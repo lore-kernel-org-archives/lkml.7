@@ -2,86 +2,71 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2997C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA16C31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96760207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739A9207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:39:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437572AbfFLJjI (ORCPT
+        id S2437610AbfFLJjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:39:08 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:57087 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406059AbfFLJjH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:39:07 -0400
-X-Originating-IP: 83.155.44.161
-Received: from classic (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
-        (Authenticated sender: hadess@hadess.net)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id B12B42000B;
-        Wed, 12 Jun 2019 09:38:58 +0000 (UTC)
-Message-ID: <9ad95905975e09646f0f2aa967140881cbbe3477.camel@hadess.net>
-Subject: Re: [PATCH] Revert "Bluetooth: Align minimum encryption key size
- for LE and BR/EDR connections"
-From:   Bastien Nocera <hadess@hadess.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marcel Holtmann <marcel@holtmann.org>
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Date:   Wed, 12 Jun 2019 11:38:57 +0200
-In-Reply-To: <20190612070701.GA13320@kroah.com>
-References: <20190522052002.10411-1-anarsoul@gmail.com>
-         <6BD1D3F7-E2F2-4B2D-9479-06E27049133C@holtmann.org>
-         <7B7F362B-6C8B-4112-8772-FB6BC708ABF5@holtmann.org>
-         <CA+E=qVfopSA90vG2Kkh+XzdYdNn=M-hJN_AptW=R+B5v3HB9eA@mail.gmail.com>
-         <CA+E=qVdLOS9smt-nBxg9Lon0iTZr87kONSp-XPKj9tqB4bvnqw@mail.gmail.com>
-         <723142BB-8217-4A01-A2B9-F527174FDC0F@holtmann.org>
-         <20190612070701.GA13320@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Wed, 12 Jun 2019 05:39:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:48742 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437412AbfFLJjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:39:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC2C3337;
+        Wed, 12 Jun 2019 02:39:52 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2AAD53F246;
+        Wed, 12 Jun 2019 02:39:52 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 10:39:45 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: linux-next: Fixes tag needs some work in the scmi tree
+Message-ID: <20190612093945.GA5368@e107155-lin>
+References: <20190612072946.15403676@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612072946.15403676@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-12 at 09:07 +0200, Greg Kroah-Hartman wrote:
-> On Tue, Jun 11, 2019 at 11:36:26PM +0200, Marcel Holtmann wrote:
-> > Hi Vasily,
-> > 
-> > > Can we get this revert merged into stable branches? Bluetooth HID
-> > > has
-> > > been broken for many devices for quite a while now and RFC patch
-> > > that
-> > > fixes the breakage hasn't seen any movement for almost a month.
-> > 
-> > lets send the RFC patch upstream since it got enough feedback that
-> > it fixes the issue.
-> 
-> According to Hans, the workaround did not work.
+On Wed, Jun 12, 2019 at 07:29:46AM +1000, Stephen Rothwell wrote:
+> Hi Sudeep,
+>
+> In commit
+>
+>   e322dcbd75e8 ("dt-bindings: arm: fix the document ID for SCMI protocol documentation")
+>
+> Fixes tag
+>
+>   Fixes: fe7be8b297b2 ("dt-bindings: arm: add support for ARM System Control
+>
+> has these problem(s):
+>
+>   - Subject has leading but no trailing parentheses
+>   - Subject has leading but no trailing quotes
+>
+> Please do not split Fixes tags over more than one line (it is ok for
+> that to be a long line).
+>
 
-Is it possible that those folks were running Fedora, and using a
-version of bluetoothd without a fix for using dbus-broker as the D-Bus
-daemon implementation?
+Thanks, will fix accordingly.
 
-I backported the fix in an update last week:
-https://bugzilla.redhat.com/show_bug.cgi?id=1711594
-
-> So can we just get this reverted so that people's machines go back to
-> working?
-> 
-> thanks,
-> 
-> greg k-h
-
+--
+Regards,
+Sudeep
