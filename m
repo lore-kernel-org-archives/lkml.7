@@ -2,94 +2,88 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F226C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775CEC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D872420B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:55:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h6usaoQu"
+	by mail.kernel.org (Postfix) with ESMTP id 5AE9A2086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437417AbfFLIzK (ORCPT
+        id S2437440AbfFLIz0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:55:10 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45899 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731584AbfFLIzJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:55:09 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u10so11426306lfm.12
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:55:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kYmy1iwC9fHd5KWLhp1RgKawKxO1mu1wxNioKBbyABA=;
-        b=h6usaoQug8lDvGPga/GoFi0ROvWZSoFgoJtb4cGyFbDPe9GepaD4ZR88gxTxmAKSjc
-         k0s72v3ZCuBZW4L7iF3K1umMYln6/dVvvGLdZu5CuzqWT8CynCANyyq3R3cltgLDim9e
-         VHu5z3PS7r3qGy/XdpON1jH5mX+WY+z4Phh8ItRc8wbT0fCciV76wmJf7Ar7v8p8sOPd
-         2wpDzzpluUdLY5pgT2SJWi/3bPsjuvRdWl+C76gGgK5BoOo3D3rV6GbR1NXnbpQq7d1H
-         RuSbtTsf56z6dcb1ezTBGHpBPegXMwulv3qa5Hl+yfTXHsS54N+2Cs1S/qK5uNuGNNPw
-         TfcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kYmy1iwC9fHd5KWLhp1RgKawKxO1mu1wxNioKBbyABA=;
-        b=Jsaha0im6CTK8DT76vnE1oxhUBitrVXlSIkHKsXlbX+lLcMvlJPIzdIbr5ocvCOVpM
-         PLWHE/DEOQ+GsEE4n81sE8a5uN1sjLCgnf612xiISvVdcU1vOUp4ezqjR+sTSGqWAxcp
-         u6ySPMfnOTsnQ3PPtHmmavL+UqLm4eE4Maq5tcmzCmiE5o1xLYHH4jawwgylEyhzXKk9
-         pz/tRf0JwSneaJBiQiE1K1t9NUPbDY3Opa6vmaTm8EnmDwO4oL3YxJZnr4E3oCKLWK3T
-         +rQVrk8RzU30VOfH/UXSwYtgQt8Cy70dWHzZkTuPcaiAxDqjq1WAl4ta/tIzkMJu2JIX
-         ZbdA==
-X-Gm-Message-State: APjAAAV00Ql9SdsE6JM5b5vk89LscU/Ie5BQ0edY8sl9wqqJ8sEb3q0Z
-        tE8uOSIz6EC1LH5miAkEhQowdm0uuAVClcPxjYeSuw==
-X-Google-Smtp-Source: APXvYqzeDRSSKfvhmShyB+/P0FILzPLpf2pje3o4J+5k4U0J1a8BDmwLQm4k9Sil0KRtpRKe+JdwQr33hsfwQpyIN2g=
-X-Received: by 2002:a19:dc0d:: with SMTP id t13mr16897617lfg.152.1560329708499;
- Wed, 12 Jun 2019 01:55:08 -0700 (PDT)
+        Wed, 12 Jun 2019 04:55:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60220 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437421AbfFLIzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 04:55:25 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A2ADC30832C8;
+        Wed, 12 Jun 2019 08:55:13 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-109.rdu2.redhat.com [10.10.120.109])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 714AE46;
+        Wed, 12 Jun 2019 08:55:03 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <cf3f4865-b6d7-7303-0212-960439e0c119@tycho.nsa.gov>
+References: <cf3f4865-b6d7-7303-0212-960439e0c119@tycho.nsa.gov> <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk> <be966d9c-e38d-7a30-8d80-fad5f25ab230@tycho.nsa.gov> <0cf7a49d-85f6-fba9-62ec-a378e0b76adf@schaufler-ca.com> <CALCETrX5O18q2=dUeC=hEtK2=t5KQpGBy9XveHxFw36OqkbNOg@mail.gmail.com> <dac74580-5b48-86e4-8222-cac29a9f541d@schaufler-ca.com> <E0925E1F-E5F2-4457-8704-47B6E64FE3F3@amacapital.net> <4b7d02b2-2434-8a7c-66cc-7dbebc37efbc@schaufler-ca.com> <CALCETrU+PKVbrKQJoXj9x_5y+vTZENMczHqyM_Xb85ca5YDZuA@mail.gmail.com> <25d88489-9850-f092-205e-0a4fc292f41b@schaufler-ca.com> <97BA9EB5-4E62-4E3A-BD97-CEC34F16FCFF@amacapital.net>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     dhowells@redhat.com, Andy Lutomirski <luto@amacapital.net>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        USB list <linux-usb@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        raven@themaw.net, Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>
+Subject: Re: [RFC][PATCH 00/13] Mount, FS, Block and Keyrings notifications [ver #4]
 MIME-Version: 1.0
-References: <20190610171103.30903-1-grygorii.strashko@ti.com> <20190610171103.30903-15-grygorii.strashko@ti.com>
-In-Reply-To: <20190610171103.30903-15-grygorii.strashko@ti.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Jun 2019 10:54:57 +0200
-Message-ID: <CACRpkdZ0fwHuFr9f_QTn=gXGo56Vo1CUM7=zmiCaxfwjp_Pyxg@mail.gmail.com>
-Subject: Re: [PATCH-next 14/20] gpio: gpio-omap: simplify omap_set_gpio_irqenable()
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Russell King <rmk@arm.linux.org.uk>,
-        Tony Lindgren <tony@atomide.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <12979.1560329702.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Wed, 12 Jun 2019 09:55:02 +0100
+Message-ID: <12980.1560329702@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 12 Jun 2019 08:55:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 7:12 PM Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
+Stephen Smalley <sds@tycho.nsa.gov> wrote:
 
-> From: Russell King <rmk+kernel@armlinux.org.uk>
->
-> omap_set_gpio_irqenable() calls two helpers that are almost the same
-> apart from whether they set or clear bits. We can consolidate these:
->
-> - in the set/clear bit register case, we can perform the operation on
->   our saved context copy and write the appropriate set/clear register.
-> - otherwise, we can use our read-modify-write helper and invert enable
->   if irqenable_inv is set.
->
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> 2) If notifications can be triggered by read-like operations (as in fanotify,
+> for example), then a "read" can be turned into a "write" flow through a
+> notification.
 
-Patch applied.
+I don't think any of the things can be classed as "read-like" operations.  At
+the moment, there are the following groups:
 
-Yours,
-Linus Walleij
+ (1) Addition of objects (eg. key_link, mount).
+
+ (2) Modifications to things (eg. keyctl_write, remount).
+
+ (3) Removal of objects (eg. key_unlink, unmount, fput+FMODE_NEED_UNMOUNT).
+
+ (4) I/O or hardware errors (eg. USB device add/remove, EDQUOT, ENOSPC).
+
+I have not currently defined any access events.
+
+I've been looking at the possibility of having epoll generate events this way,
+but that's not as straightforward as I'd hoped and fanotify could potentially
+use it also, but in both those cases, the process is already getting the
+events currently by watching for them using synchronous waiting syscalls.
+Instead this would generate an event to say it had happened.
+
+David
