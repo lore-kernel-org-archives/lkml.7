@@ -2,123 +2,129 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8183C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C536C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A939C208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:38:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="j40w5J8K"
+	by mail.kernel.org (Postfix) with ESMTP id 1516A215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409119AbfFLMiQ (ORCPT
+        id S2409115AbfFLMk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:38:16 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41425 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406351AbfFLMiP (ORCPT
+        Wed, 12 Jun 2019 08:40:27 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:60350 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727047AbfFLMk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:38:15 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5CCb2S9686859
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 12 Jun 2019 05:37:02 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5CCb2S9686859
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560343023;
-        bh=eYKMpZEAjnJ8Js12oOCOaHQmVBeOrwt5sDU+OKEJZTU=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=j40w5J8KWchEte2B1U3uMrs1/vfHUuuU5hL+FnDAJJnmomlYuDLVklWN6Pr4S9f4i
-         lcdiCO9kD4PkzSH0QKkb1DU9UreSJsSFk77jetMcBHB1c7KSW6kwwJAS1JreymKcR7
-         ZJapELuwESJJ6O0JHcfzJLWjNu4caqtdsDtbL4ViUbWsug8m0/575mqeuJTjrOLIcJ
-         ZwVt0qhRtovR2Ku+D63pAoYMgZRAtnRmntYCwB7kPQ/xej6nnwJnaeAHLDOTb7KyHj
-         5DIN7SCOXbv1qonO0uurGhz5i2TboGnviM7WrLSeEfNSXuR8Y3a5knE3oTH6Jt1US/
-         ywjv984Y6FLsw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5CCb1LD686855;
-        Wed, 12 Jun 2019 05:37:01 -0700
-Date:   Wed, 12 Jun 2019 05:37:01 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Rajneesh Bhardwaj <tipbot@zytor.com>
-Message-ID: <tip-61caa8621b9979a78b04e353ab2ee44a47ef7a62@git.kernel.org>
-Cc:     bp@alien8.de, lenb@kernel.org, kan.liang@linux.intel.com,
-        srinivas.pandruvada@linux.intel.com, tglx@linutronix.de,
-        rajneesh.bhardwaj@linux.intel.com, qiuxu.zhuo@intel.com,
-        mingo@kernel.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, hpa@zytor.com,
-        andriy.shevchenko@linux.intel.com, linux-pm@vger.kernel.org,
-        dave.hansen@linux.intel.com
-Reply-To: andriy.shevchenko@linux.intel.com, linux-pm@vger.kernel.org,
-          kan.liang@linux.intel.com, srinivas.pandruvada@linux.intel.com,
-          dave.hansen@linux.intel.com, tglx@linutronix.de,
-          rajneesh.bhardwaj@linux.intel.com, bp@alien8.de,
-          qiuxu.zhuo@intel.com, lenb@kernel.org, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, peterz@infradead.org, hpa@zytor.com
-In-Reply-To: <20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com>
-References: <20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/cpu] x86/cpu: Add Ice Lake NNPI to Intel family
-Git-Commit-ID: 61caa8621b9979a78b04e353ab2ee44a47ef7a62
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 12 Jun 2019 08:40:26 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hb2Y9-0005YG-UZ; Wed, 12 Jun 2019 06:40:21 -0600
+Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hb2Y8-0002jU-NW; Wed, 12 Jun 2019 06:40:21 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Oleg Nesterov' <oleg@redhat.com>,
+        'Andrew Morton' <akpm@linux-foundation.org>,
+        'Deepa Dinamani' <deepa.kernel@gmail.com>,
+        "'linux-kernel\@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "'arnd\@arndb.de'" <arnd@arndb.de>,
+        "'dbueso\@suse.de'" <dbueso@suse.de>,
+        "'axboe\@kernel.dk'" <axboe@kernel.dk>,
+        "'dave\@stgolabs.net'" <dave@stgolabs.net>,
+        "'e\@80x24.org'" <e@80x24.org>,
+        "'jbaron\@akamai.com'" <jbaron@akamai.com>,
+        "'linux-fsdevel\@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>,
+        "'linux-aio\@kvack.org'" <linux-aio@kvack.org>,
+        "'omar.kilani\@gmail.com'" <omar.kilani@gmail.com>,
+        "'tglx\@linutronix.de'" <tglx@linutronix.de>,
+        'Al Viro' <viro@ZenIV.linux.org.uk>,
+        'Linus Torvalds' <torvalds@linux-foundation.org>,
+        "'linux-arch\@vger.kernel.org'" <linux-arch@vger.kernel.org>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+        <20190529161157.GA27659@redhat.com>
+        <20190604134117.GA29963@redhat.com>
+        <20190606140814.GA13440@redhat.com> <87k1dxaxcl.fsf_-_@xmission.com>
+        <87ef45axa4.fsf_-_@xmission.com> <20190610162244.GB8127@redhat.com>
+        <87lfy96sta.fsf@xmission.com>
+        <9199239a450d4ea397783ccf98742220@AcuMS.aculab.com>
+        <05ffd0f434c64262aa767db81ad75ac1@AcuMS.aculab.com>
+Date:   Wed, 12 Jun 2019 07:40:03 -0500
+In-Reply-To: <05ffd0f434c64262aa767db81ad75ac1@AcuMS.aculab.com> (David
+        Laight's message of "Tue, 11 Jun 2019 15:46:11 +0000")
+Message-ID: <8736kf3rks.fsf@xmission.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain
+X-XM-SPF: eid=1hb2Y8-0002jU-NW;;;mid=<8736kf3rks.fsf@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/YVLyi/xjY76Y8LOZImydvuQ/haxaL6i0=
+X-SA-Exim-Connect-IP: 72.206.97.68
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  61caa8621b9979a78b04e353ab2ee44a47ef7a62
-Gitweb:     https://git.kernel.org/tip/61caa8621b9979a78b04e353ab2ee44a47ef7a62
-Author:     Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-AuthorDate: Thu, 6 Jun 2019 06:54:19 +0530
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 12 Jun 2019 11:43:42 +0200
+David Laight <David.Laight@ACULAB.COM> writes:
 
-x86/cpu: Add Ice Lake NNPI to Intel family
+> From: David Laight
+>> Sent: 11 June 2019 10:52
+> ...
+>> FWIW is ERESTARTNOHAND actually sane here?
+>> If I've used setitimer() to get SIGALARM generated every second I'd
+>> expect select() to return EINTR every second even if I don't
+>> have a SIGALARM handler?
+>
+> Actually no - after sigset(SIGALRM, SIG_IGN) I'd expect absolutely
+> nothing to happen when kill(pid, SIGALRM) is called.
+>
+> However if I run:
+>
+> 	struct itimerval itimerval = {{1, 0}, {1, 0}};
+> 	setitimer(ITIMER_REAL, &itimerval, NULL);
+> 	sigset(SIGALRM, SIG_IGN);
+>
+> 	poll(0, 0, big_timeout);
+>
+> I see (with strace) poll() repeatedly returning ERESTART_RESTARTBLOCK
+> and being restarted.
+> Replacing poll() with pselect() returns ERESTARTNOHAND.
+> (In both cases the timeout must be updated since the application
+> does see the timeout.)
+>
+> I'm sure other unix kernels completely ignore signals set to SIG_IGN.
+> So this restart dance just isn't needed.
 
-Add the CPUID model number of Ice Lake Neural Network Processor for Deep
-Learning Inference (ICL-NNPI) to the Intel family list. Ice Lake NNPI uses
-model number 0x9D and this will be documented in a future version of Intel
-Software Development Manual.
+We also ignore such signals except when the signal is blocked when it is
+received.
 
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@suse.de
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com
+We don't currently but it would be perfectly legitimate for
+set_current_blocked to dequeue and drop signals that have become
+unblocked whose handler is SIG_IGN.
 
----
- arch/x86/include/asm/intel-family.h | 1 +
- 1 file changed, 1 insertion(+)
+The dance would still be needed for the rare case where TIF_SIGPENDING
+gets set for a non-signal.
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 9f15384c504a..087de5d3b93a 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -53,6 +53,7 @@
- #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
- 
- #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
-+#define INTEL_FAM6_ICELAKE_NNPI		0x9D
- 
- /* "Small Core" Processors (Atom) */
- 
+Dropping the signal while it is blocked if it's handler is SIG_IGN looks
+like a bad idea.
+
+Eric
+
+
+
+
+
+
+
+
