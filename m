@@ -2,118 +2,384 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC4DC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D71AC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF1EB20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1567520874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:27:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=vmwopensource.org header.i=@vmwopensource.org header.b="gYw3bH5a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438841AbfFLM1L (ORCPT
+        id S2438875AbfFLM1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:27:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48006 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727249AbfFLM1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:27:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D2A1EAE12;
-        Wed, 12 Jun 2019 12:27:09 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] dt-bindings: net: wiznet: add w5x00 support
-Date:   Wed, 12 Jun 2019 14:25:27 +0200
-Message-Id: <20190612122526.14332-2-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190612122526.14332-1-nsaenzjulienne@suse.de>
-References: <20190612122526.14332-1-nsaenzjulienne@suse.de>
+        Wed, 12 Jun 2019 08:27:16 -0400
+Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:58922 "EHLO
+        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438842AbfFLM1O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:27:14 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 949F83F773;
+        Wed, 12 Jun 2019 14:27:01 +0200 (CEST)
+Authentication-Results: pio-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=vmwopensource.org header.i=@vmwopensource.org header.b=gYw3bH5a;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id VQ4Rb09IF_rR; Wed, 12 Jun 2019 14:26:47 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 0FA363F6C5;
+        Wed, 12 Jun 2019 14:26:45 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 8059D3619A3;
+        Wed, 12 Jun 2019 14:26:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=vmwopensource.org;
+        s=mail; t=1560342405;
+        bh=+5GVyhTYo8FM9oLssS/tZIxqS+/3NprZW4Ed/jkf8Xk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=gYw3bH5a+sDW1srtGfX3oOPFaJmEUYHu9j4KFVytZjIqhibon/ppKhfZlZctk7Fvk
+         PhtyC1kk+A7lKxnjH/LHqYqw4477BqdjT1VhKZxTyHp8At7IPmCVDZ2TCBVaLPYrAt
+         K3B4Xpn4RuRjJN/syumfKiMEUG6emAiU6sRskopY=
+Subject: Re: [PATCH v5 2/9] mm: Add an apply_to_pfn_range interface
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-graphics-maintainer@vmware.com, pv-drivers@vmware.com,
+        linux-kernel@vger.kernel.org, nadav.amit@gmail.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>
+References: <20190612064243.55340-1-thellstrom@vmwopensource.org>
+ <20190612064243.55340-3-thellstrom@vmwopensource.org>
+ <20190612121604.GB719@infradead.org>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thellstrom@vmwopensource.org>
+Organization: VMware Inc.
+Message-ID: <8f5a5b25-e21f-43f2-a4dd-a50debfd1287@vmwopensource.org>
+Date:   Wed, 12 Jun 2019 14:26:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190612121604.GB719@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add bindings for Wiznet's w5x00 series of SPI interfaced Ethernet chips.
+On 6/12/19 2:16 PM, Christoph Hellwig wrote:
+> On Wed, Jun 12, 2019 at 08:42:36AM +0200, Thomas Hellström (VMware) wrote:
+>> From: Thomas Hellstrom <thellstrom@vmware.com>
+>>
+>> This is basically apply_to_page_range with added functionality:
+>> Allocating missing parts of the page table becomes optional, which
+>> means that the function can be guaranteed not to error if allocation
+>> is disabled. Also passing of the closure struct and callback function
+>> becomes different and more in line with how things are done elsewhere.
+>>
+>> Finally we keep apply_to_page_range as a wrapper around apply_to_pfn_range
+>>
+>> The reason for not using the page-walk code is that we want to perform
+>> the page-walk on vmas pointing to an address space without requiring the
+>> mmap_sem to be held rather than on vmas belonging to a process with the
+>> mmap_sem held.
+>>
+>> Notable changes since RFC:
+>> Don't export apply_to_pfn range.
+>>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Matthew Wilcox <willy@infradead.org>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Rik van Riel <riel@surriel.com>
+>> Cc: Minchan Kim <minchan@kernel.org>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Huang Ying <ying.huang@intel.com>
+>> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+>> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kernel@vger.kernel.org
+>>
+>> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+>> Reviewed-by: Ralph Campbell <rcampbell@nvidia.com> #v1
+>> ---
+>>   include/linux/mm.h |  10 ++++
+>>   mm/memory.c        | 135 ++++++++++++++++++++++++++++++++++-----------
+>>   2 files changed, 113 insertions(+), 32 deletions(-)
+>>
+>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>> index 0e8834ac32b7..3d06ce2a64af 100644
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -2675,6 +2675,16 @@ typedef int (*pte_fn_t)(pte_t *pte, pgtable_t token, unsigned long addr,
+>>   extern int apply_to_page_range(struct mm_struct *mm, unsigned long address,
+>>   			       unsigned long size, pte_fn_t fn, void *data);
+>>   
+>> +struct pfn_range_apply;
+>> +typedef int (*pter_fn_t)(pte_t *pte, pgtable_t token, unsigned long addr,
+>> +			 struct pfn_range_apply *closure);
+>> +struct pfn_range_apply {
+>> +	struct mm_struct *mm;
+>> +	pter_fn_t ptefn;
+>> +	unsigned int alloc;
+>> +};
+>> +extern int apply_to_pfn_range(struct pfn_range_apply *closure,
+>> +			      unsigned long address, unsigned long size);
+>>   
+>>   #ifdef CONFIG_PAGE_POISONING
+>>   extern bool page_poisoning_enabled(void);
+>> diff --git a/mm/memory.c b/mm/memory.c
+>> index 168f546af1ad..462aa47f8878 100644
+>> --- a/mm/memory.c
+>> +++ b/mm/memory.c
+>> @@ -2032,18 +2032,17 @@ int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long
+>>   }
+>>   EXPORT_SYMBOL(vm_iomap_memory);
+>>   
+>> -static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+>> -				     unsigned long addr, unsigned long end,
+>> -				     pte_fn_t fn, void *data)
+>> +static int apply_to_pte_range(struct pfn_range_apply *closure, pmd_t *pmd,
+>> +			      unsigned long addr, unsigned long end)
+>>   {
+>>   	pte_t *pte;
+>>   	int err;
+>>   	pgtable_t token;
+>>   	spinlock_t *uninitialized_var(ptl);
+>>   
+>> -	pte = (mm == &init_mm) ?
+>> +	pte = (closure->mm == &init_mm) ?
+>>   		pte_alloc_kernel(pmd, addr) :
+>> -		pte_alloc_map_lock(mm, pmd, addr, &ptl);
+>> +		pte_alloc_map_lock(closure->mm, pmd, addr, &ptl);
+>>   	if (!pte)
+>>   		return -ENOMEM;
+>>   
+>> @@ -2054,86 +2053,109 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
+>>   	token = pmd_pgtable(*pmd);
+>>   
+>>   	do {
+>> -		err = fn(pte++, token, addr, data);
+>> +		err = closure->ptefn(pte++, token, addr, closure);
+>>   		if (err)
+>>   			break;
+>>   	} while (addr += PAGE_SIZE, addr != end);
+>>   
+>>   	arch_leave_lazy_mmu_mode();
+>>   
+>> -	if (mm != &init_mm)
+>> +	if (closure->mm != &init_mm)
+>>   		pte_unmap_unlock(pte-1, ptl);
+>>   	return err;
+>>   }
+>>   
+>> -static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
+>> -				     unsigned long addr, unsigned long end,
+>> -				     pte_fn_t fn, void *data)
+>> +static int apply_to_pmd_range(struct pfn_range_apply *closure, pud_t *pud,
+>> +			      unsigned long addr, unsigned long end)
+>>   {
+>>   	pmd_t *pmd;
+>>   	unsigned long next;
+>> -	int err;
+>> +	int err = 0;
+>>   
+>>   	BUG_ON(pud_huge(*pud));
+>>   
+>> -	pmd = pmd_alloc(mm, pud, addr);
+>> +	pmd = pmd_alloc(closure->mm, pud, addr);
+>>   	if (!pmd)
+>>   		return -ENOMEM;
+>> +
+>>   	do {
+>>   		next = pmd_addr_end(addr, end);
+>> -		err = apply_to_pte_range(mm, pmd, addr, next, fn, data);
+>> +		if (!closure->alloc && pmd_none_or_clear_bad(pmd))
+>> +			continue;
+>> +		err = apply_to_pte_range(closure, pmd, addr, next);
+>>   		if (err)
+>>   			break;
+>>   	} while (pmd++, addr = next, addr != end);
+>>   	return err;
+>>   }
+>>   
+>> -static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
+>> -				     unsigned long addr, unsigned long end,
+>> -				     pte_fn_t fn, void *data)
+>> +static int apply_to_pud_range(struct pfn_range_apply *closure, p4d_t *p4d,
+>> +			      unsigned long addr, unsigned long end)
+>>   {
+>>   	pud_t *pud;
+>>   	unsigned long next;
+>> -	int err;
+>> +	int err = 0;
+>>   
+>> -	pud = pud_alloc(mm, p4d, addr);
+>> +	pud = pud_alloc(closure->mm, p4d, addr);
+>>   	if (!pud)
+>>   		return -ENOMEM;
+>> +
+>>   	do {
+>>   		next = pud_addr_end(addr, end);
+>> -		err = apply_to_pmd_range(mm, pud, addr, next, fn, data);
+>> +		if (!closure->alloc && pud_none_or_clear_bad(pud))
+>> +			continue;
+>> +		err = apply_to_pmd_range(closure, pud, addr, next);
+>>   		if (err)
+>>   			break;
+>>   	} while (pud++, addr = next, addr != end);
+>>   	return err;
+>>   }
+>>   
+>> -static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
+>> -				     unsigned long addr, unsigned long end,
+>> -				     pte_fn_t fn, void *data)
+>> +static int apply_to_p4d_range(struct pfn_range_apply *closure, pgd_t *pgd,
+>> +			      unsigned long addr, unsigned long end)
+>>   {
+>>   	p4d_t *p4d;
+>>   	unsigned long next;
+>> -	int err;
+>> +	int err = 0;
+>>   
+>> -	p4d = p4d_alloc(mm, pgd, addr);
+>> +	p4d = p4d_alloc(closure->mm, pgd, addr);
+>>   	if (!p4d)
+>>   		return -ENOMEM;
+>> +
+>>   	do {
+>>   		next = p4d_addr_end(addr, end);
+>> -		err = apply_to_pud_range(mm, p4d, addr, next, fn, data);
+>> +		if (!closure->alloc && p4d_none_or_clear_bad(p4d))
+>> +			continue;
+>> +		err = apply_to_pud_range(closure, p4d, addr, next);
+>>   		if (err)
+>>   			break;
+>>   	} while (p4d++, addr = next, addr != end);
+>>   	return err;
+>>   }
+>>   
+>> -/*
+>> - * Scan a region of virtual memory, filling in page tables as necessary
+>> - * and calling a provided function on each leaf page table.
+>> +/**
+>> + * apply_to_pfn_range - Scan a region of virtual memory, calling a provided
+>> + * function on each leaf page table entry
+>> + * @closure: Details about how to scan and what function to apply
+>> + * @addr: Start virtual address
+>> + * @size: Size of the region
+>> + *
+>> + * If @closure->alloc is set to 1, the function will fill in the page table
+>> + * as necessary. Otherwise it will skip non-present parts.
+>> + * Note: The caller must ensure that the range does not contain huge pages.
+>> + * The caller must also assure that the proper mmu_notifier functions are
+>> + * called before and after the call to apply_to_pfn_range.
+>> + *
+>> + * WARNING: Do not use this function unless you know exactly what you are
+>> + * doing. It is lacking support for huge pages and transparent huge pages.
+>> + *
+>> + * Return: Zero on success. If the provided function returns a non-zero status,
+>> + * the page table walk will terminate and that status will be returned.
+>> + * If @closure->alloc is set to 1, then this function may also return memory
+>> + * allocation errors arising from allocating page table memory.
+>>    */
+>> -int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+>> -			unsigned long size, pte_fn_t fn, void *data)
+>> +int apply_to_pfn_range(struct pfn_range_apply *closure,
+>> +		       unsigned long addr, unsigned long size)
+>>   {
+>>   	pgd_t *pgd;
+>>   	unsigned long next;
+>> @@ -2143,16 +2165,65 @@ int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+>>   	if (WARN_ON(addr >= end))
+>>   		return -EINVAL;
+>>   
+>> -	pgd = pgd_offset(mm, addr);
+>> +	pgd = pgd_offset(closure->mm, addr);
+>>   	do {
+>>   		next = pgd_addr_end(addr, end);
+>> -		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data);
+>> +		if (!closure->alloc && pgd_none_or_clear_bad(pgd))
+>> +			continue;
+>> +		err = apply_to_p4d_range(closure, pgd, addr, next);
+>>   		if (err)
+>>   			break;
+>>   	} while (pgd++, addr = next, addr != end);
+>>   
+>>   	return err;
+>>   }
+>> +
+>> +/**
+>> + * struct page_range_apply - Closure structure for apply_to_page_range()
+>> + * @pter: The base closure structure we derive from
+>> + * @fn: The leaf pte function to call
+>> + * @data: The leaf pte function closure
+>> + */
+>> +struct page_range_apply {
+>> +	struct pfn_range_apply pter;
+>> +	pte_fn_t fn;
+>> +	void *data;
+>> +};
+>> +
+>> +/*
+>> + * Callback wrapper to enable use of apply_to_pfn_range for
+>> + * the apply_to_page_range interface
+>> + */
+>> +static int apply_to_page_range_wrapper(pte_t *pte, pgtable_t token,
+>> +				       unsigned long addr,
+>> +				       struct pfn_range_apply *pter)
+>> +{
+>> +	struct page_range_apply *pra =
+>> +		container_of(pter, typeof(*pra), pter);
+>> +
+>> +	return pra->fn(pte, token, addr, pra->data);
+>> +}
+>> +
+>> +/*
+>> + * Scan a region of virtual memory, filling in page tables as necessary
+>> + * and calling a provided function on each leaf page table.
+>> + *
+>> + * WARNING: Do not use this function unless you know exactly what you are
+>> + * doing. It is lacking support for huge pages and transparent huge pages.
+>> + */
+>> +int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+>> +			unsigned long size, pte_fn_t fn, void *data)
+>> +{
+>> +	struct page_range_apply pra = {
+>> +		.pter = {.mm = mm,
+>> +			 .alloc = 1,
+>> +			 .ptefn = apply_to_page_range_wrapper },
+>> +		.fn = fn,
+>> +		.data = data
+>> +	};
+>> +
+>> +	return apply_to_pfn_range(&pra.pter, addr, size);
+>> +}
+>>   
+>>   EXPORT_SYMBOL_GPL(apply_to_page_range);
+> Actually - did you look into converting our two hand full of
+> apply_to_page_range callers to your new scheme?  It seems like that
+> might actually not be to bad and avoid various layers of wrappers.
 
-Based on the bindings for microchip,enc28j60.
+Yes, I had that in mind once this landed and got some serious testing.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
+/Thomas
 
-Changes since v1:
-  - one compatible sting per line
-  - use correct 'ethenet@0' phandle name
 
- .../devicetree/bindings/net/wiznet,w5x00.txt  | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/wiznet,w5x00.txt
-
-diff --git a/Documentation/devicetree/bindings/net/wiznet,w5x00.txt b/Documentation/devicetree/bindings/net/wiznet,w5x00.txt
-new file mode 100644
-index 000000000000..901946dea3de
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/wiznet,w5x00.txt
-@@ -0,0 +1,51 @@
-+* Wiznet w5x00
-+
-+This is a standalone 10/100 MBit Ethernet controller with SPI interface.
-+
-+For each device connected to a SPI bus, define a child node within
-+the SPI master node.
-+
-+Required properties:
-+- compatible: Should be one of the following strings:
-+	      "wiznet,w5100"
-+	      "wiznet,w5200"
-+	      "wiznet,w5500"
-+- reg: Specify the SPI chip select the chip is wired to.
-+- interrupts: Specify the interrupt index within the interrupt controller (referred
-+              to above in interrupt-parent) and interrupt type. w5x00 natively
-+              generates falling edge interrupts, however, additional board logic
-+              might invert the signal.
-+- pinctrl-names: List of assigned state names, see pinctrl binding documentation.
-+- pinctrl-0: List of phandles to configure the GPIO pin used as interrupt line,
-+             see also generic and your platform specific pinctrl binding
-+             documentation.
-+
-+Optional properties:
-+- spi-max-frequency: Maximum frequency of the SPI bus when accessing the w5500.
-+  According to the w5500 datasheet, the chip allows a maximum of 80 MHz, however,
-+  board designs may need to limit this value.
-+- local-mac-address: See ethernet.txt in the same directory.
-+
-+
-+Example (for Raspberry Pi with pin control stuff for GPIO irq):
-+
-+&spi {
-+	ethernet@0: w5500@0 {
-+		compatible = "wiznet,w5500";
-+		reg = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&eth1_pins>;
-+		interrupt-parent = <&gpio>;
-+		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-+		spi-max-frequency = <30000000>;
-+	};
-+};
-+
-+&gpio {
-+	eth1_pins: eth1_pins {
-+		brcm,pins = <25>;
-+		brcm,function = <0>; /* in */
-+		brcm,pull = <0>; /* none */
-+	};
-+};
-+
--- 
-2.21.0
 
