@@ -2,220 +2,94 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8828BC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77095C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5452082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52196215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:51:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560336694;
+	bh=5jRu86QAzs8zA/gs6Ny1LZmMgOJJIteMCKmKfzBwhHw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w+CPHZAA3HlsqiMl4y8ecPT4VCCq3Xb0n8jq6+UiDGJk4s4PZze8KYttGhlEB0Fee
+	 fhpnI3CmApWEMPe5HR+TFFTf1FlhPF+fGpHF8YtyQCh6OLQ0kpLenIT4kmLNyNIQ2s
+	 jStmAwABLEz9+/OTCphCia+Duz2hcPzkAr2AJKAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408069AbfFLKup (ORCPT
+        id S2408159AbfFLKvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:50:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53694 "EHLO mx1.redhat.com"
+        Wed, 12 Jun 2019 06:51:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405021AbfFLKup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:50:45 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2408073AbfFLKvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 06:51:33 -0400
+Received: from dragon (li1264-180.members.linode.com [45.79.165.180])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6E5BBC057F2C;
-        Wed, 12 Jun 2019 10:50:39 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C07D795AD;
-        Wed, 12 Jun 2019 10:50:37 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id BDF7E1806B16;
-        Wed, 12 Jun 2019 10:50:34 +0000 (UTC)
-Date:   Wed, 12 Jun 2019 06:50:34 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     rdunlap@infradead.org, jack@suse.cz, kvm@vger.kernel.org,
-        mst@redhat.com, jasowang@redhat.com, david@fromorbit.com,
-        qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
-        dm-devel@redhat.com, adilger kernel <adilger.kernel@dilger.ca>,
-        zwisler@kernel.org, aarcange@redhat.com,
-        dave jiang <dave.jiang@intel.com>, jstaron@google.com,
-        linux-nvdimm@lists.01.org,
-        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
-        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
-        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
-        kilobyte@angband.pl, riel@surriel.com,
-        yuval shaia <yuval.shaia@oracle.com>, stefanha@redhat.com,
-        pbonzini@redhat.com, dan j williams <dan.j.williams@intel.com>,
-        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
-        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
-        snitzer@redhat.com, darrick wong <darrick.wong@oracle.com>,
-        rjw@rjwysocki.net, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        imammedo@redhat.com
-Message-ID: <977172256.34591602.1560336634257.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190612083711.2c0cfd7e.cohuck@redhat.com>
-References: <20190611163802.25352-1-pagupta@redhat.com> <20190611163802.25352-3-pagupta@redhat.com> <20190611190209.0b25033e.cohuck@redhat.com> <1003601865.34513553.1560310490030.JavaMail.zimbra@redhat.com> <20190612083711.2c0cfd7e.cohuck@redhat.com>
-Subject: Re: [Qemu-devel] [PATCH v12 2/7] virtio-pmem: Add virtio pmem
- driver
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FA2B2082C;
+        Wed, 12 Jun 2019 10:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560336693;
+        bh=5jRu86QAzs8zA/gs6Ny1LZmMgOJJIteMCKmKfzBwhHw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p0ls4eEvZEtUNYXQwDlIQ4pDBNaY2f40S56gTpQwSvu0MSqD38juSsqmRfqKf1KnW
+         2ysxeCtP8pcQv9OpTLgAtGTR8X0fjCiDCTBJwxM6YHYOuw+bTJq17DCwCisAUFtqh2
+         4MxqM16t3QM1jduhmlQY9N9RHdhYruyUm5hoqV50=
+Date:   Wed, 12 Jun 2019 18:51:00 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the imx-mxs tree
+Message-ID: <20190612105059.GG11086@dragon>
+References: <20190607074652.4b3d0c97@canb.auug.org.au>
+ <20190607002407.GY29853@dragon>
+ <AM0PR04MB44817EB65913F29630453E1A88ED0@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.116.228, 10.4.195.25]
-Thread-Topic: virtio-pmem: Add virtio pmem driver
-Thread-Index: JA2T0z0G1tIHKmlJmlUYn7dmJ8rB0Q==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 12 Jun 2019 10:50:44 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB44817EB65913F29630453E1A88ED0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> 
-> Hi Pankaj,
-> 
-> On Tue, 11 Jun 2019 23:34:50 -0400 (EDT)
-> Pankaj Gupta <pagupta@redhat.com> wrote:
-> 
-> > Hi Cornelia,
+On Tue, Jun 11, 2019 at 08:36:52AM +0000, Peng Fan wrote:
+> Hi Shawn, Stephen
+> > Subject: Re: linux-next: Fixes tag needs some work in the imx-mxs tree
 > > 
-> > > On Tue, 11 Jun 2019 22:07:57 +0530
-> > > Pankaj Gupta <pagupta@redhat.com> wrote:
-> 
-> 
-> > > > +	err1 = virtqueue_kick(vpmem->req_vq);
-> > > > +	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
-> > > > +	/*
-> > > > +	 * virtqueue_add_sgs failed with error different than -ENOSPC, we
-> > > > can't
-> > > > +	 * do anything about that.
-> > > > +	 */
-> > > 
-> > > Does it make sense to kick if you couldn't add at all?
+> > On Fri, Jun 07, 2019 at 07:46:52AM +1000, Stephen Rothwell wrote:
+> > > Hi all,
+> > >
+> > > In commit
+> > >
+> > >   f6a8ff82ce68 ("clk: imx: imx8mm: correct audio_pll2_clk to
+> > > audio_pll2_out")
+> > >
+> > > Fixes tag
+> > >
+> > >   Fixes: ba5625c3e27 ("clk: imx: Add clock driver support for imx8mm")
+> > >
+> > > has these problem(s):
+> > >
+> > >   - SHA1 should be at least 12 digits long
+> > >     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+> > >     or later) just making sure it is not set (or set to "auto").
 > > 
-> > When we could not add because of -ENOSPC we are waiting and when buffer is
-> > added
-> > then only we do a kick. For any other error which might be a rare
-> > occurrence, I think
-> > kick is harmless here and keeps the code clean?
-> 
-> Yes, I agree it does not hurt. Let's keep it as-is.
-
-Sure.
-
-> 
-> 
-> > Sure, Thank you. Attaching below on top changes on current patch2 based on
-> > your suggestions. Let me know if these are okay and then will send official
-> > v13 to for upstream merging.
-> 
-> Looks good to me, except for one change.
-
-Sure. Will send v13 shortly.
-
-> 
-> [Again sorry for the late review, did not want to get the version
-> numbers up :)]
-
-Thank you :)
-
-> 
+> > Hi Stephen,
 > > 
-> > Thanks,
-> > Pankaj
+> > Thanks for reporting.  I just got it fixed, will be more careful about that in the
+> > future.
 > > 
-> > ===============
-> > 
-> > diff --git a/drivers/nvdimm/nd_virtio.c b/drivers/nvdimm/nd_virtio.c
-> > index efc535723517..5b8d2367da0b 100644
-> > --- a/drivers/nvdimm/nd_virtio.c
-> > +++ b/drivers/nvdimm/nd_virtio.c
-> > @@ -10,7 +10,7 @@
-> >  #include "nd.h"
-> >  
-> >   /* The interrupt handler */
-> > -void host_ack(struct virtqueue *vq)
-> > +void virtio_pmem_host_ack(struct virtqueue *vq)
-> >  {
-> >         struct virtio_pmem *vpmem = vq->vdev->priv;
-> >         struct virtio_pmem_request *req_data, *req_buf;
-> > @@ -32,10 +32,10 @@ void host_ack(struct virtqueue *vq)
-> >         }
-> >         spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
-> >  }
-> > -EXPORT_SYMBOL_GPL(host_ack);
-> > +EXPORT_SYMBOL_GPL(virtio_pmem_host_ack);
-> >  
-> >   /* The request submission function */
-> > -int virtio_pmem_flush(struct nd_region *nd_region)
-> > +static int virtio_pmem_flush(struct nd_region *nd_region)
-> >  {
-> >         struct virtio_device *vdev = nd_region->provider_data;
-> >         struct virtio_pmem *vpmem  = vdev->priv;
-> > @@ -69,7 +69,7 @@ int virtio_pmem_flush(struct nd_region *nd_region)
-> >         while ((err = virtqueue_add_sgs(vpmem->req_vq, sgs, 1, 1, req_data,
-> >                                         GFP_ATOMIC)) == -ENOSPC) {
-> >  
-> > -               dev_err(&vdev->dev, "failed to send command to virtio pmem
-> > device, no free slots in the virtqueue\n");
-> > +               dev_info(&vdev->dev, "failed to send command to virtio pmem
-> > device, no free slots in the virtqueue\n");
-> >                 req_data->wq_buf_avail = false;
-> >                 list_add_tail(&req_data->list, &vpmem->req_list);
-> >                 spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
-> > @@ -90,7 +90,8 @@ int virtio_pmem_flush(struct nd_region *nd_region)
-> >         } else {
-> >                 /* A host repsonse results in "host_ack" getting called */
-> >                 wait_event(req_data->host_acked, req_data->done);
-> > -               err = virtio32_to_cpu(vdev, req_data->resp.ret);
-> > +               if ((err = virtio32_to_cpu(vdev, req_data->resp.ret)))
-> > +                       err = -EIO;
+> > @Peng, please check your git configuration as suggested above, thanks.
 > 
-> Hm, why are you making this change? I think the previous code was fine.
+> Sorry for this. Do I need to resend the patch?
 
-Yes, Something came to my mind while making the change but I agree will keep
-this as it was before.
+No.  I have fixed it on my branch.
 
-> 
-> >         }
-> >  
-> >         kfree(req_data);
-> > @@ -100,7 +101,8 @@ int virtio_pmem_flush(struct nd_region *nd_region)
-> >  /* The asynchronous flush callback function */
-> >  int async_pmem_flush(struct nd_region *nd_region, struct bio *bio)
-> >  {
-> > -       /* Create child bio for asynchronous flush and chain with
-> > +       /*
-> > +        * Create child bio for asynchronous flush and chain with
-> >          * parent bio. Otherwise directly call nd_region flush.
-> >          */
-> >         if (bio && bio->bi_iter.bi_sector != -1) {
-> > diff --git a/drivers/nvdimm/virtio_pmem.c b/drivers/nvdimm/virtio_pmem.c
-> > index b60ebd8cd2fd..5e3d07b47e0c 100644
-> > --- a/drivers/nvdimm/virtio_pmem.c
-> > +++ b/drivers/nvdimm/virtio_pmem.c
-> > @@ -19,7 +19,7 @@ static int init_vq(struct virtio_pmem *vpmem)
-> >  {
-> >         /* single vq */
-> >         vpmem->req_vq = virtio_find_single_vq(vpmem->vdev,
-> > -                                               host_ack, "flush_queue");
-> > +                                       virtio_pmem_host_ack,
-> > "flush_queue");
-> >         if (IS_ERR(vpmem->req_vq))
-> >                 return PTR_ERR(vpmem->req_vq);
-> >  
-> > diff --git a/drivers/nvdimm/virtio_pmem.h b/drivers/nvdimm/virtio_pmem.h
-> > index 6e47521be158..998efbc7660c 100644
-> > --- a/drivers/nvdimm/virtio_pmem.h
-> > +++ b/drivers/nvdimm/virtio_pmem.h
-> > @@ -50,6 +50,6 @@ struct virtio_pmem {
-> >         uint64_t size;
-> >  };
-> >  
-> > -void host_ack(struct virtqueue *vq);
-> > +void virtio_pmem_host_ack(struct virtqueue *vq);
-> >  int async_pmem_flush(struct nd_region *nd_region, struct bio *bio);
-> >  #endif
-> 
-> 
-> 
+Shawn
