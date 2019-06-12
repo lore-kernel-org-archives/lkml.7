@@ -7,77 +7,74 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360BCC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D73C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCD020896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C86D206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:40:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LioNUztR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KqIcPP4Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731698AbfFLIkV (ORCPT
+        id S1731714AbfFLIkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:40:21 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36230 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfFLIkU (ORCPT
+        Wed, 12 Jun 2019 04:40:35 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41904 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfFLIke (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:40:20 -0400
-Received: by mail-wm1-f65.google.com with SMTP id u8so5596071wmm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:40:19 -0700 (PDT)
+        Wed, 12 Jun 2019 04:40:34 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c2so15913322wrm.8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:40:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=mu+5A2Q5hvAzGMoz6pEfowPG8TlP0DjPAXbK4IMynfk=;
-        b=LioNUztR4QpDQwziOI1zo4GmytCwWi28PaeavA8dL0aXOqPFgao4PBmOBreALrgjfK
-         tjoyA/G4qktSmbFU2ntx5rMhesAkJcF8s6dhr1fO5dNbtKrOl26E3jY/pji+Ika6rqP3
-         bNRf0tG5mRRRb+dfG7oEvtl4hYHJaWWaomDyPwcdt6ShLPCAi019jaOcoKQWGWujMpZL
-         xteX4PxZluxD76b2G+xE15WHxdF1+tKJjbXIWG+Dqu2P6le+wGcjM/xNzbnI7J/MGuyz
-         1E7HJmooz0XtNKcFsyOSp1MHBBgGt5+S+L9zVVVrH8YQZZ6oCLG8ovSrepAj6VHlYBXl
-         +QFw==
+        bh=jvm2cXxD836du/9Q0GoZYqu9SjdzfijtLuIQeM/4dwc=;
+        b=KqIcPP4Q11BclQy9JX76y4ge6UO3PUxOJJGfjqcQNRLQpFBVg0yhKrM8OAdMZseIs0
+         HpVn+cSKGwcGf4FGEQZKVZNfBF8zSBBAKdtP/agE1SmXV1gsWuqfvf6iNZEPjeMTPB7Q
+         5RPUJpKSvzZqGy4oXQTW78DCoXy+ovVr9tn+eRfmJ96JJWRCywtK/NBoogiasLYYi2KP
+         TijWJXbxJyR1dOR1J66FtfDoxDgXqizYQ7wVKNpkvVWYkEhhrbjFImEkWiMaedYeqnJa
+         VJuPrXAn3ba9WkIHhEcjBK1ROoIfOapAvOVQrQtMqFMl0gfk8A4aQseTZTpJJHXEZ8QP
+         Rd/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=mu+5A2Q5hvAzGMoz6pEfowPG8TlP0DjPAXbK4IMynfk=;
-        b=VS1ypsfUzoatcoFp9k6brynJXhqxk/NEI+bfpLrCB7JS3YeVEEYgyOrjdztI3ro7i3
-         AVjQLO9hlrDk1oNYNCsqOdtdK5t1simX1/yT0fEkKGhHCPsqhJcpSI57HD/R2y8ZKmmW
-         Ogb3HrPiUhcB1utqFaKtioK2cylZavQoQZ8VLXO0gjINoo4nryNODqJ2zSPDhpgnqJeo
-         /1uf2rtN0/GqvXkaj01B2wA4Csg2DMvhZ3+N9Y1V8UVrznLl2Emog9QvkIZ6oPTXVOQq
-         lY6gQcz6VN2NJG7taEV4nbte7/plXwt/EAtU5NAypg5U3ankVpmpfr7dI1jLMRR4hsq+
-         inIA==
-X-Gm-Message-State: APjAAAXXw8B+S+uI4Vc1HN+uARKnKLAomc4Vn62atbXh/lbE8Q4f2Cfe
-        F1oNWIyWU2F7VJxaxPsHOMDn12SKqRU=
-X-Google-Smtp-Source: APXvYqzL4UDeJEl2i3CcLEi5RLobC2SOgsQ5h1ADxA9I14e914PlAJfyRM1ObHfTvvyg8QrnegS+7A==
-X-Received: by 2002:a1c:7604:: with SMTP id r4mr21373042wmc.89.1560328818792;
-        Wed, 12 Jun 2019 01:40:18 -0700 (PDT)
+        bh=jvm2cXxD836du/9Q0GoZYqu9SjdzfijtLuIQeM/4dwc=;
+        b=hBSlopkJChe3MTZZxCd8YNiv1M1DHtzQP5TzCKEYIXUPOUE5bSGS3Xt23vzhafF74F
+         u5ajXel87wMtGnXigDjNXEmObswYiykKh0hnDelmCaI8UIv9sHWn4qanJphBN2fs3qWY
+         LTj2se90736HBb25TOWAJ6PrivslznMHEXi2mbHpgQYEoXXWOSVw9EkEC2/RxzUyxUXg
+         rxKlTco4qH/PIfYib04jOBG7IpNi2Iic0grdxUEXg/HnbBAH+OF61tcDqB2+s6PvB9F3
+         E+zZAJ4m2HQYuS+maaNZ1j3U3y6kMrcnzk6+b/4Kwu20MT1TQKxUwq8QsWLeStQNWWXD
+         yXSQ==
+X-Gm-Message-State: APjAAAVUrMfnc2JFMup1G1cDVLBEZGEo8vpIRgE2o4uiHEuDLNv0YlLo
+        O/vinKfDRJNxU0YSyi8/bguyjujjrio=
+X-Google-Smtp-Source: APXvYqwvffT9zDjm+/wNOMnBMqAGh/6+u0ZEpF1tQC6gY9fVrW25Z+xCvtiqZ6yqEIBrxUJsBrAgBQ==
+X-Received: by 2002:adf:e8c8:: with SMTP id k8mr25390805wrn.285.1560328832504;
+        Wed, 12 Jun 2019 01:40:32 -0700 (PDT)
 Received: from dell ([2a01:4c8:f:9687:619a:bb91:d243:fc8b])
-        by smtp.gmail.com with ESMTPSA id l190sm3685652wml.25.2019.06.12.01.40.17
+        by smtp.gmail.com with ESMTPSA id o15sm22067448wrw.42.2019.06.12.01.40.31
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Jun 2019 01:40:18 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 09:40:14 +0100
+        Wed, 12 Jun 2019 01:40:32 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 09:40:29 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Guenter Roeck <groeck@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 5/7] dt-bindings: Add binding for cros-ec-rpmsg.
-Message-ID: <20190612084014.GA4797@dell>
+Subject: Re: [PATCH v10 6/7] mfd: cros_ec: differentiate SCP from EC by
+ feature bit.
+Message-ID: <20190612084029.GB4797@dell>
 References: <20190603034529.154969-1-pihsun@chromium.org>
- <20190603034529.154969-6-pihsun@chromium.org>
+ <20190603034529.154969-7-pihsun@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190603034529.154969-6-pihsun@chromium.org>
+In-Reply-To: <20190603034529.154969-7-pihsun@chromium.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -86,19 +83,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, 03 Jun 2019, Pi-Hsun Shih wrote:
 
-> Add a DT binding documentation for ChromeOS EC driver over rpmsg.
+> System Companion Processor (SCP) is Cortex M4 co-processor on some
+> MediaTek platform that can run EC-style firmware. Since a SCP and EC
+> would both exist on a system, and use the cros_ec_dev driver, we need to
+> differentiate between them for the userspace, or they would both be
+> registered at /dev/cros_ec, causing a conflict.
 > 
 > Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > ---
-> Changes from v9, v8, v7, v6:
+> Changes from v9:
+>  - Remove changes in cros_ec_commands.h (which is sync in
+>    https://lore.kernel.org/lkml/20190518063949.GY4319@dell/T/).
+> 
+> Changes from v8:
 >  - No change.
 > 
-> Changes from v5:
->  - New patch.
+> Changes from v7:
+>  - Address comments in v7.
+>  - Rebase the series onto https://lore.kernel.org/patchwork/patch/1059196/.
+> 
+> Changes from v6, v5, v4, v3, v2:
+>  - No change.
+> 
+> Changes from v1:
+>  - New patch extracted from Patch 5.
 > ---
->  Documentation/devicetree/bindings/mfd/cros-ec.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  drivers/mfd/cros_ec_dev.c   | 10 ++++++++++
+>  include/linux/mfd/cros_ec.h |  1 +
+>  2 files changed, 11 insertions(+)
 
 Applied, thanks.
 
