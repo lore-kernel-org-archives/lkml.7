@@ -2,90 +2,216 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C94FC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5A4C46477
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30AB7208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:23:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pu7FtOXG"
+	by mail.kernel.org (Postfix) with ESMTP id 84D9B2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:25:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560338716;
+	bh=+0wj7Dx/8wSBQOaGinRuo3t/vNRK5KIOTXl5RuAk9ZU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=10m9V/FwglxOpvMPXlpEAywR5OvRCAjvgS/BbmHlBSLXjjkK6hCj15H1pau1lI3g7
+	 C9QlXaBDD4QEhopWuJPMMxNhVwhn2rxSczW8vxZ8K2nQ7JXrHVld0NR2oslWDPpUCy
+	 EpPHc+7zYyZCVTVwEh4DoY7o/tWv+K9es0Mooihk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438166AbfFLLXy (ORCPT
+        id S2408999AbfFLLZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:23:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53042 "EHLO
+        Wed, 12 Jun 2019 07:25:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53158 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725771AbfFLLXx (ORCPT
+        with ESMTP id S2406101AbfFLLZP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:23:53 -0400
+        Wed, 12 Jun 2019 07:25:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=KJAXvYM0DI4vnD/0tu+larrshBV1A0aACdJmWI9kxzw=; b=pu7FtOXG6wwPz8NJqGleP0ENqZ
-        mWOWq7bfIS7I5pJndBO7Iorv4+OVLhztJH0MIESlmLmmGgHrX5hLbLEBOu5/+LynDGtoTdbcUkwHz
-        m+0nmPp8W2Zntos4QTutZ9PdRPfjOaERnezAPGG3G6HwOydPr0nIyh6ofXteGyBhSrbeCM90amEhl
-        OvRad6uKCL5pbwCDcWfUThMqxLI35Q+Iv2FUvjxoK6yPof3pP/uGWUbgh7SyFzGn2D06ZiXnMuLmo
-        FR8QqLtcf0RpwhAoW7YZQpMmHjkcYzS44RCzNLkzUQGIM1bRdNtGmin0BBuQtePw75gHO3CRPmO21
-        BHvzeyqQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hb1M6-0005io-1P; Wed, 12 Jun 2019 11:23:50 +0000
-Date:   Wed, 12 Jun 2019 04:23:50 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thellstrom@vmwopensource.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-graphics-maintainer@vmware.com, pv-drivers@vmware.com,
-        linux-kernel@vger.kernel.org, nadav.amit@gmail.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>
-Subject: Re: [PATCH v5 3/9] mm: Add write-protect and clean utilities for
- address space ranges
-Message-ID: <20190612112349.GA20226@infradead.org>
-References: <20190612064243.55340-1-thellstrom@vmwopensource.org>
- <20190612064243.55340-4-thellstrom@vmwopensource.org>
+        bh=BUi1t7YRmAixbRwRjqsMqD3iniMSUAyJOwWKf84JW1w=; b=px2Q8wWPFHBHWITcipeaKID/NN
+        4a43C0swHjzm3uhvc0S3ur82oFBD9NVSoldQtLaP4Yum9TzLA2GA2pY5K4W6DOcpPwQBs53vvus8b
+        MZIhd5RhAdcbw3CDiYuSyjKu4ruItmDClEc7SmcNPd18CO9URVwmCsvjnBzPHZVYv/twpEeWAhiAn
+        zOfKSYAkPFRtQDm+dMXFtyoKU9q4rKuWgF7DX3EIoRLrCRMizEFf1EI8IDdEfOsaePimyPPnG1ywN
+        QpLg3Vjgk3MeDh7mUPHHEXrQ6dzYa+onjUvF8wtjgmZS+P8nX/WT++4ZnaX5Pb2mTfdZTppJkOTW1
+        mckely1w==;
+Received: from 177.41.119.178.dynamic.adsl.gvt.net.br ([177.41.119.178] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hb1NS-000769-6J; Wed, 12 Jun 2019 11:25:14 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hb1NO-0005nn-Bb; Wed, 12 Jun 2019 08:25:10 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Media Mailing List <linux-media@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ruslan Babayev <ruslan@babayev.com>,
+        Andrew de Quincey <adq_dvb@lidskialf.net>,
+        Michael Buesch <m@bues.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH] media: tua6100: Remove some ugly defines
+Date:   Wed, 12 Jun 2019 08:25:03 -0300
+Message-Id: <fa93fecaa9d8e33f7d3b335872e9082893b775ae.1560338665.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190612081929.GA1687@kunai>
+References: <20190612081929.GA1687@kunai>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190612064243.55340-4-thellstrom@vmwopensource.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 08:42:37AM +0200, Thomas Hellström (VMware) wrote:
-> From: Thomas Hellstrom <thellstrom@vmware.com>
-> 
-> Add two utilities to a) write-protect and b) clean all ptes pointing into
-> a range of an address space.
-> The utilities are intended to aid in tracking dirty pages (either
-> driver-allocated system memory or pci device memory).
-> The write-protect utility should be used in conjunction with
-> page_mkwrite() and pfn_mkwrite() to trigger write page-faults on page
-> accesses. Typically one would want to use this on sparse accesses into
-> large memory regions. The clean utility should be used to utilize
-> hardware dirtying functionality and avoid the overhead of page-faults,
-> typically on large accesses into small memory regions.
+As reported by Stephen:
 
-Please use EXPORT_SYMBOL_GPL, just like for apply_to_page_range and
-friends.  Also in general new core functionality like this should go
-along with the actual user, we don't need to repeat the hmm disaster.
+> After merging the i2c tree, today's linux-next build (x86_64 allmodconfig)
+> produced this warning:
+>
+> drivers/media/dvb-frontends/tua6100.c: In function 'tua6100_set_params':
+> drivers/media/dvb-frontends/tua6100.c:71: warning: "_P" redefined
+>  #define _P 32
+>
+> In file included from include/acpi/platform/aclinux.h:54,
+>                  from include/acpi/platform/acenv.h:152,
+>                  from include/acpi/acpi.h:22,
+>                  from include/linux/acpi.h:21,
+>                  from include/linux/i2c.h:17,
+>                  from drivers/media/dvb-frontends/tua6100.h:22,
+>                  from drivers/media/dvb-frontends/tua6100.c:24:
+> include/linux/ctype.h:14: note: this is the location of the previous definition
+>  #define _P 0x10 /* punct */
+>
+> Exposed by commit
+>
+>   5213d7efc8ec ("i2c: acpi: export i2c_acpi_find_adapter_by_handle")
+>
+> Since that included <linux/acpi.h> from <linux/i2c.h>
+>
+> Originally introduced by commit
+>
+>   00be2e7c6415 ("V4L/DVB (4606): Add driver for TUA6100")
+>
+> The _P in <linux/ctype.h> has existed since before git.
+
+The addition of include <linux/ctype.h> at the I2C code caused a
+breakage at the tua6100 driver. The reason is that the code there
+used defines for 3 parameters used at the calculus for the
+divide ratio.
+
+In thesis, those are board-dependent, but, as there's just one
+driver using it (ttpci/budget-av), there was no need to make
+the code more generic. While it sounds unlikely that this old
+DVB-S frontend would ever be used on new projects, one might
+some day come with a variant using a different configuration. So,
+let's do the right thing and store those values at its private
+struct.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ drivers/media/dvb-frontends/tua6100.c | 38 ++++++++++++++++-----------
+ 1 file changed, 23 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/media/dvb-frontends/tua6100.c b/drivers/media/dvb-frontends/tua6100.c
+index b233b7be0b84..2990eb3fd475 100644
+--- a/drivers/media/dvb-frontends/tua6100.c
++++ b/drivers/media/dvb-frontends/tua6100.c
+@@ -31,11 +31,24 @@
+ 
+ #include "tua6100.h"
+ 
++/**
++ * struct tua6100_priv - tuner's private data
++ *
++ * @i2c_address:	I2C address
++ * @i2c:		pointer to struct i2c_adapter
++ * @frequency:		tuned frequency
++ * @prescaler_div:	divide ratio of the prescaler (32 or 64)
++ * @ref_div:		reference frequency divider
++ * @ref_inp:		reference frequency input (XTAL osc)
++ */
+ struct tua6100_priv {
+ 	/* i2c details */
+ 	int i2c_address;
+ 	struct i2c_adapter *i2c;
+ 	u32 frequency;
++	int prescaler_div;
++	int ref_div;
++	u32 ref_inp;
+ };
+ 
+ static void tua6100_release(struct dvb_frontend *fe)
+@@ -75,10 +88,6 @@ static int tua6100_set_params(struct dvb_frontend *fe)
+ 	struct i2c_msg msg1 = { .addr = priv->i2c_address, .flags = 0, .buf = reg1, .len = 4 };
+ 	struct i2c_msg msg2 = { .addr = priv->i2c_address, .flags = 0, .buf = reg2, .len = 3 };
+ 
+-#define _R 4
+-#define _P 32
+-#define _ri 4000000
+-
+ 	// setup register 0
+ 	if (c->frequency < 2000000)
+ 		reg0[1] = 0x03;
+@@ -91,14 +100,14 @@ static int tua6100_set_params(struct dvb_frontend *fe)
+ 	else
+ 		reg1[1] = 0x0c;
+ 
+-	if (_P == 64)
++	if (priv->prescaler_div == 64)
+ 		reg1[1] |= 0x40;
+ 	if (c->frequency >= 1525000)
+ 		reg1[1] |= 0x80;
+ 
+ 	// register 2
+-	reg2[1] = (_R >> 8) & 0x03;
+-	reg2[2] = _R;
++	reg2[1] = (priv->ref_div >> 8) & 0x03;
++	reg2[2] = priv->ref_div;
+ 	if (c->frequency < 1455000)
+ 		reg2[1] |= 0x1c;
+ 	else if (c->frequency < 1630000)
+@@ -110,19 +119,15 @@ static int tua6100_set_params(struct dvb_frontend *fe)
+ 	 * The N divisor ratio (note: c->frequency is in kHz, but we
+ 	 * need it in Hz)
+ 	 */
+-	prediv = (c->frequency * _R) / (_ri / 1000);
+-	div = prediv / _P;
++	prediv = (c->frequency * priv->ref_div) / (priv->ref_inp / 1000);
++	div = prediv / priv->prescaler_div;
+ 	reg1[1] |= (div >> 9) & 0x03;
+ 	reg1[2] = div >> 1;
+ 	reg1[3] = (div << 7);
+-	priv->frequency = ((div * _P) * (_ri / 1000)) / _R;
++	priv->frequency = ((div * priv->prescaler_div) * (priv->ref_inp / 1000)) / priv->ref_div;
+ 
+ 	// Finally, calculate and store the value for A
+-	reg1[3] |= (prediv - (div*_P)) & 0x7f;
+-
+-#undef _R
+-#undef _P
+-#undef _ri
++	reg1[3] |= (prediv - (div * priv->prescaler_div)) & 0x7f;
+ 
+ 	if (fe->ops.i2c_gate_ctrl)
+ 		fe->ops.i2c_gate_ctrl(fe, 1);
+@@ -189,6 +194,9 @@ struct dvb_frontend *tua6100_attach(struct dvb_frontend *fe, int addr, struct i2
+ 
+ 	priv->i2c_address = addr;
+ 	priv->i2c = i2c;
++	priv->ref_div = 4;
++	priv->prescaler_div = 32;
++	priv->ref_inp = 4000000;
+ 
+ 	memcpy(&fe->ops.tuner_ops, &tua6100_tuner_ops, sizeof(struct dvb_tuner_ops));
+ 	fe->tuner_priv = priv;
+-- 
+2.21.0
+
