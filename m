@@ -2,154 +2,120 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6254C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9937C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB2492053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:16:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iGzjYuEH"
+	by mail.kernel.org (Postfix) with ESMTP id B8ACF217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:16:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbfFMRQf (ORCPT
+        id S1728379AbfFMRQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:16:35 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34791 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfFLV2P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 17:28:15 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c85so10428496pfc.1;
-        Wed, 12 Jun 2019 14:28:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Abt4RqBWuzAO1Yg7V0VfRrHk6H4CsqP60Bl2BbL+bIU=;
-        b=iGzjYuEH25ssl+vNe1uoZW1vYfSuEXO14VWjxhsiBZLLboXPoDynBezbpz0EslhzB3
-         rn8EFOct68qfYYoHPULJWeMwbO/Pp0QDdromop/QBFNekA3t5VqFm8Dr/g9tA7QGOcX3
-         dee8GqRnSpz7vn1eHQBsUVYTuQrvnk1tbQEs3ORL2UHOhbHi9HTy6PCPZFDvWbOPMmvA
-         QL1FOH51wcP/LqcusVIepqk1jUG3jB04Tio5oesDzeuoFwvfGAPLqmDLMMoA9T257Hz9
-         ww/w9X4FE3CI5At2gCo9YZ8CWpduUVUsD8oeGzkolPInbEnGtMf0lCjAmjEnYr7dYnh0
-         uEgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Abt4RqBWuzAO1Yg7V0VfRrHk6H4CsqP60Bl2BbL+bIU=;
-        b=OJCa1nS2txAAMnFGBOd5hKX6yFk8tWPW5S2YNBWW8r1YQecte4OP/ZPhYruRKK5G6T
-         MLKk2gIn4s2Y3ieuQJjMQn23uFQuGDzVH3GSXJvpU9K1SYhFi0adBv5sUrOUXNEL9fkI
-         HXjiLw7vUeZ8dk5U5+I591wtwha9dj31RAwsf5oCgUAk+Yz8hUPXa01auvfVSlsyOL3K
-         CkMsB5O4ydxBu95pQvqe7PQ1zJJoyOJrlegihMPALhRsfPI3Q6+Q/Qu9lGUA0hTbiSOQ
-         39CmP9d9kkdnuTZcqXstBJlSJv2XPNDBwJiI7rsFAJ6SkJCfwxDUv0jJoEIO98ZKg/LE
-         W/xg==
-X-Gm-Message-State: APjAAAXzWihryUmrKLXqaHBLaOH2yj507Rpm+qaaNclQSH6L2U+kCSK2
-        /a2XVL432wWmMm+913xsmw0=
-X-Google-Smtp-Source: APXvYqxju0zMxwWj6t3ggokCgevi7OmMx7JgjO129AL1coGiJqeul2Ck0JeZytprVKHsvjfsmx2eaw==
-X-Received: by 2002:a65:620d:: with SMTP id d13mr27469784pgv.109.1560374894898;
-        Wed, 12 Jun 2019 14:28:14 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id u97sm336121pjb.26.2019.06.12.14.28.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 14:28:14 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-        jikos@kernel.org, hdegoede@redhat.com, lee.jones@linaro.org,
-        xnox@ubuntu.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v6 5/5] arm64: dts: qcom: Add Asus NovaGo TP370QL
-Date:   Wed, 12 Jun 2019 14:28:09 -0700
-Message-Id: <20190612212809.32350-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
-References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
+        Thu, 13 Jun 2019 13:16:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46146 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726244AbfFLV32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 17:29:28 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 803E42F8BC8;
+        Wed, 12 Jun 2019 21:29:28 +0000 (UTC)
+Received: from krava (ovpn-204-42.brq.redhat.com [10.40.204.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D907A600CC;
+        Wed, 12 Jun 2019 21:29:26 +0000 (UTC)
+Date:   Wed, 12 Jun 2019 23:29:25 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Laura Abbott <labbott@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: perf build failure with newer glibc headers
+Message-ID: <20190612212925.GB14171@krava>
+References: <4c0a4264-7142-2e6d-540d-aa354700e0bb@redhat.com>
+ <20190612205611.GA2149@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612205611.GA2149@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 12 Jun 2019 21:29:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the initial DT for the Asus NovaGo TP370QL laptop.  Supported
-functionality includes USB (host), microSD-card, keyboard, and trackpad.
+On Wed, Jun 12, 2019 at 05:56:11PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Jun 12, 2019 at 03:23:12PM -0400, Laura Abbott escreveu:
+> > Hi,
+> > 
+> > While doing some build experiments, I found a compile failure with perf and jvmti:
+> > 
+> > BUILDSTDERR:   gcc -Wp,-MD,./.xsk.o.d -Wp,-MT,xsk.o -O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions -fstack-protector-strong -grecord-gcc-jvmti/jvmti_agent.c:48:21: error: static declaration of 'gettid' follows non-static declaration
+> > BUILDSTDERR:    48 | static inline pid_t gettid(void)
+> > BUILDSTDERR:       |                     ^~~~~~
+> > BUILDSTDERR: In file included from /usr/include/unistd.h:1170,
+> > BUILDSTDERR:                  from jvmti/jvmti_agent.c:33:
+> > BUILDSTDERR: /usr/include/bits/unistd_ext.h:40:16: note: previous declaration of 'gettid' was here
+> > BUILDSTDERR:    40 | extern __pid_t gettid (void) __THROW;
+> > BUILDSTDERR:       |                ^~~~~~
+> > 
+> > 
+> > This is with the newer glibc headers that came into Fedora earlier this week
+> > (glibc-2.29.9000-27.fc31)  It looks like the newer headers now define gettid
+> > so the in file gettid no longer works. Note this was a custom build with
+> > jvmti enabled as regular Fedora doesn't have it enabled which is why this
+> > wasn't reported elsewhere.
+> > 
+> > I don't know enough about either the glibc headers or perf to make a suggestion
+> > on how to fix this but I'm happy to test.
+> 
+> Bummer, I haven't noticed this because my fedora:rawhide perf build test
+> container wasn't building the jvmti code:
+> 
+> Makefile.config:925: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+> 
+> i.e.:
+> 
+> [perfbuilder@c0326e8b6511 perf]$ cat /tmp/build/perf/feature/test-jvmti.make.output 
+> test-jvmti.c:2:10: fatal error: jvmti.h: No such file or directory
+>     2 | #include <jvmti.h>
+>       |          ^~~~~~~~~
+> compilation terminated.
+> [perfbuilder@c0326e8b6511 perf]$
+> 
+> Installing it I get:
+> 
+> [root@2d7fe307ad20 perf]# rpm -qa | grep openjdk
+> java-1.8.0-openjdk-1.8.0.212.b04-4.fc31.x86_64
+> java-1.8.0-openjdk-headless-1.8.0.212.b04-4.fc31.x86_64
+> java-1.8.0-openjdk-devel-1.8.0.212.b04-4.fc31.x86_64
+> [root@2d7fe307ad20 perf]# cat
+> /tmp/build/perf/feature/test-jvmti.make.output 
+> [root@2d7fe307ad20 perf]# ls -la /tmp/build/perf/feature/test-jvmti.bin 
+> -rwxr-xr-x. 1 root root 21592 Jun 12 20:48
+> /tmp/build/perf/feature/test-jvmti.bin
+> [root@2d7fe307ad20 perf]# 
+> 
+> And reproduce the problem you reported:
+> 
+> jvmti/jvmti_agent.c:48:21: error: static declaration of ‘gettid’ follows
+> non-static declaration
+>    48 | static inline pid_t gettid(void)
+>       |                     ^~~~~~
+> In file included from /usr/include/unistd.h:1170,
+>                  from jvmti/jvmti_agent.c:33:
+> 
+> So, we'll have to have a feature test, that defines some HAVE_GETTID
+> that then ifdefs out our inline copy, working on it.
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- arch/arm64/boot/dts/qcom/Makefile             |  1 +
- .../dts/qcom/msm8998-asus-novago-tp370ql.dts  | 47 +++++++++++++++++++
- 2 files changed, 48 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-asus-novago-tp370ql.dts
+ok, I did not see your email before I posted my reply,
+feature test is better, of course ;-)
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 76436f33a013..5cd1844a6d33 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-asus-novago-tp370ql.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-hp-envy-x2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
-diff --git a/arch/arm64/boot/dts/qcom/msm8998-asus-novago-tp370ql.dts b/arch/arm64/boot/dts/qcom/msm8998-asus-novago-tp370ql.dts
-new file mode 100644
-index 000000000000..db5821be1e2f
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8998-asus-novago-tp370ql.dts
-@@ -0,0 +1,47 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
-+
-+/dts-v1/;
-+
-+#include "msm8998-clamshell.dtsi"
-+
-+/ {
-+	model = "Asus NovaGo TP370QL";
-+	compatible = "asus,novago-tp370ql", "qcom,msm8998";
-+};
-+
-+&blsp1_i2c6 {
-+	status = "okay";
-+
-+	touchpad@15 {
-+		compatible = "hid-over-i2c";
-+		interrupt-parent = <&tlmm>;
-+		interrupts = <0x7b IRQ_TYPE_LEVEL_LOW>;
-+		reg = <0x15>;
-+		hid-descr-addr = <0x0001>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&touchpad>;
-+	};
-+
-+	keyboard@3a {
-+		compatible = "hid-over-i2c";
-+		interrupt-parent = <&tlmm>;
-+		interrupts = <0x25 IRQ_TYPE_LEVEL_LOW>;
-+		reg = <0x3a>;
-+		hid-descr-addr = <0x0001>;
-+	};
-+};
-+
-+&sdhc2 {
-+	cd-gpios = <&tlmm 95 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&tlmm {
-+	touchpad: touchpad {
-+		config {
-+			pins = "gpio123";
-+			bias-pull-up;
-+		};
-+	};
-+};
--- 
-2.17.1
-
+jirka
