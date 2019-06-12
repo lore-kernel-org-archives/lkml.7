@@ -2,199 +2,92 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E405C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39356C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DEDF215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:00:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="B5BkLt/H"
+	by mail.kernel.org (Postfix) with ESMTP id 121E320B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439577AbfFLOA2 (ORCPT
+        id S2392018AbfFLOBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:00:28 -0400
-Received: from mail-eopbgr80042.outbound.protection.outlook.com ([40.107.8.42]:30862
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2437126AbfFLOA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:00:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pL5YOX49NOqB4boHyj+PKa2f+fkPMHlbFJBR2N04Juw=;
- b=B5BkLt/H78P+u/kf41k4gCeNIPeJf2pbaAmAnOUzE59JDsp+4wkXcSuITOb8XuW93j0/1u6DMMEoaEGjklIBQR+obmcN3Xl1v8B9LOX7iHxvU6tJVKbmaPdiW7Or7xvhh7eru+O3QV4XAFqwJaK8LX8z+ZheTuRxOFxVLnWvdlw=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB2910.eurprd04.prod.outlook.com (10.175.23.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.15; Wed, 12 Jun 2019 13:59:44 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1987.012; Wed, 12 Jun 2019
- 13:59:44 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v2 0/4] Additional fixes on Talitos driver
-Thread-Topic: [PATCH v2 0/4] Additional fixes on Talitos driver
-Thread-Index: AQHVIGOH8ah5xSLD4UOplfJkXECTiA==
-Date:   Wed, 12 Jun 2019 13:59:44 +0000
-Message-ID: <VI1PR0402MB348583D36921F9DEC4E0DA2698EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <cover.1560263641.git.christophe.leroy@c-s.fr>
- <VI1PR0402MB34853CAF031426F4183FE29B98ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <0cb7c534-6e48-5284-899c-c0ef85c3c126@c-s.fr>
- <VI1PR0402MB3485AD965F36709F27EFB72698ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <58787543-76d3-e0db-9517-ccd0f6494d85@c-s.fr>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0cbd460c-601b-4372-a7da-08d6ef3e3932
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2910;
-x-ms-traffictypediagnostic: VI1PR0402MB2910:
-x-ms-exchange-purlcount: 3
-x-microsoft-antispam-prvs: <VI1PR0402MB2910B74A57FEAADC494D4E0C98EC0@VI1PR0402MB2910.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:605;
-x-forefront-prvs: 0066D63CE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(39860400002)(136003)(396003)(199004)(189003)(14454004)(26005)(110136005)(52536014)(7696005)(73956011)(66066001)(86362001)(229853002)(2906002)(186003)(53936002)(6246003)(54906003)(66556008)(44832011)(99286004)(76116006)(446003)(76176011)(476003)(68736007)(53546011)(8936002)(66476007)(66946007)(486006)(7736002)(66446008)(305945005)(102836004)(6506007)(66574012)(256004)(55016002)(14444005)(25786009)(74316002)(966005)(5660300002)(71200400001)(9686003)(81156014)(71190400001)(6116002)(478600001)(6436002)(6306002)(8676002)(81166006)(64756008)(316002)(3846002)(4326008)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2910;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: r2q995+14KFssPWnwPBLGAsNTQtHOKqjEa8PS6yxxfxl3Y1TeL73R1C/ksb1Go07rg7xMkDbFAduC38c0f6D2Lzi2rn4Ch1Rrtx4qsUmiCag7ikwtqaoY/6d1GaqegzIgWQiDoKWOKgo8bzG8pLClXTZbhsSyVJF2GGxj0IDc05xa1JDRJowrcwwHaE6wAz7ESIZldIMWew2hy0Io4okmQPVpnCn8XdER2aAD5+XIpppLURbkgrDoRjWwZI1KPFmtKYFKmtVqv+EjG6cgPAkLh8HwUWoObbJqRzOikRVtZxVS4P+4V7Bez2VC6UbcSi2YfxHtqZ3HGTb477oH03dqIVh+XGd1/p1ZP5147KxruX+8Xn9b/l8C/1992jePPmYJqTaUPxDoLgGu1uBr0+t4QRb2RdtMR2WL1HSu7aS1D8=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 12 Jun 2019 10:01:23 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:38155 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389885AbfFLOBX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:01:23 -0400
+Received: by mail-qk1-f195.google.com with SMTP id a27so10276102qkk.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 07:01:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1swvZXHALFzo5B0B5qOatWzKoRBzeWa4TX1TTtEgsXk=;
+        b=czY+BBQ5W/klt7EaR46IQcTifLqUeV/H5Zq6JZmHlgxdSmtQlt35olXZsMENKX8TEM
+         u0+vN09Gx+n8vl5nWE64ba+ZGkQ3qGmU6U7QsdJaBz4Czp3MULBJPpHPu6ORS+ttxXX2
+         27Rd94/ZHM3OIhPMNW5OpVF6/gv9jqwtOQ+opW3KdNXsX6+9VVWzF/6TB+CHXH+6JT55
+         dpkly07V9A4CYNatuPGZ5dkWhGnaPVcy0864qoY409BjFpXbnIshHOBTvVp4YFrJX7jP
+         HY7LCBYvqBS9h3UYMiRyPGaxgYc7U/aDqkilRz+JqszKNZNZFg+cv7j1+2Qnx8foOqUS
+         tCpw==
+X-Gm-Message-State: APjAAAU6oAgcLZX5CD54klI5j1tN8eBp3HGPlZih/sa150jv0JiCOaca
+        g8VzYs4/xGuzoNa1DDsNPj7ziZTKOeYnYB6PRsQ=
+X-Google-Smtp-Source: APXvYqzbvgtvFbqZUuKDRi0jv3yrRi2Q/SNQBnsYqrQZCCDBQYbZ+fVsnRCSrfxRCPbz9y4EAFToxFSIGn4jvsj7hrw=
+X-Received: by 2002:a37:a4d3:: with SMTP id n202mr64562583qke.84.1560348081942;
+ Wed, 12 Jun 2019 07:01:21 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cbd460c-601b-4372-a7da-08d6ef3e3932
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 13:59:44.4326
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2910
+References: <CAHmME9qBDtO1vJrA2Ch3SQigsu435wR7Q3vTm_3R=u=BE49S-Q@mail.gmail.com>
+ <alpine.DEB.2.21.1906112257120.2214@nanos.tec.linutronix.de>
+ <20190612090257.GF3436@hirez.programming.kicks-ass.net> <CAHmME9obwzZ5x=p3twDfNYux+kg0h4QAGe0ePAkZ2KqvguBK3g@mail.gmail.com>
+In-Reply-To: <CAHmME9obwzZ5x=p3twDfNYux+kg0h4QAGe0ePAkZ2KqvguBK3g@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 12 Jun 2019 16:01:04 +0200
+Message-ID: <CAK8P3a15NTV=njOjz-ccYL8=_q_MdEru0A+jeE=f7ufUTOOTgw@mail.gmail.com>
+Subject: Re: infinite loop in read_hpet from ktime_get_boot_fast_ns
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        Waiman Long <longman@redhat.com>, X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/2019 8:52 AM, Christophe Leroy wrote:=0A=
-> =0A=
-> =0A=
-> Le 11/06/2019 =E0 18:30, Horia Geanta a =E9crit=A0:=0A=
->> On 6/11/2019 6:40 PM, Christophe Leroy wrote:=0A=
->>>=0A=
->>>=0A=
->>> Le 11/06/2019 =E0 17:37, Horia Geanta a =E9crit=A0:=0A=
->>>> On 6/11/2019 5:39 PM, Christophe Leroy wrote:=0A=
->>>>> This series is the last set of fixes for the Talitos driver.=0A=
->>>>>=0A=
->>>>> We now get a fully clean boot on both SEC1 (SEC1.2 on mpc885) and=0A=
->>>>> SEC2 (SEC2.2 on mpc8321E) with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:=0A=
->>>>>=0A=
->>>> I am getting below failures on a sec 3.3.2 (p1020rdb) for hmac(sha384)=
- and=0A=
->>>> hmac(sha512):=0A=
->>>=0A=
->>> Is that new with this series or did you already have it before ?=0A=
->>>=0A=
->> Looks like this happens with or without this series.=0A=
-> =0A=
-> Found the issue, that's in =0A=
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commi=
-t/?id=3Db8fbdc2bc4e71b62646031d5df5f08aafe15d5ad=0A=
-> =0A=
-> CONFIG_CRYPTO_DEV_TALITOS_SEC2 should be CONFIG_CRYPTO_DEV_TALITOS2 inste=
-ad.=0A=
-> =0A=
-> Just sent a patch to fix it.=0A=
-> =0A=
-Thanks, I've tested it and the hmac failures go away.=0A=
-=0A=
-However, testing gets stuck.=0A=
-Seems there is another issue lurking in the driver.=0A=
-=0A=
-Used cryptodev-2.6/master with the following on top:=0A=
-crypto: testmgr - add some more preemption points=0A=
-	https://patchwork.kernel.org/patch/10972337/=0A=
-crypto: talitos - fix max key size for sha384 and sha512=0A=
-	https://patchwork.kernel.org/patch/10988473/=0A=
-=0A=
-[...]=0A=
-alg: skcipher: skipping comparison tests for ecb-3des-talitos because ecb(d=
-es3_ede-generic) is unavailable=0A=
-INFO: task cryptomgr_test:314 blocked for more than 120 seconds.=0A=
-      Not tainted 5.2.0-rc1-g905bfd415e8a #1=0A=
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.=
-=0A=
-cryptomgr_test  D    0   314      2 0x00000800=0A=
-Call Trace:=0A=
-[e78337e0] [00000004] 0x4 (unreliable)=0A=
-[e78338a8] [c08a6e5c] __schedule+0x20c/0x4d4=0A=
-[e78338f8] [c08a7158] schedule+0x34/0xc8=0A=
-[e7833908] [c08aa5ec] schedule_timeout+0x1d4/0x350=0A=
-[e7833958] [c08a7be4] wait_for_common+0xa0/0x164=0A=
-[e7833998] [c03a7b14] do_ahash_op+0xa4/0xc4=0A=
-[e78339b8] [c03aba00] test_ahash_vec_cfg+0x188/0x5e4=0A=
-[e7833aa8] [c03ac1c8] test_hash_vs_generic_impl+0x1b0/0x2b4=0A=
-[e7833de8] [c03ac498] __alg_test_hash+0x1cc/0x2d0=0A=
-[e7833e28] [c03a9fb4] alg_test.part.37+0x8c/0x3ac=0A=
-[e7833ef8] [c03a54d0] cryptomgr_test+0x4c/0x54=0A=
-[e7833f08] [c006c410] kthread+0xf8/0x124=0A=
-[e7833f38] [c001227c] ret_from_kernel_thread+0x14/0x1c=0A=
-=0A=
-addr2line on c03aba00 points to crypto/testmgr.c:1335=0A=
-=0A=
-   1327)  if (cfg->finalization_type =3D=3D FINALIZATION_TYPE_DIGEST ||=0A=
-   1328)      vec->digest_error) {=0A=
-   1329)          /* Just using digest() */=0A=
-   1330)          ahash_request_set_callback(req, req_flags, crypto_req_don=
-e,=0A=
-   1331)                                     &wait);=0A=
-   1332)          ahash_request_set_crypt(req, tsgl->sgl, result, vec->psiz=
-e);=0A=
-   1333)          err =3D do_ahash_op(crypto_ahash_digest, req, &wait, cfg-=
->nosimd);=0A=
-   1334)          if (err) {=0A=
--> 1335)                  if (err =3D=3D vec->digest_error)=0A=
-   1336)                          return 0;=0A=
-   1337)                  pr_err("alg: ahash: %s digest() failed on test ve=
-ctor %s; expected_error=3D%d, actual_error=3D%d, cfg=3D\"%s\"\n",=0A=
-   1338)                         driver, vec_name, vec->digest_error, err,=
-=0A=
-   1339)                         cfg->name);=0A=
-   1340)                  return err;=0A=
-   1341)          }=0A=
-   1342)          if (vec->digest_error) {=0A=
-   1343)                  pr_err("alg: ahash: %s digest() unexpectedly succ=
-eeded on test vector %s; expected_error=3D%d, cfg=3D\"%s\"\n",=0A=
-   1344)                         driver, vec_name, vec->digest_error, cfg->=
-name);=0A=
-   1345)                  return -EINVAL;=0A=
-   1346)          }=0A=
-   1347)          goto result_ready;=0A=
-   1348)  }=0A=
-=0A=
-Seems that for some reason driver does not receive the interrupt from HW,=
-=0A=
-thus completion callback does not run.=0A=
-=0A=
-Tried with or without current patch series, no change in behaviour.=0A=
-=0A=
-If you cannot reproduce and don't have any idea, I'll try the hard way=0A=
-(git bisect).=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+On Wed, Jun 12, 2019 at 11:46 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> On Wed, Jun 12, 2019 at 11:03 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > How quasi? Do the comments in kernel/sched/clock.c look like something
+> > you could use?
+> >
+> > As already mentioned in the other tasks, anything ktime will be
+> > horrifically crap when it ends up using the HPET, the code in
+> > kernel/sched/clock.c is a best effort to keep using TSC even when it is
+> > deemed unusable for timekeeping.
+>
+> Thanks for pointing that out. Indeed the HPET path is a bummer and I'd
+> like to just escape using ktime all together.
+>
+> In fact, my accuracy requirements are very lax. I could probably even
+> deal with an inaccuracy as huge as ~200 milliseconds. But what I do
+> need is 64-bit, so that it doesn't wrap, allowing me to compare two
+> stamps taken a long time apart, and for it to take into account sleep
+> time, like CLOCK_BOOTTIME does, which means get_jiffies_64() doesn't
+> fit the bill. I was under the impression that I could only get this
+> with ktime_get_boot & co, because those add the sleep offset.
+
+Documentation/core-api/timekeeping.rst describes the timekeeping
+interfaces. I think what you want here is ktime_get_coarse_boottime().
+
+Note that "coarse" means "don't access the hardware clocksource"
+here, which is faster than "fast", but less accurate.
+
+This is updated as often as "jiffies_64", but is in nanosecond resolution
+and takes suspended time into account.
+
+      Arnd
