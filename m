@@ -2,156 +2,147 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DB7C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459B4C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C085F208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B58D208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:03:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Au7VJqK1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RDAvMiYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408402AbfFLLDY (ORCPT
+        id S2408921AbfFLLDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:03:24 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39991 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406640AbfFLLDX (ORCPT
+        Wed, 12 Jun 2019 07:03:35 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39518 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406640AbfFLLDf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:03:23 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p184so6166928pfp.7
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 04:03:23 -0700 (PDT)
+        Wed, 12 Jun 2019 07:03:35 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x4so13761333wrt.6
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 04:03:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U+WRAXF2ARmkxSGAjp/c6etYCd0hTSbOs0DZi8MzR6Q=;
-        b=Au7VJqK1ojAhcfG23jRBnNIRm8KjejR34yLBYxx+tHyOH3UOEnqAeA+8NqPGB0xERC
-         iEkWFkgDGC2bVn5/OIaA4Iaj0a8vwuQDB61IL+0H9Fwkx9OFXo7fvyXQ9pDMhbYVG+Nt
-         NAfcfgs6HTAivxcJGzmU1GQcMJKjdgGsV4PVoEwVpmDo71FYYp7iRopdo3JqiipS6Pbm
-         g0FK+P1R3xn5BU9DYN7tw7p2D7DXBRHK9wtsmdaKDKErjouHvoT1Xsa2liBK45bWDlUw
-         nn9WdHLDyGhILUMAD8+oKvlF/Link+W8NA8UTm3/U+VTclr5XHE7a99we7HZ74tOwnVu
-         i1TQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fKEuXpKhwW6QYirKkEZUMz7KKtRy+gRE2kTuvjwe5Og=;
+        b=RDAvMiYL1/E12jVZRrvjScX/Ri1mztuZtwe0YjXLDoQGwJ9hsU9dFZTKzXhD6yrfAF
+         +vEPWD7W9C5F6bo8JKZBpBtEEDDsNrJ9BVvdiyOwNe+1OHwDE7+ylO2qqSI7KbSbM9bx
+         jdVCxvg4AKjGJ/Fjr53LH24cus/xugKFsCWba7KrOcHFzBhgwOhCWINDQ1wbVrY7OQyU
+         u/UBe878vavY48j4914n3YRLR28cDacRENJaFiMgeEIpJz5lpyZp9gAfovlXUsyR5wjr
+         MWMd4r+tDMlwHQ73jQuuohiLcBUV1aIw655M30SX/uocU5kw5+1XTSlofcoBzjy3TvBp
+         ry1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U+WRAXF2ARmkxSGAjp/c6etYCd0hTSbOs0DZi8MzR6Q=;
-        b=ehmFYPPQQ2VixHE4RPI36zhyfHS4d8xZLpM3PtkebIpO6HtloOfXuBvBb3fHc/RlZ5
-         O9zFNTQmjSxVsgKRtntgFMyhQ9W7OXpD35+ndtw0eljNg1UsuCbcSHUKFRMMSYu++RBM
-         QiezAFTSyHoZwxQdW4gxBK+EDoZzlaN1kEGqo+OQLpbsdz2LQPaCTRJQ2SdT4FV5aV2I
-         nIWy5dk9DzyA9D3dB6+uLuxOwBjzzoblBAQKtsvtKDq4DiXTyijEBUJ2lIcu+uhWfEos
-         vdoYsiZU/787cQw63OuKmUJ60ZtzJbGCJfPkREBMgyuuEODVfnFyTmfv9ahr5PE/pObP
-         +CHQ==
-X-Gm-Message-State: APjAAAVJXF2KQa3WGcAEYSP40C0yGn38I2j+p3CgN4NQcQQqpyz4DpPX
-        hdAKrWw2of/CBJHmQ4TZjb3WLou1bu7QOTZJF2W0jA==
-X-Google-Smtp-Source: APXvYqzWmxUbLyuGmwxZVdNOTNeaNzhhuMrhwfH+eyIre2cUwA02gvKzU0bgN3Cy01oTn1PiBJVwgb5PwMcG3EUFGXg=
-X-Received: by 2002:a65:64d9:: with SMTP id t25mr24706277pgv.130.1560337402181;
- Wed, 12 Jun 2019 04:03:22 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fKEuXpKhwW6QYirKkEZUMz7KKtRy+gRE2kTuvjwe5Og=;
+        b=albIqXR3p9CaU/zUGyJ1f4Q4KCq2biC1L+ajIan1qAS9pPzjXHR5Zx+WPe78oY2tDT
+         U6NcwSEoK5qCS7c/hT+jzxgodUbv0df4yINM7VCvCecDBSdAepuAtyRqOx206yXn/Eho
+         6HxIi0bo40Ae99Mjj9diT9kNnm3HvF60fwMZ5yyBvAOVY25vP5HyTkFxwDpoKvoUufkV
+         2YJ5u+iAxbbF+3moFSNNoh94KaXlg0qgOuxS2xu4lkG7FiOLvT6gjk6V5ETdz0oFWy4D
+         omEdVqQl+1aISSZKIHfN4QyFzuM/OEiUKItOIZzkTnpnFlD0TdPIMmm+/QN1Y0XyEXuZ
+         TdmA==
+X-Gm-Message-State: APjAAAW3GPDP3wwqU3C3Tpvo0swthSITaiEY0EYLoSJ2JfZOd8sJ23z4
+        6KhUQXvw+EgbISWLuQjIXpXJbg==
+X-Google-Smtp-Source: APXvYqz9I7iqIVvewoxRxb2oZe1pv8KmSN3qpUEh/9sDe+JKW7LsnC39cGT3KhS/4+zBqXYPYzFNtg==
+X-Received: by 2002:a5d:53ca:: with SMTP id a10mr41666584wrw.131.1560337412723;
+        Wed, 12 Jun 2019 04:03:32 -0700 (PDT)
+Received: from holly.lan ([185.80.132.160])
+        by smtp.gmail.com with ESMTPSA id j132sm7583807wmj.21.2019.06.12.04.03.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 04:03:31 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 12:03:25 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Brian Norris <briannorris@google.com>, Pavel Machek <pavel@ucw.cz>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Doug Anderson <dianders@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Guenter Roeck <groeck@google.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        kernel@collabora.com
+Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Message-ID: <20190612110325.xdn3q2aod52oalge@holly.lan>
+References: <20180208113032.27810-1-enric.balletbo@collabora.com>
+ <20180208113032.27810-4-enric.balletbo@collabora.com>
+ <20190607220947.GR40515@google.com>
+ <20190608210226.GB2359@xo-6d-61-c0.localdomain>
+ <20190610205233.GB137143@google.com>
+ <20190611104913.egsbwcedshjdy3m5@holly.lan>
+ <CA+ASDXOq7KQ+f4KMh0gaC9hvXaxBDdsbiJxiTbeOJ9ZVaeNJag@mail.gmail.com>
+ <20190611223019.GH137143@google.com>
 MIME-Version: 1.0
-References: <cover.1559580831.git.andreyknvl@google.com> <4327b260fb17c4776a1e3c844f388e4948cfb747.1559580831.git.andreyknvl@google.com>
- <20190610175326.GC25803@arrakis.emea.arm.com> <20190611145720.GA63588@arrakis.emea.arm.com>
- <CAAeHK+z5nSOOaGfehETzznNcMq5E5U+Eb1rZE16UVsT8FWT0Vg@mail.gmail.com> <20190611173903.4icrfmoyfvms35cy@mbp>
-In-Reply-To: <20190611173903.4icrfmoyfvms35cy@mbp>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 12 Jun 2019 13:03:10 +0200
-Message-ID: <CAAeHK+ysoiCSiCNrrvXqffK53WwBMHbc3bk69uU0vY0+R4_JvQ@mail.gmail.com>
-Subject: Re: [PATCH v16 02/16] arm64: untag user pointers in access_ok and __uaccess_mask_ptr
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        dri-devel@lists.freedesktop.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Kostya Serebryany <kcc@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611223019.GH137143@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 7:39 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
->
-> On Tue, Jun 11, 2019 at 07:09:46PM +0200, Andrey Konovalov wrote:
-> > On Tue, Jun 11, 2019 at 4:57 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > >
-> > > On Mon, Jun 10, 2019 at 06:53:27PM +0100, Catalin Marinas wrote:
-> > > > On Mon, Jun 03, 2019 at 06:55:04PM +0200, Andrey Konovalov wrote:
-> > > > > diff --git a/arch/arm64/include/asm/uaccess.h b/arch/arm64/include/asm/uaccess.h
-> > > > > index e5d5f31c6d36..9164ecb5feca 100644
-> > > > > --- a/arch/arm64/include/asm/uaccess.h
-> > > > > +++ b/arch/arm64/include/asm/uaccess.h
-> > > > > @@ -94,7 +94,7 @@ static inline unsigned long __range_ok(const void __user *addr, unsigned long si
-> > > > >     return ret;
-> > > > >  }
-> > > > >
-> > > > > -#define access_ok(addr, size)      __range_ok(addr, size)
-> > > > > +#define access_ok(addr, size)      __range_ok(untagged_addr(addr), size)
-> > > >
-> > > > I'm going to propose an opt-in method here (RFC for now). We can't have
-> > > > a check in untagged_addr() since this is already used throughout the
-> > > > kernel for both user and kernel addresses (khwasan) but we can add one
-> > > > in __range_ok(). The same prctl() option will be used for controlling
-> > > > the precise/imprecise mode of MTE later on. We can use a TIF_ flag here
-> > > > assuming that this will be called early on and any cloned thread will
-> > > > inherit this.
-> > >
-> > > Updated patch, inlining it below. Once we agreed on the approach, I
-> > > think Andrey can insert in in this series, probably after patch 2. The
-> > > differences from the one I posted yesterday:
-> > >
-> > > - renamed PR_* macros together with get/set variants and the possibility
-> > >   to disable the relaxed ABI
-> > >
-> > > - sysctl option - /proc/sys/abi/tagged_addr to disable the ABI globally
-> > >   (just the prctl() opt-in, tasks already using it won't be affected)
-> > >
-> > > And, of course, it needs more testing.
-> >
-> > Sure, I'll add it to the series.
-> >
-> > Should I drop access_ok() change from my patch, since yours just reverts it?
->
-> Not necessary, your patch just relaxes the ABI for all apps, mine
-> tightens it. You could instead move the untagging to __range_ok() and
-> rebase my patch accordingly.
+On Tue, Jun 11, 2019 at 03:30:19PM -0700, Matthias Kaehlcke wrote:
+> On Tue, Jun 11, 2019 at 09:55:30AM -0700, Brian Norris wrote:
+> > On Tue, Jun 11, 2019 at 3:49 AM Daniel Thompson
+> > <daniel.thompson@linaro.org> wrote:
+> > > This is a long standing flaw in the backlight interfaces. AFAIK generic
+> > > userspaces end up with a (flawed) heuristic.
+> > 
+> > Bingo! Would be nice if we could start to fix this long-standing flaw.
+> 
+> Agreed!
+> 
+> How could a fix look like, a sysfs attribute? Would a boolean value
+> like 'logarithmic_scale' or 'linear_scale' be enough or could more
+> granularity be needed?
 
-OK, will do. I'll also add a comment next to TIF_TAGGED_ADDR as Vincenzo asked.
+Certainly "linear" (this device will work more or less correctly if the
+userspace applies perceptual curves). Not sure about logarithmic since
+what is actually useful is something that is "perceptually linear"
+(logarithmic is merely a way to approximate that).
 
->
-> --
-> Catalin
+I do wonder about a compatible string like most-detailed to
+least-detailed description. This for a PWM with the auto-generated
+tables we'd see something like:
+
+cie-1991,perceptual,non-linear
+
+For something that is non-linear but we are not sure what its tables are
+we can offer just "non-linear".
+
+> 
+> The new attribute could be optional (it only exists if explicitly
+> specified by the driver) or be set to a default based on a heuristic
+> if not specified and be 'fixed' on a case by case basis. The latter
+> might violate "don't break userspace" though, so I'm not sure it's a
+> good idea.
+
+I think we should avoid any heuristic! There are several drivers and we
+may not be able to work through all of them and make the correct
+decision.
+
+Instead one valid value for the sysfs should be "unknown" and this be
+the default for drivers we have not analysed (this also makes it easy to
+introduce change here).
+
+We should only set the property to something else for drivers that have
+been reviewed.
+
+There could be a special case for pwm_bl.c in that I'm prepared to
+assume that the hardware components downstream of the PWM have a
+roughly linear response and that if the user provided tables that their
+function is to provide a perceptually comfortable response.
+
+
+Daniel.
