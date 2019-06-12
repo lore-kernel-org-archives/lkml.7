@@ -2,193 +2,241 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF4AC46477
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B97C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CB2208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E516F208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:14:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="O2rUqEQ0";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="u3meptCw"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="aLd0A6CZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfFLSNe (ORCPT
+        id S1726864AbfFLSOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 14:13:34 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:37948 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725497AbfFLSNd (ORCPT
+        Wed, 12 Jun 2019 14:14:44 -0400
+Received: from sonic309-22.consmr.mail.bf2.yahoo.com ([74.6.129.196]:40769
+        "EHLO sonic309-22.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726677AbfFLSOn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 14:13:33 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CI7nat016372;
-        Wed, 12 Jun 2019 11:13:23 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=tiVs2wKAz6zr2LspFolfMg9NNAGYJ0+uTUd0IVEXaec=;
- b=O2rUqEQ0N/JewVeOkyMIvfidr3KyaDq9ceVfI0s9IgxDJNo8jieUOZggTWOpdWv0W67B
- VuA4ZeDDsGddu70snuvf4G4O1QX+71X9EYBdmOKfb0A2d7RtRS2ZbHYc//fL40UfDDss
- 9SG+k2UkonAmteER3awTexD95aeKBJP3WK0pma4TjF6z85mVwlFJ2I10GyVeXsEfecU/
- l0FS6lsNM4cVaSVXXF90Ak/q4MSAb4O2YBGOMIu9mYC5POPVl0nNcrDc8r6gB6C1ds5U
- S6/zekcmwid/Pk3WEE/ljvgoC/CmOmeKWIeHt1JRK24P6eL4zExzyaK1kmBAd2T909qR Iw== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2t34ngrfqq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 12 Jun 2019 11:13:22 -0700
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 12 Jun
- 2019 11:13:21 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (104.47.50.54) by
- SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 12 Jun 2019 11:13:21 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tiVs2wKAz6zr2LspFolfMg9NNAGYJ0+uTUd0IVEXaec=;
- b=u3meptCwnOQM8cdtd5k0qB+2EYDneibM7QOQp16g2+n+FjxGC5KJZjg/1lk4MELBtINl/rFsPyAMRSWeQKsz0hgaFjPjzyo2WzJirNBW+zHe6tcW95qJlihdvlRRJJGLlC1NlVdMww+Iyqonh1bmT1CxCC4T7Pd0R5m0vLWWWwc=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
- MN2PR18MB3120.namprd18.prod.outlook.com (10.255.86.89) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Wed, 12 Jun 2019 18:13:16 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::d3:794c:1b94:cf3]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::d3:794c:1b94:cf3%4]) with mapi id 15.20.1965.017; Wed, 12 Jun 2019
- 18:13:16 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     James Morse <james.morse@arm.com>
-CC:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 10/21] EDAC, ghes: Remove pvt->detail_location string
-Thread-Topic: [PATCH 10/21] EDAC, ghes: Remove pvt->detail_location string
-Thread-Index: AQHVIUqBClS7eZ01n0uWYz4frFwiGQ==
-Date:   Wed, 12 Jun 2019 18:13:16 +0000
-Message-ID: <20190612181309.l36jlynvqe7xaqmi@rric.localdomain>
-References: <20190529084344.28562-1-rrichter@marvell.com>
- <20190529084344.28562-11-rrichter@marvell.com>
- <7017c91e-8923-c8d2-26ca-875328ab855a@arm.com>
-In-Reply-To: <7017c91e-8923-c8d2-26ca-875328ab855a@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0401CA0060.eurprd04.prod.outlook.com
- (2603:10a6:3:19::28) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:16c::25)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [92.254.182.202]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 930f6eda-d846-4198-85fb-08d6ef61a3fa
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB3120;
-x-ms-traffictypediagnostic: MN2PR18MB3120:
-x-microsoft-antispam-prvs: <MN2PR18MB3120DAB93298E23E688C05E6D9EC0@MN2PR18MB3120.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 0066D63CE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(376002)(346002)(39860400002)(396003)(189003)(199004)(8936002)(11346002)(81156014)(446003)(81166006)(8676002)(486006)(476003)(99286004)(86362001)(6436002)(52116002)(68736007)(9686003)(6512007)(229853002)(71200400001)(71190400001)(6506007)(386003)(53546011)(256004)(102836004)(54906003)(316002)(76176011)(478600001)(4326008)(25786009)(66066001)(73956011)(5660300002)(66946007)(1076003)(66476007)(64756008)(66446008)(66556008)(14454004)(6116002)(3846002)(26005)(6486002)(305945005)(2906002)(186003)(53936002)(7736002)(6246003)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3120;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /WEHW714XwHr/A+RbG3CyPwjrsxTXiwE8FDoyAjoP+EF99r9xFotopUVf7OVVcYPTqTRtZFjdLfEcQAYtuUj2UYxj2LCpQWrhyUcAedl8gxNN4XJUETPytki3At+8owLIHJD74pQ025WeB+W04kOa1u5Ftj/9gGkq3158TrG3hbKbvbukl2cg8iuwH/3XpdYYXadKsmhHZ8yw9yGX13F0fT2xuRodhUN3jwKidGwnNtlfvckD5XCKl2Yaad6U2cUj2cU9CCGwVSrEkw2fR0C9Whb3EMiHLiF7cUVImYK4oCpjOsFk/k6Dss1ODeCg/Yf1eGh7SmNPvP4nVAFn0jlQ1ITlesupu7p7Urfya7FRJfDtbXTrnoi3XcA+l7Mey/zazSsQs5zDLpK8YZK4b7S5jgN0thrZ38XM20bCuMAS4g=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <6F1BF1CC4996C84D8FB92A698ED69D01@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 12 Jun 2019 14:14:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1560363281; bh=xIF1XHVgS31oW5M5zK0EqGkjdhl54UMxsg7idDaz8ik=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=aLd0A6CZHfDugx9DtN3ricVSnlmVqdR2p8Kwr2MTVebdGsBkpUCszSmtm2gJZSE1JHzGOqK+EOhMfQBLjYa1jrsFipmpOvYGWBJWRlIjh7lksfhi7C0vzcsUcrsMrTSQuXHkBW8hDT1SzTT7K893zLayGt/hKBkYbU5gqOFH12m85+llfgiaYktxaAc+rxXZqla0/c+IptW8EquhbvDWC2+haMreihiUyZEBjuD7+Mn8tfie78sxKHFP9iOVEcBQyKN7vHhoa6ec6ppcp7rrzgl/KUnDO5g1EeXQ8lA6P5zX69Bf+1auBZwnR2BgzEPLsV1N5L7uC3AiK4JoZaByag==
+X-YMail-OSG: Xl318kMVM1lYWYMfF8RkKKue51mSK02d_ZqzkgEhZfk_znF8gGMYBiMqLWvWjPf
+ 0SDQQK4Kc9UlbO7v4Lq9ZlKNpNYwL5uCm8jqBVDYd1TLYV24FUXz1VlihyKLXn7DH3xmcSWaTzPD
+ czhc_y2Bzw4vFZ2VrKPL4DcJ25Ae5n6bPrbd8KIRyzikMQnSR1Qf.wSmbFeAAMyvVu0VoE4WR46t
+ p1oWaPe5fQLPDbqwYvLyIc6xlS6vXv2Icg1hoEcf5d2S_85WB5Q40msob4CUXocGU9x0hDEQz2hF
+ NyA2pNEryZHrvijtIduoIbn6BD61VBPOTIsSxHPmmauAh6jWiwd8.QPVgxgI4VtYX5ySEhigIFPG
+ Jn6fVlCbgoHNBbToKL8rUhvm.kjd1r75kqPqsOKhH45.h9AbH0TSwEu754XcAxUUNq3UhPbnGyye
+ 8rnpl_Qtz2RAUH_APQzqrYHRQSStDzYOglK3VNY.s1FqU2wi7JZCDe_ARBFJKe9H4G33EnCPbSB9
+ DhPHri8cVRln2V05tC3N24rX3ln4LvsbMb5B1bKhrVxvOIrFDbCfKPFzliVs3RYmr8Vhufzs6oKB
+ 8QpCkZpTyoyAoUMZsHCNpbD0FWUWjHrHLhshbgJrzxPqJDXZMd9IjixAeOAoyk909EdjPyFaktkC
+ BraqxDezBU8n2fdIafQbM2_V1Aw2NlYhpJk_uy8a.uIy4FyxzcPC3qhYJPD_kxtsCiZqlz3Gb8xg
+ SekjPKUVxiviwmeXgyIjBHodT7HEu1BPwervIVdeWco8Tcbz1V_wlZEigdfGMPse.R1U0_mYdFqi
+ BJbmvbcQIeH5QFWwyDTeW7Q20jr5KOgL1N6hCtik7eH3pma4VHZB98d.mqesPvJYVQU7qYGhKitu
+ wXmAVIucpUAUSiVeZNLAARtIN17iOMMSAvbkmF7xKo1CyhdVJuKZUKFCDA9VBbvDP6z1WCAZZZye
+ PKEYUk_NAK55ahr_7njAE7MmwNQXd1FnU.21PqYo7ENAy6GVrQVGuhy96eTw5BNeDtGpsmMcnu1S
+ ob5SFWowUOknCHJUIMiA3ifJTAjRsEgYNEHDdRJAOiahGYL7evsCZwq3fDSxyEBgscFiUi4Rfdjr
+ AEMoamGkIjrJj5_l22Nzo_OI3273656M5mF9nmifOTtceOcioI6Q28ISUlcr.MJmie4M2ZR5q.6w
+ Pu4ExRtMRNOnurhhDPqa92QJ0ZNki7ynA9Q9gQsXPseY67XslaXxRqhHCQI6elKZGZm6ZkHUtRmX
+ yayT.TRuYJqJTdZp7kble
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.bf2.yahoo.com with HTTP; Wed, 12 Jun 2019 18:14:41 +0000
+Received: from c-73-223-4-185.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([73.223.4.185])
+          by smtp405.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 90667aa732a85c97b8d2b127900fddb3;
+          Wed, 12 Jun 2019 18:14:39 +0000 (UTC)
+Subject: Re: What do LSMs *actually* need for checks on notifications?
+To:     David Howells <dhowells@redhat.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Andy Lutomirski <luto@kernel.org>, viro@zeniv.linux.org.uk,
+        linux-usb@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        casey@schaufler-ca.com
+References: <9c41cd56-af21-f17d-ab54-66615802f30e@schaufler-ca.com>
+ <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk>
+ <31009.1560262869@warthog.procyon.org.uk>
+ <14576.1560361278@warthog.procyon.org.uk>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ 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
+ abzjfg==
+Message-ID: <0483c310-87c0-17b6-632e-d57b2274a32f@schaufler-ca.com>
+Date:   Wed, 12 Jun 2019 11:14:37 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 930f6eda-d846-4198-85fb-08d6ef61a3fa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 18:13:16.8010
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rrichter@marvell.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3120
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_11:,,
- signatures=0
+In-Reply-To: <14576.1560361278@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.05.19 16:13:20, James Morse wrote:
-> Hi Robert,
->=20
-> On 29/05/2019 09:44, Robert Richter wrote:
-> > The detail_location[] string in struct ghes_edac_pvt is complete
-> > useless and data is just copied around. Put everything into
-> > e->other_detail from the beginning.
->=20
-> We still print all that complete-useless detail_location stuff... so this=
- commit message
-> had me confused about what you're doing here. I think you meant the space=
- for the string,
-> instead of the value!
+On 6/12/2019 10:41 AM, David Howells wrote:
+> Casey Schaufler <casey@schaufler-ca.com> wrote:
+>
+>>>  (4) The security attributes of the object on which the watch was set=
+ (uid,
+>>>      gid, mode, labels).
+>> Smack needs this to set a watch on the named object (file, key, ...).
+>> I am going to say that if you can't access an object you can't watch i=
+t.
+> So for the things I've so far defined:
+>
+>  (*) Keys/keyrings require View permission, but it could be Read permis=
+sion
+>      instead - though that may get disabled if the key type does not su=
+pport
+>      KEYCTL_READ.
 
-No, this patch does not remove the driver details nor it changes the
-data representation. It changes how that data is prepared internally.
-The patch removes the (useless) intermediate buffer detail_location[]
-and writes everything directly into other_detail[] buffer.
+View is good enough.
 
->=20
-> | detail_location[] is used to collect two location strings so they can b=
-e passed as one
-> | to trace_mc_event(). Instead of having an extra copy step, assemble the=
- location string
-> | in other_detail[] from the beginning.
->=20
->=20
-> > diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-> > index 39702bac5eaf..c18f16bc9e4d 100644
-> > --- a/drivers/edac/ghes_edac.c
-> > +++ b/drivers/edac/ghes_edac.c
-> > @@ -23,8 +23,7 @@ struct ghes_edac_pvt {
-> >  	struct mem_ctl_info *mci;
-> > =20
-> >  	/* Buffers for the error handling routine */
-> > -	char detail_location[240];
-> > -	char other_detail[160];
-> > +	char other_detail[400];
-> >  	char msg[80];
-> >  };
-> > =20
-> > @@ -225,13 +224,14 @@ void ghes_edac_report_mem_error(int sev, struct c=
-per_sec_mem_err *mem_err)
-> >  	memset(e, 0, sizeof (*e));
-> >  	e->error_count =3D 1;
-> >  	strcpy(e->label, "unknown label");
-> > -	e->msg =3D pvt->msg;
-> > -	e->other_detail =3D pvt->other_detail;
-> >  	e->top_layer =3D -1;
-> >  	e->mid_layer =3D -1;
-> >  	e->low_layer =3D -1;
-> > -	*pvt->other_detail =3D '\0';
-> > +	e->msg =3D pvt->msg;
-> > +	e->other_detail =3D pvt->other_detail;
-> > +
-> >  	*pvt->msg =3D '\0';
-> > +	*pvt->other_detail =3D '\0';
->=20
-> ... so no change? Could you drop this hunk?
+>  (*) Mount/superblock watches - I've made these require execute permiss=
+ion on
+>      the specified directory.  Could be read permission instead.
 
-No actual change here, but I found it useful to reorder things here
-for comparization with the similar code block in
-edac_mc_handle_error().
+Execute is good enough.
+
+>  (*) Device events (block/usb) don't require any permissions, but curre=
+ntly
+>      only deliver hardware notifications.
+
+How do you specify what device you want to watch?
+Don't you have to access a /dev/something?
+
+"currently" makes me nervous.
+
+>> I think that read access is sufficient provided that no one else can
+>> see what watches I've created.
+> You can't find out what watches exist.
+
+Not even your own?
 
 
->=20
-> Regardless,
-> Reviewed-by: James Morse <james.morse@arm.com>
+>>> At the moment, when post_one_notification() wants to write a notifica=
+tion
+>>> into a queue, it calls security_post_notification() to ask if it shou=
+ld be
+>>> allowed to do so.  This is passed (1) and (3) above plus the notifica=
+tion
+>>> record.
+>> Is "current" (2)? Smack needs (2) for the event delivery access check.=
 
-Thank you for review.
+> (2) was current_cred() when watch_sb(), KEYCTL_NOTIFY, etc. was called,=
+ but
+> isn't necessarily current_cred() at the point post_one_notification() i=
+s
+> called.  The latter is called at the point the event is generated and
+> current_cred() is the creds of whatever thread that is called in (which=
+ may be
+> a work_queue thread if it got deferred).
+>
+> At the moment, I'm storing the creds of whoever opened the queue (ie. (=
+1)) and
+> using that, but I could cache the creds of whoever created each watch
+> (ie. (2)) and pass that to post_one_notification() instead.
+>
+> However, it should be noted that (1) is the creds of the buffer owner.
 
--Robert
+How are buffers shared? Who besides the buffer creator can use it?
 
->=20
->=20
-> Thanks,
->=20
-> James
+>>>  (e) All the points at which we walk over an object in a chain from (=
+c) to
+>>>      find the watch on which we can effect (d) (eg. we walk rootwards=
+ from a
+>>>      mountpoint to find watches on a branch in the mount topology).
+>> Smack does not require anything beyond existing checks.
+> I'm glad to hear that, as this might be sufficiently impractical as to =
+render
+> it unusable with Smack.  Calling i_op->permissions() a lot would suck.
+>
+>>>  (y) What checks should be done on object destruction after final put=
+ and
+>>>      what contexts need to be supplied?
+>> Classically there is no such thing as filesystem object deletion.
+>> By making it possible to set a watch on that you've inadvertently
+>> added a security relevant action to the security model. :o
+> That wasn't my original intention - I intended fsmount(2) to mount dire=
+ctly as
+> mount(2) does, but Al had other ideas.
+>
+> Now fsmount(2) produces a file descriptor referring to a new mount obje=
+ct that
+> can be mounted into by move_mount(2) before being spliced into the moun=
+t
+> topology by move_mount(2).  However, if the fd is closed before the las=
+t step,
+> close() will destroy the mount subtree attached to it (kind of quasi-un=
+mount).
+>
+> That wouldn't be a problem, except that the fd from fsmount(2) can be u=
+sed
+> anywhere an O_PATH fd can be used - including watch_mount(2), fchdir(2)=
+, ...
+> Further, FMODE_NEED_UNMOUNT gets cleared if the mount is spliced in at =
+least
+> once.
+>
+> Okay, having tried it you don't get an unmount event (since there's no =
+actual
+> unmount), but you do get an event to say that your watch got deleted (i=
+f the
+> directory on which the watch was placed got removed from the system).
+>
+> So...  does the "your watch got deleted" message need checking?  In my
+> opinion, it shouldn't get discarded because then the watcher doesn't kn=
+ow
+> their watch went away.
+
+Can you glean information from the watch being deleted?
+I wouldn't think so, and it seems like a one-time event
+from the system, so I don't think an access check would
+be required.
+
+>
+> David
+
