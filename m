@@ -2,132 +2,103 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6B9C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8260EC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2195D2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49F7B2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:35:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzX5XPpn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9hscLxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731164AbfFLGcC (ORCPT
+        id S1731178AbfFLGfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 02:32:02 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37783 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731117AbfFLGcB (ORCPT
+        Wed, 12 Jun 2019 02:35:34 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:56021 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfFLGfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 02:32:01 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 19so8185263pfa.4;
-        Tue, 11 Jun 2019 23:32:01 -0700 (PDT)
+        Wed, 12 Jun 2019 02:35:34 -0400
+Received: by mail-it1-f193.google.com with SMTP id i21so9000117ita.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 23:35:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OZ+yC7LmAgzBV860nbEWGVmK+NhL+LSi4XpwmZSTZ0M=;
-        b=HzX5XPpnQ+ru5hys4B91jhAn0h9r44bGbQT4hnP17W0tEHyfjcSwjqYs+v8k8KaDjb
-         8yaMse4P0PgudcmifD0vyijp7xE609LQZil9XTER70cZTHJCL+dekb28EpAc6KWR3X1Y
-         cOnK/dEP5L3PpQRvpwZbuJGRk2w7VqjpbVcgKyhhtlRNo7OKEQMQoqdCE6gdmKEMBGvO
-         4dmx/aB3ormdjQNCd3VFW6wtMbrWqObX0c7KGypqCNqXO8ILCbrNGyDAHKzyi9ce3Kjv
-         pshYYKM7dGWJ9aYW4x9CXQN3P0UI20cjZhNF0mwb6gSoOP9Tz0uGxEgpqoy4dJo/IyKr
-         zexg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MHcvYWRnrXWxsWWs0BejJhNYWntQgPzwqsTyK3JVcEE=;
+        b=S9hscLxT9U0oYcldK6EV5J/lbYqp/LZmLHawIS7nzJVR0hsF1YqVy150zNpRA9eZtS
+         04C0Hbr1JbzSiOoaoXFWJijWoXICJeBvkpEM2EMr+QojWFDJ8UlLUaUSBOpD2z9Nlfgc
+         F6zwaVjxQlFzllxXNlNlaICFHIf4OAVLxZbKKCgBXFSFsBKTRA1B1KYpGaN4woeCH091
+         GNSM6lSXYFA+slAMAiohXpmR69HFHKhg/lxP3dP1h954Fc/oEsyat+AX0WldkvkU2u94
+         81Otxa9+L7GosJ3ZF8B3x8fOUMRgxm3yuiWt+QNnp/cOpbigVendTpVFvhXldkxI+/D3
+         x2Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OZ+yC7LmAgzBV860nbEWGVmK+NhL+LSi4XpwmZSTZ0M=;
-        b=jrXweqVMQ+uMi6yVOGqZd0qYzCZeIXqZRLsts0qnnTyQy4j2D1kZVTrU+z5wJWZIRA
-         hecjgYpB0ZwWXcMucAz79eokxQDOHoRSNwedKKmOMo7kXZ+Gg+X2GuhcaTlTnaSt053G
-         w9R5VlbHLKV2Eyh2zGz2lJw5MsFd8TXNc+kWIJvbDBy9sZOPvnrcbJzvRSuN2+TESJEN
-         GS5Avw+rE3tN+zhoZfLT7jTkdSpE+zv+t8fWgCW3hUf1/G8F5UZz1HykUrmtYEaD4USE
-         NOrkH5ABwXQPCi0WEgQqrDvd7ABHzzpZzf8Ia9D/GtxLrw1gLEn+PKGp71ZKVIazt3e3
-         +S4A==
-X-Gm-Message-State: APjAAAXfyFZegi7EQDj+o1D0pg8F/PGW3Lo+NycTM/S/e5+snZzpj+y2
-        nHcJj16wcBAQd0foyww1Hdc=
-X-Google-Smtp-Source: APXvYqxmzfggnMHnVv6UIcB+MEvyCcyy/9yUuTo3xp2sO7XEYH/3uAi2ikci/nu9NIT/0MtNMi3hVw==
-X-Received: by 2002:a65:4086:: with SMTP id t6mr23153451pgp.155.1560321120889;
-        Tue, 11 Jun 2019 23:32:00 -0700 (PDT)
-Received: from [172.20.20.103] ([222.151.198.97])
-        by smtp.gmail.com with ESMTPSA id r4sm4118576pjd.28.2019.06.11.23.31.58
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 23:32:00 -0700 (PDT)
-Subject: Re: [PATCH net] net: ethtool: Allow matching on vlan CFI bit
-To:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        davem@davemloft.net, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-References: <20190611155456.15360-1-maxime.chevallier@bootlin.com>
-From:   Toshiaki Makita <toshiaki.makita1@gmail.com>
-Message-ID: <e4017b1b-56ac-7853-ea81-f89a7f5c9890@gmail.com>
-Date:   Wed, 12 Jun 2019 15:31:54 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MHcvYWRnrXWxsWWs0BejJhNYWntQgPzwqsTyK3JVcEE=;
+        b=K+VzZmUlN9j24946oOjFNyAE6igtFwtkMu9V9SCEfD9LbLqHj7TeD6BFzCcCwxcr6g
+         5BA/JPXTdM9rj3YKYIrTiU7xsXd+FgH3tQxrrRx60OY2KuYJFyz9ysfF+zwGanhXb9Zt
+         VOdJ7Ig0/6yVkpcn7iRIU5vm7A92pb2NYpg18H4uYi4TSxkmqAmDTEHHEwzVZ8y2bARr
+         bFZqcmOh+SCroVUEU/9JCyXpFqmeq/rrVkBdWT8cDOSSDWyE7RsI7Ziz7poifAmWos2v
+         ccSLtyNCWAFy034P5IYTlCztYJac9+d/08yQ6CEv1uiKnAD0tEQh/pNCyeFRUW1qCfJW
+         bRoQ==
+X-Gm-Message-State: APjAAAVEovKXNzWR2lLPjbMvlSk26U55XirmlaR0I9Bz32kP69Fha1IT
+        XRRMpPAUXE7ltnO3iUhItBaWH0ufFb4TlnCMBUcQFE/t
+X-Google-Smtp-Source: APXvYqx16rAJnIPnPFPqqoZ7lmzh1vpi/yzIxiE9JzX1lPl2u7spnY33oJUFEHnBbB8dL05qV9YE/DbB9OoGggJpIo4=
+X-Received: by 2002:a24:d145:: with SMTP id w66mr20513709itg.71.1560321333285;
+ Tue, 11 Jun 2019 23:35:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190611155456.15360-1-maxime.chevallier@bootlin.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190611092144.11194-1-oded.gabbay@gmail.com> <20190611095857.GB24058@kroah.com>
+ <20190611151753.GA11404@infradead.org> <20190611152655.GA3972@kroah.com>
+ <CAFCwf13A73AxKzaa7Dk3tU-1NDgTFs4+xCO2os7SuSyUHZ9Z3Q@mail.gmail.com> <CAFCwf134nTD4FM_9Q+THQ7ZAZzGxhs15O6EheaRJMqM5wxi+aA@mail.gmail.com>
+In-Reply-To: <CAFCwf134nTD4FM_9Q+THQ7ZAZzGxhs15O6EheaRJMqM5wxi+aA@mail.gmail.com>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Wed, 12 Jun 2019 16:35:22 +1000
+Message-ID: <CAOSf1CE82uVVni638jkJJpQ7XLXX+HdD7xuB7Wv-f8mn=SBMeg@mail.gmail.com>
+Subject: Re: [PATCH v2 8/8] habanalabs: enable 64-bit DMA mask in POWER9
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, linuxppc-dev@ozlabs.org,
+        Christoph Hellwig <hch@infradead.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/06/12 0:54, Maxime Chevallier wrote:
-> Using ethtool, users can specify a classification action matching on the
-> full vlan tag, which includes the CFI bit.
-> 
-> However, when converting the ethool_flow_spec to a flow_rule, we use
-> dissector keys to represent the matching patterns.
-> 
-> Since the vlan dissector key doesn't include the CFI bit, this
-> information was silently discarded when translating the ethtool
-> flow spec in to a flow_rule.
-> 
-> This commit adds the CFI bit into the vlan dissector key, and allows
-> propagating the information to the driver when parsing the ethtool flow
-> spec.
-> 
-> Fixes: eca4205f9ec3 ("ethtool: add ethtool_rx_flow_spec to flow_rule structure translator")
-> Reported-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> ---
-> Hi all,
-> 
-> Although this prevents information to be silently discarded when parsing
-> an ethtool_flow_spec, this information doesn't seem to be used by any
-> driver that converts an ethtool_flow_spec to a flow_rule, hence I'm not
-> sure this is suitable for -net.
-> 
-> Thanks,
-> 
-> Maxime
-> 
->   include/net/flow_dissector.h | 1 +
->   net/core/ethtool.c           | 5 +++++
->   2 files changed, 6 insertions(+)
-> 
-> diff --git a/include/net/flow_dissector.h b/include/net/flow_dissector.h
-> index 7c5a8d9a8d2a..9d2e395c6568 100644
-> --- a/include/net/flow_dissector.h
-> +++ b/include/net/flow_dissector.h
-> @@ -46,6 +46,7 @@ struct flow_dissector_key_tags {
->   
->   struct flow_dissector_key_vlan {
->   	u16	vlan_id:12,
-> +		vlan_cfi:1,
+On Wed, Jun 12, 2019 at 3:25 AM Oded Gabbay <oded.gabbay@gmail.com> wrote:
+>
+> On Tue, Jun 11, 2019 at 8:03 PM Oded Gabbay <oded.gabbay@gmail.com> wrote:
+> >
+> > On Tue, Jun 11, 2019 at 6:26 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > *snip*
+> >
+> > Now, when I tried to integrate Goya into a POWER9 machine, I got a
+> > reject from the call to pci_set_dma_mask(pdev, 48). The standard code,
+> > as I wrote above, is to call the same function with 32-bits. That
+> > works BUT it is not practical, as our applications require much more
+> > memory mapped then 32-bits.
 
-Current IEEE 802.1Q defines this bit as DEI not CFI, so IMO this should be
-vlan_dei.
+Setting a 48 bit DMA mask doesn't work today because we only allocate
+IOMMU tables to cover the 0..2GB range of PCI bus addresses. Alexey
+has some patches to expand that range so we can support devices that
+can't hit the 64 bit bypass window. You need:
 
-Toshiaki Makita
+This fix: http://patchwork.ozlabs.org/patch/1113506/
+This series: http://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=110810
+
+Give that a try and see if the IOMMU overhead is tolerable.
+
+> >In addition, once you add more cards which
+> > are all mapped to the same range, it is simply not usable at all.
+
+Each IOMMU group should have a separate bus address space and seperate
+cards shouldn't be in the same IOMMU group. If they are then there's
+something up.
+
+Oliver
