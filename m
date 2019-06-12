@@ -2,75 +2,39 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87078C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F5CC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5023121721
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:31:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cW8ArLx8"
+	by mail.kernel.org (Postfix) with ESMTP id B2024215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbfFLTbk (ORCPT
+        id S1728432AbfFLTcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:31:40 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39707 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727826AbfFLTbi (ORCPT
+        Wed, 12 Jun 2019 15:32:41 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:50378 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727419AbfFLTck (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:31:38 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z23so7687286wma.4;
-        Wed, 12 Jun 2019 12:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GRfoFY5xQdWZ+zyZrF8x4tIZrgk1L2WHamAGKM9+HbI=;
-        b=cW8ArLx8R6N5xr2r4LBArrHMDLSr4xhtVhXTwo3cyH0pZ/Ul6OiDLvY2QJnAMERvEa
-         9GrVEbOvQJLUAuXBKGRrL8k65d+/0f9Cjja/chMLJZhUR0raNc2wwZ47FKlQlN6Nbx/D
-         ejpOw4FfY3PrAM3/7MbYX81LqOGrDuDgiBOb/dwgC+53qCoR1xA1PNqMkd5YUX34sCoN
-         q49RuefrUfE/Onr+8uxvEZPe0Az08fWHcsYGxEKx1v6UfnZEeoMx2hg+uI/Png6MHmPd
-         us7w/AZSrYIVyB7zLRaZ1nX/1Hdx7saB9BgGgjZIZ2AAPqhn6lDoAVz5GoKKWx6ghSbE
-         a3NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GRfoFY5xQdWZ+zyZrF8x4tIZrgk1L2WHamAGKM9+HbI=;
-        b=lfrs9HnPTZMT5D9aIwvjj6QmrULM8AUqup+Sa0rYhmgJxJksytjkWdg0oI6Uc7Qe6D
-         zZm82lsDBo/+7EiDkPubD0Uoa5EQrrBT4SR8dilYLnxWynkj34MT6l4ZJ3uWAiDdoTl0
-         Wwm06lCQdp52dAkEHjMYqP+NfqLjNahUx5qayTkRXT73xQGFGdHfsoDqOGioLXA9sdbW
-         z5vprdEZbKUT4lV7Gv5q3/G1CL3q8uFbjKr/QcnHuw4iTKnt/4jxeJFS/oabD95LLywa
-         M6FBsX5njemGyOYU8ygS7jIpaUs0ITpMxPZmpYf3nZyKIUa8FK+/61T/Zau8RYdqNr3s
-         rn4A==
-X-Gm-Message-State: APjAAAXUZl8kib+ZmNrI/Ce677OHXyS9UTWgf7MQrsyXvLldtV4/jl+K
-        RPEc9abRYOXX+pnHYFzjC878g8S2
-X-Google-Smtp-Source: APXvYqzJTIuqNtlPTGYXYCdx+JjK4QSoXYxNTFy2H98HO1zZ/AhRoqP4/zsWF3ehw7sYe6DLw8k+1Q==
-X-Received: by 2002:a1c:f515:: with SMTP id t21mr573668wmh.39.1560367895665;
-        Wed, 12 Jun 2019 12:31:35 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133DDA400428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:33dd:a400:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id q15sm379054wrr.19.2019.06.12.12.31.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 12:31:35 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     netdev@vger.kernel.org, peppe.cavallaro@st.com,
-        alexandre.torgue@st.com, joabreu@synopsys.com, davem@davemloft.net,
-        andrew@lunn.ch
-Cc:     linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        maxime.ripard@bootlin.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH net-next v2 1/1] net: stmmac: use GPIO descriptors in stmmac_mdio_reset
-Date:   Wed, 12 Jun 2019 21:31:15 +0200
-Message-Id: <20190612193115.6751-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190612193115.6751-1-martin.blumenstingl@googlemail.com>
-References: <20190612193115.6751-1-martin.blumenstingl@googlemail.com>
+        Wed, 12 Jun 2019 15:32:40 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1hb8z1-0001BN-Pi; Wed, 12 Jun 2019 15:32:31 -0400
+From:   Rik van Riel <riel@surriel.com>
+To:     peterz@infradead.org
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        morten.rasmussen@arm.com, tglx@linutronix.de,
+        dietmar.eggeman@arm.com, mgorman@techsingularity.com,
+        vincent.guittot@linaro.org
+Subject: [RFC] sched,cfs: flatten CPU controller runqueues
+Date:   Wed, 12 Jun 2019 15:32:19 -0400
+Message-Id: <20190612193227.993-1-riel@surriel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,105 +42,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch stmmac_mdio_reset to use GPIO descriptors. GPIO core handles the
-"snps,reset-gpio" for GPIO descriptors so we don't need to take care of
-it inside the driver anymore.
+The current implementation of the CPU controller uses hierarchical
+runqueues, where on wakeup a task is enqueued on its group's runqueue,
+the group is enqueued on the runqueue of the group above it, etc.
 
-The advantage of this is that we now preserve the GPIO flags which are
-passed via devicetree. This is required on some newer Amlogic boards
-which use an Open Drain pin for the reset GPIO. This pin can only output
-a LOW signal or switch to input mode but it cannot output a HIGH signal.
-There are already devicetree bindings for these special cases and GPIO
-core already takes care of them but only if we use GPIO descriptors
-instead of GPIO numbers.
+This increases a fairly large amount of overhead for workloads that
+do a lot of wakeups a second, especially given that the default systemd
+hierarchy is 2 or 3 levels deep.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
- .../net/ethernet/stmicro/stmmac/stmmac_mdio.c | 27 +++++++++----------
- include/linux/stmmac.h                        |  2 +-
- 2 files changed, 14 insertions(+), 15 deletions(-)
+This patch series is an attempt at reducing that overhead, by placing
+all the tasks on the same runqueue, and scaling the task priority by
+the priority of the group, which is calculated periodically.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-index 093a223fe408..f1c39dd048e7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -20,11 +20,11 @@
-   Maintainer: Giuseppe Cavallaro <peppe.cavallaro@st.com>
- *******************************************************************************/
- 
-+#include <linux/gpio/consumer.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
- #include <linux/mii.h>
- #include <linux/of.h>
--#include <linux/of_gpio.h>
- #include <linux/of_mdio.h>
- #include <linux/phy.h>
- #include <linux/slab.h>
-@@ -251,37 +251,36 @@ int stmmac_mdio_reset(struct mii_bus *bus)
- 
- #ifdef CONFIG_OF
- 	if (priv->device->of_node) {
-+		struct gpio_desc *reset_gpio;
-+
- 		if (data->reset_gpio < 0) {
- 			struct device_node *np = priv->device->of_node;
- 
- 			if (!np)
- 				return 0;
- 
--			data->reset_gpio = of_get_named_gpio(np,
--						"snps,reset-gpio", 0);
--			if (data->reset_gpio < 0)
--				return 0;
-+			reset_gpio = devm_gpiod_get_optional(priv->device,
-+							     "snps,reset",
-+							     GPIOD_OUT_LOW);
-+			if (IS_ERR(reset_gpio))
-+				return PTR_ERR(reset_gpio);
- 
--			data->active_low = of_property_read_bool(np,
--						"snps,reset-active-low");
- 			of_property_read_u32_array(np,
- 				"snps,reset-delays-us", data->delays, 3);
-+		} else {
-+			reset_gpio = gpio_to_desc(data->reset_gpio);
- 
--			if (devm_gpio_request(priv->device, data->reset_gpio,
--					      "mdio-reset"))
--				return 0;
-+			gpiod_direction_output(reset_gpio, 0);
- 		}
- 
--		gpio_direction_output(data->reset_gpio,
--				      data->active_low ? 1 : 0);
- 		if (data->delays[0])
- 			msleep(DIV_ROUND_UP(data->delays[0], 1000));
- 
--		gpio_set_value(data->reset_gpio, data->active_low ? 0 : 1);
-+		gpiod_set_value_cansleep(reset_gpio, 1);
- 		if (data->delays[1])
- 			msleep(DIV_ROUND_UP(data->delays[1], 1000));
- 
--		gpio_set_value(data->reset_gpio, data->active_low ? 1 : 0);
-+		gpiod_set_value_cansleep(reset_gpio, 0);
- 		if (data->delays[2])
- 			msleep(DIV_ROUND_UP(data->delays[2], 1000));
- 	}
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index 4335bd771ce5..816edb545592 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -97,7 +97,7 @@ struct stmmac_mdio_bus_data {
- 	int *irqs;
- 	int probed_phy_irq;
- #ifdef CONFIG_OF
--	int reset_gpio, active_low;
-+	int reset_gpio;
- 	u32 delays[3];
- #endif
- };
--- 
-2.22.0
+This patch series still has a number of TODO items:
+- Clean up the code, and fix compilation without CONFIG_FAIR_GROUP_SCHED.
+- Remove some more now unused code.
+- Figure out a regression with schbench, where the p99 latency goes up
+  before the system is fully overloaded. I suspect wakeup_preempt_entity()
+  and wakeup_gran() because they now use the task_h_load instead of the
+  unscaled load to figure out whether a task should be preempted.
+- Reimplement CONFIG_CFS_BANDWIDTH.
+
+Plan for the CONFIG_CFS_BANDWIDTH reimplementation:
+- When a cgroup gets throttled, mark the cgroup and its children
+  as throttled.
+- When pick_next_entity finds a task that is on a throttled cgroup,
+  stash it on the cgroup runqueue (which is not used for runnable
+  tasks any more). Leave the vruntime unchanged, and adjust that
+  runqueue's vruntime to be that of the left-most task.
+- When a cgroup gets unthrottled, and has tasks on it, place it on
+  a vruntime ordered heap separate from the main runqueue.
+- Have pick_next_task_fair grab one task off that heap every time it
+  is called, and the min vruntime of that heap is lower than the
+  vruntime of the CPU's cfs_rq (or the CPU has no other runnable tasks).
+- Place that selected task on the CPU's cfs_rq, renormalizing its
+  vruntime with the GENTLE_FAIR_SLEEPERS logic. That should help
+  interleave the already runnable tasks with the recently unthrottled
+  group, and prevent thundering herd issues.
+- If the group gets throttled again before all of its task had a chance
+  to run, vruntime sorting ensures all the tasks in the throttled cgroup
+  get a chance to run over time.
+
+This patch applies on top of what was Linus's current tree when I last
+rebased it:
+2c1212de6f97 ("Merge tag 'spdx-5.2-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core")
+
+ include/linux/sched.h |    5 
+ kernel/sched/core.c   |    2 
+ kernel/sched/debug.c  |   12 
+ kernel/sched/fair.c   |  744 +++++++++++++++++++++-----------------------------
+ kernel/sched/pelt.c   |   55 +--
+ kernel/sched/pelt.h   |    2 
+ kernel/sched/sched.h  |    9 
+ 7 files changed, 346 insertions(+), 483 deletions(-)
+
 
