@@ -2,115 +2,142 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8559C31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C456C31E45
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A07F120883
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31EA620883
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:18:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mc/O/i/G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fak8lK+4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408313AbfFLBRM (ORCPT
+        id S2408325AbfFLBSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 21:17:12 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38980 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408290AbfFLBRH (ORCPT
+        Tue, 11 Jun 2019 21:18:09 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41522 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406608AbfFLBSI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 21:17:07 -0400
-Received: by mail-pf1-f193.google.com with SMTP id j2so8557659pfe.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 18:17:07 -0700 (PDT)
+        Tue, 11 Jun 2019 21:18:08 -0400
+Received: by mail-oi1-f195.google.com with SMTP id g7so7257197oia.8;
+        Tue, 11 Jun 2019 18:18:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=UeBUMK8zne5r7f1B94AFloQ1yKIBEwqxYhdWNW1rcVE=;
-        b=Mc/O/i/G8dA9XR5Z2xuOdd78Q3EZA8MUm/uNTtjjqL7M9eg6OoaPGsm3+vX5liu8Eu
-         OjaofnIGVXtsD846o0FACmuimMFXHM7GW8NNtNXbQkJuGLHCEAoHFxvY3cPW3eHif7mv
-         rCh7+o9qUbJdHA63GM4lKNQXVZWl6FF6gUIwkYE+apHfaUJIm7rhwH99Tcc805aAf8Ad
-         Wmm9UBPe0z9REZ10l5vmksImiWRxacTHAIOrYR7rU5KPpOc6DmNfO75z0k/g/gJWEJmB
-         tcZiNGiayqBoTJd1l81xwR5dqG1SP0w0UVDu8/iYmV8+FEMWBYSNuT1/JCxkjuVqJ//n
-         RS/A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nSDY8zFKF7PHOkb9LEHVAO61FULkhNk92Ig0WDAkMeo=;
+        b=Fak8lK+4PNF9fTphDDAZgqPro0aWiW8+A1NlJtFHUsSkFFzto70eTDEOmYx+vU+Gcb
+         IGC4MMxyC6DlqpylYL/43ZaCCZfEWok0L/KwJAqYHHPikQH7pbIsSJVPd5uICx+/4MJM
+         LVeEiUXzkEHfmdxk8TaJ80bbulOZFI7e8SnfyfTsuyh5M5P6n9X03Bn+acaym/QH69hh
+         IJ1VIjtBel3XjtrALGiDcDIjetB/S2sDRTwLH0R4ZlKOVEUIMVAR00CtpxZyXLi2gEte
+         hrO8ozymXOWlDHv3X8nErfVdUe3OOcBxOGNv0F5SmjAeBGRxUTjfgmj7ez6kZVT9oFZW
+         Wk9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=UeBUMK8zne5r7f1B94AFloQ1yKIBEwqxYhdWNW1rcVE=;
-        b=HoFCnUd1rkOiUz1YSXHq4hVQDiF8KpvJtqnWC+pGCpDZFlVJFt7i04Q+HuxdyRvBxx
-         vS8iWps0WK1KkVG5M92jzTSX5k90d1+HJi/xQc6FVYrvQcvooPI7MeX0ffQ7bd4qZns9
-         1o2j3CcAxNvJ0yWQrVu73KnhdAaYxtxCVb5ERrkWn9c2/YgfXCbWfhrA34cW/MUo92y9
-         yVHkEN4EzIPbi7MuRNcFScm9/wFyZ0HdNpKNyb+jzjFKD+2F3DTkjMp4rTYqsDcEb2VR
-         V76zv4Hy16J0T3wUnqcoK6m47kwb1JihatOJVA3l5vfD2mJ3LFw3sCR7l0MWzsw+R1p+
-         8hmQ==
-X-Gm-Message-State: APjAAAUrwQ5C3dcsdV0CenNr2rnEinzNZUJW8v0qymUuISEVU3Bp05eT
-        51iuitNsMq0cn4nA1PFG7lk=
-X-Google-Smtp-Source: APXvYqyntFmaxAJbB17U4xr3GVjEA8ueDHeFxsQX18ZK8YIFTCP+Ma8Wk0S8hW5kzNdVIgLGkWK4ew==
-X-Received: by 2002:a17:90a:5887:: with SMTP id j7mr9058636pji.136.1560302226962;
-        Tue, 11 Jun 2019 18:17:06 -0700 (PDT)
-Received: from mappy.world.mentorg.com (c-107-3-185-39.hsd1.ca.comcast.net. [107.3.185.39])
-        by smtp.gmail.com with ESMTPSA id y22sm13257015pgj.38.2019.06.11.18.17.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 18:17:06 -0700 (PDT)
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR FREESCALE
-        IMX), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/3] gpu: ipu-v3: image-convert: Fix image downsize coefficients
-Date:   Tue, 11 Jun 2019 18:16:57 -0700
-Message-Id: <20190612011657.12119-3-slongerbeam@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190612011657.12119-1-slongerbeam@gmail.com>
-References: <20190612011657.12119-1-slongerbeam@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nSDY8zFKF7PHOkb9LEHVAO61FULkhNk92Ig0WDAkMeo=;
+        b=ZM0DRNI62J4dnQECvgA6Ac87+Jgi4l1vM4mb0LFEr9TPvIma4ekmKvv96rLfRMMfY7
+         PmH4vR7XAF0gLh+b/UPVpvXKUm1JF7QwnB1AikPSNfuKIfDnfeDwi5BtpbPoMU9L44XY
+         B6EuJpLEpPjsVJ3URC3NcTMuQlLU92SKkKYf1YJrOhcYd6WfmzYaT06iTcM/O28UN5p3
+         2geCS8QpBAGSbQCzkePhzyDkuqmzSdSztmtIa2nuLxCimp4zbhKhRgGBuDyQitT6x4Tq
+         fw4HjzkUKREeMdeGpb2lMevs3ckCscfB6sdtUDVFNRFGbuWFaJwIFq4N8PkotIzg6lyW
+         fjaw==
+X-Gm-Message-State: APjAAAVa1ADofxpvAcPVNPO/6olLYeWAVxKE4aJ13VcvgYHhnyXuUzDI
+        6pNFXsJH4swEG5j2KZXaKetoHgc1G6jLFhEDHFQ=
+X-Google-Smtp-Source: APXvYqxOePRL5Ast7RADB3O0vCgjL79/XpjmQIDrsy0dacjkgNNOLQ/cxOC3E7txveiyXCan4jJtl65RR5rjp+2kc6I=
+X-Received: by 2002:aca:3305:: with SMTP id z5mr15303551oiz.141.1560302288094;
+ Tue, 11 Jun 2019 18:18:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
+ <20190610143420.GA6594@flask> <20190611011100.GB24835@linux.intel.com>
+ <CANRm+Cwv5jqxBW=Ss5nkX7kZM3_Y-Ucs66yx5+wN09=W4pUdzA@mail.gmail.com>
+ <F136E492-5350-49EE-A856-FBAEDB12FF99@gmail.com> <CANRm+CyZcvuT80ixp9f0FNmjN+rTUtw8MshtBG0Uk4L1B1UjDw@mail.gmail.com>
+ <153047ED-75E2-4E70-BC33-C5FF27C08638@gmail.com>
+In-Reply-To: <153047ED-75E2-4E70-BC33-C5FF27C08638@gmail.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 12 Jun 2019 09:18:51 +0800
+Message-ID: <CANRm+Cx6Z=jxLaXqwhBDpVTsKH8mgoo4iC=U8GbAAJz-5gk5ZA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] KVM: Yield to IPI target if necessary
+To:     Nadav Amit <nadav.amit@gmail.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The output of the IC downsizer unit in both dimensions must be <= 1024
-before being passed to the IC resizer unit. This was causing corrupted
-images when:
+On Wed, 12 Jun 2019 at 00:57, Nadav Amit <nadav.amit@gmail.com> wrote:
+>
+> > On Jun 11, 2019, at 3:02 AM, Wanpeng Li <kernellwp@gmail.com> wrote:
+> >
+> > On Tue, 11 Jun 2019 at 09:48, Nadav Amit <nadav.amit@gmail.com> wrote:
+> >>> On Jun 10, 2019, at 6:45 PM, Wanpeng Li <kernellwp@gmail.com> wrote:
+> >>>
+> >>> On Tue, 11 Jun 2019 at 09:11, Sean Christopherson
+> >>> <sean.j.christopherson@intel.com> wrote:
+> >>>> On Mon, Jun 10, 2019 at 04:34:20PM +0200, Radim Kr=C4=8Dm=C3=A1=C5=
+=99 wrote:
+> >>>>> 2019-05-30 09:05+0800, Wanpeng Li:
+> >>>>>> The idea is from Xen, when sending a call-function IPI-many to vCP=
+Us,
+> >>>>>> yield if any of the IPI target vCPUs was preempted. 17% performanc=
+e
+> >>>>>> increasement of ebizzy benchmark can be observed in an over-subscr=
+ibe
+> >>>>>> environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-funct=
+ion
+> >>>>>> IPI-many since call-function is not easy to be trigged by userspac=
+e
+> >>>>>> workload).
+> >>>>>
+> >>>>> Have you checked if we could gain performance by having the yield a=
+s an
+> >>>>> extension to our PV IPI call?
+> >>>>>
+> >>>>> It would allow us to skip the VM entry/exit overhead on the caller.
+> >>>>> (The benefit of that might be negligible and it also poses a
+> >>>>> complication when splitting the target mask into several PV IPI
+> >>>>> hypercalls.)
+> >>>>
+> >>>> Tangetially related to splitting PV IPI hypercalls, are there any ma=
+jor
+> >>>> hurdles to supporting shorthand?  Not having to generate the mask fo=
+r
+> >>>> ->send_IPI_allbutself and ->kvm_send_ipi_all seems like an easy to w=
+ay
+> >>>> shave cycles for affected flows.
+> >>>
+> >>> Not sure why shorthand is not used for native x2apic mode.
+> >>
+> >> Why do you say so? native_send_call_func_ipi() checks if allbutself
+> >> shorthand should be used and does so (even though the check can be mor=
+e
+> >> efficient - I=E2=80=99m looking at that code right now=E2=80=A6)
+> >
+> > Please continue to follow the apic/x2apic driver. Just apic_flat set
+> > APIC_DEST_ALLBUT/APIC_DEST_ALLINC to ICR.
+>
+> Indeed - I was sure by the name that it does it correctly. That=E2=80=99s=
+ stupid.
+>
+> I=E2=80=99ll add it to the patch-set I am working on (TLB shootdown impro=
+vements),
+> if you don=E2=80=99t mind.
 
-input_dim > 1024, and
-input_dim / 2 < output_dim < input_dim
+Original for hotplug cpu safe.
+https://lwn.net/Articles/138365/
+https://lwn.net/Articles/138368/
+Not sure shortcut native support is acceptable, I will play my
+kvm_send_ipi_allbutself and kvm_send_ipi_all. :)
 
-Some broken examples were 1920x1080 -> 1024x768 and 1920x1080 ->
-1280x1080.
-
-Fixes: 70b9b6b3bcb21 ("gpu: ipu-v3: image-convert: calculate per-tile
-resize coefficients")
-
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
----
- drivers/gpu/ipu-v3/ipu-image-convert.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/ipu-v3/ipu-image-convert.c b/drivers/gpu/ipu-v3/ipu-image-convert.c
-index 4dfdbd1adf0d..e744f3527ce1 100644
---- a/drivers/gpu/ipu-v3/ipu-image-convert.c
-+++ b/drivers/gpu/ipu-v3/ipu-image-convert.c
-@@ -400,12 +400,14 @@ static int calc_image_resize_coefficients(struct ipu_image_convert_ctx *ctx,
- 	if (WARN_ON(resized_width == 0 || resized_height == 0))
- 		return -EINVAL;
- 
--	while (downsized_width >= resized_width * 2) {
-+	while (downsized_width > 1024 ||
-+	       downsized_width >= resized_width * 2) {
- 		downsized_width >>= 1;
- 		downsize_coeff_h++;
- 	}
- 
--	while (downsized_height >= resized_height * 2) {
-+	while (downsized_height > 1024 ||
-+	       downsized_height >= resized_height * 2) {
- 		downsized_height >>= 1;
- 		downsize_coeff_v++;
- 	}
--- 
-2.17.1
-
+Regards,
+Wanpeng Li
