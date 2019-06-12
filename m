@@ -2,39 +2,41 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F5CC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77659C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2024215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50CDD20896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbfFLTcl (ORCPT
+        id S1728823AbfFLTcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:32:41 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:50378 "EHLO
+        Wed, 12 Jun 2019 15:32:50 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:50440 "EHLO
         shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727419AbfFLTck (ORCPT
+        with ESMTP id S1728446AbfFLTcs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:32:40 -0400
+        Wed, 12 Jun 2019 15:32:48 -0400
 Received: from imladris.surriel.com ([96.67.55.152])
         by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.92)
         (envelope-from <riel@shelob.surriel.com>)
-        id 1hb8z1-0001BN-Pi; Wed, 12 Jun 2019 15:32:31 -0400
+        id 1hb8z2-0001BN-0R; Wed, 12 Jun 2019 15:32:32 -0400
 From:   Rik van Riel <riel@surriel.com>
 To:     peterz@infradead.org
 Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org, kernel-team@fb.com,
         morten.rasmussen@arm.com, tglx@linutronix.de,
         dietmar.eggeman@arm.com, mgorman@techsingularity.com,
-        vincent.guittot@linaro.org
-Subject: [RFC] sched,cfs: flatten CPU controller runqueues
-Date:   Wed, 12 Jun 2019 15:32:19 -0400
-Message-Id: <20190612193227.993-1-riel@surriel.com>
+        vincent.guittot@linaro.org, Rik van Riel <riel@surriel.com>
+Subject: [PATCH 5/8] sched,cfs: use explicit cfs_rq of parent se helper
+Date:   Wed, 12 Jun 2019 15:32:24 -0400
+Message-Id: <20190612193227.993-6-riel@surriel.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190612193227.993-1-riel@surriel.com>
+References: <20190612193227.993-1-riel@surriel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,58 +44,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current implementation of the CPU controller uses hierarchical
-runqueues, where on wakeup a task is enqueued on its group's runqueue,
-the group is enqueued on the runqueue of the group above it, etc.
+Use an explicit "cfs_rq of parent sched_entity" helper in a few
+strategic places, where cfs_rq_of(se) may no longer point at the
+right runqueue once we flatten the hierarchical cgroup runqueues.
 
-This increases a fairly large amount of overhead for workloads that
-do a lot of wakeups a second, especially given that the default systemd
-hierarchy is 2 or 3 levels deep.
+No functional change.
 
-This patch series is an attempt at reducing that overhead, by placing
-all the tasks on the same runqueue, and scaling the task priority by
-the priority of the group, which is calculated periodically.
+Signed-off-by: Rik van Riel <riel@surriel.com>
+---
+ kernel/sched/fair.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-This patch series still has a number of TODO items:
-- Clean up the code, and fix compilation without CONFIG_FAIR_GROUP_SCHED.
-- Remove some more now unused code.
-- Figure out a regression with schbench, where the p99 latency goes up
-  before the system is fully overloaded. I suspect wakeup_preempt_entity()
-  and wakeup_gran() because they now use the task_h_load instead of the
-  unscaled load to figure out whether a task should be preempted.
-- Reimplement CONFIG_CFS_BANDWIDTH.
-
-Plan for the CONFIG_CFS_BANDWIDTH reimplementation:
-- When a cgroup gets throttled, mark the cgroup and its children
-  as throttled.
-- When pick_next_entity finds a task that is on a throttled cgroup,
-  stash it on the cgroup runqueue (which is not used for runnable
-  tasks any more). Leave the vruntime unchanged, and adjust that
-  runqueue's vruntime to be that of the left-most task.
-- When a cgroup gets unthrottled, and has tasks on it, place it on
-  a vruntime ordered heap separate from the main runqueue.
-- Have pick_next_task_fair grab one task off that heap every time it
-  is called, and the min vruntime of that heap is lower than the
-  vruntime of the CPU's cfs_rq (or the CPU has no other runnable tasks).
-- Place that selected task on the CPU's cfs_rq, renormalizing its
-  vruntime with the GENTLE_FAIR_SLEEPERS logic. That should help
-  interleave the already runnable tasks with the recently unthrottled
-  group, and prevent thundering herd issues.
-- If the group gets throttled again before all of its task had a chance
-  to run, vruntime sorting ensures all the tasks in the throttled cgroup
-  get a chance to run over time.
-
-This patch applies on top of what was Linus's current tree when I last
-rebased it:
-2c1212de6f97 ("Merge tag 'spdx-5.2-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core")
-
- include/linux/sched.h |    5 
- kernel/sched/core.c   |    2 
- kernel/sched/debug.c  |   12 
- kernel/sched/fair.c   |  744 +++++++++++++++++++++-----------------------------
- kernel/sched/pelt.c   |   55 +--
- kernel/sched/pelt.h   |    2 
- kernel/sched/sched.h  |    9 
- 7 files changed, 346 insertions(+), 483 deletions(-)
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index dcc521d251e3..c6ede2ecc935 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -275,6 +275,15 @@ static inline struct cfs_rq *group_cfs_rq(struct sched_entity *grp)
+ 	return grp->my_q;
+ }
+ 
++/* runqueue owned by the parent entity */
++static inline struct cfs_rq *group_cfs_rq_of_parent(struct sched_entity *se)
++{
++	if (se->parent)
++		return group_cfs_rq(se->parent);
++
++	return &cfs_rq_of(se)->rq->cfs;
++}
++
+ static inline bool list_add_leaf_cfs_rq(struct cfs_rq *cfs_rq)
+ {
+ 	struct rq *rq = rq_of(cfs_rq);
+@@ -3298,7 +3307,7 @@ static inline int propagate_entity_load_avg(struct sched_entity *se)
+ 
+ 	gcfs_rq->propagate = 0;
+ 
+-	cfs_rq = cfs_rq_of(se);
++	cfs_rq = group_cfs_rq_of_parent(se);
+ 
+ 	add_tg_cfs_propagate(cfs_rq, gcfs_rq->prop_runnable_sum);
+ 
+@@ -7779,7 +7788,7 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
+ 
+ 	WRITE_ONCE(cfs_rq->h_load_next, NULL);
+ 	for_each_sched_entity(se) {
+-		cfs_rq = cfs_rq_of(se);
++		cfs_rq = group_cfs_rq_of_parent(se);
+ 		WRITE_ONCE(cfs_rq->h_load_next, se);
+ 		if (cfs_rq->last_h_load_update == now)
+ 			break;
+@@ -7802,7 +7811,7 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
+ 
+ static unsigned long task_se_h_load(struct sched_entity *se)
+ {
+-	struct cfs_rq *cfs_rq = cfs_rq_of(se);
++	struct cfs_rq *cfs_rq = group_cfs_rq_of_parent(se);
+ 
+ 	update_cfs_rq_h_load(cfs_rq);
+ 	return div64_ul(se->avg.load_avg * cfs_rq->h_load,
+@@ -10159,7 +10168,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+ 	struct sched_entity *se = &curr->se;
+ 
+ 	for_each_sched_entity(se) {
+-		cfs_rq = cfs_rq_of(se);
++		cfs_rq = group_cfs_rq_of_parent(se);
+ 		entity_tick(cfs_rq, se, queued);
+ 	}
+ 
+-- 
+2.20.1
 
