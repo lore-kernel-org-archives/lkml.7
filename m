@@ -2,120 +2,143 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75797C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4AEC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 497FF205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:10:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lhk5qU4z"
+	by mail.kernel.org (Postfix) with ESMTP id 5DE9B2063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbfFMRKz (ORCPT
+        id S1729266AbfFMRLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:10:55 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38324 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729204AbfFLWdJ (ORCPT
+        Thu, 13 Jun 2019 13:11:03 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49498 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729190AbfFLWby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 18:33:09 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CMTs85064050;
-        Wed, 12 Jun 2019 22:31:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=SOIVm550t2juiTj4vnRQ5BaJ/KWVoCF7DZnOrZI0vno=;
- b=lhk5qU4z4GwfZqTKR5mbk79cDQzaoJ563ewToos4HaKC4mOW42ZuJj4rIKQuuXEL39VM
- tp4ZtszcjEpWB2WzalUsZvkf7EoQ4QcnxIQ2Qft1s6ZYSRtjhbym4uydGIVYMvhQvAHw
- fRHwYoG8GoVcSmHkzJ6QvWx2AS/Jpc3PwZV8EssJZG84yCzFBaQYH11ADbuo9e/H9WzV
- gBEoPFk2imAOKNWZH8Ol5/pQ2PTjvdP/f1tgifVJKX2HZGYVJYPuqPyaHLVwju+kvqVN
- 3IYSt5eHrO4z++6UFpnrsjBUDs0k5Ev4rGF32Mx66rhmqD9/GhvxdpAvARzyeKXqVnkG 1A== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2t04etx9bj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 22:31:48 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CMSCmx113818;
-        Wed, 12 Jun 2019 22:29:47 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2t0p9s3x41-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 22:29:47 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5CMTW3r019311;
-        Wed, 12 Jun 2019 22:29:39 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 12 Jun 2019 15:29:32 -0700
-Date:   Wed, 12 Jun 2019 18:29:34 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>, hannes@cmpxchg.org,
-        jiangshanlai@gmail.com, lizefan@huawei.com, bsd@redhat.com,
-        dan.j.williams@intel.com, dave.hansen@intel.com,
-        juri.lelli@redhat.com, mhocko@kernel.org, peterz@infradead.org,
-        steven.sistare@oracle.com, tglx@linutronix.de,
-        tom.hromatka@oracle.com, vdavydov.dev@gmail.com,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, shakeelb@google.com
-Subject: Re: [RFC v2 0/5] cgroup-aware unbound workqueues
-Message-ID: <20190612222934.y74wxy3aju6eqs4r@ca-dmjordan1.us.oracle.com>
-References: <20190605133650.28545-1-daniel.m.jordan@oracle.com>
- <20190605135319.GK374014@devbig004.ftw2.facebook.com>
- <20190605153229.nvxr6j7tdzffwkgj@ca-dmjordan1.us.oracle.com>
- <20190611195549.GL3341036@devbig004.ftw2.facebook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611195549.GL3341036@devbig004.ftw2.facebook.com>
-User-Agent: NeoMutt/20180323-268-5a959c
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906120157
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906120157
+        Wed, 12 Jun 2019 18:31:54 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CMVRKI083942
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 18:31:53 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t39hx1ee2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 18:31:53 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 12 Jun 2019 23:31:51 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 12 Jun 2019 23:31:46 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5CMVjkq55836814
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 22:31:45 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 20D615205F;
+        Wed, 12 Jun 2019 22:31:45 +0000 (GMT)
+Received: from dhcp-9-31-103-88.watson.ibm.com (unknown [9.31.103.88])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2CA8B52054;
+        Wed, 12 Jun 2019 22:31:44 +0000 (GMT)
+Subject: Re: [PATCH V8 3/3] Call ima_kexec_cmdline to measure the cmdline
+ args
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     roberto.sassu@huawei.com, vgoyal@redhat.com,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Dave Young <dyoung@redhat.com>,
+        kexec <kexec@lists.infradead.org>
+Date:   Wed, 12 Jun 2019 18:31:43 -0400
+In-Reply-To: <20190612221549.28399-4-prsriva02@gmail.com>
+References: <20190612221549.28399-1-prsriva02@gmail.com>
+         <20190612221549.28399-4-prsriva02@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061222-0012-0000-0000-00000328A073
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061222-0013-0000-0000-00002161A9C6
+Message-Id: <1560378703.4578.91.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906120158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 12:55:49PM -0700, Tejun Heo wrote:
-> > > CPU doesn't have a backcharging mechanism yet and depending on the use
-> > > case, we *might* need to put kthreads in different cgroups.  However,
-> > > such use cases might not be that abundant and there may be gotaches
-> > > which require them to be force-executed and back-charged (e.g. fs
-> > > compression from global reclaim).
-> > 
-> > The CPU-intensiveness of these works is one of the reasons for actually putting
-> > the workers through the migration path.  I don't know of a way to get the
-> > workers to respect the cpu controller (and even cpuset for that matter) without
-> > doing that.
+[Cc: kexec mailing list]
+
+Hi Eric, Dave,
+
+On Wed, 2019-06-12 at 15:15 -0700, Prakhar Srivastava wrote:
+> During soft reboot(kexec_file_load) boot cmdline args
+> are not measured.Thus the new kernel on load boots with
+> an assumption of cold reboot.
 > 
-> So, I still think it'd likely be better to go back-charging route than
-> actually putting kworkers in non-root cgroups.  That's gonna be way
-> cheaper, simpler and makes avoiding inadvertent priority inversions
-> trivial.
+> This patch makes a call to the ima hook ima_kexec_cmdline,
+> added in "Define a new IMA hook to measure the boot command
+> line arguments"
+> to measure the boot cmdline args into the ima log.
+> 
+> - call ima_kexec_cmdline from kexec_file_load.
+> - move the call ima_add_kexec_buffer after the cmdline
+> args have been measured.
+> 
+> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Dave Young <dyoung@redhat.com>
 
-Ok, I'll experiment with backcharging in the cpu controller.  Initial plan is
-to smooth out resource usage by backcharging after each chunk of work that each
-helper thread does rather than do one giant backcharge after the multithreaded
-job is over.  May turn out better performance-wise to do it less often than
-this.
+Any chance we could get some Acks?
 
-I'll also experiment with getting workqueue workers to respect cpuset without
-migrating.  Seems to make sense to use the intersection of an unbound worker's
-cpumask and the cpuset's cpumask, and make some compromises if the result is
-empty.
+thanks,
 
-Daniel
+Mimi
+
+> ---
+>  kernel/kexec_file.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 072b6ee55e3f..b0c724e5d86c 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -198,9 +198,6 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  		return ret;
+>  	image->kernel_buf_len = size;
+>  
+> -	/* IMA needs to pass the measurement list to the next kernel. */
+> -	ima_add_kexec_buffer(image);
+> -
+>  	/* Call arch image probe handlers */
+>  	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
+>  					    image->kernel_buf_len);
+> @@ -241,8 +238,14 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  			ret = -EINVAL;
+>  			goto out;
+>  		}
+> +
+> +		ima_kexec_cmdline(image->cmdline_buf,
+> +				  image->cmdline_buf_len - 1);
+>  	}
+>  
+> +	/* IMA needs to pass the measurement list to the next kernel. */
+> +	ima_add_kexec_buffer(image);
+> +
+>  	/* Call arch image load handlers */
+>  	ldata = arch_kexec_kernel_image_load(image);
+>  
+
