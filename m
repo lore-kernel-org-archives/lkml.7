@@ -2,124 +2,351 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEA8C31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7324C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CCCC205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:59:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fRbpPbZm"
+	by mail.kernel.org (Postfix) with ESMTP id 7F9CC20645
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:59:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437031AbfFLA7S (ORCPT
+        id S2437049AbfFLA7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 20:59:18 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33364 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404906AbfFLA7R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 20:59:17 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k187so7427288pga.0;
-        Tue, 11 Jun 2019 17:59:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=/PPIjQFyfTkfzuR15arYhai8Ecn9PF3DgttDvytbBEs=;
-        b=fRbpPbZmWMBO2LmKWljmW5qW2yJisw3oJ6EHD64jrKLYLIkx4A4CNJVQDgILcAoOf/
-         /R00cHT/1+MPVpakLW6g29V8UCcAHYY366Gia3aQhX/vpqjLv01eA2LGqAjCmIkMG17q
-         7De/HRdIf0hGPWEvoboV00jrHzbOPCsckHhxMzXgqX+Xt78ncLv0JnhALTAM24Lg+Fpf
-         t5cPOa37iZkEJJ08ZEPRx8wU7C3Ng9AQP6gYMRtKnUpbYlU0/du7YSk8gT0KG7XoKwXD
-         7Qakh3qE91hTIJnJdWgWCpzJKHrdyW47QKl+fY1jpaR2NUNEmaji4dvI5xNY+HzT4+9C
-         BjPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=/PPIjQFyfTkfzuR15arYhai8Ecn9PF3DgttDvytbBEs=;
-        b=jCUbGGXYNYyJgx9wZ2DH64iYma199SzcdcpEaK6av+1C7EH5fnXbVdrbj1soBZ4p4Q
-         QikGMe8Y+jOhlQeUaTh18JrdMrYO9J644g9ySNobkUtp0++zwyHfUYwCWzBahqS1zrH5
-         dJOShnwCrXlbYu4RhKW1BKiYks7NV0J2GLDq8najMdfwS613u4x2Ac61bLQM3Kp4t+0y
-         od2JY/WXdcNU9eKgcszAgbX8tG0RHiQuOJjsZYAx0bpp1AKAi/RmGKbeDWkxpkcqbkQ3
-         KAHqVI9TPf/BSRZfQHzxXKCTzZzibCMynMFYmpwStrY1yRKrsKo3rRZM2ITqwClSbL4y
-         j1Ww==
-X-Gm-Message-State: APjAAAWE3n4+qSXB/9Dsx4lviYkq0ZecQCHS0E3wBmdz8+Cc4U1UpKUD
-        1RYDAO/Z1/XBVnmeAf2Wukc=
-X-Google-Smtp-Source: APXvYqwuxEGCVtjkQGENZNWYuWf2GznvMIcBahV96dW1H6qlzZ2xG8KkHCZIsfB9Q0bS/K1mmdKrxw==
-X-Received: by 2002:a17:90a:bc08:: with SMTP id w8mr30345882pjr.45.1560301156268;
-        Tue, 11 Jun 2019 17:59:16 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id j19sm12544044pfi.72.2019.06.11.17.59.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 17:59:15 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 17:59:13 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH] Input: alps: Drop unlikely before IS_ERR(_OR_NULL)
-Message-ID: <20190612005913.GJ143729@dtor-ws>
-References: <20190605142428.84784-1-wangkefeng.wang@huawei.com>
- <20190605142428.84784-5-wangkefeng.wang@huawei.com>
- <20190605144240.pfrvlgxsdpacpwxf@pali>
- <36eac452-5477-3670-7980-765d0879ead4@huawei.com>
- <a1908a998b6d1d1e4cdd097a50b9c9ac9b00caae.camel@perches.com>
+        Tue, 11 Jun 2019 20:59:30 -0400
+Received: from mga05.intel.com ([192.55.52.43]:39480 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404906AbfFLA7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 20:59:30 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 17:59:28 -0700
+X-ExtLoop1: 1
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga004.jf.intel.com with ESMTP; 11 Jun 2019 17:59:23 -0700
+Cc:     baolu.lu@linux.intel.com, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alan Cox <alan@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@intel.com>
+Subject: Re: [PATCH v4 4/9] iommu: Add bounce page APIs
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190603011620.31999-1-baolu.lu@linux.intel.com>
+ <20190603011620.31999-5-baolu.lu@linux.intel.com>
+ <e404133f-dade-6fdf-08e9-6e4f15d23b66@gmail.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <e9fd7b85-add4-04e6-c588-a48d6db49b1e@linux.intel.com>
+Date:   Wed, 12 Jun 2019 08:52:15 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a1908a998b6d1d1e4cdd097a50b9c9ac9b00caae.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e404133f-dade-6fdf-08e9-6e4f15d23b66@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+Hi Pavel,
 
-On Wed, Jun 05, 2019 at 07:28:53PM -0700, Joe Perches wrote:
-> On Thu, 2019-06-06 at 09:08 +0800, Kefeng Wang wrote:
-> > On 2019/6/5 22:42, Pali Rohár wrote:
-> > > On Wednesday 05 June 2019 22:24:28 Kefeng Wang wrote:
-> > > > IS_ERR(_OR_NULL) already contain an 'unlikely' compiler flag,
-> > > > so no need to do that again from its callers. Drop it.
-> > > Hi! I already reviewed this patch and rejected it, see:
-> > > https://patchwork.kernel.org/patch/10817475/
-> > OK, please ignore it.
+Thanks a lot for your reviewing.
+
+On 6/11/19 8:10 PM, Pavel Begunkov wrote:
 > 
-> I think the stated reason of better readability isn't
-> particularly sensible as the object code produced is
-> actually slightly larger.
 > 
-> x86-64 defconfig (gcc 8.3.0)
+> On 03/06/2019 04:16, Lu Baolu wrote:
+>> IOMMU hardware always use paging for DMA remapping.  The
+>> minimum mapped window is a page size. The device drivers
+>> may map buffers not filling whole IOMMU window. It allows
+>> device to access to possibly unrelated memory and various
+>> malicious devices can exploit this to perform DMA attack.
+>>
+>> This introduces the bouce buffer mechanism for DMA buffers
+>> which doesn't fill a minimal IOMMU page. It could be used
+>> by various vendor specific IOMMU drivers as long as the
+>> DMA domain is managed by the generic IOMMU layer. Below
+>> APIs are added:
+>>
+>> * iommu_bounce_map(dev, addr, paddr, size, dir, attrs)
+>>    - Map a buffer start at DMA address @addr in bounce page
+>>      manner. For buffer parts that doesn't cross a whole
+>>      minimal IOMMU page, the bounce page policy is applied.
+>>      A bounce page mapped by swiotlb will be used as the DMA
+>>      target in the IOMMU page table. Otherwise, the physical
+>>      address @paddr is mapped instead.
+>>
+>> * iommu_bounce_unmap(dev, addr, size, dir, attrs)
+>>    - Unmap the buffer mapped with iommu_bounce_map(). The bounce
+>>      page will be torn down after the bounced data get synced.
+>>
+>> * iommu_bounce_sync(dev, addr, size, dir, target)
+>>    - Synce the bounced data in case the bounce mapped buffer is
+>>      reused.
+>>
+>> The whole APIs are included within a kernel option IOMMU_BOUNCE_PAGE.
+>> It's useful for cases where bounce page doesn't needed, for example,
+>> embedded cases.
+>>
+>> Cc: Ashok Raj <ashok.raj@intel.com>
+>> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>> Cc: Kevin Tian <kevin.tian@intel.com>
+>> Cc: Alan Cox <alan@linux.intel.com>
+>> Cc: Mika Westerberg <mika.westerberg@intel.com>
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>>   drivers/iommu/Kconfig |  14 +++++
+>>   drivers/iommu/iommu.c | 119 ++++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/iommu.h |  35 +++++++++++++
+>>   3 files changed, 168 insertions(+)
+>>
+>> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+>> index 83664db5221d..d837ec3f359b 100644
+>> --- a/drivers/iommu/Kconfig
+>> +++ b/drivers/iommu/Kconfig
+>> @@ -86,6 +86,20 @@ config IOMMU_DEFAULT_PASSTHROUGH
+>>   
+>>   	  If unsure, say N here.
+>>   
+>> +config IOMMU_BOUNCE_PAGE
+>> +	bool "Use bounce page for untrusted devices"
+>> +	depends on IOMMU_API
+>> +	select SWIOTLB
+>> +	help
+>> +	  IOMMU hardware always use paging for DMA remapping. The minimum
+>> +	  mapped window is a page size. The device drivers may map buffers
+>> +	  not filling whole IOMMU window. This allows device to access to
+>> +	  possibly unrelated memory and malicious device can exploit this
+>> +	  to perform a DMA attack. Select this to use a bounce page for the
+>> +	  buffer which doesn't fill a whole IOMU page.
+>> +
+>> +	  If unsure, say N here.
+>> +
+>>   config OF_IOMMU
+>>          def_bool y
+>>          depends on OF && IOMMU_API
+>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>> index 2a906386bb8e..fa44f681a82b 100644
+>> --- a/drivers/iommu/iommu.c
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -2246,3 +2246,122 @@ int iommu_sva_get_pasid(struct iommu_sva *handle)
+>>   	return ops->sva_get_pasid(handle);
+>>   }
+>>   EXPORT_SYMBOL_GPL(iommu_sva_get_pasid);
+>> +
+>> +#ifdef CONFIG_IOMMU_BOUNCE_PAGE
+>> +
+>> +/*
+>> + * Bounce buffer support for external devices:
+>> + *
+>> + * IOMMU hardware always use paging for DMA remapping. The minimum mapped
+>> + * window is a page size. The device drivers may map buffers not filling
+>> + * whole IOMMU window. This allows device to access to possibly unrelated
+>> + * memory and malicious device can exploit this to perform a DMA attack.
+>> + * Use bounce pages for the buffer which doesn't fill whole IOMMU pages.
+>> + */
+>> +
+>> +static inline size_t
+>> +get_aligned_size(struct iommu_domain *domain, dma_addr_t addr, size_t size)
+>> +{
+>> +	unsigned long page_size = 1 << __ffs(domain->pgsize_bitmap);
+>> +	unsigned long offset = page_size - 1;
+>> +
+>> +	return ALIGN((addr & offset) + size, page_size);
+>> +}
+>> +
+>> +dma_addr_t iommu_bounce_map(struct device *dev, dma_addr_t iova,
+>> +			    phys_addr_t paddr, size_t size,
+>> +			    enum dma_data_direction dir,
+>> +			    unsigned long attrs)
+>> +{
+>> +	struct iommu_domain *domain;
+>> +	unsigned int min_pagesz;
+>> +	phys_addr_t tlb_addr;
+>> +	size_t aligned_size;
+>> +	int prot = 0;
+>> +	int ret;
+>> +
+>> +	domain = iommu_get_dma_domain(dev);
+>> +	if (!domain)
+>> +		return DMA_MAPPING_ERROR;
+>> +
+>> +	if (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL)
+>> +		prot |= IOMMU_READ;
+>> +	if (dir == DMA_FROM_DEVICE || dir == DMA_BIDIRECTIONAL)
+>> +		prot |= IOMMU_WRITE;
+>> +
+>> +	aligned_size = get_aligned_size(domain, paddr, size);
+>> +	min_pagesz = 1 << __ffs(domain->pgsize_bitmap);
+>> +
+>> +	/*
+>> +	 * If both the physical buffer start address and size are
+>> +	 * page aligned, we don't need to use a bounce page.
+>> +	 */
+>> +	if (!IS_ALIGNED(paddr | size, min_pagesz)) {
+>> +		tlb_addr = swiotlb_tbl_map_single(dev,
+>> +				__phys_to_dma(dev, io_tlb_start),
+>> +				paddr, size, aligned_size, dir, attrs);
+>> +		if (tlb_addr == DMA_MAPPING_ERROR)
+>> +			return DMA_MAPPING_ERROR;
+>> +	} else {
+>> +		tlb_addr = paddr;
+>> +	}
+>> +
+>> +	ret = iommu_map(domain, iova, tlb_addr, aligned_size, prot);
+>> +	if (ret) {
+>> +		swiotlb_tbl_unmap_single(dev, tlb_addr, size,
+>> +					 aligned_size, dir, attrs);
+> You would probably want to check, whether @tlb_addr came from
+> swiotlb_tbl_map_single. (is_swiotlb_buffer() or reuse predicate above).
+
+Right. Good catch.
+
 > 
-> $ size drivers/input/mouse/alps.o*
->    text	   data	    bss	    dec	    hex	filename
->   29416	     56	      0	  29472	   7320	drivers/input/mouse/alps.o.new
->   29432	     56	      0	  29488	   7330	drivers/input/mouse/alps.o.old
+> 
+>> +		return DMA_MAPPING_ERROR;
+>> +	}
+>> +
+>> +	return iova;
+>> +}
+>> +EXPORT_SYMBOL_GPL(iommu_bounce_map);
+>> +
+>> +static inline phys_addr_t
+>> +iova_to_tlb_addr(struct iommu_domain *domain, dma_addr_t addr)
+>> +{
+>> +	if (unlikely(!domain->ops || !domain->ops->iova_to_phys))
+>> +		return 0;
+>> +
+>> +	return domain->ops->iova_to_phys(domain, addr);
+>> +}
+>> +
+>> +void iommu_bounce_unmap(struct device *dev, dma_addr_t iova, size_t size,
+>> +			enum dma_data_direction dir, unsigned long attrs)
+>> +{
+>> +	struct iommu_domain *domain;
+>> +	phys_addr_t tlb_addr;
+>> +	size_t aligned_size;
+>> +
+>> +	domain = iommu_get_dma_domain(dev);
+>> +	if (WARN_ON(!domain))
+>> +		return;
+>> +
+>> +	aligned_size = get_aligned_size(domain, iova, size);
+>> +	tlb_addr = iova_to_tlb_addr(domain, iova);
+>> +	if (WARN_ON(!tlb_addr))
+>> +		return;
+>> +
+>> +	iommu_unmap(domain, iova, aligned_size);
+>> +	if (is_swiotlb_buffer(tlb_addr))
+> 
+> Is there any chance, this @tlb_addr is a swiotlb buffer, but owned by an
+> API user? I mean something like
+> iommu_bounce_map(swiotlb_tbl_map_single()).
+> 
+> Then, to retain ownership semantic, we shouldn't unmap it. Maybe to
+> check and fail iommu_bounce_map() to be sure?
 
-If gcc produces worse code for double unlikely, you should probably
-report it to gcc folks, no? Or double unlikely turns into likely?
+For untrusted devices, we always force iommu to enforce the DMA
+isolation. There are no cases where @tlb_addr is a swiotlb buffer
+owned by a device driver as far as I can see.
+
+Best regards,
+Baolu
 
 > 
-> Also if this unlikely is _really_ useful, perhaps the
-> !IS_ERR immediately after could also use likely as the
-> test seems only done for an OOM condition.
-
-No, once you take the IS_ERR_OR_NULL(priv->dev3) == true branch it stops
-being hot path and additional annotations are completely unneeded.
-
-And if we failed to create and register priv->dev3 device - that's an
-error and system is degraded. Can't do much here.
-
-Thanks.
-
--- 
-Dmitry
+> 
+>> +		swiotlb_tbl_unmap_single(dev, tlb_addr, size,
+>> +					 aligned_size, dir, attrs);
+>> +}
+>> +EXPORT_SYMBOL_GPL(iommu_bounce_unmap);
+>> +
+>> +void iommu_bounce_sync(struct device *dev, dma_addr_t addr, size_t size,
+>> +		       enum dma_data_direction dir, enum dma_sync_target target)
+>> +{
+>> +	struct iommu_domain *domain;
+>> +	phys_addr_t tlb_addr;
+>> +
+>> +	domain = iommu_get_dma_domain(dev);
+>> +	if (WARN_ON(!domain))
+>> +		return;
+>> +
+>> +	tlb_addr = iova_to_tlb_addr(domain, addr);
+>> +	if (is_swiotlb_buffer(tlb_addr))
+>> +		swiotlb_tbl_sync_single(dev, tlb_addr, size, dir, target);
+>> +}
+>> +EXPORT_SYMBOL_GPL(iommu_bounce_sync);
+>> +#endif /* CONFIG_IOMMU_BOUNCE_PAGE */
+>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>> index 91af22a344e2..814c0da64692 100644
+>> --- a/include/linux/iommu.h
+>> +++ b/include/linux/iommu.h
+>> @@ -25,6 +25,8 @@
+>>   #include <linux/errno.h>
+>>   #include <linux/err.h>
+>>   #include <linux/of.h>
+>> +#include <linux/swiotlb.h>
+>> +#include <linux/dma-direct.h>
+>>   
+>>   #define IOMMU_READ	(1 << 0)
+>>   #define IOMMU_WRITE	(1 << 1)
+>> @@ -499,6 +501,39 @@ int iommu_sva_set_ops(struct iommu_sva *handle,
+>>   		      const struct iommu_sva_ops *ops);
+>>   int iommu_sva_get_pasid(struct iommu_sva *handle);
+>>   
+>> +#ifdef CONFIG_IOMMU_BOUNCE_PAGE
+>> +dma_addr_t iommu_bounce_map(struct device *dev, dma_addr_t iova,
+>> +			    phys_addr_t paddr, size_t size,
+>> +			    enum dma_data_direction dir,
+>> +			    unsigned long attrs);
+>> +void iommu_bounce_unmap(struct device *dev, dma_addr_t iova, size_t size,
+>> +			enum dma_data_direction dir, unsigned long attrs);
+>> +void iommu_bounce_sync(struct device *dev, dma_addr_t addr, size_t size,
+>> +		       enum dma_data_direction dir,
+>> +		       enum dma_sync_target target);
+>> +#else
+>> +static inline
+>> +dma_addr_t iommu_bounce_map(struct device *dev, dma_addr_t iova,
+>> +			    phys_addr_t paddr, size_t size,
+>> +			    enum dma_data_direction dir,
+>> +			    unsigned long attrs)
+>> +{
+>> +	return DMA_MAPPING_ERROR;
+>> +}
+>> +
+>> +static inline
+>> +void iommu_bounce_unmap(struct device *dev, dma_addr_t iova, size_t size,
+>> +			enum dma_data_direction dir, unsigned long attrs)
+>> +{
+>> +}
+>> +
+>> +static inline
+>> +void iommu_bounce_sync(struct device *dev, dma_addr_t addr, size_t size,
+>> +		       enum dma_data_direction dir, enum dma_sync_target target)
+>> +{
+>> +}
+>> +#endif /* CONFIG_IOMMU_BOUNCE_PAGE */
+>> +
+>>   #else /* CONFIG_IOMMU_API */
+>>   
+>>   struct iommu_ops {};
+>>
+> 
