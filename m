@@ -2,212 +2,347 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D571C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 21:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8246CC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 21:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17DF3206BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 21:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B3F215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 21:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560373937;
-	bh=7CIGt69fnY+Oo0VNwYzt3Fg4wy5520t2tFyR/kiTyj4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=GVkUdnSuC3Tcoz+Xf6XuZ4dLep/SqTDM75SEt4165Ev6nnc5zS6FeD4QjcL+LnlYU
-	 Bb/iO8+e3w+VKgJt4VbQh0xXo25v2fllugDAqSSN7TvkAFV+L0UbtmN7L1qbqJRd9/
-	 uXhXz1l7/BLD0kmK4vSKXIgw2B8l7uopk2QDviAk=
+	s=default; t=1560373958;
+	bh=lIHZBa5rvVczy0e+qjlodC+zm9PigULVNIgbyXjFnp0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IB1bQj/0f7rvCpe4hTS/SJU19oFxhR0GL3RMJtHnfYR/jvqFQicwfpQ8uKfD6D74q
+	 yZI3ffvq4eIYWra/bdb6yS2ema7oswpWuj11JxipLIEnbybpZbZvJ4T3ZAk4eVDzUv
+	 fGUopxz+4F1tV8DqHddVQ+LPY97UFV6YUdCozeG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbfFLVMO (ORCPT
+        id S1728627AbfFLVMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 17:12:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46326 "EHLO mail.kernel.org"
+        Wed, 12 Jun 2019 17:12:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726599AbfFLVMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 17:12:14 -0400
-Received: from [192.168.1.32] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        id S1726599AbfFLVMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 17:12:36 -0400
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48D71206BB;
-        Wed, 12 Jun 2019 21:12:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70D1D215EA;
+        Wed, 12 Jun 2019 21:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560373933;
-        bh=7CIGt69fnY+Oo0VNwYzt3Fg4wy5520t2tFyR/kiTyj4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fxWCuUypWFT3jnslFsGTruAdXtPrPlBpkHwUJXRQsm2RZAiefki7r77ZP/MfEbFMc
-         NBKUztOFxJLL8VLowEz6W8LWGU++/HNbU2F8vDYBGZrrqIoR+DevkPlxnGcuJ2IYsF
-         t5i5HIAMozQ2TgDP75QSrfXMyWqsfngPVTWvpX9Q=
-Subject: Re: [PATCHv5 2/2] mtd: spi-nor: cadence-quadspi: add reset control
-To:     Tudor.Ambarus@microchip.com, linux-mtd@lists.infradead.org
-Cc:     marex@denx.de, dwmw2@infradead.org, computersforpeace@gmail.com,
-        bbrezillon@kernel.org, linux-kernel@vger.kernel.org,
-        tien.fong.chee@intel.com
-References: <20190612143744.30718-1-dinguyen@kernel.org>
- <20190612143744.30718-2-dinguyen@kernel.org>
- <2ee32a0d-7523-0b23-072e-e68af4977db7@microchip.com>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <7a31d825-53a0-5b1f-af88-daff2b529587@kernel.org>
-Date:   Wed, 12 Jun 2019 16:12:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        s=default; t=1560373954;
+        bh=lIHZBa5rvVczy0e+qjlodC+zm9PigULVNIgbyXjFnp0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=J5SNITo8cVRIaz56sMRSfsTS1PyirvZ6YZCqr0frYdXxp3EviJBEhZs7YI9Cs8OwO
+         mKJrloZ8bHfmMtCj6XhwGCJSFL5DJtP5/dRqyvdc27nUx3QmkAsZJ4amsic55f+gpa
+         AJtjGijYaU/TXl4ohGx06bPfI2Si7EmlUuYR+Lf0=
+Received: by mail-qk1-f169.google.com with SMTP id a27so11341438qkk.5;
+        Wed, 12 Jun 2019 14:12:34 -0700 (PDT)
+X-Gm-Message-State: APjAAAU1yFdsjoiXOymWP2tsR2hRDRlZIwcBvPbmK1I1/poEmvSN2qEZ
+        U1O4R2+wWsBIdP1Rb1T68VTyC8FkPyaB58+cwA==
+X-Google-Smtp-Source: APXvYqzjbicMQANY5kSF9m9PVtl+ECZShALdn/QKiThxwVk5k9mZJlhGUVDBDQTT/h5gtanhxK7qW3kyIF8ZbNf3pms=
+X-Received: by 2002:a05:620a:13d1:: with SMTP id g17mr12838675qkl.121.1560373953643;
+ Wed, 12 Jun 2019 14:12:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2ee32a0d-7523-0b23-072e-e68af4977db7@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190604003218.241354-1-saravanak@google.com> <20190604003218.241354-2-saravanak@google.com>
+ <CAL_JsqLWfNUJm23x+doJDwyuMLOvqWAnLKGQYcgVct-AyWb9LQ@mail.gmail.com>
+ <570474f4-8749-50fd-5f72-36648ed44653@gmail.com> <CAGETcx8M3YkUBZ-e2LLfrbWgnMKMMNG5cv=p8MMmBe7ZyPJ7xw@mail.gmail.com>
+ <20190611215242.GE212690@google.com> <CAL_Jsq+V9QUBpzmPyYjWe93-06-mpU=5JmUqvf-QsnuLxPnmUA@mail.gmail.com>
+ <20190612142159.GA11563@kroah.com> <CAL_Jsq+x=_6jfC7hkHy+zAaPRB_3K7i9axRiBMHGE9mHQQtPtg@mail.gmail.com>
+ <20190612170821.GA6396@kroah.com> <CAL_JsqJRPesdBQH7b7kDLs69pj7Ehw7DFx-pMA-eB2f+PY+Ngg@mail.gmail.com>
+ <CAGETcx8tJREbq0DP_unPOYk-9S8T97EkRj+9+iC=uHc1QfrSpw@mail.gmail.com>
+In-Reply-To: <CAGETcx8tJREbq0DP_unPOYk-9S8T97EkRj+9+iC=uHc1QfrSpw@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 12 Jun 2019 15:12:21 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+D_isEk6M9QAK3rgr3U4BdmCViN6+8wanoFCPOA82GCQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+D_isEk6M9QAK3rgr3U4BdmCViN6+8wanoFCPOA82GCQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH v1 1/5] of/platform: Speed up of_find_device_by_node()
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sandeep Patil <sspatil@android.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        David Collins <collinsd@codeaurora.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 12, 2019 at 1:29 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Wed, Jun 12, 2019 at 11:19 AM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Wed, Jun 12, 2019 at 11:08 AM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Wed, Jun 12, 2019 at 10:53:09AM -0600, Rob Herring wrote:
+> > > > On Wed, Jun 12, 2019 at 8:22 AM Greg Kroah-Hartman
+> > > > <gregkh@linuxfoundation.org> wrote:
+> > > > >
+> > > > > On Wed, Jun 12, 2019 at 07:53:39AM -0600, Rob Herring wrote:
+> > > > > > On Tue, Jun 11, 2019 at 3:52 PM Sandeep Patil <sspatil@android.com> wrote:
+> > > > > > >
+> > > > > > > On Tue, Jun 11, 2019 at 01:56:25PM -0700, 'Saravana Kannan' via kernel-team wrote:
+> > > > > > > > On Tue, Jun 11, 2019 at 8:18 AM Frank Rowand <frowand.list@gmail.com> wrote:
+> > > > > > > > >
+> > > > > > > > > Hi Saravana,
+> > > > > > > > >
+> > > > > > > > > On 6/10/19 10:36 AM, Rob Herring wrote:
+> > > > > > > > > > Why are you resending this rather than replying to Frank's last
+> > > > > > > > > > comments on the original?
+> > > > > > > > >
+> > > > > > > > > Adding on a different aspect...  The independent replies from three different
+> > > > > > > > > maintainers (Rob, Mark, myself) pointed out architectural issues with the
+> > > > > > > > > patch series.  There were also some implementation issues brought out.
+> > > > > > > > > (Although I refrained from bringing up most of my implementation issues
+> > > > > > > > > as they are not relevant until architecture issues are resolved.)
+> > > > > > > >
+> > > > > > > > Right, I'm not too worried about the implementation issues before we
+> > > > > > > > settle on the architectural issues. Those are easy to fix.
+> > > > > > > >
+> > > > > > > > Honestly, the main points that the maintainers raised are:
+> > > > > > > > 1) This is a configuration property and not describing the device.
+> > > > > > > > Just use the implicit dependencies coming from existing bindings.
+> > > > > > > >
+> > > > > > > > I gave a bunch of reasons for why I think it isn't an OS configuration
+> > > > > > > > property. But even if that's not something the maintainers can agree
+> > > > > > > > to, I gave a concrete example (cyclic dependencies between clock
+> > > > > > > > provider hardware) where the implicit dependencies would prevent one
+> > > > > > > > of the devices from probing till the end of time. So even if the
+> > > > > > > > maintainers don't agree we should always look at "depends-on" to
+> > > > > > > > decide the dependencies, we still need some means to override the
+> > > > > > > > implicit dependencies where they don't match the real dependency. Can
+> > > > > > > > we use depends-on as an override when the implicit dependencies aren't
+> > > > > > > > correct?
+> > > > > > > >
+> > > > > > > > 2) This doesn't need to be solved because this is just optimizing
+> > > > > > > > probing or saving power ("we should get rid of this auto disabling"):
+> > > > > > > >
+> > > > > > > > I explained why this patch series is not just about optimizing probe
+> > > > > > > > ordering or saving power. And why we can't ignore auto disabling
+> > > > > > > > (because it's more than just auto disabling). The kernel is currently
+> > > > > > > > broken when trying to use modules in ARM SoCs (probably in other
+> > > > > > > > systems/archs too, but I can't speak for those).
+> > > > > > > >
+> > > > > > > > 3) Concerns about backwards compatibility
+> > > > > > > >
+> > > > > > > > I pointed out why the current scheme (depends-on being the only source
+> > > > > > > > of dependency) doesn't break compatibility. And if we go with
+> > > > > > > > "depends-on" as an override what we could do to keep backwards
+> > > > > > > > compatibility. Happy to hear more thoughts or discuss options.
+> > > > > > > >
+> > > > > > > > 4) How the "sync_state" would work for a device that supplies multiple
+> > > > > > > > functionalities but a limited driver.
+> > > > > > >
+> > > > > > > <snip>
+> > > > > > > To be clear, all of above are _real_ problems that stops us from efficiently
+> > > > > > > load device drivers as modules for Android.
+> > > > > > >
+> > > > > > > So, if 'depends-on' doesn't seem like the right approach and "going back to
+> > > > > > > the drawing board" is the ask, could you please point us in the right
+> > > > > > > direction?
+> > > > > >
+> > > > > > Use the dependencies which are already there in DT. That's clocks,
+> > > > > > pinctrl, regulators, interrupts, gpio at a minimum. I'm simply not
+> > > > > > going to accept duplicating all those dependencies in DT. The downside
+> > > > > > for the kernel is you have to address these one by one and can't have
+> > > > > > a generic property the driver core code can parse. After that's in
+> > > > > > place, then maybe we can consider handling any additional dependencies
+> > > > > > not already captured in DT. Once all that is in place, we can probably
+> > > > > > sort device and/or driver lists to optimize the probe order (maybe the
+> > > > > > driver core already does that now?).
+> > > > > >
+> > > > > > Get rid of the auto disabling of clocks and regulators in
+> > > > > > late_initcall. It's simply not a valid marker that boot is done when
+> > > > > > modules are involved. We probably can't get rid of it as lot's of
+> > > > > > platforms rely on that, so it will have to be opt out. Make it the
+> > > > > > platform's responsibility for ensuring a consistent state.
+> > > > > >
+> > > > > > Perhaps we need a 'boot done' or 'stop deferring probe' trigger from
+> > > > > > userspace in order to make progress if dependencies are missing.
+> > > > >
+> > > > > People have tried to do this multiple times, and you never really know
+> > > > > when "boot is done" due to busses that have discoverable devices and
+> > > > > async probing of other busses.
+> > > >
+> > > > Yes, I know which is why I proposed the second name with more limited
+> > > > meaning/function.
+> > >
+> > > I still don't want to have the kernel have to rely on this.
+> > >
+> > > > > You do know "something" when you pivot to a new boot disk, and when you
+> > > > > try to load init, but given initramfs and the fact that modules are
+> > > > > usually included on them, that's not really a good indication that
+> > > > > anything is "finished".
+> > > > >
+> > > > > I don't want userspace to be responsible for telling the kernel, "hey
+> > > > > you should be finished now!", as that's an async notification that is
+> > > > > going to be ripe for problems.
+> > > >
+> > > > The usecase I care about here is when the DT has the dependency
+> > > > information, but the kernel doesn't have the driver and the dependency
+> > > > is never resolved.
+> > >
+> > > Then we have the same situation as today and nothing different happens,
+> > > right?
+> >
+> > Huh?
+> >
+> > This works today, but not for modules.
+>
+> Replying to this a bit further down.
+>
+> >
+> > >
+> > > > The same problem has to be solved with a
+> > > > 'depends-on' property. This easily happens with a new DT with added
+> > > > dependencies like pinctrl and an old kernel that doesn't have the
+> > > > "new" driver.
+>
+> Isn't this the perfect example of an "implicit dependency" in a DT
+> node not being a mandatory dependency? The old kernel worked fine with
+> older DT without the added pinctrl dependency, so treating it as a
+> mandatory dependency seems wrong for that particular device?
+> depends-on avoids all this because the older kernel won't parse
+> depends-on. And for newer kernels, it'll parse only what depends-on
+> says are dependencies and not make wrong assumptions.
 
+What happens when the older kernel is a kernel that parses
+'depends-on'? What's 'older' is a moving target. We just need a
+'depends-on-v5.2', 'depends-on-v5.3', etc.
 
-On 6/12/19 10:07 AM, Tudor.Ambarus@microchip.com wrote:
-> 
-> 
-> On 06/12/2019 05:37 PM, Dinh Nguyen wrote:
->> External E-Mail
->>
->>
->> Get the reset control properties for the QSPI controller and bring them
->> out of reset. Most will have just one reset bit, but there is an additional
->> OCP reset bit that is used ECC. The OCP reset bit will also need to get
->> de-asserted as well. [1]
->>
->> The reason this patch is needed is in the case where a bootloader leaves
->> the QSPI controller in a reset state, or a state where init cannot occur
->> successfully, this patch will put the QSPI controller into a clean state.
->>
->> [1] https://www.intel.com/content/www/us/en/programmable/hps/arria-10/hps.html#reg_soc_top/sfo1429890575955.html
->>
->> Suggested-by: Tien-Fong Chee <tien.fong.chee@intel.com>
->> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
->> ---
->> v5: remove udelay(not needed) on tested hardware
->>     group reset assert/deassert together
->>     update commit message with reasoning for patch
->> v4: fix compile error
->> v3: return full error by using PTR_ERR(rtsc)
->>     move reset control calls until after the clock enables
->>     use udelay(2) to be safe
->>     Add optional OCP(Open Core Protocol) reset signal
->> v2: use devm_reset_control_get_optional_exclusive
->>     print an error message
->>     return -EPROBE_DEFER
->> ---
->>  drivers/mtd/spi-nor/cadence-quadspi.c | 26 ++++++++++++++++++++++++++
->>  1 file changed, 26 insertions(+)
->>
->> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
->> index 792628750eec..f8b1009e488c 100644
->> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
->> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
->> @@ -34,6 +34,7 @@
->>  #include <linux/of.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/pm_runtime.h>
->> +#include <linux/reset.h>
->>  #include <linux/sched.h>
->>  #include <linux/spi/spi.h>
->>  #include <linux/timer.h>
->> @@ -1336,6 +1337,8 @@ static int cqspi_probe(struct platform_device *pdev)
->>  	struct cqspi_st *cqspi;
->>  	struct resource *res;
->>  	struct resource *res_ahb;
->> +	struct reset_control *rstc;
->> +	struct reset_control *rstc_ocp;
->>  	const struct cqspi_driver_platdata *ddata;
->>  	int ret;
->>  	int irq;
->> @@ -1402,6 +1405,29 @@ static int cqspi_probe(struct platform_device *pdev)
->>  		goto probe_clk_failed;
->>  	}
->>  
->> +	/* Obtain QSPI reset control */
->> +	rstc = devm_reset_control_get_optional_exclusive(dev, "qspi");
->> +	if (IS_ERR(rstc)) {
->> +		dev_err(dev, "Cannot get QSPI reset.\n");
->> +		return PTR_ERR(rstc);
->> +	}
->> +
->> +	rstc_ocp = devm_reset_control_get_optional_exclusive(dev, "qspi-ocp");
->> +	if (IS_ERR(rstc_ocp)) {
->> +		dev_err(dev, "Cannot get QSPI OCP reset.\n");
->> +		return PTR_ERR(rstc_ocp);
->> +	}
->> +
->> +	if (rstc) {
-> 
-> Hi, Dinh,
-> 
-> reset_control_assert/deassert() already have checks for null, you can call them
-> directly without checking for null.
-> 
->> +		reset_control_assert(rstc);
->> +		reset_control_deassert(rstc);
-> 
-> Is there any difference between:
-> reset_control_assert(rstc);
-> reset_control_assert(rstc_ocp);
-> 
-> reset_control_deassert(rstc);
-> reset_control_deassert(rstc_ocp);
-> 
-> and:
-> 
-> reset_control_assert(rstc);
-> reset_control_deassert(rstc);
-> 
-> reset_control_assert(rstc_ocp);
-> reset_control_deassert(rstc_ocp);
-> 
-> Which one would you choose?
-> 
+It's not just 'old' kernels. Current kernels which didn't enable some
+driver also have the same problem. All of this is mostly just a
+development problem on incomplete platforms. But it is a real problem
+that SUSE folks have raised.
 
-I prefer grouping the assert/deassert for each reset pointer together.
+> > > > Another example is IOMMUs. We need some way to say stop
+> > > > waiting for dependencies. It is really just a debug option (of course,
+> > > > how to prevent a debug option from being used in production?). This
+> > > > works now for built-in cases with the same late_initcall abuse.
+> > >
+> > > What is a debug option?  We need something "for real".
+> > >
+> > > > Using late_initcall_sync as an indicator has all the same problems
+> > > > with userspace indicating boot finished. We should get rid of the
+> > > > late_initcall_sync abuses and stop trying to work around them.
+> > >
+> > > I agree, but that's not the issue here.
+> >
+> > It is because the cover letter mentions it and downstream work around it.
+>
+> This patch series is trying to remove the use of late_initcall_sync
+> and instead relying on dependency information coming from DT. So, you
+> are agreeing with the patchset.
 
-Dinh
+That aspect, yes. It was Greg that said the late_initcall_sync abuses
+were not the issue. 'depends-on' is the only thing I'm objecting to
+ATM and I understand the problem (you're not the first to try). I've
+not studied the the details of the patchset though beyond that.
+
+> > > > > I really like the "depends-on" information, as it shows a topology that
+> > > > > DT doesn't seem to be able to show today, yet we rely on it in the
+> > > > > kernel with the whole deferred probing mess.  To me, there doesn't seem
+> > > > > to be any other way to properly "know" this.
+> > > >
+> > > > As I said, DT *does* have this dependency information already. The
+> > > > problem is the kernel probing doesn't use it. Fix that and then we can
+> > > > discuss dependencies the DT doesn't provide that the kernel needs.
+> > >
+> > > Where can the kernel probing be fixed to use it?  What am I missing that
+> > > can be done instead of what this patchset does?
+> >
+> > Somewhere, either in each subsystem or in the DT or core code creating
+> > struct devices, you need to iterate thru the dependencies. Take clocks
+> > as an example:
+> >
+> > for each node:
+> >   for each 'clocks' phandle
+> >     Lookup struct device from clock phandle
+> >     Add the clock provider struct device to node's struct device links
+> >
+> > Now, repeat this for regulators, interrupts, etc.
+>
+> I'm more than happy to do this if the maintainers can accept this as a
+> solution, but then we need to agree that we need an override property
+> if the implicit dependency isn't a mandatory dependency. We also need
+> to agree on how we do this without breaking backwards compatibility.
+> Either as a config option for this feature or have a property in the
+> "chosen" node to say it's okay to assume existing bindings imply
+> mandatory dependencies (it's just describing the DT more explicitly
+> and the kernel will use it to enable this feature).
+
+Thinking of the above example I gave, the problem is mandatory or not
+can't be decided in the DT. It's a function of what the kernel
+supports or not, so the kernel has to decide. With a 'depends-on'
+property, the value you'd want depends on which kernel do you boot. If
+I'm booting a kernel with the pinctrl driver, then pinctrl is a
+mandatory dependency. If I'm booting a kernel without the pinctrl
+driver, then pinctrl is not a 'depends-on' dependency. Ignoring
+dependencies like this case only works when things are built-in and
+only for specific subsystems where it makes sense. It would be nice to
+solve it for modules too, but that can be done later.
+
+There's also the case of dependencies where the driver decides how to
+handle them. For example, UARTs will use DMA if the dmaengine driver
+is available and that decision is (at least for some drivers I've
+looked at) made on every open(). I suppose in that case, the driver
+could remove the dependency link since it knows it can work with or
+without DMA, though we'd need some sort of mechanism to do that.
+
+> Although regulator binding are a "problem" because the kernel will
+> have to parse every property in a node to check if it ends with
+> -supply and then treat it as if it's a regulator binding (even though
+> it might not be). So regulators will need some kind of "opt out" in
+> the kernel (not DT).
+
+Yes, that's unfortunate. GPIO is the same. You can safely assume that
+'-supply' is a regulator. This is at least somewhat enforced by the
+binding schema now.
+
+We probably need a for_each_of_property_with_suffix() iterator for
+these cases and with some pointer math on the property names or a
+custom str compare function, it shouldn't be much slower to match.
+
+> > This series is pretty much doing the same thing, you just have to
+> > parse each provider rather than only 'depends-on'.
+> >
+> > One issue is the struct device for the dependency may not be created
+> > yet. I think this series would have the same issue, but haven't dug
+> > into how it avoids that or whether it just ignores it and falls back
+> > to deferring probe.
+>
+> The patch series handles this properly and doesn't fall back to
+> deferred probing.
+>
+> > I'm also not clear on how you create struct devices and add
+> > dependencies before probing gets attempted. If a driver is already
+> > registered, probe is going to be attempted before any dependencies are
+> > added. I guess the issue is avoided with drivers being modules, but
+> > any solution should work for built-in too.
+>
+> This is also handled properly in the series.
+>
+> I've actually boot tested both these scenarios you call out and the
+> patch series handles them properly.
+
+Okay, that's good.
+
+> But you are missing the main point here. The goal isn't to just
+> eliminate deferred probing (it's a great side effect even it it just
+> stops 99% of them), but also remove the bad assumption that
+> late_initcall_sync() means all the devices are probed. The suppliers
+> need a better signal (which the patch series provides) to tell when
+> they can "unfreeze" the resources left on at boot.
+
+I understand this. I think I was clear on my opinion about using
+late_initcall_sync.
+
+Rob
