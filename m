@@ -6,32 +6,33 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1013C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 21:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DAEC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 21:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5D020B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 21:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30D820B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 21:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbfFLVPv (ORCPT
+        id S1728643AbfFLVQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 17:15:51 -0400
-Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:15478 "EHLO
-        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbfFLVPu (ORCPT
+        Wed, 12 Jun 2019 17:16:33 -0400
+Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:20038 "EHLO
+        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfFLVQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 17:15:50 -0400
-Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
+        Wed, 12 Jun 2019 17:16:33 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Jun 2019 17:16:32 EDT
+Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
   authenticity information available from domain of
   andrew.cooper3@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
   envelope-from="Andrew.Cooper3@citrix.com";
   x-sender="andrew.cooper3@citrix.com";
   x-conformance=sidf_compatible
-Received-SPF: Pass (esa2.hc3370-68.iphmx.com: domain of
+Received-SPF: Pass (esa6.hc3370-68.iphmx.com: domain of
   Andrew.Cooper3@citrix.com designates 162.221.158.21 as
   permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
   envelope-from="Andrew.Cooper3@citrix.com";
   x-sender="Andrew.Cooper3@citrix.com";
   x-conformance=sidf_compatible; x-record-type="v=spf1";
@@ -39,34 +40,33 @@ Received-SPF: Pass (esa2.hc3370-68.iphmx.com: domain of
   ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
   ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
   ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
   envelope-from="Andrew.Cooper3@citrix.com";
   x-sender="postmaster@mail.citrix.com";
   x-conformance=sidf_compatible
-IronPort-SDR: qpTySvPBGZIdyyjQBWwwFHNJyib2P+8ncoVcQLvKIwJjC/hMb+BHC+K4c8HdJ9/sPpFFPHJVPO
- 1+eY6BPDU86zxm9jzc82aWfz6qX4+jaumGp//24O79AfE8ZxORh/4/RjWUXn48nY9DhWuVN6Il
- SHpFSfGvVtYvtnEQS/JGq9rQCs+f1IBIa79ZwnSifG0Slx7g2dIsbPZ5ngBejymawwuoJIFcVK
- MzBkhKyg39dxnJowzO98ftFiub2m3s0wh4e6lzqS9F2NMOLHH81XOLGI3EqrxtUAFFk4VeEUP+
- x0A=
+IronPort-SDR: QfRf9EeL1BNxpYwyX0nbaHzcrDo8wMEyclPRUDesaZsGVTKPMM7BppjUsiW+zRytvGtO/FSjZb
+ oA068Dc9XzZM67LDRU9TtehHKSnT8gSeH1KgeVyiwM2AxZnNBXwoXCFKA1CDSgmtf43B+jZmwU
+ M5PuivFzmR6df/orMp1GHDG+DC7OT5CAnyU+S5914GdYeeKqJtkqXMZD7/b2bNqA/z2zOXG7/I
+ O8CZ0wV88ckeDfFf9BK99d9UDsFNqSrKmnnyf3i2SNxPn4nFNZrEFE+ICv7158GopGVRrFHJyy
+ xBk=
 X-SBRS: 2.7
-X-MesageID: 1660932
-X-Ironport-Server: esa2.hc3370-68.iphmx.com
+X-MesageID: 1647832
+X-Ironport-Server: esa6.hc3370-68.iphmx.com
 X-Remote-IP: 162.221.158.21
 X-Policy: $RELAYED
 X-IronPort-AV: E=Sophos;i="5.63,367,1557201600"; 
-   d="scan'208";a="1660932"
-Subject: Re: [Xen-devel] [RFC PATCH 04/16] x86/xen: hypercall support for
- xenhost_t
+   d="scan'208";a="1647832"
+Subject: Re: [Xen-devel] [RFC PATCH 02/16] x86/xen: cpuid support in xenhost_t
 To:     Ankur Arora <ankur.a.arora@oracle.com>,
         <linux-kernel@vger.kernel.org>, <xen-devel@lists.xenproject.org>
 CC:     <jgross@suse.com>, <sstabellini@kernel.org>,
         <konrad.wilk@oracle.com>, <pbonzini@redhat.com>,
         <boris.ostrovsky@oracle.com>, <joao.m.martins@oracle.com>
 References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
- <20190509172540.12398-5-ankur.a.arora@oracle.com>
+ <20190509172540.12398-3-ankur.a.arora@oracle.com>
 From:   Andrew Cooper <andrew.cooper3@citrix.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=andrew.cooper3@citrix.com; prefer-encrypt=mutual; keydata=
@@ -112,16 +112,16 @@ Autocrypt: addr=andrew.cooper3@citrix.com; prefer-encrypt=mutual; keydata=
  B8WrhBLXDiYlyJT6zOV2yZFuW47VrLsjYnHwn27hmxTC/7tvG3euCklmkn9Sl9IAKFu29RSo
  d5bD8kMSCYsTqtTfT6W4A3qHGvIDta3ptLYpIAOD2sY3GYq2nf3Bbzx81wZK14JdDDHUX2Rs
  6+ahAA==
-Message-ID: <11f8b620-11ac-7075-019a-30d6bad7583c@citrix.com>
-Date:   Wed, 12 Jun 2019 22:15:44 +0100
+Message-ID: <2f5188ae-e542-57b5-ed12-83dd3cbbafbd@citrix.com>
+Date:   Wed, 12 Jun 2019 22:09:20 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190509172540.12398-5-ankur.a.arora@oracle.com>
+In-Reply-To: <20190509172540.12398-3-ankur.a.arora@oracle.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
  AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -129,25 +129,22 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 09/05/2019 18:25, Ankur Arora wrote:
-> Allow for different hypercall implementations for different xenhost types.
-> Nested xenhost, which has two underlying xenhosts, can use both
-> simultaneously.
+> xen_cpuid_base() is used to probe and setup features early in a
+> guest's lifetime.
 >
-> The hypercall macros (HYPERVISOR_*) implicitly use the default xenhost.x
-> A new macro (hypervisor_*) takes xenhost_t * as a parameter and does the
-> right thing.
+> We want this to behave differently depending on xenhost->type: for
+> instance, local xenhosts cannot intercept the cpuid instruction at all.
 >
-> TODO:
->   - Multicalls for now assume the default xenhost
->   - xen_hypercall_* symbols are only generated for the default xenhost.
+> Add op (*cpuid_base)() in xenhost_ops_t.
 >
 > Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
 
-Again, what is the hypervisor nesting and/or guest layout here?
+What is the real layout of hypervisor nesting here?
 
-I can't think of any case where a single piece of software can
-legitimately have two hypercall pages, because if it has one working
-one, it is by definition a guest, and therefore not privileged enough to
-use the outer one.
+When Xen is at L0, all HVM guests get working CPUID faulting to combat
+this problem, because CPUID faulting can be fully emulated even on older
+Intel hardware, and AMD hardware.
+
+It is a far cleaner way of fixing the problem.
 
 ~Andrew
