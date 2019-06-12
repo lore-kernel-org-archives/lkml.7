@@ -2,193 +2,181 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_DR,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4937C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED53AC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A050C208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A0C206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:35:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CFmrBMcg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408857AbfFLJeH (ORCPT
+        id S2437448AbfFLJf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:34:07 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:35126 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408577AbfFLJeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:34:07 -0400
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id x5C9WOWI024604;
-        Wed, 12 Jun 2019 04:32:24 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id x5C9WLgm024603;
-        Wed, 12 Jun 2019 04:32:21 -0500
-Date:   Wed, 12 Jun 2019 04:32:21 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Cedric Xing <cedric.xing@intel.com>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
-        jarkko.sakkinen@linux.intel.com, luto@kernel.org,
-        jmorris@namei.org, serge@hallyn.com, paul@paul-moore.com,
-        eparis@parisplace.org, jethro@fortanix.com, dave.hansen@intel.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, nhorman@redhat.com,
-        pmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
-        bp@alien8.de, josh@joshtriplett.org, kai.huang@intel.com,
-        rientjes@google.com, william.c.roberts@intel.com,
-        philip.b.tricca@intel.com
-Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in SELinux
-Message-ID: <20190612093221.GA24188@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <cover.1560131039.git.cedric.xing@intel.com> <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com> <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov> <20190611220243.GB3416@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Wed, 12 Jun 2019 05:35:26 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37286 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436605AbfFLJfZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:35:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=h498uX1FwZ5CaVxq4breWnlhdBuCKw4wm3JuGKcEDYM=; b=CFmrBMcg/5ikP86sa4CoaV8j2h
+        g7vfpH3ljUDpl2uxaARxCcnkcRs5VZLjY+pVXX3bQ8kOr/EVzW+vlofeECoH1/Qg5kG83RAFWzP9f
+        Aw81oKqs2Y39AN0OqYXe1YlM+OZd69q7FdHskLAf8HcIjqqaY8o/GF0y4895iKm6SsiNJwjBs9Hk1
+        J/d9FIcAyIdYB5nzW4J9GHguIaDfR8q52zsUDUsT7b1NCwCYwdmCQq74nLn3Q3yIsfmEwF7PPBDuQ
+        RC1bSQPl31ZATcjfIyDt0t8x9P/a0/34ktvWyNEDQWn+I8sFr4Y8sU1Ckd/0/JZXIivYU/QdAigTX
+        hpuvWHcQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hazet-0004gz-Qa; Wed, 12 Jun 2019 09:35:08 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 273FE2096E50D; Wed, 12 Jun 2019 11:35:06 +0200 (CEST)
+Date:   Wed, 12 Jun 2019 11:35:06 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Prasanna Panchamukhi <panchamukhi@arista.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Cathy Avery <cavery@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>,
+        Mohammed Gamal <mmorsy@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        devel@linuxdriverproject.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] x86/hyperv: Disable preemption while setting
+ reenlightenment vector
+Message-ID: <20190612093506.GH3436@hirez.programming.kicks-ass.net>
+References: <20190611212003.26382-1-dima@arista.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190611220243.GB3416@linux.intel.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Wed, 12 Jun 2019 04:32:24 -0500 (CDT)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190611212003.26382-1-dima@arista.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 03:02:43PM -0700, Sean Christopherson wrote:
-
-Good morning, I hope the week is proceeding well for everyone.
-
-> On Tue, Jun 11, 2019 at 09:40:25AM -0400, Stephen Smalley wrote:
-> > I haven't looked at this code closely, but it feels like a lot of
-> > SGX-specific logic embedded into SELinux that will have to be repeated or
-> > reused for every security module.  Does SGX not track this state itself?
-
-> SGX does track equivalent state.
+On Tue, Jun 11, 2019 at 10:20:03PM +0100, Dmitry Safonov wrote:
+> KVM support may be compiled as dynamic module, which triggers the
+> following splat on modprobe:
 > 
-> There are three proposals on the table (I think):
+>  KVM: vmx: using Hyper-V Enlightened VMCS
+>  BUG: using smp_processor_id() in preemptible [00000000] code: modprobe/466 caller is debug_smp_processor_id+0x17/0x19
+>  CPU: 0 PID: 466 Comm: modprobe Kdump: loaded Not tainted 4.19.43 #1
+>  Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090007  06/02/2017
+>  Call Trace:
+>   dump_stack+0x61/0x7e
+>   check_preemption_disabled+0xd4/0xe6
+>   debug_smp_processor_id+0x17/0x19
+>   set_hv_tscchange_cb+0x1b/0x89
+>   kvm_arch_init+0x14a/0x163 [kvm]
+>   kvm_init+0x30/0x259 [kvm]
+>   vmx_init+0xed/0x3db [kvm_intel]
+>   do_one_initcall+0x89/0x1bc
+>   do_init_module+0x5f/0x207
+>   load_module+0x1b34/0x209b
+>   __ia32_sys_init_module+0x17/0x19
+>   do_fast_syscall_32+0x121/0x1fa
+>   entry_SYSENTER_compat+0x7f/0x91
 > 
->   1. Require userspace to explicitly specificy (maximal) enclave page
->      permissions at build time.  The enclave page permissions are provided
->      to, and checked by, LSMs at enclave build time.
+> The easiest solution seems to be disabling preemption while setting up
+> reenlightment MSRs. While at it, fix hv_cpu_*() callbacks.
 > 
->      Pros: Low-complexity kernel implementation, straightforward auditing
->      Cons: Sullies the SGX UAPI to some extent, may increase complexity of
->            SGX2 enclave loaders.
+> Fixes: 93286261de1b4 ("x86/hyperv: Reenlightenment notifications
+> support")
 > 
->   2. Pre-check LSM permissions and dynamically track mappings to enclave
->      pages, e.g. add an SGX mprotect() hook to restrict W->X and WX
->      based on the pre-checked permissions.
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Cathy Avery <cavery@redhat.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>
+> Cc: Mohammed Gamal <mmorsy@redhat.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Roman Kagan <rkagan@virtuozzo.com>
+> Cc: Sasha Levin <sashal@kernel.org>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
 > 
->      Pros: Does not impact SGX UAPI, medium kernel complexity
->      Cons: Auditing is complex/weird, requires taking enclave-specific
->            lock during mprotect() to query/update tracking.
+> Cc: devel@linuxdriverproject.org
+> Cc: kvm@vger.kernel.org
+> Cc: linux-hyperv@vger.kernel.org
+> Cc: x86@kernel.org
+> Reported-by: Prasanna Panchamukhi <panchamukhi@arista.com>
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
+> ---
+>  arch/x86/hyperv/hv_init.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
->   3. Implement LSM hooks in SGX to allow LSMs to track enclave regions
->      from cradle to grave, but otherwise defer everything to LSMs.
-> 
->      Pros: Does not impact SGX UAPI, maximum flexibility, precise auditing
->      Cons: Most complex and "heaviest" kernel implementation of the three,
->            pushes more SGX details into LSMs.
-> 
-> My RFC series[1] implements #1.  My understanding is that Andy (Lutomirski)
-> prefers #2.  Cedric's RFC series implements #3.
-> 
-> Perhaps the easiest way to make forward progress is to rule out the
-> options we absolutely *don't* want by focusing on the potentially blocking
-> issue with each option:
->
->   #1 - SGX UAPI funkiness
-> 
->   #2 - Auditing complexity, potential enclave lock contention
-> 
->   #3 - Pushing SGX details into LSMs and complexity of kernel implementation
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 1608050e9df9..0bdd79ecbff8 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -91,7 +91,7 @@ EXPORT_SYMBOL_GPL(hv_max_vp_index);
+>  static int hv_cpu_init(unsigned int cpu)
+>  {
+>  	u64 msr_vp_index;
+> -	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
+> +	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[cpu];
+>  	void **input_arg;
+>  	struct page *pg;
+>  
+> @@ -103,7 +103,7 @@ static int hv_cpu_init(unsigned int cpu)
+>  
+>  	hv_get_vp_index(msr_vp_index);
+>  
+> -	hv_vp_index[smp_processor_id()] = msr_vp_index;
+> +	hv_vp_index[cpu] = msr_vp_index;
+>  
+>  	if (msr_vp_index > hv_max_vp_index)
+>  		hv_max_vp_index = msr_vp_index;
+> @@ -182,7 +182,6 @@ void set_hv_tscchange_cb(void (*cb)(void))
+>  	struct hv_reenlightenment_control re_ctrl = {
+>  		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
+>  		.enabled = 1,
+> -		.target_vp = hv_vp_index[smp_processor_id()]
+>  	};
+>  	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
+>  
+> @@ -196,7 +195,11 @@ void set_hv_tscchange_cb(void (*cb)(void))
+>  	/* Make sure callback is registered before we write to MSRs */
+>  	wmb();
+>  
+> +	preempt_disable();
+> +	re_ctrl.target_vp = hv_vp_index[smp_processor_id()];
+>  	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
+> +	preempt_enable();
+> +
+>  	wrmsrl(HV_X64_MSR_TSC_EMULATION_CONTROL, *((u64 *)&emu_ctrl));
+>  }
+>  EXPORT_SYMBOL_GPL(set_hv_tscchange_cb);
 
-At the risk of repeating myself, I believe the issue that has not
-received full clarity is that, for a security relevant solution, there
-has to be two separate aspects of LSM coverage for SGX.  I believe
-that a high level review of the requirements may assist in selection
-of a course of action for the driver.
-
-The first aspect of LSM control has been covered extensively and that
-is the notion of implementing control over the ability of a user
-identity to request some cohort of page privileges.  The cohort of
-obvious concern is the ability of a page to possess both WRITE and
-EXECUTE privileges at sometime during its lifetime.
-
-Given that SGX2 support is the ultimate and necesary goal for this
-driver, the selected proposal should be the one that gives the most
-simplistic application of this policy.  As I have noted previously,
-once SGX2 becomes available, the only relevant security control that
-can be realized with this type of LSM support is whether or not the
-platform owner wishes to limit access by a user identity to the
-ability to dynamically load code in enclave context.
-
-With SGX2 we will, by necessity, have to admit the notion that a
-platform owner will not have any effective visibility into code that
-is loaded and executed, since it can come in over a secured network
-connection in an enclave security context.  This advocates for the
-simplest approach possible to providing some type of regulation to any
-form of WX page access.
-
-Current state of the art, and there doesn't appear to be a reason to
-change this, is to package an enclave in the form of an ELF shared
-library.  It seems straight forward to inherit and act on page
-privileges from the privileges specified on the ELF sections that are
-loaded.  Loaders will have a file descriptor available so an mmap of
-the incoming page with the specified privileges should trigger the
-required LSM interventions and tie them to a specific enclave.
-
-The current enclave 'standard' also uses layout metadata, stored in a
-special .notes section of the shared image, to direct a loader with
-respect to construction of the enclave stack, heap, TCS and other
-miscellaneous regions not directly coded by the ELF TEXT sections.  It
-seems straight forward to extend this paradigm to declare region(s) of
-an enclave that are eligible to be generated at runtime (EAUG'ed) with
-the RWX protections needed to support dynamically loaded code.
-
-If an enclave wishes to support this functionality, it would seem
-straight forward to require an enclave to provide a single zero page
-which the loader will mmap with those protections in order to trigger
-the desired LSM checks against that specific enclave.
-
-The simplest driver approach that achieves the desired introspection
-of permissions in the described framework will implement as much LSM
-security as is possible with SGX technology and with minimal
-disruption to the existing SGX software eco-system.
-
-This leaves the second aspect of LSM security and that is the ability
-to inspect and act on the initialized characteristics of the enclave.
-This is the aspect of SGX LSM functionality that has not been clearly
-called out.
-
-All that is needed here is an LSM hook that gets handed a pointer to
-the signature structure (SIGSTRUCT) that is passed to the EINIT ioctl.
-If the SIGSTRUCT does not match the proposed enclave image that the
-processor has computed secondary to the enclave image creation process
-the enclave will not initialize, so all that is needed is for an LSM
-to be allowed to interpret and act on the characteristics defined in
-that structure before the enclave is actually initialized.
-
-As we have now collectively demonstrated, it is easy to get lost in
-minutia with respect to all of this.  I believe if we can focus on a
-solution that implements what I have discussed above we will achieve
-as much as can be achieved with respect to platform security for SGX
-systems.
-
-Best wishes for a productive remainder of the week.
-
-Dr. Greg
-
-As always,
-Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
-4206 N. 19th Ave.           Specializing in information infra-structure
-Fargo, ND  58102            development.
-PH: 701-281-1686            EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"Nullum magnum ingenium sine mixtura dementiae fuit."
-        (There is no great genius without some touch of madness.)
-                                -- Seneca
+This looks bogus, MSRs are a per-cpu resource, you had better know what
+CPUs you're on and be stuck to it when you do wrmsr. This just fudges
+the code to make the warning go away and doesn't fix the actual problem
+afaict.
