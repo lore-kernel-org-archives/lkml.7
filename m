@@ -2,140 +2,84 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C84C31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03795C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E71206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560356256;
-	bh=DoAGtyYmb38VamoZ+OytQ4Hu2lHFIzz8cmTYyEqDtJQ=;
-	h=From:Subject:To:Cc:References:Date:In-Reply-To:List-ID:From;
-	b=MNb3wLeR6zICoFRra8rbDgdDem7DkDB9vAnvdDCAW3CdP6+UgO0AOrJFVcUcD1FKf
-	 uINA57ISOFswhpNh4esrWPBC6Brz4+PeRQxSMSIuIKNfm0mMDRbUJUL0qPf2d3+MV3
-	 HdyijOF6oHc4alKHcPKnHB/Xq6ks4GL6DkLTLcCE=
+	by mail.kernel.org (Postfix) with ESMTP id C16E02082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:19:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PoylC1mU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730421AbfFLQRf (ORCPT
+        id S1730597AbfFLQT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 12:17:35 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33641 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbfFLQRe (ORCPT
+        Wed, 12 Jun 2019 12:19:26 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39683 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730460AbfFLQTZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:17:34 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x2so18228737qtr.0;
-        Wed, 12 Jun 2019 09:17:34 -0700 (PDT)
+        Wed, 12 Jun 2019 12:19:25 -0400
+Received: by mail-pl1-f196.google.com with SMTP id b7so1787260pls.6
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 09:19:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:subject:to:cc:references:openpgp:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=U2vYqaPYdWtpzfrzovO9feBjUjZjzjyP3l5hohlZ2Qw=;
-        b=D9u7HA9acjMxG5IDmmk52QrmRvl60xY0S/bA+fJ34Ie35XIKGzY6OZbUdNy24KUCLn
-         v0k5PGGDhJJgsyTqYBiiIENrszMhPVIwWIZMJc/dqo5GOCau43SF6mKGAE5ODH5y1H13
-         U57jobrMEWYOn66qKQvvfFa4ja97bbNE9Tx1iBlqV2aFM0WA0Lq+G/DmW8CHWvISaq41
-         RGl1t9orYPpMJ3yC8uKY6EIXm1djVIRawvm5q3HOQbZWe6/wdZeCgq/AD9jliSdbJp9L
-         K8thiwuO7coFPOPDzo9o7IdUv3SZ3asi0RWidz41BJ1xgitsFXuoSyX9F5rR5kNX04Ls
-         KkNw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2ClrvBR7luWRL5WMJSDigCb6gda3pje9DDVmIRQSL3U=;
+        b=PoylC1mUVh+mUugbhLPdcuFW+A6JfOOcNYhRf3HNICnRBhEEVNhvTHiHjcgVcfeaex
+         OAPtEDvngGbVgEF6tGnD+6DwpGiQKqcLJnlbeMvONX0E/j0tnRviRd6RBBW1E8EWWYxu
+         w4vymiYbu9JgIXmwvtL6yApB3BxbziH41fDWgu1Eb4PpdnMgAnx8r/5ekmhd6wEX48zt
+         PYsbooPvGIJTi/1Rj0y8ln3sYcYG5KQqPSpKI8SRRGZV4KvFSEOgGSQcVM1SdXgXT909
+         A4ZSEsDqaW00ZmENy/6ltPQQ6yKeCHC4m5S56N0wy9Ko8tnhwgQ5G1Szb5jSzMbFTKuq
+         zpeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:subject:to:cc:references:openpgp
-         :autocrypt:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=U2vYqaPYdWtpzfrzovO9feBjUjZjzjyP3l5hohlZ2Qw=;
-        b=gmH5z9Fu6JNSzz4bjTnJCbkXB05mk0j25cMhPopK8Ujll9dpl3EJex/gvUhJb+8KtA
-         vt6X1jruHX3na5zhSy5hSJRAKyNXltj/CDTBRsQXmyYlK9+w0CNcAyO2CrTPkQJObVyz
-         p0cuRJGWBfvDk7vVRjtoCIQyfwryGQGU5hkP0251Cy75oKP5rn5y3wT77eP0t7GuKzM6
-         EuzulFGTsIFEH6AyV9aHc7UIYOfc0vtX8hFBoP+Opt/j2AmlUbLH2hlzvbNS4RNo34KP
-         jImBbEaqcNx8YoIgkCgkNOujdsiG22TVgL2EtkNIHsUdbK5iUQG12pmn4K65C+A6YAF6
-         xafQ==
-X-Gm-Message-State: APjAAAUn0RLjpXyTzIDsJnJVPePQDVhdXZQKZreltCAkktoukVpPDV7r
-        QkGGtjmM7fzCAqfyH4UzTK5keWuz
-X-Google-Smtp-Source: APXvYqwNdJ0Fb29xxjQiS/MFAVscn9cJ6eF2PqS8LVs89NTOxmhErJbcoeaTaWjZzxjqt76lwlO+AA==
-X-Received: by 2002:ac8:1016:: with SMTP id z22mr6334107qti.287.1560356253656;
-        Wed, 12 Jun 2019 09:17:33 -0700 (PDT)
-Received: from [10.84.150.66] ([167.220.149.66])
-        by smtp.gmail.com with ESMTPSA id n10sm36819qke.72.2019.06.12.09.17.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 09:17:32 -0700 (PDT)
-From:   Sinan Kaya <Okaya@kernel.org>
-X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
-Subject: Re: [PATCH 6/6] dma: qcom: hidma: no need to check return value of
- debugfs_create functions
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     dan.j.williams@intel.com, vkoul@kernel.org,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190612122557.24158-1-gregkh@linuxfoundation.org>
- <20190612122557.24158-6-gregkh@linuxfoundation.org>
- <8185a8b8-a0ce-4a86-84a2-b51391356052@kernel.org>
- <20190612153948.GA21828@kroah.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <78da53a1-1363-fad8-16fa-4dfc6555f4e4@kernel.org>
-Date:   Wed, 12 Jun 2019 12:17:31 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2ClrvBR7luWRL5WMJSDigCb6gda3pje9DDVmIRQSL3U=;
+        b=oOxfXari5cue3JTueTcHzyklX6XxkMHbcc4BidGQrcWEqoWxHZSodU01TalLxcEiVp
+         5hqyFmjycvUv8J8m+5sXh1lWhQNv0S6zw0db3aqOSvKC3lIhSvUTCrzs84vAuQVYb+aP
+         Nn1d/IgMCP9IHlq7kaC+t39BKPgTAL7hvFf56/KISAKpTkuibM9uwKgIHi7hGeRJ/1jC
+         XkTeaGSx5/4jwGSdWRihjrVZ2JDi7QiH26pymi0NjtyQ5USkoGuGBSXj/7EI7MvXewvI
+         Tla5JMOQDPQ5htyRSIjHUULNjEMLB5BKpuyY0ZcCqMDA0HviZBKX4M67As2HcmeT/o1D
+         XVTQ==
+X-Gm-Message-State: APjAAAVQsOrhRcw4eRx8fjDf1ytQaRjilaJC3v9+HiWd8qreCNddTgBo
+        +1K7pbWifIpHgxHIWRYBtCCw8YaoCz/zb2fVpDM=
+X-Google-Smtp-Source: APXvYqxlaM8B2sBpDDfQy7D9lbtLA6Z1olKuDzz6Dsq0bplhYER46QRJz+x6l7DR05n7Igry8lykPdohDOwu+vIQTyw=
+X-Received: by 2002:a17:902:9a49:: with SMTP id x9mr62306065plv.282.1560356364709;
+ Wed, 12 Jun 2019 09:19:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190612153948.GA21828@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190612155411.GA28186@davidb.org> <20190612161239.GA9155@davidb.org>
+In-Reply-To: <20190612161239.GA9155@davidb.org>
+From:   Andy Gross <andygro@gmail.com>
+Date:   Wed, 12 Jun 2019 11:19:13 -0500
+Message-ID: <CAJ=6tTpH0VcOMu-mJEz28B2a7-HEq0tVnDyP-JWJP3BDOU+NSA@mail.gmail.com>
+Subject: Re: [PATCH] Remove myself as qcom maintainer
+To:     David Brown <david.brown@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/2019 11:39 AM, Greg Kroah-Hartman wrote:
->> Interesting. Wouldn't debugfs_create_file() blow up if dir is NULL
->> for some reason?
-> It will create a file in the root of debugfs.  But how will that happen?
-> debugfs_create_dir() can not return NULL.
+On Wed, Jun 12, 2019 at 11:12 AM David Brown <david.brown@linaro.org> wrote:
+>
+> I no longer regularly work on this platform, and only have a few
+> increasingly outdated boards.  Andy has primarily been doing the
+> maintenance.
+>
+> Signed-off-by: David Brown <david.brown@linaro.org>
+> ---
+> Resending this, hopefully with text=flowed not set in the email
+> headers.
 
-I see.
+I'll add this to my pull request.  I already have an update for our
+repo location in MAINTAINERS.
 
-> 
->> +		debugfs_create_file("stats", S_IRUGO, dir, chan,
->> +				    &hidma_chan_fops);
->>
->> Note that code ignores the return value of hidma_debug_init();
->> It was just trying to do clean up on debugfs failure by calling
->>
->> 	debugfs_remove_recursive(dmadev->debugfs);
-> Is that a problem?
-
-I just wanted to double check. You probably want to remove the return
-value on debugfs_create_file() to prevent others from doing the same
-thing.
-
-Acked-by: Sinan Kaya <okaya@kernel.org>
+Andy
