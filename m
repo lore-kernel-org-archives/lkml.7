@@ -2,1132 +2,124 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D7FC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 659E7C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7362C21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560362148;
-	bh=HiEwT8x563kVWGNTlPd3AF5bh2B/9cu1YabEInQ0PMc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ExgkLY+CECb+fwX6gFnxEGbQ/rAF7HYfgGGa+gRptzk2Xj/O7B6SnF/nePbJiKdNG
-	 ucKaarpM9iNnspZG8F/E0MNQo2c7gNGdkwMD5x1iay7sqLlbNoKhXYcQLSxwr05Xwd
-	 j11hjBot53L5X1Rk88bTeKAexGvv1s3X+KEqw9k8=
+	by mail.kernel.org (Postfix) with ESMTP id 310AB21721
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:55:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="LXPv+FsC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404066AbfFLRzr (ORCPT
+        id S1730420AbfFLRz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 13:55:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40476 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388764AbfFLRxO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 13:53:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7uC8MkSQLkpozYmSTHz8U3r2JAtr1DHpd7E4+aF7sdg=; b=KnuBOyzFyuqbgudTus5G8ZJvN9
-        NbyWtYI5zSDP6Z2G9pH+zsfp82WwgJkgJncLy1EI0XQypwCS5EfhKVnxOsdAyg9fVh0FoarYHRj/J
-        g+qVL4jRcFI/FqXVLPen3n69s62arndyEwipF4fRXQtD9Tu1Nw5/dowTsjwb/QMTMDRwhp48ekpLA
-        JS2htfOwDjn9tuvznKrQ8SzWMLrtBU1ZDTu6NpZoC1D268gjoQ0RqSQ721OZj/fxwSGT96OyYp6Uo
-        ESWGHyhG9qkeduuf8TZ0aCHtdIFmuTTbUTS9BuGmodpC7eIVZjH+ie+y6iZMPO4MqC6lQ+fC8SJ4G
-        Pj5EI06g==;
-Received: from 201.86.169.251.dynamic.adsl.gvt.net.br ([201.86.169.251] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hb7Qt-0002DY-0E; Wed, 12 Jun 2019 17:53:11 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hb7Qq-0001g8-60; Wed, 12 Jun 2019 14:53:08 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v4 08/28] docs: fault-injection: convert docs to ReST and rename to *.rst
-Date:   Wed, 12 Jun 2019 14:52:44 -0300
-Message-Id: <0c1da1fda6f0bf400338c906b78dba217adda517.1560361364.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1560361364.git.mchehab+samsung@kernel.org>
-References: <cover.1560361364.git.mchehab+samsung@kernel.org>
+        Wed, 12 Jun 2019 13:55:58 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60806 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390620AbfFLRzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 13:55:53 -0400
+Received: from zn.tnic (p200300EC2F0A6800329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6800:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DBB9E1EC0911;
+        Wed, 12 Jun 2019 19:55:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560362152;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=4grj3QejwCBpNAM+uJrsty+0eljwAkLiJVXJTISRSCE=;
+        b=LXPv+FsCSb2KZhF5X4iNxoRJpb0Z1kGoBe+7M+NW2reHoN0cDNfzqAO3pCM7ZSv4vYZqtX
+        G2OCt0WaTavhfJUK1OtJZf2iTKWifMyvMYRwqeF3coUjgKsdQJl8Njcdsd8i43ja3BVtkN
+        a/73KFoTXR4OhWBjj5LdkOzSSXo2mjw=
+Date:   Wed, 12 Jun 2019 19:55:43 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Qian Cai <cai@lca.pw>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     mingo@redhat.com, tglx@linutronix.de, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] x86/mm: fix an unused variable "tsk" warning
+Message-ID: <20190612175543.GO32652@zn.tnic>
+References: <1559338641-6145-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1559338641-6145-1-git-send-email-cai@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The conversion is actually:
-  - add blank lines and identation in order to identify paragraphs;
-  - fix tables markups;
-  - add some lists markups;
-  - mark literal blocks;
-  - adjust title markups.
+On Fri, May 31, 2019 at 05:37:21PM -0400, Qian Cai wrote:
+> Since the commit "signal: Remove the task parameter from
+> force_sig_fault", "tsk" is only used when MEMORY_FAILURE=y and generates
+> a compilation warning without it.
+> 
+> arch/x86/mm/fault.c: In function 'do_sigbus':
+> arch/x86/mm/fault.c:1017:22: warning: unused variable 'tsk'
+> [-Wunused-variable]
+> 
+> Also, change to use IS_ENABLED() instead.
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  arch/x86/mm/fault.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+> index 46ac96aa7c81..40d70bd3fa84 100644
+> --- a/arch/x86/mm/fault.c
+> +++ b/arch/x86/mm/fault.c
+> @@ -1014,8 +1014,6 @@ static inline bool bad_area_access_from_pkeys(unsigned long error_code,
+>  do_sigbus(struct pt_regs *regs, unsigned long error_code, unsigned long address,
+>  	  vm_fault_t fault)
+>  {
+> -	struct task_struct *tsk = current;
+> -
+>  	/* Kernel mode? Handle exceptions or die: */
+>  	if (!(error_code & X86_PF_USER)) {
+>  		no_context(regs, error_code, address, SIGBUS, BUS_ADRERR);
+> @@ -1028,9 +1026,10 @@ static inline bool bad_area_access_from_pkeys(unsigned long error_code,
+>  
+>  	set_signal_archinfo(address, error_code);
+>  
+> -#ifdef CONFIG_MEMORY_FAILURE
+> -	if (fault & (VM_FAULT_HWPOISON|VM_FAULT_HWPOISON_LARGE)) {
+> +	if (IS_ENABLED(CONFIG_MEMORY_FAILURE) &&
+> +	    (fault & (VM_FAULT_HWPOISON | VM_FAULT_HWPOISON_LARGE))) {
+>  		unsigned lsb = 0;
+> +		struct task_struct *tsk = current;
+>  
+>  		pr_err(
+>  	"MCE: Killing %s:%d due to hardware memory corruption fault at %lx\n",
+> @@ -1042,7 +1041,6 @@ static inline bool bad_area_access_from_pkeys(unsigned long error_code,
+>  		force_sig_mceerr(BUS_MCEERR_AR, (void __user *)address, lsb);
+>  		return;
+>  	}
+> -#endif
+>  	force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)address);
+>  }
+>  
+> -- 
 
-At its new index.rst, let's add a :orphan: while this is not linked to
-the main index.rst file, in order to avoid build warnings.
+I was puzzled just like Dave because this code is not in tip.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Acked-by: Federico Vaga <federico.vaga@vaga.pv.it>
----
- ...ault-injection.txt => fault-injection.rst} | 265 +++++++++---------
- Documentation/fault-injection/index.rst       |  20 ++
- ...r-inject.txt => notifier-error-inject.rst} |  18 +-
- .../fault-injection/nvme-fault-injection.rst  | 120 ++++++++
- .../fault-injection/nvme-fault-injection.txt  | 116 --------
- .../fault-injection/provoke-crashes.rst       |  48 ++++
- .../fault-injection/provoke-crashes.txt       |  38 ---
- Documentation/process/4.Coding.rst            |   2 +-
- .../translations/it_IT/process/4.Coding.rst   |   2 +-
- .../translations/zh_CN/process/4.Coding.rst   |   2 +-
- drivers/misc/lkdtm/core.c                     |   2 +-
- include/linux/fault-inject.h                  |   2 +-
- lib/Kconfig.debug                             |   2 +-
- tools/testing/fault-injection/failcmd.sh      |   2 +-
- 14 files changed, 344 insertions(+), 295 deletions(-)
- rename Documentation/fault-injection/{fault-injection.txt => fault-injection.rst} (68%)
- create mode 100644 Documentation/fault-injection/index.rst
- rename Documentation/fault-injection/{notifier-error-inject.txt => notifier-error-inject.rst} (83%)
- create mode 100644 Documentation/fault-injection/nvme-fault-injection.rst
- delete mode 100644 Documentation/fault-injection/nvme-fault-injection.txt
- create mode 100644 Documentation/fault-injection/provoke-crashes.rst
- delete mode 100644 Documentation/fault-injection/provoke-crashes.txt
+Turns out there's this in linux-next:
 
-diff --git a/Documentation/fault-injection/fault-injection.txt b/Documentation/fault-injection/fault-injection.rst
-similarity index 68%
-rename from Documentation/fault-injection/fault-injection.txt
-rename to Documentation/fault-injection/fault-injection.rst
-index a17517a083c3..f51bb21d20e4 100644
---- a/Documentation/fault-injection/fault-injection.txt
-+++ b/Documentation/fault-injection/fault-injection.rst
-@@ -1,3 +1,4 @@
-+===========================================
- Fault injection capabilities infrastructure
- ===========================================
- 
-@@ -7,36 +8,36 @@ See also drivers/md/md-faulty.c and "every_nth" module option for scsi_debug.
- Available fault injection capabilities
- --------------------------------------
- 
--o failslab
-+- failslab
- 
-   injects slab allocation failures. (kmalloc(), kmem_cache_alloc(), ...)
- 
--o fail_page_alloc
-+- fail_page_alloc
- 
-   injects page allocation failures. (alloc_pages(), get_free_pages(), ...)
- 
--o fail_futex
-+- fail_futex
- 
-   injects futex deadlock and uaddr fault errors.
- 
--o fail_make_request
-+- fail_make_request
- 
-   injects disk IO errors on devices permitted by setting
-   /sys/block/<device>/make-it-fail or
-   /sys/block/<device>/<partition>/make-it-fail. (generic_make_request())
- 
--o fail_mmc_request
-+- fail_mmc_request
- 
-   injects MMC data errors on devices permitted by setting
-   debugfs entries under /sys/kernel/debug/mmc0/fail_mmc_request
- 
--o fail_function
-+- fail_function
- 
-   injects error return on specific functions, which are marked by
-   ALLOW_ERROR_INJECTION() macro, by setting debugfs entries
-   under /sys/kernel/debug/fail_function. No boot option supported.
- 
--o NVMe fault injection
-+- NVMe fault injection
- 
-   inject NVMe status code and retry flag on devices permitted by setting
-   debugfs entries under /sys/kernel/debug/nvme*/fault_inject. The default
-@@ -47,7 +48,8 @@ o NVMe fault injection
- Configure fault-injection capabilities behavior
- -----------------------------------------------
- 
--o debugfs entries
-+debugfs entries
-+^^^^^^^^^^^^^^^
- 
- fault-inject-debugfs kernel module provides some debugfs entries for runtime
- configuration of fault-injection capabilities.
-@@ -55,6 +57,7 @@ configuration of fault-injection capabilities.
- - /sys/kernel/debug/fail*/probability:
- 
- 	likelihood of failure injection, in percent.
-+
- 	Format: <percent>
- 
- 	Note that one-failure-per-hundred is a very high error rate
-@@ -83,6 +86,7 @@ configuration of fault-injection capabilities.
- - /sys/kernel/debug/fail*/verbose
- 
- 	Format: { 0 | 1 | 2 }
-+
- 	specifies the verbosity of the messages when failure is
- 	injected.  '0' means no messages; '1' will print only a single
- 	log line per failure; '2' will print a call trace too -- useful
-@@ -91,14 +95,15 @@ configuration of fault-injection capabilities.
- - /sys/kernel/debug/fail*/task-filter:
- 
- 	Format: { 'Y' | 'N' }
-+
- 	A value of 'N' disables filtering by process (default).
- 	Any positive value limits failures to only processes indicated by
- 	/proc/<pid>/make-it-fail==1.
- 
--- /sys/kernel/debug/fail*/require-start:
--- /sys/kernel/debug/fail*/require-end:
--- /sys/kernel/debug/fail*/reject-start:
--- /sys/kernel/debug/fail*/reject-end:
-+- /sys/kernel/debug/fail*/require-start,
-+  /sys/kernel/debug/fail*/require-end,
-+  /sys/kernel/debug/fail*/reject-start,
-+  /sys/kernel/debug/fail*/reject-end:
- 
- 	specifies the range of virtual addresses tested during
- 	stacktrace walking.  Failure is injected only if some caller
-@@ -116,6 +121,7 @@ configuration of fault-injection capabilities.
- - /sys/kernel/debug/fail_page_alloc/ignore-gfp-highmem:
- 
- 	Format: { 'Y' | 'N' }
-+
- 	default is 'N', setting it to 'Y' won't inject failures into
- 	highmem/user allocations.
- 
-@@ -123,6 +129,7 @@ configuration of fault-injection capabilities.
- - /sys/kernel/debug/fail_page_alloc/ignore-gfp-wait:
- 
- 	Format: { 'Y' | 'N' }
-+
- 	default is 'N', setting it to 'Y' will inject failures
- 	only into non-sleep allocations (GFP_ATOMIC allocations).
- 
-@@ -134,12 +141,14 @@ configuration of fault-injection capabilities.
- - /sys/kernel/debug/fail_futex/ignore-private:
- 
- 	Format: { 'Y' | 'N' }
-+
- 	default is 'N', setting it to 'Y' will disable failure injections
- 	when dealing with private (address space) futexes.
- 
- - /sys/kernel/debug/fail_function/inject:
- 
- 	Format: { 'function-name' | '!function-name' | '' }
-+
- 	specifies the target function of error injection by name.
- 	If the function name leads '!' prefix, given function is
- 	removed from injection list. If nothing specified ('')
-@@ -160,10 +169,11 @@ configuration of fault-injection capabilities.
- 	function for given function. This will be created when
- 	user specifies new injection entry.
- 
--o Boot option
-+Boot option
-+^^^^^^^^^^^
- 
- In order to inject faults while debugfs is not available (early boot time),
--use the boot option:
-+use the boot option::
- 
- 	failslab=
- 	fail_page_alloc=
-@@ -171,10 +181,11 @@ use the boot option:
- 	fail_futex=
- 	mmc_core.fail_request=<interval>,<probability>,<space>,<times>
- 
--o proc entries
-+proc entries
-+^^^^^^^^^^^^
- 
--- /proc/<pid>/fail-nth:
--- /proc/self/task/<tid>/fail-nth:
-+- /proc/<pid>/fail-nth,
-+  /proc/self/task/<tid>/fail-nth:
- 
- 	Write to this file of integer N makes N-th call in the task fail.
- 	Read from this file returns a integer value. A value of '0' indicates
-@@ -191,16 +202,16 @@ o proc entries
- How to add new fault injection capability
- -----------------------------------------
- 
--o #include <linux/fault-inject.h>
-+- #include <linux/fault-inject.h>
- 
--o define the fault attributes
-+- define the fault attributes
- 
-   DECLARE_FAULT_ATTR(name);
- 
-   Please see the definition of struct fault_attr in fault-inject.h
-   for details.
- 
--o provide a way to configure fault attributes
-+- provide a way to configure fault attributes
- 
- - boot option
- 
-@@ -222,126 +233,126 @@ o provide a way to configure fault attributes
-   single kernel module, it is better to provide module parameters to
-   configure the fault attributes.
- 
--o add a hook to insert failures
-+- add a hook to insert failures
- 
--  Upon should_fail() returning true, client code should inject a failure.
-+  Upon should_fail() returning true, client code should inject a failure:
- 
- 	should_fail(attr, size);
- 
- Application Examples
- --------------------
- 
--o Inject slab allocation failures into module init/exit code
-+- Inject slab allocation failures into module init/exit code::
- 
--#!/bin/bash
-+    #!/bin/bash
- 
--FAILTYPE=failslab
--echo Y > /sys/kernel/debug/$FAILTYPE/task-filter
--echo 10 > /sys/kernel/debug/$FAILTYPE/probability
--echo 100 > /sys/kernel/debug/$FAILTYPE/interval
--echo -1 > /sys/kernel/debug/$FAILTYPE/times
--echo 0 > /sys/kernel/debug/$FAILTYPE/space
--echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
--echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
-+    FAILTYPE=failslab
-+    echo Y > /sys/kernel/debug/$FAILTYPE/task-filter
-+    echo 10 > /sys/kernel/debug/$FAILTYPE/probability
-+    echo 100 > /sys/kernel/debug/$FAILTYPE/interval
-+    echo -1 > /sys/kernel/debug/$FAILTYPE/times
-+    echo 0 > /sys/kernel/debug/$FAILTYPE/space
-+    echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
-+    echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
- 
--faulty_system()
--{
-+    faulty_system()
-+    {
- 	bash -c "echo 1 > /proc/self/make-it-fail && exec $*"
--}
-+    }
- 
--if [ $# -eq 0 ]
--then
-+    if [ $# -eq 0 ]
-+    then
- 	echo "Usage: $0 modulename [ modulename ... ]"
- 	exit 1
--fi
-+    fi
- 
--for m in $*
--do
-+    for m in $*
-+    do
- 	echo inserting $m...
- 	faulty_system modprobe $m
- 
- 	echo removing $m...
- 	faulty_system modprobe -r $m
--done
-+    done
- 
- ------------------------------------------------------------------------------
- 
--o Inject page allocation failures only for a specific module
-+- Inject page allocation failures only for a specific module::
- 
--#!/bin/bash
-+    #!/bin/bash
- 
--FAILTYPE=fail_page_alloc
--module=$1
-+    FAILTYPE=fail_page_alloc
-+    module=$1
- 
--if [ -z $module ]
--then
-+    if [ -z $module ]
-+    then
- 	echo "Usage: $0 <modulename>"
- 	exit 1
--fi
-+    fi
- 
--modprobe $module
-+    modprobe $module
- 
--if [ ! -d /sys/module/$module/sections ]
--then
-+    if [ ! -d /sys/module/$module/sections ]
-+    then
- 	echo Module $module is not loaded
- 	exit 1
--fi
-+    fi
- 
--cat /sys/module/$module/sections/.text > /sys/kernel/debug/$FAILTYPE/require-start
--cat /sys/module/$module/sections/.data > /sys/kernel/debug/$FAILTYPE/require-end
-+    cat /sys/module/$module/sections/.text > /sys/kernel/debug/$FAILTYPE/require-start
-+    cat /sys/module/$module/sections/.data > /sys/kernel/debug/$FAILTYPE/require-end
- 
--echo N > /sys/kernel/debug/$FAILTYPE/task-filter
--echo 10 > /sys/kernel/debug/$FAILTYPE/probability
--echo 100 > /sys/kernel/debug/$FAILTYPE/interval
--echo -1 > /sys/kernel/debug/$FAILTYPE/times
--echo 0 > /sys/kernel/debug/$FAILTYPE/space
--echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
--echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
--echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-highmem
--echo 10 > /sys/kernel/debug/$FAILTYPE/stacktrace-depth
-+    echo N > /sys/kernel/debug/$FAILTYPE/task-filter
-+    echo 10 > /sys/kernel/debug/$FAILTYPE/probability
-+    echo 100 > /sys/kernel/debug/$FAILTYPE/interval
-+    echo -1 > /sys/kernel/debug/$FAILTYPE/times
-+    echo 0 > /sys/kernel/debug/$FAILTYPE/space
-+    echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
-+    echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
-+    echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-highmem
-+    echo 10 > /sys/kernel/debug/$FAILTYPE/stacktrace-depth
- 
--trap "echo 0 > /sys/kernel/debug/$FAILTYPE/probability" SIGINT SIGTERM EXIT
-+    trap "echo 0 > /sys/kernel/debug/$FAILTYPE/probability" SIGINT SIGTERM EXIT
- 
--echo "Injecting errors into the module $module... (interrupt to stop)"
--sleep 1000000
-+    echo "Injecting errors into the module $module... (interrupt to stop)"
-+    sleep 1000000
- 
- ------------------------------------------------------------------------------
- 
--o Inject open_ctree error while btrfs mount
-+- Inject open_ctree error while btrfs mount::
- 
--#!/bin/bash
-+    #!/bin/bash
- 
--rm -f testfile.img
--dd if=/dev/zero of=testfile.img bs=1M seek=1000 count=1
--DEVICE=$(losetup --show -f testfile.img)
--mkfs.btrfs -f $DEVICE
--mkdir -p tmpmnt
-+    rm -f testfile.img
-+    dd if=/dev/zero of=testfile.img bs=1M seek=1000 count=1
-+    DEVICE=$(losetup --show -f testfile.img)
-+    mkfs.btrfs -f $DEVICE
-+    mkdir -p tmpmnt
- 
--FAILTYPE=fail_function
--FAILFUNC=open_ctree
--echo $FAILFUNC > /sys/kernel/debug/$FAILTYPE/inject
--echo -12 > /sys/kernel/debug/$FAILTYPE/$FAILFUNC/retval
--echo N > /sys/kernel/debug/$FAILTYPE/task-filter
--echo 100 > /sys/kernel/debug/$FAILTYPE/probability
--echo 0 > /sys/kernel/debug/$FAILTYPE/interval
--echo -1 > /sys/kernel/debug/$FAILTYPE/times
--echo 0 > /sys/kernel/debug/$FAILTYPE/space
--echo 1 > /sys/kernel/debug/$FAILTYPE/verbose
-+    FAILTYPE=fail_function
-+    FAILFUNC=open_ctree
-+    echo $FAILFUNC > /sys/kernel/debug/$FAILTYPE/inject
-+    echo -12 > /sys/kernel/debug/$FAILTYPE/$FAILFUNC/retval
-+    echo N > /sys/kernel/debug/$FAILTYPE/task-filter
-+    echo 100 > /sys/kernel/debug/$FAILTYPE/probability
-+    echo 0 > /sys/kernel/debug/$FAILTYPE/interval
-+    echo -1 > /sys/kernel/debug/$FAILTYPE/times
-+    echo 0 > /sys/kernel/debug/$FAILTYPE/space
-+    echo 1 > /sys/kernel/debug/$FAILTYPE/verbose
- 
--mount -t btrfs $DEVICE tmpmnt
--if [ $? -ne 0 ]
--then
-+    mount -t btrfs $DEVICE tmpmnt
-+    if [ $? -ne 0 ]
-+    then
- 	echo "SUCCESS!"
--else
-+    else
- 	echo "FAILED!"
- 	umount tmpmnt
--fi
-+    fi
- 
--echo > /sys/kernel/debug/$FAILTYPE/inject
-+    echo > /sys/kernel/debug/$FAILTYPE/inject
- 
--rmdir tmpmnt
--losetup -d $DEVICE
--rm testfile.img
-+    rmdir tmpmnt
-+    losetup -d $DEVICE
-+    rm testfile.img
- 
- 
- Tool to run command with failslab or fail_page_alloc
-@@ -354,43 +365,43 @@ see the following examples.
- Examples:
- 
- Run a command "make -C tools/testing/selftests/ run_tests" with injecting slab
--allocation failure.
-+allocation failure::
- 
- 	# ./tools/testing/fault-injection/failcmd.sh \
- 		-- make -C tools/testing/selftests/ run_tests
- 
- Same as above except to specify 100 times failures at most instead of one time
--at most by default.
-+at most by default::
- 
- 	# ./tools/testing/fault-injection/failcmd.sh --times=100 \
- 		-- make -C tools/testing/selftests/ run_tests
- 
- Same as above except to inject page allocation failure instead of slab
--allocation failure.
-+allocation failure::
- 
- 	# env FAILCMD_TYPE=fail_page_alloc \
- 		./tools/testing/fault-injection/failcmd.sh --times=100 \
--                -- make -C tools/testing/selftests/ run_tests
-+		-- make -C tools/testing/selftests/ run_tests
- 
- Systematic faults using fail-nth
- ---------------------------------
- 
- The following code systematically faults 0-th, 1-st, 2-nd and so on
--capabilities in the socketpair() system call.
-+capabilities in the socketpair() system call::
- 
--#include <sys/types.h>
--#include <sys/stat.h>
--#include <sys/socket.h>
--#include <sys/syscall.h>
--#include <fcntl.h>
--#include <unistd.h>
--#include <string.h>
--#include <stdlib.h>
--#include <stdio.h>
--#include <errno.h>
-+  #include <sys/types.h>
-+  #include <sys/stat.h>
-+  #include <sys/socket.h>
-+  #include <sys/syscall.h>
-+  #include <fcntl.h>
-+  #include <unistd.h>
-+  #include <string.h>
-+  #include <stdlib.h>
-+  #include <stdio.h>
-+  #include <errno.h>
- 
--int main()
--{
-+  int main()
-+  {
- 	int i, err, res, fail_nth, fds[2];
- 	char buf[128];
- 
-@@ -413,23 +424,23 @@ int main()
- 			break;
- 	}
- 	return 0;
--}
-+  }
- 
--An example output:
-+An example output::
- 
--1-th fault Y: res=-1/23
--2-th fault Y: res=-1/23
--3-th fault Y: res=-1/12
--4-th fault Y: res=-1/12
--5-th fault Y: res=-1/23
--6-th fault Y: res=-1/23
--7-th fault Y: res=-1/23
--8-th fault Y: res=-1/12
--9-th fault Y: res=-1/12
--10-th fault Y: res=-1/12
--11-th fault Y: res=-1/12
--12-th fault Y: res=-1/12
--13-th fault Y: res=-1/12
--14-th fault Y: res=-1/12
--15-th fault Y: res=-1/12
--16-th fault N: res=0/12
-+	1-th fault Y: res=-1/23
-+	2-th fault Y: res=-1/23
-+	3-th fault Y: res=-1/12
-+	4-th fault Y: res=-1/12
-+	5-th fault Y: res=-1/23
-+	6-th fault Y: res=-1/23
-+	7-th fault Y: res=-1/23
-+	8-th fault Y: res=-1/12
-+	9-th fault Y: res=-1/12
-+	10-th fault Y: res=-1/12
-+	11-th fault Y: res=-1/12
-+	12-th fault Y: res=-1/12
-+	13-th fault Y: res=-1/12
-+	14-th fault Y: res=-1/12
-+	15-th fault Y: res=-1/12
-+	16-th fault N: res=0/12
-diff --git a/Documentation/fault-injection/index.rst b/Documentation/fault-injection/index.rst
-new file mode 100644
-index 000000000000..92b5639ed07a
---- /dev/null
-+++ b/Documentation/fault-injection/index.rst
-@@ -0,0 +1,20 @@
-+:orphan:
-+
-+===============
-+fault-injection
-+===============
-+
-+.. toctree::
-+    :maxdepth: 1
-+
-+    fault-injection
-+    notifier-error-inject
-+    nvme-fault-injection
-+    provoke-crashes
-+
-+.. only::  subproject and html
-+
-+   Indices
-+   =======
-+
-+   * :ref:`genindex`
-diff --git a/Documentation/fault-injection/notifier-error-inject.txt b/Documentation/fault-injection/notifier-error-inject.rst
-similarity index 83%
-rename from Documentation/fault-injection/notifier-error-inject.txt
-rename to Documentation/fault-injection/notifier-error-inject.rst
-index e861d761de24..1668b6e48d3a 100644
---- a/Documentation/fault-injection/notifier-error-inject.txt
-+++ b/Documentation/fault-injection/notifier-error-inject.rst
-@@ -14,7 +14,8 @@ modules that can be used to test the following notifiers.
- PM notifier error injection module
- ----------------------------------
- This feature is controlled through debugfs interface
--/sys/kernel/debug/notifier-error-inject/pm/actions/<notifier event>/error
-+
-+  /sys/kernel/debug/notifier-error-inject/pm/actions/<notifier event>/error
- 
- Possible PM notifier events to be failed are:
- 
-@@ -22,7 +23,7 @@ Possible PM notifier events to be failed are:
-  * PM_SUSPEND_PREPARE
-  * PM_RESTORE_PREPARE
- 
--Example: Inject PM suspend error (-12 = -ENOMEM)
-+Example: Inject PM suspend error (-12 = -ENOMEM)::
- 
- 	# cd /sys/kernel/debug/notifier-error-inject/pm/
- 	# echo -12 > actions/PM_SUSPEND_PREPARE/error
-@@ -32,14 +33,15 @@ Example: Inject PM suspend error (-12 = -ENOMEM)
- Memory hotplug notifier error injection module
- ----------------------------------------------
- This feature is controlled through debugfs interface
--/sys/kernel/debug/notifier-error-inject/memory/actions/<notifier event>/error
-+
-+  /sys/kernel/debug/notifier-error-inject/memory/actions/<notifier event>/error
- 
- Possible memory notifier events to be failed are:
- 
-  * MEM_GOING_ONLINE
-  * MEM_GOING_OFFLINE
- 
--Example: Inject memory hotplug offline error (-12 == -ENOMEM)
-+Example: Inject memory hotplug offline error (-12 == -ENOMEM)::
- 
- 	# cd /sys/kernel/debug/notifier-error-inject/memory
- 	# echo -12 > actions/MEM_GOING_OFFLINE/error
-@@ -49,7 +51,8 @@ Example: Inject memory hotplug offline error (-12 == -ENOMEM)
- powerpc pSeries reconfig notifier error injection module
- --------------------------------------------------------
- This feature is controlled through debugfs interface
--/sys/kernel/debug/notifier-error-inject/pSeries-reconfig/actions/<notifier event>/error
-+
-+  /sys/kernel/debug/notifier-error-inject/pSeries-reconfig/actions/<notifier event>/error
- 
- Possible pSeries reconfig notifier events to be failed are:
- 
-@@ -61,7 +64,8 @@ Possible pSeries reconfig notifier events to be failed are:
- Netdevice notifier error injection module
- ----------------------------------------------
- This feature is controlled through debugfs interface
--/sys/kernel/debug/notifier-error-inject/netdev/actions/<notifier event>/error
-+
-+  /sys/kernel/debug/notifier-error-inject/netdev/actions/<notifier event>/error
- 
- Netdevice notifier events which can be failed are:
- 
-@@ -75,7 +79,7 @@ Netdevice notifier events which can be failed are:
-  * NETDEV_PRECHANGEUPPER
-  * NETDEV_CHANGEUPPER
- 
--Example: Inject netdevice mtu change error (-22 == -EINVAL)
-+Example: Inject netdevice mtu change error (-22 == -EINVAL)::
- 
- 	# cd /sys/kernel/debug/notifier-error-inject/netdev
- 	# echo -22 > actions/NETDEV_CHANGEMTU/error
-diff --git a/Documentation/fault-injection/nvme-fault-injection.rst b/Documentation/fault-injection/nvme-fault-injection.rst
-new file mode 100644
-index 000000000000..bbb1bf3e8650
---- /dev/null
-+++ b/Documentation/fault-injection/nvme-fault-injection.rst
-@@ -0,0 +1,120 @@
-+NVMe Fault Injection
-+====================
-+Linux's fault injection framework provides a systematic way to support
-+error injection via debugfs in the /sys/kernel/debug directory. When
-+enabled, the default NVME_SC_INVALID_OPCODE with no retry will be
-+injected into the nvme_end_request. Users can change the default status
-+code and no retry flag via the debugfs. The list of Generic Command
-+Status can be found in include/linux/nvme.h
-+
-+Following examples show how to inject an error into the nvme.
-+
-+First, enable CONFIG_FAULT_INJECTION_DEBUG_FS kernel config,
-+recompile the kernel. After booting up the kernel, do the
-+following.
-+
-+Example 1: Inject default status code with no retry
-+---------------------------------------------------
-+
-+::
-+
-+  mount /dev/nvme0n1 /mnt
-+  echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
-+  echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
-+  cp a.file /mnt
-+
-+Expected Result::
-+
-+  cp: cannot stat ‘/mnt/a.file’: Input/output error
-+
-+Message from dmesg::
-+
-+  FAULT_INJECTION: forcing a failure.
-+  name fault_inject, interval 1, probability 100, space 0, times 1
-+  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.15.0-rc8+ #2
-+  Hardware name: innotek GmbH VirtualBox/VirtualBox,
-+  BIOS VirtualBox 12/01/2006
-+  Call Trace:
-+    <IRQ>
-+    dump_stack+0x5c/0x7d
-+    should_fail+0x148/0x170
-+    nvme_should_fail+0x2f/0x50 [nvme_core]
-+    nvme_process_cq+0xe7/0x1d0 [nvme]
-+    nvme_irq+0x1e/0x40 [nvme]
-+    __handle_irq_event_percpu+0x3a/0x190
-+    handle_irq_event_percpu+0x30/0x70
-+    handle_irq_event+0x36/0x60
-+    handle_fasteoi_irq+0x78/0x120
-+    handle_irq+0xa7/0x130
-+    ? tick_irq_enter+0xa8/0xc0
-+    do_IRQ+0x43/0xc0
-+    common_interrupt+0xa2/0xa2
-+    </IRQ>
-+  RIP: 0010:native_safe_halt+0x2/0x10
-+  RSP: 0018:ffffffff82003e90 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffdd
-+  RAX: ffffffff817a10c0 RBX: ffffffff82012480 RCX: 0000000000000000
-+  RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-+  RBP: 0000000000000000 R08: 000000008e38ce64 R09: 0000000000000000
-+  R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff82012480
-+  R13: ffffffff82012480 R14: 0000000000000000 R15: 0000000000000000
-+    ? __sched_text_end+0x4/0x4
-+    default_idle+0x18/0xf0
-+    do_idle+0x150/0x1d0
-+    cpu_startup_entry+0x6f/0x80
-+    start_kernel+0x4c4/0x4e4
-+    ? set_init_arg+0x55/0x55
-+    secondary_startup_64+0xa5/0xb0
-+    print_req_error: I/O error, dev nvme0n1, sector 9240
-+  EXT4-fs error (device nvme0n1): ext4_find_entry:1436:
-+  inode #2: comm cp: reading directory lblock 0
-+
-+Example 2: Inject default status code with retry
-+------------------------------------------------
-+
-+::
-+
-+  mount /dev/nvme0n1 /mnt
-+  echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
-+  echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
-+  echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/status
-+  echo 0 > /sys/kernel/debug/nvme0n1/fault_inject/dont_retry
-+
-+  cp a.file /mnt
-+
-+Expected Result::
-+
-+  command success without error
-+
-+Message from dmesg::
-+
-+  FAULT_INJECTION: forcing a failure.
-+  name fault_inject, interval 1, probability 100, space 0, times 1
-+  CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.15.0-rc8+ #4
-+  Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-+  Call Trace:
-+    <IRQ>
-+    dump_stack+0x5c/0x7d
-+    should_fail+0x148/0x170
-+    nvme_should_fail+0x30/0x60 [nvme_core]
-+    nvme_loop_queue_response+0x84/0x110 [nvme_loop]
-+    nvmet_req_complete+0x11/0x40 [nvmet]
-+    nvmet_bio_done+0x28/0x40 [nvmet]
-+    blk_update_request+0xb0/0x310
-+    blk_mq_end_request+0x18/0x60
-+    flush_smp_call_function_queue+0x3d/0xf0
-+    smp_call_function_single_interrupt+0x2c/0xc0
-+    call_function_single_interrupt+0xa2/0xb0
-+    </IRQ>
-+  RIP: 0010:native_safe_halt+0x2/0x10
-+  RSP: 0018:ffffc9000068bec0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff04
-+  RAX: ffffffff817a10c0 RBX: ffff88011a3c9680 RCX: 0000000000000000
-+  RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-+  RBP: 0000000000000001 R08: 000000008e38c131 R09: 0000000000000000
-+  R10: 0000000000000000 R11: 0000000000000000 R12: ffff88011a3c9680
-+  R13: ffff88011a3c9680 R14: 0000000000000000 R15: 0000000000000000
-+    ? __sched_text_end+0x4/0x4
-+    default_idle+0x18/0xf0
-+    do_idle+0x150/0x1d0
-+    cpu_startup_entry+0x6f/0x80
-+    start_secondary+0x187/0x1e0
-+    secondary_startup_64+0xa5/0xb0
-diff --git a/Documentation/fault-injection/nvme-fault-injection.txt b/Documentation/fault-injection/nvme-fault-injection.txt
-deleted file mode 100644
-index 8fbf3bf60b62..000000000000
---- a/Documentation/fault-injection/nvme-fault-injection.txt
-+++ /dev/null
-@@ -1,116 +0,0 @@
--NVMe Fault Injection
--====================
--Linux's fault injection framework provides a systematic way to support
--error injection via debugfs in the /sys/kernel/debug directory. When
--enabled, the default NVME_SC_INVALID_OPCODE with no retry will be
--injected into the nvme_end_request. Users can change the default status
--code and no retry flag via the debugfs. The list of Generic Command
--Status can be found in include/linux/nvme.h
--
--Following examples show how to inject an error into the nvme.
--
--First, enable CONFIG_FAULT_INJECTION_DEBUG_FS kernel config,
--recompile the kernel. After booting up the kernel, do the
--following.
--
--Example 1: Inject default status code with no retry
-----------------------------------------------------
--
--mount /dev/nvme0n1 /mnt
--echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
--echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
--cp a.file /mnt
--
--Expected Result:
--
--cp: cannot stat ‘/mnt/a.file’: Input/output error
--
--Message from dmesg:
--
--FAULT_INJECTION: forcing a failure.
--name fault_inject, interval 1, probability 100, space 0, times 1
--CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.15.0-rc8+ #2
--Hardware name: innotek GmbH VirtualBox/VirtualBox,
--BIOS VirtualBox 12/01/2006
--Call Trace:
--  <IRQ>
--  dump_stack+0x5c/0x7d
--  should_fail+0x148/0x170
--  nvme_should_fail+0x2f/0x50 [nvme_core]
--  nvme_process_cq+0xe7/0x1d0 [nvme]
--  nvme_irq+0x1e/0x40 [nvme]
--  __handle_irq_event_percpu+0x3a/0x190
--  handle_irq_event_percpu+0x30/0x70
--  handle_irq_event+0x36/0x60
--  handle_fasteoi_irq+0x78/0x120
--  handle_irq+0xa7/0x130
--  ? tick_irq_enter+0xa8/0xc0
--  do_IRQ+0x43/0xc0
--  common_interrupt+0xa2/0xa2
--  </IRQ>
--RIP: 0010:native_safe_halt+0x2/0x10
--RSP: 0018:ffffffff82003e90 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffdd
--RAX: ffffffff817a10c0 RBX: ffffffff82012480 RCX: 0000000000000000
--RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
--RBP: 0000000000000000 R08: 000000008e38ce64 R09: 0000000000000000
--R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff82012480
--R13: ffffffff82012480 R14: 0000000000000000 R15: 0000000000000000
--  ? __sched_text_end+0x4/0x4
--  default_idle+0x18/0xf0
--  do_idle+0x150/0x1d0
--  cpu_startup_entry+0x6f/0x80
--  start_kernel+0x4c4/0x4e4
--  ? set_init_arg+0x55/0x55
--  secondary_startup_64+0xa5/0xb0
--  print_req_error: I/O error, dev nvme0n1, sector 9240
--EXT4-fs error (device nvme0n1): ext4_find_entry:1436:
--inode #2: comm cp: reading directory lblock 0
--
--Example 2: Inject default status code with retry
--------------------------------------------------
--
--mount /dev/nvme0n1 /mnt
--echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
--echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
--echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/status
--echo 0 > /sys/kernel/debug/nvme0n1/fault_inject/dont_retry
--
--cp a.file /mnt
--
--Expected Result:
--
--command success without error
--
--Message from dmesg:
--
--FAULT_INJECTION: forcing a failure.
--name fault_inject, interval 1, probability 100, space 0, times 1
--CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.15.0-rc8+ #4
--Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
--Call Trace:
--  <IRQ>
--  dump_stack+0x5c/0x7d
--  should_fail+0x148/0x170
--  nvme_should_fail+0x30/0x60 [nvme_core]
--  nvme_loop_queue_response+0x84/0x110 [nvme_loop]
--  nvmet_req_complete+0x11/0x40 [nvmet]
--  nvmet_bio_done+0x28/0x40 [nvmet]
--  blk_update_request+0xb0/0x310
--  blk_mq_end_request+0x18/0x60
--  flush_smp_call_function_queue+0x3d/0xf0
--  smp_call_function_single_interrupt+0x2c/0xc0
--  call_function_single_interrupt+0xa2/0xb0
--  </IRQ>
--RIP: 0010:native_safe_halt+0x2/0x10
--RSP: 0018:ffffc9000068bec0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff04
--RAX: ffffffff817a10c0 RBX: ffff88011a3c9680 RCX: 0000000000000000
--RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
--RBP: 0000000000000001 R08: 000000008e38c131 R09: 0000000000000000
--R10: 0000000000000000 R11: 0000000000000000 R12: ffff88011a3c9680
--R13: ffff88011a3c9680 R14: 0000000000000000 R15: 0000000000000000
--  ? __sched_text_end+0x4/0x4
--  default_idle+0x18/0xf0
--  do_idle+0x150/0x1d0
--  cpu_startup_entry+0x6f/0x80
--  start_secondary+0x187/0x1e0
--  secondary_startup_64+0xa5/0xb0
-diff --git a/Documentation/fault-injection/provoke-crashes.rst b/Documentation/fault-injection/provoke-crashes.rst
-new file mode 100644
-index 000000000000..9279a3e12278
---- /dev/null
-+++ b/Documentation/fault-injection/provoke-crashes.rst
-@@ -0,0 +1,48 @@
-+===============
-+Provoke crashes
-+===============
-+
-+The lkdtm module provides an interface to crash or injure the kernel at
-+predefined crashpoints to evaluate the reliability of crash dumps obtained
-+using different dumping solutions. The module uses KPROBEs to instrument
-+crashing points, but can also crash the kernel directly without KRPOBE
-+support.
-+
-+
-+You can provide the way either through module arguments when inserting
-+the module, or through a debugfs interface.
-+
-+Usage::
-+
-+	insmod lkdtm.ko [recur_count={>0}] cpoint_name=<> cpoint_type=<>
-+			[cpoint_count={>0}]
-+
-+recur_count
-+	Recursion level for the stack overflow test. Default is 10.
-+
-+cpoint_name
-+	Crash point where the kernel is to be crashed. It can be
-+	one of INT_HARDWARE_ENTRY, INT_HW_IRQ_EN, INT_TASKLET_ENTRY,
-+	FS_DEVRW, MEM_SWAPOUT, TIMERADD, SCSI_DISPATCH_CMD,
-+	IDE_CORE_CP, DIRECT
-+
-+cpoint_type
-+	Indicates the action to be taken on hitting the crash point.
-+	It can be one of PANIC, BUG, EXCEPTION, LOOP, OVERFLOW,
-+	CORRUPT_STACK, UNALIGNED_LOAD_STORE_WRITE, OVERWRITE_ALLOCATION,
-+	WRITE_AFTER_FREE,
-+
-+cpoint_count
-+	Indicates the number of times the crash point is to be hit
-+	to trigger an action. The default is 10.
-+
-+You can also induce failures by mounting debugfs and writing the type to
-+<mountpoint>/provoke-crash/<crashpoint>. E.g.::
-+
-+  mount -t debugfs debugfs /mnt
-+  echo EXCEPTION > /mnt/provoke-crash/INT_HARDWARE_ENTRY
-+
-+
-+A special file is `DIRECT` which will induce the crash directly without
-+KPROBE instrumentation. This mode is the only one available when the module
-+is built on a kernel without KPROBEs support.
-diff --git a/Documentation/fault-injection/provoke-crashes.txt b/Documentation/fault-injection/provoke-crashes.txt
-deleted file mode 100644
-index 7a9d3d81525b..000000000000
---- a/Documentation/fault-injection/provoke-crashes.txt
-+++ /dev/null
-@@ -1,38 +0,0 @@
--The lkdtm module provides an interface to crash or injure the kernel at
--predefined crashpoints to evaluate the reliability of crash dumps obtained
--using different dumping solutions. The module uses KPROBEs to instrument
--crashing points, but can also crash the kernel directly without KRPOBE
--support.
--
--
--You can provide the way either through module arguments when inserting
--the module, or through a debugfs interface.
--
--Usage: insmod lkdtm.ko [recur_count={>0}] cpoint_name=<> cpoint_type=<>
--				[cpoint_count={>0}]
--
--  recur_count : Recursion level for the stack overflow test. Default is 10.
--
--  cpoint_name : Crash point where the kernel is to be crashed. It can be
--	 one of INT_HARDWARE_ENTRY, INT_HW_IRQ_EN, INT_TASKLET_ENTRY,
--	 FS_DEVRW, MEM_SWAPOUT, TIMERADD, SCSI_DISPATCH_CMD,
--	 IDE_CORE_CP, DIRECT
--
--  cpoint_type : Indicates the action to be taken on hitting the crash point.
--     It can be one of PANIC, BUG, EXCEPTION, LOOP, OVERFLOW,
--     CORRUPT_STACK, UNALIGNED_LOAD_STORE_WRITE, OVERWRITE_ALLOCATION,
--     WRITE_AFTER_FREE,
--
--  cpoint_count : Indicates the number of times the crash point is to be hit
--    to trigger an action. The default is 10.
--
--You can also induce failures by mounting debugfs and writing the type to
--<mountpoint>/provoke-crash/<crashpoint>. E.g.,
--
--  mount -t debugfs debugfs /mnt
--  echo EXCEPTION > /mnt/provoke-crash/INT_HARDWARE_ENTRY
--
--
--A special file is `DIRECT' which will induce the crash directly without
--KPROBE instrumentation. This mode is the only one available when the module
--is built on a kernel without KPROBEs support.
-diff --git a/Documentation/process/4.Coding.rst b/Documentation/process/4.Coding.rst
-index 4b7a5ab3cec1..13dd893c9f88 100644
---- a/Documentation/process/4.Coding.rst
-+++ b/Documentation/process/4.Coding.rst
-@@ -298,7 +298,7 @@ enabled, a configurable percentage of memory allocations will be made to
- fail; these failures can be restricted to a specific range of code.
- Running with fault injection enabled allows the programmer to see how the
- code responds when things go badly.  See
--Documentation/fault-injection/fault-injection.txt for more information on
-+Documentation/fault-injection/fault-injection.rst for more information on
- how to use this facility.
- 
- Other kinds of errors can be found with the "sparse" static analysis tool.
-diff --git a/Documentation/translations/it_IT/process/4.Coding.rst b/Documentation/translations/it_IT/process/4.Coding.rst
-index c05b89e616dd..a5e36aa60448 100644
---- a/Documentation/translations/it_IT/process/4.Coding.rst
-+++ b/Documentation/translations/it_IT/process/4.Coding.rst
-@@ -314,7 +314,7 @@ di allocazione di memoria sarà destinata al fallimento; questi fallimenti
- possono essere ridotti ad uno specifico pezzo di codice.  Procedere con
- l'inserimento dei fallimenti attivo permette al programmatore di verificare
- come il codice risponde quando le cose vanno male.  Consultate:
--Documentation/fault-injection/fault-injection.txt per avere maggiori
-+Documentation/fault-injection/fault-injection.rst per avere maggiori
- informazioni su come utilizzare questo strumento.
- 
- Altre tipologie di errori possono essere riscontrati con lo strumento di
-diff --git a/Documentation/translations/zh_CN/process/4.Coding.rst b/Documentation/translations/zh_CN/process/4.Coding.rst
-index 8bb777941394..b82b1dde3122 100644
---- a/Documentation/translations/zh_CN/process/4.Coding.rst
-+++ b/Documentation/translations/zh_CN/process/4.Coding.rst
-@@ -205,7 +205,7 @@ Linus对这个问题给出了最佳答案:
- 启用故障注入后，内存分配的可配置百分比将失败；这些失败可以限制在特定的代码
- 范围内。在启用了故障注入的情况下运行，程序员可以看到当情况恶化时代码如何响
- 应。有关如何使用此工具的详细信息，请参阅
--Documentation/fault-injection/fault-injection.txt。
-+Documentation/fault-injection/fault-injection.rst。
- 
- 使用“sparse”静态分析工具可以发现其他类型的错误。对于sparse，可以警告程序员
- 用户空间和内核空间地址之间的混淆、big endian和small endian数量的混合、在需
-diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-index df9429e3fd3a..c7a507482051 100644
---- a/drivers/misc/lkdtm/core.c
-+++ b/drivers/misc/lkdtm/core.c
-@@ -15,7 +15,7 @@
-  *
-  * Debugfs support added by Simon Kagstrom <simon.kagstrom@netinsight.net>
-  *
-- * See Documentation/fault-injection/provoke-crashes.txt for instructions
-+ * See Documentation/fault-injection/provoke-crashes.rst for instructions
-  */
- #include "lkdtm.h"
- #include <linux/fs.h>
-diff --git a/include/linux/fault-inject.h b/include/linux/fault-inject.h
-index 7e6c77740413..e525f6957c49 100644
---- a/include/linux/fault-inject.h
-+++ b/include/linux/fault-inject.h
-@@ -11,7 +11,7 @@
- 
- /*
-  * For explanation of the elements of this struct, see
-- * Documentation/fault-injection/fault-injection.txt
-+ * Documentation/fault-injection/fault-injection.rst
-  */
- struct fault_attr {
- 	unsigned long probability;
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index d08f5848958e..3a3554e8ca0f 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1701,7 +1701,7 @@ config LKDTM
- 	called lkdtm.
- 
- 	Documentation on how to use the module can be found in
--	Documentation/fault-injection/provoke-crashes.txt
-+	Documentation/fault-injection/provoke-crashes.rst
- 
- config TEST_LIST_SORT
- 	tristate "Linked list sorting test"
-diff --git a/tools/testing/fault-injection/failcmd.sh b/tools/testing/fault-injection/failcmd.sh
-index 29a6c63c5a15..78dac34264be 100644
---- a/tools/testing/fault-injection/failcmd.sh
-+++ b/tools/testing/fault-injection/failcmd.sh
-@@ -42,7 +42,7 @@ OPTIONS
- 	--interval=value, --space=value, --verbose=value, --task-filter=value,
- 	--stacktrace-depth=value, --require-start=value, --require-end=value,
- 	--reject-start=value, --reject-end=value, --ignore-gfp-wait=value
--		See Documentation/fault-injection/fault-injection.txt for more
-+		See Documentation/fault-injection/fault-injection.rst for more
- 		information
- 
- 	failslab options:
+commit 318759b4737c3b3789e2fd64d539f437d52386f5
+Author: Eric W. Biederman <ebiederm@xmission.com>
+Date:   Mon Jun 3 10:23:58 2019 -0500
+
+    signal/x86: Move tsk inside of CONFIG_MEMORY_FAILURE in do_sigbus
+
+
 -- 
-2.21.0
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
