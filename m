@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00CAC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD93C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A048B2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48B1620866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:54:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731885AbfFLIyD (ORCPT
+        id S2437303AbfFLIyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:54:03 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:22117 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731698AbfFLIyA (ORCPT
+        Wed, 12 Jun 2019 04:54:06 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:8066 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2408123AbfFLIyB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:54:00 -0400
-X-UUID: 6321e93e977244288a8f257bf8af9ba0-20190612
-X-UUID: 6321e93e977244288a8f257bf8af9ba0-20190612
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        Wed, 12 Jun 2019 04:54:01 -0400
+X-UUID: 44c1bfc46e134f96b3f266ad894b61bb-20190612
+X-UUID: 44c1bfc46e134f96b3f266ad894b61bb-20190612
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
         (envelope-from <bibby.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1965707407; Wed, 12 Jun 2019 16:53:53 +0800
+        with ESMTP id 1388282024; Wed, 12 Jun 2019 16:53:54 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
  15.0.1395.4; Wed, 12 Jun 2019 16:53:52 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 12 Jun 2019 16:53:51 +0800
+ Transport; Wed, 12 Jun 2019 16:53:52 +0800
 From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
 To:     Jassi Brar <jassisinghbrar@gmail.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -52,9 +52,9 @@ CC:     Daniel Kurtz <djkurtz@chromium.org>,
         Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
         Houlong Wei <houlong.wei@mediatek.com>,
         <ginny.chen@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v8 03/12] dt-binding: gce: add binding for gce client reg property
-Date:   Wed, 12 Jun 2019 16:53:40 +0800
-Message-ID: <20190612085349.21243-4-bibby.hsieh@mediatek.com>
+Subject: [PATCH v8 09/12] soc: mediatek: cmdq: define the instruction struct
+Date:   Wed, 12 Jun 2019 16:53:46 +0800
+Message-ID: <20190612085349.21243-10-bibby.hsieh@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190612085349.21243-1-bibby.hsieh@mediatek.com>
 References: <20190612085349.21243-1-bibby.hsieh@mediatek.com>
@@ -66,63 +66,209 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cmdq driver provide a function that get the relationship
-of sub system number from device node for client.
-add specification for #subsys-cells, mediatek,gce-client-reg.
+Define an instruction structure for gce driver to append command.
+This structure can make the client's code more readability.
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- .../devicetree/bindings/mailbox/mtk-gce.txt    | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ drivers/soc/mediatek/mtk-cmdq-helper.c   | 103 +++++++++++++++--------
+ include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
+ 2 files changed, 72 insertions(+), 33 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-index 1f7f8f2a3f49..d48282d6b02d 100644
---- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-+++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-@@ -21,12 +21,21 @@ Required properties:
- 	priority: Priority of GCE thread.
- 	atomic_exec: GCE processing continuous packets of commands in atomic
- 		way.
-+- #subsys-cells: Should be 3.
-+	<&phandle subsys_number start_offset size>
-+	phandle: Label name of a gce node.
-+	subsys_number: specify the sub-system id which is corresponding
-+		       to the register address.
-+	start_offset: the start offset of register address that GCE can access.
-+	size: the total size of register address that GCE can access.
+diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+index 7aa0517ff2f3..0886c4967ca4 100644
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -9,12 +9,24 @@
+ #include <linux/mailbox_controller.h>
+ #include <linux/soc/mediatek/mtk-cmdq.h>
  
- Required properties for a client device:
- - mboxes: Client use mailbox to communicate with GCE, it should have this
-   property and list of phandle, mailbox specifiers.
--- mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
--  to the register address.
-+Optional properties for a client device:
-+- mediatek,gce-client-reg: Specify the sub-system id which is corresponding
-+  to the register address, it should have this property and list of phandle,
-+  sub-system specifiers.
+-#define CMDQ_ARG_A_WRITE_MASK	0xffff
+ #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
+ #define CMDQ_EOC_IRQ_EN		BIT(0)
+ #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
+ 				<< 32 | CMDQ_EOC_IRQ_EN)
  
- Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
- or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
-@@ -40,6 +49,7 @@ Example:
- 		clocks = <&infracfg CLK_INFRA_GCE>;
- 		clock-names = "gce";
- 		#mbox-cells = <3>;
-+		#subsys-cells = <3>;
- 	};
++struct cmdq_instruction {
++	union {
++		u32 value;
++		u32 mask;
++	};
++	union {
++		u16 offset;
++		u16 event;
++	};
++	u8 subsys;
++	u8 op;
++};
++
+ static void cmdq_client_timeout(struct timer_list *t)
+ {
+ 	struct cmdq_client *client = from_timer(client, t, timer);
+@@ -110,10 +122,8 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_destroy);
  
- Example for a client device:
-@@ -48,9 +58,9 @@ Example for a client device:
- 		compatible = "mediatek,mt8173-mmsys";
- 		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
- 			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
--		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
- 		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
- 				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
--
-+		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
-+					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
- 		...
- 	};
+-static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+-				   u32 arg_a, u32 arg_b)
++static struct cmdq_instruction *cmdq_pkt_append_command(struct cmdq_pkt *pkt)
+ {
+-	u64 *cmd_ptr;
+ 
+ 	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
+ 		/*
+@@ -127,81 +137,108 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+ 		pkt->cmd_buf_size += CMDQ_INST_SIZE;
+ 		WARN_ONCE(1, "%s: buffer size %u is too small !\n",
+ 			__func__, (u32)pkt->buf_size);
+-		return -ENOMEM;
++		return NULL;
+ 	}
+-	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
+-	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
++
+ 	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+ 
+-	return 0;
++	return pkt->va_base + pkt->cmd_buf_size - CMDQ_INST_SIZE;
+ }
+ 
+ int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
+ {
+-	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+-		    (subsys << CMDQ_SUBSYS_SHIFT);
++	struct cmdq_instruction *inst;
++
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
++
++	inst->op = CMDQ_CODE_WRITE;
++	inst->value = value;
++	inst->offset = offset;
++	inst->subsys = subsys;
+ 
+-	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
++	return 0;
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write);
+ 
+ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
+ 			u16 offset, u32 value, u32 mask)
+ {
++	struct cmdq_instruction *inst;
+ 	u32 offset_mask = offset;
+-	int err = 0;
+ 
+ 	if (mask != 0xffffffff) {
+-		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
++		inst = cmdq_pkt_append_command(pkt);
++		if (!inst)
++			return -ENOMEM;
++
++		inst->op = CMDQ_CODE_MASK;
++		inst->mask = ~mask;
+ 		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
+ 	}
+-	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
+ 
+-	return err;
++	return cmdq_pkt_write(pkt, subsys, offset_mask, value);
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write_mask);
+ 
+ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+ {
+-	u32 arg_b;
++	struct cmdq_instruction *inst;
+ 
+ 	if (event >= CMDQ_MAX_EVENT)
+ 		return -EINVAL;
+ 
+-	/*
+-	 * WFE arg_b
+-	 * bit 0-11: wait value
+-	 * bit 15: 1 - wait, 0 - no wait
+-	 * bit 16-27: update value
+-	 * bit 31: 1 - update, 0 - no update
+-	 */
+-	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
++
++	inst->op = CMDQ_CODE_WFE;
++	inst->value = CMDQ_WFE_OPTION;
++	inst->event = event;
+ 
+-	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
++	return 0;
+ }
+ EXPORT_SYMBOL(cmdq_pkt_wfe);
+ 
+ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+ {
++	struct cmdq_instruction *inst;
++
+ 	if (event >= CMDQ_MAX_EVENT)
+ 		return -EINVAL;
+ 
+-	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
+-				       CMDQ_WFE_UPDATE);
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
++
++	inst->op = CMDQ_CODE_WFE;
++	inst->value = CMDQ_WFE_UPDATE;
++	inst->event = event;
++
++	return 0;
+ }
+ EXPORT_SYMBOL(cmdq_pkt_clear_event);
+ 
+ static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+ {
+-	int err;
++	struct cmdq_instruction *inst;
++
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
+ 
+-	/* insert EOC and generate IRQ for each command iteration */
+-	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
++	inst->op = CMDQ_CODE_EOC;
++	inst->value = CMDQ_EOC_IRQ_EN;
+ 
+-	/* JUMP to end */
+-	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
++
++	inst->op = CMDQ_CODE_JUMP;
++	inst->value = CMDQ_JUMP_PASS;
+ 
+-	return err;
++	return 0;
+ }
+ 
+ static void cmdq_pkt_flush_async_cb(struct cmdq_cb_data data)
+diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+index 911475da7a53..c8adedefaf42 100644
+--- a/include/linux/mailbox/mtk-cmdq-mailbox.h
++++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+@@ -19,6 +19,8 @@
+ #define CMDQ_WFE_UPDATE			BIT(31)
+ #define CMDQ_WFE_WAIT			BIT(15)
+ #define CMDQ_WFE_WAIT_VALUE		0x1
++#define CMDQ_WFE_OPTION			(CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
++					CMDQ_WFE_WAIT_VALUE)
+ /** cmdq event maximum */
+ #define CMDQ_MAX_EVENT			0x3ff
+ 
 -- 
 2.18.0
 
