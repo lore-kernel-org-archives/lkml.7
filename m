@@ -3,152 +3,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84FDC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4604C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3BE6215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B409C206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:42:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="SWCbBqlO";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="p86ox96e"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="zfGP+t+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbfFLSlZ (ORCPT
+        id S2387814AbfFLSmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 14:41:25 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:42084 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728841AbfFLSlV (ORCPT
+        Wed, 12 Jun 2019 14:42:06 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38197 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbfFLSmF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 14:41:21 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CIe553010654;
-        Wed, 12 Jun 2019 11:41:13 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=q69tUFXGTMDPBEuA65P4J8macASm8wq5wpAC3LFkPXw=;
- b=SWCbBqlOuRj6blSWnZjjC9VBX6eaSadMU4F3dfOdmzqBVdCUYQuucsi80051mNPpoR0X
- RteONXNihAwxTK8A+Mdl2EBUpkNeTQpS+KrFnhUjyRRHmNHDeWJT+6EULbh7/pe6iPYk
- VkCfNHYAreweUWNhbJmJFXDUFy2K3lmOzLW8Cn3AnieE3qaQOHcJyKb2pgaxyaZymWrO
- fm1eXwnLqd7+MBjCxwBCkYhmZ2eptAyerDRgcEsJcqXtp7TOqW64GVyQ00xtgxfZMMOJ
- H6oYWuKYFux+CXIsSNDChMxPe6abDg4Z7Ci9L5kAEtqEGP0dlQiYBxmSTSZ15SqoG4OO oA== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2t34ngrk97-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 12 Jun 2019 11:41:13 -0700
-Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 12 Jun
- 2019 11:41:11 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.51) by
- SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 12 Jun 2019 11:41:11 -0700
+        Wed, 12 Jun 2019 14:42:05 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v186so12458082oie.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 11:42:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q69tUFXGTMDPBEuA65P4J8macASm8wq5wpAC3LFkPXw=;
- b=p86ox96eoceuLClEvLS2F2HuTNUnoqYN+exLCe6i+8LaFGViSw8jCjjEng8D5W6AiMTl7mOK4xJoqrbbEfJ7eVx1BY4+aD1A0LeRXXdmH80FExfD3rjJe8DgbEWYYr0Mzuq1LeEYDDXR42GXEVBzq6kHtqfhQknrupm1zzN+E/s=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
- MN2PR18MB3087.namprd18.prod.outlook.com (20.179.20.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.10; Wed, 12 Jun 2019 18:41:06 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::d3:794c:1b94:cf3]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::d3:794c:1b94:cf3%4]) with mapi id 15.20.1965.017; Wed, 12 Jun 2019
- 18:41:06 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     James Morse <james.morse@arm.com>
-CC:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 12/21] EDAC, ghes: Add support for legacy API counters
-Thread-Topic: [PATCH 12/21] EDAC, ghes: Add support for legacy API counters
-Thread-Index: AQHVIU5kX5MqKG3rJEqHTaHdhQcplw==
-Date:   Wed, 12 Jun 2019 18:41:06 +0000
-Message-ID: <20190612184058.2plbdweri6bjmppr@rric.localdomain>
-References: <20190529084344.28562-1-rrichter@marvell.com>
- <20190529084344.28562-13-rrichter@marvell.com>
- <92eda11f-dad9-bb2b-3a87-80b6c8d8e228@arm.com>
-In-Reply-To: <92eda11f-dad9-bb2b-3a87-80b6c8d8e228@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1P189CA0027.EURP189.PROD.OUTLOOK.COM (2603:10a6:7:53::40)
- To MN2PR18MB3408.namprd18.prod.outlook.com (2603:10b6:208:16c::25)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [92.254.182.202]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b267bb12-b4b4-4cde-e4cc-08d6ef658723
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB3087;
-x-ms-traffictypediagnostic: MN2PR18MB3087:
-x-microsoft-antispam-prvs: <MN2PR18MB3087AF35AA34273B31632F07D9EC0@MN2PR18MB3087.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0066D63CE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(346002)(376002)(39860400002)(136003)(199004)(189003)(9686003)(6512007)(71190400001)(71200400001)(6436002)(7736002)(305945005)(66476007)(6486002)(66556008)(6916009)(229853002)(66946007)(64756008)(73956011)(476003)(26005)(186003)(11346002)(446003)(486006)(6116002)(3846002)(66446008)(2906002)(81156014)(4326008)(81166006)(8936002)(25786009)(53936002)(6246003)(66066001)(86362001)(102836004)(68736007)(99286004)(256004)(52116002)(1076003)(14454004)(6506007)(8676002)(316002)(5660300002)(76176011)(53546011)(54906003)(386003)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3087;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: di3jjJa9CtGR/OeWpQeP1vXQeZa+w+q+s4r6XF7hAwm4D5havUBznWTMSJLjLAk14qk9wQ3Q3wS+adPBn3XKbba5r6v++qVQ3Ic8vCpX1BLjbeha/ObIhtmJOi9Ir6BZEknUt5eAr7ilaFKwE+pSdyWUomCHIm3Bp2j0vjSHvEHkTachCKs3xc84cDfVMs/IY84pm9rs11Rc+i/4uT73Nz9+7J5pHyWSDaf7bT2pLQrY9cA0DkawOv7vfWjlQ5trOPu+CyoGH6d4g5jlmjhwA30W7TUPFRNxIympq5w/WAOoGz7hYiKIE1+RxxtZoeetzm1PAOrUyVSPL7Z4GkzuKiDVYTkWgecnGztS5eD83vHjRKMSpUO9t4eIlVXFPJn5i4s3jxbxUdpms9UkYGA8uwQvrVaXBGkj/FJPNxKo/Gc=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D67A621340DCFF4590CB9B3CBC5583E0@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tLkmphJnLjEku4wPa26GqmShS2e5likwCcmpQlFLS9E=;
+        b=zfGP+t+9ivTiw9crHzyoG37UKVT39+ZjMSRc6i4RLF5qzgoEzM0PJJFpTl3UpomLM/
+         kX7wxsRh/bfXL05Kn2SjQT8PDTQbpZvw2lUD2P17lgifKk9462SiGOzy9eolZxENP8tF
+         +j8h3CL4xbOvN0NcXJng0ZhfijbK4zlpWlo5g45OKeiNBbSWh4j6EO8XjD4uzxYBWXSc
+         XQXw6jfUAUrXoISJcc1nasZDsCw2vNnJrgvivK5m8U97df7yj+O0/KKRytyMUK2vV5wL
+         CVPInnibqz35AZHLe+QENPOC6d6PXPPLQ6FBHTljTMKMRhnltIiFojDH2RTb0H3+DeCQ
+         awHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tLkmphJnLjEku4wPa26GqmShS2e5likwCcmpQlFLS9E=;
+        b=llea5M1QAA9qbnelLuxh3yGl/8Pjw0K3nhgpHzq8iUeNDCkv6XsfYiWHCFpI/ZZK4N
+         TWwL+U/sVG3j1rOQJ03c1nbcl+zBLCco1qiIFq/pIyBGGuhyZX74S00GxCbCOKo4gRjc
+         vrG0kDoW0xk9WvDnO9CO/UPoC6gQcXG5U98fEesJc3h6ILjEOyhwOMqkZ2SU0F+zAHjr
+         ZFY87hqzuJ167XT+USrS+4BG9U6S8tj/pr08D2OSpLhHmMX28nj1F+p14oYpx+kqXT2x
+         2+btPCPWHo6GpjQhVM5e67GgCgOs3+6f42biMUbwXh2mDHgo61cp9IiDUB4xeZ38HRDG
+         GKOg==
+X-Gm-Message-State: APjAAAUr9ThTD8sSB5hGxPsyGSU680jf/t/GEa+6Ba03YKMYA0QVhPUS
+        urJ+hwwss4Pc3HRwVkylBcvlnTZKCgLiH/od+JGUVw==
+X-Google-Smtp-Source: APXvYqxw8Jxg8VjrdgkzfIw+Yn35hC16YxwrfmO4tE9KRMFgYTyKNK9pqaozSKJ82RqVYk9X5Uls8HWSSM7jkwOY/uo=
+X-Received: by 2002:aca:ed4c:: with SMTP id l73mr412323oih.149.1560364924898;
+ Wed, 12 Jun 2019 11:42:04 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b267bb12-b4b4-4cde-e4cc-08d6ef658723
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 18:41:06.2163
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rrichter@marvell.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3087
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_11:,,
- signatures=0
+References: <20190606014544.8339-1-ira.weiny@intel.com> <20190606104203.GF7433@quack2.suse.cz>
+ <20190606195114.GA30714@ziepe.ca> <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
+ <20190607103636.GA12765@quack2.suse.cz> <20190607121729.GA14802@ziepe.ca>
+ <20190607145213.GB14559@iweiny-DESK2.sc.intel.com> <20190612102917.GB14578@quack2.suse.cz>
+ <20190612114721.GB3876@ziepe.ca> <20190612120907.GC14578@quack2.suse.cz>
+In-Reply-To: <20190612120907.GC14578@quack2.suse.cz>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 12 Jun 2019 11:41:53 -0700
+Message-ID: <CAPcyv4ikn219XUgHwsPdYp06vBNAJB9Rk-hjZA-fYT4GB3gi+w@mail.gmail.com>
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+To:     Jan Kara <jack@suse.cz>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Ira Weiny <ira.weiny@intel.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.05.19 16:13:02, James Morse wrote:
-> On 29/05/2019 09:44, Robert Richter wrote:
-> > The ghes driver is not able yet to count legacy API counters in sysfs,
-> > e.g.:
-> >=20
-> >  /sys/devices/system/edac/mc/mc0/csrow2/ce_count
-> >  /sys/devices/system/edac/mc/mc0/csrow2/ch0_ce_count
-> >  /sys/devices/system/edac/mc/mc0/csrow2/ch1_ce_count
-> >=20
-> > Make counting csrows/channels generic so that the ghes driver can use
-> > it too.
->=20
-> What for?
+On Wed, Jun 12, 2019 at 5:09 AM Jan Kara <jack@suse.cz> wrote:
+>
+> On Wed 12-06-19 08:47:21, Jason Gunthorpe wrote:
+> > On Wed, Jun 12, 2019 at 12:29:17PM +0200, Jan Kara wrote:
+> >
+> > > > > The main objection to the current ODP & DAX solution is that very
+> > > > > little HW can actually implement it, having the alternative still
+> > > > > require HW support doesn't seem like progress.
+> > > > >
+> > > > > I think we will eventually start seein some HW be able to do this
+> > > > > invalidation, but it won't be universal, and I'd rather leave it
+> > > > > optional, for recovery from truely catastrophic errors (ie my DAX is
+> > > > > on fire, I need to unplug it).
+> > > >
+> > > > Agreed.  I think software wise there is not much some of the devices can do
+> > > > with such an "invalidate".
+> > >
+> > > So out of curiosity: What does RDMA driver do when userspace just closes
+> > > the file pointing to RDMA object? It has to handle that somehow by aborting
+> > > everything that's going on... And I wanted similar behavior here.
+> >
+> > It aborts *everything* connected to that file descriptor. Destroying
+> > everything avoids creating inconsistencies that destroying a subset
+> > would create.
+> >
+> > What has been talked about for lease break is not destroying anything
+> > but very selectively saying that one memory region linked to the GUP
+> > is no longer functional.
+>
+> OK, so what I had in mind was that if RDMA app doesn't play by the rules
+> and closes the file with existing pins (and thus layout lease) we would
+> force it to abort everything. Yes, it is disruptive but then the app didn't
+> obey the rule that it has to maintain file lease while holding pins. Thus
+> such situation should never happen unless the app is malicious / buggy.
 
-With EDAC_LEGACY_SYSFS enabled those counters are exposed to sysfs,
-but the numbers are wrong (all zero).
-
-> Is this for an arm64 system? Surely we don't have any systems that used t=
-o work with these
-> legacy counters. Aren't they legacy because we want new software to stop =
-using them!
-
-The option is to support legacy userland. If we want to provide a
-similar "user experience" as for x86 the counters should be correct.
-Of course it is not a real mapping to csrows, but it makes that i/f
-work.
-
-In any case, this patch cleans up code as old API's counter code is
-isolated and moved to common code. Making the counter's work for ghes
-is actually a side-effect here. The cleanup is a prerequisit for
-follow on patches.
-
--Robert
-
->=20
->=20
-> Thanks,
->=20
-> James
+When you say 'close' do you mean the final release of the fd? The vma
+keeps a reference to a 'struct file' live even after the fd is closed.
