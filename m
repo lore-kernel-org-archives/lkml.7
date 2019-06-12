@@ -2,114 +2,98 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB029C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A78FC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D042208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E4DF208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:29:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YYYfzH1Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y5ihkDG2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732416AbfFLM3N (ORCPT
+        id S2438907AbfFLM3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:29:13 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:43111 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729008AbfFLM3M (ORCPT
+        Wed, 12 Jun 2019 08:29:40 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43400 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729008AbfFLM3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:29:12 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5CCT5LP685282
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 12 Jun 2019 05:29:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5CCT5LP685282
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560342546;
-        bh=EzlFuzgzk7utdYQPDK7adJsHAl+Zhv92on0+5cRVOts=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=YYYfzH1ZJWatgO8mUijXWZeyv0SFJEL1VDK6dYM+tHot6NJmXyZY4T8JdExJLdq3B
-         wGh1Hh+5baVtd+17HLmBX8mb1eAYZUJ01k1fVFYTWcB23E5IdQgEFvZlUOGfcE1JcA
-         FRoVlKcgZkpAAjIWCzxy8xhy+c7rndLsvuVE1KR7lMOo8vUY7Y8Dr+aH4h4yr4PIJD
-         btTunDAhrVAYpDk5w8WGUhFUBSv3rbTzPk4X6HVo2dYSYIyw2tNO9JtIbIjybZ51Sv
-         YB0X0Eh5FFDLYS3vkTdk1gLqMfzbjxONPnMHZ2A8Syx93216032/5Ggfu3Ru2cNJH0
-         z1tDe79xtwoGQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5CCT5Xe685279;
-        Wed, 12 Jun 2019 05:29:05 -0700
-Date:   Wed, 12 Jun 2019 05:29:05 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Daniel Lezcano <tipbot@zytor.com>
-Message-ID: <tip-3c2e79f4cef7938125b356e7f5c8fd038212619a@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org,
-        tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com
-Reply-To: mingo@kernel.org, hpa@zytor.com, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org
-In-Reply-To: <20190527205521.12091-4-daniel.lezcano@linaro.org>
-References: <20190527205521.12091-4-daniel.lezcano@linaro.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:irq/core] genirq/timings: Optimize the period detection speed
-Git-Commit-ID: 3c2e79f4cef7938125b356e7f5c8fd038212619a
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 12 Jun 2019 08:29:40 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f25so8851799pgv.10;
+        Wed, 12 Jun 2019 05:29:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WFcM32SS6XaD8HSCn00NiHqd+wcd7qBRLAizzgTZVxY=;
+        b=Y5ihkDG2CTC5uDcLFLVuhq8mJ16YaC9ICO39gSxNlGpbmCnDIiAfbPqIQF2Gca5+Ml
+         GK1oVU3LgZTkLnWXBh3hjs2Fs3Zp6FYzsw3Nk1Pp+JuecJeh16b8AhxsQ1l6QSlVX/JO
+         SIMMiP0QKEX05LnnY3C5JwauagNbOYdrg9zRe5sfpzCEK+zqKqQMjMxPMG55oyiNJYNr
+         aKhxxSoINBvHAo0Biht/1CnrO2EmUpxxuMTSuOaGu+kO2QSci6XYIffhg9UvZ6fkW1dG
+         2qEGgWc+FYHiRN4L3MXMwgBgiRdmVpd58V2+4i1atT3dnz6vZpk7IrySBS+uxgaJbTca
+         q/bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WFcM32SS6XaD8HSCn00NiHqd+wcd7qBRLAizzgTZVxY=;
+        b=HpBN4VOyPfoYJJpTA6tndS3D8PlwXU1IzDhqjfsvb476HL2uWC8OES106TqPhxQdpm
+         YtBqtq8y7KhpjzjJD5escvyhfNxSQOqw9dVqt/woZ0h0M/GkozztHTI4vG2aYNJA2mxi
+         8WPHsg1dhDSkFNR1qLUyfKKqHiO9iJyWT4e9/TOiyQ1JyAtEGYTOvMnYY2fJnY4GBltM
+         vfvB1EJ4It6ZYwH05j9rlKD70DPkC2dv7r1dOdM+nMiwRhh/Prz/ydPCgtvs71dysijE
+         xwkTjd6m+rHpHdTBFZCUR0T7+mECsexCNUBxkW/H7YXKTsbNQVzerVj7q6G3eNE51DZN
+         07qw==
+X-Gm-Message-State: APjAAAWfGE+2D4twMEi34nOPRZml9X9TwZEJnZd7fIRX5OKPib4kMylJ
+        VFHJCkKBY69WvL2BsrCkYgE=
+X-Google-Smtp-Source: APXvYqy/SY9OVqCPDYbiHArI3JT+x/0Z0xR5oGUlcaPHGqGLYEZFSqG2z2BlJ1c9lItzkcr9REzpfg==
+X-Received: by 2002:a62:e917:: with SMTP id j23mr80596145pfh.55.1560342579591;
+        Wed, 12 Jun 2019 05:29:39 -0700 (PDT)
+Received: from masabert (150-66-71-0m5.mineo.jp. [150.66.71.0])
+        by smtp.gmail.com with ESMTPSA id b26sm14993505pfo.129.2019.06.12.05.29.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 05:29:39 -0700 (PDT)
+Received: by masabert (Postfix, from userid 1000)
+        id 5FF482011BF; Wed, 12 Jun 2019 21:29:35 +0900 (JST)
+From:   Masanari Iida <standby24x7@gmail.com>
+To:     santosh.shilimkar@oracle.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org
+Cc:     Masanari Iida <standby24x7@gmail.com>
+Subject: [PATCH] linux-next: DOC: RDS: Fix a typo in rds.txt
+Date:   Wed, 12 Jun 2019 21:29:34 +0900
+Message-Id: <20190612122934.3515-1-standby24x7@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3c2e79f4cef7938125b356e7f5c8fd038212619a
-Gitweb:     https://git.kernel.org/tip/3c2e79f4cef7938125b356e7f5c8fd038212619a
-Author:     Daniel Lezcano <daniel.lezcano@linaro.org>
-AuthorDate: Mon, 27 May 2019 22:55:16 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 12 Jun 2019 10:47:03 +0200
+This patch fixes a spelling typo in rds.txt
 
-genirq/timings: Optimize the period detection speed
-
-With a minimal period and if there is a period which is a multiple of it
-but lesser than the max period then it will be detected before and the
-minimal period will be never reached.
-
- 1 2 1 2 1 2 1 2 1 2 1 2
- <-----> <-----> <----->
- <-> <-> <-> <-> <-> <->
-
-In that case, the minimum period is 2 and the maximum period is 5. That
-means all repeating pattern of 2 will be detected as repeating pattern of
-4, it is pointless to go up to 2 when searching for the period as it will
-always fail.
-
-Remove one loop iteration by increasing the minimal period to 3.
-
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: andriy.shevchenko@linux.intel.com
-Link: https://lkml.kernel.org/r/20190527205521.12091-4-daniel.lezcano@linaro.org
-
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
 ---
- kernel/irq/timings.c | 2 +-
+ Documentation/networking/rds.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/irq/timings.c b/kernel/irq/timings.c
-index 19d2fad379ee..1d1c411d4cae 100644
---- a/kernel/irq/timings.c
-+++ b/kernel/irq/timings.c
-@@ -261,7 +261,7 @@ void irq_timings_disable(void)
- #define EMA_ALPHA_VAL		64
- #define EMA_ALPHA_SHIFT		7
+diff --git a/Documentation/networking/rds.txt b/Documentation/networking/rds.txt
+index 0235ae69af2a..f2a0147c933d 100644
+--- a/Documentation/networking/rds.txt
++++ b/Documentation/networking/rds.txt
+@@ -389,7 +389,7 @@ Multipath RDS (mprds)
+   a common (to all paths) part, and a per-path struct rds_conn_path. All
+   I/O workqs and reconnect threads are driven from the rds_conn_path.
+   Transports such as TCP that are multipath capable may then set up a
+-  TPC socket per rds_conn_path, and this is managed by the transport via
++  TCP socket per rds_conn_path, and this is managed by the transport via
+   the transport privatee cp_transport_data pointer.
  
--#define PREDICTION_PERIOD_MIN	2
-+#define PREDICTION_PERIOD_MIN	3
- #define PREDICTION_PERIOD_MAX	5
- #define PREDICTION_FACTOR	4
- #define PREDICTION_MAX		10 /* 2 ^ PREDICTION_MAX useconds */
+   Transports announce themselves as multipath capable by setting the
+-- 
+2.22.0
+
