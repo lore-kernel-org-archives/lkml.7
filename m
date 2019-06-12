@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F8CC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F08C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12894208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAFB021721
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:55:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="PVbTsHM8"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="rUFa0q2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390115AbfFLUzy (ORCPT
+        id S2390211AbfFLUzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 16:55:54 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44820 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388884AbfFLUzt (ORCPT
+        Wed, 12 Jun 2019 16:55:55 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34590 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389710AbfFLUzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 16:55:49 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b17so18357769wrq.11;
-        Wed, 12 Jun 2019 13:55:47 -0700 (PDT)
+        Wed, 12 Jun 2019 16:55:52 -0400
+Received: by mail-wm1-f67.google.com with SMTP id w9so5106840wmd.1;
+        Wed, 12 Jun 2019 13:55:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0gOm2m0FcFm0g2Vu1nMDa1FWBplL205hnC9G0QkNJn4=;
-        b=PVbTsHM8Lo4nt76wMAIAfEbubaSWW3E0Qj3br9RFOJ6iWLRfEpbZvMYz+C6raOn0xT
-         sw31E9CscgBhseKPDD3i9rZp2WU3QwAK2IFDDBRokBOCBNtNmC5IyL2lgSyQm9F2b4K4
-         3OpBJ7vO18UWVF2P28uS7uoXnBr2uI9fz9dcQhjC/QdNfUXEcdnu0BrN9CPBdG+aeP/2
-         o6yCdljaT7Y/fsFWzTt38oUxqmkpAPhPiB1/byI6SRXwJD8viZbFoSYHbosr0twf5HPc
-         e9g7QXByNlkzhzhHDHF34BHVPcjvOLA5QpY2P3xuwtkrdQnUasp3U3dpzRmQ4M55uyDg
-         STbg==
+        bh=/gDKxCzkOGRMbdoCC0wOn2Sy/Yhww68pPHd5X9PQ/go=;
+        b=rUFa0q2c0ueMNjFCD1Ac5K6Fk3nNqiUfkEeny7sxh9dWEiE47qRnzWq/iyJskI1FN6
+         TkvKq+3i0BEq+hEvnmDXfmeMkxmbmaEeWY7Al9ZAMXzhvuIb9UTLv4OqgxxaucaebMeg
+         HglMyVVyQVo1UvCHaN4eTBCMv6080H2AYZzxmGKwLBpLGuZLsdg+A3gDjedobRasNnVX
+         oaNucyrsFv/jrfCh0Qim+CfblXfOK1UP/F3mfsKW+kk5Lq2GmcyG9an87uJWAmMbNQxx
+         EI32FZJtuNT9y8crY9P8KETEaPvzZOjxyWZSv8f5bsUX3LIc4AyJBC6fj12cVvNpwplH
+         F5gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0gOm2m0FcFm0g2Vu1nMDa1FWBplL205hnC9G0QkNJn4=;
-        b=DGge9qH38V2XkoE/Xjo4Cz4YOdYJ/dVQcOtH8ghWjYJIxMaDhoSPrUPuTztM81zKNL
-         MqIDh9ZRF7pl4YWz1EH3nr0OhBsIfDK+WJtTCAqBrloZ8rkgZrQ9/a/WebgwojDydZ1/
-         liGGDzO/SpeBR06ihEKlh+nY0Ak3MJHMnG60toj1ZvGN7jsQn9PTkYtoq8xcx3Bz+9gA
-         2WiBvMWOVV7RaRH/37xRnusg+K6vzisQpDJmJ24rQt1nvE4T490Ybouku5l5m0FCpRxb
-         9e/DOLh4dNDRtiXDsUNowsKdbfDN+a5afaECXfmTWRc1dNU4EFQ1sWeyVhONGj7lPxsN
-         4aWw==
-X-Gm-Message-State: APjAAAX2dB0ZLPTBgYtKbHK7ET7CxboWvq475EBsztAmqWMAFJ7VrrjH
-        2/DaaPFhUf+cvYVdJreErzY=
-X-Google-Smtp-Source: APXvYqxJtE16FbiaSYF5C2/1//jLjeLpLRpC+YK6aMthR7a6zgoGvDdLPDxwxYUQjYo+eC0cvD7odQ==
-X-Received: by 2002:adf:ce88:: with SMTP id r8mr5037854wrn.42.1560372946253;
-        Wed, 12 Jun 2019 13:55:46 -0700 (PDT)
+        bh=/gDKxCzkOGRMbdoCC0wOn2Sy/Yhww68pPHd5X9PQ/go=;
+        b=LQY51wi0dYzqG+xVyhJAicXxyPtoK3E+hi7+NIJM4wD8vGVncXIXQC4Jzib6sqM7Iq
+         6eULmr6l0x9OR9LwaLDeLJBo8vww4kUrk8V7WVBWz8j34jpofb9+LELY1ebav7xi+gEE
+         myIZQmko/i3+IUNSe0nK3lmPtyjU9OPZ52pvKDKv5/ZFQMnrAJe643mPlcGLVAlAMH3l
+         hYREmcanGi7KSu+9XQZGLjaRcCs38CLhTaU25vNWzV6YJZO7twr2KW4nfDik9hgQnteR
+         NfB1hIAP9/YNUdEHzCd8HrKufFq/lComMrAR0km+2CVbH4PRlEd7GIXwji4S3qzfXpM4
+         YHMQ==
+X-Gm-Message-State: APjAAAWrBb8FwK8zirJQLt+87lKuYDGPaC0jWd4ERyOcesaGaSVvy1iw
+        Z5br/MF2BihxQ4xc0eP8PkI=
+X-Google-Smtp-Source: APXvYqzcczDON40ZlWQv3oZhlUvn1FVQLcLqir1pA8IDNtA5z7hDUzg0Hn0fX1zXP3GmKNC7Wsrr/Q==
+X-Received: by 2002:a7b:c081:: with SMTP id r1mr820317wmh.76.1560372949589;
+        Wed, 12 Jun 2019 13:55:49 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133DDA400428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:33dd:a400:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id s7sm3445793wmc.2.2019.06.12.13.55.45
+        by smtp.googlemail.com with ESMTPSA id s7sm3445793wmc.2.2019.06.12.13.55.48
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 13:55:45 -0700 (PDT)
+        Wed, 12 Jun 2019 13:55:48 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         netdev@vger.kernel.org, linus.walleij@linaro.org, andrew@lunn.ch,
         robin.murphy@arm.com,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 1/4] arm64: dts: meson: g12a: x96-max: fix the Ethernet PHY reset line
-Date:   Wed, 12 Jun 2019 22:55:26 +0200
-Message-Id: <20190612205529.19834-2-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 4/4] arm64: dts: meson: g12b: odroid-n2: add the Ethernet PHY reset line
+Date:   Wed, 12 Jun 2019 22:55:29 +0200
+Message-Id: <20190612205529.19834-5-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190612205529.19834-1-martin.blumenstingl@googlemail.com>
 References: <20190612205529.19834-1-martin.blumenstingl@googlemail.com>
@@ -76,50 +76,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Odroid-N2 schematics show that the following pins are used for the
-reset and interrupt lines:
-- GPIOZ_14 is the PHY interrupt line
-- GPIOZ_15 is the PHY reset line
+The reset line of the RTL8211F PHY is routed to the GPIOZ_15 pad.
+Describe this in the device tree so the PHY framework can bring the PHY
+into a known state when initializing it. GPIOZ_15 doesn't support
+driving the output HIGH (to take the PHY out of reset, only output LOW
+to reset the PHY is supported). The datasheet states it's an "3.3V input
+tolerant open drain (OD) output pin". Instead there's a pull-up resistor
+on the board to take the PHY out of reset. The GPIO itself will be set
+to INPUT mode to take the PHY out of reset and LOW to reset the PHY,
+which is achieved with the flags (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN).
 
-The GPIOZ_14 and GPIOZ_15 pins are special. The datasheet describes that
-they are "3.3V input tolerant open drain (OD) output pins". This means
-the GPIO controller can drive the output LOW to reset the PHY. To
-release the reset it can only switch the pin to input mode. The output
-cannot be driven HIGH for these pins.
-This requires configuring the reset line as GPIO_OPEN_DRAIN because
-otherwise the PHY will be stuck in "reset" state (because driving the
-pin HIGH seems to result in the same signal as driving it LOW).
-
-The reset line works together with a pull-up resistor (R143 in the
-Odroid-N2 schematics). The SoC can drive GPIOZ_14 LOW to assert the PHY
-reset. However, since the SoC can't drive the pin HIGH (to release the
-reset) we switch the mode to INPUT and let the pull-up resistor take
-care of driving the reset line HIGH.
-
-Switch to GPIOZ_15 for the PHY reset line instead of using GPIOZ_14
-(which actually is the interrupt line).
-Move from the "snps" specific resets to the MDIO framework's
-reset-gpios because only the latter honors the GPIO flags.
-Use the GPIO flags (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN) to match with
-the pull-up resistor because this will:
-- drive the output LOW to reset the PHY (= active low)
-- switch the pin to INPUT mode so the pull-up will take the PHY out of
-  reset
-
-Fixes: 51d116557b2044 ("arm64: dts: meson-g12a-x96-max: Add Gigabit Ethernet Support")
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-index 98bc56e650a0..de58d7817836 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-@@ -176,6 +176,10 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+index 4146cd84989c..f911bbdc4e70 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+@@ -186,6 +186,10 @@
+ 		/* Realtek RTL8211F (0x001cc916) */	
  		reg = <0>;
  		max-speed = <1000>;
- 		eee-broken-1000t;
 +
 +		reset-assert-us = <10000>;
 +		reset-deassert-us = <30000>;
@@ -127,16 +106,6 @@ index 98bc56e650a0..de58d7817836 100644
  	};
  };
  
-@@ -186,9 +190,6 @@
- 	phy-mode = "rgmii";
- 	phy-handle = <&external_phy>;
- 	amlogic,tx-delay-ns = <2>;
--	snps,reset-gpio = <&gpio GPIOZ_14 0>;
--	snps,reset-delays-us = <0 10000 1000000>;
--	snps,reset-active-low;
- };
- 
- &pwm_ef {
 -- 
 2.22.0
 
