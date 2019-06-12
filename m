@@ -2,112 +2,249 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD21DC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5E6C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA9D2080A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:07:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="yII/WyQS"
+	by mail.kernel.org (Postfix) with ESMTP id 45F752082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:08:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437957AbfFLKHy (ORCPT
+        id S2437611AbfFLKIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:07:54 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39460 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405946AbfFLKHy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:07:54 -0400
-Received: by mail-lf1-f65.google.com with SMTP id p24so11613934lfo.6
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 03:07:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nikanor-nu.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=InU/Lj35akDd3Wyfc3JTPKg/OWStN5q+3o8HMF9TC+c=;
-        b=yII/WyQSRic/HvbG9WcCZmWLNXAli/YN11WteFhUHe4F+lvc7tMwvc+WrOKQpnhVWn
-         SeIIQneJc5ik97bsE5DUfwdCY+VHYnvDPlZ5DjINgdwcd7Ew2HvIw/TFURFv45aalmwK
-         GCr9lmJY/s8EKRx6Hca0pEu4bFZumPyZq2mhGn1cQ4vlizwDOr40LKIbYq++A3yyN4Ys
-         BXJYGjLttISSsgzBbO0BWNe1LJto5hh49Oanf3DYdwJ1nzwj+ZNZOhForjDZ+419WFE3
-         CZqVze8DrTJDRrGR9NxXsL3g7gSNEXigZTJrrtXKmHiDp6amyHeD/fyLGymIYeUOsjvI
-         9Y0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=InU/Lj35akDd3Wyfc3JTPKg/OWStN5q+3o8HMF9TC+c=;
-        b=uWgFHKxd1sOyXRK7Jj9SNGK+zcvCVReifU/WMozFmENjGzk3aqlGsC3icOXLcoEXtg
-         cBxe7/0pYKpc5G03KK8sZHOiXs37wunXl8UxQg3oLham0TG65VnCHEm3WgG9qhqm3kLR
-         J8K1B6t8HTgplIml/MinSINjJTO80awtUX3MF1u0Rc0MPjt9DEjF0/Lg5jiB7UHRizMO
-         ItVfTBiEp7H+XeQapkr9LffnYxOhEYkvZZTLq9OT0FoKBKVPRWHU3i4hHpissLLDn9c+
-         CC3rR+hNZkTDvHftPW6EuVVVO/zsRSLqCacBZIHowmt5YdbYtGShCeotnQuXUqBfKxLk
-         39CA==
-X-Gm-Message-State: APjAAAX2taI/uDpQQWO4vbl6sZuPz6LTLSzdX55UgVqjEYpcri8Ce/VB
-        i9MKwVBiRhbgJ02vGX44eRAIWA==
-X-Google-Smtp-Source: APXvYqyklnno8AkiHQfR3VreFWXsSlFhmRPu73QFtpxa+Tw32wsXBxOAfwd1RtQW9gpoMuktAgGUbA==
-X-Received: by 2002:ac2:5225:: with SMTP id i5mr30644019lfl.157.1560334072156;
-        Wed, 12 Jun 2019 03:07:52 -0700 (PDT)
-Received: from dev.nikanor.nu (78-72-133-4-no161.tbcn.telia.com. [78.72.133.4])
-        by smtp.gmail.com with ESMTPSA id v12sm2181698lje.14.2019.06.12.03.07.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 03:07:51 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 12:07:49 +0200
-From:   Simon =?utf-8?Q?Sandstr=C3=B6m?= <simon@nikanor.nu>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] staging: kpc2000: remove unnecessary comments in
- kp2000_pcie_probe
-Message-ID: <20190612100749.srpsz5er4ebwepls@dev.nikanor.nu>
-References: <20190610200535.31820-1-simon@nikanor.nu>
- <20190610200535.31820-3-simon@nikanor.nu>
- <20190612073936.GD1915@kadam>
- <20190612074600.GA17100@kroah.com>
+        Wed, 12 Jun 2019 06:08:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39520 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405946AbfFLKII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 06:08:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 431AFAF81;
+        Wed, 12 Jun 2019 10:08:06 +0000 (UTC)
+Message-ID: <0722a6e21b17b1c54c81fb71e3237e60ae4819b6.camel@suse.de>
+Subject: Re: [PATCH v3 4/7] cpufreq: add driver for Raspbery Pi
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     stefan.wahren@i2se.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     mbrugger@suse.de, sboyd@kernel.org, eric@anholt.net,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        ptesarik@suse.com, linux-rpi-kernel@lists.infradead.org,
+        ssuloev@orpaltech.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 12 Jun 2019 12:08:03 +0200
+In-Reply-To: <20190611175839.28351-5-nsaenzjulienne@suse.de>
+References: <20190611175839.28351-1-nsaenzjulienne@suse.de>
+         <20190611175839.28351-5-nsaenzjulienne@suse.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-NucUMhJDBaNTXXV5xvf1"
+User-Agent: Evolution 3.32.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190612074600.GA17100@kroah.com>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/06, Greg KH wrote:
-> On Wed, Jun 12, 2019 at 10:39:36AM +0300, Dan Carpenter wrote:
-> > On Mon, Jun 10, 2019 at 10:05:35PM +0200, Simon Sandström wrote:
-> > > @@ -349,9 +340,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
-> > >  		goto err_remove_ida;
-> > >  	}
-> > >  
-> > > -	/*
-> > > -	 * Step 4: Setup the Register BAR
-> > > -	 */
-> > > +	// Setup the Register BAR
-> > 
-> > Greg, are we moving the C++ style comments?  Linus is fine with them.  I
-> > don't like them but whatever...
-> 
-> I don't like them either.  I'm only "ok" with them on the very first
-> line of the file.  Linus chose // to make it "stand out" from the normal
-> flow of the file, which is fine for an SPDX line.  So putting these in
-> here like this is not ok to me.
-> 
-> thanks,
-> 
-> greg k-h
 
-I changed them to C++ style so that they would match the other comments
-in the file, which are C++ style, but I guess that it should have been
-done the other way around with the C++ style changed to C style.
+--=-NucUMhJDBaNTXXV5xvf1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Good to know. I'll change them back and send a v2.
+On Tue, 2019-06-11 at 19:58 +0200, Nicolas Saenz Julienne wrote:
+> Raspberry Pi's firmware offers and interface though which update it's
+> performance requirements. It allows us to request for specific runtime
+> frequencies, which the firmware might or might not respect, depending on
+> the firmware configuration and thermals.
+>=20
+> As the maximum and minimum frequencies are configurable in the firmware
+> there is no way to know in advance their values. So the Raspberry Pi
+> cpufreq driver queries them, builds an opp frequency table to then
+> launch cpufreq-dt.
+>=20
+> Also, as the firmware interface might be configured as a module, making
+> the cpu clock unavailable during init, this implements a full fledged
+> driver, as opposed to most drivers registering cpufreq-dt, which only
+> make use of an init routine.
+>=20
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Acked-by: Eric Anholt <eric@anholt.net>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> ---
 
-- Simon
+Changes since v2:
+  - Round OPP rates
+
+> Changes since v1:
+>   - Remove compatible checks
+>   - Add module support, now full fledged driver
+>   - Use NULL in clk_get()
+>=20
+>  drivers/cpufreq/Kconfig.arm           |  8 +++
+>  drivers/cpufreq/Makefile              |  1 +
+>  drivers/cpufreq/raspberrypi-cpufreq.c | 97 +++++++++++++++++++++++++++
+>  3 files changed, 106 insertions(+)
+>  create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
+>=20
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index 6f65b7f05496..56c31a78c692 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -142,6 +142,14 @@ config ARM_QCOM_CPUFREQ_HW
+>  	  The driver implements the cpufreq interface for this HW engine.
+>  	  Say Y if you want to support CPUFreq HW.
+> =20
+> +config ARM_RASPBERRYPI_CPUFREQ
+> +	tristate "Raspberry Pi cpufreq support"
+> +	depends on CLK_RASPBERRYPI || COMPILE_TEST
+> +	help
+> +	  This adds the CPUFreq driver for Raspberry Pi
+> +
+> +	  If in doubt, say N.
+> +
+>  config ARM_S3C_CPUFREQ
+>  	bool
+>  	help
+> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> index 7bcda2273d0c..5a6c70d26c98 100644
+> --- a/drivers/cpufreq/Makefile
+> +++ b/drivers/cpufreq/Makefile
+> @@ -65,6 +65,7 @@ obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+=3D pxa2xx-cpufreq.o
+>  obj-$(CONFIG_PXA3xx)			+=3D pxa3xx-cpufreq.o
+>  obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+=3D qcom-cpufreq-hw.o
+>  obj-$(CONFIG_ARM_QCOM_CPUFREQ_KRYO)	+=3D qcom-cpufreq-kryo.o
+> +obj-$(CONFIG_ARM_RASPBERRYPI_CPUFREQ) 	+=3D raspberrypi-cpufreq.o
+>  obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+=3D s3c2410-cpufreq.o
+>  obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+=3D s3c2412-cpufreq.o
+>  obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+=3D s3c2416-cpufreq.o
+> diff --git a/drivers/cpufreq/raspberrypi-cpufreq.c
+> b/drivers/cpufreq/raspberrypi-cpufreq.c
+> new file mode 100644
+> index 000000000000..2bc7d9734272
+> --- /dev/null
+> +++ b/drivers/cpufreq/raspberrypi-cpufreq.c
+> @@ -0,0 +1,97 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Raspberry Pi cpufreq driver
+> + *
+> + * Copyright (C) 2019, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/cpu.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_opp.h>
+> +
+> +#define RASPBERRYPI_FREQ_INTERVAL	100000000
+> +
+> +static struct platform_device *cpufreq_dt;
+> +
+> +static int raspberrypi_cpufreq_probe(struct platform_device *pdev)
+> +{
+> +	struct device *cpu_dev;
+> +	unsigned long min, max;
+> +	unsigned long rate;
+> +	struct clk *clk;
+> +	int ret;
+> +
+> +	cpu_dev =3D get_cpu_device(0);
+> +	if (!cpu_dev) {
+> +		pr_err("Cannot get CPU for cpufreq driver\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	clk =3D clk_get(cpu_dev, NULL);
+> +	if (IS_ERR(clk)) {
+> +		dev_err(cpu_dev, "Cannot get clock for CPU0\n");
+> +		return PTR_ERR(clk);
+> +	}
+> +
+> +	/*
+> +	 * The max and min frequencies are configurable in the Raspberry Pi
+> +	 * firmware, so we query them at runtime.
+> +	 */
+> +	min =3D roundup(clk_round_rate(clk, 0), RASPBERRYPI_FREQ_INTERVAL);
+> +	max =3D roundup(clk_round_rate(clk, ULONG_MAX),
+> RASPBERRYPI_FREQ_INTERVAL);
+> +	clk_put(clk);
+> +
+> +	for (rate =3D min; rate <=3D max; rate +=3D RASPBERRYPI_FREQ_INTERVAL) =
+{
+> +		ret =3D dev_pm_opp_add(cpu_dev, rate, 0);
+> +		if (ret)
+> +			goto remove_opp;
+> +	}
+> +
+> +	cpufreq_dt =3D platform_device_register_simple("cpufreq-dt", -1, NULL, =
+0);
+> +	ret =3D PTR_ERR_OR_ZERO(cpufreq_dt);
+> +	if (ret) {
+> +		dev_err(cpu_dev, "Failed to create platform device, %d\n", ret);
+> +		goto remove_opp;
+> +	}
+> +
+> +	return 0;
+> +
+> +remove_opp:
+> +	dev_pm_opp_remove_all_dynamic(cpu_dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int raspberrypi_cpufreq_remove(struct platform_device *pdev)
+> +{
+> +	struct device *cpu_dev;
+> +
+> +	cpu_dev =3D get_cpu_device(0);
+> +	if (cpu_dev)
+> +		dev_pm_opp_remove_all_dynamic(cpu_dev);
+> +
+> +	platform_device_unregister(cpufreq_dt);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Since the driver depends on clk-raspberrypi, which may return
+> EPROBE_DEFER,
+> + * all the activity is performed in the probe, which may be defered as w=
+ell.
+> + */
+> +static struct platform_driver raspberrypi_cpufreq_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "raspberrypi-cpufreq",
+> +	},
+> +	.probe          =3D raspberrypi_cpufreq_probe,
+> +	.remove		=3D raspberrypi_cpufreq_remove,
+> +};
+> +module_platform_driver(raspberrypi_cpufreq_driver);
+> +
+> +MODULE_AUTHOR("Nicolas Saenz Julienne <nsaenzjulienne@suse.de");
+> +MODULE_DESCRIPTION("Raspberry Pi cpufreq driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:raspberrypi-cpufreq");
+
+
+--=-NucUMhJDBaNTXXV5xvf1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl0AzwMACgkQlfZmHno8
+x/7XDwf6AmOp4z2If+9JyAnF9u7fjckQxW95msPdhyTenwMrGgbDfyVj1e/ll9jI
+rMRHVydv8Gi6mLQGb+GfY8z1awOkFZRHILG+cH82iyGCabWQKH/V9tFqvG4lLM/C
+lsTtGHKqW0yGn+dmw0A/Yj8CWPluaXEqqCVR3fWZEPwngqLPOuJOupRs2HkggRPa
+izeC8yLovNBlFT4DjQx7wnjDfoSYJfxDwGRwhiDVh8VCujVb6nqG+1d4nuKfIkCb
+J/SjEzmAMsGsoFtHKMEFbhXegEDPUU1eAIwTzckWPc/XxuzMvtseqfYYYzKoBuzo
+JfWawUIVoLH7JtMssfg8ViI4fOkoFw==
+=oVAV
+-----END PGP SIGNATURE-----
+
+--=-NucUMhJDBaNTXXV5xvf1--
+
