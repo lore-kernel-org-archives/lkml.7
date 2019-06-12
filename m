@@ -2,119 +2,105 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D04ADC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DA3C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6BD20896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CEB720874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:34:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Wsh8eoz/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XR5LMhR4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbfFLEdz (ORCPT
+        id S1729709AbfFLEeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 00:33:55 -0400
-Received: from mail-eopbgr80082.outbound.protection.outlook.com ([40.107.8.82]:54247
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725280AbfFLEdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 00:33:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t1IAPRsyJixiIDkuGc2CrGq3QqlHknmJalCsZSN7AaQ=;
- b=Wsh8eoz/6lrY/omXmsTwPCsz7twTJRVg6BfnsmojBhl7tcRbUjxk+voi6RLE2u7Qd8P11ODuZ7Ol/jcZwbU2QyAAUTaW1P1R2A/zybV43gMB69uWfNXwj8n5hOFYYoXNLs8zbVHh8hQZBANTi1irR0aREZjVIjz6/dDKAjqxFTU=
-Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com (10.169.134.149) by
- VI1PR0501MB2848.eurprd05.prod.outlook.com (10.172.15.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.11; Wed, 12 Jun 2019 04:33:51 +0000
-Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com
- ([fe80::10d7:3b2d:5471:1eb6]) by VI1PR0501MB2271.eurprd05.prod.outlook.com
- ([fe80::10d7:3b2d:5471:1eb6%10]) with mapi id 15.20.1987.010; Wed, 12 Jun
- 2019 04:33:51 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     Cornelia Huck <cohuck@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>
-Subject: RE: [PATCHv6 3/3] vfio/mdev: Synchronize device create/remove with
- parent removal
-Thread-Topic: [PATCHv6 3/3] vfio/mdev: Synchronize device create/remove with
- parent removal
-Thread-Index: AQHVGj4q7+/NzeZHEUWGN8sRZjbLIKaK/b4AgArXHICAAPRRgIAAskuA
-Date:   Wed, 12 Jun 2019 04:33:50 +0000
-Message-ID: <VI1PR0501MB2271E9CD61064F5A552BBFB7D1EC0@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-References: <20190603185658.54517-1-parav@mellanox.com>
-        <20190603185658.54517-4-parav@mellanox.com>
-        <20190604074820.71853cbb.cohuck@redhat.com>
-        <AM4PR0501MB2260589DAFDA6ECF1E8D6D87D1ED0@AM4PR0501MB2260.eurprd05.prod.outlook.com>
- <20190611115517.7a6f9c8f@x1.home>
-In-Reply-To: <20190611115517.7a6f9c8f@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [49.207.52.114]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f5e5fd51-19a7-454b-f78e-08d6eeef2b50
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0501MB2848;
-x-ms-traffictypediagnostic: VI1PR0501MB2848:
-x-microsoft-antispam-prvs: <VI1PR0501MB284848400E65BC48AAF47F8FD1EC0@VI1PR0501MB2848.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0066D63CE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(39860400002)(376002)(396003)(346002)(189003)(199004)(13464003)(256004)(76176011)(14444005)(55016002)(4326008)(68736007)(52536014)(3846002)(55236004)(6116002)(478600001)(6916009)(25786009)(53936002)(102836004)(8936002)(53546011)(14454004)(6506007)(7696005)(99286004)(5660300002)(9686003)(186003)(229853002)(74316002)(7736002)(33656002)(446003)(66066001)(26005)(2906002)(66946007)(73956011)(76116006)(6436002)(66556008)(64756008)(8676002)(54906003)(66446008)(86362001)(305945005)(476003)(6246003)(11346002)(71200400001)(71190400001)(4744005)(66476007)(81166006)(81156014)(486006)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2848;H:VI1PR0501MB2271.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: K7/De5+DIInQJXefBJaF0zzTArGled+A+EedBWy7YrLW0jSvDR2ltefHaNs8dofMRIOu1Q6kGBDtLIGujODHzT8vz5+kCyWborJ7w/0kH8+Yj2cO5yKBqiARhWYFLcdDVSm5H7aLm8vhkyRg0gFIZcs9p59Lpdi0Ju6DZnd5HEq5VRMyzL1rFC5ESxFRsOoqixoTJZ98GAtT5bGISgMqg8GuYRPiQUIDGdfgvUCEjGm4PEoYSNeQCKNJoVbM/SYhgHcUatbKj0tt1DtpCvhTnH3w9/hX1FFVk9M6kfOO0K3Fp1QHZ8EeO2f2E3JkS9ZsrqxRKoAH7FLFaV+FFEcQpGKII8pQhAIyBRuX8UHKGrMoF2YCFXeqZYVYatIYXVHsVdOjnCC1xNREkk8vcuUiJAtzOdiIfgVjGBy8ctd4Gws=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 12 Jun 2019 00:34:01 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38384 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729649AbfFLEd7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 00:33:59 -0400
+Received: by mail-pf1-f195.google.com with SMTP id a186so8827356pfa.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 21:33:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oBsKt2KANme/JOaDCF19p+x3nQ6r/cZjZD0p0XOtcRA=;
+        b=XR5LMhR4dWhA49NOiuns+aK4QrV/lto9XTcVrVO75nePd55lQKThU0DWL1/fhyhpPQ
+         uZqQ0DJjMLAKLed+Jn1qYvp2NrAf4dmQ6YHWcz3wj8Rchmi6ud/YFwKdG1ttdZExwMWF
+         NI2E/s8wUgv+GXSy1jtSQSCGn/o6LO7iy8ktQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oBsKt2KANme/JOaDCF19p+x3nQ6r/cZjZD0p0XOtcRA=;
+        b=EBCihGdY7YM4KTL3cw2WVvx/eDCxJWK/xoUz9y8gYyiuxewirhr8vZEqDcSFWy7fnF
+         0UNGl6RUU8xKdZYZcbx5w9zg7rVAW0UuTAykXSUCpn3BbCxLNwZo9UC4fYE9XaQ436Jw
+         6LnZBc1tOT6semAZuhWaYXuMSjNHdmDGSlgyaTw33nJFUD9wUUkV+NfhxbJ6v4ga075l
+         avkVTOBB3IDVinmLXetya6zb9hgH1ycibbaPR6bFSCx2VDeulHeqoX4HV639RunFZn+8
+         vCL4kZuMOVDBK7NvN1ycp9jQH6x/uM+pDIGSgns+hwCWN+zFJ6//edseQdfA0PkUgUNi
+         VEug==
+X-Gm-Message-State: APjAAAWuRb55QxjRGO6H+Wpy4T1BYErFtoE13g15ZXvNWVZGI/cuSQpB
+        +JW2DI7tYSnMMo26Fb36JsRfxQ==
+X-Google-Smtp-Source: APXvYqx/41bl7EzQ/YdXQSxExzoTiwXpf+pMqfvDDMtli/3cshz845GRC+rnDzNoeKjMdXh1FqX72A==
+X-Received: by 2002:aa7:8394:: with SMTP id u20mr72672175pfm.252.1560314038527;
+        Tue, 11 Jun 2019 21:33:58 -0700 (PDT)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
+        by smtp.gmail.com with ESMTPSA id k8sm15285998pfi.168.2019.06.11.21.33.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 11 Jun 2019 21:33:57 -0700 (PDT)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        James Morse <james.morse@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH v6 0/3] add support for rng-seed
+Date:   Wed, 12 Jun 2019 12:32:56 +0800
+Message-Id: <20190612043258.166048-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5e5fd51-19a7-454b-f78e-08d6eeef2b50
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 04:33:51.0054
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: parav@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2848
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Introducing a chosen node, rng-seed, which is an entropy that can be
+passed to kernel called very early to increase initial device
+randomness.
 
+Hsin-Yi Wang (3):
+  arm64: map FDT as RW for early_init_dt_scan()
+  fdt: add support for rng-seed
+  arm64: kexec_file: add rng-seed support
 
-> -----Original Message-----
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Tuesday, June 11, 2019 11:25 PM
-> To: Parav Pandit <parav@mellanox.com>
-> Cc: Cornelia Huck <cohuck@redhat.com>; kvm@vger.kernel.org; linux-
-> kernel@vger.kernel.org; kwankhede@nvidia.com; cjia@nvidia.com
-> Subject: Re: [PATCHv6 3/3] vfio/mdev: Synchronize device create/remove
-> with parent removal
->=20
-> On Tue, 11 Jun 2019 03:22:37 +0000
-> Parav Pandit <parav@mellanox.com> wrote:
->=20
-> > Hi Alex,
-> >
-> [snip]
->=20
-> > Now that we have all 3 patches reviewed and comments addressed, if
-> > there are no more comments, can you please take it forward?
->=20
-> Yep, I put it in a branch rolled into linux-next for upstream testing las=
-t week
-> and just sent a pull request to Linus today.  Thanks,
->=20
-Oh ok. Great. Thanks Alex.
+ arch/arm64/include/asm/mmu.h           |  2 +-
+ arch/arm64/kernel/kaslr.c              |  5 +----
+ arch/arm64/kernel/machine_kexec_file.c | 22 +++++++++++++++++++++-
+ arch/arm64/kernel/setup.c              |  9 ++++++++-
+ arch/arm64/mm/mmu.c                    | 15 +--------------
+ drivers/of/fdt.c                       | 10 ++++++++++
+ 6 files changed, 42 insertions(+), 21 deletions(-)
+
+-- 
+2.20.1
+
