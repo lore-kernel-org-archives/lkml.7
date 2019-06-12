@@ -2,108 +2,182 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3801AC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2CBC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C56520679
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858FB20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392114AbfFLOiN (ORCPT
+        id S2437900AbfFLOkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:38:13 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:55674 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S2392069AbfFLOiM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:38:12 -0400
-Received: (qmail 3180 invoked by uid 2102); 12 Jun 2019 10:38:11 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 12 Jun 2019 10:38:11 -0400
-Date:   Wed, 12 Jun 2019 10:38:11 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Soeren Moch <smoch@web.de>
-cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Wed, 12 Jun 2019 10:40:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:54772 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727626AbfFLOkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:40:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 373762B;
+        Wed, 12 Jun 2019 07:40:22 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DE913F557;
+        Wed, 12 Jun 2019 07:40:17 -0700 (PDT)
+Subject: Re: [PATCH v17 08/15] userfaultfd, arm64: untag user pointers
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-Subject: Re: [PATCH] Revert "usb: core: remove local_irq_save() around
- ->complete() handler"
-In-Reply-To: <fb64b378-57a1-19f4-0fd2-1689fc3d8540@web.de>
-Message-ID: <Pine.LNX.4.44L0.1906121033550.1557-100000@iolanthe.rowland.org>
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+References: <cover.1560339705.git.andreyknvl@google.com>
+ <e2f35a0400150594a39d9c3f4b3088601fd5dc30.1560339705.git.andreyknvl@google.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <48893efc-039a-f7e8-19f0-1bd7b188b2c1@arm.com>
+Date:   Wed, 12 Jun 2019 15:40:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <e2f35a0400150594a39d9c3f4b3088601fd5dc30.1560339705.git.andreyknvl@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Jun 2019, Soeren Moch wrote:
-
-> On 01.06.19 13:02, Sebastian Andrzej Siewior wrote:
-> > On 2019-06-01 12:50:08 [+0200], To Soeren Moch wrote:
-> >> I will look into this.
-> >
-> > nothing obvious. If there is really blocken lock, could you please
-> > enable lockdep
-> > |CONFIG_LOCK_DEBUGGING_SUPPORT=y
-> > |CONFIG_PROVE_LOCKING=y
-> > |# CONFIG_LOCK_STAT is not set
-> > |CONFIG_DEBUG_RT_MUTEXES=y
-> > |CONFIG_DEBUG_SPINLOCK=y
-> > |CONFIG_DEBUG_MUTEXES=y
-> > |CONFIG_DEBUG_WW_MUTEX_SLOWPATH=y
-> > |CONFIG_DEBUG_RWSEMS=y
-> > |CONFIG_DEBUG_LOCK_ALLOC=y
-> > |CONFIG_LOCKDEP=y
-> > |# CONFIG_DEBUG_LOCKDEP is not set
-> > |CONFIG_DEBUG_ATOMIC_SLEEP=y
-> >
-> > and send me the splat that lockdep will report?
-> >
+On 12/06/2019 12:43, Andrey Konovalov wrote:
+> This patch is a part of a series that extends arm64 kernel ABI to allow to
+> pass tagged user pointers (with the top byte set to something else other
+> than 0x00) as syscall arguments.
 > 
-> Nothing interesting:
+> userfaultfd code use provided user pointers for vma lookups, which can
+> only by done with untagged pointers.
 > 
-> [    0.000000] Booting Linux on physical CPU 0x0
-> [    0.000000] Linux version 5.1.0 (root@matrix) (gcc version 7.4.0
-> (Debian 7.4.0-6)) #6 SMP PREEMPT Wed Jun 12 11:28:41 CEST 2019
-> [    0.000000] CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7),
-> cr=10c5387d
-> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing
-> instruction cache
-> [    0.000000] OF: fdt: Machine model: TBS2910 Matrix ARM mini PC
-> ...
-> [    0.000000] rcu: Preemptible hierarchical RCU implementation.
-> [    0.000000] rcu:     RCU lockdep checking is enabled.
-> ...
-> [    0.003546] Lock dependency validator: Copyright (c) 2006 Red Hat,
-> Inc., Ingo Molnar
-> [    0.003657] ... MAX_LOCKDEP_SUBCLASSES:  8
-> [    0.003713] ... MAX_LOCK_DEPTH:          48
-> [    0.003767] ... MAX_LOCKDEP_KEYS:        8191
-> [    0.003821] ... CLASSHASH_SIZE:          4096
-> [    0.003876] ... MAX_LOCKDEP_ENTRIES:     32768
-> [    0.003931] ... MAX_LOCKDEP_CHAINS:      65536
-> [    0.003986] ... CHAINHASH_SIZE:          32768
-> [    0.004042]  memory used by lock dependency info: 5243 kB
+> Untag user pointers in validate_range().
 > 
-> Nothing else.
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+
+> ---
+>  fs/userfaultfd.c | 22 ++++++++++++----------
+>  1 file changed, 12 insertions(+), 10 deletions(-)
 > 
-> When stopping hostapd after it hangs:
-> [  903.504475] ieee80211 phy0: rt2x00queue_flush_queue: Warning - Queue
-> 14 failed to flush
+> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> index 3b30301c90ec..24d68c3b5ee2 100644
+> --- a/fs/userfaultfd.c
+> +++ b/fs/userfaultfd.c
+> @@ -1263,21 +1263,23 @@ static __always_inline void wake_userfault(struct userfaultfd_ctx *ctx,
+>  }
+>  
+>  static __always_inline int validate_range(struct mm_struct *mm,
+> -					  __u64 start, __u64 len)
+> +					  __u64 *start, __u64 len)
+>  {
+>  	__u64 task_size = mm->task_size;
+>  
+> -	if (start & ~PAGE_MASK)
+> +	*start = untagged_addr(*start);
+> +
+> +	if (*start & ~PAGE_MASK)
+>  		return -EINVAL;
+>  	if (len & ~PAGE_MASK)
+>  		return -EINVAL;
+>  	if (!len)
+>  		return -EINVAL;
+> -	if (start < mmap_min_addr)
+> +	if (*start < mmap_min_addr)
+>  		return -EINVAL;
+> -	if (start >= task_size)
+> +	if (*start >= task_size)
+>  		return -EINVAL;
+> -	if (len > task_size - start)
+> +	if (len > task_size - *start)
+>  		return -EINVAL;
+>  	return 0;
+>  }
+> @@ -1327,7 +1329,7 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
+>  		goto out;
+>  	}
+>  
+> -	ret = validate_range(mm, uffdio_register.range.start,
+> +	ret = validate_range(mm, &uffdio_register.range.start,
+>  			     uffdio_register.range.len);
+>  	if (ret)
+>  		goto out;
+> @@ -1516,7 +1518,7 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
+>  	if (copy_from_user(&uffdio_unregister, buf, sizeof(uffdio_unregister)))
+>  		goto out;
+>  
+> -	ret = validate_range(mm, uffdio_unregister.start,
+> +	ret = validate_range(mm, &uffdio_unregister.start,
+>  			     uffdio_unregister.len);
+>  	if (ret)
+>  		goto out;
+> @@ -1667,7 +1669,7 @@ static int userfaultfd_wake(struct userfaultfd_ctx *ctx,
+>  	if (copy_from_user(&uffdio_wake, buf, sizeof(uffdio_wake)))
+>  		goto out;
+>  
+> -	ret = validate_range(ctx->mm, uffdio_wake.start, uffdio_wake.len);
+> +	ret = validate_range(ctx->mm, &uffdio_wake.start, uffdio_wake.len);
+>  	if (ret)
+>  		goto out;
+>  
+> @@ -1707,7 +1709,7 @@ static int userfaultfd_copy(struct userfaultfd_ctx *ctx,
+>  			   sizeof(uffdio_copy)-sizeof(__s64)))
+>  		goto out;
+>  
+> -	ret = validate_range(ctx->mm, uffdio_copy.dst, uffdio_copy.len);
+> +	ret = validate_range(ctx->mm, &uffdio_copy.dst, uffdio_copy.len);
+>  	if (ret)
+>  		goto out;
+>  	/*
+> @@ -1763,7 +1765,7 @@ static int userfaultfd_zeropage(struct userfaultfd_ctx *ctx,
+>  			   sizeof(uffdio_zeropage)-sizeof(__s64)))
+>  		goto out;
+>  
+> -	ret = validate_range(ctx->mm, uffdio_zeropage.range.start,
+> +	ret = validate_range(ctx->mm, &uffdio_zeropage.range.start,
+>  			     uffdio_zeropage.range.len);
+>  	if (ret)
+>  		goto out;
+> 
 
-Instead of reverting the original commit, can you prevent the problem 
-by adding local_irq_save() and local_irq_restore() to the URB 
-completion routines in that wireless driver?
-
-Probably people who aren't already pretty familiar with the driver code
-won't easily be able to locate the race.  Still, a little overkill may
-be an acceptable solution.
-
-Alan Stern
-
+-- 
+Regards,
+Vincenzo
