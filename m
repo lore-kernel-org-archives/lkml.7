@@ -2,196 +2,221 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2520AC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02967C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF5632053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C595421744
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="o6PPi6iG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404734AbfFMRNI (ORCPT
+        id S2404597AbfFMRNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:13:08 -0400
-Received: from mga12.intel.com ([192.55.52.136]:33800 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728982AbfFLWCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 18:02:46 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 15:02:43 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga003.jf.intel.com with ESMTP; 12 Jun 2019 15:02:42 -0700
-Date:   Wed, 12 Jun 2019 15:02:42 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Cedric Xing <cedric.xing@intel.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        selinux@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
-        pmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        Philip Tricca <philip.b.tricca@intel.com>
-Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
- SELinux
-Message-ID: <20190612220242.GJ20308@linux.intel.com>
-References: <cover.1560131039.git.cedric.xing@intel.com>
- <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
- <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
- <20190611220243.GB3416@linux.intel.com>
- <CALCETrWQT3AG+-OKBOzuw-a6VPApkNYsKqZiBmS56-b-72bfYQ@mail.gmail.com>
+        Thu, 13 Jun 2019 13:13:04 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:46494 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728992AbfFLWGW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 18:06:22 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CLxCWW008898
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 15:06:20 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=x9wxrExlRXk0Gxj35W1xu8WnApoUM0ZZw68741IhNJg=;
+ b=o6PPi6iGRpKRqjhqgZG3PiGt6y32v1mSFaSxH2y3WY+iflMDtaSJMqE7EoV4Nzdb9ND0
+ tYWwi4GF14OooU+Wwf6eHMSoqnqy48FtSSDMalXGJNjVZWnFmQxtVf3RJpR/eI0n4ogc
+ drIEllVUq9LJiqWboIGfaBjGkIQErxJFFQU= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2t3338hk6n-7
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 15:06:18 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 12 Jun 2019 15:06:14 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 32B5462E2D12; Wed, 12 Jun 2019 15:03:44 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+CC:     <namit@vmware.com>, <peterz@infradead.org>, <oleg@redhat.com>,
+        <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+        <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
+        <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v3 5/5] uprobe: collapse THP pmd after removing all uprobes
+Date:   Wed, 12 Jun 2019 15:03:19 -0700
+Message-ID: <20190612220320.2223898-6-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190612220320.2223898-1-songliubraving@fb.com>
+References: <20190612220320.2223898-1-songliubraving@fb.com>
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrWQT3AG+-OKBOzuw-a6VPApkNYsKqZiBmS56-b-72bfYQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=787 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906120153
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 12:30:20PM -0700, Andy Lutomirski wrote:
-> On Tue, Jun 11, 2019 at 3:02 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> >   1. Require userspace to explicitly specificy (maximal) enclave page
-> >      permissions at build time.  The enclave page permissions are provided
-> >      to, and checked by, LSMs at enclave build time.
-> >
-> >      Pros: Low-complexity kernel implementation, straightforward auditing
-> >      Cons: Sullies the SGX UAPI to some extent, may increase complexity of
-> >            SGX2 enclave loaders.
-> 
-> In my notes, this works like this.  This is similar, but not
-> identical, to what Sean has been sending out.
+After all uprobes are removed from the huge page (with PTE pgtable), it
+is possible to collapse the pmd and benefit from THP again. This patch
+does the collapse.
 
-...
+An issue on earlier version was discovered by kbuild test robot.
 
-> mmap() and mprotect() enforce the following rules:
-> 
->  - Deny if a PROT_ flag is requested but the corresponding ALLOW_ flag
->    is not set for all pages in question.
-> 
->  - Deny if PROT_WRITE, PROT_EXEC, and DENY_WX are all set.
-> 
->  - Deny if PROT_EXEC, ALLOW_WRITE, and DENY_X_IF_ALLOW_WRITE are all set.
-> 
-> mprotect() and mmap() do *not* call SGX-specific LSM hooks to ask for
-> permission, although they can optionally call an LSM hook if they hit one of
-> the -EPERM cases for auditing purposes.
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+---
+ include/linux/huge_mm.h |  7 +++++
+ kernel/events/uprobes.c |  5 +++-
+ mm/huge_memory.c        | 64 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 75 insertions(+), 1 deletion(-)
 
-IMO, #1 only makes sense if it's stripped down to avoid auditing and
-locking complications, i.e. gets a pass/fail at security_enclave_load()
-and clears VM_MAY* flags during mmap().  If we want WX and W->X to be
-differentiated by security_enclave_init() as opposed to
-security_enclave_load(), then we should just scrap #1.
-
-> I think this model works quite well in an SGX1 world.  The main thing
-> that makes me uneasy about this model is that, in SGX2, it requires
-> that an SGX2-compatible enclave loader must pre-declare to the kernel
-> whether it intends for its dynamically allocated memory to be
-> ALLOW_EXEC.  If ALLOW_EXEC is set but not actually needed, it will
-> still fail if DENY_X_IF_ALLOW_WRITE ends up being set.  The other
-> version below does not have this limitation.
-
-I'm not convinced this will be a meaningful limitation in practice, though
-that's probably obvious from my RFCs :-).  That being said, the UAPI quirk
-is essentially a dealbreaker for multiple people, so let's drop #1.
-
-I discussed the options with Cedric offline, and he is ok with option #2
-*if* the idea actually translates to acceptable code and doesn't present
-problems for userspace and/or future SGX features.
-
-So, I'll work on an RFC series to implement #2 as described below.  If it
-works out, yay!  If not, i.e. option #2 is fundamentally broken, I'll
-shift my focus to Cedric's code (option #3).
-
-> >   2. Pre-check LSM permissions and dynamically track mappings to enclave
-> >      pages, e.g. add an SGX mprotect() hook to restrict W->X and WX
-> >      based on the pre-checked permissions.
-> >
-> >      Pros: Does not impact SGX UAPI, medium kernel complexity
-> >      Cons: Auditing is complex/weird, requires taking enclave-specific
-> >            lock during mprotect() to query/update tracking.
-> 
-> Here's how this looks in my mind.  It's quite similar, except that
-> ALLOW_READ, ALLOW_WRITE, and ALLOW_EXEC are replaced with a little
-> state machine.
-> 
-> EADD does not take any special flags.  It calls this LSM hook:
-> 
->   int security_enclave_load(struct vm_area_struct *source);
-> 
-> This hook can return -EPERM.  Otherwise it 0 or ALLOC_EXEC_IF_UNMODIFIED
-> (i.e. 1).  This hook enforces permissions (a) and (b).
-> 
-> The driver tracks a state for each page, and the possible states are:
-> 
->  - CLEAN_MAYEXEC /* no W or X VMAs have existed, but X is okay */
->  - CLEAN_NOEXEC /* no W or X VMAs have existed, and X is not okay */
->  - CLEAN_EXEC /* no W VMA has existed, but an X VMA has existed */
->  - DIRTY /* a W VMA has existed */
-> 
-> The initial state for a page is CLEAN_MAYEXEC if the hook said
-> ALLOW_EXEC_IF_UNMODIFIED and CLEAN_NOEXEC otherwise.
-> 
-> The future EAUG does not call a hook at all and puts pages into the state
-> CLEAN_NOEXEC.  If SGX3 or later ever adds EAUG-but-don't-clear, it can
-> call security_enclave_load() and add CLEAN_MAYEXEC pages if appropriate.
-> 
-> EINIT takes a sigstruct pointer.  SGX calls a new hook:
-> 
->   unsigned int security_enclave_init(struct sigstruct *sigstruct,
-> struct vm_area_struct *source, unsigned int flags);
-> 
-> This hook can return -EPERM.  Otherwise it returns 0 or a combination of
-> flags DENY_WX and DENY_X_DIRTY.  The driver saves this value.
-> These represent permissions (c) and (d).
-> 
-> If we want to have a permission for "execute code supplied from outside the
-> enclave that was not measured", we could have a flag like
-> HAS_UNMEASURED_CLEAN_EXEC_PAGE that the LSM could consider.
->
-> mmap() and mprotect() enforce the following rules:
-> 
->  - If VM_EXEC is requested and (either the page is DIRTY or VM_WRITE is
->    requested) and DENY_X_DIRTY, then deny.
-> 
->  - If VM_WRITE and VM_EXEC are both requested and DENY_WX, then deny.
-> 
->  - If VM_WRITE is requested, we need to update the state.  If it was
->    CLEAN_EXEC, then we reject if DENY_X_DIRTY.  Otherwise we change the
->    state to DIRTY.
-> 
->  - If VM_EXEC is requested and the page is CLEAN_NOEXEC, then deny.
-> 
-> mprotect() and mmap() do *not* call SGX-specific LSM hooks to ask for
-> permission, although they can optionally call an LSM hook if they hit one of
-> the -EPERM cases for auditing purposes.
-> 
-> Before the SIGSTRUCT is provided to the driver, the driver acts as though
-> DENY_X_DIRTY and DENY_WX are both set.
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 7cd5c150c21d..30669e9a9340 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -250,6 +250,9 @@ static inline bool thp_migration_supported(void)
+ 	return IS_ENABLED(CONFIG_ARCH_ENABLE_THP_MIGRATION);
+ }
+ 
++extern void try_collapse_huge_pmd(struct vm_area_struct *vma,
++				  struct page *page);
++
+ #else /* CONFIG_TRANSPARENT_HUGEPAGE */
+ #define HPAGE_PMD_SHIFT ({ BUILD_BUG(); 0; })
+ #define HPAGE_PMD_MASK ({ BUILD_BUG(); 0; })
+@@ -368,6 +371,10 @@ static inline bool thp_migration_supported(void)
+ {
+ 	return false;
+ }
++
++static inline void try_collapse_huge_pmd(struct vm_area_struct *vma,
++					 struct page *page) {}
++
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
+ #endif /* _LINUX_HUGE_MM_H */
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index a20d7b43a056..9bec602bf79e 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -474,6 +474,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 	struct page *old_page, *new_page;
+ 	struct vm_area_struct *vma;
+ 	int ret, is_register, ref_ctr_updated = 0;
++	struct page *orig_page = NULL;
+ 
+ 	is_register = is_swbp_insn(&opcode);
+ 	uprobe = container_of(auprobe, struct uprobe, arch);
+@@ -512,7 +513,6 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 	copy_to_page(new_page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
+ 
+ 	if (!is_register) {
+-		struct page *orig_page;
+ 		pgoff_t index;
+ 
+ 		index = vaddr_to_offset(vma, vaddr & PAGE_MASK) >> PAGE_SHIFT;
+@@ -540,6 +540,9 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 	if (ret && is_register && ref_ctr_updated)
+ 		update_ref_ctr(uprobe, mm, -1);
+ 
++	if (!ret && orig_page && PageTransCompound(orig_page))
++		try_collapse_huge_pmd(vma, orig_page);
++
+ 	return ret;
+ }
+ 
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 9f8bce9a6b32..48e951550988 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2886,6 +2886,70 @@ static struct shrinker deferred_split_shrinker = {
+ 	.flags = SHRINKER_NUMA_AWARE,
+ };
+ 
++/**
++ * try_collapse_huge_pmd - try collapse pmd for a pte mapped huge page
++ * @vma: vma containing the huge page
++ * @page: any sub page of the huge page
++ */
++void try_collapse_huge_pmd(struct vm_area_struct *vma,
++			   struct page *page)
++{
++	struct page *hpage = compound_head(page);
++	struct mm_struct *mm = vma->vm_mm;
++	struct mmu_notifier_range range;
++	unsigned long haddr;
++	unsigned long addr;
++	pmd_t *pmd, _pmd;
++	spinlock_t *ptl;
++	int i;
++
++	VM_BUG_ON_PAGE(!PageCompound(page), page);
++
++	haddr = page_address_in_vma(hpage, vma);
++	pmd = mm_find_pmd(mm, haddr);
++	if (!pmd)
++		return;
++
++	lock_page(hpage);
++	ptl = pmd_lock(mm, pmd);
++
++	/* step 1: check all mapped PTEs */
++	for (i = 0, addr = haddr; i < HPAGE_PMD_NR; i++, addr += PAGE_SIZE) {
++		pte_t *pte = pte_offset_map(pmd, addr);
++
++		if (hpage + i != vm_normal_page(vma, addr, *pte)) {
++			spin_unlock(ptl);
++			unlock_page(hpage);
++			return;
++		}
++	}
++
++	/* step 2: adjust rmap */
++	for (i = 0, addr = haddr; i < HPAGE_PMD_NR; i++, addr += PAGE_SIZE) {
++		pte_t *pte = pte_offset_map(pmd, addr);
++		struct page *p;
++
++		p = vm_normal_page(vma, addr, *pte);
++		page_remove_rmap(p, false);
++	}
++
++	/* step 3: flip page table */
++	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, NULL, mm,
++				haddr, haddr + HPAGE_PMD_SIZE);
++	mmu_notifier_invalidate_range_start(&range);
++
++	_pmd = pmdp_collapse_flush(vma, haddr, pmd);
++	spin_unlock(ptl);
++	mmu_notifier_invalidate_range_end(&range);
++
++	/* step 4: free pgtable, set refcount, mm_counters, etc. */
++	page_ref_sub(page, HPAGE_PMD_NR);
++	unlock_page(hpage);
++	mm_dec_nr_ptes(mm);
++	pte_free(mm, pmd_pgtable(_pmd));
++	add_mm_counter(mm, mm_counter_file(page), -HPAGE_PMD_NR);
++}
++
+ #ifdef CONFIG_DEBUG_FS
+ static int split_huge_pages_set(void *data, u64 val)
+ {
+-- 
+2.17.1
 
