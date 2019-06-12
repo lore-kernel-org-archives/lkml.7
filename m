@@ -2,133 +2,124 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE44C46477
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA7FC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBCB0208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B55A52082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:29:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PPEti6sa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732019AbfFLK3W (ORCPT
+        id S1732135AbfFLK3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:29:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42614 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726851AbfFLK3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:29:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 16DA0AE07;
-        Wed, 12 Jun 2019 10:29:19 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id BA8661E4328; Wed, 12 Jun 2019 12:29:17 +0200 (CEST)
-Date:   Wed, 12 Jun 2019 12:29:17 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190612102917.GB14578@quack2.suse.cz>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606195114.GA30714@ziepe.ca>
- <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
- <20190607103636.GA12765@quack2.suse.cz>
- <20190607121729.GA14802@ziepe.ca>
- <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
+        Wed, 12 Jun 2019 06:29:35 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35040 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbfFLK3e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 06:29:34 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5CATX6X062162;
+        Wed, 12 Jun 2019 05:29:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560335373;
+        bh=gffXr0SPmGe2RjlhTe5mohxf2lQM5X6YUpJTien3xyc=;
+        h=From:To:CC:Subject:Date;
+        b=PPEti6saL+4v+jr6tI2oF0dQR1hyTUAmO0+v/KKSTbVQ4OxOL+xD4xMwnP6ZGwk86
+         9jGDm1NxNzPd0pGagBu/i4BQ/aVCFbiK70VuoRFNmyxt1OFMbZtXGRHRMrLnLVlmy6
+         Nv4ztYr/lwuSK/W/ne691rtHRCgO4C0rDiQ40Vsw=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5CATXjs085203
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Jun 2019 05:29:33 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 12
+ Jun 2019 05:29:32 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 12 Jun 2019 05:29:32 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5CATTJW128310;
+        Wed, 12 Jun 2019 05:29:30 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, <kishon@ti.com>
+CC:     <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL v2] PHY: for 5.2-rc 
+Date:   Wed, 12 Jun 2019 15:57:57 +0530
+Message-ID: <20190612102803.25398-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 07-06-19 07:52:13, Ira Weiny wrote:
-> On Fri, Jun 07, 2019 at 09:17:29AM -0300, Jason Gunthorpe wrote:
-> > On Fri, Jun 07, 2019 at 12:36:36PM +0200, Jan Kara wrote:
-> > 
-> > > Because the pins would be invisible to sysadmin from that point on. 
-> > 
-> > It is not invisible, it just shows up in a rdma specific kernel
-> > interface. You have to use rdma netlink to see the kernel object
-> > holding this pin.
-> > 
-> > If this visibility is the main sticking point I suggest just enhancing
-> > the existing MR reporting to include the file info for current GUP
-> > pins and teaching lsof to collect information from there as well so it
-> > is easy to use.
-> > 
-> > If the ownership of the lease transfers to the MR, and we report that
-> > ownership to userspace in a way lsof can find, then I think all the
-> > concerns that have been raised are met, right?
-> 
-> I was contemplating some new lsof feature yesterday.  But what I don't
-> think we want is sysadmins to have multiple tools for multiple
-> subsystems.  Or even have to teach lsof something new for every potential
-> new subsystem user of GUP pins.
+Hi Greg,
 
-Agreed.
+Please find the updated pull request for 5.2 -rc cycle. Here I dropped
+the patch that added "static" for a function to fix sparse warning.
 
-> I was thinking more along the lines of reporting files which have GUP
-> pins on them directly somewhere (dare I say procfs?) and teaching lsof to
-> report that information.  That would cover any subsystem which does a
-> longterm pin.
+I'm also sending the patches along with this pull request in case you'd
+like to look them.
 
-So lsof already parses /proc/<pid>/maps to learn about files held open by
-memory mappings. It could parse some other file as well I guess. The good
-thing about that would be that then "longterm pin" structure would just hold
-struct file reference. That would avoid any needs of special behavior on
-file close (the file reference in the "longterm pin" structure would make
-sure struct file and thus the lease stays around, we'd just need to make
-explicit lease unlock block until the "longterm pin" structure is freed).
-The bad thing is that it requires us to come up with a sane new proc
-interface for reporting "longterm pins" and associated struct file. Also we
-need to define what this interface shows if the pinned pages are in DRAM
-(either page cache or anon) and not on NVDIMM.
+Consider merging it in this -rc cycle and let me know if you want me
+to make any further changes.
 
-> > > ugly to live so we have to come up with something better. The best I can
-> > > currently come up with is to have a method associated with the lease that
-> > > would invalidate the RDMA context that holds the pins in the same way that
-> > > a file close would do it.
-> > 
-> > This is back to requiring all RDMA HW to have some new behavior they
-> > currently don't have..
-> > 
-> > The main objection to the current ODP & DAX solution is that very
-> > little HW can actually implement it, having the alternative still
-> > require HW support doesn't seem like progress.
-> > 
-> > I think we will eventually start seein some HW be able to do this
-> > invalidation, but it won't be universal, and I'd rather leave it
-> > optional, for recovery from truely catastrophic errors (ie my DAX is
-> > on fire, I need to unplug it).
-> 
-> Agreed.  I think software wise there is not much some of the devices can do
-> with such an "invalidate".
+Thanks
+Kishon
 
-So out of curiosity: What does RDMA driver do when userspace just closes
-the file pointing to RDMA object? It has to handle that somehow by aborting
-everything that's going on... And I wanted similar behavior here.
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-								Honza
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git tags/phy-for-5.2-rc_v2
+
+for you to fetch changes up to e3888cda394c72dcfd450afec1121d9777a59805:
+
+  phy: tegra: xusb: Add Tegra210 PLL power supplies (2019-06-12 15:35:44 +0530)
+
+----------------------------------------------------------------
+phy: for 5.2-rc
+
+  *) Move Tegra124 PLL power supplies to be enabled by xusb-tegra124
+  *) Move Tegra210 PLL power supplies to be enabled by xusb-tegra210
+  *) Minor fixes: fix memory leaks at error path and addresses coverity.
+
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+
+----------------------------------------------------------------
+Colin Ian King (1):
+      phy: qcom-qusb2: fix missing assignment of ret when calling clk_prepare_enable
+
+Florian Fainelli (1):
+      phy: usb: phy-brcm-usb: Remove sysfs attributes upon driver removal
+
+Thierry Reding (3):
+      dt-bindings: phy: tegra-xusb: List PLL power supplies
+      phy: tegra: xusb: Add Tegra124 PLL power supplies
+      phy: tegra: xusb: Add Tegra210 PLL power supplies
+
+Yoshihiro Shimoda (1):
+      phy: renesas: rcar-gen2: Fix memory leak at error paths
+
+ Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt | 12 ++++++++++++
+ drivers/phy/broadcom/phy-brcm-usb.c                                   |  8 ++++++++
+ drivers/phy/qualcomm/phy-qcom-qusb2.c                                 |  2 +-
+ drivers/phy/renesas/phy-rcar-gen2.c                                   |  2 ++
+ drivers/phy/tegra/xusb-tegra124.c                                     |  9 +++++++++
+ drivers/phy/tegra/xusb-tegra210.c                                     |  9 +++++++++
+ 6 files changed, 41 insertions(+), 1 deletion(-)
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.17.1
+
