@@ -2,216 +2,187 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5A4C46477
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A847DC31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D9B2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:25:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560338716;
-	bh=+0wj7Dx/8wSBQOaGinRuo3t/vNRK5KIOTXl5RuAk9ZU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=10m9V/FwglxOpvMPXlpEAywR5OvRCAjvgS/BbmHlBSLXjjkK6hCj15H1pau1lI3g7
-	 C9QlXaBDD4QEhopWuJPMMxNhVwhn2rxSczW8vxZ8K2nQ7JXrHVld0NR2oslWDPpUCy
-	 EpPHc+7zYyZCVTVwEh4DoY7o/tWv+K9es0Mooihk=
+	by mail.kernel.org (Postfix) with ESMTP id 76DE12082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:25:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="Y3Sy90pb";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="pq/KdzLU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408999AbfFLLZQ (ORCPT
+        id S2409013AbfFLLZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:25:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53158 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406101AbfFLLZP (ORCPT
+        Wed, 12 Jun 2019 07:25:55 -0400
+Received: from mail177-30.suw61.mandrillapp.com ([198.2.177.30]:48153 "EHLO
+        mail177-30.suw61.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2409000AbfFLLZz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:25:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=BUi1t7YRmAixbRwRjqsMqD3iniMSUAyJOwWKf84JW1w=; b=px2Q8wWPFHBHWITcipeaKID/NN
-        4a43C0swHjzm3uhvc0S3ur82oFBD9NVSoldQtLaP4Yum9TzLA2GA2pY5K4W6DOcpPwQBs53vvus8b
-        MZIhd5RhAdcbw3CDiYuSyjKu4ruItmDClEc7SmcNPd18CO9URVwmCsvjnBzPHZVYv/twpEeWAhiAn
-        zOfKSYAkPFRtQDm+dMXFtyoKU9q4rKuWgF7DX3EIoRLrCRMizEFf1EI8IDdEfOsaePimyPPnG1ywN
-        QpLg3Vjgk3MeDh7mUPHHEXrQ6dzYa+onjUvF8wtjgmZS+P8nX/WT++4ZnaX5Pb2mTfdZTppJkOTW1
-        mckely1w==;
-Received: from 177.41.119.178.dynamic.adsl.gvt.net.br ([177.41.119.178] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hb1NS-000769-6J; Wed, 12 Jun 2019 11:25:14 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hb1NO-0005nn-Bb; Wed, 12 Jun 2019 08:25:10 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Media Mailing List <linux-media@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ruslan Babayev <ruslan@babayev.com>,
-        Andrew de Quincey <adq_dvb@lidskialf.net>,
-        Michael Buesch <m@bues.ch>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH] media: tua6100: Remove some ugly defines
-Date:   Wed, 12 Jun 2019 08:25:03 -0300
-Message-Id: <fa93fecaa9d8e33f7d3b335872e9082893b775ae.1560338665.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190612081929.GA1687@kunai>
-References: <20190612081929.GA1687@kunai>
+        Wed, 12 Jun 2019 07:25:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=cA3R4pJB9551xrjuB8IzZ/Uxj/3WlOh0i4J4iLjSJrM=;
+ b=Y3Sy90pb1uO0Yn9uQG63fUB/ZAaEuC6rKByF1SCvOoN1YIl5Q4iNwKDKi8IsOESxdYjW4RXXw/TY
+   DbqlSCJKD7vI+YoR3oJBIshsfhF5sXNtck7RvMNSdsWxEudv5xqzisKb7UEa97/AcdfFuomENrf2
+   uOwtBVAQe+WOvrywVBE=
+Received: from pmta06.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail177-30.suw61.mandrillapp.com id h03gk422rtk0 for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 11:25:52 +0000 (envelope-from <bounce-md_31050260.5d00e140.v1-79d7397535ec47a3b80e0a9e74ed4b8c@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1560338752; h=From : 
+ Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=cA3R4pJB9551xrjuB8IzZ/Uxj/3WlOh0i4J4iLjSJrM=; 
+ b=pq/KdzLUtAYK2PeY9Qo5jY0mZCKnkJ5Qq28pQCj+uSWfKNKPRo2GPWmdoaQwUSZyWMxt+J
+ sNGzMCeIy4kZK/v8ixZ4sPy74n+e2WbmYnzoAWkx+Aw6xa6vHmDFc5K4wH040FRFVB6u/oVG
+ /IXQQezWSJYiwxgZ4mbC3twqkfXeI=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: [PATCH] fuse: require /dev/fuse reads to have enough buffer capacity (take 2)
+Received: from [87.98.221.171] by mandrillapp.com id 79d7397535ec47a3b80e0a9e74ed4b8c; Wed, 12 Jun 2019 11:25:52 +0000
+To:     Miklos Szeredi <mszeredi@redhat.com>,
+        Sander Eikelenboom <linux@eikelenboom.it>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>, <gluster-devel@gluster.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Message-Id: <20190612112544.GA21465@deco.navytux.spb.ru>
+References: <876aefd0-808a-bb4b-0897-191f0a8d9e12@eikelenboom.it> <CAJfpegvRBm3M8fUJ1Le1dPd0QSJgAWAYJGLCQKa6YLTE+4oucw@mail.gmail.com> <20190611202738.GA22556@deco.navytux.spb.ru> <CAOssrKfj-MDujX0_t_fgobL_KwpuG2fxFmT=4nURuJA=sUvYYg@mail.gmail.com>
+In-Reply-To: <CAOssrKfj-MDujX0_t_fgobL_KwpuG2fxFmT=4nURuJA=sUvYYg@mail.gmail.com>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.79d7397535ec47a3b80e0a9e74ed4b8c
+X-Mandrill-User: md_31050260
+Date:   Wed, 12 Jun 2019 11:25:52 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As reported by Stephen:
+On Wed, Jun 12, 2019 at 09:44:49AM +0200, Miklos Szeredi wrote:
+> On Tue, Jun 11, 2019 at 10:28 PM Kirill Smelkov <kirr@nexedi.com> wrote:
+> 
+> > Miklos, would 4K -> `sizeof(fuse_in_header) + sizeof(fuse_write_in)` for
+> > header room change be accepted?
+> 
+> Yes, next cycle.   For 4.2 I'll just push the revert.
 
-> After merging the i2c tree, today's linux-next build (x86_64 allmodconfig)
-> produced this warning:
->
-> drivers/media/dvb-frontends/tua6100.c: In function 'tua6100_set_params':
-> drivers/media/dvb-frontends/tua6100.c:71: warning: "_P" redefined
->  #define _P 32
->
-> In file included from include/acpi/platform/aclinux.h:54,
->                  from include/acpi/platform/acenv.h:152,
->                  from include/acpi/acpi.h:22,
->                  from include/linux/acpi.h:21,
->                  from include/linux/i2c.h:17,
->                  from drivers/media/dvb-frontends/tua6100.h:22,
->                  from drivers/media/dvb-frontends/tua6100.c:24:
-> include/linux/ctype.h:14: note: this is the location of the previous definition
->  #define _P 0x10 /* punct */
->
-> Exposed by commit
->
->   5213d7efc8ec ("i2c: acpi: export i2c_acpi_find_adapter_by_handle")
->
-> Since that included <linux/acpi.h> from <linux/i2c.h>
->
-> Originally introduced by commit
->
->   00be2e7c6415 ("V4L/DVB (4606): Add driver for TUA6100")
->
-> The _P in <linux/ctype.h> has existed since before git.
+Thanks Miklos. Please consider queuing the following patch for 5.3.
+Sander, could you please confirm that glusterfs is not broken with this
+version of the check?
 
-The addition of include <linux/ctype.h> at the I2C code caused a
-breakage at the tua6100 driver. The reason is that the code there
-used defines for 3 parameters used at the calculus for the
-divide ratio.
+Thanks beforehand,
+Kirill
 
-In thesis, those are board-dependent, but, as there's just one
-driver using it (ttpci/budget-av), there was no need to make
-the code more generic. While it sounds unlikely that this old
-DVB-S frontend would ever be used on new projects, one might
-some day come with a variant using a different configuration. So,
-let's do the right thing and store those values at its private
-struct.
+---- 8< ----
+From 24a04e8be9bbf6e67de9e1908dcbe95d426d2521 Mon Sep 17 00:00:00 2001
+From: Kirill Smelkov <kirr@nexedi.com>
+Date: Wed, 27 Mar 2019 10:15:15 +0000
+Subject: [PATCH] fuse: require /dev/fuse reads to have enough buffer capacity (take 2)
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+[ This retries commit d4b13963f217 which was reverted in 766741fcaa1f.
+
+  In this version we require only `sizeof(fuse_in_header) + sizeof(fuse_write_in)`
+  instead of 4K for FUSE request header room, because, contrary to
+  libfuse and kernel client behaviour, GlusterFS actually provides only
+  so much room for request header. ]
+
+A FUSE filesystem server queues /dev/fuse sys_read calls to get
+filesystem requests to handle. It does not know in advance what would be
+that request as it can be anything that client issues - LOOKUP, READ,
+WRITE, ... Many requests are short and retrieve data from the
+filesystem. However WRITE and NOTIFY_REPLY write data into filesystem.
+
+Before getting into operation phase, FUSE filesystem server and kernel
+client negotiate what should be the maximum write size the client will
+ever issue. After negotiation the contract in between server/client is
+that the filesystem server then should queue /dev/fuse sys_read calls with
+enough buffer capacity to receive any client request - WRITE in
+particular, while FUSE client should not, in particular, send WRITE
+requests with > negotiated max_write payload. FUSE client in kernel and
+libfuse historically reserve 4K for request header. However an existing
+filesystem server - GlusterFS - was found which reserves only 80 bytes
+for header room (= `sizeof(fuse_in_header) + sizeof(fuse_write_in)`).
+
+https://lore.kernel.org/linux-fsdevel/20190611202738.GA22556@deco.navytux.spb.ru/
+https://github.com/gluster/glusterfs/blob/v3.8.15-0-gd174f021a/xlators/mount/fuse/src/fuse-bridge.c#L4894
+
+Since
+
+	`sizeof(fuse_in_header) + sizeof(fuse_write_in)` ==
+	`sizeof(fuse_in_header) + sizeof(fuse_read_in)`  ==
+	`sizeof(fuse_in_header) + sizeof(fuse_notify_retrieve_in)`
+
+is the absolute minimum any sane filesystem should be using for header
+room, the contract is that filesystem server should queue sys_reads with
+`sizeof(fuse_in_header) + sizeof(fuse_write_in)` + max_write buffer.
+
+If the filesystem server does not follow this contract, what can happen
+is that fuse_dev_do_read will see that request size is > buffer size,
+and then it will return EIO to client who issued the request but won't
+indicate in any way that there is a problem to filesystem server.
+This can be hard to diagnose because for some requests, e.g. for
+NOTIFY_REPLY which mimics WRITE, there is no client thread that is
+waiting for request completion and that EIO goes nowhere, while on
+filesystem server side things look like the kernel is not replying back
+after successful NOTIFY_RETRIEVE request made by the server.
+
+We can make the problem easy to diagnose if we indicate via error return to
+filesystem server when it is violating the contract.  This should not
+practically cause problems because if a filesystem server is using shorter
+buffer, writes to it were already very likely to cause EIO, and if the
+filesystem is read-only it should be too following FUSE_MIN_READ_BUFFER
+minimum buffer size.
+
+Please see [1] for context where the problem of stuck filesystem was hit
+for real (because kernel client was incorrectly sending more than
+max_write data with NOTIFY_REPLY; see also previous patch), how the
+situation was traced and for more involving patch that did not make it
+into the tree.
+
+[1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
+
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+Cc: Han-Wen Nienhuys <hanwen@google.com>
+Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 ---
- drivers/media/dvb-frontends/tua6100.c | 38 ++++++++++++++++-----------
- 1 file changed, 23 insertions(+), 15 deletions(-)
+ fs/fuse/dev.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/media/dvb-frontends/tua6100.c b/drivers/media/dvb-frontends/tua6100.c
-index b233b7be0b84..2990eb3fd475 100644
---- a/drivers/media/dvb-frontends/tua6100.c
-+++ b/drivers/media/dvb-frontends/tua6100.c
-@@ -31,11 +31,24 @@
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index ea8237513dfa..15531ba560b5 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -1317,6 +1317,25 @@ static ssize_t fuse_dev_do_read(struct fuse_dev *fud, struct file *file,
+ 	unsigned reqsize;
+ 	unsigned int hash;
  
- #include "tua6100.h"
- 
-+/**
-+ * struct tua6100_priv - tuner's private data
-+ *
-+ * @i2c_address:	I2C address
-+ * @i2c:		pointer to struct i2c_adapter
-+ * @frequency:		tuned frequency
-+ * @prescaler_div:	divide ratio of the prescaler (32 or 64)
-+ * @ref_div:		reference frequency divider
-+ * @ref_inp:		reference frequency input (XTAL osc)
-+ */
- struct tua6100_priv {
- 	/* i2c details */
- 	int i2c_address;
- 	struct i2c_adapter *i2c;
- 	u32 frequency;
-+	int prescaler_div;
-+	int ref_div;
-+	u32 ref_inp;
- };
- 
- static void tua6100_release(struct dvb_frontend *fe)
-@@ -75,10 +88,6 @@ static int tua6100_set_params(struct dvb_frontend *fe)
- 	struct i2c_msg msg1 = { .addr = priv->i2c_address, .flags = 0, .buf = reg1, .len = 4 };
- 	struct i2c_msg msg2 = { .addr = priv->i2c_address, .flags = 0, .buf = reg2, .len = 3 };
- 
--#define _R 4
--#define _P 32
--#define _ri 4000000
--
- 	// setup register 0
- 	if (c->frequency < 2000000)
- 		reg0[1] = 0x03;
-@@ -91,14 +100,14 @@ static int tua6100_set_params(struct dvb_frontend *fe)
- 	else
- 		reg1[1] = 0x0c;
- 
--	if (_P == 64)
-+	if (priv->prescaler_div == 64)
- 		reg1[1] |= 0x40;
- 	if (c->frequency >= 1525000)
- 		reg1[1] |= 0x80;
- 
- 	// register 2
--	reg2[1] = (_R >> 8) & 0x03;
--	reg2[2] = _R;
-+	reg2[1] = (priv->ref_div >> 8) & 0x03;
-+	reg2[2] = priv->ref_div;
- 	if (c->frequency < 1455000)
- 		reg2[1] |= 0x1c;
- 	else if (c->frequency < 1630000)
-@@ -110,19 +119,15 @@ static int tua6100_set_params(struct dvb_frontend *fe)
- 	 * The N divisor ratio (note: c->frequency is in kHz, but we
- 	 * need it in Hz)
- 	 */
--	prediv = (c->frequency * _R) / (_ri / 1000);
--	div = prediv / _P;
-+	prediv = (c->frequency * priv->ref_div) / (priv->ref_inp / 1000);
-+	div = prediv / priv->prescaler_div;
- 	reg1[1] |= (div >> 9) & 0x03;
- 	reg1[2] = div >> 1;
- 	reg1[3] = (div << 7);
--	priv->frequency = ((div * _P) * (_ri / 1000)) / _R;
-+	priv->frequency = ((div * priv->prescaler_div) * (priv->ref_inp / 1000)) / priv->ref_div;
- 
- 	// Finally, calculate and store the value for A
--	reg1[3] |= (prediv - (div*_P)) & 0x7f;
--
--#undef _R
--#undef _P
--#undef _ri
-+	reg1[3] |= (prediv - (div * priv->prescaler_div)) & 0x7f;
- 
- 	if (fe->ops.i2c_gate_ctrl)
- 		fe->ops.i2c_gate_ctrl(fe, 1);
-@@ -189,6 +194,9 @@ struct dvb_frontend *tua6100_attach(struct dvb_frontend *fe, int addr, struct i2
- 
- 	priv->i2c_address = addr;
- 	priv->i2c = i2c;
-+	priv->ref_div = 4;
-+	priv->prescaler_div = 32;
-+	priv->ref_inp = 4000000;
- 
- 	memcpy(&fe->ops.tuner_ops, &tua6100_tuner_ops, sizeof(struct dvb_tuner_ops));
- 	fe->tuner_priv = priv;
++	/*
++	 * Require sane minimum read buffer - that has capacity for fixed part
++	 * of any request header + negotiated max_write room for data. If the
++	 * requirement is not satisfied return EINVAL to the filesystem server
++	 * to indicate that it is not following FUSE server/client contract.
++	 * Don't dequeue / abort any request.
++	 *
++	 * Historically libfuse reserves 4K for fixed header room, but e.g.
++	 * GlusterFS reserves only 80 bytes
++	 *
++	 *	= `sizeof(fuse_in_header) + sizeof(fuse_write_in)`
++	 *
++	 * which is the absolute minimum any sane filesystem should be using
++	 * for header room.
++	 */
++	if (nbytes < max_t(size_t, FUSE_MIN_READ_BUFFER,
++			   sizeof(fuse_in_header) + sizeof(fuse_write_in) + fc->max_write))
++		return -EINVAL;
++
+  restart:
+ 	spin_lock(&fiq->waitq.lock);
+ 	err = -EAGAIN;
 -- 
-2.21.0
-
+2.20.1
