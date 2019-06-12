@@ -2,163 +2,141 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765B9C31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F5CC31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 599992086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D0A2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:15:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408576AbfFLDNB (ORCPT
+        id S2437115AbfFLDPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 23:13:01 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:28867 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2406872AbfFLDNA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 23:13:00 -0400
-X-UUID: dfb021c722e34194afb53bd68c7cfd93-20190612
-X-UUID: dfb021c722e34194afb53bd68c7cfd93-20190612
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 174732528; Wed, 12 Jun 2019 11:12:47 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 12 Jun 2019 11:12:40 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 12 Jun 2019 11:12:40 +0800
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-CC:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <linux-wireless@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH 2/2] mt76: mt7615: update peer's bssid when state transition changes
-Date:   Wed, 12 Jun 2019 11:12:34 +0800
-Message-ID: <449fee28c558b6f02b62275f9beefaab02b47efc.1560221172.git.ryder.lee@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <3065a01998dfa04a5d2d680e820a17cb5c110d0f.1560221172.git.ryder.lee@mediatek.com>
-References: <3065a01998dfa04a5d2d680e820a17cb5c110d0f.1560221172.git.ryder.lee@mediatek.com>
+        Tue, 11 Jun 2019 23:15:38 -0400
+Received: from mga07.intel.com ([134.134.136.100]:29460 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406820AbfFLDPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 23:15:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 20:15:38 -0700
+X-ExtLoop1: 1
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga004.jf.intel.com with ESMTP; 11 Jun 2019 20:15:32 -0700
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        pengfei.xu@intel.com, Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/9] swiotlb: Zero out bounce buffer for untrusted
+ device
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+References: <20190603011620.31999-1-baolu.lu@linux.intel.com>
+ <20190603011620.31999-4-baolu.lu@linux.intel.com>
+ <20190610154553.GT28796@char.us.oracle.com>
+ <ec6ac2ba-7b88-2bcf-aa95-f8981b258c5c@linux.intel.com>
+ <20190612010518.GB22479@char.us.oracle.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <8ad77caa-3245-4d06-314d-c4a92aa0f2ac@linux.intel.com>
+Date:   Wed, 12 Jun 2019 11:08:24 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 3F5B734C7013F11341551BE8410EA107F2318531696F13E719DF083F3416BACF2000:8
-X-MTK:  N
+In-Reply-To: <20190612010518.GB22479@char.us.oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver should update peer's bssid and bss information when
-state transition changes.
+Hi,
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
- .../net/wireless/mediatek/mt76/mt7615/main.c  |  5 +-
- .../net/wireless/mediatek/mt76/mt7615/mcu.c   | 49 ++++++++++---------
- 2 files changed, 27 insertions(+), 27 deletions(-)
+On 6/12/19 9:05 AM, Konrad Rzeszutek Wilk wrote:
+> On Wed, Jun 12, 2019 at 08:43:40AM +0800, Lu Baolu wrote:
+>> Hi Konrad,
+>>
+>> Thanks a lot for your reviewing.
+>>
+>> On 6/10/19 11:45 PM, Konrad Rzeszutek Wilk wrote:
+>>> On Mon, Jun 03, 2019 at 09:16:14AM +0800, Lu Baolu wrote:
+>>>> This is necessary to avoid exposing valid kernel data to any
+>>>> milicious device.
+>>>
+>>> malicious
+>>
+>> Yes, thanks.
+>>
+>>>
+>>>>
+>>>> Suggested-by: Christoph Hellwig <hch@lst.de>
+>>>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>>>> ---
+>>>>    kernel/dma/swiotlb.c | 6 ++++++
+>>>>    1 file changed, 6 insertions(+)
+>>>>
+>>>> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+>>>> index f956f785645a..ed41eb7f6131 100644
+>>>> --- a/kernel/dma/swiotlb.c
+>>>> +++ b/kernel/dma/swiotlb.c
+>>>> @@ -35,6 +35,7 @@
+>>>>    #include <linux/scatterlist.h>
+>>>>    #include <linux/mem_encrypt.h>
+>>>>    #include <linux/set_memory.h>
+>>>> +#include <linux/pci.h>
+>>>>    #ifdef CONFIG_DEBUG_FS
+>>>>    #include <linux/debugfs.h>
+>>>>    #endif
+>>>> @@ -560,6 +561,11 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
+>>>>    	 */
+>>>>    	for (i = 0; i < nslots; i++)
+>>>>    		io_tlb_orig_addr[index+i] = orig_addr + (i << IO_TLB_SHIFT);
+>>>> +
+>>>> +	/* Zero out the bounce buffer if the consumer is untrusted. */
+>>>> +	if (dev_is_untrusted(hwdev))
+>>>> +		memset(phys_to_virt(tlb_addr), 0, alloc_size);
+>>>
+>>> What if the alloc_size is less than a PAGE? Should this at least have ALIGN or such?
+>>
+>> It's the consumer (iommu subsystem) who requires this to be page
+>> aligned. For swiotlb, it just clears out all data in the allocated
+>> bounce buffer.
+> 
+> I am thinking that the if you don't memset the full page the malicious hardware could read stale date from the rest of the page
+> that hasn't been cleared?
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
-index d21407ddda31..e0824392c019 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
-@@ -283,9 +283,8 @@ static void mt7615_bss_info_changed(struct ieee80211_hw *hw,
- 
- 	mutex_lock(&dev->mt76.mutex);
- 
--	/* TODO: sta mode connect/disconnect
--	 * BSS_CHANGED_ASSOC | BSS_CHANGED_BSSID
--	 */
-+	if (changed & BSS_CHANGED_ASSOC)
-+		mt7615_mcu_set_bss_info(dev, vif, info->assoc);
- 
- 	/* TODO: update beacon content
- 	 * BSS_CHANGED_BEACON
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-index e82086eb8aa4..8fc12cd37906 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-@@ -741,17 +741,6 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
- 	u8 *buf, *data, tx_wlan_idx = 0;
- 	struct req_hdr *hdr;
- 
--	if (en) {
--		len += sizeof(struct bss_info_omac);
--		features |= BIT(BSS_INFO_OMAC);
--		if (mvif->omac_idx > EXT_BSSID_START) {
--			len += sizeof(struct bss_info_ext_bss);
--			features |= BIT(BSS_INFO_EXT_BSS);
--			ntlv++;
--		}
--		ntlv++;
--	}
--
- 	switch (vif->type) {
- 	case NL80211_IFTYPE_AP:
- 	case NL80211_IFTYPE_MESH_POINT:
-@@ -759,22 +748,23 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
- 		conn_type = CONNECTION_INFRA_AP;
- 		break;
- 	case NL80211_IFTYPE_STATION: {
--		struct ieee80211_sta *sta;
--		struct mt7615_sta *msta;
--
--		rcu_read_lock();
--
--		sta = ieee80211_find_sta(vif, vif->bss_conf.bssid);
--		if (!sta) {
-+		/* TODO: enable BSS_INFO_UAPSD & BSS_INFO_PM */
-+		if (en) {
-+			struct ieee80211_sta *sta;
-+			struct mt7615_sta *msta;
-+
-+			rcu_read_lock();
-+			sta = ieee80211_find_sta(vif, vif->bss_conf.bssid);
-+			if (!sta) {
-+				rcu_read_unlock();
-+				return -EINVAL;
-+			}
-+
-+			msta = (struct mt7615_sta *)sta->drv_priv;
-+			tx_wlan_idx = msta->wcid.idx;
- 			rcu_read_unlock();
--			return -EINVAL;
- 		}
--
--		msta = (struct mt7615_sta *)sta->drv_priv;
--		tx_wlan_idx = msta->wcid.idx;
- 		conn_type = CONNECTION_INFRA_STA;
--
--		rcu_read_unlock();
- 		break;
- 	}
- 	default:
-@@ -782,6 +772,17 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
- 		break;
- 	}
- 
-+	if (en) {
-+		len += sizeof(struct bss_info_omac);
-+		features |= BIT(BSS_INFO_OMAC);
-+		if (mvif->omac_idx > EXT_BSSID_START) {
-+			len += sizeof(struct bss_info_ext_bss);
-+			features |= BIT(BSS_INFO_EXT_BSS);
-+			ntlv++;
-+		}
-+		ntlv++;
-+	}
-+
- 	buf = kzalloc(len, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
--- 
-2.18.0
+Yes. My point is that this should be guaranteed by the bounce page
+implementation in iommu.
 
+Best regards,
+Baolu
+
+> 
+>>
+>> Best regards,
+>> Baolu
+>>
+>>>
+>>>> +
+>>>>    	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
+>>>>    	    (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL))
+>>>>    		swiotlb_bounce(orig_addr, tlb_addr, mapping_size, DMA_TO_DEVICE);
+>>>> -- 
+>>>> 2.17.1
+>>>>
+>>>
+> 
