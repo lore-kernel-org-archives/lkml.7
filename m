@@ -2,103 +2,147 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECD2C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E19A0C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC482080A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9AAE2080A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:16:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cj+kgVvf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9aaMqXO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730849AbfFLIP5 (ORCPT
+        id S2436877AbfFLIQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:15:57 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43672 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbfFLIP4 (ORCPT
+        Wed, 12 Jun 2019 04:16:04 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35855 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730638AbfFLIQE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:15:56 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j29so11346003lfk.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:15:55 -0700 (PDT)
+        Wed, 12 Jun 2019 04:16:04 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f21so2489937pgi.3;
+        Wed, 12 Jun 2019 01:16:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2qc0nv++ogxD/fVe1o7jhZAYVkwJMAt6qDg76e6F2/I=;
-        b=cj+kgVvf4js2JFhPQnoZZn6kDBqQbBEjXpTJqKyElA40Sc0hD8k86b6bvQXrfo3Izf
-         lKZb9SDuXC+VP9hLRUbbU4Qb5jlW7PPZBKg1t8wQpPxQwZWX8Rr+50TW/nNkkPE3GXFl
-         2YpPVNPRJBWdRePwfs+UsHEL9F4i0MKZtnvBUlTyZ30v7oWvnZmKPd7/R9eA0oCOFQ6N
-         1xgWgrfWL4ec1adbkG+fLIYxhHHtdy0GSgZD0pUWCpauWH+oKXf85OL7zAPPdMbuUjsX
-         /vfAGAdJvyUnJli1vuzvfRrs+ssobSJQTpILvHb9kw/BveAfFew0+2R3E30doQ+YVrkd
-         WEHw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=l4AptQ/lp/40HceSKPfzGNYkbh2nIq8GF58tsuXwpVM=;
+        b=h9aaMqXO9mqsSq6/NERYGEDB3ZRdlE7WRXesAHzRiGrGWxIWLuIu0wx+0IQ5W6tYkd
+         X/N/DRdjcE7yMQJBlIeKxq3RzqszGF17TC8kDoY/ODFFxA/Ma1iGRRQsAD2sap8VWoy5
+         1LWrmN7Vg2evNc7g9EXfrBmiTXWyyou1AJMq6rutcmKGzCeW2E02spIlgEvmDzg9RNGb
+         tTQ3hNJif6eSfnx2SgyzENLn5Ck1SvGlXQS+SrSxRxfEs6U+ntYBQ1HqkzXI/KS1FfDz
+         82D+Exkuxp/+JOeUSuwWW7DEJZrDSHHFFwCNyirD1ithDHDdP0k0HqMRf3tmT9pkuCp/
+         jzWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2qc0nv++ogxD/fVe1o7jhZAYVkwJMAt6qDg76e6F2/I=;
-        b=Z8n9dl3mDOO1gPyslysUVFPdM+UltfWqkTuqkFA2KAjrTFY23GowJyc4k3obJMkeZT
-         mxJdpIqnS5JpK2guxh0PZXtgp52kacXfBJIZjpQFxLWW+YhokYLX/MsIzloZwWUnsfS6
-         BEYnMK5BmTQlc4RabIukzpLlBCZL+EjuHBYDPwfmg+1Pk1oP2CzxgmbI/UnzHFoZFXVM
-         PzpS3QEEAcNO7lELnaJk49FgIJBdjN/p6gw4vghY6/tyTtxY2/nUJnTmIdDH5EHN57XC
-         O9JAUcWWCCuNauTvGZQAHDUsnhCr+ewFA1SLIZxJPuS0HUihQsFH0uJnfoBZxUHELH+s
-         +ZTg==
-X-Gm-Message-State: APjAAAUMIqCqFh/dSeCWfZphLfxQiRRJeGw2a1RbEd5P1ziaPJL0lov+
-        0Ktnor65MTbRzuYS/SOg5WzzeoSll607Gw==
-X-Google-Smtp-Source: APXvYqzksCYlTlYuYtnz2FY/MHGMyOOTRXflfdL5X4G+rMVcF1T1+JRvyDF0NKbtoWEywxrpHTOBEw==
-X-Received: by 2002:a19:dc0d:: with SMTP id t13mr16801840lfg.152.1560327354568;
-        Wed, 12 Jun 2019 01:15:54 -0700 (PDT)
-Received: from localhost (c-1c3670d5.07-21-73746f28.bbcust.telenor.se. [213.112.54.28])
-        by smtp.gmail.com with ESMTPSA id 80sm2965455lfz.56.2019.06.12.01.15.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 01:15:53 -0700 (PDT)
-From:   Anders Roxell <anders.roxell@linaro.org>
-To:     p.zabel@pengutronix.de, mchehab@kernel.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH v2 3/3] drivers: media: coda: fix warning same module names
-Date:   Wed, 12 Jun 2019 10:15:50 +0200
-Message-Id: <20190612081550.2255-1-anders.roxell@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l4AptQ/lp/40HceSKPfzGNYkbh2nIq8GF58tsuXwpVM=;
+        b=VTnK4U3W+fc1p66ugi8STQB0gmq0luYEIngcHld2DaPYqaChbWziAjAS8PAQNz5Ib0
+         y6wlRxV87I5LZN9VeJiYwVEjCZjRCkTFYZCf5mZjoReEneu5BIRCNPGf4riyftElv0kG
+         /h3ZgVGlDt7vJ1AYLhHrBb5LEkWtaSbpHWZM4MLy/5YlhcN8UOkTqRAfjwT1WrVIC97t
+         0vW89O7yUdnP7AHgrFwKWN68iGC/R3XC3e+F9ESK9mWddIrlO9kLXJ5PwlW11dSwIBW+
+         6ils0LSggJ3K0cvkxI0bnAK8g4TKVKmm8F5IBB0HTLJWbgWp3PiPoVyZQWriSW3/0lkQ
+         N/Qg==
+X-Gm-Message-State: APjAAAUCDhPvLLqq42LeAUtjVQNZmaeE08VVBTY0LhxlXuZf8Z7T5lEo
+        vG3MxcAsOSnyMQHygWOSgzY=
+X-Google-Smtp-Source: APXvYqyHNMtcfEGWDtb5uxEj3HmmDu4AqP01gbIb1yLs8zGnDR9CaSVWAjn+4niP8Ae6MJ3PWyv7AQ==
+X-Received: by 2002:a65:4806:: with SMTP id h6mr23286286pgs.299.1560327363279;
+        Wed, 12 Jun 2019 01:16:03 -0700 (PDT)
+Received: from Asurada (c-98-248-47-108.hsd1.ca.comcast.net. [98.248.47.108])
+        by smtp.gmail.com with ESMTPSA id d5sm18174050pfn.25.2019.06.12.01.16.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 01:16:03 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 01:15:54 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     "Koenig, Christian" <Christian.Koenig@amd.com>
+Cc:     "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>
+Subject: Re: [PATCH] dma-buf: refcount the attachment for cache_sgt_mapping
+Message-ID: <20190612081554.GB8876@Asurada>
+References: <20190612012219.21652-1-nicoleotsuka@gmail.com>
+ <261b46c7-0c5e-4268-619d-f8381fbc3aeb@amd.com>
+ <20190612080214.GA8876@Asurada>
+ <170c3828-115b-38e5-35fc-1b88c08c492a@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170c3828-115b-38e5-35fc-1b88c08c492a@amd.com>
+User-Agent: Mutt/1.5.22 (2013-10-16)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with CONFIG_VIDEO_CODA and CONFIG_CODA_FS enabled as
-loadable modules, we see the following warning:
+Hi Christian,
 
-warning: same module names found:
-  fs/coda/coda.ko
-  drivers/media/platform/coda/coda.ko
+On Wed, Jun 12, 2019 at 08:05:53AM +0000, Koenig, Christian wrote:
+> Am 12.06.19 um 10:02 schrieb Nicolin Chen:
+> > Hi Christian,
+> >
+> > Thanks for the quick reply.
+> >
+> > On Wed, Jun 12, 2019 at 07:45:38AM +0000, Koenig, Christian wrote:
+> >> Am 12.06.19 um 03:22 schrieb Nicolin Chen:
+> >>> Commit f13e143e7444 ("dma-buf: start caching of sg_table objects v2")
+> >>> added a support of caching the sgt pointer into an attach pointer to
+> >>> let users reuse the sgt pointer without another mapping. However, it
+> >>> might not totally work as most of dma-buf callers are doing attach()
+> >>> and map_attachment() back-to-back, using drm_prime.c for example:
+> >>>       drm_gem_prime_import_dev() {
+> >>>           attach = dma_buf_attach() {
+> >>>               /* Allocating a new attach */
+> >>>               attach = kzalloc();
+> >>>               /* .... */
+> >>>               return attach;
+> >>>           }
+> >>>           dma_buf_map_attachment(attach, direction) {
+> >>>               /* attach->sgt would be always empty as attach is new */
+> >>>               if (attach->sgt) {
+> >>>                   /* Reuse attach->sgt */
+> >>>               }
+> >>>               /* Otherwise, map it */
+> >>>               attach->sgt = map();
+> >>>           }
+> >>>       }
+> >>>
+> >>> So, for a cache_sgt_mapping use case, it would need to get the same
+> >>> attachment pointer in order to reuse its sgt pointer. So this patch
+> >>> adds a refcount to the attach() function and lets it search for the
+> >>> existing attach pointer by matching the dev pointer.
+> >> I don't think that this is a good idea.
+> >>
+> >> We use sgt caching as workaround for locking order problems and want to
+> >> remove it again in the long term.
+> > Oh. I thought it was for a performance improving purpose. It may
+> > be a misunderstanding then.
+> >
+> >> So what is the actual use case of this?
+> > We have some similar downstream changes at dma_buf to reduce the
+> > overhead from multiple clients of the same device doing attach()
+> > and map_attachment() calls for the same dma_buf.
+> 
+> I don't think that this is a good idea over all. A driver calling attach 
+> for the same buffer is doing something wrong in the first place and we 
+> should not work around this in the DMA-buf handling.
+> 
+> > We haven't used DRM/GRM_PRIME yet but I am also curious would it
+> > benefit DRM also if we reduce this overhead in the dma_buf?
+> 
+> No, not at all.
 
-Rework so media/platform/coda is named coda-vpu. Leaving CODA_FS as is
-since that's a well known module.
+From you replies, in a summary, does it means that there won't be a case
+of DRM having a dma_buf attaching to the same device, i.e. multiple calls
+of drm_gem_prime_import() function with same parameters of dev + dma_buf?
 
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
----
- drivers/media/platform/coda/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+If so, we can just ignore/drop this patch. Sorry for the misunderstanding.
 
-diff --git a/drivers/media/platform/coda/Makefile b/drivers/media/platform/coda/Makefile
-index 54e9a73a92ab..5fd5efa35159 100644
---- a/drivers/media/platform/coda/Makefile
-+++ b/drivers/media/platform/coda/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
--coda-objs := coda-common.o coda-bit.o coda-gdi.o coda-h264.o coda-mpeg2.o coda-mpeg4.o coda-jpeg.o
-+coda-vpu-objs := coda-common.o coda-bit.o coda-gdi.o coda-h264.o coda-mpeg2.o coda-mpeg4.o coda-jpeg.o
- 
--obj-$(CONFIG_VIDEO_CODA) += coda.o
-+obj-$(CONFIG_VIDEO_CODA) += coda-vpu.o
- obj-$(CONFIG_VIDEO_IMX_VDOA) += imx-vdoa.o
--- 
-2.20.1
-
+Thanks
+Nicolin
