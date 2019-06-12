@@ -2,109 +2,74 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A239C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C28C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2BC20896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D92A4208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:41:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TjJhwpae"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GxUQo4N/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437123AbfFLMlJ (ORCPT
+        id S2439036AbfFLMlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:41:09 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39295 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408385AbfFLMlJ (ORCPT
+        Wed, 12 Jun 2019 08:41:37 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:39454 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437124AbfFLMlg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:41:09 -0400
-Received: by mail-pf1-f193.google.com with SMTP id j2so9604363pfe.6;
-        Wed, 12 Jun 2019 05:41:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=P5Dp1NVMrDezDBxchJbtidsCgF7ZHAzWG1BGHh9wI5w=;
-        b=TjJhwpae0AdVN7/Ih/nU7jzjIhzilu72zXxDDnWBWAlBD4gMj20MWAC3Rne5OJC+nb
-         NfofgLH9IOYbAcHkod3VkTu28KxuQ5y9EUyypzoGbR8R7EQ7mvCVesEfeEnErWWxhQ7G
-         wq/rVV53FchD0m9i3zJV1IiHdPXEUtOXlMljLswZQkzSxF/O67zI0ANCafg3EKmG2v10
-         rgE74XKRiAJf0UVnNp2gvX8b9M1JgKQ06Ry3iagSOeVZYT29CT73LHzSmtGQM79VKovU
-         FSj5xZ7IBWeqgYVSkOhh/zrC78DQDoXZggW8qJQWAyvTMvNR0jL6AE/UR1KdhcFkNZUW
-         lfmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P5Dp1NVMrDezDBxchJbtidsCgF7ZHAzWG1BGHh9wI5w=;
-        b=rhkLNQ7mAJTQ/DF01NWaP1PWgsthze2dYi8CoWPtpMNrZHMljXi80YqvbHJZcrON/s
-         ymTQoZzxKS2aiIaA0ouhY96o+mfJyz30JVYi/7DcY2VZrgVRUs+3RDjW5PDeq/lDnI9l
-         h5nSB2l5eRWjkk6IV1mIH+LXuQUCz91dzA+4FXPRoKFlJDFrQFtroLDhcEDxU/I3yYNO
-         UaSVtJvjAzNo7Fqx2RdY+a951kHPMdBeLhxY7hUpHWANW8EcH6vmwgYrm1fBbZcH0olw
-         7tLEdRKtjXE1fYR5xEjW6E9OThFYTAJQZsO0Iuxtk2rCBhZhfzb1WOxxYE14CwIaDoiQ
-         rPBg==
-X-Gm-Message-State: APjAAAUF7QUg8fewW3U2wRlOhXhaN4kJ+XIlz2Lle2B2MQNYvx+oc19p
-        Zk+vQjcaqtuQI8kZUoT7WqI=
-X-Google-Smtp-Source: APXvYqykw/FoscQaeHTHCdJKLksKNGhMrdKmKHPpcOTH2jsByq7pbFsayWBhId0XqaVmpkcv15zWJQ==
-X-Received: by 2002:a63:5247:: with SMTP id s7mr7454711pgl.29.1560343268513;
-        Wed, 12 Jun 2019 05:41:08 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i3sm17847203pfa.175.2019.06.12.05.41.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 05:41:07 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 05:41:06 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] hwmon: lm90: simplify getting the adapter of a client
-Message-ID: <20190612124106.GA26013@roeck-us.net>
-References: <20190610095157.11814-1-wsa+renesas@sang-engineering.com>
- <20190610095157.11814-2-wsa+renesas@sang-engineering.com>
+        Wed, 12 Jun 2019 08:41:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CJ0kAWx2t5ZsPNEx9cJy2uFhX/oECkRLjy4BfZjgLq4=; b=GxUQo4N/Hj5p74ptLoAYnpHOr
+        T7HIAz/qOXDbceHdhZdWbZu4BEaPbHhPlmz40obgh5klymVS+PBgy4ccWWU8gTzQlHj2u8saQT4+H
+        zT0yNa+qArI9k7pwrJDVuh9OTjTotnJbP0s1YS9cZxy1Q8d1+xCna4nlSJDcndPL5s+cx8cPkmvVE
+        p/eGIl/NwgCPN+NOcYxjCoZMyOp+Y8GbsgborNh7ZJe3PA81UO44iymiceYA4VD1WxAh33sv7rOiE
+        vg+1nANOm+NT38Z5hDGz2CZn6F6NBxuWpoBhxZRD3oSyr9lqCUIzUITtcLRQyp/11bHFd4YN8jjiz
+        SwHmTVtng==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hb2ZF-000691-AT; Wed, 12 Jun 2019 12:41:30 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 806F8203BF963; Wed, 12 Jun 2019 14:31:51 +0200 (CEST)
+Date:   Wed, 12 Jun 2019 14:31:51 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, clemens@ladisch.de,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        Waiman Long <longman@redhat.com>, X86 ML <x86@kernel.org>,
+        arnd@arndb.de
+Subject: Re: infinite loop in read_hpet from ktime_get_boot_fast_ns
+Message-ID: <20190612123151.GL3463@hirez.programming.kicks-ass.net>
+References: <CAHmME9qBDtO1vJrA2Ch3SQigsu435wR7Q3vTm_3R=u=BE49S-Q@mail.gmail.com>
+ <alpine.DEB.2.21.1906112257120.2214@nanos.tec.linutronix.de>
+ <20190612090257.GF3436@hirez.programming.kicks-ass.net>
+ <CAHmME9obwzZ5x=p3twDfNYux+kg0h4QAGe0ePAkZ2KqvguBK3g@mail.gmail.com>
+ <20190612122843.GJ3436@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190610095157.11814-2-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190612122843.GJ3436@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 11:51:54AM +0200, Wolfram Sang wrote:
-> We have a dedicated pointer for that, so use it. Much easier to read and
-> less computation involved.
-> 
-> Reported-by: Peter Rosin <peda@axentia.se>
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Wed, Jun 12, 2019 at 02:28:43PM +0200, Peter Zijlstra wrote:
 
-Aplied.
+> AFAICT only: alpha, h8300, hexagon, m68knommu, nds32, nios2, openrisc
+> are lacking any form of sched_clock(), the rest has it either natively
+> or through sched_clock_register().
 
-Thanks,
-Guenter
+Scratch nds32, they use drivers/clocksource/timer-atcpit100.c
 
-> ---
-> 
-> Please apply to your subsystem tree.
-> 
->  drivers/hwmon/lm90.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwmon/lm90.c b/drivers/hwmon/lm90.c
-> index e562a578f20e..2ebcab8b0a9b 100644
-> --- a/drivers/hwmon/lm90.c
-> +++ b/drivers/hwmon/lm90.c
-> @@ -1718,7 +1718,7 @@ static int lm90_probe(struct i2c_client *client,
->  		      const struct i2c_device_id *id)
->  {
->  	struct device *dev = &client->dev;
-> -	struct i2c_adapter *adapter = to_i2c_adapter(dev->parent);
-> +	struct i2c_adapter *adapter = client->adapter;
->  	struct hwmon_channel_info *info;
->  	struct regulator *regulator;
->  	struct device *hwmon_dev;
+Thanks Arnd!
