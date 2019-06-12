@@ -2,99 +2,101 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCEBC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A58DC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E273208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:25:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="DkNlW945"
+	by mail.kernel.org (Postfix) with ESMTP id 6BDF1208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:25:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437330AbfFLOZa (ORCPT
+        id S2439633AbfFLOZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:25:30 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41126 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407783AbfFLOZa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:25:30 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 83so9015533pgg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 07:25:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=CG5iVPWcjFplF7lR6y3XE62eHLD9eYji1o8inBAtJJY=;
-        b=DkNlW945kuLZQ3RMFEaZhtAt/vvk0BfAkLbeAKizzc+dO/m7G5UF9lRQm6NNq+DUQh
-         OLjx98iEFsYqoENabN8XQzrRfB0Q9IoWk/uhCskW75d1RLTar/8kKDcJRAxWV50LaX24
-         m1lvDmGvJ92HaqHz9OUmZKcjabh54tm4K4IahU9DPDC0JuzJUCJNlET6Y8v5CG9MuDNs
-         7inxq7/Pu7rKUo9WkPtzByceY8kkmQdTna1PRVg//7iHjmNAlshnrhZtb5VaiPBqNjFT
-         WdX2mmSdhZMr5Iybo/COmIzTsuYbvIaFlP3cddhl+HBvAIaRf7CN1gYZkVTahmdsPgeM
-         vHvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=CG5iVPWcjFplF7lR6y3XE62eHLD9eYji1o8inBAtJJY=;
-        b=uAvsz+5d//1HG5GE4NuQqe0o6qC6OSF13XzhqgSAHDaT6el+9XN7TqxY/dHMvIl8Xg
-         sUq2RUBQtE8+nUUa4U0GuPFzUz5YGcayp3l60IMgp1+hSMkoDM7Q0i5JbrskZftU8QfI
-         9ftuKINurovA2cDrMFDPWNm7cxGAlq45k/DGSEls+ZVt1TgXZHxYNU7LY5vGWw7/PBWM
-         kZOAElm7YETI3vY7XamNtaDn3UNeEt5dlHt1CFAOVLScToZC6HeoSCBNWTlpVH//K+id
-         vpZFB1ncJ3ST+SmK82u1NK12O6S9EHL5oNyeIugItP98BU1EYwn6AZwYbOhVFy4sarVF
-         nFpw==
-X-Gm-Message-State: APjAAAUZbGCGF5my+Rc1pANx6fyAG3ccHvN6u6nAG8Ps1xoyXUByA0wo
-        aBrZN0k0QCuHJ9oh5tU6qlYcsQ==
-X-Google-Smtp-Source: APXvYqzFJUGgeRa9mS5//wWFpkOuEjJAUvNZgOI1pyCzeAI1Y14G2xwuNekpf+1k+vZZVrtDqAnWDA==
-X-Received: by 2002:a63:af44:: with SMTP id s4mr25363352pgo.411.1560349529636;
-        Wed, 12 Jun 2019 07:25:29 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.googlemail.com with ESMTPSA id y14sm121972pjr.13.2019.06.12.07.25.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Jun 2019 07:25:27 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/3] arm64: Add initial support for Odroid-N2
-In-Reply-To: <20190603091008.2382-1-narmstrong@baylibre.com>
-References: <20190603091008.2382-1-narmstrong@baylibre.com>
-Date:   Wed, 12 Jun 2019 07:25:27 -0700
-Message-ID: <7hr27y3mp4.fsf@baylibre.com>
+        Wed, 12 Jun 2019 10:25:58 -0400
+Received: from mga12.intel.com ([192.55.52.136]:1584 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437408AbfFLOZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:25:58 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 07:25:57 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga006.fm.intel.com with ESMTP; 12 Jun 2019 07:25:57 -0700
+Date:   Wed, 12 Jun 2019 07:25:57 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Dr. Greg" <greg@enjellic.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Cedric Xing <cedric.xing@intel.com>,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
+        jarkko.sakkinen@linux.intel.com, luto@kernel.org,
+        jmorris@namei.org, serge@hallyn.com, paul@paul-moore.com,
+        eparis@parisplace.org, jethro@fortanix.com, dave.hansen@intel.com,
+        tglx@linutronix.de, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, nhorman@redhat.com,
+        pmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
+        bp@alien8.de, josh@joshtriplett.org, kai.huang@intel.com,
+        rientjes@google.com, william.c.roberts@intel.com,
+        philip.b.tricca@intel.com
+Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
+ SELinux
+Message-ID: <20190612142557.GB20308@linux.intel.com>
+References: <cover.1560131039.git.cedric.xing@intel.com>
+ <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
+ <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
+ <20190611220243.GB3416@linux.intel.com>
+ <20190612093221.GA24188@wind.enjellic.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612093221.GA24188@wind.enjellic.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+On Wed, Jun 12, 2019 at 04:32:21AM -0500, Dr. Greg wrote:
+> With SGX2 we will, by necessity, have to admit the notion that a
+> platform owner will not have any effective visibility into code that
+> is loaded and executed, since it can come in over a secured network
+> connection in an enclave security context.  This advocates for the
+> simplest approach possible to providing some type of regulation to any
+> form of WX page access.
 
-> This patchset adds basic support for :
-> - Amlogic G12B, which is very similar to G12A
-> - The HardKernel Odroid-N2 based on the S922X SoC
->
-> The Amlogic G12B SoC is very similar with the G12A SoC, sharing
-> most of the features and architecture, but with these differences :
-> - The first CPU cluster only has 2xCortex-A53 instead of 4
-> - G12B has a second cluster of 4xCortex-A73
-> - Both cluster can achieve 2GHz instead of 1,8GHz for G12A
-> - CPU Clock architecture is difference, thus needing a different
->   compatible to handle this slight difference
-> - Supports a MIPI CSI input
-> - Embeds a Mali-G52 instead of a Mali-G31, but integration is the same
->
-> Actual support is done in the same way as for the GXM support, including
-> the G12A dtsi and redefining the CPU clusters.
-> Unlike GXM, the first cluster is different, thus needing to remove
-> the last 2 cpu nodes of the first cluster.
+I believe we're all on the same page in the sense that we all want the
+"simplest approach possible", but there's a sliding scale of complexity
+between the kernel and userspace.  We can make life simple for userspace
+at the cost of additional complexity in the kernel, and vice versa.  The
+disagreement is over where to shove the extra complexity.
 
-Tested-by: Kevin Hilman <khilman@baylibre.com>
+> Current state of the art, and there doesn't appear to be a reason to
+> change this, is to package an enclave in the form of an ELF shared
+> library.  It seems straight forward to inherit and act on page
+> privileges from the privileges specified on the ELF sections that are
+> loaded.  Loaders will have a file descriptor available so an mmap of
+> the incoming page with the specified privileges should trigger the
+> required LSM interventions and tie them to a specific enclave.
+> 
+> The current enclave 'standard' also uses layout metadata, stored in a
+> special .notes section of the shared image, to direct a loader with
+> respect to construction of the enclave stack, heap, TCS and other
+> miscellaneous regions not directly coded by the ELF TEXT sections.  It
+> seems straight forward to extend this paradigm to declare region(s) of
+> an enclave that are eligible to be generated at runtime (EAUG'ed) with
+> the RWX protections needed to support dynamically loaded code.
+> 
+> If an enclave wishes to support this functionality, it would seem
+> straight forward to require an enclave to provide a single zero page
+> which the loader will mmap with those protections in order to trigger
+> the desired LSM checks against that specific enclave.
 
-Queued for v5.3,
-
-Kevin
+This is effectively #1, e.g. would require userspace to pre-declare its
+intent to make regions W->X.
