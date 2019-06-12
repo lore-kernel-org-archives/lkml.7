@@ -2,62 +2,226 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9743DC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04810C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E4B2063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF8F62063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408690AbfFLJOC (ORCPT
+        id S2436698AbfFLJPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:14:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:48082 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407442AbfFLJOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:14:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1069728;
-        Wed, 12 Jun 2019 02:14:01 -0700 (PDT)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 272A13F246;
-        Wed, 12 Jun 2019 02:13:59 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 10:13:54 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
-        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
-        will.deacon@arm.com, catalin.marinas@arm.com,
-        daniel.lezcano@linaro.org, dietmar.eggemann@arm.com,
-        ionela.voinescu@arm.com, mka@chromium.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 0/3] Make IPA use PM_EM
-Message-ID: <20190612091351.jet5sew5dnirsapz@queper01-lin>
-References: <20190530092038.12020-1-quentin.perret@arm.com>
+        Wed, 12 Jun 2019 05:15:00 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18555 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405360AbfFLJO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:14:59 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 12076407B096C334960D;
+        Wed, 12 Jun 2019 17:11:56 +0800 (CST)
+Received: from HGHY2Y004646261.china.huawei.com (10.184.12.158) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 12 Jun 2019 17:11:47 +0800
+From:   Zenghui Yu <yuzenghui@huawei.com>
+To:     <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+CC:     <christoffer.dall@arm.com>, <marc.zyngier@arm.com>,
+        <acme@redhat.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <ganapatrao.kulkarni@cavium.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <mark.rutland@arm.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <wanghaibin.wang@huawei.com>,
+        <xiexiangyou@huawei.com>, <linuxarm@huawei.com>,
+        Zenghui Yu <yuzenghui@huawei.com>
+Subject: [PATCH v1 4/5] perf,kvm/arm64: Add stat support on arm64
+Date:   Wed, 12 Jun 2019 09:08:45 +0000
+Message-ID: <1560330526-15468-5-git-send-email-yuzenghui@huawei.com>
+X-Mailer: git-send-email 2.6.4.windows.1
+In-Reply-To: <1560330526-15468-1-git-send-email-yuzenghui@huawei.com>
+References: <1560330526-15468-1-git-send-email-yuzenghui@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190530092038.12020-1-quentin.perret@arm.com>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+'perf kvm stat report/record' generates a statistical analysis of KVM
+events and can be used to analyze guest exit reasons. This patch tries
+to add stat support on arm64.
 
-On Thursday 30 May 2019 at 10:20:35 (+0100), Quentin Perret wrote:
-> Changes in v5:
-> **************
->  - Changed patch 02 to guard IPA-specific code in cpu_cooling.c with
->    appropriate ifdefery (Daniel)
->  - Rebased on 5.2-rc2
+We have a mapping between guest's "exit_code" and "exit_reason" which
+already exists under arch/arm64/include/asm/ (kvm_arm_exception_type),
+and we've used it to report guest's exit type through trace_kvm_exit().
+Copy kvm_arm_exception_type into aarch64_guest_exits.h, thus export it
+to userspace.
 
-Is there anything else I can do on this series ? Should I send a v6 with
-Viresh's and Daniel's Acked-by ?
+It records on two available KVM tracepoints for arm64: "kvm:kvm_entry"
+and "kvm:kvm_exit", and reports statistical data which includes events
+handles time, samples, and so on.
 
-Many thanks,
-Quentin
+A simple test go below:
+
+ # pgrep qemu
+6039
+9937
+
+ # ./tools/perf/perf kvm stat record -p 6039
+[ perf record: Woken up 3 times to write data ]
+[ perf record: Captured and wrote 15.629 MB perf.data.guest (199063 samples) ]
+
+ # ./tools/perf/perf kvm stat report --event=vmexit
+
+Analyze events for all VMs, all VCPUs:
+
+             VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time         Avg time
+
+                TRAP      49040    97.15%   100.00%      2.60us   4072.98us   3431.60us ( +-   0.17% )
+                 IRQ       1437     2.85%     0.00%      0.90us     24.56us      2.06us ( +-   1.37% )
+
+Total Samples:50477, Total events handled time:168288630.04us.
+
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Christoffer Dall <christoffer.dall@arm.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+---
+ tools/perf/arch/arm64/Makefile                   |  2 +
+ tools/perf/arch/arm64/util/Build                 |  1 +
+ tools/perf/arch/arm64/util/aarch64_guest_exits.h | 23 +++++++++
+ tools/perf/arch/arm64/util/kvm-stat.c            | 60 ++++++++++++++++++++++++
+ 4 files changed, 86 insertions(+)
+ create mode 100644 tools/perf/arch/arm64/util/aarch64_guest_exits.h
+ create mode 100644 tools/perf/arch/arm64/util/kvm-stat.c
+
+diff --git a/tools/perf/arch/arm64/Makefile b/tools/perf/arch/arm64/Makefile
+index dbef716..172146e 100644
+--- a/tools/perf/arch/arm64/Makefile
++++ b/tools/perf/arch/arm64/Makefile
+@@ -2,6 +2,8 @@
+ ifndef NO_DWARF
+ PERF_HAVE_DWARF_REGS := 1
+ endif
++
++HAVE_KVM_STAT_SUPPORT := 1
+ PERF_HAVE_JITDUMP := 1
+ PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET := 1
+ 
+diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
+index 3cde540..d136674 100644
+--- a/tools/perf/arch/arm64/util/Build
++++ b/tools/perf/arch/arm64/util/Build
+@@ -1,5 +1,6 @@
+ perf-y += header.o
+ perf-y += sym-handling.o
++perf-y += kvm-stat.o
+ perf-$(CONFIG_DWARF)     += dwarf-regs.o
+ perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+ perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+diff --git a/tools/perf/arch/arm64/util/aarch64_guest_exits.h b/tools/perf/arch/arm64/util/aarch64_guest_exits.h
+new file mode 100644
+index 0000000..a8ca4b8
+--- /dev/null
++++ b/tools/perf/arch/arm64/util/aarch64_guest_exits.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef ARCH_PERF_AARCH64_GUEST_EXITS_H
++#define ARCH_PERF_AARCH64_GUEST_EXITS_H
++
++/* virt.h */
++/* Error returned when an invalid stub number is passed into x0 */
++#define HVC_STUB_ERR	0xbadca11
++
++/* kvm_asm.h */
++#define ARM_EXCEPTION_IRQ         0
++#define ARM_EXCEPTION_EL1_SERROR  1
++#define ARM_EXCEPTION_TRAP        2
++#define ARM_EXCEPTION_IL          3
++/* The hyp-stub will return this for any kvm_call_hyp() call */
++#define ARM_EXCEPTION_HYP_GONE    HVC_STUB_ERR
++
++#define kvm_arm_exception_type					\
++	{ARM_EXCEPTION_IRQ,		"IRQ"		},	\
++	{ARM_EXCEPTION_EL1_SERROR,	"SERROR"	},	\
++	{ARM_EXCEPTION_TRAP,		"TRAP"		},	\
++	{ARM_EXCEPTION_HYP_GONE,	"HYP_GONE"	}
++
++#endif
+diff --git a/tools/perf/arch/arm64/util/kvm-stat.c b/tools/perf/arch/arm64/util/kvm-stat.c
+new file mode 100644
+index 0000000..5804bc2
+--- /dev/null
++++ b/tools/perf/arch/arm64/util/kvm-stat.c
+@@ -0,0 +1,60 @@
++/*
++ * Arch specific functions for perf kvm stat.
++ *
++ * Copyright (c) 2019 - Huawei Technologies Co., Ltd.
++ * Author(s): Zenghui Yu <yuzenghui@huawei.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License, version 2, as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++#include <errno.h>
++#include "../../util/kvm-stat.h"
++#include "../../util/evsel.h"
++#include "aarch64_guest_exits.h"
++
++define_exit_reasons_table(arm64_exit_reasons, kvm_arm_exception_type);
++
++static struct kvm_events_ops exit_events = {
++	.is_begin_event = exit_event_begin,
++	.is_end_event = exit_event_end,
++	.decode_key = exit_event_decode_key,
++	.name = "VM-EXIT"
++};
++
++const char *vcpu_id_str = "vcpu_id";
++const int decode_str_len = 20;
++const char *kvm_exit_reason = "ret";
++const char *kvm_entry_trace = "kvm:kvm_entry";
++const char *kvm_exit_trace = "kvm:kvm_exit";
++
++const char *kvm_events_tp[] = {
++	"kvm:kvm_entry",
++	"kvm:kvm_exit",
++	NULL,
++};
++
++struct kvm_reg_events_ops kvm_reg_events_ops[] = {
++	{ .name = "vmexit", .ops = &exit_events },
++	{ NULL, NULL },
++};
++
++const char * const kvm_skip_events[] = {
++	NULL,
++};
++
++int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid __maybe_unused)
++{
++	kvm->exit_reasons = arm64_exit_reasons;
++	kvm->exit_reasons_isa = "aarch64";
++
++	return 0;
++}
+-- 
+1.8.3.1
+
+
