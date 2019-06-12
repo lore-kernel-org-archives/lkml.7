@@ -2,187 +2,308 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9508C31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17123C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1EB4208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2530208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:33:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fJnj+nia"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="E8ZL5CJ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407427AbfFLA0A (ORCPT
+        id S2407430AbfFLAdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 20:26:00 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:34013 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405491AbfFLAZ7 (ORCPT
+        Tue, 11 Jun 2019 20:33:13 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38906 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407288AbfFLAdM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 20:25:59 -0400
-Received: by mail-vs1-f66.google.com with SMTP id q64so9159909vsd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 17:25:58 -0700 (PDT)
+        Tue, 11 Jun 2019 20:33:12 -0400
+Received: by mail-qk1-f193.google.com with SMTP id a27so8897202qkk.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 17:33:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KRAxkF68gmKecn3z+xJVKQmHHe3fhnjLkR6e2Rk4Xyw=;
-        b=fJnj+niayR1N1ZzWwcqhYntA6jPdSi35aIBMUPGQoq+fZuXbt6Wr6mmgcT8Li0DIbl
-         mZ2rnLWVOMBADToUfCnXK8dduYeGZIhdvwAbBqOL/0VDH2EXhFYIC3SscfoxzwRtMruh
-         aQxEGghx7B2GqXT7GjKG0V9vlxKyPvJG2ZRNA=
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=YskuotKZ1ju/Sd7KV3N/54AMIwBSytcUxbzE4Q/MEzc=;
+        b=E8ZL5CJ1jB86Z76Sd+8CzpTe74eYEDALXhnwIMZY6Xnd56E1GB6lrqrBUWEha2yzN8
+         guVjrOerJH76HRTsEz1N5dSuRYuKOSafgJISU7eFmzPHt3IPscVy/jhPeX1nI19N+Lyf
+         goD2mGaVJ8Ohl+fJs319CcZHfZVy5oYlx0uJtOqnCPVHx/7pDZFFJhAZD7ZAuUM9dJRr
+         YHewdD1aTwQBwkMuABmJ/pK4mFYktN30yTezfXwdeFNYrg0Ryb9hboTTGQtR+ph7proj
+         Ry19sXP4Y5N6U2C6KPwwfnsIy77aIFfQ0nR4jbk55GlxRhAaJwjIou8T3Lg5fb78Vybg
+         9Frw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KRAxkF68gmKecn3z+xJVKQmHHe3fhnjLkR6e2Rk4Xyw=;
-        b=EEOnVEIyGtG9F9Y3RrWON4LTEFxITilqmjVCIGZxUUiytDAlvOkrkhqpXHId9r3Mn2
-         6weUAWQcdh5lyFwRVMe3IROQLPu9VbOy3C0ZbXpJ2pU1r5lv/sK189xifDrA4FIhs7ow
-         yHZSxz4q+TYNHl7xOpZv9MJvgisxSi0R93MzThKJfE0/33q2U/nnGI1jh81k22aBWzzm
-         xPeGoTLi0ZBYUMKXfHmd8JU8/Ad2qZ/EO8f0MCQ96qUE6LFUUvsyeTo+DMsVtCA6mZCs
-         YCTqpH135lIlD0yeoJ1Jh3TnhoZF3YO5/6NSl/nDUbvnVFJJwmU6mR0MB/9Uhb7hQPDK
-         4Jhw==
-X-Gm-Message-State: APjAAAWqEVSJJCXb5NB58mCg2XcDpUIDojf0N2Ylt5L5z/8B75kBcCw2
-        yzm5X57PAk5cnbLueGYEx8ScLFR1pUAmm0iaD6mmzw==
-X-Google-Smtp-Source: APXvYqyBOE2/PeatQjMLag/dgZW9nIv+g21QttCDT2gu4AyyqqE25wxvF/WmWHqkySY61fNGAHCWU09UoCZNZ8g35DI=
-X-Received: by 2002:a67:ea42:: with SMTP id r2mr31201742vso.207.1560299158074;
- Tue, 11 Jun 2019 17:25:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190611040350.90064-1-dbasehore@chromium.org>
- <20190611040350.90064-4-dbasehore@chromium.org> <20190611085722.GX21222@phenom.ffwll.local>
-In-Reply-To: <20190611085722.GX21222@phenom.ffwll.local>
-From:   "dbasehore ." <dbasehore@chromium.org>
-Date:   Tue, 11 Jun 2019 17:25:47 -0700
-Message-ID: <CAGAzgsr2sh5B1xi_ztQPN0xoQsZd26DDXwWT_qqJ68XeKReJ_Q@mail.gmail.com>
-Subject: Re: [PATCH 3/5] drm/panel: Add attach/detach callbacks
-To:     Derek Basehore <dbasehore@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        CK Hu <ck.hu@mediatek.com>,
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=YskuotKZ1ju/Sd7KV3N/54AMIwBSytcUxbzE4Q/MEzc=;
+        b=AjWSnp6RO8a6SPd1e2thgNLqDguFxvZXsnMfNZIU4S8ELFM8rKaimQRDsEsBl0pUgf
+         AT0GhN9EuHILdUexVb2mH6pga7HUPVpv26my1id3Vrbp5clqxFDRP854VzEq59+EJNNS
+         lrytE51T2K18EWT0KRS/iyndExlWeElDKvEOattMOmUQlEHhGaPE1hiBJIrbFphvP1Wm
+         +qnnP1sdHyNJv6jxy8s0t58a5Uz9lAOHbeMZ/dU15nmziwDRWeZBGZay/NRanDivd1M8
+         2HIxK4JffHE6qHJM0V/fjiov/tsh96VO9bmxEBXzTgy4ucCLlrf2DozKP98dkPtir9aQ
+         i0Vw==
+X-Gm-Message-State: APjAAAUVz06akViTq+z0U9BG1o++DPclfDVu0g8W4Bes1hTx8Akm6xOn
+        Rh0HhDU/mRAnKCFNMu14x3qi6A==
+X-Google-Smtp-Source: APXvYqwwj3fguJ4Uffl3GUJ338wFJOm4Bz3nYTMAQMgiP4kzMRCE6ZQKa9KLV004WVsIo67a611dxw==
+X-Received: by 2002:a37:795:: with SMTP id 143mr63565712qkh.140.1560299591236;
+        Tue, 11 Jun 2019 17:33:11 -0700 (PDT)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id g54sm1672708qtc.61.2019.06.11.17.33.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 17:33:10 -0700 (PDT)
+Message-ID: <8dfac9c5ff144ce2a3d221ea52d972ebdbd9910f.camel@ndufresne.ca>
+Subject: Re: [PATCHv4 0/2] Document memory-to-memory video codec interfaces
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Pawel Osciak <posciak@chromium.org>
+Date:   Tue, 11 Jun 2019 20:33:08 -0400
+In-Reply-To: <41bac425-65bf-2cd7-ef70-e705f7b1717d@xs4all.nl>
+References: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
+         <e40174b9a3d813389dc9529598541e4849067387.camel@ndufresne.ca>
+         <41bac425-65bf-2cd7-ef70-e705f7b1717d@xs4all.nl>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 1:57 AM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Mon, Jun 10, 2019 at 09:03:48PM -0700, Derek Basehore wrote:
-> > This adds the attach/detach callbacks. These are for setting up
-> > internal state for the connector/panel pair that can't be done at
-> > probe (since the connector doesn't exist) and which don't need to be
-> > repeatedly done for every get/modes, prepare, or enable callback.
-> > Values such as the panel orientation, and display size can be filled
-> > in for the connector.
-> >
-> > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> > ---
-> >  drivers/gpu/drm/drm_panel.c | 14 ++++++++++++++
-> >  include/drm/drm_panel.h     |  4 ++++
-> >  2 files changed, 18 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
-> > index 3b689ce4a51a..72f67678d9d5 100644
-> > --- a/drivers/gpu/drm/drm_panel.c
-> > +++ b/drivers/gpu/drm/drm_panel.c
-> > @@ -104,12 +104,23 @@ EXPORT_SYMBOL(drm_panel_remove);
-> >   */
-> >  int drm_panel_attach(struct drm_panel *panel, struct drm_connector *connector)
-> >  {
-> > +     int ret;
-> > +
-> >       if (panel->connector)
-> >               return -EBUSY;
-> >
-> >       panel->connector = connector;
-> >       panel->drm = connector->dev;
-> >
-> > +     if (panel->funcs->attach) {
-> > +             ret = panel->funcs->attach(panel);
-> > +             if (ret < 0) {
-> > +                     panel->connector = NULL;
-> > +                     panel->drm = NULL;
-> > +                     return ret;
-> > +             }
-> > +     }
->
-> Why can't we just implement this in the drm helpers for everyone, by e.g.
-> storing a dt node in drm_panel? Feels a bit overkill to have these new
-> hooks here.
->
-> Also, my understanding is that this dt stuff is supposed to be
-> standardized, so this should work.
+Le mardi 11 juin 2019 à 10:35 +0200, Hans Verkuil a écrit :
+> On 6/10/19 5:57 PM, Nicolas Dufresne wrote:
+> > Le lundi 03 juin 2019 à 13:28 +0200, Hans Verkuil a écrit :
+> > > Since Thomasz was very busy with other things, I've taken over this
+> > > patch series. This v4 includes his draft changes and additional changes
+> > > from me.
+> > > 
+> > > This series attempts to add the documentation of what was discussed
+> > > during Media Workshops at LinuxCon Europe 2012 in Barcelona and then
+> > > later Embedded Linux Conference Europe 2014 in Düsseldorf and then
+> > > eventually written down by Pawel Osciak and tweaked a bit by Chrome OS
+> > > video team (but mostly in a cosmetic way or making the document more
+> > > precise), during the several years of Chrome OS using the APIs in
+> > > production.
+> > > 
+> > > Note that most, if not all, of the API is already implemented in
+> > > existing mainline drivers, such as s5p-mfc or mtk-vcodec. Intention of
+> > > this series is just to formalize what we already have.
+> > > 
+> > > Thanks everyone for the huge amount of useful comments to previous
+> > > versions of this series. Much of the credits should go to Pawel Osciak
+> > > too, for writing most of the original text of the initial RFC.
+> > > 
+> > > This v4 incorporates all known comments (let me know if I missed
+> > > something!) and should be complete for the decoder.
+> > > 
+> > > For the encoder there are two remaining TODOs for the API:
+> > > 
+> > > 1) Setting the frame rate so bitrate control can make sense, since
+> > >    they need to know this information.
+> > > 
+> > >    Suggested solution: require support for ENUM_FRAMEINTERVALS for the
+> > >    coded pixelformats and S_PARM(OUTPUT). Open question: some drivers
+> > >    (mediatek, hva, coda) require S_PARM(OUTPUT), some (venus) allow both
+> > >    S_PARM(CAPTURE) and S_PARM(OUTPUT). I am inclined to allow both since
+> > >    this is not a CAPTURE vs OUTPUT thing, it is global to both queues.
+> > 
+> > Is ENUM_FRAMEINTERVALS really required ? This will be a hint to the
+> > encoder, so that the encoder round to it's internal precision does not
+> > seem very important.
+> 
+> I don't like this proposal. Especially the use of S_PARM (I *hate* that ioctl).
+> I think the frame period should be a control with a min/max range, like
+> any other control.
+> 
+> FRAMEINTERVALS really refers to the rate at which frames arrive when
+> capturing, and that's not quite what is happening in an encoder.
 
-So do you want all of this information added to the drm_panel struct?
-If we do that, we don't necessarily even need the drm helper function.
-We could just copy the values over here in the drm_panel_attach
-function (and clear them in drm_panel_detach).
+Only side is that this is exactly what happens when doing live encoding
+(to site GStreamer):
 
-> -Daniel
->
-> > +
-> >       return 0;
-> >  }
-> >  EXPORT_SYMBOL(drm_panel_attach);
-> > @@ -128,6 +139,9 @@ EXPORT_SYMBOL(drm_panel_attach);
-> >   */
-> >  int drm_panel_detach(struct drm_panel *panel)
-> >  {
-> > +     if (panel->funcs->detach)
-> > +             panel->funcs->detach(panel);
-> > +
-> >       panel->connector = NULL;
-> >       panel->drm = NULL;
-> >
-> > diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-> > index 13631b2efbaa..e136e3a3c996 100644
-> > --- a/include/drm/drm_panel.h
-> > +++ b/include/drm/drm_panel.h
-> > @@ -37,6 +37,8 @@ struct display_timing;
-> >   * struct drm_panel_funcs - perform operations on a given panel
-> >   * @disable: disable panel (turn off back light, etc.)
-> >   * @unprepare: turn off panel
-> > + * @detach: detach panel->connector (clear internal state, etc.)
-> > + * @attach: attach panel->connector (update internal state, etc.)
-> >   * @prepare: turn on panel and perform set up
-> >   * @enable: enable panel (turn on back light, etc.)
-> >   * @get_modes: add modes to the connector that the panel is attached to and
-> > @@ -70,6 +72,8 @@ struct display_timing;
-> >  struct drm_panel_funcs {
-> >       int (*disable)(struct drm_panel *panel);
-> >       int (*unprepare)(struct drm_panel *panel);
-> > +     void (*detach)(struct drm_panel *panel);
-> > +     int (*attach)(struct drm_panel *panel);
-> >       int (*prepare)(struct drm_panel *panel);
-> >       int (*enable)(struct drm_panel *panel);
-> >       int (*get_modes)(struct drm_panel *panel);
-> > --
-> > 2.22.0.rc2.383.gf4fbbf30c2-goog
-> >
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+   v4l2src ! v4l2encoder ! ...
+
+The frameinterval is exactly what the V4L2 capture device reports.
+Though, a lot of encoder used for RTP transcoding takes a per frame
+duration as input, as RTP does not always expose the framerate (aka
+frame duration). Or the other way around is that the frameinterval is
+calculates and updated periodically (S_PARM do have this advantage that
+you are suppose to be able to change that while streaming, no idea if
+that works in practice). I do not like the ioctl() though. This could
+have been a control and could be called framerate to match what the
+rest of the world uses.
+
+> 
+> For now I want to concentrate on the decoder spec, and I'll come back to
+> this later.
+
+Ok.
+
+> 
+> > > 2) Interactions between OUTPUT and CAPTURE formats.
+> > > 
+> > >    The main problem is what to do if the capture sizeimage is too small
+> > >    for the OUTPUT resolution when streaming starts.
+> > > 
+> > >    Proposal: width and height of S_FMT(OUTPUT) are used to
+> > >    calculate a minimum sizeimage (app may request more). This is
+> > >    driver-specific.
+> > > 
+> > >    V4L2_FMT_FLAG_FIXED_RESOLUTION is always set for codec formats
+> > >    for the encoder (i.e. we don't support mid-stream resolution
+> > >    changes for now) and V4L2_EVENT_SOURCE_CHANGE is not
+> > >    supported. See https://patchwork.linuxtv.org/patch/56478/ for
+> > >    the patch adding this flag.
+> > > 
+> > >    Of course, if we start to support mid-stream resolution
+> > >    changes (or other changes that require a source change event),
+> > >    then this flag should be dropped by the encoder driver and
+> > >    documentation on how to handle the source change event should
+> > >    be documented in the encoder spec. I prefer to postpone this
+> > >    until we have an encoder than can actually do mid-stream
+> > >    resolution changes.
+> > 
+> > For H264, mid-stream changes would make sense for the case we'd like
+> > the statefull encoder to emit multiple PPS at start, so then the switch
+> > would simply change the PPS index. The problem seems to be how do we
+> > expose "multiple" resolution in our interface ? As there is currently
+> > no solution to this, I would not see much use for having this supported
+> > at the moment.
+> 
+> I agree. That's why I want to postpone that part.
+> 
+> > >    If sizeimage of the OUTPUT is too small for the CAPTURE
+> > >    resolution and V4L2_EVENT_SOURCE_CHANGE is not supported,
+> > >    then the second STREAMON (either CAPTURE or OUTPUT) will
+> > >    return -ENOMEM since there is not enough memory to do the
+> > >    encode.
+> > > 
+> > >    If V4L2_FMT_FLAG_FIXED_RESOLUTION is set (i.e. that should
+> > >    be the case for all current encoders), then any bitrate controls
+> > >    will be limited in range to what the current state (CAPTURE and
+> > >    OUTPUT formats and frame rate) supports.
+> 
+> Note that this flag will be inverted: V4L2_FMT_FLAG_DYN_RESOLUTION.
+> So this text is out of date in that regard.
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > > Comments regarding these two encoder proposals are welcome!
+> > > 
+> > > Regards,
+> > > 
+> > > 	Hans
+> > > 
+> > > Changes since v3:
+> > > 
+> > > - Lots of stylistic fixes and fixing typos/grammar/etc.
+> > > 
+> > > Decoder:
+> > > 
+> > > - width/height for S_FMT(OUTPUT):
+> > > 
+> > >   Expects that the output width and height is always a valid
+> > >   resolution (i.e. never 0x0), and G/S/TRY_FMT and REQBUFS will use that
+> > >   instead of returning an error. Note that this resolution is a placeholder
+> > >   until the actual resolution is parsed from the stream.
+> > > 
+> > > - Dropped step 3 (Query the minimum number of buffers required for the CAPTURE
+> > >   queue via VIDIOC_G_CTRL().) in the Capture Setup section. It seems to be
+> > >   a left-over from earlier versions. The same information is also in Step 10,
+> > >   so no need to have this in two places.
+> > > 
+> > > - Added step 5 in the Capture Setup section: set COMPOSE rectangle if needed.
+> > > 
+> > > - VIDIO_DECODER_CMD: document EBUSY return while draining the queue.
+> > > 
+> > > Encoder:
+> > > 
+> > > - width/height for S_FMT(CAPTURE): The width/height for the CAPTURE format
+> > >   are marked as read-only and are based on the encoders current state such
+> > >   as the OUTPUT format.
+> > > 
+> > > - Drop TGT_COMPOSE support in the encoder: there are currently
+> > >   no encoders that can do composing/scaling.
+> > > 
+> > > - Document corner cases in the Drain sequence
+> > > 
+> > > - Document error handling.
+> > > 
+> > > - VIDIO_ENCODER_CMD: document EBUSY return while draining the queue.
+> > > 
+> > > Changes since v2:
+> > > (https://lore.kernel.org/patchwork/cover/1002474/)
+> > > Decoder:
+> > >  - Specified that the initial source change event is signaled
+> > >    regardless of whether the client-set format matches the
+> > >    stream format.
+> > >  - Dropped V4L2_CID_MIN_BUFFERS_FOR_OUTPUT since it's meaningless
+> > >    for the bitstream input buffers of decoders.
+> > >  - Explicitly stated that VIDIOC_REQBUFS is not allowed on CAPTURE
+> > >    if the stream information is not available.
+> > >  - Described decode error handling.
+> > >  - Mentioned that timestamps can be observed after a seek to
+> > >    determine whether the CAPTURE buffers originated from before
+> > >    or after the seek.
+> > >  - Explicitly stated that after a pair of V4L2_DEC_CMD_STOP and
+> > >    V4L2_DEC_CMD_START, the decoder is not reset and preserves
+> > >    all the state.
+> > > 
+> > > Encoder:
+> > >  - Specified that width and height of CAPTURE format are ignored
+> > >    and always zero.
+> > >  - Explicitly noted the common use case for the CROP target with
+> > >    macroblock-unaligned video resolutions.
+> > >  - Added a reference to Request API.
+> > >  - Dropped V4L2_CID_MIN_BUFFERS_FOR_CAPTURE since it's meaningless
+> > >    for the bitstream output buffers of encoders.
+> > >  - Explicitly stated that after a pair of V4L2_ENC_CMD_STOP and
+> > >    V4L2_ENC_CMD_START, the encoder is not reset and preserves
+> > >    all the state.
+> > > 
+> > > General:
+> > >  - Dropped format enumeration from "Initialization", since it's already
+> > >    a part of "Querying capabilities".
+> > >  - Many spelling, grammar, stylistic, etc. changes.
+> > >  - Changed the style of note blocks.
+> > >  - Rebased onto Hans' documentation cleanup series.
+> > >    (https://patchwork.kernel.org/cover/10775407/
+> > >     https://patchwork.kernel.org/patch/10776737/)
+> > >  - Moved the interfaces under the "Video Memory-To-Memory Interface"
+> > >    section.
+> > > 
+> > > For changes since v1 see the v2:
+> > > https://lore.kernel.org/patchwork/cover/1002474/
+> > > 
+> > > For changes since RFC see the v1:
+> > > https://patchwork.kernel.org/cover/10542207/
+> > > 
+> > > Tomasz Figa (2):
+> > >   media: docs-rst: Document memory-to-memory video decoder interface
+> > >   media: docs-rst: Document memory-to-memory video encoder interface
+> > > 
+> > >  Documentation/media/uapi/v4l/dev-decoder.rst  | 1084 +++++++++++++++++
+> > >  Documentation/media/uapi/v4l/dev-encoder.rst  |  608 +++++++++
+> > >  Documentation/media/uapi/v4l/dev-mem2mem.rst  |    9 +-
+> > >  Documentation/media/uapi/v4l/pixfmt-v4l2.rst  |   10 +
+> > >  Documentation/media/uapi/v4l/v4l2.rst         |   12 +-
+> > >  .../media/uapi/v4l/vidioc-decoder-cmd.rst     |   41 +-
+> > >  .../media/uapi/v4l/vidioc-encoder-cmd.rst     |   51 +-
+> > >  7 files changed, 1779 insertions(+), 36 deletions(-)
+> > >  create mode 100644 Documentation/media/uapi/v4l/dev-decoder.rst
+> > >  create mode 100644 Documentation/media/uapi/v4l/dev-encoder.rst
+> > > 
+
