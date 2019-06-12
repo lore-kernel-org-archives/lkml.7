@@ -2,88 +2,120 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AD6C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75797C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 631B1205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497FF205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:10:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="yeN126dH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lhk5qU4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404628AbfFMRKc (ORCPT
+        id S1729246AbfFMRKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:10:32 -0400
-Received: from mail-qt1-f172.google.com ([209.85.160.172]:43842 "EHLO
-        mail-qt1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729421AbfFLWqm (ORCPT
+        Thu, 13 Jun 2019 13:10:55 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38324 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729204AbfFLWdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 18:46:42 -0400
-Received: by mail-qt1-f172.google.com with SMTP id z24so7153866qtj.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 15:46:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=AvEz80RndZML7i5e7xLWFJaU/oBcGksUZL3ZVAZz/vc=;
-        b=yeN126dH080F5WJlpPkx/gVbgWfPMDnzZs19djMIpFWkQAaC6GGGjs3s9hsd6JKraY
-         +QJ4pGRl91F1byjRjEOILr+u2loTuriMZty4iV0M0L7Q7Xav0PB3xkp+8EpcypvWWcMP
-         zzJUwEPKDtJgWrWxR/R1ZDG5tzqLYY/cPoOn6XlPU1ROe48CiMkre6f09aEIh3/jOW44
-         yPgRQnWmNglH8zGM58ZL7Fq3YKJmE48oQCimuABrRuIIyufEav+Bjt8k+p7wzQrZBEVk
-         cYzjSSpm3gM5RpipcK0Wzggy58E2yU21E4WcKWjdmDAg1R4VtJEEe6cyPxp6rxNWy4Sn
-         IDjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=AvEz80RndZML7i5e7xLWFJaU/oBcGksUZL3ZVAZz/vc=;
-        b=knyUuso6PJRyXz5HKHXOlUOHB1PgcRViq0xlQPSkt7mJsEfpcSBoMrlPlg9AAiVPAd
-         JUoh0+Wtd3j1tjwWBNAevhaIkybpfbjXcwadySHcsC9dmKV/yTys2OTHOjDzQXQfryXs
-         bZOpvmuvGpIDVrMA5l85btOkVgsTvbT2REeAZ33Awc67VShnFSRU1qjU0yCmWFb/oBlD
-         2EJQx+LgmIbBr3Ei5LZKom9oKnyBTClrwIr6Aq9s6ix9DEclgJu0ktxV/x4Z9Wo7iCtk
-         k7IZj4Sy7loxQZ0gwGeKqYkoCPHqhx5thwafodygGIdR5HlVC31LUxDqa5sVRV378avG
-         uHMg==
-X-Gm-Message-State: APjAAAUDHcJbR9XCBjdV/qD5wbqNuE7eXnbvxIhETdfgEsu9FPA0tYiA
-        7TVdvLyCHR1/3H8AFZO7DgNmcg==
-X-Google-Smtp-Source: APXvYqw2t3mcxgOlSDwDLTX5e/42JMuOR5iBZr++4VWJwoI79YpIf7fWltBgwDZgdOieGa/+ml1jQA==
-X-Received: by 2002:a0c:8927:: with SMTP id 36mr823821qvp.131.1560379601808;
-        Wed, 12 Jun 2019 15:46:41 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id 34sm691604qtq.59.2019.06.12.15.46.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 15:46:41 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 15:46:37 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Xue Chaojing <xuechaojing@huawei.com>
-Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoshaokai@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>,
-        <wulike1@huawei.com>
-Subject: Re: [PATCH net-next v2 1/2] hinic: add rss support
-Message-ID: <20190612154637.2ad4d882@cakuba.netronome.com>
-In-Reply-To: <20190611181234.4843-2-xuechaojing@huawei.com>
-References: <20190611181234.4843-1-xuechaojing@huawei.com>
-        <20190611181234.4843-2-xuechaojing@huawei.com>
-Organization: Netronome Systems, Ltd.
+        Wed, 12 Jun 2019 18:33:09 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CMTs85064050;
+        Wed, 12 Jun 2019 22:31:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=SOIVm550t2juiTj4vnRQ5BaJ/KWVoCF7DZnOrZI0vno=;
+ b=lhk5qU4z4GwfZqTKR5mbk79cDQzaoJ563ewToos4HaKC4mOW42ZuJj4rIKQuuXEL39VM
+ tp4ZtszcjEpWB2WzalUsZvkf7EoQ4QcnxIQ2Qft1s6ZYSRtjhbym4uydGIVYMvhQvAHw
+ fRHwYoG8GoVcSmHkzJ6QvWx2AS/Jpc3PwZV8EssJZG84yCzFBaQYH11ADbuo9e/H9WzV
+ gBEoPFk2imAOKNWZH8Ol5/pQ2PTjvdP/f1tgifVJKX2HZGYVJYPuqPyaHLVwju+kvqVN
+ 3IYSt5eHrO4z++6UFpnrsjBUDs0k5Ev4rGF32Mx66rhmqD9/GhvxdpAvARzyeKXqVnkG 1A== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2t04etx9bj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 22:31:48 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CMSCmx113818;
+        Wed, 12 Jun 2019 22:29:47 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2t0p9s3x41-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 22:29:47 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5CMTW3r019311;
+        Wed, 12 Jun 2019 22:29:39 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 12 Jun 2019 15:29:32 -0700
+Date:   Wed, 12 Jun 2019 18:29:34 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>, hannes@cmpxchg.org,
+        jiangshanlai@gmail.com, lizefan@huawei.com, bsd@redhat.com,
+        dan.j.williams@intel.com, dave.hansen@intel.com,
+        juri.lelli@redhat.com, mhocko@kernel.org, peterz@infradead.org,
+        steven.sistare@oracle.com, tglx@linutronix.de,
+        tom.hromatka@oracle.com, vdavydov.dev@gmail.com,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, shakeelb@google.com
+Subject: Re: [RFC v2 0/5] cgroup-aware unbound workqueues
+Message-ID: <20190612222934.y74wxy3aju6eqs4r@ca-dmjordan1.us.oracle.com>
+References: <20190605133650.28545-1-daniel.m.jordan@oracle.com>
+ <20190605135319.GK374014@devbig004.ftw2.facebook.com>
+ <20190605153229.nvxr6j7tdzffwkgj@ca-dmjordan1.us.oracle.com>
+ <20190611195549.GL3341036@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611195549.GL3341036@devbig004.ftw2.facebook.com>
+User-Agent: NeoMutt/20180323-268-5a959c
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906120157
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906120157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019 18:12:33 +0000, Xue Chaojing wrote:
-> +	for (i = 0; i < HINIC_RSS_INDIR_SIZE; i++)
-> +		indir_tbl[i] = (i / HINIC_RSS_INDIR_SIZE) * nic_dev->num_rss +
-> +				i % nic_dev->num_rss;
+On Tue, Jun 11, 2019 at 12:55:49PM -0700, Tejun Heo wrote:
+> > > CPU doesn't have a backcharging mechanism yet and depending on the use
+> > > case, we *might* need to put kthreads in different cgroups.  However,
+> > > such use cases might not be that abundant and there may be gotaches
+> > > which require them to be force-executed and back-charged (e.g. fs
+> > > compression from global reclaim).
+> > 
+> > The CPU-intensiveness of these works is one of the reasons for actually putting
+> > the workers through the migration path.  I don't know of a way to get the
+> > workers to respect the cpu controller (and even cpuset for that matter) without
+> > doing that.
+> 
+> So, I still think it'd likely be better to go back-charging route than
+> actually putting kworkers in non-root cgroups.  That's gonna be way
+> cheaper, simpler and makes avoiding inadvertent priority inversions
+> trivial.
 
-This looks suspicious:
+Ok, I'll experiment with backcharging in the cpu controller.  Initial plan is
+to smooth out resource usage by backcharging after each chunk of work that each
+helper thread does rather than do one giant backcharge after the multithreaded
+job is over.  May turn out better performance-wise to do it less often than
+this.
 
-	i is in range [0, HINIC_RSS_INDIR_SIZE)
-	so i / HINIC_RSS_INDIR_SIZE is always 0
+I'll also experiment with getting workqueue workers to respect cpuset without
+migrating.  Seems to make sense to use the intersection of an unbound worker's
+cpumask and the cpuset's cpumask, and make some compromises if the result is
+empty.
 
-For the rest please use ethtool_rxfh_indir_default()
+Daniel
