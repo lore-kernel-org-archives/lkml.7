@@ -2,40 +2,44 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722F9C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5CEC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58B9F20896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCA420896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbfFLEUW (ORCPT
+        id S1729528AbfFLEVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 00:20:22 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18136 "EHLO huawei.com"
+        Wed, 12 Jun 2019 00:21:49 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60732 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725280AbfFLEUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 00:20:22 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E6099C9A9915EF60B725;
-        Wed, 12 Jun 2019 12:20:18 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+        id S1725280AbfFLEVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 00:21:49 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1A88FE90DD79A3EAE088;
+        Wed, 12 Jun 2019 12:21:45 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
  (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 12 Jun 2019
- 12:20:12 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
+ 12:21:44 +0800
+Subject: Re: [PATCH] dmaengine: dw-edma: Fix build error without
+ CONFIG_PCI_MSI
 To:     <gustavo.pimentel@synopsys.com>, <vkoul@kernel.org>,
         <dan.j.williams@intel.com>
-CC:     <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] dmaengine: dw-edma: Fix build error without CONFIG_PCI_MSI
-Date:   Wed, 12 Jun 2019 12:19:54 +0800
-Message-ID: <20190612041954.256-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+References: <20190612041801.18300-1-yuehaibing@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <48bc5e67-c501-eb97-325a-f2693736e682@huawei.com>
+Date:   Wed, 12 Jun 2019 12:21:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190612041801.18300-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.133.213.239]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,34 +47,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_PCI_MSI is not set, building with CONFIG_DW_EDMA
-fails:
+Pls ignore this, will fix patch title and resend
 
-drivers/dma/dw-edma/dw-edma-core.c: In function dw_edma_irq_request:
-drivers/dma/dw-edma/dw-edma-core.c:784:21: error: implicit declaration of function pci_irq_vector; did you mean rcu_irq_enter? [-Werror=implicit-function-declaration]
-   err = request_irq(pci_irq_vector(to_pci_dev(dev), 0),
-                     ^~~~~~~~~~~~~~
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/dma/dw-edma/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/dma/dw-edma/Kconfig b/drivers/dma/dw-edma/Kconfig
-index c0838ce..7ff17b2 100644
---- a/drivers/dma/dw-edma/Kconfig
-+++ b/drivers/dma/dw-edma/Kconfig
-@@ -2,6 +2,7 @@
- 
- config DW_EDMA
- 	tristate "Synopsys DesignWare eDMA controller driver"
-+	depends on PCI && PCI_MSI
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
--- 
-2.7.4
-
+On 2019/6/12 12:18, YueHaibing wrote:
+> If CONFIG_PCI_MSI is not set, building with CONFIG_DW_EDMA
+> fails:
+> 
+> drivers/dma/dw-edma/dw-edma-core.c: In function dw_edma_irq_request:
+> drivers/dma/dw-edma/dw-edma-core.c:784:21: error: implicit declaration of function pci_irq_vector; did you mean rcu_irq_enter? [-Werror=implicit-function-declaration]
+>    err = request_irq(pci_irq_vector(to_pci_dev(dev), 0),
+>                      ^~~~~~~~~~~~~~
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/dma/dw-edma/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/dma/dw-edma/Kconfig b/drivers/dma/dw-edma/Kconfig
+> index c0838ce..7ff17b2 100644
+> --- a/drivers/dma/dw-edma/Kconfig
+> +++ b/drivers/dma/dw-edma/Kconfig
+> @@ -2,6 +2,7 @@
+>  
+>  config DW_EDMA
+>  	tristate "Synopsys DesignWare eDMA controller driver"
+> +	depends on PCI && PCI_MSI
+>  	select DMA_ENGINE
+>  	select DMA_VIRTUAL_CHANNELS
+>  	help
+> 
 
