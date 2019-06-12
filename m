@@ -2,175 +2,88 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD34BC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7313C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 819C821743
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="nIbNa+YY"
+	by mail.kernel.org (Postfix) with ESMTP id B7D1921743
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393614AbfFMRM7 (ORCPT
+        id S2404748AbfFMRN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:12:59 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:57384 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729006AbfFLWGk (ORCPT
+        Thu, 13 Jun 2019 13:13:26 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34881 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728981AbfFLWB0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 18:06:40 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CM3E9o000799
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 15:06:38 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=qKr0k6k4xZHZmykxLb47XrFO0p8RI9jBEYkCbTeGgSI=;
- b=nIbNa+YYFSAy1ydAmHbF7duS/BDB/NT5auxXJafV3HyQhLjCJy1OblKjxSDOHQDNXn91
- aD4nuqRR0JromRfkZJ3rD4uwnCO5EEuqBwiRvhz6C1x/mE/cSlXl0Yq4wL4t33pHfsgR
- gUotB+3tufuOhPDnR0SnXAV0IjoClztmHhM= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2t34g8s94u-12
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 15:06:38 -0700
-Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
- prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Wed, 12 Jun 2019 15:06:24 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Wed, 12 Jun 2019 15:06:18 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id CFA9262E2CC4; Wed, 12 Jun 2019 15:03:35 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-CC:     <namit@vmware.com>, <peterz@infradead.org>, <oleg@redhat.com>,
-        <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
-        <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v3 2/5] uprobe: use original page when all uprobes are removed
-Date:   Wed, 12 Jun 2019 15:03:16 -0700
-Message-ID: <20190612220320.2223898-3-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190612220320.2223898-1-songliubraving@fb.com>
-References: <20190612220320.2223898-1-songliubraving@fb.com>
-X-FB-Internal: Safe
+        Wed, 12 Jun 2019 18:01:26 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m3so18557612wrv.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 15:01:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rtjjxJbZCnNJbQ4rRmAh0Ahovsd/DILFvQwc++jpSoQ=;
+        b=a2ORLIoZf9N5iqjC2ggsM8Hh1mhSo5nxnJ/DZap0cc/9kBYXO6LDjFn1n+SoxVjOsC
+         PV11oWZ2YNZtPTveKxaJ8gh89ChWF049yutZ4Jxxo8Gib1JOvxQn3ohhDOSXgJLGiScX
+         ZGRnyphL4n2zKqEc9M3p9+r2MsY0ZCujvKR1EgGkj/zYj6jL44QF9aMKglsZAnaoQoky
+         sZqToFv7FnnmRJ2kh+lIf9Oy2TLZYeRuaN8MMw3gWfRWlDa1Fig3fB6LyzpC9FauHrA2
+         s26CsgA4GBiUteX8gczWeWafn+7Bg53GrB0jUa0xJ+r/ok9mPiIJF15s368jgexnobZp
+         21oA==
+X-Gm-Message-State: APjAAAV8a3Kd8PgVySRnifK3fj72RRZBqAhUZELwJQ+h8GNlX5FFoz9i
+        aJHRCq92RfEjJyIDvVlVi6RRWA==
+X-Google-Smtp-Source: APXvYqwzum8xO+Bu+aMx87Ojw8bGvggqXnzAbO1TIQlOxrSKi01Hd/i8+OaLN8a0LKXtOAy3bBjcow==
+X-Received: by 2002:adf:d081:: with SMTP id y1mr11088437wrh.34.1560376884297;
+        Wed, 12 Jun 2019 15:01:24 -0700 (PDT)
+Received: from raver.teknoraver.net (net-93-144-152-91.cust.dsl.teletu.it. [93.144.152.91])
+        by smtp.gmail.com with ESMTPSA id i188sm929448wma.27.2019.06.12.15.01.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 15:01:23 -0700 (PDT)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-next@vger.kernel.org
+Cc:     Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Aaron Tomlin <atomlin@redhat.com>
+Subject: [PATCH linux-next] sysctl: fix build error
+Date:   Thu, 13 Jun 2019 00:01:20 +0200
+Message-Id: <20190612220120.31312-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=977 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906120153
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, uprobe swaps the target page with a anonymous page in both
-install_breakpoint() and remove_breakpoint(). When all uprobes on a page
-are removed, the given mm is still using an anonymous page (not the
-original page).
+Commit cefdca0a86be ("userfaultfd/sysctl: add vm.unprivileged_userfaultfd")
+reintroduces a reference to 'zero' and 'one'.
+Use the SYSCTL_{ZERO,ONE} symbols instead.
 
-This patch allows uprobe to use original page when possible (all uprobes
-on the page are already removed).
-
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
 ---
- kernel/events/uprobes.c | 45 +++++++++++++++++++++++++++++++++--------
- 1 file changed, 37 insertions(+), 8 deletions(-)
+ kernel/sysctl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 78f61bfc6b79..f7c61a1ef720 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -160,16 +160,19 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
- 	int err;
- 	struct mmu_notifier_range range;
- 	struct mem_cgroup *memcg;
-+	bool orig = new_page->mapping != NULL;  /* new_page == orig_page */
- 
- 	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, mm, addr,
- 				addr + PAGE_SIZE);
- 
- 	VM_BUG_ON_PAGE(PageTransHuge(old_page), old_page);
- 
--	err = mem_cgroup_try_charge(new_page, vma->vm_mm, GFP_KERNEL, &memcg,
--			false);
--	if (err)
--		return err;
-+	if (!orig) {
-+		err = mem_cgroup_try_charge(new_page, vma->vm_mm, GFP_KERNEL,
-+					    &memcg, false);
-+		if (err)
-+			return err;
-+	}
- 
- 	/* For try_to_free_swap() and munlock_vma_page() below */
- 	lock_page(old_page);
-@@ -177,15 +180,24 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
- 	mmu_notifier_invalidate_range_start(&range);
- 	err = -EAGAIN;
- 	if (!page_vma_mapped_walk(&pvmw)) {
--		mem_cgroup_cancel_charge(new_page, memcg, false);
-+		if (!orig)
-+			mem_cgroup_cancel_charge(new_page, memcg, false);
- 		goto unlock;
- 	}
- 	VM_BUG_ON_PAGE(addr != pvmw.address, old_page);
- 
- 	get_page(new_page);
--	page_add_new_anon_rmap(new_page, vma, addr, false);
--	mem_cgroup_commit_charge(new_page, memcg, false, false);
--	lru_cache_add_active_or_unevictable(new_page, vma);
-+	if (orig) {
-+		lock_page(new_page);  /* for page_add_file_rmap() */
-+		page_add_file_rmap(new_page, false);
-+		unlock_page(new_page);
-+		inc_mm_counter(mm, mm_counter_file(new_page));
-+		dec_mm_counter(mm, MM_ANONPAGES);
-+	} else {
-+		page_add_new_anon_rmap(new_page, vma, addr, false);
-+		mem_cgroup_commit_charge(new_page, memcg, false, false);
-+		lru_cache_add_active_or_unevictable(new_page, vma);
-+	}
- 
- 	if (!PageAnon(old_page)) {
- 		dec_mm_counter(mm, mm_counter_file(old_page));
-@@ -501,6 +513,23 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
- 	copy_highpage(new_page, old_page);
- 	copy_to_page(new_page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
- 
-+	if (!is_register) {
-+		struct page *orig_page;
-+		pgoff_t index;
-+
-+		index = vaddr_to_offset(vma, vaddr & PAGE_MASK) >> PAGE_SHIFT;
-+		orig_page = find_get_page(vma->vm_file->f_inode->i_mapping,
-+					  index);
-+
-+		if (orig_page) {
-+			if (pages_identical(new_page, orig_page)) {
-+				put_page(new_page);
-+				new_page = orig_page;
-+			} else
-+				put_page(orig_page);
-+		}
-+	}
-+
- 	ret = __replace_page(vma, vaddr, old_page, new_page);
- 	put_page(new_page);
- put_old:
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index c77174336d16..4dce89d74a40 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1735,8 +1735,8 @@ static struct ctl_table vm_table[] = {
+ 		.maxlen		= sizeof(sysctl_unprivileged_userfaultfd),
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= &zero,
+-		.extra2		= &one,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
+ 	},
+ #endif
+ 	{ }
 -- 
-2.17.1
+2.21.0
 
