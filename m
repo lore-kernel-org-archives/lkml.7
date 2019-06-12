@@ -2,99 +2,87 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A94C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2798DC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 391C6208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 019AB2080A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:01:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="k8v11BX5"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HTu1YrNv";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PITdNvAl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732323AbfFLLAr (ORCPT
+        id S2438138AbfFLLBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:00:47 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55604 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727992AbfFLLAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:00:47 -0400
-Received: from zn.tnic (p200300EC2F0A6800D18ACEC6DD65F264.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6800:d18a:cec6:dd65:f264])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 12 Jun 2019 07:01:07 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:37988 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727992AbfFLLBH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 07:01:07 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 26CCC60769; Wed, 12 Jun 2019 11:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560337266;
+        bh=lzpHdLUEUqtwXqGtqgm9oTsDgX5Kg8aW/R4ibVuLnco=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HTu1YrNvmB4O7ZGF7koUANRNxNSS6KSWNx7c+84tYaet02uzPK0DnWGZZXJO6ZFEN
+         Nr0VNRdhkCCHzsPDZElgAA5ZBN9Zznu29qmA7dY2bTuNwa+pM1vGSGRutuRdsS1guJ
+         rgWlrohVO1RNLGpZngtZ1+0h8j3/wU70lwJamQfM=
+Received: from blr-ubuntu-288.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1FE0B1EC09C0;
-        Wed, 12 Jun 2019 13:00:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560337245;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=HOMK+9JvCIpMQ3+nyUvjKfhBVhvirtCjErehwrT4UyU=;
-        b=k8v11BX5NOmU7kAzEv7EF+RwnANERInaAO4pBImSmW8ZH30tz0tPIlOMF/V2qcf1d206Ho
-        FiTPJGZjo0cfVOcgOQkrAh8BgtBHFIDIJTwXWA+jF78Nyvk+xds4kwQklnkexcjtw9q2nB
-        j0XAmObOKvCgPABYwk14zIXNjbc0Iqk=
-Date:   Wed, 12 Jun 2019 13:00:39 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        James Morse <james.morse@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Message-ID: <20190612110039.GH32652@zn.tnic>
-References: <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
- <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
- <20190608090556.GA32464@zn.tnic>
- <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
- <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
- <20190611115651.GD31772@zn.tnic>
- <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
- <20190612034813.GA32652@zn.tnic>
- <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
- <20190612074242.53a4cf56@coco.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190612074242.53a4cf56@coco.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        (Authenticated sender: nishakumari@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 982ED602F3;
+        Wed, 12 Jun 2019 11:01:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560337265;
+        bh=lzpHdLUEUqtwXqGtqgm9oTsDgX5Kg8aW/R4ibVuLnco=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PITdNvAl3B0HTbps14aPOcbv5Y/YN9ZA2yPFfyICoNRpzCN0JqEWphObWdeJRXIvO
+         eDNq8SyR9t4yTg9Ckjxnx+4fqd9bPoVu3Op7OROqNUvH3m87w2e0JEC1Mx+iFfl3u6
+         1dOnwtiVHMIWqwiIqDcsDN8uq9W5iHN/ZKsaW2Fo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 982ED602F3
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=nishakumari@codeaurora.org
+From:   Nisha Kumari <nishakumari@codeaurora.org>
+To:     bjorn.andersson@linaro.org, broonie@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org
+Cc:     lgirdwood@gmail.com, mark.rutland@arm.com, david.brown@linaro.org,
+        linux-kernel@vger.kernel.org, kgunda@codeaurora.org,
+        rnayak@codeaurora.org, Nisha Kumari <nishakumari@codeaurora.org>
+Subject: [PATCH 0/4] Add labibb regulator support for LCD display mode
+Date:   Wed, 12 Jun 2019 16:30:48 +0530
+Message-Id: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 07:42:42AM -0300, Mauro Carvalho Chehab wrote:
-> That's said, from the admin PoV, it makes sense to have a single
-> daemon that collect errors from all error sources and take the
-> needed actions.
+This patch series adds the labibb regulator for supporting LCD display mode
+on SDM845.
 
-Doing recovery actions in userspace is too flaky. Daemon can get killed
-at any point in time and there are error types where you want to do
-recovery *before* you return to userspace.
+Nisha Kumari (4):
+  dt-bindings: regulator: Add labibb regulator
+  arm64: dts: qcom: pmi8998: Add nodes for LAB and IBB regulators
+  regulator: Add labibb driver
+  regulator: adding interrupt handling in labibb regulator
 
-Yes, we do have different error reporting facilities but I still think
-that concentrating all the error information needed in order to do
-proper recovery action is the better approach here. And make that part
-of the kernel so that it is robust. Userspace can still configure it and
-so on.
+ .../bindings/regulator/qcom-labibb-regulator.txt   |  57 ++
+ arch/arm64/boot/dts/qcom/pmi8998.dtsi              |  22 +
+ drivers/regulator/Kconfig                          |  10 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/qcom-labibb-regulator.c          | 599 +++++++++++++++++++++
+ 5 files changed, 689 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
+ create mode 100644 drivers/regulator/qcom-labibb-regulator.c
 
 -- 
-Regards/Gruss,
-    Boris.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
