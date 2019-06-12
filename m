@@ -2,79 +2,85 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F30C46477
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761C8C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F308120874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB1B208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:53:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437735AbfFLJwl (ORCPT
+        id S2437748AbfFLJxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:52:41 -0400
-Received: from mga14.intel.com ([192.55.52.115]:48959 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437415AbfFLJwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:52:41 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 02:52:40 -0700
-X-ExtLoop1: 1
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga005.jf.intel.com with ESMTP; 12 Jun 2019 02:52:35 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hazvl-0007ql-Rx; Wed, 12 Jun 2019 12:52:33 +0300
-Date:   Wed, 12 Jun 2019 12:52:33 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, bp@suse.de,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [Patch v2] x86/cpu: Add Ice Lake NNPI to Intel family
-Message-ID: <20190612095233.GE9224@smile.fi.intel.com>
-References: <20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com>
+        Wed, 12 Jun 2019 05:53:43 -0400
+Received: from smtp.nue.novell.com ([195.135.221.5]:43724 "EHLO
+        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437415AbfFLJxn (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
+        Wed, 12 Jun 2019 05:53:43 -0400
+Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
+        by smtp.nue.novell.com with ESMTP (TLS encrypted); Wed, 12 Jun 2019 11:53:41 +0200
+Received: from suselix (nwb-a10-snat.microfocus.com [10.120.13.202])
+        by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted); Wed, 12 Jun 2019 07:50:13 +0100
+Date:   Wed, 12 Jun 2019 08:50:09 +0200
+From:   Andreas Herrmann <aherrmann@suse.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH] block/switching-sched.txt: Update to blk-mq schedulers
+Message-ID: <20190612065009.GA11361@suselix>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 06:54:19AM +0530, Rajneesh Bhardwaj wrote:
-> Add the CPUID model number of Ice Lake Neural Network Processor for Deep
-> Learning Inference (ICL-NNPI) to the Intel family list. Ice Lake NNPI uses
-> model number 0x9D and this will be documented in a future version of Intel
-> Software Development Manual.
 
->  #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
-> +#define INTEL_FAM6_ICELAKE_NNPI		0x9D
+Remove references to CFQ and legacy block layer which are gone.
+Update example with what's available under blk-mq.
 
-What "I" stands for?
+Signed-off-by: Andreas Herrmann <aherrmann@suse.com>
+---
+ Documentation/block/switching-sched.txt | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-For me sounds like it's redundant here or something like NNP_DLI would be
-better (because somewhere we have _NP as for Network Processor).
-
+diff --git a/Documentation/block/switching-sched.txt b/Documentation/block/switching-sched.txt
+index 3b2612e342f1..7977f6fb8b20 100644
+--- a/Documentation/block/switching-sched.txt
++++ b/Documentation/block/switching-sched.txt
+@@ -13,11 +13,9 @@ you can do so by typing:
+ 
+ # mount none /sys -t sysfs
+ 
+-As of the Linux 2.6.10 kernel, it is now possible to change the
+-IO scheduler for a given block device on the fly (thus making it possible,
+-for instance, to set the CFQ scheduler for the system default, but
+-set a specific device to use the deadline or noop schedulers - which
+-can improve that device's throughput).
++It is possible to change the IO scheduler for a given block device on
++the fly to select one of mq-deadline, none, bfq, or kyber schedulers -
++which can improve that device's throughput.
+ 
+ To set a specific scheduler, simply do this:
+ 
+@@ -30,8 +28,8 @@ The list of defined schedulers can be found by simply doing
+ a "cat /sys/block/DEV/queue/scheduler" - the list of valid names
+ will be displayed, with the currently selected scheduler in brackets:
+ 
+-# cat /sys/block/hda/queue/scheduler
+-noop deadline [cfq]
+-# echo deadline > /sys/block/hda/queue/scheduler
+-# cat /sys/block/hda/queue/scheduler
+-noop [deadline] cfq
++# cat /sys/block/sda/queue/scheduler
++[mq-deadline] kyber bfq none
++# echo none >/sys/block/sda/queue/scheduler
++# cat /sys/block/sda/queue/scheduler
++[none] mq-deadline kyber bfq
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+2.13.7
