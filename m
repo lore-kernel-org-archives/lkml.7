@@ -2,85 +2,108 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B61BBC31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2248FC31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8282054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E93822080A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:57:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iB1LNB5E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437103AbfFLBzy (ORCPT
+        id S2406421AbfFLB5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 21:55:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48242 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406027AbfFLBzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 21:55:53 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 311FA3082B64;
-        Wed, 12 Jun 2019 01:55:53 +0000 (UTC)
-Received: from localhost (ovpn-12-46.pek2.redhat.com [10.72.12.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3EA5F1001B0A;
-        Wed, 12 Jun 2019 01:55:51 +0000 (UTC)
-Date:   Wed, 12 Jun 2019 09:55:49 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     lijiang <lijiang@redhat.com>, linux-kernel@vger.kernel.org,
-        kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        akpm@linux-foundation.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, x86@kernel.org,
-        hpa@zytor.com, dyoung@redhat.com, Thomas.Lendacky@amd.com
-Subject: Re: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel
- e820 table
-Message-ID: <20190612015549.GI26148@MiWiFi-R3L-srv>
-References: <20190423013007.17838-1-lijiang@redhat.com>
- <12847a03-3226-0b29-97b5-04d404410147@redhat.com>
- <20190607174211.GN20269@zn.tnic>
- <20190608035451.GB26148@MiWiFi-R3L-srv>
- <20190608091030.GB32464@zn.tnic>
- <20190608100139.GC26148@MiWiFi-R3L-srv>
- <20190608100623.GA9138@zn.tnic>
- <20190608102659.GA9130@MiWiFi-R3L-srv>
- <20190610113747.GD5488@zn.tnic>
+        Tue, 11 Jun 2019 21:57:37 -0400
+Received: from mail-oi1-f173.google.com ([209.85.167.173]:36383 "EHLO
+        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404557AbfFLB5g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 21:57:36 -0400
+Received: by mail-oi1-f173.google.com with SMTP id w7so10504633oic.3;
+        Tue, 11 Jun 2019 18:57:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6Z9WC8IIuQYglwsQB0e3uL6ecR5E4muSXX477jTQGh8=;
+        b=iB1LNB5EGSLpo7WgSDBrPmeEMZ93Mel9h5ylZ9HqRqs1gJhLWN86/njzn4XJevfmCu
+         db3MlOx94hwD3ngUE2V7wPLLQ8HFc5X/4aaCDN2LInVyw/NM0aIpWl22dzBLXUiOfS1g
+         sVBPhMzZAMjbsfr+JpAirucC7TFI0YeoWXBetnhPW2Iba/wwmBQNQFrKomZOQz9KMmUA
+         RKAhyYOHYT8QhUI5dl/veYPT/Bz+7gJcQA3o40NzSL+6wPjw+zGQf2xoYcrnbBo0NVsb
+         lWLvihSbKerJyuzT8gFbYbezGSA3mRft0Jf/NdHGVzmRuEQ3sp5xFAAvgi9i+i2vZFVM
+         u+mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6Z9WC8IIuQYglwsQB0e3uL6ecR5E4muSXX477jTQGh8=;
+        b=c1d0vxRzda9q+4IDfvTdgivClg4hYulQhCU0nwhfU/QRvsQ4qxtCG854L5Z26IHzhW
+         N1FUEdxZf43Yg4K5jAgOhb1bYtO/8HLGrO2E9mvENuMP/NWgQ7g5Gu/VSq7qo1NdIEwp
+         EJ+sCbss+u3/ZpS+lmwyxmhbourpf5gkBksqVs1I3OkiT7D1tugSQjDu37QcxJNRS5/L
+         eBY2RGP6bVhvk6PkqILWGZe7NIasz9KzUOp+M9CrzxNpHR9NeE8f8B+xuRZkmMPQH5GL
+         p4Z4uyHHWOR/HSd6vL4dLHxBmHBQenWzCu6YRemgOo87amkKiGT9RI2gu33iNUe6Z6SV
+         oK5g==
+X-Gm-Message-State: APjAAAUM+bZoWWT+sm71K+/S8LkfLB1FYkbPiS4mKk6/cx/r2k1dKoRo
+        rXCPwWPv9XAePkfOIpX4QYKDR7Jf
+X-Google-Smtp-Source: APXvYqziy+hwOJ/rBxaZYDd+TNhUBY53RQKM+KiMF+7YIA5VTYBc9yXxbDk19EaodEyzL0xN3GIxfA==
+X-Received: by 2002:aca:6208:: with SMTP id w8mr17923394oib.128.1560304656060;
+        Tue, 11 Jun 2019 18:57:36 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id 41sm5775218otm.6.2019.06.11.18.57.35
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 18:57:35 -0700 (PDT)
+Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
+ <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
+ <20190607172902.GA8183@lst.de>
+ <30000803-3772-3edf-f4a9-55122d504f3f@lwfinger.net>
+ <20190610081825.GA16534@lst.de>
+ <153c13f5-a829-1eab-a3c5-fecfb84127ff@lwfinger.net>
+ <20190611060521.GA19512@lst.de>
+ <5aaa600b-5b59-1f68-454f-20403c318f1a@lwfinger.net>
+ <20190611224623.GC26504@darkstar.musicnaut.iki.fi>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <74c8af35-6006-5ca8-0fe4-b5938b1139ff@lwfinger.net>
+Date:   Tue, 11 Jun 2019 20:57:34 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190610113747.GD5488@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 12 Jun 2019 01:55:53 +0000 (UTC)
+In-Reply-To: <20190611224623.GC26504@darkstar.musicnaut.iki.fi>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/10/19 at 01:37pm, Borislav Petkov wrote:
-> On Sat, Jun 08, 2019 at 06:26:59PM +0800, Baoquan He wrote:
-> > OK, I see. Then it should be the issue we have met and talked about with
-> > Tom.
-> > https://lkml.kernel.org/r/20190604134952.GC26891@MiWiFi-R3L-srv
-> > 
-> > You can apply Tom's patch as below. I tested it, it can make kexec
-> > kernel succeed to boot, but failed for kdump kernel booting. The kdump
-> > kernel can boot till the end of kernel initialization, then hang with a
-> > call trace. I have pasted the log in the above thread. Haven't got the
-> > reason.
-> > http://lkml.kernel.org/r/508c2853-dc4f-70a6-6fa8-97c950dc31c6@amd.com
+On 6/11/19 5:46 PM, Aaro Koskinen wrote:
+> Hi,
 > 
-> I can confirm the same observation.
+> On Tue, Jun 11, 2019 at 05:20:12PM -0500, Larry Finger wrote:
+>> It is obvious that the case of a mask smaller than min_mask should be
+>> handled by the IOMMU. In my system, CONFIG_IOMMU_SUPPORT is selected. All
+>> other CONFIG variables containing IOMMU are not selected. When
+>> dma_direct_supported() fails, should the system not try for an IOMMU
+>> solution? Is the driver asking for the wrong type of memory? It is doing a
+>> dma_and_set_mask_coherent() call.
+> 
+> I don't think we have IOMMU on G4. On G5 it should work (I remember fixing
+> b43 issue on G5, see 4c374af5fdee, unfortunately all my G5 Macs with b43
+> are dead and waiting for re-capping).
 
-With further investigation, the failure after applying Tom's patch is
-caused by OOM. When increase crashkernel reservation to 512M, kdump
-kernel can boot successfully. I noticed your crashkernel reservation is
-256M, that will fail and stuck there very possibly.
+You are right. My configuration has CONFIG_IOMMU_SUPPORT=y, but there is no 
+mention of an IOMMU in the log.
 
-So Tom's patch can fix the issue. We need further check why much more
-crashkernel memory is needed on those AMD boxes with sme support..
+Larry
 
-Thanks
-Baoquan
