@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FABC31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251EEC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB1720874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA54020874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560342387;
-	bh=Q4DR0ZfiZ07BcC65F0iVrnB89qNKvjsdzyOF+UzlnSQ=;
+	s=default; t=1560342392;
+	bh=pwRn6AXU7SWO1tJhlUuy4tZltJqtkI4L1pFotOCpAEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hU/E4miK22W9MQ0AcQMu4iU3sLf3KhE7ajKycgvTmZ8N0Nz003lzT25PPfLgh7sNN
-	 dERisDtboeDY0IEy8CwWwj5NxOutYlYWI2wbEvzkYfceQlKGK7ICFcvBgfOs3xpvUc
-	 fGOlWotA8V4N1fZBXfF69oS5Wyqq9eo0SaGRK6V8=
+	b=tazH9Eul6GrU7NbaMSSaiTTmOuz36xqf9wri4wi+stwW2r42ONs5tvbGDjIz0ud9P
+	 RLtITI+5mdmJ/AZ4v3V0Dh4YM+YkjBG2n3JHjfe3e0asd7DOgIShMIYNE1nWb/nXtZ
+	 Y+gwbdgkJkF62aTLoFjvD0KngE7abYWo70QMPzEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732357AbfFLM00 (ORCPT
+        id S1732371AbfFLM0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:26:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59756 "EHLO mail.kernel.org"
+        Wed, 12 Jun 2019 08:26:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438710AbfFLM0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:26:22 -0400
+        id S1726941AbfFLM0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:26:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C30CE20874;
-        Wed, 12 Jun 2019 12:26:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00D69208C4;
+        Wed, 12 Jun 2019 12:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560342381;
-        bh=Q4DR0ZfiZ07BcC65F0iVrnB89qNKvjsdzyOF+UzlnSQ=;
+        s=default; t=1560342384;
+        bh=pwRn6AXU7SWO1tJhlUuy4tZltJqtkI4L1pFotOCpAEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aPC3w47Vx4ftoEzC0SsDE+HJwteGfxPGeFUoMw9bN6/EEl0kVTPxjAemiNyEmzRgG
-         aJHK/b3tZIB/D2HWMXXdc9igxJLIPPdKuaW4ZOMyoThY2zXQED00PVpLu8FQAbD6U6
-         J2DdHQWrJ2eiiigK2Cuk6+JI48CDDkiEaPlnG7WY=
+        b=1+/Xsan74f4XdgCu9VaU2vkspMbyBS8QvScp8jEVLqbpTrRML8fX+438U2RZ8BwdX
+         sfckT6icVtnTgxnNGd4gf70cQmwQk64okzM1M6Q5IrWO56V0wCZ47SifU7dJ+0ucAA
+         sX3IAgUh1x3CcIljR90kH0zUlAqcdikJl9zyx+aE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     dan.j.williams@intel.com, vkoul@kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sinan Kaya <okaya@kernel.org>, Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] dma: qcom: hidma: no need to check return value of debugfs_create functions
-Date:   Wed, 12 Jun 2019 14:25:57 +0200
-Message-Id: <20190612122557.24158-6-gregkh@linuxfoundation.org>
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/6] dma: bcm-sba-raid: no need to check return value of debugfs_create functions
+Date:   Wed, 12 Jun 2019 14:25:53 +0200
+Message-Id: <20190612122557.24158-2-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190612122557.24158-1-gregkh@linuxfoundation.org>
 References: <20190612122557.24158-1-gregkh@linuxfoundation.org>
@@ -65,115 +61,50 @@ return value.  The function can work or not, but the code logic should
 never do something different based on this.
 
 Also, because there is no need to save the file dentry, remove the
-variables that were saving them as they were never even being used once
-set.
+variable that was saving it as it was never even being used once set.
 
-Cc: Sinan Kaya <okaya@kernel.org>
-Cc: Andy Gross <agross@kernel.org>
-Cc: David Brown <david.brown@linaro.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: Vinod Koul <vkoul@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-arm-msm@vger.kernel.org
+Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: dmaengine@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/dma/qcom/hidma.h     |  5 +----
- drivers/dma/qcom/hidma_dbg.c | 37 +++++++-----------------------------
- 2 files changed, 8 insertions(+), 34 deletions(-)
+ drivers/dma/bcm-sba-raid.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/dma/qcom/hidma.h b/drivers/dma/qcom/hidma.h
-index 5f9966e82c0b..36357d02333a 100644
---- a/drivers/dma/qcom/hidma.h
-+++ b/drivers/dma/qcom/hidma.h
-@@ -101,8 +101,6 @@ struct hidma_chan {
- 	 * It is used by the DMA complete notification to
- 	 * locate the descriptor that initiated the transfer.
- 	 */
--	struct dentry			*debugfs;
--	struct dentry			*stats;
- 	struct hidma_dev		*dmadev;
- 	struct hidma_desc		*running;
+diff --git a/drivers/dma/bcm-sba-raid.c b/drivers/dma/bcm-sba-raid.c
+index fa81d0177765..275e90fa829d 100644
+--- a/drivers/dma/bcm-sba-raid.c
++++ b/drivers/dma/bcm-sba-raid.c
+@@ -164,7 +164,6 @@ struct sba_device {
+ 	struct list_head reqs_free_list;
+ 	/* DebugFS directory entries */
+ 	struct dentry *root;
+-	struct dentry *stats;
+ };
  
-@@ -134,7 +132,6 @@ struct hidma_dev {
- 	struct dma_device		ddev;
+ /* ====== Command helper routines ===== */
+@@ -1716,17 +1715,11 @@ static int sba_probe(struct platform_device *pdev)
  
- 	struct dentry			*debugfs;
--	struct dentry			*stats;
- 
- 	/* sysfs entry for the channel id */
- 	struct device_attribute		*chid_attrs;
-@@ -166,6 +163,6 @@ irqreturn_t hidma_ll_inthandler(int irq, void *arg);
- irqreturn_t hidma_ll_inthandler_msi(int irq, void *arg, int cause);
- void hidma_cleanup_pending_tre(struct hidma_lldev *llhndl, u8 err_info,
- 				u8 err_code);
--int hidma_debug_init(struct hidma_dev *dmadev);
-+void hidma_debug_init(struct hidma_dev *dmadev);
- void hidma_debug_uninit(struct hidma_dev *dmadev);
- #endif
-diff --git a/drivers/dma/qcom/hidma_dbg.c b/drivers/dma/qcom/hidma_dbg.c
-index 9523faf7acdc..994f448b64d8 100644
---- a/drivers/dma/qcom/hidma_dbg.c
-+++ b/drivers/dma/qcom/hidma_dbg.c
-@@ -146,17 +146,13 @@ void hidma_debug_uninit(struct hidma_dev *dmadev)
- 	debugfs_remove_recursive(dmadev->debugfs);
- }
- 
--int hidma_debug_init(struct hidma_dev *dmadev)
-+void hidma_debug_init(struct hidma_dev *dmadev)
- {
--	int rc = 0;
- 	int chidx = 0;
- 	struct list_head *position = NULL;
-+	struct dentry *dir;
- 
- 	dmadev->debugfs = debugfs_create_dir(dev_name(dmadev->ddev.dev), NULL);
--	if (!dmadev->debugfs) {
--		rc = -ENODEV;
--		return rc;
+ 	/* Create debugfs root entry */
+ 	sba->root = debugfs_create_dir(dev_name(sba->dev), NULL);
+-	if (IS_ERR_OR_NULL(sba->root)) {
+-		dev_err(sba->dev, "failed to create debugfs root entry\n");
+-		sba->root = NULL;
+-		goto skip_debugfs;
 -	}
  
- 	/* walk through the virtual channel list */
- 	list_for_each(position, &dmadev->ddev.channels) {
-@@ -165,32 +161,13 @@ int hidma_debug_init(struct hidma_dev *dmadev)
- 		chan = list_entry(position, struct hidma_chan,
- 				  chan.device_node);
- 		sprintf(chan->dbg_name, "chan%d", chidx);
--		chan->debugfs = debugfs_create_dir(chan->dbg_name,
-+		dir = debugfs_create_dir(chan->dbg_name,
- 						   dmadev->debugfs);
--		if (!chan->debugfs) {
--			rc = -ENOMEM;
--			goto cleanup;
--		}
--		chan->stats = debugfs_create_file("stats", S_IRUGO,
--						  chan->debugfs, chan,
--						  &hidma_chan_fops);
--		if (!chan->stats) {
--			rc = -ENOMEM;
--			goto cleanup;
--		}
-+		debugfs_create_file("stats", S_IRUGO, dir, chan,
-+				    &hidma_chan_fops);
- 		chidx++;
- 	}
+ 	/* Create debugfs stats entry */
+-	sba->stats = debugfs_create_devm_seqfile(sba->dev, "stats", sba->root,
+-						 sba_debugfs_stats_show);
+-	if (IS_ERR_OR_NULL(sba->stats))
+-		dev_err(sba->dev, "failed to create debugfs stats file\n");
++	debugfs_create_devm_seqfile(sba->dev, "stats", sba->root,
++				    sba_debugfs_stats_show);
++
+ skip_debugfs:
  
--	dmadev->stats = debugfs_create_file("stats", S_IRUGO,
--					    dmadev->debugfs, dmadev,
--					    &hidma_dma_fops);
--	if (!dmadev->stats) {
--		rc = -ENOMEM;
--		goto cleanup;
--	}
--
--	return 0;
--cleanup:
--	hidma_debug_uninit(dmadev);
--	return rc;
-+	debugfs_create_file("stats", S_IRUGO, dmadev->debugfs, dmadev,
-+			    &hidma_dma_fops);
- }
+ 	/* Register DMA device with Linux async framework */
 -- 
 2.22.0
 
