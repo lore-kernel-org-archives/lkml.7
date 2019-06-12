@@ -4,93 +4,190 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24675C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC21C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDC7420665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A1A820665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:02:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="X4SA7gIK"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="kMu+BVJa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729739AbfFMRCf (ORCPT
+        id S1730947AbfFMRCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:02:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:59143 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726103AbfFLXHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 19:07:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45PMvf6Csvz9s00;
-        Thu, 13 Jun 2019 09:07:10 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560380831;
-        bh=UdldULC6VqoNkkec5xx/1Gl133nw3s45DH0pbTnGJ9E=;
-        h=Date:From:To:Cc:Subject:From;
-        b=X4SA7gIKIn2yx7BxaD6EDA0gViV6x7sJq790B9RxbimLiVw3Xji0f1TqkQxsc7nmU
-         xJmxT9WX+HGGImdml3NNPL3no9xbvTji+IxT8Rga/uoFJKUrFBJ/oFzZn8sNnR012+
-         ou+3Zwqx8YjwuChZm53Uv9Xi4UkCPf/Tc+zxdTeBm+dy1xJsI21uayregP4hpNQzIi
-         +z1LEfHc4sX/GIH0E4ydNkBgEOUU+Y4LhOVv7p9kk/pO24WZ4S/+YwP4L6pRXaGoJ5
-         h37QSNmQeSXVr5ZqbDWEKszBKcGcnnXQ1v4GQY+Aj5kEpZ/aZNdfEmF2Z4MlHyZfbL
-         YxXanKbUghPiA==
-Date:   Thu, 13 Jun 2019 09:07:05 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>
-Subject: linux-next: Fixes tag needs some work in the clockevents tree
-Message-ID: <20190613090700.04badfc3@canb.auug.org.au>
+        Thu, 13 Jun 2019 13:02:40 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38917 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729503AbfFLXEd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 19:04:33 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j2so10534981pfe.6
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 16:04:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=0sXEuoXXfB+58oAqB27nyxVJnIR0qxmqN3amvLO4MUI=;
+        b=kMu+BVJa981hAatIgUu4yrYi7Q8PVRZO3FdVXL/KM/vtg9zSDoY6QaoYVsgwARCtsB
+         8wMNnJZZEbmSLCmDQCZCYinzc3oFyRXDR4yjqyajTfxcaq5mYNvy6US7H9FOyI1ujcE6
+         mkifXT6gFQ7lLMNCAiWTrrsyS6n/+tpWDLK+4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=0sXEuoXXfB+58oAqB27nyxVJnIR0qxmqN3amvLO4MUI=;
+        b=jV9cPMgl/z3WYLjvyjDkRj/QODrOFi1l/YlCpFwpCWL21NeqcsYlFBkjUyxdd8tPk1
+         JAmgeAznO2HLr7C0ybMAQGLp8b1uWzX928EmiYQZrHcEr/V/k/9xw+EzOFX/XqKNe4ev
+         EQQYG5VMmcBhsXjljvF6xvMY0EPajpynsscVd8Zj4AaizFpN1FyHQzNi2EsYKiOxH+VY
+         29E/zHtz8Gx0MUlv14vk4x6v3t7+KSSaQPVLfXc2lwWaarDfDodZCtV4bFkKLDoDEzRQ
+         cSDLSS89Waj0B780cuMn/KB+wqU1tffnUy5Bp4qg1DmqRJwf/aQxe3xybf+sj5GZa6A9
+         YZxA==
+X-Gm-Message-State: APjAAAW1lFtP+kwfOqmTgPeZeyys+QE4E1B5brg/rTUeHjgt8P0ik85N
+        bUroUVcj5fB7Js+/9jyr95AxGw==
+X-Google-Smtp-Source: APXvYqx+XWoFTjG9dZbuolj86wqQOT4Iqef0H+9nNIH/wMPWesoTcaGtVUCDotl0QJH7LYE+KensLw==
+X-Received: by 2002:a63:ee0a:: with SMTP id e10mr26896771pgi.28.1560380672280;
+        Wed, 12 Jun 2019 16:04:32 -0700 (PDT)
+Received: from localhost (ppp167-251-205.static.internode.on.net. [59.167.251.205])
+        by smtp.gmail.com with ESMTPSA id g9sm463989pgs.78.2019.06.12.16.04.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 16:04:31 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Nayna <nayna@linux.vnet.ibm.com>, Nayna Jain <nayna@linux.ibm.com>,
+        linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Eric Richter <erichte@linux.ibm.com>
+Subject: Re: [PATCH v3 1/3] powerpc/powernv: Add OPAL API interface to get secureboot state
+In-Reply-To: <eaa37bd0-a77d-d70a-feb5-c0e73ce231bf@linux.vnet.ibm.com>
+References: <1560198837-18857-1-git-send-email-nayna@linux.ibm.com> <1560198837-18857-2-git-send-email-nayna@linux.ibm.com> <87ftofpbth.fsf@dja-thinkpad.axtens.net> <eaa37bd0-a77d-d70a-feb5-c0e73ce231bf@linux.vnet.ibm.com>
+Date:   Thu, 13 Jun 2019 09:04:26 +1000
+Message-ID: <87d0jipfr9.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/9XxNnr/bQBTFrzLY_.KnWAE"; protocol="application/pgp-signature"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9XxNnr/bQBTFrzLY_.KnWAE
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Nayna,
 
-Hi all,
+>>> Since OPAL can support different types of backend which can vary in the
+>>> variable interpretation, a new OPAL API call named OPAL_SECVAR_BACKEND, is
+>>> added to retrieve the supported backend version. This helps the consumer
+>>> to know how to interpret the variable.
+>>>
+>> (Firstly, apologies that I haven't got around to asking about this yet!)
+>>
+>> Are pluggable/versioned backend a good idea?
+>>
+>> There are a few things that worry me about the idea:
+>>
+>>   - It adds complexity in crypto (or crypto-adjacent) code, and that
+>>     increases the likelihood that we'll accidentally add a bug with bad
+>>     consequences.
+>
+> Sorry, I think I am not clear on what exactly you mean here.Can you 
+> please elaborate or give specifics ?
 
-In commit
+Cryptosystems with greater flexibility can have new kinds of
+vulnerabilities arise from the greater complexity. The first sort of
+thing that comes to mind is a downgrade attack like from TLS. I think
+you're protected from this because the mode cannot be negotiatied at run
+time, but in general it's security sensitive code so I'd like it to be
+as simple as possible.
 
-  98793726ab3f ("clocksource/drivers/tegra: Restore timer rate on Tegra210")
+>>   - If we are worried about a long-term-future change to how secure-boot
+>>     works, would it be better to just add more get/set calls to opal at
+>>     the point at which we actually implement the new system?
+>
+> The intention is to avoid to re-implement the key/value interface for 
+> each scheme. Do you mean to deprecate the old APIs and add new APIs with 
+> every scheme ?
 
-Fixes tag
+Yes, because I expect the scheme would change very, very rarely.
 
-  Fixes: 3be2a85a0b61 ("Support per-CPU timers on all Tegra's")
+>>   - Under what circumstances would would we change the kernel-visible
+>>     behaviour of skiboot? Are we expecting to change the behaviour,
+>>     content or names of the variables in future? Otherwise the only
+>>     relevant change I can think of is a change to hardware platforms, and
+>>     I'm not sure how a change in hardware would lead to change in
+>>     behaviour in the kernel. Wouldn't Skiboot hide h/w differences?
+>
+> Backends are intended to be an agreement for firmware, kernel and 
+> userspace on what the format of variables are, what variables should be 
+> expected, how they should be signed, etc. Though we don't expect it to 
+> happen very often, we want to anticipate possible changes in the 
+> firmware which may affect the kernel such as new features, support of 
+> new authentication mechanisms, addition of new variables. Corresponding 
+> skiboot patches are on - 
+> https://lists.ozlabs.org/pipermail/skiboot/2019-June/014641.html
 
-has these problem(s):
+I still feel like this is holding onto ongoing complexity for very
+little gain, but perhaps this is because I can't picture a specific
+change that would actually require a wholesale change to the scheme.
 
-  - Subject does not match target commit subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
+You mention new features, support for new authentication mechanisms, and
+addition of new variables.
 
---=20
-Cheers,
-Stephen Rothwell
+ - New features is a bit too generic to answer specifically. In general
+   I accept that there exists some new feature that would be
+   sufficiently backwards-incompatible as to require a new version. I
+   just can't think of one off the top of my head and so I'm not
+   convinced it's worth the complexity. Did you have something in mind?
 
---Sig_/9XxNnr/bQBTFrzLY_.KnWAE
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+ - By support for new authentication mechanisms, I assume you mean new
+   mechanisms for authenticating variable updates? This is communicated
+   in edk2 via the attributes field. Looking at patch 5 from the skiboot
+   series:
 
------BEGIN PGP SIGNATURE-----
++ * When the attribute EFI_VARIABLE_TIME_BASED_AUTHENTICATED_WRITE_ACCESS is set,
++ * then the Data buffer shall begin with an instance of a complete (and
++ * serialized) EFI_VARIABLE_AUTHENTICATION_2 descriptor.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0BhZkACgkQAVBC80lX
-0GyAtgf7Bg1GxFw4110B5/LO0rTjI+Naw8yMRZWOjGdHlqzxJB6PNEtHqGXIwxou
-+ScQlN0ao2gzUZc4m8sWQUB0kOJaBR3T3J4+3TdbbekKT+94BbS+CftQS8vww+tL
-x0+af6LcLluJYkUaBOTR8KwzyRMKPjGFsOGCYX+76TRspQkg+x+WLL/3iF7Tav3a
-mstcHrlk8SIgGqk5wGbIatsaHTs0wNZlf3F1R9TNA7QJ2B7tynuUGoX6MMSi9tnt
-FEJkBcORbLyPN+T62V8TS6vRTi0a9pbO14lusS5amcnuz06XhC9CX0wLFniLVEEy
-fXgtYxa0TOYcfQ+BEVZe5MsybK6hfA==
-=1kvb
------END PGP SIGNATURE-----
+   Could a new authentication scheme be communicated by setting a
+   different attribute value? Or are we not carrying attributes in the
+   metadata blob?
 
---Sig_/9XxNnr/bQBTFrzLY_.KnWAE--
+ - For addition of new variables, I'm confused as to why this would
+   require a new API - wouldn't it just be exposed in the normal way via
+   opal_secvar_get(_next)?
+
+I guess I also somewhat object to calling it a 'backend' if we're using
+it as a version scheme. I think the skiboot storage backends are true
+backends - they provide different implementations of the same
+functionality with the same API, but this seems like you're using it to
+indicate different functionality. It seems like we're using it as if it
+were called OPAL_SECVAR_VERSION.
+
+>>   - What is the correct fallback behaviour if a kernel receives a result
+>>     that it does not expect? If a kernel expecting BackendV1 is instead
+>>     informed that it is running on BackendV2, then the cannot access the
+>>     secure variable at all, so it cannot load keys that are potentially
+>>     required to successfully boot (e.g. to validate the module for
+>>     network card or graphics!)
+>
+> The backend is declaredby the firmware, and is set at compile-time. The 
+> kernel queriesfirmware on whichbackend is in use, and the backend will 
+> not change at runtime.If the backend in use by the firmware is not 
+> supported by the kernel (e.g. kernel is too old), the kernel does not 
+> attempt to read any secure variables, as it won't understand what the 
+> format is. This is a secure boot failure condition, as we cannot verify 
+> the next kernel. With addition of new backends in the skiboot, the 
+> support will be added to the kernel. Note: skiboot and skiroot should 
+> always be in sync with backend support.
+
+Seems reasonable. I'm thinking specifically about the kernel loaded
+after skiroot; and yes, on reflection just failing to boot is the only
+sensible thing you can do.
+
+Regards,
+Daniel
+
