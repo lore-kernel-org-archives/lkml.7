@@ -2,85 +2,80 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC73C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B14DC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5939020866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C06B20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439850AbfFLO4S (ORCPT
+        id S2439870AbfFLO5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:56:18 -0400
-Received: from www62.your-server.de ([213.133.104.62]:47570 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbfFLO4S (ORCPT
+        Wed, 12 Jun 2019 10:57:03 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50285 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727121AbfFLO5D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:56:18 -0400
-Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hb4fe-00007v-4O; Wed, 12 Jun 2019 16:56:14 +0200
-Received: from [178.199.41.31] (helo=linux.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hb4fd-0005or-V5; Wed, 12 Jun 2019 16:56:13 +0200
-Subject: Re: [PATCH] bpf/core.c - silence warning messages
-To:     =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-References: <29466.1559875167@turing-police>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <d693c3bd-7491-588e-3648-59bbef3b88fa@iogearbox.net>
-Date:   Wed, 12 Jun 2019 16:56:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Wed, 12 Jun 2019 10:57:03 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hb4gN-00078Q-Qx; Wed, 12 Jun 2019 14:56:59 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Dan Murphy <dmurphy@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org
+Subject: [PATCH][next] leds: lm36274: remove redundant initialization of variable ret
+Date:   Wed, 12 Jun 2019 15:56:59 +0100
+Message-Id: <20190612145659.26514-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <29466.1559875167@turing-police>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25478/Wed Jun 12 10:14:54 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/07/2019 04:39 AM, Valdis Klētnieks wrote:
-> Compiling kernel/bpf/core.c with W=1 causes a flood of warnings:
-> 
-> kernel/bpf/core.c:1198:65: warning: initialized field overwritten [-Woverride-init]
->  1198 | #define BPF_INSN_3_TBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = true
->       |                                                                 ^~~~
-> kernel/bpf/core.c:1087:2: note: in expansion of macro 'BPF_INSN_3_TBL'
->  1087 |  INSN_3(ALU, ADD,  X),   \
->       |  ^~~~~~
-> kernel/bpf/core.c:1202:3: note: in expansion of macro 'BPF_INSN_MAP'
->  1202 |   BPF_INSN_MAP(BPF_INSN_2_TBL, BPF_INSN_3_TBL),
->       |   ^~~~~~~~~~~~
-> kernel/bpf/core.c:1198:65: note: (near initialization for 'public_insntable[12]')
->  1198 | #define BPF_INSN_3_TBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = true
->       |                                                                 ^~~~
-> kernel/bpf/core.c:1087:2: note: in expansion of macro 'BPF_INSN_3_TBL'
->  1087 |  INSN_3(ALU, ADD,  X),   \
->       |  ^~~~~~
-> kernel/bpf/core.c:1202:3: note: in expansion of macro 'BPF_INSN_MAP'
->  1202 |   BPF_INSN_MAP(BPF_INSN_2_TBL, BPF_INSN_3_TBL),
->       |   ^~~~~~~~~~~~
-> 
-> 98 copies of the above.
-> 
-> The attached patch silences the warnings, because we *know* we're overwriting
-> the default initializer. That leaves bpf/core.c with only 6 other warnings,
-> which become more visible in comparison.
-> 
-> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+From: Colin Ian King <colin.king@canonical.com>
 
-Makes sense, applied!
+The variable ret is being initialized with a value that is never
+read, hence it is redundant and can be removed.  Also move the
+declaration of ret to the for loop scope.
+
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/leds/leds-lm36274.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/leds/leds-lm36274.c b/drivers/leds/leds-lm36274.c
+index ed9dc857ec8f..b55bd238c074 100644
+--- a/drivers/leds/leds-lm36274.c
++++ b/drivers/leds/leds-lm36274.c
+@@ -74,7 +74,6 @@ static int lm36274_parse_dt(struct lm36274 *lm36274_data)
+ 	struct device *dev = &lm36274_data->pdev->dev;
+ 	const char *name;
+ 	int child_cnt;
+-	int ret = -EINVAL;
+ 
+ 	/* There should only be 1 node */
+ 	child_cnt = device_get_child_node_count(dev);
+@@ -82,6 +81,8 @@ static int lm36274_parse_dt(struct lm36274 *lm36274_data)
+ 		return -EINVAL;
+ 
+ 	device_for_each_child_node(dev, child) {
++		int ret;
++
+ 		ret = fwnode_property_read_string(child, "label", &name);
+ 		if (ret)
+ 			snprintf(label, sizeof(label),
+-- 
+2.20.1
+
