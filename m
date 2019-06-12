@@ -2,134 +2,104 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16952C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE39C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E940E21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 440C2215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:25:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=eikelenboom.it header.i=@eikelenboom.it header.b="RSlgjpwa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502096AbfFLQYK (ORCPT
+        id S2502108AbfFLQZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 12:24:10 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:55940 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502083AbfFLQYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:24:09 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 7B63620C11;
-        Wed, 12 Jun 2019 18:24:06 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 5F6C520BC5;
-        Wed, 12 Jun 2019 18:24:06 +0200 (CEST)
-Subject: Re: [PATCH] phy: qcom-qmp: Correct READY_STATUS poll break condition
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>
-References: <20190604232443.3417-1-bjorn.andersson@linaro.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <619d2559-6d88-e795-76e0-3078236933ef@free.fr>
-Date:   Wed, 12 Jun 2019 18:24:06 +0200
+        Wed, 12 Jun 2019 12:25:06 -0400
+Received: from server.eikelenboom.it ([91.121.65.215]:56262 "EHLO
+        server.eikelenboom.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727337AbfFLQZG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 12:25:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=eikelenboom.it; s=20180706; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ktowEjqF/CBPxhQY3pu7cziNBjpasaaInkiP4lM1ITk=; b=RSlgjpwaOad4S6Af3UpDb10U4o
+        dC7hhgdeQYuNplE4lMwObyLofK5gd7ONp6mAexVHPXXBoFTRvgqpdJmyUudt/WiPUNIj7jjICxEmj
+        IpNyVa0Nz254ZSjkoJpQjgIBcexHaR8UVvXVNPXoUZtLmlIXHUMs5NBuGuJ8gZdmoyUs=;
+Received: from ip4da85049.direct-adsl.nl ([77.168.80.73]:38718 helo=[172.16.1.50])
+        by server.eikelenboom.it with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <linux@eikelenboom.it>)
+        id 1hb63Y-0004wh-UT; Wed, 12 Jun 2019 18:25:00 +0200
+Subject: Re: [PATCH] fuse: require /dev/fuse reads to have enough buffer
+ capacity (take 2)
+To:     Kirill Smelkov <kirr@nexedi.com>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>, gluster-devel@gluster.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+References: <876aefd0-808a-bb4b-0897-191f0a8d9e12@eikelenboom.it>
+ <CAJfpegvRBm3M8fUJ1Le1dPd0QSJgAWAYJGLCQKa6YLTE+4oucw@mail.gmail.com>
+ <20190611202738.GA22556@deco.navytux.spb.ru>
+ <CAOssrKfj-MDujX0_t_fgobL_KwpuG2fxFmT=4nURuJA=sUvYYg@mail.gmail.com>
+ <20190612112544.GA21465@deco.navytux.spb.ru>
+ <f31ca7b5-0c9b-5fde-6a75-967265de67c6@eikelenboom.it>
+ <20190612141220.GA25389@deco.navytux.spb.ru>
+From:   Sander Eikelenboom <linux@eikelenboom.it>
+Message-ID: <f79ff13f-701b-89d8-149c-e53bb880bb77@eikelenboom.it>
+Date:   Wed, 12 Jun 2019 18:28:17 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190604232443.3417-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20190612141220.GA25389@deco.navytux.spb.ru>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Jun 12 18:24:06 2019 +0200 (CEST)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/06/2019 01:24, Bjorn Andersson wrote:
+On 12/06/2019 16:12, Kirill Smelkov wrote:
+> On Wed, Jun 12, 2019 at 03:03:49PM +0200, Sander Eikelenboom wrote:
+>> On 12/06/2019 13:25, Kirill Smelkov wrote:
+>>> On Wed, Jun 12, 2019 at 09:44:49AM +0200, Miklos Szeredi wrote:
+>>>> On Tue, Jun 11, 2019 at 10:28 PM Kirill Smelkov <kirr@nexedi.com> wrote:
+>>>>
+>>>>> Miklos, would 4K -> `sizeof(fuse_in_header) + sizeof(fuse_write_in)` for
+>>>>> header room change be accepted?
+>>>>
+>>>> Yes, next cycle.   For 4.2 I'll just push the revert.
+>>>
+>>> Thanks Miklos. Please consider queuing the following patch for 5.3.
+>>> Sander, could you please confirm that glusterfs is not broken with this
+>>> version of the check?
+>>>
+>>> Thanks beforehand,
+>>> Kirill
+>>
+>>
+>> Hmm unfortunately it doesn't build, see below.
+>> [...]
+>> fs/fuse/dev.c:1336:14: error: ‘fuse_in_header’ undeclared (first use in this function)
+>>        sizeof(fuse_in_header) + sizeof(fuse_write_in) + fc->max_write))
+> 
+> Sorry, my bad, it was missing "struct" before fuse_in_header. I
+> originally compile-tested the patch with `make -j4`, was distracted onto
+> other topic and did not see the error after returning due to long tail
+> of successful CC lines. Apologize for the inconvenience. Below is a
+> fixed patch that was both compile-tested and runtime-tested with my FUSE
+> workloads (non-glusterfs).
+> 
+> Kirill
+> 
 
-> After issuing a PHY_START request to the QMP, the hardware documentation
-> states that the software should wait for the PCS_READY_STATUS to become
-> 1.
-> 
-> With the introduction of c9b589791fc1 ("phy: qcom: Utilize UFS reset
-> controller") an additional 1ms delay was introduced between the start
-> request and the check of the status bit. This greatly increases the
-> chances for the hardware to actually becoming ready before the status
-> bit is read.
-> 
-> The result can be seen in that UFS PHY enabling is now reported as a
-> failure in 10% of the boots on SDM845, which is a clear regression from
-> the previous rare/occasional failure.
-> 
-> This patch fixes the "break condition" of the poll to check for the
-> correct state of the status bit.
-> 
-> Unfortunately PCIe on 8996 and 8998 does not specify the mask_pcs_ready
-> register, which means that the code checks a bit that's always 0. So the
-> patch also fixes these, in order to not regress these targets.
-> 
-> Cc: stable@vger.kernel.org
-> Cc: Evan Green <evgreen@chromium.org>
-> Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> Cc: Vivek Gautam <vivek.gautam@codeaurora.org>
-> Fixes: 73d7ec899bd8 ("phy: qcom-qmp: Add msm8998 PCIe QMP PHY support")
-> Fixes: e78f3d15e115 ("phy: qcom-qmp: new qmp phy driver for qcom-chipsets")
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> @Kishon, this is a regression spotted in v5.2-rc1, so please consider applying
-> this towards v5.2.
-> 
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index cd91b4179b10..43abdfd0deed 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -1074,6 +1074,7 @@ static const struct qmp_phy_cfg msm8996_pciephy_cfg = {
->  
->  	.start_ctrl		= PCS_START | PLL_READY_GATE_EN,
->  	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
-> +	.mask_pcs_ready		= PHYSTATUS,
->  	.mask_com_pcs_ready	= PCS_READY,
->  
->  	.has_phy_com_ctrl	= true,
-> @@ -1253,6 +1254,7 @@ static const struct qmp_phy_cfg msm8998_pciephy_cfg = {
->  
->  	.start_ctrl             = SERDES_START | PCS_START,
->  	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
-> +	.mask_pcs_ready		= PHYSTATUS,
->  	.mask_com_pcs_ready	= PCS_READY,
->  };
->  
-> @@ -1547,7 +1549,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
->  	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
->  	mask = cfg->mask_pcs_ready;
->  
-> -	ret = readl_poll_timeout(status, val, !(val & mask), 1,
-> +	ret = readl_poll_timeout(status, val, val & mask, 1,
->  				 PHY_INIT_COMPLETE_TIMEOUT);
->  	if (ret) {
->  		dev_err(qmp->dev, "phy initialization timed-out\n");
+Just tested and it works for me, thanks !
 
-Your patch made me realize that:
-msm8998_pciephy_cfg.has_phy_com_ctrl = false
-thus
-msm8998_pciephy_cfg.mask_com_pcs_ready is useless, AFAICT.
-
-(I copied msm8996_pciephy_cfg for msm8998_pciephy_cfg)
-
-Does msm8996_pciephy_cfg really need both mask_pcs_ready AND
-mask_com_pcs_ready?
-
-I'll test your patch tomorrow.
-
-Regards.
+--
+Sander
