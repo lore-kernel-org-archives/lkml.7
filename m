@@ -2,108 +2,92 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FCDC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E27CC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A392063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61DE22053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNHab+lV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393441AbfFMROV (ORCPT
+        id S1728918AbfFMROe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:14:21 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:41254 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728925AbfFLV5R (ORCPT
+        Thu, 13 Jun 2019 13:14:34 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42352 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728813AbfFLVxk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 17:57:17 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TU0Hbt._1560376624;
-Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TU0Hbt._1560376624)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 13 Jun 2019 05:57:13 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     ktkhai@virtuozzo.com, kirill.shutemov@linux.intel.com,
-        hannes@cmpxchg.org, mhocko@suse.com, hughd@google.com,
-        shakeelb@google.com, rientjes@google.com, akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [v3 PATCH 0/4] Make deferred split shrinker memcg aware
-Date:   Thu, 13 Jun 2019 05:56:45 +0800
-Message-Id: <1560376609-113689-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 12 Jun 2019 17:53:40 -0400
+Received: by mail-pl1-f194.google.com with SMTP id go2so7159069plb.9;
+        Wed, 12 Jun 2019 14:53:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sF5eZ8ccOdUVhZ+yD1F3lyg7ISOOzEpkdH3AlG665WA=;
+        b=kNHab+lVszS41ajdNq+qQPTlg6l670gPy4qjY7YG4PDulI+oEDbXLzQVBHeFxGn9mv
+         yFQyT12V5R1bs4DLxboxj06C7nT1lt7fLqHY3m7lpXB3Stp8ofgPzW7jxxo6WPIUYSXE
+         nHFTnrueCbpnXdjGzNt4UiUet71kdmdPxaH+q4tlnhMwwWa9pxOAvISNbvDj8d4aNsZM
+         vuqrA95a5NOFFs2yu7st6sybslXEXCn2Ro9Wh/NU432EdQVDx6s7IiRIJygGCPvjKvri
+         BM+Zzemp+WasD62TDhLjwfTC3meEWLFSSF3pW7XzU4r6ejPgRvd8lAdk8lZ81a/Ys1C9
+         jwag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sF5eZ8ccOdUVhZ+yD1F3lyg7ISOOzEpkdH3AlG665WA=;
+        b=aiA6C29CtW5Zr3+TDZ85p8Biow6+b2jBlIjQ75Zc9ox2IskNCQpjYSPoanxDORw8T3
+         VgV7IQClURcwvRjLkbgwPbTmaaEW94r7UymjfNgLgCEcp4oWIV3U9Nf2Haxw2u+8QYPp
+         vUZTXHWAKunVN1MZRhOYt9d8Fe3HK1xe2sQMffS7H3Jk0oU5tcNP8kNbRcZsCZ+/Kpvi
+         MGZTI30EmVnV5ZwNf039Y6lXKPFPJEGkoURm0CceXlw/SywoJmNb+x7uVcsBrEIaYqc6
+         WzuClu9/W26KyxUGkJ7+KqlcmRC2cB4BiFU7rTPGrSbCUBgNf4XABkEJTcJRSj+YXEV2
+         CmEw==
+X-Gm-Message-State: APjAAAVq3Hyueh9jQEXXAtHP9Z6nn9om+kBdAi/vjcWl+weCFMIzHaFU
+        /Ad1te8quRrUqvFYRSQ7MlU=
+X-Google-Smtp-Source: APXvYqx1BKexrGHOYAGc6B2VvZQHJ0ldV141e7VWln+TRXutB8eaXkUXN+zHGj9EaQgVtp2cWL28FQ==
+X-Received: by 2002:a17:902:9682:: with SMTP id n2mr76598713plp.95.1560376419900;
+        Wed, 12 Jun 2019 14:53:39 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id 12sm500677pfi.60.2019.06.12.14.53.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 14:53:39 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 14:53:37 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: input: serio: Add a module desription to the
+ hyperv_keyboard driver
+Message-ID: <20190612215337.GB40779@dtor-ws>
+References: <20190530174645.18147-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190530174645.18147-1-sashal@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sasha,
 
-Currently THP deferred split shrinker is not memcg aware, this may cause
-premature OOM with some configuration. For example the below test would
-run into premature OOM easily:
+On Thu, May 30, 2019 at 01:46:45PM -0400, Sasha Levin wrote:
+> From: Joseph Salisbury <Joseph.Salisbury@microsoft.com>
+> 
+> This patch only adds a MODULE_DESCRIPTION statement to the driver.
+> This change is only cosmetic, so there should be no runtime impact.
+> 
+> Signed-off-by: Joseph Salisbury <joseph.salisbury@microsoft.com>
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-$ cgcreate -g memory:thp
-$ echo 4G > /sys/fs/cgroup/memory/thp/memory/limit_in_bytes
-$ cgexec -g memory:thp transhuge-stress 4000
+This is already in Linus' tree as commit
+9d1c2f067e50bebb521ed6ced49ddf53bb1deba8
 
-transhuge-stress comes from kernel selftest.
-
-It is easy to hit OOM, but there are still a lot THP on the deferred
-split queue, memcg direct reclaim can't touch them since the deferred
-split shrinker is not memcg aware.
-
-Convert deferred split shrinker memcg aware by introducing per memcg
-deferred split queue.  The THP should be on either per node or per memcg
-deferred split queue if it belongs to a memcg.  When the page is
-immigrated to the other memcg, it will be immigrated to the target
-memcg's deferred split queue too.
-
-Reuse the second tail page's deferred_list for per memcg list since the
-same THP can't be on multiple deferred split queues.
-
-Make deferred split shrinker not depend on memcg kmem since it is not slab.
-It doesn’t make sense to not shrink THP even though memcg kmem is disabled.
-
-With the above change the test demonstrated above doesn’t trigger OOM even
-though with cgroup.memory=nokmem.
-
-
-Changelog:
-v3: * Adopted the suggestion from Kirill Shutemov to move mem_cgroup_uncharge()
-      out of __page_cache_release() in order to handle THP free properly. 
-    * Adjusted the sequence of the patches per Kirill Shutemov. Dropped the
-      patch 3/4 in v2.
-    * Moved enqueuing THP onto "to" memcg deferred split queue after
-      page->mem_cgroup is changed in memcg account move per Kirill Tkhai.
- 
-v2: * Adopted the suggestion from Krill Shutemov to extract deferred split
-      fields into a struct to reduce code duplication (patch 1/4).  With this
-      change, the lines of change is shrunk down to 198 from 278.
-    * Removed memcg_deferred_list. Use deferred_list for both global and memcg.
-      With the code deduplication, it doesn't make too much sense to keep it.
-      Kirill Tkhai also suggested so.
-    * Fixed typo for SHRINKER_NONSLAB.
-
-
-Yang Shi (4):
-      mm: thp: extract split_queue_* into a struct
-      mm: move mem_cgroup_uncharge out of __page_cache_release()
-      mm: shrinker: make shrinker not depend on memcg kmem
-      mm: thp: make deferred split shrinker memcg aware
-
- include/linux/huge_mm.h    |  9 ++++++++
- include/linux/memcontrol.h |  4 ++++
- include/linux/mm_types.h   |  1 +
- include/linux/mmzone.h     | 12 ++++++++---
- include/linux/shrinker.h   |  3 +--
- mm/huge_memory.c           | 80 +++++++++++++++++++++++++++++++++++++++++++++-----------------------
- mm/memcontrol.c            | 24 +++++++++++++++++++++
- mm/page_alloc.c            |  9 +++++---
- mm/swap.c                  |  2 +-
- mm/vmscan.c                | 27 ++++++-----------------
- 10 files changed, 114 insertions(+), 57 deletions(-)
+-- 
+Dmitry
