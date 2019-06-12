@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC786C31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A41C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6B521721
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D90D215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:28:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="cgBypDFh"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="WiFBUdjE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbfFLT2B (ORCPT
+        id S1728615AbfFLT0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:28:01 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55597 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728824AbfFLT0z (ORCPT
+        Wed, 12 Jun 2019 15:26:47 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38092 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728529AbfFLT0o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:26:55 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a15so7697031wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:26:53 -0700 (PDT)
+        Wed, 12 Jun 2019 15:26:44 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d18so18129517wrs.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:26:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XRp885uMdJAuEcfk6wtJl9pFzB2CTFcS76XeafSjAG0=;
-        b=cgBypDFhuJcDvgJ3WfCUXJ4p2srOcYCtmlL+6uFeUK8ndgTjI2oa5/w6wWKXdkIxS3
-         ehBJMYJjnYTTy1ak8qVT9aN+e6G8M7e1GF0L8qlWat67vX7x4rMP19sRgiyr3xsrl1wG
-         iE0VeIIL+dwcFHU0fLTqhkN9DCqLsr6lokjrBR1ZVFEzrgDYC7yiRByQBQfAgDWoca98
-         /KRZHLS2c2L/GEY2w57c9fI2XkElkHAzacYDLSZKCB8kbU2DAu3YfU0/ZEo3ce2DrA6G
-         qhX9TnPEG1pZqxCl3AxaUWJYQZ4PVneftyyaqFa5qWEzh+TpKdaSLUmnAozjRxDBlVCR
-         GqhA==
+        bh=zVoz266rOhzBvq1+fckdm28R8FS758kT1jJN+dLbL8A=;
+        b=WiFBUdjE8xWhBn9cC4dZyzht9pQDrd7MLBhLhWmk3GB2CQunKSEgt6uj3NIoSuy2/f
+         Py2ewqFlKgHEEhoyaVNLcVMVSjW9146l4m0MOsgyBrVC6stj+jPg0gPPw0Bw11szuBPe
+         za0uzX03kb3JeX5CX2q33rO3LKbQI0NC3mqThbYVoX9xp4ujwSt8fYymhaTBrZd/Jv4g
+         sSchxuk/8xp4+a7GWlFACFxzIa+uZinksMrx8GOL8pLyUNH57zxzWkhcX9tt0EvIZYxI
+         6UiGobqqIwf5E/MqgjwcHjKQPq9evXxrZAQJKBl1DlXRi9+6GzINpcop/pSKqmFhajqD
+         DuHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XRp885uMdJAuEcfk6wtJl9pFzB2CTFcS76XeafSjAG0=;
-        b=aeI9qCb/afvT0aGRktslTdxB6O4pEP+PmL7LfKGAWwIuJaAeDIptFzUEf0j16p4ErP
-         UwUP3QdwLVHaz/r0Kdx79MiKJggnD8CFISToBl9VsRusTWfayb0V3HnlGXFKC5LF1MP2
-         5g214UBErDuG2bO6JRU7p7NuiSKgxliajPaKept2nWcE693a0GvZy2b14cD5Qp2aa6J3
-         U8PB5F/wHDXodqycPfFvtC60HonPDJxFeUm9MO62R0JrC/eYLmnRGlojaNfaZ3E8Sq9J
-         8wdWWFg5u0HXBNrzN0mBHh5Ocy67XOMy61CVIZDIub+5xnGxaikvzmb8cEZmuABXNRCj
-         f+Dw==
-X-Gm-Message-State: APjAAAUdgbi/nU0q8/lNnc50m+t2fPMDXITLxWGCIi+l1weY8nxSLQCM
-        SJe4pRpyVPp0aRnq6WI3pOsWMbFb/rk=
-X-Google-Smtp-Source: APXvYqzUGCVDmc5eqnvclrAqsBL7OQbG1i0dwhsUMkIaidCFpYFdjiRURuI7F+Ni1zwbOyaMDND/Sw==
-X-Received: by 2002:a1c:1b81:: with SMTP id b123mr521266wmb.144.1560367612994;
-        Wed, 12 Jun 2019 12:26:52 -0700 (PDT)
+        bh=zVoz266rOhzBvq1+fckdm28R8FS758kT1jJN+dLbL8A=;
+        b=S3y7f+a262dna4BHw4qYpKTO98n5ZP0b5MeMMDG92MNkLIh/Y33amOcLM7sY9Pv6se
+         3Uy1zASXfVkjIVPfUztSa1CVvNUaXHeFzoGTgmpLvf3Lncc2lpgLbmorPov4zgF3ImJs
+         g5OrTS5GE6+ccofnrhQITr3naCxY/AUnLuVwNKAxDFosQ9GTkLqgL3Er4AAHrmPv3Xlv
+         0ZSLgKPKKF5dtZTygAB/1au5+I9p+JClfs7cOQsvIc+w2QB99d9Ri9/E+jLS4/JnOgNd
+         78KdMXa3NrXLFrS5P7iXqbhUIV1pffYDGJ03aBaL/dse1y4r0diFrxNfLuMksH+SRgVi
+         3MOQ==
+X-Gm-Message-State: APjAAAUwGE+udjuayBLf8b+cwGlN5wGMuf9/ltdQF/+ZTIrDyLCS6kav
+        9kKDpkoFHUyva6YsV0N+68Gxf/1YflI=
+X-Google-Smtp-Source: APXvYqx+PJkYZMSI9t5sNkdtGQlgjC+5XYuoJ3aCb5UMpFJcNHRTFUxNRNF/4WQnfBFB2DpiJhgRuw==
+X-Received: by 2002:adf:ba8e:: with SMTP id p14mr13313189wrg.39.1560367601555;
+        Wed, 12 Jun 2019 12:26:41 -0700 (PDT)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id r5sm612526wrg.10.2019.06.12.12.26.51
+        by smtp.gmail.com with ESMTPSA id r5sm612526wrg.10.2019.06.12.12.26.40
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 12:26:52 -0700 (PDT)
+        Wed, 12 Jun 2019 12:26:40 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <dima@arista.com>, Adrian Reber <adrian@lisas.de>,
+Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
+        Adrian Reber <adrian@lisas.de>,
         Andrei Vagin <avagin@openvz.org>,
         Andy Lutomirski <luto@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
@@ -75,9 +76,9 @@ Cc:     Dmitry Safonov <dima@arista.com>, Adrian Reber <adrian@lisas.de>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         containers@lists.linux-foundation.org, criu@openvz.org,
         linux-api@vger.kernel.org, x86@kernel.org
-Subject: [PATCHv4 16/28] x86/vdso: Allocate timens vdso
-Date:   Wed, 12 Jun 2019 20:26:15 +0100
-Message-Id: <20190612192628.23797-17-dima@arista.com>
+Subject: [PATCHv4 08/28] timens/kernel: Take into account timens clock offsets in clock_nanosleep
+Date:   Wed, 12 Jun 2019 20:26:07 +0100
+Message-Id: <20190612192628.23797-9-dima@arista.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190612192628.23797-1-dima@arista.com>
 References: <20190612192628.23797-1-dima@arista.com>
@@ -88,230 +89,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As it has been discussed on timens RFC, adding a new conditional branch
-`if (inside_time_ns)` on VDSO for all processes is undesirable.
-It will add a penalty for everybody as branch predictor may mispredict
-the jump. Also there are instruction cache lines wasted on cmp/jmp.
+From: Andrei Vagin <avagin@gmail.com>
 
-Those effects of introducing time namespace are very much unwanted
-having in mind how much work have been spent on micro-optimisation
-vdso code.
+Wire up clock_nanosleep() to timens offsets.
 
-The propose is to allocate a second vdso code with dynamically
-patched out (disabled by static_branch) timens code on boot time.
-
-Allocate another vdso and copy original code.
-
-Co-developed-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Andrei Vagin <avagin@openvz.org>
+Co-developed-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/x86/entry/vdso/vdso2c.h |   2 +-
- arch/x86/entry/vdso/vma.c    | 113 +++++++++++++++++++++++++++++++++--
- arch/x86/include/asm/vdso.h  |   9 +--
- 3 files changed, 114 insertions(+), 10 deletions(-)
+ include/linux/hrtimer.h    |  2 +-
+ kernel/time/alarmtimer.c   |  2 ++
+ kernel/time/hrtimer.c      |  8 ++++----
+ kernel/time/posix-stubs.c  | 12 ++++++++++--
+ kernel/time/posix-timers.c | 19 ++++++++++++++++---
+ 5 files changed, 33 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/vdso2c.h b/arch/x86/entry/vdso/vdso2c.h
-index 7556bb70ed8b..885b988aea19 100644
---- a/arch/x86/entry/vdso/vdso2c.h
-+++ b/arch/x86/entry/vdso/vdso2c.h
-@@ -157,7 +157,7 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
+index 2e8957eac4d4..5a3b3e17d0e8 100644
+--- a/include/linux/hrtimer.h
++++ b/include/linux/hrtimer.h
+@@ -473,7 +473,7 @@ static inline u64 hrtimer_forward_now(struct hrtimer *timer,
+ /* Precise sleep: */
+ 
+ extern int nanosleep_copyout(struct restart_block *, struct timespec64 *);
+-extern long hrtimer_nanosleep(const struct timespec64 *rqtp,
++extern long hrtimer_nanosleep(ktime_t rqtp,
+ 			      const enum hrtimer_mode mode,
+ 			      const clockid_t clockid);
+ 
+diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+index 6346e6ee0d32..f1f42df179d0 100644
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -819,6 +819,8 @@ static int alarm_timer_nsleep(const clockid_t which_clock, int flags,
+ 		ktime_t now = alarm_bases[type].gettime();
+ 
+ 		exp = ktime_add_safe(now, exp);
++	} else {
++		exp = timens_ktime_to_host(which_clock, exp);
  	}
- 	fprintf(outfile, "\n};\n\n");
  
--	fprintf(outfile, "const struct vdso_image %s = {\n", image_name);
-+	fprintf(outfile, "struct vdso_image %s __ro_after_init = {\n", image_name);
- 	fprintf(outfile, "\t.text = raw_data,\n");
- 	fprintf(outfile, "\t.size = %lu,\n", mapping_size);
- 	if (alt_sec) {
-diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
-index 8a7f4cfe1fad..cc06c6b70167 100644
---- a/arch/x86/entry/vdso/vma.c
-+++ b/arch/x86/entry/vdso/vma.c
-@@ -30,26 +30,128 @@
- unsigned int __read_mostly vdso64_enabled = 1;
- #endif
- 
--void __init init_vdso_image(const struct vdso_image *image)
-+void __init init_vdso_image(struct vdso_image *image)
- {
- 	BUG_ON(image->size % PAGE_SIZE != 0);
- 
- 	apply_alternatives((struct alt_instr *)(image->text + image->alt),
- 			   (struct alt_instr *)(image->text + image->alt +
- 						image->alt_len));
-+#ifdef CONFIG_TIME_NS
-+	image->text_timens = vmalloc_32(image->size);
-+	if (WARN_ON(image->text_timens == NULL))
-+		return;
-+
-+	memcpy(image->text_timens, image->text, image->size);
-+#endif
+ 	ret = alarmtimer_do_nsleep(&alarm, exp, type);
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 41dfff23c1f9..b245f6ff9c8f 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -1716,7 +1716,7 @@ static long __sched hrtimer_nanosleep_restart(struct restart_block *restart)
+ 	return ret;
  }
  
- struct linux_binprm;
- 
-+#ifdef CONFIG_TIME_NS
-+static inline struct timens_offsets *current_timens_offsets(void)
-+{
-+	return current->nsproxy->time_ns->offsets;
-+}
-+
-+static int vdso_check_timens(struct vm_area_struct *vma, bool *in_timens)
-+{
-+	struct task_struct *tsk;
-+
-+	if (likely(vma->vm_mm == current->mm)) {
-+		*in_timens = !!current_timens_offsets();
-+		return 0;
-+	}
-+
-+	/*
-+	 * .fault() handler can be called over remote process through
-+	 * interfaces like /proc/$pid/mem or process_vm_{readv,writev}()
-+	 * Considering such access to vdso as a slow-path.
-+	 */
-+
-+#ifdef CONFIG_MEMCG
-+	rcu_read_lock();
-+
-+	tsk = rcu_dereference(vma->vm_mm->owner);
-+	if (tsk) {
-+		task_lock(tsk);
-+		/*
-+		 * Shouldn't happen: nsproxy is unset in exit_mm().
-+		 * Before that exit_mm() holds mmap_sem to set (mm = NULL).
-+		 * It's impossible to have a fault in task without mm
-+		 * and mmap_sem is taken during the fault.
-+		 */
-+		if (WARN_ON_ONCE(tsk->nsproxy == NULL)) {
-+			task_unlock(tsk);
-+			rcu_read_unlock();
-+			return -EIO;
-+		}
-+		*in_timens = !!tsk->nsproxy->time_ns->offsets;
-+		task_unlock(tsk);
-+		rcu_read_unlock();
-+		return 0;
-+	}
-+	rcu_read_unlock();
-+#endif
-+
-+	read_lock(&tasklist_lock);
-+	for_each_process(tsk) {
-+		struct task_struct *c;
-+
-+		if (tsk->flags & PF_KTHREAD)
-+			continue;
-+		for_each_thread(tsk, c) {
-+			if (c->mm == vma->vm_mm)
-+				goto found;
-+			if (c->mm)
-+				break;
-+		}
-+	}
-+	read_unlock(&tasklist_lock);
-+	return -ESRCH;
-+
-+found:
-+	task_lock(tsk);
-+	read_unlock(&tasklist_lock);
-+	*in_timens = !!tsk->nsproxy->time_ns->offsets;
-+	task_unlock(tsk);
-+
-+	return 0;
-+}
-+#else /* CONFIG_TIME_NS */
-+static inline int vdso_check_timens(struct vm_area_struct *vma, bool *in_timens)
-+{
-+	*in_timens = false;
-+	return 0;
-+}
-+static inline struct timens_offsets *current_timens_offsets(void)
-+{
-+	return NULL;
-+}
-+#endif /* CONFIG_TIME_NS */
-+
- static vm_fault_t vdso_fault(const struct vm_special_mapping *sm,
- 		      struct vm_area_struct *vma, struct vm_fault *vmf)
+-long hrtimer_nanosleep(const struct timespec64 *rqtp,
++long hrtimer_nanosleep(ktime_t rqtp,
+ 		       const enum hrtimer_mode mode, const clockid_t clockid)
  {
- 	const struct vdso_image *image = vma->vm_mm->context.vdso_image;
-+	unsigned long offset = vmf->pgoff << PAGE_SHIFT;
-+	bool in_timens;
-+	int err;
+ 	struct restart_block *restart;
+@@ -1729,7 +1729,7 @@ long hrtimer_nanosleep(const struct timespec64 *rqtp,
+ 		slack = 0;
  
- 	if (!image || (vmf->pgoff << PAGE_SHIFT) >= image->size)
- 		return VM_FAULT_SIGBUS;
+ 	hrtimer_init_on_stack(&t.timer, clockid, mode);
+-	hrtimer_set_expires_range_ns(&t.timer, timespec64_to_ktime(*rqtp), slack);
++	hrtimer_set_expires_range_ns(&t.timer, rqtp, slack);
+ 	ret = do_nanosleep(&t, mode);
+ 	if (ret != -ERESTART_RESTARTBLOCK)
+ 		goto out;
+@@ -1764,7 +1764,7 @@ SYSCALL_DEFINE2(nanosleep, struct __kernel_timespec __user *, rqtp,
  
--	vmf->page = virt_to_page(image->text + (vmf->pgoff << PAGE_SHIFT));
-+	err = vdso_check_timens(vma, &in_timens);
-+	if (err)
-+		return VM_FAULT_SIGBUS;
-+
-+	WARN_ON_ONCE(in_timens && !image->text_timens);
-+
-+	if (in_timens && image->text_timens)
-+		vmf->page = vmalloc_to_page(image->text_timens + offset);
-+	else
-+		vmf->page = virt_to_page(image->text + offset);
-+
- 	get_page(vmf->page);
- 	return 0;
+ 	current->restart_block.nanosleep.type = rmtp ? TT_NATIVE : TT_NONE;
+ 	current->restart_block.nanosleep.rmtp = rmtp;
+-	return hrtimer_nanosleep(&tu, HRTIMER_MODE_REL, CLOCK_MONOTONIC);
++	return hrtimer_nanosleep(timespec64_to_ktime(tu), HRTIMER_MODE_REL, CLOCK_MONOTONIC);
  }
-@@ -138,13 +240,14 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
- 			return vmf_insert_pfn(vma, vmf->address,
- 					vmalloc_to_pfn(tsc_pg));
- 	} else if (sym_offset == image->sym_timens_page) {
--		struct time_namespace *ns = current->nsproxy->time_ns;
-+		/* We can fault only in current context for VM_PFNMAP mapping */
-+		struct timens_offsets *offsets = current_timens_offsets();
- 		unsigned long pfn;
  
--		if (!ns->offsets)
-+		if (!offsets)
- 			pfn = page_to_pfn(ZERO_PAGE(0));
- 		else
--			pfn = page_to_pfn(virt_to_page(ns->offsets));
-+			pfn = page_to_pfn(virt_to_page(offsets));
+ #endif
+@@ -1784,7 +1784,7 @@ SYSCALL_DEFINE2(nanosleep_time32, struct old_timespec32 __user *, rqtp,
  
- 		return vmf_insert_pfn(vma, vmf->address, pfn);
- 	}
-diff --git a/arch/x86/include/asm/vdso.h b/arch/x86/include/asm/vdso.h
-index 9d420c545607..03f468c63a24 100644
---- a/arch/x86/include/asm/vdso.h
-+++ b/arch/x86/include/asm/vdso.h
-@@ -12,6 +12,7 @@
- 
- struct vdso_image {
- 	void *text;
-+	void *text_timens;
- 	unsigned long size;   /* Always a multiple of PAGE_SIZE */
- 
- 	unsigned long alt, alt_len;
-@@ -30,18 +31,18 @@ struct vdso_image {
- };
- 
- #ifdef CONFIG_X86_64
--extern const struct vdso_image vdso_image_64;
-+extern struct vdso_image vdso_image_64;
+ 	current->restart_block.nanosleep.type = rmtp ? TT_COMPAT : TT_NONE;
+ 	current->restart_block.nanosleep.compat_rmtp = rmtp;
+-	return hrtimer_nanosleep(&tu, HRTIMER_MODE_REL, CLOCK_MONOTONIC);
++	return hrtimer_nanosleep(timespec64_to_ktime(tu), HRTIMER_MODE_REL, CLOCK_MONOTONIC);
+ }
  #endif
  
- #ifdef CONFIG_X86_X32
--extern const struct vdso_image vdso_image_x32;
-+extern struct vdso_image vdso_image_x32;
- #endif
+diff --git a/kernel/time/posix-stubs.c b/kernel/time/posix-stubs.c
+index edaf075d1ee4..4ee0dc180866 100644
+--- a/kernel/time/posix-stubs.c
++++ b/kernel/time/posix-stubs.c
+@@ -129,6 +129,7 @@ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
+ 		struct __kernel_timespec __user *, rmtp)
+ {
+ 	struct timespec64 t;
++	ktime_t texp;
  
- #if defined CONFIG_X86_32 || defined CONFIG_COMPAT
--extern const struct vdso_image vdso_image_32;
-+extern struct vdso_image vdso_image_32;
- #endif
+ 	switch (which_clock) {
+ 	case CLOCK_REALTIME:
+@@ -147,7 +148,10 @@ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
+ 		rmtp = NULL;
+ 	current->restart_block.nanosleep.type = rmtp ? TT_NATIVE : TT_NONE;
+ 	current->restart_block.nanosleep.rmtp = rmtp;
+-	return hrtimer_nanosleep(&t, flags & TIMER_ABSTIME ?
++	texp = timespec64_to_ktime(t);
++	if (flags & TIMER_ABSTIME)
++		texp = timens_ktime_to_host(clockid, texp;
++	return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
+ 				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
+ 				 which_clock);
+ }
+@@ -215,6 +219,7 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
+ 		struct old_timespec32 __user *, rmtp)
+ {
+ 	struct timespec64 t;
++	ktime texp;
  
--extern void __init init_vdso_image(const struct vdso_image *image);
-+extern void __init init_vdso_image(struct vdso_image *image);
- 
- extern int map_vdso_once(const struct vdso_image *image, unsigned long addr);
- 
+ 	switch (which_clock) {
+ 	case CLOCK_REALTIME:
+@@ -233,7 +238,10 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
+ 		rmtp = NULL;
+ 	current->restart_block.nanosleep.type = rmtp ? TT_COMPAT : TT_NONE;
+ 	current->restart_block.nanosleep.compat_rmtp = rmtp;
+-	return hrtimer_nanosleep(&t, flags & TIMER_ABSTIME ?
++	texp = timespec64_to_ktime(t);
++	if (flags & TIMER_ABSTIME)
++		texp = timens_ktime_to_host(clockid, texp;
++	return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
+ 				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
+ 				 which_clock);
+ }
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index dba77ee48e74..bb457962fc7c 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -1194,7 +1194,20 @@ SYSCALL_DEFINE2(clock_getres_time32, clockid_t, which_clock,
+ static int common_nsleep(const clockid_t which_clock, int flags,
+ 			 const struct timespec64 *rqtp)
+ {
+-	return hrtimer_nanosleep(rqtp, flags & TIMER_ABSTIME ?
++	ktime_t texp = timespec64_to_ktime(*rqtp);
++	return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
++				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
++				 which_clock);
++}
++
++static int common_nsleep_timens(const clockid_t which_clock, int flags,
++			 const struct timespec64 *rqtp)
++{
++	ktime_t texp = timespec64_to_ktime(*rqtp);
++	if (flags & TIMER_ABSTIME)
++		texp = timens_ktime_to_host(which_clock, texp);
++
++	return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
+ 				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
+ 				 which_clock);
+ }
+@@ -1275,7 +1288,7 @@ static const struct k_clock clock_monotonic = {
+ 	.clock_getres		= posix_get_hrtimer_res,
+ 	.clock_get_timespec	= posix_get_timespec,
+ 	.clock_get_ktime	= posix_get_ktime,
+-	.nsleep			= common_nsleep,
++	.nsleep			= common_nsleep_timens,
+ 	.timer_create		= common_timer_create,
+ 	.timer_set		= common_timer_set,
+ 	.timer_get		= common_timer_get,
+@@ -1322,7 +1335,7 @@ static const struct k_clock clock_boottime = {
+ 	.clock_getres		= posix_get_hrtimer_res,
+ 	.clock_get_ktime	= posix_get_boottime_ktime,
+ 	.clock_get_timespec	= posix_get_boottime_timespec,
+-	.nsleep			= common_nsleep,
++	.nsleep			= common_nsleep_timens,
+ 	.timer_create		= common_timer_create,
+ 	.timer_set		= common_timer_set,
+ 	.timer_get		= common_timer_get,
 -- 
 2.22.0
 
