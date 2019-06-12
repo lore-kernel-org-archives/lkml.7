@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B330C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1A6C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6F20208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C4A217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560341605;
-	bh=s7t54JWbBuNtEvtmX8/LDytHT2xfujJQNzLt26RSLK8=;
+	s=default; t=1560341608;
+	bh=mnEMQqcIZyYYy6tRZgovJ/xEPKXIK1opq3MoAC4IEm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PXRH+SVYWP6a9snYK0ny7bFOH5s/9Z7O97xXxE58FDiOelf+2KOmQSaUjEh0FscnS
-	 zI2xP3dlqE7mf8MmTOekJOlqtuqGNeyU4q6vQW9Jr+6Kiv0HSmP3ARz2XZ39wxvWJl
-	 tS/nNPz8Gi/LRCvho2XaCdUkQvaKpFzoY6QTIYxg=
+	b=D3H1ZYNSomZ0AAuMhC+g6AM2gVWm0VCKmB3bp/96kM+Cs832JMTIHUb/u9V0swW6U
+	 pl/iRbi0pLRFzhR9YLGSnTrrfQKkPHaYlLwLhmOfaWqPMlGNaVP1wcc4UwUMEqZglR
+	 riwoh8k0kdj+wAnclc5+xvpwfyHo65MNMrNJNrVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732335AbfFLMNZ (ORCPT
+        id S2438670AbfFLMN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:13:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53562 "EHLO mail.kernel.org"
+        Wed, 12 Jun 2019 08:13:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727584AbfFLMNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:13:23 -0400
+        id S1728433AbfFLMNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:13:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C286208CA;
-        Wed, 12 Jun 2019 12:13:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA76921019;
+        Wed, 12 Jun 2019 12:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560341601;
-        bh=s7t54JWbBuNtEvtmX8/LDytHT2xfujJQNzLt26RSLK8=;
+        s=default; t=1560341604;
+        bh=mnEMQqcIZyYYy6tRZgovJ/xEPKXIK1opq3MoAC4IEm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bpv41V0nZjIAJGFvc7NA4lGDoD2jotV0pKMKdLkbDoKvwAbdC+dDy7tx+ZGCwBmgg
-         SjZVtWp2xpmn2nrLHllnPjEcxhgXi6aHs7JFxBLdvxrjJjD8e2k4sD+cM9MOTqhme6
-         m2fDURwhnGvWvxPkDME2wqzoFREMV9jobEbkoj8c=
+        b=HzceL25iFwN+uLKR4EGITNhSGQ6T7NO/oZ3loXq20Fo/OVblYG4fLfmNcOi2mAKSl
+         LzF1AkWUcufE9swWLie2GPear9RDY+LUOdxIqrEcYE6w59yAhETcZX1GdzCzbQOhsj
+         YExdh3JZuvU3OinDTeHwj7+jtLti3MKnCMn1Rpww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     dvhart@infradead.org, andy@infradead.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/8] platform: x86: samsung-laptop: no need to check return value of debugfs_create functions
-Date:   Wed, 12 Jun 2019 14:12:55 +0200
-Message-Id: <20190612121258.19535-5-gregkh@linuxfoundation.org>
+Subject: [PATCH 6/8] platform: x86: pmc_atom: no need to check return value of debugfs_create functions
+Date:   Wed, 12 Jun 2019 14:12:56 +0200
+Message-Id: <20190612121258.19535-6-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190612121258.19535-1-gregkh@linuxfoundation.org>
 References: <20190612121258.19535-1-gregkh@linuxfoundation.org>
@@ -61,139 +60,85 @@ When calling debugfs functions, there is no need to ever check the
 return value.  The function can work or not, but the code logic should
 never do something different based on this.
 
-Cc: Corentin Chary <corentin.chary@gmail.com>
 Cc: Darren Hart <dvhart@infradead.org>
 Cc: Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/platform/x86/samsung-laptop.c | 89 +++++++--------------------
- 1 file changed, 23 insertions(+), 66 deletions(-)
+ drivers/platform/x86/pmc_atom.c | 43 ++++++++-------------------------
+ 1 file changed, 10 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index 7b160ee98115..e84f11398c1b 100644
---- a/drivers/platform/x86/samsung-laptop.c
-+++ b/drivers/platform/x86/samsung-laptop.c
-@@ -1280,15 +1280,12 @@ static void samsung_debugfs_exit(struct samsung_laptop *samsung)
- 	debugfs_remove_recursive(samsung->debug.root);
- }
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index b1d804376237..2104e1ad38d9 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -350,45 +350,24 @@ static int pmc_sleep_tmr_show(struct seq_file *s, void *unused)
  
--static int samsung_debugfs_init(struct samsung_laptop *samsung)
-+static void samsung_debugfs_init(struct samsung_laptop *samsung)
+ DEFINE_SHOW_ATTRIBUTE(pmc_sleep_tmr);
+ 
+-static void pmc_dbgfs_unregister(struct pmc_dev *pmc)
++static void pmc_dbgfs_register(struct pmc_dev *pmc)
  {
--	struct dentry *dent;
-+	struct dentry *root;
+-	debugfs_remove_recursive(pmc->dbgfs_dir);
+-}
+-
+-static int pmc_dbgfs_register(struct pmc_dev *pmc)
+-{
+-	struct dentry *dir, *f;
++	struct dentry *dir;
  
--	samsung->debug.root = debugfs_create_dir("samsung-laptop", NULL);
--	if (!samsung->debug.root) {
--		pr_err("failed to create debugfs directory");
--		goto error_debugfs;
--	}
-+	root = debugfs_create_dir("samsung-laptop", NULL);
-+	samsung->debug.root = root;
+ 	dir = debugfs_create_dir("pmc_atom", NULL);
+-	if (!dir)
+-		return -ENOMEM;
  
- 	samsung->debug.f0000_wrapper.data = samsung->f0000_segment;
- 	samsung->debug.f0000_wrapper.size = 0xffff;
-@@ -1299,60 +1296,24 @@ static int samsung_debugfs_init(struct samsung_laptop *samsung)
- 	samsung->debug.sdiag_wrapper.data = samsung->sdiag;
- 	samsung->debug.sdiag_wrapper.size = strlen(samsung->sdiag);
+ 	pmc->dbgfs_dir = dir;
  
--	dent = debugfs_create_u16("command", S_IRUGO | S_IWUSR,
--				  samsung->debug.root, &samsung->debug.command);
--	if (!dent)
--		goto error_debugfs;
+-	f = debugfs_create_file("dev_state", S_IFREG | S_IRUGO,
+-				dir, pmc, &pmc_dev_state_fops);
+-	if (!f)
+-		goto err;
 -
--	dent = debugfs_create_u32("d0", S_IRUGO | S_IWUSR, samsung->debug.root,
--				  &samsung->debug.data.d0);
--	if (!dent)
--		goto error_debugfs;
+-	f = debugfs_create_file("pss_state", S_IFREG | S_IRUGO,
+-				dir, pmc, &pmc_pss_state_fops);
+-	if (!f)
+-		goto err;
 -
--	dent = debugfs_create_u32("d1", S_IRUGO | S_IWUSR, samsung->debug.root,
--				  &samsung->debug.data.d1);
--	if (!dent)
--		goto error_debugfs;
--
--	dent = debugfs_create_u16("d2", S_IRUGO | S_IWUSR, samsung->debug.root,
--				  &samsung->debug.data.d2);
--	if (!dent)
--		goto error_debugfs;
--
--	dent = debugfs_create_u8("d3", S_IRUGO | S_IWUSR, samsung->debug.root,
--				 &samsung->debug.data.d3);
--	if (!dent)
--		goto error_debugfs;
--
--	dent = debugfs_create_blob("data", S_IRUGO | S_IWUSR,
--				   samsung->debug.root,
--				   &samsung->debug.data_wrapper);
--	if (!dent)
--		goto error_debugfs;
--
--	dent = debugfs_create_blob("f0000_segment", S_IRUSR | S_IWUSR,
--				   samsung->debug.root,
--				   &samsung->debug.f0000_wrapper);
--	if (!dent)
--		goto error_debugfs;
--
--	dent = debugfs_create_file("call", S_IFREG | S_IRUGO,
--				   samsung->debug.root, samsung,
--				   &samsung_laptop_call_fops);
--	if (!dent)
--		goto error_debugfs;
--
--	dent = debugfs_create_blob("sdiag", S_IRUGO | S_IWUSR,
--				   samsung->debug.root,
--				   &samsung->debug.sdiag_wrapper);
--	if (!dent)
--		goto error_debugfs;
+-	f = debugfs_create_file("sleep_state", S_IFREG | S_IRUGO,
+-				dir, pmc, &pmc_sleep_tmr_fops);
+-	if (!f)
+-		goto err;
 -
 -	return 0;
--
--error_debugfs:
--	samsung_debugfs_exit(samsung);
--	return -ENOMEM;
-+	debugfs_create_u16("command", S_IRUGO | S_IWUSR, root,
-+			   &samsung->debug.command);
-+	debugfs_create_u32("d0", S_IRUGO | S_IWUSR, root,
-+			   &samsung->debug.data.d0);
-+	debugfs_create_u32("d1", S_IRUGO | S_IWUSR, root,
-+			   &samsung->debug.data.d1);
-+	debugfs_create_u16("d2", S_IRUGO | S_IWUSR, root,
-+			   &samsung->debug.data.d2);
-+	debugfs_create_u8("d3", S_IRUGO | S_IWUSR, root,
-+			  &samsung->debug.data.d3);
-+	debugfs_create_blob("data", S_IRUGO | S_IWUSR, root,
-+			    &samsung->debug.data_wrapper);
-+	debugfs_create_blob("f0000_segment", S_IRUSR | S_IWUSR, root,
-+			    &samsung->debug.f0000_wrapper);
-+	debugfs_create_file("call", S_IFREG | S_IRUGO, root, samsung,
-+			    &samsung_laptop_call_fops);
-+	debugfs_create_blob("sdiag", S_IRUGO | S_IWUSR, root,
-+			    &samsung->debug.sdiag_wrapper);
+-err:
+-	pmc_dbgfs_unregister(pmc);
+-	return -ENODEV;
++	debugfs_create_file("dev_state", S_IFREG | S_IRUGO, dir, pmc,
++			    &pmc_dev_state_fops);
++	debugfs_create_file("pss_state", S_IFREG | S_IRUGO, dir, pmc,
++			    &pmc_pss_state_fops);
++	debugfs_create_file("sleep_state", S_IFREG | S_IRUGO, dir, pmc,
++			    &pmc_sleep_tmr_fops);
  }
+ #else
+-static int pmc_dbgfs_register(struct pmc_dev *pmc)
++static void pmc_dbgfs_register(struct pmc_dev *pmc)
+ {
+-	return 0;
+ }
+ #endif /* CONFIG_DEBUG_FS */
  
- static void samsung_sabi_exit(struct samsung_laptop *samsung)
-@@ -1745,9 +1706,7 @@ static int __init samsung_init(void)
- 	if (ret)
- 		goto error_lid_handling;
+@@ -500,9 +479,7 @@ static int pmc_setup_dev(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	/* PMC hardware registers setup */
+ 	pmc_hw_reg_setup(pmc);
  
--	ret = samsung_debugfs_init(samsung);
+-	ret = pmc_dbgfs_register(pmc);
 -	if (ret)
--		goto error_debugfs;
-+	samsung_debugfs_init(samsung);
+-		dev_warn(&pdev->dev, "debugfs register failed\n");
++	pmc_dbgfs_register(pmc);
  
- 	samsung->pm_nb.notifier_call = samsung_pm_notification;
- 	register_pm_notifier(&samsung->pm_nb);
-@@ -1755,8 +1714,6 @@ static int __init samsung_init(void)
- 	samsung_platform_device = samsung->platform_device;
- 	return ret;
- 
--error_debugfs:
--	samsung_lid_handling_exit(samsung);
- error_lid_handling:
- 	samsung_leds_exit(samsung);
- error_leds:
+ 	/* Register platform clocks - PMC_PLT_CLK [0..5] */
+ 	ret = pmc_setup_clks(pdev, pmc->regmap, data);
 -- 
 2.22.0
 
