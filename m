@@ -2,93 +2,82 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E96CC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E48FC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0378F20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44ACC20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:03:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X4fqxkFU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qNxuFUcW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405792AbfFLI7P (ORCPT
+        id S2436773AbfFLJDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:59:15 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43595 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729413AbfFLI7O (ORCPT
+        Wed, 12 Jun 2019 05:03:12 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37032 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727855AbfFLJDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:59:14 -0400
-Received: by mail-lf1-f65.google.com with SMTP id j29so11445246lfk.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V2L+zl6dowkd/yIBbT7eRrGp601e57v2tAHbEjBGJTw=;
-        b=X4fqxkFUUtZqYl036ehGL/EeenuwWFqKCNrIgtl0sfKO1CziKoyuiKNHtxSW7mmdT/
-         GmMSjXhOyHCeA2bLmKJ4EYbomOxRED8IWzZlcIOAzfR30W2mt8A2uoEoKFoVGcG5Ihxj
-         GFrYwP1ohGAB58nb+WHlzAwM0jSdY3H/80yFHE/XZ+IgCbPGlbi1HDfBC9PbEtgPAn99
-         nQxs3HRHSInY1DkPn/OAJ9SKqQ5nqiDk5sZkBuJuWFkpBFuB38xQt5fJ1Fm9eqKu8OgJ
-         PT0emqTy4xxMN4Rr552UHUcBV9d0PjU9STLc/KZiaiv5JPdhC6w+GrFWUxEn/fdfq0+/
-         OtOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V2L+zl6dowkd/yIBbT7eRrGp601e57v2tAHbEjBGJTw=;
-        b=LvhWfFXjD7jngz9nYRPnuTRhjGxcrSepkccd1A+2PYhLG45+0kcLgU1vUqYInxz/5U
-         asUQA2Dtavp7WQCzzbvMJ+id1lAkG1MBDCqAvivzc+iy0/xNdbmaWRMGEJxPU1RdXyy1
-         MKuaC4Yaby99dDTHw6ekpoTlFj50ZPlglf+o5GH1AGQqguk61edn5Sm4N2vPxV8OKBpg
-         FkjstvA/UykfgFmFBczYsJPI94KWa61mOxasAYx6g0o9t1AM9zVHd+kzr2qPxGpdKKRW
-         ApU1TatDA58PszoX41TQIr05pQBhGblRoZAGN0EpXfbt8LkkrJ3qk4mM4QM7uoWCKoj4
-         nikA==
-X-Gm-Message-State: APjAAAUbH4dklPk8G1KeHFU7bP3EuHpL+SiSg3ydjkBJp8Skr+2CVWJO
-        OXlWwYN3jjE09wK3OfNqeNGbzEnNjhop8w9gDYVCW+wRDpE=
-X-Google-Smtp-Source: APXvYqxjS/7aTV8YOZIs8AdNxK6uGmYNc9VJ3EJJBU3O7jWDspDz9e4LDwcqW1lbvKFFYrHG6CHJ4s9KIP+m6y6ZICQ=
-X-Received: by 2002:ac2:598d:: with SMTP id w13mr39036425lfn.165.1560329952465;
- Wed, 12 Jun 2019 01:59:12 -0700 (PDT)
+        Wed, 12 Jun 2019 05:03:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KW6pIO4BW4A8NeSYhtYsxDO73dMYune9Npy8bVLERxc=; b=qNxuFUcW0ZQz2Y/FnKYi/jyGT
+        PwGnV1Uup63HRxijOvNiF1QjNrbJne2nId4R5WNXCUDmnWEWrlT6l40vgIJU2t5vbaaK+g+7GS49R
+        /DMOjgHqucWyYByVbDcFvfvDQaGpfR56oBxnB2IUurjJ7hB2Y37Cx2+RhmXzEWxlb/DhZlOuH3XIF
+        Adf3UXp4hKRkEsforUJGAvv0oMvD0fE5NSJYj8PCc8eCxwGKo4nhFUoFenCrr7bQp0eHTm+1Xs52V
+        EY1RssJdTe/ZkE5eI4ZwZXQd/B/iPmQfmTn4jxmBZ66NB+rLYG+bSIz8/MW2qMYJn6cKZkrzrLnjD
+        Uqnl92lHQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1haz9p-0004Xd-Hq; Wed, 12 Jun 2019 09:03:01 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8DDC320564E00; Wed, 12 Jun 2019 11:02:57 +0200 (CEST)
+Date:   Wed, 12 Jun 2019 11:02:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        LKML <linux-kernel@vger.kernel.org>, clemens@ladisch.de,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        Waiman Long <longman@redhat.com>, x86@kernel.org
+Subject: Re: infinite loop in read_hpet from ktime_get_boot_fast_ns
+Message-ID: <20190612090257.GF3436@hirez.programming.kicks-ass.net>
+References: <CAHmME9qBDtO1vJrA2Ch3SQigsu435wR7Q3vTm_3R=u=BE49S-Q@mail.gmail.com>
+ <alpine.DEB.2.21.1906112257120.2214@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20190610171103.30903-1-grygorii.strashko@ti.com> <20190610171103.30903-20-grygorii.strashko@ti.com>
-In-Reply-To: <20190610171103.30903-20-grygorii.strashko@ti.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Jun 2019 10:59:00 +0200
-Message-ID: <CACRpkdYdcj9kEntzZ0q=xkEKjdzH6tmWPYBAH+8iSpPGvMaT5w@mail.gmail.com>
-Subject: Re: [PATCH-next 19/20] gpio: gpio-omap: irq_startup() must not return
- error codes
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Russell King <rmk@arm.linux.org.uk>,
-        Tony Lindgren <tony@atomide.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1906112257120.2214@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 7:13 PM Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
+On Tue, Jun 11, 2019 at 11:09:20PM +0200, Thomas Gleixner wrote:
+> Jason,
+> 
+> On Fri, 7 Jun 2019, Jason A. Donenfeld wrote:
+> 
+> Adding a few more people on cc and keeping full context.
+> 
+> > Hey Thomas,
+> > 
+> > After some discussions here prior about the different clocks
+> > available, WireGuard uses ktime_get_boot_fast_ns() pretty extensively.
+> > The requirement is for a quasi-accurate monotonic counter that takes
+> > into account sleep time, and this seems to fit the bill pretty well.
 
-> From: Russell King <rmk+kernel@armlinux.org.uk>
->
-> The irq_startup() method returns an unsigned int, but in __irq_startup()
-> it is assigned to an int.  However, nothing checks for errors, so any
-> error that is returned is ignored.
->
-> Remove the check for GPIO-input mode and the error return.
->
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+How quasi? Do the comments in kernel/sched/clock.c look like something
+you could use?
 
-Patch applied.
-
-Yours,
-Linus Walleij
+As already mentioned in the other tasks, anything ktime will be
+horrifically crap when it ends up using the HPET, the code in
+kernel/sched/clock.c is a best effort to keep using TSC even when it is
+deemed unusable for timekeeping.
