@@ -2,109 +2,164 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2427EC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9C8C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E353B21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:36:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560353778;
-	bh=HpcaMDHf6apvppP8x1d2hnvQGsEvTJUrmUraAlHDIJU=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=H3+3XxNfGDjKHERXBQ5nG2t+n+sd97Xpu4Pjd2ppuMOgGCLVgqbGCVu3osNXmBn2C
-	 46bw+PKnECLPYNxTukekcdoxMoiR9aJ1km/eK70ZFc007Q1IBPmPwZ97Y0KRp45EIF
-	 8wqbKE9/i7b001AJzL3OSGyGC7lnsuuU1t4mbNBI=
+	by mail.kernel.org (Postfix) with ESMTP id E771E215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:36:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="h/VdZDVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409454AbfFLPgR (ORCPT
+        id S2437515AbfFLPg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:36:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409443AbfFLPgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:36:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 794D7215EA;
-        Wed, 12 Jun 2019 15:36:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560353776;
-        bh=HpcaMDHf6apvppP8x1d2hnvQGsEvTJUrmUraAlHDIJU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=V5i4TYClZNXSEepTT76JWjOsB0zEF+EF5m9+f/JvCOmiWsKnwOdwyjW0w2BwYwVRr
-         ECYbjVa4bOvKF9hxwBbkNNeni8VaIWEdMVCvc5cYQMkje62tUzDIUs+YUkZt9Znblm
-         7hwuOFvZva7pm/aH44ijpEL4rlmUtUN14ZhSyqEw=
-Date:   Wed, 12 Jun 2019 17:36:13 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] lib: notifier-error-inject: no need to check return value of
- debugfs_create functions
-Message-ID: <20190612153613.GA21239@kroah.com>
+        Wed, 12 Jun 2019 11:36:26 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:29736 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409443AbfFLPgZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:36:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1560353785; x=1591889785;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=iysjHFEmFK6WReRy+l8vRaIRl3mJUVuzUzI1BfSSuWA=;
+  b=h/VdZDVYQt+QuQNBHV4WQ+OaIWjgZxkOixOP5tuhujVKt3nw4Zw7Tj66
+   rcjM+fuAzhGM8euXjkXwb1oZC9MjkJ33u9BD/n7YQjxyO9Qwo8+wlGgFL
+   SYPcbygmmVGaWnFg3thwdySl+31uA18jG+QsdDO0nMt/E4MQ5r8a30n00
+   Y=;
+X-IronPort-AV: E=Sophos;i="5.62,366,1554768000"; 
+   d="scan'208";a="400429507"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 12 Jun 2019 15:36:23 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 494C6A245B;
+        Wed, 12 Jun 2019 15:36:18 +0000 (UTC)
+Received: from EX13D08UEE002.ant.amazon.com (10.43.62.92) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 12 Jun 2019 15:36:18 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D08UEE002.ant.amazon.com (10.43.62.92) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 12 Jun 2019 15:36:18 +0000
+Received: from u6cf1b7119fa15b.ant.amazon.com (10.28.85.98) by
+ mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Wed, 12 Jun 2019 15:36:15 +0000
+From:   Sam Caccavale <samcacc@amazon.de>
+CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
+        <wipawel@amazon.de>, <dwmw@amazon.co.uk>, <mpohlack@amazon.de>,
+        <graf@amazon.de>, <karahmed@amazon.de>,
+        <andrew.cooper3@citrix.com>, <JBeulich@suse.com>,
+        <pbonzini@redhat.com>, <rkrcmar@redhat.com>, <tglx@linutronix.de>,
+        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+        <paullangton4@gmail.com>, <anirudhkaushik@google.com>,
+        <x86@kernel.org>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Sam Caccavale <samcacc@amazon.de>
+Subject: [v2, 0/4] x86 instruction emulator fuzzing
+Date:   Wed, 12 Jun 2019 17:35:56 +0200
+Message-ID: <20190612153600.13073-1-samcacc@amazon.de>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
+Dear all,
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- lib/notifier-error-inject.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+This series aims to provide an entrypoint for, and fuzz KVM's x86 instruction
+emulator from userspace.  It mirrors Xen's application of the AFL fuzzer to
+it's instruction emulator in the hopes of discovering vulnerabilities.
+Since this entrypoint also allows arbitrary execution of the emulators code
+from userspace, it may also be useful for testing.
 
-diff --git a/lib/notifier-error-inject.c b/lib/notifier-error-inject.c
-index 3d2ba7cf83f4..21016b32d313 100644
---- a/lib/notifier-error-inject.c
-+++ b/lib/notifier-error-inject.c
-@@ -59,33 +59,22 @@ struct dentry *notifier_err_inject_init(const char *name, struct dentry *parent,
- 	err_inject->nb.priority = priority;
- 
- 	dir = debugfs_create_dir(name, parent);
--	if (!dir)
--		return ERR_PTR(-ENOMEM);
- 
- 	actions_dir = debugfs_create_dir("actions", dir);
--	if (!actions_dir)
--		goto fail;
- 
- 	for (action = err_inject->actions; action->name; action++) {
- 		struct dentry *action_dir;
- 
- 		action_dir = debugfs_create_dir(action->name, actions_dir);
--		if (!action_dir)
--			goto fail;
- 
- 		/*
- 		 * Create debugfs r/w file containing action->error. If
- 		 * notifier call chain is called with action->val, it will
- 		 * fail with the error code
- 		 */
--		if (!debugfs_create_errno("error", mode, action_dir,
--					&action->error))
--			goto fail;
-+		debugfs_create_errno("error", mode, action_dir, &action->error);
- 	}
- 	return dir;
--fail:
--	debugfs_remove_recursive(dir);
--	return ERR_PTR(-ENOMEM);
- }
- EXPORT_SYMBOL_GPL(notifier_err_inject_init);
- 
--- 
-2.22.0
+The current 4 patches build the emulator and 2 harnesses: simple-harness is
+an example of unit testing; afl-harness is a frontend for the AFL fuzzer.
+
+Patches
+=======
+
+- 01: Builds and links afl-harness with the required kernel objects.
+- 02: Introduces the minimal set of emulator operations and supporting code
+to emulate simple instructions.
+- 03: Demonstrates simple-harness as a unit test.
+- 04: Adds scripts for install, running, and crash triage.
+
+Any comments/suggestions are greatly appreciated.
+
+Best,
+Sam Caccavale
+
+Sam Caccavale (4):
+  Build target for emulate.o as a userspace binary
+  Emulate simple x86 instructions in userspace
+  Demonstrating unit testing via simple-harness
+  Added scripts for filtering, building, deploying
+
+ tools/Makefile                                |   9 +
+ tools/fuzz/x86ie/.gitignore                   |   2 +
+ tools/fuzz/x86ie/Makefile                     |  54 +++
+ tools/fuzz/x86ie/README.md                    |  12 +
+ tools/fuzz/x86ie/afl-harness.c                | 151 +++++++
+ tools/fuzz/x86ie/common.h                     |  87 ++++
+ tools/fuzz/x86ie/emulator_ops.c               | 398 ++++++++++++++++++
+ tools/fuzz/x86ie/emulator_ops.h               | 120 ++++++
+ tools/fuzz/x86ie/scripts/afl-many             |  28 ++
+ tools/fuzz/x86ie/scripts/bin.sh               |  49 +++
+ tools/fuzz/x86ie/scripts/build.sh             |  32 ++
+ tools/fuzz/x86ie/scripts/coalesce.sh          |   6 +
+ tools/fuzz/x86ie/scripts/deploy.sh            |   9 +
+ tools/fuzz/x86ie/scripts/deploy_remote.sh     |   9 +
+ tools/fuzz/x86ie/scripts/gen_output.sh        |  11 +
+ tools/fuzz/x86ie/scripts/install_afl.sh       |  14 +
+ .../fuzz/x86ie/scripts/install_deps_ubuntu.sh |   5 +
+ tools/fuzz/x86ie/scripts/rebuild.sh           |   6 +
+ tools/fuzz/x86ie/scripts/run.sh               |  10 +
+ tools/fuzz/x86ie/scripts/summarize.sh         |   9 +
+ tools/fuzz/x86ie/simple-harness.c             |  42 ++
+ tools/fuzz/x86ie/stubs.c                      |  56 +++
+ tools/fuzz/x86ie/stubs.h                      |  52 +++
+ 23 files changed, 1171 insertions(+)
+ create mode 100644 tools/fuzz/x86ie/.gitignore
+ create mode 100644 tools/fuzz/x86ie/Makefile
+ create mode 100644 tools/fuzz/x86ie/README.md
+ create mode 100644 tools/fuzz/x86ie/afl-harness.c
+ create mode 100644 tools/fuzz/x86ie/common.h
+ create mode 100644 tools/fuzz/x86ie/emulator_ops.c
+ create mode 100644 tools/fuzz/x86ie/emulator_ops.h
+ create mode 100755 tools/fuzz/x86ie/scripts/afl-many
+ create mode 100755 tools/fuzz/x86ie/scripts/bin.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/build.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/coalesce.sh
+ create mode 100644 tools/fuzz/x86ie/scripts/deploy.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/deploy_remote.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/gen_output.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/install_afl.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/rebuild.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/run.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/summarize.sh
+ create mode 100644 tools/fuzz/x86ie/simple-harness.c
+ create mode 100644 tools/fuzz/x86ie/stubs.c
+ create mode 100644 tools/fuzz/x86ie/stubs.h
+
+--
+2.17.1
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
 
