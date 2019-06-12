@@ -2,110 +2,102 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5276FC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60C3C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33BC920684
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA976215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439255AbfFLMtO (ORCPT
+        id S2439269AbfFLMtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:49:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55382 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439235AbfFLMtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:49:13 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A1A1D305B952;
-        Wed, 12 Jun 2019 12:49:12 +0000 (UTC)
-Received: from dhcp201-121.englab.pnq.redhat.com (ovpn-116-228.sin2.redhat.com [10.67.116.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6AD7577DEF;
-        Wed, 12 Jun 2019 12:48:28 +0000 (UTC)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pagupta@redhat.com,
-        pbonzini@redhat.com, yuval.shaia@oracle.com, kilobyte@angband.pl,
-        jstaron@google.com, rdunlap@infradead.org, snitzer@redhat.com
-Subject: [PATCH v13 5/7] dax: check synchronous mapping is supported
-Date:   Wed, 12 Jun 2019 18:15:25 +0530
-Message-Id: <20190612124527.3763-6-pagupta@redhat.com>
-In-Reply-To: <20190612124527.3763-1-pagupta@redhat.com>
-References: <20190612124527.3763-1-pagupta@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 12 Jun 2019 12:49:12 +0000 (UTC)
+        Wed, 12 Jun 2019 08:49:17 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:32840 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2439257AbfFLMtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:49:16 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D58236C600BA13826720;
+        Wed, 12 Jun 2019 20:49:11 +0800 (CST)
+Received: from [127.0.0.1] (10.177.223.23) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 12 Jun 2019
+ 20:49:07 +0800
+Subject: Re: [PATCH v11 0/3] remain and optimize memblock_next_valid_pfn on
+ arm and arm64
+To:     Jia He <hejianet@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+CC:     Will Deacon <will.deacon@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kemi Wang <kemi.wang@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Petr Tesarik <ptesarik@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        "AKASHI Takahiro" <takahiro.akashi@linaro.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Andrey Ryabinin" <aryabinin@virtuozzo.com>,
+        Laura Abbott <labbott@redhat.com>,
+        "Daniel Vacek" <neelx@redhat.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        "Kees Cook" <keescook@chromium.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>,
+        "Jia He" <jia.he@hxt-semitech.com>,
+        Gioh Kim <gi-oh.kim@profitbricks.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Steve Capper <steve.capper@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        "Philip Derrin" <philip@cog.systems>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <1534907237-2982-1-git-send-email-jia.he@hxt-semitech.com>
+ <CAKv+Gu9u8RcrzSHdgXiqHS9HK1aSrjbPxVUSCP0DT4erAhx0pw@mail.gmail.com>
+ <20180907144447.GD12788@arm.com>
+ <84b8e874-2a52-274c-4806-968470e66a08@huawei.com>
+ <CAKv+Gu9fd2Y7USDYnQdUuYd9L2OD99kU4A1x1JSF442KN96TTA@mail.gmail.com>
+ <2de74de9-35b0-5e62-d822-1be59f0ef605@huawei.com>
+ <8fdf5545-21b7-354c-4c4b-e1e92048864f@gmail.com>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <ed84966f-81ed-3be9-5b21-1fd92deea3cc@huawei.com>
+Date:   Wed, 12 Jun 2019 20:48:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.0
+MIME-Version: 1.0
+In-Reply-To: <8fdf5545-21b7-354c-4c4b-e1e92048864f@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.223.23]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces 'daxdev_mapping_supported' helper
-which checks if 'MAP_SYNC' is supported with filesystem
-mapping. It also checks if corresponding dax_device is
-synchronous. Virtio pmem device is asynchronous and
-does not not support VM_SYNC.
+On 2019/6/12 9:05, Jia He wrote:
+>>
+>>> So what I would like to see is the patch set being proposed again,
+>>> with the new data points added for documentation. Also, the commit
+>>> logs need to crystal clear about how the meaning of PFN validity
+>>> differs between ARM and other architectures, and why the assumptions
+>>> that the optimization is based on are guaranteed to hold.
+>> I think Jia He no longer works for HXT, if don't mind, I can repost
+>> this patch set with Jia He's authority unchanged.
+> Ok, I don't mind that, thanks for your followup :)
 
-Suggested-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
----
- include/linux/dax.h | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+That's great, I will prepare a new version with Ard's comments addressed
+then repost.
 
-diff --git a/include/linux/dax.h b/include/linux/dax.h
-index 2b106752b1b8..267251a394fa 100644
---- a/include/linux/dax.h
-+++ b/include/linux/dax.h
-@@ -42,6 +42,18 @@ void dax_write_cache(struct dax_device *dax_dev, bool wc);
- bool dax_write_cache_enabled(struct dax_device *dax_dev);
- bool dax_synchronous(struct dax_device *dax_dev);
- void set_dax_synchronous(struct dax_device *dax_dev);
-+/*
-+ * Check if given mapping is supported by the file / underlying device.
-+ */
-+static inline bool daxdev_mapping_supported(struct vm_area_struct *vma,
-+					    struct dax_device *dax_dev)
-+{
-+	if (!(vma->vm_flags & VM_SYNC))
-+		return true;
-+	if (!IS_DAX(file_inode(vma->vm_file)))
-+		return false;
-+	return dax_synchronous(dax_dev);
-+}
- #else
- static inline struct dax_device *dax_get_by_host(const char *host)
- {
-@@ -69,6 +81,11 @@ static inline bool dax_write_cache_enabled(struct dax_device *dax_dev)
- {
- 	return false;
- }
-+static inline bool daxdev_mapping_supported(struct vm_area_struct *vma,
-+				struct dax_device *dax_dev)
-+{
-+	return !(vma->vm_flags & VM_SYNC);
-+}
- #endif
- 
- struct writeback_control;
--- 
-2.20.1
+Thanks
+Hanjun
 
