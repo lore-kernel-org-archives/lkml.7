@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE49BC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42526C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C5E2208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 132B9215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560341600;
-	bh=HEfVF3kXxJ0nC/WZgJnYTwFfoLD22fZO73D9qujcDW0=;
+	s=default; t=1560341602;
+	bh=4SmLU4+bYJ493/LkbHQOOJEWVZjXMM4kmuEWI0pnj34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cop6uFaGk6WJ6WpciC1TZrdZNzR5whCnruYpS1q3SBFAj4nhkZOByPuwrN+9/8E+i
-	 s8ABx3jLpOuGnXdRufNjmd8//7cVzB3bcMcfx6kKTSmRKO82vw1KUdyadG/D3XcoZ/
-	 SQcTiVmgJ/htSShrUsKuVRSmbwMnlmRlrpTVZoRo=
+	b=JXaCSLIR036Y/Ujpiq7GJGmyftsx5HvyaB2DHQpYwM20edzmoZSlmfr9X72q11h1A
+	 Wl7YvJ6aVyHir8N1iamcgV8QWo5L1NiR2tz/RqsUUVPgHAKVDCBu/x4ztsFQA+ITq5
+	 x4xaESu1mLEtWp5ZDBWc24d97sWf9l9/cPvA5M04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732209AbfFLMNU (ORCPT
+        id S1732325AbfFLMNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:13:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53402 "EHLO mail.kernel.org"
+        Wed, 12 Jun 2019 08:13:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726864AbfFLMNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:13:15 -0400
+        id S1727584AbfFLMNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:13:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63C27208C4;
-        Wed, 12 Jun 2019 12:13:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18D67208CA;
+        Wed, 12 Jun 2019 12:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560341593;
-        bh=HEfVF3kXxJ0nC/WZgJnYTwFfoLD22fZO73D9qujcDW0=;
+        s=default; t=1560341596;
+        bh=4SmLU4+bYJ493/LkbHQOOJEWVZjXMM4kmuEWI0pnj34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uly5nhvqu+cerVeYBgywQQJ0UwSMl6Ifr/guGTXQVODWkOj6CgbNDKDo8ju5vus7/
-         a7sg0+ot4IZ0H3oWXRpJwjqP1PitvtQvuKJ/2u76Kh3XQ0EktwCYlzeHB7bb3toIY1
-         CKAP7QnDPgYo/Fk1aMRXvshU4DIkKRv8Ov3iRTFo=
+        b=xOic1LtMPlrND0Iel66b8vgdJ7aZZGUHA0gdaxVVqLFftppZ4ge75LL2t1hQUAec+
+         jQXWgUFJKI7Y8Teo8jvMjZWX9IfBLmuowqfKCNpxj4+S9sQjAVtC0HnDjaseaU71IO
+         chGqJDMMpFCgcs98V/JHE1/9vwIzRY2GMJ8baHSo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     dvhart@infradead.org, andy@infradead.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        acpi4asus-user@lists.sourceforge.net,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/8] platform: x86: asus-wmi: no need to check return value of debugfs_create functions
-Date:   Wed, 12 Jun 2019 14:12:52 +0200
-Message-Id: <20190612121258.19535-2-gregkh@linuxfoundation.org>
+Subject: [PATCH 3/8] platform: x86: dell-laptop: no need to check return value of debugfs_create functions
+Date:   Wed, 12 Jun 2019 14:12:53 +0200
+Message-Id: <20190612121258.19535-3-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190612121258.19535-1-gregkh@linuxfoundation.org>
 References: <20190612121258.19535-1-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,98 +63,33 @@ When calling debugfs functions, there is no need to ever check the
 return value.  The function can work or not, but the code logic should
 never do something different based on this.
 
-Cc: Corentin Chary <corentin.chary@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: "Pali Rohár" <pali.rohar@gmail.com>
 Cc: Darren Hart <dvhart@infradead.org>
 Cc: Andy Shevchenko <andy@infradead.org>
-Cc: acpi4asus-user@lists.sourceforge.net
 Cc: platform-driver-x86@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/platform/x86/asus-wmi.c | 47 ++++++++-------------------------
- 1 file changed, 11 insertions(+), 36 deletions(-)
+ drivers/platform/x86/dell-laptop.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 3e4336025e8f..4e3786eae349 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -2005,50 +2005,29 @@ static void asus_wmi_debugfs_exit(struct asus_wmi *asus)
- 	debugfs_remove_recursive(asus->debug.root);
- }
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index a561f653cf13..94a2f259031c 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -2176,9 +2176,8 @@ static int __init dell_init(void)
+ 	kbd_led_init(&platform_device->dev);
  
--static int asus_wmi_debugfs_init(struct asus_wmi *asus)
-+static void asus_wmi_debugfs_init(struct asus_wmi *asus)
- {
--	struct dentry *dent;
- 	int i;
+ 	dell_laptop_dir = debugfs_create_dir("dell_laptop", NULL);
+-	if (dell_laptop_dir != NULL)
+-		debugfs_create_file("rfkill", 0444, dell_laptop_dir, NULL,
+-				    &dell_debugfs_fops);
++	debugfs_create_file("rfkill", 0444, dell_laptop_dir, NULL,
++			    &dell_debugfs_fops);
  
- 	asus->debug.root = debugfs_create_dir(asus->driver->name, NULL);
--	if (!asus->debug.root) {
--		pr_err("failed to create debugfs directory\n");
--		goto error_debugfs;
--	}
+ 	dell_laptop_register_notifier(&dell_laptop_notifier);
  
--	dent = debugfs_create_x32("method_id", S_IRUGO | S_IWUSR,
--				  asus->debug.root, &asus->debug.method_id);
--	if (!dent)
--		goto error_debugfs;
-+	debugfs_create_x32("method_id", S_IRUGO | S_IWUSR, asus->debug.root,
-+			   &asus->debug.method_id);
- 
--	dent = debugfs_create_x32("dev_id", S_IRUGO | S_IWUSR,
--				  asus->debug.root, &asus->debug.dev_id);
--	if (!dent)
--		goto error_debugfs;
-+	debugfs_create_x32("dev_id", S_IRUGO | S_IWUSR, asus->debug.root,
-+			   &asus->debug.dev_id);
- 
--	dent = debugfs_create_x32("ctrl_param", S_IRUGO | S_IWUSR,
--				  asus->debug.root, &asus->debug.ctrl_param);
--	if (!dent)
--		goto error_debugfs;
-+	debugfs_create_x32("ctrl_param", S_IRUGO | S_IWUSR, asus->debug.root,
-+			   &asus->debug.ctrl_param);
- 
- 	for (i = 0; i < ARRAY_SIZE(asus_wmi_debug_files); i++) {
- 		struct asus_wmi_debugfs_node *node = &asus_wmi_debug_files[i];
- 
- 		node->asus = asus;
--		dent = debugfs_create_file(node->name, S_IFREG | S_IRUGO,
--					   asus->debug.root, node,
--					   &asus_wmi_debugfs_io_ops);
--		if (!dent) {
--			pr_err("failed to create debug file: %s\n", node->name);
--			goto error_debugfs;
--		}
-+		debugfs_create_file(node->name, S_IFREG | S_IRUGO,
-+				    asus->debug.root, node,
-+				    &asus_wmi_debugfs_io_ops);
- 	}
--
--	return 0;
--
--error_debugfs:
--	asus_wmi_debugfs_exit(asus);
--	return -ENOMEM;
- }
- 
- static int asus_wmi_fan_init(struct asus_wmi *asus)
-@@ -2162,14 +2141,10 @@ static int asus_wmi_add(struct platform_device *pdev)
- 		goto fail_wmi_handler;
- 	}
- 
--	err = asus_wmi_debugfs_init(asus);
--	if (err)
--		goto fail_debugfs;
-+	asus_wmi_debugfs_init(asus);
- 
- 	return 0;
- 
--fail_debugfs:
--	wmi_remove_notify_handler(asus->driver->event_guid);
- fail_wmi_handler:
- 	asus_wmi_backlight_exit(asus);
- fail_backlight:
 -- 
 2.22.0
 
