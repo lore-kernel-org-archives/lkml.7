@@ -2,189 +2,120 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58933C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFDCC31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A8120874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F03720874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:21:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408700AbfFLJUO (ORCPT
+        id S2437369AbfFLJVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:20:14 -0400
-Received: from smtp.nue.novell.com ([195.135.221.5]:49861 "EHLO
-        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406714AbfFLJUO (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
-        Wed, 12 Jun 2019 05:20:14 -0400
-Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
-        by smtp.nue.novell.com with ESMTP (TLS encrypted); Wed, 12 Jun 2019 11:20:11 +0200
-Received: from suselix (nwb-a10-snat.microfocus.com [10.120.13.202])
-        by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted); Wed, 12 Jun 2019 07:17:35 +0100
-Date:   Wed, 12 Jun 2019 08:17:32 +0200
-From:   Andreas Herrmann <aherrmann@suse.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH] blkio-controller.txt: Remove references to CFQ
-Message-ID: <20190612061732.GA3711@suselix>
+        Wed, 12 Jun 2019 05:21:11 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43986 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2436698AbfFLJVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:21:11 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C1E5B7232FB05951CF92;
+        Wed, 12 Jun 2019 17:21:07 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 12 Jun 2019
+ 17:21:00 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <ast@kernel.org>, <daniel@iogearbox.net>, <kafai@fb.com>,
+        <songliubraving@fb.com>, <yhs@fb.com>, <davem@davemloft.net>,
+        <jakub.kicinski@netronome.com>, <jonathan.lemon@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <xdp-newbies@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH bpf-next] bpf: Fix build error without CONFIG_INET
+Date:   Wed, 12 Jun 2019 17:18:47 +0800
+Message-ID: <20190612091847.23708-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CFQ is gone. No need anymore to document its "proportional weight time
-based division of disk policy".
+If CONFIG_INET is not set, building fails:
 
-Signed-off-by: Andreas Herrmann <aherrmann@suse.com>
+kernel/bpf/verifier.o: In function `check_mem_access':
+verifier.c: undefined reference to `bpf_xdp_sock_is_valid_access'
+kernel/bpf/verifier.o: In function `convert_ctx_accesses':
+verifier.c: undefined reference to `bpf_xdp_sock_convert_ctx_access'
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: fada7fdc83c0 ("bpf: Allow bpf_map_lookup_elem() on an xskmap")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- Documentation/cgroup-v1/blkio-controller.txt | 96 ++--------------------------
- 1 file changed, 7 insertions(+), 89 deletions(-)
+ include/linux/bpf.h | 31 ++++++++++++++++++++++++-------
+ 1 file changed, 24 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/cgroup-v1/blkio-controller.txt b/Documentation/cgroup-v1/blkio-controller.txt
-index 673dc34d3f78..d1a1b7bdd03a 100644
---- a/Documentation/cgroup-v1/blkio-controller.txt
-+++ b/Documentation/cgroup-v1/blkio-controller.txt
-@@ -8,61 +8,13 @@ both at leaf nodes as well as at intermediate nodes in a storage hierarchy.
- Plan is to use the same cgroup based management interface for blkio controller
- and based on user options switch IO policies in the background.
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 4118f3d..72ca1e7 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -725,13 +725,6 @@ void __cpu_map_insert_ctx(struct bpf_map *map, u32 index);
+ void __cpu_map_flush(struct bpf_map *map);
+ int cpu_map_enqueue(struct bpf_cpu_map_entry *rcpu, struct xdp_buff *xdp,
+ 		    struct net_device *dev_rx);
+-bool bpf_xdp_sock_is_valid_access(int off, int size, enum bpf_access_type type,
+-				  struct bpf_insn_access_aux *info);
+-u32 bpf_xdp_sock_convert_ctx_access(enum bpf_access_type type,
+-				    const struct bpf_insn *si,
+-				    struct bpf_insn *insn_buf,
+-				    struct bpf_prog *prog,
+-				    u32 *target_size);
  
--Currently two IO control policies are implemented. First one is proportional
--weight time based division of disk policy. It is implemented in CFQ. Hence
--this policy takes effect only on leaf nodes when CFQ is being used. The second
--one is throttling policy which can be used to specify upper IO rate limits
--on devices. This policy is implemented in generic block layer and can be
--used on leaf nodes as well as higher level logical devices like device mapper.
-+One IO control policy is throttling policy which can be used to
-+specify upper IO rate limits on devices. This policy is implemented in
-+generic block layer and can be used on leaf nodes as well as higher
-+level logical devices like device mapper.
+ /* Return map's numa specified by userspace */
+ static inline int bpf_map_attr_numa_node(const union bpf_attr *attr)
+@@ -1107,6 +1100,15 @@ u32 bpf_tcp_sock_convert_ctx_access(enum bpf_access_type type,
+ 				    struct bpf_insn *insn_buf,
+ 				    struct bpf_prog *prog,
+ 				    u32 *target_size);
++
++bool bpf_xdp_sock_is_valid_access(int off, int size, enum bpf_access_type type,
++				  struct bpf_insn_access_aux *info);
++
++u32 bpf_xdp_sock_convert_ctx_access(enum bpf_access_type type,
++				    const struct bpf_insn *si,
++				    struct bpf_insn *insn_buf,
++				    struct bpf_prog *prog,
++				    u32 *target_size);
+ #else
+ static inline bool bpf_tcp_sock_is_valid_access(int off, int size,
+ 						enum bpf_access_type type,
+@@ -1123,6 +1125,21 @@ static inline u32 bpf_tcp_sock_convert_ctx_access(enum bpf_access_type type,
+ {
+ 	return 0;
+ }
++static inline bool bpf_xdp_sock_is_valid_access(int off, int size,
++						enum bpf_access_type type,
++						struct bpf_insn_access_aux *info)
++{
++	return false;
++}
++
++static inline u32 bpf_xdp_sock_convert_ctx_access(enum bpf_access_type type,
++						  const struct bpf_insn *si,
++						  struct bpf_insn *insn_buf,
++						  struct bpf_prog *prog,
++						  u32 *target_size)
++{
++	return 0;
++}
+ #endif /* CONFIG_INET */
  
- HOWTO
- =====
--Proportional Weight division of bandwidth
-------------------------------------------
--You can do a very simple testing of running two dd threads in two different
--cgroups. Here is what you can do.
--
--- Enable Block IO controller
--	CONFIG_BLK_CGROUP=y
--
--- Enable group scheduling in CFQ
--	CONFIG_CFQ_GROUP_IOSCHED=y
--
--- Compile and boot into kernel and mount IO controller (blkio); see
--  cgroups.txt, Why are cgroups needed?.
--
--	mount -t tmpfs cgroup_root /sys/fs/cgroup
--	mkdir /sys/fs/cgroup/blkio
--	mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
--
--- Create two cgroups
--	mkdir -p /sys/fs/cgroup/blkio/test1/ /sys/fs/cgroup/blkio/test2
--
--- Set weights of group test1 and test2
--	echo 1000 > /sys/fs/cgroup/blkio/test1/blkio.weight
--	echo 500 > /sys/fs/cgroup/blkio/test2/blkio.weight
--
--- Create two same size files (say 512MB each) on same disk (file1, file2) and
--  launch two dd threads in different cgroup to read those files.
--
--	sync
--	echo 3 > /proc/sys/vm/drop_caches
--
--	dd if=/mnt/sdb/zerofile1 of=/dev/null &
--	echo $! > /sys/fs/cgroup/blkio/test1/tasks
--	cat /sys/fs/cgroup/blkio/test1/tasks
--
--	dd if=/mnt/sdb/zerofile2 of=/dev/null &
--	echo $! > /sys/fs/cgroup/blkio/test2/tasks
--	cat /sys/fs/cgroup/blkio/test2/tasks
--
--- At macro level, first dd should finish first. To get more precise data, keep
--  on looking at (with the help of script), at blkio.disk_time and
--  blkio.disk_sectors files of both test1 and test2 groups. This will tell how
--  much disk time (in milliseconds), each group got and how many sectors each
--  group dispatched to the disk. We provide fairness in terms of disk time, so
--  ideally io.disk_time of cgroups should be in proportion to the weight.
--
- Throttling/Upper Limit policy
- -----------------------------
- - Enable Block IO controller
-@@ -94,7 +46,7 @@ Throttling/Upper Limit policy
- Hierarchical Cgroups
- ====================
- 
--Both CFQ and throttling implement hierarchy support; however,
-+Throttling implements hierarchy support; however,
- throttling's hierarchy support is enabled iff "sane_behavior" is
- enabled from cgroup side, which currently is a development option and
- not publicly available.
-@@ -107,9 +59,8 @@ If somebody created a hierarchy like as follows.
- 			|
- 		     test3
- 
--CFQ by default and throttling with "sane_behavior" will handle the
--hierarchy correctly.  For details on CFQ hierarchy support, refer to
--Documentation/block/cfq-iosched.txt.  For throttling, all limits apply
-+Throttling with "sane_behavior" will handle the
-+hierarchy correctly. For throttling, all limits apply
- to the whole subtree while all statistics are local to the IOs
- directly generated by tasks in that cgroup.
- 
-@@ -130,10 +81,6 @@ CONFIG_DEBUG_BLK_CGROUP
- 	- Debug help. Right now some additional stats file show up in cgroup
- 	  if this option is enabled.
- 
--CONFIG_CFQ_GROUP_IOSCHED
--	- Enables group scheduling in CFQ. Currently only 1 level of group
--	  creation is allowed.
--
- CONFIG_BLK_DEV_THROTTLING
- 	- Enable block device throttling support in block layer.
- 
-@@ -344,32 +291,3 @@ Common files among various policies
- - blkio.reset_stats
- 	- Writing an int to this file will result in resetting all the stats
- 	  for that cgroup.
--
--CFQ sysfs tunable
--=================
--/sys/block/<disk>/queue/iosched/slice_idle
--------------------------------------------
--On a faster hardware CFQ can be slow, especially with sequential workload.
--This happens because CFQ idles on a single queue and single queue might not
--drive deeper request queue depths to keep the storage busy. In such scenarios
--one can try setting slice_idle=0 and that would switch CFQ to IOPS
--(IO operations per second) mode on NCQ supporting hardware.
--
--That means CFQ will not idle between cfq queues of a cfq group and hence be
--able to driver higher queue depth and achieve better throughput. That also
--means that cfq provides fairness among groups in terms of IOPS and not in
--terms of disk time.
--
--/sys/block/<disk>/queue/iosched/group_idle
--------------------------------------------
--If one disables idling on individual cfq queues and cfq service trees by
--setting slice_idle=0, group_idle kicks in. That means CFQ will still idle
--on the group in an attempt to provide fairness among groups.
--
--By default group_idle is same as slice_idle and does not do anything if
--slice_idle is enabled.
--
--One can experience an overall throughput drop if you have created multiple
--groups and put applications in that group which are not driving enough
--IO to keep disk busy. In that case set group_idle=0, and CFQ will not idle
--on individual groups and throughput should improve.
+ #endif /* _LINUX_BPF_H */
 -- 
-2.13.7
+2.7.4
+
+
