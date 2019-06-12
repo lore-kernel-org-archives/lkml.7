@@ -2,134 +2,127 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FEFC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74837C31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788FA206BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59379208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:51:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409212AbfFLOuN (ORCPT
+        id S2437985AbfFLOv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:50:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51864 "EHLO mx1.redhat.com"
+        Wed, 12 Jun 2019 10:51:29 -0400
+Received: from mga04.intel.com ([192.55.52.120]:45204 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408884AbfFLOuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:50:13 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ABC6D3B714;
-        Wed, 12 Jun 2019 14:50:12 +0000 (UTC)
-Received: from treble (ovpn-120-37.rdu2.redhat.com [10.10.120.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 69C2B46E70;
-        Wed, 12 Jun 2019 14:50:11 +0000 (UTC)
-Date:   Wed, 12 Jun 2019 09:50:08 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kairui Song <kasong@redhat.com>, Alexei Starovoitov <ast@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: Getting empty callchain from perf_callchain_kernel()
-Message-ID: <20190612145008.3l5iguuwk2termi4@treble>
-References: <ab047883-69f6-1175-153f-5ad9462c6389@fb.com>
- <20190522174517.pbdopvookggen3d7@treble>
- <20190522234635.a47bettklcf5gt7c@treble>
- <CACPcB9dRJ89YAMDQdKoDMU=vFfpb5AaY0mWC_Xzw1ZMTFBf6ng@mail.gmail.com>
- <20190523133253.tad6ywzzexks6hrp@treble>
- <CACPcB9fQKg7xhzhCZaF4UGi=EQs1HLTFgg-C_xJQaUfho3yMyA@mail.gmail.com>
- <20190523152413.m2pbnamihu3s2c5s@treble>
- <20190524085319.GE2589@hirez.programming.kicks-ass.net>
- <20190612030501.7tbsjy353g7l74ej@treble>
- <20190612085423.GE3436@hirez.programming.kicks-ass.net>
+        id S2407179AbfFLOv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:51:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 07:51:28 -0700
+X-ExtLoop1: 1
+Received: from jasaito-mobl1.amr.corp.intel.com (HELO [10.251.13.144]) ([10.251.13.144])
+  by orsmga005.jf.intel.com with ESMTP; 12 Jun 2019 07:51:26 -0700
+Subject: Re: [Patch v2] x86/cpu: Add Ice Lake NNPI to Intel family
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, bp@suse.de,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux PM <linux-pm@vger.kernel.org>
+References: <20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com>
+ <20190612095233.GE9224@smile.fi.intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ mQINBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
+ oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
+ 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
+ ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
+ VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
+ iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
+ c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
+ pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
+ ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
+ QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABtEVEYXZpZCBDaHJp
+ c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
+ LmNvbT6JAjgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
+ lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
+ MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
+ IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
+ aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
+ I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
+ E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
+ F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
+ CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
+ P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
+ 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lcuQINBFRjzmoBEACyAxbvUEhd
+ GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
+ MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
+ Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
+ lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
+ 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
+ qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
+ BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
+ 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
+ vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
+ FCRl0Bvyj1YZUql+ZkptgGjikQARAQABiQIfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
+ l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
+ yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
+ +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
+ asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
+ WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
+ sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
+ KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
+ MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
+ hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
+ vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
+Message-ID: <73eb1ba5-dc29-53ee-487d-d22700b874a1@intel.com>
+Date:   Wed, 12 Jun 2019 07:51:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190612095233.GE9224@smile.fi.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190612085423.GE3436@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 12 Jun 2019 14:50:13 +0000 (UTC)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 10:54:23AM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 11, 2019 at 10:05:01PM -0500, Josh Poimboeuf wrote:
-> > On Fri, May 24, 2019 at 10:53:19AM +0200, Peter Zijlstra wrote:
-> > > > For ORC, I'm thinking we may be able to just require that all generated
-> > > > code (BPF and others) always use frame pointers.  Then when ORC doesn't
-> > > > recognize a code address, it could try using the frame pointer as a
-> > > > fallback.
-> > > 
-> > > Yes, this seems like a sensible approach. We'd also have to audit the
-> > > ftrace and kprobe trampolines, IIRC they only do framepointer setup for
-> > > CONFIG_FRAME_POINTER currently, which should be easy to fix (after the
-> > > patches I have to fix the FP generation in the first place:
-> > > 
-> > >   https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/log/?h=x86/wip
-> > 
-> > Right now, ftrace has a special hook in the ORC unwinder
-> > (orc_ftrace_find).  It would be great if we could get rid of that in
-> > favor of the "always use frame pointers" approach.  I'll hold off on
-> > doing the kpatch/kprobe trampoline conversions in my patches since it
-> > would conflict with yours.
-> > 
-> > Though, hm, because of pt_regs I guess ORC would need to be able to
-> > decode an encoded frame pointer?  I was hoping we could leave those
-> > encoded frame pointers behind in CONFIG_FRAME_POINTER-land forever...
+On 6/12/19 2:52 AM, Andy Shevchenko wrote:
+>>  #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
+>> +#define INTEL_FAM6_ICELAKE_NNPI		0x9D
+> What "I" stands for?
 > 
-> Ah, I see.. could a similar approach work for the kprobe trampolines
-> perhaps?
+> For me sounds like it's redundant here or something like NNP_DLI would be
+> better (because somewhere we have _NP as for Network Processor).
 
-If you mean requiring that kprobes trampolines always use frame
-pointers, I think it should work.
+Let's not bikeshed this too much.  These things aren't used that widely
+and mostly they're just used for figuring out the processor generation.
+ It's exceedingly rare to have something like:
 
-> > Here are my latest BPF unwinder patches in case anybody wants a sneak
-> > peek:
-> > 
-> >   https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/log/?h=bpf-orc-fix
-> 
-> On a quick read-through, that looks good to me. A minor nit:
-> 
-> 			/* mov dst_reg, %r11 */
-> 			EMIT_mov(dst_reg, AUX_REG);
-> 
-> The disparity between %r11 and AUX_REG is jarring. I understand the
-> whole bpf register mapping thing, but it is just weird when reading
-> this.
 
-True, but there are several cases where the r11 is hard-coded in the
-instruction encoding itself, like:
+	if (model == INTEL_FAM6_ICELAKE_MOBILE)
+		foo();
+	else if (model == INTEL_FAM6_ICELAKE_NNPI)
+		bar();
 
-			/* mov imm32, %r11 */
-			EMIT3_off32(0x49, 0xC7, 0xC3, imm32);
+where what you suggest would matter.
 
-If the code were more decoupled, like if it had helpers where you could
-always just pass AUX_REG, and the code never had to know what the value
-of AUX_REG is, then using "AUX_REG" in the comments would make sense.
+Preserving the ability to google "ice lake nnpi" is pretty important, so
+preserving the Intel name makes a lot of sense here when possible.
 
-But since there are inconsistencies, with hard-coded register mapping
-knowledge in many places, I find it easier to follow what's going on
-when the specific register name is always shown in the comments.
-
-> Other than that, the same note as before, the 32bit JIT still seems
-> buggered, but I'm not sure you (or anybody else) cares enough about that
-> to fix it though. It seems to use ebp as its own frame pointer, which
-> completely defeats an unwinder.
-
-I'm still trying to decide if I care about 32-bit.  It does indeed use
-ebp everywhere.  But I'm not sure if I want to poke the beehive...  Also
-factoring into the equation is the fact that I'll be on PTO next week
-:-)  If I have time in the next couple days then I may take a look.
-
--- 
-Josh
+Do we *HAVE* an Ice Lake network processor?
