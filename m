@@ -2,56 +2,56 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7313C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6882C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D1921743
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F8E121743
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560446010;
+	bh=05dXGrGKCXPHaKO0jLEjsx1c8iyxgNPMzxixaWBU1Yw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1e73VVtSnacii+6JTQ1K7c1k8pmkH8kVU8VxlLf3+bHREKyBiRAtfdzSyKFXa07qi
+	 13tAZzyv4wQKTxw3B9PbiCY9+vcWwk/YLkwsQoXAvwBXqyvC+wVUOsvTygQARIMjpk
+	 CMMUN4eFHy6CmFPJFuhEPvRL7buFGqOSTXzMj0Yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404748AbfFMRN0 (ORCPT
+        id S2393299AbfFMRN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:13:26 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34881 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728981AbfFLWB0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 18:01:26 -0400
-Received: by mail-wr1-f65.google.com with SMTP id m3so18557612wrv.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 15:01:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rtjjxJbZCnNJbQ4rRmAh0Ahovsd/DILFvQwc++jpSoQ=;
-        b=a2ORLIoZf9N5iqjC2ggsM8Hh1mhSo5nxnJ/DZap0cc/9kBYXO6LDjFn1n+SoxVjOsC
-         PV11oWZ2YNZtPTveKxaJ8gh89ChWF049yutZ4Jxxo8Gib1JOvxQn3ohhDOSXgJLGiScX
-         ZGRnyphL4n2zKqEc9M3p9+r2MsY0ZCujvKR1EgGkj/zYj6jL44QF9aMKglsZAnaoQoky
-         sZqToFv7FnnmRJ2kh+lIf9Oy2TLZYeRuaN8MMw3gWfRWlDa1Fig3fB6LyzpC9FauHrA2
-         s26CsgA4GBiUteX8gczWeWafn+7Bg53GrB0jUa0xJ+r/ok9mPiIJF15s368jgexnobZp
-         21oA==
-X-Gm-Message-State: APjAAAV8a3Kd8PgVySRnifK3fj72RRZBqAhUZELwJQ+h8GNlX5FFoz9i
-        aJHRCq92RfEjJyIDvVlVi6RRWA==
-X-Google-Smtp-Source: APXvYqwzum8xO+Bu+aMx87Ojw8bGvggqXnzAbO1TIQlOxrSKi01Hd/i8+OaLN8a0LKXtOAy3bBjcow==
-X-Received: by 2002:adf:d081:: with SMTP id y1mr11088437wrh.34.1560376884297;
-        Wed, 12 Jun 2019 15:01:24 -0700 (PDT)
-Received: from raver.teknoraver.net (net-93-144-152-91.cust.dsl.teletu.it. [93.144.152.91])
-        by smtp.gmail.com with ESMTPSA id i188sm929448wma.27.2019.06.12.15.01.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 15:01:23 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-next@vger.kernel.org
-Cc:     Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Aaron Tomlin <atomlin@redhat.com>
-Subject: [PATCH linux-next] sysctl: fix build error
-Date:   Thu, 13 Jun 2019 00:01:20 +0200
-Message-Id: <20190612220120.31312-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 13 Jun 2019 13:13:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728971AbfFLWBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 18:01:04 -0400
+Received: from ebiggers-linuxstation.mtv.corp.google.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECBA920B7C;
+        Wed, 12 Jun 2019 22:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560376863;
+        bh=05dXGrGKCXPHaKO0jLEjsx1c8iyxgNPMzxixaWBU1Yw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AboYvTBemsNv4lHkJnmN3fRjqz8XXX+E25fN0bEhWhvgW3f5h7sG/yrdthbOx82sR
+         /G1h5EN0zwuadF0X3NVvEkHnWtKM32g0NNzm11z/m6Ueqv6rzs9EjIr4bs8h+OtXGh
+         e0Va7vDvzGUmYwaHuAvyzAUFX1ez0zDLy1YfKV5Q=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+111cb28d9f583693aefa@syzkaller.appspotmail.com>
+Subject: [PATCH] io_uring: fix memory leak of UNIX domain socket inode
+Date:   Wed, 12 Jun 2019 14:58:43 -0700
+Message-Id: <20190612215843.91294-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
+In-Reply-To: <0000000000005bc340058983fe8e@google.com>
+References: <0000000000005bc340058983fe8e@google.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,31 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit cefdca0a86be ("userfaultfd/sysctl: add vm.unprivileged_userfaultfd")
-reintroduces a reference to 'zero' and 'one'.
-Use the SYSCTL_{ZERO,ONE} symbols instead.
+From: Eric Biggers <ebiggers@google.com>
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Opening and closing an io_uring instance leaks a UNIX domain socket
+inode.  This is because the ->file of the io_uring instance's internal
+UNIX domain socket is set to point to the io_uring file, but then
+sock_release() sees the non-NULL ->file and assumes the inode reference
+is held by the file so doesn't call iput().  That's not the case here,
+since the reference is still meant to be held by the socket; the actual
+inode of the io_uring file is different.
+
+Fix this leak by NULL-ing out ->file before releasing the socket.
+
+Reported-by: syzbot+111cb28d9f583693aefa@syzkaller.appspotmail.com
+Fixes: 2b188cc1bb85 ("Add io_uring IO interface")
+Cc: <stable@vger.kernel.org> # v5.1+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- kernel/sysctl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/io_uring.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index c77174336d16..4dce89d74a40 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1735,8 +1735,8 @@ static struct ctl_table vm_table[] = {
- 		.maxlen		= sizeof(sysctl_unprivileged_userfaultfd),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &zero,
--		.extra2		= &one,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE,
- 	},
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 0fbb486a320e9..86a2bd7219005 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2777,8 +2777,10 @@ static void io_ring_ctx_free(struct io_ring_ctx *ctx)
+ 	io_eventfd_unregister(ctx);
+ 
+ #if defined(CONFIG_UNIX)
+-	if (ctx->ring_sock)
++	if (ctx->ring_sock) {
++		ctx->ring_sock->file = NULL; /* so that iput() is called */
+ 		sock_release(ctx->ring_sock);
++	}
  #endif
- 	{ }
+ 
+ 	io_mem_free(ctx->sq_ring);
 -- 
-2.21.0
+2.22.0.rc2.383.gf4fbbf30c2-goog
 
