@@ -2,119 +2,92 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EBBC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E45C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80EA208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B20DB208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:04:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="LuS7gSaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfFLTDF (ORCPT
+        id S1727851AbfFLTEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:03:05 -0400
-Received: from mga09.intel.com ([134.134.136.24]:23178 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbfFLTDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:03:04 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 12:03:04 -0700
-X-ExtLoop1: 1
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.145])
-  by orsmga003.jf.intel.com with ESMTP; 12 Jun 2019 12:03:03 -0700
-Date:   Wed, 12 Jun 2019 12:03:03 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        keith.busch@intel.com, mike.campin@intel.com,
-        Ashok Raj <ashok.raj@intel.com>,
-        KarimAllah Ahmed <karahmed@amazon.de>
-Subject: Re: [PATCH v2 1/1] PCI/IOV: Fix incorrect cfg_size for VF > 0
-Message-ID: <20190612190303.GA29348@otc-nc-03>
-References: <20190612170647.43220-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190612121910.231368e2@x1.home>
- <0b21c76e-53f3-c35e-cebf-00719e451b11@linux.intel.com>
- <20190612125817.42909d83@x1.home>
+        Wed, 12 Jun 2019 15:04:25 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42658 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfFLTEY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 15:04:24 -0400
+Received: by mail-ot1-f67.google.com with SMTP id l15so16481280otn.9
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:04:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fm+mSktMwQOzdmDjQttzxop/Se9urlLSubyC93GJpJ4=;
+        b=LuS7gSaW0BGRMk1yfudUHtAoBYQKvzFNUXxlwVYlUwgLqve/5odOm96fueOy+dk3wr
+         JnCiH0mwRbkEKhYD/7ByaJvEVvjj8dH87169XEup7OtRPolTcWrSxYG6e7VXkVvpJGRv
+         i5nX7zOQlFCF5BNAJfa/lM72KUtF+3Uciofl+omm6sZ9CouKcHFPCV5P8xf0VbWwOwFt
+         /woNTQkJ63ZEwhtinkhqDXqjZT7SafFqxlRydcZSgojOlxu/sZug3q+uoerJmx3Zg3p2
+         +N/1xX+vYJB3A/GuFz8kc7M9zhPlE2hJTAEsNRMWc6lHVEsqlD5vPB6vXjqrwyHo5DUT
+         Xpwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fm+mSktMwQOzdmDjQttzxop/Se9urlLSubyC93GJpJ4=;
+        b=pvCdaqUZPG5P5ww8mss6x7tlTv154LCWzroeckgX+Qg1YLZv7oGq5gEQrBMryW22+L
+         EiJ+M9r8Nc0+ieZ3M1AB191AezhhjmAuGNj7v+rSd93FhOTxpRcjuddCHjgmi79wlA22
+         uD9j8MvE1RDFDBHoRWwW8lwrbddUF7BczMFoHIQ6nWJuUS7rR0F0PPMkdvib7zKkqZQj
+         cNqz+GEp/cTh7hw8/83Hww9mXWn8Vx1J/D0dckJ+3b95AseuSBe4P2QzyjBXQGxR05rW
+         Oj6Vyb+2XiCCWt2+FEQEYHtWXQeOJ9G5byPvJMsoqzkcrl3Uxqlp/UbAFCXjkSWEGq1o
+         jCZA==
+X-Gm-Message-State: APjAAAWWWcP8SP0IEuV6dAgEi/32U50qghvu5eA3ZKZyra+JA/7cGsMb
+        RHcatP6Nj1koo3g1zbZPUK9n3V+pbLNEdLpY7zQyUg==
+X-Google-Smtp-Source: APXvYqxvJTu577fQoKcjkYpWtOb5YYd/YL44ZHZzH9wLurkBS4Udi6HfEgZVwQ1tDKxNk2V77DLY+1ueAa7R3cyNUO0=
+X-Received: by 2002:a9d:7248:: with SMTP id a8mr9613478otk.363.1560366263877;
+ Wed, 12 Jun 2019 12:04:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612125817.42909d83@x1.home>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <cover.1560364493.git.mchehab+samsung@kernel.org> <075d5879142ff1b7ad16f5eccf4759d35ca02fd4.1560364494.git.mchehab+samsung@kernel.org>
+In-Reply-To: <075d5879142ff1b7ad16f5eccf4759d35ca02fd4.1560364494.git.mchehab+samsung@kernel.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 12 Jun 2019 12:04:12 -0700
+Message-ID: <CAPcyv4g08r6bK_SyTjzKFRM7=wpTQLdmHqRSGh7r-e9YD4tq5Q@mail.gmail.com>
+Subject: Re: [PATCH v1 29/31] docs: nvdimm: convert to ReST
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 12:58:17PM -0600, Alex Williamson wrote:
-> On Wed, 12 Jun 2019 11:41:36 -0700
-> sathyanarayanan kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-> wrote:
-> 
-> > On 6/12/19 11:19 AM, Alex Williamson wrote:
-> > > On Wed, 12 Jun 2019 10:06:47 -0700
-> > > sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> > >  
-> > >> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > >>
-> > >> Commit 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for
-> > >> other VFs") calculates and caches the cfg_size for VF0 device before
-> > >> initializing the pcie_cap of the device which results in using incorrect
-> > >> cfg_size for all VF devices > 0. So set pcie_cap of the device before
-> > >> calculating the cfg_size of VF0 device.
-> > >>
-> > >> Fixes: 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for
-> > >> other VFs")
-> > >> Cc: Ashok Raj <ashok.raj@intel.com>
-> > >> Suggested-by: Mike Campin <mike.campin@intel.com>
-> > >> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > >> ---
-> > >>
-> > >> Changes since v1:
-> > >>   * Fixed a typo in commit message.
-> > >>
-> > >>   drivers/pci/iov.c | 1 +
-> > >>   1 file changed, 1 insertion(+)
-> > >>
-> > >> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> > >> index 3aa115ed3a65..2869011c0e35 100644
-> > >> --- a/drivers/pci/iov.c
-> > >> +++ b/drivers/pci/iov.c
-> > >> @@ -160,6 +160,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
-> > >>   	virtfn->device = iov->vf_device;
-> > >>   	virtfn->is_virtfn = 1;
-> > >>   	virtfn->physfn = pci_dev_get(dev);
-> > >> +	virtfn->pcie_cap = pci_find_capability(virtfn, PCI_CAP_ID_EXP);
-> > >>   
-> > >>   	if (id == 0)
-> > >>   		pci_read_vf_config_common(virtfn);  
-> > > Why not re-order until after we've setup pcie_cap?
-> > >
-> > > https://lore.kernel.org/linux-pci/20190604143617.0a226555@x1.home/T/#  
-> > 
-> > pci_read_vf_config_common() also caches values for properties like 
-> > class, hdr_type, susbsystem_vendor/device. These values are read/used in 
-> > pci_setup_device(). So if we can use cached values in 
-> > pci_setup_device(), we don't have to read them from registers twice for 
-> > each device.
-> 
-> Sorry, I missed that dependency, a bit too subtle.  It's still pretty
-> ugly that pci_setup_device()->set_pcie_port_type() is the canonical
-> location for setting pcie_cap and now we need to kludge it earlier.
-> What about the question in the self follow-up to my patch in the link
-> above, can we simply assume 4K config space on a VF?  Thanks,
+Hi Mauro,
 
-There should be no issue simply reading them once? I don't know
-what that exact optimization saves, unless some broken VFs didn't
-actually expose all the capabilities in config space and this happens
-to workaround the problem.
+On Wed, Jun 12, 2019 at 11:38 AM Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
+>
+> Rename the mtd documentation files to ReST, add an
 
-+ Karim
+s/mtd/nvdimm/
 
-Cheers,
-Ashok
+> index for them and adjust in order to produce a nice html
+> output via the Sphinx build system.
+>
+> At its new index.rst, let's add a :orphan: while this is not linked to
+> the main index.rst file, in order to avoid build warnings.
+
+Looks ok, but I was not able to apply this one in isolation to give it
+a try. Am I missing some pre-reqs compared to v5.2-rc4?
