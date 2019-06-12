@@ -2,93 +2,124 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D89C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AA4C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B7421721
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E852086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:52:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="RBdMUJ9B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730662AbfFLFuI (ORCPT
+        id S1730695AbfFLFwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 01:50:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33128 "EHLO mx1.redhat.com"
+        Wed, 12 Jun 2019 01:52:18 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:64620 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbfFLFuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 01:50:08 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CB6C4859FF;
-        Wed, 12 Jun 2019 05:50:01 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-58.pek2.redhat.com [10.72.12.58])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0A692600CD;
-        Wed, 12 Jun 2019 05:49:53 +0000 (UTC)
-Date:   Wed, 12 Jun 2019 13:49:49 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Borislav Petkov <bp@alien8.de>, lijiang <lijiang@redhat.com>,
-        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, akpm@linux-foundation.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        x86@kernel.org, hpa@zytor.com, Thomas.Lendacky@amd.com
-Subject: Re: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel
- e820 table
-Message-ID: <20190612054949.GA23066@dhcp-128-65.nay.redhat.com>
-References: <20190423013007.17838-1-lijiang@redhat.com>
- <12847a03-3226-0b29-97b5-04d404410147@redhat.com>
- <20190607174211.GN20269@zn.tnic>
- <20190608035451.GB26148@MiWiFi-R3L-srv>
- <20190608091030.GB32464@zn.tnic>
- <20190608100139.GC26148@MiWiFi-R3L-srv>
- <20190608100623.GA9138@zn.tnic>
- <20190608102659.GA9130@MiWiFi-R3L-srv>
- <20190610113747.GD5488@zn.tnic>
- <20190612015549.GI26148@MiWiFi-R3L-srv>
+        id S1725601AbfFLFwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 01:52:18 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45NwxW2rMFz9v0lc;
+        Wed, 12 Jun 2019 07:52:15 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=RBdMUJ9B; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id dBgxHB_AY2Yx; Wed, 12 Jun 2019 07:52:15 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45NwxW1jKtz9v0lL;
+        Wed, 12 Jun 2019 07:52:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1560318735; bh=ohAp/YSXJJ0PS41E8peTUSFPOADBTv6CNhYclehwS+E=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=RBdMUJ9BIMIA2W6herx08iJdndrXtUWfahMDw0rDznctgcLh8nTtHlc62fud6SoT8
+         iHNTY4o8nkhRbj1Ihknh4gnAqKO3IydSH/cBO22/OEN+erLaCu5smSuTLuwhUbO7Hy
+         ZLV0v/g1glyhL9n8M6tbWaEGPr5dt1ZnvYe8Augc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1D6468B802;
+        Wed, 12 Jun 2019 07:52:16 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id BBvVVHRFsBJn; Wed, 12 Jun 2019 07:52:16 +0200 (CEST)
+Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.230.107])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EB1C68B75A;
+        Wed, 12 Jun 2019 07:52:15 +0200 (CEST)
+Subject: Re: [PATCH v2 0/4] Additional fixes on Talitos driver
+To:     Horia Geanta <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <cover.1560263641.git.christophe.leroy@c-s.fr>
+ <VI1PR0402MB34853CAF031426F4183FE29B98ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <0cb7c534-6e48-5284-899c-c0ef85c3c126@c-s.fr>
+ <VI1PR0402MB3485AD965F36709F27EFB72698ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <58787543-76d3-e0db-9517-ccd0f6494d85@c-s.fr>
+Date:   Wed, 12 Jun 2019 07:52:13 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612015549.GI26148@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 12 Jun 2019 05:50:08 +0000 (UTC)
+In-Reply-To: <VI1PR0402MB3485AD965F36709F27EFB72698ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/12/19 at 09:55am, Baoquan He wrote:
-> On 06/10/19 at 01:37pm, Borislav Petkov wrote:
-> > On Sat, Jun 08, 2019 at 06:26:59PM +0800, Baoquan He wrote:
-> > > OK, I see. Then it should be the issue we have met and talked about with
-> > > Tom.
-> > > https://lkml.kernel.org/r/20190604134952.GC26891@MiWiFi-R3L-srv
-> > > 
-> > > You can apply Tom's patch as below. I tested it, it can make kexec
-> > > kernel succeed to boot, but failed for kdump kernel booting. The kdump
-> > > kernel can boot till the end of kernel initialization, then hang with a
-> > > call trace. I have pasted the log in the above thread. Haven't got the
-> > > reason.
-> > > http://lkml.kernel.org/r/508c2853-dc4f-70a6-6fa8-97c950dc31c6@amd.com
-> > 
-> > I can confirm the same observation.
-> 
-> With further investigation, the failure after applying Tom's patch is
-> caused by OOM. When increase crashkernel reservation to 512M, kdump
-> kernel can boot successfully. I noticed your crashkernel reservation is
-> 256M, that will fail and stuck there very possibly.
 
-Usually for Fedora/RHEL variant kernel + userspace, 160M is a good value
-works for common setup.  Sometimes people forgot to strip debuginfo,
-thus the kernel modules packed in initramfs is too big and cause out of
-memory.
+
+Le 11/06/2019 à 18:30, Horia Geanta a écrit :
+> On 6/11/2019 6:40 PM, Christophe Leroy wrote:
+>>
+>>
+>> Le 11/06/2019 à 17:37, Horia Geanta a écrit :
+>>> On 6/11/2019 5:39 PM, Christophe Leroy wrote:
+>>>> This series is the last set of fixes for the Talitos driver.
+>>>>
+>>>> We now get a fully clean boot on both SEC1 (SEC1.2 on mpc885) and
+>>>> SEC2 (SEC2.2 on mpc8321E) with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:
+>>>>
+>>> I am getting below failures on a sec 3.3.2 (p1020rdb) for hmac(sha384) and
+>>> hmac(sha512):
+>>
+>> Is that new with this series or did you already have it before ?
+>>
+> Looks like this happens with or without this series.
+
+Found the issue, that's in 
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=b8fbdc2bc4e71b62646031d5df5f08aafe15d5ad
+
+CONFIG_CRYPTO_DEV_TALITOS_SEC2 should be CONFIG_CRYPTO_DEV_TALITOS2 instead.
+
+Just sent a patch to fix it.
+
+Thanks
+Christophe
 
 > 
-> So Tom's patch can fix the issue. We need further check why much more
-> crashkernel memory is needed on those AMD boxes with sme support..
+> I haven't checked the state of this driver for quite some time.
+> Since I've noticed increased activity, I thought it would be worth
+> actually testing the changes.
 > 
-> Thanks
-> Baoquan
+> Are changes in patch 2/4 ("crypto: talitos - fix hash on SEC1.")
+> strictly for sec 1.x or they affect all revisions?
+> 
+>> What do you mean by "fuzz testing" enabled ? Is that
+>> CONFIG_CRYPTO_MANAGER_EXTRA_TESTS or something else ?
+>>
+> Yes, it's this config symbol.
+> 
+> Horia
+> 
