@@ -2,237 +2,105 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1850C31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B8CC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 774142173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560371228;
-	bh=RBQpqmPN1eB+w8KVq3eTNkgh7136KTd34ZIGXDIkM1w=;
-	h=To:Cc:From:Subject:Date:List-ID:From;
-	b=0xTxl/StK4QvYOWv+puRtvxKlMD1hQh3YWE7qZFbfyFRv9AApr3qyJ7NYdQHaukXO
-	 Q15KNEqlFKdlnATBX5UE4fVLAWh+aWDdcy3LjTQppoGAQf7DSyZDtuee4LKSrwaMkH
-	 TVwet4ZRp2yvmYsODXKhfaDDr4O3iI+LCRzwBSjk=
+	by mail.kernel.org (Postfix) with ESMTP id A783620866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:27:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="dosYpfHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388989AbfFLU1H (ORCPT
+        id S2389264AbfFLU1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 16:27:07 -0400
-Received: from mail-io1-f42.google.com ([209.85.166.42]:36117 "EHLO
-        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388381AbfFLU1G (ORCPT
+        Wed, 12 Jun 2019 16:27:11 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40700 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389032AbfFLU1I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 16:27:06 -0400
-Received: by mail-io1-f42.google.com with SMTP id h6so14131176ioh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 13:27:06 -0700 (PDT)
+        Wed, 12 Jun 2019 16:27:08 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a93so7104041pla.7
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 13:27:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language;
-        bh=n01BMcs7fBxk+Su0IaHbrT19JaQ+6dWso0UN0D7p0L8=;
-        b=Lvgxfgrce6L8U858gDsUewPeiuZ+4j5QPRyin0guF5MFBp3T2S+UOXod7OOaIQptoL
-         0LKTT1Umw80y7bPLj7H3KyU8ISMb1+QAkHR9nm/pEYdmvYAALzD0MAtx2o6SSvaoy7dW
-         kM3jzBFy7YCQsATpSGFHx9LUaIdxDC81OdeKU=
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=wQSIjj1uz1dtSEsQ8et37d1oi55PupCcmG/N44FomHg=;
+        b=dosYpfHyXQnOIHiak4h4vT7DtMsiDthIYDzQhi40A07vw+2UujEnaY2h1t/znWnsFr
+         quz6BW2DabQNadx+sDAO2O97r0jLz2nrIHQjYC9CHjraeetUerSWSoTLviI8HPycXoZZ
+         EhrCJYG29dvXZxU6C2YJtgjuh1T7f1raROHKgUW3XwqaYfDhqi2gu8n47/JClJNSwZFK
+         Cy50WsRvmzOO0Wm82pvIO18xzLdWmPQlSHYbVv4RpfrfhpGtr7WHpa/8Vj6GKkjUbi4J
+         I1Lys/X6FYmMf0ochoRNkJNNr7r0V1GDgqmSXn2lH+6rIIfw12YCjQ4hkbB9ywHjoOzK
+         tg3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language;
-        bh=n01BMcs7fBxk+Su0IaHbrT19JaQ+6dWso0UN0D7p0L8=;
-        b=UHwtrwPu449eUYRIiS5ND3jQr9W561c6hIWX1/Hli4Kxzfo8nKmlV1OaNns1MviVU5
-         8gLnOIptdHq8emzPWiCgm9WAkOnyRvhEvGR/lL53aMXbqFeVHsBJnjjHtrKaFrjmkjyJ
-         xNrwCO2G/XJGbsj8spkdUQrK94uwfs4GcEqoLAVpe7GlTW1oXAp1LQ+NXptF9ehS9LnW
-         ZOAbYdkQN4vhP5c7x/OuEqa2Mvf7SRhki3mEGribqNLwC7OYlXn1bU1MUOID4ctFjHku
-         lqC1lJ5yJIv/IxxjRxzgJcrS60KJDywOFy0fMO1J/BBDr+LOAdnsPPwy8WfUcXXKO780
-         tsJA==
-X-Gm-Message-State: APjAAAWAGlVO3gBxVRG1VGIs2GHtgzk3FyEP/Iltd9DdrQwNDXGrEMIX
-        vILAvIno16ZRofg9aOGxc5z7me+VnPU=
-X-Google-Smtp-Source: APXvYqyty9FFYerV5/56wDhSV6er5CSIOrKYh1N5f8wp3wX/W7O7t9rWjPxfLbqkiV7U+XUOXa0gmw==
-X-Received: by 2002:a6b:e60b:: with SMTP id g11mr53543825ioh.9.1560371225622;
-        Wed, 12 Jun 2019 13:27:05 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id a130sm413349itb.14.2019.06.12.13.27.04
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=wQSIjj1uz1dtSEsQ8et37d1oi55PupCcmG/N44FomHg=;
+        b=U1f0gksR+jicnacwq/rT4b6ar2lFw6aNoGAyYSPbkafRqi7nnCnxcNDwTuSroV34AG
+         lLxThDTppN/rPDv+xCrh3Y+WKz+Pjr4zVV9lEC28YeDiKD9aEYnS8UOTC1elTru44L03
+         nTBAeFXIIhJohfprIy3Z8Jozwix9ojJ5EsOT6nXdpnPfIOIQ1lLYRN4V8s0TbuNqCGmd
+         Cx9t8CXyHqaMS4wDikNIzmDgeTuyykzKwrv9uMseaWP5IoFHZesrLLirFJfRjCHO+kTD
+         tIBTHDuznEHZaNSw0yO/IE+y2mugFz4XC1S2UE1LXEgl+pNbyRHdFMGtY+msJjMhEsKK
+         Pogg==
+X-Gm-Message-State: APjAAAUu0QRKW7blcbincj8R6tDx40e+q8dt1SxJg8lN905y6n1PJjEP
+        05vsid1r7LcVy6WX/wqPJ8PmAMThc5ixCg==
+X-Google-Smtp-Source: APXvYqz0dHD5fq+ketC5HFnEXuKjsrvf/JQonYxBDCeP2VEnkY8AJZcbmbqYowRApnU+lnXqwECpog==
+X-Received: by 2002:a17:902:760f:: with SMTP id k15mr58881187pll.125.1560371227543;
+        Wed, 12 Jun 2019 13:27:07 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:e92e:2d95:2c68:42e6? ([2601:646:c200:1ef2:e92e:2d95:2c68:42e6])
+        by smtp.gmail.com with ESMTPSA id m1sm267870pjv.22.2019.06.12.13.27.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 13:27:04 -0700 (PDT)
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Thomas Renninger <trenn@suse.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Subject: [GIT PULL] cpupower update for Linux 5.2-rc6
-Message-ID: <376ea5d7-110a-71fe-7b02-efe1b0aed88e@linuxfoundation.org>
-Date:   Wed, 12 Jun 2019 14:27:03 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------DA1BC82BAC95C219E9AB2661"
-Content-Language: en-US
+        Wed, 12 Jun 2019 13:27:06 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM secrets
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16F203)
+In-Reply-To: <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com>
+Date:   Wed, 12 Jun 2019 13:27:04 -0700
+Cc:     Marius Hillenbrand <mhillenb@amazon.de>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        linux-mm@kvack.org, Alexander Graf <graf@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net>
+References: <20190612170834.14855-1-mhillenb@amazon.de> <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------DA1BC82BAC95C219E9AB2661
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Hi Rafael,
 
-Please pull the following update for Linux 5.2-rc6 or 5.3 depending on
-your pull request schedule for Linus.
+> On Jun 12, 2019, at 12:55 PM, Dave Hansen <dave.hansen@intel.com> wrote:
+>=20
+>> On 6/12/19 10:08 AM, Marius Hillenbrand wrote:
+>> This patch series proposes to introduce a region for what we call
+>> process-local memory into the kernel's virtual address space.=20
+>=20
+> It might be fun to cc some x86 folks on this series.  They might have
+> some relevant opinions. ;)
+>=20
+> A few high-level questions:
+>=20
+> Why go to all this trouble to hide guest state like registers if all the
+> guest data itself is still mapped?
+>=20
+> Where's the context-switching code?  Did I just miss it?
+>=20
+> We've discussed having per-cpu page tables where a given PGD is only in
+> use from one CPU at a time.  I *think* this scheme still works in such a
+> case, it just adds one more PGD entry that would have to context-switched.=
 
-This cpupower update for Linux 5.2-rc6 consists of a fix and a minor
-spelling correction.
 
-diff is attached.
-
-thanks,
--- Shuah
-
-----------------------------------------------------------------
-The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
-
-   Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
-
-are available in the Git repository at:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux 
-tags/linux-cpupower-5.2-rc6
-
-for you to fetch changes up to 04507c0a9385cc8280f794a36bfff567c8cc1042:
-
-   cpupower : frequency-set -r option misses the last cpu in related cpu 
-list (2019-06-04 09:06:50 -0600)
-
-----------------------------------------------------------------
-linux-cpupower-5.2-rc6
-
-This cpupower update for Linux 5.2-rc6 consists of a fix and a minor
-spelling correction.
-
-----------------------------------------------------------------
-Abhishek Goel (1):
-       cpupower : frequency-set -r option misses the last cpu in related 
-cpu list
-
-Nick Black (1):
-       cpupower: correct spelling of interval
-
-  tools/power/cpupower/man/cpupower-monitor.1 | 2 +-
-  tools/power/cpupower/po/cs.po               | 2 +-
-  tools/power/cpupower/po/de.po               | 2 +-
-  tools/power/cpupower/po/fr.po               | 2 +-
-  tools/power/cpupower/po/it.po               | 2 +-
-  tools/power/cpupower/po/pt.po               | 2 +-
-  tools/power/cpupower/utils/cpufreq-set.c    | 2 ++
-  7 files changed, 8 insertions(+), 6 deletions(-)
-
-----------------------------------------------------------------
-
---------------DA1BC82BAC95C219E9AB2661
-Content-Type: text/x-patch;
- name="linux-cpupower-5.2-rc6.diff"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="linux-cpupower-5.2-rc6.diff"
-
-diff --git a/tools/power/cpupower/man/cpupower-monitor.1 b/tools/power/cpupower/man/cpupower-monitor.1
-index 914cbb9d9cd0..70a56476f4b0 100644
---- a/tools/power/cpupower/man/cpupower-monitor.1
-+++ b/tools/power/cpupower/man/cpupower-monitor.1
-@@ -61,7 +61,7 @@ Only display specific monitors. Use the monitor string(s) provided by \-l option
- .PP
- \-i seconds
- .RS 4
--Measure intervall.
-+Measure interval.
- .RE
- .PP
- \-c
-diff --git a/tools/power/cpupower/po/cs.po b/tools/power/cpupower/po/cs.po
-index cb22c45c5069..bfc7e1702ec9 100644
---- a/tools/power/cpupower/po/cs.po
-+++ b/tools/power/cpupower/po/cs.po
-@@ -98,7 +98,7 @@ msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:74
- #, c-format
--msgid "\t -i: time intervall to measure for in seconds (default 1)\n"
-+msgid "\t -i: time interval to measure for in seconds (default 1)\n"
- msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:75
-diff --git a/tools/power/cpupower/po/de.po b/tools/power/cpupower/po/de.po
-index 840c17cc450a..70887bb8ba95 100644
---- a/tools/power/cpupower/po/de.po
-+++ b/tools/power/cpupower/po/de.po
-@@ -95,7 +95,7 @@ msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:74
- #, c-format
--msgid "\t -i: time intervall to measure for in seconds (default 1)\n"
-+msgid "\t -i: time interval to measure for in seconds (default 1)\n"
- msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:75
-diff --git a/tools/power/cpupower/po/fr.po b/tools/power/cpupower/po/fr.po
-index b46ca2548f86..b6e505b34e4a 100644
---- a/tools/power/cpupower/po/fr.po
-+++ b/tools/power/cpupower/po/fr.po
-@@ -95,7 +95,7 @@ msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:74
- #, c-format
--msgid "\t -i: time intervall to measure for in seconds (default 1)\n"
-+msgid "\t -i: time interval to measure for in seconds (default 1)\n"
- msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:75
-diff --git a/tools/power/cpupower/po/it.po b/tools/power/cpupower/po/it.po
-index f80c4ddb9bda..a1deeb52c9e0 100644
---- a/tools/power/cpupower/po/it.po
-+++ b/tools/power/cpupower/po/it.po
-@@ -95,7 +95,7 @@ msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:74
- #, c-format
--msgid "\t -i: time intervall to measure for in seconds (default 1)\n"
-+msgid "\t -i: time interval to measure for in seconds (default 1)\n"
- msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:75
-diff --git a/tools/power/cpupower/po/pt.po b/tools/power/cpupower/po/pt.po
-index 990f5267ffe8..902186585bb9 100644
---- a/tools/power/cpupower/po/pt.po
-+++ b/tools/power/cpupower/po/pt.po
-@@ -93,7 +93,7 @@ msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:74
- #, c-format
--msgid "\t -i: time intervall to measure for in seconds (default 1)\n"
-+msgid "\t -i: time interval to measure for in seconds (default 1)\n"
- msgstr ""
- 
- #: utils/idle_monitor/cpupower-monitor.c:75
-diff --git a/tools/power/cpupower/utils/cpufreq-set.c b/tools/power/cpupower/utils/cpufreq-set.c
-index f49bc4aa2a08..6ed82fba5aaa 100644
---- a/tools/power/cpupower/utils/cpufreq-set.c
-+++ b/tools/power/cpupower/utils/cpufreq-set.c
-@@ -305,6 +305,8 @@ int cmd_freq_set(int argc, char **argv)
- 				bitmask_setbit(cpus_chosen, cpus->cpu);
- 				cpus = cpus->next;
- 			}
-+			/* Set the last cpu in related cpus list */
-+			bitmask_setbit(cpus_chosen, cpus->cpu);
- 			cpufreq_put_related_cpus(cpus);
- 		}
- 	}
-
---------------DA1BC82BAC95C219E9AB2661--
+Fair warning: Linus is on record as absolutely hating this idea. He might ch=
+ange his mind, but it=E2=80=99s an uphill battle.=
