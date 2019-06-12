@@ -4,90 +4,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CDBC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD26C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E60A208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B876620B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:19:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfFLSTU (ORCPT
+        id S1726947AbfFLST1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 14:19:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:25430 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbfFLSTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 14:19:20 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E17C8307D932;
-        Wed, 12 Jun 2019 18:19:14 +0000 (UTC)
-Received: from x1.home (ovpn-116-190.phx2.redhat.com [10.3.116.190])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 30294600CC;
-        Wed, 12 Jun 2019 18:19:10 +0000 (UTC)
-Date:   Wed, 12 Jun 2019 12:19:10 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        keith.busch@intel.com, mike.campin@intel.com
-Subject: Re: [PATCH v2 1/1] PCI/IOV: Fix incorrect cfg_size for VF > 0
-Message-ID: <20190612121910.231368e2@x1.home>
-In-Reply-To: <20190612170647.43220-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20190612170647.43220-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Red Hat
+        Wed, 12 Jun 2019 14:19:27 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:54425 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfFLST0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 14:19:26 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hb7qG-0004DB-Ua; Wed, 12 Jun 2019 12:19:25 -0600
+Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hb7qF-0000Qn-JJ; Wed, 12 Jun 2019 12:19:24 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Qian Cai <cai@lca.pw>, mingo@redhat.com, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190612175543.GO32652@zn.tnic> (Borislav Petkov's message of
+        "Wed, 12 Jun 2019 19:55:43 +0200")
+References: <1559338641-6145-1-git-send-email-cai@lca.pw>
+        <20190612175543.GO32652@zn.tnic>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+Date:   Wed, 12 Jun 2019 13:19:06 -0500
+Message-ID: <87a7emy8dh.fsf@xmission.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 12 Jun 2019 18:19:20 +0000 (UTC)
+Content-Type: text/plain
+X-XM-SPF: eid=1hb7qF-0000Qn-JJ;;;mid=<87a7emy8dh.fsf@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+7rkvNfWVNsDvrLU2jOC4FkVsErnjkXHU=
+X-SA-Exim-Connect-IP: 72.206.97.68
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH -next] x86/mm: fix an unused variable "tsk" warning
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Jun 2019 10:06:47 -0700
-sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+Borislav Petkov <bp@alien8.de> writes:
 
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> Commit 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for
-> other VFs") calculates and caches the cfg_size for VF0 device before
-> initializing the pcie_cap of the device which results in using incorrect
-> cfg_size for all VF devices > 0. So set pcie_cap of the device before
-> calculating the cfg_size of VF0 device.
-> 
-> Fixes: 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for
-> other VFs")
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Suggested-by: Mike Campin <mike.campin@intel.com>
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
-> 
-> Changes since v1:
->  * Fixed a typo in commit message.
-> 
->  drivers/pci/iov.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 3aa115ed3a65..2869011c0e35 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -160,6 +160,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
->  	virtfn->device = iov->vf_device;
->  	virtfn->is_virtfn = 1;
->  	virtfn->physfn = pci_dev_get(dev);
-> +	virtfn->pcie_cap = pci_find_capability(virtfn, PCI_CAP_ID_EXP);
->  
->  	if (id == 0)
->  		pci_read_vf_config_common(virtfn);
+> On Fri, May 31, 2019 at 05:37:21PM -0400, Qian Cai wrote:
+>> Since the commit "signal: Remove the task parameter from
+>> force_sig_fault", "tsk" is only used when MEMORY_FAILURE=y and generates
+>> a compilation warning without it.
+>> 
+>> arch/x86/mm/fault.c: In function 'do_sigbus':
+>> arch/x86/mm/fault.c:1017:22: warning: unused variable 'tsk'
+>> [-Wunused-variable]
+>> 
+>> Also, change to use IS_ENABLED() instead.
+>> 
+>> Signed-off-by: Qian Cai <cai@lca.pw>
+>> ---
+>>  arch/x86/mm/fault.c | 8 +++-----
+>>  1 file changed, 3 insertions(+), 5 deletions(-)
+>> 
+>> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+>> index 46ac96aa7c81..40d70bd3fa84 100644
+>> --- a/arch/x86/mm/fault.c
+>> +++ b/arch/x86/mm/fault.c
+>> @@ -1014,8 +1014,6 @@ static inline bool bad_area_access_from_pkeys(unsigned long error_code,
+>>  do_sigbus(struct pt_regs *regs, unsigned long error_code, unsigned long address,
+>>  	  vm_fault_t fault)
+>>  {
+>> -	struct task_struct *tsk = current;
+>> -
+>>  	/* Kernel mode? Handle exceptions or die: */
+>>  	if (!(error_code & X86_PF_USER)) {
+>>  		no_context(regs, error_code, address, SIGBUS, BUS_ADRERR);
+>> @@ -1028,9 +1026,10 @@ static inline bool bad_area_access_from_pkeys(unsigned long error_code,
+>>  
+>>  	set_signal_archinfo(address, error_code);
+>>  
+>> -#ifdef CONFIG_MEMORY_FAILURE
+>> -	if (fault & (VM_FAULT_HWPOISON|VM_FAULT_HWPOISON_LARGE)) {
+>> +	if (IS_ENABLED(CONFIG_MEMORY_FAILURE) &&
+>> +	    (fault & (VM_FAULT_HWPOISON | VM_FAULT_HWPOISON_LARGE))) {
+>>  		unsigned lsb = 0;
+>> +		struct task_struct *tsk = current;
+>>  
+>>  		pr_err(
+>>  	"MCE: Killing %s:%d due to hardware memory corruption fault at %lx\n",
+>> @@ -1042,7 +1041,6 @@ static inline bool bad_area_access_from_pkeys(unsigned long error_code,
+>>  		force_sig_mceerr(BUS_MCEERR_AR, (void __user *)address, lsb);
+>>  		return;
+>>  	}
+>> -#endif
+>>  	force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)address);
+>>  }
+>>  
+>> -- 
+>
+> I was puzzled just like Dave because this code is not in tip.
+>
+> Turns out there's this in linux-next:
+>
+> commit 318759b4737c3b3789e2fd64d539f437d52386f5
+> Author: Eric W. Biederman <ebiederm@xmission.com>
+> Date:   Mon Jun 3 10:23:58 2019 -0500
+>
+>     signal/x86: Move tsk inside of CONFIG_MEMORY_FAILURE in do_sigbus
 
-Why not re-order until after we've setup pcie_cap?
+Since I am removing the tsk parameter from all of the synchrnous signal
+sending functions, on all of the architectures it was easier to go
+through my own tree than -tip.
 
-https://lore.kernel.org/linux-pci/20190604143617.0a226555@x1.home/T/#
+The removal of tsk from force_sig_fault is what caused the warning
+in do_sigbus.
 
-Thanks,
-Alex
+My apologies I was a little slow in getting that patch added and
+generating work for other folks.
+
+Eric
