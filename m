@@ -2,180 +2,117 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48309C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752D0C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14FD321019
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:44:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="VglMiIgy"
+	by mail.kernel.org (Postfix) with ESMTP id 597CA20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbfFLOoE (ORCPT
+        id S1731996AbfFLOoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:44:04 -0400
-Received: from mout.gmx.net ([212.227.17.21]:38425 "EHLO mout.gmx.net"
+        Wed, 12 Jun 2019 10:44:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48558 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbfFLOoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:44:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1560350641;
-        bh=skS5buEgxsD9Rt4mFouFB/4LkspCqy177A8CpTLDQnA=;
-        h=X-UI-Sender-Class:To:Cc:References:From:Subject:Date:In-Reply-To;
-        b=VglMiIgycAZeYQOQhBiYKy5lJymJUNUMsZMrBS3fhh+PPxfxKdmQqgOxcW7fVFzgl
-         uKccHEwJYXAj6fNXs4lPGv2lJgJ7fXwukX5ZN2wtm1ZAeMSwiUED5Q1V1D697Qv8NY
-         lbJp0RaPX+6XJxbWYim9441WL1zT1zWioLhGlGiY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [10.2.0.3] ([79.195.235.197]) by mail.gmx.com (mrgmx102
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0MdXSC-1i0RWX1Jnw-00PL4A; Wed, 12
- Jun 2019 16:44:01 +0200
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20180918004732.9875-1-dmitry.torokhov@gmail.com>
- <0541f46d-1f4f-05f4-8e93-6663f6c13bd9@gmx.de>
- <20180919171039.GA116719@dtor-ws>
-From:   Tim Schumacher <timschumi@gmx.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=timschumi@gmx.de; keydata=
- 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
-Subject: Re: [PATCH 01/20] Input: iforce - remove "being used" silliness
-Message-ID: <3505434a-f5ec-de50-5f94-7347c6926f40@gmx.de>
-Date:   Wed, 12 Jun 2019 16:44:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1727846AbfFLOoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:44:13 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4CD033087958;
+        Wed, 12 Jun 2019 14:44:07 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (unknown [10.36.118.125])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C4DF6061E;
+        Wed, 12 Jun 2019 14:43:59 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v10)
+References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com>
+        <87muj2k4ov.fsf@oldenburg2.str.redhat.com>
+        <1528929896.22217.1559326257155.JavaMail.zimbra@efficios.com>
+        <87o93d4lqb.fsf@oldenburg2.str.redhat.com>
+        <117220011.27079.1559663870037.JavaMail.zimbra@efficios.com>
+        <87wohzorj0.fsf@oldenburg2.str.redhat.com>
+        <1329439108.43041.1560348962006.JavaMail.zimbra@efficios.com>
+        <87blz27uio.fsf@oldenburg2.str.redhat.com>
+        <512441263.43096.1560350163180.JavaMail.zimbra@efficios.com>
+Date:   Wed, 12 Jun 2019 16:43:58 +0200
+In-Reply-To: <512441263.43096.1560350163180.JavaMail.zimbra@efficios.com>
+        (Mathieu Desnoyers's message of "Wed, 12 Jun 2019 10:36:03 -0400
+        (EDT)")
+Message-ID: <8736ke7tjl.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20180919171039.GA116719@dtor-ws>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US-large
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:DpZURLMn7G66vd70EQkrBlBcsjwkdiGWTQn38X/W1IIri6syRb2
- vgX2zWDhSozLNXLJM/CqjqETYlwxY+efSHNBpCJ7TKembEBdyRDkjNggHvn/sXSwr/p9Bmq
- vOB0/T0l1X32plX1YqfonDHTycM49Ez8fujtegEt5bIUdhBlEfDSMtnPzCiJWPuH7miMQ6x
- //P/pnoSrv4IOTtI5ACPg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yGVKvdZKLvU=:WnQa+0xHY+9iRke4j+OtiG
- x3wArQHmvoC/AegGptYJreaEhLpChZU+dX0GY6yT+4gmemVJsEcRUQMFEIweqT+UreSDx1L8g
- MgBeyVUGsqgf6EElBMqgxRH9hzc4Il2lPPdV9ZG8+RhHp0SYxYcgKTPnShTkpPmy0mwxR2eh0
- /moty8MUKvx7XsfIf8xdNinE1HL8muAT8EHnpa48q8MHbPC2C+pPLxTGd3GxkKM9H0ZSo5Ln8
- e/VbOz6gnaJ2b5Ntd9hRt0M8Dlmlq5aRwX1gwyG1QPMthyYLy7I5odkOM4k5aiTiCiAguEYPn
- x5K8CW4ABFJ3z7lo+gwVvAiqJgNkqKPsD/1HmI3jbPopV4KKpZVNT2Jw2oEov/bqzVnO8ODka
- VpLcAvBeLsf6VLgSdU7Oa9u3y0yzoHiaOuy7RK/A0mmrW9UJzB2KbKiJ1h9IDVa+rr+Aa5xaD
- PvCYpDheFg96GalBVZziJn+GCZ5GDCKlvDS8axvIXAdBoViEc6sPAQZ1LJRezwHzRu5hbAsaB
- dVIhPeZNZknUIs1HX9ZYgYhkGM3xCuuufrbQNdf2LRwFhUOhkUEhmLdK9hmu3ZlfSLO4bmOl2
- xvPasGmzSsrHOXYvRYZSBzx4g9hcPKG1nOLO4GtKMaF2Ymfn0UO23zbeFJKX+pscbXl36Ar7M
- UwGS8SzYqrt7i7xCtA3qeHQQ9Tv+RUIx5dtqkSvMTDBB0X4Syhp/JCHtLLIM5FEJ2G2aFQoR+
- gbT/xlYW3GTpdnS38yjfktazMqVoK2047RiMA19tgiIfQGus/Zz006WgatUqyg1DibrFQBkOA
- b1xXZCoqs+5XSryCpIpOyJalu1U3Dlsctpvo6KAQUWaVwyd4ydUOJ9Ci8JOyAdnRap6C8o69k
- JW/Tlo3XM4wy3Ptf2uCEbp0xg/5Tro69YJyTNXtNKPfkCFaYcIu9uGdFVb5WdVoh0TCZe3hxx
- RKivIinkx5bq4ZqHQzI3rCqcRwili0Z8nqsJT6jHvMnh2RySSe4tX
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 12 Jun 2019 14:44:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.09.18 19:10, Dmitry Torokhov wrote:
-> On Wed, Sep 19, 2018 at 04:51:26PM +0200, Tim Schumacher wrote:
->> On 18.09.18 02:47, Dmitry Torokhov wrote:
->>> The kernel is supposed to handle multiple devices, static flags
->>> in packet handling code will never work.
->>>
->>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->>> ---
->>>
->>> This is a random assortment of iforce patches that I made a few weeks =
-back.
->>>
->>> Tim, I do not have hardware, so I was bound to screw it up, but if you
->>> have some time I'd appreciate if you try them out (and if I indeed bro=
-ke
->>> things if you could identify issues that would be even more awesome).
->>>
->>> Thanks!
->>>
->> Hello Dmitry,
->>
->> I tested those patches and I didn't find any obvious issues. The basic =
-functions
->> do work (i.e. buttons and axes, don't have a HAT so I can't test that),=
- force
->> feedback seems to work to the extent it was before (I only have fftest =
-though,
->> no games that support force feedback). I'll go through a few more appli=
-cations
->> and see if anything not obvious is broken.
->>
->
-> Thank you for taking a look.
->
->> Unfortunately, I only have that one wheel and I can only test USB conne=
-ctions
->> at the moment (unless I find a proper serial adaptor, but I'm not sure =
-if that
->> would even work).
->>
->> Are those patches planned to go into 4.19 or are they intended to be me=
-rged in
->> the next development cycle?
->
-> Definitely not 4.19. Could be 4.20 or 4.21...
->
-> Thanks.
->
+* Mathieu Desnoyers:
 
-Hello Dmitry,
+> ----- On Jun 12, 2019, at 4:22 PM, Florian Weimer fweimer@redhat.com wrote:
+>
+>> * Mathieu Desnoyers:
+>> 
+>>>> It's the registration from libc.so which needs some care.  In
+>>>> particular, we must not override an existing registration.
+>>>
+>>> OK, so it could check if __rseq_abi.cpu_id is -1, and only
+>>> perform registration if it is the case. Or do you have another
+>>> approach in mind ?
+>> 
+>> No, __rseq_abi will not be shared with the outer libc, so the inner libc
+>> will always see -1 there, even if the outer libc has performed
+>> registration.
+>> 
+>> libio/vtables.c has some example what you can do:
+>> 
+>>  /* In case this libc copy is in a non-default namespace, we always
+>>     need to accept foreign vtables because there is always a
+>>     possibility that FILE * objects are passed across the linking
+>>     boundary.  */
+>>  {
+>>    Dl_info di;
+>>    struct link_map *l;
+>>    if (!rtld_active ()
+>>        || (_dl_addr (_IO_vtable_check, &di, &l, NULL) != 0
+>>            && l->l_ns != LM_ID_BASE))
+>>      return;
+>>  }
+>> 
+>> _IO_vtable_check would have to be replaced with your own function; the
+>> actual function doesn't really matter.
+>> 
+>> The rtld_active check covers the static dlopen case, where
+>> rtld_active () is false in the inner libc.
+>
+> Then out of curiosity, would it also work if I check for
+>
+> if (!__libc_multiple_libcs)
+>
+> in LIBC_START_MAIN ?
 
-as a followup to the last E-Mail I sent about this topic, the complete cha=
-in
-of patches has been in my personal tree since September of 2018 and there
-have been no issues so far as well. I tested a few more games and utilitie=
-s,
-and I was able to test with multiple wheels simultaneously as well.
+In my experience, __libc_multiple_libcs is not reliable.  I have not yet
+figured out why.
 
-In the end it's still your decision, but imo those patches should be fine
-to pull in.
-
-Tim
+Thanks,
+Florian
