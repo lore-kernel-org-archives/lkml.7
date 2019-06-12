@@ -2,105 +2,112 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-19.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43C5C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A47C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C752084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9021206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:02:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZX6h/m/C"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q5HV6uR0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbfFMRBy (ORCPT
+        id S1729830AbfFMRCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:01:54 -0400
-Received: from mail-yw1-f74.google.com ([209.85.161.74]:37525 "EHLO
-        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729555AbfFLXZn (ORCPT
+        Thu, 13 Jun 2019 13:02:10 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45166 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729523AbfFLXOj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 19:25:43 -0400
-Received: by mail-yw1-f74.google.com with SMTP id j68so19167108ywj.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 16:25:43 -0700 (PDT)
+        Wed, 12 Jun 2019 19:14:39 -0400
+Received: by mail-pf1-f193.google.com with SMTP id s11so10520394pfm.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 16:14:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=c4y2pZiaN2WhmN/OxTBjUr2bY3qKhiFt2vrnSnjnBeU=;
-        b=ZX6h/m/Ccz3D08OR8zobi4ldZ1jS6PwWzVR/t+WFD6v0/Fss+beVWhFf3zeZ82ESbD
-         JnDV0SUioVotRseLuOCQjBJLHc6Uk0pBrTXhoZGSLVaiSZdExpDDf2i2/rIyMYZlsF70
-         qFSP5TrwsByiyXtw3w02BWlG1wBzSWk/vy0A0IrFOW0FYgFOCrryf7dyHBTlBJtuaKKG
-         ERMoWPBQK1FwgW7tltk/GtzR+Be390NfVB6tt1uV6i3acZq1aasmD19TVthHF8qX8Rml
-         6a5JDLxHclFpku0vjZ4XD/CW1AMslRend4jJ1Ln+Ot1bhEXU2bNv+/yI4qPlSB866sPf
-         QLGA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hpdxxdnECrCjfxRQwQAXITDsXaRY4S9Y8qNe9cxvook=;
+        b=q5HV6uR0qU8gfYERpbtgOXiB16bdDKZqjJ8yqVAfRUsCVrr5UW/VXIBUMalc8kGJ8e
+         SW7vyN8ZLRzUsDrmlPCeMSaqxOd8NAk8riv426uuleJQLBjjdTxd6ru4CW97jxqxoNj0
+         pcIfFYgGvVNX3u0Fayt2GCS0cMD2hUYzwXOQ6Icz4dsJaconOW9atwDICfo6tWeujct9
+         +411xP5ry8xLiW2r1AhVFPkoCcKzJa0MaXshle9M8188Eo/h3VW4RprwrwerqSKSq7Lt
+         3J7LbbB9FVNZp3WJm5sKC7P3Ic8etu9+CgIvgCmarryYcQLvbtzVS5rNackF2tSbrJfR
+         E78w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=c4y2pZiaN2WhmN/OxTBjUr2bY3qKhiFt2vrnSnjnBeU=;
-        b=Rm/xTZcgR8tiK8Mx4+0zBqnRsDzz/OIhQPa+BTtO2PlJhjR0a/ec6GvV3zwOfrRlS4
-         IaRPbF/FNwyXEAtmDKhneqdbz1GrRi5B/nM4Ih9aril/ShRHAUUyMi7Idr7uoW5+mLSK
-         LmHl2uA9qQv1oJwsamq/FJKxCXx2wxMFKIcK89tqHIw01ysOMUyPju7HpdNV359IKbuS
-         MGE9g06bmy2Dx6ZQYyNp9E1zE8/8wxYOqEfySl5sTOV5/hn8FFJqY3IifR3tejj71mhc
-         5MAmL5c8wQnrlUQqlzk1dXWr990XHYAxxVhrMn7g93wZJpT4ifnBym/c8qQ7locy68T8
-         QIww==
-X-Gm-Message-State: APjAAAXzPVc5OLk9MGj9FD6nL/CksypizC/HiMZxN+5+JUY7HCRHNwQd
-        40t2qjR6vFcug/QGwppjHybAT8OPzw==
-X-Google-Smtp-Source: APXvYqzXnzX8wpDiqygjRAk3N1+TcIw2/ksV0H9K5MlzkDv4+dJxv87avsDznM1QwBlHmYu3EINw3LGE/A==
-X-Received: by 2002:a25:ef10:: with SMTP id g16mr40616532ybd.510.1560381942993;
- Wed, 12 Jun 2019 16:25:42 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 16:25:02 -0700
-Message-Id: <20190612232502.256846-1-nhuck@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-Subject: [PATCH] ASoC: tas571x: Fix -Wunused-const-variable
-From:   Nathan Huckleberry <nhuck@google.com>
-To:     cernekee@chromium.org, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Nathan Huckleberry <nhuck@google.com>,
-        clang-built-linux@googlegroups.com
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hpdxxdnECrCjfxRQwQAXITDsXaRY4S9Y8qNe9cxvook=;
+        b=hcIyYlmkG09ksaY1PQiY9aPaS/7VV8m7s+H33lmtykscOsYO4XgzBPahTYEN8t8p+n
+         pI1s/5+ZABjG9XA2X019jrOheLzbnqibd3l+oesOVPuUPykcF7kiSD2+4LQ8wbtBAeaw
+         yObBLDtsLphwVajvwearvVpm40eZlNFohTJnXggsD8k8b2C8yEh1dkW1MvovjbzYp/Wl
+         VmQRIF/9ykLRr4rt3LGK7KDThZtG2YyULQGrhLmZe38Ya278Nyqi8yLf+H4eLOBo/6Ef
+         Oxgc1nVKgO8GuoopiUSYPfCYDCv6mwQ+TxUZk7AyzrS1wqil3nxHU+5sdVasyyh544iK
+         mT0w==
+X-Gm-Message-State: APjAAAWlIiDka7XfaiQ47IYx6DRpsVYIhKsU5OZwGV4KesjseAMUhJwQ
+        e4dtGT1ch4pRpSx/NS1FGBbWfAdxnuFNu4X68ESI5Q==
+X-Google-Smtp-Source: APXvYqztz5V4dpKFE1Y8iXl/I0qdlviNE8GgjRikSDpqDKtChZ+KTIWt5CleNZQU3O9ZT60wDef+zNwlYot5W099IjY=
+X-Received: by 2002:a17:90a:2488:: with SMTP id i8mr1547499pje.123.1560381277880;
+ Wed, 12 Jun 2019 16:14:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190612225419.241618-1-nhuck@google.com>
+In-Reply-To: <20190612225419.241618-1-nhuck@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 12 Jun 2019 16:14:26 -0700
+Message-ID: <CAKwvOdkAJcOCGvveBYaDD2kf4vx7m=b+Nxyn3_n=9aCBapzDcw@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: mv_xor_v2: Fix -Wshift-negative-value
+To:     Nathan Huckleberry <nhuck@google.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, vkoul@kernel.org,
+        dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang produces the following warning
+On Wed, Jun 12, 2019 at 3:54 PM 'Nathan Huckleberry' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+> Upon further investigation MV_XOR_V2_DMA_IMSG_THRD_SHIFT and
+> MV_XOR_V2_DMA_IMSG_TIMER_THRD_SHIFT are both 0. Since shifting by 0 does
+> nothing, these variables can be removed.
+>
+> Cc: clang-built-linux@googlegroups.com
+> Link: https://github.com/ClangBuiltLinux/linux/issues/521
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> ---
+>  drivers/dma/mv_xor_v2.c | 11 ++++-------
+>  1 file changed, 4 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/dma/mv_xor_v2.c b/drivers/dma/mv_xor_v2.c
+> index fa5dab481203..5d2e0d1f3ec9 100644
+> --- a/drivers/dma/mv_xor_v2.c
+> +++ b/drivers/dma/mv_xor_v2.c
+> @@ -261,16 +259,15 @@ void mv_xor_v2_enable_imsg_thrd(struct mv_xor_v2_device *xor_dev)
+>
+>         /* Configure threshold of number of descriptors, and enable timer */
+>         reg = readl(xor_dev->dma_base + MV_XOR_V2_DMA_IMSG_THRD_OFF);
+> -       reg &= (~MV_XOR_V2_DMA_IMSG_THRD_MASK << MV_XOR_V2_DMA_IMSG_THRD_SHIFT);
+> -       reg |= (MV_XOR_V2_DONE_IMSG_THRD << MV_XOR_V2_DMA_IMSG_THRD_SHIFT);
+> +       reg &= (~MV_XOR_V2_DMA_IMSG_THRD_MASK);
+> +       reg |= (MV_XOR_V2_DONE_IMSG_THRD);
+>         reg |= MV_XOR_V2_DMA_IMSG_TIMER_EN;
+>         writel(reg, xor_dev->dma_base + MV_XOR_V2_DMA_IMSG_THRD_OFF);
+>
+>         /* Configure Timer Threshold */
+>         reg = readl(xor_dev->dma_base + MV_XOR_V2_DMA_IMSG_TMOT);
+> -       reg &= (~MV_XOR_V2_DMA_IMSG_TIMER_THRD_MASK <<
+> -               MV_XOR_V2_DMA_IMSG_TIMER_THRD_SHIFT);
+> -       reg |= (MV_XOR_V2_TIMER_THRD << MV_XOR_V2_DMA_IMSG_TIMER_THRD_SHIFT);
+> +       reg &= (~MV_XOR_V2_DMA_IMSG_TIMER_THRD_MASK);
+> +       reg |= (MV_XOR_V2_TIMER_THRD);
 
-sound/soc/codecs/tas571x.c:666:38: warning: unused variable
-'tas5721_controls' [-Wunused-const-variable]
+Don't need the parentheses anymore. Please send a v2.
 
-In the chip struct definition tas5711_controls is used rather than
-tac5712_controls. Looks like a typo was made in the original commit.
-
-Since tac5711_controls is identical to tas5721_controls we can just swap
-them
-
-Cc: clang-built-linux@googlegroups.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/522
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
----
- sound/soc/codecs/tas571x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/codecs/tas571x.c b/sound/soc/codecs/tas571x.c
-index 20798fa2988a..1554631cb397 100644
---- a/sound/soc/codecs/tas571x.c
-+++ b/sound/soc/codecs/tas571x.c
-@@ -721,8 +721,8 @@ static const struct regmap_config tas5721_regmap_config = {
- static const struct tas571x_chip tas5721_chip = {
- 	.supply_names			= tas5721_supply_names,
- 	.num_supply_names		= ARRAY_SIZE(tas5721_supply_names),
--	.controls			= tas5711_controls,
--	.num_controls			= ARRAY_SIZE(tas5711_controls),
-+	.controls			= tas5721_controls,
-+	.num_controls			= ARRAY_SIZE(tas5721_controls),
- 	.regmap_config			= &tas5721_regmap_config,
- 	.vol_reg_size			= 1,
- };
 -- 
-2.22.0.rc2.383.gf4fbbf30c2-goog
-
+Thanks,
+~Nick Desaulniers
