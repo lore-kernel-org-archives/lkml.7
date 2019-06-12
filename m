@@ -2,221 +2,190 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AB2C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04527C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D8121019
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:30:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="pRLRf+XN"
+	by mail.kernel.org (Postfix) with ESMTP id D8A0121019
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:31:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440256AbfFLQam (ORCPT
+        id S2408866AbfFLQbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 12:30:42 -0400
-Received: from mail-eopbgr50053.outbound.protection.outlook.com ([40.107.5.53]:59883
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405901AbfFLQal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:30:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ncffr8ucm/9RwM9/2pyUDUeJp+BVq2pphMnhUfpcM6Y=;
- b=pRLRf+XNxm3uE8xmMwk8Dg4e1gzmD6Gr8/88mloKrvMiadmeIySIsS3MZZuygzx9bKgCEAfpXsMyLl0aNSuGB2uDx8/RucAsdHNCq0h6NI/TU0gMpUiYXxRKfi000i52lpHb+JeEmTwocQISME98RmqD0cBvmXeJjg3nP7AY/Vc=
-Received: from VE1PR08MB4637.eurprd08.prod.outlook.com (10.255.27.14) by
- VE1PR08MB4799.eurprd08.prod.outlook.com (10.255.112.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.15; Wed, 12 Jun 2019 16:30:35 +0000
-Received: from VE1PR08MB4637.eurprd08.prod.outlook.com
- ([fe80::6574:1efb:6972:2b37]) by VE1PR08MB4637.eurprd08.prod.outlook.com
- ([fe80::6574:1efb:6972:2b37%6]) with mapi id 15.20.1965.017; Wed, 12 Jun 2019
- 16:30:35 +0000
-From:   Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-To:     Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     nd <nd@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v4 1/2] arm64: Define
- Documentation/arm64/tagged-address-abi.txt
-Thread-Topic: [PATCH v4 1/2] arm64: Define
- Documentation/arm64/tagged-address-abi.txt
-Thread-Index: AQHVIS/jNTMPiNHftkW5Mto9lMl3oKaYNfCA
-Date:   Wed, 12 Jun 2019 16:30:34 +0000
-Message-ID: <a90da586-8ff6-4bed-d940-9306d517a18c@arm.com>
-References: <cover.1560339705.git.andreyknvl@google.com>
- <20190612142111.28161-1-vincenzo.frascino@arm.com>
- <20190612142111.28161-2-vincenzo.frascino@arm.com>
-In-Reply-To: <20190612142111.28161-2-vincenzo.frascino@arm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-x-originating-ip: [217.140.106.51]
-x-clientproxiedby: LO2P265CA0447.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:e::27) To VE1PR08MB4637.eurprd08.prod.outlook.com
- (2603:10a6:802:b1::14)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Szabolcs.Nagy@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dbf6d76f-efbe-4260-e688-08d6ef534b80
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4799;
-x-ms-traffictypediagnostic: VE1PR08MB4799:
-nodisclaimer: True
-x-microsoft-antispam-prvs: <VE1PR08MB47998090B67B43085F32CBD3EDEC0@VE1PR08MB4799.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0066D63CE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(396003)(366004)(346002)(376002)(199004)(189003)(386003)(64126003)(66066001)(229853002)(25786009)(65806001)(6512007)(66476007)(66446008)(81166006)(26005)(66946007)(58126008)(73956011)(64756008)(8936002)(256004)(3846002)(66556008)(6116002)(102836004)(31686004)(81156014)(4326008)(6246003)(99286004)(6486002)(2906002)(53936002)(71200400001)(71190400001)(36756003)(76176011)(6506007)(53546011)(52116002)(6436002)(14454004)(305945005)(486006)(8676002)(476003)(14444005)(478600001)(44832011)(68736007)(31696002)(316002)(110136005)(186003)(446003)(7736002)(54906003)(86362001)(2616005)(11346002)(72206003)(2201001)(65826007)(2501003)(5660300002)(65956001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4799;H:VE1PR08MB4637.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: qGopdaSsNzczqizDbqa+McsMu1mGevfKHFAMAie4WTruLkO+bO4oncXDpHeQ+sM+9Of9VZVu65MKii52lL4zgWYktkrPTIFAovR5S0PVSXVbAvSzpS3bZXZdbWR+4A1pRYno4fKM4aj1RsHUme6Tsyyf/W7SZQfioQthg9c5ZtgN1XoDHIx/p8EOAK8KaCWUAXTj2y4JbVpzKX7bn/iSMVrVoXMjL683NORtOGtmMNbOUizWQjbb+H8cUsgx8AC64CDMs1gqcyI8+v8x4AEjfA5YRqJxTcgrASdtRhlMTKKeBFa9Jyv7t4M9H1yBOwGBL7nAZb0b0H63SSGD+8wxJdbbc6nf8USdl/DnB/GkPKHAMN2HipUlPnZgs3rZxFGI3b60/f+NpF20Xp+f0hsFn5G9NjtWb4qWbPFUMzPb3Yk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <17BB69DB38AF7C4FA55AEAE05410EF68@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 12 Jun 2019 12:31:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34614 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405901AbfFLQbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 12:31:04 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 279E22E97D5;
+        Wed, 12 Jun 2019 16:31:04 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 23FB16061E;
+        Wed, 12 Jun 2019 16:31:03 +0000 (UTC)
+Subject: Re: [RESEND PATCH v3] cpuset: restore sanity to
+ cpuset_cpus_allowed_fallback()
+To:     Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Li Zefan <lizefan@huawei.com>, Phil Auld <pauld@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, cgroups@vger.kernel.org
+References: <1560354648-23632-1-git-send-email-jsavitz@redhat.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <3bca146c-14bc-4188-becb-7ebc7348f646@redhat.com>
+Date:   Wed, 12 Jun 2019 12:31:02 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dbf6d76f-efbe-4260-e688-08d6ef534b80
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 16:30:35.0095
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Szabolcs.Nagy@arm.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4799
+In-Reply-To: <1560354648-23632-1-git-send-email-jsavitz@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 12 Jun 2019 16:31:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTIvMDYvMjAxOSAxNToyMSwgVmluY2Vuem8gRnJhc2Npbm8gd3JvdGU6DQo+IE9uIGFybTY0
-IHRoZSBUQ1JfRUwxLlRCSTAgYml0IGhhcyBiZWVuIGFsd2F5cyBlbmFibGVkIGhlbmNlDQo+IHRo
-ZSB1c2Vyc3BhY2UgKEVMMCkgaXMgYWxsb3dlZCB0byBzZXQgYSBub24temVybyB2YWx1ZSBpbiB0
-aGUNCj4gdG9wIGJ5dGUgYnV0IHRoZSByZXN1bHRpbmcgcG9pbnRlcnMgYXJlIG5vdCBhbGxvd2Vk
-IGF0IHRoZQ0KPiB1c2VyLWtlcm5lbCBzeXNjYWxsIEFCSSBib3VuZGFyeS4NCj4gDQo+IFdpdGgg
-dGhlIHJlbGF4ZWQgQUJJIHByb3Bvc2VkIHRocm91Z2ggdGhpcyBkb2N1bWVudCwgaXQgaXMgbm93
-IHBvc3NpYmxlDQo+IHRvIHBhc3MgdGFnZ2VkIHBvaW50ZXJzIHRvIHRoZSBzeXNjYWxscywgd2hl
-biB0aGVzZSBwb2ludGVycyBhcmUgaW4NCj4gbWVtb3J5IHJhbmdlcyBvYnRhaW5lZCBieSBhbiBh
-bm9ueW1vdXMgKE1BUF9BTk9OWU1PVVMpIG1tYXAoKS4NCj4gDQo+IFRoaXMgY2hhbmdlIGluIHRo
-ZSBBQkkgcmVxdWlyZXMgYSBtZWNoYW5pc20gdG8gcmVxdWlyZXMgdGhlIHVzZXJzcGFjZQ0KPiB0
-byBvcHQtaW4gdG8gc3VjaCBhbiBvcHRpb24uDQo+IA0KPiBTcGVjaWZ5IGFuZCBkb2N1bWVudCB0
-aGUgd2F5IGluIHdoaWNoIHN5c2N0bCBhbmQgcHJjdGwoKSBjYW4gYmUgdXNlZA0KPiBpbiBjb21i
-aW5hdGlvbiB0byBhbGxvdyB0aGUgdXNlcnNwYWNlIHRvIG9wdC1pbiB0aGlzIGZlYXR1cmUuDQo+
-IA0KPiBDYzogQ2F0YWxpbiBNYXJpbmFzIDxjYXRhbGluLm1hcmluYXNAYXJtLmNvbT4NCj4gQ2M6
-IFdpbGwgRGVhY29uIDx3aWxsLmRlYWNvbkBhcm0uY29tPg0KPiBDQzogQW5kcmV5IEtvbm92YWxv
-diA8YW5kcmV5a252bEBnb29nbGUuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBWaW5jZW56byBGcmFz
-Y2lubyA8dmluY2Vuem8uZnJhc2Npbm9AYXJtLmNvbT4NCj4gLS0tDQo+ICBEb2N1bWVudGF0aW9u
-L2FybTY0L3RhZ2dlZC1hZGRyZXNzLWFiaS50eHQgfCAxMTEgKysrKysrKysrKysrKysrKysrKysr
-DQo+ICAxIGZpbGUgY2hhbmdlZCwgMTExIGluc2VydGlvbnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBEb2N1bWVudGF0aW9uL2FybTY0L3RhZ2dlZC1hZGRyZXNzLWFiaS50eHQNCj4gDQo+IGRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2FybTY0L3RhZ2dlZC1hZGRyZXNzLWFiaS50eHQgYi9E
-b2N1bWVudGF0aW9uL2FybTY0L3RhZ2dlZC1hZGRyZXNzLWFiaS50eHQNCj4gbmV3IGZpbGUgbW9k
-ZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi45NmUxNDllMmM1NWMNCj4gLS0tIC9kZXYv
-bnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2FybTY0L3RhZ2dlZC1hZGRyZXNzLWFiaS50eHQN
-Cj4gQEAgLTAsMCArMSwxMTEgQEANCj4gK0FSTTY0IFRBR0dFRCBBRERSRVNTIEFCSQ0KPiArPT09
-PT09PT09PT09PT09PT09PT09PT09DQo+ICsNCj4gK1RoaXMgZG9jdW1lbnQgZGVzY3JpYmVzIHRo
-ZSB1c2FnZSBhbmQgc2VtYW50aWNzIG9mIHRoZSBUYWdnZWQgQWRkcmVzcw0KPiArQUJJIG9uIGFy
-bTY0Lg0KPiArDQo+ICsxLiBJbnRyb2R1Y3Rpb24NCj4gKy0tLS0tLS0tLS0tLS0tLQ0KPiArDQo+
-ICtPbiBhcm02NCB0aGUgVENSX0VMMS5UQkkwIGJpdCBoYXMgYmVlbiBhbHdheXMgZW5hYmxlZCBv
-biB0aGUgYXJtNjQga2VybmVsLA0KPiAraGVuY2UgdGhlIHVzZXJzcGFjZSAoRUwwKSBpcyBhbGxv
-d2VkIHRvIHNldCBhIG5vbi16ZXJvIHZhbHVlIGluIHRoZSB0b3ANCj4gK2J5dGUgYnV0IHRoZSBy
-ZXN1bHRpbmcgcG9pbnRlcnMgYXJlIG5vdCBhbGxvd2VkIGF0IHRoZSB1c2VyLWtlcm5lbCBzeXNj
-YWxsDQo+ICtBQkkgYm91bmRhcnkuDQo+ICsNCj4gK1RoaXMgZG9jdW1lbnQgZGVzY3JpYmVzIGEg
-cmVsYXhhdGlvbiBvZiB0aGUgQUJJIHdpdGggd2hpY2ggaXQgaXMgcG9zc2libGUNCj4gK3RvIHBh
-c3MgdGFnZ2VkIHRhZ2dlZCBwb2ludGVycyB0byB0aGUgc3lzY2FsbHMsIHdoZW4gdGhlc2UgcG9p
-bnRlcnMgYXJlIGluDQogICAgICAgICAgIF5eXl5eXl5eXl5eXl4NCnR5cG8uDQoNCj4gK21lbW9y
-eSByYW5nZXMgb2J0YWluZWQgYXMgZGVzY3JpYmVkIGluIHBhcmFncmFwaCAyLg0KPiArDQo+ICtT
-aW5jZSBpdCBpcyBub3QgZGVzaXJhYmxlIHRvIHJlbGF4IHRoZSBBQkkgdG8gYWxsb3cgdGFnZ2Vk
-IHVzZXIgYWRkcmVzc2VzDQo+ICtpbnRvIHRoZSBrZXJuZWwgaW5kaXNjcmltaW5hdGVseSwgYXJt
-NjQgcHJvdmlkZXMgYSBuZXcgc3lzY3RsIGludGVyZmFjZQ0KPiArKC9wcm9jL3N5cy9hYmkvdGFn
-Z2VkX2FkZHIpIHRoYXQgaXMgdXNlZCB0byBwcmV2ZW50IHRoZSBhcHBsaWNhdGlvbnMgZnJvbQ0K
-PiArZW5hYmxpbmcgdGhlIHJlbGF4ZWQgQUJJIGFuZCBhIG5ldyBwcmN0bCgpIGludGVyZmFjZSB0
-aGF0IGNhbiBiZSB1c2VkIHRvDQo+ICtlbmFibGUgb3IgZGlzYWJsZSB0aGUgcmVsYXhlZCBBQkku
-DQo+ICsNCj4gK1RoZSBzeXNjdGwgaXMgbWVhbnQgYWxzbyBmb3IgdGVzdGluZyBwdXJwb3NlcyBp
-biBvcmRlciB0byBwcm92aWRlIGEgc2ltcGxlDQo+ICt3YXkgZm9yIHRoZSB1c2Vyc3BhY2UgdG8g
-dmVyaWZ5IHRoZSByZXR1cm4gZXJyb3IgY2hlY2tpbmcgb2YgdGhlIHByY3RsKCkNCj4gK2NvbW1h
-bmQgd2l0aG91dCBoYXZpbmcgdG8gcmVjb25maWd1cmUgdGhlIGtlcm5lbC4NCj4gKw0KPiArVGhl
-IEFCSSBwcm9wZXJ0aWVzIGFyZSBpbmhlcml0ZWQgYnkgdGhyZWFkcyBvZiB0aGUgc2FtZSBhcHBs
-aWNhdGlvbiBhbmQNCj4gK2ZvcmsoKSdlZCBjaGlsZHJlbiBidXQgY2xlYXJlZCB3aGVuIGEgbmV3
-IHByb2Nlc3MgaXMgc3Bhd24gKGV4ZWN2ZSgpKS4NCg0KT0suDQoNCj4gKw0KPiArMi4gQVJNNjQg
-VGFnZ2VkIEFkZHJlc3MgQUJJDQo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gKw0K
-PiArRnJvbSB0aGUga2VybmVsIHN5c2NhbGwgaW50ZXJmYWNlIHByb3NwZWN0aXZlLCB3ZSBkZWZp
-bmUsIGZvciB0aGUgcHVycG9zZXMNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBeXl5eXl5eXl5eXg0KcGVyc3BlY3RpdmUNCg0KPiArb2YgdGhpcyBkb2N1bWVudCwgYSAidmFs
-aWQgdGFnZ2VkIHBvaW50ZXIiIGFzIGEgcG9pbnRlciB0aGF0IGVpdGhlciBpdCBoYXMNCj4gK2Eg
-emVybyB2YWx1ZSBzZXQgaW4gdGhlIHRvcCBieXRlIG9yIGl0IGhhcyBhIG5vbi16ZXJvIHZhbHVl
-LCBpdCBpcyBpbiBtZW1vcnkNCj4gK3JhbmdlcyBwcml2YXRlbHkgb3duZWQgYnkgYSB1c2Vyc3Bh
-Y2UgcHJvY2VzcyBhbmQgaXQgaXMgb2J0YWluZWQgaW4gb25lIG9mDQo+ICt0aGUgZm9sbG93aW5n
-IHdheXM6DQo+ICsgIC0gbW1hcCgpIGRvbmUgYnkgdGhlIHByb2Nlc3MgaXRzZWxmLCB3aGVyZSBl
-aXRoZXI6DQo+ICsgICAgKiBmbGFncyA9IE1BUF9QUklWQVRFIHwgTUFQX0FOT05ZTU9VUw0KPiAr
-ICAgICogZmxhZ3MgPSBNQVBfUFJJVkFURSBhbmQgdGhlIGZpbGUgZGVzY3JpcHRvciByZWZlcnMg
-dG8gYSByZWd1bGFyDQo+ICsgICAgICBmaWxlIG9yICIvZGV2L3plcm8iDQoNCnRoaXMgZG9lcyBu
-b3QgbWFrZSBpdCBjbGVhciBpZiBNQVBfRklYRUQgb3Igb3RoZXINCmZsYWdzIGFyZSB2YWxpZCAo
-dGhlcmUgYXJlIG1hbnkgbWFwIGZsYWdzIGkgZG9uJ3QNCmtub3csIGJ1dCBhdCBsZWFzdCBmaXhl
-ZCBzaG91bGQgd29yayBhbmQgc3RhY2svZ3Jvd3Nkb3duLg0KaSdkIGV4cGVjdCBhbnl0aGluZyB0
-aGF0J3Mgbm90IGluY29tcGF0aWJsZSB3aXRoDQpwcml2YXRlfGFub24gdG8gd29yaykuDQoNCj4g
-KyAgLSBhIG1hcHBpbmcgYmVsb3cgc2JyaygwKSBkb25lIGJ5IHRoZSBwcm9jZXNzIGl0c2VsZg0K
-DQpkb2Vzbid0IHRoZSBtbWFwIHJ1bGUgY292ZXIgdGhpcz8NCg0KPiArICAtIGFueSBtZW1vcnkg
-bWFwcGVkIGJ5IHRoZSBrZXJuZWwgaW4gdGhlIHByb2Nlc3MncyBhZGRyZXNzIHNwYWNlIGR1cmlu
-Zw0KPiArICAgIGNyZWF0aW9uIGFuZCBmb2xsb3dpbmcgdGhlIHJlc3RyaWN0aW9ucyBwcmVzZW50
-ZWQgYWJvdmUgKGkuZS4gZGF0YSwgYnNzLA0KPiArICAgIHN0YWNrKS4NCg0KT0suDQoNCkNhbiBh
-IG51bGwgcG9pbnRlciBoYXZlIGEgdGFnPw0KKGluIGNhc2UgTlVMTCBpcyB2YWxpZCB0byBwYXNz
-IHRvIGEgc3lzY2FsbCkNCg0KPiArDQo+ICtUaGUgQVJNNjQgVGFnZ2VkIEFkZHJlc3MgQUJJIGlz
-IGFuIG9wdC1pbiBmZWF0dXJlLCBhbmQgYW4gYXBwbGljYXRpb24gY2FuDQo+ICtjb250cm9sIGl0
-IHVzaW5nIHRoZSBmb2xsb3dpbmcgcHJjdGwoKXM6DQo+ICsgIC0gUFJfU0VUX1RBR0dFRF9BRERS
-X0NUUkw6IGNhbiBiZSB1c2VkIHRvIGVuYWJsZSB0aGUgVGFnZ2VkIEFkZHJlc3MgQUJJLg0KPiAr
-ICAtIFBSX0dFVF9UQUdHRURfQUREUl9DVFJMOiBjYW4gYmUgdXNlZCB0byBjaGVjayB0aGUgc3Rh
-dHVzIG9mIHRoZSBUYWdnZWQNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWRkcmVz
-cyBBQkkuDQo+ICsNCj4gK0FzIGEgY29uc2VxdWVuY2Ugb2YgaW52b2tpbmcgUFJfU0VUX1RBR0dF
-RF9BRERSX0NUUkwgcHJjdGwoKSBieSBhbiBhcHBsaWNhdGlvbnMsDQo+ICt0aGUgQUJJIGd1YXJh
-bnRlZXMgdGhlIGZvbGxvd2luZyBiZWhhdmlvdXJzOg0KPiArDQo+ICsgIC0gRXZlcnkgY3VycmVu
-dCBvciBuZXdseSBpbnRyb2R1Y2VkIHN5c2NhbGwgY2FuIGFjY2VwdCBhbnkgdmFsaWQgdGFnZ2Vk
-DQo+ICsgICAgcG9pbnRlcnMuDQo+ICsNCj4gKyAgLSBJZiBhIG5vbiB2YWxpZCB0YWdnZWQgcG9p
-bnRlciBpcyBwYXNzZWQgdG8gYSBzeXNjYWxsIHRoZW4gdGhlIGJlaGF2aW91cg0KPiArICAgIGlz
-IHVuZGVmaW5lZC4NCj4gKw0KPiArICAtIEV2ZXJ5IHZhbGlkIHRhZ2dlZCBwb2ludGVyIGlzIGV4
-cGVjdGVkIHRvIHdvcmsgYXMgYW4gdW50YWdnZWQgb25lLg0KPiArDQo+ICsgIC0gVGhlIGtlcm5l
-bCBwcmVzZXJ2ZXMgYW55IHZhbGlkIHRhZ2dlZCBwb2ludGVycyBhbmQgcmV0dXJucyB0aGVtIHRv
-IHRoZQ0KPiArICAgIHVzZXJzcGFjZSB1bmNoYW5nZWQgaW4gYWxsIHRoZSBjYXNlcyBleGNlcHQg
-dGhlIG9uZXMgZG9jdW1lbnRlZCBpbiB0aGUNCj4gKyAgICAiUHJlc2VydmluZyB0YWdzIiBwYXJh
-Z3JhcGggb2YgdGFnZ2VkLXBvaW50ZXJzLnR4dC4NCg0KT0suDQoNCmkgZ3Vlc3MgcG9pbnRlcnMg
-b2YgYW5vdGhlciBwcm9jZXNzIGFyZSBub3QgInZhbGlkIHRhZ2dlZA0KcG9pbnRlcnMiIGZvciB0
-aGUgY3VycmVudCBvbmUsIHNvIGUuZy4gaW4gcHRyYWNlIHRoZQ0KcHRyYWNlciBoYXMgdG8gY2xl
-YXIgdGhlIHRhZ3MgYmVmb3JlIFBFRUsgZXRjLg0KDQo+ICsNCj4gK0EgZGVmaW5pdGlvbiBvZiB0
-aGUgbWVhbmluZyBvZiB0YWdnZWQgcG9pbnRlcnMgb24gYXJtNjQgY2FuIGJlIGZvdW5kIGluOg0K
-PiArRG9jdW1lbnRhdGlvbi9hcm02NC90YWdnZWQtcG9pbnRlcnMudHh0Lg0KPiArDQo+ICszLiBB
-Uk02NCBUYWdnZWQgQWRkcmVzcyBBQkkgRXhjZXB0aW9ucw0KPiArLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gKw0KPiArVGhlIGJlaGF2aW91cnMgZGVzY3JpYmVkIGlu
-IHBhcmFncmFwaCAyLCB3aXRoIHBhcnRpY3VsYXIgcmVmZXJlbmNlIHRvIHRoZQ0KPiArYWNjZXB0
-YW5jZSBieSB0aGUgc3lzY2FsbHMgb2YgYW55IHZhbGlkIHRhZ2dlZCBwb2ludGVyIGFyZSBub3Qg
-YXBwbGljYWJsZQ0KPiArdG8gdGhlIGZvbGxvd2luZyBjYXNlczoNCj4gKyAgLSBtbWFwKCkgYWRk
-ciBwYXJhbWV0ZXIuDQo+ICsgIC0gbXJlbWFwKCkgbmV3X2FkZHJlc3MgcGFyYW1ldGVyLg0KPiAr
-ICAtIHByY3RsX3NldF9tbSgpIHN0cnVjdCBwcmN0bF9tYXAgZmllbGRzLg0KPiArICAtIHByY3Rs
-X3NldF9tbV9tYXAoKSBzdHJ1Y3QgcHJjdGxfbWFwIGZpZWxkcy4NCg0KaSBkb24ndCB1bmRlcnN0
-YW5kIHRoZSBleGNlcHRpb246IGRvZXMgaXQgbWVhbg0KdGhhdCBwYXNzaW5nIGEgdGFnZ2VkIGFk
-ZHJlc3MgdG8gdGhlc2Ugc3lzY2FsbHMNCmlzIHVuZGVmaW5lZD8NCg0KPiArDQo+ICs0LiBFeGFt
-cGxlIG9mIGNvcnJlY3QgdXNhZ2UNCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAr
-DQo+ICt2b2lkIG1haW4odm9pZCkNCj4gK3sNCj4gKwlzdGF0aWMgaW50IHRiaV9lbmFibGVkID0g
-MDsNCj4gKwl1bnNpZ25lZCBsb25nIHRhZyA9IDA7DQo+ICsNCj4gKwljaGFyICpwdHIgPSBtbWFw
-KE5VTEwsIFBBR0VfU0laRSwgUFJPVF9SRUFEIHwgUFJPVF9XUklURSwNCj4gKwkJCSBNQVBfQU5P
-TllNT1VTLCAtMSwgMCk7DQo+ICsNCj4gKwlpZiAocHJjdGwoUFJfU0VUX1RBR0dFRF9BRERSX0NU
-UkwsIFBSX1RBR0dFRF9BRERSX0VOQUJMRSwNCj4gKwkJICAwLCAwLCAwKSA9PSAwKQ0KPiArCQl0
-YmlfZW5hYmxlZCA9IDE7DQo+ICsNCj4gKwlpZiAoIXB0cikNCj4gKwkJcmV0dXJuIC0xOw0KDQpt
-bWFwIHJldHVybnMgTUFQX0ZBSUxFRCBvbiBmYWlsdXJlLg0KDQo+ICsNCj4gKwlpZiAodGJpX2Vu
-YWJsZWQpDQo+ICsJCXRhZyA9IHJhbmQoKSAmIDB4ZmY7DQo+ICsNCj4gKwlwdHIgPSAoY2hhciAq
-KSgodW5zaWduZWQgbG9uZylwdHIgfCAodGFnIDw8IFRBR19TSElGVCkpOw0KPiArDQo+ICsJKnB0
-ciA9ICdhJzsNCj4gKw0KPiArCS4uLg0KPiArfQ0KPiArDQo+IA0KDQo=
+On 6/12/19 11:50 AM, Joel Savitz wrote:
+> In the case that a process is constrained by taskset(1) (i.e.
+> sched_setaffinity(2)) to a subset of available cpus, and all of those are
+> subsequently offlined, the scheduler will set tsk->cpus_allowed to
+> the current value of task_cs(tsk)->effective_cpus.
+>
+> This is done via a call to do_set_cpus_allowed() in the context of 
+> cpuset_cpus_allowed_fallback() made by the scheduler when this case is
+> detected. This is the only call made to cpuset_cpus_allowed_fallback()
+> in the latest mainline kernel.
+>
+> However, this is not sane behavior.
+>
+> I will demonstrate this on a system running the latest upstream kernel
+> with the following initial configuration:
+>
+> 	# grep -i cpu /proc/$$/status
+> 	Cpus_allowed:	ffffffff,fffffff
+> 	Cpus_allowed_list:	0-63
+>
+> (Where cpus 32-63 are provided via smt.)
+>
+> If we limit our current shell process to cpu2 only and then offline it
+> and reonline it:
+>
+> 	# taskset -p 4 $$
+> 	pid 2272's current affinity mask: ffffffffffffffff
+> 	pid 2272's new affinity mask: 4
+>
+> 	# echo off > /sys/devices/system/cpu/cpu2/online
+> 	# dmesg | tail -3
+> 	[ 2195.866089] process 2272 (bash) no longer affine to cpu2
+> 	[ 2195.872700] IRQ 114: no longer affine to CPU2
+> 	[ 2195.879128] smpboot: CPU 2 is now offline
+>
+> 	# echo on > /sys/devices/system/cpu/cpu2/online
+> 	# dmesg | tail -1
+> 	[ 2617.043572] smpboot: Booting Node 0 Processor 2 APIC 0x4
+>
+>
+> We see that our current process now has an affinity mask containing
+> every cpu available on the system _except_ the one we originally
+> constrained it to:
+>
+> 	# grep -i cpu /proc/$$/status
+> 	Cpus_allowed:   ffffffff,fffffffb
+> 	Cpus_allowed_list:      0-1,3-63 
+>
+> This is not sane behavior, as the scheduler can now not only place the
+> process on previously forbidden cpus, it can't even schedule it on
+> the cpu it was originally constrained to!
+>
+> Other cases result in even more exotic affinity masks. Take for instance
+> a process with an affinity mask containing only cpus provided by smt at
+> the moment that smt is toggled, in a configuration such as the following:
+>
+> 	# taskset -p f000000000 $$
+> 	# grep -i cpu /proc/$$/status
+> 	Cpus_allowed:	000000f0,00000000
+> 	Cpus_allowed_list:	36-39
+>
+> A double toggle of smt results in the following behavior:
+>
+> 	# echo off > /sys/devices/system/cpu/smt/control
+> 	# echo on > /sys/devices/system/cpu/smt/control
+> 	# grep -i cpus /proc/$$/status
+> 	Cpus_allowed:	ffffff00,ffffffff
+> 	Cpus_allowed_list:	0-31,40-63
+>
+> This is even less sane than the previous case, as the new affinity mask
+> excludes all smt-provided cpus with ids less than those that were
+> previously in the affinity mask, as well as those that were actually in
+> the mask.
+>
+> With this patch applied, both of these cases end in the following state:
+>
+> 	# grep -i cpu /proc/$$/status
+> 	Cpus_allowed:	ffffffff,ffffffff
+> 	Cpus_allowed_list:	0-63
+>
+> The original policy is discarded. Though not ideal, it is the simplest way
+> to restore sanity to this fallback case without reinventing the cpuset
+> wheel that rolls down the kernel just fine in cgroup v2. A user who wishes
+> for the previous affinity mask to be restored in this fallback case can use
+> that mechanism instead.
+>
+> This patch modifies scheduler behavior by instead resetting the mask to
+> task_cs(tsk)->cpus_allowed by default, and cpu_possible mask in legacy
+> mode. I tested the cases above on both modes.
+>
+> Note that the scheduler uses this fallback mechanism if and only if
+> _every_ other valid avenue has been traveled, and it is the last resort
+> before calling BUG().
+>
+> Suggested-by: Waiman Long <longman@redhat.com>
+> Suggested-by: Phil Auld <pauld@redhat.com>
+> Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+> ---
+>  kernel/cgroup/cpuset.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index 6a1942ed781c..515525ff1cfd 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -3254,10 +3254,23 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
+>  	spin_unlock_irqrestore(&callback_lock, flags);
+>  }
+>  
+> +/**
+> + * cpuset_cpus_allowed_fallback - final fallback before complete catastrophe.
+> + * @tsk: pointer to task_struct with which the scheduler is struggling
+> + *
+> + * Description: In the case that the scheduler cannot find an allowed cpu in
+> + * tsk->cpus_allowed, we fall back to task_cs(tsk)->cpus_allowed. In legacy
+> + * mode however, this value is the same as task_cs(tsk)->effective_cpus,
+> + * which will not contain a sane cpumask during cases such as cpu hotplugging.
+> + * This is the absolute last resort for the scheduler and it is only used if
+> + * _every_ other avenue has been traveled.
+> + **/
+> +
+>  void cpuset_cpus_allowed_fallback(struct task_struct *tsk)
+>  {
+>  	rcu_read_lock();
+> -	do_set_cpus_allowed(tsk, task_cs(tsk)->effective_cpus);
+> +	do_set_cpus_allowed(tsk, is_in_v2_mode() ?
+> +		task_cs(tsk)->cpus_allowed : cpu_possible_mask);
+>  	rcu_read_unlock();
+>  
+>  	/*
+
+Acked-by: Waiman Long <longman@redhat.com>
+
+Good job!
+
