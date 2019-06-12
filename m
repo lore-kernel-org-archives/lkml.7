@@ -6,83 +6,131 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E09C31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33ABEC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30BD208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D24821734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iz8jnCnd"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="la5Lq+ye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407161AbfFLMPE (ORCPT
+        id S2438727AbfFLMPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:15:04 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43737 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbfFLMPD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:15:03 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j29so11894739lfk.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 05:15:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FFYjM9wk0Lz17ea9speLpvagwR++tad6Xn0EKWjFYrA=;
-        b=iz8jnCndeBkvP3p4bBUYrvrE0G6l+fnUrY4oU5MyfPxGojrx49R4TMU+njNn/7WkR1
-         KudRDNq6DwntOfaunGUQ2Ggo7LykQcAuySfJlCxT5juyhc3dBfB+pQf/5I311Unb61Ak
-         xDOd9SDmEBkAmthWSazEjw2aPFlUj9sFiYGMQb7c8R64IJKhJyDC763gJmHYUQHB2JEY
-         ObuDuPWxggur9qaAQOWrQNqbA61Jj83r369UjaHpdkGB+xj6tC2Oo2lQDj2219vXZZjC
-         WYTaixMFeNHwjcNo5OjrrHcq5pLGSx47JLd9HuGnPjcAo+4RnkSXgfEjH6OYMEiNgoEx
-         ztdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FFYjM9wk0Lz17ea9speLpvagwR++tad6Xn0EKWjFYrA=;
-        b=PmRguZPRCJgjunEvY4DA3t6DW8+lm4KnDTQ+FOJUJdnjGAoCH2mM2jxSS5tRdWLrFm
-         oznlxKFkuRVmC/L2WeeqVT53kwaHPD3/ujr8p7m2CAmapzXeJZEFp1Of6PYn7jG7C7g1
-         3AWVItIxxA/IN/BVds2OqcqYGTKj6gbcAUg2FjhcLrXf6bzhuxndC1mtQttTAujo/bEK
-         xahvHPGrSHbFczbdO2+YDtNOkWzhKyrVDXe8K8BW0CkctXl1Z/F9aql22wKpfyStuayV
-         ZgPcBFsEr9oqoqla8Enb+Yu46S1L8hrHhKoawhwBixcSRaOcQjLN/OipQc5nqsGGz2rM
-         LvrA==
-X-Gm-Message-State: APjAAAXZ9jfBynYEKzGdbTx+z8KaM/GEzhmSpJvTyFMsOwA3Sqk1nYa2
-        PYxRAeYr4jxxKCbUWAIKyVww77lSsIG/HQIg6gyIeA==
-X-Google-Smtp-Source: APXvYqwy0mZMiBNpW/oi3ASfqSMigvHqJvRnpIQvSh4m+n3Y5mdNL+QhoJDfGK8Ag45DTi2N8BZsC58UGSuJHBOr+eI=
-X-Received: by 2002:ac2:50c4:: with SMTP id h4mr27964836lfm.61.1560341701722;
- Wed, 12 Jun 2019 05:15:01 -0700 (PDT)
+        Wed, 12 Jun 2019 08:15:40 -0400
+Received: from mail-eopbgr30071.outbound.protection.outlook.com ([40.107.3.71]:27930
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726696AbfFLMPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:15:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kQShRtZUn3kdVbZlVtiPK0sW/NYp/0ABeaPC2Fqs8PY=;
+ b=la5Lq+yelONW/6Em6LNSfIXTfRS7KtcR/wgY5GyII173HYa3jFO4EP9bYNioH5Y/haLpA8elIF6/wh9R+mLBOt0UdQ0sQ4Fqq4KLKu75gUeZnFOKi998LxmMz3QLgxyHbcjt6kmhmo8Z+BEuWOqDN9fVIDLQaZEO2YJNt7HbnL0=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5506.eurprd04.prod.outlook.com (20.178.115.221) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Wed, 12 Jun 2019 12:15:35 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::6090:1f0b:b85b:8015]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::6090:1f0b:b85b:8015%3]) with mapi id 15.20.1965.017; Wed, 12 Jun 2019
+ 12:15:35 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: linux-next: Fixes tag needs some work in the imx-mxs tree
+Thread-Topic: linux-next: Fixes tag needs some work in the imx-mxs tree
+Thread-Index: AQHVHLFm4+M1Nb0Br0ijahXpQNE+6aaPVUEAgAbSoGCAAbgtAIAAF2kA
+Date:   Wed, 12 Jun 2019 12:15:35 +0000
+Message-ID: <AM0PR04MB448134A784B77716C9C93A7488EC0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20190607074652.4b3d0c97@canb.auug.org.au>
+ <20190607002407.GY29853@dragon>
+ <AM0PR04MB44817EB65913F29630453E1A88ED0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20190612105059.GG11086@dragon>
+In-Reply-To: <20190612105059.GG11086@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c18891d3-fe98-4c96-54d3-08d6ef2fac97
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5506;
+x-ms-traffictypediagnostic: AM0PR04MB5506:
+x-microsoft-antispam-prvs: <AM0PR04MB55069DB7C18A6D8F0227E96588EC0@AM0PR04MB5506.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0066D63CE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(376002)(396003)(366004)(53754006)(189003)(199004)(43544003)(229853002)(25786009)(9686003)(55016002)(53936002)(3846002)(6116002)(6436002)(186003)(71200400001)(71190400001)(33656002)(86362001)(102836004)(478600001)(6506007)(14454004)(68736007)(26005)(7696005)(256004)(66446008)(76176011)(2906002)(66946007)(66476007)(66556008)(64756008)(73956011)(76116006)(476003)(11346002)(52536014)(6916009)(44832011)(446003)(99286004)(486006)(5660300002)(305945005)(7736002)(74316002)(4326008)(6246003)(66066001)(8936002)(316002)(81156014)(81166006)(54906003)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5506;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: YxwaACQqBrjh+mWcX3dwCAkLlc1cYCygISE4TfvDVPB2+OEMESDI9WHzTn3TcQj9ZAcyzsIuqTImw4eybUYDqo85JU6zw567CgzsJnbWihqNge9KyRlZYDx6gQ+Vbukq+2SEK4wIrbznR+ay3wG+E2yfC2CGqTKS+cb5B8SCR8KXNBryc8/zuawDd9nWdtGcIVWY8tBkRIxAO+TJ3JK+vBLyHs1GQxByuWHOHc4dBKUTvrE+QatpPIvlnfNKle78A+m8QjmaYbbf2xM69oLn6fr56SNPl4lNHQVoAnRWtK9PAuP02k8ltMC2mce4RypqmtyDhI+T4SSeA+mkUzf7jqWSSDg3r8iu2BVH6BWlEQ3937UWdBpClEGDtU0XdQ9tzcVHnQvYY74YRzc6fQ/7Jsex8UOlXjFv8jA/xixj6yY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190611140940.14357-1-icenowy@aosc.io>
-In-Reply-To: <20190611140940.14357-1-icenowy@aosc.io>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Jun 2019 14:14:50 +0200
-Message-ID: <CACRpkdbSo=oKh94GxmLX_FrhCuoZJyY27WeV8KJjBW6gTUrh=g@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] Support for Allwinner V3/S3L and Sochip S3
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c18891d3-fe98-4c96-54d3-08d6ef2fac97
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 12:15:35.6944
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: peng.fan@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5506
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 4:10 PM Icenowy Zheng <icenowy@aosc.io> wrote:
 
->   dt-bindings: pinctrl: add missing compatible string for V3s
->   dt-bindings: pinctrl: add compatible string for Allwinner V3 pinctrl
 
-I applied these two so we get down the depth of the patch stack.
+> Subject: Re: linux-next: Fixes tag needs some work in the imx-mxs tree
+>=20
+> On Tue, Jun 11, 2019 at 08:36:52AM +0000, Peng Fan wrote:
+> > Hi Shawn, Stephen
+> > > Subject: Re: linux-next: Fixes tag needs some work in the imx-mxs
+> > > tree
+> > >
+> > > On Fri, Jun 07, 2019 at 07:46:52AM +1000, Stephen Rothwell wrote:
+> > > > Hi all,
+> > > >
+> > > > In commit
+> > > >
+> > > >   f6a8ff82ce68 ("clk: imx: imx8mm: correct audio_pll2_clk to
+> > > > audio_pll2_out")
+> > > >
+> > > > Fixes tag
+> > > >
+> > > >   Fixes: ba5625c3e27 ("clk: imx: Add clock driver support for
+> > > > imx8mm")
+> > > >
+> > > > has these problem(s):
+> > > >
+> > > >   - SHA1 should be at least 12 digits long
+> > > >     Can be fixed by setting core.abbrev to 12 (or more) or (for git=
+ v2.11
+> > > >     or later) just making sure it is not set (or set to "auto").
+> > >
+> > > Hi Stephen,
+> > >
+> > > Thanks for reporting.  I just got it fixed, will be more careful
+> > > about that in the future.
+> > >
+> > > @Peng, please check your git configuration as suggested above, thanks=
+.
+> >
+> > Sorry for this. Do I need to resend the patch?
+>=20
+> No.  I have fixed it on my branch.
 
-Waiting for a v3 on the pinctrl patch.
+Thanks. I'll take care in future.
 
-Yours,
-Linus Walleij
+Thanks,
+Peng.
+
+>=20
+> Shawn
