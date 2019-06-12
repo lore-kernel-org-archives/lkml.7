@@ -2,446 +2,142 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFE6C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F643C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 277432080A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC8A42080A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:55:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yvSF1zZk"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="EmICF+S+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731624AbfFLHz3 (ORCPT
+        id S2436673AbfFLHzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 03:55:29 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:47057 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbfFLHz1 (ORCPT
+        Wed, 12 Jun 2019 03:55:35 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:38498 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbfFLHze (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 03:55:27 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 81so9142200pfy.13
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 00:55:27 -0700 (PDT)
+        Wed, 12 Jun 2019 03:55:34 -0400
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="Nicolas.Ferre@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.63,363,1557212400"; 
+   d="scan'208";a="34080989"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Jun 2019 00:55:33 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.87.71) by
+ chn-vm-ex01.mchp-main.com (10.10.87.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 12 Jun 2019 00:55:32 -0700
+Received: from NAM01-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Wed, 12 Jun 2019 00:55:32 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dX8ayxbG6dv3ymS6EHBWk6+IbbfEAXYHv1SHsYeWqgY=;
-        b=yvSF1zZk6pvNg3yFSmYEkBkETtB1a1JUR6L7bc1OTd/8jnUDx8NpWPT+rMvSSxmler
-         bAa3EkGpAMX/kK/42QdaOAs0fZoppiIq5RbF0NdfvKZt4tu/cVvpB2NmsQiv2TIp1YAs
-         bjHEbIPH1T2yhCQTobs8pQpHJxCYgZBQTuiFdLJLs6N/bv9MHC3LstILSi7dH+SvrUZN
-         IuVUCuEC2db48RsElxYwBeIbSM2kqmPsNIeImGzlgPuaOjFnqMARqk6e62uk42LsUiwb
-         vCWlA3zMDijl5Kz44kxGMPxD+BtjOJ6TOffTTsj/BwA+6v90GgDJRTnuDUMWnEzqvYbb
-         +ylA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dX8ayxbG6dv3ymS6EHBWk6+IbbfEAXYHv1SHsYeWqgY=;
-        b=FtdiQVO+M8+991FyjQvN6pGm6PNDIQnACszny4sMM0ISn3bRK0bAHokMJsVt4VquWG
-         bWEMoJ+o0Fmxo35GzU/YIYS/+fVTeq2PoXNx1cI/hc1xXnFpHEbaozfdS2Mb/VnLFikC
-         /scyMAlOjSt8/R05vf+bzCagxm0WcPRRXIGsYkLSXOaBqkV4PaNb4PqT8aMOPtTkdjhe
-         TTpT238aTYQXaNguf7nWp7YxOThHrCs0oYhFpkHkLVzEBOgyZpABtLzZkcEev4uYUK3X
-         +Y6xHclgyTpm17TfFuY3t87qWNSezRsIuTD1RbJmJ5F1/KqXlJIz3vbQTGNC2SiKo9uu
-         vYVA==
-X-Gm-Message-State: APjAAAUiPtRWoVcPHdkbHVlFGu1+onnXpPshz2+DhPJpxhfdUshTSP0r
-        Iz3ta05L47mRyWAoPF3MahK1
-X-Google-Smtp-Source: APXvYqy9brcyJa9cOLqSc4S85FGB54wo9ovBp6MNXHxx9AHNw51a1v1EA4T5P76BseRnHvE/D7bdwg==
-X-Received: by 2002:a65:668e:: with SMTP id b14mr19917390pgw.407.1560326126600;
-        Wed, 12 Jun 2019 00:55:26 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:894:d456:15b5:9ca9:e3ec:c06a])
-        by smtp.gmail.com with ESMTPSA id b15sm16846399pfi.141.2019.06.12.00.55.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 00:55:26 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        robh+dt@kernel.org
-Cc:     linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loic.pallardy@st.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v4 4/4] ARM: dts: Add Avenger96 devicetree support based on STM32MP157A
-Date:   Wed, 12 Jun 2019 13:24:51 +0530
-Message-Id: <20190612075451.8643-5-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190612075451.8643-1-manivannan.sadhasivam@linaro.org>
-References: <20190612075451.8643-1-manivannan.sadhasivam@linaro.org>
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NXSDa9DWzTco6T0nG/cxa6bKscMVuLsU5NrSuJMDljk=;
+ b=EmICF+S+fXJasEH86dpp+vQQMlbEAX6ZZeVWcgkKva+UK3Ms1pYlXB99kdqrPGkop+8/M08zwFFxLw6oOUxFFuBgHAGaMRvHucodcoWV989iTSfhObCaO1cjNd07Ynq6MFHbBtfpgG3Dzz2vAy/noViEviLONW8NZG8F2hsA5e8=
+Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
+ MWHPR11MB1646.namprd11.prod.outlook.com (10.172.54.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.14; Wed, 12 Jun 2019 07:55:30 +0000
+Received: from MWHPR11MB1662.namprd11.prod.outlook.com
+ ([fe80::7534:63dc:8504:c2b3]) by MWHPR11MB1662.namprd11.prod.outlook.com
+ ([fe80::7534:63dc:8504:c2b3%6]) with mapi id 15.20.1965.017; Wed, 12 Jun 2019
+ 07:55:30 +0000
+From:   <Nicolas.Ferre@microchip.com>
+To:     <colin.king@canonical.com>, <b.zolnierkie@samsung.com>,
+        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
+        <linux-fbdev@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][next] video: fbdev: atmel_lcdfb: remove redundant
+ initialization to variable ret
+Thread-Topic: [PATCH][next] video: fbdev: atmel_lcdfb: remove redundant
+ initialization to variable ret
+Thread-Index: AQHVIHhxNzg6Tx2rZEi/BuBHE6ieyaaXp22A
+Date:   Wed, 12 Jun 2019 07:55:30 +0000
+Message-ID: <37ac8530-6601-a1a0-37e0-8c6d5d1702cd@microchip.com>
+References: <20190611170913.20913-1-colin.king@canonical.com>
+In-Reply-To: <20190611170913.20913-1-colin.king@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0228.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1e::24) To MWHPR11MB1662.namprd11.prod.outlook.com
+ (2603:10b6:301:e::15)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [213.41.198.74]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f7757d5c-afab-4fdf-557a-08d6ef0b56ee
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR11MB1646;
+x-ms-traffictypediagnostic: MWHPR11MB1646:
+x-microsoft-antispam-prvs: <MWHPR11MB1646FB9DAAA4376C23EA3DEDE0EC0@MWHPR11MB1646.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:862;
+x-forefront-prvs: 0066D63CE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(136003)(366004)(396003)(376002)(189003)(199004)(72206003)(386003)(64756008)(66476007)(476003)(6512007)(68736007)(26005)(53546011)(99286004)(53936002)(2616005)(6506007)(102836004)(86362001)(11346002)(186003)(229853002)(486006)(6246003)(2501003)(446003)(36756003)(2201001)(66446008)(66556008)(31686004)(4326008)(6436002)(8676002)(305945005)(81166006)(316002)(31696002)(8936002)(6486002)(25786009)(81156014)(7736002)(478600001)(76176011)(52116002)(4744005)(54906003)(256004)(66946007)(2906002)(14444005)(110136005)(73956011)(5660300002)(14454004)(66066001)(71190400001)(71200400001)(6116002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1646;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /x8SIDZnpkmA1BFQPgZKYF+oi2q7DRkAz+6Z7cZtpB0JVgainvWKkaGtIfDgjF4mh1bYp4ZWrXbfaHlmemNiwkTLoXSqcHgxc4tRp2JEaE7AFGfeTM4XpWiR21ydD5T0bATz9vl1Vv0C9StkWG13b7fHvB58XaYdbTQysP/eF3L9GwN8FoAUUFWC2ZuJ3fL6AT1LuIR9NO9g07PZwvge34fIhaTfh/nbgbZxvf2elKFNTzVJGHfddy2XYltx/kG/NIY+gF321ZUt7icG/S9ZsGyCWP/C0T2I3IpyfIzj4Dta53U7Z8ePZ2HV9h7umkuk1kzNJQ1cbw8KeGv5dAPb5q6ASQ7ZC9YDLiTcYGPW5CfkIfRRY97Z/Iz/8SfAI4dbrfyBGMssuRW5WvLxqKOVXOzCAPxylPtBmGs1sAYoqkk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BAA8371C89283945AE7EC078E4004321@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7757d5c-afab-4fdf-557a-08d6ef0b56ee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 07:55:30.5045
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nicolas.ferre@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1646
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add devicetree support for Avenger96 board based on STM32MP157A MPU
-from ST Micro. This board is one of the 96Boards Consumer Edition board
-from Arrow Electronics and has the following features:
-
-SoC: STM32MP157AAC
-PMIC: STPMIC1A
-RAM: 1024 Mbyte @ 533MHz
-Storage: eMMC v4.51: 8 Gbyte
-         microSD Socket: UHS-1 v3.01
-Ethernet Port: 10/100/1000 Mbit/s, IEEE 802.3 Compliant
-Wireless: WiFi 5 GHz & 2.4GHz IEEE 802.11a/b/g/n/ac
-          Bluetooth®v4.2 (BR/EDR/BLE)
-USB: 2x Type A (USB 2.0) Host and 1x Micro B (USB 2.0) OTG
-Display: HDMI: WXGA (1366x768)@ 60 fps, HDMI 1.4
-LED: 4x User LED, 1x WiFi LED, 1x BT LED
-
-More information about this board can be found in 96Boards website:
-https://www.96boards.org/product/avenger96/
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/stm32mp157a-avenger96.dts | 321 ++++++++++++++++++++
- 2 files changed, 322 insertions(+)
- create mode 100644 arch/arm/boot/dts/stm32mp157a-avenger96.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index dab2914fa293..918c85c227b5 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -975,6 +975,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
- 	stm32746g-eval.dtb \
- 	stm32h743i-eval.dtb \
- 	stm32h743i-disco.dtb \
-+	stm32mp157a-avenger96.dtb \
- 	stm32mp157a-dk1.dtb \
- 	stm32mp157c-dk2.dtb \
- 	stm32mp157c-ed1.dtb \
-diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-new file mode 100644
-index 000000000000..9d00be78010f
---- /dev/null
-+++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-@@ -0,0 +1,321 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-+/*
-+ * Copyright (C) Linaro Ltd 2019 - All Rights Reserved
-+ * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+ */
-+
-+/dts-v1/;
-+
-+#include "stm32mp157c.dtsi"
-+#include "stm32mp157-pinctrl.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/mfd/st,stpmic1.h>
-+
-+/ {
-+	model = "Arrow Electronics STM32MP157A Avenger96 board";
-+	compatible = "arrow,stm32mp157a-avenger96", "st,stm32mp157";
-+
-+	aliases {
-+		ethernet0 = &ethernet0;
-+		mmc0 = &sdmmc1;
-+		serial0 = &uart4;
-+		serial1 = &uart7;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@c0000000 {
-+		device_type = "memory";
-+		reg = <0xc0000000 0x40000000>;
-+	};
-+
-+	led {
-+		compatible = "gpio-leds";
-+		led1 {
-+			label = "green:user1";
-+			gpios = <&gpioz 7 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+
-+		led2 {
-+			label = "green:user2";
-+			gpios = <&gpiof 3 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc0";
-+			default-state = "off";
-+		};
-+
-+		led3 {
-+			label = "green:user3";
-+			gpios = <&gpiog 0 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc1";
-+			default-state = "off";
-+		};
-+
-+		led4 {
-+			label = "green:user3";
-+			gpios = <&gpiog 1 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "none";
-+			default-state = "off";
-+			panic-indicator;
-+		};
-+
-+		led5 {
-+			label = "yellow:wifi";
-+			gpios = <&gpioz 3 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "phy0tx";
-+			default-state = "off";
-+		};
-+
-+		led6 {
-+			label = "blue:bt";
-+			gpios = <&gpioz 6 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "bluetooth-power";
-+			default-state = "off";
-+		};
-+	};
-+};
-+
-+&ethernet0 {
-+	status = "okay";
-+	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
-+	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
-+	pinctrl-names = "default", "sleep";
-+	phy-mode = "rgmii";
-+	max-speed = <1000>;
-+	phy-handle = <&phy0>;
-+
-+	mdio0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "snps,dwmac-mdio";
-+		phy0: ethernet-phy@7 {
-+			reg = <7>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_b>;
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	status = "okay";
-+	/delete-property/dmas;
-+	/delete-property/dma-names;
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_b1 &i2c2_pins_b2>;
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	status = "okay";
-+	/delete-property/dmas;
-+	/delete-property/dma-names;
-+};
-+
-+&i2c4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c4_pins_a>;
-+	i2c-scl-rising-time-ns = <185>;
-+	i2c-scl-falling-time-ns = <20>;
-+	status = "okay";
-+	/delete-property/dmas;
-+	/delete-property/dma-names;
-+
-+	pmic: stpmic@33 {
-+		compatible = "st,stpmic1";
-+		reg = <0x33>;
-+		interrupts-extended = <&exti 55 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		status = "okay";
-+
-+		st,main-control-register = <0x04>;
-+		st,vin-control-register = <0xc0>;
-+		st,usb-control-register = <0x30>;
-+
-+		regulators {
-+			compatible = "st,stpmic1-regulators";
-+
-+			ldo1-supply = <&v3v3>;
-+			ldo2-supply = <&v3v3>;
-+			ldo3-supply = <&vdd_ddr>;
-+			ldo5-supply = <&v3v3>;
-+			ldo6-supply = <&v3v3>;
-+			pwr_sw1-supply = <&bst_out>;
-+			pwr_sw2-supply = <&bst_out>;
-+
-+			vddcore: buck1 {
-+				regulator-name = "vddcore";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+				regulator-initial-mode = <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd_ddr: buck2 {
-+				regulator-name = "vdd_ddr";
-+				regulator-min-microvolt = <1350000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+				regulator-initial-mode = <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd: buck3 {
-+				regulator-name = "vdd";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+				st,mask_reset;
-+				regulator-initial-mode = <0>;
-+				regulator-over-current-protection;
-+			};
-+
-+			v3v3: buck4 {
-+				regulator-name = "v3v3";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+				regulator-initial-mode = <0>;
-+			};
-+
-+			vdda: ldo1 {
-+				regulator-name = "vdda";
-+				regulator-min-microvolt = <2900000>;
-+				regulator-max-microvolt = <2900000>;
-+				interrupts = <IT_CURLIM_LDO1 0>;
-+				interrupt-parent = <&pmic>;
-+			};
-+
-+			v2v8: ldo2 {
-+				regulator-name = "v2v8";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				interrupts = <IT_CURLIM_LDO2 0>;
-+				interrupt-parent = <&pmic>;
-+			};
-+
-+			vtt_ddr: ldo3 {
-+				regulator-name = "vtt_ddr";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <750000>;
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+			};
-+
-+			vdd_usb: ldo4 {
-+				regulator-name = "vdd_usb";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				interrupts = <IT_CURLIM_LDO4 0>;
-+				interrupt-parent = <&pmic>;
-+			};
-+
-+			vdd_sd: ldo5 {
-+				regulator-name = "vdd_sd";
-+				regulator-min-microvolt = <2900000>;
-+				regulator-max-microvolt = <2900000>;
-+				interrupts = <IT_CURLIM_LDO5 0>;
-+				interrupt-parent = <&pmic>;
-+				regulator-boot-on;
-+			};
-+
-+			v1v8: ldo6 {
-+				regulator-name = "v1v8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				interrupts = <IT_CURLIM_LDO6 0>;
-+				interrupt-parent = <&pmic>;
-+				regulator-enable-ramp-delay = <300000>;
-+			};
-+
-+			vref_ddr: vref_ddr {
-+				regulator-name = "vref_ddr";
-+				regulator-always-on;
-+				regulator-over-current-protection;
-+			};
-+
-+			bst_out: boost {
-+				regulator-name = "bst_out";
-+				interrupts = <IT_OCP_BOOST 0>;
-+				interrupt-parent = <&pmic>;
-+			};
-+
-+			vbus_otg: pwr_sw1 {
-+				regulator-name = "vbus_otg";
-+				interrupts = <IT_OCP_OTG 0>;
-+				interrupt-parent = <&pmic>;
-+				regulator-active-discharge;
-+			};
-+
-+			vbus_sw: pwr_sw2 {
-+				regulator-name = "vbus_sw";
-+				interrupts = <IT_OCP_SWOUT 0>;
-+				interrupt-parent = <&pmic>;
-+				regulator-active-discharge;
-+			};
-+		};
-+
-+		onkey {
-+			compatible = "st,stpmic1-onkey";
-+			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 1>;
-+			interrupt-names = "onkey-falling", "onkey-rising";
-+			status = "okay";
-+		};
-+
-+		watchdog {
-+			compatible = "st,stpmic1-wdt";
-+			status = "disabled";
-+		};
-+	};
-+};
-+
-+&iwdg2 {
-+	timeout-sec = <32>;
-+	status = "okay";
-+};
-+
-+&rng1 {
-+	status = "okay";
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&sdmmc1 {
-+	pinctrl-names = "default", "opendrain", "sleep";
-+	pinctrl-0 = <&sdmmc1_b4_pins_a &sdmmc1_dir_pins_a>;
-+	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
-+	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
-+	broken-cd;
-+	st,sig-dir;
-+	st,neg-edge;
-+	st,use-ckin;
-+	bus-width = <4>;
-+	vmmc-supply = <&vdd_sd>;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	/* On Low speed expansion header */
-+	label = "LS-UART1";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart4_pins_b>;
-+	status = "okay";
-+};
-+
-+&uart7 {
-+	/* On Low speed expansion header */
-+	label = "LS-UART0";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart7_pins_a>;
-+	status = "okay";
-+};
--- 
-2.17.1
-
+T24gMTEvMDYvMjAxOSBhdCAxOTowOSwgQ29saW4gS2luZyB3cm90ZToNCj4gRXh0ZXJuYWwgRS1N
+YWlsDQo+IA0KPiANCj4gRnJvbTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2Fs
+LmNvbT4NCj4gDQo+IEN1cnJlbnRseSB2YXJpYWJsZSByZXQgaXMgYmVpbmcgaW5pdGlhbGl6ZWQg
+d2l0aCAtRU5PRU5UIGhvd2V2ZXIgdGhhdA0KPiB2YWx1ZSBpcyBuZXZlciByZWFkIGFuZCByZXQg
+aXMgYmVpbmcgcmUtYXNzaWduZWQgbGF0ZXIgb24uIEhlbmNlIHRoaXMNCj4gYXNzaWdubWVudCBp
+cyByZWR1bmRhbnQgYW5kIGNhbiBiZSByZW1vdmVkLg0KPiANCj4gQWRkcmVzc2VzLUNvdmVyaXR5
+OiAoIlVudXNlZCB2YWx1ZSIpDQo+IFNpZ25lZC1vZmYtYnk6IENvbGluIElhbiBLaW5nIDxjb2xp
+bi5raW5nQGNhbm9uaWNhbC5jb20+DQoNCkluZGVlZDoNCkFja2VkLWJ5OiBOaWNvbGFzIEZlcnJl
+IDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb20+DQoNClRoYW5rcywgYmVzdCByZWdhcmRzLA0K
+ICAgTmljb2xhcw0KDQoNCj4gLS0tDQo+ICAgZHJpdmVycy92aWRlby9mYmRldi9hdG1lbF9sY2Rm
+Yi5jIHwgMiArLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlv
+bigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdmlkZW8vZmJkZXYvYXRtZWxfbGNkZmIu
+YyBiL2RyaXZlcnMvdmlkZW8vZmJkZXYvYXRtZWxfbGNkZmIuYw0KPiBpbmRleCBmYjExN2NjYmVh
+YjMuLjkzMGNjM2Y5MmUwMSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy92aWRlby9mYmRldi9hdG1l
+bF9sY2RmYi5jDQo+ICsrKyBiL2RyaXZlcnMvdmlkZW8vZmJkZXYvYXRtZWxfbGNkZmIuYw0KPiBA
+QCAtOTUwLDcgKzk1MCw3IEBAIHN0YXRpYyBpbnQgYXRtZWxfbGNkZmJfb2ZfaW5pdChzdHJ1Y3Qg
+YXRtZWxfbGNkZmJfaW5mbyAqc2luZm8pDQo+ICAgCXN0cnVjdCBmYl92aWRlb21vZGUgZmJfdm07
+DQo+ICAgCXN0cnVjdCBncGlvX2Rlc2MgKmdwaW9kOw0KPiAgIAlzdHJ1Y3QgdmlkZW9tb2RlIHZt
+Ow0KPiAtCWludCByZXQgPSAtRU5PRU5UOw0KPiArCWludCByZXQ7DQo+ICAgCWludCBpOw0KPiAg
+IA0KPiAgIAlzaW5mby0+Y29uZmlnID0gKHN0cnVjdCBhdG1lbF9sY2RmYl9jb25maWcqKQ0KPiAN
+Cg0KDQotLSANCk5pY29sYXMgRmVycmUNCg==
