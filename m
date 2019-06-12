@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14568C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E257C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4F3A21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2A4A215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:37:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="b07tNumU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="MCD2VXxS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440054AbfFLPg5 (ORCPT
+        id S2440073AbfFLPhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:36:57 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:11346 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438037AbfFLPgy (ORCPT
+        Wed, 12 Jun 2019 11:37:01 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:33271 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440055AbfFLPg7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:36:54 -0400
+        Wed, 12 Jun 2019 11:36:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1560353809; x=1591889809;
+  t=1560353818; x=1591889818;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=2bWy8i3jdtmdLHfgaMhry3R3MkwAbwGQMbtvEWgFRMQ=;
-  b=b07tNumU2R+DGsJXumFEHUI2DR/EHvtO8YPySvNrdHZ3hYie+sIHqEOl
-   u1HkrEEBklFnDT3H0oZbUQ/JwsuKKfCgN7Do6+ue7urm2tO5dGEEL5ZcH
-   0nbfYxYJJvsmMeI/UnnEWJu/4AXcaSkF4un13E5AAAhnIotN9Y3p12Jmv
-   0=;
+  bh=Igp805vrj0BYv3eJaUUvnPl+aBTcIEQQKeYNPV80oSY=;
+  b=MCD2VXxSUIYgzvkxd5ahMYUOJtAeNjIxHCkTfGHed6i76APHBaWM0fDN
+   d2izZgD/duxhoXfRsV72Tk+NiLFM5FoblrjbN38lYSkWTKqWK7iOHJV/P
+   xmGgrDdACsosv/50OTW3UhOljD03VZqJzqwj7tBLVi1WxQk8sXMi30G5/
+   4=;
 X-IronPort-AV: E=Sophos;i="5.62,366,1554768000"; 
-   d="scan'208";a="400429582"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 12 Jun 2019 15:36:49 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id E5E69A1F94;
-        Wed, 12 Jun 2019 15:36:44 +0000 (UTC)
-Received: from EX13D08UEE003.ant.amazon.com (10.43.62.118) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 12 Jun 2019 15:36:21 +0000
+   d="scan'208";a="737167416"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 12 Jun 2019 15:36:55 +0000
+Received: from EX13MTAUEB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id 99381A2902;
+        Wed, 12 Jun 2019 15:36:50 +0000 (UTC)
+Received: from EX13D08UEB003.ant.amazon.com (10.43.60.11) by
+ EX13MTAUEB001.ant.amazon.com (10.43.60.96) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 12 Jun 2019 15:36:30 +0000
 Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D08UEE003.ant.amazon.com (10.43.62.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 12 Jun 2019 15:36:20 +0000
+ EX13D08UEB003.ant.amazon.com (10.43.60.11) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 12 Jun 2019 15:36:29 +0000
 Received: from u6cf1b7119fa15b.ant.amazon.com (10.28.85.98) by
  mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Wed, 12 Jun 2019 15:36:18 +0000
+ 15.0.1367.3 via Frontend Transport; Wed, 12 Jun 2019 15:36:26 +0000
 From:   Sam Caccavale <samcacc@amazon.de>
 CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
         <wipawel@amazon.de>, <dwmw@amazon.co.uk>, <mpohlack@amazon.de>,
@@ -59,9 +59,9 @@ CC:     <samcaccavale@gmail.com>, <nmanthey@amazon.de>,
         <paullangton4@gmail.com>, <anirudhkaushik@google.com>,
         <x86@kernel.org>, <kvm@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Sam Caccavale <samcacc@amazon.de>
-Subject: [v2, 1/4] Build target for emulate.o as a userspace binary
-Date:   Wed, 12 Jun 2019 17:35:57 +0200
-Message-ID: <20190612153600.13073-2-samcacc@amazon.de>
+Subject: [v2, 4/4] Added scripts for filtering, building, deploying
+Date:   Wed, 12 Jun 2019 17:36:00 +0200
+Message-ID: <20190612153600.13073-5-samcacc@amazon.de>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190612153600.13073-1-samcacc@amazon.de>
 References: <20190612153600.13073-1-samcacc@amazon.de>
@@ -73,700 +73,282 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit contains the minimal set of functionality to build
-afl-harness around arch/x86/emulate.c which allows exercising code
-in that source file, like x86_emulate_insn.  Resolving the
-dependencies was done via GCC's -H flag by get_headers.py.
-
-CR: https://code.amazon.com/reviews/CR-8325546
+bin.sh produces output which diagnoses whether the crash was expected.
+coalesce.sh, gen_output.sh, and summarize.sh are useful for parsing
+the large crash directories that afl produces.
+deploy_remote.sh does all of the setup to launch a fuzz run via
+install_deps_ubuntu.sh, install_afl.sh, build.sh, and run.sh.
+rebuild.sh cleans the directories and executes build.sh
 ---
- tools/Makefile                  |   9 ++
- tools/fuzz/x86ie/.gitignore     |   2 +
- tools/fuzz/x86ie/Makefile       |  51 +++++++++++
- tools/fuzz/x86ie/README.md      |  12 +++
- tools/fuzz/x86ie/afl-harness.c  | 149 ++++++++++++++++++++++++++++++++
- tools/fuzz/x86ie/common.h       |  87 +++++++++++++++++++
- tools/fuzz/x86ie/emulator_ops.c |  58 +++++++++++++
- tools/fuzz/x86ie/emulator_ops.h | 117 +++++++++++++++++++++++++
- tools/fuzz/x86ie/stubs.c        |  56 ++++++++++++
- tools/fuzz/x86ie/stubs.h        |  52 +++++++++++
- 10 files changed, 593 insertions(+)
- create mode 100644 tools/fuzz/x86ie/.gitignore
- create mode 100644 tools/fuzz/x86ie/Makefile
- create mode 100644 tools/fuzz/x86ie/README.md
- create mode 100644 tools/fuzz/x86ie/afl-harness.c
- create mode 100644 tools/fuzz/x86ie/common.h
- create mode 100644 tools/fuzz/x86ie/emulator_ops.c
- create mode 100644 tools/fuzz/x86ie/emulator_ops.h
- create mode 100644 tools/fuzz/x86ie/stubs.c
- create mode 100644 tools/fuzz/x86ie/stubs.h
+ tools/fuzz/x86ie/scripts/afl-many             |  6 +--
+ tools/fuzz/x86ie/scripts/bin.sh               | 49 +++++++++++++++++++
+ tools/fuzz/x86ie/scripts/build.sh             | 32 ++++++++++++
+ tools/fuzz/x86ie/scripts/coalesce.sh          |  6 +++
+ tools/fuzz/x86ie/scripts/deploy.sh            |  9 ++++
+ tools/fuzz/x86ie/scripts/deploy_remote.sh     |  9 ++++
+ tools/fuzz/x86ie/scripts/gen_output.sh        | 11 +++++
+ tools/fuzz/x86ie/scripts/install_afl.sh       | 14 ++++++
+ .../fuzz/x86ie/scripts/install_deps_ubuntu.sh |  5 ++
+ tools/fuzz/x86ie/scripts/rebuild.sh           |  6 +++
+ tools/fuzz/x86ie/scripts/run.sh               | 10 ++++
+ tools/fuzz/x86ie/scripts/summarize.sh         |  9 ++++
+ 12 files changed, 163 insertions(+), 3 deletions(-)
+ create mode 100755 tools/fuzz/x86ie/scripts/bin.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/build.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/coalesce.sh
+ create mode 100644 tools/fuzz/x86ie/scripts/deploy.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/deploy_remote.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/gen_output.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/install_afl.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/rebuild.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/run.sh
+ create mode 100755 tools/fuzz/x86ie/scripts/summarize.sh
 
-diff --git a/tools/Makefile b/tools/Makefile
-index 3dfd72ae6c1a..4d68817b7e49 100644
---- a/tools/Makefile
-+++ b/tools/Makefile
-@@ -94,6 +94,12 @@ freefall: FORCE
- kvm_stat: FORCE
- 	$(call descend,kvm/$@)
+diff --git a/tools/fuzz/x86ie/scripts/afl-many b/tools/fuzz/x86ie/scripts/afl-many
+index ab15258573a2..3fe6423309a6 100755
+--- a/tools/fuzz/x86ie/scripts/afl-many
++++ b/tools/fuzz/x86ie/scripts/afl-many
+@@ -19,10 +19,10 @@ while [ -z "$sync_dir" ]; do
+ done
 
-+fuzz: FORCE
-+	$(call descend,fuzz/x86_instruction_emulation)
-+
-+fuzz_deps: FORCE
-+	$(call descend,fuzz/x86_instruction_emulation,fuzz_deps)
-+
- all: acpi cgroup cpupower gpio hv firewire liblockdep \
- 		perf selftests spi turbostat usb \
- 		virtio vm bpf x86_energy_perf_policy \
-@@ -171,6 +177,9 @@ tmon_clean:
- freefall_clean:
- 	$(call descend,laptop/freefall,clean)
+ for i in $(seq 1 $(( ${NPROC:-$(nproc)} - 1)) ); do
+-    taskset -c "$i" ./afl-fuzz -S "slave$i" $@ >/dev/null 2>&1 &
++    taskset -c "$i" $AFLPATH/afl-fuzz -S "slave$i" $@ >/dev/null 2>&1 &
+ done
+-taskset -c 0 ./afl-fuzz -M master $@ >/dev/null 2>&1 &
++taskset -c 0 $AFLPATH/afl-fuzz -M master $@ >/dev/null 2>&1 &
 
-+fuzz_clean:
-+	$(call descend,fuzz/x86_instruction_emulation,clean)
-+
- build_clean:
- 	$(call descend,build,clean)
-
-diff --git a/tools/fuzz/x86ie/.gitignore b/tools/fuzz/x86ie/.gitignore
-new file mode 100644
-index 000000000000..7d44f7ce266e
+ sleep 5
+-watch -n1 "echo \"Executing './afl-fuzz $@' on ${NPROC:-$(nproc)} cores.\" && ./afl-whatsup -s ${sync_dir}"
++watch -n1 "echo \"Executing 'AFLPATH/afl-fuzz $@' on ${NPROC:-$(nproc)} cores.\" && $AFLPATH/afl-whatsup -s ${sync_dir}"
+ pkill afl-fuzz
+diff --git a/tools/fuzz/x86ie/scripts/bin.sh b/tools/fuzz/x86ie/scripts/bin.sh
+new file mode 100755
+index 000000000000..6383a883ff33
 --- /dev/null
-+++ b/tools/fuzz/x86ie/.gitignore
-@@ -0,0 +1,2 @@
-+*.o
-+*-harness
-diff --git a/tools/fuzz/x86ie/Makefile b/tools/fuzz/x86ie/Makefile
-new file mode 100644
-index 000000000000..d45fe6d266b9
++++ b/tools/fuzz/x86ie/scripts/bin.sh
+@@ -0,0 +1,49 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
++
++if [ "$#" -lt 3 ]; then
++  echo "Usage: './bin path/to/afl-harness path/to/afl_crash [path/to/linux/src/root]'"
++  exit
++fi
++
++export AFL_HARNESS="$1"
++export LINUX_SRC="$3"
++
++diagnose_segfault() {
++  SOURCE=$(gdb -batch -ex r -ex 'bt 2' --args $@ 2>&1 | grep -Po '#1.* \K([^ ]+:[0-9]+)');
++  IFS=: read FILE LINE <<< "$SOURCE"
++
++  OP="$(sed -n "${LINE}p" "$LINUX_SRC/$FILE" 2>/dev/null)"
++  if [ $? -ne 0 ]; then
++    OP="$(sed -n "${LINE}p" "$LINUX_SRC/tools/fuzz/x86_instruction_emulation/$FILE" 2>/dev/null)"
++  fi
++
++  OP="$(echo $OP | grep -Po 'ops->\K([^(]+)')"
++  if [ -z "$OP" ]; then
++    echo "SEGV: unknown, in $FILE:$LINE"
++  else
++    echo "Expected: segfaulting on emulator->$OP"
++  fi
++}
++export -f diagnose_segfault
++
++bin() {
++  OUTPUT=$(bash -c "timeout 1s $AFL_HARNESS $1 2>&1" 2>&1)
++  RETVAL=$?
++
++  echo "$OUTPUT"
++  if [ $RETVAL -eq 0 ]; then
++    echo "Terminated successfully"
++  elif [ $RETVAL -eq 124 ]; then
++    echo "Unknown: killed due to timeout.  Loop likely."
++  elif echo "$OUTPUT" | grep -q "SEGV"; then
++    echo "$(diagnose_segfault $AFL_HARNESS $1)"
++  elif echo "$OUTPUT" | grep -q "FPE"; then
++    echo "Expected: floating point exception."
++  else
++    echo "Unknown cause of crash."
++  fi
++}
++export -f bin
++
++echo "$(bin $2 2>&1)"
+diff --git a/tools/fuzz/x86ie/scripts/build.sh b/tools/fuzz/x86ie/scripts/build.sh
+new file mode 100755
+index 000000000000..74b893f222c1
 --- /dev/null
-+++ b/tools/fuzz/x86ie/Makefile
-@@ -0,0 +1,51 @@
-+ROOT_DIR=../../..
-+THIS_DIR=tools/fuzz/x86_instruction_emulation
++++ b/tools/fuzz/x86ie/scripts/build.sh
+@@ -0,0 +1,32 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
 +
-+include ../../scripts/Makefile.include
++kernel_objects="arch/x86/kvm/emulate.o arch/x86/lib/retpoline.o lib/find_bit.o"
 +
-+.DEFAULT_GOAL := all
++disable() { sed -i -r "/\b$1\b/c\# $1" .config; }
++enable() { sed -i -r "/\b$1\b/c\\$1=y" .config; }
 +
-+INCLUDES := $(patsubst -I./%,-I./$(ROOT_DIR)/%, $(LINUXINCLUDE))
-+INCLUDES := $(patsubst ./include/%,./$(ROOT_DIR)/include/%, $(INCLUDES))
-+INCLUDES += -include ./$(ROOT_DIR)/include/linux/compiler_types.h
++make ${CC:+ "CC=$CC"} ${DEBUG:+ "DEBUG=1"} defconfig
 +
-+$(ROOT_DIR)/.config:
-+	make -C $(ROOT_DIR) menuconfig
-+	sed -i -r 's/^#? *CONFIG_KVM(.*)=.*/CONFIG_KVM\1=y/' $(ROOT_DIR)/.config
++enable "CONFIG_DEBUG_INFO"
++enable "CONFIG_STACKPROTECTOR"
 +
++yes ' ' | make ${CC:+ "CC=$CC"} ${DEBUG:+ "DEBUG=1"} $kernel_objects
 +
-+KBUILD_CFLAGS += -fsanitize=address
-+BAD_FLAGS := -mcmodel=kernel # Causes all kinds of errors in a userspace bin
-+BAD_FLAGS += -mpreferred-stack-boundary=3 # Similar to ^, breaks ubuntu 16 too
-+BAD_FLAGS += -mno-sse # stdlibs use sse, would like to have it
++omit_arg () { args=$(echo "$args" | sed "s/ $1//g"); }
++add_arg () { args+=" $1"; }
 +
-+ifdef DEBUG
-+KBUILD_CFLAGS += -DDEBUG
-+KBUILD_CFLAGS += -O0
-+BAD_FLAGS += -O3
-+BAD_FLAGS += -O2
-+BAD_FLAGS += -O1
-+endif
++rebuild () {
++  args="$(head -1 $(dirname $1)/.$(basename $1).cmd | sed -e 's/.*:= //g')"
++  omit_arg "-mcmodel=kernel"
++  omit_arg "-mpreferred-stack-boundary=3"
++  add_arg "-fsanitize=address"
++  echo -e "Rebuilding $1 with \n$args"
++  eval "$args"
++}
 +
-+KBUILD_CFLAGS := $(filter-out $(BAD_FLAGS),$(KBUILD_CFLAGS))
++for object in $kernel_objects; do
++  rebuild $object
++done
 +
-+KERNEL_OBJS := arch/x86/kvm/emulate.o \
-+		arch/x86/lib/retpoline.o \
-+		lib/find_bit.o
-+KERNEL_OBJS := $(patsubst %,$(ROOT_DIR)/%, $(KERNEL_OBJS))
-+# $(KERNEL_OBJS): $(ROOT_DIR)/.config
-+# 	$(error Run `./tools/fuzz/x86_instruction_emulation/scripts/make_deps' first (setting envvar CC if desired).)
-+
-+DEPS := emulator_ops.h stubs.h common.h
-+%.o: %.c $(DEPS)
-+	$(CC) $(KBUILD_CFLAGS) $(INCLUDES) -g -c -o $@ $<
-+
-+LOCAL_OBJS := emulator_ops.o stubs.o
-+afl-harness: afl-harness.o $(LOCAL_OBJS) $(KERNEL_OBJS)
-+	@$(CC) -v $(KBUILD_CFLAGS) $(LOCAL_OBJS) $(KERNEL_OBJS) $< $(INCLUDES) -Istubs.h -o $@ -no-pie
-+
-+all: afl-harness
-+
-+.PHONY: clean
-+clean:
-+	$(RM) -r *.o afl-harness
-diff --git a/tools/fuzz/x86ie/README.md b/tools/fuzz/x86ie/README.md
-new file mode 100644
-index 000000000000..a78ac51b0152
++make ${CC:+ "CC=$CC"} ${DEBUG:+ "DEBUG=1"} tools/fuzz
+diff --git a/tools/fuzz/x86ie/scripts/coalesce.sh b/tools/fuzz/x86ie/scripts/coalesce.sh
+new file mode 100755
+index 000000000000..18c2ca7f2767
 --- /dev/null
-+++ b/tools/fuzz/x86ie/README.md
-@@ -0,0 +1,12 @@
-+# Building
++++ b/tools/fuzz/x86ie/scripts/coalesce.sh
+@@ -0,0 +1,6 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
 +
-+From the root of linux, run:
-+1. `./tools/fuzz/x86_instruction_emulation/scripts/make_deps`
-+  - Optionally, set the envvar CC with your desired compiler.
-+2. `make tools/fuzz`
-+
-+## TODO
-+
-+I'd like to add the object files built in `make_deps` as real
-+dependencies of `make tools/fuzz` but it causes a cycle in Make to
-+add them to `tools/fuzz/x86_instruction_emulation/Makefile`.
-\ No newline at end of file
-diff --git a/tools/fuzz/x86ie/afl-harness.c b/tools/fuzz/x86ie/afl-harness.c
++mkdir -p all
++rm -rf all/*
++find . -type f -wholename '*crashes/id*' | parallel cp {} ./all/$(basename $(dirname {//})):{/}
+diff --git a/tools/fuzz/x86ie/scripts/deploy.sh b/tools/fuzz/x86ie/scripts/deploy.sh
 new file mode 100644
-index 000000000000..b3b09d7f15f2
+index 000000000000..f95c3aa2b5b5
 --- /dev/null
-+++ b/tools/fuzz/x86ie/afl-harness.c
-@@ -0,0 +1,149 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * x86 Instruction Emulation Fuzzing Wrapper
-+ *
-+ * Authors:
-+ *   Sam Caccavale   <samcacc@amazon.de>
-+ *
-+ * Supporting code from xen:
-+ *  xen/tools/fuzz/x86_instruction_emulation/afl-harness.c
-+ *
-+ * This work is licensed under the terms of the GNU GPL, version 2.  See
-+ * the COPYING file in the top-level directory.
-+ *
-+ * From: xen/master f68f35fd2016e36ee30f8b3e7dfd46c554407ac1
-+ */
++++ b/tools/fuzz/x86ie/scripts/deploy.sh
+@@ -0,0 +1,9 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
 +
-+#include <assert.h>
-+#include <stdint.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <getopt.h>
-+#include "emulator_ops.h"
++REMOTE=$1
++DSTDIR=/dev/shm
 +
-+/* Arbitrary, but limiting fuzz input size is important. */
-+#define MAX_INPUT_SIZE 4096
-+#define INSTRUCTION_BYTES (MAX_INPUT_SIZE - MIN_INPUT_SIZE)
++rsync -av $(pwd) $REMOTE:$DSTDIR
 +
-+int main(int argc, char **argv)
-+{
-+	size_t size;
-+	FILE *fp = NULL;
-+	int max, count;
-+	struct state *state;
-+
-+	setbuf(stdin, NULL);
-+	setbuf(stdout, NULL);
-+
-+	while (1) {
-+		enum { OPT_INPUT_SIZE,
-+		};
-+		static const struct option lopts[] = {
-+			{ "input-size", no_argument, NULL, OPT_INPUT_SIZE },
-+			{ 0, 0, 0, 0 }
-+		};
-+		int c = getopt_long_only(argc, argv, "", lopts, NULL);
-+
-+		if (c == -1)
-+			break;
-+
-+		switch (c) {
-+		case OPT_INPUT_SIZE:
-+			printf("Min: %u\n", MIN_INPUT_SIZE);
-+			printf("Max: %u\n", MAX_INPUT_SIZE);
-+			exit(0);
-+			break;
-+
-+		case '?':
-+			printf("Usage: %s $FILE [$FILE...] | [--input-size]\n",
-+			       argv[0]);
-+			exit(-1);
-+			break;
-+
-+		default:
-+			printf("Bad getopt return %d (%c)\n", c, c);
-+			exit(-1);
-+			break;
-+		}
-+	}
-+
-+	max = argc - optind;
-+
-+	if (!max) { /* No positional parameters.  Use stdin. */
-+		max = 1;
-+		fp = stdin;
-+	}
-+
-+	state = create_emulator();
-+	state->data = malloc(INSTRUCTION_BYTES);
-+
-+#ifdef __AFL_HAVE_MANUAL_CONTROL
-+	__AFL_INIT();
-+
-+	/*
-+	 * This is the number of times AFL's forkserver should reuse a
-+	 * process to fuzz the target.  1000 is the recommended starting
-+	 * point.  Future tweaking may or may not yeild better results.
-+	 */
-+	for (count = 0; __AFL_LOOP(1000);)
-+#else
-+	for (count = 0; count < max; count++)
-+#endif
-+	{
-+		if (fp != stdin) { /* If not stdin, open the provided file. */
-+			printf("Opening file %s\n", argv[optind + count]);
-+			fp = fopen(argv[optind + count], "rb");
-+			if (fp == NULL) {
-+				perror("fopen");
-+				exit(-1);
-+			}
-+		}
-+#ifdef __AFL_HAVE_MANUAL_CONTROL
-+		else {
-+			/*
-+			 * This will ensure we're dealing with a clean stream
-+			 * state after the afl-fuzz process messes with the
-+			 * open file handle.
-+			 */
-+			fseek(fp, 0, SEEK_SET);
-+		}
-+#endif
-+		reset_emulator(state);
-+
-+		size = fread(state, 1, MIN_INPUT_SIZE, fp);
-+		if (size != MIN_INPUT_SIZE) {
-+			printf("Input does not populate state\n");
-+			if (max == 1)
-+				exit(-1);
-+		}
-+
-+		size = fread(state->data, 1, INSTRUCTION_BYTES, fp);
-+		state->data_available = size;
-+
-+		if (ferror(fp)) {
-+			perror("fread");
-+			exit(-1);
-+		}
-+
-+		/* Only run the test if the input file was < than INPUT_SIZE */
-+		if (feof(fp)) {
-+			initialize_emulator(state);
-+			emulate_until_complete(state);
-+		} else {
-+			printf("Input too large\n");
-+			/* Don't exit if we're doing batch processing */
-+			if (max == 1)
-+				exit(-1);
-+		}
-+
-+		if (fp != stdin) {
-+			fclose(fp);
-+			fp = NULL;
-+		}
-+	}
-+
-+	free(state->data);
-+	free_emulator(state);
-+	return 0;
-+}
-diff --git a/tools/fuzz/x86ie/common.h b/tools/fuzz/x86ie/common.h
-new file mode 100644
-index 000000000000..9aec2bea3d50
++ssh $REMOTE "cd $DSTDIR/$(basename $(pwd)); bash -s tools/fuzz/x86_instruction_emulation/scripts/deploy_remote.sh"
+diff --git a/tools/fuzz/x86ie/scripts/deploy_remote.sh b/tools/fuzz/x86ie/scripts/deploy_remote.sh
+new file mode 100755
+index 000000000000..e002c5a932f5
 --- /dev/null
-+++ b/tools/fuzz/x86ie/common.h
-@@ -0,0 +1,87 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++++ b/tools/fuzz/x86ie/scripts/deploy_remote.sh
+@@ -0,0 +1,9 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
 +
-+#include <stdint.h>
++SCRIPTDIR=$(pwd)/tools/fuzz/x86_instruction_emulation/scripts
 +
-+#define PRIx64 "llx"
-+#define MSR_INDEX_MAX 16
-+
-+#ifdef DEBUG
-+#define DEBUG_PRINT 1
-+#else
-+#define DEBUG_PRINT 0
-+#endif
-+
-+#define debug(...)							\
-+	do {								\
-+		if (DEBUG_PRINT)					\
-+			fprintf(stderr, __VA_ARGS__);			\
-+	} while (0)
-+
-+enum x86_segment {
-+	/* General purpose. */
-+	x86_seg_es,
-+	x86_seg_cs,
-+	x86_seg_ss,
-+	x86_seg_ds,
-+	x86_seg_fs,
-+	x86_seg_gs,
-+	/* System: Valid to use for implicit table references. */
-+	x86_seg_tr,
-+	x86_seg_ldtr,
-+	x86_seg_gdtr,
-+	x86_seg_idtr,
-+	/* No Segment: For accesses which are already linear. */
-+	x86_seg_none
-+};
-+
-+#define NR_SEG x86_seg_none
-+
-+struct segment_register {
-+	uint16_t sel;
-+	union {
-+		uint16_t attr;
-+		struct {
-+			uint16_t type : 4;
-+			uint16_t s : 1;
-+			uint16_t dpl : 2;
-+			uint16_t p : 1;
-+			uint16_t avl : 1;
-+			uint16_t l : 1;
-+			uint16_t db : 1;
-+			uint16_t g : 1;
-+			uint16_t pad : 4;
-+		};
-+	};
-+	uint32_t limit;
-+	uint64_t base;
-+};
-+
-+enum user_regs {
-+	REGS_RAX,
-+	REGS_RCX,
-+	REGS_RDX,
-+	REGS_RBX,
-+	REGS_RSP,
-+	REGS_RBP,
-+	REGS_RSI,
-+	REGS_RDI,
-+	REGS_R8,
-+	REGS_R9,
-+	REGS_R10,
-+	REGS_R11,
-+	REGS_R12,
-+	REGS_R13,
-+	REGS_R14,
-+	REGS_R15,
-+	NR_REGS
-+};
-+#define NR_VCPU_REGS NR_REGS
-+
-+static inline void print_n_bytes(unsigned char *bytes, size_t n)
-+{
-+	int i;
-+
-+	for (i = 0; i < n; i++)
-+		fprintf(stderr, " %02x", bytes[i]);
-+	fprintf(stderr, "\n");
-+}
-diff --git a/tools/fuzz/x86ie/emulator_ops.c b/tools/fuzz/x86ie/emulator_ops.c
-new file mode 100644
-index 000000000000..55ae4e8fbd96
++$SCRIPTDIR/install_deps_ubuntu.sh
++source $SCRIPTDIR/install_afl.sh
++CC=$AFLPATH/afl-gcc $SCRIPTDIR/build.sh
++FUZZDIR="${FUZZDIR:-$(pwd)/fuzz}" $SCRIPTDIR/run.sh
+diff --git a/tools/fuzz/x86ie/scripts/gen_output.sh b/tools/fuzz/x86ie/scripts/gen_output.sh
+new file mode 100755
+index 000000000000..6c0707eb6d08
 --- /dev/null
-+++ b/tools/fuzz/x86ie/emulator_ops.c
-@@ -0,0 +1,58 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * x86 Instruction Emulation Fuzzing Wrapper
-+ *
-+ * Authors:
-+ *   Sam Caccavale   <samcacc@amazon.de>
-+ *
-+ * Supporting code from xen:
-+ *  xen/tools/fuzz/x86_instruction_emulation/fuzz_emul.c
-+ *
-+ * This work is licensed under the terms of the GNU GPL, version 2.  See
-+ * the COPYING file in the top-level directory.
-+ *
-+ * From: xen/master f68f35fd2016e36ee30f8b3e7dfd46c554407ac1
-+ */
++++ b/tools/fuzz/x86ie/scripts/gen_output.sh
+@@ -0,0 +1,11 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
 +
-+#include <string.h>
-+#include <stdio.h>
-+#include <assert.h>
-+#include <stdlib.h>
++if [ "$#" -lt 3 ]; then
++  echo "Usage: '$0 path/to/afl-harness path/to/afl_crash_dir path/to/linux/src/root'"
++  exit
++fi
 +
-+#include "stubs.h"
-+#include "emulator_ops.h"
-+
-+#include <linux/compiler_attributes.h>
-+
-+#include <asm/kvm_emulate.h>
-+#include <asm/processor-flags.h>
-+#include <asm/user_64.h>
-+#include <asm/kvm.h>
-+
-+void initialize_emulator(struct state *state)
-+{
-+}
-+
-+int step_emulator(struct state *state)
-+{
-+	return 0;
-+}
-+
-+int emulate_until_complete(struct state *state)
-+{
-+	return 0;
-+}
-+
-+struct state *create_emulator(void)
-+{
-+	struct state *state = malloc(sizeof(struct state));
-+	return state;
-+}
-+
-+void reset_emulator(struct state *state)
-+{
-+}
-+
-+void free_emulator(struct state *state)
-+{
-+}
-diff --git a/tools/fuzz/x86ie/emulator_ops.h b/tools/fuzz/x86ie/emulator_ops.h
-new file mode 100644
-index 000000000000..5ae072d5f205
++mkdir -p output
++rm -rf output/*
++find $2 -type f | parallel ./bin.sh $1 {} $3 '>' ./output/{/}.out
+diff --git a/tools/fuzz/x86ie/scripts/install_afl.sh b/tools/fuzz/x86ie/scripts/install_afl.sh
+new file mode 100755
+index 000000000000..b1c5612eca1c
 --- /dev/null
-+++ b/tools/fuzz/x86ie/emulator_ops.h
-@@ -0,0 +1,117 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++++ b/tools/fuzz/x86ie/scripts/install_afl.sh
+@@ -0,0 +1,14 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
 +
-+#ifndef EMULATOR_OPS_H
-+#define EMULATOR_OPS_H
++wget http://lcamtuf.coredump.cx/afl/releases/afl-latest.tgz
++mkdir -p afl
++tar xzf afl-latest.tgz -C afl --strip-components 1
 +
-+#include "common.h"
-+#include "stubs.h"
-+#include <asm/kvm_emulate.h>
++pushd afl
++set AFL_USE_ASAN
++make clean all
++export AFLPATH="$(pwd)"
++popd
 +
-+struct vcpu {
-+	unsigned long cr[5];
-+	uint64_t msr[MSR_INDEX_MAX];
-+	uint64_t regs[NR_REGS];
-+	uint64_t rflags;
-+	struct segment_register segments[NR_SEG];
-+};
-+
-+/*
-+ * Internal state of the emulate harness.  Calculated initially from the input
-+ * corpus, and later mutated by the emulation callbacks.
-+ */
-+struct state {
-+	/* Bitmask which enables/disables hooks. */
-+	unsigned long options;
-+
-+	/* Internal representation of emulated CPU. */
-+	struct vcpu vcpu;
-+
-+	/*
-+	 * Input bytes are consumed at s.data[eip + s.other_bytes_consumed]
-+	 * while eip + size_requested + other_bytes_consumed < data_available
-+	 *
-+	 * emul_fetch consumes bytes for use as x86 instructions as eip grows
-+	 *
-+	 * get_bytes_and_increment consumes bytes and increments
-+	 * other_bytes_consumed.  These bytes can be used as return values for
-+	 * memory reads, random chances to fail, or other purposes.
-+	 *
-+	 *  Only these two functions should be used to access this data.
-+	 *
-+	 * This causes .data to be an interspliced source of instructions and
-+	 * other data.  Xen's instruction emulation does this to provide
-+	 * deterministic randomness on fuzz runs at the cost of complexity to
-+	 * crash output.
-+	 *
-+	 * Other alternatives (two separate streams, getting ins bytes from
-+	 * low, and random bytes from high, etc) yield byte streams which may
-+	 * not bear an as close correlation with AFL's input.  This was chosen
-+	 * since the only drawback to this approach is remedied by simple
-+	 * bookkeeping of instruction bytes when debugging crashes.  This is
-+	 * enabled by the TODO flag.
-+	 */
-+	unsigned char *data;
-+
-+	/* Real amount of data backing state->data[]. */
-+	size_t data_available;
-+
-+	/*
-+	 * Amount of bytes consumed for purposes other than instructions.
-+	 * E.G. whether a memory access should fault.
-+	 */
-+	size_t other_bytes_consumed;
-+
-+	/* Emulation context */
-+	struct x86_emulate_ctxt ctxt;
-+};
-+
-+#define MIN_INPUT_SIZE (offsetof(struct state, data))
-+
-+#define container_of(ptr, type, member)					\
-+	({								\
-+		const typeof(((type *)0)->member) * __mptr = (ptr);	\
-+		(type *)((char *)__mptr - offsetof(type, member));	\
-+	})
-+
-+#define get_state(h) container_of(h, struct state, ctxt)
-+
-+void buffer_stderr(void) __attribute__((constructor));
-+
-+/*
-+ * Allocates space for, and creates a `struct state`.  The user should set
-+ * state->data to their instruction stream and do any modification of the
-+ * state-vpcu if desired.
-+ */
-+extern struct state *create_emulator(void);
-+
-+/*
-+ * memset's all fields of state except data and data_available.
-+ */
-+extern void reset_emulator(struct state *state);
-+
-+/*
-+ * free_emulator does not free the state->data member, the user should free
-+ * it before freeing the emulator.  The alternative implementation either
-+ * restrains data to a fixed size or has the user pass in a (pointer, size)
-+ * pair which would have to be copied.  Copying this would be slow to fuzz.
-+ */
-+extern void free_emulator(struct state *state);
-+
-+/*
-+ * Uses the state->option field to disable certain functionality and
-+ * initializes the state->ctxt to a valid state.  This is optional if
-+ * intentionally testing the emulator in an invalid state.
-+ */
-+extern void initialize_emulator(struct state *state);
-+
-+/*
-+ * Advances the emulator one instruction and handles any exceptions.
-+ */
-+extern int step_emulator(struct state *state);
-+
-+/*
-+ * Steps the emulator until no instructions remain or something fails.
-+ */
-+extern int emulate_until_complete(struct state *state);
-+
-+#endif /* ifdef EMULATOR_OPS_H */
-diff --git a/tools/fuzz/x86ie/stubs.c b/tools/fuzz/x86ie/stubs.c
-new file mode 100644
-index 000000000000..d2ffeb3ec599
++sudo bash -c "echo core >/proc/sys/kernel/core_pattern"
+diff --git a/tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh b/tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh
+new file mode 100755
+index 000000000000..5525bc8b659c
 --- /dev/null
-+++ b/tools/fuzz/x86ie/stubs.c
-@@ -0,0 +1,56 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/tools/fuzz/x86ie/scripts/install_deps_ubuntu.sh
+@@ -0,0 +1,5 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
 +
-+/*
-+ * These functions/symbols are required to build emulate.o but belong in
-+ * linux tree files with include many other headers/unnecessary symbols
-+ * and cause building emulate.o to become far more complicated than just
-+ * stubbing them out here.  In order to stub them without modifying the
-+ * included source, we're declaring many of them here.
-+ */
-+#include <linux/types.h>
-+
-+#include "stubs.h"
-+
-+#define VMWARE_BACKDOOR_PMC_HOST_TSC 0x10000
-+#define VMWARE_BACKDOOR_PMC_REAL_TIME 0x10001
-+#define VMWARE_BACKDOOR_PMC_APPARENT_TIME 0x10002
-+
-+/*
-+ * This is easy enough to stub out its full functionality.
-+ */
-+bool is_vmware_backdoor_pmc(u32 pmc_idx)
-+{
-+	switch (pmc_idx) {
-+	case VMWARE_BACKDOOR_PMC_HOST_TSC:
-+	case VMWARE_BACKDOOR_PMC_REAL_TIME:
-+	case VMWARE_BACKDOOR_PMC_APPARENT_TIME:
-+		return true;
-+	}
-+	return false;
-+}
-+
-+/*
-+ * Printk has no side effects so we don't need to worry about it.
-+ */
-+int printk(const char *s, ...)
-+{
-+	return 0;
-+}
-+
-+/*
-+ * This is required by source included from emulate.c and would be linked in.
-+ */
-+bool enable_vmware_backdoor;
-+
-+struct exception_table_entry;
-+struct pt_regs;
-+
-+/*
-+ * TODO: we likely need to implement this to handle emulated exceptions.
-+ */
-+bool ex_handler_default(const struct exception_table_entry *fixup,
-+			struct pt_regs *regs, int trapnr,
-+			unsigned long error_code, unsigned long fault_addr)
-+{
-+	return true;
-+}
-diff --git a/tools/fuzz/x86ie/stubs.h b/tools/fuzz/x86ie/stubs.h
-new file mode 100644
-index 000000000000..02c2f6f9bc26
++sudo apt update
++sudo apt install -y make gcc wget screen build-essential libssh-dev flex bison libelf-dev bc
+diff --git a/tools/fuzz/x86ie/scripts/rebuild.sh b/tools/fuzz/x86ie/scripts/rebuild.sh
+new file mode 100755
+index 000000000000..ecdc5aa52653
 --- /dev/null
-+++ b/tools/fuzz/x86ie/stubs.h
-@@ -0,0 +1,52 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++++ b/tools/fuzz/x86ie/scripts/rebuild.sh
+@@ -0,0 +1,6 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
 +
-+#ifndef STUBS_H
-+#define STUBS_H
++make clean
++make tools/fuzz_clean
++FUZZDIR="./fuzz" ./tools/fuzz/x86_instruction_emulation/scripts/build.sh
+diff --git a/tools/fuzz/x86ie/scripts/run.sh b/tools/fuzz/x86ie/scripts/run.sh
+new file mode 100755
+index 000000000000..9b7d69e0f0f6
+--- /dev/null
++++ b/tools/fuzz/x86ie/scripts/run.sh
+@@ -0,0 +1,10 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
 +
++FUZZDIR="${FUZZDIR:-$(pwd)/fuzz}"
 +
-+/*
-+ * Several typedefs in linux/types.h collide with ones in standard libs.
-+ *
-+ * kvm_emulate.h uses many other types in linux/types.h heavily, so we must
-+ * include it but having access to the standard libs is also important for the
-+ * harnesses.
-+ *
-+ * A solution would be to not include any kernel files in the harness but then
-+ * useful introspection into state->ctxt is impossible as x86_emulate_ctxt is
-+ * defined in kvm_emulate.h and uses a ton of linux/types.h types.
-+ *
-+ * Instead, we use dummy defines to avoid the collision and linux seems
-+ * content to use the equivalent types from the standard libs.
-+ */
-+#define fd_set fake_fd_set
-+#define dev_t fake_dev_t
-+#define nlink_t fake_nlink_t
-+#define timer_t fake_timer_t
-+#define loff_t fake_loff_t
-+#define u_int64_t fake_u_int64_t
-+#define int64_t fake_int64_t
-+#define blkcnt_t fake_blkcnt_t
-+#define uint64_t fake_uint64_t
-+#include <linux/types.h>
-+#undef fd_set
-+#undef dev_t
-+#undef nlint_t
-+#undef timer_t
-+#undef loff_t
-+#undef u_int64_t
-+#undef int64_t
-+#undef blkcnt_t
-+#undef uint64_t
++mkdir -p $FUZZDIR/in
++cp tools/fuzz/x86_instruction_emulation/rand_sample.bin $FUZZDIR/in
++mkdir -p $FUZZDIR/out
 +
-+/*
-+ * These are identically defined in string.h and included kernel headers.
-+ */
-+#ifdef __always_inline
-+#undef __always_inline
-+#endif
++screen bash -c "ulimit -Sv $[21999999999 << 10]; ./tools/fuzz/x86_instruction_emulation/scripts/afl-many -m 22000000000 -i $FUZZDIR/in -o $FUZZDIR/out tools/fuzz/x86_instruction_emulation/afl-harness @@"
+diff --git a/tools/fuzz/x86ie/scripts/summarize.sh b/tools/fuzz/x86ie/scripts/summarize.sh
+new file mode 100755
+index 000000000000..27761f283ee3
+--- /dev/null
++++ b/tools/fuzz/x86ie/scripts/summarize.sh
+@@ -0,0 +1,9 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0+
 +
-+#ifdef __attribute_const__
-+#undef __attribute_const__
-+#endif
++if [ "$#" -lt 1 ]; then
++  echo "Usage: '$0 path/to/output/dir'"
++  exit
++fi
 +
-+#endif /* STUBS_H */
++time bash -c "find $1 -type f -exec tail -n 1 {} \; | sort | uniq -c | sort -rn"
 --
 2.17.1
 
