@@ -2,146 +2,98 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C29D9C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DE5C46477
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE0C2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:24:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560353094;
-	bh=x+x/tPpm3cvGQwKr+DcQW7JhQbOr+heDitVTTRJnnAg=;
-	h=From:Subject:To:Cc:References:Date:In-Reply-To:List-ID:From;
-	b=TZrKHB2Xxnrz/fF7IgFxaP6+bzfHteF0QH1LlnFlkcVk/HcCSspYwnz3LH+1Qk0/R
-	 rR4piP4pMT5syayKgwDOAkyEY31ARQFjQoSVD5q6q0jtYGJClwG4nhWg/M2a0g4Kb7
-	 MIxUhc66+/A7xv75AaDOPCwd8z2+VY2HhfzZcCG8=
+	by mail.kernel.org (Postfix) with ESMTP id E520D2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732142AbfFLPYy (ORCPT
+        id S2409346AbfFLP1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:24:54 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40240 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727419AbfFLPYx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:24:53 -0400
-Received: by mail-qt1-f196.google.com with SMTP id a15so18930384qtn.7;
-        Wed, 12 Jun 2019 08:24:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:subject:to:cc:references:openpgp:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=x/y4rh2GpXVp2fvK0BIj6HcH04gYu7ik1dJuJV7JqSE=;
-        b=gfaonzahNiQIay2TIzNRmKH4jfqBoa1rd4ukaLTrYRQkLOdLp/2X+zYhdgIRZjuL+K
-         M5BnzEoMLwGRU0ca+2ghr+czB10fUMRNz15o2Yl3sItCK7ORKZWLOyRO33YxZe1+I7wX
-         oJGEAHeAnxuxq5DIDNxwaL7LPR5SDkxCWlll7J91Z5/xkxwLaFSEJ3eKqELLHIiHj7w5
-         oNfQx6zhhGF4PpAwBVYbvHURhwNORv0bMni9nOD2yvW8cJXLgd2yEWP41spERrfDl4IT
-         F0SkvhzRsgjZItQJA33SFy2QIs0g6znV28uE5Lj+g4bDj8uGi2bF0+yszeI5v43VD5OT
-         0h3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:subject:to:cc:references:openpgp
-         :autocrypt:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=x/y4rh2GpXVp2fvK0BIj6HcH04gYu7ik1dJuJV7JqSE=;
-        b=PwAISTp3+cUaxE13yYSyQJ/xeOSBWk818c/4KAaOlB8bsXAI7GpMOUG2mjWK9vVNi0
-         gKSWyA9V3bp1fIxCbQbkQD8BFpnJiPczLxksSYFqdWuOSRtgjJDDsJhOjOYoFQRHWpHy
-         MhPLjA/4lXz1tgduyHZNScYBycaWjm4ly5y1qmNZ5+tSBLPzAHMkq0T4GGZjdyH03rWo
-         lotGuG/WbL88dtGzAq6ZzCMh71m3xkbpJKPw2xHBIlt9ewp3kSV/X7Kblhe3cudHNnQy
-         9XjS/ZKh0y+u9n4xSum4Qf9vcDYRs4J01wwbpxHVYkKGx5xAA7u8/me3fGH8XOtcmb+o
-         GhXg==
-X-Gm-Message-State: APjAAAWjQz8hGYVkZrBmyseLTf71HJGiZfPJjmZFS9YL3YEbwFAAjo/L
-        4MC5y25mEpzI4zTZ5SKCAqZh6AFm
-X-Google-Smtp-Source: APXvYqye/2ePZackd8UnkSvmHspMqWBf3Ci8+wA0N4ZKXatISVMJv90tpsbH4oujNN2SjfCd7T+3Lw==
-X-Received: by 2002:aed:3ed5:: with SMTP id o21mr69291746qtf.369.1560353092224;
-        Wed, 12 Jun 2019 08:24:52 -0700 (PDT)
-Received: from [10.84.150.66] ([167.220.148.66])
-        by smtp.gmail.com with ESMTPSA id i17sm8068790qkl.71.2019.06.12.08.24.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 08:24:51 -0700 (PDT)
-From:   Sinan Kaya <Okaya@kernel.org>
-X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
-Subject: Re: [PATCH 6/6] dma: qcom: hidma: no need to check return value of
- debugfs_create functions
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        dan.j.williams@intel.com, vkoul@kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190612122557.24158-1-gregkh@linuxfoundation.org>
- <20190612122557.24158-6-gregkh@linuxfoundation.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <8185a8b8-a0ce-4a86-84a2-b51391356052@kernel.org>
-Date:   Wed, 12 Jun 2019 11:24:51 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 12 Jun 2019 11:27:25 -0400
+Received: from mga06.intel.com ([134.134.136.31]:62144 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405706AbfFLP1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:27:24 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 08:27:23 -0700
+X-ExtLoop1: 1
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 12 Jun 2019 08:27:19 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 12 Jun 2019 18:27:18 +0300
+Date:   Wed, 12 Jun 2019 18:27:18 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     wsa@the-dreams.de, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        benjamin.tissoires@redhat.com, jbroadus@gmail.com,
+        patches@opensource.cirrus.com
+Subject: Re: [PATCH v4 4/7] i2c: core: Make i2c_acpi_get_irq available to the
+ rest of the I2C core
+Message-ID: <20190612152718.GC2640@lahna.fi.intel.com>
+References: <20190611123101.25264-1-ckeepax@opensource.cirrus.com>
+ <20190611123101.25264-5-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-In-Reply-To: <20190612122557.24158-6-gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611123101.25264-5-ckeepax@opensource.cirrus.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/2019 8:25 AM, Greg Kroah-Hartman wrote:
-> When calling debugfs functions, there is no need to ever check the
-> return value.  The function can work or not, but the code logic should
-> never do something different based on this.
+On Tue, Jun 11, 2019 at 01:30:58PM +0100, Charles Keepax wrote:
+> In preparation for more refactoring make i2c_acpi_get_irq available
+> outside i2c-core-acpi.c.
 > 
-> Also, because there is no need to save the file dentry, remove the
-> variables that were saving them as they were never even being used once
-> set.
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
 > 
-> Cc: Sinan Kaya <okaya@kernel.org>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: David Brown <david.brown@linaro.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: dmaengine@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Changes since v3:
+>  - Move the change to use the helper function from i2c-core-base into its own patch.
+> 
+> Thanks,
+> Charles
+> 
+>  drivers/i2c/i2c-core-acpi.c | 15 +++++++++++++--
+>  drivers/i2c/i2c-core.h      |  7 +++++++
+>  2 files changed, 20 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+> index 7d4d66ba752d4..35966cc337dde 100644
+> --- a/drivers/i2c/i2c-core-acpi.c
+> +++ b/drivers/i2c/i2c-core-acpi.c
+> @@ -144,8 +144,17 @@ static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
+>  	return 1; /* No need to add resource to the list */
+>  }
+>  
+> -static int i2c_acpi_get_irq(struct acpi_device *adev)
+> +/**
+> + * i2c_acpi_get_irq - get device IRQ number from ACPI
+> + * @client: Pointer to the I2C client device
+> + *
+> + * Find the IRQ number used by a specific client device.
+> + *
+> + * Return: The IRQ number or an error code.
+> + */
+> +int i2c_acpi_get_irq(struct i2c_client *client)
+>  {
+> +	struct acpi_device *adev = ACPI_COMPANION(&client->adapter->dev);
 
-Interesting. Wouldn't debugfs_create_file() blow up if dir is NULL
-for some reason?
+Is this adev checked for being NULL somewhere below before it is being
+dereferenced?
 
+It could explain the issue Benjamin is seeing.
 
-+		debugfs_create_file("stats", S_IRUGO, dir, chan,
-+				    &hidma_chan_fops);
-
-Note that code ignores the return value of hidma_debug_init();
-It was just trying to do clean up on debugfs failure by calling
-
-	debugfs_remove_recursive(dmadev->debugfs);
+>  	struct list_head resource_list;
+>  	int irq = -ENOENT;
+>  	int ret;
