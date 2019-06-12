@@ -2,91 +2,112 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439ADC31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C889C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1930D20896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:07:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="MTtnxOj8"
+	by mail.kernel.org (Postfix) with ESMTP id E857020866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:08:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560305281;
+	bh=8UtWCl+qouRdxPKZ1wjZWhAx7DfmMoLDBjkFIXYvgx0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Cg4RSApqs+MsmeNhY2go8dzQj6iHvSuHNF2r7ZzvcLNk5Emd9rIw3m33DUBoSgeG+
+	 SI2E4upRxIGxMHT7xNxJY/kemYglFTWWEdZT7dDLA7+S4HrCAIT9F76k05aCb2Fyi8
+	 N1WSq2FX158nCs2pFvl610odMj/P/xoQHErGVK9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406579AbfFLCHw (ORCPT
+        id S2408315AbfFLCH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 22:07:52 -0400
-Received: from mail-ed1-f53.google.com ([209.85.208.53]:41790 "EHLO
-        mail-ed1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404880AbfFLCHv (ORCPT
+        Tue, 11 Jun 2019 22:07:59 -0400
+Received: from mail-lj1-f178.google.com ([209.85.208.178]:35197 "EHLO
+        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406596AbfFLCH7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 22:07:51 -0400
-Received: by mail-ed1-f53.google.com with SMTP id p15so23055997eds.8
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 19:07:50 -0700 (PDT)
+        Tue, 11 Jun 2019 22:07:59 -0400
+Received: by mail-lj1-f178.google.com with SMTP id x25so9007256ljh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 19:07:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=e3TEzE60VRj/MS8YEEehOOQckYotYtM00jSjKCi8/jI=;
-        b=MTtnxOj8b/+TTYuM6NNkobIsRNOElKsc/8BqXi3Y/+dNGP7+MZ2IGVtBb9IvQn+OsO
-         vW74urYy7EzW8nl+nFudq/JabGlvyX3vo/5Hnrim+qNbyvWWoh95wiXSZNopPL+oXF/O
-         eD2Pnlv4mFpK9NfsXHt421c7OE1+1LjF2t546fw5c+ALo6qKpb5Up3nS2VgDyXsEYmXu
-         0EFS1eXIH10mQztjtBB9u+208ddm8dhgPx+iDuc40U2BU6O0uLBWML0c78uHFi1gvuAk
-         cpkYbNvZV5mNIS/64Z1tTp9WdsscxLL6ysWN85wbls6CM1baoMoKiseSgh4yK5TDDiHE
-         ByZw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zvcuGBw+4LQao88YFmzPADNOaa+2pmIz1aMFK+ndk6M=;
+        b=XcZ9B2oIjVRXTLHyuEPsLajuh6i76LN69nh3G8uioz1IkqIoBNiJmqBx/YkM+zyHPY
+         2G4ifYC/e/x616EYdSNIo03kIta8UGvL7gEmyY9zsCOwuEh0KIGgPW6cVGtYZOxKD6oY
+         Cr+IJ89IjBKKmulpfediz94KCA9DcxQ3obwPo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e3TEzE60VRj/MS8YEEehOOQckYotYtM00jSjKCi8/jI=;
-        b=Va40DPM1MtgQKNm72Ti0VdMU3RieGVeBCTPdcw4W9TwtANH3AbuwzVT8VxYg10s1Sn
-         QZHSXClrQyWIn6KsL/pJMNOncwm1p7L0Y9TnL65NTEkwQcNkS/m1oQDuxV0JIXt4nEKQ
-         WvspL2IjYXt92ChVTZGOq46N/9WTwcoGtKJRyV2DX6FkdJjqbtSHuMt7WK5qqWWFFvR3
-         kJOUnpdouo9suCuqKRgJOCeMv2PDGuTX7wVpWwcFN61nDaVsz6pTkc1yOjxxDUHXWzmP
-         gCTMegKZQKhxk/j070vjSae6uGwDhlPnCyr5+30MQnxXh1byCD7n08/lRIDQvefuhDvg
-         Ra7A==
-X-Gm-Message-State: APjAAAVQ06z+gKQpDCWYKaHHLdaKrIM9QuJO6uoglDrWbQH1T341POZR
-        FJ6AbWsRyfwXHi7jJYr1DD6jIw==
-X-Google-Smtp-Source: APXvYqz0F/coC3G7qHRNAuBkWxFLoYTo3WBL7aSNleJKw+ls654OvYPBn0myZDv5kyjEpbjibAS9FA==
-X-Received: by 2002:a17:906:7d4e:: with SMTP id l14mr19826791ejp.188.1560305270074;
-        Tue, 11 Jun 2019 19:07:50 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id v18sm3176634edq.80.2019.06.11.19.07.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 19:07:49 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id ECA1F10081B; Wed, 12 Jun 2019 05:07:49 +0300 (+03)
-Date:   Wed, 12 Jun 2019 05:07:49 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Larry Bassel <larry.bassel@oracle.com>
-Cc:     mike.kravetz@oracle.com, willy@infradead.org,
-        dan.j.williams@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
-Subject: Re: [PATCH, RFC 2/2] Implement sharing/unsharing of PMDs for FS/DAX
-Message-ID: <20190612020749.sjpuquzxrprkalfy@box>
-References: <1557417933-15701-1-git-send-email-larry.bassel@oracle.com>
- <1557417933-15701-3-git-send-email-larry.bassel@oracle.com>
- <20190514130147.2pk2xx32aiomm57b@box>
- <20190524160711.GF19025@ubuette>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zvcuGBw+4LQao88YFmzPADNOaa+2pmIz1aMFK+ndk6M=;
+        b=MGd6ryUBl+jANQT/bRUnkp+U2nxi3U5y6jRMD/cWCQqTwlHeEDWvUICl2KtpkLporM
+         QabZfbDdvpDFVhU/bh7ipKrnaKs5uzM6zIvMOO0lMi8CL5Iukmcxh4GXsaTLHE4GU7TZ
+         BV6CY3xWhmVKvANZODAbFbxiRMDpovxCTy/gDOfVdsyKgbwo+v2KnMjzPVZAW37WhWSE
+         ME1n4i6PmcQgmkEWB4vdf6YC1c8mDDHGHgzAWQUmz41gNkpO5v8zFrPlC6z/zQy6sA3a
+         WNOgtuos7XoF7/JczN1AgIARJEK8ZDeJl3SrruFjDbBlqYvniZ8HvY7qzuyRxxhTN645
+         aTXA==
+X-Gm-Message-State: APjAAAVSjXVDkZOBm0U8phTEwyJJJx4xEoDVji7DqFKdx6YZ6CjJbYXd
+        yZgZsRP33U+0hQmy0zFkIyPZYa7GZes=
+X-Google-Smtp-Source: APXvYqxxzgi636gUWTt0sX4U3Yvge1rYocP1nsSO+hGTAduUdWcBEuq3XmUdXD5hqqatOXDfW9L/Dw==
+X-Received: by 2002:a2e:1510:: with SMTP id s16mr13515961ljd.19.1560305277155;
+        Tue, 11 Jun 2019 19:07:57 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id n1sm543626lfk.19.2019.06.11.19.07.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 19:07:56 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id 16so13583863ljv.10
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 19:07:56 -0700 (PDT)
+X-Received: by 2002:a2e:9c03:: with SMTP id s3mr26468187lji.209.1560305276220;
+ Tue, 11 Jun 2019 19:07:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524160711.GF19025@ubuette>
-User-Agent: NeoMutt/20180716
+References: <20190610191420.27007-1-kent.overstreet@gmail.com>
+ <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
+ <20190611041045.GA14363@dread.disaster.area> <CAHk-=whDmeozRHUO0qM+2OeGw+=dkcjwGdsvms-x5Dz4y7Tzcw@mail.gmail.com>
+ <20190611071038.GC14363@dread.disaster.area>
+In-Reply-To: <20190611071038.GC14363@dread.disaster.area>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 11 Jun 2019 16:07:40 -1000
+X-Gmail-Original-Message-ID: <CAHk-=wgBdTUvjYXKPr_wAAe_Z-hFgM2KMHcsK+b=3w5yMSJ9zw@mail.gmail.com>
+Message-ID: <CAHk-=wgBdTUvjYXKPr_wAAe_Z-hFgM2KMHcsK+b=3w5yMSJ9zw@mail.gmail.com>
+Subject: Re: bcachefs status update (it's done cooking; let's get this sucker merged)
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-bcache@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Zach Brown <zach.brown@ni.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 09:07:11AM -0700, Larry Bassel wrote:
-> Again, I don't think this can happen in DAX. The only sharing allowed
-> is for FS/DAX/2MiB pagesize.
+On Mon, Jun 10, 2019 at 9:11 PM Dave Chinner <david@fromorbit.com> wrote:
+>
+> The same rwsem issues were seen on the mmap_sem, the shrinker rwsem,
+> in a couple of device drivers, and so on. i.e. This isn't an XFS
+> issue I'm raising here - I'm raising a concern about the lack of
+> validation of core infrastructure and it's suitability for
+> functionality extensions.
 
-Hm. I still don't follow. How do you guarantee that DAX actually allocated
-continues space for the file on backing storage and you can map it with
-PMD page? I believe you don't have such guarantee.
+I haven't actually seen the reports.
 
+That said, I do think this should be improving. The random
+architecture-specific code is largely going away, and we'll have a
+unified rwsem.
 
--- 
- Kirill A. Shutemov
+It might obviously cause some pain initially, but I think long-term we
+should be much better off, at least avoiding the "on particular
+configurations" issue..
+
+              Linus
