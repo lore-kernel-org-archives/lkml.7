@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE90FC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722F9C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16E520866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58B9F20896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:20:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729429AbfFLETr (ORCPT
+        id S1729498AbfFLEUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 00:19:47 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49098 "EHLO huawei.com"
+        Wed, 12 Jun 2019 00:20:22 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18136 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725280AbfFLETr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 00:19:47 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 71AFA3880FDC3D9E2455;
-        Wed, 12 Jun 2019 12:19:44 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 12 Jun 2019
- 12:19:37 +0800
+        id S1725280AbfFLEUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 00:20:22 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E6099C9A9915EF60B725;
+        Wed, 12 Jun 2019 12:20:18 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 12 Jun 2019
+ 12:20:12 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <gustavo.pimentel@synopsys.com>, <vkoul@kernel.org>,
         <dan.j.williams@intel.com>
 CC:     <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] dmaengine: dw-edma: Fix build error without CONFIG_PCI_MSI
-Date:   Wed, 12 Jun 2019 12:18:01 +0800
-Message-ID: <20190612041801.18300-1-yuehaibing@huawei.com>
+Subject: [PATCH -next] dmaengine: dw-edma: Fix build error without CONFIG_PCI_MSI
+Date:   Wed, 12 Jun 2019 12:19:54 +0800
+Message-ID: <20190612041954.256-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
