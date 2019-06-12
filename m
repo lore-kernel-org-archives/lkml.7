@@ -2,118 +2,126 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40D9C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97B2C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 919452082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE1620866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:21:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sV7Q9pQ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437974AbfFLQV0 (ORCPT
+        id S2502082AbfFLQVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 12:21:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35330 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405705AbfFLQV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:21:26 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1FB8F30BB524;
-        Wed, 12 Jun 2019 16:21:26 +0000 (UTC)
-Received: from amt.cnet (ovpn-112-4.gru2.redhat.com [10.97.112.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D02F71001B0F;
-        Wed, 12 Jun 2019 16:21:25 +0000 (UTC)
-Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id EC7DC10516A;
-        Wed, 12 Jun 2019 13:15:49 -0300 (BRT)
-Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id x5CGFjFV004957;
-        Wed, 12 Jun 2019 13:15:45 -0300
-Date:   Wed, 12 Jun 2019 13:15:41 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH v3 1/4] KVM: LAPIC: Make lapic timer unpinned when timer
- is injected by pi
-Message-ID: <20190612161538.GA4764@amt.cnet>
-References: <1560255429-7105-1-git-send-email-wanpengli@tencent.com>
- <1560255429-7105-2-git-send-email-wanpengli@tencent.com>
- <20190611203919.GB7520@amt.cnet>
- <CANRm+CxX4__=p8BJ_Dd6GbKrgEpQH733sN_FATYrD2jNRayXaA@mail.gmail.com>
+        Wed, 12 Jun 2019 12:21:49 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36806 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437976AbfFLQVs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 12:21:48 -0400
+Received: by mail-qt1-f196.google.com with SMTP id p15so11720481qtl.3;
+        Wed, 12 Jun 2019 09:21:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9EBwbWfsA9jQlfiCxUyc9e2H035Ves6CLXOfri3HY3c=;
+        b=sV7Q9pQ5BfY4ghdOP9Q0XQAuEO4teJ16NQq2soC0ZjRUbAOSlRIZFbSU5LilX2fCY1
+         QmWOJbWMb6mwyLo5X9BUA/4mN3D/5EEC0JxcILAhOymTk4Jvyin69iSq/3jdBRonpTcE
+         76ytq9PpM32r7Dvy/VNW7lKrCAMI1nrRQw3t7pYVOrKbd6kgqF58W2UDG9aMAqVJjtVv
+         4c6O7zIO+6+HbUV/OVpcJiSO1s0HE/ay994FzUySe7RwW+ytF7G3HhxYSsLFCQDoZtM1
+         MwZrrEpmKSGCBingJmWrVmOI/AliTlbaMk9Z8pVivv7dwC45mnDBa8fA3MKSJ2NO/0b8
+         dE3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9EBwbWfsA9jQlfiCxUyc9e2H035Ves6CLXOfri3HY3c=;
+        b=HLDV11rRl9voqB1EFPiuB9Kj0LiAZdwrLYPOX0baMZj9gTBg53SdFoVFGWaD4Iqqok
+         alOzFwMdHPn/JwDFw05OEsb3R86XpNkCs1fB5zlZewCEuXiosn/7VLHzcbPfa0oPc02s
+         QtExNGQuXZhYF7uFFyfcxnKUXrpJ9/JM6pFsm2GE5+ZvmdY2oFURaUB02hlBg5G1zlx0
+         tM7spomDDoaCU64g6DAlKTKHnIxg0XJrBENsXUdgTGDW72JSSKDFbTGiUfjzC2QktsIl
+         nL1QB8XG/jGkjZ+V+GXx9XPh9sQ3dQn4YdIgwqbbcrYNwqzQ5EIS+YYb3YwzcjbRpx87
+         ETSg==
+X-Gm-Message-State: APjAAAUbr0H5gy/Vp5e2yK2se6rm+4LsXutLNLwNuVvbT/KHX7wKodqI
+        z86TBq5SLVF4O8iY6owpQg==
+X-Google-Smtp-Source: APXvYqxZApMK6W8Zar2IN27EONCe2VtQ7jzp+fOnM7MS9mn0USyIB/k4W++raMdWD9E7hA0WCVh/Ug==
+X-Received: by 2002:ac8:1b2d:: with SMTP id y42mr22428374qtj.202.1560356507411;
+        Wed, 12 Jun 2019 09:21:47 -0700 (PDT)
+Received: from kmo-pixel ([69.5.123.9])
+        by smtp.gmail.com with ESMTPSA id s23sm143068qtj.56.2019.06.12.09.21.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 09:21:46 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 12:21:44 -0400
+From:   Kent Overstreet <kent.overstreet@gmail.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-bcache@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Zach Brown <zach.brown@ni.com>, Jens Axboe <axboe@kernel.dk>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>
+Subject: Re: bcachefs status update (it's done cooking; let's get this sucker
+ merged)
+Message-ID: <20190612162144.GA7619@kmo-pixel>
+References: <20190610191420.27007-1-kent.overstreet@gmail.com>
+ <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
+ <20190611011737.GA28701@kmo-pixel>
+ <20190611043336.GB14363@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANRm+CxX4__=p8BJ_Dd6GbKrgEpQH733sN_FATYrD2jNRayXaA@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 12 Jun 2019 16:21:26 +0000 (UTC)
+In-Reply-To: <20190611043336.GB14363@dread.disaster.area>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 08:45:10AM +0800, Wanpeng Li wrote:
-> On Wed, 12 Jun 2019 at 04:39, Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> >
-> > On Tue, Jun 11, 2019 at 08:17:06PM +0800, Wanpeng Li wrote:
-> > > From: Wanpeng Li <wanpengli@tencent.com>
-> > >
-> > > Make lapic timer unpinned when timer is injected by posted-interrupt,
-> > > the emulated timer can be offload to the housekeeping cpus.
-> > >
-> > > The host admin should fine tuned, e.g. dedicated instances scenario
-> > > w/ nohz_full cover the pCPUs which vCPUs resident, several pCPUs
-> > > surplus for housekeeping, disable mwait/hlt/pause vmexits to occupy
-> > > the pCPUs, fortunately preemption timer is disabled after mwait is
-> > > exposed to guest which makes emulated timer offload can be possible.
-> >
-> > Li,
-> >
-> > Nice!
-> >
-> > I think you can drop the HRTIMER_MODE_ABS_PINNED and
-> > instead have
-> >
-> > void kvm_set_pending_timer(struct kvm_vcpu *vcpu)
-> > {
-> >         kvm_make_request(KVM_REQ_PENDING_TIMER, vcpu);
-> >         kvm_vcpu_kick(vcpu);
-> > }
-> >
-> > As an alternative to commit 61abdbe0bcc2b32745ab4479cc550f4c1f518ee2
-> > (as a first patch in your series).
-> >
-> > This will make the logic simpler (and timer migration, for
-> > nonhousekeeping case, ensures timer is migrated).
+On Tue, Jun 11, 2019 at 02:33:36PM +1000, Dave Chinner wrote:
+> I just recently said this with reference to the range lock stuff I'm
+> working on in the background:
 > 
-> Good point. :)
-
-Actually should probably revisit the KVM_REQ_PENDING_TIMER logic,
-and only use the LAPIC injection to avoid guest entry,
-and use LAPIC's vcpu_kick as well.
-
-> > Also, should make this work for non housekeeping case as well.
-> > (But that can be done later).
+> 	FWIW, it's to avoid problems with stupid userspace stuff
+> 	that nobody really should be doing that I want range locks
+> 	for the XFS inode locks.  If userspace overlaps the ranges
+> 	and deadlocks in that case, they they get to keep all the
+> 	broken bits because, IMO, they are doing something
+> 	monumentally stupid. I'd probably be making it return
+> 	EDEADLOCK back out to userspace in the case rather than
+> 	deadlocking but, fundamentally, I think it's broken
+> 	behaviour that we should be rejecting with an error rather
+> 	than adding complexity trying to handle it.
 > 
-> The timer fire may cause other vCPUs vmexits for non housekeeping
-> case(after migrating timers fail during vCPU is scheduled to run in a
-> different pCPU). 
+> So I think this recusive locking across a page fault case should
+> just fail, not add yet more complexity to try to handle a rare
+> corner case that exists more in theory than in reality. i.e put the
+> lock context in the current task, then if the page fault requires a
+> conflicting lock context to be taken, we terminate the page fault,
+> back out of the IO and return EDEADLOCK out to userspace. This works
+> for all types of lock contexts - only the filesystem itself needs to
+> know what the lock context pointer contains....
 
-There should be no timer migration fail in the non housekeeping case?
+Ok, I'm totally on board with returning EDEADLOCK.
 
-> Could you explain more?
+Question: Would we be ok with returning EDEADLOCK for any IO where the buffer is
+in the same address space as the file being read/written to, even if the buffer
+and the IO don't technically overlap?
 
-Would have to find an optimal placement of interrupt handlers and vcpus.
+This would simplify things a lot and eliminate a really nasty corner case - page
+faults trigger readahead. Even if the buffer and the direct IO don't overlap,
+readahead can pull in pages that do overlap with the dio.
 
-Say, if a socket has 4 pcpus, and 3 vcpus, the free pcpu could house
-the interrupt handlers.
-
-But can start with housekeeping structure, then later find a solution
-for nonhousekeeping.
-
+And on getting EDEADLOCK we could fall back to buffered IO, so userspace would
+never know...
