@@ -2,89 +2,97 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C16C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF8EC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC1720896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4FA20896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:05:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBzl8rN/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437035AbfFLMEm (ORCPT
+        id S2438450AbfFLMFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:04:42 -0400
-Received: from sauhun.de ([88.99.104.3]:59096 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405097AbfFLMEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:04:41 -0400
-Received: from localhost (p5486CACA.dip0.t-ipconnect.de [84.134.202.202])
-        by pokefinder.org (Postfix) with ESMTPSA id E9AA82C54BC;
-        Wed, 12 Jun 2019 14:04:39 +0200 (CEST)
-Date:   Wed, 12 Jun 2019 14:04:39 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Mauro Carvalho Chehab <mchehab@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ruslan Babayev <ruslan@babayev.com>,
-        Andrew de Quincey <adq_dvb@lidskialf.net>
-Subject: Re: linux-next: build warning after merge of the i2c tree
-Message-ID: <20190612120439.GB2805@kunai>
-References: <20190611102528.44ad5783@canb.auug.org.au>
- <20190612081929.GA1687@kunai>
- <20190612080226.45d2115a@coco.lan>
- <20190612110904.qhuoxyljgoo76yjj@ninjato>
- <20190612084824.16671efa@coco.lan>
+        Wed, 12 Jun 2019 08:05:17 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36258 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436551AbfFLMFR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:05:17 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f21so2810956pgi.3;
+        Wed, 12 Jun 2019 05:05:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2Sff4ua3deUoFnvuxLiF7YAw+tlu26eK2pltBahQlIM=;
+        b=NBzl8rN/oAdi5zCjlv7rvRkehotFhdDepkjg+vDZhXE2PBPg4nQBNXqlJmq2U+KF4S
+         kTD54SprA0aT+K4kEoHLZCd6eqqrV9yzUfLQc6euPqP1jipjpdSrWxvI0TojAalKo5Lo
+         i2l/xMRZ2qDgmhxLrHkF425fsLUCOaK4xTCoRBz251ejL7b2ReCZgSL/wfrlSsO9iSqS
+         MD+vObqwcFZwMkOF1ht7AupR9jamsODZCqCRaKVy6qWtTQmsp33tN6cb/yHLTLxXYozj
+         Ur04IgsAU6GVoixxajT/6+KE54f/487NoF6wHAv7z3jWG2O2Ix90kdZ7JoGrq+otTevz
+         SELA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2Sff4ua3deUoFnvuxLiF7YAw+tlu26eK2pltBahQlIM=;
+        b=piAVM/oeNfaWYuSZlNMhT7JZp/sB1DZ0vpFDVM4gGdxulnPrNsDv0zM1R5Z/tuvLJC
+         f1Djom1FrSex+s/reNnkt3tsEVbl7CpW7fpzEtk/GUFls+xvLs9TcsgJ31OyGbZNx4Y+
+         ANmG4cilXk/zI8brm8pgEJcHiID03Qn2yrFkFiOCgiupt2VQXg1KXkMsQwc7jAAcmIem
+         1M70OMmaDL4dCEoNpCK//Hb17Sz+iNnVBPtv/7ZnoupHLuMh5cw03GV4Vzz1jUi07j9+
+         03bpJV1Hn3AYqLV0nW3Hrq1T8PrM/oi/0f7OPE0FcJTLxdqYmLNc0Q7BKujVnqwSLUC4
+         OcIQ==
+X-Gm-Message-State: APjAAAWhdtv1zWVJqgEKBNDFqzGVHGDAa47GA+SddWL94XBu8bO5AzrA
+        frZwu1BIaiXYS3nIqMRmUSQ=
+X-Google-Smtp-Source: APXvYqxCFL0ITppBmVjK6Osmr2Z/1tpzGxQLw+hH/Obl7KNjP2Ump9ilyp3gg4RCZTal1u9xzomuiA==
+X-Received: by 2002:aa7:9a92:: with SMTP id w18mr56535444pfi.167.1560341116838;
+        Wed, 12 Jun 2019 05:05:16 -0700 (PDT)
+Received: from masabert (150-66-71-0m5.mineo.jp. [150.66.71.0])
+        by smtp.gmail.com with ESMTPSA id e16sm5309606pga.11.2019.06.12.05.05.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 05:05:16 -0700 (PDT)
+Received: by masabert (Postfix, from userid 1000)
+        id DF87C2011BF; Wed, 12 Jun 2019 21:05:11 +0900 (JST)
+From:   Masanari Iida <standby24x7@gmail.com>
+To:     linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
+        ricardo.ribalda@gmail.com, linux-media@vger.kernel.org
+Cc:     Masanari Iida <standby24x7@gmail.com>
+Subject: [PATCH] media: imx214: Fix typo in module description of imx214
+Date:   Wed, 12 Jun 2019 21:05:10 +0900
+Message-Id: <20190612120510.839-1-standby24x7@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/WwmFnJnmDyWGHa4"
-Content-Disposition: inline
-In-Reply-To: <20190612084824.16671efa@coco.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch fixes a spelling typo found in imx214.c
 
---/WwmFnJnmDyWGHa4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+---
+ drivers/media/i2c/imx214.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+index 83e9961b0505..159a3a604f0e 100644
+--- a/drivers/media/i2c/imx214.c
++++ b/drivers/media/i2c/imx214.c
+@@ -1111,6 +1111,6 @@ static struct i2c_driver imx214_i2c_driver = {
+ 
+ module_i2c_driver(imx214_i2c_driver);
+ 
+-MODULE_DESCRIPTION("Sony IMX214 Camera drier");
++MODULE_DESCRIPTION("Sony IMX214 Camera driver");
+ MODULE_AUTHOR("Ricardo Ribalda <ricardo.ribalda@gmail.com>");
+ MODULE_LICENSE("GPL v2");
+-- 
+2.22.0
 
-> > OK, so that means I should send my pull request after yours in the next
-> > merge window? To avoid the build breakage?
->=20
-> Either that or you can apply my patch on your tree before the
-> patch that caused the breakage.=20
->=20
-> Just let me know what works best for you.
-
-Hmm, the offending patch is already in -next and I don't rebase my tree.
-So, I guess it's the merge window dependency then.
-
-
---/WwmFnJnmDyWGHa4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0A6lcACgkQFA3kzBSg
-KbZjSg//Z00AABwaP2AKy0R5ADbslsPS/4ByNTm3ijHSx+dcZ29rhM4HOUfMXDDZ
-ksZ+1bvr+pGCR3qKFXv6kCuqWdAKnneKfYNSrib5esjWm++vyLW7lNXwQR7eOYsV
-pA1gS/XIG+EHLCvQFupOALutcMHRwKetxSj+y9SBeKVxmOVvvnsvT15wYWouPv/9
-5p/BooqZV9o5bNh0AUFwcvGv7kZA4ZDVOwIpiIndpJ/VnFmQQ6mCxuX+j2cal5Wg
-q7e6De2CDL+pUfIdcqb67SdE0gJEMHKbMAHw+Ll9cC6A4dytOd4C4Nppo1pAGp+/
-AbfASwT7YFfSMPSerXQAGdiSZfVxUKOJ7epaQGQRK5kL99XS3Ccuu8KOheiAG0Vv
-bKNpOauz1PNsmQeOBo3KHIfwdGx9H9I440IplefSJdygdMKGvYD2jY80cfU5iR1s
-n+c3kiydkIIFSoum+hAH0ObE39sX2WTneOg4OLPa4IokkzbIy1SVwYeqZw7qe/C5
-0VpaCD/T4rzTGoGFT0VELYnikOBOD2xH3eaxmu16plpqsoDRr2y7BuwwG3xAOMbF
-Nq13QVqR5kU233pVc9FIUbEx4c2LqsQ3F5kvxeMANR8MOIvAw+Rr+WdwsssfpSbu
-l7C+JWXxPACxQhu4Joz8XhF/q0JzNMat3F982qQ/0PK//cwIrhM=
-=82Kc
------END PGP SIGNATURE-----
-
---/WwmFnJnmDyWGHa4--
