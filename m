@@ -2,154 +2,110 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA8BC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D657C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC38C20684
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 088F820684
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:18:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="MIIdtvua"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T3WDjTm7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405884AbfFLHSK (ORCPT
+        id S2407268AbfFLHSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 03:18:10 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:42249 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731214AbfFLHSJ (ORCPT
+        Wed, 12 Jun 2019 03:18:39 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:32783 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731298AbfFLHSh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 03:18:09 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190612071807euoutp02ab6e679d745c440623e923132dde1d60~nYk8VUwSk0275802758euoutp02r
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 07:18:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190612071807euoutp02ab6e679d745c440623e923132dde1d60~nYk8VUwSk0275802758euoutp02r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1560323887;
-        bh=Ib2hOUBwsOQPwhivWkswJDbQOGHqTT29bt2JNeyXdfM=;
-        h=Subject:To:From:Date:In-Reply-To:References:From;
-        b=MIIdtvuaP9oxdVbZEg1DbiOmlpKuRvd/xM99a1KFJ0RDPrkp7PNIQooNFTNS4i7C1
-         n6OdoU4ny4H9GKh47xgPRq1FSUWmcDTv5qk2FlNi61vFMBAG6TyEmEfAgV0MCHDVwn
-         uXV30KwKlzxFfiZ1R7mHxO6OBLyO9wpFJpKAlGPk=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190612071806eucas1p24457744ce55feb071aaada8e3fa3c118~nYk7cTv962271322713eucas1p2p;
-        Wed, 12 Jun 2019 07:18:06 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id C1.5A.04377.E27A00D5; Wed, 12
-        Jun 2019 08:18:06 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190612071806eucas1p29bbe929b1df18938ce355e9f63320ce1~nYk6x4tin1127011270eucas1p24;
-        Wed, 12 Jun 2019 07:18:06 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190612071805eusmtrp2dd48ceed9f5cd27bd15669b50836115e~nYk6iy9VE2761027610eusmtrp2i;
-        Wed, 12 Jun 2019 07:18:05 +0000 (GMT)
-X-AuditID: cbfec7f4-12dff70000001119-8b-5d00a72e2f49
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 8D.9A.04146.D27A00D5; Wed, 12
-        Jun 2019 08:18:05 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190612071805eusmtip2609a10c68b1a6cffa2e792a4a0929d3f~nYk54NAEO1398613986eusmtip2W;
-        Wed, 12 Jun 2019 07:18:05 +0000 (GMT)
-Subject: Re: [PATCH v1 0/2] dw-mipi-dsi: add power on & off optional phy ops
- and update stm
-To:     =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Vincent Abriou <vincent.abriou@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <8fad125a-54f2-7cca-fa01-5d7098930d62@samsung.com>
-Date:   Wed, 12 Jun 2019 09:18:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.0
+        Wed, 12 Jun 2019 03:18:37 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y17so11242856lfe.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 00:18:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eLHfkrcZKTo38F+HaUI6ckV79OZ0o6Qwqt61e1BrVrE=;
+        b=T3WDjTm70bMNjTMTCWqVSg7AlbbkPQ8m68HplITNSif9lb4dM1J4+qSqh7Bvp7O3Ww
+         Yysk1R0j0bTNnoYt8zCSs1qZ2Mvg/HDYnUQjzbxPpjFkVJ64dq01UEDZ8S/Rt6thbZw1
+         5NajMHZbFg4j/a5wyeEch9lfQlmmQ4wly/T8T+D8yAuCtTqPsuadEWmNpYEWD+qI3Ujf
+         Qsiq2AHo0pbd9cDZZocdVrxiX+rjbf5XzFWkKficu/3zleLrwS4ImuQ7oGn//+LMWp8f
+         mTOFKEPWKMLqcqWoNsoh8P7l1Xaz0bzm+e7F2zYbglE2PY28+hh/H8bTV2RSeAHKygwB
+         hNog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eLHfkrcZKTo38F+HaUI6ckV79OZ0o6Qwqt61e1BrVrE=;
+        b=XhnnqrsEMIwAQ5Bq1hNnKUYaX5dmXs8PfykWrRfztTUHkyHs8OlVa2Utt2FW1OTl58
+         Ot+DCXL9ZxsfeBFHbuMKTbGTy3weHfLRu274GrCH2tRcabeBsUEttkGRan7CF3zPWRW/
+         DXTTXw4XQVKUSwvraCkVY1ye1Um6QifKkbpXwMKrInsJ2iEPp1TEMr9FtOvpQjN4HUhn
+         8DHOgtRSo76or6UWX/1AQigrBpLOX1/nUb2/KDu1y0ploNXLIhm+JGZD1tRXMnzSHTkr
+         z0YQ4Bp0vlQpC4dXCjiqfUsCRFUowXV8geX2udllg62bbkmUO6cVP/BMiT/MPf3KMkuz
+         2qcA==
+X-Gm-Message-State: APjAAAX4HrpfbgQOGuleb3hpB5Ck+IxBusVQlwa0Uw/brQZLTEckHtQm
+        wRI+VR6jsLnNc32ebCntHbN7ex+rBen1JOju3sLkIw==
+X-Google-Smtp-Source: APXvYqzDh4d8Jgxhz1KUU0UefThe5Mfao7GnQlNr1l1ciJMnwpzLb6ZT/NclpErH3pe+BXltkLCsA/57T4H+XLB/VdE=
+X-Received: by 2002:a19:7616:: with SMTP id c22mr36520290lff.115.1560323915112;
+ Wed, 12 Jun 2019 00:18:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1558952499-15418-1-git-send-email-yannick.fertre@st.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUiTYRzHfXwPX0ez12ntV1rhosAoTRF66KKi4wUhCvpDKrOVL54z2zyy
-        /lC6nHaQGppzmYRDEY+aTptkXtg61JJy2eVM14FhUh61atnmu8j/Pr/v8/0dX3gYQmKnFjNx
-        SSm8MkmeKKNFZON9W++aoAq3yLU9fUvwpd6H7vi29THCpzse0XimMY/Az6fGHTT8mcI5eeUe
-        WD9ipvCzZi2Nc81WCpfaayis+/UF4aGznyhcaTMg3N3fRuLsnHP0FpZrmS4jOaPmrQdXoi6m
-        uDfmuzTXND1EcZYLJneuvjyTKy/spzm7ppXkmsylBNd+L4R7/6OF4Cb0S/eI94s2RvOJcWm8
-        MnjzYVHst4/PqORx+kT267ceWaiGykWeDLBhUPFh0MEiRsJWIhjuN9BCMYlg9OsAKRQTCL5l
-        dxL/WuxjtYTwUIFA+1Lnco0huHOt21EwjA8bCbrhWd2X1VLQrv0+u5BmA8Fe/5J2spjdDO3P
-        G2ankuwK6DI+QU5ewEbApFGPBI83PCy2kk72ZHeCfnhidg7BLoMzhhJCYCm8st5wdy4D9joD
-        Ay9KXem2w6OmQg+BfWDU1OBif5gxOhucnAmWyrOE0KxGYLhldOXcAJ2mPsqZhnBcXdccLMhb
-        YWzERjhlYL1gYMxbuMEL8huLXLIY1OclgjsALD0G10Ap6J5O0YKFg4sWvysoQDMnpGZOMM2c
-        YJr/J5QhsgpJ+VSVIoZXhSbx6UEquUKVmhQTdPSYQo8cn/LxH9PkHdT8+0gHYhkkmyduK5o5
-        KKHkaaoMRQcChpD5ikMT3CIl4mh5xkleeSxKmZrIqzqQH0PKpOJTbkMHJGyMPIVP4PlkXvnv
-        1Z3xXJyF8goUmdSVtbZ3y8fTjTGHyifUpl0Gm7++ZGbo3pRuNw6vjl/t+6BWWxUbrFjYik2d
-        p+n11ZlRihUZWdGcOu7m4ekuS11d2M/iqU2B1vH7V2ukg10RqwoX7d0RWlBRG2+XmG0jvn3q
-        jKZBN+m28PmGtJ8Hy9ZdLiLyNQPHE1a27pORqlh5yCpCqZL/BTswG1+QAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplleLIzCtJLcpLzFFi42I5/e/4PV3d5QyxBn9ea1v0njvJZLHxyWlG
-        i6ZDp9gs/m+byGxx5et7IOvRa1aLzolL2C02Pb7GanF51xw2i65rT1gt5v1dy2qx9Pc7RosH
-        LS9YLVb83MpocebqARaL9s5WNgcBj73fFrB47Jx1l91jdsdMVo871/aweWz/9oDV4373cSaP
-        zUvqPZZMu8rm8XfWfhaP7dfmMXsc3Gfo8fTHXmaPz5vkAnij9GyK8ktLUhUy8otLbJWiDS2M
-        9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DI+Pb/MWvCeraL99l32Bsa1rF2MnBwS
-        AiYSf9+uY+5i5OIQEljKKLH4zHIWiIS4xO75b5khbGGJP9e62CCKXjNKdFxpBOrm4BAWiJVY
-        +ogFJC4isIBVou1qLyNE0UxGibcnHoN1swloSvzdfJMNxOYVsJM4eGULWJxFQFXi6M7zjCC2
-        qECExOxdDSwQNYISJ2c+AbM5BdwkNj36DHYqs4C6xJ95l5ghbHmJ5q2zoWxxiVtP5jNNYBSc
-        haR9FpKWWUhaZiFpWcDIsopRJLW0ODc9t9hQrzgxt7g0L10vOT93EyMwCWw79nPzDsZLG4MP
-        MQpwMCrx8B6Y/j9GiDWxrLgy9xCjBAezkgivUTZDrBBvSmJlVWpRfnxRaU5q8SFGU6DnJjJL
-        iSbnAxNUXkm8oamhuYWlobmxubGZhZI4b4fAwRghgfTEktTs1NSC1CKYPiYOTqkGRs4VXmUz
-        Tgu8fNGyLfboae8wq7AHl+12LPa/v6haM+naCulNs00PWGpznzN9s2md8ManpyNaanXNbANU
-        9N+yZGo8vBv1+bqvoDx3q5t/biVLSJzCP+Nu1mkS+WqFKybYCjalZrqb7xDvEP2l/TQ8vPLa
-        7bm3J3g2bWs0DGc5eCJ0dnUz59ZOJZbijERDLeai4kQARRSawBgDAAA=
-X-CMS-MailID: 20190612071806eucas1p29bbe929b1df18938ce355e9f63320ce1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190527102219epcas2p20eaad1cb2849841d8b0c3dbc8d0b2e99
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190527102219epcas2p20eaad1cb2849841d8b0c3dbc8d0b2e99
-References: <CGME20190527102219epcas2p20eaad1cb2849841d8b0c3dbc8d0b2e99@epcas2p2.samsung.com>
-        <1558952499-15418-1-git-send-email-yannick.fertre@st.com>
+References: <20190610084213.1052-1-lee.jones@linaro.org> <20190610084213.1052-4-lee.jones@linaro.org>
+ <CAKv+Gu_s7i8JC4cv-dJMvm1_0cGzzhzf+Dxu0rxcF7iugF=vHg@mail.gmail.com>
+ <20190610085542.GL4797@dell> <CAKv+Gu8rhxciy1cOG3B3pda9+p4R_COGrrqa7S_Rj9y2HeBxYw@mail.gmail.com>
+ <20190610092245.GN4797@dell> <20190611183945.GP4814@minitux>
+In-Reply-To: <20190611183945.GP4814@minitux>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 12 Jun 2019 09:18:23 +0200
+Message-ID: <CACRpkdZLO0tOuaribTWK5eMYD6_drdGJk9x7tG7YDxJKVJqOVg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/8] pinctrl: qcom: sdm845: Provide ACPI support
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        alokc@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jlhugo@gmail.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.05.2019 12:21, Yannick Fertré wrote:
-> These patches fix a bug concerning an access issue to display controler (ltdc)
-> registers.
-> If the physical layer of the DSI is started too early then the fifo DSI are full
-> very quickly which implies ltdc register's access hang up. To avoid this
-> problem, it is necessary to start the DSI physical layer only when the bridge
-> is enable.
->
-> Yannick Fertré (2):
->   drm/bridge/synopsys: dsi: add power on/off optional phy ops
->   drm/stm: dsi: add power on/off phy ops
->
->  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c |  8 ++++++++
->  drivers/gpu/drm/stm/dw_mipi_dsi-stm.c         | 21 ++++++++++++++++++++-
->  include/drm/bridge/dw_mipi_dsi.h              |  2 ++
->  3 files changed, 30 insertions(+), 1 deletion(-)
->
-> --
-> 2.7.4
->
->
->
-Queued both patches to drm-misc-next.
+On Tue, Jun 11, 2019 at 8:39 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 
---
-Regards
-Andrzej
+> Last time we discussed this the _only_ offender was the loop issuing a
+> get_direction() on all descs towards the end of
+> gpiochip_add_data_with_key()
 
+I think that is still the only offender.
+
+We were a bit back and forth: adding that code, removing it
+and then adding it back again.
+
+In a way it is good that we detect it so users do not crash their
+kernels by asking for these GPIOs at runtime from userspace
+instead.
+
+It makes a lot of sense for us to ask for the initial direction for
+all pins, as they get registered as GPIOs, which by definition
+makes them available as such and we should be able to inspect
+them.
+
+"GPIOs" reserved by ACPI arguably are not GPIOs anymore
+since ACPI have dedicated them to a special purpose
+(no more "general purpose").
+
+Yours,
+Linus Walleij
