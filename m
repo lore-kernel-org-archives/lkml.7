@@ -2,78 +2,169 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E91C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62338C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0753F208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:45:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560350719;
-	bh=rOfk/K0YNJACpRZFi4bgdJVwMwRzfJQ4/d8AReyG3XA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0+z5BAzEKD7WBDU+JVVjNwZSJBadlpbZskyAYY7Yg5HoPO9qptN63Retwuam29nN5
-	 iq/DdS1NdRsfaJgFR1tYcwSnyFpfSkFRDwxPe2SEorVv5Wfqw5gtk9CjsXtfeETQA6
-	 wb8y0CCmN/CGyug/1SJY26gPbqZRBNKIMjOo4Q4U=
+	by mail.kernel.org (Postfix) with ESMTP id 3CBB720B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:45:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ckbgKyCO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732501AbfFLOpS (ORCPT
+        id S1732516AbfFLOpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 12 Jun 2019 10:45:21 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:49284 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728679AbfFLOpS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Jun 2019 10:45:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728707AbfFLOpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:45:17 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68106206BB;
-        Wed, 12 Jun 2019 14:45:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560350716;
-        bh=rOfk/K0YNJACpRZFi4bgdJVwMwRzfJQ4/d8AReyG3XA=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=Pd4/F0yMyORxjiIL4Q4GYK4bTFMq+FmycjXpaW2xU09+SKqP8l8EhnTowlUEUqmpe
-         /LjeLKkSzfjukeQSjtcEFq6BQ7Oj3e7Ew0jQ0ghrFM6j5iZYmuOevsE3fTXNFfv0TV
-         S081STik3qZaMDk/o1QVHvduaR9OgmnDsec2VeDE=
-Date:   Wed, 12 Jun 2019 16:45:11 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        benjamin.tissoires@redhat.com, bjorn.andersson@linaro.org,
-        lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        agross@kernel.org, david.brown@linaro.org, hdegoede@redhat.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] HID: quirks: Refactor ELAN 400 and 401 handling
-In-Reply-To: <20190612003507.GG143729@dtor-ws>
-Message-ID: <nycvar.YFH.7.76.1906121644160.27227@cbobk.fhfr.pm>
-References: <20190606161055.47089-1-jeffrey.l.hugo@gmail.com> <20190606161322.47192-1-jeffrey.l.hugo@gmail.com> <20190612003507.GG143729@dtor-ws>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 326599B1;
+        Wed, 12 Jun 2019 16:45:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1560350716;
+        bh=SUQ+g8BoQCUWiMccKA9g5COZBgRnGBPawulg/lxaGXk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ckbgKyCO98q5Digo+fghazWKwj4e1yeYWcdLYp4Swf+5zWeIBhr69UTh2dMma72by
+         5BTJqrjlIzrc3ouQsPWTu26SXKfaWL2Ze/wY82M5kW6NhtJYQHupbDaZKMbs/DJ5mo
+         /anUxCBB+Xpzn6kYdrnCtADLXhToGv1J8ek9gSp8=
+Date:   Wed, 12 Jun 2019 17:45:00 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] media: vsp1: drm: Remove vsp1_du_setup_lif()
+Message-ID: <20190612144500.GP5035@pendragon.ideasonboard.com>
+References: <20190517223143.26251-1-kieran.bingham+renesas@ideasonboard.com>
+ <20190517223143.26251-4-kieran.bingham+renesas@ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190517223143.26251-4-kieran.bingham+renesas@ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019, Dmitry Torokhov wrote:
+Hi Kieran,
 
-> > +static const char *hid_elan_i2c_ignore[] = {
+Thank you for the patch.
+
+On Fri, May 17, 2019 at 11:31:43PM +0100, Kieran Bingham wrote:
+> The vsp1_du_setup_lif() function is deprecated, and the users have been
+> removed. Remove the implementation and the associated configuration
+> structure.
 > 
-> If this is a copy of elan whitelist, then, if we do not want to bother
-> with sharing it in object form (as a elan-i2c-ids module), can we at
-> least move it into include/linux/input/elan-i2c-ids.h and consume from
-> hid-quirks.c?
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-Let's just not duplicate it in both objects. Why not properly export it 
-from hid_quirks?
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Thanks,
+> ---
+>  drivers/media/platform/vsp1/vsp1_drm.c | 47 --------------------------
+>  include/media/vsp1.h                   | 22 ------------
+>  2 files changed, 69 deletions(-)
+> 
+> diff --git a/drivers/media/platform/vsp1/vsp1_drm.c b/drivers/media/platform/vsp1/vsp1_drm.c
+> index ce5c0780680f..12f76344bdec 100644
+> --- a/drivers/media/platform/vsp1/vsp1_drm.c
+> +++ b/drivers/media/platform/vsp1/vsp1_drm.c
+> @@ -817,53 +817,6 @@ int vsp1_du_atomic_disable(struct device *dev, unsigned int pipe_index)
+>  }
+>  EXPORT_SYMBOL_GPL(vsp1_du_atomic_disable);
+>  
+> -/**
+> - * vsp1_du_setup_lif - Setup the output part of the VSP pipeline
+> - * @dev: the VSP device
+> - * @pipe_index: the DRM pipeline index
+> - * @cfg: the LIF configuration
+> - *
+> - * Configure the output part of VSP DRM pipeline for the given frame @cfg.width
+> - * and @cfg.height. This sets up formats on the BRx source pad, the WPF sink and
+> - * source pads, and the LIF sink pad.
+> - *
+> - * The @pipe_index argument selects which DRM pipeline to setup. The number of
+> - * available pipelines depend on the VSP instance.
+> - *
+> - * As the media bus code on the blend unit source pad is conditioned by the
+> - * configuration of its sink 0 pad, we also set up the formats on all blend unit
+> - * sinks, even if the configuration will be overwritten later by
+> - * vsp1_du_setup_rpf(). This ensures that the blend unit configuration is set to
+> - * a well defined state.
+> - *
+> - * Return 0 on success or a negative error code on failure.
+> - */
+> -int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
+> -		      const struct vsp1_du_lif_config *cfg)
+> -{
+> -	int ret;
+> -
+> -	struct vsp1_du_modeset_config modes = {
+> -		.width = cfg->width,
+> -		.height = cfg->height,
+> -		.interlaced = cfg->interlaced,
+> -	};
+> -	struct vsp1_du_enable_config enable = {
+> -		.callback = cfg->callback,
+> -		.callback_data = cfg->callback_data,
+> -	};
+> -
+> -	if (!cfg)
+> -		return vsp1_du_atomic_disable(dev, pipe_index);
+> -
+> -	ret = vsp1_du_atomic_modeset(dev, pipe_index, &modes);
+> -	if (ret)
+> -		return ret;
+> -
+> -	return vsp1_du_atomic_enable(dev, pipe_index, &enable);
+> -}
+> -EXPORT_SYMBOL_GPL(vsp1_du_setup_lif);
+> -
+>  /**
+>   * vsp1_du_atomic_begin - Prepare for an atomic update
+>   * @dev: the VSP device
+> diff --git a/include/media/vsp1.h b/include/media/vsp1.h
+> index 13f5a1c4d45a..bc0a26d33d9a 100644
+> --- a/include/media/vsp1.h
+> +++ b/include/media/vsp1.h
+> @@ -20,28 +20,6 @@ int vsp1_du_init(struct device *dev);
+>  #define VSP1_DU_STATUS_COMPLETE		BIT(0)
+>  #define VSP1_DU_STATUS_WRITEBACK	BIT(1)
+>  
+> -/**
+> - * struct vsp1_du_lif_config - VSP LIF configuration - Deprecated
+> - * @width: output frame width
+> - * @height: output frame height
+> - * @interlaced: true for interlaced pipelines
+> - * @callback: frame completion callback function (optional). When a callback
+> - *	      is provided, the VSP driver guarantees that it will be called once
+> - *	      and only once for each vsp1_du_atomic_flush() call.
+> - * @callback_data: data to be passed to the frame completion callback
+> - */
+> -struct vsp1_du_lif_config {
+> -	unsigned int width;
+> -	unsigned int height;
+> -	bool interlaced;
+> -
+> -	void (*callback)(void *data, unsigned int status, u32 crc);
+> -	void *callback_data;
+> -};
+> -
+> -int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
+> -		      const struct vsp1_du_lif_config *cfg);
+> -
+>  /**
+>   * struct vsp1_du_modeset_config - VSP LIF Mode configuration
+>   * @width: output frame width
 
 -- 
-Jiri Kosina
-SUSE Labs
+Regards,
 
+Laurent Pinchart
