@@ -2,152 +2,251 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB92C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B281C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 494862175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:13:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EByOcF5o"
+	by mail.kernel.org (Postfix) with ESMTP id 534E82064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409491AbfFLQN0 (ORCPT
+        id S1729956AbfFLQQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 12:13:26 -0400
-Received: from mail-pl1-f173.google.com ([209.85.214.173]:46432 "EHLO
-        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409460AbfFLQNZ (ORCPT
+        Wed, 12 Jun 2019 12:16:31 -0400
+Received: from www62.your-server.de ([213.133.104.62]:43164 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbfFLQQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:13:25 -0400
-Received: by mail-pl1-f173.google.com with SMTP id e5so6817157pls.13
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 09:13:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e4ItLxshqMfqM68z4YCARRhGpvs/wbTADgtzp6LLi8k=;
-        b=EByOcF5oR5p8jLYaIHj/W3OAyPEwMFyxrCSaDMZ710yE5WD1Y/b+UNqhkabWO+KS1l
-         IgRWkQvJ2NjRclyAP+f+rEMc+so66/pJayjBsfvCjka+fdtro0rRT+G7kG/mV7cxYud+
-         DqLOkvG+jeTuQuRkwivcdqKUg66y8+r9eNK3GSX6WWwVM0LTkEGNYmcMgV8xtaI71jUo
-         gFzG+TD6/zdIHpyrirE/qQrbJQeDR0ghIWFeujzm+5W4gmflXpO4QMnJsFIg6kJrAry+
-         pv87Rmlg0j8CYSgiU2v0e0ld97KdTEUF+/M94iRv9qKosgsTDP8ev18imoJavVyGJMMs
-         5lxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e4ItLxshqMfqM68z4YCARRhGpvs/wbTADgtzp6LLi8k=;
-        b=dC+iTG+UHFJ+i7mYYJyGdcEkqnCkD+JcKzN0ZxnIub4ubVOqG2Hxq/0OqGKux2XQOT
-         ClD2xPdnekeNbHAeU/hVpL3phuUC4Mklumnr1soWcDeRdQ9bBb3ZYVMpABWVMv1DZcLR
-         X+RgVQRzwN13i7aG3vmFdJviFZjHDnEFn5u4Ur3Pf5Xc/W/JchWH9T+++PoZZTRa3OFq
-         fL+HWkSSckhiHOv+BudAkmwC9AwewmeR7S6dcHTc1l7Or05Tml0cDH+K3YB/bVX5vmy/
-         VWg7G8ZTbG8LzSiq9BpXp1YLPQvvTdgqY44HLi6KsMJh3I5Hyzh5DPn928ec7B9mKzBs
-         vZpw==
-X-Gm-Message-State: APjAAAWKVpVvHCCOjRT3Y4Gsmr/SwKBFgRbOfaagYXP0DUDLs1kTBaLc
-        7fpbv0/N5Tmv1wPekGRvHfrMtNHJgrC1T/0B/kNWjQ==
-X-Google-Smtp-Source: APXvYqzmdD5qKrrrXe+HCEiDQQKVQS4JJibsx3w0GVW5imo8nYDvtycFLQxTBoJXvBBVIDupEJMTzYRQD7ldjOaUjJg=
-X-Received: by 2002:a17:902:1566:: with SMTP id b35mr84417865plh.147.1560356003612;
- Wed, 12 Jun 2019 09:13:23 -0700 (PDT)
+        Wed, 12 Jun 2019 12:16:31 -0400
+Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hb5vH-0006i5-3G; Wed, 12 Jun 2019 18:16:27 +0200
+Received: from [178.199.41.31] (helo=linux.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hb5vG-0003em-UF; Wed, 12 Jun 2019 18:16:26 +0200
+Subject: Re: [PATCH bpf-next v5 1/4] bpf: sock ops: add netns ino and dev in
+ bpf context
+To:     =?UTF-8?Q?Iago_L=c3=b3pez_Galeiras?= <iago@kinvolk.io>,
+        john.fastabend@gmail.com, ast@kernel.org
+Cc:     alban@kinvolk.io, krzesimir@kinvolk.io, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190607141106.32148-1-iago@kinvolk.io>
+ <20190607141106.32148-2-iago@kinvolk.io>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <d3eeb0f0-b222-1b15-af22-28dfd129771d@iogearbox.net>
+Date:   Wed, 12 Jun 2019 18:16:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-References: <000000000000927a7b0586561537@google.com> <MN2PR18MB263783F52CAD4A335FD8BB34A01A0@MN2PR18MB2637.namprd18.prod.outlook.com>
- <CACT4Y+aQzBkAq86Hx4jNFnAUzjXnq8cS2NZKfeCaFrZa__g-cg@mail.gmail.com>
- <MN2PR18MB26372D98386D79736A7947EEA0140@MN2PR18MB2637.namprd18.prod.outlook.com>
- <MN2PR18MB263710E8F1F8FFA06B2EDB3CA0EC0@MN2PR18MB2637.namprd18.prod.outlook.com>
-In-Reply-To: <MN2PR18MB263710E8F1F8FFA06B2EDB3CA0EC0@MN2PR18MB2637.namprd18.prod.outlook.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 12 Jun 2019 18:13:12 +0200
-Message-ID: <CAAeHK+wpzHG73AbB+199-TN35Kb1kEjGrKScSqU++7q7RSUGGg@mail.gmail.com>
-Subject: Re: [EXT] INFO: trying to register non-static key in del_timer_sync (2)
-To:     Ganapathi Bhat <gbhat@marvell.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>,
-        "amitkarwar@gmail.com" <amitkarwar@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "huxinming820@gmail.com" <huxinming820@gmail.com>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "nishants@marvell.com" <nishants@marvell.com>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
-Content-Type: multipart/mixed; boundary="00000000000052860b058b22b16c"
+In-Reply-To: <20190607141106.32148-2-iago@kinvolk.io>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25478/Wed Jun 12 10:14:54 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---00000000000052860b058b22b16c
-Content-Type: text/plain; charset="UTF-8"
+On 06/07/2019 04:11 PM, Iago López Galeiras wrote:
+> From: Alban Crequy <alban@kinvolk.io>
+> 
+> sockops programs can now access the network namespace inode and device
+> via (struct bpf_sock_ops)->netns_ino and ->netns_dev. This can be useful
+> to apply different policies on different network namespaces.
+> 
+> In the unlikely case where network namespaces are not compiled in
+> (CONFIG_NET_NS=n), the verifier will return netns_dev as usual and will
+> return 0 for netns_ino.
+> 
+> The generated BPF bytecode for netns_ino is loading the correct inode
+> number at the time of execution.
+> 
+> However, the generated BPF bytecode for netns_dev is loading an
+> immediate value determined at BPF-load-time by looking at the initial
+> network namespace. In practice, this works because all netns currently
+> use the same virtual device. If this was to change, this code would need
+> to be updated too.
+> 
+> Co-authored-by: Iago López Galeiras <iago@kinvolk.io>
+> Signed-off-by: Alban Crequy <alban@kinvolk.io>
+> Signed-off-by: Iago López Galeiras <iago@kinvolk.io>
+> 
+> ---
+> 
+> Changes since v1:
+> - add netns_dev (review from Alexei)
+> 
+> Changes since v2:
+> - replace __u64 by u64 in kernel code (review from Y Song)
+> - remove unneeded #else branch: program would be rejected in
+>   is_valid_access (review from Y Song)
+> - allow partial reads (<u64) (review from Y Song)
+> 
+> Changes since v3:
+> - return netns_dev unconditionally and set netns_ino to 0 if
+>   CONFIG_NET_NS is not enabled (review from Jakub Kicinski)
+> - use bpf_ctx_record_field_size and bpf_ctx_narrow_access_ok instead of
+>   manually deal with partial reads (review from Y Song)
+> - update commit message to reflect new code and remove note about
+>   partial reads since it was discussed in the review
+> - use bpf_ctx_range() and offsetofend()
+> 
+> Changes since v4:
+> - add netns_dev comment on uapi header (review from Y Song)
+> - remove redundant bounds check (review from Y Song)
+> ---
+>  include/uapi/linux/bpf.h |  6 ++++
+>  net/core/filter.c        | 67 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 73 insertions(+)
+> 
+> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> index 63e0cf66f01a..41f54ac3db95 100644
+> --- a/include/uapi/linux/bpf.h
+> +++ b/include/uapi/linux/bpf.h
+> @@ -3261,6 +3261,12 @@ struct bpf_sock_ops {
+>  	__u32 sk_txhash;
+>  	__u64 bytes_received;
+>  	__u64 bytes_acked;
+> +	/*
+> +	 * netns_dev might be zero if there's an error getting it
+> +	 * when loading the BPF program. This is very unlikely.
+> +	 */
+> +	__u64 netns_dev;
+> +	__u64 netns_ino;
+>  };
+>  
+>  /* Definitions for bpf_sock_ops_cb_flags */
+> diff --git a/net/core/filter.c b/net/core/filter.c
+> index 55bfc941d17a..ce3dc5fef57e 100644
+> --- a/net/core/filter.c
+> +++ b/net/core/filter.c
+> @@ -76,6 +76,8 @@
+>  #include <net/lwtunnel.h>
+>  #include <net/ipv6_stubs.h>
+>  #include <net/bpf_sk_storage.h>
+> +#include <linux/kdev_t.h>
+> +#include <linux/proc_ns.h>
+>  
+>  /**
+>   *	sk_filter_trim_cap - run a packet through a socket filter
+> @@ -6822,6 +6824,15 @@ static bool sock_ops_is_valid_access(int off, int size,
+>  		}
+>  	} else {
+>  		switch (off) {
+> +		case bpf_ctx_range(struct bpf_sock_ops, netns_dev):
+> +			bpf_ctx_record_field_size(info, sizeof(u64));
+> +			if (!bpf_ctx_narrow_access_ok(off, size, sizeof(u64)))
+> +				return false;
+> +			break;
+> +		case offsetof(struct bpf_sock_ops, netns_ino):
+> +			if (size != sizeof(u64))
+> +				return false;
+> +			break;
+>  		case bpf_ctx_range_till(struct bpf_sock_ops, bytes_received,
+>  					bytes_acked):
+>  			if (size != sizeof(__u64))
+> @@ -7739,6 +7750,11 @@ static u32 sock_addr_convert_ctx_access(enum bpf_access_type type,
+>  	return insn - insn_buf;
+>  }
+>  
+> +static struct ns_common *sockops_netns_cb(void *private_data)
+> +{
+> +	return &init_net.ns;
+> +}
+> +
+>  static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
+>  				       const struct bpf_insn *si,
+>  				       struct bpf_insn *insn_buf,
+> @@ -7747,6 +7763,10 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
+>  {
+>  	struct bpf_insn *insn = insn_buf;
+>  	int off;
+> +	struct inode *ns_inode;
+> +	struct path ns_path;
+> +	u64 netns_dev;
+> +	void *res;
+>  
+>  /* Helper macro for adding read access to tcp_sock or sock fields. */
+>  #define SOCK_OPS_GET_FIELD(BPF_FIELD, OBJ_FIELD, OBJ)			      \
+> @@ -7993,6 +8013,53 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
+>  		SOCK_OPS_GET_OR_SET_FIELD(sk_txhash, sk_txhash,
+>  					  struct sock, type);
+>  		break;
+> +
+> +	case bpf_ctx_range(struct bpf_sock_ops, netns_dev):
+> +		/* We get the netns_dev at BPF-load-time and not at
+> +		 * BPF-exec-time. We assume that netns_dev is a constant.
+> +		 */
+> +		res = ns_get_path_cb(&ns_path, sockops_netns_cb, NULL);
+> +		if (IS_ERR(res)) {
+> +			netns_dev = 0;
+> +		} else {
+> +			ns_inode = ns_path.dentry->d_inode;
+> +			netns_dev = new_encode_dev(ns_inode->i_sb->s_dev);
+> +		}
 
-On Wed, Jun 12, 2019 at 6:03 PM Ganapathi Bhat <gbhat@marvell.com> wrote:
->
-> Hi Dmitry,
->
-> We have a patch to fix this: https://patchwork.kernel.org/patch/10990275/
+This is leaking the netns path ref here, you're missing a path_put().
 
-Hi Ganapathi,
+The feature looks very useful, thanks! But more on a higher level, the assumption
+that netns_dev is and will remain a constant is a bit troublesome to me. As soon
+as this assumption changes at some point, this ctx uapi restriction will give us
+a potentially hard time to fix up at runtime. It basically would mean that all this
+needs to be correctly resolved via BPF asm ctx rewrite at program /runtime/ as
+opposed to load time.
 
-Great, thanks for working on this!
+Imho, it would be more future proof to design this as a helper function which would
+pass dev and ino back to the program when passed as args plus perhaps a bitmask
+which can select to fill in one of them or both (but that's an implementation detail).
+Issue I'd see here is that __ns_get_path() can be quite expensive and potentially
+sleep, but perhaps ns->stashed could be filled / cached such that we'll always hit
+fast-path at BPF runtime? (Anyway, as a helper, this should also be enabled for other
+program types.)
 
-We can ask syzbot to test the fix:
+> +		*target_size = 8;
+> +		*insn++ = BPF_MOV64_IMM(si->dst_reg, netns_dev);
+> +		break;
+> +
+> +	case offsetof(struct bpf_sock_ops, netns_ino):
+> +#ifdef CONFIG_NET_NS
+> +		/* Loading: sk_ops->sk->__sk_common.skc_net.net->ns.inum
+> +		 * Type: (struct bpf_sock_ops_kern *)
+> +		 *       ->(struct sock *)
+> +		 *       ->(struct sock_common)
+> +		 *       .possible_net_t
+> +		 *       .(struct net *)
+> +		 *       ->(struct ns_common)
+> +		 *       .(unsigned int)
+> +		 */
+> +		BUILD_BUG_ON(offsetof(struct sock, __sk_common) != 0);
+> +		BUILD_BUG_ON(offsetof(possible_net_t, net) != 0);
+> +		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
+> +						struct bpf_sock_ops_kern, sk),
+> +				      si->dst_reg, si->src_reg,
+> +				      offsetof(struct bpf_sock_ops_kern, sk));
+> +		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
+> +						possible_net_t, net),
+> +				      si->dst_reg, si->dst_reg,
+> +				      offsetof(struct sock_common, skc_net));
+> +		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
+> +						struct ns_common, inum),
+> +				      si->dst_reg, si->dst_reg,
+> +				      offsetof(struct net, ns) +
+> +				      offsetof(struct ns_common, inum));
+> +#else
+> +		*insn++ = BPF_MOV64_IMM(si->dst_reg, 0);
+> +#endif
+> +		break;
+> +
+>  	}
+>  	return insn - insn_buf;
+>  }
+> 
 
-#syz test: https://github.com/google/kasan.git usb-fuzzer
-
-Thanks!
-
->
-> Regards,
-> Ganapathi
-
---00000000000052860b058b22b16c
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="mwifiex-avoid-deleting-uninitialized-timer-during-USB-cleanup.diff"
-Content-Disposition: attachment; 
-	filename="mwifiex-avoid-deleting-uninitialized-timer-during-USB-cleanup.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jwtfnzut0>
-X-Attachment-Id: f_jwtfnzut0
-
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL21hcnZlbGwvbXdpZmlleC91c2IuYyBi
-L2RyaXZlcnMvbmV0L3dpcmVsZXNzL21hcnZlbGwvbXdpZmlleC91c2IuYwppbmRleCBjMjM2NWVl
-Li45MzlmMWU5IDEwMDY0NAotLS0gYS9kcml2ZXJzL25ldC93aXJlbGVzcy9tYXJ2ZWxsL213aWZp
-ZXgvdXNiLmMKKysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvbWFydmVsbC9td2lmaWV4L3VzYi5j
-CkBAIC0xMzQ4LDYgKzEzNDgsOCBAQCBzdGF0aWMgdm9pZCBtd2lmaWV4X3VzYl9jbGVhbnVwX3R4
-X2FnZ3Ioc3RydWN0IG13aWZpZXhfYWRhcHRlciAqYWRhcHRlcikKIAogCWZvciAoaWR4ID0gMDsg
-aWR4IDwgTVdJRklFWF9UWF9EQVRBX1BPUlQ7IGlkeCsrKSB7CiAJCXBvcnQgPSAmY2FyZC0+cG9y
-dFtpZHhdOworCQlpZiAoIXBvcnQtPnR4X2RhdGFfZXApCisJCQljb250aW51ZTsKIAkJaWYgKGFk
-YXB0ZXItPmJ1c19hZ2dyLmVuYWJsZSkKIAkJCXdoaWxlICgoc2tiX3RtcCA9CiAJCQkJc2tiX2Rl
-cXVldWUoJnBvcnQtPnR4X2FnZ3IuYWdncl9saXN0KSkpCkBAIC0xMzY1LDggKzEzNjcsNiBAQCBz
-dGF0aWMgdm9pZCBtd2lmaWV4X3VucmVnaXN0ZXJfZGV2KHN0cnVjdCBtd2lmaWV4X2FkYXB0ZXIg
-KmFkYXB0ZXIpCiAKIAltd2lmaWV4X3VzYl9mcmVlKGNhcmQpOwogCi0JbXdpZmlleF91c2JfY2xl
-YW51cF90eF9hZ2dyKGFkYXB0ZXIpOwotCiAJY2FyZC0+YWRhcHRlciA9IE5VTEw7CiB9CiAKQEAg
-LTE1MTAsNyArMTUxMCw3IEBAIHN0YXRpYyBpbnQgbXdpZmlleF9wcm9nX2Z3X3dfaGVscGVyKHN0
-cnVjdCBtd2lmaWV4X2FkYXB0ZXIgKmFkYXB0ZXIsCiBzdGF0aWMgaW50IG13aWZpZXhfdXNiX2Ru
-bGRfZncoc3RydWN0IG13aWZpZXhfYWRhcHRlciAqYWRhcHRlciwKIAkJCXN0cnVjdCBtd2lmaWV4
-X2Z3X2ltYWdlICpmdykKIHsKLQlpbnQgcmV0OworCWludCByZXQgPSAwOwogCXN0cnVjdCB1c2Jf
-Y2FyZF9yZWMgKmNhcmQgPSAoc3RydWN0IHVzYl9jYXJkX3JlYyAqKWFkYXB0ZXItPmNhcmQ7CiAK
-IAlpZiAoY2FyZC0+dXNiX2Jvb3Rfc3RhdGUgPT0gVVNCOFhYWF9GV19ETkxEKSB7CkBAIC0xNTIz
-LDEwICsxNTIzLDYgQEAgc3RhdGljIGludCBtd2lmaWV4X3VzYl9kbmxkX2Z3KHN0cnVjdCBtd2lm
-aWV4X2FkYXB0ZXIgKmFkYXB0ZXIsCiAJCQlyZXR1cm4gLTE7CiAJfQogCi0JcmV0ID0gbXdpZmll
-eF91c2JfcnhfaW5pdChhZGFwdGVyKTsKLQlpZiAoIXJldCkKLQkJcmV0ID0gbXdpZmlleF91c2Jf
-dHhfaW5pdChhZGFwdGVyKTsKLQogCXJldHVybiByZXQ7CiB9CiAKQEAgLTE1ODQsNyArMTU4MCwy
-OSBAQCBzdGF0aWMgdm9pZCBtd2lmaWV4X3VzYl9zdWJtaXRfcmVtX3J4X3VyYnMoc3RydWN0IG13
-aWZpZXhfYWRhcHRlciAqYWRhcHRlcikKIAlyZXR1cm4gMDsKIH0KIAorc3RhdGljIGludCBtd2lm
-aWV4X2luaXRfdXNiKHN0cnVjdCBtd2lmaWV4X2FkYXB0ZXIgKmFkYXB0ZXIpCit7CisJc3RydWN0
-IHVzYl9jYXJkX3JlYyAqY2FyZCA9IChzdHJ1Y3QgdXNiX2NhcmRfcmVjICopYWRhcHRlci0+Y2Fy
-ZDsKKwlpbnQgcmV0ID0gMDsKKworCWlmIChjYXJkLT51c2JfYm9vdF9zdGF0ZSA9PSBVU0I4WFhY
-X0ZXX0ROTEQpCisJCXJldHVybiAwOworCisJcmV0ID0gbXdpZmlleF91c2JfcnhfaW5pdChhZGFw
-dGVyKTsKKwlpZiAoIXJldCkKKwkJcmV0ID0gbXdpZmlleF91c2JfdHhfaW5pdChhZGFwdGVyKTsK
-KworCXJldHVybiByZXQ7Cit9CisKK3N0YXRpYyB2b2lkIG13aWZpZXhfY2xlYW51cF91c2Ioc3Ry
-dWN0IG13aWZpZXhfYWRhcHRlciAqYWRhcHRlcikKK3sKKwltd2lmaWV4X3VzYl9jbGVhbnVwX3R4
-X2FnZ3IoYWRhcHRlcik7Cit9CisKIHN0YXRpYyBzdHJ1Y3QgbXdpZmlleF9pZl9vcHMgdXNiX29w
-cyA9IHsKKwkuaW5pdF9pZiA9CQltd2lmaWV4X2luaXRfdXNiLAorCS5jbGVhbnVwX2lmID0JCW13
-aWZpZXhfY2xlYW51cF91c2IsCiAJLnJlZ2lzdGVyX2RldiA9CQltd2lmaWV4X3JlZ2lzdGVyX2Rl
-diwKIAkudW5yZWdpc3Rlcl9kZXYgPQltd2lmaWV4X3VucmVnaXN0ZXJfZGV2LAogCS53YWtldXAg
-PQkJbXdpZmlleF9wbV93YWtldXBfY2FyZCwK
---00000000000052860b058b22b16c--
