@@ -2,51 +2,76 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBD4C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8AAC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F435208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3FA208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:48:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cUYNm5og"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439219AbfFLMsK (ORCPT
+        id S2409131AbfFLMsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:48:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:52646 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439208AbfFLMsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:48:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 80036337;
-        Wed, 12 Jun 2019 05:48:09 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39D8E3F246;
-        Wed, 12 Jun 2019 05:48:07 -0700 (PDT)
-Subject: Re: [PATCH v1 1/5] KVM: arm/arm64: Remove kvm_mmio_emulate tracepoint
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, marc.zyngier@arm.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, acme@kernel.org,
-        linuxarm@huawei.com, acme@redhat.com, peterz@infradead.org,
-        alexander.shishkin@linux.intel.com, mingo@redhat.com,
-        ganapatrao.kulkarni@cavium.com, namhyung@kernel.org,
-        jolsa@redhat.com, xiexiangyou@huawei.com
-References: <1560330526-15468-1-git-send-email-yuzenghui@huawei.com>
- <1560330526-15468-2-git-send-email-yuzenghui@huawei.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <e915c19a-51df-be88-ea3a-7c9a211f4518@arm.com>
-Date:   Wed, 12 Jun 2019 13:48:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+        Wed, 12 Jun 2019 08:48:30 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42390 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406354AbfFLMs3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:48:29 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5CCmKOd062918;
+        Wed, 12 Jun 2019 07:48:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560343700;
+        bh=VNAzdfRr5Fo8LME/5hfg26/21196dpOni0yCTYzdhNs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=cUYNm5ogyS/hT31gT74CvW3Ygh9wmCj6iK9TLIUIzKS9nCEbFhnQ1Cojp0L1D/i/w
+         e7+FAC+GtQCqSjeKMpeysHvxll9o9VvQhjA3CO5eRgUOWC3da+fofx/+/X79fSI8q4
+         bGS4CbzH3aCiXntpQE636tUOsuf14QCg7wjbkV3o=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5CCmKfd063889
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Jun 2019 07:48:20 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 12
+ Jun 2019 07:48:19 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 12 Jun 2019 07:48:19 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5CCmHB8038159;
+        Wed, 12 Jun 2019 07:48:17 -0500
+Subject: Re: [PATCH v5 10/15] drm/bridge: tc358767: Add support for
+ address-only I2C transfers
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        <dri-devel@lists.freedesktop.org>
+CC:     Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        <linux-kernel@vger.kernel.org>
+References: <20190612083252.15321-1-andrew.smirnov@gmail.com>
+ <20190612083252.15321-11-andrew.smirnov@gmail.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <a1c125d2-1c7a-c190-8b7e-845a2ec1d2ea@ti.com>
+Date:   Wed, 12 Jun 2019 15:48:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <1560330526-15468-2-git-send-email-yuzenghui@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+In-Reply-To: <20190612083252.15321-11-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -54,58 +79,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-On 12/06/2019 10:08, Zenghui Yu wrote:
-> In current KVM/ARM code, no one will invoke trace_kvm_mmio_emulate().
-> Remove this TRACE_EVENT definition.
+On 12/06/2019 11:32, Andrey Smirnov wrote:
+> Transfer size of zero means a request to do an address-only
+> transfer. Since the HW support this, we probably shouldn't be just
+> ignoring such requests. While at it allow DP_AUX_I2C_MOT flag to pass
+> through, since it is supported by the HW as well.
 
-Oooer. We can't just go removing these things, they are visible to user-space.
+I bisected the EDID read issue to this patch...
 
-I recall an article on this: https://lwn.net/Articles/737530/
-"Another attempt to address the tracepoint ABI problem"
+  Tomi
 
-I agree this is orphaned, it was added by commit 45e96ea6b369 ("KVM: ARM: Handle I/O
-aborts"), but there never was a caller.
-
-The problem with removing it is /sys/kernel/debug/tracing/events/kvm/kvm_mmio_emulate
-disappears. Any program relying on that being present (but useless) is now broken.
-
-
-Thanks,
-
-James
-
-
-> diff --git a/virt/kvm/arm/trace.h b/virt/kvm/arm/trace.h
-> index 204d210..8b7dff2 100644
-> --- a/virt/kvm/arm/trace.h
-> +++ b/virt/kvm/arm/trace.h
-> @@ -114,27 +114,6 @@
->  		  __entry->type, __entry->vcpu_idx, __entry->irq_num, __entry->level)
->  );
->  
-> -TRACE_EVENT(kvm_mmio_emulate,
-> -	TP_PROTO(unsigned long vcpu_pc, unsigned long instr,
-> -		 unsigned long cpsr),
-> -	TP_ARGS(vcpu_pc, instr, cpsr),
-> -
-> -	TP_STRUCT__entry(
-> -		__field(	unsigned long,	vcpu_pc		)
-> -		__field(	unsigned long,	instr		)
-> -		__field(	unsigned long,	cpsr		)
-> -	),
-> -
-> -	TP_fast_assign(
-> -		__entry->vcpu_pc		= vcpu_pc;
-> -		__entry->instr			= instr;
-> -		__entry->cpsr			= cpsr;
-> -	),
-> -
-> -	TP_printk("Emulate MMIO at: 0x%08lx (instr: %08lx, cpsr: %08lx)",
-> -		  __entry->vcpu_pc, __entry->instr, __entry->cpsr)
-> -);
-> -
->  TRACE_EVENT(kvm_unmap_hva_range,
->  	TP_PROTO(unsigned long start, unsigned long end),
->  	TP_ARGS(start, end),
-> 
-
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
