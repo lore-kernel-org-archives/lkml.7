@@ -2,95 +2,190 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD52C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C64C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B42B0208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC05208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391659AbfFLKZB (ORCPT
+        id S2405814AbfFLKZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:25:01 -0400
-Received: from sauhun.de ([88.99.104.3]:58236 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390609AbfFLKZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:25:00 -0400
-Received: from localhost (p5486CACA.dip0.t-ipconnect.de [84.134.202.202])
-        by pokefinder.org (Postfix) with ESMTPSA id A641C2C54BC;
-        Wed, 12 Jun 2019 12:24:58 +0200 (CEST)
-Date:   Wed, 12 Jun 2019 12:24:58 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Bitan Biswas <bbiswas@nvidia.com>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-Subject: Re: [PATCH V5 6/7] i2c: tegra: fix PIO rx/tx residual transfer check
-Message-ID: <20190612102458.liieiohnprfyyvs6@ninjato>
-References: <1560250274-18499-1-git-send-email-bbiswas@nvidia.com>
- <1560250274-18499-6-git-send-email-bbiswas@nvidia.com>
+        Wed, 12 Jun 2019 06:25:49 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54025 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391671AbfFLKZt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 06:25:49 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x15so5980866wmj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 03:25:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=xuz7wl9JI/1izuO7h6cmpUujshUximjTTA0wiCF4sTg=;
+        b=ub+DmJ5i+XYNRvxBqOrhElzXu+gLckFVy2YXGNwbBTnoJ0fm90b3fLZVfhjAnzL140
+         1swijfh5yeT2bO1rgxwzeMEVr7Y+bSLSrRbUMtsymgmzuUkN5IkFhJQJpYMyeQrrq3y2
+         GjQXzbxRCxhawOB6f3OA/qtapbgyKK/m52yN0/+aHHlZwWkaz1pW0mtEAcR3xZMmyH91
+         2kYsLNgr/0pv/7KFcYX1Yk6ImLixFizQg5vXUmBJ1NWmaJM0oABZbEq7057RktNxqO1G
+         dM+tGgOts4pUlJs8hz9wXgpbl/g6wZ3Fu97Ntltuh0cik/1nJpitsfcXBvu27QOZymUl
+         sfVA==
+X-Gm-Message-State: APjAAAUHmpAU+Ml7QlZ+rOWA3pkflCzWZ3M6xhZmLxmiGFHnmnPwGRLF
+        JOeA+EI2vk3W8j4DrD9Ehkyc2w==
+X-Google-Smtp-Source: APXvYqyvXjwdxbX8PPfz/CW94/F08nXOpdTiba2085ImP1ZnWBDiUcxjjeVDZN0HlcN+tUZgfwgZfw==
+X-Received: by 2002:a05:600c:1008:: with SMTP id c8mr22199755wmc.133.1560335146039;
+        Wed, 12 Jun 2019 03:25:46 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id f2sm13793660wru.31.2019.06.12.03.25.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 03:25:45 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Prasanna Panchamukhi <panchamukhi@arista.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Cathy Avery <cavery@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        "Michael Kelley \(EOSG\)" <Michael.H.Kelley@microsoft.com>,
+        Mohammed Gamal <mmorsy@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devel@linuxdriverproject.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] x86/hyperv: Disable preemption while setting reenlightenment vector
+In-Reply-To: <20190612093506.GH3436@hirez.programming.kicks-ass.net>
+References: <20190611212003.26382-1-dima@arista.com> <20190612093506.GH3436@hirez.programming.kicks-ass.net>
+Date:   Wed, 12 Jun 2019 12:25:44 +0200
+Message-ID: <87tvcvdrrr.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="t3rkxinhkpc76bjs"
-Content-Disposition: inline
-In-Reply-To: <1560250274-18499-6-git-send-email-bbiswas@nvidia.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Peter Zijlstra <peterz@infradead.org> writes:
 
---t3rkxinhkpc76bjs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Tue, Jun 11, 2019 at 10:20:03PM +0100, Dmitry Safonov wrote:
+>> KVM support may be compiled as dynamic module, which triggers the
+>> following splat on modprobe:
+>> 
+>>  KVM: vmx: using Hyper-V Enlightened VMCS
+>>  BUG: using smp_processor_id() in preemptible [00000000] code: modprobe/466 caller is debug_smp_processor_id+0x17/0x19
+>>  CPU: 0 PID: 466 Comm: modprobe Kdump: loaded Not tainted 4.19.43 #1
+>>  Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090007  06/02/2017
+>>  Call Trace:
+>>   dump_stack+0x61/0x7e
+>>   check_preemption_disabled+0xd4/0xe6
+>>   debug_smp_processor_id+0x17/0x19
+>>   set_hv_tscchange_cb+0x1b/0x89
+>>   kvm_arch_init+0x14a/0x163 [kvm]
+>>   kvm_init+0x30/0x259 [kvm]
+>>   vmx_init+0xed/0x3db [kvm_intel]
+>>   do_one_initcall+0x89/0x1bc
+>>   do_init_module+0x5f/0x207
+>>   load_module+0x1b34/0x209b
+>>   __ia32_sys_init_module+0x17/0x19
+>>   do_fast_syscall_32+0x121/0x1fa
+>>   entry_SYSENTER_compat+0x7f/0x91
+>> 
+>> The easiest solution seems to be disabling preemption while setting up
+>> reenlightment MSRs. While at it, fix hv_cpu_*() callbacks.
+>> 
+>> Fixes: 93286261de1b4 ("x86/hyperv: Reenlightenment notifications
+>> support")
+>> 
+>> Cc: Andy Lutomirski <luto@kernel.org>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: Cathy Avery <cavery@redhat.com>
+>> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+>> Cc: "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>
+>> Cc: Mohammed Gamal <mmorsy@redhat.com>
+>> Cc: Paolo Bonzini <pbonzini@redhat.com>
+>> Cc: Radim Krčmář <rkrcmar@redhat.com>
+>> Cc: Roman Kagan <rkagan@virtuozzo.com>
+>> Cc: Sasha Levin <sashal@kernel.org>
+>> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> 
+>> Cc: devel@linuxdriverproject.org
+>> Cc: kvm@vger.kernel.org
+>> Cc: linux-hyperv@vger.kernel.org
+>> Cc: x86@kernel.org
+>> Reported-by: Prasanna Panchamukhi <panchamukhi@arista.com>
+>> Signed-off-by: Dmitry Safonov <dima@arista.com>
+>> ---
+>>  arch/x86/hyperv/hv_init.c | 9 ++++++---
+>>  1 file changed, 6 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+>> index 1608050e9df9..0bdd79ecbff8 100644
+>> --- a/arch/x86/hyperv/hv_init.c
+>> +++ b/arch/x86/hyperv/hv_init.c
+>> @@ -91,7 +91,7 @@ EXPORT_SYMBOL_GPL(hv_max_vp_index);
+>>  static int hv_cpu_init(unsigned int cpu)
+>>  {
+>>  	u64 msr_vp_index;
+>> -	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
+>> +	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[cpu];
+>>  	void **input_arg;
+>>  	struct page *pg;
+>>  
+>> @@ -103,7 +103,7 @@ static int hv_cpu_init(unsigned int cpu)
+>>  
+>>  	hv_get_vp_index(msr_vp_index);
+>>  
+>> -	hv_vp_index[smp_processor_id()] = msr_vp_index;
+>> +	hv_vp_index[cpu] = msr_vp_index;
+>>  
+>>  	if (msr_vp_index > hv_max_vp_index)
+>>  		hv_max_vp_index = msr_vp_index;
+>> @@ -182,7 +182,6 @@ void set_hv_tscchange_cb(void (*cb)(void))
+>>  	struct hv_reenlightenment_control re_ctrl = {
+>>  		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
+>>  		.enabled = 1,
+>> -		.target_vp = hv_vp_index[smp_processor_id()]
+>>  	};
+>>  	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
+>>  
+>> @@ -196,7 +195,11 @@ void set_hv_tscchange_cb(void (*cb)(void))
+>>  	/* Make sure callback is registered before we write to MSRs */
+>>  	wmb();
+>>  
+>> +	preempt_disable();
+>> +	re_ctrl.target_vp = hv_vp_index[smp_processor_id()];
+>>  	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
+>> +	preempt_enable();
+>> +
+>>  	wrmsrl(HV_X64_MSR_TSC_EMULATION_CONTROL, *((u64 *)&emu_ctrl));
+>>  }
+>>  EXPORT_SYMBOL_GPL(set_hv_tscchange_cb);
+>
+> This looks bogus, MSRs are a per-cpu resource, you had better know what
+> CPUs you're on and be stuck to it when you do wrmsr. This just fudges
+> the code to make the warning go away and doesn't fix the actual problem
+> afaict.
 
-On Tue, Jun 11, 2019 at 03:51:13AM -0700, Bitan Biswas wrote:
-> Fix expression for residual bytes(less than word) transfer
-> in I2C PIO mode RX/TX.
->=20
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+Actually, we don't care which CPU will receive the reenlightenment
+notification and TSC Emulation in Hyper-V is, of course, global. We have
+code which re-assignes the notification to some other CPU in case the
+one it's currently assigned to goes away (see hv_cpu_die()).
 
-I applied patches 1-5 to my for-next tree now. No need to resend them
-anymore, you can focus on the remaining patches now.
-
-Question: The nominal maintainer for this driver is
-
-        Laxman Dewangan <ldewangan@nvidia.com> (supporter:TEGRA I2C DRIVER)
-
-I wonder if he is still around and interested?
-
-That aside, thanks a lot Dmitry for the review of this series!
-
-
---t3rkxinhkpc76bjs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0A0vkACgkQFA3kzBSg
-KbZ9mw//T4O3hoJ/kzky0Dkl2XSb0PlOZ2Bw61yaBOQYAQgHggU7wP0OfFki5Gfq
-4yxLGVDoKxGLNBOG6cdtkTFMMQKauZxRzoEkBjfWXYNfV37LDWoBIuS7HEPAAcgv
-2Kix3fbeOaEcozQz+czeVq5MKC9C/oniYGOsLNWYLJn0PIFDmqbj9Q/cQh/1prrX
-ACkMyvdrsHdm7kZLDAFY+6llztTf0CK7d1isXfnCTmlym2rj5aaU+jXfRMjdYOX9
-VJlJg4HSs85Tw9SpRCjKbgGO2zzP8YaNhhoNuVycFuj43M2TPV+4fqRKDFnyKi8y
-4LMotA1S2ikbptkvEhtdZ+sggAx65cwu6O4Uc+C1xnux6BWQamjnhgj7kPyauzzC
-3zs6bNFedSjgGRHR3u4eH6sStcM38/p+CgrGkhBq0VOA4p5aQr+xv5OfiTS5kh1z
-P9zzOI+VT0rCqRBdkZTOhSrbkr6/4GdvwvXsqHVlihrEOG0C+RvOih765Tm27DVQ
-Ey0ynpMFdVdb9rlJrdDjHMdlZVdy/JyrPqcpw1HZfhN2THDRzyBBr7itV0jabcWY
-XmD88PnRbE/VUk4eqxeC2FVumEYMB06k+9dQ7HwJyMumyCFIBz6rdHmWDnZxPvt0
-CypA65YWeTbZ6ptOJls/EsbiMqhrMdnUUmifAoof/KAyrDLE4MY=
-=Mw1x
------END PGP SIGNATURE-----
-
---t3rkxinhkpc76bjs--
+-- 
+Vitaly
