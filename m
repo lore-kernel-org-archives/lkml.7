@@ -2,99 +2,97 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC8DC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C20EAC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A36DC20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:35:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="dap6GC6q"
+	by mail.kernel.org (Postfix) with ESMTP id A3D8720866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436743AbfFLNfD (ORCPT
+        id S1729393AbfFLNfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:35:03 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:40779 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbfFLNfC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:35:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1560346506; x=1591882506;
-  h=from:to:cc:subject:date:message-id;
-  bh=g/hnuUwnFuH6qtFig5Ggh85b17S9rmWi19B6ciJrMz8=;
-  b=dap6GC6qTrQvVW+oSucu+vn5O07cwPFFzsYwSIW0cDivfkSvysetmTfy
-   w7PuZ6zJp53otha6XUyB7VBzx0zuzQRhGXIc9h7/1RvZ+EHJBlT1JtYGh
-   rzp+YwjoCL3CtPjgblNbcIEyx+VCd7S1R8nHYJBrmpvB+FNzmOWZDNI4s
-   np0JyC5Rh22uCzc2ukSCf/brO0+2QIW6ztidC6eAkZcdefj3ZsbHuuozF
-   OFppwEwXR7Y//B7X6m0ErQMRl8VPDCNLaBy2wHJ37vtRq4ahddH/ExZr1
-   ZvxL7jpwnUuvrxVp9jJtXC4G1NvGsu7GEB006amirSzwQCUggo68Jy1Jm
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.63,366,1557158400"; 
-   d="scan'208";a="210060896"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 12 Jun 2019 21:35:06 +0800
-IronPort-SDR: EVZKtWSQo/bbnntur7E6ae6oeM8HDbrGUJhskdN0PV+E8BiZtBREtkwa5cCFPyAWvfP4j8yAx9
- elaQpxtX+y8bP98tI6soCNcVxFMx+yLzhMElaeXtgzhD3BxIokx7A+yPeyPxfTDaAsnqYXDy1m
- yd30G9i6oUIJjXsxYG29DpBcgVV1wbNX/PeurBcVYwOkNooL7jmWSPlGDuu0UTbm27ruvY4HN+
- kc2fGEkXIbZLDMKCEZ8VCbNs2ixs2qNqavJ0CIrkU/0FXuCesA5V6XLbuFrQbDdtuE5BO5eZvQ
- NV99Wb2a+vk9ZirJ8Xsbwggo
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP; 12 Jun 2019 06:34:51 -0700
-IronPort-SDR: Btbm0nQU2UKlfJilRuPCjxkY/ldwKK5VBFW+MKBZ4OP22bI9MnGfdNQYYI2yPDqIV1SshWqQwA
- /cH9cGxrywvO7joo7lFNO90j7g4xwf2/89fmAa/BJon7ww5TMJVBov6p7bsayXvK+SIZHTb7sc
- gTy6O9iTrjhoAnMAvNTO4p8oaMGrZHAg9PmHZkG3dleN5Bwc6+6Z+v8/qnBvzrpbxQ4Cz22qKm
- uKMm3CdldXblU3VH/t2Y5GjfaiasCu60z95EQiC59Wtrg66miaRdwxHaXjf/S8U6fdKzU9XeAT
- dc8=
-Received: from kfae422988.sdcorp.global.sandisk.com ([10.0.230.227])
-  by uls-op-cesaip02.wdc.com with ESMTP; 12 Jun 2019 06:35:00 -0700
-From:   Avri Altman <avri.altman@wdc.com>
-To:     "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     Avi Shchislowski <avi.shchislowski@wdc.com>,
-        Alex Lemberg <alex.lemberg@wdc.com>,
-        Avri Altman <avri.altman@wdc.com>
-Subject: [PATCH] scsi: uapi: ufs: Fix SPDX license identifier
-Date:   Wed, 12 Jun 2019 16:34:37 +0300
-Message-Id: <1560346477-13944-1-git-send-email-avri.altman@wdc.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 12 Jun 2019 09:35:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51930 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726747AbfFLNfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 09:35:38 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5B9263086236;
+        Wed, 12 Jun 2019 13:35:26 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D98E1795BE;
+        Wed, 12 Jun 2019 13:35:20 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed, 12 Jun 2019 15:35:26 +0200 (CEST)
+Date:   Wed, 12 Jun 2019 15:35:20 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
+        'Andrew Morton' <akpm@linux-foundation.org>,
+        'Deepa Dinamani' <deepa.kernel@gmail.com>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "'arnd@arndb.de'" <arnd@arndb.de>,
+        "'dbueso@suse.de'" <dbueso@suse.de>,
+        "'axboe@kernel.dk'" <axboe@kernel.dk>,
+        "'dave@stgolabs.net'" <dave@stgolabs.net>,
+        "'e@80x24.org'" <e@80x24.org>,
+        "'jbaron@akamai.com'" <jbaron@akamai.com>,
+        "'linux-fsdevel@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>,
+        "'linux-aio@kvack.org'" <linux-aio@kvack.org>,
+        "'omar.kilani@gmail.com'" <omar.kilani@gmail.com>,
+        "'tglx@linutronix.de'" <tglx@linutronix.de>,
+        'Al Viro' <viro@ZenIV.linux.org.uk>,
+        'Linus Torvalds' <torvalds@linux-foundation.org>,
+        "'linux-arch@vger.kernel.org'" <linux-arch@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
+Message-ID: <20190612133519.GA3276@redhat.com>
+References: <20190604134117.GA29963@redhat.com>
+ <20190606140814.GA13440@redhat.com>
+ <87k1dxaxcl.fsf_-_@xmission.com>
+ <87ef45axa4.fsf_-_@xmission.com>
+ <20190610162244.GB8127@redhat.com>
+ <87lfy96sta.fsf@xmission.com>
+ <9199239a450d4ea397783ccf98742220@AcuMS.aculab.com>
+ <95decc6904754004af8a5546aca0468a@AcuMS.aculab.com>
+ <87pnnj2ca0.fsf@xmission.com>
+ <a11bb1a2a6de4cf5aa773ea79c602f1a@AcuMS.aculab.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a11bb1a2a6de4cf5aa773ea79c602f1a@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 12 Jun 2019 13:35:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-added 'WITH Linux-syscall-note' exception, which is the officially
-assigned exception identifier for the kernel syscall exception.
-This exception makes it possible to include GPL headers into non GPL
-code, without confusing license compliance tools.
+On 06/12, David Laight wrote:
+>
+> > > If I add a signal handler for SIGINT it is called when pselect()
+> > > returns regardless of the return value.
+> >
+> > That is odd.  Is this with Oleg's fix applied?
+>
+> No it is a 5.1.0-rc5 kernel with no related local patches.
+> So it is the 'historic' behaviour of pselect().
 
-fixes: a851b2bd3632 (scsi: uapi: ufs: Make utp_upiu_req visible to user
-		     space)
+No, this is not historic behaviour,
 
-Signed-off-by: Avri Altman <avri.altman@wdc.com>
----
- include/uapi/scsi/scsi_bsg_ufs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> But not the original one! Under 2.6.22-5-31 the signal handler isn't caller
+> when pselect() returns 1.
 
-diff --git a/include/uapi/scsi/scsi_bsg_ufs.h b/include/uapi/scsi/scsi_bsg_ufs.h
-index 17c7abd..9988db6 100644
---- a/include/uapi/scsi/scsi_bsg_ufs.h
-+++ b/include/uapi/scsi/scsi_bsg_ufs.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 */
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
- /*
-  * UFS Transport SGIO v4 BSG Message Support
-  *
--- 
-1.9.1
+This is historic behaviour.
+
+And it was broken by 854a6ed56839a4 ("signal: Add restore_user_sigmask()").
+
+And this is what we already discussed many, many times in this thread ;)
+
+Oleg.
 
