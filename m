@@ -2,126 +2,111 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F05F4C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF51C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3DAE20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:45:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NGU+gcXH"
+	by mail.kernel.org (Postfix) with ESMTP id BD3E1206BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:46:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732523AbfFLOpr (ORCPT
+        id S1732540AbfFLOqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:45:47 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36680 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728707AbfFLOpq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:45:46 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5CEjhlO123299;
-        Wed, 12 Jun 2019 09:45:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560350743;
-        bh=xyAWNTrYH0QoNd9ukAbvyzeuxkpCV6ALotpkbQS0afA=;
-        h=From:To:CC:Subject:Date;
-        b=NGU+gcXHrfLDdBMjSjJW29qFwrVKeVVvnTBrDiINwHuZzOcnJWCMSJYCkR+HIGIbu
-         a+9WF7E0LU/XEfGyUp5yCtIU1h8WO2alp8x7KMsaVKeHYeC5MdJ5GNC52CgmuhR2Ft
-         Wpd4TGQqjVBaeIVBoyjY0kE8ACWUvDUTmWeXUEQE=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5CEjhJS079595
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Jun 2019 09:45:43 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 12
- Jun 2019 09:45:43 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 12 Jun 2019 09:45:43 -0500
-Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5CEjf5P083688;
-        Wed, 12 Jun 2019 09:45:41 -0500
-From:   Keerthy <j-keerthy@ti.com>
-To:     <lee.jones@linaro.org>, <broonie@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <t-kristo@ti.com>, <j-keerthy@ti.com>
-Subject: [RESEND PATCH v2 3/3] regulator: lp87565: Add 4-phase lp87561 regulator support
-Date:   Wed, 12 Jun 2019 20:16:20 +0530
-Message-ID: <20190612144620.28331-1-j-keerthy@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 12 Jun 2019 10:46:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:54956 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728707AbfFLOqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:46:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD29D2B;
+        Wed, 12 Jun 2019 07:46:06 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E4533F557;
+        Wed, 12 Jun 2019 07:46:05 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 15:45:59 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        David Collins <collinsd@codeaurora.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RESEND PATCH v1 3/5] dt-bindings: Add depends-on property
+Message-ID: <20190612144559.GA21466@e107155-lin>
+References: <20190604003218.241354-1-saravanak@google.com>
+ <20190604003218.241354-4-saravanak@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604003218.241354-4-saravanak@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LP8756x family has a single output 4-phase regulator
-configuration. Add support for the same. The control
-lies in the master buck which is buck0 for 4-phase
-configuration. Enable/disable/voltage set happen via
-buck0 registers.
+On Mon, Jun 03, 2019 at 05:32:16PM -0700, Saravana Kannan wrote:
+> The depends-on property is used to list the mandatory functional
+> dependencies of a consumer device on zero or more supplier devices.
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  .../devicetree/bindings/depends-on.txt        | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/depends-on.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/depends-on.txt b/Documentation/devicetree/bindings/depends-on.txt
+> new file mode 100644
+> index 000000000000..1cbddd11cf17
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/depends-on.txt
+> @@ -0,0 +1,26 @@
+> +Functional dependency linking
+> +=============================
+> +
+> +Apart from parent-child relationships, devices (consumers) often have
+> +functional dependencies on other devices (suppliers). Common examples of
+> +suppliers are clock, regulators, pinctrl, etc. However not all of them are
+> +dependencies with well defined devicetree bindings. Also, not all functional
+> +dependencies are mandatory as the device might be able to operate in a limited
+> +mode without some of the dependencies.
+> +
+> +The depends-on property allows marking these mandatory functional dependencies
+> +between one or more devices. The depends-on property is used by the consumer
+> +device to point to all its mandatory supplier devices.
+> +
+> +Optional properties:
+> +- depends-on:	A list of phandles to mandatory suppliers of the device.
+> +
+> +
+> +Examples:
+> +Here, the device is dependent on only 2 of the 3 clock providers
+> +dev@40031000 {
+> +	      compatible = "name";
+> +	      reg = <0x40031000 0x1000>;
+> +	      clocks = <&osc_1 1>, <&osc_2 7> <&osc_3 5>;
+> +	      depends-on = <&osc_1>, <&osc_3>;
 
-Data Sheet: https://www.ti.com/lit/ds/symlink/lp87561-q1.pdf
+Why is this not implicit from clocks property and why is there need for
+explicit mention of this ?
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Acked-by: Mark Brown <broonie@kernel.org>
----
+What happens if there's a cyclic dependency ? From hardware perspective,
+cyclic dependency is quite feasible, so IMO it's hard to define this
+property unambiguously.
 
-patches 1/3 2/3 are already applied to linux-next.
+And being optional, we need to deal with the absence of these, and if we
+fallback to marking clock, regulators, pinctrl suppliers as depends-on,
+this may end up redundant.
 
-Changes in v2:
+You may need to show examples(preferably with DTs in mainline just to
+help understand it quickly and easily) that are beyond these standard
+suppliers that are not implicit to add this property.
 
-  * Changed if/else block to switch statement.
-
- drivers/regulator/lp87565-regulator.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/regulator/lp87565-regulator.c b/drivers/regulator/lp87565-regulator.c
-index 81eb4b890c0c..af00d1ffcf33 100644
---- a/drivers/regulator/lp87565-regulator.c
-+++ b/drivers/regulator/lp87565-regulator.c
-@@ -153,6 +153,12 @@ static const struct lp87565_regulator regulators[] = {
- 			  LP87565_REG_BUCK2_CTRL_1,
- 			  LP87565_BUCK_CTRL_1_EN, 3230,
- 			  buck0_1_2_3_ranges, LP87565_REG_BUCK2_CTRL_2),
-+	LP87565_REGULATOR("BUCK3210", LP87565_BUCK_3210, "buck3210",
-+			  lp87565_buck_ops, 256, LP87565_REG_BUCK0_VOUT,
-+			  LP87565_BUCK_VSET, LP87565_REG_BUCK0_CTRL_1,
-+			  LP87565_BUCK_CTRL_1_EN |
-+			  LP87565_BUCK_CTRL_1_FPWM_MP_0_2, 3230,
-+			  buck0_1_2_3_ranges, LP87565_REG_BUCK0_CTRL_2),
- };
- 
- static int lp87565_regulator_probe(struct platform_device *pdev)
-@@ -169,9 +175,18 @@ static int lp87565_regulator_probe(struct platform_device *pdev)
- 	config.driver_data = lp87565;
- 	config.regmap = lp87565->regmap;
- 
--	if (lp87565->dev_type == LP87565_DEVICE_TYPE_LP87565_Q1) {
-+	switch (lp87565->dev_type) {
-+	case LP87565_DEVICE_TYPE_LP87565_Q1:
- 		min_idx = LP87565_BUCK_10;
- 		max_idx = LP87565_BUCK_23;
-+		break;
-+	case LP87565_DEVICE_TYPE_LP87561_Q1:
-+		min_idx = LP87565_BUCK_3210;
-+		max_idx = LP87565_BUCK_3210;
-+	default:
-+		dev_err(lp87565->dev, "Invalid lp config %d\n",
-+			lp87565->dev_type);
-+		return -EINVAL;
- 	}
- 
- 	for (i = min_idx; i <= max_idx; i++) {
--- 
-2.17.1
-
+--
+Regards,
+Sudeep
