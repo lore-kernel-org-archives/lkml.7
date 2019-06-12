@@ -2,93 +2,129 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6794AC46477
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D29C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A01620896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:15:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560323739;
-	bh=Pgn4z8eXDtvYuB4h8Srt1Pl6cmZJ+jrdGbEb4/HW8F4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Uk7l6E+HZVIDME9kNINaWt1krLqWyotu3nLMj/yfo+Eny5FfsGtAqOJ+Lsifs50dw
-	 Vcvo6y4hs81GJidH8YMacN8WU/OeLE/oE0fhA9wkRyHhf3K/pO5SRQRgUK394fmDah
-	 OEkqLrtK2XEEq7mopghPH7X9oZk3xyGqg34yK6wY=
+	by mail.kernel.org (Postfix) with ESMTP id A11ED205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:16:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZAs7q5+B";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KDzaqLHB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408172AbfFLHPi (ORCPT
+        id S2408188AbfFLHQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 03:15:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53680 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405874AbfFLHPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 03:15:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 12 Jun 2019 03:16:11 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:45484 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403831AbfFLHQL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 03:16:11 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 232E36077A; Wed, 12 Jun 2019 07:16:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560323770;
+        bh=G4FwNfCMzmbQWhHtSmKn6+0lmeggfG6bd2sWRg5DNvI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ZAs7q5+BZKQBzehPs8zjt+RJP3QzWuLTdjldsEGADRZeZM8EmubFAsFGoG436Cjwt
+         uk2wRKDjmoB2V+y+cLG0sCeX7DCuelUie1TotjhxPhrKWMFJdkOOP+88tYqX2s3YLZ
+         ItLnanIChIr5wrCZ+mznLZ6kOnGJKu5N1KD8++Pk=
+Received: from blr-ubuntu-41.ap.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B146205ED;
-        Wed, 12 Jun 2019 07:15:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560323737;
-        bh=Pgn4z8eXDtvYuB4h8Srt1Pl6cmZJ+jrdGbEb4/HW8F4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gyOXmd/Bk2MY+ObjQoit0TWOjS+A3rYkI8Ikbk1QNX/JbNILMih4G3ibdsrKy44JR
-         7ruaWDGVo8ybEPMU8WZhzsjFQSjflJ4nYRMnwH0bRWMfWVfNJbJKasKwZaLca/ZkSc
-         gwOUUi5a8BqneqAbLIWnNU9FATVBUi5J1fmPsHFU=
-Date:   Wed, 12 Jun 2019 09:15:34 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "zhangxiaoxu (A)" <zhangxiaoxu5@huawei.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, peterz@infradead.org,
-        dvhart@infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] futex: Fix futex lock the wrong page
-Message-ID: <20190612071534.GA14367@kroah.com>
-References: <1560304465-68966-1-git-send-email-zhangxiaoxu5@huawei.com>
- <d00fc9d7-ea10-1577-40e9-03df1578acbe@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d00fc9d7-ea10-1577-40e9-03df1578acbe@huawei.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1E560602F4;
+        Wed, 12 Jun 2019 07:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560323769;
+        bh=G4FwNfCMzmbQWhHtSmKn6+0lmeggfG6bd2sWRg5DNvI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KDzaqLHB/BqX8eUq14ztTe0VJox0crdOGG6NEngsossj0T4OrO8Yo1It5zG/5sH4D
+         sF08JKP1JBDfrMbmRRMMQ5SElwZ8PHtH1qFSuXhQSzUG5dcsiS5HW/3gMXSzzg2Oe6
+         mvTvoN7Cp59yfDeljqrUMP7jTv4Nglw3Lrrs8ezQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1E560602F4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+To:     agross@kernel.org, robh+dt@kernel.org, will.deacon@arm.com,
+        robin.murphy@arm.com, joro@8bytes.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, david.brown@linaro.org,
+        Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: [PATCH v3 0/4] Qcom smmu-500 wait-for-safe handling for sdm845
+Date:   Wed, 12 Jun 2019 12:45:50 +0530
+Message-Id: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+X-Mailer: git-send-email 2.16.1.72.g5be1f00a9a70
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 09:50:25AM +0800, zhangxiaoxu (A) wrote:
-> This patch is for stable branch linux-4.4-y.
-> 
-> On 2019/6/12 9:54, ZhangXiaoxu wrote:
-> > The upstram commit 65d8fc777f6d ("futex: Remove requirement
-> > for lock_page() in get_futex_key()") use variable 'page' as
-> > the page head, when merge it to stable branch, the variable
-> > `page_head` is page head.
-> > 
-> > In the stable branch, the variable `page` not means the page
-> > head, when lock the page head, we should lock 'page_head',
-> > rather than 'page'.
-> > 
-> > It maybe lead a hung task problem.
-> > 
-> > Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-> > Cc: stable@vger.kernel.org
-> > ---
-> >   kernel/futex.c | 4 ++--
-> >   1 file changed, 2 insertions(+), 2 deletions(-)
+Subject changed, older subject was -
+Qcom smmu-500 TLB invalidation errata for sdm845.
+Previous version of the patches are at [1]:
 
-I do not understand.
+Qcom's implementation of smmu-500 on sdm845 adds a hardware logic called
+wait-for-safe. This logic helps in meeting the invalidation requirements
+from 'real-time clients', such as display and camera. This wait-for-safe
+logic ensures that the invalidations happen after getting an ack from these
+devices.
+In this patch-series we are disabling this wait-for-safe logic from the
+arm-smmu driver's probe as with this enabled the hardware tries to
+throttle invalidations from 'non-real-time clients', such as USB and UFS.
 
-Please read
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to submit a patch to the stable trees properly.
+For detailed information please refer to patch [3/4] in this series.
+I have included the device tree patch too in this series for someone who
+would like to test out this. Here's a branch [2] that gets display on MTP
+SDM845 device.
 
-If the commit is not in Linus's tree, then we can not take it, unless
-something is _very_ broken and it is the only way it can be resolved.
+This patch series is inspired from downstream work to handle under-performance
+issues on real-time clients on sdm845. In downstream we add separate page table
+ops to handle TLB maintenance and toggle wait-for-safe in tlb_sync call so that
+achieve required performance for display and camera [3, 4].
 
-thanks,
+Changes since v2:
+ * Dropped the patch to add atomic io_read/write scm API.
+ * Removed support for any separate page table ops to handle wait-for-safe.
+   Currently just disabling this wait-for-safe logic from arm_smmu_device_probe()
+   to achieve performance on USB/UFS on sdm845.
+ * Added a device tree patch to add smmu option for fw-implemented support
+   for SCM call to take care of SAFE toggling.
 
-greg k-h
+Changes since v1:
+ * Addressed Will and Robin's comments:
+    - Dropped the patch[4] that forked out __arm_smmu_tlb_inv_range_nosync(),
+      and __arm_smmu_tlb_sync().
+    - Cleaned up the errata patch further to use downstream polling mechanism
+      for tlb sync.
+ * No change in SCM call patches - patches 1 to 3.
+
+[1] https://lore.kernel.org/patchwork/cover/983913/
+[2] https://github.com/vivekgautam1/linux/tree/v5.2-rc4/sdm845-display-working
+[3] https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/drivers/iommu/arm-smmu.c?h=CogSystems-msm-49/msm-4.9&id=da765c6c75266b38191b38ef086274943f353ea7
+[4] https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/drivers/iommu/arm-smmu.c?h=CogSystems-msm-49/msm-4.9&id=8696005aaaf745de68f57793c1a534a34345c30a
+
+Vivek Gautam (4):
+  firmware: qcom_scm-64: Add atomic version of qcom_scm_call
+  firmware/qcom_scm: Add scm call to handle smmu errata
+  iommu/arm-smmu: Add support to handle Qcom's wait-for-safe logic
+  arm64: dts/sdm845: Enable FW implemented safe sequence handler on MTP
+
+ arch/arm64/boot/dts/qcom/sdm845.dtsi |   1 +
+ drivers/firmware/qcom_scm-32.c       |   5 ++
+ drivers/firmware/qcom_scm-64.c       | 149 ++++++++++++++++++++++++-----------
+ drivers/firmware/qcom_scm.c          |   6 ++
+ drivers/firmware/qcom_scm.h          |   5 ++
+ drivers/iommu/arm-smmu.c             |  16 ++++
+ include/linux/qcom_scm.h             |   2 +
+ 7 files changed, 140 insertions(+), 44 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
