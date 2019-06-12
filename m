@@ -2,58 +2,99 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9753EC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A94C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7861A2080A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 391C6208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:00:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="k8v11BX5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438134AbfFLK7y (ORCPT
+        id S1732323AbfFLLAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:59:54 -0400
-Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:48004 "EHLO
-        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2438119AbfFLK7w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:59:52 -0400
-X-Greylist: delayed 1164 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Jun 2019 06:59:51 EDT
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.89)
-        (envelope-from <fw@strlen.de>)
-        id 1hb0fz-0004eM-FG; Wed, 12 Jun 2019 12:40:19 +0200
-Date:   Wed, 12 Jun 2019 12:40:19 +0200
-From:   Florian Westphal <fw@strlen.de>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Florian Westphal <fw@strlen.de>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] xfrm: fix missing break on AF_INET6 case
-Message-ID: <20190612104019.2f6x72wa2qdxw5p3@breakpoint.cc>
-References: <20190612103624.27246-1-colin.king@canonical.com>
+        Wed, 12 Jun 2019 07:00:47 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:55604 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727992AbfFLLAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 07:00:47 -0400
+Received: from zn.tnic (p200300EC2F0A6800D18ACEC6DD65F264.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6800:d18a:cec6:dd65:f264])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1FE0B1EC09C0;
+        Wed, 12 Jun 2019 13:00:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560337245;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=HOMK+9JvCIpMQ3+nyUvjKfhBVhvirtCjErehwrT4UyU=;
+        b=k8v11BX5NOmU7kAzEv7EF+RwnANERInaAO4pBImSmW8ZH30tz0tPIlOMF/V2qcf1d206Ho
+        FiTPJGZjo0cfVOcgOQkrAh8BgtBHFIDIJTwXWA+jF78Nyvk+xds4kwQklnkexcjtw9q2nB
+        j0XAmObOKvCgPABYwk14zIXNjbc0Iqk=
+Date:   Wed, 12 Jun 2019 13:00:39 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        James Morse <james.morse@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Message-ID: <20190612110039.GH32652@zn.tnic>
+References: <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+ <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+ <20190608090556.GA32464@zn.tnic>
+ <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+ <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+ <20190611115651.GD31772@zn.tnic>
+ <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
+ <20190612034813.GA32652@zn.tnic>
+ <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
+ <20190612074242.53a4cf56@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190612103624.27246-1-colin.king@canonical.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190612074242.53a4cf56@coco.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Colin King <colin.king@canonical.com> wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> It appears that there is a missing break statement for the AF_INET6 case
-> that falls through to the default WARN_ONCE case. I don't think that is
-> intentional. Fix this by adding in the missing break.
+On Wed, Jun 12, 2019 at 07:42:42AM -0300, Mauro Carvalho Chehab wrote:
+> That's said, from the admin PoV, it makes sense to have a single
+> daemon that collect errors from all error sources and take the
+> needed actions.
 
-Yes, I sent same patch a few minutes ago:
+Doing recovery actions in userspace is too flaky. Daemon can get killed
+at any point in time and there are error types where you want to do
+recovery *before* you return to userspace.
 
-https://patchwork.ozlabs.org/patch/1114377/
+Yes, we do have different error reporting facilities but I still think
+that concentrating all the error information needed in order to do
+proper recovery action is the better approach here. And make that part
+of the kernel so that it is robust. Userspace can still configure it and
+so on.
 
-I don't mind which one gets applied.
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
