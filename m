@@ -2,92 +2,89 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9965C46477
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD49C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC89208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED3E4208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:57:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tSg2rXqu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731917AbfFLI5i (ORCPT
+        id S1731934AbfFLI5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:57:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51982 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726286AbfFLI5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:57:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0BB60AF49;
-        Wed, 12 Jun 2019 08:57:37 +0000 (UTC)
-Subject: Re: [PATCH v2 1/3] fs/fuse, splice_write: Don't access pipe->buffers
- without pipe_lock()
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <CAJfpegvAAQTAjxLcQLefvFOQDJ6ug_G8Jggt=UZci+YnNP741A@mail.gmail.com>
- <20180717160035.9422-1-aryabinin@virtuozzo.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <b7aceb99-9631-cbcf-fdec-3abef72c949d@suse.cz>
-Date:   Wed, 12 Jun 2019 10:57:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 12 Jun 2019 04:57:51 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45112 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731302AbfFLI5u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 04:57:50 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u10so11432481lfm.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:57:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AO6tXHL0MIrI5PKsPY9yMrIUQzOMgeWQn+5LBcWu5/A=;
+        b=tSg2rXqu8jgkoPwygOaPeLpX9WM453fRghyKYBXvNtYKkfQ8Jw8WlttSk4DKne1vRY
+         O/O7yUgA/OvD8gEAY2KX2AJgmTM9oVRbIEXEm97p3YZo7tGu7fodb7lmdiJYIgtbbKNe
+         vQQRp6P4l4YYcP+/nHj99yrHgq3CwIvjCJQsbwruNZW/XHngZBj1VWew42VHhZ0ry78Q
+         /ClQDeMqcQcTuk8jV/grio9YrxoKDyqwP3RXKEu73uyG4vsMgEeWD/FrvH0wmf1ybvWb
+         Fxv7zvGh1taGSevLTKVK4AwTZrDQhQLjTW7yzZrosQBB5vpzcA3XLXVbQU/FUVXfGRzz
+         /ukQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AO6tXHL0MIrI5PKsPY9yMrIUQzOMgeWQn+5LBcWu5/A=;
+        b=pRbNcOlK7QKwSYAvdSJFy0pePa3cUTiMdHvmIRwmA9uCb/8iJjMetab5U/y+wm0Qbx
+         Ehh8eBZYCcGk1tU18XiL3mupUQw3RJc39rIpBTCjjPB7okABundleWcvzNydMpDoPfuG
+         TpxEMqV6Rx7Hsy8uBvm0JKH2dae6WXykjl7BuGh80MpOveeQNZAFc+dRoX2nnifhKS8L
+         4xcyg7DqSfIR/GFIRAYmEgQlJNjTLvIhW2TOkRJceJ76CYvTdRpgLRUox+h/mY1UK8Ic
+         MpMGsZ58CIz3rBYlnR1GhSd5LbLN2BQreu1K0sp8U950pahX7271g7LZdAOzwlr5CAib
+         AqHw==
+X-Gm-Message-State: APjAAAWNPRadkVjLmmEWe9eR7CZZ5tz/yMoU6OxpXw0SdLAMz2OizOgt
+        43GGGLk7riXVrtc2IOdeJHSyc9f3QMENhii0RMYzaQ==
+X-Google-Smtp-Source: APXvYqx7/U5en44gUOzYZ8yPmE23B84RXv7n+VLhsaSN8Ln0pBxF0981D+KVOcBExB2RE4G2fsqTgPKUOqFqSpHqMVs=
+X-Received: by 2002:ac2:4891:: with SMTP id x17mr5285457lfc.60.1560329868976;
+ Wed, 12 Jun 2019 01:57:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20180717160035.9422-1-aryabinin@virtuozzo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190610171103.30903-1-grygorii.strashko@ti.com> <20190610171103.30903-18-grygorii.strashko@ti.com>
+In-Reply-To: <20190610171103.30903-18-grygorii.strashko@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 12 Jun 2019 10:57:37 +0200
+Message-ID: <CACRpkdYObWMhshXcHTMrmjr7hPnmk=j6g52APzgg5=meP_XTMQ@mail.gmail.com>
+Subject: Re: [PATCH-next 17/20] gpio: gpio-omap: constify register tables
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Russell King <rmk@arm.linux.org.uk>,
+        Tony Lindgren <tony@atomide.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/18 6:00 PM, Andrey Ryabinin wrote:
-> fuse_dev_splice_write() reads pipe->buffers to determine the size of
-> 'bufs' array before taking the pipe_lock(). This is not safe as
-> another thread might change the 'pipe->buffers' between the allocation
-> and taking the pipe_lock(). So we end up with too small 'bufs' array.
-> 
-> Move the bufs allocations inside pipe_lock()/pipe_unlock() to fix this.
-> 
-> Fixes: dd3bb14f44a6 ("fuse: support splice() writing to fuse device")
-> Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Cc: <stable@vger.kernel.org>
+On Mon, Jun 10, 2019 at 7:13 PM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
 
-BTW, why don't we need to do the same in fuse_dev_splice_read()?
+> From: Russell King <rmk+kernel@armlinux.org.uk>
+>
+> We must never alter the register tables; these are read-only as far
+> as the driver is concerned.  Constify these tables.
+>
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
-Thanks,
-Vlastimil
+Patch applied.
 
-> ---
->  fs/fuse/dev.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-> index c6b88fa85e2e..702592cce546 100644
-> --- a/fs/fuse/dev.c
-> +++ b/fs/fuse/dev.c
-> @@ -1944,12 +1944,15 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
->  	if (!fud)
->  		return -EPERM;
->  
-> +	pipe_lock(pipe);
-> +
->  	bufs = kmalloc_array(pipe->buffers, sizeof(struct pipe_buffer),
->  			     GFP_KERNEL);
-> -	if (!bufs)
-> +	if (!bufs) {
-> +		pipe_unlock(pipe);
->  		return -ENOMEM;
-> +	}
->  
-> -	pipe_lock(pipe);
->  	nbuf = 0;
->  	rem = 0;
->  	for (idx = 0; idx < pipe->nrbufs && rem < len; idx++)
-> 
-
+Yours,
+Linus Walleij
