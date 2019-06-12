@@ -2,107 +2,128 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.6 required=3.0 tests=FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 250F3C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD74C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01F1C208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FBB208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501859AbfFLPAk (ORCPT
+        id S1728877AbfFLPBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:00:40 -0400
-Received: from mga11.intel.com ([192.55.52.93]:34860 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436945AbfFLPAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:00:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 08:00:39 -0700
-X-ExtLoop1: 1
-Received: from jasaito-mobl1.amr.corp.intel.com (HELO [10.251.13.144]) ([10.251.13.144])
-  by orsmga005.jf.intel.com with ESMTP; 12 Jun 2019 08:00:38 -0700
-Subject: Re: [PATCH] x86/mm: Create an SME workarea in the kernel for early
- encryption
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>
-References: <d565e0c8e9867132c75648fe67416c3f51a0efbd.1560346329.git.thomas.lendacky@amd.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <053ded24-eb70-0e88-5e0c-312ea93a6fd0@intel.com>
-Date:   Wed, 12 Jun 2019 08:00:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 12 Jun 2019 11:01:22 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41390 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbfFLPBV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:01:21 -0400
+Received: by mail-io1-f68.google.com with SMTP id w25so13177869ioc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 08:01:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=shuAyQ1I56gj94KbjmRqaQ587FUaZO/1wGxqCAR2L5g=;
+        b=jasr/6eNBT3Wy2jHPCQOQsFkc+rf0C3zTbErwqYuQkh1Gn06FKv94qkrmv1fUV6ixO
+         Jw3KCQjCB/vQbNW7RrN4tV7k9yeVVbtOrk1hW/eHMMxfVJokG8CYSxALkfZsuDGFB6MB
+         6J/dTIupA3tjx3ioJTaH3CuEovbEu5mxWMAzMlaJODNCvJlGQVf5MinWJt7g4077ZmCt
+         /RQjWKq+9Ollm6zQjqMAwsm9r5MRK30ngnAA0AuAsCpzwNqzK+ywYc50gjQLPGzkali3
+         zVuoQuSMoh4HF27CBEdAOP/taPqTP4x6c+5uh9zYX2kAgm07tbwPdrD5gkc991KKCF6A
+         Sixg==
+X-Gm-Message-State: APjAAAXg9AFbbFpgJgHyiiCT2vac2xlZUstd9BBdVuQdfuDGW1X3C/db
+        HhOwg1t5WoiD1zKtOkawpnThcA==
+X-Google-Smtp-Source: APXvYqxvIw+gJmjqKDyUCtIwpfzNKI1enkSa94j5cWvjhBtpZNh9a80WqyvkTu1WUeUpW3gtHtseKQ==
+X-Received: by 2002:a5e:820a:: with SMTP id l10mr33701840iom.283.1560351680686;
+        Wed, 12 Jun 2019 08:01:20 -0700 (PDT)
+Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id n7sm5939759ioo.79.2019.06.12.08.01.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 08:01:19 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 09:01:15 -0600
+From:   Raul Rangel <rrangel@chromium.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "ernest.zhang" <ernest.zhang@bayhubtech.com>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 1/3] mmc: sdhci: sdhci-pci-o2micro: Correctly set bus
+ width when tuning
+Message-ID: <20190612150115.GA27989@google.com>
+References: <20190610185354.35310-1-rrangel@chromium.org>
+ <CAPDyKFppNgL_kZPV-QS6ZiJErde5ea8Nj-sQTy_vXhW9jfXhpg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <d565e0c8e9867132c75648fe67416c3f51a0efbd.1560346329.git.thomas.lendacky@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFppNgL_kZPV-QS6ZiJErde5ea8Nj-sQTy_vXhW9jfXhpg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/19 6:32 AM, Lendacky, Thomas wrote:
-> Create a section for SME in the vmlinux.lds.S.  Position it after "_end"
-> so that the memory will be reclaimed during boot and, since it is all
-> zeroes, it compresses well. 
+On Wed, Jun 12, 2019 at 03:36:25PM +0200, Ulf Hansson wrote:
+> On Mon, 10 Jun 2019 at 20:54, Raul E Rangel <rrangel@chromium.org> wrote:
+> >
+> > sdhci_send_tuning uses mmc->ios.bus_width to determine the block size.
+> > Without this patch the block size would be set incorrectly when the
+> > bus_width == 8 which results in tuning failing.
+> >
+> > Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+> > ---
+> >
+> >  drivers/mmc/host/sdhci-pci-o2micro.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+> > index b29bf4e7dcb48..dd21315922c87 100644
+> > --- a/drivers/mmc/host/sdhci-pci-o2micro.c
+> > +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+> > @@ -115,6 +115,7 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
+> >          */
+> >         if (mmc->ios.bus_width == MMC_BUS_WIDTH_8) {
+> >                 current_bus_width = mmc->ios.bus_width;
+> > +               mmc->ios.bus_width = MMC_BUS_WIDTH_4;
+> 
+> This looks wrong.
+> 
+> mmc->ios.bus_width is not supposed to be updated by a host driver, but
+I guess I left this part out: The O2Micro controller only supports
+tuning at 4-bits. So the host driver needs to change the bus width while
+tuning and then set it back when done. Ideally I would have used
+`mmc_set_bus_width()`, but that is a core only function.
 
-I don't think I realized that things after _end get reclaimed.  Do we do
-that at the same spot that we do init data or somewhere else?
-
-How much does compressing 8MB of zeros slow down my kernel compile? ;)
+If `sdhci_send_tuning()` didn't rely on mmc->ios.bus_width to determine
+the bus width, but instead read the HOST_CONTROL register then this
+patch wouldn't be needed.
+> rather the value should only be read.
+> 
+> >                 sdhci_set_bus_width(host, MMC_BUS_WIDTH_4);
+> >         }
+> >
+> > @@ -126,8 +127,10 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
+> >
+> >         sdhci_end_tuning(host);
+> >
+> > -       if (current_bus_width == MMC_BUS_WIDTH_8)
+> > +       if (current_bus_width == MMC_BUS_WIDTH_8) {
+> > +               mmc->ios.bus_width = MMC_BUS_WIDTH_8;
+> 
+> Ditto.
+> 
+> >                 sdhci_set_bus_width(host, current_bus_width);
+> > +       }
+> >
+> >         host->flags &= ~SDHCI_HS400_TUNING;
+> >         return 0;
+> > --
+> > 2.22.0.rc2.383.gf4fbbf30c2-goog
+> >
+> 
+> Kind regards
+> Uffe
+Thanks for the review!
