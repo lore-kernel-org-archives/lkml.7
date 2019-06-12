@@ -2,86 +2,96 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537BDC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60173C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED879206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:28:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DTGYZ21w"
+	by mail.kernel.org (Postfix) with ESMTP id 4282B20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbfFLF2Y (ORCPT
+        id S1730613AbfFLF2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 01:28:24 -0400
-Received: from mail-io1-f50.google.com ([209.85.166.50]:43558 "EHLO
-        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbfFLF2Y (ORCPT
+        Wed, 12 Jun 2019 01:28:52 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:16276 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725681AbfFLF2w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 01:28:24 -0400
-Received: by mail-io1-f50.google.com with SMTP id k20so11910833ios.10
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 22:28:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=0egADaKHPgxEseV+5zTmwO02LpSCL+ELQpPqc7dluDI=;
-        b=DTGYZ21wKGFW8ESp2178P057vVW9OtYlyO0lh1uR+Fq4qsEofRlNXVtwAsg6xwcdVS
-         73cFj+JmPdmdo6NkoJivXGqzverYG6kWj8mmnxL6q2j1gVcegLL9g+xJ8cYz3M0qX0hS
-         PVGaiOBPX3ml1L9PBmOj/WaviM8GnXRPTS9H22T7Qy8lysss3HgNokx+oDnFhv9okMzY
-         sXotzhgTwD5e5ignqjWDKZoL+RyMxw1+0f4lySedm7IoT52fqyEjeMje6tWbhCX4AGq8
-         fWy137D9h5ipiTcXxcDeNKlri5LqmWQnioTL/fCT6ykdUMoeNFlREP51cjunTHxsF8cs
-         09mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=0egADaKHPgxEseV+5zTmwO02LpSCL+ELQpPqc7dluDI=;
-        b=lKzazwX+dYoHqGM2Woy7txSsertm5maAm9zkpLq2qm6yGPidNTdGPQUXiu846aIgZj
-         gPYnpu9+3KFdzD56l+xh09aEBdBZejeYKVSHGlaP+95Qv0+a5ui7Vwt1sRs/N9SxcPEt
-         mTKcy/3nYq+ceIywC7oM421i3sBFypIo/WcZsoQ73VrKJ9xNyr67rV6DlwSBhq51wFEz
-         DmDmaDXBP9fWVUQb5prWXKL+io3fAP16EjgTZSx5O+pseTGjOq7sWW+mbtYlAS8rtJp7
-         wVadu6NOYR4iDSk6jMQQ+SsDClddgKWKKFFznSyb14ByWe1+BPIgXqa5H7Lb/GSmMMkm
-         oUBw==
-X-Gm-Message-State: APjAAAU24AOjY1fJp9WY28jzlR1bPCC6yYrZoLMy7azLReut9auSCBlI
-        ehTYGWZ+HYh6xat4CSxDmQvEPP87IJe12ikgdbQgK7Bt
-X-Google-Smtp-Source: APXvYqxxNRo4wxH2jLBqUQXkw6LPwhrEcORYeGAzeHIGr0Ve5O5Hwsp9J+c4ZQJjXe8Qrmd6mIi52qcnzFbtg6tvYSQ=
-X-Received: by 2002:a6b:4107:: with SMTP id n7mr6420390ioa.12.1560317302867;
- Tue, 11 Jun 2019 22:28:22 -0700 (PDT)
+        Wed, 12 Jun 2019 01:28:52 -0400
+X-IronPort-AV: E=Sophos;i="5.63,363,1557180000"; 
+   d="scan'208";a="386977124"
+Received: from abo-12-105-68.mrs.modulonet.fr (HELO hadrien) ([85.68.105.12])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 07:28:48 +0200
+Date:   Wed, 12 Jun 2019 07:28:48 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Himanshu Jha <himanshujha199640@gmail.com>,
+        cocci@systeme.lip6.fr, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>
+Subject: Re: Coccinelle: api: add devm_platform_ioremap_resource script
+In-Reply-To: <f573b2d3-11d0-92b5-f8ab-4c4b6493e152@metux.net>
+Message-ID: <alpine.DEB.2.21.1906120727300.2535@hadrien>
+References: <20190406061112.31620-1-himanshujha199640@gmail.com> <f09006a3-691c-382a-23b8-8e9ff5b4a5f1@web.de> <alpine.DEB.2.21.1906081925090.2543@hadrien> <7b4fe770-dadd-80ba-2ba4-0f2bc90984ef@web.de> <f573b2d3-11d0-92b5-f8ab-4c4b6493e152@metux.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-From:   dharmendra hans <dharamhans87@gmail.com>
-Date:   Wed, 12 Jun 2019 10:58:11 +0530
-Message-ID: <CACUYsyG03ysubRp7UKPEQzz3Fm9e-J_yxp4S60jZ37WwagiXxA@mail.gmail.com>
-Subject: madvise() flags for not to sync dirty pages to the disk in shared mapping
-To:     linux-kernel@vger.kernel.org
-Cc:     dharmendra singh <dharamhans87@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323329-133965833-1560317328=:2535"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-I was searching for some  madvise() flag options which allow my
-application to have choice of not syncing dirty pages created through
-shared mmap() to the disk. Issue is that currently dirty pages created
-by the application will be synced to the disk and there is no way
-application can avoid that except MADV_REMOVE. But MADV_REMOVE punches
-the hole in the file and it takes a lot of time if mapping size was
-big, therefore one wants to avoid this option as it delays the further
-state change in application.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-So  one seems to have two issue.
-1) Application is forced to wait during munmap() as dirty pages are synced.
-2) if one kill the application process, it lands in process defunct
-state for long time and it seems pages which were created by
-application are being synced to the disk.
+--8323329-133965833-1560317328=:2535
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-MADV_REMOVE seems to solve it but it is really slow due to file
-truncation on mapped file.
-What is desired is that application should be allowed choice of no
-dirty pages sync without creating hole in the mapped file.
 
--Dharmendra
+
+On Tue, 11 Jun 2019, Enrico Weigelt, metux IT consult wrote:
+
+> On 09.06.19 10:55, Markus Elfring wrote:
+>
+> <snip>
+>
+> >> But there is not usually any interesting formatting on the left side of an
+> >> assignment (ie typically no newlines or comments).
+> >
+> > Is there any need to trigger additional source code reformatting?
+> >
+> >> I can see no purpose to factorizing the right parenthesis.
+> >
+> > These characters at the end of such a function call should be kept unchanged.
+>
+> Agreed. OTOH, we all know that spatch results still need to be carefully
+> checked. I suspect trying to teach it all the formatting rules of the
+> kernel isn't an easy task.
+>
+> > The flag “IORESOURCE_MEM” is passed as the second parameter for the call
+> > of the function “platform_get_resource” in this refactoring.
+>
+> In that particular case, we maybe should consider separate inline
+> helpers instead of passing this is a parameter.
+>
+> Maybe it would even be more efficient to have completely separate
+> versions of devm_platform_ioremap_resource(), so we don't even have
+> to pass that parameter on stack.
+
+I'm lost as to why this discussion suddenly appeared.  What problem is
+actually being discussed?
+
+julia
+--8323329-133965833-1560317328=:2535--
