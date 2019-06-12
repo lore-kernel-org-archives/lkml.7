@@ -2,259 +2,144 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6F0C46477
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A49C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 434A4215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560367835;
-	bh=h97diiQWZdqlQ81qSsUGwG2qdx36A24rBfkQNgw4pQ8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LSLD60Ehjnq+C0b9KdtuwW9rzSy9QO27rDYNWstgIBHawOr0AxYKc24vBt6TtE/HR
-	 enwH87L9Jry2fJii3E98yQnuC04pm/ogM+zieKezwhZp2Q2Hvs1GeMdc7lPnc02iQ/
-	 hSwRB0KyKk//u5uYQzDvkjEtUTsjC7MPjgGQbsCU=
+	by mail.kernel.org (Postfix) with ESMTP id C8151215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:31:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Z16lXH8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388207AbfFLTae (ORCPT
+        id S1728486AbfFLTbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:30:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728458AbfFLTae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:30:34 -0400
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA8292183E
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 19:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560367833;
-        bh=h97diiQWZdqlQ81qSsUGwG2qdx36A24rBfkQNgw4pQ8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xJ7yPAzUSlkMtjigoey8f3HD7f2j2VMqn1jhFRs+98+1cqkoZQoCEBwu5gzhVt9cc
-         F5kGVgP8s2X8+KQHtHgKMItJGDqoSSqqdmnBPl+RwWoBP0jeLhhg1kkOGnvJp1urK8
-         MiOP81oFlPpupcIvzjzcwC5Fx2+Hv/eN8ycVUclk=
-Received: by mail-wr1-f47.google.com with SMTP id x4so15497649wrt.6
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:30:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAW7ElCUAOhTctHiTZXKEvghtHjoqn6HZAmoOaP3qP/g7Kk/hMvs
-        t9ictvFESN2j7bw0dKZG0iLG5p80t0xdXYE2knBz2g==
-X-Google-Smtp-Source: APXvYqy5x9diLPrcbhstS+YVuX+XWQq7iMhNri6eT6+sEnq4gVyZpAWeu8P1fKqxN6m8gPIB0E36q2gXd5KXDiLulq8=
-X-Received: by 2002:adf:ef48:: with SMTP id c8mr34810713wrp.352.1560367831343;
- Wed, 12 Jun 2019 12:30:31 -0700 (PDT)
+        Wed, 12 Jun 2019 15:31:38 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33802 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727879AbfFLTbh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 15:31:37 -0400
+Received: by mail-wr1-f67.google.com with SMTP id e16so18179523wrn.1;
+        Wed, 12 Jun 2019 12:31:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=piJHUi4lk+8l3N6vpCR4aXaFS5oizipdYRkQO+KF1qQ=;
+        b=Z16lXH8fCl6C5qbOQPQTz2P6w/DihSOJFI8TyxYwWTfTBbw73Du2lc+fqNe2U3KzZl
+         v51mK6JVlP5ZEoQ9IMShm+xVQ665mKx/QvFUTY7eQAa6sEbwxr/Vk6tKBZTRiR9K7P3F
+         RMufcoChyle0YhJhhHNS0sbZbvdG+uzCi754D7DDW6j/4U8+KP70WWcPVNnAFbknuyc0
+         z7eGRB59ZaKuTptvlulTj5Kiarslp+WO7D8JdVUwG8jTkNzN1SbzqPp9OjK17VNnJPG0
+         9uzQ5TmybU/EmZzxvo+WeSAXkDgAuSHBQlGkjmS/PdZAyTE0VHWulxTdhAd1gcNMlX+r
+         RnMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=piJHUi4lk+8l3N6vpCR4aXaFS5oizipdYRkQO+KF1qQ=;
+        b=em+OC/EObBnWljYsZdDrq8NBJ7rGulgRh8OO5gLpQ5isMzINh6naFqsahA5OpvlZx8
+         ij6qb8Po+4gJOemsYBswtYN+/kFfHYNTawozZgspX/AHsZnWyW/9lKtiadN4THaNUuIx
+         JxdCGSufnBtoNoUNFaG7O5MoB8PYhLH62o3cjMDZk0o0w/0b5haUgwzHkE3kzKwm9m6a
+         rp6bo01fjk9CSfzEDu3QyLvcrCsXafWtKcE7pQO4p7WthzbrILgzOkYAh4sIxtszjHc8
+         VXIhR0shHUoPhJ7CPiwPD0t+wXqQr5n0HGCqditg/5OdLkDyrdpo5C2xhEArpfeJEilO
+         F4Fw==
+X-Gm-Message-State: APjAAAU2UErmRhfw+eVPMd/vrgiWwrcG8+5Zoo7eYsjgEXxuZrSZd2lj
+        poSt3DNQ/phxoI2rKs3wZZ03+msk
+X-Google-Smtp-Source: APXvYqyGq9L4GORx9QxsX5rk1418GVqtaX0ZpZZsqVbJqkJiH4gzhyYbqE2/1oCnWRloDJhytm05cg==
+X-Received: by 2002:adf:e2c7:: with SMTP id d7mr1272968wrj.272.1560367894513;
+        Wed, 12 Jun 2019 12:31:34 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133DDA400428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:33dd:a400:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id q15sm379054wrr.19.2019.06.12.12.31.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 12:31:33 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     netdev@vger.kernel.org, peppe.cavallaro@st.com,
+        alexandre.torgue@st.com, joabreu@synopsys.com, davem@davemloft.net,
+        andrew@lunn.ch
+Cc:     linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        maxime.ripard@bootlin.com,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH net-next v2 0/1] stmmac: honor the GPIO flags for the PHY reset GPIO
+Date:   Wed, 12 Jun 2019 21:31:14 +0200
+Message-Id: <20190612193115.6751-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <cover.1560131039.git.cedric.xing@intel.com> <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
- <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov> <20190611220243.GB3416@linux.intel.com>
-In-Reply-To: <20190611220243.GB3416@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 12 Jun 2019 12:30:20 -0700
-X-Gmail-Original-Message-ID: <CALCETrWQT3AG+-OKBOzuw-a6VPApkNYsKqZiBmS56-b-72bfYQ@mail.gmail.com>
-Message-ID: <CALCETrWQT3AG+-OKBOzuw-a6VPApkNYsKqZiBmS56-b-72bfYQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in SELinux
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Cedric Xing <cedric.xing@intel.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        selinux@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
-        pmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        Philip Tricca <philip.b.tricca@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 3:02 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Tue, Jun 11, 2019 at 09:40:25AM -0400, Stephen Smalley wrote:
-> > I haven't looked at this code closely, but it feels like a lot of
-> > SGX-specific logic embedded into SELinux that will have to be repeated or
-> > reused for every security module.  Does SGX not track this state itself?
->
-> SGX does track equivalent state.
->
-> There are three proposals on the table (I think):
+Recent Amlogic SoCs (G12A which includes S905X2 and S905D2 as well as
+G12B which includes S922X) use GPIOZ_14 or GPIOZ_15 for the PHY reset
+line. These GPIOs are special because they are marked as "3.3V input
+tolerant open drain (OD) pins" which means they can only drive the pin
+output LOW (to reset the PHY) or to switch to input mode (to take the
+PHY out of reset).
+The GPIO subsystem already supports this with the GPIO_OPEN_DRAIN and
+GPIO_OPEN_SOURCE flags in the devicetree bindings.
 
-Sounds about right.  I've been playing with #1 and #2 (as text, not
-code), and I'll post my latest thoughts on it below.  But first, I
-should mention that I think we've gotten a bit too caught up on
-SELinux-y terminology like "EXECMOD" and "EXECMEM", which is relevant
-since the kernel has very little visibility into what the enclave is
-doing.  Instead, I think we should think about the relevant
-permissions more like this:
+The goal of this series to add support for these special GPIOs in
+stmmac (even though the "snps,reset-gpio" binding is deprecated).
 
-a) "execute code from a particular source, e.g. a file"
-b) "execute code supplied from arbitrary memory outside the enclave"
-c) "execute code generated within the enclave"
-d) "possess WX enclave memory"
-
-I think that any sensible policy that allows (b) should allow (a).
-Similarly, any policy that allows (d) should allow (c).   I don't see
-any particular need for the kernel to go out of its way to ensure
-these relationships, though.
-
-We could plausibly also distinguish "execute measured code", although
-I think that the details of defining and implenenting this, especially
-with SGX2, could be nastier than we want to deal with.  A minimal
-approach that mostly ignores SGX2 would be to have another permission
-"execute code supplied from outside the enclave that was not
-measured".  This permission would be required on top of (a) or (b),
-depending on where that code comes from.
-
-If we want to map these to existing SELinux terms, we could use
-EXECUTE for (a), EXECMOD for (c), and EXECMEM for (d). (b) seems to
-also map to EXECMOD or EXECMEM depending on exactly how it happens,
-and I'm not sure this makes all that much sense.
-
->
->   1. Require userspace to explicitly specificy (maximal) enclave page
->      permissions at build time.  The enclave page permissions are provided
->      to, and checked by, LSMs at enclave build time.
->
->      Pros: Low-complexity kernel implementation, straightforward auditing
->      Cons: Sullies the SGX UAPI to some extent, may increase complexity of
->            SGX2 enclave loaders.
-
-In my notes, this works like this.  This is similar, but not
-identical, to what Sean has been sending out.
-
-EADD takes flags: ALLOW_READ, ALLOW_WRITE, ALLOW_EXEC.  It calls a new hook:
-
-  int security_enclave_load(struct vm_area_struct *source, unsigned int flags);
-
-(Sean passed in the secinfo protection too, but I think we agreed
-that this could be omitted.)  This hook will fail if ALLOW_EXEC is
-requested and the LSM doesn't consider the source VMA to be
-executable.  Privileges (a) and (b) are implemented here.
-
-Optionally, we can enforce noexec here.
-
-The future EAUG ioctl takes the same flags, but it doesn't call
-security_enclave_load().  (As Cedric noted, the actual user API for EAUG
-is not settled, but I don't think it makes much difference here.)
-
-EINIT takes a sigstruct pointer.  SGX calls a new hook:
-
-  unsigned int security_enclave_init(struct sigstruct *sigstruct,
-struct vm_area_struct *source, unsigned int flags);
-
-This hook can return -EPERM.  Otherwise it returns 0 or a combination of
-flags DENY_WX and DENY_X_IF_ALLOW_WRITE.  The driver saves this value.
-These represent permissions (c) and (d).
-
-If we want to have a permission for "execute code supplied from
-outside the enclave that was not measured", we could have a flag like
-HAS_UNMEASURED_ALLOW_EXEC_PAGE that the LSM could consider.
-
-mmap() and mprotect() enforce the following rules:
-
- - Deny if a PROT_ flag is requested but the corresponding ALLOW_ flag
-   is not set for all pages in question.
-
- - Deny if PROT_WRITE, PROT_EXEC, and DENY_WX are all set.
-
- - Deny if PROT_EXEC, ALLOW_WRITE, and DENY_X_IF_ALLOW_WRITE are all set.
-
-mprotect() and mmap() do *not* call SGX-specific LSM hooks to ask for
-permission, although they can optionally call an LSM hook if they hit one of
-the -EPERM cases for auditing purposes.
+My test-cases were:
+- X96 Max: snps,reset-gpio = <&gpio GPIOZ_15 0> with and without
+           snps,reset-active-low before these patches. The PHY was
+           not detected.
+- X96 Max: snps,reset-gpio = <&gpio GPIOZ_15
+                              (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>.
+           The PHY is now detected correctly
+- Meson8b EC100: snps,reset-gpio = <&gpio GPIOH_4 0> with
+                 snps,reset-active-low. Before and after these
+                 patches the PHY is detected correctly.
+- Meson8b EC100: snps,reset-gpio = <&gpio GPIOH_4 0> without
+                 snps,reset-active-low. Before and after these
+                 patches the PHY is not detected (this is expected
+                 because we need to set the output LOW to take the
+                 PHY out of reset).
+- Meson8b EC100: snps,reset-gpio = <&gpio GPIOH_4 GPIO_ACTIVE_LOW>
+                 but without snps,reset-active-low. Before these
+                 patches the PHY was not detected. With these patches
+                 the PHY is now detected correctly.
 
 
-I think this model works quite well in an SGX1 world.  The main thing
-that makes me uneasy about this model is that, in SGX2, it requires
-that an SGX2-compatible enclave loader must pre-declare to the kernel
-whether it intends for its dynamically allocated memory to be
-ALLOW_EXEC.  If ALLOW_EXEC is set but not actually needed, it will
-still fail if DENY_X_IF_ALLOW_WRITE ends up being set.  The other
-version below does not have this limitation.
+Changes since RFC v1 at [0]:
+- dropped all patches except the main patch which changes
+  stmmac_mdio_reset to use GPIO descriptors (I will send the cleanup
+  patches in a separate series once this patch is merged)
+- drop the active_low field from struct stmmac_mdio_bus_data
+- added Linus Walleij's Reviewed-by (thank you!)
 
->
->   2. Pre-check LSM permissions and dynamically track mappings to enclave
->      pages, e.g. add an SGX mprotect() hook to restrict W->X and WX
->      based on the pre-checked permissions.
->
->      Pros: Does not impact SGX UAPI, medium kernel complexity
->      Cons: Auditing is complex/weird, requires taking enclave-specific
->            lock during mprotect() to query/update tracking.
 
-Here's how this looks in my mind.  It's quite similar, except that
-ALLOW_READ, ALLOW_WRITE, and ALLOW_EXEC are replaced with a little
-state machine.
+DEPENDENCIES:
+This has a runtime dependency on the preparation patch [0] from
+Linus W.'s GPIO tree. Without that dependency the
+snps,reset-active-low property (which quite a few .dts files use)
+will be ignored.
+Linus created an immutable branch which can be pulled into net-next:
+git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+ib-snps-reset-gpio
+gitweb for this immutable branch: [2]
 
-EADD does not take any special flags.  It calls this LSM hook:
 
-  int security_enclave_load(struct vm_area_struct *source);
+[0] https://patchwork.kernel.org/cover/10983801/
+[1] https://patchwork.ozlabs.org/cover/1113217/
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=ib-snps-reset-gpio
 
-This hook can return -EPERM.  Otherwise it 0 or ALLOC_EXEC_IF_UNMODIFIED
-(i.e. 1).  This hook enforces permissions (a) and (b).
 
-The driver tracks a state for each page, and the possible states are:
+Martin Blumenstingl (1):
+  net: stmmac: use GPIO descriptors in stmmac_mdio_reset
 
- - CLEAN_MAYEXEC /* no W or X VMAs have existed, but X is okay */
- - CLEAN_NOEXEC /* no W or X VMAs have existed, and X is not okay */
- - CLEAN_EXEC /* no W VMA has existed, but an X VMA has existed */
- - DIRTY /* a W VMA has existed */
+ .../net/ethernet/stmicro/stmmac/stmmac_mdio.c | 27 +++++++++----------
+ include/linux/stmmac.h                        |  2 +-
+ 2 files changed, 14 insertions(+), 15 deletions(-)
 
-The initial state for a page is CLEAN_MAYEXEC if the hook said
-ALLOW_EXEC_IF_UNMODIFIED and CLEAN_NOEXEC otherwise.
+-- 
+2.22.0
 
-The future EAUG does not call a hook at all and puts pages into the state
-CLEAN_NOEXEC.  If SGX3 or later ever adds EAUG-but-don't-clear, it can
-call security_enclave_load() and add CLEAN_MAYEXEC pages if appropriate.
-
-EINIT takes a sigstruct pointer.  SGX calls a new hook:
-
-  unsigned int security_enclave_init(struct sigstruct *sigstruct,
-struct vm_area_struct *source, unsigned int flags);
-
-This hook can return -EPERM.  Otherwise it returns 0 or a combination of
-flags DENY_WX and DENY_X_DIRTY.  The driver saves this value.
-These represent permissions (c) and (d).
-
-If we want to have a permission for "execute code supplied from outside the
-enclave that was not measured", we could have a flag like
-HAS_UNMEASURED_CLEAN_EXEC_PAGE that the LSM could consider.
-
-mmap() and mprotect() enforce the following rules:
-
- - If VM_EXEC is requested and (either the page is DIRTY or VM_WRITE is
-   requested) and DENY_X_DIRTY, then deny.
-
- - If VM_WRITE and VM_EXEC are both requested and DENY_WX, then deny.
-
- - If VM_WRITE is requested, we need to update the state.  If it was
-   CLEAN_EXEC, then we reject if DENY_X_DIRTY.  Otherwise we change the
-   state to DIRTY.
-
- - If VM_EXEC is requested and the page is CLEAN_NOEXEC, then deny.
-
-mprotect() and mmap() do *not* call SGX-specific LSM hooks to ask for
-permission, although they can optionally call an LSM hook if they hit one of
-the -EPERM cases for auditing purposes.
-
-Before the SIGSTRUCT is provided to the driver, the driver acts as though
-DENY_X_DIRTY and DENY_WX are both set.
