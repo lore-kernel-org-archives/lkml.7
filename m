@@ -2,113 +2,141 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3A1C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24799C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD9AC20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E63C920665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:01:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="tHU6jHIt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393197AbfFMRBK (ORCPT
+        id S1729680AbfFMRB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:01:10 -0400
-Received: from mga04.intel.com ([192.55.52.120]:15714 "EHLO mga04.intel.com"
+        Thu, 13 Jun 2019 13:01:29 -0400
+Received: from cmta20.telus.net ([209.171.16.93]:56634 "EHLO cmta20.telus.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729744AbfFLXtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 19:49:12 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 16:49:11 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga002.jf.intel.com with ESMTP; 12 Jun 2019 16:49:11 -0700
-Date:   Wed, 12 Jun 2019 16:50:31 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv3 1/2] mm/gup: fix omission of check on FOLL_LONGTERM in
- get_user_pages_fast()
-Message-ID: <20190612235031.GF14336@iweiny-DESK2.sc.intel.com>
-References: <1559725820-26138-1-git-send-email-kernelfans@gmail.com>
- <87tvcwhzdo.fsf@linux.ibm.com>
- <2807E5FD2F6FDA4886F6618EAC48510E79D8D79B@CRSMSX101.amr.corp.intel.com>
- <20190612135458.GA19916@dhcp-128-55.nay.redhat.com>
+        id S1729677AbfFLXjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 19:39:11 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id bCpdho1tDmIDxbCpehR4ah; Wed, 12 Jun 2019 17:39:09 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1560382749; bh=NkAlskxzscdeR1udzQK+9g7a0lj1WFYO+VNUmciFeO4=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=tHU6jHIt+tCyctkDgAHnArmS1uz4tVBejGFyZPfMGlqs9DqZuUjM1MrL9gm6D9R0/
+         bf5GIZizNGLn2SWaPC6bgClvtMsyTrdrnTqA012+jg7sWWWeHU7lEES0KPujAfTSmX
+         4yyG3pEeteDkKwCr45rBMmhxxiI8rKe8XmJujCOoqXB4MDMx5gwhN4z/u7sSj0Xyle
+         LZ2SKPIrbf8f+2ns+L/NviuKaxpOo2DZ0ih9VJADkE5MfgzZfElL84mWdjZRizg/dx
+         Sgmk3mT6Im7p19dxWTgynq0YNpxaI1SegIe+PciWzKICIre/U4zcKXyRPOLmLy8OIT
+         ZyhiCjIMmlvMQ==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=Tq+Yewfh c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=IkcTkHD0fZMA:10 a=aatUQebYAAAA:8 a=M5e_aTnQhfenkqaycmAA:9 a=QEXdDO2ut3YA:10
+ a=7715FyvI7WU-l6oqrZBK:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rafael@kernel.org>,
+        "'Pavel Machek'" <pavel@ucw.cz>
+Cc:     "'kernel list'" <linux-kernel@vger.kernel.org>,
+        "'ACPI Devel Maling List'" <linux-acpi@vger.kernel.org>,
+        "'Zhang, Rui'" <rui.zhang@intel.com>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>,
+        "'Thomas Gleixner'" <tglx@linutronix.de>,
+        "'Ingo Molnar'" <mingo@redhat.com>,
+        "'Borislav Petkov'" <bp@alien8.de>,
+        "'H. Peter Anvin'" <hpa@zytor.com>,
+        "'the arch/x86 maintainers'" <x86@kernel.org>,
+        "Doug Smythies" <dsmythies@telus.net>
+References: <20190609111732.GA2885@amd> <007701d520c7$c397bda0$4ac738e0$@net> <CAJZ5v0j2pb2WxSA+S44Mr-6bpOx-P9A_T2-sDG3CiWSqLMg3sA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0j2pb2WxSA+S44Mr-6bpOx-P9A_T2-sDG3CiWSqLMg3sA@mail.gmail.com>
+Subject: RE: 5.2-rc2: low framerate in flightgear, cpu not running at full speed, thermal related?
+Date:   Wed, 12 Jun 2019 16:39:04 -0700
+Message-ID: <008f01d52178$07b3be70$171b3b50$@net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612135458.GA19916@dhcp-128-55.nay.redhat.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Thread-Index: AdUhaAyoVaNrS0lJQFeu7feFwtatGwABXsmg
+Content-Language: en-ca
+X-CMAE-Envelope: MS4wfKWWA2PE6GCEhygvHrMKC5TKX76lYBBxCksFr6o5c317Qh9TFUY9Xd0FqOf0Muz+2eh0pg8epTL8td+N3EUJlV8I5UlZgoxHwHX5mwwiungH3c4N7ufj
+ DlhTMMdkXIf8BS8tEwY+yYvKFNFyH1P6VZ6POpMqXHo/SpgKpEmoPDJbQA9LallEmq5kasHdpJ37sFl9L+dADFzRrmjA+7IBtFr/jyoYKALMiAscfRIKlscV
+ G+Wu138uliJPRo0u4EeUs8uZlEekJ0LVyn/XAsW71YACasP3M+vmHl3szCD9E7KF5E1IMaBo8L7yoLi3dSOSS1O2Uaw6Q1VPanb3oEOAC2BKKwUOYzNsV2Y+
+ pb2liYm2oqji1wiYWQhbeDgu2HcOEu5G1ECPSmioO5GO9aRbMZxlSI4L9sFS4iO+Jkzlr6kWzGgTsiWmdDhiXHOV7sL/oLNe6L3foJxYXnFq/Z0fcuY0W6gS
+ 0qfQWEZnBQg6AtcwKTKCcn6i2Cov7N5du79o3tZXWAuxdPD/dsnwtRL3d7NdlwOLGRVk3adAdPRy8dIm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 09:54:58PM +0800, Pingfan Liu wrote:
-> On Tue, Jun 11, 2019 at 04:29:11PM +0000, Weiny, Ira wrote:
-> > > Pingfan Liu <kernelfans@gmail.com> writes:
-> > > 
-> > > > As for FOLL_LONGTERM, it is checked in the slow path
-> > > > __gup_longterm_unlocked(). But it is not checked in the fast path,
-> > > > which means a possible leak of CMA page to longterm pinned requirement
-> > > > through this crack.
-> > > 
-> > > Shouldn't we disallow FOLL_LONGTERM with get_user_pages fastpath? W.r.t
-> > > dax check we need vma to ensure whether a long term pin is allowed or not.
-> > > If FOLL_LONGTERM is specified we should fallback to slow path.
-> > 
-> > Yes, the fastpath bails to the slowpath if FOLL_LONGTERM _and_ DAX.  But it does this while walking the page tables.  I missed the CMA case and Pingfan's patch fixes this.  We could check for CMA pages while walking the page tables but most agreed that it was not worth it.  For DAX we already had checks for *_devmap() so it was easier to put the FOLL_LONGTERM checks there.
-> > 
-> Then for CMA pages, are you suggesting something like:
+On 2019.06.12 14:25 Rafael J. Wysocki wrote:
+> On Wed, Jun 12, 2019 at 4:45 AM Doug Smythies <dsmythies@telus.net> wrote:
+>>
+>> So, currently there seems to be 3 issues in this thread
+>> (and I am guessing a little, without definitive data):
+>>
+>> 1.) On your system Kernel 5.4-rc2 (or 4) defaults to the intel_pstate CPU frequency
+>> scaling driver and the powersave governor, but kernel 4.6 defaults to the
+>> acpi-cpufreq CPU frequency scaling driver and the ondemand governor.
+>
+> Which means that intel_pstate works in the active mode by default and
+> so it uses its internal governor.
 
-I'm not suggesting this.
+Note sure what you mean by "internal governor"?
+If you meant HWP (Hardware P-state), Pavel's processor doesn't have it.
+If you meant the active powersave governor code within the driver, then agreed.
 
-Sorry I wrote this prior to seeing the numbers in your other email.  Given
-the numbers it looks like performing the check whilst walking the tables is
-worth the extra complexity.  I was just trying to summarize the thread.  I
-don't think we should disallow FOLL_LONGTERM because it only affects CMA and
-DAX.  Other pages will be fine with FOLL_LONGTERM.  Why penalize every call if
-we don't have to.  Also in the case of DAX the use of vma will be going
-away...[1]  Eventually...  ;-)
+> That governor is more performance-oriented than ondemand and it very
+> well may cause more power to be allocated for the processor - at the
+> expense of the GPU.
 
-Ira
+O.K. I mainly use servers and so have no experience with possible GPU
+verses CPU tradeoffs.
 
-[1] https://lkml.org/lkml/2019/6/5/1049
+However, I did re-do my tests measuring energy instead of CPU frequency
+and found very little difference between the acpi-cpufreq/ondemand verses
+intel_pstate/powersave as a function of single threaded load. Actually,
+I did the test twice, one at 20 hertz work/sleep frequency and also
+at 67 hertz work/sleep frequency. (Of course, Pavel's processor might
+well have a different curve, but it is a similar vintage to mine
+i5-2520M verses i7-2600K.) The worst difference was approximately
+1.1 extra processor package watts (an extra 5.5%) in the 80% to 85%
+single threaded load range at 67 hertz work/sleep frequency for
+the intel-pstate/powersave driver/governor. 
 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 42a47c0..8bf3cc3 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2251,6 +2251,8 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
->         if (unlikely(!access_ok((void __user *)start, len)))
->                 return -EFAULT;
-> 
-> +       if (unlikely(gup_flags & FOLL_LONGTERM))
-> +               goto slow;
->         if (gup_fast_permitted(start, nr_pages)) {
->                 local_irq_disable();
->                 gup_pgd_range(addr, end, gup_flags, pages, &nr);
-> @@ -2258,6 +2260,7 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
->                 ret = nr;
->         }
-> 
-> +slow:
->         if (nr < nr_pages) {
->                 /* Try to get the remaining pages with get_user_pages */
->                 start += nr << PAGE_SHIFT;
-> 
-> Thanks,
->   Pingfan
+What am I saying? For a fixed amount of work to do per work/sleep cycle
+(i.e. maybe per video frame related type work) while the CPU frequency Verses load
+curves might differ, the resulting processor energy curve differs much less.
+(i.e. the extra power for higher CPU frequency is for less time because it gets
+the job done faster.) So, myself, I don't yet understand why only the one method
+would have hit thermal throttling, but not the other (if indeed it doesn't).
+Other differences between kernel 4.6 and 5.2-rc? might explain it. I did all
+my tests on kernel 5.2-rc3, except that one example from kernel 4.4 on my
+earlier reply, so that were not other variables than CPU scaling driver and
+governor changes.
+
+> The lower-than-expected frame rate may result from that, in principle.
+
+> One way to mitigate that might be to use intel_pstate in the passive
+> mode (pass intel_pstate=passive to the kernel in the command line)
+> along with either ondemand or schedutil as the governor.
+
+The CPU frequency verses load curves for this those two governors are very similar
+for both the acpi_cpufreq and intel_cpufreq (which is the intel_pstate driver
+in passive mode) drivers.
+
+Just for information: CPU frequency verses single threaded load curves
+for the conservative governor is quite different between the two drivers.
+(tests done in February, perhaps I should re-do and also look at energy
+at the same time, or instead of CPU frequency.)
+
+... Doug
+
+
