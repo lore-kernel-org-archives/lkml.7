@@ -2,164 +2,128 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6303C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2B6C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98552205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A04321473
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:12:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393578AbfFMRMK (ORCPT
+        id S1729193AbfFMRMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:12:10 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:60540 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729076AbfFLWOG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 18:14:06 -0400
-Received: from 79.184.253.190.ipv4.supernova.orange.pl (79.184.253.190) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 991125ee90f9fcfa; Thu, 13 Jun 2019 00:14:02 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PCI <linux-pci@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH] PCI: PM: Skip devices in D0 for suspend-to-idle
-Date:   Thu, 13 Jun 2019 00:14:02 +0200
-Message-ID: <2513600.jR9RdVMSR0@kreacher>
+        Thu, 13 Jun 2019 13:12:14 -0400
+Received: from mga01.intel.com ([192.55.52.88]:41922 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729072AbfFLWMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 18:12:18 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 15:12:17 -0700
+X-ExtLoop1: 1
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga004.jf.intel.com with ESMTP; 12 Jun 2019 15:12:16 -0700
+Date:   Wed, 12 Jun 2019 15:13:36 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190612221336.GA27080@iweiny-DESK2.sc.intel.com>
+References: <20190606104203.GF7433@quack2.suse.cz>
+ <20190606195114.GA30714@ziepe.ca>
+ <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
+ <20190607103636.GA12765@quack2.suse.cz>
+ <20190607121729.GA14802@ziepe.ca>
+ <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
+ <20190612102917.GB14578@quack2.suse.cz>
+ <20190612114721.GB3876@ziepe.ca>
+ <20190612120907.GC14578@quack2.suse.cz>
+ <20190612191421.GM3876@ziepe.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612191421.GM3876@ziepe.ca>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Wed, Jun 12, 2019 at 04:14:21PM -0300, Jason Gunthorpe wrote:
+> On Wed, Jun 12, 2019 at 02:09:07PM +0200, Jan Kara wrote:
+> > On Wed 12-06-19 08:47:21, Jason Gunthorpe wrote:
+> > > On Wed, Jun 12, 2019 at 12:29:17PM +0200, Jan Kara wrote:
+> > > 
+> > > > > > The main objection to the current ODP & DAX solution is that very
+> > > > > > little HW can actually implement it, having the alternative still
+> > > > > > require HW support doesn't seem like progress.
+> > > > > > 
+> > > > > > I think we will eventually start seein some HW be able to do this
+> > > > > > invalidation, but it won't be universal, and I'd rather leave it
+> > > > > > optional, for recovery from truely catastrophic errors (ie my DAX is
+> > > > > > on fire, I need to unplug it).
+> > > > > 
+> > > > > Agreed.  I think software wise there is not much some of the devices can do
+> > > > > with such an "invalidate".
+> > > > 
+> > > > So out of curiosity: What does RDMA driver do when userspace just closes
+> > > > the file pointing to RDMA object? It has to handle that somehow by aborting
+> > > > everything that's going on... And I wanted similar behavior here.
+> > > 
+> > > It aborts *everything* connected to that file descriptor. Destroying
+> > > everything avoids creating inconsistencies that destroying a subset
+> > > would create.
+> > > 
+> > > What has been talked about for lease break is not destroying anything
+> > > but very selectively saying that one memory region linked to the GUP
+> > > is no longer functional.
+> > 
+> > OK, so what I had in mind was that if RDMA app doesn't play by the rules
+> > and closes the file with existing pins (and thus layout lease) we would
+> > force it to abort everything. Yes, it is disruptive but then the app didn't
+> > obey the rule that it has to maintain file lease while holding pins. Thus
+> > such situation should never happen unless the app is malicious / buggy.
+> 
+> We do have the infrastructure to completely revoke the entire
+> *content* of a FD (this is called device disassociate). It is
+> basically close without the app doing close. But again it only works
+> with some drivers. However, this is more likely something a driver
+> could support without a HW change though.
+> 
+> It is quite destructive as it forcibly kills everything RDMA related
+> the process(es) are doing, but it is less violent than SIGKILL, and
+> there is perhaps a way for the app to recover from this, if it is
+> coded for it.
 
-Commit d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-attempted to avoid a problem with devices whose drivers want them to
-stay in D0 over suspend-to-idle and resume, but it did not go as far
-as it should with that.
+I don't think many are...  I think most would effectively be "killed" if this
+happened to them.
 
-Namely, first of all, it is questionable to change the power state
-of a PCI bridge with a device in D0 under it, but that is not
-actively prevented from happening during system-wide PM transitions,
-so use the skip_bus_pm flag introduced by commit d491f2b75237 for
-that.
+> 
+> My preference would be to avoid this scenario, but if it is really
+> necessary, we could probably build it with some work.
+> 
+> The only case we use it today is forced HW hot unplug, so it is rarely
+> used and only for an 'emergency' like use case.
 
-Second, the configuration of devices left in D0 (whatever the reason)
-during suspend-to-idle need not be changed and attempting to put them
-into D0 again by force may confuse some firmware, so explicitly avoid
-doing that.
+I'd really like to avoid this as well.  I think it will be very confusing for
+RDMA apps to have their context suddenly be invalid.  I think if we have a way
+for admins to ID who is pinning a file the admin can take more appropriate
+action on those processes.   Up to and including killing the process.
 
-Fixes: d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-Tested on Dell XPS13 9360 with no issues.
-
----
- drivers/pci/pci-driver.c |   47 +++++++++++++++++++++++++++++++++++------------
- 1 file changed, 35 insertions(+), 12 deletions(-)
-
-Index: linux-pm/drivers/pci/pci-driver.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci-driver.c
-+++ linux-pm/drivers/pci/pci-driver.c
-@@ -524,7 +524,6 @@ static void pci_pm_default_resume_early(
- 	pci_power_up(pci_dev);
- 	pci_restore_state(pci_dev);
- 	pci_pme_restore(pci_dev);
--	pci_fixup_device(pci_fixup_resume_early, pci_dev);
- }
- 
- /*
-@@ -842,18 +841,16 @@ static int pci_pm_suspend_noirq(struct d
- 
- 	if (pci_dev->skip_bus_pm) {
- 		/*
--		 * The function is running for the second time in a row without
-+		 * Either the device is a bridge with a child in D0 below it, or
-+		 * the function is running for the second time in a row without
- 		 * going through full resume, which is possible only during
--		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
--		 * device was originally left in D0, so its power state should
--		 * not be changed here and the device register values saved
--		 * originally should be restored on resume again.
-+		 * suspend-to-idle in a spurious wakeup case.  The device should
-+		 * be in D0 at this point, but if it is a bridge, it may be
-+		 * necessary to save its state.
- 		 */
--		pci_dev->state_saved = true;
--	} else if (pci_dev->state_saved) {
--		if (pci_dev->current_state == PCI_D0)
--			pci_dev->skip_bus_pm = true;
--	} else {
-+		if (!pci_dev->state_saved)
-+			pci_save_state(pci_dev);
-+	} else if (!pci_dev->state_saved) {
- 		pci_save_state(pci_dev);
- 		if (pci_power_manageable(pci_dev))
- 			pci_prepare_to_sleep(pci_dev);
-@@ -862,6 +859,22 @@ static int pci_pm_suspend_noirq(struct d
- 	dev_dbg(dev, "PCI PM: Suspend power state: %s\n",
- 		pci_power_name(pci_dev->current_state));
- 
-+	if (pci_dev->current_state == PCI_D0) {
-+		pci_dev->skip_bus_pm = true;
-+		/*
-+		 * Changing the power state of a PCI bridge with a device in D0
-+		 * below it is questionable, so avoid doing that by setting the
-+		 * skip_bus_pm flag for the parent bridge.
-+		 */
-+		if (pci_dev->bus->self)
-+			pci_dev->bus->self->skip_bus_pm = true;
-+	}
-+
-+	if (pci_dev->skip_bus_pm && !pm_suspend_via_firmware()) {
-+		dev_dbg(dev, "PCI PM: Skipped\n");
-+		goto Fixup;
-+	}
-+
- 	pci_pm_set_unknown_state(pci_dev);
- 
- 	/*
-@@ -909,7 +922,16 @@ static int pci_pm_resume_noirq(struct de
- 	if (dev_pm_smart_suspend_and_suspended(dev))
- 		pm_runtime_set_active(dev);
- 
--	pci_pm_default_resume_early(pci_dev);
-+	/*
-+	 * In the suspend-to-idle case, devices left in D0 during suspend will
-+	 * stay in D0, so it is not necessary to restore or update their
-+	 * configuration here and attempting to put them into D0 again may
-+	 * confuse some firmware, so avoid doing that.
-+	 */
-+	if (!pci_dev->skip_bus_pm || pm_suspend_via_firmware())
-+		pci_pm_default_resume_early(pci_dev);
-+
-+	pci_fixup_device(pci_fixup_resume_early, pci_dev);
- 
- 	if (pci_has_legacy_pm_support(pci_dev))
- 		return pci_legacy_resume_early(dev);
-@@ -1200,6 +1222,7 @@ static int pci_pm_restore_noirq(struct d
- 	}
- 
- 	pci_pm_default_resume_early(pci_dev);
-+	pci_fixup_device(pci_fixup_resume_early, pci_dev);
- 
- 	if (pci_has_legacy_pm_support(pci_dev))
- 		return pci_legacy_resume_early(dev);
-
-
+Ira
 
