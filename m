@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A09C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B82C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C55E42086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3666020665
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:45:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B2iFFkrK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ok3TDXB/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730091AbfFLEpn (ORCPT
+        id S1730172AbfFLEpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 00:45:43 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38365 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729934AbfFLEpl (ORCPT
+        Wed, 12 Jun 2019 00:45:52 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34676 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730046AbfFLEpn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 00:45:41 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v11so8197077pgl.5
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 21:45:40 -0700 (PDT)
+        Wed, 12 Jun 2019 00:45:43 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c85so8860263pfc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 21:45:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bVli2yr8eO0K7ILXstIjswO8Yta29DR9SyYFw4Rhlss=;
-        b=B2iFFkrKRR2C97mWsP+TwkQCNjPS1UdDCOxH7QUNe03LqOIoezvS25bnRTzmjzBTbC
-         lEI5DuqgP3l+yCRRlaDN3+tlTZy7enJGppcIVc1LJcluULHWDAAKQdmhf3zgQbFSnzML
-         /ENrC+DQw+NZFL/wKv90PtaFLrD5y/XcQ6eaVBuxHUuovlyQyPyrVAwe69l0lyjM+hED
-         akRvPutce9Y/vA11LI2GC2ZYkqRldvDyF5P3n8FfDZeiIgsAoVOjjqASMtsvMcDD1ioE
-         NP+KVoQDrztYahZ8F7RyluOPbzF4ltj7U/F4esZucpV+VuAgSq3k5efMuOb1O3YfYIvr
-         cAmg==
+        bh=lU+1IReUFq1QxTqJmNw/PFLd12Qda0MdEvw29DLYGsI=;
+        b=Ok3TDXB/0ir1GXhXi4ceey/ULS/XIgOAO3ADiqKp5EnZ72xf3Z2Rz5aTAdztTH/lSH
+         yV+BGzMyOaXTmH7eA8jzZnCBDsKHX/YtNUEwo9JofnxkgjlptRcxgMLCBDz2C4iN6ePX
+         eUMC9IntZ82vQqR23loEnCWf7Tk9R+bNazeOqRZ8/QFTDDFa2tzRoVbht8lRG8t4j+RB
+         RC1SswfT5jxdzNHlGZm4nu2xuGfYrAwMEEFcWkdLL/eAWYwtGx5+X9B8b5oOQJahhGMK
+         96HmPZsmjNF64F6fuxyJaERspyC9niiFYDxMNub4ply7vD9VPSoGCaxLI6fZE97mgI/q
+         546Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=bVli2yr8eO0K7ILXstIjswO8Yta29DR9SyYFw4Rhlss=;
-        b=DlM/HuuWbqNHpymWTZCvObUtXi4GC23g9TpwRI7tRD6LtCcjXzzlcJmzignRZfQwnS
-         aPhdvQM/7sd7yRUGxbilK6gihH3xHjFZBKWdMd2nh/9hvmMsWF1A6DM8qdZ5F5AESepM
-         czZyi48BmPTNys8oBMCthOMSroS2vMhZp7VlgiFga6v7PgmmofrCB3YogMvyd//pS0Db
-         nKm4lPDGc/5QCVf0EDmBAyD3E7/4EVk/RMjY+WxG3+L7AjY0ZnSl0eq1j+1bn0+/mRQK
-         CtFfETfeThQrgAagIAtTFUGhSNq0Lqzyo8QNIxotZJLc4gAqyznXyFSDaydd1CKUVjg2
-         XCag==
-X-Gm-Message-State: APjAAAVGUkhJMcP6TLc/q0yEn/fOxNztNLR8bRR2/8ND68Ft1dTT7AYE
-        uSIOLPu7UgOsGoqXE2wLanTKGQ==
-X-Google-Smtp-Source: APXvYqzfOAuiwBlZDLKfmXvuPp3a6Zw1HNOLvA0tS3FXYUmzKxltcw7My52z66cNyttL9qFzH+teYg==
-X-Received: by 2002:a17:90a:a407:: with SMTP id y7mr30748501pjp.97.1560314740121;
-        Tue, 11 Jun 2019 21:45:40 -0700 (PDT)
+        bh=lU+1IReUFq1QxTqJmNw/PFLd12Qda0MdEvw29DLYGsI=;
+        b=JTqyCTCe50jZqWfkZP38IQIVlODyPS3pd4hHVIP8i9SY52Ip4UJG+JoUkUilKNVflz
+         VCs5/Yz0SaZ4r8ZMy24XlV0lHY9u9LYOnXff6K2zWOJJRuJZN2McbxGQpzVcn8VfRrs4
+         qU9HKtVFjRgDVHF8a4NKKDtK1UwIV8FHTPezy655pjcgK4CxH+wUmk0SyiOI/hZKFBPu
+         vwFdzA0MkHdg7ARN3iajFesDYPj4r7FzewM3XbKPHEYZLN5H+g1T2nZ2qF3ZDBjJmTPg
+         B72CjFY0KWvX17lmlfmn54b3fKLmcMffvZI4IrRhHhLUAWdcgadUIhjOeJW0YmqhL2uz
+         gb3w==
+X-Gm-Message-State: APjAAAWcGdg9HhUzjYZYpBNgqSE8otoPj300KB/0ujWQ5RKfAnu00Tot
+        yetniS7buhHYNRXCDA4INH7Ijg==
+X-Google-Smtp-Source: APXvYqxidn6YVca8VaGCmJ1n6WsjntR5pgsqjt1jIgf7t/P0osUBMOKWEroQFtZYfl48vexKIAhPJw==
+X-Received: by 2002:a17:90a:d3d7:: with SMTP id d23mr29021075pjw.26.1560314742061;
+        Tue, 11 Jun 2019 21:45:42 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id z126sm17129194pfb.100.2019.06.11.21.45.39
+        by smtp.gmail.com with ESMTPSA id z126sm17129194pfb.100.2019.06.11.21.45.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 21:45:39 -0700 (PDT)
+        Tue, 11 Jun 2019 21:45:41 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v9 1/4] dt-bindings: soc: qcom: Add AOSS QMP binding
-Date:   Tue, 11 Jun 2019 21:45:33 -0700
-Message-Id: <20190612044536.13940-2-bjorn.andersson@linaro.org>
+Subject: [PATCH v9 3/4] arm64: dts: qcom: Add AOSS QMP node
+Date:   Tue, 11 Jun 2019 21:45:35 -0700
+Message-Id: <20190612044536.13940-4-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190612044536.13940-1-bjorn.andersson@linaro.org>
 References: <20190612044536.13940-1-bjorn.andersson@linaro.org>
@@ -70,11 +70,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding for the QMP based side-channel communication mechanism to
-the AOSS, which is used to control resources not exposed through the
-RPMh interface.
+The AOSS QMP provides a number of power domains, used for QDSS and
+PIL, add the node for this.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 Reviewed-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
@@ -82,119 +82,30 @@ Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Changes since v8:
 - None
 
- .../bindings/soc/qcom/qcom,aoss-qmp.txt       | 81 +++++++++++++++++++
- include/dt-bindings/power/qcom-aoss-qmp.h     | 14 ++++
- 2 files changed, 95 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
- create mode 100644 include/dt-bindings/power/qcom-aoss-qmp.h
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
-new file mode 100644
-index 000000000000..954ffee0a9c4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
-@@ -0,0 +1,81 @@
-+Qualcomm Always-On Subsystem side channel binding
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index c5a5c5b086b1..c80881309f79 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2448,6 +2448,16 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		aoss_qmp: qmp@c300000 {
++			compatible = "qcom,sdm845-aoss-qmp";
++			reg = <0 0x0c300000 0 0x100000>;
++			interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
++			mboxes = <&apss_shared 0>;
 +
-+This binding describes the hardware component responsible for side channel
-+requests to the always-on subsystem (AOSS), used for certain power management
-+requests that is not handled by the standard RPMh interface. Each client in the
-+SoC has it's own block of message RAM and IRQ for communication with the AOSS.
-+The protocol used to communicate in the message RAM is known as Qualcomm
-+Messaging Protocol (QMP)
++			#clock-cells = <0>;
++			#power-domain-cells = <1>;
++		};
 +
-+The AOSS side channel exposes control over a set of resources, used to control
-+a set of debug related clocks and to affect the low power state of resources
-+related to the secondary subsystems. These resources are exposed as a set of
-+power-domains.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be "qcom,sdm845-aoss-qmp"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: the base address and size of the message RAM for this
-+		    client's communication with the AOSS
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should specify the AOSS message IRQ for this client
-+
-+- mboxes:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: reference to the mailbox representing the outgoing doorbell
-+		    in APCS for this client, as described in mailbox/mailbox.txt
-+
-+- #clock-cells:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: must be 0
-+		    The single clock represents the QDSS clock.
-+
-+- #power-domain-cells:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: must be 1
-+		    The provided power-domains are:
-+		    CDSP state (0), LPASS state (1), modem state (2), SLPI
-+		    state (3), SPSS state (4) and Venus state (5).
-+
-+= SUBNODES
-+The AOSS side channel also provides the controls for three cooling devices,
-+these are expressed as subnodes of the QMP node. The name of the node is used
-+to identify the resource and must therefor be "cx", "mx" or "ebi".
-+
-+- #cooling-cells:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: must be 2
-+
-+= EXAMPLE
-+
-+The following example represents the AOSS side-channel message RAM and the
-+mechanism exposing the power-domains, as found in SDM845.
-+
-+  aoss_qmp: qmp@c300000 {
-+	  compatible = "qcom,sdm845-aoss-qmp";
-+	  reg = <0x0c300000 0x100000>;
-+	  interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
-+	  mboxes = <&apss_shared 0>;
-+
-+	  #power-domain-cells = <1>;
-+
-+	  cx_cdev: cx {
-+		#cooling-cells = <2>;
-+	  };
-+
-+	  mx_cdev: mx {
-+		#cooling-cells = <2>;
-+	  };
-+  };
-diff --git a/include/dt-bindings/power/qcom-aoss-qmp.h b/include/dt-bindings/power/qcom-aoss-qmp.h
-new file mode 100644
-index 000000000000..ec336d31dee4
---- /dev/null
-+++ b/include/dt-bindings/power/qcom-aoss-qmp.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2018, Linaro Ltd. */
-+
-+#ifndef __DT_BINDINGS_POWER_QCOM_AOSS_QMP_H
-+#define __DT_BINDINGS_POWER_QCOM_AOSS_QMP_H
-+
-+#define AOSS_QMP_LS_CDSP		0
-+#define AOSS_QMP_LS_LPASS	1
-+#define AOSS_QMP_LS_MODEM	2
-+#define AOSS_QMP_LS_SLPI		3
-+#define AOSS_QMP_LS_SPSS		4
-+#define AOSS_QMP_LS_VENUS	5
-+
-+#endif
+ 		spmi_bus: spmi@c440000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+ 			reg = <0 0x0c440000 0 0x1100>,
 -- 
 2.18.0
 
