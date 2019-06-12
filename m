@@ -2,96 +2,81 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF69C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D536FC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 225C1208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92B520896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:00:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392012AbfFLL6L (ORCPT
+        id S1728901AbfFLMAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:58:11 -0400
-Received: from gate.crashing.org ([63.228.1.57]:58006 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387878AbfFLL6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:58:09 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5CBvfmS019047;
-        Wed, 12 Jun 2019 06:57:42 -0500
-Message-ID: <7705227ea831793cc9e45af32e0da8f5547cb14d.camel@kernel.crashing.org>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Cc:     James Morse <james.morse@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-Date:   Wed, 12 Jun 2019 21:57:40 +1000
-In-Reply-To: <20190612084213.4fb9e054@coco.lan>
-References: <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
-         <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
-         <20190608090556.GA32464@zn.tnic>
-         <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
-         <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
-         <20190611115651.GD31772@zn.tnic>
-         <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
-         <20190612034813.GA32652@zn.tnic>
-         <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
-         <20190612074242.53a4cf56@coco.lan> <20190612110039.GH32652@zn.tnic>
-         <20190612084213.4fb9e054@coco.lan>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 12 Jun 2019 08:00:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42804 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727503AbfFLMAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:00:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 724F4AFC3;
+        Wed, 12 Jun 2019 12:00:13 +0000 (UTC)
+Date:   Wed, 12 Jun 2019 14:00:12 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Subject: Re: [RFC] printk/sysrq: Don't play with console_loglevel
+Message-ID: <20190612120012.mmokgz4yybywfs26@pathway.suse.cz>
+References: <20190528002412.1625-1-dima@arista.com>
+ <20190528041500.GB26865@jagdpanzerIV>
+ <20190528044619.GA3429@jagdpanzerIV>
+ <20190528134227.xyb3622gjwu52q4r@pathway.suse.cz>
+ <20190603065153.GA13072@jagdpanzerIV>
+ <20190606071039.txqczrjlntrljlrx@pathway.suse.cz>
+ <20190612083643.GA7722@jagdpanzerIV>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612083643.GA7722@jagdpanzerIV>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-12 at 08:42 -0300, Mauro Carvalho Chehab wrote:
-> > Yes, we do have different error reporting facilities but I still
-> > think
-> > that concentrating all the error information needed in order to do
-> > proper recovery action is the better approach here. And make that
-> > part
-> > of the kernel so that it is robust. Userspace can still configure
-> > it and
-> > so on.
+On Wed 2019-06-12 17:36:43, Sergey Senozhatsky wrote:
+> On (06/06/19 09:10), Petr Mladek wrote:
+> > Just to be sure. I wanted to say that I like the idea with
+> > KERN_UNSUPRESSED. So, I think that we are on the same page.
 > 
-> If the error reporting facilities are for the same hardware "group"
-> (like the machine's memory controllers), I agree with you: it makes
-> sense to have a single driver. 
+> I understand. All I wanted to say is that KERN_UNSUPRESSED is
+> per-message, while the most interesting (and actually broken)
+> cases, IMHO, are per-context, IOW things like this one
 > 
-> If they are for completely independent hardware then implementing
-> as separate drivers would work equally well, with the advantage of
-> making easier to maintain and make it generic enough to support
-> different vendors using the same IP block.
+> 	console_loglevel = NEW
+> 	foo()
+> 	  dump_stack()
+> 	     printk
+> 	     ...
+> 	     printk
+> 	console_loglevel = OLD
+> 
+> KERN_UNSUPRESSED does not help here. We probably can't convert
+> dump_stack() to KERN_UNSUPRESSED.
 
-Right. And if you really want a platform orchestrator for recovery in
-the kenrel, it should be a separate one, that consumes data from the
-individual IP block drivers that report the raw errors anyway.
+I agree. I take KERN_UNSUPRESSED like a nice trick how to pass
+the information about the unsupressed printk context via
+printk_safe and printk_nmi per-CPU buffers.
 
-But for the main case that really needs to be in the kernel, which is
-DRAM, the recovery can usually be contained to the MC driver anyway.
+The single line in sysrq __handle_sysrq() seems to be the only
+location where KERN_UNSUPRESSED can be used directly.
 
-Cheers,
-Ben.
-
-
+Best Regards,
+Petr
