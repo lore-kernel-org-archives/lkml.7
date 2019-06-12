@@ -6,42 +6,58 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961DCC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E0CC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7267B20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015E720866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438418AbfFLMzP (ORCPT
+        id S2439315AbfFLMzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:55:15 -0400
-Received: from mga11.intel.com ([192.55.52.93]:25121 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728455AbfFLMzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:55:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 05:55:14 -0700
-X-ExtLoop1: 1
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
-  by orsmga001.jf.intel.com with ESMTP; 12 Jun 2019 05:55:12 -0700
-Subject: Re: [PATCH 1/3] mmc: sdhci: sdhci-pci-o2micro: Correctly set bus
- width when tuning
-To:     Raul E Rangel <rrangel@chromium.org>, linux-mmc@vger.kernel.org
-Cc:     ernest.zhang@bayhubtech.com, djkurtz@chromium.org,
-        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-References: <20190610185354.35310-1-rrangel@chromium.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <883dab7b-57fc-22dd-e111-72506544d0e8@intel.com>
-Date:   Wed, 12 Jun 2019 15:53:57 +0300
+        Wed, 12 Jun 2019 08:55:23 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45870 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438500AbfFLMzW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:55:22 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a14so23712702edv.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 05:55:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aD69m6otj68UH0Q7gUM0VGrtwF15HpBY3jIEQiF8Flk=;
+        b=ntZvh2KwaDXB+go+WLsM79HXH1hQprk1qwW56gt37SpPLpCJIDgUWDfdZE3kKPnvic
+         IYVxUGuYejHwnTZL8L11rVQoE9lKG/2PSjT90d15Z9xoyyNSAmVZvc/Zf4dvCACtV3FL
+         68B42Sxx/uKh/ywhDx5mvC4VgA+BZJOBHGFWZq6IdDXeNGvtU7SSKjssh9jZG8RRd5Q/
+         eexIfdZ5/hMA5A0x63bTis0ZqG4yh15PSPvxvsIQmocTfWKwxFmSD2OBTpEm3Hrdqd//
+         RhGwg02JvssdI0FlcU4uLXFHWMZooArwGSEromrjXz+ECByBkSklHogTNZ+d/e5xV4w1
+         1AKw==
+X-Gm-Message-State: APjAAAW4g1m5v1wqRWTZi8+7GkHCOjvjUDvET1cobDqviWD+P4YPVLCY
+        KiHE0T10BKrt+yo9C2GzTgq37XbVcN8=
+X-Google-Smtp-Source: APXvYqyhz7ko/MVJXRvdEbK38K+R1dfbCIspcF/HYfRDUZR8RTCSLzD3QIbIVDj3ba/Wtxy12sgefQ==
+X-Received: by 2002:aa7:d30d:: with SMTP id p13mr4360291edq.292.1560344120330;
+        Wed, 12 Jun 2019 05:55:20 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id m4sm4526164edc.24.2019.06.12.05.55.19
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 05:55:19 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Update Hi10 Air filter
+To:     Christian Oder <me@myself5.de>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190612124053.119182-1-me@myself5.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <736848fd-1c45-0bd9-bfd1-747c716bd953@redhat.com>
+Date:   Wed, 12 Jun 2019 14:55:18 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190610185354.35310-1-rrangel@chromium.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190612124053.119182-1-me@myself5.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,43 +65,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/06/19 9:53 PM, Raul E Rangel wrote:
-> sdhci_send_tuning uses mmc->ios.bus_width to determine the block size.
-> Without this patch the block size would be set incorrectly when the
-> bus_width == 8 which results in tuning failing.
-> 
-> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+Hi,
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+On 12-06-19 14:40, Christian Oder wrote:
+> Turns out the Hi10 Air is built by multiple companies so using Hampoo
+> as a filter is not enough to cover all variants.
+> 
+> This has been verified as working on the Hampoo and Morshow version.
+> 
+> Signed-off-by: Christian Oder <me@myself5.de>
+
+Patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
 
 > ---
+>   drivers/platform/x86/touchscreen_dmi.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 > 
->  drivers/mmc/host/sdhci-pci-o2micro.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index b662cb2d7cd5..61e7c4987d0d 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -597,7 +597,8 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+>   		/* Chuwi Hi10 Air */
+>   		.driver_data = (void *)&chuwi_hi10_air_data,
+>   		.matches = {
+> -			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
+> +			DMI_MATCH(DMI_SYS_VENDOR, "CHUWI INNOVATION AND TECHNOLOGY(SHENZHEN)CO.LTD"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
+>   			DMI_MATCH(DMI_PRODUCT_SKU, "P1W6_C109D_B"),
+>   		},
+>   	},
 > 
-> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-> index b29bf4e7dcb48..dd21315922c87 100644
-> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
-> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-> @@ -115,6 +115,7 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  	 */
->  	if (mmc->ios.bus_width == MMC_BUS_WIDTH_8) {
->  		current_bus_width = mmc->ios.bus_width;
-> +		mmc->ios.bus_width = MMC_BUS_WIDTH_4;
->  		sdhci_set_bus_width(host, MMC_BUS_WIDTH_4);
->  	}
->  
-> @@ -126,8 +127,10 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  
->  	sdhci_end_tuning(host);
->  
-> -	if (current_bus_width == MMC_BUS_WIDTH_8)
-> +	if (current_bus_width == MMC_BUS_WIDTH_8) {
-> +		mmc->ios.bus_width = MMC_BUS_WIDTH_8;
->  		sdhci_set_bus_width(host, current_bus_width);
-> +	}
->  
->  	host->flags &= ~SDHCI_HS400_TUNING;
->  	return 0;
-> 
-
