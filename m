@@ -2,94 +2,152 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1683C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F228EC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BCD1215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6FDD215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:58:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XzeKPY4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728938AbfFLR6D (ORCPT
+        id S2404233AbfFLR6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 13:58:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49262 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727439AbfFLR6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 13:58:02 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8E4BC3001572;
-        Wed, 12 Jun 2019 17:58:02 +0000 (UTC)
-Received: from jsavitz.bos.com (dhcp-17-175.bos.redhat.com [10.18.17.175])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DE1371001B17;
-        Wed, 12 Jun 2019 17:57:55 +0000 (UTC)
-From:   Joel Savitz <jsavitz@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Joel Savitz <jsavitz@redhat.com>,
-        Rafael Aquini <aquini@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>, linux-mm@kvack.org
-Subject: [RESEND PATCH v2] mm/oom_killer: Add task UID to info message on an oom kill
-Date:   Wed, 12 Jun 2019 13:57:53 -0400
-Message-Id: <1560362273-534-1-git-send-email-jsavitz@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 12 Jun 2019 17:58:02 +0000 (UTC)
+        Wed, 12 Jun 2019 13:58:48 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:37695 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727439AbfFLR6s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 13:58:48 -0400
+Received: by mail-it1-f196.google.com with SMTP id x22so12040437itl.2;
+        Wed, 12 Jun 2019 10:58:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iJG2vQZhcPeJyWwyoiZlnIBWFYcWNy7uPN6RTvt3o+0=;
+        b=XzeKPY4UghingG2IHUZj64o5cUYXhSbgoRNlc2ZYSYp19Xb8MeOj9g4cyCBylvQIJh
+         wLdBJkIJKdeeyzOChwsKtMRRjxXx+i7HA90CEf1Zjd+ke64dOY4eZ0vo4X+P8bUVg2x8
+         cTnwDbkdqGs29ml8EOlAOsZ/CeH1L2BFZnzI96H2449TrjsRS3mLgYGPhGde3CEOFWTU
+         d5rtmjG4RDEjw06GweP8Ae/jfnCaibpeyqnj1mhSIkHNUliG5KoRzga9xg6ZfrcBJTBP
+         toh6V70LGrupSKYSDQK32DkuGqg9WZcJzYMNZ1/7Wmtg2LyTXR72r+qsWNzwhviHYpN8
+         SWUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iJG2vQZhcPeJyWwyoiZlnIBWFYcWNy7uPN6RTvt3o+0=;
+        b=ET2ERH4b0uXcFJLNxX35mI52yQQrWV42hhDFB52lHQ8XxhUWBskXpKxs9zPeB4b988
+         yUmINoFGytjRF2aDvxe90/sGCPzCusbLhp4Xxb//r8bHLBozZ1LFAhCPxku21UKd1+dV
+         6xJqwwpAB1ZI6iinRENkwPfXbtCViFDpvCAOZLTLOnlp4hZIuo9mvBhI6gxw5NAmmrtI
+         Iu2gRX/171iVuD20FjZzRO2kfAc6800cMpZCwrwG6Az0/Kj3Q2eKiVqABXUQ4Jj/Q7bC
+         0TzBI9gVMNl6N2dPOi62JAl7rL5EV/xmxGSsihloOniiJ1+mJthVGn8jVVRI/P1s8uO8
+         BlOg==
+X-Gm-Message-State: APjAAAUoG6pl669FaAfeN0jOlmQRI5LNgsGRqjuxq3VChMrI7WoJHQoe
+        f0B5vBXMEFIDBWUT6iuBsKfqkHu/V1U+irafFR4=
+X-Google-Smtp-Source: APXvYqy8FsnT2tXAP9AmLOyZ4r6ik6vu3DdC9qVPGnxzd/WzDMecFvfZ2ITzSGUE4E2Ce+Va6U+5wKKkP5QgrxvaLiI=
+X-Received: by 2002:a02:7121:: with SMTP id n33mr52373916jac.19.1560362326654;
+ Wed, 12 Jun 2019 10:58:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190605210856.20677-1-bjorn.andersson@linaro.org> <20190605210856.20677-3-bjorn.andersson@linaro.org>
+In-Reply-To: <20190605210856.20677-3-bjorn.andersson@linaro.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Wed, 12 Jun 2019 11:58:35 -0600
+Message-ID: <CAOCk7Nocb7VO5xCcuK1FAPVdPr9U-7z8qOL4yt3ig=05e7brgg@mail.gmail.com>
+Subject: Re: [RFC 2/2] iommu: arm-smmu: Don't blindly use first SMR to
+ calculate mask
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Patrick Daly <pdaly@codeaurora.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the event of an oom kill, useful information about the killed
-process is printed to dmesg. Users, especially system administrators,
-will find it useful to immediately see the UID of the process.
+On Wed, Jun 5, 2019 at 3:09 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> With the SMRs inherited from the bootloader the first SMR might actually
+> be valid and in use. As such probing the SMR mask using the first SMR
+> might break a stream in use. Search for an unused stream and use this to
+> probe the SMR mask.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-In the following example, abuse_the_ram is the name of a program
-that attempts to iteratively allocate all available memory until it is
-stopped by force.
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-Current message:
+I don't quite like the situation where the is no SMR to compute the mask, but I
+think the way you've handled it is the best option/
 
-Out of memory: Killed process 35389 (abuse_the_ram)
-total-vm:133718232kB, anon-rss:129624980kB, file-rss:0kB,
-shmem-rss:0kB
+I'm curious, why is this not included in patch #1?  Seems like patch
+#1 introduces
+the issue, yet doesn't also fix it.
 
-Patched message:
-
-Out of memory: Killed process 2739 (abuse_the_ram),
-total-vm:133880028kB, anon-rss:129754836kB, file-rss:0kB,
-shmem-rss:0kB, UID 0
-
-
-Suggested-by: David Rientjes <rientjes@google.com>
-Signed-off-by: Joel Savitz <jsavitz@redhat.com>
----
- mm/oom_kill.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index 3a2484884cfd..af2e3faa72a0 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -874,12 +874,13 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
- 	 */
- 	do_send_sig_info(SIGKILL, SEND_SIG_PRIV, victim, PIDTYPE_TGID);
- 	mark_oom_victim(victim);
--	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB\n",
-+	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB, UID %d\n",
- 		message, task_pid_nr(victim), victim->comm,
- 		K(victim->mm->total_vm),
- 		K(get_mm_counter(victim->mm, MM_ANONPAGES)),
- 		K(get_mm_counter(victim->mm, MM_FILEPAGES)),
--		K(get_mm_counter(victim->mm, MM_SHMEMPAGES)));
-+		K(get_mm_counter(victim->mm, MM_SHMEMPAGES)),
-+		from_kuid(&init_user_ns, task_uid(victim)));
- 	task_unlock(victim);
- 
- 	/*
--- 
-2.18.1
-
+> ---
+>  drivers/iommu/arm-smmu.c | 20 ++++++++++++++++----
+>  1 file changed, 16 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index c8629a656b42..0c6f5fe6f382 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -1084,23 +1084,35 @@ static void arm_smmu_test_smr_masks(struct arm_smmu_device *smmu)
+>  {
+>         void __iomem *gr0_base = ARM_SMMU_GR0(smmu);
+>         u32 smr;
+> +       int idx;
+>
+>         if (!smmu->smrs)
+>                 return;
+>
+> +       for (idx = 0; idx < smmu->num_mapping_groups; idx++) {
+> +               smr = readl_relaxed(gr0_base + ARM_SMMU_GR0_SMR(idx));
+> +               if (!(smr & SMR_VALID))
+> +                       break;
+> +       }
+> +
+> +       if (idx == smmu->num_mapping_groups) {
+> +               dev_err(smmu->dev, "Unable to compute streamid_mask\n");
+> +               return;
+> +       }
+> +
+>         /*
+>          * SMR.ID bits may not be preserved if the corresponding MASK
+>          * bits are set, so check each one separately. We can reject
+>          * masters later if they try to claim IDs outside these masks.
+>          */
+>         smr = smmu->streamid_mask << SMR_ID_SHIFT;
+> -       writel_relaxed(smr, gr0_base + ARM_SMMU_GR0_SMR(0));
+> -       smr = readl_relaxed(gr0_base + ARM_SMMU_GR0_SMR(0));
+> +       writel_relaxed(smr, gr0_base + ARM_SMMU_GR0_SMR(idx));
+> +       smr = readl_relaxed(gr0_base + ARM_SMMU_GR0_SMR(idx));
+>         smmu->streamid_mask = smr >> SMR_ID_SHIFT;
+>
+>         smr = smmu->streamid_mask << SMR_MASK_SHIFT;
+> -       writel_relaxed(smr, gr0_base + ARM_SMMU_GR0_SMR(0));
+> -       smr = readl_relaxed(gr0_base + ARM_SMMU_GR0_SMR(0));
+> +       writel_relaxed(smr, gr0_base + ARM_SMMU_GR0_SMR(idx));
+> +       smr = readl_relaxed(gr0_base + ARM_SMMU_GR0_SMR(idx));
+>         smmu->smr_mask_mask = smr >> SMR_MASK_SHIFT;
+>  }
+>
+> --
+> 2.18.0
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
