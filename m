@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EEDC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EA9C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C60032053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E04B2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Eyr/wAeo"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="JiNDT2mG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbfFMROq (ORCPT
+        id S1729529AbfFMROw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:14:46 -0400
-Received: from smtp.aristanetworks.com ([54.193.82.35]:49808 "EHLO
+        Thu, 13 Jun 2019 13:14:52 -0400
+Received: from smtp.aristanetworks.com ([54.193.82.35]:49794 "EHLO
         smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728807AbfFLVwe (ORCPT
+        with ESMTP id S1728804AbfFLVwd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 17:52:34 -0400
+        Wed, 12 Jun 2019 17:52:33 -0400
 Received: from smtp.aristanetworks.com (localhost [127.0.0.1])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id E69DE214A72B;
-        Wed, 12 Jun 2019 14:52:33 -0700 (PDT)
+        by smtp.aristanetworks.com (Postfix) with ESMTP id E1821214A723;
+        Wed, 12 Jun 2019 14:52:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
-        s=Arista-A; t=1560376353;
-        bh=OG5iz7Y2otWoE83PZVl2kJS3N6qNz01B8T1Adm2jXHQ=;
+        s=Arista-A; t=1560376352;
+        bh=Ur8IpLq8gF2to3WfM7YOfN36My26fjgqB6sAL0vxTRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Eyr/wAeoK9oS57pbm2+3BOtbbq9ZcYEq8NTwlBHmtxp5kR2Xw1yyWgIjpwFekfqy1
-         i54LicM69uDC64/MWOpSEnv/RHnKekQm4l6Ff02U1vo7M/T3AhkclLHgfgkMI+96mw
-         LQShjlhxZHbZ285shI3c13IJN/ecd/zRcpqUXhHyhpiHnfy6eXMc4jtBQJUzAZLOMp
-         A9f1EIH98pZ8wnwl53Uy+MS4+mA+VGknSGO7NZBd4CB7qsOXiF500JKoZtCfjoe35r
-         H0m651wXd86K5jlr4NnqnynU9L8HgiWSBXsO7RgVJe55q/m3damBbMrA01i9aINeNp
-         Iys9ZOYrnSRzA==
+        b=JiNDT2mGQDJpPadWx/HVKnahToM6mdkvhVNTqFXUAHzewlCL8vqpkVq8f7zFiFoZo
+         IpGYNc2OtqUqC+Iptrq0G++UjjmwIAZQuRNsYVX7t4EwJFQMAF/Fuy35eX7Qq0JLMF
+         +5sSp8NNtah8lrnFpgd9+E5WAQIiGhJNTFxWALOehE+b1ji35pXq468TZIUhw51IKS
+         8P8AjTExOOMsLXB0xTi682CahR5GAScGrrI5/DV+JvbhKnKIJRFPYdShMFVIcq13mP
+         AGMVwa/FnLnP/keBulaigFW4oaRV8IUMyGW/+dx5CoCKSt4qJJNsxZZDQaLSV5x5jn
+         IiBZDHy032kHw==
 Received: from chmeee (unknown [10.80.4.152])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id DD5203180B64;
-        Wed, 12 Jun 2019 14:52:33 -0700 (PDT)
+        by smtp.aristanetworks.com (Postfix) with ESMTP id D20273180B64;
+        Wed, 12 Jun 2019 14:52:32 -0700 (PDT)
 Received: from kevmitch by chmeee with local (Exim 4.92)
         (envelope-from <kevmitch@chmeee>)
-        id 1hbBAX-0003KL-OA; Wed, 12 Jun 2019 14:52:33 -0700
+        id 1hbBAW-0003KI-LA; Wed, 12 Jun 2019 14:52:32 -0700
 From:   Kevin Mitchell <kevmitch@arista.com>
 To:     Joerg Roedel <joro@8bytes.org>
 Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         Kevin Mitchell <kevmitch@arista.com>
-Subject: [PATCH 3/3] iommu/amd: only free resources once on init error
-Date:   Wed, 12 Jun 2019 14:52:05 -0700
-Message-Id: <20190612215203.12711-4-kevmitch@arista.com>
+Subject: [PATCH 2/3] iommu/amd: move gart fallback to amd_iommu_init
+Date:   Wed, 12 Jun 2019 14:52:04 -0700
+Message-Id: <20190612215203.12711-3-kevmitch@arista.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190612215203.12711-1-kevmitch@arista.com>
 References: <20190612215203.12711-1-kevmitch@arista.com>
@@ -59,75 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When amd_iommu=off was specified on the command line, free_X_resources
-functions were called immediately after early_amd_iommu_init. They were
-then called again when amd_iommu_init also failed (as expected).
+The fallback to the GART driver in the case amd_iommu doesn't work was
+executed in a function called free_iommu_resources, which didn't really
+make sense. This was even being called twice if amd_iommu=off was
+specified on the command line.
 
-Instead, call them only once: at the end of state_next() whenever
-there's an error. These functions should be safe to call any time and
-any number of times. However, since state_next is never called again in
-an error state, the cleanup will only ever be run once.
-
-This also ensures that cleanup code is run as soon as possible after an
-error is detected rather than waiting for amd_iommu_init() to be called.
+The only complication is that it needs to be verified that amd_iommu has
+fully relinquished control by calling free_iommu_resources and emptying
+the amd_iommu_list.
 
 Signed-off-by: Kevin Mitchell <kevmitch@arista.com>
 ---
- drivers/iommu/amd_iommu_init.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ drivers/iommu/amd_iommu_init.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 5f3df5ae6ba8..24fc060fe596 100644
+index 3798d7303c99..5f3df5ae6ba8 100644
 --- a/drivers/iommu/amd_iommu_init.c
 +++ b/drivers/iommu/amd_iommu_init.c
-@@ -2638,8 +2638,6 @@ static int __init state_next(void)
- 		init_state = ret ? IOMMU_INIT_ERROR : IOMMU_ACPI_FINISHED;
- 		if (init_state == IOMMU_ACPI_FINISHED && amd_iommu_disabled) {
- 			pr_info("AMD IOMMU disabled on kernel command-line\n");
--			free_dma_resources();
--			free_iommu_resources();
- 			init_state = IOMMU_CMDLINE_DISABLED;
- 			ret = -EINVAL;
- 		}
-@@ -2680,6 +2678,19 @@ static int __init state_next(void)
- 		BUG();
- 	}
+@@ -2345,15 +2345,6 @@ static void __init free_iommu_resources(void)
+ 	amd_iommu_dev_table = NULL;
  
-+	if (ret) {
-+		free_dma_resources();
-+		if (!irq_remapping_enabled) {
-+			disable_iommus();
-+			free_iommu_resources();
-+		} else {
-+			struct amd_iommu *iommu;
-+
-+			uninit_device_table_dma();
-+			for_each_iommu(iommu)
-+				iommu_flush_all_caches(iommu);
-+		}
-+	}
- 	return ret;
+ 	free_iommu_all();
+-
+-#ifdef CONFIG_GART_IOMMU
+-	/*
+-	 * We failed to initialize the AMD IOMMU - try fallback to GART
+-	 * if possible.
+-	 */
+-	gart_iommu_init();
+-
+-#endif
  }
  
-@@ -2753,18 +2764,6 @@ static int __init amd_iommu_init(void)
- 	int ret;
+ /* SB IOAPIC is always on this device in AMD systems */
+@@ -2774,6 +2765,16 @@ static int __init amd_iommu_init(void)
+ 		}
+ 	}
  
- 	ret = iommu_go_to_state(IOMMU_INITIALIZED);
--	if (ret) {
--		free_dma_resources();
--		if (!irq_remapping_enabled) {
--			disable_iommus();
--			free_iommu_resources();
--		} else {
--			uninit_device_table_dma();
--			for_each_iommu(iommu)
--				iommu_flush_all_caches(iommu);
--		}
--	}
--
- #ifdef CONFIG_GART_IOMMU
- 	if (ret && list_empty(&amd_iommu_list)) {
- 		/*
++#ifdef CONFIG_GART_IOMMU
++	if (ret && list_empty(&amd_iommu_list)) {
++		/*
++		 * We failed to initialize the AMD IOMMU - try fallback
++		 * to GART if possible.
++		 */
++		gart_iommu_init();
++	}
++#endif
++
+ 	for_each_iommu(iommu)
+ 		amd_iommu_debugfs_setup(iommu);
+ 
 -- 
 2.20.1
 
