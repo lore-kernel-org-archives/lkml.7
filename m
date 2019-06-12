@@ -2,239 +2,92 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDE7C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D922FC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20B1521019
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7A120B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:34:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408935AbfFLLan (ORCPT
+        id S2409027AbfFLLea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:30:43 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:46188 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727352AbfFLLam (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:30:42 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id D12CF634C7B;
-        Wed, 12 Jun 2019 14:30:05 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1hb1S9-0001e5-VI; Wed, 12 Jun 2019 14:30:05 +0300
-Date:   Wed, 12 Jun 2019 14:30:05 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Eugen.Hristev@microchip.com
-Cc:     hverkuil@xs4all.nl, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] media: atmel: atmel-isc: fix and cleanup
- potential bugs
-Message-ID: <20190612113005.44zvi4vgdl4pqlv7@valkosipuli.retiisi.org.uk>
-References: <1560336983-16843-1-git-send-email-eugen.hristev@microchip.com>
- <1560336983-16843-3-git-send-email-eugen.hristev@microchip.com>
+        Wed, 12 Jun 2019 07:34:30 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34248 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406406AbfFLLe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 07:34:29 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BF6BF666E464925F7254;
+        Wed, 12 Jun 2019 19:34:26 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 12 Jun
+ 2019 19:34:17 +0800
+Subject: Re: [PATCH v2] sched/core: add __sched tag for io_schedule()
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     LKML <linux-kernel@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
+        "Ingo Molnar" <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        <stable@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        <koujilong@huawei.com>
+References: <20190531082912.80724-1-gaoxiang25@huawei.com>
+ <20190603091338.2695-1-gaoxiang25@huawei.com>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <2c77fa8f-b93a-c4d6-f946-c3867a18af27@huawei.com>
+Date:   Wed, 12 Jun 2019 19:34:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560336983-16843-3-git-send-email-eugen.hristev@microchip.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190603091338.2695-1-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eugen,
+Friendly ping...
 
-On Wed, Jun 12, 2019 at 11:01:15AM +0000, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
+Thanks,
+Gao Xiang
+
+On 2019/6/3 17:13, Gao Xiang wrote:
+> non-inline io_schedule() was introduced in
+> commit 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
+> Keep in line with io_schedule_timeout, Otherwise
+> "/proc/<pid>/wchan" will report io_schedule()
+> rather than its callers when waiting io.
 > 
-> Fixed issues that can lead to potential bugs.
-> Cleanup order in the driver
-> Taking into consideration std control creation can fail
-> mutex_destroy call
-> changing controller_formats with const specifier
-> some cosmetic cleanups
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> Reported-by: Jilong Kou <koujilong@huawei.com>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Acked-by: Tejun Heo <tj@kernel.org>
+> Fixes: 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
+> Cc: <stable@vger.kernel.org> # 4.11+
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 > ---
-> Changes in v5:
-> - new patch that fixes issues reviewed by Sakari
+> change log v2:
+>  - add missing tags
 > 
->  drivers/media/platform/atmel/atmel-isc-base.c    | 28 +++++++++++++++---------
->  drivers/media/platform/atmel/atmel-isc.h         |  2 +-
->  drivers/media/platform/atmel/atmel-sama5d2-isc.c | 14 +++++++-----
->  3 files changed, 28 insertions(+), 16 deletions(-)
+>  kernel/sched/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/media/platform/atmel/atmel-isc-base.c b/drivers/media/platform/atmel/atmel-isc-base.c
-> index edfd7e0..678383e 100644
-> --- a/drivers/media/platform/atmel/atmel-isc-base.c
-> +++ b/drivers/media/platform/atmel/atmel-isc-base.c
-> @@ -45,7 +45,7 @@ MODULE_PARM_DESC(sensor_preferred,
->  		 "Sensor is preferred to output the specified format (1-on 0-off), default 1");
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 874c427742a9..4d5962232a55 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -5123,7 +5123,7 @@ long __sched io_schedule_timeout(long timeout)
+>  }
+>  EXPORT_SYMBOL(io_schedule_timeout);
 >  
->  /* This is a list of the formats that the ISC can *output* */
-> -struct isc_format controller_formats[] = {
-> +const struct isc_format controller_formats[] = {
->  	{
->  		.fourcc		= V4L2_PIX_FMT_ARGB444,
->  	},
-> @@ -231,7 +231,7 @@ static inline void isc_update_awb_ctrls(struct isc_device *isc)
->  
->  static inline void isc_reset_awb_ctrls(struct isc_device *isc)
+> -void io_schedule(void)
+> +void __sched io_schedule(void)
 >  {
-> -	int c;
-> +	unsigned int c;
+>  	int token;
 >  
->  	for (c = ISC_HIS_CFG_MODE_GR; c <= ISC_HIS_CFG_MODE_B; c++) {
->  		/* gains have a fixed point at 9 decimals */
-> @@ -1456,7 +1456,7 @@ static int isc_enum_frameintervals(struct file *file, void *fh,
->  		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
->  	};
->  	int ret = -EINVAL;
-> -	int i;
-> +	unsigned int i;
->  
->  	for (i = 0; i < isc->num_user_formats; i++)
->  		if (isc->user_formats[i]->fourcc == fival->pixel_format)
-> @@ -1883,6 +1883,12 @@ static int isc_ctrl_init(struct isc_device *isc)
->  	isc->do_wb_ctrl = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_DO_WHITE_BALANCE,
->  					    0, 0, 0, 0);
->  
-> +	if (!isc->do_wb_ctrl) {
-> +		ret = hdl->error;
-> +		v4l2_ctrl_handler_free(hdl);
-> +		return ret;
-> +	}
-> +
->  	v4l2_ctrl_activate(isc->do_wb_ctrl, false);
->  
->  	v4l2_ctrl_handler_setup(hdl);
-> @@ -2010,7 +2016,7 @@ static int isc_async_complete(struct v4l2_async_notifier *notifier)
->  					      struct isc_device, v4l2_dev);
->  	struct video_device *vdev = &isc->video_dev;
->  	struct vb2_queue *q = &isc->vb2_vidq;
-> -	int ret;
-> +	int ret = 0;
->  
->  	INIT_WORK(&isc->awb_work, isc_awb_work);
->  
-> @@ -2041,7 +2047,7 @@ static int isc_async_complete(struct v4l2_async_notifier *notifier)
->  	if (ret < 0) {
->  		v4l2_err(&isc->v4l2_dev,
->  			 "vb2_queue_init() failed: %d\n", ret);
-> -		return ret;
-> +		goto isc_async_complete_err;
->  	}
->  
->  	/* Init video dma queues */
-> @@ -2053,19 +2059,19 @@ static int isc_async_complete(struct v4l2_async_notifier *notifier)
->  	if (ret < 0) {
->  		v4l2_err(&isc->v4l2_dev,
->  			 "Init format failed: %d\n", ret);
-> -		return ret;
-> +		goto isc_async_complete_err;
->  	}
->  
->  	ret = isc_set_default_fmt(isc);
->  	if (ret) {
->  		v4l2_err(&isc->v4l2_dev, "Could not set default format\n");
-> -		return ret;
-> +		goto isc_async_complete_err;
->  	}
->  
->  	ret = isc_ctrl_init(isc);
->  	if (ret) {
->  		v4l2_err(&isc->v4l2_dev, "Init isc ctrols failed: %d\n", ret);
-> -		return ret;
-> +		goto isc_async_complete_err;
->  	}
->  
->  	/* Register video device */
-> @@ -2085,10 +2091,12 @@ static int isc_async_complete(struct v4l2_async_notifier *notifier)
->  	if (ret < 0) {
->  		v4l2_err(&isc->v4l2_dev,
->  			 "video_register_device failed: %d\n", ret);
-> -		return ret;
-> +		goto isc_async_complete_err;
->  	}
->  
-> -	return 0;
-
-I presume you did not intend to remove that line?
-
-The patch seems good apart from that.
-
-> +isc_async_complete_err:
-> +	mutex_destroy(&isc->lock);
-> +	return ret;
->  }
->  
->  const struct v4l2_async_notifier_operations isc_async_ops = {
-> diff --git a/drivers/media/platform/atmel/atmel-isc.h b/drivers/media/platform/atmel/atmel-isc.h
-> index 5be5b09..f5f5932 100644
-> --- a/drivers/media/platform/atmel/atmel-isc.h
-> +++ b/drivers/media/platform/atmel/atmel-isc.h
-> @@ -235,7 +235,7 @@ extern unsigned int debug;
->  extern unsigned int sensor_preferred;
->  
->  extern struct isc_format formats_list[];
-> -extern struct isc_format controller_formats[];
-> +extern const struct isc_format controller_formats[];
->  extern const u32 isc_gamma_table[GAMMA_MAX + 1][GAMMA_ENTRIES];
->  extern const struct regmap_config isc_regmap_config;
->  extern const struct v4l2_async_notifier_operations isc_async_ops;
-> diff --git a/drivers/media/platform/atmel/atmel-sama5d2-isc.c b/drivers/media/platform/atmel/atmel-sama5d2-isc.c
-> index 127e79c..266df14 100644
-> --- a/drivers/media/platform/atmel/atmel-sama5d2-isc.c
-> +++ b/drivers/media/platform/atmel/atmel-sama5d2-isc.c
-> @@ -122,8 +122,7 @@ static int isc_parse_dt(struct device *dev, struct isc_device *isc)
->  					ISC_PFE_CFG0_CCIR656;
->  
->  		subdev_entity->asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-> -		subdev_entity->asd->match.fwnode =
-> -			of_fwnode_handle(rem);
-> +		subdev_entity->asd->match.fwnode = of_fwnode_handle(rem);
->  		list_add_tail(&subdev_entity->list, &isc->subdev_entities);
->  	}
->  
-> @@ -282,13 +281,14 @@ static int atmel_isc_remove(struct platform_device *pdev)
->  	struct isc_device *isc = platform_get_drvdata(pdev);
->  
->  	pm_runtime_disable(&pdev->dev);
-> -	clk_disable_unprepare(isc->ispck);
-> -	clk_disable_unprepare(isc->hclock);
->  
->  	isc_subdev_cleanup(isc);
->  
->  	v4l2_device_unregister(&isc->v4l2_dev);
->  
-> +	clk_disable_unprepare(isc->ispck);
-> +	clk_disable_unprepare(isc->hclock);
-> +
->  	isc_clk_cleanup(isc);
->  
->  	return 0;
-> @@ -313,7 +313,11 @@ static int __maybe_unused isc_runtime_resume(struct device *dev)
->  	if (ret)
->  		return ret;
->  
-> -	return clk_prepare_enable(isc->ispck);
-> +	ret = clk_prepare_enable(isc->ispck);
-> +	if (ret)
-> +		clk_disable_unprepare(isc->hclock);
-> +
-> +	return ret;
->  }
->  
->  static const struct dev_pm_ops atmel_isc_dev_pm_ops = {
-> -- 
-> 2.7.4
 > 
-
--- 
-Sakari Ailus
