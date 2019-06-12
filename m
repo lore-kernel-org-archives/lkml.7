@@ -7,64 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2B0C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D4AC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F33207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C481207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:12:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qin+oZhf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lDbIlVA9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730187AbfFLIMA (ORCPT
+        id S1730334AbfFLIMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:12:00 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38689 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbfFLIMA (ORCPT
+        Wed, 12 Jun 2019 04:12:08 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46327 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbfFLIME (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:12:00 -0400
-Received: by mail-lf1-f65.google.com with SMTP id b11so11343639lfa.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:11:58 -0700 (PDT)
+        Wed, 12 Jun 2019 04:12:04 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v24so9915169ljg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:12:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=lFS4BBAAFXbjrbCxdYjYSGPzdbbXyO/GncmZQneFLcA=;
-        b=qin+oZhf13sdSKn1SKVta6xNQYBa7ZCymdbgUUHhuXuNkSdmsnN+xPwGBDrKl1DDKA
-         9eirix1ojbveQYt3vkTmM3znNupkTqQ8im6xurMFPDyRXfonbylfyKnt15BDcEym4lMm
-         zbtDPDw9VXTMVRkSt4rI+FWRMj1Xt9LbcvKTqAjccyQz1RgkOT7KcWQMjwFvReihwunX
-         5IId7kX7++BKRB2fbN9hvksAPw8W2FWW8C3fA5ZdlzJyuJ3b7B0RFoEVakEDyZ633Z8p
-         MGnaSs3SJUvJl5KKJ4xQOKm/SeukK6uVQdR8m6q9ikusAy5ui1WToMXZfIqpBKQxclhK
-         4grA==
+        bh=wlVjUjqpWzID0KuxViSALS3lzmjYAzsT4I+mvQyLT2o=;
+        b=lDbIlVA9aF0aoJGtLsKYOOo+mpBh3j55rX512XVSvbx7lF96pkcklSUc2hMcFH6aWJ
+         pTaumzaRme3TiK6VZ4uBob/qhZtxgZWehfgknEsQv09sVZX60/7DnIld6JMEsvzcw0Qd
+         putu1z4HMUHMPtjl4EyS/Ry5ufLyXAprYpNNmhGAbhLw2FjNz0qHjy8qufWGxWmUulIR
+         zSRysAOX1rUj5CPxbEJp68Aewsyzhe2mCnk86KMYhjgRPN50+k+s1Lo8m2+6/dcvdpDi
+         nh6Flbrwc2wC81rff1C+DAZuWHylVdUFRSMUDs1q0ZuesD9k9sj+jpA5yoS5tEKB4vss
+         Ep1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=lFS4BBAAFXbjrbCxdYjYSGPzdbbXyO/GncmZQneFLcA=;
-        b=EhbRSdGRt+Rhy/QSTx/y28tleSHT7fOo5/hIN9dmbMVEaimO/4jxgTy/rLv8LpAOyK
-         TXMQSib4NokVfpjf+Kxg1EC8OrVHQq/CkvXSpO2RGuvvVD7+O6m11EepBSLUB4E/rM21
-         AW0HeyrCDkytul88NqpnXvpAKF+hzUEQv4xfGs/09WhQbNWmJzhd6BBEkJxVty0BtZHc
-         JJMMxV+6xC1O1unUaIT81fqKo5dKspFjkuv31yNUSMgc032VKvkOxHq0kwnNvBGs2SV7
-         33+EDKMv00mgkXthx6L6EIdNb38hcO1LIBFVm9kiS4CbmtHSl9e5YsPhqtnjSU0xUiZB
-         Ak3A==
-X-Gm-Message-State: APjAAAV57/Esf6mwgNqnc2xai6CyvxszfzPVSWsK+Q9HyJSt04OobprE
-        sJ0bROqCyNHGMqWpbGNSv/U3hGcRTzhAmA==
-X-Google-Smtp-Source: APXvYqzFkbRzv2cUwnOkrG34fAgQA5tXqMO36EKSSBfuGGn0JzJjJC6Fc/hggdqH7MAIezjdsxEYaQ==
-X-Received: by 2002:ac2:4466:: with SMTP id y6mr13435120lfl.0.1560327118141;
-        Wed, 12 Jun 2019 01:11:58 -0700 (PDT)
+        bh=wlVjUjqpWzID0KuxViSALS3lzmjYAzsT4I+mvQyLT2o=;
+        b=EqHNOHjQOsIJX5DgQ4vveudIOlkFrsXnSZABu6AhH2J6Jg7GK2Ld1aHUskwKvDN0Zl
+         GH1d3c+MZ13noO7kmCG3/EzTg2F4H2s7pfKJA8kSzJIHkBcW0c2snRBpbei2rluGOPsC
+         28OPSHiYUnLpu5oZE3YGPlelGLMHLx1Hkt8nVTpFVgt6IB1Rb3AfhrS8VIxXo8mU0iHJ
+         K0LBhFCOOUAx80ekfG70Z+3oGR5q6F46JRSupwGtgVLphbpwt0uT5P1d/wGDxtniKklY
+         DQ5Sdf1P1BYGphOBGk+ogaK4XW4bfyv2eBaodVF6cwpHPpDAB3MTezvV+nsSDzuXuKv3
+         Pb1A==
+X-Gm-Message-State: APjAAAXa/O07AXo6qT5UqVijkadQKStORAawE0VW5UmDqActxHSVxzzd
+        oacemYajfn5S7JS7+XESX3NVDA==
+X-Google-Smtp-Source: APXvYqwHyWM9GqP0EP0UjwOE49JW96qoqR9GLtO0yy6E6HPJJuWlSJaSBkei4laH5sn6K7o3mZTnCg==
+X-Received: by 2002:a2e:a311:: with SMTP id l17mr22655761lje.214.1560327122815;
+        Wed, 12 Jun 2019 01:12:02 -0700 (PDT)
 Received: from localhost (c-1c3670d5.07-21-73746f28.bbcust.telenor.se. [213.112.54.28])
-        by smtp.gmail.com with ESMTPSA id z6sm2544076ljk.57.2019.06.12.01.11.57
+        by smtp.gmail.com with ESMTPSA id a21sm228813ljd.70.2019.06.12.01.12.01
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 01:11:57 -0700 (PDT)
+        Wed, 12 Jun 2019 01:12:02 -0700 (PDT)
 From:   Anders Roxell <anders.roxell@linaro.org>
-To:     davem@davemloft.net
-Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        linus.walleij@linaro.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+To:     lgirdwood@gmail.com, broonie@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
         Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH v2] drivers: net: dsa: fix warning same module names
-Date:   Wed, 12 Jun 2019 10:11:47 +0200
-Message-Id: <20190612081147.1372-1-anders.roxell@linaro.org>
+Subject: [PATCH v2] drivers: regulator: 88pm800: fix warning same module names
+Date:   Wed, 12 Jun 2019 10:11:58 +0200
+Message-Id: <20190612081158.1424-1-anders.roxell@linaro.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -73,41 +71,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with CONFIG_NET_DSA_REALTEK_SMI and CONFIG_REALTEK_PHY
+When building with CONFIG_MFD_88PM800 and CONFIG_REGULATOR_88PM800
 enabled as loadable modules, we see the following warning:
 
 warning: same module names found:
-  drivers/net/phy/realtek.ko
-  drivers/net/dsa/realtek.ko
+  drivers/regulator/88pm800.ko
+  drivers/mfd/88pm800.ko
 
-Rework so the driver name is rtl8366 instead of realtek.
+Rework so that the file is named 88pm800-regulator.
 
 Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 ---
- drivers/net/dsa/Makefile                        | 4 ++--
- drivers/net/dsa/{rtl8366.c => rtl8366-common.c} | 0
- 2 files changed, 2 insertions(+), 2 deletions(-)
- rename drivers/net/dsa/{rtl8366.c => rtl8366-common.c} (100%)
+ drivers/regulator/{88pm800.c => 88pm800-regulator.c} | 0
+ drivers/regulator/Makefile                           | 2 +-
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename drivers/regulator/{88pm800.c => 88pm800-regulator.c} (100%)
 
-diff --git a/drivers/net/dsa/Makefile b/drivers/net/dsa/Makefile
-index fefb6aaa82ba..d7a282eb2ff9 100644
---- a/drivers/net/dsa/Makefile
-+++ b/drivers/net/dsa/Makefile
-@@ -9,8 +9,8 @@ obj-$(CONFIG_NET_DSA_LANTIQ_GSWIP) += lantiq_gswip.o
- obj-$(CONFIG_NET_DSA_MT7530)	+= mt7530.o
- obj-$(CONFIG_NET_DSA_MV88E6060) += mv88e6060.o
- obj-$(CONFIG_NET_DSA_QCA8K)	+= qca8k.o
--obj-$(CONFIG_NET_DSA_REALTEK_SMI) += realtek.o
--realtek-objs			:= realtek-smi.o rtl8366.o rtl8366rb.o
-+obj-$(CONFIG_NET_DSA_REALTEK_SMI) += rtl8366.o
-+rtl8366-objs			:= realtek-smi.o rtl8366-common.o rtl8366rb.o
- obj-$(CONFIG_NET_DSA_SMSC_LAN9303) += lan9303-core.o
- obj-$(CONFIG_NET_DSA_SMSC_LAN9303_I2C) += lan9303_i2c.o
- obj-$(CONFIG_NET_DSA_SMSC_LAN9303_MDIO) += lan9303_mdio.o
-diff --git a/drivers/net/dsa/rtl8366.c b/drivers/net/dsa/rtl8366-common.c
+diff --git a/drivers/regulator/88pm800.c b/drivers/regulator/88pm800-regulator.c
 similarity index 100%
-rename from drivers/net/dsa/rtl8366.c
-rename to drivers/net/dsa/rtl8366-common.c
+rename from drivers/regulator/88pm800.c
+rename to drivers/regulator/88pm800-regulator.c
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 76e78fa449a2..c15b0b613766 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -11,7 +11,7 @@ obj-$(CONFIG_REGULATOR_VIRTUAL_CONSUMER) += virtual.o
+ obj-$(CONFIG_REGULATOR_USERSPACE_CONSUMER) += userspace-consumer.o
+ 
+ obj-$(CONFIG_REGULATOR_88PG86X) += 88pg86x.o
+-obj-$(CONFIG_REGULATOR_88PM800) += 88pm800.o
++obj-$(CONFIG_REGULATOR_88PM800) += 88pm800-regulator.o
+ obj-$(CONFIG_REGULATOR_88PM8607) += 88pm8607.o
+ obj-$(CONFIG_REGULATOR_CPCAP) += cpcap-regulator.o
+ obj-$(CONFIG_REGULATOR_AAT2870) += aat2870-regulator.o
 -- 
 2.20.1
 
