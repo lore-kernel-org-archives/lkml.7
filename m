@@ -2,225 +2,103 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9398C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCBFC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A14FE21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ABAB20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:11:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dM4y3ztI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408616AbfFLJLy (ORCPT
+        id S2408637AbfFLJL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:11:54 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60762 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2408175AbfFLJLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:11:54 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2DDE0B6C3954A0597502;
-        Wed, 12 Jun 2019 17:11:51 +0800 (CST)
-Received: from HGHY2Y004646261.china.huawei.com (10.184.12.158) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 12 Jun 2019 17:11:44 +0800
-From:   Zenghui Yu <yuzenghui@huawei.com>
-To:     <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-CC:     <christoffer.dall@arm.com>, <marc.zyngier@arm.com>,
-        <acme@redhat.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <ganapatrao.kulkarni@cavium.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <mark.rutland@arm.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <wanghaibin.wang@huawei.com>,
-        <xiexiangyou@huawei.com>, <linuxarm@huawei.com>,
-        Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH v1 2/5] KVM: arm/arm64: Adjust entry/exit and trap related tracepoints
-Date:   Wed, 12 Jun 2019 09:08:43 +0000
-Message-ID: <1560330526-15468-3-git-send-email-yuzenghui@huawei.com>
-X-Mailer: git-send-email 2.6.4.windows.1
-In-Reply-To: <1560330526-15468-1-git-send-email-yuzenghui@huawei.com>
-References: <1560330526-15468-1-git-send-email-yuzenghui@huawei.com>
+        Wed, 12 Jun 2019 05:11:58 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45189 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408414AbfFLJLz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:11:55 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m23so14386752lje.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 02:11:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mYym2l8mqAEx5DPcwNMYFMU/GTCZC3cLzsLhFQIJHOM=;
+        b=dM4y3ztI6yt1g4hASKxq2snbEX1K68CjUC6gTHWe+9d9vvdCjc0Hyb7Tt4SFpWfMnZ
+         PP/1qBniNFTnD2xxgtG3ZnHDp3pAvcZ0c8KOwrNuqHiEukY0hi7MsorGkKtlPbbpBMyF
+         epma8V7XicgRJLPbSvVz0Bb5ZAXr/qBaK4wG4k0ftrVRFJ+4phQYjdYLRjOhAVFwa7Wx
+         T+Buc4YW4OtkNrK67CwaDSfapcUXfthRM4P8N8fGIE3Yzxk3j9Jn7CKZJxbXXdvAknSN
+         amls9/vG09ZfIzWpnAPHn5suPlmmYG8YDi92WVUyX4FsL/+D9JHImhzF8Ietl15bSNTC
+         G7Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mYym2l8mqAEx5DPcwNMYFMU/GTCZC3cLzsLhFQIJHOM=;
+        b=ev61i3PqGo/rGuryhNMFN4a2thSoocRWx0xF8z7YySgs8u8GmVER1ccMbMPH8VYUgu
+         unv2BKMvV5Ayw9Lshw4YR7H/bICl4mPt0O3aK++dAMpeDAWKeRMbU8H2UZA2VxMzEZVv
+         2LujNWqYSRuaME7XgtLF0e2iVpFlUcPDwr06m7sLprVtVFJv1pAASFDcWxUdtGndelUp
+         ugAu1dfF7uMzekOd5WSLUluzdEPv0SzBhAmnvdUa4xZzks6nIwytDM+IYM64DIu9IT/y
+         T6mOZhzDhdNJ2+PvBmNFj/aoh9YN8JjQBTmZ+NIQZEFnQ0s3+xI6Lx3RYjPsxeSZUITo
+         J2Sw==
+X-Gm-Message-State: APjAAAUbrnTpPjCOiOkOalDCQg1biqemZB/F+cOipfTFCcLOkQgjiue8
+        qvCDzD0MeoStKzWHWFt9bmKc1MNheODgSVavTgZ0Pw==
+X-Google-Smtp-Source: APXvYqxPQeP+YZhtl1yArUP/kEZEaq45Z/0+ctNo29822y9vO0QaRlGNPkN9752MhVjSxAx4U3gKOqJrOx5tmU+Q5gs=
+X-Received: by 2002:a2e:480a:: with SMTP id v10mr5624585lja.94.1560330713660;
+ Wed, 12 Jun 2019 02:11:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+References: <20190610171103.30903-1-grygorii.strashko@ti.com> <20190610171103.30903-21-grygorii.strashko@ti.com>
+In-Reply-To: <20190610171103.30903-21-grygorii.strashko@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 12 Jun 2019 11:11:41 +0200
+Message-ID: <CACRpkda2FhYNYA2TkVANOF5GWd3hE9cqM7N_pFDFj9nh-fh=iA@mail.gmail.com>
+Subject: Re: [PATCH-next 20/20] gpio: gpio-omap: clean up register access in omap2_set_gpio_debounce()
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Russell King <rmk@arm.linux.org.uk>,
+        Tony Lindgren <tony@atomide.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, we use trace_kvm_exit() to report exception type (e.g.,
-"IRQ", "TRAP") and exception class (ESR_ELx's bit[31:26]) together.
-But hardware only saves the exit class to ESR_ELx on synchronous
-exceptions, not on asynchronous exceptions. When the guest exits
-due to external interrupts, we will get tracing output like:
+On Mon, Jun 10, 2019 at 7:13 PM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
 
-	"kvm_exit: IRQ: HSR_EC: 0x0000 (UNKNOWN), PC: 0xffff87259e30"
+> From: Russell King <rmk+kernel@armlinux.org.uk>
+>
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
-Obviously, "HSR_EC" here is meaningless.
+Patch applied.
 
-This patch splits "exit" and "trap" events by adding two tracepoints
-explicitly in handle_trap_exceptions(). Let trace_kvm_exit() report VM
-exit events, and trace_kvm_trap_exit() report VM trap events.
+At your convenience please look at the debounce function a bit
+closer because I think there is a bug/unpredictable behavior:
 
-These tracepoints are adjusted also in preparation for supporting
-'perf kvm stat' on arm64.
+IIUC the whole bank/block of GPIOs share the same debounce
+timer setting, and it is currently handled in a "last caller wins"
+manner, so if the different GPIOs in the bank has different
+debounce settings, the call order decides what debounce time
+is used across all of them.
 
-Cc: Christoffer Dall <christoffer.dall@arm.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
----
- arch/arm64/kvm/handle_exit.c |  3 +++
- arch/arm64/kvm/trace.h       | 35 +++++++++++++++++++++++++++++++++++
- virt/kvm/arm/arm.c           |  4 ++--
- virt/kvm/arm/trace.h         | 21 +++++++++++----------
- 4 files changed, 51 insertions(+), 12 deletions(-)
+In drivers/gpio/gpio-ftgpio.c function ftgpio_gpio_set_config()
+I simply reject a dounce time setting
+different from the currently configured if any GPIOs are
+currently using the deounce feature.
 
-diff --git a/arch/arm64/kvm/handle_exit.c b/arch/arm64/kvm/handle_exit.c
-index 516aead..af3c732 100644
---- a/arch/arm64/kvm/handle_exit.c
-+++ b/arch/arm64/kvm/handle_exit.c
-@@ -264,7 +264,10 @@ static int handle_trap_exceptions(struct kvm_vcpu *vcpu, struct kvm_run *run)
- 		exit_handle_fn exit_handler;
- 
- 		exit_handler = kvm_get_exit_handler(vcpu);
-+		trace_kvm_trap_enter(vcpu->vcpu_id,
-+				     kvm_vcpu_trap_get_class(vcpu));
- 		handled = exit_handler(vcpu, run);
-+		trace_kvm_trap_exit(vcpu->vcpu_id);
- 	}
- 
- 	return handled;
-diff --git a/arch/arm64/kvm/trace.h b/arch/arm64/kvm/trace.h
-index eab91ad..6014c73 100644
---- a/arch/arm64/kvm/trace.h
-+++ b/arch/arm64/kvm/trace.h
-@@ -8,6 +8,41 @@
- #undef TRACE_SYSTEM
- #define TRACE_SYSTEM kvm
- 
-+TRACE_EVENT(kvm_trap_enter,
-+	TP_PROTO(unsigned int vcpu_id, unsigned int esr_ec),
-+	TP_ARGS(vcpu_id, esr_ec),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int,	vcpu_id)
-+		__field(unsigned int,	esr_ec)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->vcpu_id	= vcpu_id;
-+		__entry->esr_ec		= esr_ec;
-+	),
-+
-+	TP_printk("VCPU %u: HSR_EC=0x%04x (%s)",
-+		  __entry->vcpu_id,
-+		  __entry->esr_ec,
-+		  __print_symbolic(__entry->esr_ec, kvm_arm_exception_class))
-+);
-+
-+TRACE_EVENT(kvm_trap_exit,
-+	TP_PROTO(unsigned int vcpu_id),
-+	TP_ARGS(vcpu_id),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int,	vcpu_id)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->vcpu_id	= vcpu_id;
-+	),
-+
-+	TP_printk("VCPU %u", __entry->vcpu_id)
-+);
-+
- TRACE_EVENT(kvm_wfx_arm64,
- 	TP_PROTO(unsigned long vcpu_pc, bool is_wfe),
- 	TP_ARGS(vcpu_pc, is_wfe),
-diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-index 90cedeb..9f63fd9 100644
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -758,7 +758,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
- 		/**************************************************************
- 		 * Enter the guest
- 		 */
--		trace_kvm_entry(*vcpu_pc(vcpu));
-+		trace_kvm_entry(vcpu->vcpu_id, *vcpu_pc(vcpu));
- 		guest_enter_irqoff();
- 
- 		if (has_vhe()) {
-@@ -822,7 +822,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
- 		 * guest time.
- 		 */
- 		guest_exit();
--		trace_kvm_exit(ret, kvm_vcpu_trap_get_class(vcpu), *vcpu_pc(vcpu));
-+		trace_kvm_exit(vcpu->vcpu_id, ret, *vcpu_pc(vcpu));
- 
- 		/* Exit types that need handling before we can be preempted */
- 		handle_exit_early(vcpu, run, ret);
-diff --git a/virt/kvm/arm/trace.h b/virt/kvm/arm/trace.h
-index 8b7dff2..edd9dae 100644
---- a/virt/kvm/arm/trace.h
-+++ b/virt/kvm/arm/trace.h
-@@ -12,40 +12,41 @@
-  * Tracepoints for entry/exit to guest
-  */
- TRACE_EVENT(kvm_entry,
--	TP_PROTO(unsigned long vcpu_pc),
--	TP_ARGS(vcpu_pc),
-+	TP_PROTO(unsigned int vcpu_id, unsigned long vcpu_pc),
-+	TP_ARGS(vcpu_id, vcpu_pc),
- 
- 	TP_STRUCT__entry(
-+		__field(	unsigned int,	vcpu_id		)
- 		__field(	unsigned long,	vcpu_pc		)
- 	),
- 
- 	TP_fast_assign(
-+		__entry->vcpu_id		= vcpu_id;
- 		__entry->vcpu_pc		= vcpu_pc;
- 	),
- 
--	TP_printk("PC: 0x%08lx", __entry->vcpu_pc)
-+	TP_printk("VCPU %u: PC=0x%08lx", __entry->vcpu_id, __entry->vcpu_pc)
- );
- 
- TRACE_EVENT(kvm_exit,
--	TP_PROTO(int ret, unsigned int esr_ec, unsigned long vcpu_pc),
--	TP_ARGS(ret, esr_ec, vcpu_pc),
-+	TP_PROTO(unsigned int vcpu_id, int ret, unsigned long vcpu_pc),
-+	TP_ARGS(vcpu_id, ret, vcpu_pc),
- 
- 	TP_STRUCT__entry(
-+		__field(	unsigned int,	vcpu_id		)
- 		__field(	int,		ret		)
--		__field(	unsigned int,	esr_ec		)
- 		__field(	unsigned long,	vcpu_pc		)
- 	),
- 
- 	TP_fast_assign(
-+		__entry->vcpu_id		= vcpu_id;
- 		__entry->ret			= ARM_EXCEPTION_CODE(ret);
--		__entry->esr_ec = ARM_EXCEPTION_IS_TRAP(ret) ? esr_ec : 0;
- 		__entry->vcpu_pc		= vcpu_pc;
- 	),
- 
--	TP_printk("%s: HSR_EC: 0x%04x (%s), PC: 0x%08lx",
-+	TP_printk("VCPU %u: exit_type=%s, PC=0x%08lx",
-+		  __entry->vcpu_id,
- 		  __print_symbolic(__entry->ret, kvm_arm_exception_type),
--		  __entry->esr_ec,
--		  __print_symbolic(__entry->esr_ec, kvm_arm_exception_class),
- 		  __entry->vcpu_pc)
- );
- 
--- 
-1.8.3.1
+(It's the semantic I came up with but maybe there are other
+ideas here.)
 
-
+Yours,
+Linus Walleij
