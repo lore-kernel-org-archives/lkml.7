@@ -7,61 +7,65 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF9FC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D7FC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8686521721
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7362C21721
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560362146;
-	bh=3rx6Bkfh5euv6JwZIYP36BwGbKOAUf0YaU9Uzl9ugZs=;
+	s=default; t=1560362148;
+	bh=HiEwT8x563kVWGNTlPd3AF5bh2B/9cu1YabEInQ0PMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T+zeURm8+QyaH9tkRclvQGQIjYKdUXudSSDwfxe92z5jnMT2MPeZPeX77Tj14R7Fx
-	 576e7LxzelvBU9mZhQp4bM1Sg8j87eKMVaakyCBnVAreRLXtq7dWboGOyPsWf9GuNT
-	 GyIfeE4/OcomuVzsDXilfP49mDz1zNOd1XnjFDU8=
+	b=ExgkLY+CECb+fwX6gFnxEGbQ/rAF7HYfgGGa+gRptzk2Xj/O7B6SnF/nePbJiKdNG
+	 ucKaarpM9iNnspZG8F/E0MNQo2c7gNGdkwMD5x1iay7sqLlbNoKhXYcQLSxwr05Xwd
+	 j11hjBot53L5X1Rk88bTeKAexGvv1s3X+KEqw9k8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390605AbfFLRzp (ORCPT
+        id S2404066AbfFLRzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 13:55:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40478 "EHLO
+        Wed, 12 Jun 2019 13:55:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40476 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388722AbfFLRxO (ORCPT
+        with ESMTP id S2388764AbfFLRxO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Jun 2019 13:53:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Zt3xoMrxZU+L1IqkBU/DdgxjyhNGin3s3jVYlUtGi7w=; b=KZbejZKoEgJtow9o5a7n7Xm31r
-        uL7HeN0o/NrRjMOd4hp7+au7j/xc/3NPYkc/2YiFhdiFf1b5lbgtEFfkNjqm5l5WA2DSUIMurUpCu
-        Rixsw1xpv1Hl1R6aqu4PJ9+ki7C2tvJMTuwPyiL+l3rav2rxOGI5jadFy6YedPOZUpYzbSYhXeZn+
-        fPu5T6m2mh9VhBCyuEszurKErXMDOLzRTywxcdHYZwDTsFCJrKszI9PwEmqV7Lb28JNf/43sBms+n
-        hQ8x86uZ6p7qoR9ytLObSaHbeQ2ySX6N0h8zJZjR6hlkOt0I3KXkKUDqd9DC6eD0VONAw9O6RLll1
-        qFEuesWQ==;
+        bh=7uC8MkSQLkpozYmSTHz8U3r2JAtr1DHpd7E4+aF7sdg=; b=KnuBOyzFyuqbgudTus5G8ZJvN9
+        NbyWtYI5zSDP6Z2G9pH+zsfp82WwgJkgJncLy1EI0XQypwCS5EfhKVnxOsdAyg9fVh0FoarYHRj/J
+        g+qVL4jRcFI/FqXVLPen3n69s62arndyEwipF4fRXQtD9Tu1Nw5/dowTsjwb/QMTMDRwhp48ekpLA
+        JS2htfOwDjn9tuvznKrQ8SzWMLrtBU1ZDTu6NpZoC1D268gjoQ0RqSQ721OZj/fxwSGT96OyYp6Uo
+        ESWGHyhG9qkeduuf8TZ0aCHtdIFmuTTbUTS9BuGmodpC7eIVZjH+ie+y6iZMPO4MqC6lQ+fC8SJ4G
+        Pj5EI06g==;
 Received: from 201.86.169.251.dynamic.adsl.gvt.net.br ([201.86.169.251] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hb7Qt-0002Dd-2K; Wed, 12 Jun 2019 17:53:11 +0000
+        id 1hb7Qt-0002DY-0E; Wed, 12 Jun 2019 17:53:11 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hb7Qq-0001gN-8y; Wed, 12 Jun 2019 14:53:08 -0300
+        id 1hb7Qq-0001g8-60; Wed, 12 Jun 2019 14:53:08 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Borislav Petkov <bp@alien8.de>, Jens Axboe <axboe@kernel.dk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-ide@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-Subject: [PATCH v4 11/28] docs: ide: convert docs to ReST and rename to *.rst
-Date:   Wed, 12 Jun 2019 14:52:47 -0300
-Message-Id: <c8d81e59f9d7d6611531086b59e26ee399ade3a8.1560361364.git.mchehab+samsung@kernel.org>
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v4 08/28] docs: fault-injection: convert docs to ReST and rename to *.rst
+Date:   Wed, 12 Jun 2019 14:52:44 -0300
+Message-Id: <0c1da1fda6f0bf400338c906b78dba217adda517.1560361364.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560361364.git.mchehab+samsung@kernel.org>
 References: <cover.1560361364.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -79,457 +83,534 @@ At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Acked-by: Federico Vaga <federico.vaga@vaga.pv.it>
 ---
- .../admin-guide/kernel-parameters.txt         |   2 +-
- Documentation/cdrom/ide-cd.rst                |  18 +--
- Documentation/ide/changelogs.rst              |  17 ++
- .../ide/{ide-tape.txt => ide-tape.rst}        |  23 +--
- Documentation/ide/{ide.txt => ide.rst}        | 147 ++++++++++--------
- Documentation/ide/index.rst                   |  21 +++
- ...arm-plug-howto.txt => warm-plug-howto.rst} |  10 +-
- arch/m68k/q40/README                          |   2 +-
- drivers/ide/Kconfig                           |  20 +--
- 9 files changed, 155 insertions(+), 105 deletions(-)
- create mode 100644 Documentation/ide/changelogs.rst
- rename Documentation/ide/{ide-tape.txt => ide-tape.rst} (83%)
- rename Documentation/ide/{ide.txt => ide.rst} (72%)
- create mode 100644 Documentation/ide/index.rst
- rename Documentation/ide/{warm-plug-howto.txt => warm-plug-howto.rst} (61%)
+ ...ault-injection.txt => fault-injection.rst} | 265 +++++++++---------
+ Documentation/fault-injection/index.rst       |  20 ++
+ ...r-inject.txt => notifier-error-inject.rst} |  18 +-
+ .../fault-injection/nvme-fault-injection.rst  | 120 ++++++++
+ .../fault-injection/nvme-fault-injection.txt  | 116 --------
+ .../fault-injection/provoke-crashes.rst       |  48 ++++
+ .../fault-injection/provoke-crashes.txt       |  38 ---
+ Documentation/process/4.Coding.rst            |   2 +-
+ .../translations/it_IT/process/4.Coding.rst   |   2 +-
+ .../translations/zh_CN/process/4.Coding.rst   |   2 +-
+ drivers/misc/lkdtm/core.c                     |   2 +-
+ include/linux/fault-inject.h                  |   2 +-
+ lib/Kconfig.debug                             |   2 +-
+ tools/testing/fault-injection/failcmd.sh      |   2 +-
+ 14 files changed, 344 insertions(+), 295 deletions(-)
+ rename Documentation/fault-injection/{fault-injection.txt => fault-injection.rst} (68%)
+ create mode 100644 Documentation/fault-injection/index.rst
+ rename Documentation/fault-injection/{notifier-error-inject.txt => notifier-error-inject.rst} (83%)
+ create mode 100644 Documentation/fault-injection/nvme-fault-injection.rst
+ delete mode 100644 Documentation/fault-injection/nvme-fault-injection.txt
+ create mode 100644 Documentation/fault-injection/provoke-crashes.rst
+ delete mode 100644 Documentation/fault-injection/provoke-crashes.txt
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 581d8888e829..affed5d447de 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1502,7 +1502,7 @@
- 			Format: =0.0 to prevent dma on hda, =0.1 hdb =1.0 hdc
- 			.vlb_clock .pci_clock .noflush .nohpa .noprobe .nowerr
- 			.cdrom .chs .ignore_cable are additional options
--			See Documentation/ide/ide.txt.
-+			See Documentation/ide/ide.rst.
+diff --git a/Documentation/fault-injection/fault-injection.txt b/Documentation/fault-injection/fault-injection.rst
+similarity index 68%
+rename from Documentation/fault-injection/fault-injection.txt
+rename to Documentation/fault-injection/fault-injection.rst
+index a17517a083c3..f51bb21d20e4 100644
+--- a/Documentation/fault-injection/fault-injection.txt
++++ b/Documentation/fault-injection/fault-injection.rst
+@@ -1,3 +1,4 @@
++===========================================
+ Fault injection capabilities infrastructure
+ ===========================================
  
- 	ide-generic.probe-mask= [HW] (E)IDE subsystem
- 			Format: <int>
-diff --git a/Documentation/cdrom/ide-cd.rst b/Documentation/cdrom/ide-cd.rst
-index dadc94ef6b6c..bdccb74fc92d 100644
---- a/Documentation/cdrom/ide-cd.rst
-+++ b/Documentation/cdrom/ide-cd.rst
-@@ -47,7 +47,7 @@ This driver provides the following features:
- ---------------
+@@ -7,36 +8,36 @@ See also drivers/md/md-faulty.c and "every_nth" module option for scsi_debug.
+ Available fault injection capabilities
+ --------------------------------------
  
- 0. The ide-cd relies on the ide disk driver.  See
--   Documentation/ide/ide.txt for up-to-date information on the ide
-+   Documentation/ide/ide.rst for up-to-date information on the ide
-    driver.
+-o failslab
++- failslab
  
- 1. Make sure that the ide and ide-cd drivers are compiled into the
-@@ -62,7 +62,7 @@ This driver provides the following features:
+   injects slab allocation failures. (kmalloc(), kmem_cache_alloc(), ...)
  
-    Depending on what type of IDE interface you have, you may need to
-    specify additional configuration options.  See
--   Documentation/ide/ide.txt.
-+   Documentation/ide/ide.rst.
+-o fail_page_alloc
++- fail_page_alloc
  
- 2. You should also ensure that the iso9660 filesystem is either
-    compiled into the kernel or available as a loadable module.  You
-@@ -82,7 +82,7 @@ This driver provides the following features:
-    on the primary IDE interface are called `hda` and `hdb`,
-    respectively.  The drives on the secondary interface are called
-    `hdc` and `hdd`.  (Interfaces at other locations get other letters
--   in the third position; see Documentation/ide/ide.txt.)
-+   in the third position; see Documentation/ide/ide.rst.)
+   injects page allocation failures. (alloc_pages(), get_free_pages(), ...)
  
-    If you want your CDROM drive to be found automatically by the
-    driver, you should make sure your IDE interface uses either the
-@@ -91,7 +91,7 @@ This driver provides the following features:
-    be jumpered as `master`.  (If for some reason you cannot configure
-    your system in this manner, you can probably still use the driver.
-    You may have to pass extra configuration information to the kernel
--   when you boot, however.  See Documentation/ide/ide.txt for more
-+   when you boot, however.  See Documentation/ide/ide.rst for more
-    information.)
+-o fail_futex
++- fail_futex
  
- 4. Boot the system.  If the drive is recognized, you should see a
-@@ -163,7 +163,7 @@ to change.  If the slot number is -1, the drive is unloaded.
- This section discusses some common problems encountered when trying to
- use the driver, and some possible solutions.  Note that if you are
- experiencing problems, you should probably also review
--Documentation/ide/ide.txt for current information about the underlying
-+Documentation/ide/ide.rst for current information about the underlying
- IDE support code.  Some of these items apply only to earlier versions
- of the driver, but are mentioned here for completeness.
+   injects futex deadlock and uaddr fault errors.
  
-@@ -173,7 +173,7 @@ from the driver.
- a. Drive is not detected during booting.
+-o fail_make_request
++- fail_make_request
  
-    - Review the configuration instructions above and in
--     Documentation/ide/ide.txt, and check how your hardware is
-+     Documentation/ide/ide.rst, and check how your hardware is
-      configured.
+   injects disk IO errors on devices permitted by setting
+   /sys/block/<device>/make-it-fail or
+   /sys/block/<device>/<partition>/make-it-fail. (generic_make_request())
  
-    - If your drive is the only device on an IDE interface, it should
-@@ -181,7 +181,7 @@ a. Drive is not detected during booting.
+-o fail_mmc_request
++- fail_mmc_request
  
-    - If your IDE interface is not at the standard addresses of 0x170
-      or 0x1f0, you'll need to explicitly inform the driver using a
--     lilo option.  See Documentation/ide/ide.txt.  (This feature was
-+     lilo option.  See Documentation/ide/ide.rst.  (This feature was
-      added around kernel version 1.3.30.)
+   injects MMC data errors on devices permitted by setting
+   debugfs entries under /sys/kernel/debug/mmc0/fail_mmc_request
  
-    - If the autoprobing is not finding your drive, you can tell the
-@@ -207,7 +207,7 @@ a. Drive is not detected during booting.
-      Support for some interfaces needing extra initialization is
-      provided in later 1.3.x kernels.  You may need to turn on
-      additional kernel configuration options to get them to work;
--     see Documentation/ide/ide.txt.
-+     see Documentation/ide/ide.rst.
+-o fail_function
++- fail_function
  
-      Even if support is not available for your interface, you may be
-      able to get it to work with the following procedure.  First boot
-@@ -261,7 +261,7 @@ c. System hangups.
-     be worked around by specifying the `serialize` option when
-     booting.  Recent kernels should be able to detect the need for
-     this automatically in most cases, but the detection is not
--    foolproof.  See Documentation/ide/ide.txt for more information
-+    foolproof.  See Documentation/ide/ide.rst for more information
-     about the `serialize` option and the CMD640B.
+   injects error return on specific functions, which are marked by
+   ALLOW_ERROR_INJECTION() macro, by setting debugfs entries
+   under /sys/kernel/debug/fail_function. No boot option supported.
  
-   - Note that many MS-DOS CDROM drivers will work with such buggy
-diff --git a/Documentation/ide/changelogs.rst b/Documentation/ide/changelogs.rst
+-o NVMe fault injection
++- NVMe fault injection
+ 
+   inject NVMe status code and retry flag on devices permitted by setting
+   debugfs entries under /sys/kernel/debug/nvme*/fault_inject. The default
+@@ -47,7 +48,8 @@ o NVMe fault injection
+ Configure fault-injection capabilities behavior
+ -----------------------------------------------
+ 
+-o debugfs entries
++debugfs entries
++^^^^^^^^^^^^^^^
+ 
+ fault-inject-debugfs kernel module provides some debugfs entries for runtime
+ configuration of fault-injection capabilities.
+@@ -55,6 +57,7 @@ configuration of fault-injection capabilities.
+ - /sys/kernel/debug/fail*/probability:
+ 
+ 	likelihood of failure injection, in percent.
++
+ 	Format: <percent>
+ 
+ 	Note that one-failure-per-hundred is a very high error rate
+@@ -83,6 +86,7 @@ configuration of fault-injection capabilities.
+ - /sys/kernel/debug/fail*/verbose
+ 
+ 	Format: { 0 | 1 | 2 }
++
+ 	specifies the verbosity of the messages when failure is
+ 	injected.  '0' means no messages; '1' will print only a single
+ 	log line per failure; '2' will print a call trace too -- useful
+@@ -91,14 +95,15 @@ configuration of fault-injection capabilities.
+ - /sys/kernel/debug/fail*/task-filter:
+ 
+ 	Format: { 'Y' | 'N' }
++
+ 	A value of 'N' disables filtering by process (default).
+ 	Any positive value limits failures to only processes indicated by
+ 	/proc/<pid>/make-it-fail==1.
+ 
+-- /sys/kernel/debug/fail*/require-start:
+-- /sys/kernel/debug/fail*/require-end:
+-- /sys/kernel/debug/fail*/reject-start:
+-- /sys/kernel/debug/fail*/reject-end:
++- /sys/kernel/debug/fail*/require-start,
++  /sys/kernel/debug/fail*/require-end,
++  /sys/kernel/debug/fail*/reject-start,
++  /sys/kernel/debug/fail*/reject-end:
+ 
+ 	specifies the range of virtual addresses tested during
+ 	stacktrace walking.  Failure is injected only if some caller
+@@ -116,6 +121,7 @@ configuration of fault-injection capabilities.
+ - /sys/kernel/debug/fail_page_alloc/ignore-gfp-highmem:
+ 
+ 	Format: { 'Y' | 'N' }
++
+ 	default is 'N', setting it to 'Y' won't inject failures into
+ 	highmem/user allocations.
+ 
+@@ -123,6 +129,7 @@ configuration of fault-injection capabilities.
+ - /sys/kernel/debug/fail_page_alloc/ignore-gfp-wait:
+ 
+ 	Format: { 'Y' | 'N' }
++
+ 	default is 'N', setting it to 'Y' will inject failures
+ 	only into non-sleep allocations (GFP_ATOMIC allocations).
+ 
+@@ -134,12 +141,14 @@ configuration of fault-injection capabilities.
+ - /sys/kernel/debug/fail_futex/ignore-private:
+ 
+ 	Format: { 'Y' | 'N' }
++
+ 	default is 'N', setting it to 'Y' will disable failure injections
+ 	when dealing with private (address space) futexes.
+ 
+ - /sys/kernel/debug/fail_function/inject:
+ 
+ 	Format: { 'function-name' | '!function-name' | '' }
++
+ 	specifies the target function of error injection by name.
+ 	If the function name leads '!' prefix, given function is
+ 	removed from injection list. If nothing specified ('')
+@@ -160,10 +169,11 @@ configuration of fault-injection capabilities.
+ 	function for given function. This will be created when
+ 	user specifies new injection entry.
+ 
+-o Boot option
++Boot option
++^^^^^^^^^^^
+ 
+ In order to inject faults while debugfs is not available (early boot time),
+-use the boot option:
++use the boot option::
+ 
+ 	failslab=
+ 	fail_page_alloc=
+@@ -171,10 +181,11 @@ use the boot option:
+ 	fail_futex=
+ 	mmc_core.fail_request=<interval>,<probability>,<space>,<times>
+ 
+-o proc entries
++proc entries
++^^^^^^^^^^^^
+ 
+-- /proc/<pid>/fail-nth:
+-- /proc/self/task/<tid>/fail-nth:
++- /proc/<pid>/fail-nth,
++  /proc/self/task/<tid>/fail-nth:
+ 
+ 	Write to this file of integer N makes N-th call in the task fail.
+ 	Read from this file returns a integer value. A value of '0' indicates
+@@ -191,16 +202,16 @@ o proc entries
+ How to add new fault injection capability
+ -----------------------------------------
+ 
+-o #include <linux/fault-inject.h>
++- #include <linux/fault-inject.h>
+ 
+-o define the fault attributes
++- define the fault attributes
+ 
+   DECLARE_FAULT_ATTR(name);
+ 
+   Please see the definition of struct fault_attr in fault-inject.h
+   for details.
+ 
+-o provide a way to configure fault attributes
++- provide a way to configure fault attributes
+ 
+ - boot option
+ 
+@@ -222,126 +233,126 @@ o provide a way to configure fault attributes
+   single kernel module, it is better to provide module parameters to
+   configure the fault attributes.
+ 
+-o add a hook to insert failures
++- add a hook to insert failures
+ 
+-  Upon should_fail() returning true, client code should inject a failure.
++  Upon should_fail() returning true, client code should inject a failure:
+ 
+ 	should_fail(attr, size);
+ 
+ Application Examples
+ --------------------
+ 
+-o Inject slab allocation failures into module init/exit code
++- Inject slab allocation failures into module init/exit code::
+ 
+-#!/bin/bash
++    #!/bin/bash
+ 
+-FAILTYPE=failslab
+-echo Y > /sys/kernel/debug/$FAILTYPE/task-filter
+-echo 10 > /sys/kernel/debug/$FAILTYPE/probability
+-echo 100 > /sys/kernel/debug/$FAILTYPE/interval
+-echo -1 > /sys/kernel/debug/$FAILTYPE/times
+-echo 0 > /sys/kernel/debug/$FAILTYPE/space
+-echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
+-echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
++    FAILTYPE=failslab
++    echo Y > /sys/kernel/debug/$FAILTYPE/task-filter
++    echo 10 > /sys/kernel/debug/$FAILTYPE/probability
++    echo 100 > /sys/kernel/debug/$FAILTYPE/interval
++    echo -1 > /sys/kernel/debug/$FAILTYPE/times
++    echo 0 > /sys/kernel/debug/$FAILTYPE/space
++    echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
++    echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
+ 
+-faulty_system()
+-{
++    faulty_system()
++    {
+ 	bash -c "echo 1 > /proc/self/make-it-fail && exec $*"
+-}
++    }
+ 
+-if [ $# -eq 0 ]
+-then
++    if [ $# -eq 0 ]
++    then
+ 	echo "Usage: $0 modulename [ modulename ... ]"
+ 	exit 1
+-fi
++    fi
+ 
+-for m in $*
+-do
++    for m in $*
++    do
+ 	echo inserting $m...
+ 	faulty_system modprobe $m
+ 
+ 	echo removing $m...
+ 	faulty_system modprobe -r $m
+-done
++    done
+ 
+ ------------------------------------------------------------------------------
+ 
+-o Inject page allocation failures only for a specific module
++- Inject page allocation failures only for a specific module::
+ 
+-#!/bin/bash
++    #!/bin/bash
+ 
+-FAILTYPE=fail_page_alloc
+-module=$1
++    FAILTYPE=fail_page_alloc
++    module=$1
+ 
+-if [ -z $module ]
+-then
++    if [ -z $module ]
++    then
+ 	echo "Usage: $0 <modulename>"
+ 	exit 1
+-fi
++    fi
+ 
+-modprobe $module
++    modprobe $module
+ 
+-if [ ! -d /sys/module/$module/sections ]
+-then
++    if [ ! -d /sys/module/$module/sections ]
++    then
+ 	echo Module $module is not loaded
+ 	exit 1
+-fi
++    fi
+ 
+-cat /sys/module/$module/sections/.text > /sys/kernel/debug/$FAILTYPE/require-start
+-cat /sys/module/$module/sections/.data > /sys/kernel/debug/$FAILTYPE/require-end
++    cat /sys/module/$module/sections/.text > /sys/kernel/debug/$FAILTYPE/require-start
++    cat /sys/module/$module/sections/.data > /sys/kernel/debug/$FAILTYPE/require-end
+ 
+-echo N > /sys/kernel/debug/$FAILTYPE/task-filter
+-echo 10 > /sys/kernel/debug/$FAILTYPE/probability
+-echo 100 > /sys/kernel/debug/$FAILTYPE/interval
+-echo -1 > /sys/kernel/debug/$FAILTYPE/times
+-echo 0 > /sys/kernel/debug/$FAILTYPE/space
+-echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
+-echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
+-echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-highmem
+-echo 10 > /sys/kernel/debug/$FAILTYPE/stacktrace-depth
++    echo N > /sys/kernel/debug/$FAILTYPE/task-filter
++    echo 10 > /sys/kernel/debug/$FAILTYPE/probability
++    echo 100 > /sys/kernel/debug/$FAILTYPE/interval
++    echo -1 > /sys/kernel/debug/$FAILTYPE/times
++    echo 0 > /sys/kernel/debug/$FAILTYPE/space
++    echo 2 > /sys/kernel/debug/$FAILTYPE/verbose
++    echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-wait
++    echo 1 > /sys/kernel/debug/$FAILTYPE/ignore-gfp-highmem
++    echo 10 > /sys/kernel/debug/$FAILTYPE/stacktrace-depth
+ 
+-trap "echo 0 > /sys/kernel/debug/$FAILTYPE/probability" SIGINT SIGTERM EXIT
++    trap "echo 0 > /sys/kernel/debug/$FAILTYPE/probability" SIGINT SIGTERM EXIT
+ 
+-echo "Injecting errors into the module $module... (interrupt to stop)"
+-sleep 1000000
++    echo "Injecting errors into the module $module... (interrupt to stop)"
++    sleep 1000000
+ 
+ ------------------------------------------------------------------------------
+ 
+-o Inject open_ctree error while btrfs mount
++- Inject open_ctree error while btrfs mount::
+ 
+-#!/bin/bash
++    #!/bin/bash
+ 
+-rm -f testfile.img
+-dd if=/dev/zero of=testfile.img bs=1M seek=1000 count=1
+-DEVICE=$(losetup --show -f testfile.img)
+-mkfs.btrfs -f $DEVICE
+-mkdir -p tmpmnt
++    rm -f testfile.img
++    dd if=/dev/zero of=testfile.img bs=1M seek=1000 count=1
++    DEVICE=$(losetup --show -f testfile.img)
++    mkfs.btrfs -f $DEVICE
++    mkdir -p tmpmnt
+ 
+-FAILTYPE=fail_function
+-FAILFUNC=open_ctree
+-echo $FAILFUNC > /sys/kernel/debug/$FAILTYPE/inject
+-echo -12 > /sys/kernel/debug/$FAILTYPE/$FAILFUNC/retval
+-echo N > /sys/kernel/debug/$FAILTYPE/task-filter
+-echo 100 > /sys/kernel/debug/$FAILTYPE/probability
+-echo 0 > /sys/kernel/debug/$FAILTYPE/interval
+-echo -1 > /sys/kernel/debug/$FAILTYPE/times
+-echo 0 > /sys/kernel/debug/$FAILTYPE/space
+-echo 1 > /sys/kernel/debug/$FAILTYPE/verbose
++    FAILTYPE=fail_function
++    FAILFUNC=open_ctree
++    echo $FAILFUNC > /sys/kernel/debug/$FAILTYPE/inject
++    echo -12 > /sys/kernel/debug/$FAILTYPE/$FAILFUNC/retval
++    echo N > /sys/kernel/debug/$FAILTYPE/task-filter
++    echo 100 > /sys/kernel/debug/$FAILTYPE/probability
++    echo 0 > /sys/kernel/debug/$FAILTYPE/interval
++    echo -1 > /sys/kernel/debug/$FAILTYPE/times
++    echo 0 > /sys/kernel/debug/$FAILTYPE/space
++    echo 1 > /sys/kernel/debug/$FAILTYPE/verbose
+ 
+-mount -t btrfs $DEVICE tmpmnt
+-if [ $? -ne 0 ]
+-then
++    mount -t btrfs $DEVICE tmpmnt
++    if [ $? -ne 0 ]
++    then
+ 	echo "SUCCESS!"
+-else
++    else
+ 	echo "FAILED!"
+ 	umount tmpmnt
+-fi
++    fi
+ 
+-echo > /sys/kernel/debug/$FAILTYPE/inject
++    echo > /sys/kernel/debug/$FAILTYPE/inject
+ 
+-rmdir tmpmnt
+-losetup -d $DEVICE
+-rm testfile.img
++    rmdir tmpmnt
++    losetup -d $DEVICE
++    rm testfile.img
+ 
+ 
+ Tool to run command with failslab or fail_page_alloc
+@@ -354,43 +365,43 @@ see the following examples.
+ Examples:
+ 
+ Run a command "make -C tools/testing/selftests/ run_tests" with injecting slab
+-allocation failure.
++allocation failure::
+ 
+ 	# ./tools/testing/fault-injection/failcmd.sh \
+ 		-- make -C tools/testing/selftests/ run_tests
+ 
+ Same as above except to specify 100 times failures at most instead of one time
+-at most by default.
++at most by default::
+ 
+ 	# ./tools/testing/fault-injection/failcmd.sh --times=100 \
+ 		-- make -C tools/testing/selftests/ run_tests
+ 
+ Same as above except to inject page allocation failure instead of slab
+-allocation failure.
++allocation failure::
+ 
+ 	# env FAILCMD_TYPE=fail_page_alloc \
+ 		./tools/testing/fault-injection/failcmd.sh --times=100 \
+-                -- make -C tools/testing/selftests/ run_tests
++		-- make -C tools/testing/selftests/ run_tests
+ 
+ Systematic faults using fail-nth
+ ---------------------------------
+ 
+ The following code systematically faults 0-th, 1-st, 2-nd and so on
+-capabilities in the socketpair() system call.
++capabilities in the socketpair() system call::
+ 
+-#include <sys/types.h>
+-#include <sys/stat.h>
+-#include <sys/socket.h>
+-#include <sys/syscall.h>
+-#include <fcntl.h>
+-#include <unistd.h>
+-#include <string.h>
+-#include <stdlib.h>
+-#include <stdio.h>
+-#include <errno.h>
++  #include <sys/types.h>
++  #include <sys/stat.h>
++  #include <sys/socket.h>
++  #include <sys/syscall.h>
++  #include <fcntl.h>
++  #include <unistd.h>
++  #include <string.h>
++  #include <stdlib.h>
++  #include <stdio.h>
++  #include <errno.h>
+ 
+-int main()
+-{
++  int main()
++  {
+ 	int i, err, res, fail_nth, fds[2];
+ 	char buf[128];
+ 
+@@ -413,23 +424,23 @@ int main()
+ 			break;
+ 	}
+ 	return 0;
+-}
++  }
+ 
+-An example output:
++An example output::
+ 
+-1-th fault Y: res=-1/23
+-2-th fault Y: res=-1/23
+-3-th fault Y: res=-1/12
+-4-th fault Y: res=-1/12
+-5-th fault Y: res=-1/23
+-6-th fault Y: res=-1/23
+-7-th fault Y: res=-1/23
+-8-th fault Y: res=-1/12
+-9-th fault Y: res=-1/12
+-10-th fault Y: res=-1/12
+-11-th fault Y: res=-1/12
+-12-th fault Y: res=-1/12
+-13-th fault Y: res=-1/12
+-14-th fault Y: res=-1/12
+-15-th fault Y: res=-1/12
+-16-th fault N: res=0/12
++	1-th fault Y: res=-1/23
++	2-th fault Y: res=-1/23
++	3-th fault Y: res=-1/12
++	4-th fault Y: res=-1/12
++	5-th fault Y: res=-1/23
++	6-th fault Y: res=-1/23
++	7-th fault Y: res=-1/23
++	8-th fault Y: res=-1/12
++	9-th fault Y: res=-1/12
++	10-th fault Y: res=-1/12
++	11-th fault Y: res=-1/12
++	12-th fault Y: res=-1/12
++	13-th fault Y: res=-1/12
++	14-th fault Y: res=-1/12
++	15-th fault Y: res=-1/12
++	16-th fault N: res=0/12
+diff --git a/Documentation/fault-injection/index.rst b/Documentation/fault-injection/index.rst
 new file mode 100644
-index 000000000000..fdf9d0fb8027
+index 000000000000..92b5639ed07a
 --- /dev/null
-+++ b/Documentation/ide/changelogs.rst
-@@ -0,0 +1,17 @@
-+Changelog for ide cd
-+--------------------
-+
-+ .. include:: ChangeLog.ide-cd.1994-2004
-+    :literal:
-+
-+Changelog for ide floppy
-+------------------------
-+
-+ .. include:: ChangeLog.ide-floppy.1996-2002
-+    :literal:
-+
-+Changelog for ide tape
-+----------------------
-+
-+ .. include:: ChangeLog.ide-tape.1995-2002
-+    :literal:
-diff --git a/Documentation/ide/ide-tape.txt b/Documentation/ide/ide-tape.rst
-similarity index 83%
-rename from Documentation/ide/ide-tape.txt
-rename to Documentation/ide/ide-tape.rst
-index 3f348a0b21d8..3e061d9c0e38 100644
---- a/Documentation/ide/ide-tape.txt
-+++ b/Documentation/ide/ide-tape.rst
-@@ -1,4 +1,6 @@
--IDE ATAPI streaming tape driver.
-+===============================
-+IDE ATAPI streaming tape driver
-+===============================
- 
- This driver is a part of the Linux ide driver.
- 
-@@ -10,14 +12,14 @@ to the request-list of the block device, and waits for their completion.
- The block device major and minor numbers are determined from the
- tape's relative position in the ide interfaces, as explained in ide.c.
- 
--The character device interface consists of the following devices:
-+The character device interface consists of the following devices::
- 
--ht0		major 37, minor 0	first  IDE tape, rewind on close.
--ht1		major 37, minor 1	second IDE tape, rewind on close.
--...
--nht0		major 37, minor 128	first  IDE tape, no rewind on close.
--nht1		major 37, minor 129	second IDE tape, no rewind on close.
--...
-+  ht0		major 37, minor 0	first  IDE tape, rewind on close.
-+  ht1		major 37, minor 1	second IDE tape, rewind on close.
-+  ...
-+  nht0		major 37, minor 128	first  IDE tape, no rewind on close.
-+  nht1		major 37, minor 129	second IDE tape, no rewind on close.
-+  ...
- 
- The general magnetic tape commands compatible interface, as defined by
- include/linux/mtio.h, is accessible through the character device.
-@@ -40,9 +42,10 @@ Testing was done with a 2 GB CONNER CTMA 4000 IDE ATAPI Streaming Tape Drive.
- Here are some words from the first releases of hd.c, which are quoted
- in ide.c and apply here as well:
- 
--| Special care is recommended.  Have Fun!
-+* Special care is recommended.  Have Fun!
- 
--Possible improvements:
-+Possible improvements
-+=====================
- 
- 1. Support for the ATAPI overlap protocol.
- 
-diff --git a/Documentation/ide/ide.txt b/Documentation/ide/ide.rst
-similarity index 72%
-rename from Documentation/ide/ide.txt
-rename to Documentation/ide/ide.rst
-index 7aca987c23d9..88bdcba92f7d 100644
---- a/Documentation/ide/ide.txt
-+++ b/Documentation/ide/ide.rst
-@@ -1,41 +1,43 @@
--
--	Information regarding the Enhanced IDE drive in Linux 2.6
--
--==============================================================================
--
-+============================================
-+Information regarding the Enhanced IDE drive
-+============================================
- 
-    The hdparm utility can be used to control various IDE features on a
-    running system. It is packaged separately.  Please Look for it on popular
-    linux FTP sites.
- 
-+-------------------------------------------------------------------------------
- 
-+.. important::
- 
--***  IMPORTANT NOTICES:  BUGGY IDE CHIPSETS CAN CORRUPT DATA!!
--***  =================
--***  PCI versions of the CMD640 and RZ1000 interfaces are now detected
--***  automatically at startup when PCI BIOS support is configured.
--***
--***  Linux disables the "prefetch" ("readahead") mode of the RZ1000
--***  to prevent data corruption possible due to hardware design flaws.
--***
--***  For the CMD640, linux disables "IRQ unmasking" (hdparm -u1) on any
--***  drive for which the "prefetch" mode of the CMD640 is turned on.
--***  If "prefetch" is disabled (hdparm -p8), then "IRQ unmasking" can be
--***  used again.
--***
--***  For the CMD640, linux disables "32bit I/O" (hdparm -c1) on any drive
--***  for which the "prefetch" mode of the CMD640 is turned off.
--***  If "prefetch" is enabled (hdparm -p9), then "32bit I/O" can be
--***  used again.
--***
--***  The CMD640 is also used on some Vesa Local Bus (VLB) cards, and is *NOT*
--***  automatically detected by Linux.  For safe, reliable operation with such
--***  interfaces, one *MUST* use the "cmd640.probe_vlb" kernel option.
--***
--***  Use of the "serialize" option is no longer necessary.
--
--================================================================================
--Common pitfalls:
-+   BUGGY IDE CHIPSETS CAN CORRUPT DATA!!
-+
-+    PCI versions of the CMD640 and RZ1000 interfaces are now detected
-+    automatically at startup when PCI BIOS support is configured.
-+
-+    Linux disables the "prefetch" ("readahead") mode of the RZ1000
-+    to prevent data corruption possible due to hardware design flaws.
-+
-+    For the CMD640, linux disables "IRQ unmasking" (hdparm -u1) on any
-+    drive for which the "prefetch" mode of the CMD640 is turned on.
-+    If "prefetch" is disabled (hdparm -p8), then "IRQ unmasking" can be
-+    used again.
-+
-+    For the CMD640, linux disables "32bit I/O" (hdparm -c1) on any drive
-+    for which the "prefetch" mode of the CMD640 is turned off.
-+    If "prefetch" is enabled (hdparm -p9), then "32bit I/O" can be
-+    used again.
-+
-+    The CMD640 is also used on some Vesa Local Bus (VLB) cards, and is *NOT*
-+    automatically detected by Linux.  For safe, reliable operation with such
-+    interfaces, one *MUST* use the "cmd640.probe_vlb" kernel option.
-+
-+    Use of the "serialize" option is no longer necessary.
-+
-+-------------------------------------------------------------------------------
-+
-+Common pitfalls
-+===============
- 
- - 40-conductor IDE cables are capable of transferring data in DMA modes up to
-   udma2, but no faster.
-@@ -49,19 +51,18 @@ Common pitfalls:
- - Even better try to stick to the same vendor and device type on the same
-   cable.
- 
--================================================================================
--
--This is the multiple IDE interface driver, as evolved from hd.c.
-+This is the multiple IDE interface driver, as evolved from hd.c
-+===============================================================
- 
- It supports up to 9 IDE interfaces per default, on one or more IRQs (usually
--14 & 15).  There can be up to two drives per interface, as per the ATA-6 spec.
-+14 & 15).  There can be up to two drives per interface, as per the ATA-6 spec.::
- 
--Primary:    ide0, port 0x1f0; major=3;  hda is minor=0; hdb is minor=64
--Secondary:  ide1, port 0x170; major=22; hdc is minor=0; hdd is minor=64
--Tertiary:   ide2, port 0x1e8; major=33; hde is minor=0; hdf is minor=64
--Quaternary: ide3, port 0x168; major=34; hdg is minor=0; hdh is minor=64
--fifth..     ide4, usually PCI, probed
--sixth..     ide5, usually PCI, probed
-+  Primary:    ide0, port 0x1f0; major=3;  hda is minor=0; hdb is minor=64
-+  Secondary:  ide1, port 0x170; major=22; hdc is minor=0; hdd is minor=64
-+  Tertiary:   ide2, port 0x1e8; major=33; hde is minor=0; hdf is minor=64
-+  Quaternary: ide3, port 0x168; major=34; hdg is minor=0; hdh is minor=64
-+  fifth..     ide4, usually PCI, probed
-+  sixth..     ide5, usually PCI, probed
- 
- To access devices on interfaces > ide0, device entries please make sure that
- device files for them are present in /dev.  If not, please create such
-@@ -80,12 +81,15 @@ seldom occurs.  Be careful, and if in doubt, don't do it!
- 
- Drives are normally found by auto-probing and/or examining the CMOS/BIOS data.
- For really weird situations, the apparent (fdisk) geometry can also be specified
--on the kernel "command line" using LILO.  The format of such lines is:
-+on the kernel "command line" using LILO.  The format of such lines is::
- 
- 	ide_core.chs=[interface_number.device_number]:cyls,heads,sects
--or	ide_core.cdrom=[interface_number.device_number]
- 
--For example:
-+or::
-+
-+	ide_core.cdrom=[interface_number.device_number]
-+
-+For example::
- 
- 	ide_core.chs=1.0:1050,32,64  ide_core.cdrom=1.1
- 
-@@ -96,10 +100,12 @@ geometry for partitioning purposes (fdisk).
- If the auto-probing during boot time confuses a drive (ie. the drive works
- with hd.c but not with ide.c), then an command line option may be specified
- for each drive for which you'd like the drive to skip the hardware
--probe/identification sequence.  For example:
-+probe/identification sequence.  For example::
- 
- 	ide_core.noprobe=0.1
--or
-+
-+or::
-+
- 	ide_core.chs=1.0:768,16,32
- 	ide_core.noprobe=1.0
- 
-@@ -115,22 +121,24 @@ Such drives will be identified at boot time, just like a hard disk.
- 
- If for some reason your cdrom drive is *not* found at boot time, you can force
- the probe to look harder by supplying a kernel command line parameter
--via LILO, such as:
-+via LILO, such as:::
- 
- 	ide_core.cdrom=1.0	/* "master" on second interface (hdc) */
--or
-+
-+or::
-+
- 	ide_core.cdrom=1.1	/* "slave" on second interface (hdd) */
- 
- For example, a GW2000 system might have a hard drive on the primary
- interface (/dev/hda) and an IDE cdrom drive on the secondary interface
--(/dev/hdc).  To mount a CD in the cdrom drive, one would use something like:
-+(/dev/hdc).  To mount a CD in the cdrom drive, one would use something like::
- 
- 	ln -sf /dev/hdc /dev/cdrom
- 	mkdir /mnt/cdrom
- 	mount /dev/cdrom /mnt/cdrom -t iso9660 -o ro
- 
- If, after doing all of the above, mount doesn't work and you see
--errors from the driver (with dmesg) complaining about `status=0xff',
-+errors from the driver (with dmesg) complaining about `status=0xff`,
- this means that the hardware is not responding to the driver's attempts
- to read it.  One of the following is probably the problem:
- 
-@@ -165,7 +173,7 @@ drivers can always be compiled as loadable modules, the chipset drivers
- can only be compiled into the kernel, and the core code (ide.c) can be
- compiled as a loadable module provided no chipset support is needed.
- 
--When using ide.c as a module in combination with kmod, add:
-+When using ide.c as a module in combination with kmod, add::
- 
- 	alias block-major-3 ide-probe
- 
-@@ -176,10 +184,8 @@ driver using the "options=" keyword to insmod, while replacing any ',' with
- ';'.
- 
- 
--================================================================================
--
- Summary of ide driver parameters for kernel command line
----------------------------------------------------------
-+========================================================
- 
- For legacy IDE VLB host drivers (ali14xx/dtc2278/ht6560b/qd65xx/umc8672)
- you need to explicitly enable probing by using "probe" kernel parameter,
-@@ -226,28 +232,31 @@ Other kernel parameters for ide_core are:
- 
- * "chs=[interface_number.device_number]" to force device as a disk (using CHS)
- 
--================================================================================
- 
- Some Terminology
------------------
--IDE = Integrated Drive Electronics, meaning that each drive has a built-in
--controller, which is why an "IDE interface card" is not a "controller card".
-+================
- 
--ATA = AT (the old IBM 286 computer) Attachment Interface, a draft American
--National Standard for connecting hard drives to PCs.  This is the official
--name for "IDE".
-+IDE
-+  Integrated Drive Electronics, meaning that each drive has a built-in
-+  controller, which is why an "IDE interface card" is not a "controller card".
- 
--The latest standards define some enhancements, known as the ATA-6 spec,
--which grew out of vendor-specific "Enhanced IDE" (EIDE) implementations.
-+ATA
-+  AT (the old IBM 286 computer) Attachment Interface, a draft American
-+  National Standard for connecting hard drives to PCs.  This is the official
-+  name for "IDE".
- 
--ATAPI = ATA Packet Interface, a new protocol for controlling the drives,
--similar to SCSI protocols, created at the same time as the ATA2 standard.
--ATAPI is currently used for controlling CDROM, TAPE and FLOPPY (ZIP or
--LS120/240) devices, removable R/W cartridges, and for high capacity hard disk
--drives.
-+  The latest standards define some enhancements, known as the ATA-6 spec,
-+  which grew out of vendor-specific "Enhanced IDE" (EIDE) implementations.
-+
-+ATAPI
-+  ATA Packet Interface, a new protocol for controlling the drives,
-+  similar to SCSI protocols, created at the same time as the ATA2 standard.
-+  ATAPI is currently used for controlling CDROM, TAPE and FLOPPY (ZIP or
-+  LS120/240) devices, removable R/W cartridges, and for high capacity hard disk
-+  drives.
- 
- mlord@pobox.com
----
-+
- 
- Wed Apr 17 22:52:44 CEST 2002 edited by Marcin Dalecki, the current
- maintainer.
-diff --git a/Documentation/ide/index.rst b/Documentation/ide/index.rst
-new file mode 100644
-index 000000000000..45bc12d3957f
---- /dev/null
-+++ b/Documentation/ide/index.rst
-@@ -0,0 +1,21 @@
++++ b/Documentation/fault-injection/index.rst
+@@ -0,0 +1,20 @@
 +:orphan:
 +
-+==================================
-+Integrated Drive Electronics (IDE)
-+==================================
++===============
++fault-injection
++===============
 +
 +.. toctree::
 +    :maxdepth: 1
 +
-+    ide
-+    ide-tape
-+    warm-plug-howto
-+
-+    changelogs
++    fault-injection
++    notifier-error-inject
++    nvme-fault-injection
++    provoke-crashes
 +
 +.. only::  subproject and html
 +
@@ -537,138 +618,516 @@ index 000000000000..45bc12d3957f
 +   =======
 +
 +   * :ref:`genindex`
-diff --git a/Documentation/ide/warm-plug-howto.txt b/Documentation/ide/warm-plug-howto.rst
-similarity index 61%
-rename from Documentation/ide/warm-plug-howto.txt
-rename to Documentation/ide/warm-plug-howto.rst
-index 98152bcd515a..c245242ef2f1 100644
---- a/Documentation/ide/warm-plug-howto.txt
-+++ b/Documentation/ide/warm-plug-howto.rst
-@@ -1,14 +1,14 @@
+diff --git a/Documentation/fault-injection/notifier-error-inject.txt b/Documentation/fault-injection/notifier-error-inject.rst
+similarity index 83%
+rename from Documentation/fault-injection/notifier-error-inject.txt
+rename to Documentation/fault-injection/notifier-error-inject.rst
+index e861d761de24..1668b6e48d3a 100644
+--- a/Documentation/fault-injection/notifier-error-inject.txt
++++ b/Documentation/fault-injection/notifier-error-inject.rst
+@@ -14,7 +14,8 @@ modules that can be used to test the following notifiers.
+ PM notifier error injection module
+ ----------------------------------
+ This feature is controlled through debugfs interface
+-/sys/kernel/debug/notifier-error-inject/pm/actions/<notifier event>/error
++
++  /sys/kernel/debug/notifier-error-inject/pm/actions/<notifier event>/error
+ 
+ Possible PM notifier events to be failed are:
+ 
+@@ -22,7 +23,7 @@ Possible PM notifier events to be failed are:
+  * PM_SUSPEND_PREPARE
+  * PM_RESTORE_PREPARE
+ 
+-Example: Inject PM suspend error (-12 = -ENOMEM)
++Example: Inject PM suspend error (-12 = -ENOMEM)::
+ 
+ 	# cd /sys/kernel/debug/notifier-error-inject/pm/
+ 	# echo -12 > actions/PM_SUSPEND_PREPARE/error
+@@ -32,14 +33,15 @@ Example: Inject PM suspend error (-12 = -ENOMEM)
+ Memory hotplug notifier error injection module
+ ----------------------------------------------
+ This feature is controlled through debugfs interface
+-/sys/kernel/debug/notifier-error-inject/memory/actions/<notifier event>/error
++
++  /sys/kernel/debug/notifier-error-inject/memory/actions/<notifier event>/error
+ 
+ Possible memory notifier events to be failed are:
+ 
+  * MEM_GOING_ONLINE
+  * MEM_GOING_OFFLINE
+ 
+-Example: Inject memory hotplug offline error (-12 == -ENOMEM)
++Example: Inject memory hotplug offline error (-12 == -ENOMEM)::
+ 
+ 	# cd /sys/kernel/debug/notifier-error-inject/memory
+ 	# echo -12 > actions/MEM_GOING_OFFLINE/error
+@@ -49,7 +51,8 @@ Example: Inject memory hotplug offline error (-12 == -ENOMEM)
+ powerpc pSeries reconfig notifier error injection module
+ --------------------------------------------------------
+ This feature is controlled through debugfs interface
+-/sys/kernel/debug/notifier-error-inject/pSeries-reconfig/actions/<notifier event>/error
++
++  /sys/kernel/debug/notifier-error-inject/pSeries-reconfig/actions/<notifier event>/error
+ 
+ Possible pSeries reconfig notifier events to be failed are:
+ 
+@@ -61,7 +64,8 @@ Possible pSeries reconfig notifier events to be failed are:
+ Netdevice notifier error injection module
+ ----------------------------------------------
+ This feature is controlled through debugfs interface
+-/sys/kernel/debug/notifier-error-inject/netdev/actions/<notifier event>/error
++
++  /sys/kernel/debug/notifier-error-inject/netdev/actions/<notifier event>/error
+ 
+ Netdevice notifier events which can be failed are:
+ 
+@@ -75,7 +79,7 @@ Netdevice notifier events which can be failed are:
+  * NETDEV_PRECHANGEUPPER
+  * NETDEV_CHANGEUPPER
+ 
+-Example: Inject netdevice mtu change error (-22 == -EINVAL)
++Example: Inject netdevice mtu change error (-22 == -EINVAL)::
+ 
+ 	# cd /sys/kernel/debug/notifier-error-inject/netdev
+ 	# echo -22 > actions/NETDEV_CHANGEMTU/error
+diff --git a/Documentation/fault-injection/nvme-fault-injection.rst b/Documentation/fault-injection/nvme-fault-injection.rst
+new file mode 100644
+index 000000000000..bbb1bf3e8650
+--- /dev/null
++++ b/Documentation/fault-injection/nvme-fault-injection.rst
+@@ -0,0 +1,120 @@
++NVMe Fault Injection
++====================
++Linux's fault injection framework provides a systematic way to support
++error injection via debugfs in the /sys/kernel/debug directory. When
++enabled, the default NVME_SC_INVALID_OPCODE with no retry will be
++injected into the nvme_end_request. Users can change the default status
++code and no retry flag via the debugfs. The list of Generic Command
++Status can be found in include/linux/nvme.h
++
++Following examples show how to inject an error into the nvme.
++
++First, enable CONFIG_FAULT_INJECTION_DEBUG_FS kernel config,
++recompile the kernel. After booting up the kernel, do the
++following.
++
++Example 1: Inject default status code with no retry
++---------------------------------------------------
++
++::
++
++  mount /dev/nvme0n1 /mnt
++  echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
++  echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
++  cp a.file /mnt
++
++Expected Result::
++
++  cp: cannot stat ‘/mnt/a.file’: Input/output error
++
++Message from dmesg::
++
++  FAULT_INJECTION: forcing a failure.
++  name fault_inject, interval 1, probability 100, space 0, times 1
++  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.15.0-rc8+ #2
++  Hardware name: innotek GmbH VirtualBox/VirtualBox,
++  BIOS VirtualBox 12/01/2006
++  Call Trace:
++    <IRQ>
++    dump_stack+0x5c/0x7d
++    should_fail+0x148/0x170
++    nvme_should_fail+0x2f/0x50 [nvme_core]
++    nvme_process_cq+0xe7/0x1d0 [nvme]
++    nvme_irq+0x1e/0x40 [nvme]
++    __handle_irq_event_percpu+0x3a/0x190
++    handle_irq_event_percpu+0x30/0x70
++    handle_irq_event+0x36/0x60
++    handle_fasteoi_irq+0x78/0x120
++    handle_irq+0xa7/0x130
++    ? tick_irq_enter+0xa8/0xc0
++    do_IRQ+0x43/0xc0
++    common_interrupt+0xa2/0xa2
++    </IRQ>
++  RIP: 0010:native_safe_halt+0x2/0x10
++  RSP: 0018:ffffffff82003e90 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffdd
++  RAX: ffffffff817a10c0 RBX: ffffffff82012480 RCX: 0000000000000000
++  RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
++  RBP: 0000000000000000 R08: 000000008e38ce64 R09: 0000000000000000
++  R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff82012480
++  R13: ffffffff82012480 R14: 0000000000000000 R15: 0000000000000000
++    ? __sched_text_end+0x4/0x4
++    default_idle+0x18/0xf0
++    do_idle+0x150/0x1d0
++    cpu_startup_entry+0x6f/0x80
++    start_kernel+0x4c4/0x4e4
++    ? set_init_arg+0x55/0x55
++    secondary_startup_64+0xa5/0xb0
++    print_req_error: I/O error, dev nvme0n1, sector 9240
++  EXT4-fs error (device nvme0n1): ext4_find_entry:1436:
++  inode #2: comm cp: reading directory lblock 0
++
++Example 2: Inject default status code with retry
++------------------------------------------------
++
++::
++
++  mount /dev/nvme0n1 /mnt
++  echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
++  echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
++  echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/status
++  echo 0 > /sys/kernel/debug/nvme0n1/fault_inject/dont_retry
++
++  cp a.file /mnt
++
++Expected Result::
++
++  command success without error
++
++Message from dmesg::
++
++  FAULT_INJECTION: forcing a failure.
++  name fault_inject, interval 1, probability 100, space 0, times 1
++  CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.15.0-rc8+ #4
++  Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
++  Call Trace:
++    <IRQ>
++    dump_stack+0x5c/0x7d
++    should_fail+0x148/0x170
++    nvme_should_fail+0x30/0x60 [nvme_core]
++    nvme_loop_queue_response+0x84/0x110 [nvme_loop]
++    nvmet_req_complete+0x11/0x40 [nvmet]
++    nvmet_bio_done+0x28/0x40 [nvmet]
++    blk_update_request+0xb0/0x310
++    blk_mq_end_request+0x18/0x60
++    flush_smp_call_function_queue+0x3d/0xf0
++    smp_call_function_single_interrupt+0x2c/0xc0
++    call_function_single_interrupt+0xa2/0xb0
++    </IRQ>
++  RIP: 0010:native_safe_halt+0x2/0x10
++  RSP: 0018:ffffc9000068bec0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff04
++  RAX: ffffffff817a10c0 RBX: ffff88011a3c9680 RCX: 0000000000000000
++  RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
++  RBP: 0000000000000001 R08: 000000008e38c131 R09: 0000000000000000
++  R10: 0000000000000000 R11: 0000000000000000 R12: ffff88011a3c9680
++  R13: ffff88011a3c9680 R14: 0000000000000000 R15: 0000000000000000
++    ? __sched_text_end+0x4/0x4
++    default_idle+0x18/0xf0
++    do_idle+0x150/0x1d0
++    cpu_startup_entry+0x6f/0x80
++    start_secondary+0x187/0x1e0
++    secondary_startup_64+0xa5/0xb0
+diff --git a/Documentation/fault-injection/nvme-fault-injection.txt b/Documentation/fault-injection/nvme-fault-injection.txt
+deleted file mode 100644
+index 8fbf3bf60b62..000000000000
+--- a/Documentation/fault-injection/nvme-fault-injection.txt
++++ /dev/null
+@@ -1,116 +0,0 @@
+-NVMe Fault Injection
+-====================
+-Linux's fault injection framework provides a systematic way to support
+-error injection via debugfs in the /sys/kernel/debug directory. When
+-enabled, the default NVME_SC_INVALID_OPCODE with no retry will be
+-injected into the nvme_end_request. Users can change the default status
+-code and no retry flag via the debugfs. The list of Generic Command
+-Status can be found in include/linux/nvme.h
 -
-+===================
- IDE warm-plug HOWTO
- ===================
+-Following examples show how to inject an error into the nvme.
+-
+-First, enable CONFIG_FAULT_INJECTION_DEBUG_FS kernel config,
+-recompile the kernel. After booting up the kernel, do the
+-following.
+-
+-Example 1: Inject default status code with no retry
+----------------------------------------------------
+-
+-mount /dev/nvme0n1 /mnt
+-echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
+-echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
+-cp a.file /mnt
+-
+-Expected Result:
+-
+-cp: cannot stat ‘/mnt/a.file’: Input/output error
+-
+-Message from dmesg:
+-
+-FAULT_INJECTION: forcing a failure.
+-name fault_inject, interval 1, probability 100, space 0, times 1
+-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.15.0-rc8+ #2
+-Hardware name: innotek GmbH VirtualBox/VirtualBox,
+-BIOS VirtualBox 12/01/2006
+-Call Trace:
+-  <IRQ>
+-  dump_stack+0x5c/0x7d
+-  should_fail+0x148/0x170
+-  nvme_should_fail+0x2f/0x50 [nvme_core]
+-  nvme_process_cq+0xe7/0x1d0 [nvme]
+-  nvme_irq+0x1e/0x40 [nvme]
+-  __handle_irq_event_percpu+0x3a/0x190
+-  handle_irq_event_percpu+0x30/0x70
+-  handle_irq_event+0x36/0x60
+-  handle_fasteoi_irq+0x78/0x120
+-  handle_irq+0xa7/0x130
+-  ? tick_irq_enter+0xa8/0xc0
+-  do_IRQ+0x43/0xc0
+-  common_interrupt+0xa2/0xa2
+-  </IRQ>
+-RIP: 0010:native_safe_halt+0x2/0x10
+-RSP: 0018:ffffffff82003e90 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffdd
+-RAX: ffffffff817a10c0 RBX: ffffffff82012480 RCX: 0000000000000000
+-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+-RBP: 0000000000000000 R08: 000000008e38ce64 R09: 0000000000000000
+-R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff82012480
+-R13: ffffffff82012480 R14: 0000000000000000 R15: 0000000000000000
+-  ? __sched_text_end+0x4/0x4
+-  default_idle+0x18/0xf0
+-  do_idle+0x150/0x1d0
+-  cpu_startup_entry+0x6f/0x80
+-  start_kernel+0x4c4/0x4e4
+-  ? set_init_arg+0x55/0x55
+-  secondary_startup_64+0xa5/0xb0
+-  print_req_error: I/O error, dev nvme0n1, sector 9240
+-EXT4-fs error (device nvme0n1): ext4_find_entry:1436:
+-inode #2: comm cp: reading directory lblock 0
+-
+-Example 2: Inject default status code with retry
+-------------------------------------------------
+-
+-mount /dev/nvme0n1 /mnt
+-echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/times
+-echo 100 > /sys/kernel/debug/nvme0n1/fault_inject/probability
+-echo 1 > /sys/kernel/debug/nvme0n1/fault_inject/status
+-echo 0 > /sys/kernel/debug/nvme0n1/fault_inject/dont_retry
+-
+-cp a.file /mnt
+-
+-Expected Result:
+-
+-command success without error
+-
+-Message from dmesg:
+-
+-FAULT_INJECTION: forcing a failure.
+-name fault_inject, interval 1, probability 100, space 0, times 1
+-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.15.0-rc8+ #4
+-Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+-Call Trace:
+-  <IRQ>
+-  dump_stack+0x5c/0x7d
+-  should_fail+0x148/0x170
+-  nvme_should_fail+0x30/0x60 [nvme_core]
+-  nvme_loop_queue_response+0x84/0x110 [nvme_loop]
+-  nvmet_req_complete+0x11/0x40 [nvmet]
+-  nvmet_bio_done+0x28/0x40 [nvmet]
+-  blk_update_request+0xb0/0x310
+-  blk_mq_end_request+0x18/0x60
+-  flush_smp_call_function_queue+0x3d/0xf0
+-  smp_call_function_single_interrupt+0x2c/0xc0
+-  call_function_single_interrupt+0xa2/0xb0
+-  </IRQ>
+-RIP: 0010:native_safe_halt+0x2/0x10
+-RSP: 0018:ffffc9000068bec0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff04
+-RAX: ffffffff817a10c0 RBX: ffff88011a3c9680 RCX: 0000000000000000
+-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+-RBP: 0000000000000001 R08: 000000008e38c131 R09: 0000000000000000
+-R10: 0000000000000000 R11: 0000000000000000 R12: ffff88011a3c9680
+-R13: ffff88011a3c9680 R14: 0000000000000000 R15: 0000000000000000
+-  ? __sched_text_end+0x4/0x4
+-  default_idle+0x18/0xf0
+-  do_idle+0x150/0x1d0
+-  cpu_startup_entry+0x6f/0x80
+-  start_secondary+0x187/0x1e0
+-  secondary_startup_64+0xa5/0xb0
+diff --git a/Documentation/fault-injection/provoke-crashes.rst b/Documentation/fault-injection/provoke-crashes.rst
+new file mode 100644
+index 000000000000..9279a3e12278
+--- /dev/null
++++ b/Documentation/fault-injection/provoke-crashes.rst
+@@ -0,0 +1,48 @@
++===============
++Provoke crashes
++===============
++
++The lkdtm module provides an interface to crash or injure the kernel at
++predefined crashpoints to evaluate the reliability of crash dumps obtained
++using different dumping solutions. The module uses KPROBEs to instrument
++crashing points, but can also crash the kernel directly without KRPOBE
++support.
++
++
++You can provide the way either through module arguments when inserting
++the module, or through a debugfs interface.
++
++Usage::
++
++	insmod lkdtm.ko [recur_count={>0}] cpoint_name=<> cpoint_type=<>
++			[cpoint_count={>0}]
++
++recur_count
++	Recursion level for the stack overflow test. Default is 10.
++
++cpoint_name
++	Crash point where the kernel is to be crashed. It can be
++	one of INT_HARDWARE_ENTRY, INT_HW_IRQ_EN, INT_TASKLET_ENTRY,
++	FS_DEVRW, MEM_SWAPOUT, TIMERADD, SCSI_DISPATCH_CMD,
++	IDE_CORE_CP, DIRECT
++
++cpoint_type
++	Indicates the action to be taken on hitting the crash point.
++	It can be one of PANIC, BUG, EXCEPTION, LOOP, OVERFLOW,
++	CORRUPT_STACK, UNALIGNED_LOAD_STORE_WRITE, OVERWRITE_ALLOCATION,
++	WRITE_AFTER_FREE,
++
++cpoint_count
++	Indicates the number of times the crash point is to be hit
++	to trigger an action. The default is 10.
++
++You can also induce failures by mounting debugfs and writing the type to
++<mountpoint>/provoke-crash/<crashpoint>. E.g.::
++
++  mount -t debugfs debugfs /mnt
++  echo EXCEPTION > /mnt/provoke-crash/INT_HARDWARE_ENTRY
++
++
++A special file is `DIRECT` which will induce the crash directly without
++KPROBE instrumentation. This mode is the only one available when the module
++is built on a kernel without KPROBEs support.
+diff --git a/Documentation/fault-injection/provoke-crashes.txt b/Documentation/fault-injection/provoke-crashes.txt
+deleted file mode 100644
+index 7a9d3d81525b..000000000000
+--- a/Documentation/fault-injection/provoke-crashes.txt
++++ /dev/null
+@@ -1,38 +0,0 @@
+-The lkdtm module provides an interface to crash or injure the kernel at
+-predefined crashpoints to evaluate the reliability of crash dumps obtained
+-using different dumping solutions. The module uses KPROBEs to instrument
+-crashing points, but can also crash the kernel directly without KRPOBE
+-support.
+-
+-
+-You can provide the way either through module arguments when inserting
+-the module, or through a debugfs interface.
+-
+-Usage: insmod lkdtm.ko [recur_count={>0}] cpoint_name=<> cpoint_type=<>
+-				[cpoint_count={>0}]
+-
+-  recur_count : Recursion level for the stack overflow test. Default is 10.
+-
+-  cpoint_name : Crash point where the kernel is to be crashed. It can be
+-	 one of INT_HARDWARE_ENTRY, INT_HW_IRQ_EN, INT_TASKLET_ENTRY,
+-	 FS_DEVRW, MEM_SWAPOUT, TIMERADD, SCSI_DISPATCH_CMD,
+-	 IDE_CORE_CP, DIRECT
+-
+-  cpoint_type : Indicates the action to be taken on hitting the crash point.
+-     It can be one of PANIC, BUG, EXCEPTION, LOOP, OVERFLOW,
+-     CORRUPT_STACK, UNALIGNED_LOAD_STORE_WRITE, OVERWRITE_ALLOCATION,
+-     WRITE_AFTER_FREE,
+-
+-  cpoint_count : Indicates the number of times the crash point is to be hit
+-    to trigger an action. The default is 10.
+-
+-You can also induce failures by mounting debugfs and writing the type to
+-<mountpoint>/provoke-crash/<crashpoint>. E.g.,
+-
+-  mount -t debugfs debugfs /mnt
+-  echo EXCEPTION > /mnt/provoke-crash/INT_HARDWARE_ENTRY
+-
+-
+-A special file is `DIRECT' which will induce the crash directly without
+-KPROBE instrumentation. This mode is the only one available when the module
+-is built on a kernel without KPROBEs support.
+diff --git a/Documentation/process/4.Coding.rst b/Documentation/process/4.Coding.rst
+index 4b7a5ab3cec1..13dd893c9f88 100644
+--- a/Documentation/process/4.Coding.rst
++++ b/Documentation/process/4.Coding.rst
+@@ -298,7 +298,7 @@ enabled, a configurable percentage of memory allocations will be made to
+ fail; these failures can be restricted to a specific range of code.
+ Running with fault injection enabled allows the programmer to see how the
+ code responds when things go badly.  See
+-Documentation/fault-injection/fault-injection.txt for more information on
++Documentation/fault-injection/fault-injection.rst for more information on
+ how to use this facility.
  
--To warm-plug devices on a port 'idex':
-+To warm-plug devices on a port 'idex'::
+ Other kinds of errors can be found with the "sparse" static analysis tool.
+diff --git a/Documentation/translations/it_IT/process/4.Coding.rst b/Documentation/translations/it_IT/process/4.Coding.rst
+index c05b89e616dd..a5e36aa60448 100644
+--- a/Documentation/translations/it_IT/process/4.Coding.rst
++++ b/Documentation/translations/it_IT/process/4.Coding.rst
+@@ -314,7 +314,7 @@ di allocazione di memoria sarà destinata al fallimento; questi fallimenti
+ possono essere ridotti ad uno specifico pezzo di codice.  Procedere con
+ l'inserimento dei fallimenti attivo permette al programmatore di verificare
+ come il codice risponde quando le cose vanno male.  Consultate:
+-Documentation/fault-injection/fault-injection.txt per avere maggiori
++Documentation/fault-injection/fault-injection.rst per avere maggiori
+ informazioni su come utilizzare questo strumento.
  
--# echo -n "1" > /sys/class/ide_port/idex/delete_devices
-+	# echo -n "1" > /sys/class/ide_port/idex/delete_devices
+ Altre tipologie di errori possono essere riscontrati con lo strumento di
+diff --git a/Documentation/translations/zh_CN/process/4.Coding.rst b/Documentation/translations/zh_CN/process/4.Coding.rst
+index 8bb777941394..b82b1dde3122 100644
+--- a/Documentation/translations/zh_CN/process/4.Coding.rst
++++ b/Documentation/translations/zh_CN/process/4.Coding.rst
+@@ -205,7 +205,7 @@ Linus对这个问题给出了最佳答案:
+ 启用故障注入后，内存分配的可配置百分比将失败；这些失败可以限制在特定的代码
+ 范围内。在启用了故障注入的情况下运行，程序员可以看到当情况恶化时代码如何响
+ 应。有关如何使用此工具的详细信息，请参阅
+-Documentation/fault-injection/fault-injection.txt。
++Documentation/fault-injection/fault-injection.rst。
  
--unplug old device(s) and plug new device(s)
-+unplug old device(s) and plug new device(s)::
+ 使用“sparse”静态分析工具可以发现其他类型的错误。对于sparse，可以警告程序员
+ 用户空间和内核空间地址之间的混淆、big endian和small endian数量的混合、在需
+diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+index df9429e3fd3a..c7a507482051 100644
+--- a/drivers/misc/lkdtm/core.c
++++ b/drivers/misc/lkdtm/core.c
+@@ -15,7 +15,7 @@
+  *
+  * Debugfs support added by Simon Kagstrom <simon.kagstrom@netinsight.net>
+  *
+- * See Documentation/fault-injection/provoke-crashes.txt for instructions
++ * See Documentation/fault-injection/provoke-crashes.rst for instructions
+  */
+ #include "lkdtm.h"
+ #include <linux/fs.h>
+diff --git a/include/linux/fault-inject.h b/include/linux/fault-inject.h
+index 7e6c77740413..e525f6957c49 100644
+--- a/include/linux/fault-inject.h
++++ b/include/linux/fault-inject.h
+@@ -11,7 +11,7 @@
  
--# echo -n "1" > /sys/class/ide_port/idex/scan
-+	# echo -n "1" > /sys/class/ide_port/idex/scan
+ /*
+  * For explanation of the elements of this struct, see
+- * Documentation/fault-injection/fault-injection.txt
++ * Documentation/fault-injection/fault-injection.rst
+  */
+ struct fault_attr {
+ 	unsigned long probability;
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index d08f5848958e..3a3554e8ca0f 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1701,7 +1701,7 @@ config LKDTM
+ 	called lkdtm.
  
- done
+ 	Documentation on how to use the module can be found in
+-	Documentation/fault-injection/provoke-crashes.txt
++	Documentation/fault-injection/provoke-crashes.rst
  
-diff --git a/arch/m68k/q40/README b/arch/m68k/q40/README
-index 93f4c4cd3c45..a4991d2d8af6 100644
---- a/arch/m68k/q40/README
-+++ b/arch/m68k/q40/README
-@@ -31,7 +31,7 @@ drivers used by the Q40, apart from the very obvious (console etc.):
- 		char/joystick/*		# most of this should work, not
- 				        # in default config.in
- 	        block/q40ide.c		# startup for ide
--		      ide*		# see Documentation/ide/ide.txt
-+		      ide*		# see Documentation/ide/ide.rst
- 		      floppy.c		# normal PC driver, DMA emu in asm/floppy.h
- 					# and arch/m68k/kernel/entry.S
- 					# see drivers/block/README.fd
-diff --git a/drivers/ide/Kconfig b/drivers/ide/Kconfig
-index fdd2a62f9d52..9eada392df15 100644
---- a/drivers/ide/Kconfig
-+++ b/drivers/ide/Kconfig
-@@ -25,13 +25,13 @@ menuconfig IDE
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ide-core.
+ config TEST_LIST_SORT
+ 	tristate "Linked list sorting test"
+diff --git a/tools/testing/fault-injection/failcmd.sh b/tools/testing/fault-injection/failcmd.sh
+index 29a6c63c5a15..78dac34264be 100644
+--- a/tools/testing/fault-injection/failcmd.sh
++++ b/tools/testing/fault-injection/failcmd.sh
+@@ -42,7 +42,7 @@ OPTIONS
+ 	--interval=value, --space=value, --verbose=value, --task-filter=value,
+ 	--stacktrace-depth=value, --require-start=value, --require-end=value,
+ 	--reject-start=value, --reject-end=value, --ignore-gfp-wait=value
+-		See Documentation/fault-injection/fault-injection.txt for more
++		See Documentation/fault-injection/fault-injection.rst for more
+ 		information
  
--	  For further information, please read <file:Documentation/ide/ide.txt>.
-+	  For further information, please read <file:Documentation/ide/ide.rst>.
- 
- 	  If unsure, say N.
- 
- if IDE
- 
--comment "Please see Documentation/ide/ide.txt for help/info on IDE drives"
-+comment "Please see Documentation/ide/ide.rst for help/info on IDE drives"
- 
- config IDE_XFER_MODE
- 	bool
-@@ -163,7 +163,7 @@ config BLK_DEV_IDETAPE
- 	  along with other IDE devices, as "hdb" or "hdc", or something
- 	  similar, and will be mapped to a character device such as "ht0"
- 	  (check the boot messages with dmesg).  Be sure to consult the
--	  <file:drivers/ide/ide-tape.c> and <file:Documentation/ide/ide.txt>
-+	  <file:drivers/ide/ide-tape.c> and <file:Documentation/ide/ide.rst>
- 	  files for usage information.
- 
- 	  To compile this driver as a module, choose M here: the
-@@ -251,7 +251,7 @@ config BLK_DEV_CMD640
- 
- 	  The CMD640 chip is also used on add-in cards by Acculogic, and on
- 	  the "CSA-6400E PCI to IDE controller" that some people have. For
--	  details, read <file:Documentation/ide/ide.txt>.
-+	  details, read <file:Documentation/ide/ide.rst>.
- 
- config BLK_DEV_CMD640_ENHANCED
- 	bool "CMD640 enhanced support"
-@@ -259,7 +259,7 @@ config BLK_DEV_CMD640_ENHANCED
- 	help
- 	  This option includes support for setting/autotuning PIO modes and
- 	  prefetch on CMD640 IDE interfaces.  For details, read
--	  <file:Documentation/ide/ide.txt>. If you have a CMD640 IDE interface
-+	  <file:Documentation/ide/ide.rst>. If you have a CMD640 IDE interface
- 	  and your BIOS does not already do this for you, then say Y here.
- 	  Otherwise say N.
- 
-@@ -819,7 +819,7 @@ config BLK_DEV_ALI14XX
- 	  boot parameter.  It enables support for the secondary IDE interface
- 	  of the ALI M1439/1443/1445/1487/1489 chipsets, and permits faster
- 	  I/O speeds to be set as well.
--	  See the files <file:Documentation/ide/ide.txt> and
-+	  See the files <file:Documentation/ide/ide.rst> and
- 	  <file:drivers/ide/ali14xx.c> for more info.
- 
- config BLK_DEV_DTC2278
-@@ -830,7 +830,7 @@ config BLK_DEV_DTC2278
- 	  This driver is enabled at runtime using the "dtc2278.probe" kernel
- 	  boot parameter. It enables support for the secondary IDE interface
- 	  of the DTC-2278 card, and permits faster I/O speeds to be set as
--	  well. See the <file:Documentation/ide/ide.txt> and
-+	  well. See the <file:Documentation/ide/ide.rst> and
- 	  <file:drivers/ide/dtc2278.c> files for more info.
- 
- config BLK_DEV_HT6560B
-@@ -841,7 +841,7 @@ config BLK_DEV_HT6560B
- 	  This driver is enabled at runtime using the "ht6560b.probe" kernel
- 	  boot parameter. It enables support for the secondary IDE interface
- 	  of the Holtek card, and permits faster I/O speeds to be set as well.
--	  See the <file:Documentation/ide/ide.txt> and
-+	  See the <file:Documentation/ide/ide.rst> and
- 	  <file:drivers/ide/ht6560b.c> files for more info.
- 
- config BLK_DEV_QD65XX
-@@ -851,7 +851,7 @@ config BLK_DEV_QD65XX
- 	help
- 	  This driver is enabled at runtime using the "qd65xx.probe" kernel
- 	  boot parameter.  It permits faster I/O speeds to be set.  See the
--	  <file:Documentation/ide/ide.txt> and <file:drivers/ide/qd65xx.c>
-+	  <file:Documentation/ide/ide.rst> and <file:drivers/ide/qd65xx.c>
- 	  for more info.
- 
- config BLK_DEV_UMC8672
-@@ -862,7 +862,7 @@ config BLK_DEV_UMC8672
- 	  This driver is enabled at runtime using the "umc8672.probe" kernel
- 	  boot parameter. It enables support for the secondary IDE interface
- 	  of the UMC-8672, and permits faster I/O speeds to be set as well.
--	  See the files <file:Documentation/ide/ide.txt> and
-+	  See the files <file:Documentation/ide/ide.rst> and
- 	  <file:drivers/ide/umc8672.c> for more info.
- 
- endif
+ 	failslab options:
 -- 
 2.21.0
 
