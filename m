@@ -2,88 +2,144 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40022C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7304FC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1506B206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:02:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YNLAf6UI"
+	by mail.kernel.org (Postfix) with ESMTP id 50BB9206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393177AbfFMRC5 (ORCPT
+        id S2389764AbfFMRC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:02:57 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:36640 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732955AbfFMRCv (ORCPT
+        Thu, 13 Jun 2019 13:02:56 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:33351 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729490AbfFLXD3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:02:51 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5DH2nWv085847;
-        Thu, 13 Jun 2019 12:02:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560445369;
-        bh=a/fwfBr6/AiPek9tHmowXu1EXqMUlQqdpcIOL2R9TwY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YNLAf6UIWzdF3bIacyBi5wXFtVplr+AjB7BPP4mX03dgESXPzHFJfGFfUPd3XyRR9
-         +70ckwauXLQz3zBQVWnf7wlVMqyriO6sZbaLMlEknTb4khJJuLGPbgYlXBHmdHuAcX
-         g/zKznTPgILp4E8e+6zlVpf+9S3GxB4UT95TY8DI=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5DH2ngk103699
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 13 Jun 2019 12:02:49 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 13
- Jun 2019 12:02:48 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 13 Jun 2019 12:02:48 -0500
-Received: from [172.22.216.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5DH2kRH054812;
-        Thu, 13 Jun 2019 12:02:47 -0500
-Subject: Re: [RESEND PATCH v2 3/3] regulator: lp87565: Add 4-phase lp87561
- regulator support
-To:     Mark Brown <broonie@kernel.org>
-CC:     <lee.jones@linaro.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <t-kristo@ti.com>
-References: <20190612144620.28331-1-j-keerthy@ti.com>
- <20190613154552.GL5316@sirena.org.uk>
-From:   keerthy <j-keerthy@ti.com>
-Message-ID: <bfb19336-fbe9-06d8-25d3-f2e0b8ea6c9b@ti.com>
-Date:   Thu, 13 Jun 2019 22:32:45 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 12 Jun 2019 19:03:29 -0400
+Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 341A143A474;
+        Thu, 13 Jun 2019 09:03:22 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hbCG8-0003d7-Ew; Thu, 13 Jun 2019 09:02:24 +1000
+Date:   Thu, 13 Jun 2019 09:02:24 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Kent Overstreet <kent.overstreet@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-bcache@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Zach Brown <zach.brown@ni.com>, Jens Axboe <axboe@kernel.dk>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>
+Subject: Re: bcachefs status update (it's done cooking; let's get this sucker
+ merged)
+Message-ID: <20190612230224.GJ14308@dread.disaster.area>
+References: <20190610191420.27007-1-kent.overstreet@gmail.com>
+ <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
+ <20190611011737.GA28701@kmo-pixel>
+ <20190611043336.GB14363@dread.disaster.area>
+ <20190612162144.GA7619@kmo-pixel>
 MIME-Version: 1.0
-In-Reply-To: <20190613154552.GL5316@sirena.org.uk>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612162144.GA7619@kmo-pixel>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
+        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
+        a=7-415B0cAAAA:8 a=tccdw4E4cXR0RJmQ1BEA:9 a=0qVWwiFle0hDQdq2:21
+        a=AnpUfA7Lj1-y_lnq:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/13/2019 9:15 PM, Mark Brown wrote:
-> On Wed, Jun 12, 2019 at 08:16:20PM +0530, Keerthy wrote:
+On Wed, Jun 12, 2019 at 12:21:44PM -0400, Kent Overstreet wrote:
+> On Tue, Jun 11, 2019 at 02:33:36PM +1000, Dave Chinner wrote:
+> > I just recently said this with reference to the range lock stuff I'm
+> > working on in the background:
+> > 
+> > 	FWIW, it's to avoid problems with stupid userspace stuff
+> > 	that nobody really should be doing that I want range locks
+> > 	for the XFS inode locks.  If userspace overlaps the ranges
+> > 	and deadlocks in that case, they they get to keep all the
+> > 	broken bits because, IMO, they are doing something
+> > 	monumentally stupid. I'd probably be making it return
+> > 	EDEADLOCK back out to userspace in the case rather than
+> > 	deadlocking but, fundamentally, I think it's broken
+> > 	behaviour that we should be rejecting with an error rather
+> > 	than adding complexity trying to handle it.
+> > 
+> > So I think this recusive locking across a page fault case should
+> > just fail, not add yet more complexity to try to handle a rare
+> > corner case that exists more in theory than in reality. i.e put the
+> > lock context in the current task, then if the page fault requires a
+> > conflicting lock context to be taken, we terminate the page fault,
+> > back out of the IO and return EDEADLOCK out to userspace. This works
+> > for all types of lock contexts - only the filesystem itself needs to
+> > know what the lock context pointer contains....
 > 
->> patches 1/3 2/3 are already applied to linux-next.
+> Ok, I'm totally on board with returning EDEADLOCK.
 > 
-> This doesn't build without those patches:
+> Question: Would we be ok with returning EDEADLOCK for any IO where the buffer is
+> in the same address space as the file being read/written to, even if the buffer
+> and the IO don't technically overlap?
 
-They are already on next. Do you want me to resend them as well?
+I'd say that depends on the lock granularity. For a range lock,
+we'd be able to do the IO for non-overlapping ranges. For a normal
+mutex or rwsem, then we risk deadlock if the page fault triggers on
+the same address space host as we already have locked for IO. That's
+the case we currently handle with the second IO lock in XFS, ext4,
+btrfs, etc (XFS_MMAPLOCK_* in XFS).
 
-> 
->    CC      drivers/regulator/lp87565-regulator.o
-> drivers/regulator/lp87565-regulator.c:156:32: error: ‘LP87565_BUCK_3210’ undeclared here (not in a function); did you mean ‘LP87565_BUCK_10’?
->    LP87565_REGULATOR("BUCK3210", LP87565_BUCK_3210, "buck3210",
->                                  ^~~~~~~~~~~~~~~~~
-> 
+One of the reasons I'm looking at range locks for XFS is to get rid
+of the need for this second mmap lock, as there is no reason for it
+existing if we can lock ranges and EDEADLOCK inside page faults and
+return errors.
+
+> This would simplify things a lot and eliminate a really nasty corner case - page
+> faults trigger readahead. Even if the buffer and the direct IO don't overlap,
+> readahead can pull in pages that do overlap with the dio.
+
+Page cache readahead needs to be moved under the filesystem IO
+locks. There was a recent thread about how readahead can race with
+hole punching and other fallocate() operations because page cache
+readahead bypasses the filesystem IO locks used to serialise page
+cache invalidation.
+
+e.g. Readahead can be directed by userspace via fadvise, so we now
+have file->f_op->fadvise() so that filesystems can lock the inode
+before calling generic_fadvise() such that page cache instantiation
+and readahead dispatch can be serialised against page cache
+invalidation. I have a patch for XFS sitting around somewhere that
+implements the ->fadvise method.
+
+I think there are some other patches floating around to address the
+other readahead mechanisms to only be done under filesytem IO locks,
+but I haven't had time to dig into it any further. Readahead from
+page faults most definitely needs to be under the MMAPLOCK at
+least so it serialises against fallocate()...
+
+> And on getting EDEADLOCK we could fall back to buffered IO, so
+> userspace would never know....
+
+Yup, that's a choice that individual filesystems can make.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
