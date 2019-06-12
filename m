@@ -2,153 +2,146 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E70BC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CDDC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF9E208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:55:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dzWbAtDg"
+	by mail.kernel.org (Postfix) with ESMTP id 4DDAE20896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437897AbfFLJzZ (ORCPT
+        id S2437908AbfFLJzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:55:25 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:17697 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731781AbfFLJzY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:55:24 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d00cc080001>; Wed, 12 Jun 2019 02:55:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 12 Jun 2019 02:55:23 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 12 Jun 2019 02:55:23 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Jun
- 2019 09:55:23 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 12 Jun 2019 09:55:23 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d00cc050004>; Wed, 12 Jun 2019 02:55:22 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
-CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V10 10/15] dt-bindings: PHY: P2U: Add Tegra194 P2U block
-Date:   Wed, 12 Jun 2019 15:23:34 +0530
-Message-ID: <20190612095339.20118-11-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190612095339.20118-1-vidyas@nvidia.com>
-References: <20190612095339.20118-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 12 Jun 2019 05:55:31 -0400
+Received: from mga12.intel.com ([192.55.52.136]:48761 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437752AbfFLJza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:55:30 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 02:55:30 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga005.fm.intel.com with ESMTP; 12 Jun 2019 02:55:28 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hazya-0007sG-Dq; Wed, 12 Jun 2019 12:55:28 +0300
+Date:   Wed, 12 Jun 2019 12:55:28 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v2] device property: Add helpers to count items in an
+ array
+Message-ID: <20190612095528.GF9224@smile.fi.intel.com>
+References: <20190520135004.15203-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560333320; bh=rU7ITFf2z1Fl1bf92nXBgZ/NVxELN8wOQb7dRVIeyBs=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=dzWbAtDg/o0LhXPAM48yaRK3eu78zTfzN+3Sbpgz8Ay/PD2ElDFKCkhn80kdJ6DM2
-         oe3qHSUYuAjMnWSORHzbfkYo6G8EERx4b8K5MCP2AbexwfGQOjm9G1cWn0s9B7Drte
-         Yx2Ih6Ard/hiGcILyB2KskLXo03Z3P65AoRmG7+pJJPPZsCU/IMq2BKI1oF+UOZC6Z
-         Os66MaHs7lJ/Gwt8zbCljtQ3pytsKQEIyQTGZqRGFfhbgVvLJhMnas/brMBlQgRKlj
-         oKaeSPDXBm2JLGKJ8v4zkOZO2iIJnxq8lCnCBi5sh0JquEM7HpLMy0xJ1tarF20nbY
-         cvswNNo8GSzeg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520135004.15203-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Tegra194 P2U (PIPE to UPHY) module block which is a glue
-module instantiated one for each PCIe lane between Synopsys DesignWare core
-based PCIe IP and Universal PHY block.
+On Mon, May 20, 2019 at 04:50:04PM +0300, Andy Shevchenko wrote:
+> The usual pattern to allocate the necessary space for an array of properties is
+> to count them first by calling:
+> 
+>   count = device_property_read_uXX_array(dev, propname, NULL, 0);
+>   if (count < 0)
+> 	return count;
+> 
+> Introduce helpers device_property_count_uXX() to count items by supplying hard
+> coded last two parameters to device_property_readXX_array().
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-Changes since [v9]:
-* None
+Rafael, can be this applied if you have no objections?
 
-Changes since [v8]:
-* None
+> ---
+> - gathered tags
+> - rephrase a bit the commit message and fix a typo (Sakari)
+>  include/linux/property.h | 44 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> index a29369c89e6e..65e31c090f9f 100644
+> --- a/include/linux/property.h
+> +++ b/include/linux/property.h
+> @@ -144,6 +144,26 @@ static inline int device_property_read_u64(struct device *dev,
+>  	return device_property_read_u64_array(dev, propname, val, 1);
+>  }
+>  
+> +static inline int device_property_count_u8(struct device *dev, const char *propname)
+> +{
+> +	return device_property_read_u8_array(dev, propname, NULL, 0);
+> +}
+> +
+> +static inline int device_property_count_u16(struct device *dev, const char *propname)
+> +{
+> +	return device_property_read_u16_array(dev, propname, NULL, 0);
+> +}
+> +
+> +static inline int device_property_count_u32(struct device *dev, const char *propname)
+> +{
+> +	return device_property_read_u32_array(dev, propname, NULL, 0);
+> +}
+> +
+> +static inline int device_property_count_u64(struct device *dev, const char *propname)
+> +{
+> +	return device_property_read_u64_array(dev, propname, NULL, 0);
+> +}
+> +
+>  static inline bool fwnode_property_read_bool(const struct fwnode_handle *fwnode,
+>  					     const char *propname)
+>  {
+> @@ -174,6 +194,30 @@ static inline int fwnode_property_read_u64(const struct fwnode_handle *fwnode,
+>  	return fwnode_property_read_u64_array(fwnode, propname, val, 1);
+>  }
+>  
+> +static inline int fwnode_property_count_u8(const struct fwnode_handle *fwnode,
+> +					   const char *propname)
+> +{
+> +	return fwnode_property_read_u8_array(fwnode, propname, NULL, 0);
+> +}
+> +
+> +static inline int fwnode_property_count_u16(const struct fwnode_handle *fwnode,
+> +					    const char *propname)
+> +{
+> +	return fwnode_property_read_u16_array(fwnode, propname, NULL, 0);
+> +}
+> +
+> +static inline int fwnode_property_count_u32(const struct fwnode_handle *fwnode,
+> +					    const char *propname)
+> +{
+> +	return fwnode_property_read_u32_array(fwnode, propname, NULL, 0);
+> +}
+> +
+> +static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
+> +					    const char *propname)
+> +{
+> +	return fwnode_property_read_u64_array(fwnode, propname, NULL, 0);
+> +}
+> +
+>  /**
+>   * struct property_entry - "Built-in" device property representation.
+>   * @name: Name of the property.
+> -- 
+> 2.20.1
+> 
 
-Changes since [v7]:
-* None
-
-Changes since [v6]:
-* None
-
-Changes since [v5]:
-* Added Sob
-* Changed node name from "p2u@xxxxxxxx" to "phy@xxxxxxxx"
-
-Changes since [v4]:
-* None
-
-Changes since [v3]:
-* None
-
-Changes since [v2]:
-* Changed node label to reflect new format that includes either 'hsio' or
-  'nvhs' in its name to reflect which UPHY brick they belong to
-
-Changes since [v1]:
-* This is a new patch in v2 series
-
- .../bindings/phy/phy-tegra194-p2u.txt         | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-new file mode 100644
-index 000000000000..d23ff90baad5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-@@ -0,0 +1,28 @@
-+NVIDIA Tegra194 P2U binding
-+
-+Tegra194 has two PHY bricks namely HSIO (High Speed IO) and NVHS (NVIDIA High
-+Speed) each interfacing with 12 and 8 P2U instances respectively.
-+A P2U instance is a glue logic between Synopsys DesignWare Core PCIe IP's PIPE
-+interface and PHY of HSIO/NVHS bricks. Each P2U instance represents one PCIe
-+lane.
-+
-+Required properties:
-+- compatible: For Tegra19x, must contain "nvidia,tegra194-p2u".
-+- reg: Should be the physical address space and length of respective each P2U
-+       instance.
-+- reg-names: Must include the entry "ctl".
-+
-+Required properties for PHY port node:
-+- #phy-cells: Defined by generic PHY bindings.  Must be 0.
-+
-+Refer to phy/phy-bindings.txt for the generic PHY binding properties.
-+
-+Example:
-+
-+p2u_hsio_0: phy@3e10000 {
-+	compatible = "nvidia,tegra194-p2u";
-+	reg = <0x03e10000 0x10000>;
-+	reg-names = "ctl";
-+
-+	#phy-cells = <0>;
-+};
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
