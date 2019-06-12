@@ -2,93 +2,186 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8AAC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21841C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3FA208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:48:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cUYNm5og"
+	by mail.kernel.org (Postfix) with ESMTP id ED30A208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:48:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409131AbfFLMsa (ORCPT
+        id S2409151AbfFLMsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:48:30 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42390 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406354AbfFLMs3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:48:29 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5CCmKOd062918;
-        Wed, 12 Jun 2019 07:48:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560343700;
-        bh=VNAzdfRr5Fo8LME/5hfg26/21196dpOni0yCTYzdhNs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=cUYNm5ogyS/hT31gT74CvW3Ygh9wmCj6iK9TLIUIzKS9nCEbFhnQ1Cojp0L1D/i/w
-         e7+FAC+GtQCqSjeKMpeysHvxll9o9VvQhjA3CO5eRgUOWC3da+fofx/+/X79fSI8q4
-         bGS4CbzH3aCiXntpQE636tUOsuf14QCg7wjbkV3o=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5CCmKfd063889
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Jun 2019 07:48:20 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 12
- Jun 2019 07:48:19 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 12 Jun 2019 07:48:19 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5CCmHB8038159;
-        Wed, 12 Jun 2019 07:48:17 -0500
-Subject: Re: [PATCH v5 10/15] drm/bridge: tc358767: Add support for
- address-only I2C transfers
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        <dri-devel@lists.freedesktop.org>
-CC:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        <linux-kernel@vger.kernel.org>
-References: <20190612083252.15321-1-andrew.smirnov@gmail.com>
- <20190612083252.15321-11-andrew.smirnov@gmail.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <a1c125d2-1c7a-c190-8b7e-845a2ec1d2ea@ti.com>
-Date:   Wed, 12 Jun 2019 15:48:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190612083252.15321-11-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 12 Jun 2019 08:48:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46248 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404447AbfFLMsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:48:35 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5037E31628E7;
+        Wed, 12 Jun 2019 12:48:28 +0000 (UTC)
+Received: from dhcp201-121.englab.pnq.redhat.com (ovpn-116-228.sin2.redhat.com [10.67.116.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 99A5E60BF1;
+        Wed, 12 Jun 2019 12:47:54 +0000 (UTC)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
+        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
+        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
+        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
+        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
+        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
+        david@fromorbit.com, cohuck@redhat.com,
+        xiaoguangrong.eric@gmail.com, pagupta@redhat.com,
+        pbonzini@redhat.com, yuval.shaia@oracle.com, kilobyte@angband.pl,
+        jstaron@google.com, rdunlap@infradead.org, snitzer@redhat.com
+Subject: [PATCH v13 4/7] dm: enable synchronous dax
+Date:   Wed, 12 Jun 2019 18:15:24 +0530
+Message-Id: <20190612124527.3763-5-pagupta@redhat.com>
+In-Reply-To: <20190612124527.3763-1-pagupta@redhat.com>
+References: <20190612124527.3763-1-pagupta@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 12 Jun 2019 12:48:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patch sets dax device 'DAXDEV_SYNC' flag if all the target
+devices of device mapper support synchrononous DAX. If device
+mapper consists of both synchronous and asynchronous dax devices,
+we don't set 'DAXDEV_SYNC' flag.
 
-On 12/06/2019 11:32, Andrey Smirnov wrote:
-> Transfer size of zero means a request to do an address-only
-> transfer. Since the HW support this, we probably shouldn't be just
-> ignoring such requests. While at it allow DP_AUX_I2C_MOT flag to pass
-> through, since it is supported by the HW as well.
+'dm_table_supports_dax' is refactored to pass 'iterate_devices_fn'
+as argument so that the callers can pass the appropriate functions.
 
-I bisected the EDID read issue to this patch...
+Suggested-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+Reviewed-by: Mike Snitzer <snitzer@redhat.com>
+---
+ drivers/md/dm-table.c | 24 ++++++++++++++++++------
+ drivers/md/dm.c       |  2 +-
+ drivers/md/dm.h       |  5 ++++-
+ 3 files changed, 23 insertions(+), 8 deletions(-)
 
-  Tomi
-
+diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+index 350cf0451456..81c55304c4fa 100644
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -881,7 +881,7 @@ void dm_table_set_type(struct dm_table *t, enum dm_queue_mode type)
+ EXPORT_SYMBOL_GPL(dm_table_set_type);
+ 
+ /* validate the dax capability of the target device span */
+-static int device_supports_dax(struct dm_target *ti, struct dm_dev *dev,
++int device_supports_dax(struct dm_target *ti, struct dm_dev *dev,
+ 				       sector_t start, sector_t len, void *data)
+ {
+ 	int blocksize = *(int *) data;
+@@ -890,7 +890,15 @@ static int device_supports_dax(struct dm_target *ti, struct dm_dev *dev,
+ 			start, len);
+ }
+ 
+-bool dm_table_supports_dax(struct dm_table *t, int blocksize)
++/* Check devices support synchronous DAX */
++static int device_synchronous(struct dm_target *ti, struct dm_dev *dev,
++				       sector_t start, sector_t len, void *data)
++{
++	return dax_synchronous(dev->dax_dev);
++}
++
++bool dm_table_supports_dax(struct dm_table *t,
++			  iterate_devices_callout_fn iterate_fn, int *blocksize)
+ {
+ 	struct dm_target *ti;
+ 	unsigned i;
+@@ -903,8 +911,7 @@ bool dm_table_supports_dax(struct dm_table *t, int blocksize)
+ 			return false;
+ 
+ 		if (!ti->type->iterate_devices ||
+-		    !ti->type->iterate_devices(ti, device_supports_dax,
+-			    &blocksize))
++			!ti->type->iterate_devices(ti, iterate_fn, blocksize))
+ 			return false;
+ 	}
+ 
+@@ -940,6 +947,7 @@ static int dm_table_determine_type(struct dm_table *t)
+ 	struct dm_target *tgt;
+ 	struct list_head *devices = dm_table_get_devices(t);
+ 	enum dm_queue_mode live_md_type = dm_get_md_type(t->md);
++	int page_size = PAGE_SIZE;
+ 
+ 	if (t->type != DM_TYPE_NONE) {
+ 		/* target already set the table's type */
+@@ -984,7 +992,7 @@ static int dm_table_determine_type(struct dm_table *t)
+ verify_bio_based:
+ 		/* We must use this table as bio-based */
+ 		t->type = DM_TYPE_BIO_BASED;
+-		if (dm_table_supports_dax(t, PAGE_SIZE) ||
++		if (dm_table_supports_dax(t, device_supports_dax, &page_size) ||
+ 		    (list_empty(devices) && live_md_type == DM_TYPE_DAX_BIO_BASED)) {
+ 			t->type = DM_TYPE_DAX_BIO_BASED;
+ 		} else {
+@@ -1883,6 +1891,7 @@ void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
+ 			       struct queue_limits *limits)
+ {
+ 	bool wc = false, fua = false;
++	int page_size = PAGE_SIZE;
+ 
+ 	/*
+ 	 * Copy table's limits to the DM device's request_queue
+@@ -1910,8 +1919,11 @@ void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
+ 	}
+ 	blk_queue_write_cache(q, wc, fua);
+ 
+-	if (dm_table_supports_dax(t, PAGE_SIZE))
++	if (dm_table_supports_dax(t, device_supports_dax, &page_size)) {
+ 		blk_queue_flag_set(QUEUE_FLAG_DAX, q);
++		if (dm_table_supports_dax(t, device_synchronous, NULL))
++			set_dax_synchronous(t->md->dax_dev);
++	}
+ 	else
+ 		blk_queue_flag_clear(QUEUE_FLAG_DAX, q);
+ 
+diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+index b1caa7188209..b92c42a72ad4 100644
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -1119,7 +1119,7 @@ static bool dm_dax_supported(struct dax_device *dax_dev, struct block_device *bd
+ 	if (!map)
+ 		return false;
+ 
+-	ret = dm_table_supports_dax(map, blocksize);
++	ret = dm_table_supports_dax(map, device_supports_dax, &blocksize);
+ 
+ 	dm_put_live_table(md, srcu_idx);
+ 
+diff --git a/drivers/md/dm.h b/drivers/md/dm.h
+index 17e3db54404c..0475673337f3 100644
+--- a/drivers/md/dm.h
++++ b/drivers/md/dm.h
+@@ -72,7 +72,10 @@ bool dm_table_bio_based(struct dm_table *t);
+ bool dm_table_request_based(struct dm_table *t);
+ void dm_table_free_md_mempools(struct dm_table *t);
+ struct dm_md_mempools *dm_table_get_md_mempools(struct dm_table *t);
+-bool dm_table_supports_dax(struct dm_table *t, int blocksize);
++bool dm_table_supports_dax(struct dm_table *t, iterate_devices_callout_fn fn,
++			   int *blocksize);
++int device_supports_dax(struct dm_target *ti, struct dm_dev *dev,
++			   sector_t start, sector_t len, void *data);
+ 
+ void dm_lock_md_type(struct mapped_device *md);
+ void dm_unlock_md_type(struct mapped_device *md);
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.20.1
+
