@@ -2,113 +2,96 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DACEC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CDBC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3909120874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ADBA215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:43:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kQwI9QpL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o2bm3iMt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731584AbfFLImu (ORCPT
+        id S1731735AbfFLInJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:42:50 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33799 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbfFLImu (ORCPT
+        Wed, 12 Jun 2019 04:43:09 -0400
+Received: from mail-lj1-f177.google.com ([209.85.208.177]:40694 "EHLO
+        mail-lj1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731637AbfFLInI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:42:50 -0400
-Received: by mail-wm1-f67.google.com with SMTP id w9so3742027wmd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:42:48 -0700 (PDT)
+        Wed, 12 Jun 2019 04:43:08 -0400
+Received: by mail-lj1-f177.google.com with SMTP id a21so14345075ljh.7
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:43:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Vy/mEqXU/U3wrsZD2Jkiz7elwZu303ZemKwcaxzfKNE=;
-        b=kQwI9QpLQIVMzRxAg2KZ0HhaUR+hVsU47EOuC6kXAUzU3yET5ccoaWu8g8sAwhuqF0
-         THhYGXXsDbrq4biwYS1FO89TeA+EST23eNU+EnRab6ZVXDpK0bfbSMq0HGAHey3q4u6k
-         QqsDi/DNo9yr2Y8BY6k7QbTomS071661F8cAJBwPulacoTXhhFCNFjbffAWzsuWqr0xJ
-         fvvEcA2fvpzmbB9YvSlnrN7UUym+7rT7R07QX9f2V9AfPB4JTQAvvIn3n/8WT3QvYwCH
-         vBrZmZtJTJmgNgYRY9eSiaW131ZuLI/jrgtpcjNnrLwkSeAcAzrcpxaQ+x4Lw06d0gSz
-         kMIQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x+EjlD1+T7CCrikjK1HAO5M7exqwmkOmFUVOPSS1Jzc=;
+        b=o2bm3iMtBobjXXtxNv1yFCOKCEhNUdN1OsTsR9YVk17KPGSUwu4aT0rnhkx69gbg95
+         e2jjaVb1Se7IrsCu31pdFspgjFlEuVi9fGbKbg5PlhWAR+3A8iphpCXysUy9RzLYddgl
+         aQNZlqA2yjNcOCK0yYlTihm0cVfIdW7csM0JGNjE93raaG/4HQLO9z5U0AY8tolh5QGv
+         E9IiagQROkDPg0Gek2RaF8qaGdek3UkTHykivSnaKNP2wVIHhAaH/Qzd5o65P2RAW7MQ
+         1LcaQk9sZ0sz5i9K0nXFhZxkqx8Xwd8rM86vTPKG20eZr4FXCJkN14MSO3s8wSzqj5B+
+         GLDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Vy/mEqXU/U3wrsZD2Jkiz7elwZu303ZemKwcaxzfKNE=;
-        b=UbOwdP8rPUzomnEFtcK6/5t0Y7FVcH+wHo67g0+CvA/SrCz3uicjfqy7ahWr3edlOQ
-         e9Rz/wJHEUIjAWN+8Cwa4GkHKPMBePod4Ns5BKLgwpkdSpyfzS02m0yiOOfLhxSypPJ4
-         FTfHnUpNwbPcz9NiBiRM6uTVw8GfvJkskkS/PPpnAekXGl03SSMP6JkfbX1NLOwGRQKF
-         0p9ahvzKFt6CYTpM9p3T4XDLkpzYrP8CzwSqiOz6e9Ps+BjaqeSE6O9IE35pMtJBtdpV
-         vENvhx5fdT9v5o2ze4h1NLf7HTpjy452TZ+cH576Vi6mjDME+latUDYY8mbiIOPPRJYA
-         qwKA==
-X-Gm-Message-State: APjAAAUlw7cZS+1ITmugme2gt/DqnIF2bGI6j+sdHpIFd59O8k3DbkLh
-        fXIKh4YaAtnctujtSwVZWi1Vpw==
-X-Google-Smtp-Source: APXvYqzi/I2WoVwZfkLjbykWRV0LWKhr9BIfOxagRzC9h79bGL0UiupB8mBqM6ygP1BDqtGAyarcuQ==
-X-Received: by 2002:a1c:48c5:: with SMTP id v188mr20340723wma.175.1560328968062;
-        Wed, 12 Jun 2019 01:42:48 -0700 (PDT)
-Received: from dell ([2a01:4c8:f:9687:619a:bb91:d243:fc8b])
-        by smtp.gmail.com with ESMTPSA id s8sm27496285wra.55.2019.06.12.01.42.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Jun 2019 01:42:47 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 09:42:43 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
-Cc:     kernel@collabora.com, Nick Vaccaro <nvaccaro@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] iio: common: cros_ec_sensors: support protocol v3
- message
-Message-ID: <20190612084243.GC4797@dell>
-References: <cover.1558601329.git.fabien.lahoudere@collabora.com>
- <b619ce4f7f2d10ce1ede2b99d7262828f5b24952.1558601329.git.fabien.lahoudere@collabora.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x+EjlD1+T7CCrikjK1HAO5M7exqwmkOmFUVOPSS1Jzc=;
+        b=PYHCe8oKHpinj2JRjigRb/FC1EFR7rz28ZE2zlYbqrRQsHRwTf7oDbhvsSaCxFvV8J
+         9aszOJdSOhVOXMDL9pGsLSRYiz6gRVR19qBkSdaPn0raRGhpL6M9Z54cd+FTz+7CxuXR
+         A9tB/mHQMfyhXak5gc0INcft5b03TGO1Yo5y3gwYv35MGkeVYUj9yHWmcaoR+iDGwDk6
+         f9vP9NoAav5XXd2Fc+aRKCHojNcAei9dWkN13UyfgdygiHhTFYiKGzRdE16WZE04hSnr
+         v/qYp5MJOBf+dG5sznqFc0ty/+JWI910n++7v44ys0pnpAL8aqYG5X48WxkarHlHRtfM
+         m8Rw==
+X-Gm-Message-State: APjAAAWJmCvSx5QAUMnpfEkUAhGq7bh8ejzbGadMEsWMo++qw0s8+Myr
+        TwKlukSgZuiLjcW+M/mBVCZiDGrqb9wwKUyyWi+OTw==
+X-Google-Smtp-Source: APXvYqxcESdgBagFUM3+T7x4f4AJ5XZlAtn+aqs2xl9XMwCPhMnxciJL8Ij4vBzLWAJ5RBgDBwAgRsx8strN2LlYm58=
+X-Received: by 2002:a2e:7508:: with SMTP id q8mr26813533ljc.165.1560328986596;
+ Wed, 12 Jun 2019 01:43:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b619ce4f7f2d10ce1ede2b99d7262828f5b24952.1558601329.git.fabien.lahoudere@collabora.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190610171103.30903-1-grygorii.strashko@ti.com> <20190610171103.30903-6-grygorii.strashko@ti.com>
+In-Reply-To: <20190610171103.30903-6-grygorii.strashko@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 12 Jun 2019 10:42:54 +0200
+Message-ID: <CACRpkdbaXFZQ3d8pQJAxd2WaCJQbBHZZ4XKS3ovrq=ZOmP8o7w@mail.gmail.com>
+Subject: Re: [PATCH-next 05/20] gpio: gpio-omap: remove irq_ack method
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Russell King <rmk@arm.linux.org.uk>,
+        Tony Lindgren <tony@atomide.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019, Fabien Lahoudere wrote:
+On Mon, Jun 10, 2019 at 7:11 PM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
 
-> Version 3 of the EC protocol provides min and max frequencies and fifo
-> size for EC sensors.
-> 
-> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-> Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
-> ---
->  .../cros_ec_sensors/cros_ec_sensors_core.c    | 83 ++++++++++++++++++-
->  .../linux/iio/common/cros_ec_sensors_core.h   |  4 +
->  include/linux/mfd/cros_ec_commands.h          | 21 +++++
+> From: Russell King <rmk+kernel@armlinux.org.uk>
+>
+> The irq_ack method does not fit our hardware requirements. Edge
+> interrupts must be cleared before we handle them, and level interrupts
+> must be cleared after handling them.
+>
+> We handle the interrupt clearance in our interrupt handler for edge IRQs
+> and in the unmask method for level IRQs.
+>
+> Replace the irq_ack method with the no-op method from the dummy irq
+> chip.
+>
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
-There have been many changes to this file recently.  We will have to
-co-ordinate the merge.
+Patch applied.
 
-But for now:
-
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Yours,
+Linus Walleij
