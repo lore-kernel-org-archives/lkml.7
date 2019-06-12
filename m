@@ -2,78 +2,108 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DEBC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA84FC46477
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53B35208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:03:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=myself5.de header.i=@myself5.de header.b="PX/6A62N"
+	by mail.kernel.org (Postfix) with ESMTP id BF23A20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:04:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731233AbfFLNDB (ORCPT
+        id S1731622AbfFLNEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:03:01 -0400
-Received: from myself5.de ([5.230.26.43]:43438 "EHLO myself5.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730214AbfFLNDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:03:00 -0400
-X-Greylist: delayed 1199 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Jun 2019 09:02:59 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=myself5.de; s=mail;
-        h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From; bh=kaMCzSe33t2mDZfL48JawC3dylTfnzOCvJpCgH+Tfh4=;
-        b=PX/6A62NkVlH5hV5ULbHDmAaJnJh1oyv29QSxNEZkz3QZ3MWWlr24JbUTes84szYkTTfomClnBuf6ruPr9crcW5D7rrYauHYMjaqJm0gP7G2IDhC5PbRkjXhDqDu3Ch2T2+E8ZnhUvCIJDQFy6/WKbnt6dXHcYega9Qq6viHPGyUPThaIQNuCwkaqI5nRPHZq5nd2FsF3UMlE+yZfMdY+fPqbFuo/wZUMbaTky2HJuA02TYpOQD60gGiZOIccwBMmlMCLtST45wkoo4Zk+Pe0S/CMdq8iA6Kmv7u0r4MYrckT4Rt+KIr/exgXleJhDTYplsdRBGrxOYkWqURMDi4nQ==;
-Received: from hsi-kbw-046-005-003-194.hsi8.kabel-badenwuerttemberg.de ([46.5.3.194] helo=localhost)
-        by myself5.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.84_2)
-        (envelope-from <gpg@myself5.de>)
-        id 1hb2aZ-0005Hv-Um; Wed, 12 Jun 2019 14:42:52 +0200
-From:   Christian Oder <me@myself5.de>
-Cc:     Christian Oder <me@myself5.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: touchscreen_dmi: Update Hi10 Air filter
-Date:   Wed, 12 Jun 2019 14:40:53 +0200
-Message-Id: <20190612124053.119182-1-me@myself5.de>
-X-Mailer: git-send-email 2.21.0
+        Wed, 12 Jun 2019 09:04:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55104 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728322AbfFLNEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 09:04:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D5E70AF8F;
+        Wed, 12 Jun 2019 13:04:46 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 1FBB21E4328; Wed, 12 Jun 2019 15:04:46 +0200 (CEST)
+Date:   Wed, 12 Jun 2019 15:04:46 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
+        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+Message-ID: <20190612130446.GD14578@quack2.suse.cz>
+References: <6FE0A98F-1E3D-4EF6-8B38-2C85741924A4@linaro.org>
+ <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
+ <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
+ <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
+ <5b71028c-72f0-73dd-0cd5-f28ff298a0a3@csail.mit.edu>
+ <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
+ <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
+ <7B74A790-BD98-412B-ADAB-3B513FB1944E@linaro.org>
+ <6a6f4aa4-fc95-f132-55b2-224ff52bd2d8@csail.mit.edu>
+ <7c5e9d11-4a3d-7df4-c1e6-7c95919522ab@csail.mit.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7c5e9d11-4a3d-7df4-c1e6-7c95919522ab@csail.mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Turns out the Hi10 Air is built by multiple companies so using Hampoo
-as a filter is not enough to cover all variants.
+On Tue 11-06-19 15:34:48, Srivatsa S. Bhat wrote:
+> On 6/2/19 12:04 AM, Srivatsa S. Bhat wrote:
+> > On 5/30/19 3:45 AM, Paolo Valente wrote:
+> >>
+> [...]
+> >> At any rate, since you pointed out that you are interested in
+> >> out-of-the-box performance, let me complete the context: in case
+> >> low_latency is left set, one gets, in return for this 12% loss,
+> >> a) at least 1000% higher responsiveness, e.g., 1000% lower start-up
+> >> times of applications under load [1];
+> >> b) 500-1000% higher throughput in multi-client server workloads, as I
+> >> already pointed out [2].
+> >>
+> > 
+> > I'm very happy that you could solve the problem without having to
+> > compromise on any of the performance characteristics/features of BFQ!
+> > 
+> > 
+> >> I'm going to prepare complete patches.  In addition, if ok for you,
+> >> I'll report these results on the bug you created.  Then I guess we can
+> >> close it.
+> >>
+> > 
+> > Sounds great!
+> >
+> 
+> Hi Paolo,
+> 
+> Hope you are doing great!
+> 
+> I was wondering if you got a chance to post these patches to LKML for
+> review and inclusion... (No hurry, of course!)
+> 
+> Also, since your fixes address the performance issues in BFQ, do you
+> have any thoughts on whether they can be adapted to CFQ as well, to
+> benefit the older stable kernels that still support CFQ?
 
-This has been verified as working on the Hampoo and Morshow version.
+Since CFQ doesn't exist in current upstream kernel anymore, I seriously
+doubt you'll be able to get any performance improvements for it in the
+stable kernels...
 
-Signed-off-by: Christian Oder <me@myself5.de>
----
- drivers/platform/x86/touchscreen_dmi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+								Honza
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index b662cb2d7cd5..61e7c4987d0d 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -597,7 +597,8 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
- 		/* Chuwi Hi10 Air */
- 		.driver_data = (void *)&chuwi_hi10_air_data,
- 		.matches = {
--			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
-+			DMI_MATCH(DMI_SYS_VENDOR, "CHUWI INNOVATION AND TECHNOLOGY(SHENZHEN)CO.LTD"),
-+			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
- 			DMI_MATCH(DMI_PRODUCT_SKU, "P1W6_C109D_B"),
- 		},
- 	},
 -- 
-2.21.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
