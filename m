@@ -2,156 +2,156 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6346AC31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE8EC31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB5720883
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F06162086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:30:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cj5dIYRv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408418AbfFLC3s (ORCPT
+        id S2408442AbfFLCaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 22:29:48 -0400
-Received: from mga09.intel.com ([134.134.136.24]:57842 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405046AbfFLC3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 22:29:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 19:29:47 -0700
-X-ExtLoop1: 1
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga004.jf.intel.com with ESMTP; 11 Jun 2019 19:29:41 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com, Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH v4 6/9] iommu/vt-d: Check whether device requires bounce
- buffer
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-References: <20190603011620.31999-1-baolu.lu@linux.intel.com>
- <20190603011620.31999-7-baolu.lu@linux.intel.com>
- <20190610160802.GX28796@char.us.oracle.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <bf973966-d975-9100-475d-bf30dbb99bf6@linux.intel.com>
-Date:   Wed, 12 Jun 2019 10:22:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 11 Jun 2019 22:30:03 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35490 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405046AbfFLCaC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 22:30:02 -0400
+Received: by mail-pl1-f195.google.com with SMTP id p1so5958666plo.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 19:30:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=t/rKc3UZZprCkI3wfeBbbL1oVUA4HMdb6pTNv5jLyR8=;
+        b=Cj5dIYRv5xHkfWnoRUxXfl7u999Son8N/lGdopdqLfG+VmK+JRrGtBGsqlwTBFXbDZ
+         5VXTbjdmESfdMiySOW9wvkUQA98dtrx8sh46BmlJL9MjqgYCzfP+rmIADR6cFeeqCUyM
+         LVf0IOmzRiUKk+HjDtGhmM9GENkBKdmNuNfa7R4S0bSrAbqYOttG5cvIczCBYW5BOlpw
+         DnE9pLo8tPSjIKmwcY24WLMCt9e7xaKqpl/iusfIuVZ2ld43WEzvlk6+w/M2+JWmo2ti
+         tgG1gCC556flN8mvNBdNZNgTkbEGpzJie3a3Ih9gJM+yZSkgvtauMKaJiIRSQH4smUiA
+         ITxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=t/rKc3UZZprCkI3wfeBbbL1oVUA4HMdb6pTNv5jLyR8=;
+        b=I1kIkj2zjY+nIuHe6p8gJ+8cmZhrhusCHJvpZWbsj9vC7OZlQClnIm4p/aciUkNFZg
+         bXlTIOxFWKxJKUprtyq58dN+ximiVsXBRn1LuLzjv01Kx4UHr/f3trIUYXiN7ToGctVu
+         /sSjT9cVWKwznbMyx/02V/0aaiw+OJmfhB9MMt+aujUSv3czdJR8g8NELW7boWT8eHEd
+         hDslTA9D8NFYhMacpW46vblP1xWlG+Kr/vwj3kQ+ZSxB5AkfS4KBJef0oVdiuK9BY+Vo
+         ehHO8eAnf/Kk8C+d1FGVNa92RohKW0+1bCGnM4697k0fX57XIXxiqe1EdcH3R4Uejl3H
+         LaVQ==
+X-Gm-Message-State: APjAAAWqcddtEv2ib0OWjMV14CX+OmC/OacN7hCkS4e05YhgzJi1dWC8
+        +G0BfkCYImCUgWUdbC0gJi/wH90t
+X-Google-Smtp-Source: APXvYqwf7Zp29rxomvSWiSoF/w4ki3aL363oWnSRiCls9jLx8X+BkZoR17yHp8KcSZoNLMHApQzbcA==
+X-Received: by 2002:a17:902:bb90:: with SMTP id m16mr12324750pls.54.1560306602272;
+        Tue, 11 Jun 2019 19:30:02 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.89.153])
+        by smtp.gmail.com with ESMTPSA id x17sm15448463pgk.72.2019.06.11.19.29.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 19:30:01 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 07:59:57 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] staging: rtl8723bs: hal: sdio_halinit: fix comparison to
+ true/false is error prone
+Message-ID: <20190612022956.GA23698@hari-Inspiron-1545>
 MIME-Version: 1.0
-In-Reply-To: <20190610160802.GX28796@char.us.oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+CHECK: Using comparison to false is error prone
+CHECK: Using comparison to true is error prone
 
-On 6/11/19 12:08 AM, Konrad Rzeszutek Wilk wrote:
-> On Mon, Jun 03, 2019 at 09:16:17AM +0800, Lu Baolu wrote:
->> This adds a helper to check whether a device needs to use bounce
->> buffer. It also provides a boot time option to disable the bounce
->> buffer. Users can use this to prevent the iommu driver from using
->> the bounce buffer for performance gain.
->> 
->> Cc: Ashok Raj <ashok.raj@intel.com> Cc: Jacob Pan
->> <jacob.jun.pan@linux.intel.com> Cc: Kevin Tian
->> <kevin.tian@intel.com> Signed-off-by: Lu Baolu
->> <baolu.lu@linux.intel.com> Tested-by: Xu Pengfei
->> <pengfei.xu@intel.com> Tested-by: Mika Westerberg
->> <mika.westerberg@intel.com> --- 
->> Documentation/admin-guide/kernel-parameters.txt | 5 +++++ 
->> drivers/iommu/intel-iommu.c                     | 6 ++++++ 2 files
->> changed, 11 insertions(+)
->> 
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt
->> b/Documentation/admin-guide/kernel-parameters.txt index
->> 138f6664b2e2..65685c6e53e4 100644 ---
->> a/Documentation/admin-guide/kernel-parameters.txt +++
->> b/Documentation/admin-guide/kernel-parameters.txt @@ -1728,6
->> +1728,11 @@ Note that using this option lowers the security 
->> provided by tboot because it makes the system vulnerable to DMA
->> attacks. +		nobounce [Default off] +			Do not use the bounce buffer
->> for untrusted devices like +			the Thunderbolt devices. This will
->> treat the untrusted
-> 
-> My brain has sometimes a hard time parsing 'Not' and 'un'. Could this
-> be:
-> 
-> Disable bounce buffer for unstrusted devices ..?
-> 
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/hal/sdio_halinit.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-Fair enough.
+diff --git a/drivers/staging/rtl8723bs/hal/sdio_halinit.c b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+index 3c65a9c..70f9e1d 100644
+--- a/drivers/staging/rtl8723bs/hal/sdio_halinit.c
++++ b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+@@ -26,7 +26,7 @@ static u8 CardEnable(struct adapter *padapter)
 
-> 
-> And perhaps call it 'noswiotlb' ? Not everyone knows that SWIOTLB =
-> bounce buffer.
 
-As I said in previous thread, swiotlb is not only used for BOUNCE_PAGE
-case, but also used by direct dma APIs. Will it cause confusion?
+	rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
+-	if (bMacPwrCtrlOn == false) {
++	if (!bMacPwrCtrlOn) {
+		/*  RSV_CTRL 0x1C[7:0] = 0x00 */
+		/*  unlock ISO/CLK/Power control register */
+		rtw_write8(padapter, REG_RSV_CTRL, 0x0);
+@@ -127,7 +127,7 @@ u8 _InitPowerOn_8723BS(struct adapter *padapter)
 
-Anyway, I have no strong feeling to use 'nobounce' or 'noswiotlb'. It's
-a driver specific switch for debugging purpose. People suggested that we
-should move this switch into pci module, but I heard that it's more
-helpful to implement per-device switch for "trusted' or "untrusted".
-So I kept this untouched in this version.
+	/*  only cmd52 can be used before power on(card enable) */
+	ret = CardEnable(padapter);
+-	if (ret == false) {
++	if (!ret) {
+		RT_TRACE(
+			_module_hci_hal_init_c_,
+			_drv_emerg_,
+@@ -838,7 +838,7 @@ static u32 rtl8723bs_hal_init(struct adapter *padapter)
 
-> 
->> +			devices as the trusted ones, hence might expose security +
->> risks of DMA attacks.
->> 
->> intel_idle.max_cstate=	[KNL,HW,ACPI,X86] 0	disables intel_idle and
->> fall back on acpi_idle. diff --git a/drivers/iommu/intel-iommu.c
->> b/drivers/iommu/intel-iommu.c index 235837c50719..41439647f75d
->> 100644 --- a/drivers/iommu/intel-iommu.c +++
->> b/drivers/iommu/intel-iommu.c @@ -371,6 +371,7 @@ static int
->> dmar_forcedac; static int intel_iommu_strict; static int
->> intel_iommu_superpage = 1; static int iommu_identity_mapping; 
->> +static int intel_no_bounce;
-> 
-> intel_swiotlb_on = 1 ?
-> 
->> 
->> #define IDENTMAP_ALL		1 #define IDENTMAP_GFX		2 @@ -384,6 +385,8 @@
->> EXPORT_SYMBOL_GPL(intel_iommu_gfx_mapped); static
->> DEFINE_SPINLOCK(device_domain_lock); static
->> LIST_HEAD(device_domain_list);
->> 
->> +#define device_needs_bounce(d) (!intel_no_bounce &&
->> dev_is_untrusted(d)) + /* * Iterate over elements in
->> device_domain_list and call the specified * callback @fn against
->> each element. @@ -466,6 +469,9 @@ static int __init
->> intel_iommu_setup(char *str) printk(KERN_INFO "Intel-IOMMU: not
->> forcing on after tboot. This could expose security risk for
->> tboot\n"); intel_iommu_tboot_noforce = 1; +		} else if
->> (!strncmp(str, "nobounce", 8)) { +			pr_info("Intel-IOMMU: No
->> bounce buffer. This could expose security risks of DMA
->> attacks\n");
-> 
-> Again, Intel-IOMMU: No SWIOTLB. T.. blah blah'
-> 
-> Asking for this as doing 'dmesg | grep SWIOTLB' will expose nicely
-> all the SWIOTLB invocations..
+ /*	SIC_Init(padapter); */
 
-Yes. Will refine this.
+-	if (pwrctrlpriv->reg_rfoff == true)
++	if (pwrctrlpriv->reg_rfoff)
+		pwrctrlpriv->rf_pwrstate = rf_off;
 
-Best regards,
-Baolu
+	/*  2010/08/09 MH We need to check if we need to turnon or off RF after detecting */
+@@ -1081,7 +1081,7 @@ static void CardDisableRTL8723BSdio(struct adapter *padapter)
+	ret = false;
+	rtw_hal_set_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
+	ret = HalPwrSeqCmdParsing(padapter, PWR_CUT_ALL_MSK, PWR_FAB_ALL_MSK, PWR_INTF_SDIO_MSK, rtl8723B_card_disable_flow);
+-	if (ret == false) {
++	if (!ret) {
+		DBG_8192C(KERN_ERR "%s: run CARD DISABLE flow fail!\n", __func__);
+	}
+ }
+@@ -1091,9 +1091,9 @@ static u32 rtl8723bs_hal_deinit(struct adapter *padapter)
+	struct dvobj_priv *psdpriv = padapter->dvobj;
+	struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
+
+-	if (padapter->hw_init_completed == true) {
++	if (padapter->hw_init_completed) {
+		if (adapter_to_pwrctl(padapter)->bips_processing == true) {
+-			if (padapter->netif_up == true) {
++			if (padapter->netif_up) {
+				int cnt = 0;
+				u8 val8 = 0;
+
+@@ -1387,7 +1387,7 @@ static s32 _ReadAdapterInfo8723BS(struct adapter *padapter)
+	RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("+_ReadAdapterInfo8723BS\n"));
+
+	/*  before access eFuse, make sure card enable has been called */
+-	if (padapter->hw_init_completed == false)
++	if (!padapter->hw_init_completed)
+		_InitPowerOn_8723BS(padapter);
+
+
+@@ -1404,7 +1404,7 @@ static s32 _ReadAdapterInfo8723BS(struct adapter *padapter)
+	_ReadPROMContent(padapter);
+	_InitOtherVariable(padapter);
+
+-	if (padapter->hw_init_completed == false) {
++	if (!padapter->hw_init_completed) {
+		rtw_write8(padapter, 0x67, 0x00); /*  for BT, Switch Ant control to BT */
+		CardDisableRTL8723BSdio(padapter);/* for the power consumption issue,  wifi ko module is loaded during booting, but wifi GUI is off */
+	}
+--
+2.7.4
+
