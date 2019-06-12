@@ -2,106 +2,126 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDBBC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94F3C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58D0920874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8850C20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:18:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="jjbfNYpP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbfFLPSp (ORCPT
+        id S1729737AbfFLPSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:18:45 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:46931 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbfFLPSp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:18:45 -0400
-X-Originating-IP: 90.88.159.246
-Received: from mc-bl-xps13.lan (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
-        (Authenticated sender: maxime.chevallier@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 9184BFF81C;
-        Wed, 12 Jun 2019 15:18:40 +0000 (UTC)
-From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
-To:     davem@davemloft.net, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Toshiaki Makita <toshiaki.makita1@gmail.com>
-Subject: [PATCH net v2] net: ethtool: Allow matching on vlan DEI bit
-Date:   Wed, 12 Jun 2019 17:18:38 +0200
-Message-Id: <20190612151838.7455-1-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 12 Jun 2019 11:18:51 -0400
+Received: from mx01-fr.bfs.de ([193.174.231.67]:24836 "EHLO mx01-fr.bfs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726454AbfFLPSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:18:49 -0400
+Received: from mail-fr.bfs.de (mail-fr.bfs.de [10.177.18.200])
+        by mx01-fr.bfs.de (Postfix) with ESMTPS id 3D0D2201F4;
+        Wed, 12 Jun 2019 17:18:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
+        t=1560352722; h=from:from:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iz3CpY34we/DvAotNLRGWsXayWK0i3l2X+/9ZHiFnyw=;
+        b=jjbfNYpPxGZWgMtcEFGgK1M7jzrSmGfdOaQZfXN5TA7uwH5qjLXLYw/9ECOTC2PICKghjD
+        V3eKX1dCeTpnmLbZhkjskt+NIEO7og8F432987h0blEpWYrYxDMw03Kjw0aSiPuaU7s22E
+        m1x4nHyxmh9t7UIQqwo1HgsMPSkVVcxUAHSXkujKSYZWF8C+oQTGvz1BM35lUFomieE02i
+        +OJJit5QLNdPMBYmGWrgBh4pRB45VdylUdL31O2Wj9Tn+oyan/vnIqRfztl4OqS+TZ/7Kx
+        VEK4JbTC3m9TOwE0am5yfFhdCtgy0rHOyatoM1/oZAZOaJ2dRbFzaru/rZyIUg==
+Received: from [134.92.181.33] (unknown [134.92.181.33])
+        by mail-fr.bfs.de (Postfix) with ESMTPS id C86DEBEEBD;
+        Wed, 12 Jun 2019 17:18:41 +0200 (CEST)
+Message-ID: <5D0117D0.501@bfs.de>
+Date:   Wed, 12 Jun 2019 17:18:40 +0200
+From:   walter harms <wharms@bfs.de>
+Reply-To: wharms@bfs.de
+User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; de; rv:1.9.1.16) Gecko/20101125 SUSE/3.0.11 Thunderbird/3.0.11
 MIME-Version: 1.0
+To:     Colin King <colin.king@canonical.com>
+CC:     Dan Murphy <dmurphy@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH][next] leds: lm36274: remove redundant initialization
+ of variable ret
+References: <20190612145659.26514-1-colin.king@canonical.com>
+In-Reply-To: <20190612145659.26514-1-colin.king@canonical.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Authentication-Results: mx01-fr.bfs.de
+X-Spamd-Result: default: False [-3.10 / 7.00];
+         ARC_NA(0.00)[];
+         HAS_REPLYTO(0.00)[wharms@bfs.de];
+         BAYES_HAM(-3.00)[100.00%];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         REPLYTO_ADDR_EQ_FROM(0.00)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[7];
+         NEURAL_HAM(-0.00)[-0.999,0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         RCVD_TLS_ALL(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using ethtool, users can specify a classification action matching on the
-full vlan tag, which includes the DEI bit (also previously called CFI).
 
-However, when converting the ethool_flow_spec to a flow_rule, we use
-dissector keys to represent the matching patterns.
 
-Since the vlan dissector key doesn't include the DEI bit, this
-information was silently discarded when translating the ethtool
-flow spec in to a flow_rule.
+Am 12.06.2019 16:56, schrieb Colin King:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable ret is being initialized with a value that is never
+> read, hence it is redundant and can be removed.  Also move the
+> declaration of ret to the for loop scope.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/leds/leds-lm36274.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/leds/leds-lm36274.c b/drivers/leds/leds-lm36274.c
+> index ed9dc857ec8f..b55bd238c074 100644
+> --- a/drivers/leds/leds-lm36274.c
+> +++ b/drivers/leds/leds-lm36274.c
+> @@ -74,7 +74,6 @@ static int lm36274_parse_dt(struct lm36274 *lm36274_data)
+>  	struct device *dev = &lm36274_data->pdev->dev;
+>  	const char *name;
+>  	int child_cnt;
+> -	int ret = -EINVAL;
+>  
+>  	/* There should only be 1 node */
+>  	child_cnt = device_get_child_node_count(dev);
+> @@ -82,6 +81,8 @@ static int lm36274_parse_dt(struct lm36274 *lm36274_data)
+>  		return -EINVAL;
+>  
+>  	device_for_each_child_node(dev, child) {
+> +		int ret;
+> +
+>  		ret = fwnode_property_read_string(child, "label", &name);
+>  		if (ret)
+>  			snprintf(label, sizeof(label),
 
-This commit adds the DEI bit into the vlan dissector key, and allows
-propagating the information to the driver when parsing the ethtool flow
-spec.
+this looks odd,
+i would leave ret in place or move char *name also.
 
-Fixes: eca4205f9ec3 ("ethtool: add ethtool_rx_flow_spec to flow_rule structure translator")
-Reported-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
----
-V1 -> V2: Use "DEI" instead of the old name "CFI", as suggested by Toshiaki.
-          Perform endianness swap on the constant, sothat it's done at
-	  build-time, as suggested by Jakub.
+just my 2 cents,
 
- include/net/flow_dissector.h | 1 +
- net/core/ethtool.c           | 5 +++++
- 2 files changed, 6 insertions(+)
-
-diff --git a/include/net/flow_dissector.h b/include/net/flow_dissector.h
-index 7c5a8d9a8d2a..dfabc0503446 100644
---- a/include/net/flow_dissector.h
-+++ b/include/net/flow_dissector.h
-@@ -46,6 +46,7 @@ struct flow_dissector_key_tags {
- 
- struct flow_dissector_key_vlan {
- 	u16	vlan_id:12,
-+		vlan_dei:1,
- 		vlan_priority:3;
- 	__be16	vlan_tpid;
- };
-diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-index d08b1e19ce9c..4d1011b2e24f 100644
---- a/net/core/ethtool.c
-+++ b/net/core/ethtool.c
-@@ -3020,6 +3020,11 @@ ethtool_rx_flow_rule_create(const struct ethtool_rx_flow_spec_input *input)
- 			match->mask.vlan.vlan_id =
- 				ntohs(ext_m_spec->vlan_tci) & 0x0fff;
- 
-+			match->key.vlan.vlan_dei =
-+				!!(ext_h_spec->vlan_tci & htons(0x1000));
-+			match->mask.vlan.vlan_dei =
-+				!!(ext_m_spec->vlan_tci & htons(0x1000));
-+
- 			match->key.vlan.vlan_priority =
- 				(ntohs(ext_h_spec->vlan_tci) & 0xe000) >> 13;
- 			match->mask.vlan.vlan_priority =
--- 
-2.20.1
-
+re,
+ wh
