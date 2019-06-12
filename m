@@ -2,97 +2,94 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856CCC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BFFC46477
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7A4208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:23:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pFDYhglD"
+	by mail.kernel.org (Postfix) with ESMTP id 45F26208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:24:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731576AbfFLJXV (ORCPT
+        id S1731745AbfFLJYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:23:21 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43963 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbfFLJXV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:23:21 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j29so11502178lfk.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 02:23:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9xB4K2RyPS/R57/JJTkF3nS6D2VfQstRM6okCDkUpXk=;
-        b=pFDYhglDOvHhgTlm4JT6bDT8ASm+PtdFkhZg52zUouEDk4o0E4X4ZtbAOdJMAZ6iWl
-         O+uvDV5hgYuwyTXQoE+Kr9oMbpfQ7hmyJKMyhaN3GCM2N7mvAWId00sc1wDMtV3ao05I
-         8X9urtEYd+jcPPH620hZWB5B93f2ud+j35c0VpVa8kJ7OBsx2pB2J8LdcE0eRZYr4J/e
-         st1c3reb9iREpMlFnS01buN5ERtdWBLiYD8vBcbAQem7rXk8INOS+KUI7jDv37tnRw8n
-         BVl92fzUvYBE3g1WF4PDDj3kp5Uk0uS7Vs2bdThWC/PljF0RjE1nP2ntysaLq1oy0ZEU
-         BPwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9xB4K2RyPS/R57/JJTkF3nS6D2VfQstRM6okCDkUpXk=;
-        b=m8DMOFe8aE2y/xaN6DLcxvs8XZQ54C6B6+IQsiuvN1776JQLgywZr6hMDmqLDXnCWT
-         xMchZBqH9PdgCjkxoMnXRp2+N3ryyTOma9OG5y/BuFsWWO9Q6qyu0VOJRHauQYz0hvUl
-         68ch6rkYo/f/FPrEnlrw227PEQLvkWrFCFHBuVDsPnsVYz4REKpHFhXv6S33e7pNrVtU
-         tENtRLJmPAx8k85r7cON7G+DwbQcmc/wwy5Wbfmm/i8DVAL6j/tgMrE1LbSF875+kp2D
-         2nc10xlLrU7536fVNZzns9GRZnNtsacfRWKlQXwykH0iW6dUGohff7RfBEkWAW1spNPK
-         wSRA==
-X-Gm-Message-State: APjAAAUe8fyhE0OYI5YlIU3kpQDY/6Yro+/G1h3lsvANkMwg4ng2c3lV
-        vgI+YgORkNSntkBnoE9tJYp9wqXPN6RIau6wFxyRNw==
-X-Google-Smtp-Source: APXvYqzpG6R8CuOm+a9rEIDx5UCqguZdACqHC7MEghETAfPC2KWCVJSCTTbd3ssSHHSl0L4f+vvy9uBtO7bg9b6ZZYA=
-X-Received: by 2002:ac2:4891:: with SMTP id x17mr5356875lfc.60.1560331399558;
- Wed, 12 Jun 2019 02:23:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190610171103.30903-1-grygorii.strashko@ti.com>
-In-Reply-To: <20190610171103.30903-1-grygorii.strashko@ti.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Jun 2019 11:23:07 +0200
-Message-ID: <CACRpkdamKFMrvfi4+L95KqJzPkX69er=CBC3ShUwj0VWArnQRg@mail.gmail.com>
-Subject: Re: [PATCH-next 00/20] gpio: gpio-omap: set of fixes and big clean-up
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Russell King <rmk@arm.linux.org.uk>,
-        Tony Lindgren <tony@atomide.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Wed, 12 Jun 2019 05:24:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:48282 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731233AbfFLJYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:24:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4179B28;
+        Wed, 12 Jun 2019 02:24:13 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E54E3F246;
+        Wed, 12 Jun 2019 02:24:12 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 10:24:04 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Stephen Bates <sbates@raithlin.com>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jens Axboe <axboe@kernel.dk>,
+        "shhuiw@foxmail.com" <shhuiw@foxmail.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH] io_uring: fix SQPOLL cpu check
+Message-ID: <20190612092403.GA38578@lakrids.cambridge.arm.com>
+References: <5D2859FE-DB39-48F5-BBB5-6EDD3791B6C3@raithlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5D2859FE-DB39-48F5-BBB5-6EDD3791B6C3@raithlin.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 7:11 PM Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
+On Tue, Jun 11, 2019 at 11:56:06PM +0000, Stephen  Bates wrote:
+> The array_index_nospec() check in io_sq_offload_start() is performed
+> before any checks on p->sq_thread_cpu are done. This means cpu is
+> clamped and therefore no error occurs when out-of-range values are
+> passed in from userspace. This is in violation of the specification
+> for io_ring_setup() and causes the io_ring_setup unit test in liburing
+> to regress.
+> 
+> Add a new bounds check on sq_thread_cpu at the start of
+> io_sq_offload_start() so we can exit the function early when bad
+> values are passed in.
+> 
+> Fixes: 975554b03edd ("io_uring: fix SQPOLL cpu validation")
+> Signed-off-by: Stephen Bates <sbates@raithlin.com>
 
-> This series contains set of patches from Russell King which were circulated
-> internally for quite some time already and I fill it's reasonable to move
-> future discussion upstream (and also avoid rebasing).
-> Fisrt two patches are fixes and the rest are big, great clean up
-> from Russell King.
->
-> Personally, I like this clean up and refactoring very much and don't want
-> it to be lost.
+Aargh. My original patch [1] handled that correctly, and this case was
+explicitly called out in the commit message, which was retained even
+when the patch was "simplified". That's rather disappointing. :/
 
-I share your view, it is very nice to have Russell's attention to detail
-shaping up this driver.
+Thanks,
+Mark.
 
-I vaguely remember at some point wondering why we were
-not using gpio-mmio.c at least partially
-for this driver, as it share this characteristic of keeping a shadow
-copy of the registers around and seem to have offsets from 0..n
-in the registers, but I guess there is some specific
-good reason for not using the library?
+[1] https://lore.kernel.org/lkml/20190430123451.44227-1-mark.rutland@arm.com/
 
-Yours,
-Linus Walleij
+> ---
+>  fs/io_uring.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 30a5687..e458470 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -2316,6 +2316,9 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
+>  {
+>  	int ret;
+>  
+> +	if (p->sq_thread_cpu >= nr_cpu_ids)
+> +		return -EINVAL;
+> +
+>  	init_waitqueue_head(&ctx->sqo_wait);
+>  	mmgrab(current->mm);
+>  	ctx->sqo_mm = current->mm;
+> -- 
+> 2.7.4
+> 
