@@ -2,107 +2,137 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71343C31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD672C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 539B1208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8323C208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:36:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vHQc7Riw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408206AbfFLAg3 (ORCPT
+        id S2408249AbfFLAgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 20:36:29 -0400
-Received: from mga09.intel.com ([134.134.136.24]:50299 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407953AbfFLAgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 20:36:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 17:36:17 -0700
-X-ExtLoop1: 1
-Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by orsmga001.jf.intel.com with ESMTP; 11 Jun 2019 17:36:15 -0700
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        sai.praneeth.prakhya@intel.com, cai@lca.pw,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v2 5/7] iommu/vt-d: Fix suspicious RCU usage in probe_acpi_namespace_devices()
-Date:   Wed, 12 Jun 2019 08:28:49 +0800
-Message-Id: <20190612002851.17103-6-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190612002851.17103-1-baolu.lu@linux.intel.com>
-References: <20190612002851.17103-1-baolu.lu@linux.intel.com>
+        Tue, 11 Jun 2019 20:36:40 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:51566 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391522AbfFLAgk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 20:36:40 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5C0U2aL172563;
+        Wed, 12 Jun 2019 00:35:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=9gKawnpnm3eYTlbJSmpS31BgWCZu6yO6zvRDwLNExMc=;
+ b=vHQc7RiwFlRopnBcV6yXscL30ZNdwN/v/B17eINRtpQHvUvgM6epdVedyPbAKdmcBBV3
+ cpQKUJvANpmF9rest4EECBPlFj+c/6FFyA1MB+Y7QHfaviX1SgktsC/OuLuEeHTjfJfn
+ IHVrIivC0Er8GlXskbXJ6t5OZcUHTAMhyEJ0O8MOVdKDEgKTHfWtz59o9kiNq/kqTY6E
+ 4hAomBRtHJLX3EPEAvdgUe3wJJHguniVZBFYytUSwIeEiPqdsoMO2S6x/RCI4kCCEC8X
+ 5tzrNpCpeUTAjMu2i0Q0axAMVtIdwT/+kMGJyGR6ACAIOztQv/pzRx3K8FTZ+teYFImj 5Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2t04etrany-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 00:35:50 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5C0YsTE041414;
+        Wed, 12 Jun 2019 00:35:50 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 2t1jphr047-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Jun 2019 00:35:50 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5C0Zn8q043221;
+        Wed, 12 Jun 2019 00:35:49 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2t1jphr042-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 00:35:49 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5C0ZfCm005680;
+        Wed, 12 Jun 2019 00:35:41 GMT
+Received: from localhost (/10.145.179.81)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 11 Jun 2019 17:35:41 -0700
+Date:   Tue, 11 Jun 2019 17:35:38 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Dave Kleikamp <dave.kleikamp@oracle.com>
+Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        shaggy@kernel.org, ard.biesheuvel@linaro.org, josef@toxicpanda.com,
+        clm@fb.com, adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk,
+        linux-xfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net,
+        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        reiserfs-devel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, ocfs2-devel@oss.oracle.com
+Subject: Re: [Jfs-discussion] [PATCH 1/4] vfs: create a generic checking
+ function for FS_IOC_SETFLAGS
+Message-ID: <20190612003538.GW1871505@magnolia>
+References: <156022833285.3227089.11990489625041926920.stgit@magnolia>
+ <156022834076.3227089.14763553158562888103.stgit@magnolia>
+ <fb974a33-2192-30ab-9f31-885c3796360b@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fb974a33-2192-30ab-9f31-885c3796360b@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9285 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906120001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The drhd and device scope list should be iterated with the
-iommu global lock held. Otherwise, a suspicious RCU usage
-message will be displayed.
+On Tue, Jun 11, 2019 at 08:41:06AM -0500, Dave Kleikamp wrote:
+> On 6/10/19 11:45 PM, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > Create a generic checking function for the incoming FS_IOC_SETFLAGS flag
+> > values so that we can standardize the implementations that follow ext4's
+> > flag values.
+> > 
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+>  -- clip --
+> 
+> > diff --git a/fs/jfs/ioctl.c b/fs/jfs/ioctl.c
+> > index ba34dae8bd9f..c8446d2cd0c7 100644
+> > --- a/fs/jfs/ioctl.c
+> > +++ b/fs/jfs/ioctl.c
+> > @@ -98,6 +98,12 @@ long jfs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+> >  		/* Lock against other parallel changes of flags */
+> >  		inode_lock(inode);
+> >  
+> > +		oldflags = jfs_map_ext2(jfs_inode->mode2 & JFS_FL_USER_VISIBLE,
+> > +					0);
+> > +		err = vfs_ioc_setflags_check(inode, oldflags, flags);
+> > +		if (err)
+> > +			goto setflags_out;
+> 
+> inode_unlock(inode) is not called on the error path.
+> 
+> > +
+> >  		oldflags = jfs_inode->mode2;
+> >  
+> >  		/*
+> 
+> This patch leaves jfs's open-coded version of the same check.
 
-[    3.695886] =============================
-[    3.695917] WARNING: suspicious RCU usage
-[    3.695950] 5.2.0-rc2+ #2467 Not tainted
-[    3.695981] -----------------------------
-[    3.696014] drivers/iommu/intel-iommu.c:4569 suspicious rcu_dereference_check() usage!
-[    3.696069]
-               other info that might help us debug this:
+Heh, thanks for pointing that out.  I'll fix both of those things.
 
-[    3.696126]
-               rcu_scheduler_active = 2, debug_locks = 1
-[    3.696173] no locks held by swapper/0/1.
-[    3.696204]
-               stack backtrace:
-[    3.696241] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc2+ #2467
-[    3.696370] Call Trace:
-[    3.696404]  dump_stack+0x85/0xcb
-[    3.696441]  intel_iommu_init+0x128c/0x13ce
-[    3.696478]  ? kmem_cache_free+0x16b/0x2c0
-[    3.696516]  ? __fput+0x14b/0x270
-[    3.696550]  ? __call_rcu+0xb7/0x300
-[    3.696583]  ? get_max_files+0x10/0x10
-[    3.696631]  ? set_debug_rodata+0x11/0x11
-[    3.696668]  ? e820__memblock_setup+0x60/0x60
-[    3.696704]  ? pci_iommu_init+0x16/0x3f
-[    3.696737]  ? set_debug_rodata+0x11/0x11
-[    3.696770]  pci_iommu_init+0x16/0x3f
-[    3.696805]  do_one_initcall+0x5d/0x2e4
-[    3.696844]  ? set_debug_rodata+0x11/0x11
-[    3.696880]  ? rcu_read_lock_sched_held+0x6b/0x80
-[    3.696924]  kernel_init_freeable+0x1f0/0x27c
-[    3.696961]  ? rest_init+0x260/0x260
-[    3.696997]  kernel_init+0xa/0x110
-[    3.697028]  ret_from_fork+0x3a/0x50
+--D
 
-Fixes: fa212a97f3a36 ("iommu/vt-d: Probe DMA-capable ACPI name space devices")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel-iommu.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 19c4c387a3f6..84e650c6a46d 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -4793,8 +4793,10 @@ int __init intel_iommu_init(void)
- 	cpuhp_setup_state(CPUHP_IOMMU_INTEL_DEAD, "iommu/intel:dead", NULL,
- 			  intel_iommu_cpu_dead);
- 
-+	down_read(&dmar_global_lock);
- 	if (probe_acpi_namespace_devices())
- 		pr_warn("ACPI name space devices didn't probe correctly\n");
-+	up_read(&dmar_global_lock);
- 
- 	/* Finally, we enable the DMA remapping hardware. */
- 	for_each_iommu(iommu, drhd) {
--- 
-2.17.1
-
+> Thanks,
+> Shaggy
