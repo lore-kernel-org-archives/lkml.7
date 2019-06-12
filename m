@@ -2,98 +2,84 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B296C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A30C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645EE2063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA6E21721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404791AbfFMRNq (ORCPT
+        id S2393450AbfFMRNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:13:46 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:38539 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728962AbfFLV7k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 17:59:40 -0400
-Received: from orion.localdomain ([95.115.5.111]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MTREY-1i4mQQ0iFQ-00TkDW; Wed, 12 Jun 2019 23:59:38 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH] include: linux: gpio: fix build warnings on undefined struct pinctrl_dev
-Date:   Wed, 12 Jun 2019 23:59:36 +0200
-Message-Id: <1560376776-21994-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:qp5w8WJ5kjoBxuPrGVaQvHJnswpsq3PO6LN0pXiQKB3UvsEWn/A
- B3hzhs2UjG0Y9HqziiCeosWcGzX/RNTqUoY0ctV/0Dnj6x5IY0vnsxi+TxfdogogyrJbkHE
- ltu3yq217K4S3f1j0eNvGLS/PWnTMqX5GZbJorctSOHDnAPyXY9D50oLXRN9uGjh2GtZsxZ
- kfEVGbNqXtHMQkrHsif1A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Zu0FjJYGsXE=:CG9qQEeSZjvZER/4XQo5kI
- YXdr4XMAsDbq6YDcilUTExdahK7gT+2YZ/ILZDc1VmZopMgSCd0MjzX7Yeq9KlvN/H1CuzJmt
- FtTk5hletnzw20f/CnBsCch02tPnXZcmCaRYuxVi1PPxgjOen642bEwyY0X12e63+yg7lA6Ap
- Yv1I3kqVPXpZ1+OYdAWnTDUvIonalHLYjd9s9yfL93MKS48rPm0/dwF3AEwFmDvmQRjqiLfMK
- KVmKTSqhniav07k95/dCbNYIOdpdqYPGmGmjV4C57qriVwGfOzzi4f4YkNwJkLAjNqqVBxntH
- FhDIKviNQhnKOtlz3TiEdxfAk1GYG8F4MHbvrFuhpP6/B1ePkC2xvEf2PqPFS/7QUekFvNjK9
- 2EZa2CaeJ9fGTl8BzfkPCX/GX+0to/z3DruHSnm7k3e8Q1rXpRU1zVWd2C68hDDRZ6knOnlW+
- samidTtVSOqBw7EDjaRUrPOeiq9jub6EefVBFM19paGryOKwkuqMnv0Trd1g+/zNhFI+I+iFl
- EAk2nmnRRhaooGdN+9p+zoZg4p4TfgyzfxwbLhfKKawqsMBY6+TRYwJ723vhTWP3YLSt8zBKj
- UgZdzV7U3ioqxzaEGwQr7qhE8XT+ju/C6YZhwqnbWaO6lMRXj/dR/x8O+oV2L7h0Ow43AB03D
- LINUoIH+5Gi+cfQ3OSrkH0VZOg4Tk6NY1TgMpCiLhoROhVfArtFcPLuP8fYthmso6Bu/5h/E0
- 82hFIxW6j+HRdNwpRgIbU3RI2u5mK7hZ/ARU7w==
+        Thu, 13 Jun 2019 13:13:45 -0400
+Received: from gate.crashing.org ([63.228.1.57]:60838 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728964AbfFLWAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 18:00:14 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5CLxqNj012272;
+        Wed, 12 Jun 2019 16:59:53 -0500
+Message-ID: <05db995c55ad7c1002124374c139d2c0812ad034.camel@kernel.crashing.org>
+Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        linuxppc-dev@lists.ozlabs.org
+Date:   Thu, 13 Jun 2019 07:59:51 +1000
+In-Reply-To: <d6d82c0d-4a40-a191-0414-6b9a64547f65@lwfinger.net>
+References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
+         <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
+         <20190607172902.GA8183@lst.de>
+         <30000803-3772-3edf-f4a9-55122d504f3f@lwfinger.net>
+         <20190610081825.GA16534@lst.de>
+         <153c13f5-a829-1eab-a3c5-fecfb84127ff@lwfinger.net>
+         <20190611060521.GA19512@lst.de>
+         <5aaa600b-5b59-1f68-454f-20403c318f1a@lwfinger.net>
+         <20190612065558.GA19585@lst.de>
+         <d6d82c0d-4a40-a191-0414-6b9a64547f65@lwfinger.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
+On Wed, 2019-06-12 at 14:41 -0500, Larry Finger wrote:
+> On 6/12/19 1:55 AM, Christoph Hellwig wrote:
+> > 
+> > Ooops, yes.  But I think we could just enable ZONE_DMA on 32-bit
+> > powerpc.  Crude enablement hack below:
+> > 
+> > diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> > index 8c1c636308c8..1dd71a98b70c 100644
+> > --- a/arch/powerpc/Kconfig
+> > +++ b/arch/powerpc/Kconfig
+> > @@ -372,7 +372,7 @@ config PPC_ADV_DEBUG_DAC_RANGE
+> >    
+> >    config ZONE_DMA
+> >        bool
+> > -     default y if PPC_BOOK3E_64
+> > +     default y
+> >    
+> >    config PGTABLE_LEVELS
+> >        int
+> > 
+> 
+> With the patch for Kconfig above, and the original patch setting 
+> ARCH_ZONE_DMA_BITS to 30, everything works.
+> 
+> Do you have any ideas on what should trigger the change in ARCH_ZONE_BITS? 
+> Should it be CONFIG_PPC32 defined, or perhaps CONFIG_G4_CPU defined?
 
-This fixes the warnings:
+I think CONFIG_PPC32 is fine
 
-* include/linux/gpio.h:254:11: warning: 'struct pinctrl_dev' declared
-  inside parameter list will not be visible outside of this definition
-  or declaration
-* include/linux/gpio/driver.h:602:11: warning: 'struct pinctrl_dev'
-  declared inside parameter list will not be visible outside of this
-  definition or declaration
-
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- include/linux/gpio.h        | 1 +
- include/linux/gpio/driver.h | 2 ++
- 2 files changed, 3 insertions(+)
-
-diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index 39745b8..40915b4 100644
---- a/include/linux/gpio.h
-+++ b/include/linux/gpio.h
-@@ -106,6 +106,7 @@ int devm_gpio_request_one(struct device *dev, unsigned gpio,
- 
- struct device;
- struct gpio_chip;
-+struct pinctrl_dev;
- 
- static inline bool gpio_is_valid(int number)
- {
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index a1d273c..b58b27c 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -590,6 +590,8 @@ int gpiochip_add_pingroup_range(struct gpio_chip *chip,
- 
- #else
- 
-+struct pinctrl_dev;
-+
- static inline int
- gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- 		       unsigned int gpio_offset, unsigned int pin_offset,
--- 
-1.9.1
+Ben.
 
