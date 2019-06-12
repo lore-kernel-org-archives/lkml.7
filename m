@@ -2,121 +2,196 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C71CCC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2520AC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A024E2063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="d5Nfvqxa"
+	by mail.kernel.org (Postfix) with ESMTP id EF5632053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:13:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404697AbfFMRNG (ORCPT
+        id S2404734AbfFMRNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:13:06 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:50694 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728989AbfFLWGW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 18:06:22 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x5CM38rn013351
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 15:06:20 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=mJVdksI83pcAr/2dwtDaBJBK6Rf/MpbqiwJ18bpKuB4=;
- b=d5NfvqxaVKUz9etwwx4Nb7+wyFk01khAYRPNJLsjj2+STh6cFzBwfLiq29ym6MB+KcFW
- Mb7+x8G8WPMbUgRhGd1tNxEEDPcZC6e6UZ8RmBnva888nfZe+vsx5zFRF2Ka93ILxqsL
- qm5as3D/b87YltgWMuCZEUdCA4BzLdNRgTU= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0001303.ppops.net with ESMTP id 2t356213fd-8
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 15:06:20 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 12 Jun 2019 15:06:16 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 8320F62E2085; Wed, 12 Jun 2019 15:03:23 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-CC:     <namit@vmware.com>, <peterz@infradead.org>, <oleg@redhat.com>,
-        <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
-        <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v3 0/5] THP aware uprobe
-Date:   Wed, 12 Jun 2019 15:03:14 -0700
-Message-ID: <20190612220320.2223898-1-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Thu, 13 Jun 2019 13:13:08 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33800 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728982AbfFLWCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 18:02:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 15:02:43 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga003.jf.intel.com with ESMTP; 12 Jun 2019 15:02:42 -0700
+Date:   Wed, 12 Jun 2019 15:02:42 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Cedric Xing <cedric.xing@intel.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        selinux@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        pmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
+ SELinux
+Message-ID: <20190612220242.GJ20308@linux.intel.com>
+References: <cover.1560131039.git.cedric.xing@intel.com>
+ <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
+ <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
+ <20190611220243.GB3416@linux.intel.com>
+ <CALCETrWQT3AG+-OKBOzuw-a6VPApkNYsKqZiBmS56-b-72bfYQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906120153
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrWQT3AG+-OKBOzuw-a6VPApkNYsKqZiBmS56-b-72bfYQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set makes uprobe aware of THPs.
+On Wed, Jun 12, 2019 at 12:30:20PM -0700, Andy Lutomirski wrote:
+> On Tue, Jun 11, 2019 at 3:02 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> >   1. Require userspace to explicitly specificy (maximal) enclave page
+> >      permissions at build time.  The enclave page permissions are provided
+> >      to, and checked by, LSMs at enclave build time.
+> >
+> >      Pros: Low-complexity kernel implementation, straightforward auditing
+> >      Cons: Sullies the SGX UAPI to some extent, may increase complexity of
+> >            SGX2 enclave loaders.
+> 
+> In my notes, this works like this.  This is similar, but not
+> identical, to what Sean has been sending out.
 
-Currently, when uprobe is attached to text on THP, the page is split by
-FOLL_SPLIT. As a result, uprobe eliminates the performance benefit of THP.
+...
 
-This set makes uprobe THP-aware. Instead of FOLL_SPLIT, we introduces
-FOLL_SPLIT_PMD, which only split PMD for uprobe. After all uprobes within
-the THP are removed, the PTEs are regrouped into huge PMD.
+> mmap() and mprotect() enforce the following rules:
+> 
+>  - Deny if a PROT_ flag is requested but the corresponding ALLOW_ flag
+>    is not set for all pages in question.
+> 
+>  - Deny if PROT_WRITE, PROT_EXEC, and DENY_WX are all set.
+> 
+>  - Deny if PROT_EXEC, ALLOW_WRITE, and DENY_X_IF_ALLOW_WRITE are all set.
+> 
+> mprotect() and mmap() do *not* call SGX-specific LSM hooks to ask for
+> permission, although they can optionally call an LSM hook if they hit one of
+> the -EPERM cases for auditing purposes.
 
-Note that, with uprobes attached, the process runs with PTEs for the huge
-page. The performance benefit of THP is recovered _after_ all uprobes on
-the huge page are detached.
+IMO, #1 only makes sense if it's stripped down to avoid auditing and
+locking complications, i.e. gets a pass/fail at security_enclave_load()
+and clears VM_MAY* flags during mmap().  If we want WX and W->X to be
+differentiated by security_enclave_init() as opposed to
+security_enclave_load(), then we should just scrap #1.
 
-This set (plus a few THP patches) is also available at
+> I think this model works quite well in an SGX1 world.  The main thing
+> that makes me uneasy about this model is that, in SGX2, it requires
+> that an SGX2-compatible enclave loader must pre-declare to the kernel
+> whether it intends for its dynamically allocated memory to be
+> ALLOW_EXEC.  If ALLOW_EXEC is set but not actually needed, it will
+> still fail if DENY_X_IF_ALLOW_WRITE ends up being set.  The other
+> version below does not have this limitation.
 
-   https://github.com/liu-song-6/linux/tree/uprobe-thp
+I'm not convinced this will be a meaningful limitation in practice, though
+that's probably obvious from my RFCs :-).  That being said, the UAPI quirk
+is essentially a dealbreaker for multiple people, so let's drop #1.
 
-Changes since v2:
-1. For FOLL_SPLIT_PMD, populated the page table in follow_pmd_mask().
-2. Simplify logic in uprobe_write_opcode. (Oleg Nesterov)
-3. Fix page refcount handling with FOLL_SPLIT_PMD.
-4. Much more testing, together with THP on ext4 and btrfs (sending in
-   separate set).
-5. Rebased up on Linus's tree:
-   commit 35110e38e6c5 ("Merge tag 'media/v5.2-2' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media")
+I discussed the options with Cedric offline, and he is ok with option #2
+*if* the idea actually translates to acceptable code and doesn't present
+problems for userspace and/or future SGX features.
 
-Changes since v1:
-1. introduces FOLL_SPLIT_PMD, instead of modifying split_huge_pmd*();
-2. reuse pages_identical() from ksm.c;
-3. rewrite most of try_collapse_huge_pmd().
+So, I'll work on an RFC series to implement #2 as described below.  If it
+works out, yay!  If not, i.e. option #2 is fundamentally broken, I'll
+shift my focus to Cedric's code (option #3).
 
-Song Liu (5):
-  mm: move memcmp_pages() and pages_identical()
-  uprobe: use original page when all uprobes are removed
-  mm, thp: introduce FOLL_SPLIT_PMD
-  uprobe: use FOLL_SPLIT_PMD instead of FOLL_SPLIT
-  uprobe: collapse THP pmd after removing all uprobes
+> >   2. Pre-check LSM permissions and dynamically track mappings to enclave
+> >      pages, e.g. add an SGX mprotect() hook to restrict W->X and WX
+> >      based on the pre-checked permissions.
+> >
+> >      Pros: Does not impact SGX UAPI, medium kernel complexity
+> >      Cons: Auditing is complex/weird, requires taking enclave-specific
+> >            lock during mprotect() to query/update tracking.
+> 
+> Here's how this looks in my mind.  It's quite similar, except that
+> ALLOW_READ, ALLOW_WRITE, and ALLOW_EXEC are replaced with a little
+> state machine.
+> 
+> EADD does not take any special flags.  It calls this LSM hook:
+> 
+>   int security_enclave_load(struct vm_area_struct *source);
+> 
+> This hook can return -EPERM.  Otherwise it 0 or ALLOC_EXEC_IF_UNMODIFIED
+> (i.e. 1).  This hook enforces permissions (a) and (b).
+> 
+> The driver tracks a state for each page, and the possible states are:
+> 
+>  - CLEAN_MAYEXEC /* no W or X VMAs have existed, but X is okay */
+>  - CLEAN_NOEXEC /* no W or X VMAs have existed, and X is not okay */
+>  - CLEAN_EXEC /* no W VMA has existed, but an X VMA has existed */
+>  - DIRTY /* a W VMA has existed */
+> 
+> The initial state for a page is CLEAN_MAYEXEC if the hook said
+> ALLOW_EXEC_IF_UNMODIFIED and CLEAN_NOEXEC otherwise.
+> 
+> The future EAUG does not call a hook at all and puts pages into the state
+> CLEAN_NOEXEC.  If SGX3 or later ever adds EAUG-but-don't-clear, it can
+> call security_enclave_load() and add CLEAN_MAYEXEC pages if appropriate.
+> 
+> EINIT takes a sigstruct pointer.  SGX calls a new hook:
+> 
+>   unsigned int security_enclave_init(struct sigstruct *sigstruct,
+> struct vm_area_struct *source, unsigned int flags);
+> 
+> This hook can return -EPERM.  Otherwise it returns 0 or a combination of
+> flags DENY_WX and DENY_X_DIRTY.  The driver saves this value.
+> These represent permissions (c) and (d).
+> 
+> If we want to have a permission for "execute code supplied from outside the
+> enclave that was not measured", we could have a flag like
+> HAS_UNMEASURED_CLEAN_EXEC_PAGE that the LSM could consider.
+>
+> mmap() and mprotect() enforce the following rules:
+> 
+>  - If VM_EXEC is requested and (either the page is DIRTY or VM_WRITE is
+>    requested) and DENY_X_DIRTY, then deny.
+> 
+>  - If VM_WRITE and VM_EXEC are both requested and DENY_WX, then deny.
+> 
+>  - If VM_WRITE is requested, we need to update the state.  If it was
+>    CLEAN_EXEC, then we reject if DENY_X_DIRTY.  Otherwise we change the
+>    state to DIRTY.
+> 
+>  - If VM_EXEC is requested and the page is CLEAN_NOEXEC, then deny.
+> 
+> mprotect() and mmap() do *not* call SGX-specific LSM hooks to ask for
+> permission, although they can optionally call an LSM hook if they hit one of
+> the -EPERM cases for auditing purposes.
+> 
+> Before the SIGSTRUCT is provided to the driver, the driver acts as though
+> DENY_X_DIRTY and DENY_WX are both set.
 
- include/linux/huge_mm.h |  7 +++++
- include/linux/mm.h      |  8 ++++++
- kernel/events/uprobes.c | 54 ++++++++++++++++++++++++++--------
- mm/gup.c                | 38 ++++++++++++++++++++++--
- mm/huge_memory.c        | 64 +++++++++++++++++++++++++++++++++++++++++
- mm/ksm.c                | 18 ------------
- mm/util.c               | 13 +++++++++
- 7 files changed, 169 insertions(+), 33 deletions(-)
-
---
-2.17.1
