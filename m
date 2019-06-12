@@ -2,52 +2,46 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B17C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961DCC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1459D21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7267B20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:55:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409187AbfFLMyH (ORCPT
+        id S2438418AbfFLMzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:54:07 -0400
-Received: from mga11.intel.com ([192.55.52.93]:25054 "EHLO mga11.intel.com"
+        Wed, 12 Jun 2019 08:55:15 -0400
+Received: from mga11.intel.com ([192.55.52.93]:25121 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbfFLMyG (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:54:06 -0400
+        id S1728455AbfFLMzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:55:15 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 05:54:06 -0700
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 05:55:14 -0700
 X-ExtLoop1: 1
-Received: from hjin5-mobl1.ccr.corp.intel.com (HELO [10.254.211.209]) ([10.254.211.209])
-  by fmsmga007.fm.intel.com with ESMTP; 12 Jun 2019 05:54:04 -0700
-Subject: Re: [PATCH v2 4/7] perf diff: Use hists to manage basic blocks per
- symbol
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <1559572577-25436-1-git-send-email-yao.jin@linux.intel.com>
- <1559572577-25436-5-git-send-email-yao.jin@linux.intel.com>
- <20190605114417.GB5868@krava>
- <4bbc5085-c8b0-5e36-419c-6ee754186027@linux.intel.com>
- <20190611085606.GA11510@krava>
- <c46ee356-9765-42cc-8cff-221bacb63c3d@linux.intel.com>
- <20190612074417.GC6455@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <c9d5e3b1-63a1-c87d-32c2-4c3b25642d1a@linux.intel.com>
-Date:   Wed, 12 Jun 2019 20:54:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by orsmga001.jf.intel.com with ESMTP; 12 Jun 2019 05:55:12 -0700
+Subject: Re: [PATCH 1/3] mmc: sdhci: sdhci-pci-o2micro: Correctly set bus
+ width when tuning
+To:     Raul E Rangel <rrangel@chromium.org>, linux-mmc@vger.kernel.org
+Cc:     ernest.zhang@bayhubtech.com, djkurtz@chromium.org,
+        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+References: <20190610185354.35310-1-rrangel@chromium.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <883dab7b-57fc-22dd-e111-72506544d0e8@intel.com>
+Date:   Wed, 12 Jun 2019 15:53:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190612074417.GC6455@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190610185354.35310-1-rrangel@chromium.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,137 +49,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 10/06/19 9:53 PM, Raul E Rangel wrote:
+> sdhci_send_tuning uses mmc->ios.bus_width to determine the block size.
+> Without this patch the block size would be set incorrectly when the
+> bus_width == 8 which results in tuning failing.
+> 
+> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-On 6/12/2019 3:44 PM, Jiri Olsa wrote:
-> On Wed, Jun 12, 2019 at 02:11:44PM +0800, Jin, Yao wrote:
->>
->>
->> On 6/11/2019 4:56 PM, Jiri Olsa wrote:
->>> On Sat, Jun 08, 2019 at 07:41:47PM +0800, Jin, Yao wrote:
->>>>
->>>>
->>>> On 6/5/2019 7:44 PM, Jiri Olsa wrote:
->>>>> On Mon, Jun 03, 2019 at 10:36:14PM +0800, Jin Yao wrote:
->>>>>
->>>>> SNIP
->>>>>
->>>>>> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
->>>>>> index 43623fa..d1641da 100644
->>>>>> --- a/tools/perf/util/sort.h
->>>>>> +++ b/tools/perf/util/sort.h
->>>>>> @@ -79,6 +79,9 @@ struct hist_entry_diff {
->>>>>>     		/* HISTC_WEIGHTED_DIFF */
->>>>>>     		s64	wdiff;
->>>>>> +
->>>>>> +		/* PERF_HPP_DIFF__CYCLES */
->>>>>> +		s64	cycles;
->>>>>>     	};
->>>>>>     };
->>>>>> @@ -143,6 +146,9 @@ struct hist_entry {
->>>>>>     	struct branch_info	*branch_info;
->>>>>>     	long			time;
->>>>>>     	struct hists		*hists;
->>>>>> +	void			*block_hists;
->>>>>> +	int			block_idx;
->>>>>> +	int			block_num;
->>>>>>     	struct mem_info		*mem_info;
->>>>>>     	struct block_info	*block_info;
->>>>>
->>>>> could you please not add the new block* stuff in here,
->>>>> and instead use the "c2c model" and use yourr own struct
->>>>> on top of hist_entry? we are trying to librarize this
->>>>> stuff and keep only necessary things in here..
->>>>>
->>>>> you're already using hist_entry_ops, so should be easy
->>>>>
->>>>> something like:
->>>>>
->>>>> 	struct block_hist_entry {
->>>>> 		void			*block_hists;
->>>>> 		int			block_idx;
->>>>> 		int			block_num;
->>>>> 		struct block_info	*block_info;
->>>>>
->>>>> 		struct hist_entry	he;
->>>>> 	};
->>>>>
->>>>>
->>>>>
->>>>> jirka
->>>>>
->>>>
->>>> Hi Jiri,
->>>>
->>>> After more considerations, maybe I can't move these stuffs from hist_entry
->>>> to block_hist_entry.
->>>
->>> why?
->>>
->>>>
->>>> Actually we use 2 kinds of hist_entry in this patch series. On kind of
->>>> hist_entry is for symbol/function. The other kind of hist_entry is for basic
->>>> block.
->>>
->>> correct
->>>
->>> so the way I see it the processing goes like this:
->>>
->>>
->>> 1) there's standard hist_entry processing ending up
->>>      with evsel->hists->rb_root full of hist entries
->>>
->>> 2) then you process every hist_entry and create
->>>      new 'struct hists' for each and fill it with
->>>      symbol counts data
->>>
->>>
->>>
->>> you could add 'struct hist_entry_ops' for the 1) processing
->>> that adds the 'struct hists' object for each hist_entry
->>>
->>> and add another 'struct hist_entry_ops' for 2) processing
->>> to carry the block data for each hist_entry
->>>
->>> jirka
->>>
->>
->> Hi Jiri,
->>
->> Yes, I can use two hist_entry_ops but one thing is still difficult to handle
->> that is the printing of blocks.
->>
->> One function may contain multiple blocks so I add 'block_num' in 'struct
->> hist_entry' to record the number of blocks.
->>
->> In patch "perf diff: Print the basic block cycles diff", I reuse most of
->> current code to print the blocks. The major change is:
->>
->>   static int hist_entry__fprintf(struct hist_entry *he, size_t size,
->>                                 char *bf, size_t bfsz, FILE *fp,
->>                                 bool ignore_callchains) {
->>
->> +       if (he->block_hists)
->> +               return hist_entry__block_fprintf(he, bf, size, fp);
->> +
+> ---
 > 
+>  drivers/mmc/host/sdhci-pci-o2micro.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> you could do it the way we do hierarchy and have
-> something like 'symbol_conf.report_block'
+> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+> index b29bf4e7dcb48..dd21315922c87 100644
+> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
+> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+> @@ -115,6 +115,7 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>  	 */
+>  	if (mmc->ios.bus_width == MMC_BUS_WIDTH_8) {
+>  		current_bus_width = mmc->ios.bus_width;
+> +		mmc->ios.bus_width = MMC_BUS_WIDTH_4;
+>  		sdhci_set_bus_width(host, MMC_BUS_WIDTH_4);
+>  	}
+>  
+> @@ -126,8 +127,10 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>  
+>  	sdhci_end_tuning(host);
+>  
+> -	if (current_bus_width == MMC_BUS_WIDTH_8)
+> +	if (current_bus_width == MMC_BUS_WIDTH_8) {
+> +		mmc->ios.bus_width = MMC_BUS_WIDTH_8;
+>  		sdhci_set_bus_width(host, current_bus_width);
+> +	}
+>  
+>  	host->flags &= ~SDHCI_HS400_TUNING;
+>  	return 0;
 > 
->          if (symbol_conf.report_hierarchy)
->                  return hist_entry__hierarchy_fprintf(he, &hpp, hists, fp);
-> 
-> and in hist_entry__block_fprintf you cast the hist_entry
-> to your struct.. so you'll have all the data
-> 
-> jirka
-> 
-
-Thanks Jiri. So it looks I need to define 'struct block_hist_entry' in 
-util/sort.h, then hist_entry__block_fprintf can know this struct. 
-Previously I just defined this struct in builtin-diff.c.
-
-Thanks
-Jin Yao
 
