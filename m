@@ -2,84 +2,98 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A30C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C26C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA6E21721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B21152063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:14:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393450AbfFMRNp (ORCPT
+        id S1729299AbfFMRON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:13:45 -0400
-Received: from gate.crashing.org ([63.228.1.57]:60838 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728964AbfFLWAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 18:00:14 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5CLxqNj012272;
-        Wed, 12 Jun 2019 16:59:53 -0500
-Message-ID: <05db995c55ad7c1002124374c139d2c0812ad034.camel@kernel.crashing.org>
-Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 13 Jun 2019 07:59:51 +1000
-In-Reply-To: <d6d82c0d-4a40-a191-0414-6b9a64547f65@lwfinger.net>
-References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
-         <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
-         <20190607172902.GA8183@lst.de>
-         <30000803-3772-3edf-f4a9-55122d504f3f@lwfinger.net>
-         <20190610081825.GA16534@lst.de>
-         <153c13f5-a829-1eab-a3c5-fecfb84127ff@lwfinger.net>
-         <20190611060521.GA19512@lst.de>
-         <5aaa600b-5b59-1f68-454f-20403c318f1a@lwfinger.net>
-         <20190612065558.GA19585@lst.de>
-         <d6d82c0d-4a40-a191-0414-6b9a64547f65@lwfinger.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 13 Jun 2019 13:14:13 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:46714 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728939AbfFLV5R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 17:57:17 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TU0Hbt._1560376624;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TU0Hbt._1560376624)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 13 Jun 2019 05:57:14 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     ktkhai@virtuozzo.com, kirill.shutemov@linux.intel.com,
+        hannes@cmpxchg.org, mhocko@suse.com, hughd@google.com,
+        shakeelb@google.com, rientjes@google.com, akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [v3 PATCH 2/4] mm: move mem_cgroup_uncharge out of __page_cache_release()
+Date:   Thu, 13 Jun 2019 05:56:47 +0800
+Message-Id: <1560376609-113689-3-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1560376609-113689-1-git-send-email-yang.shi@linux.alibaba.com>
+References: <1560376609-113689-1-git-send-email-yang.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-12 at 14:41 -0500, Larry Finger wrote:
-> On 6/12/19 1:55 AM, Christoph Hellwig wrote:
-> > 
-> > Ooops, yes.  But I think we could just enable ZONE_DMA on 32-bit
-> > powerpc.  Crude enablement hack below:
-> > 
-> > diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> > index 8c1c636308c8..1dd71a98b70c 100644
-> > --- a/arch/powerpc/Kconfig
-> > +++ b/arch/powerpc/Kconfig
-> > @@ -372,7 +372,7 @@ config PPC_ADV_DEBUG_DAC_RANGE
-> >    
-> >    config ZONE_DMA
-> >        bool
-> > -     default y if PPC_BOOK3E_64
-> > +     default y
-> >    
-> >    config PGTABLE_LEVELS
-> >        int
-> > 
-> 
-> With the patch for Kconfig above, and the original patch setting 
-> ARCH_ZONE_DMA_BITS to 30, everything works.
-> 
-> Do you have any ideas on what should trigger the change in ARCH_ZONE_BITS? 
-> Should it be CONFIG_PPC32 defined, or perhaps CONFIG_G4_CPU defined?
+The later patch would make THP deferred split shrinker memcg aware, but
+it needs page->mem_cgroup information in THP destructor, which is called
+after mem_cgroup_uncharge() now.
 
-I think CONFIG_PPC32 is fine
+So, move mem_cgroup_uncharge() from __page_cache_release() to compound
+page destructor, which is called by both THP and other compound pages
+except HugeTLB.  And call it in __put_single_page() for single order
+page.
 
-Ben.
+Suggested-by: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: David Rientjes <rientjes@google.com>
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+---
+ mm/page_alloc.c | 1 +
+ mm/swap.c       | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index a82104a..7f27f4e 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -623,6 +623,7 @@ static void bad_page(struct page *page, const char *reason,
+ 
+ void free_compound_page(struct page *page)
+ {
++	mem_cgroup_uncharge(page);
+ 	__free_pages_ok(page, compound_order(page));
+ }
+ 
+diff --git a/mm/swap.c b/mm/swap.c
+index 3a75722..982bd79 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -70,12 +70,12 @@ static void __page_cache_release(struct page *page)
+ 		spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+ 	}
+ 	__ClearPageWaiters(page);
+-	mem_cgroup_uncharge(page);
+ }
+ 
+ static void __put_single_page(struct page *page)
+ {
+ 	__page_cache_release(page);
++	mem_cgroup_uncharge(page);
+ 	free_unref_page(page);
+ }
+ 
+-- 
+1.8.3.1
 
