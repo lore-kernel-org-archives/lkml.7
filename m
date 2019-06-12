@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4549C31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C7DC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4750208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8414920896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731882AbfFLJ5o (ORCPT
+        id S2437838AbfFLJ5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:57:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52950 "EHLO mx1.redhat.com"
+        Wed, 12 Jun 2019 05:57:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52996 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727239AbfFLJ5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:57:43 -0400
+        id S1731931AbfFLJ5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:57:50 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 72BBA2F8BF5;
-        Wed, 12 Jun 2019 09:57:43 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3E8822F8BFA;
+        Wed, 12 Jun 2019 09:57:50 +0000 (UTC)
 Received: from localhost.default (ovpn-116-101.phx2.redhat.com [10.3.116.101])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 474DC614C4;
-        Wed, 12 Jun 2019 09:57:39 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 26A822CFA7;
+        Wed, 12 Jun 2019 09:57:46 +0000 (UTC)
 From:   Daniel Bristot de Oliveira <bristot@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -42,22 +42,28 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Baron <jbaron@akamai.com>, Scott Wood <swood@redhat.com>,
         Marcelo Tosatti <mtosatti@redhat.com>,
         Clark Williams <williams@redhat.com>, x86@kernel.org
-Subject: [PATCH V6 1/6] jump_label: Add a jump_label_can_update() helper
-Date:   Wed, 12 Jun 2019 11:57:26 +0200
-Message-Id: <56b69bd3f8e644ed64f2dbde7c088030b8cbe76b.1560325897.git.bristot@redhat.com>
+Subject: [PATCH V6 3/6] jump_label: Sort entries of the same key by the code
+Date:   Wed, 12 Jun 2019 11:57:28 +0200
+Message-Id: <f57ae83e0592418ba269866bb7ade570fc8632e0.1560325897.git.bristot@redhat.com>
 In-Reply-To: <cover.1560325897.git.bristot@redhat.com>
 References: <cover.1560325897.git.bristot@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 12 Jun 2019 09:57:43 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 12 Jun 2019 09:57:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the check if a jump_entry is valid to a function. No functional
-change.
+In the batching mode, all the entries of a given key are updated at once.
+During the update of a key, a hit in the int3 handler will check if the
+hitting code address belongs to one of these keys.
+
+To optimize the search of a given code in the vector of entries being
+updated, a binary search is used. The binary search relies on the order
+of the entries of a key by its code. Hence the keys need to be sorted
+by the code too, so sort the entries of a given key by the code.
 
 Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
@@ -78,54 +84,40 @@ Cc: Clark Williams <williams@redhat.com>
 Cc: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- kernel/jump_label.c | 28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ kernel/jump_label.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-index 0bfa10f4410c..468ca421ad9a 100644
+index 468ca421ad9a..2bd172e1e95f 100644
 --- a/kernel/jump_label.c
 +++ b/kernel/jump_label.c
-@@ -384,22 +384,30 @@ static enum jump_label_type jump_label_type(struct jump_entry *entry)
- 	return enabled ^ branch;
+@@ -37,12 +37,26 @@ static int jump_label_cmp(const void *a, const void *b)
+ 	const struct jump_entry *jea = a;
+ 	const struct jump_entry *jeb = b;
+ 
++	/*
++	 * Entrires are sorted by key.
++	 */
+ 	if (jump_entry_key(jea) < jump_entry_key(jeb))
+ 		return -1;
+ 
+ 	if (jump_entry_key(jea) > jump_entry_key(jeb))
+ 		return 1;
+ 
++	/*
++	 * In the batching mode, entries should also be sorted by the code
++	 * inside the already sorted list of entries, enabling a bsearch in
++	 * the vector.
++	 */
++	if (jump_entry_code(jea) < jump_entry_code(jeb))
++		return -1;
++
++	if (jump_entry_code(jea) > jump_entry_code(jeb))
++		return 1;
++
+ 	return 0;
  }
  
-+static bool jump_label_can_update(struct jump_entry *entry, bool init)
-+{
-+	/*
-+	 * Cannot update code that was in an init text area.
-+	 */
-+	if (!init && jump_entry_is_init(entry))
-+		return false;
-+
-+	if (!kernel_text_address(jump_entry_code(entry))) {
-+		WARN_ONCE(1, "can't patch jump_label at %pS", (void *)jump_entry_code(entry));
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- static void __jump_label_update(struct static_key *key,
- 				struct jump_entry *entry,
- 				struct jump_entry *stop,
- 				bool init)
- {
- 	for (; (entry < stop) && (jump_entry_key(entry) == key); entry++) {
--		/*
--		 * An entry->code of 0 indicates an entry which has been
--		 * disabled because it was in an init text area.
--		 */
--		if (init || !jump_entry_is_init(entry)) {
--			if (kernel_text_address(jump_entry_code(entry)))
--				arch_jump_label_transform(entry, jump_label_type(entry));
--			else
--				WARN_ONCE(1, "can't patch jump_label at %pS",
--					  (void *)jump_entry_code(entry));
-+		if (jump_label_can_update(entry, init)) {
-+			arch_jump_label_transform(entry, jump_label_type(entry));
- 		}
- 	}
- }
 -- 
 2.20.1
 
