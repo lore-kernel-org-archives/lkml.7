@@ -2,251 +2,62 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B42C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE1AC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15BA4215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:00:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560358824;
-	bh=7aLU5Bqdlqn7abZ+7OODf6LyuDW/idcWFbauu3DZwuc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YQ2Emo9BZYEv1+J6FtrF9Uyzu8kYFVyqp5Y7FZzCBkkmSGgA44R0PbXZEoyhDrPGD
-	 hoGMUzK7Uj9LLjGBV66FJY8HjhoNxMBzOeL0wS1haRxfDotIuSUl7A2Lmq94GCMSx9
-	 jgtArPMaZL92n9mk9zkY+63cSAfpzMoXKINHIiBo=
+	by mail.kernel.org (Postfix) with ESMTP id 9130A20896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:00:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YrZ7aTZf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438228AbfFLRAX (ORCPT
+        id S1730538AbfFLRAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 13:00:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726529AbfFLRAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 13:00:23 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 483C821744;
-        Wed, 12 Jun 2019 17:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560358821;
-        bh=7aLU5Bqdlqn7abZ+7OODf6LyuDW/idcWFbauu3DZwuc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XzlPb9hN+5HIVFHLTsbbBjJh0oCS51YAarc73vQgyAqEMvCTRSY3Cc+I3HadF0U8n
-         TmFCY0gdRA4dNN4aXftcOgHuFjB3pflK51gSyl3nxKLvR0RnpRjNji8ySWlnhKH6gV
-         FiprotSDsesZ/mHQ2y71KyooIyFktigjimda/WPU=
-Received: by mail-qt1-f173.google.com with SMTP id x2so18369410qtr.0;
-        Wed, 12 Jun 2019 10:00:21 -0700 (PDT)
-X-Gm-Message-State: APjAAAVkZAMDn3Knb8V4DNsPuPcYH2dRouv/SMUIIKLdq0cSaAJMMDRg
-        PVE0w0GsDx+9jXsD7wNAymTcRFh+5QIo5OFndA==
-X-Google-Smtp-Source: APXvYqy5uOAOwR6lIcM4YkoRgaS0Q4eE5PZ1OGinObQbMWVdvD1Ij2PRCU4Me2E6xB25hQAWGRnvsjIhll2KDB9J+LQ=
-X-Received: by 2002:ac8:3908:: with SMTP id s8mr71080428qtb.224.1560358820525;
- Wed, 12 Jun 2019 10:00:20 -0700 (PDT)
+        Wed, 12 Jun 2019 13:00:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37132 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728377AbfFLRAg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 13:00:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ntWDNfgCNc/sndoYBEa1e+idBiANLDkzcnLcfROE1SY=; b=YrZ7aTZf2lH6dOw36x7OfJ7HZG
+        JDXb9QvjQqfl8BtXA9x04yG6aQl/qTNDN8eCSI0VqNbXzJIC81iw+vy9B/fhS3uM0sNd9txORD+s4
+        oJJGz+SZAOxxCX5aQUNvk7y09p9YfwfabsIcNusBi59Eu2YYn0Okw1D3drqE+J/v24+EAre78/vdj
+        2MRLls7NG9naeJ0Lp+pU/yE+7bw0wlEPDkmOb6UkgFu28+cSXU+MAvjhTFU8F6Ag4a8Mo4sDavAv9
+        1CvnVSf1wiqL+le77gmkRpOmyJ62SBr8T/izEXJtUnEQ232zgWapdXoINmv6sMXJuwV/6xfdh9yUK
+        YBepZjxw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hb6by-0003OL-Vj; Wed, 12 Jun 2019 17:00:34 +0000
+Date:   Wed, 12 Jun 2019 10:00:34 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        gorcunov@gmail.com, Laurent Dufour <ldufour@linux.ibm.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>
+Subject: Re: [RFC PATCH] binfmt_elf: Protect mm_struct access with mmap_sem
+Message-ID: <20190612170034.GE32656@bombadil.infradead.org>
+References: <20190612142811.24894-1-mkoutny@suse.com>
 MIME-Version: 1.0
-References: <20190612010011.90185-1-wangkefeng.wang@huawei.com> <0702fa2d-1952-e9fc-8e17-a93f3b90a958@gmail.com>
-In-Reply-To: <0702fa2d-1952-e9fc-8e17-a93f3b90a958@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 12 Jun 2019 11:00:08 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKsjK237W+-Yz4McxSZG=Gd3Pfp2JtgMnfAqiNRUcCg1g@mail.gmail.com>
-Message-ID: <CAL_JsqKsjK237W+-Yz4McxSZG=Gd3Pfp2JtgMnfAqiNRUcCg1g@mail.gmail.com>
-Subject: Re: [PATCH next] of/fdt: Fix defined but not used compiler warning
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612142811.24894-1-mkoutny@suse.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 10:45 AM Frank Rowand <frowand.list@gmail.com> wrot=
-e:
->
-> Hi Kefeng,
->
-> If Rob agrees, I'd like to see one more change in this patch.
->
-> Since the only caller of of_fdt_match() is of_flat_dt_match(),
-> can you move the body of of_fdt_match() into  of_flat_dt_match()
-> and eliminate of_fdt_match()?
+On Wed, Jun 12, 2019 at 04:28:11PM +0200, Michal Koutný wrote:
+> -	/* N.B. passed_fileno might not be initialized? */
+> +
 
-That's fine as long as we think there's never any use for of_fdt_match
-after init? Fixup of nodes in an overlay for example.
-
-Rob
-
->
-> (Noting that of_flat_dt_match() consists only of the call to
-> of_fdt_match().)
->
-> -Frank
->
->
-> On 6/11/19 6:00 PM, Kefeng Wang wrote:
-> > When CONFIG_OF_EARLY_FLATTREE is disabled, there is a compiler warning,
-> >
-> > drivers/of/fdt.c:129:19: warning: =E2=80=98of_fdt_match=E2=80=99 define=
-d but not used [-Wunused-function]
-> >  static int __init of_fdt_match(const void *blob, unsigned long node,
-> >
-> > Move of_fdt_match() and of_fdt_is_compatible() under CONFIG_OF_EARLY_FL=
-ATTREE
-> > to fix it.
-> >
-> > Cc: Stephen Boyd <swboyd@chromium.org>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: Frank Rowand <frowand.list@gmail.com>
-> > Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> > ---
-> >  drivers/of/fdt.c | 106 +++++++++++++++++++++++------------------------
-> >  1 file changed, 53 insertions(+), 53 deletions(-)
-> >
-> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> > index 3d36b5afd9bd..d6afd5b22940 100644
-> > --- a/drivers/of/fdt.c
-> > +++ b/drivers/of/fdt.c
-> > @@ -78,38 +78,6 @@ void __init of_fdt_limit_memory(int limit)
-> >       }
-> >  }
-> >
-> > -/**
-> > - * of_fdt_is_compatible - Return true if given node from the given blo=
-b has
-> > - * compat in its compatible list
-> > - * @blob: A device tree blob
-> > - * @node: node to test
-> > - * @compat: compatible string to compare with compatible list.
-> > - *
-> > - * On match, returns a non-zero value with smaller values returned for=
- more
-> > - * specific compatible values.
-> > - */
-> > -static int of_fdt_is_compatible(const void *blob,
-> > -                   unsigned long node, const char *compat)
-> > -{
-> > -     const char *cp;
-> > -     int cplen;
-> > -     unsigned long l, score =3D 0;
-> > -
-> > -     cp =3D fdt_getprop(blob, node, "compatible", &cplen);
-> > -     if (cp =3D=3D NULL)
-> > -             return 0;
-> > -     while (cplen > 0) {
-> > -             score++;
-> > -             if (of_compat_cmp(cp, compat, strlen(compat)) =3D=3D 0)
-> > -                     return score;
-> > -             l =3D strlen(cp) + 1;
-> > -             cp +=3D l;
-> > -             cplen -=3D l;
-> > -     }
-> > -
-> > -     return 0;
-> > -}
-> > -
-> >  static bool of_fdt_device_is_available(const void *blob, unsigned long=
- node)
-> >  {
-> >       const char *status =3D fdt_getprop(blob, node, "status", NULL);
-> > @@ -123,27 +91,6 @@ static bool of_fdt_device_is_available(const void *=
-blob, unsigned long node)
-> >       return false;
-> >  }
-> >
-> > -/**
-> > - * of_fdt_match - Return true if node matches a list of compatible val=
-ues
-> > - */
-> > -static int __init of_fdt_match(const void *blob, unsigned long node,> =
--                             const char *const *compat)
-> > -{
-> > -     unsigned int tmp, score =3D 0;
-> > -
-> > -     if (!compat)
-> > -             return 0;
-> > -
-> > -     while (*compat) {
-> > -             tmp =3D of_fdt_is_compatible(blob, node, *compat);
-> > -             if (tmp && (score =3D=3D 0 || (tmp < score)))
-> > -                     score =3D tmp;
-> > -             compat++;
-> > -     }
-> > -
-> > -     return score;
-> > -}
-> > -
-> >  static void *unflatten_dt_alloc(void **mem, unsigned long size,
-> >                                      unsigned long align)
-> >  {
-> > @@ -764,6 +711,59 @@ const void *__init of_get_flat_dt_prop(unsigned lo=
-ng node, const char *name,
-> >       return fdt_getprop(initial_boot_params, node, name, size);
-> >  }
-> >
-> > +/**
-> > + * of_fdt_is_compatible - Return true if given node from the given blo=
-b has
-> > + * compat in its compatible list
-> > + * @blob: A device tree blob
-> > + * @node: node to test
-> > + * @compat: compatible string to compare with compatible list.
-> > + *
-> > + * On match, returns a non-zero value with smaller values returned for=
- more
-> > + * specific compatible values.
-> > + */
-> > +static int of_fdt_is_compatible(const void *blob,
-> > +                   unsigned long node, const char *compat)
-> > +{
-> > +     const char *cp;
-> > +     int cplen;
-> > +     unsigned long l, score =3D 0;
-> > +
-> > +     cp =3D fdt_getprop(blob, node, "compatible", &cplen);
-> > +     if (cp =3D=3D NULL)
-> > +             return 0;
-> > +     while (cplen > 0) {
-> > +             score++;
-> > +             if (of_compat_cmp(cp, compat, strlen(compat)) =3D=3D 0)
-> > +                     return score;
-> > +             l =3D strlen(cp) + 1;
-> > +             cp +=3D l;
-> > +             cplen -=3D l;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +/**
-> > + * of_fdt_match - Return true if node matches a list of compatible val=
-ues
-> > + */
-> > +static int __init of_fdt_match(const void *blob, unsigned long node,
-> > +                            const char *const *compat)
-> > +{
-> > +     unsigned int tmp, score =3D 0;
-> > +
-> > +     if (!compat)
-> > +             return 0;
-> > +
-> > +     while (*compat) {
-> > +             tmp =3D of_fdt_is_compatible(blob, node, *compat);
-> > +             if (tmp && (score =3D=3D 0 || (tmp < score)))
-> > +                     score =3D tmp;
-> > +             compat++;
-> > +     }
-> > +
-> > +     return score;
-> > +}
-> > +
-> >  /**
-> >   * of_flat_dt_is_compatible - Return true if given node has compat in =
-compatible list
-> >   * @node: node to test
-> >
->
+Why did you delete this comment?
