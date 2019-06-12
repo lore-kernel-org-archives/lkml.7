@@ -2,241 +2,99 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A49CCC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9539C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 714E820B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFFA2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:32:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="JGtoU/Ek";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="hUPL4hXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbfFLObz (ORCPT
+        id S1731564AbfFLOcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:31:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:54464 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726331AbfFLOby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:31:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B72F12B;
-        Wed, 12 Jun 2019 07:31:53 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 71EB73F557;
-        Wed, 12 Jun 2019 07:31:48 -0700 (PDT)
-Subject: Re: [PATCH v17 04/15] mm, arm64: untag user pointers passed to memory
- syscalls
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-References: <cover.1560339705.git.andreyknvl@google.com>
- <f9b50767d639b7116aa986dc67f158131b8d4169.1560339705.git.andreyknvl@google.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <d69117fc-84e2-9be0-2686-32cdb88e9a05@arm.com>
-Date:   Wed, 12 Jun 2019 15:31:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 12 Jun 2019 10:32:09 -0400
+Received: from pb-smtp21.pobox.com ([173.228.157.53]:65232 "EHLO
+        pb-smtp21.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729261AbfFLOcI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:32:08 -0400
+Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id 1C6E17809F;
+        Wed, 12 Jun 2019 10:32:08 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=bOMQaaOm2gKMIqGX2iIXCgseqvA=; b=JGtoU/
+        Ek14mXheuKDS8vYJeDozewP8TnNyKPgklm+TD6DytThxtCrKzRXfZcLq5y5Ru+zp
+        TzWqUZylSje/68StcZRupW3x62HsNChGRBjOZLaVCrXOfW1rnzDX50yaWRf7SCwZ
+        mI571kAcgJN+u1VEXxuxVCT00UbHxNHg4dBno=
+Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id 135FA7809E;
+        Wed, 12 Jun 2019 10:32:08 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=ossT+PSBWcBxEnICc2cDyEQ5Oy8oKOI11AMP/+LakHA=; b=hUPL4hXeoHn9v2aOMY0srFAEF4RRmpDqQpuOkvXEeD475DSRadF6yx3FsnRXEUEkAA1EXUQsEVVbTa/b2aUU767fj9DADX/5TYLhrgiCDclq88G6SwT58GShTSYxPDw1oQDjt5KFYrbUO5v1f6Y/ufgD2TudPAos/1QmdJPCsCA=
+Received: from yoda.home (unknown [70.82.130.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp21.pobox.com (Postfix) with ESMTPSA id C953B7809D;
+        Wed, 12 Jun 2019 10:32:03 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 0AE162DA0205;
+        Wed, 12 Jun 2019 10:32:02 -0400 (EDT)
+Date:   Wed, 12 Jun 2019 10:32:01 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Gen Zhang <blackgod016574@gmail.com>
+cc:     Greg KH <gregkh@linuxfoundation.org>, kilobyte@angband.pl,
+        textshell@uchuujin.de, mpatocka@redhat.com, daniel.vetter@ffwll.ch,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] vt: fix a missing-check bug in con_init()
+In-Reply-To: <20190612134449.GA4015@zhanggen-UX430UQ>
+Message-ID: <nycvar.YSQ.7.76.1906121018340.1558@knanqh.ubzr>
+References: <20190612131506.GA3526@zhanggen-UX430UQ> <20190612133838.GA7748@kroah.com> <20190612134449.GA4015@zhanggen-UX430UQ>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <f9b50767d639b7116aa986dc67f158131b8d4169.1560339705.git.andreyknvl@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: D8DD0936-8D1E-11E9-9CA5-8D86F504CC47-78420484!pb-smtp21.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/06/2019 12:43, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow to
-> pass tagged user pointers (with the top byte set to something else other
-> than 0x00) as syscall arguments.
-> 
-> This patch allows tagged pointers to be passed to the following memory
-> syscalls: get_mempolicy, madvise, mbind, mincore, mlock, mlock2, mprotect,
-> mremap, msync, munlock, move_pages.
-> 
-> The mmap and mremap syscalls do not currently accept tagged addresses.
-> Architectures may interpret the tag as a background colour for the
-> corresponding vma.
-> 
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+On Wed, 12 Jun 2019, Gen Zhang wrote:
 
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> On Wed, Jun 12, 2019 at 03:38:38PM +0200, Greg KH wrote:
+> > On Wed, Jun 12, 2019 at 09:15:06PM +0800, Gen Zhang wrote:
+> > > In function con_init(), the pointer variable vc_cons[currcons].d, vc and 
+> > > vc->vc_screenbuf is allocated by kzalloc(). However, kzalloc() returns 
+> > > NULL when fails. Therefore, we should check the return value and handle 
+> > > the error.
+> > > 
+> > > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > > ---
+> > 
+> > What changed from v1, v2, and v3?
+> Thanks for your timely response. I am not a native English speaker, so
+> I am not sure I understand this correctly. Does this mean that I should
+> use "v5", rather than "v4"? 
 
-> ---
->  mm/madvise.c   | 2 ++
->  mm/mempolicy.c | 3 +++
->  mm/migrate.c   | 2 +-
->  mm/mincore.c   | 2 ++
->  mm/mlock.c     | 4 ++++
->  mm/mprotect.c  | 2 ++
->  mm/mremap.c    | 7 +++++++
->  mm/msync.c     | 2 ++
->  8 files changed, 23 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 628022e674a7..39b82f8a698f 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -810,6 +810,8 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
->  	size_t len;
->  	struct blk_plug plug;
->  
-> +	start = untagged_addr(start);
-> +
->  	if (!madvise_behavior_valid(behavior))
->  		return error;
->  
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 01600d80ae01..78e0a88b2680 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -1360,6 +1360,7 @@ static long kernel_mbind(unsigned long start, unsigned long len,
->  	int err;
->  	unsigned short mode_flags;
->  
-> +	start = untagged_addr(start);
->  	mode_flags = mode & MPOL_MODE_FLAGS;
->  	mode &= ~MPOL_MODE_FLAGS;
->  	if (mode >= MPOL_MAX)
-> @@ -1517,6 +1518,8 @@ static int kernel_get_mempolicy(int __user *policy,
->  	int uninitialized_var(pval);
->  	nodemask_t nodes;
->  
-> +	addr = untagged_addr(addr);
-> +
->  	if (nmask != NULL && maxnode < nr_node_ids)
->  		return -EINVAL;
->  
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index f2ecc2855a12..d22c45cf36b2 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1616,7 +1616,7 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->  			goto out_flush;
->  		if (get_user(node, nodes + i))
->  			goto out_flush;
-> -		addr = (unsigned long)p;
-> +		addr = (unsigned long)untagged_addr(p);
->  
->  		err = -ENODEV;
->  		if (node < 0 || node >= MAX_NUMNODES)
-> diff --git a/mm/mincore.c b/mm/mincore.c
-> index c3f058bd0faf..64c322ed845c 100644
-> --- a/mm/mincore.c
-> +++ b/mm/mincore.c
-> @@ -249,6 +249,8 @@ SYSCALL_DEFINE3(mincore, unsigned long, start, size_t, len,
->  	unsigned long pages;
->  	unsigned char *tmp;
->  
-> +	start = untagged_addr(start);
-> +
->  	/* Check the start address: needs to be page-aligned.. */
->  	if (start & ~PAGE_MASK)
->  		return -EINVAL;
-> diff --git a/mm/mlock.c b/mm/mlock.c
-> index 080f3b36415b..e82609eaa428 100644
-> --- a/mm/mlock.c
-> +++ b/mm/mlock.c
-> @@ -674,6 +674,8 @@ static __must_check int do_mlock(unsigned long start, size_t len, vm_flags_t fla
->  	unsigned long lock_limit;
->  	int error = -ENOMEM;
->  
-> +	start = untagged_addr(start);
-> +
->  	if (!can_do_mlock())
->  		return -EPERM;
->  
-> @@ -735,6 +737,8 @@ SYSCALL_DEFINE2(munlock, unsigned long, start, size_t, len)
->  {
->  	int ret;
->  
-> +	start = untagged_addr(start);
-> +
->  	len = PAGE_ALIGN(len + (offset_in_page(start)));
->  	start &= PAGE_MASK;
->  
-> diff --git a/mm/mprotect.c b/mm/mprotect.c
-> index bf38dfbbb4b4..19f981b733bc 100644
-> --- a/mm/mprotect.c
-> +++ b/mm/mprotect.c
-> @@ -465,6 +465,8 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
->  	const bool rier = (current->personality & READ_IMPLIES_EXEC) &&
->  				(prot & PROT_READ);
->  
-> +	start = untagged_addr(start);
-> +
->  	prot &= ~(PROT_GROWSDOWN|PROT_GROWSUP);
->  	if (grows == (PROT_GROWSDOWN|PROT_GROWSUP)) /* can't be both */
->  		return -EINVAL;
-> diff --git a/mm/mremap.c b/mm/mremap.c
-> index fc241d23cd97..64c9a3b8be0a 100644
-> --- a/mm/mremap.c
-> +++ b/mm/mremap.c
-> @@ -606,6 +606,13 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
->  	LIST_HEAD(uf_unmap_early);
->  	LIST_HEAD(uf_unmap);
->  
-> +	/*
-> +	 * Architectures may interpret the tag passed to mmap as a background
-> +	 * colour for the corresponding vma. For mremap we don't allow tagged
-> +	 * new_addr to preserve similar behaviour to mmap.
-> +	 */
-> +	addr = untagged_addr(addr);
-> +
->  	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
->  		return ret;
->  
-> diff --git a/mm/msync.c b/mm/msync.c
-> index ef30a429623a..c3bd3e75f687 100644
-> --- a/mm/msync.c
-> +++ b/mm/msync.c
-> @@ -37,6 +37,8 @@ SYSCALL_DEFINE3(msync, unsigned long, start, size_t, len, int, flags)
->  	int unmapped_error = 0;
->  	int error = -EINVAL;
->  
-> +	start = untagged_addr(start);
-> +
->  	if (flags & ~(MS_ASYNC | MS_INVALIDATE | MS_SYNC))
->  		goto out;
->  	if (offset_in_page(start))
-> 
+Given that this is your v4 patch, you should list what has changed since 
+earlier versions. Greg is asking you to produce a v5 with that 
+information added. Obviously, the change from v4 to v5 would be 
+something like "added version change information".
 
--- 
-Regards,
-Vincenzo
+> > That always goes below the --- line.
+> And I can't see what goes wrong with "---". Could you please make some
+> explaination?
+
+The version change information should be put below the --- line in your 
+post, not above it. This way it won't be captured in commit log.
+
+
+Nicolas
