@@ -2,118 +2,107 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60184C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3355EC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8132173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:02:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E63OiXss"
+	by mail.kernel.org (Postfix) with ESMTP id 09BE821743
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560355369;
+	bh=dimwybp2MWtfWr4zH9aMyGxS7EXOgNSmoxRuLK+Ncqk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZV/V25JxCql1dL0bKGKi6ysRgWzi+6jc08YdfM17ESDNkjcHobRB1l1bIGw8hb1Yl
+	 ocu2fp0eapctgBo1V49OW/Cma4CF9ZqD6cMm8TR7i/ig5Uo2nDa2heGsXTqiEV5kCz
+	 jis+Sc7DlNUmNEXNRdErLzzajFLDXGQXx6UJRH/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440195AbfFLQCY (ORCPT
+        id S2440205AbfFLQCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 12:02:24 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36630 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440183AbfFLQCY (ORCPT
+        Wed, 12 Jun 2019 12:02:48 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40860 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406604AbfFLQCr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:02:24 -0400
-Received: by mail-lf1-f66.google.com with SMTP id q26so12596238lfc.3;
-        Wed, 12 Jun 2019 09:02:22 -0700 (PDT)
+        Wed, 12 Jun 2019 12:02:47 -0400
+Received: by mail-pf1-f196.google.com with SMTP id p184so6634906pfp.7;
+        Wed, 12 Jun 2019 09:02:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SjJp7DDkiTkAIzDEQcNIlyJ4kV4kLIt3hJDkNsAGJWo=;
-        b=E63OiXsstjGjJSAKzxJKHdTInL9TZi7AUCpOB2bBLTZEdXZFZ4EmPK26sKgqhIrVpP
-         baTjbh2F7jwLuaHTsQek7q4HL8MbtDQtfmCbPDVUv/+PPH+dI/nOxjNTX9qpblAA4Epu
-         GUGBpSRNJXZY3ALCL1tEOs1Qp9ZCDkokJM1NTmSnxpVuI8qNf63uSp4aUZPKnG8ru4WF
-         osS9JkhK/OaztKMIzuRjnSDXRcYU5qyqdZ9ROXLzmJ94dnOQEJcFuqgLiLZ2dKkD8UM4
-         Be91oNusy9jWas6U3t81ZVXN7EzLXOYcn7ojXpHDYbM8mlTZanPbsXfCiBSrLBUuUG5/
-         asSw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Q/SueBbtj7C5fFQ+1HnrwXXVgHlOaQMtNQZKJDih2vk=;
+        b=O2IfSoEdPeOtqvYc61BZ6k3//eUBsMkInNpkQAdhysvx5DQ3SdYRIa4kcfKFNZZiUf
+         gnZiXeSVkjhFpwuXlNh0ekQU9A13LIBL1boBvvOujQQdHY6GA0eSL5Gnqvg6nq8Nfeuc
+         3fp+jTtqUacUT5N2RJ51BAY8KHD3RLw3T0WANZ7Fdcv8ap6gs4icNXGB8NJwKRnjHgbx
+         5lD/T9jSf8m6NvX1y/agOfMFhQMjhe9A0JGL45PHag1/zVPKZOOpYu8c3TGhLn+7hxSO
+         UoCiIyN+Kca/fLHpXlP7m4CqcwCd5anviByK0K7OR9KQ3wgNCj125XtlSdLups1CYqYK
+         GJSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SjJp7DDkiTkAIzDEQcNIlyJ4kV4kLIt3hJDkNsAGJWo=;
-        b=LlcFir+Dz0OtlQzrba+eZjOdjBsW5AkEkR4QrbcHp7FudZ1QMTwUHGpZ7NDAdH/Ztp
-         nW2OiItBdkg61EHWotDajLmrr19uyroAwiGgD6+QmjcjrcLiPXJP4vqNt+CZiWAQXe5u
-         +UhMdTaFALqWp5W25tCIFLJoRl0OPhzN9iIzmMvIg6QrGn5t2VmbxPwsErE0YUR/mLF2
-         VUd5rUEO5M3iCj74ukJVq6/dGJXmTYo6vzYtkD1/anStpgPCqtddsAtPLkdEfgW6Mhf3
-         NhQYsuOfih4smUQHkCTI3W594SEQbNCw+ugGAEyLdWYlzdapmP8RibW76sKtj9RfG2C4
-         fqLA==
-X-Gm-Message-State: APjAAAV59e7xZFHF4c78mQkiKZrVRgIopZvEwlkSj9IYzqKR8K8gqB5e
-        7rl3JdhtLAHF5k7dWdqNnkeTcxIF
-X-Google-Smtp-Source: APXvYqwX7GJ/BDXweSMZpvDrziPK1p6zuUVVXQuDWZM6aAmkaZDMQw0Gu4p+TaRml6JSHsGK/HZQRg==
-X-Received: by 2002:a19:4f50:: with SMTP id a16mr41032680lfk.24.1560355341462;
-        Wed, 12 Jun 2019 09:02:21 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id u128sm44485lja.23.2019.06.12.09.02.19
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Q/SueBbtj7C5fFQ+1HnrwXXVgHlOaQMtNQZKJDih2vk=;
+        b=QkZKCTJgO+CRCncQ+ZB0St41hMjdD9sz251zs0EQUzh5kXC8B/ntA3HOmjeNkoZACJ
+         HnmiDHOUuA4VyMexl+O9vUkCUGJcS9hbzCuZMJN5+UmGkpjLgQXGGJeC5MVeY02VFFYe
+         IcO1A1/QfT1zOD7zmcXGj1Ah5Qo74PyKYaEXmujEoF5rqrJ6XGwvTHqE0rwFHeRrd0SS
+         XwFPpNejsvqM+CqcVYlFnaJzttvm2ZPnBNoQk35qqxCWlKghdAlwSGMQ5FBm6YkuFmLU
+         U2Fyl4E9AJYn1wBWPcMuLQTfqOP0A37oaun5y2AXuXNgFueOPvvMio6qcHq7YTBTd7nw
+         mjqQ==
+X-Gm-Message-State: APjAAAWxjq5umXq+CbN6NO6YbCqSzin2dkEAKcC79EnPL+SJ9J5VxGbL
+        OtvJZGAXYQ8g8oKrzo3xY7o=
+X-Google-Smtp-Source: APXvYqxG8p2oJB3BYWG5XIejEtw3Ow6zJoP+BBfkx5+yZm7Z3tUHMhdrYVY2YkHPFCPijmjru4t8NA==
+X-Received: by 2002:a65:484d:: with SMTP id i13mr25259329pgs.27.1560355366687;
+        Wed, 12 Jun 2019 09:02:46 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::c431])
+        by smtp.gmail.com with ESMTPSA id d187sm14370pfa.38.2019.06.12.09.02.45
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 09:02:20 -0700 (PDT)
-Subject: Re: [PATCH v2 1/6] clocksource/drivers/tegra: Restore timer rate on
- Tegra210
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190610164400.11830-1-digetx@gmail.com>
- <20190610164400.11830-2-digetx@gmail.com>
- <17eac2c4-41fa-a616-83e9-fa18a9e1483d@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <9ca69eec-c4c0-d798-9946-ed7f0bb3050d@gmail.com>
-Date:   Wed, 12 Jun 2019 19:02:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 12 Jun 2019 09:02:45 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 09:02:44 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Joel Savitz <jsavitz@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
+        Phil Auld <pauld@redhat.com>, Waiman Long <longman@redhat.com>,
+        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, cgroups@vger.kernel.org
+Subject: Re: [RESEND PATCH v3] cpuset: restore sanity to
+ cpuset_cpus_allowed_fallback()
+Message-ID: <20190612160244.GP3341036@devbig004.ftw2.facebook.com>
+References: <1560354648-23632-1-git-send-email-jsavitz@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <17eac2c4-41fa-a616-83e9-fa18a9e1483d@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560354648-23632-1-git-send-email-jsavitz@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-12.06.2019 11:30, Jon Hunter пишет:
+On Wed, Jun 12, 2019 at 11:50:48AM -0400, Joel Savitz wrote:
+> In the case that a process is constrained by taskset(1) (i.e.
+> sched_setaffinity(2)) to a subset of available cpus, and all of those are
+> subsequently offlined, the scheduler will set tsk->cpus_allowed to
+> the current value of task_cs(tsk)->effective_cpus.
 > 
-> On 10/06/2019 17:43, Dmitry Osipenko wrote:
->> The clocksource rate is initialized only for the first per-CPU clocksource
->> and then that rate shall be replicated for the rest of clocksource's
->> because they are initialized manually in the code.
->>
->> Fixes: 3be2a85a0b61 ("Support per-CPU timers on all Tegra's")
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/clocksource/timer-tegra.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
->> index 9406855781ff..830c66e2d927 100644
->> --- a/drivers/clocksource/timer-tegra.c
->> +++ b/drivers/clocksource/timer-tegra.c
->> @@ -277,6 +277,8 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
->>  		 */
->>  		if (tegra20)
->>  			cpu_to->of_clk.rate = 1000000;
->> +		else
->> +			cpu_to->of_clk.rate = timer_of_rate(to);
->>  
->>  		cpu_to = per_cpu_ptr(&tegra_to, cpu);
->>  		cpu_to->of_base.base = timer_reg_base + base;
+> This is done via a call to do_set_cpus_allowed() in the context of 
+> cpuset_cpus_allowed_fallback() made by the scheduler when this case is
+> detected. This is the only call made to cpuset_cpus_allowed_fallback()
+> in the latest mainline kernel.
 > 
-> Thanks. This fixes a boot regression we are seeing on -next with
-> Tegra210 (introduced by the commit referenced above). So ...
-> 
-> Acked-by: Jon Hunter <jonathanh@nvidia.com>
-> Tested-by: Jon Hunter <jonathanh@nvidia.com>
+> However, this is not sane behavior.
 
-Thanks for the testing :)
+While not perfect (we'll need to stop updating task's cpumask from
+cpuset to make), this is still a signifcant improvement.
+
+ Acked-by: Tejun Heo <tj@kernel.org>
+
+If there's no objection, I'll route it through the cgroup tree.
+
+Thanks.
+
+-- 
+tejun
