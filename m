@@ -2,160 +2,130 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D8FC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C7BC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B40D20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADC1820874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:34:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="TyEyvxw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439036AbfFLMdJ (ORCPT
+        id S2407654AbfFLMe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:33:09 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41735 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438948AbfFLMdI (ORCPT
+        Wed, 12 Jun 2019 08:34:57 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42447 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728606AbfFLMe4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:33:08 -0400
-Received: by mail-ed1-f65.google.com with SMTP id p15so25465915eds.8
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 05:33:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/9+BscyBSG8LtxRtL3bsLVsuCvjxfppgNJUSn3pi0BA=;
-        b=dHKW1qzNZwyMVOn+qHOePUQ35FtWe1LEhdHRgQQ6XejmTk73mI96UnD0DRfyc0b82b
-         agVXEKrYAal+c4XlyDbWwTf42Q3Ek06h2zAPI4lfi4MufDeQIoiMMYsZ78cKTlDn25vx
-         /NtTc8w2oP3ThoCqlSXI8e6PAElGTvic+3CGAfLQGo3+O1T/xMBMe19YMs2pWVCFCmIt
-         4O3enn5J6iE4EIDsNs/O29VE2WDl9eM1SRh2B6HIpLEvCg7rKP1PiozuBdiYrLqIUKd5
-         O6crjGl9NUWFT9SfqIOIfXZQ8vFyZEwdTn7weXz5S1RB7HxPgVb64VKDJic3uUqeJWkj
-         DGAA==
-X-Gm-Message-State: APjAAAWSKiNBdcDJHUkvSpnaIofCdlav+q0oEIWgOiHO88uqxrzBwqcg
-        ++j8xz9GWXHNZxAVMwC5rmeQEQ==
-X-Google-Smtp-Source: APXvYqwH+EIsTHqwWN3f9HxFMK99PgTbuqj4T1Pw/EUS2brCmPFSeeUdToS6/AutI5NLtTDk9/MaKw==
-X-Received: by 2002:a50:b561:: with SMTP id z30mr32633599edd.87.1560342787019;
-        Wed, 12 Jun 2019 05:33:07 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id c21sm2784931ejk.79.2019.06.12.05.33.05
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 05:33:06 -0700 (PDT)
-Subject: Re: [PATCH 4/5] drm/connector: Split out orientation quirk detection
-To:     "dbasehore ." <dbasehore@chromium.org>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-References: <20190611040350.90064-1-dbasehore@chromium.org>
- <20190611040350.90064-5-dbasehore@chromium.org> <87zhmoy270.fsf@intel.com>
- <01636500-0be5-acf8-5f93-a57383bf4b20@redhat.com>
- <CAGAzgsoxpsft-vmVOuKSAbLJqR-EZvcceLpMeWkz6ikJEKGJHg@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <fe774952-6fd5-b4ec-56c9-32fd30546313@redhat.com>
-Date:   Wed, 12 Jun 2019 14:33:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 12 Jun 2019 08:34:56 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5CCY8Vp686254
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 12 Jun 2019 05:34:09 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5CCY8Vp686254
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1560342849;
+        bh=i8E3Pjz132lVE/zyO3itgO5Jj7nZ1IpdYVG2JGHWWAE=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=TyEyvxw2ds5wYz0DLZh2WakXDjqXhWWBkiIPtAB8sy6OaSNJcORxqpRwSTOR59rYB
+         Yl+m5Zn5JmVuFlgnzDGdpeZt+uIhFdYsdQIJUyDwMTLP6RkJF0XE4AoVFda8TJleqw
+         6R6969Jp+XEU64YQoaVoBNhNrUYCzTEBw/51YTJybTp9SwOpL5E1+p1e5CD3iNAGLE
+         v/EqD7nOr4qhj3ZvIcj/ch01jmPn8Zi437j+QaqXuRApzMRmlUewBcb3cpCdhAfNkE
+         NwXHRGx90oj0QsnA/OTu1sM2006fVYRkeFgXynYQyEphNfcxI1jB3pf8XrORUie1AD
+         nuFp29VMkv9Ag==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5CCY8Zv686251;
+        Wed, 12 Jun 2019 05:34:08 -0700
+Date:   Wed, 12 Jun 2019 05:34:08 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Pavankumar Kondeti <tipbot@zytor.com>
+Message-ID: <tip-a66d955e910ab0e598d7a7450cbe6139f52befe7@git.kernel.org>
+Cc:     konrad.wilk@oracle.com, mojha@codeaurora.org, jkosina@suse.cz,
+        mingo@kernel.org, hpa@zytor.com, rjw@rjwysocki.net,
+        tglx@linutronix.de, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, len.brown@intel.com,
+        pkondeti@codeaurora.org, jpoimboe@redhat.com, pavel@ucw.cz
+Reply-To: tglx@linutronix.de, peterz@infradead.org,
+          linux-kernel@vger.kernel.org, len.brown@intel.com,
+          pkondeti@codeaurora.org, jpoimboe@redhat.com, pavel@ucw.cz,
+          konrad.wilk@oracle.com, mojha@codeaurora.org, jkosina@suse.cz,
+          mingo@kernel.org, hpa@zytor.com, rjw@rjwysocki.net
+In-Reply-To: <1559536263-16472-1-git-send-email-pkondeti@codeaurora.org>
+References: <1559536263-16472-1-git-send-email-pkondeti@codeaurora.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:smp/hotplug] cpu/hotplug: Abort disabling secondary CPUs if
+ wakeup is pending
+Git-Commit-ID: a66d955e910ab0e598d7a7450cbe6139f52befe7
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <CAGAzgsoxpsft-vmVOuKSAbLJqR-EZvcceLpMeWkz6ikJEKGJHg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Commit-ID:  a66d955e910ab0e598d7a7450cbe6139f52befe7
+Gitweb:     https://git.kernel.org/tip/a66d955e910ab0e598d7a7450cbe6139f52befe7
+Author:     Pavankumar Kondeti <pkondeti@codeaurora.org>
+AuthorDate: Mon, 3 Jun 2019 10:01:03 +0530
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 12 Jun 2019 11:03:05 +0200
 
-On 12-06-19 02:16, dbasehore . wrote:
-> On Tue, Jun 11, 2019 at 1:54 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi,
->>
->> On 11-06-19 10:08, Jani Nikula wrote:
->>> On Mon, 10 Jun 2019, Derek Basehore <dbasehore@chromium.org> wrote:
->>>> This removes the orientation quirk detection from the code to add
->>>> an orientation property to a panel. This is used only for legacy x86
->>>> systems, yet we'd like to start using this on devicetree systems where
->>>> quirk detection like this is not needed.
->>>
->>> Not needed, but no harm done either, right?
->>>
->>> I guess I'll defer judgement on this to Hans and Ville (Cc'd).
->>
->> Hmm, I'm not big fan of this change. It adds code duplication and as
->> other models with the same issue using a different driver or panel-type
->> show up we will get more code duplication.
->>
->> Also I'm not convinced that devicetree based platforms will not need
->> this. The whole devicetree as an ABI thing, which means that all
->> devicetree bindings need to be set in stone before things are merged
->> into the mainline, is done solely so that we can get vendors to ship
->> hardware with the dtb files included in the firmware.
-> 
-> We've posted fixes to the devicetree well after the initial merge into
-> mainline before, so I don't see what you mean about the bindings being
-> set in stone.
+cpu/hotplug: Abort disabling secondary CPUs if wakeup is pending
 
-That was just me repeating the official party line about devicetree.
+When "deep" suspend is enabled, all CPUs except the primary CPU are frozen
+via CPU hotplug one by one. After all secondary CPUs are unplugged the
+wakeup pending condition is evaluated and if pending the suspend operation
+is aborted and the secondary CPUs are brought up again.
 
-> I also don't really see the point. The devicetree is in
-> the kernel. If there's some setting in the devicetree that we want to
-> change, it's effectively the same to make the change in the devicetree
-> versus some quirk setting. The only difference seems to be that making
-> the change in the devicetree is cleaner.
+CPU hotplug is a slow operation, so it makes sense to check for wakeup
+pending in the freezer loop before bringing down the next CPU. This
+improves the system suspend abort latency significantly.
 
-I agree with you that devicetree in practice is easy to update after
-shipping. But at least whenever I tried to get new bindings reviewed
-I was always told that I was not allowed to count on that.
+[ tglx: Massaged changelog and improved printk message ]
 
->> I'm 100% sure that there is e.g. ARM hardware out there which uses
->> non upright mounted LCD panels (I used to have a few Allwinner
->> tablets which did this). And given my experience with the quality
->> of firmware bundled tables like ACPI tables I'm quite sure that
->> if we ever move to firmware included dtb files that we will need
->> quirks for those too.
-> 
-> Is there a timeline to start using firmware bundled tables?
+Signed-off-by: Pavankumar Kondeti <pkondeti@codeaurora.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: iri Kosina <jkosina@suse.cz>
+Cc: Mukesh Ojha <mojha@codeaurora.org>
+Cc: linux-pm@vger.kernel.org
+Link: https://lkml.kernel.org/r/1559536263-16472-1-git-send-email-pkondeti@codeaurora.org
 
-Nope, as I said "if we ever move to ...".
+---
+ kernel/cpu.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> Since the
-> quirk code only uses DMI, it will need to be changed anyways for
-> firmware bundled devicetree files anyways.
-> 
-> We could consolidate the duplicated code into another function that
-> calls drm_get_panel_orientation_quirks too. The only reason it's like
-> it is is because I initially only had the call to
-> drm_get_panel_orientation_quirk once in the code.
-
-Yes if you can add a new helper for the current callers, then
-I'm fine with dropping the quirk handling from
-drm_connector_init_panel_orientation_property()
-
-Regards,
-
-Hans
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index be82cbc11a8a..0778249cd49d 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1221,6 +1221,13 @@ int freeze_secondary_cpus(int primary)
+ 	for_each_online_cpu(cpu) {
+ 		if (cpu == primary)
+ 			continue;
++
++		if (pm_wakeup_pending()) {
++			pr_info("Wakeup pending. Abort CPU freeze\n");
++			error = -EBUSY;
++			break;
++		}
++
+ 		trace_suspend_resume(TPS("CPU_OFF"), cpu, true);
+ 		error = _cpu_down(cpu, 1, CPUHP_OFFLINE);
+ 		trace_suspend_resume(TPS("CPU_OFF"), cpu, false);
