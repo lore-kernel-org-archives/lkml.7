@@ -2,94 +2,83 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BFFC46477
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9424AC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45F26208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F092208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:24:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560331469;
+	bh=r+Wtx9RxQ8AR8woF+J5gD2DYf54g7vBdtUikWoiXG70=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=txIaPhjjecgc4HwNxK9zQBfEewvvJOva1Im7jpNsSlzmF4/r3aKFl9pIGcH7qreZZ
+	 NdYCl+yGVghnrFZq1f8ZZ0LuPSZOeYQo3H2ItSdb3DBCxrruezCwEEeHBhlsfFaklv
+	 NEjCZYAvgWXmMcKjj9NR0sevKiu3WOuNSZF1JBvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731745AbfFLJYO (ORCPT
+        id S2437337AbfFLJY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:24:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:48282 "EHLO foss.arm.com"
+        Wed, 12 Jun 2019 05:24:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731233AbfFLJYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:24:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4179B28;
-        Wed, 12 Jun 2019 02:24:13 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E54E3F246;
-        Wed, 12 Jun 2019 02:24:12 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 10:24:04 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Stephen Bates <sbates@raithlin.com>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        "shhuiw@foxmail.com" <shhuiw@foxmail.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH] io_uring: fix SQPOLL cpu check
-Message-ID: <20190612092403.GA38578@lakrids.cambridge.arm.com>
-References: <5D2859FE-DB39-48F5-BBB5-6EDD3791B6C3@raithlin.com>
+        id S1729856AbfFLJY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:24:28 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B59A3208C4;
+        Wed, 12 Jun 2019 09:24:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560331468;
+        bh=r+Wtx9RxQ8AR8woF+J5gD2DYf54g7vBdtUikWoiXG70=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=CZrStXBpb1jj9NvuVMuap6aXGz3ZsWto+XfE70qKHNeJJpmW6R0Rx10KEmvXr5Egp
+         b/jAqg7IDGDKcF90xYU2rn8afAOQg6VlUZflqtVQn1j7TKgNAShjGT9Wvh1l7tizyM
+         0TwjQvjrxcKhyPDzRfbWbI61hdexYZcFgsYr+NdQ=
+Date:   Wed, 12 Jun 2019 11:24:24 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+cc:     Hans de Goede <hdegoede@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org
+Subject: Re: Strange regression in hid_llogitech_dj (was: Re: Linux
+ 5.2-rc4)
+In-Reply-To: <14875910.PnJmU55uV6@kreacher>
+Message-ID: <nycvar.YFH.7.76.1906121123580.27227@cbobk.fhfr.pm>
+References: <CAHk-=wjm7FQxdF=RKa8Xe23CLNNpbGDOACewgo8e-hwDJ8TyQg@mail.gmail.com> <1875376.0DUQQ8o03D@kreacher> <nycvar.YFH.7.76.1906121029350.27227@cbobk.fhfr.pm> <14875910.PnJmU55uV6@kreacher>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5D2859FE-DB39-48F5-BBB5-6EDD3791B6C3@raithlin.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 11:56:06PM +0000, Stephen  Bates wrote:
-> The array_index_nospec() check in io_sq_offload_start() is performed
-> before any checks on p->sq_thread_cpu are done. This means cpu is
-> clamped and therefore no error occurs when out-of-range values are
-> passed in from userspace. This is in violation of the specification
-> for io_ring_setup() and causes the io_ring_setup unit test in liburing
-> to regress.
-> 
-> Add a new bounds check on sq_thread_cpu at the start of
-> io_sq_offload_start() so we can exit the function early when bad
-> values are passed in.
-> 
-> Fixes: 975554b03edd ("io_uring: fix SQPOLL cpu validation")
-> Signed-off-by: Stephen Bates <sbates@raithlin.com>
+On Wed, 12 Jun 2019, Rafael J. Wysocki wrote:
 
-Aargh. My original patch [1] handled that correctly, and this case was
-explicitly called out in the commit message, which was retained even
-when the patch was "simplified". That's rather disappointing. :/
-
-Thanks,
-Mark.
-
-[1] https://lore.kernel.org/lkml/20190430123451.44227-1-mark.rutland@arm.com/
-
-> ---
->  fs/io_uring.c | 3 +++
->  1 file changed, 3 insertions(+)
+> > > hid-logitech-dj is not loaded after a fresh boot, so I need to modprobe it manually and that
+> > > appears to be blocking (apparently indefinitely) until terminated with ^C.  But then it turns
+> > > out that hid-logitech-dj is there in the list of modules and it is in use (by usbhid) and the
+> > > mouse works.
+> > 
+> > My bad, I should've asked you to test with the complete 'for-5.2/fixes' 
+> > branch which contains two reverts [1] [2] that should fix this issue as 
+> > well.
+> > 
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/commit/?h=for-5.2/fixes&id=e0b7f9bc0246bc642d1de2ff3ff133730584c956
+> > [2] https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/commit/?h=for-5.2/fixes&id=f9482dabfd1686987cc6044e06ae0e4c05915518
 > 
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 30a5687..e458470 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -2316,6 +2316,9 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
->  {
->  	int ret;
->  
-> +	if (p->sq_thread_cpu >= nr_cpu_ids)
-> +		return -EINVAL;
-> +
->  	init_waitqueue_head(&ctx->sqo_wait);
->  	mmgrab(current->mm);
->  	ctx->sqo_mm = current->mm;
-> -- 
-> 2.7.4
-> 
+> Yes, with the two reverts applied in addition to the fix, it all works as expected.
+
+Rafael, thanks a lot for testing. I am sending the pile to Linus today or 
+tomorrow latest.
+
+-- 
+Jiri Kosina
+SUSE Labs
+
