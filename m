@@ -2,68 +2,156 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AD2C31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A7AC31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE5D20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54CC720645
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:37:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s/iyRl96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406860AbfFLBfA (ORCPT
+        id S2407317AbfFLBhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 21:35:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39474 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405839AbfFLBfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 21:35:00 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 102C0308218D;
-        Wed, 12 Jun 2019 01:34:43 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-17.pek2.redhat.com [10.72.12.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 87B5F6404F;
-        Wed, 12 Jun 2019 01:34:31 +0000 (UTC)
-Subject: Re: [PATCH 2/3 v3] x86/kexec: Set the C-bit in the identity map page
- table when SEV is active
-To:     Boris Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, akpm@linux-foundation.org,
-        x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
-        Thomas.Lendacky@amd.com, brijesh.singh@amd.com
-References: <20190430074421.7852-1-lijiang@redhat.com>
- <20190430074421.7852-3-lijiang@redhat.com> <20190515133006.GG24212@zn.tnic>
- <4707fb2d-b7d3-34e3-a488-8aa9bdca05f1@redhat.com>
- <0650D79F-2B12-4A80-A37A-F318B5C9ECBC@alien8.de>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <065dfaab-089b-2329-905a-e1dfbd2f3b3f@redhat.com>
-Date:   Wed, 12 Jun 2019 09:34:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <0650D79F-2B12-4A80-A37A-F318B5C9ECBC@alien8.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 12 Jun 2019 01:35:00 +0000 (UTC)
+        Tue, 11 Jun 2019 21:37:40 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46177 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406864AbfFLBhk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 21:37:40 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 81so8564615pfy.13;
+        Tue, 11 Jun 2019 18:37:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ydXYegSsk8MFFAKGT3kHy7pToynlZlXFgT5BPbWFhEQ=;
+        b=s/iyRl96wWweA0Dc+5vAJ04IgU/jkPqkjOPULxvdeFHMVp6+SB0nh0w7OEkUFKp5V9
+         CqWPNijp6hAD9M0TU74Rrz1tAsA3MYm0idF5PRpTN6YzUbknOYuU9pCqixCNJMiAMFx2
+         HpS7UHaD3C26iyKheZHbsi1lntzlpMnsft/RNpXtAoLrmTzeyvYsr7Ve5UtA+AXsdUJf
+         n1pQllp1zPXVv3t7nzx2mzJfutm1ku3/Gepa8oHqqZCSRXgoA6lIVF6VUE7YGLomaqvh
+         68YM/aNYOK84mKzQr3ymkmguwqzd10bLmFwL/5P4MYqY3epnD2kC1tB3jOWIiNR5u4xL
+         opGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ydXYegSsk8MFFAKGT3kHy7pToynlZlXFgT5BPbWFhEQ=;
+        b=YtBWAeqGEQK2rKnZxzyA9nmcveyWKPadyiDjghomyGDOW9pX0sQKLPuEaXfroQHc5c
+         WRP/Y92kzr+T6x39CrfmYE87z90xpCW9u7F98r/ydEwLETFjzyxWUBhJbPwd+BNKiMby
+         xHmcgpo2cKOkPvDJn5oAChL0w2IljdP4aNEU3vm8yaVXB54Eqgml1lZXMhWBmrbcj8KD
+         qTZtOkpZudax1B5kTo8OYmuX8B7FrFL72FjbJbYb/TWj8bDwsMBGx5i16VtXWjUJyi3+
+         ql3Sh36WrzEpysqsG23osYEjoVjpf2ltBE/pV0+Dchh4nWxXBAcul2PRVU2bfM+LT8St
+         1NMg==
+X-Gm-Message-State: APjAAAUqDN7uHU+JqfYiqndfmwk/MY/3w3ODVR+ee3KHqEEGRaVrUr34
+        EdOxpCyLL6H2oFi092PSgsI=
+X-Google-Smtp-Source: APXvYqyjjwVLTbzQhufcRUwHewlFSBLfXcxp/O0XaByfHEAHoEOV0wSnUDIiIkKrqFaPb8yjt8rrYw==
+X-Received: by 2002:a63:b1d:: with SMTP id 29mr22800685pgl.103.1560303459071;
+        Tue, 11 Jun 2019 18:37:39 -0700 (PDT)
+Received: from [10.2.189.129] ([66.170.99.2])
+        by smtp.gmail.com with ESMTPSA id a16sm26653148pfd.68.2019.06.11.18.37.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 18:37:38 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v3 0/3] KVM: Yield to IPI target if necessary
+From:   Nadav Amit <nadav.amit@gmail.com>
+In-Reply-To: <CANRm+Cx6Z=jxLaXqwhBDpVTsKH8mgoo4iC=U8GbAAJz-5gk5ZA@mail.gmail.com>
+Date:   Tue, 11 Jun 2019 18:37:36 -0700
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <28BF5471-57E8-41FE-B401-D49D57D01A63@gmail.com>
+References: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
+ <20190610143420.GA6594@flask> <20190611011100.GB24835@linux.intel.com>
+ <CANRm+Cwv5jqxBW=Ss5nkX7kZM3_Y-Ucs66yx5+wN09=W4pUdzA@mail.gmail.com>
+ <F136E492-5350-49EE-A856-FBAEDB12FF99@gmail.com>
+ <CANRm+CyZcvuT80ixp9f0FNmjN+rTUtw8MshtBG0Uk4L1B1UjDw@mail.gmail.com>
+ <153047ED-75E2-4E70-BC33-C5FF27C08638@gmail.com>
+ <CANRm+Cx6Z=jxLaXqwhBDpVTsKH8mgoo4iC=U8GbAAJz-5gk5ZA@mail.gmail.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2019年05月16日 16:15, Boris Petkov 写道:
-> On May 16, 2019 3:12:26 AM GMT+02:00, lijiang <lijiang@redhat.com> wrote:
->> OK, i will modify it according to your suggestion and post again.
-> 
-> No need - i fixed it up already. 
-> 
+> On Jun 11, 2019, at 6:18 PM, Wanpeng Li <kernellwp@gmail.com> wrote:
+>=20
+> On Wed, 12 Jun 2019 at 00:57, Nadav Amit <nadav.amit@gmail.com> wrote:
+>>> On Jun 11, 2019, at 3:02 AM, Wanpeng Li <kernellwp@gmail.com> wrote:
+>>>=20
+>>> On Tue, 11 Jun 2019 at 09:48, Nadav Amit <nadav.amit@gmail.com> =
+wrote:
+>>>>> On Jun 10, 2019, at 6:45 PM, Wanpeng Li <kernellwp@gmail.com> =
+wrote:
+>>>>>=20
+>>>>> On Tue, 11 Jun 2019 at 09:11, Sean Christopherson
+>>>>> <sean.j.christopherson@intel.com> wrote:
+>>>>>> On Mon, Jun 10, 2019 at 04:34:20PM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99=
+ wrote:
+>>>>>>> 2019-05-30 09:05+0800, Wanpeng Li:
+>>>>>>>> The idea is from Xen, when sending a call-function IPI-many to =
+vCPUs,
+>>>>>>>> yield if any of the IPI target vCPUs was preempted. 17% =
+performance
+>>>>>>>> increasement of ebizzy benchmark can be observed in an =
+over-subscribe
+>>>>>>>> environment. (w/ kvm-pv-tlb disabled, testing TLB flush =
+call-function
+>>>>>>>> IPI-many since call-function is not easy to be trigged by =
+userspace
+>>>>>>>> workload).
+>>>>>>>=20
+>>>>>>> Have you checked if we could gain performance by having the =
+yield as an
+>>>>>>> extension to our PV IPI call?
+>>>>>>>=20
+>>>>>>> It would allow us to skip the VM entry/exit overhead on the =
+caller.
+>>>>>>> (The benefit of that might be negligible and it also poses a
+>>>>>>> complication when splitting the target mask into several PV IPI
+>>>>>>> hypercalls.)
+>>>>>>=20
+>>>>>> Tangetially related to splitting PV IPI hypercalls, are there any =
+major
+>>>>>> hurdles to supporting shorthand?  Not having to generate the mask =
+for
+>>>>>> ->send_IPI_allbutself and ->kvm_send_ipi_all seems like an easy =
+to way
+>>>>>> shave cycles for affected flows.
+>>>>>=20
+>>>>> Not sure why shorthand is not used for native x2apic mode.
+>>>>=20
+>>>> Why do you say so? native_send_call_func_ipi() checks if allbutself
+>>>> shorthand should be used and does so (even though the check can be =
+more
+>>>> efficient - I=E2=80=99m looking at that code right now=E2=80=A6)
+>>>=20
+>>> Please continue to follow the apic/x2apic driver. Just apic_flat set
+>>> APIC_DEST_ALLBUT/APIC_DEST_ALLINC to ICR.
+>>=20
+>> Indeed - I was sure by the name that it does it correctly. That=E2=80=99=
+s stupid.
+>>=20
+>> I=E2=80=99ll add it to the patch-set I am working on (TLB shootdown =
+improvements),
+>> if you don=E2=80=99t mind.
+>=20
+> Original for hotplug cpu safe.
+> https://lwn.net/Articles/138365/
+> https://lwn.net/Articles/138368/
+> Not sure shortcut native support is acceptable, I will play my
+> kvm_send_ipi_allbutself and kvm_send_ipi_all. :)
 
-Hi, until now, i haven't seen the upstream branch pick up this patch series,
-any updates?
+Yes, I saw these threads before. But I think the test in
+native_send_call_func_ipi() should take care of it.
 
-Thanks.
-Lianbo
+I=E2=80=99ll recheck.=
