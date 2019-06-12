@@ -2,150 +2,115 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7AEC31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE1BC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E84C20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A335215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:16:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fKZgzRoQ"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="osWFZDHN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbfFLTOY (ORCPT
+        id S1728084AbfFLTQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:14:24 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40721 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727790AbfFLTOY (ORCPT
+        Wed, 12 Jun 2019 15:16:14 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35919 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbfFLTQO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:14:24 -0400
-Received: by mail-qt1-f193.google.com with SMTP id a15so19725509qtn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:14:23 -0700 (PDT)
+        Wed, 12 Jun 2019 15:16:14 -0400
+Received: by mail-qt1-f196.google.com with SMTP id p15so367378qtl.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:16:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Q6iGM1TiupqbenVhxjWmtAI5HyN33SMdpalMPy6x5OY=;
-        b=fKZgzRoQazhx2NyU0bXbVZS8dOqt2ksyWGIauwNWYHJH8kgsCVJI03c4N5lKN0UfbL
-         Bhd0f7dzZ8VYCFXXU+aLJIcr64Q7WMzXQZhTBHMZGz5IhlK3ID/yDJO/l9SrdO5KfgqK
-         Pzqt+w2uTJiIBcYRcbkg+zqo7JEvQt6YgPwzekPufoXbr56qiO4x0n/EncSJ7JDY0Ihx
-         5v476nbYAMqpu7FcZAOCJM9Yr1cgH62Vahq2y1Hbu0KZAQpHI9vvaxHreBBJ1eHnpDXL
-         1X7rLB8DRwb8xJ6R2YIgnjubs6XczMXMrodaik5vqBCeF/b9SQjTHUeI0/OO4EIsnzG3
-         NonA==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=VM0X6sjIUXYgIgyRfttiOmJ9MQtVYKp30kcz3vOUcd8=;
+        b=osWFZDHNmnVngzJkRWmhdL6JobmUmTjdYAA3S1jiMrMfY3FmdHH38icHv8dXo1Tohc
+         mSXiMZChJeDdK+U8DMvHPW5aeQO8oKWBgQInrgerdzBRWqEAdKbBTTpYbG7l/KvSHJQm
+         aWb6+MdEAuYAsGuzGQSX/eZavG1WjeWvJr8Covmg+XJdIsjtgkmJNfJPZcj7K1fiaTNg
+         3pC2hp1o/HKnHMZLH8R4IVfHCmY0jMRECcspcwRN2a0I/M1hPWCtmiefmN6o+Ddx4Ahd
+         i4vFCh3B8XD2dlYfMRgKSTj2DTy01/twYA7iKw3x3bJyhHahvFsSQMdT23cTRKPmirRq
+         PJWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q6iGM1TiupqbenVhxjWmtAI5HyN33SMdpalMPy6x5OY=;
-        b=DawZKXurEgIiY+bknuT9p08GLK+hh+hqy5lhTaUkZCT03dhttSojcRwpEd92LSVUm3
-         dtozsR+cFXyKnHtQX0lfxPHoFk3Sd9/XSrNxW0D7w3Tx6w6NgNVBmi0I7Nrrazh34q4n
-         ZIeSd5//CH5uQYVl5qLpeQPZnMaG4Oui09R666MJqU9dEHjCFgaaRgr0ExgovXvP5u33
-         qzxisdR2zJgeeiVvYR+E9/IkWHbCrsAgJt4l9W4Q0l+xRyGG8A43Gb9/EObG2f0KuPRK
-         U8r1O557e737sx2VEBAgo/vAEeV+yTncdZPrD0/K599SVcCRYjtUmCbWfB0M3qLtxaiX
-         qV4g==
-X-Gm-Message-State: APjAAAVjH/ygxGkFOy1tY5pdMA5O/omA85A43Iom/5PLiyO91KjxJ+eu
-        UbTubEmzQgm85NJuL1x1J9QyfQ==
-X-Google-Smtp-Source: APXvYqxNVQoMlV0omgFKo75Awgw9qRfhh6FBsXYbr1pvY1QOdw5O302UlF57KTTs2aFOEmTGVw1+7g==
-X-Received: by 2002:aed:3a03:: with SMTP id n3mr38086132qte.85.1560366863270;
-        Wed, 12 Jun 2019 12:14:23 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id e66sm296313qtb.55.2019.06.12.12.14.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Jun 2019 12:14:22 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hb8hR-00037z-Na; Wed, 12 Jun 2019 16:14:21 -0300
-Date:   Wed, 12 Jun 2019 16:14:21 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190612191421.GM3876@ziepe.ca>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606195114.GA30714@ziepe.ca>
- <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
- <20190607103636.GA12765@quack2.suse.cz>
- <20190607121729.GA14802@ziepe.ca>
- <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
- <20190612102917.GB14578@quack2.suse.cz>
- <20190612114721.GB3876@ziepe.ca>
- <20190612120907.GC14578@quack2.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612120907.GC14578@quack2.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=VM0X6sjIUXYgIgyRfttiOmJ9MQtVYKp30kcz3vOUcd8=;
+        b=jntlQPACYhXDK28UUbOlGvdjK3nQijnl2Bmjt37y8Pp+ou7pxpzmYmhK37yBr9UPzS
+         +lT7zAfXIuKPCAtXZazRI1Lp7woBOt2Lrj3upuj3WWtj6r1l3oAaNaymn0cZarTWlcX5
+         F2/1JKjTHLEAEUqjOKBpwAvSkh8tJfebDtZmi7dtyPTZ7HKOw1N8SUpqbGwDkk+vu96E
+         oL0jHmZeEJTOGigNKu+sMlSIpYAGPXotNOmqXJZ+iGzHax0DdHRRi6pr8yQ4eIx8GMWf
+         kgYjvJ/b9ivdBlhhNyi2IHZ8488hY9WNECy7Q26RaaIqA2NI9n/m0C2iw05/Ohu/jYF+
+         ML/A==
+X-Gm-Message-State: APjAAAWLQBk7EczJ6a3reag5wvNAunmLX9dvWfAoYnV6uaOqz79QuB6M
+        YsMVIPm+l7JOeikPW/uSGCEj/Q==
+X-Google-Smtp-Source: APXvYqwq5OuLqmcTYHYFkbjfzskyM1J/2vUhrTfX19xKEL2RF3CO3MzulELPQ4bfvgWOTUb6ZbUhpg==
+X-Received: by 2002:ac8:c0e:: with SMTP id k14mr29436661qti.72.1560366973092;
+        Wed, 12 Jun 2019 12:16:13 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id d25sm209437qko.96.2019.06.12.12.16.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 12:16:12 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     dan.j.williams@intel.com, osalvador@suse.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] mm/hotplug: skip bad PFNs from pfn_to_online_page()
+Date:   Wed, 12 Jun 2019 15:15:52 -0400
+Message-Id: <1560366952-10660-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 02:09:07PM +0200, Jan Kara wrote:
-> On Wed 12-06-19 08:47:21, Jason Gunthorpe wrote:
-> > On Wed, Jun 12, 2019 at 12:29:17PM +0200, Jan Kara wrote:
-> > 
-> > > > > The main objection to the current ODP & DAX solution is that very
-> > > > > little HW can actually implement it, having the alternative still
-> > > > > require HW support doesn't seem like progress.
-> > > > > 
-> > > > > I think we will eventually start seein some HW be able to do this
-> > > > > invalidation, but it won't be universal, and I'd rather leave it
-> > > > > optional, for recovery from truely catastrophic errors (ie my DAX is
-> > > > > on fire, I need to unplug it).
-> > > > 
-> > > > Agreed.  I think software wise there is not much some of the devices can do
-> > > > with such an "invalidate".
-> > > 
-> > > So out of curiosity: What does RDMA driver do when userspace just closes
-> > > the file pointing to RDMA object? It has to handle that somehow by aborting
-> > > everything that's going on... And I wanted similar behavior here.
-> > 
-> > It aborts *everything* connected to that file descriptor. Destroying
-> > everything avoids creating inconsistencies that destroying a subset
-> > would create.
-> > 
-> > What has been talked about for lease break is not destroying anything
-> > but very selectively saying that one memory region linked to the GUP
-> > is no longer functional.
-> 
-> OK, so what I had in mind was that if RDMA app doesn't play by the rules
-> and closes the file with existing pins (and thus layout lease) we would
-> force it to abort everything. Yes, it is disruptive but then the app didn't
-> obey the rule that it has to maintain file lease while holding pins. Thus
-> such situation should never happen unless the app is malicious / buggy.
+The linux-next commit "mm/sparsemem: Add helpers track active portions
+of a section at boot" [1] causes a crash below when the first kmemleak
+scan kthread kicks in. This is because kmemleak_scan() calls
+pfn_to_online_page(() which calls pfn_valid_within() instead of
+pfn_valid() on x86 due to CONFIG_HOLES_IN_ZONE=n.
 
-We do have the infrastructure to completely revoke the entire
-*content* of a FD (this is called device disassociate). It is
-basically close without the app doing close. But again it only works
-with some drivers. However, this is more likely something a driver
-could support without a HW change though.
+The commit [1] did add an additional check of pfn_section_valid() in
+pfn_valid(), but forgot to add it in the above code path.
 
-It is quite destructive as it forcibly kills everything RDMA related
-the process(es) are doing, but it is less violent than SIGKILL, and
-there is perhaps a way for the app to recover from this, if it is
-coded for it.
+page:ffffea0002748000 is uninitialized and poisoned
+raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
+raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
+page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+------------[ cut here ]------------
+kernel BUG at include/linux/mm.h:1084!
+invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+CPU: 5 PID: 332 Comm: kmemleak Not tainted 5.2.0-rc4-next-20190612+ #6
+Hardware name: Lenovo ThinkSystem SR530 -[7X07RCZ000]-/-[7X07RCZ000]-,
+BIOS -[TEE113T-1.00]- 07/07/2017
+RIP: 0010:kmemleak_scan+0x6df/0xad0
+Call Trace:
+ kmemleak_scan_thread+0x9f/0xc7
+ kthread+0x1d2/0x1f0
+ ret_from_fork+0x35/0x4
 
-My preference would be to avoid this scenario, but if it is really
-necessary, we could probably build it with some work.
+[1] https://patchwork.kernel.org/patch/10977957/
 
-The only case we use it today is forced HW hot unplug, so it is rarely
-used and only for an 'emergency' like use case.
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ include/linux/memory_hotplug.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Jason
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+index 0b8a5e5ef2da..f02be86077e3 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -28,6 +28,7 @@
+ 	unsigned long ___nr = pfn_to_section_nr(___pfn);	   \
+ 								   \
+ 	if (___nr < NR_MEM_SECTIONS && online_section_nr(___nr) && \
++	    pfn_section_valid(__nr_to_section(___nr), pfn) &&	   \
+ 	    pfn_valid_within(___pfn))				   \
+ 		___page = pfn_to_page(___pfn);			   \
+ 	___page;						   \
+-- 
+1.8.3.1
+
