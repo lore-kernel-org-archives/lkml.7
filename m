@@ -8,148 +8,150 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D625AC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A880C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECCD217D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE40821721
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:59:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="i98jcwEg"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="s2k7UPtX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389492AbfFLT7j (ORCPT
+        id S2389953AbfFLT7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:59:39 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34408 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388658AbfFLT7d (ORCPT
+        Wed, 12 Jun 2019 15:59:44 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43487 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389642AbfFLT7m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:59:33 -0400
-Received: by mail-wr1-f67.google.com with SMTP id k11so50754wrl.1;
-        Wed, 12 Jun 2019 12:59:32 -0700 (PDT)
+        Wed, 12 Jun 2019 15:59:42 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p13so8125798wru.10;
+        Wed, 12 Jun 2019 12:59:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DbdAX0bV85Dko/n1L+nFmKMabI9Kh0fLOwLLV1IH53M=;
-        b=i98jcwEgONXb3ZOPIzPaDduImuV0oAvjS9qfSmC5tx3AcS2Ny/sC+OFo8VMuEFDyN9
-         8kO0wtjx655Rhp9mXl4zeUa2GVSWhqtq7n2yidRk4ED+WXElWp2iY11rpMjQvLzvS4rm
-         VoHVs7TMtYOj7i25xCkTxoJKzPkdS8smwL7tmtAkI/LrVrplmn1MW6jkMpTmzk5PGL17
-         8zn0ZraSMPZcl4EQFRuMmHyhziVAiswTUj4qoARxdWiVw8Ugj6A40BQSdzWhVHg+pF/f
-         GTZaz8DuBDTGXA4qWGfQZ+Bn/+bcO3zDmCfeARHURfoOn8UAqxoydYC1adaol1wSMEW5
-         snzg==
+        bh=ZO2I0nc2ZuC8lo4fZqPZLu1ILdKFupecX1fpt0vJbX8=;
+        b=s2k7UPtXJrKmRqewFzECaggm0X0f1LVk4ve6wyxIHpM/+aaRLVzCL0oIPaATv+7icK
+         giRfO3MeaQ9+0n7NZZKRcmKvneynm/p6mx4DFiVUi1qWjWuddVUJwW+DdtgQX38MAcTf
+         ofWXa05BtJwNhTgJF3NYhy7Mkh2RdMIo1OizJgCep9waUpq80XvJrIrb5EDYSlDSERzh
+         /+8VRIOvbTxqBexLHe9TC2QuBcvlwywgIZYYG+Uh9u0OKbQv+qpvIotcFOD3g7ngDbeZ
+         slhUjjFhv5pebPc/uYry4PoYjy9qhGo5Q18RvGAxVRpRbaHbkQclZi00i2RvbaM/9xmt
+         a/WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DbdAX0bV85Dko/n1L+nFmKMabI9Kh0fLOwLLV1IH53M=;
-        b=QDB91pjWwIp1V59jGejr4lw0xFWdyB666c1cMb2vH+SSjLSfxNX4LRdZ7FopF3fD0C
-         uF4uVmAHUXvDA06GNIv8y9ia3amhlyc/RvX/m59ZVtMe7IIyxM7DUZesVz4xg8QQHBP3
-         sEVuydd7JAEQCOVffsyfK4OGDMrg0qFdOXLJ6aD4Z4SmbmFiu0zvw+D5tgEDA+SxeZC8
-         qIBQ3kXbiztPOkOtb+E+O2HiDMk8/rHDzXFaEHicULy64Sdpeojochf7AFRopOoUfhpj
-         lB18QWAi48XFv8DAW+J2JEh/aIDG5TIREP9Eq+psum4n5olVh8XOTs0YGnp0mWi2UsYz
-         B1LQ==
-X-Gm-Message-State: APjAAAWVAYsz6UjzxovP63dDj+VCbocX3y9FIr7VVF/9MgHL9w0I0sVQ
-        wkKDa8dW20JnhOINcO0SYX0=
-X-Google-Smtp-Source: APXvYqz8FPKyN4u6g2XV8ExWl7unahV+eyESFia516NWg/4YKZGCKK1sV/9qmYUtmXKVI4t10SWXMg==
-X-Received: by 2002:adf:a38b:: with SMTP id l11mr3832905wrb.325.1560369571376;
-        Wed, 12 Jun 2019 12:59:31 -0700 (PDT)
+        bh=ZO2I0nc2ZuC8lo4fZqPZLu1ILdKFupecX1fpt0vJbX8=;
+        b=ACJ7Yqmg2lMG9vfx/OVeqqeK1B7TmoTUw7pAEfj7LkzUtDk9e+pww3Y0sISebrWadF
+         7bWcpFUeX9DR07G3DTWBUCsgTdfq0af+SG1o72mkr00ukqnYaImcMFTbsm7zMkQUzjie
+         ky6azZtjgIfFsAJ+hweNVgjx95TW5igWhEbLj+lelzSLGrdfi1kzn8mESH3Sq5d60ZNo
+         5zY/5PsiQQW3Sh1H33OoQtbS5Quo2SJSY/Cu6LYNPT4olrjdJ6ldt/yX/NSn2nuXq0ek
+         bZ8cjorRpykKFPvVuLHlmkt7pdCFu4dmFNV2enj8DWlolN7GDN9L1z2mswBWbteuSrTW
+         dPIQ==
+X-Gm-Message-State: APjAAAXJoJbPpJRZekykrSg5lMO+KML2gbBejmy4LfPhF+kpGLrgKoI7
+        jcAX1SUygxGv/N/IF+KOhFA=
+X-Google-Smtp-Source: APXvYqwsZeC2xWn46wSwc6F1FRQQkyg4g9mdYUrvu06Wn8TkkSHFCVkYpWEmZcaG6bt4PqKqBTkDYQ==
+X-Received: by 2002:a5d:6312:: with SMTP id i18mr16038992wru.203.1560369580608;
+        Wed, 12 Jun 2019 12:59:40 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133DDA400428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:33dd:a400:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id f10sm1026745wrg.24.2019.06.12.12.59.29
+        by smtp.googlemail.com with ESMTPSA id f10sm1026745wrg.24.2019.06.12.12.59.39
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 12:59:30 -0700 (PDT)
+        Wed, 12 Jun 2019 12:59:39 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
         thierry.reding@gmail.com
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         u.kleine-koenig@pengutronix.de, narmstrong@baylibre.com,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 01/14] pwm: meson: unify the parameter list of meson_pwm_{enable,disable}
-Date:   Wed, 12 Jun 2019 21:58:58 +0200
-Message-Id: <20190612195911.4442-2-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 09/14] pwm: meson: move pwm_set_chip_data() to meson_pwm_request()
+Date:   Wed, 12 Jun 2019 21:59:06 +0200
+Message-Id: <20190612195911.4442-10-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190612195911.4442-1-martin.blumenstingl@googlemail.com>
 References: <20190612195911.4442-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a preparation for a future cleanup. Pass struct pwm_device
-instead of passing the individual values required by each function as
-these can be obtained for each struct pwm_device instance.
+All existing PWM drivers (except pwm-meson and two other ones) call
+pwm_set_chip_data() from their pwm_ops.request() callback. Now that we
+can access the struct meson_pwm_channel from struct meson_pwm we can do
+the same.
 
-As a nice side-effect the driver now uses "switch (pwm->hwpwm)"
-everywhere. Before some functions used "switch (id)" while others used
-"switch (pwm->hwpwm)".
+Move the call to pwm_set_chip_data() to meson_pwm_request() and drop the
+custom meson_pwm_add_channels(). This makes the implementation
+consistent with other drivers and makes it slightly more obvious
+thatpwm_get_chip_data() cannot be used from pwm_ops.get_state() (because
+that's called by the PWM core before pwm_ops.request()).
 
-No functional changes.
+No functional changes intended.
 
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/pwm/pwm-meson.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/pwm/pwm-meson.c | 22 ++++++++--------------
+ 1 file changed, 8 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 5fef7e925282..3fbbc4128ce8 100644
+index ac7e188155fd..27915d6475e3 100644
 --- a/drivers/pwm/pwm-meson.c
 +++ b/drivers/pwm/pwm-meson.c
-@@ -183,15 +183,14 @@ static int meson_pwm_calc(struct meson_pwm *meson,
+@@ -98,12 +98,16 @@ static inline struct meson_pwm *to_meson_pwm(struct pwm_chip *chip)
+ 
+ static int meson_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+-	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
++	struct meson_pwm *meson = to_meson_pwm(chip);
++	struct meson_pwm_channel *channel;
+ 	struct device *dev = chip->dev;
+ 	int err;
+ 
+-	if (!channel)
+-		return -ENODEV;
++	channel = pwm_get_chip_data(pwm);
++	if (channel)
++		return 0;
++
++	channel = &meson->channels[pwm->hwpwm];
+ 
+ 	if (channel->clk_parent) {
+ 		err = clk_set_parent(channel->clk, channel->clk_parent);
+@@ -124,7 +128,7 @@ static int meson_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ 
+ 	chip->ops->get_state(chip, pwm, &channel->state);
+ 
+-	return 0;
++	return pwm_set_chip_data(pwm, channel);
+ }
+ 
+ static void meson_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+@@ -460,14 +464,6 @@ static int meson_pwm_init_channels(struct meson_pwm *meson)
  	return 0;
  }
  
--static void meson_pwm_enable(struct meson_pwm *meson,
--			     struct meson_pwm_channel *channel,
--			     unsigned int id)
-+static void meson_pwm_enable(struct meson_pwm *meson, struct pwm_device *pwm)
+-static void meson_pwm_add_channels(struct meson_pwm *meson)
+-{
+-	unsigned int i;
+-
+-	for (i = 0; i < meson->chip.npwm; i++)
+-		pwm_set_chip_data(&meson->chip.pwms[i], &meson->channels[i]);
+-}
+-
+ static int meson_pwm_probe(struct platform_device *pdev)
  {
-+	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
- 	u32 value, clk_shift, clk_enable, enable;
- 	unsigned int offset;
- 	unsigned long flags;
- 
--	switch (id) {
-+	switch (pwm->hwpwm) {
- 	case 0:
- 		clk_shift = MISC_A_CLK_DIV_SHIFT;
- 		clk_enable = MISC_A_CLK_EN;
-@@ -228,12 +227,12 @@ static void meson_pwm_enable(struct meson_pwm *meson,
- 	spin_unlock_irqrestore(&meson->lock, flags);
- }
- 
--static void meson_pwm_disable(struct meson_pwm *meson, unsigned int id)
-+static void meson_pwm_disable(struct meson_pwm *meson, struct pwm_device *pwm)
- {
- 	u32 value, enable;
- 	unsigned long flags;
- 
--	switch (id) {
-+	switch (pwm->hwpwm) {
- 	case 0:
- 		enable = MISC_A_EN;
- 		break;
-@@ -266,7 +265,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		return -EINVAL;
- 
- 	if (!state->enabled) {
--		meson_pwm_disable(meson, pwm->hwpwm);
-+		meson_pwm_disable(meson, pwm);
- 		channel->state.enabled = false;
- 
- 		return 0;
-@@ -293,7 +292,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	struct meson_pwm *meson;
+@@ -503,8 +499,6 @@ static int meson_pwm_probe(struct platform_device *pdev)
+ 		return err;
  	}
  
- 	if (state->enabled && !channel->state.enabled) {
--		meson_pwm_enable(meson, channel, pwm->hwpwm);
-+		meson_pwm_enable(meson, pwm);
- 		channel->state.enabled = true;
- 	}
+-	meson_pwm_add_channels(meson);
+-
+ 	platform_set_drvdata(pdev, meson);
  
+ 	return 0;
 -- 
 2.22.0
 
