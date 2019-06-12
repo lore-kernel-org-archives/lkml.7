@@ -2,83 +2,147 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B95FC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 303EEC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A53208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 065A721721
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:18:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dusx49mr"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="FjNDRYeX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438755AbfFLMRO (ORCPT
+        id S2438769AbfFLMSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:17:14 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46997 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436570AbfFLMRO (ORCPT
+        Wed, 12 Jun 2019 08:18:02 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:54316 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438756AbfFLMSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:17:14 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v24so10545545ljg.13
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 05:17:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2txdGGqAtBgtUiiIPP10i5KT2B4f0+7u5UH9LS7ouJg=;
-        b=dusx49mrCLSgU5t83nzKnjS+WluovaOxnHyWSgEcpeQJPi0w63Vjj0FYvbpHl8IZ0M
-         0Eg7mJFCz8lJciydS+e8UNQaC7r8ojgw9QaIwsF5onCMIfBQpqxcaGfmtdOVvxgAS1KJ
-         iZq25ceilSdWqf4legHqbrKpfWh4VKQT0VMk1AZzYWalsKzgxxO8bSpWHPJeScvgczFQ
-         UG9KdibBNgx/ir54+DcjvIdzr+rJjZpD58RkUmmiAXwcrcVgH4HS2cGQGBcFg8/U+PQZ
-         Sos5qV0IrsWvi+9ROxVD7rnYs9P3dEm3uBX6AprDgms9/N5jIdr73kQfNzUk9tpZsI4F
-         PxiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2txdGGqAtBgtUiiIPP10i5KT2B4f0+7u5UH9LS7ouJg=;
-        b=d3cmae8fZLBepARW7E1EzoLOJq6Iw325rwcnNQcOKyWU/mIwVbp2EA+tNK07JOrINk
-         La8drGGC20beuwrXaVdkX9osWI7sDcRmI8lwtjcB8biQ0h2z6J9l7IEn2zkVtzkb7n3U
-         rMhiqABqA24th0/xqDvO2UTHl+E5668bDPCwTlue4O0NZCXk4muPABN4jx7RBmquSvTw
-         vy1bj5b5POFy7HUgGOyAxEHvW6io9JC5p+o+SBs9770RIMT8ywYqKYoc8A5wsbJjLSN8
-         mwk5f8EVEomtRyZ06pgrlVl9I43YtzsK5mRk1G2y+DsM2V6sVJS8dun27Guf7heeYCN9
-         s18w==
-X-Gm-Message-State: APjAAAVLNzwfDIzNpid20aM14DIVcZp7p+cxKGxZjBInRCFjMdJsUDTv
-        O5+gX1+wRzyqQ+op9skMqkTMWn4xvW/JnRCNRW5p1LPCxqA=
-X-Google-Smtp-Source: APXvYqyY0A/WfPrOeCNf6qf18ESfRNrBcrzXIRXu/sUdZWtDXsnEw4ymCliw3ZfYA/tTBPR2Wnzztl40Q8AA2XCcUE4=
-X-Received: by 2002:a2e:5dc4:: with SMTP id v65mr33483063lje.138.1560341832416;
- Wed, 12 Jun 2019 05:17:12 -0700 (PDT)
+        Wed, 12 Jun 2019 08:18:02 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 64E305C2176;
+        Wed, 12 Jun 2019 14:17:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1560341879;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/KH0/i4R3MFhchQ0T0snADnLYDTs7aFotX1/6SeWxhU=;
+        b=FjNDRYeX/PtHXdcW9e8GNSv42F0BHqkcPhNorsrgHPuy03m/dRNJKTlY+psz48RUEnd+3f
+        IEZBG5raooHHVy+i6B9P20h+EOukDGaEO2c79N5grBB3+iHhyu4IqX4DacTYiRX148NKjY
+        LrYiKoroQEosDlrg9KqsL9bPJ/rFJa0=
 MIME-Version: 1.0
-References: <20190611072004.2978373-1-lkundrak@v3.sk>
-In-Reply-To: <20190611072004.2978373-1-lkundrak@v3.sk>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Jun 2019 14:17:01 +0200
-Message-ID: <CACRpkdb7jZ3Hw3uH_hqGRhbsoreQW17ck_QPXKxqLA8ov9ffuQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: lantiq: Switch to SPDX header
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     John Crispin <john@phrozen.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 12 Jun 2019 14:17:59 +0200
+From:   Stefan Agner <stefan@agner.ch>
+To:     Igor Opaniuk <igor.opaniuk@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        marcel@ziswiler.com, marcel.ziswiler@toradex.com
+Subject: Re: [PATCH 1/1] ARM: dts: imx6ull-colibri: enable UHS-I for USDHC1
+In-Reply-To: <20190606090612.16685-1-igor.opaniuk@gmail.com>
+References: <20190606090612.16685-1-igor.opaniuk@gmail.com>
+Message-ID: <3b84f3cc6cd5399f25ebd8e1c8559c58@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 9:20 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+On 06.06.2019 11:06, Igor Opaniuk wrote:
+> From: Igor Opaniuk <igor.opaniuk@toradex.com>
+> 
+> Allows to use the SD interface at a higher speed mode if the card
+> supports it. For this the signaling voltage is switched from 3.3V to
+> 1.8V under the usdhc1's drivers control.
+> 
+> Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+> ---
+>  arch/arm/boot/dts/imx6ul.dtsi                  |  4 ++++
+>  arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi | 11 +++++++++--
+>  arch/arm/boot/dts/imx6ull-colibri.dtsi         |  6 ++++++
+>  3 files changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+> index fc388b84bf22..91a0ced44e27 100644
+> --- a/arch/arm/boot/dts/imx6ul.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul.dtsi
+> @@ -857,6 +857,8 @@
+>  					 <&clks IMX6UL_CLK_USDHC1>,
+>  					 <&clks IMX6UL_CLK_USDHC1>;
+>  				clock-names = "ipg", "ahb", "per";
+> +				fsl,tuning-step= <2>;
+> +				fsl,tuning-start-tap = <20>;
+>  				bus-width = <4>;
+>  				status = "disabled";
+>  			};
+> @@ -870,6 +872,8 @@
+>  					 <&clks IMX6UL_CLK_USDHC2>;
+>  				clock-names = "ipg", "ahb", "per";
+>  				bus-width = <4>;
+> +				fsl,tuning-step= <2>;
+> +				fsl,tuning-start-tap = <20>;
+>  				status = "disabled";
+>  			};
+>  
+> diff --git a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> index 006690ea98c0..7dc7770cf52c 100644
+> --- a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> +++ b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> @@ -145,13 +145,20 @@
+>  };
+>  
+>  &usdhc1 {
+> -	pinctrl-names = "default";
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz", "sleep";
+>  	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_snvs_usdhc1_cd>;
+> -	no-1-8-v;
+> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz &pinctrl_snvs_usdhc1_cd>;
+> +	pinctrl-2 = <&pinctrl_usdhc1_100mhz &pinctrl_snvs_usdhc1_cd>;
 
-> The original license text had a typo ("publishhed") which would be
-> likely to confuse automated licensing auditing tools. Let's just switch
-> to SPDX instead of fixing the wording.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Should that not be pinctrl_usdhc1_200mhz?
 
-This is already fixed upstream in Torvald's tree, see
-commit 1d0ea0692ae3f909b22e99af3121bcf3142a5c5f
-"treewide: Replace GPLv2 boilerplate/reference with SPDX - rule 332"
+--
+Stefan
 
-Yours,
-Linus Walleij
+> +	pinctrl-3 = <&pinctrl_usdhc1 &pinctrl_snvs_usdhc1_sleep_cd>;
+>  	cd-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
+>  	disable-wp;
+>  	wakeup-source;
+>  	keep-power-in-suspend;
+>  	vmmc-supply = <&reg_3v3>;
+> +	vqmmc-supply = <&reg_sd1_vmmc>;
+> +	sd-uhs-sdr12;
+> +	sd-uhs-sdr25;
+> +	sd-uhs-sdr50;
+> +	sd-uhs-sdr104;
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi
+> b/arch/arm/boot/dts/imx6ull-colibri.dtsi
+> index 9ad1da159768..d56728f03c35 100644
+> --- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
+> @@ -545,6 +545,12 @@
+>  		>;
+>  	};
+>  
+> +	pinctrl_snvs_usdhc1_sleep_cd: snvs-usdhc1-cd-grp-slp {
+> +		fsl,pins = <
+> +			MX6ULL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x0
+> +		>;
+> +	};
+> +
+>  	pinctrl_snvs_wifi_pdn: snvs-wifi-pdn-grp {
+>  		fsl,pins = <
+>  			MX6ULL_PAD_BOOT_MODE1__GPIO5_IO11	0x14
