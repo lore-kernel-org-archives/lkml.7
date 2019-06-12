@@ -2,125 +2,159 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D01C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07317C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E046B20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C480320B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:55:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DyjaHPUe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JXE5QOKT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408759AbfFLNzL (ORCPT
+        id S2409191AbfFLNzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:55:11 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39216 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407368AbfFLNzK (ORCPT
+        Wed, 12 Jun 2019 09:55:31 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35730 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407368AbfFLNza (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:55:10 -0400
-Received: by mail-pg1-f195.google.com with SMTP id 196so8981654pgc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 06:55:10 -0700 (PDT)
+        Wed, 12 Jun 2019 09:55:30 -0400
+Received: by mail-wr1-f68.google.com with SMTP id m3so17064143wrv.2;
+        Wed, 12 Jun 2019 06:55:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JuCNsBgKz2kjwwU2iDU7wV4lSMUa82jMKbRvCjaKNYk=;
-        b=DyjaHPUeflN5ZsbtMGDS9Y5nT5fm3yy+sEHGvi6P//QVMQd2DHb7JAQZ1QAUpVOzvJ
-         N+KZ9PwASzybi0SO1U8b+EDTeErIAqt7oZT6ojvJ5s9QMF+iex62ERsVrm8o8++vfvYF
-         6VIib32cQ8JALMkAgDNWQCE8e241NVPKstnWeQ2+mGDa7iuxpNCsYDcTDmmSc7BWe0jg
-         XvsfjxgQKxKqyhdeezlhXKq113Cv2BhnB7TVMXccoGCXQ37WlMG42T5+DCr0X7DLsQHw
-         znEQuw8W69ywX1XQ5aVKeL7n1nqWdZLqmHcAvIkalngQAuijXjBjEd8XJaWH3wKRJYE9
-         2Adw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eZX3anyZMMAgTvTOAbA6GQo46jqojN0EiJPMmbv67bA=;
+        b=JXE5QOKTWFbr6BQ6o8PjdWiflFieSzJ6ofNQwYduozexkoEMzTSrQiqW/WX/PoweCS
+         1JHqfWuLCQPWbjxM7j/IEGK8G3aFHQbXs2ETn3fbjYb2iZc3IYZuwMatIW4jOoZXrrcJ
+         Ep7sQzS6MyKKLHm6SSESA2PNYz1M1G2DbJ1Ws0OqQl46zKasVNBxemDAyR0OssSjWyo4
+         AVx1/z4GTPaC1YxzNZ/EHA8NfwxuD3nEO7m8kE4h0OAruSReCP6cf8LSvfR9g933kbWp
+         38G3wdqmlw/wB8sOdYU6a1K/vDcBi2LxDphJusEJMjhHwe6COutExhMCnfqk7BbCURMu
+         UxKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JuCNsBgKz2kjwwU2iDU7wV4lSMUa82jMKbRvCjaKNYk=;
-        b=rcdR7l+KsQ7/KNKZ7S8vpTsnHEgdP9Y9SfkF403yGZdRpYAxOdE73q0BGUC/6zgL34
-         le0sQeXpVTGWrhzheqkcJjytuKL5lC350hL4NPm/1aCbtZsdUeP9U2tXEiTq1i1ongcL
-         Hr72CSDDYSkMIsqvCNa1lc8hkFKmrlkSOGvkN7JNgFgJcZPoUUCjvhwwo1bPiMdpg6JI
-         oLIn3Xz6y4/wpe4vJFRq+f42gVumTpyQkUcIY3RpbWcZHk8HNQm+UZN+mSU/q7E52f7k
-         LGW+zLRGc9SbZwiz0iOIOyXrSB5JJ0FD0R+qKpzVDSA9gdAT5QXvOrHUXIQCBZPo8a+u
-         RICg==
-X-Gm-Message-State: APjAAAWcUULu2MqxiHgoNJGqmlHOS3fASO41fs1O/OoAjv4fGfjXFdwi
-        XhH24meGRjQjX/I6SXT2Ig==
-X-Google-Smtp-Source: APXvYqxlJ7e75DsWX7egMpEWIh17YRS2EgGe1PzB66KsEeNy0SS0S0WCNWEmTNn2GsRLsUzGK7fXXQ==
-X-Received: by 2002:a63:574b:: with SMTP id h11mr5323558pgm.25.1560347710137;
-        Wed, 12 Jun 2019 06:55:10 -0700 (PDT)
-Received: from dhcp-128-55.nay.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id j11sm2865040pfa.2.2019.06.12.06.55.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 06:55:09 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 21:54:58 +0800
-From:   Pingfan Liu <kernelfans@gmail.com>
-To:     "Weiny, Ira" <ira.weiny@intel.com>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv3 1/2] mm/gup: fix omission of check on FOLL_LONGTERM in
- get_user_pages_fast()
-Message-ID: <20190612135458.GA19916@dhcp-128-55.nay.redhat.com>
-References: <1559725820-26138-1-git-send-email-kernelfans@gmail.com>
- <87tvcwhzdo.fsf@linux.ibm.com>
- <2807E5FD2F6FDA4886F6618EAC48510E79D8D79B@CRSMSX101.amr.corp.intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eZX3anyZMMAgTvTOAbA6GQo46jqojN0EiJPMmbv67bA=;
+        b=SmU1fJTSKKHJlbvnN0m5fjoOv/BlidrSXQKE7Zz2auK7aMITl3UwzAVFdlC7mwcw3A
+         yD90N+xPzPOneu/r18Shsc6VyWqWHcOY9xrw4oxcUxK6ccBIbS+k81+nEurS+MsootSW
+         UeymnxPcJHy1ljTfSXIgDKH0+3sAk6eO+fOrDd52KVB5KlYCbZYO3Drud3ku+JYcWKNF
+         zQ0njeO+U6smUs0uPWcrwFGTSIATzEWymrJ+82sMMKO82ObxH1hUnbGhywjmQp6l53hu
+         cb3FwQVy05u5mhBdi3Bhr9HCamwtgMDg9bViJGpbZ5A9ePWQq4Oy4MIltEHGRQyTgZO3
+         59gw==
+X-Gm-Message-State: APjAAAUBS3CxIorLgl9Nw7zJyGeiwim/NQbW26FT2DAOyYN0dJESIvVP
+        bydK9EuQU+ah1m35IXJMs3E=
+X-Google-Smtp-Source: APXvYqwjyH5JmEcfzRpESprQR/QtSXTMaNRLBZytNj2AXDHNhT6aiWI7ZMCrVWWviowXrniWslUoeA==
+X-Received: by 2002:adf:e34e:: with SMTP id n14mr35430946wrj.169.1560347728053;
+        Wed, 12 Jun 2019 06:55:28 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id v18sm17973839wrs.80.2019.06.12.06.55.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 06:55:26 -0700 (PDT)
+Subject: Re: [PATCH V5 6/7] i2c: tegra: fix PIO rx/tx residual transfer check
+To:     Bitan Biswas <bbiswas@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1560250274-18499-1-git-send-email-bbiswas@nvidia.com>
+ <1560250274-18499-6-git-send-email-bbiswas@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b6b24358-36a0-af98-1b29-9a622baa9600@gmail.com>
+Date:   Wed, 12 Jun 2019 16:55:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2807E5FD2F6FDA4886F6618EAC48510E79D8D79B@CRSMSX101.amr.corp.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1560250274-18499-6-git-send-email-bbiswas@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 04:29:11PM +0000, Weiny, Ira wrote:
-> > Pingfan Liu <kernelfans@gmail.com> writes:
-> > 
-> > > As for FOLL_LONGTERM, it is checked in the slow path
-> > > __gup_longterm_unlocked(). But it is not checked in the fast path,
-> > > which means a possible leak of CMA page to longterm pinned requirement
-> > > through this crack.
-> > 
-> > Shouldn't we disallow FOLL_LONGTERM with get_user_pages fastpath? W.r.t
-> > dax check we need vma to ensure whether a long term pin is allowed or not.
-> > If FOLL_LONGTERM is specified we should fallback to slow path.
+11.06.2019 13:51, Bitan Biswas пишет:
+> Fix expression for residual bytes(less than word) transfer
+> in I2C PIO mode RX/TX.
 > 
-> Yes, the fastpath bails to the slowpath if FOLL_LONGTERM _and_ DAX.  But it does this while walking the page tables.  I missed the CMA case and Pingfan's patch fixes this.  We could check for CMA pages while walking the page tables but most agreed that it was not worth it.  For DAX we already had checks for *_devmap() so it was easier to put the FOLL_LONGTERM checks there.
+> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 > 
-Then for CMA pages, are you suggesting something like:
-diff --git a/mm/gup.c b/mm/gup.c
-index 42a47c0..8bf3cc3 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2251,6 +2251,8 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
-        if (unlikely(!access_ok((void __user *)start, len)))
-                return -EFAULT;
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+> index 4dfb4c1..0596c12 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -514,7 +514,8 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+>  	 * If there is a partial word at the end of buf, handle it manually to
+>  	 * prevent overwriting past the end of buf
+>  	 */
+> -	if (rx_fifo_avail > 0 && buf_remaining > 0) {
+> +	if (rx_fifo_avail > 0 &&
+> +	    (buf_remaining > 0 && buf_remaining < BYTES_PER_FIFO_WORD)) {
 
-+       if (unlikely(gup_flags & FOLL_LONGTERM))
-+               goto slow;
-        if (gup_fast_permitted(start, nr_pages)) {
-                local_irq_disable();
-                gup_pgd_range(addr, end, gup_flags, pages, &nr);
-@@ -2258,6 +2260,7 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
-                ret = nr;
-        }
+The buf_remaining >= BYTES_PER_FIFO_WORD is not possible to happen
+because there are three possible cases:
 
-+slow:
-        if (nr < nr_pages) {
-                /* Try to get the remaining pages with get_user_pages */
-                start += nr << PAGE_SHIFT;
+1) buf_remaining > rx_fifo_avail * 4:
 
-Thanks,
-  Pingfan
+	In this case rx_fifo_avail = 0
+
+2) buf_remaining < rx_fifo_avail * 4;
+
+	In this case buf_remaining is always < 4 because
+	words_to_transfer is a buf_remaining rounded down to 4
+	and then divided by 4. Hence:
+
+	buf_remaining -= (buf_remaining / 4) * 4 always results
+	into buf_remaining < 4.
+
+3) buf_remaining == rx_fifo_avail * 4:
+
+	In this case rx_fifo_avail = 0 and buf_remaining = 0.
+
+Case 2 should never happen and means that something gone wrong.
+
+>  		BUG_ON(buf_remaining > 3);
+>  		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
+>  		val = cpu_to_le32(val);
+> @@ -557,11 +558,10 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
+>  			words_to_transfer = tx_fifo_avail;
+>  
+>  		/*
+> -		 * Update state before writing to FIFO.  If this casues us
+> +		 * Update state before writing to FIFO.  If this causes us
+>  		 * to finish writing all bytes (AKA buf_remaining goes to 0) we
+>  		 * have a potential for an interrupt (PACKET_XFER_COMPLETE is
+> -		 * not maskable).  We need to make sure that the isr sees
+> -		 * buf_remaining as 0 and doesn't call us back re-entrantly.
+> +		 * not maskable).
+>  		 */
+>  		buf_remaining -= words_to_transfer * BYTES_PER_FIFO_WORD;
+>  		tx_fifo_avail -= words_to_transfer;
+> @@ -580,7 +580,8 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
+>  	 * prevent reading past the end of buf, which could cross a page
+>  	 * boundary and fault.
+>  	 */
+> -	if (tx_fifo_avail > 0 && buf_remaining > 0) {
+> +	if (tx_fifo_avail > 0 &&
+> +	    (buf_remaining > 0 && buf_remaining < BYTES_PER_FIFO_WORD)) {
+>  		BUG_ON(buf_remaining > 3);
+>  		memcpy(&val, buf, buf_remaining);
+>  		val = le32_to_cpu(val);
+> 
+
+Same as for RX.
