@@ -2,113 +2,212 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B7FC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C46C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF1E120874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD5D208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:35:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ver4vcTB"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FreZ+Ydx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407780AbfFLMfp (ORCPT
+        id S2407844AbfFLMft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:35:45 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:42821 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407663AbfFLMfo (ORCPT
+        Wed, 12 Jun 2019 08:35:49 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56157 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407663AbfFLMfs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:35:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1560342943; x=1591878943;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=VFn/gI6zgNUuVhHVrpgAggjKM4seBCL+904wneHHRAg=;
-  b=ver4vcTBWLqgucpl4hGD6Omd/SYV7YzjgxmbCXwD4nID0STSHE5ZOat+
-   3ga/e671+3UoOeOLrxAQKuV9aYuEqndtgqOenJXbmE1WJztgYYAqdfGsc
-   m/sm/68Gz7sw+dn4TN5tpVV2BKTBwzM7uzRB5GUs/L1FKRzv9wB1+ebgi
-   I=;
-X-IronPort-AV: E=Sophos;i="5.62,365,1554768000"; 
-   d="scan'208";a="809976184"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 12 Jun 2019 12:35:40 +0000
-Received: from EX13MTAUEB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id E7ECDA1B8C;
-        Wed, 12 Jun 2019 12:35:36 +0000 (UTC)
-Received: from EX13D08UEB003.ant.amazon.com (10.43.60.11) by
- EX13MTAUEB001.ant.amazon.com (10.43.60.129) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 12 Jun 2019 12:35:36 +0000
-Received: from EX13MTAUEB001.ant.amazon.com (10.43.60.96) by
- EX13D08UEB003.ant.amazon.com (10.43.60.11) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 12 Jun 2019 12:35:35 +0000
-Received: from [10.107.3.21] (10.107.3.21) by mail-relay.amazon.com
- (10.43.60.129) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
- Transport; Wed, 12 Jun 2019 12:35:32 +0000
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-To:     Borislav Petkov <bp@alien8.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-References: <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
- <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
- <20190611115651.GD31772@zn.tnic>
- <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
- <20190612034813.GA32652@zn.tnic>
- <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
- <20190612074242.53a4cf56@coco.lan> <20190612110039.GH32652@zn.tnic>
- <20190612084213.4fb9e054@coco.lan>
- <7705227ea831793cc9e45af32e0da8f5547cb14d.camel@kernel.crashing.org>
- <20190612122504.GI32652@zn.tnic>
-From:   "Hawa, Hanna" <hhhawa@amazon.com>
-Message-ID: <6911a79a-bcd7-03e1-1c90-2adb88aaa1db@amazon.com>
-Date:   Wed, 12 Jun 2019 15:35:31 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 12 Jun 2019 08:35:48 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5CCZZK9686452
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 12 Jun 2019 05:35:35 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5CCZZK9686452
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1560342936;
+        bh=h3in5hBREftm3C57eF1wFkPde9gIToHd7JgiCVF5P9M=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=FreZ+Ydxy/Khf4anThvGthBBEmuVdCezI6VqQQ4j+mhBLU66eE5luEvgjbSB9CTVX
+         T3Rfyur5hLwcQSW0njN05QOT8Dbm3FYxjG9iJwx2P88zhzC9QOmyBJu6RfoxPFbTVw
+         WBwveRa1ECBDL1Kd98rPlY8rvCCMoiXdPmvjMl2yHNbGG5v3NeMUYEnsqabEOl8SMN
+         zdfy2gzS6oHfdCWhswi9qYehgRV1U+sVL05m55Ezxoy/2XeU/i6bQD6m11bJ1z/sfB
+         YWygKTNcmaFTCOrUa4r2ZbE5aazJDtIWBuayktmOmPWFctFKubHuFecGuRRJ4xchGj
+         6Og/J3ZVHYZoQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5CCZYDI686448;
+        Wed, 12 Jun 2019 05:35:34 -0700
+Date:   Wed, 12 Jun 2019 05:35:34 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Aubrey Li <tipbot@zytor.com>
+Message-ID: <tip-0c608dad2a771c0a11b6d12148d1a8b975e015d4@git.kernel.org>
+Cc:     adobriyan@gmail.com, mingo@kernel.org, luto@kernel.org,
+        tim.c.chen@linux.intel.com, hpa@zytor.com, ak@linux.intel.com,
+        peterz@infradead.org, dave.hansen@intel.com, tglx@linutronix.de,
+        aubrey.li@linux.intel.com, linux-kernel@vger.kernel.org,
+        arjan@linux.intel.com, akpm@linux-foundation.org,
+        linux-api@vger.kernel.org
+Reply-To: ak@linux.intel.com, dave.hansen@intel.com, peterz@infradead.org,
+          aubrey.li@linux.intel.com, arjan@linux.intel.com,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          linux-api@vger.kernel.org, akpm@linux-foundation.org,
+          luto@kernel.org, mingo@kernel.org, adobriyan@gmail.com,
+          hpa@zytor.com, tim.c.chen@linux.intel.com
+In-Reply-To: <20190606012236.9391-2-aubrey.li@linux.intel.com>
+References: <20190606012236.9391-2-aubrey.li@linux.intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/core] x86/process: Add AVX-512 usage elapsed time to
+ /proc/pid/arch_status
+Git-Commit-ID: 0c608dad2a771c0a11b6d12148d1a8b975e015d4
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190612122504.GI32652@zn.tnic>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
+Commit-ID:  0c608dad2a771c0a11b6d12148d1a8b975e015d4
+Gitweb:     https://git.kernel.org/tip/0c608dad2a771c0a11b6d12148d1a8b975e015d4
+Author:     Aubrey Li <aubrey.li@linux.intel.com>
+AuthorDate: Thu, 6 Jun 2019 09:22:35 +0800
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 12 Jun 2019 11:42:13 +0200
 
-> 
-> Yap, I think we're in agreement here. I believe the important question
-> is whether you need to get error information from multiple sources
-> together in order to do proper recovery or doing it per error source
-> suffices.
-> 
-> And I think the actual use cases could/should dictate our
-> drivers/orchestrators design.
-> 
-> Thus my question how you guys are planning on tying all that error info
-> the drivers report, into the whole system design?
-We have daemon script that collects correctable/uncorrectable errors 
-from EDAC sysfs and reports to Amazon service that allow us to take 
-action on specific error thresholds.
+x86/process: Add AVX-512 usage elapsed time to /proc/pid/arch_status
 
-Thanks,
-Hanna
-> 
+AVX-512 components usage can result in turbo frequency drop. So it's useful
+to expose AVX-512 usage elapsed time as a heuristic hint for user space job
+schedulers to cluster the AVX-512 using tasks together.
+
+Examples:
+$ while [ 1 ]; do cat /proc/tid/arch_status | grep AVX512; sleep 1; done
+AVX512_elapsed_ms:      4
+AVX512_elapsed_ms:      8
+AVX512_elapsed_ms:      4
+
+This means that 4 milliseconds have elapsed since the tsks AVX512 usage was
+detected when the task was scheduled out.
+
+$ cat /proc/tid/arch_status | grep AVX512
+AVX512_elapsed_ms:      -1
+
+'-1' indicates that no AVX512 usage was recorded for this task.
+
+The time exposed is not necessarily accurate when the arch_status file is
+read as the AVX512 usage is only evaluated when a task is scheduled
+out. Accurate usage information can be obtained with performance counters.
+
+[ tglx: Massaged changelog ]
+
+Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: akpm@linux-foundation.org
+Cc: peterz@infradead.org
+Cc: hpa@zytor.com
+Cc: ak@linux.intel.com
+Cc: tim.c.chen@linux.intel.com
+Cc: dave.hansen@intel.com
+Cc: arjan@linux.intel.com
+Cc: adobriyan@gmail.com
+Cc: aubrey.li@intel.com
+Cc: linux-api@vger.kernel.org
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linux API <linux-api@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20190606012236.9391-2-aubrey.li@linux.intel.com
+
+---
+ arch/x86/Kconfig             |  1 +
+ arch/x86/kernel/fpu/xstate.c | 47 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 2bbbd4d1ba31..8a49b4b03f6b 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -217,6 +217,7 @@ config X86
+ 	select USER_STACKTRACE_SUPPORT
+ 	select VIRT_TO_BUS
+ 	select X86_FEATURE_NAMES		if PROC_FS
++	select PROC_PID_ARCH_STATUS		if PROC_FS
+ 
+ config INSTRUCTION_DECODER
+ 	def_bool y
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 3c36dd1784db..591ddde3b3e8 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -8,6 +8,8 @@
+ #include <linux/cpu.h>
+ #include <linux/mman.h>
+ #include <linux/pkeys.h>
++#include <linux/seq_file.h>
++#include <linux/proc_fs.h>
+ 
+ #include <asm/fpu/api.h>
+ #include <asm/fpu/internal.h>
+@@ -1240,3 +1242,48 @@ int copy_user_to_xstate(struct xregs_state *xsave, const void __user *ubuf)
+ 
+ 	return 0;
+ }
++
++#ifdef CONFIG_PROC_PID_ARCH_STATUS
++/*
++ * Report the amount of time elapsed in millisecond since last AVX512
++ * use in the task.
++ */
++static void avx512_status(struct seq_file *m, struct task_struct *task)
++{
++	unsigned long timestamp = READ_ONCE(task->thread.fpu.avx512_timestamp);
++	long delta;
++
++	if (!timestamp) {
++		/*
++		 * Report -1 if no AVX512 usage
++		 */
++		delta = -1;
++	} else {
++		delta = (long)(jiffies - timestamp);
++		/*
++		 * Cap to LONG_MAX if time difference > LONG_MAX
++		 */
++		if (delta < 0)
++			delta = LONG_MAX;
++		delta = jiffies_to_msecs(delta);
++	}
++
++	seq_put_decimal_ll(m, "AVX512_elapsed_ms:\t", delta);
++	seq_putc(m, '\n');
++}
++
++/*
++ * Report architecture specific information
++ */
++int proc_pid_arch_status(struct seq_file *m, struct pid_namespace *ns,
++			struct pid *pid, struct task_struct *task)
++{
++	/*
++	 * Report AVX512 state if the processor and build option supported.
++	 */
++	if (cpu_feature_enabled(X86_FEATURE_AVX512F))
++		avx512_status(m, task);
++
++	return 0;
++}
++#endif /* CONFIG_PROC_PID_ARCH_STATUS */
