@@ -2,114 +2,103 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDD4C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA388C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB3E208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C7F21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:20:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438800AbfFLMUY (ORCPT
+        id S2438830AbfFLMUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:20:24 -0400
-Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:46845 "EHLO
-        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438786AbfFLMUX (ORCPT
+        Wed, 12 Jun 2019 08:20:32 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:39734 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438796AbfFLMUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:20:23 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id B32C43F792;
-        Wed, 12 Jun 2019 14:20:15 +0200 (CEST)
-Authentication-Results: ste-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=vmwopensource.org header.i=@vmwopensource.org header.b=g9JQd7iX;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
-        dkim=pass (1024-bit key) header.d=vmwopensource.org
-Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id YFDHihGaaJKs; Wed, 12 Jun 2019 14:20:05 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id D94A63F771;
-        Wed, 12 Jun 2019 14:20:03 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 6C3313619A3;
-        Wed, 12 Jun 2019 14:20:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=vmwopensource.org;
-        s=mail; t=1560342003;
-        bh=6NfMWfvQeoRy9SPu4DRek4214/12osldJKiSUF/Om8o=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=g9JQd7iXbBFiJ9k/DFvRCemp/a055P3v1B/2XGHSPrmLckFXXamHhLxVJb7ZMt9f5
-         jYLGqeoMp1N46VhXUk47+FPdynyWNASQeTHzpZ9jHQ6CUrTYeWqqkzDzRovkQI4o8Z
-         Sf04V6HvJKonDRhebjhwGvZ/BTi//2F1blpTwSKE=
-Subject: Re: [PATCH v5 3/9] mm: Add write-protect and clean utilities for
- address space ranges
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-graphics-maintainer@vmware.com, pv-drivers@vmware.com,
-        linux-kernel@vger.kernel.org, nadav.amit@gmail.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>
-References: <20190612064243.55340-1-thellstrom@vmwopensource.org>
- <20190612064243.55340-4-thellstrom@vmwopensource.org>
- <20190612112349.GA20226@infradead.org>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thellstrom@vmwopensource.org>
-Organization: VMware Inc.
-Message-ID: <a004e1a5-bdc5-6508-039e-8d97a9d3cb68@vmwopensource.org>
-Date:   Wed, 12 Jun 2019 14:20:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 12 Jun 2019 08:20:25 -0400
+Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id F038E25AEA9;
+        Wed, 12 Jun 2019 22:20:22 +1000 (AEST)
+Received: by penelope.horms.nl (Postfix, from userid 7100)
+        id E8276E21FE5; Wed, 12 Jun 2019 14:20:20 +0200 (CEST)
+Date:   Wed, 12 Jun 2019 14:20:20 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH repost 0/5] Repost CAN and CANFD dt-bindings
+Message-ID: <20190612122020.sgp5q427ilh6bbbg@verge.net.au>
+References: <1557429622-31676-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <TY1PR01MB1770D2AAF2ED748575CA4CBFC0100@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190612112349.GA20226@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB1770D2AAF2ED748575CA4CBFC0100@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/19 1:23 PM, Christoph Hellwig wrote:
-> On Wed, Jun 12, 2019 at 08:42:37AM +0200, Thomas Hellström (VMware) wrote:
->> From: Thomas Hellstrom <thellstrom@vmware.com>
->>
->> Add two utilities to a) write-protect and b) clean all ptes pointing into
->> a range of an address space.
->> The utilities are intended to aid in tracking dirty pages (either
->> driver-allocated system memory or pci device memory).
->> The write-protect utility should be used in conjunction with
->> page_mkwrite() and pfn_mkwrite() to trigger write page-faults on page
->> accesses. Typically one would want to use this on sparse accesses into
->> large memory regions. The clean utility should be used to utilize
->> hardware dirtying functionality and avoid the overhead of page-faults,
->> typically on large accesses into small memory regions.
-> Please use EXPORT_SYMBOL_GPL, just like for apply_to_page_range and
-> friends.
+Dave,
 
-Sounds reasonable if this uses already EXPORT_SYMBOL_GPL'd 
-functionality. I'll respin.
+are you comfortable with me taking these patches
+through the renesas tree? Or perhaps should they be reposted
+to you for inclusion in net-next?
 
->    Also in general new core functionality like this should go
-> along with the actual user, we don't need to repeat the hmm disaster.
+They have been stuck for a long time now.
 
-I see in your later message that you noticed the other patches. There's 
-also user-space functionality in mesa that excercises this.
-
-/Thomas
-
-
+On Fri, Jun 07, 2019 at 10:02:13AM +0000, Fabrizio Castro wrote:
+> Dear All,
+> 
+> These patches have been around for a very long time now, is anybody willing to take them?
+> 
+> Cheers,
+> Fab
+> 
+> > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Sent: 09 May 2019 20:20
+> > Subject: [PATCH repost 0/5] Repost CAN and CANFD dt-bindings
+> > 
+> > Dear All,
+> > 
+> > I am reposting some CAN and CANFD related dt-bindings changes for
+> > Renesas' R-Car and RZ/G devices that have been originally sent
+> > end of last year and beginning of this year.
+> > 
+> > Thanks,
+> > Fab
+> > 
+> > Fabrizio Castro (3):
+> >   dt-bindings: can: rcar_can: Fix RZ/G2 CAN clocks
+> >   dt-bindings: can: rcar_can: Add r8a774c0 support
+> >   dt-bindings: can: rcar_canfd: document r8a774c0 support
+> > 
+> > Marek Vasut (2):
+> >   dt-bindings: can: rcar_canfd: document r8a77965 support
+> >   dt-bindings: can: rcar_canfd: document r8a77990 support
+> > 
+> >  Documentation/devicetree/bindings/net/can/rcar_can.txt   | 13 ++++---------
+> >  Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 16 ++++++++++------
+> >  2 files changed, 14 insertions(+), 15 deletions(-)
+> > 
+> > --
+> > 2.7.4
+> 
