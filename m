@@ -2,85 +2,198 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFE7C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDCEC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEECD215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B73D21721
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408481AbfFLR3S (ORCPT
+        id S2409536AbfFLRaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 13:29:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53478 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406395AbfFLR3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 13:29:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C45A5AEBB;
-        Wed, 12 Jun 2019 17:29:16 +0000 (UTC)
-Date:   Wed, 12 Jun 2019 19:29:15 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     gorcunov@gmail.com, linux-mm@kvack.org,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, Kirill Tkhai <ktkhai@virtuozzo.com>
-Subject: Re: [RFC PATCH] binfmt_elf: Protect mm_struct access with mmap_sem
-Message-ID: <20190612172914.GC9638@blackbody.suse.cz>
-References: <20190612142811.24894-1-mkoutny@suse.com>
- <20190612170034.GE32656@bombadil.infradead.org>
+        Wed, 12 Jun 2019 13:30:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39098 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406395AbfFLRaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 13:30:22 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 664E4552FC;
+        Wed, 12 Jun 2019 17:30:21 +0000 (UTC)
+Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 12E435DE8D;
+        Wed, 12 Jun 2019 17:30:15 +0000 (UTC)
+Date:   Wed, 12 Jun 2019 13:30:13 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Joel Savitz <jsavitz@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
+        Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, cgroups@vger.kernel.org
+Subject: Re: [RESEND PATCH v3] cpuset: restore sanity to
+ cpuset_cpus_allowed_fallback()
+Message-ID: <20190612173013.GD12415@pauld.bos.csb>
+References: <1560354648-23632-1-git-send-email-jsavitz@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="dc+cDN39EJAMEtIO"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190612170034.GE32656@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1560354648-23632-1-git-send-email-jsavitz@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 12 Jun 2019 17:30:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 12, 2019 at 11:50:48AM -0400 Joel Savitz wrote:
+> In the case that a process is constrained by taskset(1) (i.e.
+> sched_setaffinity(2)) to a subset of available cpus, and all of those are
+> subsequently offlined, the scheduler will set tsk->cpus_allowed to
+> the current value of task_cs(tsk)->effective_cpus.
+> 
+> This is done via a call to do_set_cpus_allowed() in the context of 
+> cpuset_cpus_allowed_fallback() made by the scheduler when this case is
+> detected. This is the only call made to cpuset_cpus_allowed_fallback()
+> in the latest mainline kernel.
+> 
+> However, this is not sane behavior.
+> 
+> I will demonstrate this on a system running the latest upstream kernel
+> with the following initial configuration:
+> 
+> 	# grep -i cpu /proc/$$/status
+> 	Cpus_allowed:	ffffffff,fffffff
+> 	Cpus_allowed_list:	0-63
+> 
+> (Where cpus 32-63 are provided via smt.)
+> 
+> If we limit our current shell process to cpu2 only and then offline it
+> and reonline it:
+> 
+> 	# taskset -p 4 $$
+> 	pid 2272's current affinity mask: ffffffffffffffff
+> 	pid 2272's new affinity mask: 4
+> 
+> 	# echo off > /sys/devices/system/cpu/cpu2/online
+> 	# dmesg | tail -3
+> 	[ 2195.866089] process 2272 (bash) no longer affine to cpu2
+> 	[ 2195.872700] IRQ 114: no longer affine to CPU2
+> 	[ 2195.879128] smpboot: CPU 2 is now offline
+> 
+> 	# echo on > /sys/devices/system/cpu/cpu2/online
+> 	# dmesg | tail -1
+> 	[ 2617.043572] smpboot: Booting Node 0 Processor 2 APIC 0x4
+> 
+> 
+> We see that our current process now has an affinity mask containing
+> every cpu available on the system _except_ the one we originally
+> constrained it to:
+> 
+> 	# grep -i cpu /proc/$$/status
+> 	Cpus_allowed:   ffffffff,fffffffb
+> 	Cpus_allowed_list:      0-1,3-63 
+> 
+> This is not sane behavior, as the scheduler can now not only place the
+> process on previously forbidden cpus, it can't even schedule it on
+> the cpu it was originally constrained to!
+> 
+> Other cases result in even more exotic affinity masks. Take for instance
+> a process with an affinity mask containing only cpus provided by smt at
+> the moment that smt is toggled, in a configuration such as the following:
+> 
+> 	# taskset -p f000000000 $$
+> 	# grep -i cpu /proc/$$/status
+> 	Cpus_allowed:	000000f0,00000000
+> 	Cpus_allowed_list:	36-39
+> 
+> A double toggle of smt results in the following behavior:
+> 
+> 	# echo off > /sys/devices/system/cpu/smt/control
+> 	# echo on > /sys/devices/system/cpu/smt/control
+> 	# grep -i cpus /proc/$$/status
+> 	Cpus_allowed:	ffffff00,ffffffff
+> 	Cpus_allowed_list:	0-31,40-63
+> 
+> This is even less sane than the previous case, as the new affinity mask
+> excludes all smt-provided cpus with ids less than those that were
+> previously in the affinity mask, as well as those that were actually in
+> the mask.
+> 
+> With this patch applied, both of these cases end in the following state:
+> 
+> 	# grep -i cpu /proc/$$/status
+> 	Cpus_allowed:	ffffffff,ffffffff
+> 	Cpus_allowed_list:	0-63
+> 
+> The original policy is discarded. Though not ideal, it is the simplest way
+> to restore sanity to this fallback case without reinventing the cpuset
+> wheel that rolls down the kernel just fine in cgroup v2. A user who wishes
+> for the previous affinity mask to be restored in this fallback case can use
+> that mechanism instead.
+> 
+> This patch modifies scheduler behavior by instead resetting the mask to
+> task_cs(tsk)->cpus_allowed by default, and cpu_possible mask in legacy
+> mode. I tested the cases above on both modes.
+> 
+> Note that the scheduler uses this fallback mechanism if and only if
+> _every_ other valid avenue has been traveled, and it is the last resort
+> before calling BUG().
+> 
+> Suggested-by: Waiman Long <longman@redhat.com>
+> Suggested-by: Phil Auld <pauld@redhat.com>
+> Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+> ---
+>  kernel/cgroup/cpuset.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index 6a1942ed781c..515525ff1cfd 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -3254,10 +3254,23 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
+>  	spin_unlock_irqrestore(&callback_lock, flags);
+>  }
+>  
+> +/**
+> + * cpuset_cpus_allowed_fallback - final fallback before complete catastrophe.
+> + * @tsk: pointer to task_struct with which the scheduler is struggling
+> + *
+> + * Description: In the case that the scheduler cannot find an allowed cpu in
+> + * tsk->cpus_allowed, we fall back to task_cs(tsk)->cpus_allowed. In legacy
+> + * mode however, this value is the same as task_cs(tsk)->effective_cpus,
+> + * which will not contain a sane cpumask during cases such as cpu hotplugging.
+> + * This is the absolute last resort for the scheduler and it is only used if
+> + * _every_ other avenue has been traveled.
+> + **/
+> +
+>  void cpuset_cpus_allowed_fallback(struct task_struct *tsk)
+>  {
+>  	rcu_read_lock();
+> -	do_set_cpus_allowed(tsk, task_cs(tsk)->effective_cpus);
+> +	do_set_cpus_allowed(tsk, is_in_v2_mode() ?
+> +		task_cs(tsk)->cpus_allowed : cpu_possible_mask);
+>  	rcu_read_unlock();
+>  
+>  	/*
+> -- 
+> 2.18.1
+> 
 
---dc+cDN39EJAMEtIO
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 12, 2019 at 10:00:34AM -0700, Matthew Wilcox <willy@infradead.o=
-rg> wrote:
-> On Wed, Jun 12, 2019 at 04:28:11PM +0200, Michal Koutn=FD wrote:
-> > -	/* N.B. passed_fileno might not be initialized? */
-> > +
->=20
-> Why did you delete this comment?
-The variable got removed in
-    d20894a23708 ("Remove a.out interpreter support in ELF loader")
-so it is not relevant anymore.
+I think this makes a lot more sense that what it currently does.
 
+Fwiw,
 
---dc+cDN39EJAMEtIO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Acked-by: Phil Auld <pauld@redhat.com>
+ 
 
------BEGIN PGP SIGNATURE-----
+Cheers,
+Phil
 
-iQIzBAEBCAAdFiEE+amhwRV4jZeXdUhoK2l36XSZ9y4FAl0BNl8ACgkQK2l36XSZ
-9y4uOxAAjMDNYmUD6lLGAzeXFrP+1e5ZsH+N+j2Qh62Pahnv0oBIbre4TBhAk4xm
-av5IPuXrU5Ov5DrRGwDlDP1B2gHbCsvkMxjN+fhrqDRaP9q2y1+UIwKJD66VTxIQ
-KiEEiU0uZvikSW4/s4OWstiLxj9nZmiun/YiJ5qVNVuvsfoUjvTHK0BbAN6Vdaab
-M80HDqLf+uuERUiaSb8xa5WVB0QViHICBJ2LDfDnVtiioJPn44kPmFwyao+nZJ1T
-/RlZ9jFB0UIFSRWIwAxA+qwyWj2hlfT3NC8DMqROJzQDwje6op8keLSWJnwWGMzG
-OldDk2uRA5DUi3nliUhp6iv8fDgcryT0IvV5GsphE/LHU/xVMymC0ZkIMksTq4pG
-cWU1rnWOLgDpr9BHzP2Zhl7RjSyPUNBojV/hVvo0hpPt2gFgQOlhegKkKl/pURjG
-jsLbYKr9aA99OJUEIfk4qK019j6b2If2Ixh5FyXAcxzDpQWIMWAaZdyoFkytnYK9
-tKW0uHeCA6irmDKIAQiXfftfLH+UnZtgyOC6LPv17R708LxUpaoUTANh0tP6oLv5
-JSABgDwjlbdD9Z9IAfpwOXlbiy5SNyVj68KnZqOfdr0Fb8RVcZ1cLDL8l/EV5COV
-40ZmE+Enx5DK9cL9+pTYqi2EPAq96UEZnWOWP9D9s8F2bxjBOAA=
-=67iw
------END PGP SIGNATURE-----
-
---dc+cDN39EJAMEtIO--
+-- 
