@@ -2,127 +2,138 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC253C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23258C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF74C20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECD9820866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:09:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="JAj6hWom"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gg57xIIq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439578AbfFLOJC (ORCPT
+        id S2439603AbfFLOJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:09:02 -0400
-Received: from mout.gmx.net ([212.227.15.18]:58977 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436722AbfFLOJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:09:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1560348540;
-        bh=NvcCbtzx411aDDq6p/x++NbuHwp0vPYykyPBqyzTXdo=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=JAj6hWom3G0AW7N/n9i/bla5sjTZYroeigS4FWQbsxhRiDD6Mo2KhiGIDrm16JV5F
-         V0U7TItkj91LwsyLQQ8sNOjue/h03sftfbG10FKerCUbx2xiqAQV2mAqY0Zi5+tfrf
-         HLm1gGBnBL4XIbK4VDqlEZlGYHvjqBpk/eIQXb7M=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from b450.lan ([79.195.235.197]) by mail.gmx.com (mrgmx002
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0Mb7lL-1hvD4y3XBr-00Kfie; Wed, 12
- Jun 2019 16:08:59 +0200
-From:   Tim Schumacher <timschumi@gmx.de>
-To:     linux-input@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com,
-        timschumi@gmx.de
-Subject: [PATCH resend] Input: iforce - Add the Saitek R440 Force Wheel
-Date:   Wed, 12 Jun 2019 16:09:03 +0200
-Message-Id: <20190612140903.20058-1-timschumi@gmx.de>
-X-Mailer: git-send-email 2.22.0
+        Wed, 12 Jun 2019 10:09:17 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37712 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439584AbfFLOJQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:09:16 -0400
+Received: by mail-wr1-f65.google.com with SMTP id v14so17077809wrr.4;
+        Wed, 12 Jun 2019 07:09:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VqRsR02MRpXUpBmTyt+gotwvmYKpyFWAczeS3z19SOU=;
+        b=Gg57xIIqwVV4RnV2ANTDzL2+YfITQx2vE4Y9d2hlrEOCXQQkntLVXiwLfxeX82EjvE
+         hGf4OL47pLdCtUVZu4T/HepeaoAHnEd3GsxFUr93ViEck/tLEkcTkWIHJjA5FIQkxfuu
+         xajdYxQ6gyD73stoT2KvRXpKNTr1qFc2FFKiJByENrmX/FOCNOBElSPXkhm7ieUmPrDi
+         4ZRW9pnQ41cTgKywTQk/f0DkcTDjA8bzWUcxzNI6LAAdhhboXQbJ6ntqrSyVD2zrPP8V
+         5zMlWY9PlvjRHtpqWWfNAwZp2vgM/VjC/SIa546QnDS3lczI1mJMis8h3x0yd2P78rQ4
+         TT/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VqRsR02MRpXUpBmTyt+gotwvmYKpyFWAczeS3z19SOU=;
+        b=YSOZfNhrjb/XEa+PLxqaea4KItbdMyHyDQYXERrB1W7jihy1+H5BXgbkmGqwlD++xj
+         22fVwgwmNhuFbHm4grW2miagRAKmKtXE6quPHH+fF9+ui0TYCeyJ4DSlnKDVoSpQgInU
+         CEjTa8nCIz+jrK1umicphshJGTDHwC1pRRZeibXoi15COtVE9I9tgEZYPlqezct2p2Lc
+         gSNtinGR6ZVkrOA3bNfD+GX4mmc623Ok0KDf9mvntWk9sCHLMuW/eIknCeinGDR7ZcTs
+         Q+u9+ZnWmScNCQIbtpNTJRDgwO74qEe7seifY0HjaPG5WSxUeGMYDbvYRT0uHX0wVnWB
+         Hq0Q==
+X-Gm-Message-State: APjAAAVcy3DndOwAAsXFRkouQoC2lhV+PxmwWYJbCSbMzZbIzk6Ikwm1
+        joLnEGTDEtXtvyqJacUk/L0=
+X-Google-Smtp-Source: APXvYqy2ksphkWG/pB6E0eHOxvp/qg8l/FsiJC9HmfAEpnA/dm5nE0SXyG7ZXAFSOdjcbz8QGPsUCg==
+X-Received: by 2002:a5d:4b4f:: with SMTP id w15mr11954799wrs.199.1560348553929;
+        Wed, 12 Jun 2019 07:09:13 -0700 (PDT)
+Received: from gmail.com (net-31-27-155-100.cust.vodafonedsl.it. [31.27.155.100])
+        by smtp.gmail.com with ESMTPSA id t140sm2772023wmt.0.2019.06.12.07.09.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 07:09:13 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 16:09:11 +0200
+From:   Paolo Pisati <p.pisati@gmail.com>
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Paolo Pisati <p.pisati@gmail.com>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: msm8996: qcom-qmp: apq8096-db820c fails to boot, reset back to
+ fastboot and locks up
+Message-ID: <20190612140911.GA16863@harukaze>
+References: <20190610134401.GA12964@harukaze>
+ <20190611171225.GA21992@centauri.ideon.se>
+ <20190612131735.GB11167@centauri>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:DkjaIw6wDT3Xc+d7JtT/GaIRv489Y0suNvC0UFtBPFjp1A/jMQX
- kzJQqyT0mDv49Gw153+FpsfuC4mp11vYjwRqno9eBt8RReT1N/OrwoEiFqRwrQH5A4TgXt5
- LSBOvJfcD/q/8qNggxSdj5qfbibi8PXiXHKIhR80UWXbm55KrfBhdI39LWUvFz3C2r/ARcu
- /5I9u/ugzVnkKJhOqrTTQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:D7U24nUWfy8=:KrdX7FauEncvLYAaKRpznB
- 0b9xpZqtA8i8WqrccSIk6YIvFRltb8L32AdRczCe9AGzwZdTol0HHyUOWYezgV/OkT0NQsQYK
- E0PISpz7av7dW5ZwZfzf0L88TI9fQRG8FfxME7tnIbc+yYjPoa/Sq5OQ8XIvY1Gx6KkkWGisc
- N9ok7YxiLIPZvG4Qa//M2v7siTotSpEpKo5Xf+rFcJWuMvke5FeALDV6JxK8nuS+QyaGbP5mo
- DIvF7zZuPcBVLRR2iBuq8ga4iJSX5d+7Ji++NOz4ea+vyDgnRIpwFKto8tW3tlmYP/+dUPev4
- FymPxVrgQHzWPF/aXZjEik+g9FrPW+DakPW+DQ6KJcFz+/MOP3JC6HPgxAw+/6gP68ZFX+aOJ
- EXU7jZ8BHWMuO/XFUceQqKXAezF5eCTeicaYUaYTiJVMN471UMCHtB1hBCUCbrKorqfNeBI7b
- TFts/AMyxrJEIE+DvfGUO9JdeetWdmP1oWXGOUWZpbL8FUcdDH6A3MkQC5PwLQ+7YuXltCEoo
- HcoYYPaqhW/x4mAzL3nvQouOXyokNZI43ANZYFQ/xA6C1Q16Ev6CbmGGcdyaDwjZsGiwTfgIN
- kyNHY558/8UNpmYUJ/yPeB9PSaQFQoKcMzii8cG4Rp1pAW1uVoOs8KWz2B4nGpzlmvFd7K7mg
- twIaclS026uplJ7OTO+A9BSPtf3i1+XAy1Awp5aPHFg6mdbsqeP98L/p5TjcdbGlaNHnh4cve
- 2vBCairLM99es+vmzNpRFStDryStPzxi39OLhUgNZ2RGZgaLrMyCYaZqNASGQSt+W37zv+rGG
- XroGgC/eAiupie3KfMazn2AqM6E3NaaH1Ao9aZVeVG4XzR2uvNmomjh9RBFmXmHBj9kOb2RiS
- zEzhhvYCcQuRK33Y8wx4HyEMhEga2b2/nE6W6Z9NzPm+IENN09uJAi4c2ytAEhsMf1WzwvA3/
- b2TyOfERReaPMshf4H87HCIbOU2piNS0=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612131735.GB11167@centauri>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Tim Schumacher <timschumi@gmx.de>
-=2D--
-Please note that I do NOT own this device.
+On Wed, Jun 12, 2019 at 03:17:35PM +0200, Niklas Cassel wrote:
+> > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > index cd91b4179b10..22352e3b0ec5 100644
+> > --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > @@ -1490,7 +1490,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+> >  
+> >         ret = qcom_qmp_phy_com_init(qphy);
+> >         if (ret)
+> > -               return ret;
+> > +               goto err_lane_rst;
+> >  
+> >         if (cfg->has_lane_rst) {
+> >                 ret = reset_control_deassert(qphy->lane_rst);
 
-I'm adding this based on the fact that this is an iforce-based
-device and that the Windows driver for the R440 works for the
-Logitech WingMan Formula Force after replacing the device/vendor
-IDs (I got the vendor/device IDs from there as well).
+Hi Niklas,
+unfortunately, it didn't help - i added a printk, to highlight when it failed:
 
-Please don't add this patch if adding devices based on that is
-not ok.
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -1489,8 +1489,10 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+        }
+ 
+        ret = qcom_qmp_phy_com_init(qphy);
+-       if (ret)
+-               return ret;
++       if (ret) {
++               dev_err(qmp->dev, "qphy initialization failed\n");
++               goto err_lane_rst;
++       }
+ 
+        if (cfg->has_lane_rst) {
+                ret = reset_control_deassert(qphy->lane_rst);
 
-This patch is a resend of the patch I sent back in November,
-which apparently went unnoticed.
-=2D--
- drivers/input/joystick/iforce/iforce-main.c | 1 +
- drivers/input/joystick/iforce/iforce-usb.c  | 1 +
- 2 files changed, 2 insertions(+)
+After several reboots i was able to trigger the phy init failure again:
 
-diff --git a/drivers/input/joystick/iforce/iforce-main.c b/drivers/input/j=
-oystick/iforce/iforce-main.c
-index 55f5b7bb4cac..e000e7d5b4c1 100644
-=2D-- a/drivers/input/joystick/iforce/iforce-main.c
-+++ b/drivers/input/joystick/iforce/iforce-main.c
-@@ -55,6 +55,7 @@ static struct iforce_device iforce_device[] =3D {
- 	{ 0x05ef, 0x8888, "AVB Top Shot Force Feedback Racing Wheel",	btn_wheel,=
- abs_wheel, ff_iforce }, //?
- 	{ 0x061c, 0xc0a4, "ACT LABS Force RS",                          btn_whee=
-l, abs_wheel, ff_iforce }, //?
- 	{ 0x061c, 0xc084, "ACT LABS Force RS",				btn_wheel, abs_wheel, ff_iforc=
-e },
-+	{ 0x06a3, 0xff04, "Saitek R440 Force Wheel",			btn_wheel, abs_wheel, ff_=
-iforce }, //?
- 	{ 0x06f8, 0x0001, "Guillemot Race Leader Force Feedback",	btn_wheel, abs=
-_wheel, ff_iforce }, //?
- 	{ 0x06f8, 0x0001, "Guillemot Jet Leader Force Feedback",	btn_joystick, a=
-bs_joystick_rudder, ff_iforce },
- 	{ 0x06f8, 0x0004, "Guillemot Force Feedback Racing Wheel",	btn_wheel, ab=
-s_wheel, ff_iforce }, //?
-diff --git a/drivers/input/joystick/iforce/iforce-usb.c b/drivers/input/jo=
-ystick/iforce/iforce-usb.c
-index f1569ae8381b..afbcd1a522d4 100644
-=2D-- a/drivers/input/joystick/iforce/iforce-usb.c
-+++ b/drivers/input/joystick/iforce/iforce-usb.c
-@@ -202,6 +202,7 @@ static const struct usb_device_id iforce_usb_ids[] =3D=
- {
- 	{ USB_DEVICE(0x05ef, 0x8888) },		/* AVB Top Shot FFB Racing Wheel */
- 	{ USB_DEVICE(0x061c, 0xc0a4) },         /* ACT LABS Force RS */
- 	{ USB_DEVICE(0x061c, 0xc084) },         /* ACT LABS Force RS */
-+	{ USB_DEVICE(0x06a3, 0xff04) },		/* Saitek R440 Force Wheel */
- 	{ USB_DEVICE(0x06f8, 0x0001) },		/* Guillemot Race Leader Force Feedback=
- */
- 	{ USB_DEVICE(0x06f8, 0x0003) },		/* Guillemot Jet Leader Force Feedback =
-*/
- 	{ USB_DEVICE(0x06f8, 0x0004) },		/* Guillemot Force Feedback Racing Whee=
-l */
-=2D-
-2.22.0
+...
+[    2.223999] qcom-qmp-phy 34000.phy: Registered Qcom-QMP phy
+[    2.224956] qcom-qmp-phy 7410000.phy: Registered Qcom-QMP phy
+[    2.228798] ufs_qcom_phy_qmp_14nm 627000.phy: invalid resource
+[    2.237271] qcom-qmp-phy 34000.phy: phy common block init timed-out
+[    2.240315] qcom-qmp-phy 34000.phy: qphy initialization failed
+...
 
+these are the last lines printed, before rebooting in fastboot and
+locking up there (as before[*]).
+
+So, as far as i understand there are two distinct problems:
+
+1) sometimes, qcom-qmp-phy fails to initialize
+
+2) and when that happens, the failure is fatal and it led to a reboot & lockup
+in fastboot
+
+1: https://pastebin.ubuntu.com/p/rtjVrD3yzk/
+-- 
+bye,
+p.
