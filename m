@@ -2,109 +2,113 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B10C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4E5C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D22A206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B15B206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:37:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b5NRZZzX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ct/SEARz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437558AbfFLJg4 (ORCPT
+        id S2437570AbfFLJhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:36:56 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40004 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729856AbfFLJgz (ORCPT
+        Wed, 12 Jun 2019 05:37:10 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46344 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfFLJhK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:36:55 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a93so6409285pla.7
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 02:36:55 -0700 (PDT)
+        Wed, 12 Jun 2019 05:37:10 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n4so16066911wrw.13
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 02:37:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0HM5SoliJDA3x8dLqRFVSpErY9ZjZiu/7dZDibCRUD8=;
-        b=b5NRZZzXPxl6w5LwxAXkKuxZxHCocavnaojtqAEHIs6N4i7nDPLyLD58i1cyvDL8Oc
-         RWOwGw4rr9cfAgZHPk0O5X8/wXR0Okm742qRAazPUelI3Hz9knF4mslU2kgihImuw6gr
-         MRfXTfkKhmzsekl2p8UGUrZTXTf9aKDL4boY4=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=rOWtd7XOxe0FfSSEZRoiEo8adVKTNm/zc2wOuo36asU=;
+        b=Ct/SEARzF2+ihR9jeLoP/sUqewPGY1VAk2sVOGCDCflsgPDum9PbqyFqPueg2EfxdA
+         AOdmBknh2WvjLg3viMh0T32Sk2L9u4XAWuVUXlavuGZLVEWJprCOENyQyAeCcK89DaBR
+         xrJ8VYN/50NJueoUU8qDhYPd0leaxmuRaN7vDLDxOfDmJfd2Z0LMrA+KTkWqZQwUy0qZ
+         sctlxh0mJcceB5FKIkf65qv4nNoIIjTGQHeqdN48gicR5TfExYbwMlTN4lx4/JAnlQiD
+         2BtK3/cZdn2zWXcMDdth0j4f2dD+OOj7zGgFB+zlyAI2QZpYzwriLEWaXnaN6pGlc8T4
+         6MWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0HM5SoliJDA3x8dLqRFVSpErY9ZjZiu/7dZDibCRUD8=;
-        b=p3+1/lTJ+j8XZ3f/0PEoauyHKc4nib7j8W1yjjyLi+n0cYiSQILSnhbFD6BSSM3zzO
-         OXd6eTrslxwdhTvn51kboiDellxsFxV/raHyiXUT0DKmSpmddQCu+eQfMQ+SRMRQdCdb
-         jmiO4f1Bk722XWZ9504yLVAYJZtQbI59HY5Y1ioouGybypU+74+TJ5mxP6yXkBCtiYMF
-         EI8k/YdeckuQc64RE197XM9tJH6A2PSYbxtsMTQqz/oc/O2m2wo99tam1tkp1ALxmT7e
-         qIryjLfAqfnRQqVBMVHzkUa6f/J4TSwJbhHD3oSd2xE9Cq+sTiSMZSx6edkBEEaFoLED
-         kL1Q==
-X-Gm-Message-State: APjAAAWaCXC7+bKpSrUtjaMesnWrPAf8zmXaYQf7bWSfBbXre44cjatR
-        5WpRYx/zTVWLXBJRMpbwups6Pw==
-X-Google-Smtp-Source: APXvYqzfN1W92Yom13ePXXUnOfpx/PPaFrT4AeV13Y9+7ejaBWM9SLtJUijheYJzWC+qlCzeOJZCQQ==
-X-Received: by 2002:a17:902:da4:: with SMTP id 33mr21908077plv.209.1560332215116;
-        Wed, 12 Jun 2019 02:36:55 -0700 (PDT)
-Received: from tfiga.tok.corp.google.com ([2401:fa00:4:4:6d27:f13:a0fa:d4b6])
-        by smtp.gmail.com with ESMTPSA id t4sm4521209pjq.19.2019.06.12.02.36.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 02:36:54 -0700 (PDT)
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Hirokazu Honda <hiroh@chromium.org>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: [PATCH] media: Clarify the meaning of file descriptors in VIDIOC_DQBUF
-Date:   Wed, 12 Jun 2019 18:36:48 +0900
-Message-Id: <20190612093648.47412-1-tfiga@chromium.org>
-X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=rOWtd7XOxe0FfSSEZRoiEo8adVKTNm/zc2wOuo36asU=;
+        b=Cxidh4ymeRYrkQvgs/RCqMCfLrB0qA080GeR2DpMJYO2RDrhsMRdiE37hDmXcO32kF
+         dgDFG5iIIuZdj/wHJF9XGrqf3m1M1foYLOIJe3fKOYgHBCGtneyoaW6hIY0AePrRxZE/
+         HSETWDMbRYv3Z7tIHHPsu5olwRSgw8kxEkSMciUttS0pALV0vTRJjufvH7BT4S/rcw8m
+         /GyfUz8NgmskeIZDve3NrxrH1KQohe5DH+/ry82RXWUcvCIrdf2BLrohN081eJLJSFVw
+         dUAzmdcJRtUsVDp0ijhV1PE1iq7llt51CyfC2RDc4OOgQjWbBTaQCIsyKjyXyjLfHrwf
+         rFrw==
+X-Gm-Message-State: APjAAAWAVqHOq9ipVK97K1c/vK3iB0xtT7TPVC8+OSKLCrmMn0tkeRdd
+        SaaYJJAGX5gvZKmx4K1gSJNHvQ==
+X-Google-Smtp-Source: APXvYqzCVj0vpoau0f+SroJHtqv1GmqnMQbxGBrbWEt+qIBocJp0pFlYG8Hlpfw9Ms/hqdYTwSZrtA==
+X-Received: by 2002:a05:6000:110:: with SMTP id o16mr51576111wrx.200.1560332228225;
+        Wed, 12 Jun 2019 02:37:08 -0700 (PDT)
+Received: from dell ([185.80.132.160])
+        by smtp.gmail.com with ESMTPSA id t15sm8126623wrx.84.2019.06.12.02.37.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Jun 2019 02:37:07 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 10:37:06 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Amelie DELAUNAY <amelie.delaunay@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v2] mfd: stmfx: Uninitialized variable in
+ stmfx_irq_handler()
+Message-ID: <20190612093706.GF4797@dell>
+References: <ccefbd0b-3397-a26e-95e7-059fcced9154@st.com>
+ <20190606124127.GA17082@mwanda>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190606124127.GA17082@mwanda>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the application calls VIDIOC_DQBUF with the DMABUF memory type, the
-v4l2_buffer structure (or v4l2_plane structures) are filled with DMA-buf
-file descriptors. However, the current documentation does not explain
-whether those are new file descriptors referring to the same DMA-bufs or
-just the same integers as passed to VIDIOC_QBUF back in time. Clarify
-the documentation that it's the latter.
+On Thu, 06 Jun 2019, Dan Carpenter wrote:
 
-Signed-off-by: Tomasz Figa <tfiga@chromium.org>
----
- Documentation/media/uapi/v4l/vidioc-qbuf.rst | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> The problem is that on 64bit systems then we don't clear the higher
+> bits of the "pending" variable.  So when we do:
+> 
+>         ack = pending & ~BIT(STMFX_REG_IRQ_SRC_EN_GPIO);
+>         if (ack) {
+> 
+> the if (ack) condition relies on uninitialized data.  The fix it that
+> I've changed "pending" from an unsigned long to a u32.  I changed "n" as
+> well, because that's a number in the 0-10 range and it fits easily
+> inside an int.  We do need to add a cast to "pending" when we use it in
+> the for_each_set_bit() loop, but that doesn't cause a proble, it's
+> fine.
+> 
+> Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+> v2: white space changes
+> 
+>  drivers/mfd/stmfx.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/media/uapi/v4l/vidioc-qbuf.rst b/Documentation/media/uapi/v4l/vidioc-qbuf.rst
-index dbf7b445a27b..407302d80684 100644
---- a/Documentation/media/uapi/v4l/vidioc-qbuf.rst
-+++ b/Documentation/media/uapi/v4l/vidioc-qbuf.rst
-@@ -139,6 +139,14 @@ may continue as normal, but should be aware that data in the dequeued
- buffer might be corrupted. When using the multi-planar API, the planes
- array must be passed in as well.
- 
-+If the application sets the ``memory`` field to ``V4L2_MEMORY_DMABUF`` to
-+dequeue a :ref:`DMABUF <dmabuf>` buffer, the driver fills the ``m.fd`` field
-+with a file descriptor numerically the same as the one given to ``VIDIOC_QBUF``
-+when the buffer was enqueued. No new file descriptor is created at dequeue time
-+and the value is only for the application convenience. When the multi-planar
-+API is used the ``m.fd`` fields of the passed array of struct
-+:c:type:`v4l2_plane` are filled instead.
-+
- By default ``VIDIOC_DQBUF`` blocks when no buffer is in the outgoing
- queue. When the ``O_NONBLOCK`` flag was given to the
- :ref:`open() <func-open>` function, ``VIDIOC_DQBUF`` returns
+Applied, thanks.
+
 -- 
-2.22.0.rc2.383.gf4fbbf30c2-goog
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
