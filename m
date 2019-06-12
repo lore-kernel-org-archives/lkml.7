@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A86FC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8005C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F2720874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A734521019
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:20:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2501947AbfFLPU1 (ORCPT
+        id S2501962AbfFLPUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:20:27 -0400
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:22805 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439843AbfFLPU0 (ORCPT
+        Wed, 12 Jun 2019 11:20:32 -0400
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:36124 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439785AbfFLPUa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:20:26 -0400
+        Wed, 12 Jun 2019 11:20:30 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 1FF86427B7;
-        Wed, 12 Jun 2019 17:20:19 +0200 (CEST)
-Authentication-Results: ste-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=vmwopensource.org header.i=@vmwopensource.org header.b=SkgSXz2v;
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id A60FE4135F;
+        Wed, 12 Jun 2019 17:20:23 +0200 (CEST)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=vmwopensource.org header.i=@vmwopensource.org header.b=k9y9Rssd;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id edC2bgQOCY1V; Wed, 12 Jun 2019 17:20:11 +0200 (CEST)
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ya1Ae-sIKO5o; Wed, 12 Jun 2019 17:20:10 +0200 (CEST)
 Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
         (Authenticated sender: mb878879)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id E73E6416F1;
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 378A3405E5;
         Wed, 12 Jun 2019 17:20:10 +0200 (CEST)
 Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 65B983620E6;
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 01685361DE1;
         Wed, 12 Jun 2019 17:20:10 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=vmwopensource.org;
         s=mail; t=1560352810;
-        bh=ywu99SLn6S80+sqVBhdQUXNvrrN564QuiBbE0vgNWMU=;
+        bh=0OCS847VhF4p4ZkW88dxoqjOEDCCvJZwECAtiDuXG38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SkgSXz2v6kkPFxyCzElf/mhA3s4YBiCIFlw73arZTlTYmyVh2y+roS2fvv50+Z62S
-         5pni0M0Mxz3TsJNKw2WJ8doarmN1rGoZs+rz3SVF4FFYhQrAUg8xDK3xNDIeJ1WVtQ
-         FAhteMJPhHn0TTxjBuGgXM0shLEjMnRGKn/ZAhBU=
+        b=k9y9RssdEDp2LHuSq7fpS6qJlK2q559+qdFnOLj5g2pGD5+dKqd/fO5Fq6L2/nPH5
+         3++KA0r9bzfjVZDeL5WsVJNwFog2VjQmXsUEPmHQOZQvIDpuB7EMDvGwjhcpRY3hKY
+         EErVQfGIxJOhGai3cpQkdYwxRPUVGXTaSf3SmTTA=
 From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
         <thellstrom@vmwopensource.org>
 To:     dri-devel@lists.freedesktop.org
 Cc:     linux-graphics-maintainer@vmware.com, pv-drivers@vmware.com,
         linux-kernel@vger.kernel.org, hch@infradead.org,
         Thomas Hellstrom <thellstrom@vmware.com>,
-        Deepak Rawat <drawat@vmware.com>
-Subject: [PATCH v6 7/9] drm/vmwgfx: Use an RBtree instead of linked list for MOB resources
-Date:   Wed, 12 Jun 2019 17:19:48 +0200
-Message-Id: <20190612151950.2870-8-thellstrom@vmwopensource.org>
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Subject: [PATCH v6 4/9] drm/ttm: Allow the driver to provide the ttm struct vm_operations_struct
+Date:   Wed, 12 Jun 2019 17:19:45 +0200
+Message-Id: <20190612151950.2870-5-thellstrom@vmwopensource.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190612151950.2870-1-thellstrom@vmwopensource.org>
 References: <20190612151950.2870-1-thellstrom@vmwopensource.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -67,176 +68,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Hellstrom <thellstrom@vmware.com>
 
-With emulated coherent memory we need to be able to quickly look up
-a resource from the MOB offset. Instead of traversing a linked list with
-O(n) worst case, use an RBtree with O(log n) worst case complexity.
+Add a pointer to the struct vm_operations_struct in the bo_device, and
+assign that pointer to the default value currently used.
+
+The driver can then optionally modify that pointer and the new value
+can be used for each new vma created.
+
+Cc: "Christian König" <christian.koenig@amd.com>
 
 Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Reviewed-by: Deepak Rawat <drawat@vmware.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_bo.c       |  5 ++--
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.h      | 10 +++----
- drivers/gpu/drm/vmwgfx/vmwgfx_resource.c | 33 +++++++++++++++++-------
- 3 files changed, 32 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/ttm/ttm_bo.c    | 1 +
+ drivers/gpu/drm/ttm/ttm_bo_vm.c | 6 +++---
+ include/drm/ttm/ttm_bo_driver.h | 6 ++++++
+ 3 files changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c b/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
-index 90ca866640fe..e8bc7a7ac031 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
-@@ -464,6 +464,7 @@ void vmw_bo_bo_free(struct ttm_buffer_object *bo)
- 	struct vmw_buffer_object *vmw_bo = vmw_buffer_object(bo);
+diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
+index c7de667d482a..6953dd264172 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo.c
++++ b/drivers/gpu/drm/ttm/ttm_bo.c
+@@ -1739,6 +1739,7 @@ int ttm_bo_device_init(struct ttm_bo_device *bdev,
+ 	mutex_lock(&ttm_global_mutex);
+ 	list_add_tail(&bdev->device_list, &glob->device_list);
+ 	mutex_unlock(&ttm_global_mutex);
++	bdev->vm_ops = &ttm_bo_vm_ops;
  
- 	WARN_ON(vmw_bo->dirty);
-+	WARN_ON(!RB_EMPTY_ROOT(&vmw_bo->res_tree));
- 	vmw_bo_unmap(vmw_bo);
- 	kfree(vmw_bo);
+ 	return 0;
+ out_no_sys:
+diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+index 6dacff49c1cc..196e13a0adad 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
++++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+@@ -395,7 +395,7 @@ static int ttm_bo_vm_access(struct vm_area_struct *vma, unsigned long addr,
+ 	return ret;
  }
-@@ -480,6 +481,7 @@ static void vmw_user_bo_destroy(struct ttm_buffer_object *bo)
- 	struct vmw_buffer_object *vbo = &vmw_user_bo->vbo;
  
- 	WARN_ON(vbo->dirty);
-+	WARN_ON(!RB_EMPTY_ROOT(&vbo->res_tree));
- 	vmw_bo_unmap(vbo);
- 	ttm_prime_object_kfree(vmw_user_bo, prime);
- }
-@@ -515,8 +517,7 @@ int vmw_bo_init(struct vmw_private *dev_priv,
- 	memset(vmw_bo, 0, sizeof(*vmw_bo));
- 	BUILD_BUG_ON(TTM_MAX_BO_PRIORITY <= 3);
- 	vmw_bo->base.priority = 3;
--
--	INIT_LIST_HEAD(&vmw_bo->res_list);
-+	vmw_bo->res_tree = RB_ROOT;
+-static const struct vm_operations_struct ttm_bo_vm_ops = {
++const struct vm_operations_struct ttm_bo_vm_ops = {
+ 	.fault = ttm_bo_vm_fault,
+ 	.open = ttm_bo_vm_open,
+ 	.close = ttm_bo_vm_close,
+@@ -448,7 +448,7 @@ int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
+ 	if (unlikely(ret != 0))
+ 		goto out_unref;
  
- 	ret = ttm_bo_init(bdev, &vmw_bo->base, size,
- 			  ttm_bo_type_device, placement,
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-index 27c259395790..9b347923196f 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-@@ -89,7 +89,7 @@ struct vmw_fpriv {
+-	vma->vm_ops = &ttm_bo_vm_ops;
++	vma->vm_ops = bdev->vm_ops;
+ 
+ 	/*
+ 	 * Note: We're transferring the bo reference to
+@@ -480,7 +480,7 @@ int ttm_fbdev_mmap(struct vm_area_struct *vma, struct ttm_buffer_object *bo)
+ 
+ 	ttm_bo_get(bo);
+ 
+-	vma->vm_ops = &ttm_bo_vm_ops;
++	vma->vm_ops = bo->bdev->vm_ops;
+ 	vma->vm_private_data = bo;
+ 	vma->vm_flags |= VM_MIXEDMAP;
+ 	vma->vm_flags |= VM_IO | VM_DONTEXPAND;
+diff --git a/include/drm/ttm/ttm_bo_driver.h b/include/drm/ttm/ttm_bo_driver.h
+index c9b8ba492f24..a2d810a2504d 100644
+--- a/include/drm/ttm/ttm_bo_driver.h
++++ b/include/drm/ttm/ttm_bo_driver.h
+@@ -442,6 +442,9 @@ extern struct ttm_bo_global {
+  * @driver: Pointer to a struct ttm_bo_driver struct setup by the driver.
+  * @man: An array of mem_type_managers.
+  * @vma_manager: Address space manager
++ * @vm_ops: Pointer to the struct vm_operations_struct used for this
++ * device's VM operations. The driver may override this before the first
++ * mmap() call.
+  * lru_lock: Spinlock that protects the buffer+device lru lists and
+  * ddestroy lists.
+  * @dev_mapping: A pointer to the struct address_space representing the
+@@ -460,6 +463,7 @@ struct ttm_bo_device {
+ 	struct ttm_bo_global *glob;
+ 	struct ttm_bo_driver *driver;
+ 	struct ttm_mem_type_manager man[TTM_NUM_MEM_TYPES];
++	const struct vm_operations_struct *vm_ops;
+ 
+ 	/*
+ 	 * Protected by internal locks.
+@@ -488,6 +492,8 @@ struct ttm_bo_device {
+ 	bool no_retry;
+ };
+ 
++extern const struct vm_operations_struct ttm_bo_vm_ops;
++
  /**
-  * struct vmw_buffer_object - TTM buffer object with vmwgfx additions
-  * @base: The TTM buffer object
-- * @res_list: List of resources using this buffer object as a backing MOB
-+ * @res_tree: RB tree of resources using this buffer object as a backing MOB
-  * @pin_count: pin depth
-  * @dx_query_ctx: DX context if this buffer object is used as a DX query MOB
-  * @map: Kmap object for semi-persistent mappings
-@@ -98,7 +98,7 @@ struct vmw_fpriv {
-  */
- struct vmw_buffer_object {
- 	struct ttm_buffer_object base;
--	struct list_head res_list;
-+	struct rb_root res_tree;
- 	s32 pin_count;
- 	/* Not ref-counted.  Protected by binding_mutex */
- 	struct vmw_resource *dx_query_ctx;
-@@ -146,8 +146,8 @@ struct vmw_res_func;
-  * pin-count greater than zero. It is not on the resource LRU lists and its
-  * backup buffer is pinned. Hence it can't be evicted.
-  * @func: Method vtable for this resource. Immutable.
-+ * @mob_node; Node for the MOB backup rbtree. Protected by @backup reserved.
-  * @lru_head: List head for the LRU list. Protected by @dev_priv::resource_lock.
-- * @mob_head: List head for the MOB backup list. Protected by @backup reserved.
-  * @binding_head: List head for the context binding list. Protected by
-  * the @dev_priv::binding_mutex
-  * @res_free: The resource destructor.
-@@ -168,8 +168,8 @@ struct vmw_resource {
- 	unsigned long backup_offset;
- 	unsigned long pin_count;
- 	const struct vmw_res_func *func;
-+	struct rb_node mob_node;
- 	struct list_head lru_head;
--	struct list_head mob_head;
- 	struct list_head binding_head;
- 	struct vmw_resource_dirty *dirty;
- 	void (*res_free) (struct vmw_resource *res);
-@@ -742,7 +742,7 @@ void vmw_resource_dirty_update(struct vmw_resource *res, pgoff_t start,
-  */
- static inline bool vmw_resource_mob_attached(const struct vmw_resource *res)
- {
--	return !list_empty(&res->mob_head);
-+	return !RB_EMPTY_NODE(&res->mob_node);
- }
- 
- /**
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c b/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
-index da9afa83fb4f..b84dd5953886 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
-@@ -41,11 +41,24 @@
- void vmw_resource_mob_attach(struct vmw_resource *res)
- {
- 	struct vmw_buffer_object *backup = res->backup;
-+	struct rb_node **new = &backup->res_tree.rb_node, *parent = NULL;
- 
- 	lockdep_assert_held(&backup->base.resv->lock.base);
- 	res->used_prio = (res->res_dirty) ? res->func->dirty_prio :
- 		res->func->prio;
--	list_add_tail(&res->mob_head, &backup->res_list);
-+
-+	while (*new) {
-+		struct vmw_resource *this =
-+			container_of(*new, struct vmw_resource, mob_node);
-+
-+		parent = *new;
-+		new = (res->backup_offset < this->backup_offset) ?
-+			&((*new)->rb_left) : &((*new)->rb_right);
-+	}
-+
-+	rb_link_node(&res->mob_node, parent, new);
-+	rb_insert_color(&res->mob_node, &backup->res_tree);
-+
- 	vmw_bo_prio_add(backup, res->used_prio);
- }
- 
-@@ -59,7 +72,8 @@ void vmw_resource_mob_detach(struct vmw_resource *res)
- 
- 	lockdep_assert_held(&backup->base.resv->lock.base);
- 	if (vmw_resource_mob_attached(res)) {
--		list_del_init(&res->mob_head);
-+		rb_erase(&res->mob_node, &backup->res_tree);
-+		RB_CLEAR_NODE(&res->mob_node);
- 		vmw_bo_prio_del(backup, res->used_prio);
- 	}
- }
-@@ -206,8 +220,8 @@ int vmw_resource_init(struct vmw_private *dev_priv, struct vmw_resource *res,
- 	res->res_free = res_free;
- 	res->dev_priv = dev_priv;
- 	res->func = func;
-+	RB_CLEAR_NODE(&res->mob_node);
- 	INIT_LIST_HEAD(&res->lru_head);
--	INIT_LIST_HEAD(&res->mob_head);
- 	INIT_LIST_HEAD(&res->binding_head);
- 	res->id = -1;
- 	res->backup = NULL;
-@@ -756,19 +770,20 @@ int vmw_resource_validate(struct vmw_resource *res, bool intr)
-  */
- void vmw_resource_unbind_list(struct vmw_buffer_object *vbo)
- {
--
--	struct vmw_resource *res, *next;
- 	struct ttm_validate_buffer val_buf = {
- 		.bo = &vbo->base,
- 		.num_shared = 0
- 	};
- 
- 	lockdep_assert_held(&vbo->base.resv->lock.base);
--	list_for_each_entry_safe(res, next, &vbo->res_list, mob_head) {
--		if (!res->func->unbind)
--			continue;
-+	while (!RB_EMPTY_ROOT(&vbo->res_tree)) {
-+		struct rb_node *node = vbo->res_tree.rb_node;
-+		struct vmw_resource *res =
-+			container_of(node, struct vmw_resource, mob_node);
-+
-+		if (!WARN_ON_ONCE(!res->func->unbind))
-+			(void) res->func->unbind(res, res->res_dirty, &val_buf);
- 
--		(void) res->func->unbind(res, res->res_dirty, &val_buf);
- 		res->backup_dirty = true;
- 		res->res_dirty = false;
- 		vmw_resource_mob_detach(res);
+  * struct ttm_lru_bulk_move_pos
+  *
 -- 
 2.20.1
 
