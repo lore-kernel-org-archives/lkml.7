@@ -2,121 +2,125 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CA1C46477
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D01C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CAD321019
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E046B20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:55:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DyjaHPUe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409178AbfFLNyI (ORCPT
+        id S2408759AbfFLNzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:54:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:53604 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409112AbfFLNyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:54:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9224228;
-        Wed, 12 Jun 2019 06:54:04 -0700 (PDT)
-Received: from redmoon (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8EDE13F557;
-        Wed, 12 Jun 2019 06:54:02 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 14:54:00 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv5 19/20] PCI: mobiveil: Add 8-bit and 16-bit register
- accessors
-Message-ID: <20190612135400.GB15747@redmoon>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-20-Zhiqiang.Hou@nxp.com>
+        Wed, 12 Jun 2019 09:55:11 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39216 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407368AbfFLNzK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 09:55:10 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 196so8981654pgc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 06:55:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JuCNsBgKz2kjwwU2iDU7wV4lSMUa82jMKbRvCjaKNYk=;
+        b=DyjaHPUeflN5ZsbtMGDS9Y5nT5fm3yy+sEHGvi6P//QVMQd2DHb7JAQZ1QAUpVOzvJ
+         N+KZ9PwASzybi0SO1U8b+EDTeErIAqt7oZT6ojvJ5s9QMF+iex62ERsVrm8o8++vfvYF
+         6VIib32cQ8JALMkAgDNWQCE8e241NVPKstnWeQ2+mGDa7iuxpNCsYDcTDmmSc7BWe0jg
+         XvsfjxgQKxKqyhdeezlhXKq113Cv2BhnB7TVMXccoGCXQ37WlMG42T5+DCr0X7DLsQHw
+         znEQuw8W69ywX1XQ5aVKeL7n1nqWdZLqmHcAvIkalngQAuijXjBjEd8XJaWH3wKRJYE9
+         2Adw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JuCNsBgKz2kjwwU2iDU7wV4lSMUa82jMKbRvCjaKNYk=;
+        b=rcdR7l+KsQ7/KNKZ7S8vpTsnHEgdP9Y9SfkF403yGZdRpYAxOdE73q0BGUC/6zgL34
+         le0sQeXpVTGWrhzheqkcJjytuKL5lC350hL4NPm/1aCbtZsdUeP9U2tXEiTq1i1ongcL
+         Hr72CSDDYSkMIsqvCNa1lc8hkFKmrlkSOGvkN7JNgFgJcZPoUUCjvhwwo1bPiMdpg6JI
+         oLIn3Xz6y4/wpe4vJFRq+f42gVumTpyQkUcIY3RpbWcZHk8HNQm+UZN+mSU/q7E52f7k
+         LGW+zLRGc9SbZwiz0iOIOyXrSB5JJ0FD0R+qKpzVDSA9gdAT5QXvOrHUXIQCBZPo8a+u
+         RICg==
+X-Gm-Message-State: APjAAAWcUULu2MqxiHgoNJGqmlHOS3fASO41fs1O/OoAjv4fGfjXFdwi
+        XhH24meGRjQjX/I6SXT2Ig==
+X-Google-Smtp-Source: APXvYqxlJ7e75DsWX7egMpEWIh17YRS2EgGe1PzB66KsEeNy0SS0S0WCNWEmTNn2GsRLsUzGK7fXXQ==
+X-Received: by 2002:a63:574b:: with SMTP id h11mr5323558pgm.25.1560347710137;
+        Wed, 12 Jun 2019 06:55:10 -0700 (PDT)
+Received: from dhcp-128-55.nay.redhat.com ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id j11sm2865040pfa.2.2019.06.12.06.55.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 06:55:09 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 21:54:58 +0800
+From:   Pingfan Liu <kernelfans@gmail.com>
+To:     "Weiny, Ira" <ira.weiny@intel.com>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv3 1/2] mm/gup: fix omission of check on FOLL_LONGTERM in
+ get_user_pages_fast()
+Message-ID: <20190612135458.GA19916@dhcp-128-55.nay.redhat.com>
+References: <1559725820-26138-1-git-send-email-kernelfans@gmail.com>
+ <87tvcwhzdo.fsf@linux.ibm.com>
+ <2807E5FD2F6FDA4886F6618EAC48510E79D8D79B@CRSMSX101.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190412083635.33626-20-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <2807E5FD2F6FDA4886F6618EAC48510E79D8D79B@CRSMSX101.amr.corp.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 08:37:05AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Tue, Jun 11, 2019 at 04:29:11PM +0000, Weiny, Ira wrote:
+> > Pingfan Liu <kernelfans@gmail.com> writes:
+> > 
+> > > As for FOLL_LONGTERM, it is checked in the slow path
+> > > __gup_longterm_unlocked(). But it is not checked in the fast path,
+> > > which means a possible leak of CMA page to longterm pinned requirement
+> > > through this crack.
+> > 
+> > Shouldn't we disallow FOLL_LONGTERM with get_user_pages fastpath? W.r.t
+> > dax check we need vma to ensure whether a long term pin is allowed or not.
+> > If FOLL_LONGTERM is specified we should fallback to slow path.
 > 
-> There are some 8-bit and 16-bit registers in PCIe
-> configuration space, so add accessors for them.
+> Yes, the fastpath bails to the slowpath if FOLL_LONGTERM _and_ DAX.  But it does this while walking the page tables.  I missed the CMA case and Pingfan's patch fixes this.  We could check for CMA pages while walking the page tables but most agreed that it was not worth it.  For DAX we already had checks for *_devmap() so it was easier to put the FOLL_LONGTERM checks there.
 > 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> ---
-> V5:
->  - Corrected and retouched the subject and changelog.
->  - No functionality change.
-> 
->  drivers/pci/controller/pcie-mobiveil.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 411e9779da12..456adfee393c 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -268,11 +268,31 @@ static u32 csr_readl(struct mobiveil_pcie *pcie, u32 off)
->  	return csr_read(pcie, off, 0x4);
->  }
->  
-> +static u32 csr_readw(struct mobiveil_pcie *pcie, u32 off)
-> +{
-> +	return csr_read(pcie, off, 0x2);
-> +}
-> +
-> +static u32 csr_readb(struct mobiveil_pcie *pcie, u32 off)
-> +{
-> +	return csr_read(pcie, off, 0x1);
-> +}
-> +
->  static void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
->  {
->  	csr_write(pcie, val, off, 0x4);
->  }
->  
-> +static void csr_writew(struct mobiveil_pcie *pcie, u32 val, u32 off)
-> +{
-> +	csr_write(pcie, val, off, 0x2);
-> +}
-> +
-> +static void csr_writeb(struct mobiveil_pcie *pcie, u32 val, u32 off)
-> +{
-> +	csr_write(pcie, val, off, 0x1);
-> +}
-> +
+Then for CMA pages, are you suggesting something like:
+diff --git a/mm/gup.c b/mm/gup.c
+index 42a47c0..8bf3cc3 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2251,6 +2251,8 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+        if (unlikely(!access_ok((void __user *)start, len)))
+                return -EFAULT;
 
-They are not used so you should drop this patch.
++       if (unlikely(gup_flags & FOLL_LONGTERM))
++               goto slow;
+        if (gup_fast_permitted(start, nr_pages)) {
+                local_irq_disable();
+                gup_pgd_range(addr, end, gup_flags, pages, &nr);
+@@ -2258,6 +2260,7 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+                ret = nr;
+        }
 
-Lorenzo
++slow:
+        if (nr < nr_pages) {
+                /* Try to get the remaining pages with get_user_pages */
+                start += nr << PAGE_SHIFT;
 
->  static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
->  {
->  	return (csr_readl(pcie, LTSSM_STATUS) &
-> -- 
-> 2.17.1
-> 
+Thanks,
+  Pingfan
