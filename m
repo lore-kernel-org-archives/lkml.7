@@ -2,113 +2,150 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E989C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7AEC31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2010F215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E84C20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:14:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Y18tx6kC";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GBXD1+Mz"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fKZgzRoQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbfFLTNa (ORCPT
+        id S1728048AbfFLTOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:13:30 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46820 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfFLTNa (ORCPT
+        Wed, 12 Jun 2019 15:14:24 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40721 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727790AbfFLTOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:13:30 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4223E60DAB; Wed, 12 Jun 2019 19:13:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560366809;
-        bh=rrkZxoygQH/v8ARsngpOhTOqBfIXl3bsffCMyVrCKKk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y18tx6kCTxYem8FPyJNz4qiHS4UMXhrMMiyFCrcOraJbw+Wt81jTeMhL+RA7zg93J
-         oP8m7JS4FHFGSrNW5CuJyQ93fjm94NAl1p3hAGn43wHkFrhwmHnE1UxTpTBlole7gO
-         7LmUPTsPnB3hEVBAExw/+ONzzH0HLH8CpeJQ4qRI=
-Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1AABF60237;
-        Wed, 12 Jun 2019 19:13:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560366806;
-        bh=rrkZxoygQH/v8ARsngpOhTOqBfIXl3bsffCMyVrCKKk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GBXD1+MzabYYY7BF/e1ARNeIFI3TKAWvUR/yH3QyDIf93mU/DRxqs8h+U+kEpKI/G
-         ESGvxRLNelvL4ShdfbrpwbFjNCWKm7qPRmpCNf7vDNmfrbMtC9So9mh6VUWFiaHxtk
-         IJObXCF7DmmBZo/b4ax8Q3gsQwcoj//emHu0aPY8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1AABF60237
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     marc.w.gonzalez@free.fr, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v5 6/6] arm64: dts: qcom: msm8998: Add mmcc node
-Date:   Wed, 12 Jun 2019 13:13:17 -0600
-Message-Id: <1560366797-6155-1-git-send-email-jhugo@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1560366600-5826-1-git-send-email-jhugo@codeaurora.org>
-References: <1560366600-5826-1-git-send-email-jhugo@codeaurora.org>
+        Wed, 12 Jun 2019 15:14:24 -0400
+Received: by mail-qt1-f193.google.com with SMTP id a15so19725509qtn.7
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:14:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Q6iGM1TiupqbenVhxjWmtAI5HyN33SMdpalMPy6x5OY=;
+        b=fKZgzRoQazhx2NyU0bXbVZS8dOqt2ksyWGIauwNWYHJH8kgsCVJI03c4N5lKN0UfbL
+         Bhd0f7dzZ8VYCFXXU+aLJIcr64Q7WMzXQZhTBHMZGz5IhlK3ID/yDJO/l9SrdO5KfgqK
+         Pzqt+w2uTJiIBcYRcbkg+zqo7JEvQt6YgPwzekPufoXbr56qiO4x0n/EncSJ7JDY0Ihx
+         5v476nbYAMqpu7FcZAOCJM9Yr1cgH62Vahq2y1Hbu0KZAQpHI9vvaxHreBBJ1eHnpDXL
+         1X7rLB8DRwb8xJ6R2YIgnjubs6XczMXMrodaik5vqBCeF/b9SQjTHUeI0/OO4EIsnzG3
+         NonA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Q6iGM1TiupqbenVhxjWmtAI5HyN33SMdpalMPy6x5OY=;
+        b=DawZKXurEgIiY+bknuT9p08GLK+hh+hqy5lhTaUkZCT03dhttSojcRwpEd92LSVUm3
+         dtozsR+cFXyKnHtQX0lfxPHoFk3Sd9/XSrNxW0D7w3Tx6w6NgNVBmi0I7Nrrazh34q4n
+         ZIeSd5//CH5uQYVl5qLpeQPZnMaG4Oui09R666MJqU9dEHjCFgaaRgr0ExgovXvP5u33
+         qzxisdR2zJgeeiVvYR+E9/IkWHbCrsAgJt4l9W4Q0l+xRyGG8A43Gb9/EObG2f0KuPRK
+         U8r1O557e737sx2VEBAgo/vAEeV+yTncdZPrD0/K599SVcCRYjtUmCbWfB0M3qLtxaiX
+         qV4g==
+X-Gm-Message-State: APjAAAVjH/ygxGkFOy1tY5pdMA5O/omA85A43Iom/5PLiyO91KjxJ+eu
+        UbTubEmzQgm85NJuL1x1J9QyfQ==
+X-Google-Smtp-Source: APXvYqxNVQoMlV0omgFKo75Awgw9qRfhh6FBsXYbr1pvY1QOdw5O302UlF57KTTs2aFOEmTGVw1+7g==
+X-Received: by 2002:aed:3a03:: with SMTP id n3mr38086132qte.85.1560366863270;
+        Wed, 12 Jun 2019 12:14:23 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id e66sm296313qtb.55.2019.06.12.12.14.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Jun 2019 12:14:22 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hb8hR-00037z-Na; Wed, 12 Jun 2019 16:14:21 -0300
+Date:   Wed, 12 Jun 2019 16:14:21 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190612191421.GM3876@ziepe.ca>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606195114.GA30714@ziepe.ca>
+ <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
+ <20190607103636.GA12765@quack2.suse.cz>
+ <20190607121729.GA14802@ziepe.ca>
+ <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
+ <20190612102917.GB14578@quack2.suse.cz>
+ <20190612114721.GB3876@ziepe.ca>
+ <20190612120907.GC14578@quack2.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612120907.GC14578@quack2.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MSM8998 Multimedia Clock Controller DT node.
+On Wed, Jun 12, 2019 at 02:09:07PM +0200, Jan Kara wrote:
+> On Wed 12-06-19 08:47:21, Jason Gunthorpe wrote:
+> > On Wed, Jun 12, 2019 at 12:29:17PM +0200, Jan Kara wrote:
+> > 
+> > > > > The main objection to the current ODP & DAX solution is that very
+> > > > > little HW can actually implement it, having the alternative still
+> > > > > require HW support doesn't seem like progress.
+> > > > > 
+> > > > > I think we will eventually start seein some HW be able to do this
+> > > > > invalidation, but it won't be universal, and I'd rather leave it
+> > > > > optional, for recovery from truely catastrophic errors (ie my DAX is
+> > > > > on fire, I need to unplug it).
+> > > > 
+> > > > Agreed.  I think software wise there is not much some of the devices can do
+> > > > with such an "invalidate".
+> > > 
+> > > So out of curiosity: What does RDMA driver do when userspace just closes
+> > > the file pointing to RDMA object? It has to handle that somehow by aborting
+> > > everything that's going on... And I wanted similar behavior here.
+> > 
+> > It aborts *everything* connected to that file descriptor. Destroying
+> > everything avoids creating inconsistencies that destroying a subset
+> > would create.
+> > 
+> > What has been talked about for lease break is not destroying anything
+> > but very selectively saying that one memory region linked to the GUP
+> > is no longer functional.
+> 
+> OK, so what I had in mind was that if RDMA app doesn't play by the rules
+> and closes the file with existing pins (and thus layout lease) we would
+> force it to abort everything. Yes, it is disruptive but then the app didn't
+> obey the rule that it has to maintain file lease while holding pins. Thus
+> such situation should never happen unless the app is malicious / buggy.
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+We do have the infrastructure to completely revoke the entire
+*content* of a FD (this is called device disassociate). It is
+basically close without the app doing close. But again it only works
+with some drivers. However, this is more likely something a driver
+could support without a HW change though.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 9c88801..856c8ec 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -3,6 +3,7 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8998.h>
-+#include <dt-bindings/clock/qcom,mmcc-msm8998.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
- #include <dt-bindings/gpio/gpio.h>
- 
-@@ -1066,6 +1067,19 @@
- 			status = "disabled";
- 		};
- 
-+		mmcc: clock-controller@c8c0000 {
-+			compatible = "qcom,mmcc-msm8998";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+			reg = <0x0c8c0000 0x40000>;
-+
-+			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
-+				 <&gcc GPLL0_OUT_MAIN>;
-+			clock-names = "xo",
-+				      "gpll0";
-+		};
-+
- 		timer@17920000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--- 
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+It is quite destructive as it forcibly kills everything RDMA related
+the process(es) are doing, but it is less violent than SIGKILL, and
+there is perhaps a way for the app to recover from this, if it is
+coded for it.
 
+My preference would be to avoid this scenario, but if it is really
+necessary, we could probably build it with some work.
+
+The only case we use it today is forced HW hot unplug, so it is rarely
+used and only for an 'emergency' like use case.
+
+Jason
