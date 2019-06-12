@@ -2,92 +2,176 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39356C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59902C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121E320B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2644220B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:04:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ByooAjIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392018AbfFLOBX (ORCPT
+        id S2408702AbfFLOER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:01:23 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38155 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389885AbfFLOBX (ORCPT
+        Wed, 12 Jun 2019 10:04:17 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60640 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407368AbfFLOER (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:01:23 -0400
-Received: by mail-qk1-f195.google.com with SMTP id a27so10276102qkk.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 07:01:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1swvZXHALFzo5B0B5qOatWzKoRBzeWa4TX1TTtEgsXk=;
-        b=czY+BBQ5W/klt7EaR46IQcTifLqUeV/H5Zq6JZmHlgxdSmtQlt35olXZsMENKX8TEM
-         u0+vN09Gx+n8vl5nWE64ba+ZGkQ3qGmU6U7QsdJaBz4Czp3MULBJPpHPu6ORS+ttxXX2
-         27Rd94/ZHM3OIhPMNW5OpVF6/gv9jqwtOQ+opW3KdNXsX6+9VVWzF/6TB+CHXH+6JT55
-         dpkly07V9A4CYNatuPGZ5dkWhGnaPVcy0864qoY409BjFpXbnIshHOBTvVp4YFrJX7jP
-         HY7LCBYvqBS9h3UYMiRyPGaxgYc7U/aDqkilRz+JqszKNZNZFg+cv7j1+2Qnx8foOqUS
-         tCpw==
-X-Gm-Message-State: APjAAAU6oAgcLZX5CD54klI5j1tN8eBp3HGPlZih/sa150jv0JiCOaca
-        g8VzYs4/xGuzoNa1DDsNPj7ziZTKOeYnYB6PRsQ=
-X-Google-Smtp-Source: APXvYqzbvgtvFbqZUuKDRi0jv3yrRi2Q/SNQBnsYqrQZCCDBQYbZ+fVsnRCSrfxRCPbz9y4EAFToxFSIGn4jvsj7hrw=
-X-Received: by 2002:a37:a4d3:: with SMTP id n202mr64562583qke.84.1560348081942;
- Wed, 12 Jun 2019 07:01:21 -0700 (PDT)
+        Wed, 12 Jun 2019 10:04:17 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190612140415euoutp014cf11a6322c9b68f70884da0e7a52108~neHiKxAz32516525165euoutp01k
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 14:04:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190612140415euoutp014cf11a6322c9b68f70884da0e7a52108~neHiKxAz32516525165euoutp01k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1560348255;
+        bh=sPdSdE4qsvSbaMak0sr8YcOjHPVPjBPKJgIQWVV5LTI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=ByooAjIRm3rFFDei4YHPfD5wqM5phX9lu433HkJZ2iWchvC0FAMpFlTzoUjo6rqsw
+         Z7xDIEHLd7B7gMqR5Fo9gj5r99HF6Db7PC7VTscsF78heCSVng3Xx1MlCJbhXqLmEI
+         TdmENNzgTSuCPCW68YOhwQmce+UIofuJ+uKr9gMM=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190612140414eucas1p1038570cb76911800945c01500eee9d4e~neHhiY01d3019030190eucas1p1H;
+        Wed, 12 Jun 2019 14:04:14 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id CE.8A.04298.D56010D5; Wed, 12
+        Jun 2019 15:04:14 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190612140413eucas1p1b72f9da419ac23b227fd7316b1bf3de6~neHgj5MGh3020330203eucas1p1G;
+        Wed, 12 Jun 2019 14:04:13 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190612140413eusmtrp10452264c3bc4df51d72019284fa2cc4b~neHgVF4JW2651626516eusmtrp1b;
+        Wed, 12 Jun 2019 14:04:13 +0000 (GMT)
+X-AuditID: cbfec7f2-f13ff700000010ca-08-5d01065d1a86
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id EC.61.04146.C56010D5; Wed, 12
+        Jun 2019 15:04:13 +0100 (BST)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190612140412eusmtip1ab3d5e919d1d18ce372ca3125f4a0e3b~neHf-G_0v2528925289eusmtip1K;
+        Wed, 12 Jun 2019 14:04:12 +0000 (GMT)
+Subject: Re: [PATCH 02/34] gpu: drm: bridge: sii9234: simplify getting the
+ adapter of a client
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <87d7a499-22b8-5e9f-8da2-54c83d1c4b2d@samsung.com>
+Date:   Wed, 12 Jun 2019 16:04:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <CAHmME9qBDtO1vJrA2Ch3SQigsu435wR7Q3vTm_3R=u=BE49S-Q@mail.gmail.com>
- <alpine.DEB.2.21.1906112257120.2214@nanos.tec.linutronix.de>
- <20190612090257.GF3436@hirez.programming.kicks-ass.net> <CAHmME9obwzZ5x=p3twDfNYux+kg0h4QAGe0ePAkZ2KqvguBK3g@mail.gmail.com>
-In-Reply-To: <CAHmME9obwzZ5x=p3twDfNYux+kg0h4QAGe0ePAkZ2KqvguBK3g@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 12 Jun 2019 16:01:04 +0200
-Message-ID: <CAK8P3a15NTV=njOjz-ccYL8=_q_MdEru0A+jeE=f7ufUTOOTgw@mail.gmail.com>
-Subject: Re: infinite loop in read_hpet from ktime_get_boot_fast_ns
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Waiman Long <longman@redhat.com>, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190608114036.GA4786@pendragon.ideasonboard.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNKsWRmVeSWpSXmKPExsWy7djP87pxbIyxBvP7WS16z51ksvi/bSKz
+        xZWv79ksOicuYbfo+PuF0eLyrjlsFn3n3B3YPfZ+W8DiMbtjJqvH9m8PWD3udx9n8ni2cD2L
+        x+dNcgFsUVw2Kak5mWWpRfp2CVwZs7/cZy74zVvxfQp/A+MW7i5GDg4JAROJ73f9uxi5OIQE
+        VjBK7L97mAXC+cIoMWnBFtYuRk4g5zOjxKd37iA2SMOXuy1MEEXLGSW6532G6njLKLHv1yN2
+        kLHCAgkSN7+IgTSICGRL3FgxjxmkhllgEaPEh9ZmsKlsApoSfzffZAOxeQXsJObd2sAOYrMI
+        qEq8P3uCGcQWFYiQ+LJzEyNEjaDEyZlPWEBsTgF7iev3/zGB2MwC8hLNW2czQ9jiEreezAe7
+        TkJgF7vEwfZ2JoizXST29u5jhbCFJV4d38IOYctInJ7cwwJh10vcX9HCDNHcwSixdcNOZoiE
+        tcTh4xdZQT5jBrp6/S59SNg5Sky5HQZh8knceCsIcQKfxKRt05khwrwSHW1CEDMUJe6f3Qo1
+        T1xi6YWvbBMYlWYheWwWkmdmIXlmFsLaBYwsqxjFU0uLc9NTiw3zUsv1ihNzi0vz0vWS83M3
+        MQKT0Ol/xz/tYPx6KekQowAHoxIP74Hp/2OEWBPLiitzDzFKcDArifAaZTPECvGmJFZWpRbl
+        xxeV5qQWH2KU5mBREuetZngQLSSQnliSmp2aWpBaBJNl4uCUamDkq45LyPmix+H7O+nedrWd
+        8/71fDi3X0ayt6Xo+YvYIqu44Pf7f+/a8lfga8Ta03lz7luKf5Czn6ERbe/AwMDYI6+//LXl
+        q1uzVos9fc75yTLyrkSqzNvnXSxtW4xC+jSXBT4T8cq2UPRc3TCZtaVX6MZb0Wc5kz/69Bs/
+        vv5799JPrmfire4rsRRnJBpqMRcVJwIAYJ6ghj4DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPIsWRmVeSWpSXmKPExsVy+t/xu7qxbIyxBtfULHrPnWSy+L9tIrPF
+        la/v2Sw6Jy5ht+j4+4XR4vKuOWwWfefcHdg99n5bwOIxu2Mmq8f2bw9YPe53H2fyeLZwPYvH
+        501yAWxRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJ
+        ehmzv9xnLvjNW/F9Cn8D4xbuLkZODgkBE4kvd1uYuhi5OIQEljJKTJt2iRUiIS6xe/5bZghb
+        WOLPtS42iKLXjBI7WlexdDFycAgLJEjc/CIGUiMikC3xt3Uh2CBmgUWMEj9W3ANrFhJoY5L4
+        vDUTxGYT0JT4u/kmG4jNK2AnMe/WBnYQm0VAVeL92RNg9aICERKzdzWwQNQISpyc+QTM5hSw
+        l7h+/x8TiM0soC7xZ94lZghbXqJ562woW1zi1pP5TBMYhWYhaZ+FpGUWkpZZSFoWMLKsYhRJ
+        LS3OTc8tNtQrTswtLs1L10vOz93ECIy8bcd+bt7BeGlj8CFGAQ5GJR7eA9P/xwixJpYVV+Ye
+        YpTgYFYS4TXKZogV4k1JrKxKLcqPLyrNSS0+xGgK9NxEZinR5HxgUsgriTc0NTS3sDQ0NzY3
+        NrNQEuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cDIMnVn0+/fwW9ZrM7vvKJ8wMljU3a68Y75
+        vAe7myZNKWkRuhf1o2/ZswczOTh9LC6siG5m6rj9S0CzXCH3mXnI0j+JtvfdTK3i4n8lHWk/
+        81db6haf6JGwmL8nW7W3nm3nvTvTf4O7CbeZxpl/rEndF5JfKSsnRFnc4+N8Lqa477dM3u+/
+        kfFKLMUZiYZazEXFiQBfsOB60gIAAA==
+X-CMS-MailID: 20190612140413eucas1p1b72f9da419ac23b227fd7316b1bf3de6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190608114101epcas3p4127647ce1c8224b4d777585bfa8e31d1
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190608114101epcas3p4127647ce1c8224b4d777585bfa8e31d1
+References: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
+        <20190608105619.593-3-wsa+renesas@sang-engineering.com>
+        <CGME20190608114101epcas3p4127647ce1c8224b4d777585bfa8e31d1@epcas3p4.samsung.com>
+        <20190608114036.GA4786@pendragon.ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 11:46 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> On Wed, Jun 12, 2019 at 11:03 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > How quasi? Do the comments in kernel/sched/clock.c look like something
-> > you could use?
-> >
-> > As already mentioned in the other tasks, anything ktime will be
-> > horrifically crap when it ends up using the HPET, the code in
-> > kernel/sched/clock.c is a best effort to keep using TSC even when it is
-> > deemed unusable for timekeeping.
+On 08.06.2019 13:40, Laurent Pinchart wrote:
+> Hi Wolfram,
 >
-> Thanks for pointing that out. Indeed the HPET path is a bummer and I'd
-> like to just escape using ktime all together.
+> Thank you for the patch.
 >
-> In fact, my accuracy requirements are very lax. I could probably even
-> deal with an inaccuracy as huge as ~200 milliseconds. But what I do
-> need is 64-bit, so that it doesn't wrap, allowing me to compare two
-> stamps taken a long time apart, and for it to take into account sleep
-> time, like CLOCK_BOOTTIME does, which means get_jiffies_64() doesn't
-> fit the bill. I was under the impression that I could only get this
-> with ktime_get_boot & co, because those add the sleep offset.
+> On Sat, Jun 08, 2019 at 12:55:41PM +0200, Wolfram Sang wrote:
+>> We have a dedicated pointer for that, so use it. Much easier to read and
+>> less computation involved.
+>>
+>> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Documentation/core-api/timekeeping.rst describes the timekeeping
-interfaces. I think what you want here is ktime_get_coarse_boottime().
 
-Note that "coarse" means "don't access the hardware clocksource"
-here, which is faster than "fast", but less accurate.
+Queued to drm-misc-next.
 
-This is updated as often as "jiffies_64", but is in nanosecond resolution
-and takes suspended time into account.
 
-      Arnd
+Laurent, for unknown reason patchwork does not collect yours tags, and
+it is not the 1st time, added manually.
+
+
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+
+ --
+Regards
+Andrzej
+
+
+>
+>> ---
+>>
+>> Please apply to your subsystem tree.
+>>
+>>  drivers/gpu/drm/bridge/sii9234.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/sii9234.c b/drivers/gpu/drm/bridge/sii9234.c
+>> index b36bbafb0e43..25d4ad8c7ad6 100644
+>> --- a/drivers/gpu/drm/bridge/sii9234.c
+>> +++ b/drivers/gpu/drm/bridge/sii9234.c
+>> @@ -815,7 +815,7 @@ static irqreturn_t sii9234_irq_thread(int irq, void *data)
+>>  static int sii9234_init_resources(struct sii9234 *ctx,
+>>  				  struct i2c_client *client)
+>>  {
+>> -	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
+>> +	struct i2c_adapter *adapter = client->adapter;
+>>  	int ret;
+>>  
+>>  	if (!ctx->dev->of_node) {
+>> @@ -897,7 +897,7 @@ static const struct drm_bridge_funcs sii9234_bridge_funcs = {
+>>  static int sii9234_probe(struct i2c_client *client,
+>>  			 const struct i2c_device_id *id)
+>>  {
+>> -	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
+>> +	struct i2c_adapter *adapter = client->adapter;
+>>  	struct sii9234 *ctx;
+>>  	struct device *dev = &client->dev;
+>>  	int ret;
+
+
