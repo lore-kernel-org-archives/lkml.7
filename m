@@ -2,80 +2,50 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB123C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5ADC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2F420896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BEF120896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:55:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391809AbfFLLw5 (ORCPT
+        id S2391892AbfFLLzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:52:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:51610 "EHLO foss.arm.com"
+        Wed, 12 Jun 2019 07:55:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:51684 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387878AbfFLLw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:52:56 -0400
+        id S2387878AbfFLLzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 07:55:20 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78BEC28;
-        Wed, 12 Jun 2019 04:52:55 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E9883F246;
-        Wed, 12 Jun 2019 04:54:33 -0700 (PDT)
-Subject: Re: [PATCH v16 02/16] arm64: untag user pointers in access_ok and
- __uaccess_mask_ptr
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        linux-kselftest@vger.kernel.org,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Kostya Serebryany <kcc@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        linux-kernel@vger.kernel.org,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-References: <cover.1559580831.git.andreyknvl@google.com>
- <4327b260fb17c4776a1e3c844f388e4948cfb747.1559580831.git.andreyknvl@google.com>
- <20190610175326.GC25803@arrakis.emea.arm.com>
- <20190611145720.GA63588@arrakis.emea.arm.com>
- <d3dc2b1f-e8c9-c60d-f648-0bc9b08f20e4@arm.com>
- <20190612093158.GG10165@c02tf0j2hf1t.cambridge.arm.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <c760f34a-1b99-17bb-8cc8-ea8b0d63fe90@arm.com>
-Date:   Wed, 12 Jun 2019 12:52:49 +0100
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E6C128;
+        Wed, 12 Jun 2019 04:55:19 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E30603F246;
+        Wed, 12 Jun 2019 04:57:00 -0700 (PDT)
+Subject: Re: [PATCH v2 0/4] iommu: Add device fault reporting API
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
+        "robdclark@gmail.com" <robdclark@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Robin Murphy <Robin.Murphy@arm.com>
+References: <20190603145749.46347-1-jean-philippe.brucker@arm.com>
+ <20190612081944.GB17505@8bytes.org>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <0f21e1b2-837f-87ba-6cf3-f6490d9e2a57@arm.com>
+Date:   Wed, 12 Jun 2019 12:54:51 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190612093158.GG10165@c02tf0j2hf1t.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190612081944.GB17505@8bytes.org>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,104 +53,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Catalin,
-
-On 12/06/2019 10:32, Catalin Marinas wrote:
-> Hi Vincenzo,
-> 
-> On Tue, Jun 11, 2019 at 06:09:10PM +0100, Vincenzo Frascino wrote:
->>> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
->>> index 3767fb21a5b8..69d0be1fc708 100644
->>> --- a/arch/arm64/kernel/process.c
->>> +++ b/arch/arm64/kernel/process.c
->>> @@ -30,6 +30,7 @@
->>>  #include <linux/kernel.h>
->>>  #include <linux/mm.h>
->>>  #include <linux/stddef.h>
->>> +#include <linux/sysctl.h>
->>>  #include <linux/unistd.h>
->>>  #include <linux/user.h>
->>>  #include <linux/delay.h>
->>> @@ -323,6 +324,7 @@ void flush_thread(void)
->>>  	fpsimd_flush_thread();
->>>  	tls_thread_flush();
->>>  	flush_ptrace_hw_breakpoint(current);
->>> +	clear_thread_flag(TIF_TAGGED_ADDR);
+On 12/06/2019 09:19, Joerg Roedel wrote:
+> On Mon, Jun 03, 2019 at 03:57:45PM +0100, Jean-Philippe Brucker wrote:
+>> Jacob Pan (3):
+>>   driver core: Add per device iommu param
+>>   iommu: Introduce device fault data
+>>   iommu: Introduce device fault report API
 >>
->> Nit: in line we the other functions in thread_flush we could have something like
->> "tagged_addr_thread_flush", maybe inlined.
-> 
-> The other functions do a lot more than clearing a TIF flag, so they
-> deserved their own place. We could do this when adding MTE support. I
-> think we also need to check what other TIF flags we may inadvertently
-> pass on execve(), maybe have a mask clearing.
-> 
-
-Agreed. All the comments I provided are meant to simplify the addition of MTE
-support.
-
->>> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
->>> index 094bb03b9cc2..2e927b3e9d6c 100644
->>> --- a/include/uapi/linux/prctl.h
->>> +++ b/include/uapi/linux/prctl.h
->>> @@ -229,4 +229,9 @@ struct prctl_mm_map {
->>>  # define PR_PAC_APDBKEY			(1UL << 3)
->>>  # define PR_PAC_APGAKEY			(1UL << 4)
->>>  
->>> +/* Tagged user address controls for arm64 */
->>> +#define PR_SET_TAGGED_ADDR_CTRL		55
->>> +#define PR_GET_TAGGED_ADDR_CTRL		56
->>> +# define PR_TAGGED_ADDR_ENABLE		(1UL << 0)
->>> +
->>>  #endif /* _LINUX_PRCTL_H */
->>> diff --git a/kernel/sys.c b/kernel/sys.c
->>> index 2969304c29fe..ec48396b4943 100644
->>> --- a/kernel/sys.c
->>> +++ b/kernel/sys.c
->>> @@ -124,6 +124,12 @@
->>>  #ifndef PAC_RESET_KEYS
->>>  # define PAC_RESET_KEYS(a, b)	(-EINVAL)
->>>  #endif
->>> +#ifndef SET_TAGGED_ADDR_CTRL
->>> +# define SET_TAGGED_ADDR_CTRL(a)	(-EINVAL)
->>> +#endif
->>> +#ifndef GET_TAGGED_ADDR_CTRL
->>> +# define GET_TAGGED_ADDR_CTRL()		(-EINVAL)
->>> +#endif
->>>  
->>>  /*
->>>   * this is where the system-wide overflow UID and GID are defined, for
->>> @@ -2492,6 +2498,16 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
->>>  			return -EINVAL;
->>>  		error = PAC_RESET_KEYS(me, arg2);
->>>  		break;
->>> +	case PR_SET_TAGGED_ADDR_CTRL:
->>> +		if (arg3 || arg4 || arg5)
->>> +			return -EINVAL;
->>> +		error = SET_TAGGED_ADDR_CTRL(arg2);
->>> +		break;
->>> +	case PR_GET_TAGGED_ADDR_CTRL:
->>> +		if (arg2 || arg3 || arg4 || arg5)
->>> +			return -EINVAL;
->>> +		error = GET_TAGGED_ADDR_CTRL();
->>> +		break;
+>> Jean-Philippe Brucker (1):
+>>   iommu: Add recoverable fault reporting
 >>
->> Why do we need two prctl here? We could have only one and use arg2 as set/get
->> and arg3 as a parameter. What do you think?
+>>  drivers/iommu/iommu.c      | 236 ++++++++++++++++++++++++++++++++++++-
+>>  include/linux/device.h     |   3 +
+>>  include/linux/iommu.h      |  87 ++++++++++++++
+>>  include/uapi/linux/iommu.h | 153 ++++++++++++++++++++++++
+>>  4 files changed, 476 insertions(+), 3 deletions(-)
+>>  create mode 100644 include/uapi/linux/iommu.h
 > 
-> This follows the other PR_* options, e.g. PR_SET_VL/GET_VL,
-> PR_*_FP_MODE. We will use other bits in arg2, for example to set the
-> precise vs imprecise MTE trapping.
-> 
+> Applied, thanks.
 
-Indeed. I was not questioning the pre-existing interface definition, but trying
-more to reduce the changes to the ABI to the minimum since:
- - prctl does not mandate how to use the arg[2-5]
- - prctl interface is flexible enough for the problem to be solved with only one
-   PR_ command.
+Thanks! As discussed I think we need to add padding into the iommu_fault
+structure before this reaches mainline, to make the UAPI easier to
+extend in the future. It's already possible to extend but requires
+introducing a new ABI version number and support two structures. Adding
+some padding would only require introducing new flags. If there is no
+objection I'll send a one-line patch bumping the structure size to 64
+bytes (currently 48)
 
-I agree on reusing the interface for MTE for the purposes you specified.
-
--- 
-Regards,
-Vincenzo
+Thanks,
+Jean
