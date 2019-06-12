@@ -2,315 +2,166 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 245EDC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C07C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF07F20652
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477A020B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:15:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hycc4AFm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lfBF4crI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbfFLUNs (ORCPT
+        id S1728599AbfFLUPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 16:13:48 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35074 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728179AbfFLUNq (ORCPT
+        Wed, 12 Jun 2019 16:15:01 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42671 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728328AbfFLUPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 16:13:46 -0400
-Received: by mail-wr1-f65.google.com with SMTP id m3so18305318wrv.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 13:13:44 -0700 (PDT)
+        Wed, 12 Jun 2019 16:15:01 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y13so13170935lfh.9
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 13:14:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=XrmwYmseyI81svrde0Rr2oIWo/3RlcrMJfQXdcGN0wc=;
-        b=hycc4AFmNBd3iCrgBCvwcW73IW9t0fXQWjFMf8HKUFOs05iYwvP2TJNV0gb7cclKVf
-         xe6z1gODNFL3Mt9N6FMkD/wwaTBm4OaYFYIp0beAEsuQ0D81JJTR6HHKNNdPIvHBZiKW
-         PzQCP5h2LKEnNUV/c5bQjPd6WPtPiWIQJXaH4nP3MPkh1KwwEj/D8dnM7qSpa0KfWuN5
-         HsU8SXj4+r4OEr7o0KsKvjqfYLyriGoZ/pZpwvjpfuVrXhho97mnUyequ7fj8jTWG+WD
-         z6ZNWww7mUtWx59Y4S4m1dQMcwmYt3XAaYAD9aHZhxghnEkNLus3N/XkWj5tr0Oe3Xsf
-         nL2w==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jDFo2V+VQv8YSr2MsBJdK8CI0EENjzUBt5cXQyonQPw=;
+        b=lfBF4crIW1RehF6GtknQbvLtDHRI5PJPmiQI871Piq9f/oa02U8ZKf0CfkW4e/Dawh
+         sj20TLogAUOGKhgqmpjN6IVuF/89nzsT5WaSFHWpBJClDi+QZa2TVWCK8mv0E2mCxbmK
+         ROAvHLaU1EF3eAkxNjh3IW+cPN1EJzrmJlItymljUUhgplNhQ8AIwBahyIZjE2sSihWG
+         eBkzU+wMoFPo6tt7kvMlrd+bA10q/17esZh53VEXaB5FqR9qzyW5sefu8wJTaf2Ue5o9
+         tZZRXJO7Hqlw+RdgkcpgPotI8GCUsHe7SJa4BWuO+QdPdAw3iLtZMhRDAEomAMUr2MML
+         j/iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=XrmwYmseyI81svrde0Rr2oIWo/3RlcrMJfQXdcGN0wc=;
-        b=tATZukIQcetYYMQxe4hHBa/COs9QweacUOphX1PwdDpuLtVdyptSQjSod8sd81vu8k
-         hzsEFF3lx3ArWDf6jwDbR/IN2Tnk6l8k5kiA4muMhjnjBvsxo35K65KaU4usQgHW6VpE
-         VyTzDBH54tY2UWyCrC42oX3icmctsKa5xaQ+PcetY6lstO8fXyjH4wpQ+Ufa37Yy47Sx
-         ZPUp4tP90c+MWID8OClyRNpW35tOz/fs9gYXxm9FBxmWeMesBWtmGz8hFdu2vwqPk0zt
-         xd9Q/8w8UzWmjIwFIsAWfJ5w5sVH37qiZ5QHy7k6AqrCcKkurcR6hSHPJpp47gTMRWwD
-         7ZAw==
-X-Gm-Message-State: APjAAAVH6Cr+bagK6luZLf6nQx5JWhHlkgkutyv/cvGik136LNjT4ALp
-        docNW+PxBXGr9TeMQBMU8eNLBQ==
-X-Google-Smtp-Source: APXvYqz7DIAmKSXQbKZle0WtdzNIdjQ1mFKvamHzPP6lnKS8wkI3kMS/tWsmbdX8u5cjTIl48G4X3Q==
-X-Received: by 2002:adf:ff86:: with SMTP id j6mr23986979wrr.318.1560370423295;
-        Wed, 12 Jun 2019 13:13:43 -0700 (PDT)
-Received: from mai.imgcgcw.net (237.65.130.77.rev.sfr.net. [77.130.65.237])
-        by smtp.gmail.com with ESMTPSA id l8sm1119566wrg.40.2019.06.12.13.13.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 13:13:42 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     rui.zhang@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        amit.kucheria@linaro.org
-Subject: [PATCH 2/2] thermal/drivers/core: Use governor table to initialize
-Date:   Wed, 12 Jun 2019 22:13:25 +0200
-Message-Id: <20190612201325.1150-2-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190612201325.1150-1-daniel.lezcano@linaro.org>
-References: <20190612201325.1150-1-daniel.lezcano@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jDFo2V+VQv8YSr2MsBJdK8CI0EENjzUBt5cXQyonQPw=;
+        b=N+uDmqxzj4C+Cq6foW2M1SoR4k+mr5lYViw7bJb/lCXH8NhA0JJFsGPLm+Ljt6CVYZ
+         rIYBMbpBpppfAjbAuRYUQFSBGUI9b4l+7gaVbWY9ZGuOrX9khKp7SWeKRbHAwDdK6q6Y
+         o7bU5Rde08o43mTu5vJWQ+Sxn+roZgtAo5qRYvM7pRnqBgTwKGc5Lmg7hhQmmWcpPSGW
+         BJmY60E5mUW2RvrirQT9uLzOUktR6QilYiDX61LBtnvWgWDJPxbeihYhlE4+DSzTKg/E
+         Cv3zVVDbkeBVDIfpl3iH4/G50ZS8rjjALrI84XoHwMpgoCDZ6Q5r3p+fW/YRwhIronr1
+         +UQw==
+X-Gm-Message-State: APjAAAW1fC5Bqhc13pi67MMmyFsXL+0vCn3DwiibVcsONA9uPw5KY/pG
+        QP2v31fIEFXp3jYWlqeG1rZHM9dEJJhVmN4/eJxtcw==
+X-Google-Smtp-Source: APXvYqw0RiCKGAnbcRcwdry457QiSKvhC1ZzvUvAjtg/O2lGEeMnxASXbFeTamxAJwaO3i3B6T8x7H9PQCce8LQ51Nk=
+X-Received: by 2002:ac2:4a6e:: with SMTP id q14mr23975880lfp.154.1560370497585;
+ Wed, 12 Jun 2019 13:14:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <000000000000afe2c70589526668@google.com> <20190612192312.GF18795@gmail.com>
+In-Reply-To: <20190612192312.GF18795@gmail.com>
+From:   Todd Kjos <tkjos@google.com>
+Date:   Wed, 12 Jun 2019 13:14:46 -0700
+Message-ID: <CAHRSSEw52jBRVNbw-DxgrmfZKoo3sqBVHCQ+e3BJtPTfhZADbQ@mail.gmail.com>
+Subject: Re: WARNING in binder_transaction_buffer_release
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        syzbot <syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the governor table is in place and the macro allows to browse the
-table, declare the governor so the entry is added in the governor table
-in the init section.
+On Wed, Jun 12, 2019 at 12:23 PM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Mon, May 20, 2019 at 07:18:06AM -0700, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    72cf0b07 Merge tag 'sound-fix-5.2-rc1' of git://git.kernel..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=17c7d4bca00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d103f114f9010324
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=8b3c354d33c4ac78bfad
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > userspace arch: i386
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15b99b44a00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com
+> >
+> > WARNING: CPU: 1 PID: 8535 at drivers/android/binder.c:2368
+> > binder_transaction_buffer_release+0x673/0x8f0 drivers/android/binder.c:2368
+> > Kernel panic - not syncing: panic_on_warn set ...
+> > CPU: 1 PID: 8535 Comm: syz-executor.2 Not tainted 5.1.0+ #19
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Call Trace:
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+> >  panic+0x2cb/0x715 kernel/panic.c:214
+> >  __warn.cold+0x20/0x4c kernel/panic.c:571
+> >  report_bug+0x263/0x2b0 lib/bug.c:186
+> >  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+> >  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+> >  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+> >  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+> >  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+> > RIP: 0010:binder_transaction_buffer_release+0x673/0x8f0
+> > drivers/android/binder.c:2368
+> > Code: 31 ff 41 89 c5 89 c6 e8 7b 04 1f fc 45 85 ed 0f 85 1f 41 01 00 49 8d
+> > 47 40 48 89 85 50 fe ff ff e9 9d fa ff ff e8 dd 02 1f fc <0f> 0b e9 7f fc ff
+> > ff e8 d1 02 1f fc 48 89 d8 45 31 c9 4c 89 fe 4c
+> > RSP: 0018:ffff88807b2775f0 EFLAGS: 00010293
+> > RAX: ffff888092b1e040 RBX: 0000000000000060 RCX: 1ffff11012563caa
+> > RDX: 0000000000000000 RSI: ffffffff85519e13 RDI: ffff888097a2d248
+> > RBP: ffff88807b2777d8 R08: ffff888092b1e040 R09: ffffed100f64eee3
+> > R10: ffffed100f64eee2 R11: ffff88807b277717 R12: ffff88808fd2c340
+> > R13: 0000000000000068 R14: ffff88807b2777b0 R15: ffff88809f7ea580
+> >  binder_transaction+0x153d/0x6620 drivers/android/binder.c:3484
+> >  binder_thread_write+0x87e/0x2820 drivers/android/binder.c:3792
+> >  binder_ioctl_write_read drivers/android/binder.c:4836 [inline]
+> >  binder_ioctl+0x102f/0x1833 drivers/android/binder.c:5013
+> >  __do_compat_sys_ioctl fs/compat_ioctl.c:1052 [inline]
+> >  __se_compat_sys_ioctl fs/compat_ioctl.c:998 [inline]
+> >  __ia32_compat_sys_ioctl+0x195/0x620 fs/compat_ioctl.c:998
+> >  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+> >  do_fast_syscall_32+0x27b/0xd7d arch/x86/entry/common.c:408
+> >  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+> > RIP: 0023:0xf7f9e849
+> > Code: 85 d2 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 3c 24 c3 90 90
+> > 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90
+> > 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+> > RSP: 002b:00000000f7f9a0cc EFLAGS: 00000296 ORIG_RAX: 0000000000000036
+> > RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00000000c0306201
+> > RDX: 0000000020000140 RSI: 0000000000000000 RDI: 0000000000000000
+> > RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+> > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> > R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> > Kernel Offset: disabled
+> > Rebooting in 86400 seconds..
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > syzbot can test patches for this bug, for details see:
+> > https://goo.gl/tpsmEJ#testing-patches
+> >
+>
+> Are any of the binder maintainers planning to fix this?  This seems to be the
+> only open syzbot report for binder on the upstream kernel.
 
-The [un]register_thermal_governors function does no longer need to use the
-exported [un]register thermal governor's specific function which in turn
-call the [un]register_thermal_governor. The governors are fully
-self-encapsulated.
+Taking a look.
 
-The cyclic dependency is no longer needed, remove it.
-
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/thermal/fair_share.c      | 12 +------
- drivers/thermal/gov_bang_bang.c   | 11 +------
- drivers/thermal/power_allocator.c | 11 +------
- drivers/thermal/step_wise.c       | 11 +------
- drivers/thermal/thermal_core.c    | 52 +++++++++++++++++--------------
- drivers/thermal/thermal_core.h    | 40 ------------------------
- drivers/thermal/user_space.c      | 12 +------
- 7 files changed, 34 insertions(+), 115 deletions(-)
-
-diff --git a/drivers/thermal/fair_share.c b/drivers/thermal/fair_share.c
-index d3469fbc5207..bda2afc63471 100644
---- a/drivers/thermal/fair_share.c
-+++ b/drivers/thermal/fair_share.c
-@@ -129,14 +129,4 @@ static struct thermal_governor thermal_gov_fair_share = {
- 	.name		= "fair_share",
- 	.throttle	= fair_share_throttle,
- };
--
--int thermal_gov_fair_share_register(void)
--{
--	return thermal_register_governor(&thermal_gov_fair_share);
--}
--
--void thermal_gov_fair_share_unregister(void)
--{
--	thermal_unregister_governor(&thermal_gov_fair_share);
--}
--
-+THERMAL_GOVERNOR_DECLARE(thermal_gov_fair_share);
-diff --git a/drivers/thermal/gov_bang_bang.c b/drivers/thermal/gov_bang_bang.c
-index fc5e5057f0de..c5e19c7d63da 100644
---- a/drivers/thermal/gov_bang_bang.c
-+++ b/drivers/thermal/gov_bang_bang.c
-@@ -126,13 +126,4 @@ static struct thermal_governor thermal_gov_bang_bang = {
- 	.name		= "bang_bang",
- 	.throttle	= bang_bang_control,
- };
--
--int thermal_gov_bang_bang_register(void)
--{
--	return thermal_register_governor(&thermal_gov_bang_bang);
--}
--
--void thermal_gov_bang_bang_unregister(void)
--{
--	thermal_unregister_governor(&thermal_gov_bang_bang);
--}
-+THERMAL_GOVERNOR_DECLARE(thermal_gov_bang_bang);
-diff --git a/drivers/thermal/power_allocator.c b/drivers/thermal/power_allocator.c
-index 3055f9a12a17..44636475b2a3 100644
---- a/drivers/thermal/power_allocator.c
-+++ b/drivers/thermal/power_allocator.c
-@@ -651,13 +651,4 @@ static struct thermal_governor thermal_gov_power_allocator = {
- 	.unbind_from_tz	= power_allocator_unbind,
- 	.throttle	= power_allocator_throttle,
- };
--
--int thermal_gov_power_allocator_register(void)
--{
--	return thermal_register_governor(&thermal_gov_power_allocator);
--}
--
--void thermal_gov_power_allocator_unregister(void)
--{
--	thermal_unregister_governor(&thermal_gov_power_allocator);
--}
-+THERMAL_GOVERNOR_DECLARE(thermal_gov_power_allocator);
-diff --git a/drivers/thermal/step_wise.c b/drivers/thermal/step_wise.c
-index ee047ca43084..6cd251ab56fc 100644
---- a/drivers/thermal/step_wise.c
-+++ b/drivers/thermal/step_wise.c
-@@ -218,13 +218,4 @@ static struct thermal_governor thermal_gov_step_wise = {
- 	.name		= "step_wise",
- 	.throttle	= step_wise_throttle,
- };
--
--int thermal_gov_step_wise_register(void)
--{
--	return thermal_register_governor(&thermal_gov_step_wise);
--}
--
--void thermal_gov_step_wise_unregister(void)
--{
--	thermal_unregister_governor(&thermal_gov_step_wise);
--}
-+THERMAL_GOVERNOR_DECLARE(thermal_gov_step_wise);
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 3ac0e2b564e2..533530529607 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -243,36 +243,42 @@ int thermal_build_list_of_policies(char *buf)
- 	return count;
- }
- 
--static int __init thermal_register_governors(void)
-+static void __init thermal_unregister_governors(void)
- {
--	int result;
-+	struct thermal_governor **governor;
- 
--	result = thermal_gov_step_wise_register();
--	if (result)
--		return result;
-+	for_each_governor_table(governor)
-+		thermal_unregister_governor(*governor);
-+}
- 
--	result = thermal_gov_fair_share_register();
--	if (result)
--		return result;
-+static int __init thermal_register_governors(void)
-+{
-+	int ret = 0;
-+	struct thermal_governor **governor;
- 
--	result = thermal_gov_bang_bang_register();
--	if (result)
--		return result;
-+	for_each_governor_table(governor) {
-+		ret = thermal_register_governor(*governor);
-+		if (ret) {
-+			pr_err("Failed to register governor: '%s'",
-+			       (*governor)->name);
-+			break;
-+		}
- 
--	result = thermal_gov_user_space_register();
--	if (result)
--		return result;
-+		pr_info("Registered thermal governor '%s'",
-+			(*governor)->name);
-+	}
- 
--	return thermal_gov_power_allocator_register();
--}
-+	if (ret) {
-+		struct thermal_governor **gov;
- 
--static void __init thermal_unregister_governors(void)
--{
--	thermal_gov_step_wise_unregister();
--	thermal_gov_fair_share_unregister();
--	thermal_gov_bang_bang_unregister();
--	thermal_gov_user_space_unregister();
--	thermal_gov_power_allocator_unregister();
-+		for_each_governor_table(gov) {
-+			if (gov == governor)
-+				break;
-+			thermal_unregister_governor(*gov);
-+		}
-+	}
-+
-+	return ret;
- }
- 
- /*
-diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
-index be901e84aa65..cb423b97ef01 100644
---- a/drivers/thermal/thermal_core.h
-+++ b/drivers/thermal/thermal_core.h
-@@ -89,46 +89,6 @@ thermal_cooling_device_stats_update(struct thermal_cooling_device *cdev,
- 				    unsigned long new_state) {}
- #endif /* CONFIG_THERMAL_STATISTICS */
- 
--#ifdef CONFIG_THERMAL_GOV_STEP_WISE
--int thermal_gov_step_wise_register(void);
--void thermal_gov_step_wise_unregister(void);
--#else
--static inline int thermal_gov_step_wise_register(void) { return 0; }
--static inline void thermal_gov_step_wise_unregister(void) {}
--#endif /* CONFIG_THERMAL_GOV_STEP_WISE */
--
--#ifdef CONFIG_THERMAL_GOV_FAIR_SHARE
--int thermal_gov_fair_share_register(void);
--void thermal_gov_fair_share_unregister(void);
--#else
--static inline int thermal_gov_fair_share_register(void) { return 0; }
--static inline void thermal_gov_fair_share_unregister(void) {}
--#endif /* CONFIG_THERMAL_GOV_FAIR_SHARE */
--
--#ifdef CONFIG_THERMAL_GOV_BANG_BANG
--int thermal_gov_bang_bang_register(void);
--void thermal_gov_bang_bang_unregister(void);
--#else
--static inline int thermal_gov_bang_bang_register(void) { return 0; }
--static inline void thermal_gov_bang_bang_unregister(void) {}
--#endif /* CONFIG_THERMAL_GOV_BANG_BANG */
--
--#ifdef CONFIG_THERMAL_GOV_USER_SPACE
--int thermal_gov_user_space_register(void);
--void thermal_gov_user_space_unregister(void);
--#else
--static inline int thermal_gov_user_space_register(void) { return 0; }
--static inline void thermal_gov_user_space_unregister(void) {}
--#endif /* CONFIG_THERMAL_GOV_USER_SPACE */
--
--#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
--int thermal_gov_power_allocator_register(void);
--void thermal_gov_power_allocator_unregister(void);
--#else
--static inline int thermal_gov_power_allocator_register(void) { return 0; }
--static inline void thermal_gov_power_allocator_unregister(void) {}
--#endif /* CONFIG_THERMAL_GOV_POWER_ALLOCATOR */
--
- /* device tree support */
- #ifdef CONFIG_THERMAL_OF
- int of_parse_thermal_zones(void);
-diff --git a/drivers/thermal/user_space.c b/drivers/thermal/user_space.c
-index 8e92a06ef48a..5fac99e5221d 100644
---- a/drivers/thermal/user_space.c
-+++ b/drivers/thermal/user_space.c
-@@ -56,14 +56,4 @@ static struct thermal_governor thermal_gov_user_space = {
- 	.name		= "user_space",
- 	.throttle	= notify_user_space,
- };
--
--int thermal_gov_user_space_register(void)
--{
--	return thermal_register_governor(&thermal_gov_user_space);
--}
--
--void thermal_gov_user_space_unregister(void)
--{
--	thermal_unregister_governor(&thermal_gov_user_space);
--}
--
-+THERMAL_GOVERNOR_DECLARE(thermal_gov_user_space);
--- 
-2.17.1
-
+>
+> - Eric
