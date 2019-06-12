@@ -2,110 +2,151 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27553C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946BEC31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0267E20883
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64461206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:48:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="HXRALFEY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jqOtu9b9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436472AbfFLBqh (ORCPT
+        id S1729286AbfFLBsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 21:46:37 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38111 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbfFLBqg (ORCPT
+        Tue, 11 Jun 2019 21:48:16 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41466 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbfFLBsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 21:46:36 -0400
-Received: by mail-ed1-f67.google.com with SMTP id g13so23020524edu.5
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 18:46:35 -0700 (PDT)
+        Tue, 11 Jun 2019 21:48:16 -0400
+Received: by mail-oi1-f195.google.com with SMTP id g7so7296370oia.8;
+        Tue, 11 Jun 2019 18:48:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LXj97QV1xj0YMzJTfwO7V63Jo2GxebtIwJp0QMGiowU=;
-        b=HXRALFEYuiiWfCAMv5ihCzb+blJRwM2p40Q+4CrmWGOBIgEkIDSwBrEmzJYKQ+tQQG
-         z2zhnfgt9xZBNdaJnC4IYxdve974bp8GqdRK0VoTR77WKjzD+KD0JIztls5JApZ5hV+F
-         OZ26YVVQJtbKfc4dhoGKHLxGltQMUFpy31s8E4bdelVuXnJSkCJzxdSGyZILsBzUq80t
-         f2c+1jkR/tn+MjiDAWne64fh2CCM+Ju3910qo87nTjZEZJjXCiYH7ZeVy12toNmoHyaz
-         IxnqUNMjynTbSnz5WxKPBzjlGaW/AxuUfXPeCSCnkTypuYPRZ93+e0sfsOSBZY616mof
-         zdBg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dm76JZldFkWEgkVO1SScer1LyP51y0/fkMGkyI4B5po=;
+        b=jqOtu9b9g/g4PCAlxBumBB8oZSTNGeigc03WPBDH0+euBKHEh9LwKL+aKT7vI4blsi
+         VECTaKvJ279kOlWcowd8LHyBRW6p2+yj/I6p+/4Dc2SQKFbwjv5Ihbbe4D0J2E/jAGla
+         khBDvdpHU5bFJg8GrC3+SGLypXs3NTxL0Brb6FiqVajiNbf/4LvisZj7dfeCDy7dgIK3
+         KA0hxTtA3bTuAva51ncqrDyPtdEA7u8E/QUNBYKEdFDqWSqmu9oLkigYG8FRQyngemem
+         1jRaRIPm7zO7GUifkeWIlsMNVqTNlHm7Ek25SonVTtYaRzzvh0wzYxH6mzsNWJ71jC25
+         iirQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LXj97QV1xj0YMzJTfwO7V63Jo2GxebtIwJp0QMGiowU=;
-        b=roGIY97NgS3ePYJYZkRA8BTYqMqVVPHP1dGWtDYlK8nfJ6pKE7HCw5vrl3DBQoir5u
-         swN7yMXe8dHzvy1BNlEG5PznGwerIXsMvZ3fZLnG6tJWRjPSq48xQuCP8UkEARUG2iwE
-         8jhkrYVjQmJ3QEEfufbzmBWTl7v4jA1xxkVOTEss/shTlo4UFxr4xjCPmRqB2jmtPRi0
-         RVxfs5a/kcIFIRMHIZ7ZwNDjRrYcNvf3vQ5dqiQQivaASX3jthgj8pIi4p7ZSEhebaNA
-         ZtGce7QX4pXJ6f8SQHRBmt/4qgqIixVw4NlECbzPAruY90ZJCZsHiyMvt36EcJFid4cs
-         1LNA==
-X-Gm-Message-State: APjAAAVmtU7bPkHSPG9NstreFYU8KD/zjly14EuWSCN3FVXJz6ntnpqP
-        PTQqQVk045bKL2xStJ+qrldEaw==
-X-Google-Smtp-Source: APXvYqwI5Qv0C/a0lrl6mzuoFXDCntFWruXenrhqcLo08+2SpUh6wATX727OIc7E2oRZg6ayc5q2AQ==
-X-Received: by 2002:a50:ad01:: with SMTP id y1mr62139325edc.180.1560303994960;
-        Tue, 11 Jun 2019 18:46:34 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id a53sm1063966eda.56.2019.06.11.18.46.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 18:46:34 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 0011A10081B; Wed, 12 Jun 2019 04:46:34 +0300 (+03)
-Date:   Wed, 12 Jun 2019 04:46:34 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Hugh Dickins <hughd@google.com>,
-        Jan Kara <jack@suse.cz>, Song Liu <liu.song.a23@gmail.com>
-Subject: Re: [PATCH v4] page cache: Store only head pages in i_pages
-Message-ID: <20190612014634.f23fjumw666jj52s@box>
-References: <20190307153051.18815-1-willy@infradead.org>
- <155951205528.18214.706102020945306720@skylake-alporthouse-com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dm76JZldFkWEgkVO1SScer1LyP51y0/fkMGkyI4B5po=;
+        b=nVTbP6/Zn4zF4NR/4oU08DaqwyZcJ9UewAs1P2+YumOeBEUWAI5D/XoHQaa29D+/7C
+         dUJzTQheTlaGlDRAKhEB7ApyKXZ6JTsLhZEJiaN9y2jRlPS0rqS5xnBkR2VuGuHe3YLk
+         sjd1FpOeXUUj6snziyYJ+g4HBCPRJDE1sSVW1IX/xAfarS1EQD0JaXBPLu9arE5SDcon
+         mxRS6Zq5ygnKNjrZq/CiiSVhXfpZL2XesY44DD8RWQpyr/RWcGWbYMTPmvzWHQZpOf5L
+         OtybAdu2zRxAVbUrg64UdF7S4Q1hnDOpxyj5bSRFh4e2ASKBcMZONGcPBpoFIHW6V8wb
+         kXTQ==
+X-Gm-Message-State: APjAAAWIXfyNbd7aEn86ihSjoTTl2v5HznIbRhgmaktUvSGYP0qxef6E
+        pnFr+k3b6XHcqBHb/ZsplVqL96fBH3ZMbtGCTe/DJD9S
+X-Google-Smtp-Source: APXvYqy5z3LMZU/0QZyJ7yBAYlqwpNzIZB9WFfgK0/75pyUsnLxMTAhTbz7QgExMpnh95v9Fw7cZH3ZK1JgYLfVg6rg=
+X-Received: by 2002:aca:51ce:: with SMTP id f197mr17752443oib.33.1560304095162;
+ Tue, 11 Jun 2019 18:48:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155951205528.18214.706102020945306720@skylake-alporthouse-com>
-User-Agent: NeoMutt/20180716
+References: <1560255429-7105-1-git-send-email-wanpengli@tencent.com>
+ <1560255429-7105-3-git-send-email-wanpengli@tencent.com> <20190611201849.GA7520@amt.cnet>
+In-Reply-To: <20190611201849.GA7520@amt.cnet>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 12 Jun 2019 09:48:58 +0800
+Message-ID: <CANRm+CwrbMQpQ1d_KMp-EBMd-pXFVePQ8GV4Y4X0oy8-zGZCBQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] KVM: LAPIC: lapic timer interrupt is injected by
+ posted interrupt
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 02, 2019 at 10:47:35PM +0100, Chris Wilson wrote:
-> Quoting Matthew Wilcox (2019-03-07 15:30:51)
-> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> > index 404acdcd0455..aaf88f85d492 100644
-> > --- a/mm/huge_memory.c
-> > +++ b/mm/huge_memory.c
-> > @@ -2456,6 +2456,9 @@ static void __split_huge_page(struct page *page, struct list_head *list,
-> >                         if (IS_ENABLED(CONFIG_SHMEM) && PageSwapBacked(head))
-> >                                 shmem_uncharge(head->mapping->host, 1);
-> >                         put_page(head + i);
-> > +               } else if (!PageAnon(page)) {
-> > +                       __xa_store(&head->mapping->i_pages, head[i].index,
-> > +                                       head + i, 0);
-> 
-> Forgiving the ignorant copy'n'paste, this is required:
-> 
-> +               } else if (PageSwapCache(page)) {
-> +                       swp_entry_t entry = { .val = page_private(head + i) };
-> +                       __xa_store(&swap_address_space(entry)->i_pages,
-> +                                  swp_offset(entry),
-> +                                  head + i, 0);
->                 }
->         }
->  
-> The locking is definitely wrong.
+On Wed, 12 Jun 2019 at 04:39, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+>
+> On Tue, Jun 11, 2019 at 08:17:07PM +0800, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Dedicated instances are currently disturbed by unnecessary jitter due
+> > to the emulated lapic timers fire on the same pCPUs which vCPUs residen=
+t.
+> > There is no hardware virtual timer on Intel for guest like ARM. Both
+> > programming timer in guest and the emulated timer fires incur vmexits.
+> > This patch tries to avoid vmexit which is incurred by the emulated
+> > timer fires in dedicated instance scenario.
+> >
+> > When nohz_full is enabled in dedicated instances scenario, the emulated
+> > timers can be offload to the nearest busy housekeeping cpus since APICv
+> > is really common in recent years. The guest timer interrupt is injected
+> > by posted-interrupt which is delivered by housekeeping cpu once the emu=
+lated
+> > timer fires.
+> >
+> > ~3% redis performance benefit can be observed on Skylake server.
+> >
+> > w/o patch:
+> >
+> >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time   Av=
+g time
+> >
+> > EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us   0.=
+71us ( +-   1.09% )
+> >
+> > w/ patch:
+> >
+> >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time     =
+    Avg time
+> >
+> > EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us   0.=
+72us ( +-   4.02% )
+> >
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> >  arch/x86/kvm/lapic.c | 32 +++++++++++++++++++++++++-------
+> >  1 file changed, 25 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > index e57eeba..020599f 100644
+> > --- a/arch/x86/kvm/lapic.c
+> > +++ b/arch/x86/kvm/lapic.c
+> > @@ -133,6 +133,12 @@ inline bool posted_interrupt_inject_timer_enabled(=
+struct kvm_vcpu *vcpu)
+> >  }
+> >  EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer_enabled);
+> >
+> > +static inline bool can_posted_interrupt_inject_timer(struct kvm_vcpu *=
+vcpu)
+> > +{
+> > +     return posted_interrupt_inject_timer_enabled(vcpu) &&
+> > +             kvm_hlt_in_guest(vcpu->kvm);
+> > +}
+>
+> Hi Li,
 
-Does it help with the problem, or it's just a possible lead?
+Hi Marcelo,
 
--- 
- Kirill A. Shutemov
+>
+> Don't think its necessary to depend on kvm_hlt_in_guest: Can also use
+> exitless injection if the guest is running (think DPDK style workloads
+> that busy-spin on network card).
+>
+
+There are some discussions here.
+
+https://lkml.org/lkml/2019/6/11/424
+https://lkml.org/lkml/2019/6/5/436
+
+Regards,
+Wanpeng Li
