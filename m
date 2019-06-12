@@ -2,59 +2,62 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C117C31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 030DFC31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C160207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B5C20883
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:40:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="juH7/uOY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408470AbfFLCiu (ORCPT
+        id S2437097AbfFLCkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 22:38:50 -0400
-Received: from mga18.intel.com ([134.134.136.126]:52684 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406202AbfFLCiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 22:38:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 19:38:48 -0700
-X-ExtLoop1: 1
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga004.jf.intel.com with ESMTP; 11 Jun 2019 19:38:43 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com, Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH v4 7/9] iommu/vt-d: Add trace events for domain map/unmap
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-References: <20190603011620.31999-1-baolu.lu@linux.intel.com>
- <20190603011620.31999-8-baolu.lu@linux.intel.com>
- <20190610160838.GY28796@char.us.oracle.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <297f6aaa-36c0-bae3-fa36-7ca544dc5f35@linux.intel.com>
-Date:   Wed, 12 Jun 2019 10:31:34 +0800
+        Tue, 11 Jun 2019 22:40:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37130 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406202AbfFLCkA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 22:40:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yvy/gkrIuOAqW1aZMYOf3AGFTiXylWG+oKPZyKjIo4w=; b=juH7/uOYpZ8jrItAQ7kbO3cWF
+        t2fmGc+ksnS3y/SXiuvQqTb5NklWSxrFgXXQqRQJBtZuS6QRqiZHTPq9vlQg6cjARtYfByfwJlBLR
+        kcj2xXFRseqw4IJnSFvuZrvQmLORk+DHSNqOzXJi+mUdIWusr4FOXjaDoZWOrlGYciRlbNQglynUX
+        743DguT32rU6j1hOn0ql6TVad55xC17RcI54BJgfyEslIfGMPjDx/ZzpMt3HLV0RHad2QERo47mSG
+        4JabUXwBWYCbBwT3MM/PtaiQ/lEhqv0D9WNmZo7V2YXhrAbwVHXJWQqDz+JdNlJTOVJykIWAa/ZSi
+        4kx41DZbA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hatB9-0006Wi-L2; Wed, 12 Jun 2019 02:39:59 +0000
+Subject: Re: [PATCH net] mpls: fix af_mpls dependencies
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Ahern <dsahern@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+References: <20190608125019.417-1-mcroce@redhat.com>
+ <20190609.195742.739339469351067643.davem@davemloft.net>
+ <d19abcd4-799c-ac2f-ffcb-fa749d17950c@infradead.org>
+ <CAGnkfhyS15NPEO2ygkjazECULtUDkJgPk8wCYFhA9zL2+w27pg@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <49b58181-90da-4ee4-cbb0-80e226d040fc@infradead.org>
+Date:   Tue, 11 Jun 2019 19:39:51 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190610160838.GY28796@char.us.oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAGnkfhyS15NPEO2ygkjazECULtUDkJgPk8wCYFhA9zL2+w27pg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,23 +65,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 6/11/19 12:08 AM, Konrad Rzeszutek Wilk wrote:
-> On Mon, Jun 03, 2019 at 09:16:18AM +0800, Lu Baolu wrote:
->> This adds trace support for the Intel IOMMU driver. It
->> also declares some events which could be used to trace
->> the events when an IOVA is being mapped or unmapped in
->> a domain.
+On 6/11/19 5:08 PM, Matteo Croce wrote:
+> On Wed, Jun 12, 2019 at 1:07 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>> On 6/9/19 7:57 PM, David Miller wrote:
+>>> From: Matteo Croce <mcroce@redhat.com>
+>>> Date: Sat,  8 Jun 2019 14:50:19 +0200
+>>>
+>>>> MPLS routing code relies on sysctl to work, so let it select PROC_SYSCTL.
+>>>>
+>>>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+>>>> Suggested-by: David Ahern <dsahern@gmail.com>
+>>>> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+>>>
+>>> Applied, thanks.
+>>>
+>>
+>> This patch causes build errors when
+>> # CONFIG_PROC_FS is not set
+>> because PROC_SYSCTL depends on PROC_FS.  The build errors are not
+>> in fs/proc/ but in other places in the kernel that never expect to see
+>> PROC_FS not set but PROC_SYSCTL=y.
+>>
 > 
-> Is that even needed considering SWIOTLB also has tracing events?
+> Hi,
 > 
+> Maybe I'm missing something, if PROC_SYSCTL depends on PROC_FS, how is
+> possible to have PROC_FS not set but PROC_SYSCTL=y?
 
-Currently there isn't any trace point in swiotlb_tbl_map_single().
-If we want to add trace point there, I hope we can distinguish the
-bounce page events from other use cases (such as bounce buffer for
-direct dma), so that we could calculate how many percents of DMA buffers
-used by a specific device driver needs to use bounce page.
+When MPLS=y and MPLS_ROUTING=[y|m], MPLS_ROUTING selects PROC_SYSCTL.
+That enables PROC_SYSCTL, whether PROC_FS is set/enabled or not.
 
-Best regards,
-Baolu
+There is a warning about this in Documentation/kbuild/kconfig-language.rst:
+
+  Note:
+	select should be used with care. select will force
+	a symbol to a value without visiting the dependencies.
+	By abusing select you are able to select a symbol FOO even
+	if FOO depends on BAR that is not set.
+	In general use select only for non-visible symbols
+	(no prompts anywhere) and for symbols with no dependencies.
+	That will limit the usefulness but on the other hand avoid
+	the illegal configurations all over.
+
+
+> I tried it by manually editing .config. but make oldconfig warns:
+> 
+> WARNING: unmet direct dependencies detected for PROC_SYSCTL
+>   Depends on [n]: PROC_FS [=n]
+>   Selected by [m]:
+>   - MPLS_ROUTING [=m] && NET [=y] && MPLS [=y] && (NET_IP_TUNNEL [=n]
+> || NET_IP_TUNNEL [=n]=n)
+
+Yes, I get this also.
+
+> *
+> * Restart config...
+> *
+> *
+> * Configure standard kernel features (expert users)
+> *
+> Configure standard kernel features (expert users) (EXPERT) [Y/?] y
+>   Multiple users, groups and capabilities support (MULTIUSER) [Y/n/?] y
+>   sgetmask/ssetmask syscalls support (SGETMASK_SYSCALL) [N/y/?] n
+>   Sysfs syscall support (SYSFS_SYSCALL) [N/y/?] n
+>   Sysctl syscall support (SYSCTL_SYSCALL) [N/y/?] (NEW)
+
+So I still say that MPLS_ROUTING should depend on PROC_SYSCTL,
+not select it.
+
+-- 
+~Randy
