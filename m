@@ -2,147 +2,170 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5360C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3B3C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF9120874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:42:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="MPoY2wDr"
+	by mail.kernel.org (Postfix) with ESMTP id 74D7620874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:43:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560336197;
+	bh=vc2wEkwX9nPPRxAp5ML83w7fcPIxhmz6XZU4rHDHsbA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=UsEFpMEwdQnrZ1Q/vIb4omTyA2NW+2osYQb2dcjdGbIV+ZkU1nmG2eQvgTRi9r9cF
+	 EVxV+YX/Cr8+hy0AcmIxSFpmQpzMFin4jUdMNEoxqP//WDWOzfw+Y7nb3UfN51yAtm
+	 bCZYKU3vswvHiyIJXk5oUR/TulSkLW4RmST6Joy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391838AbfFLKmv (ORCPT
+        id S1732233AbfFLKnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:42:51 -0400
-Received: from mail-eopbgr60060.outbound.protection.outlook.com ([40.107.6.60]:3413
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389150AbfFLKmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:42:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XxjNZT99PoyVDblYkgfj2RavmbUPLPlzQmXpXT8gbu8=;
- b=MPoY2wDrrIzUx4JvgPeWDtR7jp92fYKUjYGED1clxt/WSVmL2mS5/qkfKff9rwx70dgkZGMi8fmGPuFn0Ga5pJrWP6MMyDJ0s5nNb8cl8d2qmEAAHGSpKjjVj/stt/4Mx+HOq+JRkFUEFMvcLK4iAcDF/VkxNibCtuOAfeyJIF8=
-Received: from AM6PR05MB5879.eurprd05.prod.outlook.com (20.179.0.76) by
- AM6PR05MB4405.eurprd05.prod.outlook.com (52.135.163.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Wed, 12 Jun 2019 10:42:34 +0000
-Received: from AM6PR05MB5879.eurprd05.prod.outlook.com
- ([fe80::9527:fe9d:2a02:41d5]) by AM6PR05MB5879.eurprd05.prod.outlook.com
- ([fe80::9527:fe9d:2a02:41d5%5]) with mapi id 15.20.1987.010; Wed, 12 Jun 2019
- 10:42:34 +0000
-From:   Maxim Mikityanskiy <maximmi@mellanox.com>
-To:     Jonas Bonn <jonas@norrbonn.se>,
+        Wed, 12 Jun 2019 06:43:17 -0400
+Received: from casper.infradead.org ([85.118.1.10]:52298 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbfFLKnQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 06:43:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=j5f18jG0/5hJHpAfDLqIFHqkftIh9jPJlgCGS0EkQU8=; b=eJJvE3OkfHioiVyAUvod/xWHtV
+        WGv/N2PsOYiZL3mcChSb+TQTYzkHm+vRlydFYijkHHFga8gaiM762Vydaej5hAhzbSjxNiqWxgIJA
+        CP+d59zC2wQz9RD8blXdOwWCSaXxhKkLnL0ANjl1Av52CEhiwyF8dUYtZ6gkhHjowc6HcEJUfMXxQ
+        3IZlOYIDbwarslbdNgpOEhFI1jgMgaoyOKUYq/9U+JSs9ljCepmrURegpcxLjA4TTCktKSiFNfcHf
+        NqM603BOB5I95liq3KZ+VAN+23tDKLx8zqsZ0iq+w4xGbjjCop/u3ZV94XBFY3Q3nkJ8461iJMT/W
+        ecPejnfg==;
+Received: from 177.41.119.178.dynamic.adsl.gvt.net.br ([177.41.119.178] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hb0iP-0007Id-65; Wed, 12 Jun 2019 10:42:49 +0000
+Date:   Wed, 12 Jun 2019 07:42:42 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Shenhar, Talel" <talel@amazon.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Subject: Re: [PATCH 1/1] Address regression in inet6_validate_link_af
-Thread-Topic: [PATCH 1/1] Address regression in inet6_validate_link_af
-Thread-Index: AQHVIDzu/Smg4fm3OEOQVEC2DfH3j6aX1piA
-Date:   Wed, 12 Jun 2019 10:42:34 +0000
-Message-ID: <58ac6ec1-9255-0e51-981a-195c2b1ac380@mellanox.com>
-References: <20190611100327.16551-1-jonas@norrbonn.se>
-In-Reply-To: <20190611100327.16551-1-jonas@norrbonn.se>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR0102CA0008.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:14::21) To AM6PR05MB5879.eurprd05.prod.outlook.com
- (2603:10a6:20b:a2::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=maximmi@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [95.67.35.250]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4b212d13-394e-498e-c38b-08d6ef22ad7b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR05MB4405;
-x-ms-traffictypediagnostic: AM6PR05MB4405:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <AM6PR05MB44053C9E86351FCE13BC8ED5D1EC0@AM6PR05MB4405.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:132;
-x-forefront-prvs: 0066D63CE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(39860400002)(136003)(346002)(396003)(199004)(189003)(26005)(6512007)(110136005)(486006)(31686004)(11346002)(7736002)(446003)(6506007)(6486002)(2616005)(316002)(256004)(102836004)(54906003)(386003)(14444005)(478600001)(99286004)(6436002)(186003)(476003)(53546011)(8936002)(229853002)(76176011)(52116002)(5660300002)(25786009)(36756003)(6306002)(71190400001)(71200400001)(81156014)(8676002)(66066001)(81166006)(6246003)(2906002)(14454004)(2501003)(73956011)(966005)(66946007)(305945005)(4326008)(66446008)(66556008)(2201001)(64756008)(3846002)(53936002)(66476007)(86362001)(31696002)(68736007)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB4405;H:AM6PR05MB5879.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bXXvrzJIyUwU+hMnlfVi7sPrEiw95an3OxEyxO+vnhvE8xx7AzbUrtvAOOaQhn9M1VjgGUbiiL2EIw3eWeZe13QcSz4O5vPOKx0a15MD/yvYBrvTHhWtiml+Zyh0PSUpabb7EzwnEw7YA9N5GQ7+GcVyxAm/qoNkvBSvs/n8HOxmqs4RYZp0tn34rITFtWvf3WT36mjOXWmh383mggpTSq6Jo/yxJAC9xbxOh1DZf0qIjo8NFrAn3Cs/fxbrH4R6GCvXnmwux8gzgCT6125dS6bCpD7BytHTe+ODFC0PG7xM8Uu5DT+9c/zeodQ8CUsnfR7tCVsZXfxCeE8chJ9SjZg1v/DmEBfItKx0xiJoQIiMaUuJ0A3bjhaNWBgzGLbdDfI4qI2Frhpp1ojYwN8LNsyZDWFPgo7vdReJzRw5evc=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1E91B6206AB5E843A2DAE596681AEEDF@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Message-ID: <20190612074242.53a4cf56@coco.lan>
+In-Reply-To: <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
+References: <bfbc12fb68eea9d8d4cc257c213393fd4e92c33a.camel@amazon.com>
+        <20190531051400.GA2275@cz.tnic>
+        <ce01a2bc-7973-5978-b033-a6bdc61b9d4b@amazon.com>
+        <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+        <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+        <20190608090556.GA32464@zn.tnic>
+        <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+        <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+        <20190611115651.GD31772@zn.tnic>
+        <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
+        <20190612034813.GA32652@zn.tnic>
+        <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b212d13-394e-498e-c38b-08d6ef22ad7b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 10:42:34.0978
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: maximmi@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB4405
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNi0xMSAxMzowMywgSm9uYXMgQm9ubiB3cm90ZToNCj4gUGF0Y2ggN2RjMmJjY2Fi
-MGVlMzdhYzI4MDk2YjhmY2RjMzkwYTY3OWExNTg0MSBpbnRyb2R1Y2VzIGEgcmVncmVzc2lvbg0K
-PiB3aXRoIHN5c3RlbWQgMjQxLiAgSW4gdGhhdCByZXZpc2lvbiwgc3lzdGVtZC1uZXR3b3JrZCBm
-YWlscyB0byBwYXNzIHRoZQ0KPiByZXF1aXJlZCBmbGFncyBlYXJseSBlbm91Z2guICBUaGlzIGFw
-cGVhcnMgdG8gYmUgYWRkcmVzc2VkIGluIGxhdGVyDQo+IHZlcnNpb25zIG9mIHN5c3RlbWQsIGJ1
-dCBmb3IgdXNlcnMgb2YgdmVyc2lvbiAyNDEgd2hlcmUgc3lzdGVtZC1uZXR3b3JrZA0KPiBub25l
-dGhlbGVzcyB3b3JrZWQgd2l0aCBlYXJsaWVyIGtlcm5lbHMsIHRoZSBzdHJpY3QgY2hlY2sgaW50
-cm9kdWNlZCBieQ0KPiB0aGUgcGF0Y2ggY2F1c2VzIGEgcmVncmVzc2lvbiBpbiBiZWhhdmlvdXIu
-DQo+IA0KPiBUaGlzIHBhdGNoIGNvbnZlcnRzIHRoZSBmYWlsdXJlIHRvIHN1cHBseSB0aGUgcmVx
-dWlyZWQgZmxhZ3MgZnJvbSBhbg0KPiBlcnJvciBpbnRvIGEgd2FybmluZy4NClRoZSBwdXJwb3Nl
-IG9mIG15IHBhdGNoIHdhcyB0byBwcmV2ZW50IGEgcGFydGlhbCBjb25maWd1cmF0aW9uIHVwZGF0
-ZSBvbiANCmludmFsaWQgaW5wdXQuIC1FSU5WQUwgd2FzIHJldHVybmVkIGJvdGggYmVmb3JlIGFu
-ZCBhZnRlciBteSBwYXRjaCwgdGhlIA0KZGlmZmVyZW5jZSBpcyB0aGF0IGJlZm9yZSBteSBwYXRj
-aCB0aGVyZSB3YXMgYSBwYXJ0aWFsIHVwZGF0ZSBhbmQgYSB3YXJuaW5nLg0KDQpZb3VyIHBhdGNo
-IGJhc2ljYWxseSBtYWtlcyBtaW5lIHBvaW50bGVzcywgYmVjYXVzZSB5b3UgcmV2ZXJ0IHRoZSBm
-aXgsIA0KYW5kIG5vdyB3ZSdsbCBoYXZlIHRoZSBzYW1lIHBhcnRpYWwgdXBkYXRlIGFuZCB0d28g
-d2FybmluZ3MuDQoNCk9uZSBtb3JlIHRoaW5nIGlzIHRoYXQgYWZ0ZXIgYXBwbHlpbmcgeW91ciBw
-YXRjaCBvbiB0b3Agb2YgbWluZSwgdGhlIA0Ka2VybmVsIHdvbid0IHJldHVybiAtRUlOVkFMIGFu
-eW1vcmUgb24gaW52YWxpZCBpbnB1dC4gUmV0dXJuaW5nIC1FSU5WQUwgDQppcyB3aGF0IGhhcHBl
-bmVkIGJlZm9yZSBteSBwYXRjaCwgYW5kIGFsc28gYWZ0ZXIgbXkgcGF0Y2guDQoNClJlZ2FyZGlu
-ZyB0aGUgc3lzdGVtZCBpc3N1ZSwgSSBkb24ndCB0aGluayB3ZSBzaG91bGQgY2hhbmdlIHRoZSBr
-ZXJuZWwgDQp0byBhZGFwdCB0byBidWdzIGluIHN5c3RlbWQuIHN5c3RlbWQgZGlkbid0IGhhdmUg
-dGhpcyBidWcgZnJvbSBkYXkgb25lLCANCml0IHdhcyBhIHJlZ3Jlc3Npb24gaW50cm9kdWNlZCBp
-biBbMV0uIFRoZSBrZXJuZWwgaGFzIGFsd2F5cyByZXR1cm5lZCANCi1FSU5WQUwgaGVyZSwgYnV0
-IHRoZSBiZWhhdmlvciBiZWZvcmUgbXkgcGF0Y2ggd2FzIGJhc2ljYWxseSBhIFVCLCBhbmQgDQph
-ZnRlciB0aGUgcGF0Y2ggaXQncyB3ZWxsLWRlZmluZWQuIElmIHN5c3RlbWQgc2F3IEVJTlZBTCBh
-bmQgcmVsaWVkIG9uIA0KdGhlIFVCIHRoYXQgY2FtZSB3aXRoIGl0LCBpdCBjYW4ndCBiZSBhIHJl
-YXNvbiBlbm91Z2ggdG8gYnJlYWsgdGhlIGtlcm5lbC4NCg0KTW9yZW92ZXIsIHRoZSBidWcgbG9v
-a3MgZml4ZWQgaW4gc3lzdGVtZCdzIG1hc3Rlciwgc28gd2hhdCB5b3Ugc3VnZ2VzdCANCmlzIHRv
-IGluc2VydCBhIGtlcm5lbC1zaWRlIHdvcmthcm91bmQgZm9yIGFuIG9sZCB2ZXJzaW9uIG9mIHNv
-ZnR3YXJlIA0Kd2hlbiB0aGVyZSBpcyBhIGZpeGVkIG9uZS4NCg0KUGxlYXNlIGNvcnJlY3QgbWUg
-aWYgYW55dGhpbmcgSSBzYXkgaXMgd3JvbmcuDQoNClRoYW5rcywNCk1heA0KDQpbMV06IA0KaHR0
-cHM6Ly9naXRodWIuY29tL3N5c3RlbWQvc3lzdGVtZC9jb21taXQvMGUyZmRiODNiYjVlMjIwNDdl
-MGM3Y2MwNThiNDE1ZDBlOTNmMDJjZg0KDQo+IFdpdGggdGhpcywgc3lzdGVtZC1uZXR3b3JrZCB2
-ZXJzaW9uIDI0MSBvbmNlDQo+IGFnYWluIGlzIGFibGUgdG8gYnJpbmcgdXAgdGhlIGxpbmssIGFs
-YmVpdCBub3QgcXVpdGUgYXMgaW50ZW5kZWQgYW5kDQo+IHRoZXJlYnkgd2l0aCBhIHdhcm5pbmcg
-aW4gdGhlIGtlcm5lbCBsb2cuDQo+IA0KPiBDQzogTWF4aW0gTWlraXR5YW5za2l5IDxtYXhpbW1p
-QG1lbGxhbm94LmNvbT4NCj4gQ0M6IERhdmlkIFMuIE1pbGxlciA8ZGF2ZW1AZGF2ZW1sb2Z0Lm5l
-dD4NCj4gQ0M6IEFsZXhleSBLdXpuZXRzb3YgPGt1em5ldEBtczIuaW5yLmFjLnJ1Pg0KPiBDQzog
-SGlkZWFraSBZT1NISUZVSkkgPHlvc2hmdWppQGxpbnV4LWlwdjYub3JnPg0KPiBTaWduZWQtb2Zm
-LWJ5OiBKb25hcyBCb25uIDxqb25hc0Bub3JyYm9ubi5zZT4NCj4gLS0tDQo+ICAgbmV0L2lwdjYv
-YWRkcmNvbmYuYyB8IDMgKystDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwg
-MSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL25ldC9pcHY2L2FkZHJjb25mLmMgYi9u
-ZXQvaXB2Ni9hZGRyY29uZi5jDQo+IGluZGV4IDA4MWJiNTE3ZTQwZC4uZTI0NzdiZjkyZTEyIDEw
-MDY0NA0KPiAtLS0gYS9uZXQvaXB2Ni9hZGRyY29uZi5jDQo+ICsrKyBiL25ldC9pcHY2L2FkZHJj
-b25mLmMNCj4gQEAgLTU2OTYsNyArNTY5Niw4IEBAIHN0YXRpYyBpbnQgaW5ldDZfdmFsaWRhdGVf
-bGlua19hZihjb25zdCBzdHJ1Y3QgbmV0X2RldmljZSAqZGV2LA0KPiAgIAkJcmV0dXJuIGVycjsN
-Cj4gICANCj4gICAJaWYgKCF0YltJRkxBX0lORVQ2X1RPS0VOXSAmJiAhdGJbSUZMQV9JTkVUNl9B
-RERSX0dFTl9NT0RFXSkNCj4gLQkJcmV0dXJuIC1FSU5WQUw7DQo+ICsJCW5ldF93YXJuX3JhdGVs
-aW1pdGVkKA0KPiArCQkJInJlcXVpcmVkIGxpbmsgZmxhZyBvbWl0dGVkOiBUT0tFTi9BRERSX0dF
-Tl9NT0RFXG4iKTsNCj4gICANCj4gICAJaWYgKHRiW0lGTEFfSU5FVDZfQUREUl9HRU5fTU9ERV0p
-IHsNCj4gICAJCXU4IG1vZGUgPSBubGFfZ2V0X3U4KHRiW0lGTEFfSU5FVDZfQUREUl9HRU5fTU9E
-RV0pOw0KPiANCg0K
+Em Wed, 12 Jun 2019 18:29:26 +1000
+Benjamin Herrenschmidt <benh@kernel.crashing.org> escreveu:
+
+> On Wed, 2019-06-12 at 05:48 +0200, Borislav Petkov wrote:
+> > On Wed, Jun 12, 2019 at 08:25:52AM +1000, Benjamin Herrenschmidt wrote:  
+> > > Yes, we would be in a world of pain already if tracepoints couldn't
+> > > handle concurrency :-)  
+> > 
+> > Right, lockless buffer and the whole shebang :)  
+> 
+> Yup.
+> 
+> > > Sort-of... I still don't see a race in what we propose but I might be
+> > > missing something subtle. We are talking about two drivers for two
+> > > different IP blocks updating different counters etc...  
+> > 
+> > If you do only *that* you should be fine. That should technically be ok.  
+> 
+> Yes, that' the point.
+
+I don't think the EDAC core has any troubles with concurrency. 
+
+As far as I remember, the hacks we had to do at x86 world are due to 
+concurrency at the hardware side: having two RAS codes (either between
+a driver and BIOS APEI/GHES or between two drivers) accessing the same 
+set of MCA registers doesn't work at the Intel chipsets I'm aware of.
+
+> 
+> > I still think, though, that the sensible thing to do is have one
+> > platform driver which concentrates all RAS functionality.   
+>
+
+> I tend to disagree here. We've been down that rabbit hole in the past
+> and we (Linux in general) are trying to move away from that sort of
+> "platform" overarching driver as much as possible.
+
+Without entering on ARM-specific architecture design, I tend to agree
+with the principle that different hardware components would use different
+RAS drivers, provided that they use the already existing RAS cores.
+
+Up to some extend, we have already multiple RAS drivers right now.
+
+Besides EDAC/MCE, there are for example, PCIe errors that can come via 
+AER. Network drivers also report errors using different mechanisms.
+I know a person that it is interested on working on an implementation
+to collect disk errors using a trace-based error report mechanism.
+
+So, at the end of the day, different errors may come from different
+drivers using different non-overlapping error mechanisms.
+
+That's said, from the admin PoV, it makes sense to have a single
+daemon that collect errors from all error sources and take the
+needed actions.
+
+> 
+> > It is the
+> > more sensible design and takes care of potential EDAC shortcomings and
+> > the need to communicate between the different logging functionality,
+> > as in, for example, "I had so many errors, lemme go and increase DRAM
+> > scrubber frequency." For example. And all the other advantages of having
+> > everything in a single driver.  
+> 
+> This is a policy. It should either belong to userspace, or be in some
+> generic RAS code in the kernel, there's no reason why these can't be
+> abstracted. Also in your specific example, it could be entirely local
+> to the MC EDAC / DRAM controller path, we could have a generic way for
+> EDAC to advertise that a given memory channel is giving lots of errors
+> and have memory controller drivers listen to it but usually the EDAC MC
+> driver *is* the only thing that looks like a MC driver to begin with,
+> so again, pretty much no overlap with L1/L2 caches RAS or PCIe RAS
+> etc...
+
+On userspace, I guess there's just the rasdaemon and the old legacy
+edac-utils. 
+
+Right now, the rasdaemon doesn't have anything like that, but we keep
+integrating new RAS report mechanisms to it (we just added support
+this week for network devlink error reports). 
+
+If I had to put a policy like that on userspace, rasdaemon should probably 
+be the right place to add it.
+
+Thanks,
+Mauro
