@@ -2,173 +2,103 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E88C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7033DC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798D0215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:00:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="b5yvmRAC"
+	by mail.kernel.org (Postfix) with ESMTP id 4760B20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388911AbfFLT7d (ORCPT
+        id S2389251AbfFLUBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:59:33 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35821 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388521AbfFLT7c (ORCPT
+        Wed, 12 Jun 2019 16:01:43 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43933 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388447AbfFLUBn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:59:32 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c6so7784922wml.0;
-        Wed, 12 Jun 2019 12:59:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gSCXfO4SZrHlREdSSaw8mmXbrGugYj3k3dCGPOAQii8=;
-        b=b5yvmRACWpqZ/mN/ykGbaGobmJoGlHZekESdaJ+IMrlyyO486QMrsD9N2cimWIO4dG
-         Kq+tWdh2lksKWf5OOkGBv8kWpJtVTyYTxgO5jkGDcfD3zruKUO/v+Y6hTLzpMZ3sD4jI
-         3eIvzVe7KE5gFjV57z7PQ53N9aaJRubZLPgVENh/O079qENraDUMbkWeMnLZRCAZSlaR
-         i7AJIZ5lJc/a+FysvG/zS0quCQKlZfchyH4/9CiNF4EhIELK80/GqmMomPJAqhSxAStJ
-         RQYLZpsXBIEW2BTaYaj6aAbYNDwTNRxCkc8ke5VpzvkcTKKZKlmlEkfMAl+jm/1+vjPs
-         UE4g==
+        Wed, 12 Jun 2019 16:01:43 -0400
+Received: by mail-ot1-f65.google.com with SMTP id i8so16669917oth.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 13:01:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gSCXfO4SZrHlREdSSaw8mmXbrGugYj3k3dCGPOAQii8=;
-        b=rFvNQtoup7LzYQd4RO4J4AM4jEeVUE31PInxbXmCxOawcCRjk8zAjizePxQ7BD2ryN
-         nuZUwcMk1VV9atT9DxsfSaongnGFaHEqqgFciVwIZaibAKaPxr3sJDECr2lWJcz+bl0L
-         gsEcbMx+kBFosXMWIrOtbsZkSpR8WbX6EKA4JqlwaDf1Kj2Bk7g3ylxk0yKp1rtIMe2Q
-         6FtgslkkLm/AvChXZhhI7lq1EIRXs51uqfNDEJ2XvpwRUf+fFHnHVYwN9o/UnEH2nKTt
-         0qmujLbYIoycFf++YHMSVO6q5EkPdVMkhdYtGgIx4CBuqqD9DDURaiVQA8qWSVQAkS6+
-         oZsQ==
-X-Gm-Message-State: APjAAAW+pi6ycrnIpO5RiISG+W/FBcCZOq7MlgZLTxijW3JmiQZTij+G
-        sOLt7wpOu81vF3D9sMhUfVA=
-X-Google-Smtp-Source: APXvYqxx6WQ0Q2TthI9hcw9mcaNNk72tal9lYxSvbzj/rzuhF1Bm90n0CNI5eUROu1nDamDovAo5Tw==
-X-Received: by 2002:a1c:4b1a:: with SMTP id y26mr601629wma.105.1560369569855;
-        Wed, 12 Jun 2019 12:59:29 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133DDA400428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:33dd:a400:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id f10sm1026745wrg.24.2019.06.12.12.59.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 12:59:28 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
-        thierry.reding@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        u.kleine-koenig@pengutronix.de, narmstrong@baylibre.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 00/14] pwm-meson: cleanups and improvements
-Date:   Wed, 12 Jun 2019 21:58:57 +0200
-Message-Id: <20190612195911.4442-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0O8kud1OZKkvtHeAHVJbfPeAphq/Q2FLAtf0UYYJ3/U=;
+        b=jfvmGr6vXnwPJXt2O/LJ+JA/LZ9J7HqtQsp80r4ZrIQ3/S50EA+IwkiTBriCXwFyKg
+         MOFOGjaHZ/rDyA4dr+TqkDyKpGhurM6wkW23Ghi9L4gTt33Ov5swAa2pMYU9T4Nqxtv5
+         DqH304gbQO4Vt8Y54k1QkC42oQgs6zAY0osLuDATW1olzV3nasxDoAbi9MKjnyEjk+v7
+         UaeL80WnvyhOg0qPR6ULLu1EAZZ9s5b05Kls/6hcWIZVzeHS9orTunrnT79tXNWbNRxC
+         LntV3JrgK0/snHU0b+yacZr5vDlghoFK2iggtONksdaLiNKxd7ITfnRGFSYcCfzc30XU
+         qKvw==
+X-Gm-Message-State: APjAAAXWigCGwG9njgUW7o+dYs1+OwcaKpmZyWKgMuoFY+HL+bApB9yH
+        e+MnYwK9I3xR4vrtasPgCxaLQ0Ru
+X-Google-Smtp-Source: APXvYqzJVTYaWENbmZQvZgwch+ObRfP7lb9GuIMIds4iW518UgnGBKfuWXySpXfrM5XGqnpA5SJXCA==
+X-Received: by 2002:a9d:7a9a:: with SMTP id l26mr33759232otn.71.1560369702116;
+        Wed, 12 Jun 2019 13:01:42 -0700 (PDT)
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com. [209.85.210.52])
+        by smtp.gmail.com with ESMTPSA id x128sm222264oig.54.2019.06.12.13.01.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 13:01:41 -0700 (PDT)
+Received: by mail-ot1-f52.google.com with SMTP id p4so13448958oti.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 13:01:40 -0700 (PDT)
+X-Received: by 2002:a05:6830:1192:: with SMTP id u18mr35659756otq.74.1560369700348;
+ Wed, 12 Jun 2019 13:01:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190422183056.16375-1-leoyang.li@nxp.com> <20190510030525.GC15856@dragon>
+In-Reply-To: <20190510030525.GC15856@dragon>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Wed, 12 Jun 2019 15:01:29 -0500
+X-Gmail-Original-Message-ID: <CADRPPNT2G20j2pvSEyqX=_WNDPrcNR+xCR_XZukbnSW19wFLNA@mail.gmail.com>
+Message-ID: <CADRPPNT2G20j2pvSEyqX=_WNDPrcNR+xCR_XZukbnSW19wFLNA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: defconfig: Enable FSL_EDMA driver
+To:     Shawn Guo <shawnguo@kernel.org>, madalin.bucur@nxp.com,
+        Rob Herring <robh+dt@kernel.org>, aisheng.dong@nxp.com
+Cc:     Vinod Koul <vkoul@kernel.org>, Grant Likely <grant.likely@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series consists of various cleanups and improvements for the
-pwm-meson driver.
+On Thu, May 9, 2019 at 10:15 PM Shawn Guo <shawnguo@kernel.org> wrote:
+>
+> On Mon, Apr 22, 2019 at 01:30:56PM -0500, Li Yang wrote:
+> > Enables the FSL EDMA driver by default.  This also works around an issue
+> > that imx-i2c driver keeps deferring the probe because of the DMA is not
+> > ready.  And currently the DMA engine framework can not correctly tell
+> > if the DMA channels will truly become available later (it will never be
+> > available if the DMA driver is not enabled).
+> >
+> > This will cause indefinite messages like below:
+> > [    3.335829] imx-i2c 2180000.i2c: can't get pinctrl, bus recovery not supported
+> > [    3.344455] ina2xx 0-0040: power monitor ina220 (Rshunt = 1000 uOhm)
+> > [    3.350917] lm90 0-004c: 0-004c supply vcc not found, using dummy regulator
+> > [    3.362089] imx-i2c 2180000.i2c: can't get pinctrl, bus recovery not supported
+> > [    3.370741] ina2xx 0-0040: power monitor ina220 (Rshunt = 1000 uOhm)
+> > [    3.377205] lm90 0-004c: 0-004c supply vcc not found, using dummy regulator
+> > [    3.388455] imx-i2c 2180000.i2c: can't get pinctrl, bus recovery not supported
+> > .....
+> >
+> > Signed-off-by: Li Yang <leoyang.li@nxp.com>
+>
+> Applied, thanks.
 
-Patches 1 to 6 are small code cleanups with the goal of making the code
-easier to read.
+Hi Shawn,
 
-Patches 7 to 9 are reworking the way the per-channel settings are
-accessed. This is a first preparation step for adding full support to
-meson_pwm_get_state() in the pwm-meson driver. Patch 7 makes struct
-meson_pwm_channel accessible from struct meson_pwm because
-meson_pwm_get_state() cannot use pwm_get_chip_data(). Patch 8 removes
-redundant switch/case statements and ensures that we don't have to
-add another redundant one for the upcoming full meson_pwm_get_state()
-implementation. Patch 9 gets rid of meson_pwm_add_channels() and moves
-the pwm_set_chip_data() call to meson_pwm_request() (like all other PWM
-drivers do - except two).
+Is it possible to move this patch to the -fix series so that it can
+reach the mainline earlier?  It is having a boot failure in mainline
+for platforms using this device without this workaround.
 
-Patch 10 is based on a suggestion by Uwe to simplify the calculation of
-the values which the PWM IP requires. The nice benefit of this is that
-we have an easier calculation which we can do "in reverse" for the
-meson_pwm_get_state() (which calculates nanoseconds from the hardware
-values).
+I see Rob added a new API driver_deferred_probe_check_state() last
+year.  Probably we should update the imx-i2c driver to use the new API
+for optional dependencies to avoid this kind of situation completely?
 
-Patch 11 implements reading the period and duty cycle in the
-meson_pwm_get_state() callback.
-
-Patch 12 removes some internal caching which we don't need anymore now
-meson_pwm_get_state() is fully implemented. The PWM core now takes care
-of not calling pwm_ops.apply() if "nothing has changed".
-
-Patch 13 adds support for PWM_POLARITY_INVERSED when disabling the
-output as suggested by Uwe.
-
-Patch 14 completes this series by adding some documentation to the
-driver. Thanks to Neil for summarizing how the hardware works
-internally.
-
-Due to the changed PWM calculation in patch 10 I have verified that
-we don't break any existing boards. The patch itself contains two
-examples which show that the new calculation improves precision. I
-made screenshots of the measurements in pulseview [0] for the second
-case ("PWM LED on Khadas VIM"):
-- old algorithm: [1]
-- old algorithm: [2]
-
-Dependencies:
-This series applies on top of Neil's patch "pwm: pwm-meson: update with
-SPDX Licence identifier" [3]
-
-Changes since v1 at [4]:
-- fixed MESON_NUM_PWM vs MESON_NUM_PWMS typo in patch #7
-- add another example to patch #10 where the pre_div has changed with
-  the new calculation. the generated PWM signal is still the same as
-  measuring shows
-- added Neil's Reviewed-by's and Uwe's Acked-by (thank you!)
-
-Changes since v2 at [5]:
-- fix the SoC name in the documentation patch (#14). The link points
-  to the S912 datasheet so we shouldn't call it the "S922X datasheet".
-  Spotted by Chris Moore (thank you!)
-- add the link to the S922X datasheet in the documentation patch (#14)
-  because that SoC generation contains an updated version of the IP
-  block with hardware support for "inversion" and "constant mode"
-- put my Signed-off-by after all Reviewed-by/Acked-by to indicate that
-  I was the one who put the R-b/A-b there (spotted by Uwe - thank you)
-- added Uwe's Reviewed-by to three patches (thank you!)
-
-
-[0] https://sigrok.org/wiki/PulseView
-[1] https://abload.de/img/old-algormjs9.png
-[2] https://abload.de/img/new-algo4ckjo.png
-[3] https://patchwork.kernel.org/patch/10951319/
-[4] https://patchwork.kernel.org/cover/10961073/
-[5] https://patchwork.kernel.org/cover/10983279/
-
-
-Martin Blumenstingl (14):
-  pwm: meson: unify the parameter list of meson_pwm_{enable,disable}
-  pwm: meson: use devm_clk_get_optional() to get the input clock
-  pwm: meson: use GENMASK and FIELD_PREP for the lo and hi values
-  pwm: meson: change MISC_CLK_SEL_WIDTH to MISC_CLK_SEL_MASK
-  pwm: meson: don't duplicate the polarity internally
-  pwm: meson: pass struct pwm_device to meson_pwm_calc()
-  pwm: meson: add the meson_pwm_channel data to struct meson_pwm
-  pwm: meson: add the per-channel register offsets and bits in a struct
-  pwm: meson: move pwm_set_chip_data() to meson_pwm_request()
-  pwm: meson: simplify the calculation of the pre-divider and count
-  pwm: meson: read the full hardware state in meson_pwm_get_state()
-  pwm: meson: don't cache struct pwm_state internally
-  pwm: meson: add support PWM_POLARITY_INVERSED when disabling
-  pwm: meson: add documentation to the driver
-
- drivers/pwm/pwm-meson.c | 327 +++++++++++++++++++++-------------------
- 1 file changed, 173 insertions(+), 154 deletions(-)
-
--- 
-2.22.0
-
+Regards,
+Leo
