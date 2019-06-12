@@ -2,116 +2,147 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB95C31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23A3C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6139D21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80C5621019
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439373AbfFLNYb (ORCPT
+        id S2439309AbfFLNYn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:24:31 -0400
-Received: from sauhun.de ([88.99.104.3]:59658 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437469AbfFLNYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:24:31 -0400
-Received: from localhost (p5486CACA.dip0.t-ipconnect.de [84.134.202.202])
-        by pokefinder.org (Postfix) with ESMTPSA id 93BAB2C54BC;
-        Wed, 12 Jun 2019 15:24:29 +0200 (CEST)
-Date:   Wed, 12 Jun 2019 15:24:29 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ruslan Babayev <ruslan@babayev.com>,
-        Andrew de Quincey <adq_dvb@lidskialf.net>
-Subject: Re: linux-next: build warning after merge of the i2c tree
-Message-ID: <20190612132429.GA5862@kunai>
-References: <20190611102528.44ad5783@canb.auug.org.au>
- <20190612081929.GA1687@kunai>
- <20190612080226.45d2115a@coco.lan>
- <20190612110904.qhuoxyljgoo76yjj@ninjato>
- <20190612084824.16671efa@coco.lan>
- <20190612120439.GB2805@kunai>
- <20190612093229.7f14a1e2@coco.lan>
- <20190612231535.253a8a20@canb.auug.org.au>
+        Wed, 12 Jun 2019 09:24:43 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:32959 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2437123AbfFLNYm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 09:24:42 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-189-CYuI-zRlOtGfu46-Pzuvvw-1; Wed, 12 Jun 2019 14:24:38 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed,
+ 12 Jun 2019 14:24:38 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 12 Jun 2019 14:24:38 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Eric W. Biederman'" <ebiederm@xmission.com>
+CC:     'Oleg Nesterov' <oleg@redhat.com>,
+        'Andrew Morton' <akpm@linux-foundation.org>,
+        'Deepa Dinamani' <deepa.kernel@gmail.com>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "'arnd@arndb.de'" <arnd@arndb.de>,
+        "'dbueso@suse.de'" <dbueso@suse.de>,
+        "'axboe@kernel.dk'" <axboe@kernel.dk>,
+        "'dave@stgolabs.net'" <dave@stgolabs.net>,
+        "'e@80x24.org'" <e@80x24.org>,
+        "'jbaron@akamai.com'" <jbaron@akamai.com>,
+        "'linux-fsdevel@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>,
+        "'linux-aio@kvack.org'" <linux-aio@kvack.org>,
+        "'omar.kilani@gmail.com'" <omar.kilani@gmail.com>,
+        "'tglx@linutronix.de'" <tglx@linutronix.de>,
+        'Al Viro' <viro@ZenIV.linux.org.uk>,
+        'Linus Torvalds' <torvalds@linux-foundation.org>,
+        "'linux-arch@vger.kernel.org'" <linux-arch@vger.kernel.org>
+Subject: RE: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
+Thread-Topic: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
+Thread-Index: AQHVH9JWknGdQ9+D0UeylJNmvFzQKKaWJ31QgAAjZdCAAbHqlYAAAXJw
+Date:   Wed, 12 Jun 2019 13:24:38 +0000
+Message-ID: <a11bb1a2a6de4cf5aa773ea79c602f1a@AcuMS.aculab.com>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+        <20190529161157.GA27659@redhat.com>
+        <20190604134117.GA29963@redhat.com>
+        <20190606140814.GA13440@redhat.com> <87k1dxaxcl.fsf_-_@xmission.com>
+        <87ef45axa4.fsf_-_@xmission.com> <20190610162244.GB8127@redhat.com>
+        <87lfy96sta.fsf@xmission.com>
+        <9199239a450d4ea397783ccf98742220@AcuMS.aculab.com>
+        <95decc6904754004af8a5546aca0468a@AcuMS.aculab.com>
+ <87pnnj2ca0.fsf@xmission.com>
+In-Reply-To: <87pnnj2ca0.fsf@xmission.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
-Content-Disposition: inline
-In-Reply-To: <20190612231535.253a8a20@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: CYuI-zRlOtGfu46-Pzuvvw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---k1lZvvs/B4yU6o8G
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jun 12, 2019 at 11:15:35PM +1000, Stephen Rothwell wrote:
-> Hi all,
->=20
-> On Wed, 12 Jun 2019 09:32:29 -0300 Mauro Carvalho Chehab <mchehab@infrade=
-ad.org> wrote:
+From: Eric W. Biederman
+> Sent: 12 June 2019 13:56
+> David Laight <David.Laight@ACULAB.COM> writes:
+> 
+> > From: David Laight
+> >> Sent: 11 June 2019 10:52
+> > ...
+> >> If I have an application that has a loop with a pselect call that
+> >> enables SIGINT (without a handler) and, for whatever reason,
+> >> one of the fd is always 'ready' then I'd expect a SIGINT
+> >> (from ^C) to terminate the program.
+> >>
+> >> A quick test program:
+> >>
+> >> #include <sys/time.h>
+> >> #include <sys/types.h>
+> >> #include <unistd.h>
+> >>
+> >> #include <sys/select.h>
+> >> #include <signal.h>
+> >>
+> >> int main(int argc, char **argv)
+> >> {
+> >>         fd_set readfds;
+> >>         sigset_t sig_int;
+> >>         struct timespec delay = {1, 0};
+> >>
+> >>         sigfillset(&sig_int);
+> >>         sigdelset(&sig_int, SIGINT);
+> >>
+> >>         sighold(SIGINT);
+> >>
+> >>         for (;;) {
+> >>                 FD_ZERO(&readfds);
+> >>                 FD_SET(0, &readfds);
+> >>                 pselect(1, &readfds, NULL, NULL, &delay, &sig_int);
+> >>
+> >>                 poll(0,0,1000);
+> >>         }
+> >> }
+> >>
+> >> Run under strace to see what is happening and send SIGINT from a different terminal.
+> >> The program sleeps for a second in each of the pselect() and poll() calls.
+> >> Send a SIGINT and in terminates after pselect() returns ERESTARTNOHAND.
+> >>
+> >> Run again, this time press enter - making fd 0 readable.
+> >> pselect() returns 1, but the program still exits.
+> >> (Tested on a 5.1.0-rc5 kernel.)
+> >>
+> >> If a signal handler were defined it should be called instead.
 > >
-> > Em Wed, 12 Jun 2019 14:04:39 +0200
-> > Wolfram Sang <wsa@the-dreams.de> escreveu:
-> >=20
-> > > > > OK, so that means I should send my pull request after yours in th=
-e next
-> > > > > merge window? To avoid the build breakage?   =20
-> > > >=20
-> > > > Either that or you can apply my patch on your tree before the
-> > > > patch that caused the breakage.=20
-> > > >=20
-> > > > Just let me know what works best for you.   =20
-> > >=20
-> > > Hmm, the offending patch is already in -next and I don't rebase my tr=
-ee.
-> > > So, I guess it's the merge window dependency then.
-> > >  =20
-> > Ok, I'll merge it through my tree then.
->=20
-> It should go into the i2c tree (since that is where the *warning* was
-> introduced).  It is only a warning and there won't be many patches
-> between the patch that introduced the warning and this one that fixes
-> it.  This patch could then have a Fixes tag that makes sense i.e. it
-> will reference a previous commit.
+> > If I add a signal handler for SIGINT it is called when pselect()
+> > returns regardless of the return value.
+> 
+> That is odd.  Is this with Oleg's fix applied?
 
-I can apply the patch to my i2c/for-next branch, but not to my
-i2c/for-5.3 branch (which I merge into i2c/for-next). This way, the
-warning will go away, but the media patch still goes to Linus via the
-media tree. Is that suitable for you?
+No it is a 5.1.0-rc5 kernel with no related local patches.
+So it is the 'historic' behaviour of pselect().
+But not the original one! Under 2.6.22-5-31 the signal handler isn't caller
+when pselect() returns 1.
 
+	David
 
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
---k1lZvvs/B4yU6o8G
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0A/QkACgkQFA3kzBSg
-KbaiYQ//YbzgHF3IWTPhIpd+28zpYqI5GRF/lATJTmZNgWgNRwtl06+yBpMYJ10r
-TMV+Mx+HXAS8BHApNEGr1qTtbE9e8pD3gKdk+2LHYprk/+htApR2hqxJ07UvIX6t
-yyB96RqcTD8FuhjIzvETvTml7anIb8CTPzX8KVaLKlHCqy82eeysnHn34TarPc3g
-jFlTJlKBeXSGZL7JTLjrbbVQPHo1VOB2juhqKFKxjchJslCbhdd0ESq5A3MgPd+S
-pZ4cCeRvHa5cLhm1a/xhF/ER2hcjA3+g7BaxhqGQvAcuM/6ZR2U5wJyUHH9NXS/Z
-Jc6arFof/UQjR2B+TPfBPurN1cMdpxixrrrkS40Bo4P7C+AIowbDfm5a0XCp9qCM
-rI1RbAAkvD/PPjKmNvwMvMm48BwLudEsrQFHbZM/UwGe8VVF+LGVl5XPS5M8ax+0
-vjkY+qb/x+qYbrw1ZQZfvbrQ5r+Sw+tNesx3/SwKlMecfnnQ8dBDqSVQXUHETCAF
-1Bw5gLh3ejpb/fosGH1uggY1Pm0kySgyWuK+P9pW26Zb1oMOCNR0/snG5Vhhd2Hx
-Yy8jIdxA3MVoLt001ST8EjDPEJwTqXIv+nM2GDSRiD5u5QgIjAlt4bCNspE/EGdq
-OBNF49wgc6gI91UzsyFRrhN8yAFLjGlmABDS0F/6u50jNlL6mrU=
-=iSgc
------END PGP SIGNATURE-----
-
---k1lZvvs/B4yU6o8G--
