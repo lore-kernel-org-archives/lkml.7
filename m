@@ -2,147 +2,248 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23A3C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0407C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C5621019
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 897D420866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:26:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QYWBrnNj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439309AbfFLNYn convert rfc822-to-8bit (ORCPT
+        id S1729313AbfFLN0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:24:43 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:32959 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2437123AbfFLNYm (ORCPT
+        Wed, 12 Jun 2019 09:26:09 -0400
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:43270 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728977AbfFLN0J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:24:42 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-189-CYuI-zRlOtGfu46-Pzuvvw-1; Wed, 12 Jun 2019 14:24:38 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed,
- 12 Jun 2019 14:24:38 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 12 Jun 2019 14:24:38 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'Eric W. Biederman'" <ebiederm@xmission.com>
-CC:     'Oleg Nesterov' <oleg@redhat.com>,
-        'Andrew Morton' <akpm@linux-foundation.org>,
-        'Deepa Dinamani' <deepa.kernel@gmail.com>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "'arnd@arndb.de'" <arnd@arndb.de>,
-        "'dbueso@suse.de'" <dbueso@suse.de>,
-        "'axboe@kernel.dk'" <axboe@kernel.dk>,
-        "'dave@stgolabs.net'" <dave@stgolabs.net>,
-        "'e@80x24.org'" <e@80x24.org>,
-        "'jbaron@akamai.com'" <jbaron@akamai.com>,
-        "'linux-fsdevel@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>,
-        "'linux-aio@kvack.org'" <linux-aio@kvack.org>,
-        "'omar.kilani@gmail.com'" <omar.kilani@gmail.com>,
-        "'tglx@linutronix.de'" <tglx@linutronix.de>,
-        'Al Viro' <viro@ZenIV.linux.org.uk>,
-        'Linus Torvalds' <torvalds@linux-foundation.org>,
-        "'linux-arch@vger.kernel.org'" <linux-arch@vger.kernel.org>
-Subject: RE: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
-Thread-Topic: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
-Thread-Index: AQHVH9JWknGdQ9+D0UeylJNmvFzQKKaWJ31QgAAjZdCAAbHqlYAAAXJw
-Date:   Wed, 12 Jun 2019 13:24:38 +0000
-Message-ID: <a11bb1a2a6de4cf5aa773ea79c602f1a@AcuMS.aculab.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
-        <20190529161157.GA27659@redhat.com>
-        <20190604134117.GA29963@redhat.com>
-        <20190606140814.GA13440@redhat.com> <87k1dxaxcl.fsf_-_@xmission.com>
-        <87ef45axa4.fsf_-_@xmission.com> <20190610162244.GB8127@redhat.com>
-        <87lfy96sta.fsf@xmission.com>
-        <9199239a450d4ea397783ccf98742220@AcuMS.aculab.com>
-        <95decc6904754004af8a5546aca0468a@AcuMS.aculab.com>
- <87pnnj2ca0.fsf@xmission.com>
-In-Reply-To: <87pnnj2ca0.fsf@xmission.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 12 Jun 2019 09:26:09 -0400
+Received: by mail-vk1-f195.google.com with SMTP id m193so3251769vke.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 06:26:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E7fySMumjNmRNmMY5t+/ORC71GvUDcf7jQJsz2Lmu8Y=;
+        b=QYWBrnNjzTR4SGTlmO+2dMnBv0gF7OVThMta1UF3J+3SU6BeS6RM+NzORZ66PxnWMr
+         TN4VaBhSU8xmyY+EpiRD7RUp/3nb+aJxMFRBITrHO7pf7VOLwfr75hgtcrdjNdhikPqg
+         CQ0xBkMxoL13nkJCidmvZ5LkHGd1qFz+h1IAO85qJdsWiPFmVRRH9ubM6QwTjpUo0lRH
+         l8+unLl6yS22kj5G2/kesq8q0bzn8XxOe56vJ7Nwgq1hxtYfcbCqgmfsl9UPsih6Eq4f
+         44D0bXKixT4b/tmZKKQrVAKKLo9+5lz4OVfKHUOuvLssmnlfk4kDGpVhZNeT0V3qZoSs
+         Ezrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E7fySMumjNmRNmMY5t+/ORC71GvUDcf7jQJsz2Lmu8Y=;
+        b=kDYqKDWFOONl5P9Atn94f9srpCUij2nsd0aaAfVM7BM/JSHdShOFIdBC3pETyYFbuP
+         gH+CzYwDhYS6vkHod0fXPu2Yw1WLdrb+VFzif7u7eDPOJtx6iR1rMcF4ddE85joszTWe
+         xvTgPjeb5fpoaGGTnGyLw1pARJL1gelLNcudllNn2H0YkULqH3NcvnTcOScKxGkNphYn
+         iv4YXK4mMxg+AjAjoIv8WtnRCr1pFfDJ8s1PE8GbtMKCQePPbSFLCgsc0wRYuf7gzCOq
+         lw51phv9BDp3b3Q5SLTNcT1FACFqLYDksq0HcQLysb6/e8pJXZWVqLLk9juNEFdOVRn/
+         7HJA==
+X-Gm-Message-State: APjAAAUfkMFQM1ofI1P0DcIxHyJStTchYHILO5ZH9wwwmottIT0PsjKA
+        xhd1a1lIdVBnEB4yxZoU9f0wzX9ykaIISOOEiVeaDg==
+X-Google-Smtp-Source: APXvYqzHLztZ6A07mA3L0RxrvDr4TaNWEVgx7eQUPB1lNxzINC6SuMv7jHQOr/DXwamjqJh6KLqVETMYT0iIgnB+Yjs=
+X-Received: by 2002:ac5:c2d2:: with SMTP id i18mr23129212vkk.36.1560345967778;
+ Wed, 12 Jun 2019 06:26:07 -0700 (PDT)
 MIME-Version: 1.0
-X-MC-Unique: CYuI-zRlOtGfu46-Pzuvvw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20190607223716.119277-1-dianders@chromium.org> <20190607223716.119277-3-dianders@chromium.org>
+In-Reply-To: <20190607223716.119277-3-dianders@chromium.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 12 Jun 2019 15:25:31 +0200
+Message-ID: <CAPDyKFpdkkzkbSy-uWL8TwdNFjJi10au7ZDOYjoWuDzftpoNsQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] mmc: core: API for temporarily disabling
+ auto-retuning due to errors
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Double Lo <double.lo@cypress.com>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        netdev@vger.kernel.org, brcm80211-dev-list@cypress.com,
+        Jiong Wu <lohengrin1024@gmail.com>,
+        Ritesh Harjani <riteshh@codeaurora.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Avri Altman <avri.altman@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman
-> Sent: 12 June 2019 13:56
-> David Laight <David.Laight@ACULAB.COM> writes:
-> 
-> > From: David Laight
-> >> Sent: 11 June 2019 10:52
-> > ...
-> >> If I have an application that has a loop with a pselect call that
-> >> enables SIGINT (without a handler) and, for whatever reason,
-> >> one of the fd is always 'ready' then I'd expect a SIGINT
-> >> (from ^C) to terminate the program.
-> >>
-> >> A quick test program:
-> >>
-> >> #include <sys/time.h>
-> >> #include <sys/types.h>
-> >> #include <unistd.h>
-> >>
-> >> #include <sys/select.h>
-> >> #include <signal.h>
-> >>
-> >> int main(int argc, char **argv)
-> >> {
-> >>         fd_set readfds;
-> >>         sigset_t sig_int;
-> >>         struct timespec delay = {1, 0};
-> >>
-> >>         sigfillset(&sig_int);
-> >>         sigdelset(&sig_int, SIGINT);
-> >>
-> >>         sighold(SIGINT);
-> >>
-> >>         for (;;) {
-> >>                 FD_ZERO(&readfds);
-> >>                 FD_SET(0, &readfds);
-> >>                 pselect(1, &readfds, NULL, NULL, &delay, &sig_int);
-> >>
-> >>                 poll(0,0,1000);
-> >>         }
-> >> }
-> >>
-> >> Run under strace to see what is happening and send SIGINT from a different terminal.
-> >> The program sleeps for a second in each of the pselect() and poll() calls.
-> >> Send a SIGINT and in terminates after pselect() returns ERESTARTNOHAND.
-> >>
-> >> Run again, this time press enter - making fd 0 readable.
-> >> pselect() returns 1, but the program still exits.
-> >> (Tested on a 5.1.0-rc5 kernel.)
-> >>
-> >> If a signal handler were defined it should be called instead.
-> >
-> > If I add a signal handler for SIGINT it is called when pselect()
-> > returns regardless of the return value.
-> 
-> That is odd.  Is this with Oleg's fix applied?
+On Sat, 8 Jun 2019 at 00:37, Douglas Anderson <dianders@chromium.org> wrote:
+>
+> Normally when the MMC core sees an "-EILSEQ" error returned by a host
+> controller then it will trigger a retuning of the card.  This is
+> generally a good idea.
+>
+> However, if a command is expected to sometimes cause transfer errors
+> then these transfer errors shouldn't cause a re-tuning.  This
+> re-tuning will be a needless waste of time.  One example case where a
+> transfer is expected to cause errors is when transitioning between
+> idle (sometimes referred to as "sleep" in Broadcom code) and active
+> state on certain Broadcom WiFi cards.  Specifically if the card was
+> already transitioning between states when the command was sent it
+> could cause an error on the SDIO bus.
+>
+> Let's add an API that the SDIO card drivers can call that will
+> temporarily disable the auto-tuning functionality.  Then we can add a
+> call to this in the Broadcom WiFi driver and any other driver that
+> might have similar needs.
+>
+> NOTE: this makes the assumption that the card is already tuned well
+> enough that it's OK to disable the auto-retuning during one of these
+> error-prone situations.  Presumably the driver code performing the
+> error-prone transfer knows how to recover / retry from errors.  ...and
+> after we can get back to a state where transfers are no longer
+> error-prone then we can enable the auto-retuning again.  If we truly
+> find ourselves in a case where the card needs to be retuned sometimes
+> to handle one of these error-prone transfers then we can always try a
+> few transfers first without auto-retuning and then re-try with
+> auto-retuning if the first few fail.
+>
+> Without this change on rk3288-veyron-minnie I periodically see this in
+> the logs of a machine just sitting there idle:
+>   dwmmc_rockchip ff0d0000.dwmmc: Successfully tuned phase to XYZ
+>
+> Fixes: bd11e8bd03ca ("mmc: core: Flag re-tuning is needed on CRC errors")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> Note that are are a whole boatload of different ways that we could
+> provide an API for the Broadcom WiFi SDIO driver.  This patch
+> illustrates one way but if maintainers feel strongly that this is too
+> ugly and have a better idea then I can give it a shot too.  From a
+> purist point of view I kinda felt that the "expect errors" really
+> belonged as part of the mmc_request structure, but getting it into
+> there meant changing a whole pile of core SD/MMC APIs.  Simply adding
+> it to the host seemed to match the current style better and was a less
+> intrusive change.
+>
+> Changes in v3:
+> - Took out the spinlock since I believe this is all in one context.
 
-No it is a 5.1.0-rc5 kernel with no related local patches.
-So it is the 'historic' behaviour of pselect().
-But not the original one! Under 2.6.22-5-31 the signal handler isn't caller
-when pselect() returns 1.
+This needs to be clarified, preferable also in a function header.
 
-	David
+If I understand correctly, the SDIO func driver needs the host to be
+claimed when it calls mmc_expect_errors_begin(). More importantly, it
+also needs to be keep it claimed until after it had called
+mmc_expect_errors_end(). Correct?
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+>
+> Changes in v2:
+> - Updated commit message to clarify based on discussion of v1.
+>
+>  drivers/mmc/core/core.c  | 19 +++++++++++++++++--
+>  include/linux/mmc/core.h |  2 ++
+>  include/linux/mmc/host.h |  1 +
+>  3 files changed, 20 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+> index 6db36dc870b5..bc109ec49406 100644
+> --- a/drivers/mmc/core/core.c
+> +++ b/drivers/mmc/core/core.c
+> @@ -144,8 +144,9 @@ void mmc_request_done(struct mmc_host *host, struct mmc_request *mrq)
+>         int err = cmd->error;
+>
+>         /* Flag re-tuning needed on CRC errors */
+> -       if ((cmd->opcode != MMC_SEND_TUNING_BLOCK &&
+> -           cmd->opcode != MMC_SEND_TUNING_BLOCK_HS200) &&
+> +       if (cmd->opcode != MMC_SEND_TUNING_BLOCK &&
+> +           cmd->opcode != MMC_SEND_TUNING_BLOCK_HS200 &&
+> +           !host->expect_errors &&
+>             (err == -EILSEQ || (mrq->sbc && mrq->sbc->error == -EILSEQ) ||
+>             (mrq->data && mrq->data->error == -EILSEQ) ||
+>             (mrq->stop && mrq->stop->error == -EILSEQ)))
+> @@ -2163,6 +2164,20 @@ int mmc_sw_reset(struct mmc_host *host)
+>  }
+>  EXPORT_SYMBOL(mmc_sw_reset);
+>
+> +void mmc_expect_errors_begin(struct mmc_host *host)
+> +{
+> +       WARN_ON(host->expect_errors);
 
+Please remove the WARN_ON. If you believe there is a need for
+reference counting, then please add that instead (but likely not in
+the phase?).
+
+> +       host->expect_errors = true;
+> +}
+> +EXPORT_SYMBOL_GPL(mmc_expect_errors_begin);
+> +
+> +void mmc_expect_errors_end(struct mmc_host *host)
+> +{
+> +       WARN_ON(!host->expect_errors);
+
+Ditto.
+
+> +       host->expect_errors = false;
+> +}
+> +EXPORT_SYMBOL_GPL(mmc_expect_errors_end);
+
+These new APIs seems to be useful solely for SDIO. Even if it turns
+out later that they can be made generic, I suggest to start with a
+SDIO func API instead.
+
+However, using a new host variable (->expect_errors) is fine by me.
+
+> +
+>  static int mmc_rescan_try_freq(struct mmc_host *host, unsigned freq)
+>  {
+>         host->f_init = freq;
+> diff --git a/include/linux/mmc/core.h b/include/linux/mmc/core.h
+> index 134a6483347a..02a13abf0cda 100644
+> --- a/include/linux/mmc/core.h
+> +++ b/include/linux/mmc/core.h
+> @@ -178,6 +178,8 @@ int mmc_wait_for_cmd(struct mmc_host *host, struct mmc_command *cmd,
+>
+>  int mmc_hw_reset(struct mmc_host *host);
+>  int mmc_sw_reset(struct mmc_host *host);
+> +void mmc_expect_errors_begin(struct mmc_host *host);
+> +void mmc_expect_errors_end(struct mmc_host *host);
+
+The API prevents a new re-tune to be "scheduled" in case requests are
+failing with -EILSEQ.
+
+To better reflect that, may I suggest to rename this to
+sdio_retune_crc_disable() and sdio_retune_crc_enable(). Or something
+along those lines.
+
+
+>  void mmc_set_data_timeout(struct mmc_data *data, const struct mmc_card *card);
+>
+>  #endif /* LINUX_MMC_CORE_H */
+> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+> index 43d0f0c496f6..8d553fb8c834 100644
+> --- a/include/linux/mmc/host.h
+> +++ b/include/linux/mmc/host.h
+> @@ -398,6 +398,7 @@ struct mmc_host {
+>         unsigned int            retune_now:1;   /* do re-tuning at next req */
+>         unsigned int            retune_paused:1; /* re-tuning is temporarily disabled */
+>         unsigned int            use_blk_mq:1;   /* use blk-mq */
+> +       unsigned int            expect_errors:1; /* don't trigger retune upon errors */
+>
+>         int                     rescan_disable; /* disable card detection */
+>         int                     rescan_entered; /* used with nonremovable devices */
+> --
+> 2.22.0.rc2.383.gf4fbbf30c2-goog
+>
+
+Kind regards
+Uffe
