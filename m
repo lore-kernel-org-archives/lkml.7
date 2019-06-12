@@ -2,196 +2,133 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23199C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571A4C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB13A2063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E462063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:03:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="kn+TCh4r"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Nq8XeflS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732457AbfFMRDT (ORCPT
+        id S2393203AbfFMRDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:03:19 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40270 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729455AbfFLW4I (ORCPT
+        Thu, 13 Jun 2019 13:03:21 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33562 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729447AbfFLWyh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 18:56:08 -0400
-Received: by mail-qt1-f195.google.com with SMTP id a15so20392457qtn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 15:56:08 -0700 (PDT)
+        Wed, 12 Jun 2019 18:54:37 -0400
+Received: by mail-wm1-f68.google.com with SMTP id h19so5267977wme.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 15:54:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=rwIUelHuBwKm3odn4j/kyFgXxrPvIhVkoS3EqQWqZHE=;
-        b=kn+TCh4rcW0ZQQ+FDGv3UGCWsJDPT3wI28aa+oyId4qNNUeddnAvKEAr7rGknnH6xa
-         /r497R8WZS5cZQtEX3x193nDWpK147meOaWCyJDIQ4xp0ZNb9ylNG84Zajc+kynx05EX
-         iYldzxbKQ27h3fA+0PYA5VwUiUK07M3rf9oL9Z8/wAGpNoFK0/OFXI3/epNlGobVJEUE
-         kPS6xxeHkeADSGogBno96twERVvjXoDZ1SxikoFmcP/Zz6luq+NUs9CoiHvF8/wqqMQS
-         G6/JQoWCpyUsCT+g2/YkzfYJQZIxQ0hx9WAUVLJnDe06BozxPMiv660nRhYODwEyWiDg
-         ErYw==
+        d=brauner.io; s=google;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=JPDTuU1KnT4imMfQFt3NF1AkrQ8ighWpONZCIjWty8k=;
+        b=Nq8XeflSpeNq85e0XL6YL6R2q9mdD488Rr1YrYR+xdjtkLsTPQ2J+RZ+++BpMD6zs4
+         0PUUwrE079J3RlX/OYkGYC9YyuOcEvxfOqptTMqPnhFbZf51cS1TkTQ9shNS3Xmu8lsx
+         LIgiKMllwi/VvpMIO63KrOTNKDCWxUyuXQuQOn/hk0cs1TLXFLsWrTHr16u4lAumEPal
+         xZF48NOWp4DkVh8r8exkogr1ZfbxTHy6Q+3E5sGDd8BRh62mpDKONNBwxYDF8sMXCTBC
+         RCCkc+wC5jS8dENlCKFJvHhLlIE5/3gbR6zPxnFgpahYIn1DIOkmO/0V6V3tLjJSwzEO
+         UUyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=rwIUelHuBwKm3odn4j/kyFgXxrPvIhVkoS3EqQWqZHE=;
-        b=gaUEHsO1EVtSsuQhSWXA70kuWH/rQehsWd6r3DaMd28CpNV8Q5ef3RWHwWM8Sz78j6
-         0J1zxe5Q2aGrXquXRsR8TyGPWjiybCa27RLUBGzwO1m3Nqa4PTU4IumFTyqPMx2NgxKx
-         v2PQiqkeQZdL5/lgdOjtUuzTYtTf+tWJ3FFxpKrE9YWUTGrl03pUfUB5kcyJT9ITi3FV
-         jahvr/Nc+txQlKMN9ciOZ37fxFdreoiP++X8nGVFROWaOj37KxeKHaMGN6/2chCPeWKU
-         BxlyoKOiBNRjMRhDnvygYRXMFca1k9lm4OoCIpG8HuDIh2HTWBBdOxvRs110i0w+T51w
-         RRhg==
-X-Gm-Message-State: APjAAAULd1k6OTWPNnasp1y95MRP28zQUFylaYCvnHBTudM5YQvZm5g+
-        CPh+CcsGDSPvPxxyGjMj7JcJMg==
-X-Google-Smtp-Source: APXvYqy8jgn8msBHtww5Cwbc2Pc6dQy0PWQe6hRatZPYWSkA7OUB4W2Zf3oqaR3JgAqXSf/2tH6OLw==
-X-Received: by 2002:ac8:2bf6:: with SMTP id n51mr72527919qtn.189.1560380167722;
-        Wed, 12 Jun 2019 15:56:07 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id c5sm462231qtj.27.2019.06.12.15.56.06
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=JPDTuU1KnT4imMfQFt3NF1AkrQ8ighWpONZCIjWty8k=;
+        b=RYYP7Tr8WLFnGJoEnZ0TcUEXpz5RDHu6qMLu4J+VcCjS6kzSgSgeA66uaKxAyQ8QAE
+         dNpj0urlOt5SJX9yWahHiEZihb9h3uybZGTGGnpTHRk7XlKbqDsnn+cBAIQsva2vR1wz
+         u2TFF/kDn5WG7fZ1zlL5ArwipsV3Iny9gbBdQE0eoQrgkl/evAebAG6sXwlpYCv93mgl
+         pAItWwYs+9p8cnA/DcTkTaolLQeevjfriURb8E16FO93c2xEZ2eq15DzOD1KqBif4h3g
+         0O8mY+E24Hcr+hx9TtgRjcoPrHlJx4a8P0f6CtWHuhw3UEWsm+wpAcG4agT5/Al2dklZ
+         43nA==
+X-Gm-Message-State: APjAAAXMlZd3qcK5R8YzCasHm6EpLnrR7wgOkFpao+F8yDsmNzQJxxhN
+        PBeUL/Q3lo1gj8/cfjFj4JrPFA==
+X-Google-Smtp-Source: APXvYqzMwFI47ICM+9xHYN+8QsBe1OUPB18O7f91O/loMUm8TPCfIlC6qG8jtfcI5of1Ah/ZYCVwLQ==
+X-Received: by 2002:a1c:acc8:: with SMTP id v191mr1006944wme.177.1560380074924;
+        Wed, 12 Jun 2019 15:54:34 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id z14sm996092wre.96.2019.06.12.15.54.33
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 15:56:07 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 15:56:03 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Xue Chaojing <xuechaojing@huawei.com>
-Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoshaokai@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>,
-        <wulike1@huawei.com>
-Subject: Re: [PATCH net-next v2 1/2] hinic: add rss support
-Message-ID: <20190612155603.4078ebb3@cakuba.netronome.com>
-In-Reply-To: <20190611181234.4843-2-xuechaojing@huawei.com>
-References: <20190611181234.4843-1-xuechaojing@huawei.com>
-        <20190611181234.4843-2-xuechaojing@huawei.com>
-Organization: Netronome Systems, Ltd.
+        Wed, 12 Jun 2019 15:54:34 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 00:54:33 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, dhowells@redhat.com
+Subject: Regression for MS_MOVE on kernel v5.1
+Message-ID: <20190612225431.p753mzqynxpsazb7@brauner.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019 18:12:33 +0000, Xue Chaojing wrote:
-> This patch adds rss support for the HINIC driver.
-> 
-> Signed-off-by: Xue Chaojing <xuechaojing@huawei.com>
+Hey,
 
-> +static int hinic_rss_init(struct hinic_dev *nic_dev)
-> +{
-> +	u8 default_rss_key[HINIC_RSS_KEY_SIZE] = {
-> +			0x6d, 0x5a, 0x56, 0xda, 0x25, 0x5b, 0x0e, 0xc2,
-> +			0x41, 0x67, 0x25, 0x3d, 0x43, 0xa3, 0x8f, 0xb0,
-> +			0xd0, 0xca, 0x2b, 0xcb, 0xae, 0x7b, 0x30, 0xb4,
-> +			0x77, 0xcb, 0x2d, 0xa3, 0x80, 0x30, 0xf2, 0x0c,
-> +			0x6a, 0x42, 0xb7, 0x3b, 0xbe, 0xac, 0x01, 0xfa};
+Sorry to be the bearer of bad news but I think I observed a pretty
+gnarly regression for userspace with MS_MOVE from kernel v5.1 onwards.
 
-netdev_rss_key_fill()
+When propagating mounts across mount namespaces owned by different user
+namespaces it is not possible anymore to move the mount in the less
+privileged mount namespace.
+Here is a reproducer:
 
-> +	u32 indir_tbl[HINIC_RSS_INDIR_SIZE] = { 0 };
-> +	u8 tmpl_idx = nic_dev->rss_tmpl_idx;
-> +	int err, i;
-> +
-> +	for (i = 0; i < HINIC_RSS_INDIR_SIZE; i++)
-> +		indir_tbl[i] = (i / HINIC_RSS_INDIR_SIZE) * nic_dev->num_rss +
-> +				i % nic_dev->num_rss;
-> +
-> +	err = hinic_rss_set_template_tbl(nic_dev, tmpl_idx, default_rss_key);
-> +	if (err)
-> +		return err;
-> +
-> +	err = hinic_rss_set_indir_tbl(nic_dev, tmpl_idx, indir_tbl);
-> +	if (err)
-> +		return err;
-> +
-> +	err = hinic_set_rss_type(nic_dev, tmpl_idx, nic_dev->rss_type);
-> +	if (err)
-> +		return err;
-> +
-> +	err = hinic_rss_set_hash_engine(nic_dev, tmpl_idx,
-> +					nic_dev->rss_hash_engine);
-> +	if (err)
-> +		return err;
-> +
-> +	err = hinic_rss_cfg(nic_dev, 1, tmpl_idx);
-> +	if (err)
-> +		return err;
-> +
-> +	return 0;
-> +}
-> +
-> +static void hinic_rss_deinit(struct hinic_dev *nic_dev)
-> +{
-> +	hinic_rss_cfg(nic_dev, 0, nic_dev->rss_tmpl_idx);
-> +}
-> +
-> +static void hinic_init_rss_parameters(struct hinic_dev *nic_dev)
-> +{
-> +	nic_dev->rss_hash_engine = HINIC_RSS_HASH_ENGINE_TYPE_XOR;
-> +	nic_dev->rss_type.tcp_ipv6_ext = 1;
-> +	nic_dev->rss_type.ipv6_ext = 1;
-> +	nic_dev->rss_type.tcp_ipv6 = 1;
-> +	nic_dev->rss_type.ipv6 = 1;
-> +	nic_dev->rss_type.tcp_ipv4 = 1;
-> +	nic_dev->rss_type.ipv4 = 1;
-> +	nic_dev->rss_type.udp_ipv6 = 1;
-> +	nic_dev->rss_type.udp_ipv4 = 1;
+sudo mount -t tmpfs tmpfs /mnt
+sudo --make-rshared /mnt
 
-Usually UDP is disabled by default because fragmentation leads to
-reorders (NICs file all fragmented packets to queue 0 while other
-packets are distributed by RSS).
+# create unprivileged user + mount namespace and preserve propagation
+unshare -U -m --map-root --propagation=unchanged
 
-> +}
-> +
-> +static void hinic_enable_rss(struct hinic_dev *nic_dev)
-> +{
-> +	struct net_device *netdev = nic_dev->netdev;
-> +	struct hinic_hwdev *hwdev = nic_dev->hwdev;
-> +	struct hinic_hwif *hwif = hwdev->hwif;
-> +	struct pci_dev *pdev = hwif->pdev;
-> +	int i, node, err = 0;
-> +	u16 num_cpus = 0;
-> +
-> +	nic_dev->max_qps = hinic_hwdev_max_num_qps(hwdev);
-> +	if (nic_dev->max_qps <= 1) {
-> +		nic_dev->flags &= ~HINIC_RSS_ENABLE;
-> +		nic_dev->rss_limit = nic_dev->max_qps;
-> +		nic_dev->num_qps = nic_dev->max_qps;
-> +		nic_dev->num_rss = nic_dev->max_qps;
-> +
-> +		return;
-> +	}
-> +
-> +	err = hinic_rss_template_alloc(nic_dev, &nic_dev->rss_tmpl_idx);
-> +	if (err) {
-> +		netif_err(nic_dev, drv, netdev,
-> +			  "Failed to alloc tmpl_idx for rss, can't enable rss for this function\n");
-> +		nic_dev->flags &= ~HINIC_RSS_ENABLE;
-> +		nic_dev->max_qps = 1;
-> +		nic_dev->rss_limit = nic_dev->max_qps;
-> +		nic_dev->num_qps = nic_dev->max_qps;
-> +		nic_dev->num_rss = nic_dev->max_qps;
-> +
-> +		return;
-> +	}
-> +
-> +	nic_dev->flags |= HINIC_RSS_ENABLE;
-> +
-> +	for (i = 0; i < num_online_cpus(); i++) {
-> +		node = cpu_to_node(i);
-> +		if (node == dev_to_node(&pdev->dev))
-> +			num_cpus++;
-> +	}
-> +
-> +	if (!num_cpus)
-> +		num_cpus = num_online_cpus();
-> +
-> +	nic_dev->num_qps = min_t(u16, nic_dev->max_qps, num_cpus);
+# now change back to the original mount namespace in another terminal:
+sudo mkdir /mnt/aaa
+sudo mount -t tmpfs tmpfs /mnt/aaa
 
-We generally use netif_get_num_default_rss_queues() for RX queues
-and num_online_cpus() for TX queues but I'm not sure you can do
-different counts, so it's probably fine.
+# now in the unprivileged user + mount namespace
+mount --move /mnt/aaa /opt
+
+This will work on kernels prior to 5.1 but will fail on kernels starting
+with 5.1.
+Unfortunately, this is a pretty big deal for userspace. In LXD - which I
+maintain when not doing kernel stuff - we use this mechanism to inject
+mounts into running unprivileged containers. Users started reporting
+failures against our mount injection feature just a short while ago
+(cf.  [1], [2]) and I just came around to looking into this today.
+
+I tracked this down to commit:
+
+commit 3bd045cc9c4be2049602b47505256b43908b4e2f
+Author: Al Viro <viro@zeniv.linux.org.uk>
+Date:   Wed Jan 30 13:15:45 2019 -0500
+
+    separate copying and locking mount tree on cross-userns copies
+
+    Rather than having propagate_mnt() check doing unprivileged copies,
+    lock them before commit_tree().
+
+    Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+
+reverting it makes MS_MOVE to work correctly again.
+The commit changes the internal logic to lock mounts when propagating
+mounts (user+)mount namespaces and - I believe - causes do_mount_move()
+to fail at:
+
+if (old->mnt.mnt_flags & MNT_LOCKED)
+        goto out;
+
+If that's indeed the case we should either revert this commit (reverts
+cleanly, just tested it) or find a fix.
+
+Thanks!
+Christian
+
+[1]: https://github.com/lxc/lxd/issues/5788
+[2]: https://github.com/lxc/lxd/issues/5836
