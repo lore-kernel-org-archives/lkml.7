@@ -2,212 +2,127 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9113FC31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4DFC31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4DF20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:06:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQnMsjM8"
+	by mail.kernel.org (Postfix) with ESMTP id AE4D52086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:07:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407483AbfFLBGZ (ORCPT
+        id S2407522AbfFLBHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 21:06:25 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44244 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405839AbfFLBGY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 21:06:24 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t16so8525985pfe.11
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 18:06:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=MogpfsEDMN5cINGy9NYc5BobLdtPxSxSh+1uml2YEE4=;
-        b=GQnMsjM8WfvHCd2nvoofF6j3WHIWn4KeV6xHyiFVP08PELSGNOvdMir1AHt6KF7bPU
-         OfixU6Qgkvtq+LGc8P9OQ0sI+w0blIDkImxCRdF+BrHOKiTpYCDB7fNol6ByR2hXOVl7
-         wjJfHrG3NJDqAAgo/foug204XnRFrpeSSP+GtsmYAaS66WCP7c2672G7WhWlhy+2/Yrc
-         FvoWZWIB0e5Ou/I6rHgZLNZoaADqHkRPp0LhjOSu6OhbqMZ5K6MAkVyAMCo+jF0Rbgze
-         ttW3kS6aiC0RnY/xlOfU+rXrBYmEDXEHJtl9XTOoY9vu92MfNSMg3Z/UK9owvacfjJrP
-         OjyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding;
-        bh=MogpfsEDMN5cINGy9NYc5BobLdtPxSxSh+1uml2YEE4=;
-        b=Zve6YmI/OI5ZXb8Qh/aznWsAu83N3l0k5GsY2fZPXEBMp8yIXMQyyO4Wim/DhwFe3M
-         ULlkCmcigzIqGprAk+smoqo3lGON2HgS0qEcHfAFLiHWzDohJVPnMjdNjH1z3+whMypp
-         xuVlAmN6+5Pwq+GpP+lKDyOdlWSH2obdv+pdxGN619KO5pdMgyyPYHiL3Ji2L5KfKE4z
-         CGceOHR3xHboapU3Gi4UOMSrXyvABj6EQLWPSlyIorswbATToye3xrtjRvQMs2zsflI/
-         IroPf9Bg+Rqa5xiJaNpAdOqxBWRcdsfDEL21E8FNcmXuRJ3q+l6luEhsoOpFVwvHSC8L
-         tvNw==
-X-Gm-Message-State: APjAAAWrE3GmG9WKdXu+UZZRsiWUzE6Qb0nrDY4/WMsTyujPliI9KbFc
-        ZpFEh96J1UzUhdx2QzBSwQpBOEXNEpCm1g==
-X-Google-Smtp-Source: APXvYqy096Fat/UGv0A1DkMZjMJLB5J0pXHMFFJm37+yz0PHphj/G+xIoifblGkB8F2xy+sSOEQjgw==
-X-Received: by 2002:a17:90a:254e:: with SMTP id j72mr30658331pje.11.1560301583425;
-        Tue, 11 Jun 2019 18:06:23 -0700 (PDT)
-Received: from [0.0.0.0] (104.129.187.94.16clouds.com. [104.129.187.94])
-        by smtp.gmail.com with ESMTPSA id a18sm3530668pjq.0.2019.06.11.18.06.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 18:06:22 -0700 (PDT)
-Subject: Re: [PATCH v11 0/3] remain and optimize memblock_next_valid_pfn on
- arm and arm64
-To:     Hanjun Guo <guohanjun@huawei.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Kemi Wang <kemi.wang@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Petr Tesarik <ptesarik@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Daniel Vacek <neelx@redhat.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        YASUAKI ISHIMATSU <yasu.isimatu@gmail.com>,
-        Jia He <jia.he@hxt-semitech.com>,
-        Gioh Kim <gi-oh.kim@profitbricks.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Steve Capper <steve.capper@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Philip Derrin <philip@cog.systems>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <1534907237-2982-1-git-send-email-jia.he@hxt-semitech.com>
- <CAKv+Gu9u8RcrzSHdgXiqHS9HK1aSrjbPxVUSCP0DT4erAhx0pw@mail.gmail.com>
- <20180907144447.GD12788@arm.com>
- <84b8e874-2a52-274c-4806-968470e66a08@huawei.com>
- <CAKv+Gu9fd2Y7USDYnQdUuYd9L2OD99kU4A1x1JSF442KN96TTA@mail.gmail.com>
- <2de74de9-35b0-5e62-d822-1be59f0ef605@huawei.com>
-From:   Jia He <hejianet@gmail.com>
-Organization: ARM
-Message-ID: <8fdf5545-21b7-354c-4c4b-e1e92048864f@gmail.com>
-Date:   Wed, 12 Jun 2019 09:05:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Tue, 11 Jun 2019 21:07:34 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56582 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405839AbfFLBHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 21:07:33 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7A0C9D575BAF6CA96BF3;
+        Wed, 12 Jun 2019 09:07:31 +0800 (CST)
+Received: from [127.0.0.1] (10.133.217.137) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 12 Jun 2019
+ 09:07:29 +0800
+Subject: Re: [PATCH] fs: gfs2: Use IS_ERR_OR_NULL
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>, Bob Peterson <rpeterso@redhat.com>,
+        <cluster-devel@redhat.com>
+References: <20190605142428.84784-1-wangkefeng.wang@huawei.com>
+ <20190611162326.26967-1-agruenba@redhat.com>
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+Message-ID: <723b26e2-fb94-0634-1f58-fdd9eabae945@huawei.com>
+Date:   Wed, 12 Jun 2019 09:07:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <2de74de9-35b0-5e62-d822-1be59f0ef605@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190611162326.26967-1-agruenba@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.217.137]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hanjun
 
-On 2019/6/11 23:18, Hanjun Guo wrote:
-> Hello Ard,
->
-> Thanks for the reply, please see my comments inline.
->
-> On 2019/6/10 21:16, Ard Biesheuvel wrote:
->> On Sat, 8 Jun 2019 at 06:22, Hanjun Guo <guohanjun@huawei.com> wrote:
->>> Hi Ard, Will,
->>>
->>> This week we were trying to debug an issue of time consuming in mem_init(),
->>> and leading to this similar solution form Jia He, so I would like to bring this
->>> thread back, please see my detail test result below.
->>>
->>> On 2018/9/7 22:44, Will Deacon wrote:
->>>> On Thu, Sep 06, 2018 at 01:24:22PM +0200, Ard Biesheuvel wrote:
->>>>> On 22 August 2018 at 05:07, Jia He <hejianet@gmail.com> wrote:
->>>>>> Commit b92df1de5d28 ("mm: page_alloc: skip over regions of invalid pfns
->>>>>> where possible") optimized the loop in memmap_init_zone(). But it causes
->>>>>> possible panic bug. So Daniel Vacek reverted it later.
->>>>>>
->>>>>> But as suggested by Daniel Vacek, it is fine to using memblock to skip
->>>>>> gaps and finding next valid frame with CONFIG_HAVE_ARCH_PFN_VALID.
->>>>>>
->>>>>> More from what Daniel said:
->>>>>> "On arm and arm64, memblock is used by default. But generic version of
->>>>>> pfn_valid() is based on mem sections and memblock_next_valid_pfn() does
->>>>>> not always return the next valid one but skips more resulting in some
->>>>>> valid frames to be skipped (as if they were invalid). And that's why
->>>>>> kernel was eventually crashing on some !arm machines."
->>>>>>
->>>>>> About the performance consideration:
->>>>>> As said by James in b92df1de5,
->>>>>> "I have tested this patch on a virtual model of a Samurai CPU with a
->>>>>> sparse memory map.  The kernel boot time drops from 109 to 62 seconds."
->>>>>> Thus it would be better if we remain memblock_next_valid_pfn on arm/arm64.
->>>>>>
->>>>>> Besides we can remain memblock_next_valid_pfn, there is still some room
->>>>>> for improvement. After this set, I can see the time overhead of memmap_init
->>>>>> is reduced from 27956us to 13537us in my armv8a server(QDF2400 with 96G
->>>>>> memory, pagesize 64k). I believe arm server will benefit more if memory is
->>>>>> larger than TBs
->>>>>>
->>>>> OK so we can summarize the benefits of this series as follows:
->>>>> - boot time on a virtual model of a Samurai CPU drops from 109 to 62 seconds
->>>>> - boot time on a QDF2400 arm64 server with 96 GB of RAM drops by ~15
->>>>> *milliseconds*
->>>>>
->>>>> Google was not very helpful in figuring out what a Samurai CPU is and
->>>>> why we should care about the boot time of Linux running on a virtual
->>>>> model of it, and the 15 ms speedup is not that compelling either.
->>> Testing this patch set on top of Kunpeng 920 based ARM64 server, with
->>> 384G memory in total, we got the time consuming below
->>>
->>>               without this patch set      with this patch set
->>> mem_init()        13310ms                      1415ms
->>>
->>> So we got about 8x speedup on this machine, which is very impressive.
->>>
->> Yes, this is impressive. But does it matter in the grand scheme of
->> things?
-> It matters for this machine, because it's for storage and there is
-> a watchdog and the time consuming triggers the watchdog.
->
->> How much time does this system take to arrive at this point
->> from power on?
-> Sorry, I don't have such data, as the arch timer is not initialized
-> and I didn't see the time stamp at this point, but I read the cycles
-> from arch timer before and after the time consuming function to get
-> how much time consumed.
->
->>> The time consuming is related the memory DIMM size and where to locate those
->>> memory DIMMs in the slots. In above case, we are using 16G memory DIMM.
->>> We also tested 1T memory with 64G size for each memory DIMM on another ARM64
->>> machine, the time consuming reduced from 20s to 2s (I think it's related to
->>> firmware implementations).
->>>
->> I agree that this optimization looks good in isolation, but the fact
->> that you spotted a bug justifies my skepticism at the time. On the
->> other hand, now that we have several independent reports (from you,
->> but also from the Renesas folks) that the speedup is worthwhile for
->> real world use cases, I think it does make sense to revisit it.
-> Thank you very much for taking care of this :)
->
->> So what I would like to see is the patch set being proposed again,
->> with the new data points added for documentation. Also, the commit
->> logs need to crystal clear about how the meaning of PFN validity
->> differs between ARM and other architectures, and why the assumptions
->> that the optimization is based on are guaranteed to hold.
-> I think Jia He no longer works for HXT, if don't mind, I can repost
-> this patch set with Jia He's authority unchanged.
-Ok, I don't mind that, thanks for your followup :)
 
----
-Cheers,
-Justin (Jia He)
+On 2019/6/12 0:23, Andreas Gruenbacher wrote:
+> Kefeng,
+> 
+> On Wed, 5 Jun 2019 at 16:17, Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
+>> Use IS_ERR_OR_NULL where appropriate.
+> 
+> It seems there are several more instances in which IS_ERR_OR_NULL should
+> be used (see below).
+> 
+
+Right, will collect the following changes and send a new one, thanks.
+
+> Thanks,
+> Andreas
+> 
+> ---
+>  fs/gfs2/dir.c        | 2 +-
+>  fs/gfs2/glock.c      | 2 +-
+>  fs/gfs2/inode.c      | 2 +-
+>  fs/gfs2/ops_fstype.c | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/gfs2/dir.c b/fs/gfs2/dir.c
+> index 3925efd3fd83..761a37a3c656 100644
+> --- a/fs/gfs2/dir.c
+> +++ b/fs/gfs2/dir.c
+> @@ -753,7 +753,7 @@ static struct gfs2_dirent *gfs2_dirent_split_alloc(struct inode *inode,
+>  	struct gfs2_dirent *dent;
+>  	dent = gfs2_dirent_scan(inode, bh->b_data, bh->b_size,
+>  				gfs2_dirent_find_offset, name, ptr);
+> -	if (!dent || IS_ERR(dent))
+> +	if (IS_ERR_OR_NULL(dent))
+>  		return dent;
+>  	return do_init_dirent(inode, dent, name, bh,
+>  			      (unsigned)(ptr - (void *)dent));
+> diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+> index 15c605cfcfc8..f6281470a182 100644
+> --- a/fs/gfs2/glock.c
+> +++ b/fs/gfs2/glock.c
+> @@ -684,7 +684,7 @@ static void delete_work_func(struct work_struct *work)
+>  		goto out;
+>  
+>  	inode = gfs2_lookup_by_inum(sdp, no_addr, NULL, GFS2_BLKST_UNLINKED);
+> -	if (inode && !IS_ERR(inode)) {
+> +	if (!IS_ERR_OR_NULL(inode)) {
+>  		d_prune_aliases(inode);
+>  		iput(inode);
+>  	}
+> diff --git a/fs/gfs2/inode.c b/fs/gfs2/inode.c
+> index 998051c4aea7..1cc99da705fc 100644
+> --- a/fs/gfs2/inode.c
+> +++ b/fs/gfs2/inode.c
+> @@ -796,7 +796,7 @@ static int gfs2_create_inode(struct inode *dir, struct dentry *dentry,
+>  fail_gunlock:
+>  	gfs2_dir_no_add(&da);
+>  	gfs2_glock_dq_uninit(ghs);
+> -	if (inode && !IS_ERR(inode)) {
+> +	if (!IS_ERR_OR_NULL(inode)) {
+>  		clear_nlink(inode);
+>  		if (!free_vfs_inode)
+>  			mark_inode_dirty(inode);
+> diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
+> index f5312f3b58ee..d35772d90b0a 100644
+> --- a/fs/gfs2/ops_fstype.c
+> +++ b/fs/gfs2/ops_fstype.c
+> @@ -579,7 +579,7 @@ static int gfs2_jindex_hold(struct gfs2_sbd *sdp, struct gfs2_holder *ji_gh)
+>  
+>  		INIT_WORK(&jd->jd_work, gfs2_recover_func);
+>  		jd->jd_inode = gfs2_lookupi(sdp->sd_jindex, &name, 1);
+> -		if (!jd->jd_inode || IS_ERR(jd->jd_inode)) {
+> +		if (IS_ERR_OR_NULL(jd->jd_inode)) {
+>  			if (!jd->jd_inode)
+>  				error = -ENOENT;
+>  			else
+> 
 
