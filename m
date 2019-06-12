@@ -2,123 +2,90 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6D2C46477
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CD9C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC19F206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D5120866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:48:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="KEjL99Iz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sV3BW+Wy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbfFLLrY (ORCPT
+        id S1728629AbfFLLsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:47:24 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43050 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726830AbfFLLrX (ORCPT
+        Wed, 12 Jun 2019 07:48:24 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:37348 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbfFLLsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:47:23 -0400
-Received: by mail-qt1-f193.google.com with SMTP id z24so4924370qtj.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 04:47:23 -0700 (PDT)
+        Wed, 12 Jun 2019 07:48:24 -0400
+Received: by mail-it1-f194.google.com with SMTP id x22so10049114itl.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 04:48:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=doRL6xBFBed4pJcj6qEQTvbXU3ur3CIYrFA1lN8ah30=;
-        b=KEjL99IzABO4E8zOpgtHyEE7fDCc4xx1ObR/IKbq+ZUDqR6OX5HnV4sIUZFTf7RnZt
-         b2Ynd/zlz64GKX5T4XDhbfMlrndVetU9EumvX37IkUOWJMmaxMkt+vAcxu1CdZPoc7EU
-         ab05F8Xpa83TYkV6OHDY0iY2sudedN7HpmLMnCVeAmqMtt9fy753PUDc6q2lXgRHWuNb
-         WbanwUiNhr0RXy5e3mIuwzswALCs1rX2s+SZhewD51kCAtF+shTYjgGV9IGTi7j7s9Wy
-         MYyHNmVkN91noui2Vnp7/PPo2P6dBu6nZ6qFP8tAHWsLEKkJnaOd1W/VqIrOF8KjgmmJ
-         M41A==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/z0Jdvaew8ZNTrmPwRXBvXU6v+TaVoGCDpIAHDRM6P8=;
+        b=sV3BW+Wy3876BAc/isBu+hSuU2nBMUlPeL4Hzw+9a5jlvXaJN52e2OTNm6yiO8J1gP
+         eyAqrp4Iz0+TTevNp5Wcgyi47QDpDAUNfeFNDGYSHRDHpy6odAd9SppPd2o1y5s4gkvq
+         PhzVdhByu4jiWyTybds5t5QfeWmG9oH1rGD1iVlVmxK78cnWxFoW7OSTFLRJt0vuj8VP
+         lYsxvFOK11hP8pNMTLIfcmW1YIxcRVPqzDreMTxG1kbDMMcW/3Tx0n+qjYaDpJykYF8O
+         K8HA1txL4xUz9ydyHEOWcBCcL11ld1qNVoSI1744Y7XgmMtfX7ORRQqhk+qBicy4JNhx
+         o2SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=doRL6xBFBed4pJcj6qEQTvbXU3ur3CIYrFA1lN8ah30=;
-        b=iuw6fj5U2o6j4VGfLHXsYq4gkhbHJV+Ix89dJMMXb5XGxO5TT8tpkl1b/IrkSYeTqv
-         ANTHsK0LGgtFjxzakrXE/U1yn1NCtDoQfwNb+p5X18xSQevrv4A7DucFt0xmwtknpzFM
-         q8q1Wj8T0LsteboJ8Bsq54X6psYDAnOlmJvkxHXerACzXPkhVxTVOXOBccWxfZ7e+qvP
-         wsebWNibWX6QfKU7rRdREe6FwajauTjZfvkvuIhb7MlDICZ1R4zl65ca3LTYNZEEXIVy
-         AyAG0TjR7JmagCBu80s1tWqnHzMh1K+S/i/skQ7SrkhJfWWdDPfSO8MmzUDHUMKm1GOy
-         MYkw==
-X-Gm-Message-State: APjAAAVcrZpqs8dyF+logASAMxNIn00kY1HoW6pUyCq+NmlUrl2QtrWH
-        DaqXOHHiUZf2P/aImup4DmQyvA==
-X-Google-Smtp-Source: APXvYqycHb6gvBCa/U7QXKWMgTojD1Kl8PmNQRXZ9Diy9dAscbbAdH3XTO8f9by4yoHhgJdAhCfOmQ==
-X-Received: by 2002:ac8:2eb9:: with SMTP id h54mr69874544qta.381.1560340042946;
-        Wed, 12 Jun 2019 04:47:22 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id v17sm10366715qtc.23.2019.06.12.04.47.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Jun 2019 04:47:22 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hb1is-0002JC-07; Wed, 12 Jun 2019 08:47:22 -0300
-Date:   Wed, 12 Jun 2019 08:47:21 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190612114721.GB3876@ziepe.ca>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606195114.GA30714@ziepe.ca>
- <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
- <20190607103636.GA12765@quack2.suse.cz>
- <20190607121729.GA14802@ziepe.ca>
- <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
- <20190612102917.GB14578@quack2.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/z0Jdvaew8ZNTrmPwRXBvXU6v+TaVoGCDpIAHDRM6P8=;
+        b=ZXxPzxJaCPd7FPoWezCcxD3ad9oG765TS9MTktjjG3oRZ4Z03xRRGMwXMeygfVMfrx
+         sBodUnVwB0dk/ShkClVDuG/a53HmssS48TaOH09fCdrn6Fnk5TpANBHvYTb/UqzldF8X
+         uAGKy8CmDTj253g5e+YKA7RRduFkBiE1mXa6GDKbT/y1APtj/DSKiPOo8DCq/y96kwbe
+         1qU5xeUCBfQ1Hfhm46EGyQ4I6xTPfgmcWSfx6zhCPYdugImFHMt+v1LDe2/5wBzPgGAV
+         bwGjTq9q/nKqBxfqwnBjOKeA5iOd1pUckxwChQlmWsO8TqnXeSv76bhhDB+xWhf5mATw
+         9OCQ==
+X-Gm-Message-State: APjAAAW+K5/DMpghWV5OBQp+bA+vY2/bBkIWkN75c4uqOvoPTyM4eboO
+        E14+OIDRZJu+nY7SWO8c1MdtdH0XbGGMrQ2rTzk=
+X-Google-Smtp-Source: APXvYqzN4gZSdU1v/0N78zQbpjP/CanYz5Dgld7i+PhumbwMU8L0DHwQqmcZMAiJSxjiA4Ha/MPoKdTEop+HhRr5Kks=
+X-Received: by 2002:a05:660c:383:: with SMTP id x3mr21228859itj.44.1560340103393;
+ Wed, 12 Jun 2019 04:48:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612102917.GB14578@quack2.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190611092144.11194-1-oded.gabbay@gmail.com> <20190611095857.GB24058@kroah.com>
+ <20190611151753.GA11404@infradead.org> <20190611152655.GA3972@kroah.com>
+ <CAFCwf13A73AxKzaa7Dk3tU-1NDgTFs4+xCO2os7SuSyUHZ9Z3Q@mail.gmail.com>
+ <CAFCwf134nTD4FM_9Q+THQ7ZAZzGxhs15O6EheaRJMqM5wxi+aA@mail.gmail.com>
+ <CAOSf1CE82uVVni638jkJJpQ7XLXX+HdD7xuB7Wv-f8mn=SBMeg@mail.gmail.com> <20190612065314.GA28838@infradead.org>
+In-Reply-To: <20190612065314.GA28838@infradead.org>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Wed, 12 Jun 2019 21:48:12 +1000
+Message-ID: <CAOSf1CF=gkGDVbiqT2NM1Rd_-aWKePA9D1hyj4FwY+M+4gPRBQ@mail.gmail.com>
+Subject: Re: [PATCH v2 8/8] habanalabs: enable 64-bit DMA mask in POWER9
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Oded Gabbay <oded.gabbay@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>, linuxppc-dev@ozlabs.org,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 12:29:17PM +0200, Jan Kara wrote:
+On Wed, Jun 12, 2019 at 4:53 PM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Wed, Jun 12, 2019 at 04:35:22PM +1000, Oliver O'Halloran wrote:
+> > Setting a 48 bit DMA mask doesn't work today because we only allocate
+> > IOMMU tables to cover the 0..2GB range of PCI bus addresses.
+>
+> I don't think that is true upstream, and if it is we need to fix bug
+> in the powerpc code.  powerpc should be falling back treating a 48-bit
+> dma mask like a 32-bit one at least, that is use dynamic iommu mappings
+> instead of using the direct mapping.  And from my reding of
+> arch/powerpc/kernel/dma-iommu.c that is exactly what it does.
 
-> > > The main objection to the current ODP & DAX solution is that very
-> > > little HW can actually implement it, having the alternative still
-> > > require HW support doesn't seem like progress.
-> > > 
-> > > I think we will eventually start seein some HW be able to do this
-> > > invalidation, but it won't be universal, and I'd rather leave it
-> > > optional, for recovery from truely catastrophic errors (ie my DAX is
-> > > on fire, I need to unplug it).
-> > 
-> > Agreed.  I think software wise there is not much some of the devices can do
-> > with such an "invalidate".
-> 
-> So out of curiosity: What does RDMA driver do when userspace just closes
-> the file pointing to RDMA object? It has to handle that somehow by aborting
-> everything that's going on... And I wanted similar behavior here.
-
-It aborts *everything* connected to that file descriptor. Destroying
-everything avoids creating inconsistencies that destroying a subset
-would create.
-
-What has been talked about for lease break is not destroying anything
-but very selectively saying that one memory region linked to the GUP
-is no longer functional.
-
-Jason
+This is more or less what Alexey's patches fix. The IOMMU table
+allocated for the 32bit DMA window is only sized for 2GB in the
+platform code, see pnv_pci_ioda2_setup_default_config().
