@@ -2,202 +2,201 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C9FC31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE45C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4343A207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A49DB20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437677AbfFLJpu (ORCPT
+        id S2437686AbfFLJqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:45:50 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:35281 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437298AbfFLJpu (ORCPT
+        Wed, 12 Jun 2019 05:46:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46114 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2437379AbfFLJqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:45:50 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 57F603C00C6;
-        Wed, 12 Jun 2019 11:45:47 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id uyfoQNArz41o; Wed, 12 Jun 2019 11:45:41 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 3178E3C00BE;
-        Wed, 12 Jun 2019 11:45:41 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 12 Jun
- 2019 11:45:41 +0200
-Date:   Wed, 12 Jun 2019 11:45:38 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kalle Valo <kvalo@codeaurora.org>, Eyal Reizer <eyalr@ti.com>
-CC:     Simon Horman <horms+renesas@verge.net.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
-        Joshua Frkuska <joshua_frkuska@mentor.com>,
-        "George G . Davis" <george_davis@mentor.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] wlcore/wl18xx: Add invert-irq OF property for physically
- inverted IRQ
-Message-ID: <20190612094538.GA16575@vmlxhi-102.adit-jv.com>
-References: <20190607172958.20745-1-erosca@de.adit-jv.com>
- <87tvcxncuq.fsf@codeaurora.org>
- <20190610083012.GV5447@atomide.com>
- <CAMuHMdUOc17ocqmt=oNmyN1UT_K7_y=af1pwjwr5PTgQL2o2OQ@mail.gmail.com>
- <08bc4755-5f47-d792-8b5a-927b5fbe7619@arm.com>
+        Wed, 12 Jun 2019 05:46:00 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5C9gHwQ063699
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 05:45:59 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t2xncs79v-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 05:45:58 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Wed, 12 Jun 2019 10:45:57 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 12 Jun 2019 10:45:53 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5C9jqEP39190948
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 09:45:52 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B78B0AE045;
+        Wed, 12 Jun 2019 09:45:52 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 40B8AAE04D;
+        Wed, 12 Jun 2019 09:45:51 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.124.35.98])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 12 Jun 2019 09:45:51 +0000 (GMT)
+X-Mailer: emacs 26.2 (via feedmail 11-beta-1 Q)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org
+Cc:     mhocko@suse.com, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        linux-mm@kvack.org, osalvador@suse.de
+Subject: Re: [PATCH v9 11/12] libnvdimm/pfn: Fix fsdax-mode namespace info-block zero-fields
+In-Reply-To: <155977193862.2443951.10284714500308539570.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com> <155977193862.2443951.10284714500308539570.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Wed, 12 Jun 2019 15:11:46 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <08bc4755-5f47-d792-8b5a-927b5fbe7619@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.93.184]
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19061209-4275-0000-0000-000003419E4E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061209-4276-0000-0000-00003851B3FC
+Message-Id: <87r27zi1id.fsf@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906120067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Dan Williams <dan.j.williams@intel.com> writes:
 
-cc: Linus Walleij
+> At namespace creation time there is the potential for the "expected to
+> be zero" fields of a 'pfn' info-block to be filled with indeterminate
+> data. While the kernel buffer is zeroed on allocation it is immediately
+> overwritten by nd_pfn_validate() filling it with the current contents of
+> the on-media info-block location. For fields like, 'flags' and the
+> 'padding' it potentially means that future implementations can not rely
+> on those fields being zero.
+>
+> In preparation to stop using the 'start_pad' and 'end_trunc' fields for
+> section alignment, arrange for fields that are not explicitly
+> initialized to be guaranteed zero. Bump the minor version to indicate it
+> is safe to assume the 'padding' and 'flags' are zero. Otherwise, this
+> corruption is expected to benign since all other critical fields are
+> explicitly initialized.
+>
+> Fixes: 32ab0a3f5170 ("libnvdimm, pmem: 'struct page' for pmem")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/nvdimm/dax_devs.c |    2 +-
+>  drivers/nvdimm/pfn.h      |    1 +
+>  drivers/nvdimm/pfn_devs.c |   18 +++++++++++++++---
+>  3 files changed, 17 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/nvdimm/dax_devs.c b/drivers/nvdimm/dax_devs.c
+> index 0453f49dc708..326f02ffca81 100644
+> --- a/drivers/nvdimm/dax_devs.c
+> +++ b/drivers/nvdimm/dax_devs.c
+> @@ -126,7 +126,7 @@ int nd_dax_probe(struct device *dev, struct nd_namespace_common *ndns)
+>  	nvdimm_bus_unlock(&ndns->dev);
+>  	if (!dax_dev)
+>  		return -ENOMEM;
+> -	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
+> +	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
+>  	nd_pfn->pfn_sb = pfn_sb;
+>  	rc = nd_pfn_validate(nd_pfn, DAX_SIG);
+>  	dev_dbg(dev, "dax: %s\n", rc == 0 ? dev_name(dax_dev) : "<none>");
+> diff --git a/drivers/nvdimm/pfn.h b/drivers/nvdimm/pfn.h
+> index dde9853453d3..e901e3a3b04c 100644
+> --- a/drivers/nvdimm/pfn.h
+> +++ b/drivers/nvdimm/pfn.h
+> @@ -36,6 +36,7 @@ struct nd_pfn_sb {
+>  	__le32 end_trunc;
+>  	/* minor-version-2 record the base alignment of the mapping */
+>  	__le32 align;
+> +	/* minor-version-3 guarantee the padding and flags are zero */
+>  	u8 padding[4000];
+>  	__le64 checksum;
+>  };
+> diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
+> index 01f40672507f..a2406253eb70 100644
+> --- a/drivers/nvdimm/pfn_devs.c
+> +++ b/drivers/nvdimm/pfn_devs.c
+> @@ -420,6 +420,15 @@ static int nd_pfn_clear_memmap_errors(struct nd_pfn *nd_pfn)
+>  	return 0;
+>  }
+>  
+> +/**
+> + * nd_pfn_validate - read and validate info-block
+> + * @nd_pfn: fsdax namespace runtime state / properties
+> + * @sig: 'devdax' or 'fsdax' signature
+> + *
+> + * Upon return the info-block buffer contents (->pfn_sb) are
+> + * indeterminate when validation fails, and a coherent info-block
+> + * otherwise.
+> + */
+>  int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
+>  {
+>  	u64 checksum, offset;
+> @@ -565,7 +574,7 @@ int nd_pfn_probe(struct device *dev, struct nd_namespace_common *ndns)
+>  	nvdimm_bus_unlock(&ndns->dev);
+>  	if (!pfn_dev)
+>  		return -ENOMEM;
+> -	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
+> +	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
+>  	nd_pfn = to_nd_pfn(pfn_dev);
+>  	nd_pfn->pfn_sb = pfn_sb;
+>  	rc = nd_pfn_validate(nd_pfn, PFN_SIG);
+> @@ -702,7 +711,7 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
+>  	u64 checksum;
+>  	int rc;
+>  
+> -	pfn_sb = devm_kzalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
+> +	pfn_sb = devm_kmalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
+>  	if (!pfn_sb)
+>  		return -ENOMEM;
+>  
+> @@ -711,11 +720,14 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
+>  		sig = DAX_SIG;
+>  	else
+>  		sig = PFN_SIG;
+> +
+>  	rc = nd_pfn_validate(nd_pfn, sig);
+>  	if (rc != -ENODEV)
+>  		return rc;
+>  
+>  	/* no info block, do init */;
+> +	memset(pfn_sb, 0, sizeof(*pfn_sb));
+> +
+>  	nd_region = to_nd_region(nd_pfn->dev.parent);
+>  	if (nd_region->ro) {
+>  		dev_info(&nd_pfn->dev,
+> @@ -768,7 +780,7 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
+>  	memcpy(pfn_sb->uuid, nd_pfn->uuid, 16);
+>  	memcpy(pfn_sb->parent_uuid, nd_dev_to_uuid(&ndns->dev), 16);
+>  	pfn_sb->version_major = cpu_to_le16(1);
+> -	pfn_sb->version_minor = cpu_to_le16(2);
+> +	pfn_sb->version_minor = cpu_to_le16(3);
+>  	pfn_sb->start_pad = cpu_to_le32(start_pad);
+>  	pfn_sb->end_trunc = cpu_to_le32(end_trunc);
+>  	pfn_sb->align = cpu_to_le32(nd_pfn->align);
+>
 
-On Tue, Jun 11, 2019 at 10:00:41AM +0100, Marc Zyngier wrote:
-> On 11/06/2019 09:45, Geert Uytterhoeven wrote:
-> > CC irqchip
-> > 
-> > Original thread at
-> > https://lore.kernel.org/lkml/20190607172958.20745-1-erosca@de.adit-jv.com/
-> > 
-> > On Mon, Jun 10, 2019 at 10:30 AM Tony Lindgren <tony@atomide.com> wrote:
-> >> * Kalle Valo <kvalo@codeaurora.org> [190610 07:01]:
-> >>> Eugeniu Rosca <erosca@de.adit-jv.com> writes:
-> >>>
-> >>>> The wl1837mod datasheet [1] says about the WL_IRQ pin:
-> >>>>
-> >>>>  ---8<---
-> >>>> SDIO available, interrupt out. Active high. [..]
-> >>>> Set to rising edge (active high) on powerup.
-> >>>>  ---8<---
-> >>>>
-> >>>> That's the reason of seeing the interrupt configured as:
-> >>>>  - IRQ_TYPE_EDGE_RISING on HiKey 960/970
-> >>>>  - IRQ_TYPE_LEVEL_HIGH on a number of i.MX6 platforms
-> >>>>
-> >>>> We assert that all those platforms have the WL_IRQ pin connected
-> >>>> to the SoC _directly_ (confirmed on HiKey 970 [2]).
-> >>>>
-> >>>> That's not the case for R-Car Kingfisher extension target, which carries
-> >>>> a WL1837MODGIMOCT IC. There is an SN74LV1T04DBVR inverter present
-> >>>> between the WLAN_IRQ pin of the WL18* chip and the SoC, effectively
-> >>>> reversing the requirement quoted from [1]. IOW, in Kingfisher DTS
-> >>>> configuration we would need to use IRQ_TYPE_EDGE_FALLING or
-> >>>> IRQ_TYPE_LEVEL_LOW.
-> >>>>
-> >>>> Unfortunately, v4.2-rc1 commit bd763482c82ea2 ("wl18xx: wlan_irq:
-> >>>> support platform dependent interrupt types") made a special case out
-> >>>> of these interrupt types. After this commit, it is impossible to provide
-> >>>> an IRQ configuration via DTS which would describe an inverter present
-> >>>> between the WL18* chip and the SoC, generating the need for workarounds
-> >>>> like [3].
-> >>>>
-> >>>> Create a boolean OF property, called "invert-irq" to specify that
-> >>>> the WLAN_IRQ pin of WL18* is connected to the SoC via an inverter.
-> >>>>
-> >>>> This solution has been successfully tested on R-Car H3ULCB-KF-M06 using
-> >>>> the DTS configuration [4] combined with the "invert-irq" property.
-> >>>>
-> >>>> [1] http://www.ti.com/lit/ds/symlink/wl1837mod.pdf
-> >>>> [2] https://www.96boards.org/documentation/consumer/hikey/hikey970/hardware-docs/
-> >>>> [3] https://github.com/CogentEmbedded/meta-rcar/blob/289fbd4f8354/meta-rcar-gen3-adas/recipes-kernel/linux/linux-renesas/0024-wl18xx-do-not-invert-IRQ-on-WLxxxx-side.patch
-> >>>> [4] https://patchwork.kernel.org/patch/10895879/
-> >>>>     ("arm64: dts: ulcb-kf: Add support for TI WL1837")
-> >>>>
-> >>>> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> >>>
-> >>> Tony&Eyal, do you agree with this?
-> >>
-> >> Yeah if there's some hardware between the WLAN device and the SoC
-> >> inverting the interrupt, I don't think we have clear a way to deal
-> >> with it short of setting up a separate irqchip that does the
-> >> translation.
-> > 
-> > Yeah, inverting the interrupt type in DT works only for simple devices,
-> > that don't need configuration.
-> > A simple irqchip driver that just inverts the type sounds like a good
-> > solution to me. Does something like that already exists?
-> 
-> We already have plenty of that in the tree, the canonical example
-> probably being drivers/irqchip/irq-mtk-sysirq.c. It should be pretty
-> easy to turn this driver into something more generic.
+How will this minor version 3 be used? If we are not having
+start_pad/end_trunc updated in pfn_sb, how will the older kernel enable these namesapces?
 
-I don't think drivers/irqchip/irq-mtk-sysirq.c can serve the
-use-case/purpose of this patch. The MTK driver seems to be dealing with
-the polarity inversion of on-SoC interrupts which are routed to GiC,
-whereas in this patch we are talking about an off-chip interrupt
-wired to R-Car GPIO controller.
+Do we need a patch like
+https://lore.kernel.org/linux-mm/20190604091357.32213-2-aneesh.kumar@linux.ibm.com
 
-It looks to me that the nice DTS sketch shared by Linus Walleij in [5]
-might come closer to the concept proposed by Geert? FWIW, the
-infrastructure/implementation to make this possible is still not ready.
+-aneesh
 
-One question to the wlcore/wl18xx maintainers: Why exactly do you give
-freedom to users to set the interrupt as LEVEL_LOW/EDGE_FALLING [6]?
-Apparently, this:
- - complicates the wl18xx driver, thus increasing the chance for bugs
- - is not supposed to reflect any HW differences between boards using
-   LEVEL_LOW/EDGE_FALLING and the boards using LEVEL_HIGH/EDGE_RISING
- - doesn't bring any obvious advantage to the users, who are expected to
-   sense the same behavior regardless of the IRQ type set in DTS
- - prevent the users to set IRQ type to LEVEL_LOW/EDGE_FALLING when
-   there is an inverter present between WL_IRQ and SoC
- - seems to be not used almost at all, as 99% of mainline DTS set the
-   IRQ type to the canonical/NLCP LEVEL_HIGH/EDGE_RISING
-
-[5] https://patchwork.ozlabs.org/patch/1095690/#2167076
-  ("[V1,1/2] gpio: make it possible to set active-state on GPIO lines")
- --------------------8<-------------------
- gpio0: gpio {
-    compatible = "foo,chip";
-    gpio-controller;
-    (...)
- };
-
- inv0: inverter {
-     compatible = "inverter";
-     gpio-controller;
-     gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
- };
-
- consumer {
-    compatible = "bar";
-    gpios = <&inv0 0 GPIO_ACTIVE_HIGH>;
- };
- --------------------8<-------------------
-
-[6] bd763482c82ea2 ("wl18xx: wlan_irq: support platform dependent interrupt types")
-
--- 
-Best Regards,
-Eugeniu.
