@@ -2,221 +2,514 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D7CC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC59C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 439D621721
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FD7C21721
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:09:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Bl3JANCS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EySNu/Tz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407231AbfFLAJd (ORCPT
+        id S2407389AbfFLAJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 20:09:33 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45508 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405287AbfFLAJc (ORCPT
+        Tue, 11 Jun 2019 20:09:52 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:41550 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405287AbfFLAJw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 20:09:32 -0400
-Received: by mail-pf1-f195.google.com with SMTP id s11so8439178pfm.12
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 17:09:32 -0700 (PDT)
+        Tue, 11 Jun 2019 20:09:52 -0400
+Received: by mail-qk1-f193.google.com with SMTP id c11so8860908qkk.8
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 17:09:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=i3PsJwwDPsMEThcXBS4rchzEL1RqZkKdH+CwL/ZYuMY=;
-        b=Bl3JANCSsnwSitJTWTfdgv5r0urYyObtgFnzXllgN0+LpM9C0WkN0RoCQpiNiEKN/F
-         UYqwtjiNTA+9tYZcvTjiZVrkdDEsgEyLglUTcJYGBmLyjgDbVpZBZLNrX7qFJ3nDWHcb
-         W2HY2Uz+eWXZ9D6r5SgxN7XCOCq7ijmDNrOF1gdegdauLyOhfHRm+SXgztoBPvABTuc2
-         lmMWdb9NLlLOyydS6e07W/28K9+971Q/KuoFv3iYPkxbz3crZCFWnjfPwhxezXd6gU6s
-         7x3YaiANYeYeSZ0EBRf00a43z1GzDvBfUmdvNrUukroL2ySnVpAZRL/YghT+GzeN70FS
-         PC5g==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=B6SsaZB5uGhCAsxc9F8lMD7sBJKJaGRB5YjOmHQoDfM=;
+        b=EySNu/TzNrLS0idUX3tqqeATfzyoSyJhcWI/j1RqvAhZcfb5KaldB4ryyCzrqcGkYL
+         hr+zET8ce5pbL2EwOpfTf52cq882++8ReccrCYRmC7Ft3OIUSrmNpUau47kTAT4m1L3A
+         u4JjGlY2RJ4XVtnM0zqFq75ZHQjUCVLtEjhN64ftMMy8F6rhHh+1RIvn6/s4SxfNKbwd
+         anT5dHnarvcbD3pLMWJHkb+JXPbt2m4Wmf6VBT9kZOM1ieJ4MpQFWYzjLavV5PylKfqM
+         Ja0h/I9xqJQptmafkV/rQKYKQuZ8bkdOkwE49OMbG132Vb47CUWEG5fxr8/RDizI6w5S
+         3vXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=i3PsJwwDPsMEThcXBS4rchzEL1RqZkKdH+CwL/ZYuMY=;
-        b=TG/PC2VpfvXNLMaTXCofMvCCB5pcM6vARn2amSZwSxmKTNE7gcJ+lrE57RQiaoMIHA
-         Fo9lB0ZeTsjK2RxiscmHf6vUMLREX/tSAZ0UFeytNMKxLUnE/QiKqjrtoGWy/RQtKjpw
-         /fBvJQ60G+tvAPjx/pbxaWcf8FZYMNGQVwcQEom9FvuTwbmY6SVtUwWzcc41sXeBUJfv
-         2O9tia0LDrVBe0eXAyIYJikdVUmrSgQsyNm8PyRHFypaUaPsJj+hOPZedj7Bd9CTCmFM
-         wEXSJrdboILK7PX/v+w6n7NaSgVeST4UwRgHyk89NuJcF1CcoJ0rQHzcVOhfz2V2z/Hl
-         T2Mg==
-X-Gm-Message-State: APjAAAUqLvojbclHD3u/6kM+UOmMduPZoIg0aZ+qomMV3IVAINJhYGd3
-        UKFjufnACnSjcGX6z57wSFPrFg==
-X-Google-Smtp-Source: APXvYqy5+q46U41txHcFBZpRYAZLn2uuixoWepqfy1WrfIIerCO4LhHBaAIwbEkFPrzEuxfJ7pZJKA==
-X-Received: by 2002:a63:de43:: with SMTP id y3mr23364910pgi.271.1560298171849;
-        Tue, 11 Jun 2019 17:09:31 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b062:7159:60af:2fa5:3435:5195? ([2600:1010:b062:7159:60af:2fa5:3435:5195])
-        by smtp.gmail.com with ESMTPSA id 18sm14248201pfy.0.2019.06.11.17.09.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 17:09:30 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH v2 2/5] x86/sgx: Require userspace to define enclave pages' protection bits
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16F203)
-In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F655010EF@ORSMSX116.amr.corp.intel.com>
-Date:   Tue, 11 Jun 2019 17:09:28 -0700
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        "Tricca, Philip B" <philip.b.tricca@intel.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <331B31BF-9892-4FB3-9265-3E37412F80F4@amacapital.net>
-References: <20190606021145.12604-1-sean.j.christopherson@intel.com> <20190606021145.12604-3-sean.j.christopherson@intel.com> <960B34DE67B9E140824F1DCDEC400C0F65500E13@ORSMSX116.amr.corp.intel.com> <CALCETrWv9FYDtiHMfnfH==jE00tt7F22t-zcnP+XjfRCQgLr7A@mail.gmail.com> <960B34DE67B9E140824F1DCDEC400C0F655010EF@ORSMSX116.amr.corp.intel.com>
-To:     "Xing, Cedric" <cedric.xing@intel.com>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B6SsaZB5uGhCAsxc9F8lMD7sBJKJaGRB5YjOmHQoDfM=;
+        b=FqcnjrHYwtpNgS491RnaKRE4o6lY2jffQ5A74bO4BdRlwNzpZBUdLzlyUXK7AsABiK
+         7Y2M9QKXvupHrTYfTJJUh84g1VgHZOFzHHoVrsKUk8WV3hE9I1DklrQn49Afw1Z4337Q
+         ZXGeamRzTZgRH6+OBTVyCA5ekbW2wcpP7pM801XGiFeMuAc+09NkTvBi70clqxqcm/gP
+         MIxF0nkvNVLyowBPFtjY8MXjjw9QlU8rQv5HgHqB/gguXIOt1t/btOcwNwgwjuDpTeEe
+         TMBiRHfOLQ16h5DNPSY6LoR8Rc10rdIJdbJRZ3zCv2f82YhiZkHT0jxL/D00o8opHaFR
+         1vMg==
+X-Gm-Message-State: APjAAAUCUqi1j2NvC2C6OJqipECJ0K/1uVuPD6/vAq8ezOQ1urBMV8MJ
+        vr5cggsxxF/9WKZnbb75mDU=
+X-Google-Smtp-Source: APXvYqwku3fR69s3otXeuDy4zhMTUZFfd94zBcQloKGuGmQRLCSq/RtxwuvqqpszIlE0jusI9FEFbA==
+X-Received: by 2002:a05:620a:35e:: with SMTP id t30mr62986376qkm.14.1560298190734;
+        Tue, 11 Jun 2019 17:09:50 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id w9sm5473808qki.81.2019.06.11.17.09.49
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 17:09:49 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 652C541149; Tue, 11 Jun 2019 21:09:45 -0300 (-03)
+Date:   Tue, 11 Jun 2019 21:09:45 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/11] perf intel-pt: Add new packets for PEBS via PT
+Message-ID: <20190612000945.GE28689@kernel.org>
+References: <20190610072803.10456-1-adrian.hunter@intel.com>
+ <20190610072803.10456-2-adrian.hunter@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610072803.10456-2-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Mon, Jun 10, 2019 at 10:27:53AM +0300, Adrian Hunter escreveu:
+> Add 3 new packets to supports PEBS via PT, namely Block Begin Packet (BBP),
+> Block Item Packet (BIP) and Block End Packet (BEP). PEBS data is encoded
+> into multiple BIP packets that come between BBP and BEP. The BEP packet
+> might be associated with a FUP packet. That is indicated by using a
+> separate packet type (INTEL_PT_BEP_IP) similar to other packets types with
+> the _IP suffix.
+> 
+> Refer to the Intel SDM for more information about PEBS via PT.
 
+In these cases would be nice to provide an URL and page number, for
+convenience.
 
-On Jun 10, 2019, at 3:28 PM, Xing, Cedric <cedric.xing@intel.com> wrote:
+- Arnaldo
+ 
+> Decoding of BIP packets conflicts with single-byte TNT packets. Since BIP
+> packets only occur in the context of a block (i.e. between BBP and BEP),
+> that context must be recorded and passed to the packet decoder.
+> 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  .../util/intel-pt-decoder/intel-pt-decoder.c  |  38 ++++-
+>  .../intel-pt-decoder/intel-pt-pkt-decoder.c   | 140 +++++++++++++++++-
+>  .../intel-pt-decoder/intel-pt-pkt-decoder.h   |  21 ++-
+>  tools/perf/util/intel-pt.c                    |   3 +-
+>  4 files changed, 193 insertions(+), 9 deletions(-)
+> 
+> diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+> index 9eb778f9c911..44218f9cf16a 100644
+> --- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+> +++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+> @@ -140,6 +140,7 @@ struct intel_pt_decoder {
+>  	int mtc_shift;
+>  	struct intel_pt_stack stack;
+>  	enum intel_pt_pkt_state pkt_state;
+> +	enum intel_pt_pkt_ctx pkt_ctx;
+>  	struct intel_pt_pkt packet;
+>  	struct intel_pt_pkt tnt;
+>  	int pkt_step;
+> @@ -558,7 +559,7 @@ static int intel_pt_get_split_packet(struct intel_pt_decoder *decoder)
+>  	memcpy(buf + len, decoder->buf, n);
+>  	len += n;
+>  
+> -	ret = intel_pt_get_packet(buf, len, &decoder->packet);
+> +	ret = intel_pt_get_packet(buf, len, &decoder->packet, &decoder->pkt_ctx);
+>  	if (ret < (int)old_len) {
+>  		decoder->next_buf = decoder->buf;
+>  		decoder->next_len = decoder->len;
+> @@ -593,6 +594,7 @@ static int intel_pt_pkt_lookahead(struct intel_pt_decoder *decoder,
+>  {
+>  	struct intel_pt_pkt_info pkt_info;
+>  	const unsigned char *buf = decoder->buf;
+> +	enum intel_pt_pkt_ctx pkt_ctx = decoder->pkt_ctx;
+>  	size_t len = decoder->len;
+>  	int ret;
+>  
+> @@ -611,7 +613,8 @@ static int intel_pt_pkt_lookahead(struct intel_pt_decoder *decoder,
+>  			if (!len)
+>  				return INTEL_PT_NEED_MORE_BYTES;
+>  
+> -			ret = intel_pt_get_packet(buf, len, &pkt_info.packet);
+> +			ret = intel_pt_get_packet(buf, len, &pkt_info.packet,
+> +						  &pkt_ctx);
+>  			if (!ret)
+>  				return INTEL_PT_NEED_MORE_BYTES;
+>  			if (ret < 0)
+> @@ -686,6 +689,10 @@ static int intel_pt_calc_cyc_cb(struct intel_pt_pkt_info *pkt_info)
+>  	case INTEL_PT_MNT:
+>  	case INTEL_PT_PTWRITE:
+>  	case INTEL_PT_PTWRITE_IP:
+> +	case INTEL_PT_BBP:
+> +	case INTEL_PT_BIP:
+> +	case INTEL_PT_BEP:
+> +	case INTEL_PT_BEP_IP:
+>  		return 0;
+>  
+>  	case INTEL_PT_MTC:
+> @@ -878,7 +885,7 @@ static int intel_pt_get_next_packet(struct intel_pt_decoder *decoder)
+>  		}
+>  
+>  		ret = intel_pt_get_packet(decoder->buf, decoder->len,
+> -					  &decoder->packet);
+> +					  &decoder->packet, &decoder->pkt_ctx);
+>  		if (ret == INTEL_PT_NEED_MORE_BYTES && BITS_PER_LONG == 32 &&
+>  		    decoder->len < INTEL_PT_PKT_MAX_SZ && !decoder->next_buf) {
+>  			ret = intel_pt_get_split_packet(decoder);
+> @@ -1624,6 +1631,10 @@ static int intel_pt_walk_psbend(struct intel_pt_decoder *decoder)
+>  		case INTEL_PT_MWAIT:
+>  		case INTEL_PT_PWRE:
+>  		case INTEL_PT_PWRX:
+> +		case INTEL_PT_BBP:
+> +		case INTEL_PT_BIP:
+> +		case INTEL_PT_BEP:
+> +		case INTEL_PT_BEP_IP:
+>  			decoder->have_tma = false;
+>  			intel_pt_log("ERROR: Unexpected packet\n");
+>  			err = -EAGAIN;
+> @@ -1717,6 +1728,10 @@ static int intel_pt_walk_fup_tip(struct intel_pt_decoder *decoder)
+>  		case INTEL_PT_MWAIT:
+>  		case INTEL_PT_PWRE:
+>  		case INTEL_PT_PWRX:
+> +		case INTEL_PT_BBP:
+> +		case INTEL_PT_BIP:
+> +		case INTEL_PT_BEP:
+> +		case INTEL_PT_BEP_IP:
+>  			intel_pt_log("ERROR: Missing TIP after FUP\n");
+>  			decoder->pkt_state = INTEL_PT_STATE_ERR3;
+>  			decoder->pkt_step = 0;
+> @@ -2038,6 +2053,12 @@ static int intel_pt_walk_trace(struct intel_pt_decoder *decoder)
+>  			decoder->state.pwrx_payload = decoder->packet.payload;
+>  			return 0;
+>  
+> +		case INTEL_PT_BBP:
+> +		case INTEL_PT_BIP:
+> +		case INTEL_PT_BEP:
+> +		case INTEL_PT_BEP_IP:
+> +			break;
+> +
+>  		default:
+>  			return intel_pt_bug(decoder);
+>  		}
+> @@ -2076,6 +2097,10 @@ static int intel_pt_walk_psb(struct intel_pt_decoder *decoder)
+>  		case INTEL_PT_MWAIT:
+>  		case INTEL_PT_PWRE:
+>  		case INTEL_PT_PWRX:
+> +		case INTEL_PT_BBP:
+> +		case INTEL_PT_BIP:
+> +		case INTEL_PT_BEP:
+> +		case INTEL_PT_BEP_IP:
+>  			intel_pt_log("ERROR: Unexpected packet\n");
+>  			err = -ENOENT;
+>  			goto out;
+> @@ -2282,6 +2307,10 @@ static int intel_pt_walk_to_ip(struct intel_pt_decoder *decoder)
+>  		case INTEL_PT_MWAIT:
+>  		case INTEL_PT_PWRE:
+>  		case INTEL_PT_PWRX:
+> +		case INTEL_PT_BBP:
+> +		case INTEL_PT_BIP:
+> +		case INTEL_PT_BEP:
+> +		case INTEL_PT_BEP_IP:
+>  		default:
+>  			break;
+>  		}
+> @@ -2632,11 +2661,12 @@ static unsigned char *intel_pt_last_psb(unsigned char *buf, size_t len)
+>  static bool intel_pt_next_tsc(unsigned char *buf, size_t len, uint64_t *tsc,
+>  			      size_t *rem)
+>  {
+> +	enum intel_pt_pkt_ctx ctx = INTEL_PT_NO_CTX;
+>  	struct intel_pt_pkt packet;
+>  	int ret;
+>  
+>  	while (len) {
+> -		ret = intel_pt_get_packet(buf, len, &packet);
+> +		ret = intel_pt_get_packet(buf, len, &packet, &ctx);
+>  		if (ret <= 0)
+>  			return false;
+>  		if (packet.type == INTEL_PT_TSC) {
+> diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
+> index d426761a549d..2b2793b339c0 100644
+> --- a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
+> +++ b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.c
+> @@ -71,6 +71,10 @@ static const char * const packet_name[] = {
+>  	[INTEL_PT_MWAIT]	= "MWAIT",
+>  	[INTEL_PT_PWRE]		= "PWRE",
+>  	[INTEL_PT_PWRX]		= "PWRX",
+> +	[INTEL_PT_BBP]		= "BBP",
+> +	[INTEL_PT_BIP]		= "BIP",
+> +	[INTEL_PT_BEP]		= "BEP",
+> +	[INTEL_PT_BEP_IP]	= "BEP",
+>  };
+>  
+>  const char *intel_pt_pkt_name(enum intel_pt_pkt_type type)
+> @@ -289,6 +293,55 @@ static int intel_pt_get_pwrx(const unsigned char *buf, size_t len,
+>  	return 7;
+>  }
+>  
+> +static int intel_pt_get_bbp(const unsigned char *buf, size_t len,
+> +			    struct intel_pt_pkt *packet)
+> +{
+> +	if (len < 3)
+> +		return INTEL_PT_NEED_MORE_BYTES;
+> +	packet->type = INTEL_PT_BBP;
+> +	packet->count = buf[2] >> 7;
+> +	packet->payload = buf[2] & 0x1f;
+> +	return 3;
+> +}
+> +
+> +static int intel_pt_get_bip_4(const unsigned char *buf, size_t len,
+> +			      struct intel_pt_pkt *packet)
+> +{
+> +	if (len < 5)
+> +		return INTEL_PT_NEED_MORE_BYTES;
+> +	packet->type = INTEL_PT_BIP;
+> +	packet->count = buf[0] >> 3;
+> +	memcpy_le64(&packet->payload, buf + 1, 4);
+> +	return 5;
+> +}
+> +
+> +static int intel_pt_get_bip_8(const unsigned char *buf, size_t len,
+> +			      struct intel_pt_pkt *packet)
+> +{
+> +	if (len < 9)
+> +		return INTEL_PT_NEED_MORE_BYTES;
+> +	packet->type = INTEL_PT_BIP;
+> +	packet->count = buf[0] >> 3;
+> +	memcpy_le64(&packet->payload, buf + 1, 8);
+> +	return 9;
+> +}
+> +
+> +static int intel_pt_get_bep(size_t len, struct intel_pt_pkt *packet)
+> +{
+> +	if (len < 2)
+> +		return INTEL_PT_NEED_MORE_BYTES;
+> +	packet->type = INTEL_PT_BEP;
+> +	return 2;
+> +}
+> +
+> +static int intel_pt_get_bep_ip(size_t len, struct intel_pt_pkt *packet)
+> +{
+> +	if (len < 2)
+> +		return INTEL_PT_NEED_MORE_BYTES;
+> +	packet->type = INTEL_PT_BEP_IP;
+> +	return 2;
+> +}
+> +
+>  static int intel_pt_get_ext(const unsigned char *buf, size_t len,
+>  			    struct intel_pt_pkt *packet)
+>  {
+> @@ -329,6 +382,12 @@ static int intel_pt_get_ext(const unsigned char *buf, size_t len,
+>  		return intel_pt_get_pwre(buf, len, packet);
+>  	case 0xA2: /* PWRX */
+>  		return intel_pt_get_pwrx(buf, len, packet);
+> +	case 0x63: /* BBP */
+> +		return intel_pt_get_bbp(buf, len, packet);
+> +	case 0x33: /* BEP no IP */
+> +		return intel_pt_get_bep(len, packet);
+> +	case 0xb3: /* BEP with IP */
+> +		return intel_pt_get_bep_ip(len, packet);
+>  	default:
+>  		return INTEL_PT_BAD_PACKET;
+>  	}
+> @@ -477,7 +536,8 @@ static int intel_pt_get_mtc(const unsigned char *buf, size_t len,
+>  }
+>  
+>  static int intel_pt_do_get_packet(const unsigned char *buf, size_t len,
+> -				  struct intel_pt_pkt *packet)
+> +				  struct intel_pt_pkt *packet,
+> +				  enum intel_pt_pkt_ctx ctx)
+>  {
+>  	unsigned int byte;
+>  
+> @@ -487,6 +547,22 @@ static int intel_pt_do_get_packet(const unsigned char *buf, size_t len,
+>  		return INTEL_PT_NEED_MORE_BYTES;
+>  
+>  	byte = buf[0];
+> +
+> +	switch (ctx) {
+> +	case INTEL_PT_NO_CTX:
+> +		break;
+> +	case INTEL_PT_BLK_4_CTX:
+> +		if ((byte & 0x7) == 4)
+> +			return intel_pt_get_bip_4(buf, len, packet);
+> +		break;
+> +	case INTEL_PT_BLK_8_CTX:
+> +		if ((byte & 0x7) == 4)
+> +			return intel_pt_get_bip_8(buf, len, packet);
+> +		break;
+> +	default:
+> +		break;
+> +	};
+> +
+>  	if (!(byte & BIT(0))) {
+>  		if (byte == 0)
+>  			return intel_pt_get_pad(packet);
+> @@ -525,15 +601,65 @@ static int intel_pt_do_get_packet(const unsigned char *buf, size_t len,
+>  	}
+>  }
+>  
+> +void intel_pt_upd_pkt_ctx(const struct intel_pt_pkt *packet,
+> +			  enum intel_pt_pkt_ctx *ctx)
+> +{
+> +	switch (packet->type) {
+> +	case INTEL_PT_BAD:
+> +	case INTEL_PT_PAD:
+> +	case INTEL_PT_TSC:
+> +	case INTEL_PT_TMA:
+> +	case INTEL_PT_MTC:
+> +	case INTEL_PT_FUP:
+> +	case INTEL_PT_CYC:
+> +	case INTEL_PT_CBR:
+> +	case INTEL_PT_MNT:
+> +	case INTEL_PT_EXSTOP:
+> +	case INTEL_PT_EXSTOP_IP:
+> +	case INTEL_PT_PWRE:
+> +	case INTEL_PT_PWRX:
+> +	case INTEL_PT_BIP:
+> +		break;
+> +	case INTEL_PT_TNT:
+> +	case INTEL_PT_TIP:
+> +	case INTEL_PT_TIP_PGD:
+> +	case INTEL_PT_TIP_PGE:
+> +	case INTEL_PT_MODE_EXEC:
+> +	case INTEL_PT_MODE_TSX:
+> +	case INTEL_PT_PIP:
+> +	case INTEL_PT_OVF:
+> +	case INTEL_PT_VMCS:
+> +	case INTEL_PT_TRACESTOP:
+> +	case INTEL_PT_PSB:
+> +	case INTEL_PT_PSBEND:
+> +	case INTEL_PT_PTWRITE:
+> +	case INTEL_PT_PTWRITE_IP:
+> +	case INTEL_PT_MWAIT:
+> +	case INTEL_PT_BEP:
+> +	case INTEL_PT_BEP_IP:
+> +		*ctx = INTEL_PT_NO_CTX;
+> +		break;
+> +	case INTEL_PT_BBP:
+> +		if (packet->count)
+> +			*ctx = INTEL_PT_BLK_4_CTX;
+> +		else
+> +			*ctx = INTEL_PT_BLK_8_CTX;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +}
+> +
+>  int intel_pt_get_packet(const unsigned char *buf, size_t len,
+> -			struct intel_pt_pkt *packet)
+> +			struct intel_pt_pkt *packet, enum intel_pt_pkt_ctx *ctx)
+>  {
+>  	int ret;
+>  
+> -	ret = intel_pt_do_get_packet(buf, len, packet);
+> +	ret = intel_pt_do_get_packet(buf, len, packet, *ctx);
+>  	if (ret > 0) {
+>  		while (ret < 8 && len > (size_t)ret && !buf[ret])
+>  			ret += 1;
+> +		intel_pt_upd_pkt_ctx(packet, ctx);
+>  	}
+>  	return ret;
+>  }
+> @@ -611,8 +737,10 @@ int intel_pt_pkt_desc(const struct intel_pt_pkt *packet, char *buf,
+>  		return snprintf(buf, buf_len, "%s 0x%llx IP:0", name, payload);
+>  	case INTEL_PT_PTWRITE_IP:
+>  		return snprintf(buf, buf_len, "%s 0x%llx IP:1", name, payload);
+> +	case INTEL_PT_BEP:
+>  	case INTEL_PT_EXSTOP:
+>  		return snprintf(buf, buf_len, "%s IP:0", name);
+> +	case INTEL_PT_BEP_IP:
+>  	case INTEL_PT_EXSTOP_IP:
+>  		return snprintf(buf, buf_len, "%s IP:1", name);
+>  	case INTEL_PT_MWAIT:
+> @@ -630,6 +758,12 @@ int intel_pt_pkt_desc(const struct intel_pt_pkt *packet, char *buf,
+>  				(unsigned int)((payload >> 4) & 0xf),
+>  				(unsigned int)(payload & 0xf),
+>  				(unsigned int)((payload >> 8) & 0xf));
+> +	case INTEL_PT_BBP:
+> +		return snprintf(buf, buf_len, "%s SZ %s-byte Type 0x%llx",
+> +				name, packet->count ? "4" : "8", payload);
+> +	case INTEL_PT_BIP:
+> +		return snprintf(buf, buf_len, "%s ID 0x%02x Value 0x%llx",
+> +				name, packet->count, payload);
+>  	default:
+>  		break;
+>  	}
+> diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.h b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.h
+> index 73ddc3a88d07..682b35282abc 100644
+> --- a/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.h
+> +++ b/tools/perf/util/intel-pt-decoder/intel-pt-pkt-decoder.h
+> @@ -59,6 +59,10 @@ enum intel_pt_pkt_type {
+>  	INTEL_PT_MWAIT,
+>  	INTEL_PT_PWRE,
+>  	INTEL_PT_PWRX,
+> +	INTEL_PT_BBP,
+> +	INTEL_PT_BIP,
+> +	INTEL_PT_BEP,
+> +	INTEL_PT_BEP_IP,
+>  };
+>  
+>  struct intel_pt_pkt {
+> @@ -67,10 +71,25 @@ struct intel_pt_pkt {
+>  	uint64_t		payload;
+>  };
+>  
+> +/*
+> + * Decoding of BIP packets conflicts with single-byte TNT packets. Since BIP
+> + * packets only occur in the context of a block (i.e. between BBP and BEP), that
+> + * context must be recorded and passed to the packet decoder.
+> + */
+> +enum intel_pt_pkt_ctx {
+> +	INTEL_PT_NO_CTX,	/* BIP packets are invalid */
+> +	INTEL_PT_BLK_4_CTX,	/* 4-byte BIP packets */
+> +	INTEL_PT_BLK_8_CTX,	/* 8-byte BIP packets */
+> +};
+> +
+>  const char *intel_pt_pkt_name(enum intel_pt_pkt_type);
+>  
+>  int intel_pt_get_packet(const unsigned char *buf, size_t len,
+> -			struct intel_pt_pkt *packet);
+> +			struct intel_pt_pkt *packet,
+> +			enum intel_pt_pkt_ctx *ctx);
+> +
+> +void intel_pt_upd_pkt_ctx(const struct intel_pt_pkt *packet,
+> +			  enum intel_pt_pkt_ctx *ctx);
+>  
+>  int intel_pt_pkt_desc(const struct intel_pt_pkt *packet, char *buf, size_t len);
+>  
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index 3cff8fe2eaa0..f43d3ac2db8b 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -174,13 +174,14 @@ static void intel_pt_dump(struct intel_pt *pt __maybe_unused,
+>  	int ret, pkt_len, i;
+>  	char desc[INTEL_PT_PKT_DESC_MAX];
+>  	const char *color = PERF_COLOR_BLUE;
+> +	enum intel_pt_pkt_ctx ctx = INTEL_PT_NO_CTX;
+>  
+>  	color_fprintf(stdout, color,
+>  		      ". ... Intel Processor Trace data: size %zu bytes\n",
+>  		      len);
+>  
+>  	while (len) {
+> -		ret = intel_pt_get_packet(buf, len, &packet);
+> +		ret = intel_pt_get_packet(buf, len, &packet, &ctx);
+>  		if (ret > 0)
+>  			pkt_len = ret;
+>  		else
+> -- 
+> 2.17.1
 
->> From: Andy Lutomirski [mailto:luto@kernel.org]
->> Sent: Monday, June 10, 2019 12:15 PM
->>=20
->> On Mon, Jun 10, 2019 at 11:29 AM Xing, Cedric <cedric.xing@intel.com>
->> wrote:
->>>=20
->>>> From: Christopherson, Sean J
->>>> Sent: Wednesday, June 05, 2019 7:12 PM
->>>>=20
->>>> +/**
->>>> + * sgx_map_allowed - check vma protections against the associated
->>>> enclave page
->>>> + * @encl:    an enclave
->>>> + * @start:   start address of the mapping (inclusive)
->>>> + * @end:     end address of the mapping (exclusive)
->>>> + * @prot:    protection bits of the mapping
->>>> + *
->>>> + * Verify a userspace mapping to an enclave page would not violate
->>>> +the security
->>>> + * requirements of the *kernel*.  Note, this is in no way related
->>>> +to the
->>>> + * page protections enforced by hardware via the EPCM.  The EPCM
->>>> +protections
->>>> + * can be directly extended by the enclave, i.e. cannot be relied
->>>> +upon by the
->>>> + * kernel for security guarantees of any kind.
->>>> + *
->>>> + * Return:
->>>> + *   0 on success,
->>>> + *   -EACCES if the mapping is disallowed
->>>> + */
->>>> +int sgx_map_allowed(struct sgx_encl *encl, unsigned long start,
->>>> +                 unsigned long end, unsigned long prot) {
->>>> +     struct sgx_encl_page *page;
->>>> +     unsigned long addr;
->>>> +
->>>> +     prot &=3D (VM_READ | VM_WRITE | VM_EXEC);
->>>> +     if (!prot || !encl)
->>>> +             return 0;
->>>> +
->>>> +     mutex_lock(&encl->lock);
->>>> +
->>>> +     for (addr =3D start; addr < end; addr +=3D PAGE_SIZE) {
->>>> +             page =3D radix_tree_lookup(&encl->page_tree, addr >>
->>>> PAGE_SHIFT);
->>>> +
->>>> +             /*
->>>> +              * Do not allow R|W|X to a non-existent page, or
->> protections
->>>> +              * beyond those of the existing enclave page.
->>>> +              */
->>>> +             if (!page || (prot & ~page->prot))
->>>> +                     return -EACCES;
->>>=20
->>> In SGX2, pages will be "mapped" before being populated.
->>>=20
->>> Here's a brief summary for those who don't have enough background on
->> how new EPC pages could be added to a running enclave in SGX2:
->>>  - There are 2 new instructions - EACCEPT and EAUG.
->>>  - EAUG is used by SGX module to add (augment) a new page to an
->> existing enclave. The newly added page is *inaccessible* until the
->> enclave *accepts* it.
->>>  - EACCEPT is the instruction for an enclave to accept a new page.
->>>=20
->>> And the s/w flow for an enclave to request new EPC pages is expected
->> to be something like the following:
->>>  - The enclave issues EACCEPT at the linear address that it would
->> like a new page.
->>>  - EACCEPT results in #PF, as there's no page at the linear address
->> above.
->>>  - SGX module is notified about the #PF, in form of its vma->vm_ops-
->>> fault() being called by kernel.
->>>  - SGX module EAUGs a new EPC page at the fault address, and resumes
->> the enclave.
->>>  - EACCEPT is reattempted, and succeeds at this time.
->>=20
->> This seems like an odd workflow.  Shouldn't the #PF return back to
->> untrusted userspace so that the untrusted user code can make its own
->> decision as to whether it wants to EAUG a page there as opposed to, say,
->> killing the enclave or waiting to keep resource usage under control?
->=20
-> This may seem odd to some at the first glance. But if you can think of how=
- static heap (pre-allocated by EADD before EINIT) works, the load parses the=
- "metadata" coming with the enclave to decide the address/size of the heap, E=
-ADDs it, and calls it done. In the case of "dynamic" heap (allocated dynamic=
-ally by EAUG after EINIT), the same thing applies - the loader determines th=
-e range of the heap, tells the SGX module about it, and calls it done. Every=
-thing else is the between the enclave and the SGX module.
->=20
-> In practice, untrusted code usually doesn't know much about enclaves, just=
- like it doesn't know much about the shared objects loaded into its address s=
-pace either. Without the necessary knowledge, untrusted code usually just do=
-es what it is told (via o-calls, or return value from e-calls), without judg=
-ing that's right or wrong.=20
->=20
-> When it comes to #PF like what I described, of course a signal could be se=
-nt to the untrusted code but what would it do then? Usually it'd just come b=
-ack asking for a page at the fault address. So we figured it'd be more effic=
-ient to just have the kernel EAUG at #PF.=20
->=20
-> Please don't get me wrong though, as I'm not dictating what the s/w flow s=
-hall be. It's just going to be a choice offered to user mode. And that choic=
-e was planned to be offered via mprotect() - i.e. a writable vma causes kern=
-el to EAUG while a non-writable vma will result in a signal (then the user m=
-ode could decide whether to EAUG). The key point is flexibility - as we want=
- to allow all reasonable s/w flows instead of dictating one over others. We h=
-ad similar discussions on vDSO API before. And I think you accepted my appro=
-ach because of its flexibility. Am I right?
+-- 
 
-As long as user code can turn this off, I have no real objection. But it mig=
-ht make sense to have it be more explicit =E2=80=94 have an ioctl set up a r=
-ange as =E2=80=9CEAUG-on-demand=E2=80=9D.
-
-But this is all currently irrelevant. We can argue about it when the patches=
- show up. :)=
+- Arnaldo
