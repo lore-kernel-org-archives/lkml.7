@@ -2,143 +2,174 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4AEC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C23C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE9B2063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54692063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:11:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YlGK7G62";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SrGaRP2r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbfFMRLD (ORCPT
+        id S1729162AbfFMRLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:11:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49498 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729190AbfFLWby (ORCPT
+        Thu, 13 Jun 2019 13:11:11 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:42000 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729110AbfFLWUr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 18:31:54 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CMVRKI083942
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 18:31:53 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t39hx1ee2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 18:31:53 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 12 Jun 2019 23:31:51 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 12 Jun 2019 23:31:46 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5CMVjkq55836814
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 22:31:45 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 20D615205F;
-        Wed, 12 Jun 2019 22:31:45 +0000 (GMT)
-Received: from dhcp-9-31-103-88.watson.ibm.com (unknown [9.31.103.88])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2CA8B52054;
-        Wed, 12 Jun 2019 22:31:44 +0000 (GMT)
-Subject: Re: [PATCH V8 3/3] Call ima_kexec_cmdline to measure the cmdline
- args
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     roberto.sassu@huawei.com, vgoyal@redhat.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Dave Young <dyoung@redhat.com>,
-        kexec <kexec@lists.infradead.org>
-Date:   Wed, 12 Jun 2019 18:31:43 -0400
-In-Reply-To: <20190612221549.28399-4-prsriva02@gmail.com>
-References: <20190612221549.28399-1-prsriva02@gmail.com>
-         <20190612221549.28399-4-prsriva02@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Wed, 12 Jun 2019 18:20:47 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6E3A760A42; Wed, 12 Jun 2019 22:20:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560378045;
+        bh=TyBZfve1UAcUIxJVv/pwvffuVJYpSGzvXxE0yFWh3tQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YlGK7G627dyWti5JtzgoOdpbTyy6JowipOj+zmhU8d8NGj4nv7QHD41sx6C4vtKVt
+         0mQ2PCj+A4bBWmLPJL4cwQPzmmGUa3LKn36MgW3GimqzV6UsMJ899f84/f7OqHj6qh
+         LgBA/KL3espizB7k2z7o65run4g2kO0is2Jvlk+k=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 182C360741;
+        Wed, 12 Jun 2019 22:20:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560378044;
+        bh=TyBZfve1UAcUIxJVv/pwvffuVJYpSGzvXxE0yFWh3tQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=SrGaRP2rWnakJm4aMI31oVfz1S1KFvJSVNvmgEM9FJcV8znU2qyyCftSl5O0vT7V7
+         aBPEf3HFFYWVakNjuu9F3cTiGzw8pfcoNkDyHn39fxE0HDkdfcLSPZdu2OHr3zOTO1
+         jT2hvH+scjfclQcwuHQ4liVONIIYVligoVrM9cRs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 182C360741
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: Re: [PATCH v6 2/5] HID: quirks: Refactor ELAN 400 and 401
+ handling
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     benjamin.tissoires@redhat.com, jikos@kernel.org,
+        hdegoede@redhat.com, bjorn.andersson@linaro.org, agross@kernel.org,
+        lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
+ <20190612212721.32195-1-jeffrey.l.hugo@gmail.com>
+ <20190612214636.GA40779@dtor-ws>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <84e7d83f-e133-0281-612a-94d8c4319040@codeaurora.org>
+Date:   Wed, 12 Jun 2019 16:20:42 -0600
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190612214636.GA40779@dtor-ws>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061222-0012-0000-0000-00000328A073
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061222-0013-0000-0000-00002161A9C6
-Message-Id: <1560378703.4578.91.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906120158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc: kexec mailing list]
-
-Hi Eric, Dave,
-
-On Wed, 2019-06-12 at 15:15 -0700, Prakhar Srivastava wrote:
-> During soft reboot(kexec_file_load) boot cmdline args
-> are not measured.Thus the new kernel on load boots with
-> an assumption of cold reboot.
+On 6/12/2019 3:46 PM, Dmitry Torokhov wrote:
+> On Wed, Jun 12, 2019 at 02:27:21PM -0700, Jeffrey Hugo wrote:
+>> There needs to be coordination between hid-quirks and the elan_i2c driver
+>> about which devices are handled by what drivers.  Currently, both use
+>> whitelists, which results in valid devices being unhandled by default,
+>> when they should not be rejected by hid-quirks.  This is quickly becoming
+>> an issue.
+>>
+>> Since elan_i2c has a maintained whitelist of what devices it will handle,
+>> which is now in a header file that hid-quirks can access, use that to
+>> implement a blacklist in hid-quirks so that only the devices that need to
+>> be handled by elan_i2c get rejected by hid-quirks, and everything else is
+>> handled by default.
+>>
+>> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+>> ---
+>>   drivers/hid/hid-quirks.c | 27 ++++++++++++++++-----------
+>>   1 file changed, 16 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+>> index e5ca6fe2ca57..bd81bb090222 100644
+>> --- a/drivers/hid/hid-quirks.c
+>> +++ b/drivers/hid/hid-quirks.c
+>> @@ -16,6 +16,7 @@
+>>   #include <linux/export.h>
+>>   #include <linux/slab.h>
+>>   #include <linux/mutex.h>
+>> +#include <linux/input/elan-i2c-ids.h>
+>>   
+>>   #include "hid-ids.h"
+>>   
+>> @@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
+>>   
+>>   bool hid_ignore(struct hid_device *hdev)
+>>   {
+>> +	int i;
+>> +
+>>   	if (hdev->quirks & HID_QUIRK_NO_IGNORE)
+>>   		return false;
+>>   	if (hdev->quirks & HID_QUIRK_IGNORE)
+>> @@ -978,18 +981,20 @@ bool hid_ignore(struct hid_device *hdev)
+>>   		break;
+>>   	case USB_VENDOR_ID_ELAN:
+>>   		/*
+>> -		 * Many Elan devices have a product id of 0x0401 and are handled
+>> -		 * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
+>> -		 * is not (and cannot be) handled by that driver ->
+>> -		 * Ignore all 0x0401 devs except for the ELAN0800 dev.
+>> +		 * Blacklist of everything that gets handled by the elan_i2c
+>> +		 * input driver.  This avoids disabling valid touchpads and
+>> +		 * other ELAN devices.
+>>   		 */
+>> -		if (hdev->product == 0x0401 &&
+>> -		    strncmp(hdev->name, "ELAN0800", 8) != 0)
+>> -			return true;
+>> -		/* Same with product id 0x0400 */
+>> -		if (hdev->product == 0x0400 &&
+>> -		    strncmp(hdev->name, "QTEC0001", 8) != 0)
+>> -			return true;
+>> +		if ((hdev->product == 0x0401 || hdev->product == 0x0400)) {
+>> +			for (i = 0; strlen(elan_acpi_id[i].id); ++i)
+>> +				if (!strncmp(hdev->name, elan_acpi_id[i].id,
+>> +					     strlen(elan_acpi_id[i].id)))
+>> +					return true;
+>> +			for (i = 0; strlen(elan_of_match[i].name); ++i)
+>> +				if (!strncmp(hdev->name, elan_of_match[i].name,
+>> +					     strlen(elan_of_match[i].name)))
+>> +					return true;
 > 
-> This patch makes a call to the ima hook ima_kexec_cmdline,
-> added in "Define a new IMA hook to measure the boot command
-> line arguments"
-> to measure the boot cmdline args into the ima log.
-> 
-> - call ima_kexec_cmdline from kexec_file_load.
-> - move the call ima_add_kexec_buffer after the cmdline
-> args have been measured.
-> 
-> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Dave Young <dyoung@redhat.com>
+> Do we really need to blacklist the OF case here? I thought that in ACPI
+> case we have clashes as HID gets matched by elan_i2c and CID is matched
+> by i2c-hid, but I do not believe we'll run into the same situation on OF
+> systems.
 
-Any chance we could get some Acks?
+I think its the safer approach.
 
-thanks,
+On an OF system, such as patch 3 in the series, the "hid-over-i2c" will 
+end up running through this (kind of the whole reason why this series 
+exists).  The vendor and product ids will still match, so we'll end up 
+going through the lists to see if the hdev->name (the compatible string) 
+will match the blacklist.  "hid-over-i2c" won't match the blacklist, but 
+if there is a more specific compatible, it might.
 
-Mimi
+In that case, not matching OF would work, however how it could break 
+today is if both "hid-over-i2c" and "elan,ekth3000" were listed for the 
+same device, and elan_i2c was not compiled.  In that case, if we skip 
+the OF part of the black list, hid-quirks will not reject the device, 
+and you'll probably have some odd behavior instead of the obvious "the 
+device doesn't work because the correct driver isn't present" behavior.
 
-> ---
->  kernel/kexec_file.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 072b6ee55e3f..b0c724e5d86c 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -198,9 +198,6 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
->  		return ret;
->  	image->kernel_buf_len = size;
->  
-> -	/* IMA needs to pass the measurement list to the next kernel. */
-> -	ima_add_kexec_buffer(image);
-> -
->  	/* Call arch image probe handlers */
->  	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
->  					    image->kernel_buf_len);
-> @@ -241,8 +238,14 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
->  			ret = -EINVAL;
->  			goto out;
->  		}
-> +
-> +		ima_kexec_cmdline(image->cmdline_buf,
-> +				  image->cmdline_buf_len - 1);
->  	}
->  
-> +	/* IMA needs to pass the measurement list to the next kernel. */
-> +	ima_add_kexec_buffer(image);
-> +
->  	/* Call arch image load handlers */
->  	ldata = arch_kexec_kernel_image_load(image);
->  
+While that scenario might be far fetched since having both 
+"hid-over-i2c" and "elan,ekth3000" probably violates the OF bindings, 
+its still safer to include the OF case in the blacklist against future 
+scenarios.
+
 
