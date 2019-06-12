@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C58C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41281C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B68682082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A02207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:29:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Qmn73KdF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UZSfp15x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732186AbfFLK3u (ORCPT
+        id S1732199AbfFLK3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:29:50 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44122 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732151AbfFLK3t (ORCPT
+        Wed, 12 Jun 2019 06:29:55 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56410 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727846AbfFLK3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:29:49 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5CATm2X040369;
-        Wed, 12 Jun 2019 05:29:48 -0500
+        Wed, 12 Jun 2019 06:29:52 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5CATpC1031934;
+        Wed, 12 Jun 2019 05:29:51 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560335388;
-        bh=ivsc2x+9Cpl6a1E43O1kQ1pwGbkzvrUAuWeBZqbf3o4=;
+        s=ti-com-17Q1; t=1560335391;
+        bh=IdaQjdXlt1IrKCg6uSGP7IL6H1ZHedEZAA0iGbkCJKA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Qmn73KdFoZaYqSzzP0oL4UxSgyZ/LFJyrGDQOaSZ1UQuyIBuAThg1Iy+ibWtrDKyY
-         fgKa6BygTZ3R0bukqK/UppJ6XlQFAP6A7JqW02RmanRM0qLog8B/RKF83eYdJyDhlr
-         R5bs88mmIZSfhCRQnGI/LD9KEJ1kJbyq9uojQpGU=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5CATmdK089701
+        b=UZSfp15xhQUA01lGq8g/mVjJrFVH6cLh8pYyGhjagFLuLsWNJUiaE1BLlsXGOwD9k
+         ozHS+GUcYlOlv/laVcoPT8CLBXJviriGr5Y4pPrRej9PXJVD92ySsbcMxRWirSNrVN
+         df+GYprFd0HxmNvqA19eRD+OJCbasn3E9yTUGeK8=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5CATpBj085393
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Jun 2019 05:29:48 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 12 Jun 2019 05:29:51 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 12
- Jun 2019 05:29:48 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2019 05:29:51 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 12 Jun 2019 05:29:48 -0500
+ Frontend Transport; Wed, 12 Jun 2019 05:29:51 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5CATTJZ128310;
-        Wed, 12 Jun 2019 05:29:44 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5CATTJa128310;
+        Wed, 12 Jun 2019 05:29:49 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, <kishon@ti.com>
 CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/6] phy: usb: phy-brcm-usb: Remove sysfs attributes upon driver removal
-Date:   Wed, 12 Jun 2019 15:58:00 +0530
-Message-ID: <20190612102803.25398-4-kishon@ti.com>
+Subject: [PATCH 4/6] dt-bindings: phy: tegra-xusb: List PLL power supplies
+Date:   Wed, 12 Jun 2019 15:58:01 +0530
+Message-ID: <20190612102803.25398-5-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190612102803.25398-1-kishon@ti.com>
 References: <20190612102803.25398-1-kishon@ti.com>
@@ -65,47 +65,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Thierry Reding <treding@nvidia.com>
 
-We are not destroying the sysfs attribute groupe we registered during
-the probe function which will make subsequent probe calls to that
-driver fail. Correct that with adding a remove function which only
-removes those attributes since the reference counting on clocks did its
-job already.
+These power supplies provide power for various PLLs that are set up and
+driven by the XUSB pad controller. These power supplies were previously
+improperly added to the PCIe and XUSB controllers, but depending on the
+driver probe order, power to the PLLs will not be supplied soon enough
+and cause initialization to fail.
 
-Fixes: 415060b21f31 ("phy: usb: phy-brcm-usb: Add ability to force DRD mode to host or device")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/phy/broadcom/phy-brcm-usb.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../bindings/phy/nvidia,tegra124-xusb-padctl.txt     | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/phy/broadcom/phy-brcm-usb.c b/drivers/phy/broadcom/phy-brcm-usb.c
-index f59b1dc30399..292d5b3fc66c 100644
---- a/drivers/phy/broadcom/phy-brcm-usb.c
-+++ b/drivers/phy/broadcom/phy-brcm-usb.c
-@@ -376,6 +376,13 @@ static int brcm_usb_phy_probe(struct platform_device *pdev)
- 	return PTR_ERR_OR_ZERO(phy_provider);
- }
+diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
+index daedb15f322e..9fb682e47c29 100644
+--- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
++++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
+@@ -42,6 +42,18 @@ Required properties:
+ - reset-names: Must include the following entries:
+   - "padctl"
  
-+static int brcm_usb_phy_remove(struct platform_device *pdev)
-+{
-+	sysfs_remove_group(&pdev->dev.kobj, &brcm_usb_phy_group);
++For Tegra124:
++- avdd-pll-utmip-supply: UTMI PLL power supply. Must supply 1.8 V.
++- avdd-pll-erefe-supply: PLLE reference PLL power supply. Must supply 1.05 V.
++- avdd-pex-pll-supply: PCIe/USB3 PLL power supply. Must supply 1.05 V.
++- hvdd-pex-pll-e-supply: High-voltage PLLE power supply. Must supply 3.3 V.
 +
-+	return 0;
-+}
++For Tegra210:
++- avdd-pll-utmip-supply: UTMI PLL power supply. Must supply 1.8 V.
++- avdd-pll-uerefe-supply: PLLE reference PLL power supply. Must supply 1.05 V.
++- dvdd-pex-pll-supply: PCIe/USB3 PLL power supply. Must supply 1.05 V.
++- hvdd-pex-pll-e-supply: High-voltage PLLE power supply. Must supply 1.8 V.
 +
- #ifdef CONFIG_PM_SLEEP
- static int brcm_usb_phy_suspend(struct device *dev)
- {
-@@ -441,6 +448,7 @@ MODULE_DEVICE_TABLE(of, brcm_usb_dt_ids);
- 
- static struct platform_driver brcm_usb_driver = {
- 	.probe		= brcm_usb_phy_probe,
-+	.remove		= brcm_usb_phy_remove,
- 	.driver		= {
- 		.name	= "brcmstb-usb-phy",
- 		.owner	= THIS_MODULE,
+ For Tegra186:
+ - avdd-pll-erefeut-supply: UPHY brick and reference clock as well as UTMI PHY
+   power supply. Must supply 1.8 V.
 -- 
 2.17.1
 
