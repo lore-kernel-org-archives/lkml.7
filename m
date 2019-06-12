@@ -2,100 +2,159 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB304C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 581FDC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7C9215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31AF32082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:24:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BueqaEpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408748AbfFLPWf (ORCPT
+        id S2408863AbfFLPYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:22:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58206 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727419AbfFLPWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:22:35 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 50B5C11549;
-        Wed, 12 Jun 2019 15:22:35 +0000 (UTC)
-Received: from flask (unknown [10.40.205.10])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 32E4A377B;
-        Wed, 12 Jun 2019 15:22:31 +0000 (UTC)
-Received: by flask (sSMTP sendmail emulation); Wed, 12 Jun 2019 17:22:31 +0200
-Date:   Wed, 12 Jun 2019 17:22:31 +0200
-From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     Marcelo Tosatti <mtosatti@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v3 2/4] KVM: LAPIC: lapic timer interrupt is injected by
- posted interrupt
-Message-ID: <20190612152231.GA22785@flask>
-References: <1560255429-7105-1-git-send-email-wanpengli@tencent.com>
- <1560255429-7105-3-git-send-email-wanpengli@tencent.com>
- <20190611201849.GA7520@amt.cnet>
- <CANRm+CwrbMQpQ1d_KMp-EBMd-pXFVePQ8GV4Y4X0oy8-zGZCBQ@mail.gmail.com>
+        Wed, 12 Jun 2019 11:24:14 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39218 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727967AbfFLPYO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:24:14 -0400
+Received: by mail-pf1-f195.google.com with SMTP id j2so9866033pfe.6;
+        Wed, 12 Jun 2019 08:24:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Fj8w7JFwxSiJmuLmJTCqCfMeiQ/Z4xIXLViQMCuR7R8=;
+        b=BueqaEpqE3yTy8qRAlT1y+RnLGUPcAfbZ9U8bwaVmBNE8GA58uNSFoDwn5ZbqCJbX0
+         dhX/kgshtQdziUqhbWq22zptY56mz9uS5anM+Rn/VXWeqjHrFhNzy/wnwxQ/pG67aHyU
+         tcXvwqgFhx/q0Gp6TAzEfmL+bj5yBzm1bqEjJpqOnIwJTGpQBiXBJLocPKX96O+RRpgP
+         ypgQVGAe753s05t2Pqka0ytbu0xKxS9J6ARXTnYHrEgoDiioqolJ5qf6G59h+4HGU8Zc
+         YyeF+lZ7kdW6IsLrvH/DS4vt0vjxN/To3DkR4P4jPsxpgtXdH8TA99gYLsHjKC4GJ35p
+         WyAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Fj8w7JFwxSiJmuLmJTCqCfMeiQ/Z4xIXLViQMCuR7R8=;
+        b=SJNHZEpB0vbNs4KiCRt1N45C6rysaXgW3SV6bT4unOQ9OXTOEPu+Gm5lKvQv3zwx5J
+         C9RLSrK+Uqr02kktpF+pFX/MaA9Iw+WZjTbIFMAdXYbKlv2X+4NgPcbAO483LgdeoHLx
+         YrPD02UUFCEQUTvrDR7VhoP/LArwpLs3uZNc3a7A+nkxM1S4sieqeV1HNdR01dtX+JvF
+         ++DXvNj2467z/Z6ACu9+WdVhrySjuFZ3/r3csPxuGUD5kul3MDfIkw3tYm+3wfGylOBY
+         VHLxwJB18Qp9oXj7aRdM7UriNy0O5n59aJZt+8MqaW5EHyDBhLoEZJyni/wF6uRnyyVp
+         J+ig==
+X-Gm-Message-State: APjAAAXauOR7nNY9v6uTa4hV1Jr1OUrTuOZ/fi6hrZyg7JLvEkS1m7FY
+        IYRPdDeXR7xhyWE5BecYXh8wK1T6
+X-Google-Smtp-Source: APXvYqwKlVFqfb3mgwvUK2av74PQnxpr/vAe172n2dcNuwwZhDxNLFcfKnU0R2L+6vNbVlyJyRB2gw==
+X-Received: by 2002:a63:4d08:: with SMTP id a8mr9743550pgb.329.1560353053032;
+        Wed, 12 Jun 2019 08:24:13 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z3sm223990pjn.16.2019.06.12.08.24.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 08:24:11 -0700 (PDT)
+Subject: Re: [PATCH v1 1/1] watchdog: atmel: atmel-sama5d4-wdt: Disable
+ watchdog on system suspend
+To:     Ken Sloat <KSloat@aampglobal.com>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>
+Cc:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190612150154.16778-1-ksloat@aampglobal.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <8af0794a-327d-7144-609f-0c56422e92ec@roeck-us.net>
+Date:   Wed, 12 Jun 2019 08:24:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANRm+CwrbMQpQ1d_KMp-EBMd-pXFVePQ8GV4Y4X0oy8-zGZCBQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 12 Jun 2019 15:22:35 +0000 (UTC)
+In-Reply-To: <20190612150154.16778-1-ksloat@aampglobal.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019-06-12 09:48+0800, Wanpeng Li:
-> On Wed, 12 Jun 2019 at 04:39, Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> > On Tue, Jun 11, 2019 at 08:17:07PM +0800, Wanpeng Li wrote:
-> > > From: Wanpeng Li <wanpengli@tencent.com>
-> > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> > > @@ -133,6 +133,12 @@ inline bool posted_interrupt_inject_timer_enabled(struct kvm_vcpu *vcpu)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer_enabled);
-> > >
-> > > +static inline bool can_posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
-> > > +{
-> > > +     return posted_interrupt_inject_timer_enabled(vcpu) &&
-> > > +             kvm_hlt_in_guest(vcpu->kvm);
-> > > +}
-> >
-> > Hi Li,
+On 6/12/19 8:02 AM, Ken Sloat wrote:
+> From: Ken Sloat <ksloat@aampglobal.com>
 > 
-> Hi Marcelo,
+> Currently, the atmel-sama5d4-wdt continues to run after system suspend.
+> Unless the system resumes within the watchdog timeout period so the
+> userspace can kick it, the system will be reset. This change disables
+> the watchdog on suspend if it is active and re-enables on resume. These
+> actions occur during the late and early phases of suspend and resume
+> respectively to minimize chances where a lock could occur while the
+> watchdog is disabled.
 > 
-> >
-> > Don't think its necessary to depend on kvm_hlt_in_guest: Can also use
-> > exitless injection if the guest is running (think DPDK style workloads
-> > that busy-spin on network card).
-
-I agree.
-
-> There are some discussions here.
+> Signed-off-by: Ken Sloat <ksloat@aampglobal.com>
+> ---
+>   drivers/watchdog/sama5d4_wdt.c | 31 +++++++++++++++++++++++++++++--
+>   1 file changed, 29 insertions(+), 2 deletions(-)
 > 
-> https://lkml.org/lkml/2019/6/11/424
-> https://lkml.org/lkml/2019/6/5/436
+> diff --git a/drivers/watchdog/sama5d4_wdt.c b/drivers/watchdog/sama5d4_wdt.c
+> index 111695223aae..84eb4db23993 100644
+> --- a/drivers/watchdog/sama5d4_wdt.c
+> +++ b/drivers/watchdog/sama5d4_wdt.c
+> @@ -280,6 +280,18 @@ static const struct of_device_id sama5d4_wdt_of_match[] = {
+>   MODULE_DEVICE_TABLE(of, sama5d4_wdt_of_match);
+>   
+>   #ifdef CONFIG_PM_SLEEP
+> +static int sama5d4_wdt_suspend_late(struct device *dev)
+> +{
+> +	struct sama5d4_wdt *wdt;
+> +
+> +	wdt = dev_get_drvdata(dev);
+> +
+> +	if (watchdog_active(&wdt->wdd))
+> +		sama5d4_wdt_stop(&wdt->wdd);
+> +
+> +	return 0;
+> +}
+> +
+>   static int sama5d4_wdt_resume(struct device *dev)
+>   {
+>   	struct sama5d4_wdt *wdt = dev_get_drvdata(dev);
+> @@ -293,10 +305,25 @@ static int sama5d4_wdt_resume(struct device *dev)
+>   
+>   	return 0;
+>   }
+> +
+> +static int sama5d4_wdt_resume_early(struct device *dev)
+> +{
+> +	struct sama5d4_wdt *wdt;
+> +
+> +	wdt = dev_get_drvdata(dev);
+> +
+> +	if (watchdog_active(&wdt->wdd))
+> +		sama5d4_wdt_start(&wdt->wdd);
+> +
+> +	return 0;
+> +}
+>   #endif
+>   
+> -static SIMPLE_DEV_PM_OPS(sama5d4_wdt_pm_ops, NULL,
+> -			 sama5d4_wdt_resume);
+> +static const struct dev_pm_ops sama5d4_wdt_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, sama5d4_wdt_resume)
+> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(sama5d4_wdt_suspend_late,
+> +			sama5d4_wdt_resume_early)
 
-Paolo wants to disable the APF synthetic halt first, which I think is
-unrelated to the timer implementation.
-The synthetic halt happens when the VCPU cannot progress because the
-host swapped out its memory and any asynchronous event should unhalt it,
-because we assume that the interrupt path wasn't swapped out.
+I don't think you need both sama5d4_wdt_resume()
+and sama5d4_wdt_resume_early().
 
-The posted interrupt does a swake_up_one (part of vcpu kick), which is
-everything what the non-posted path does after setting a KVM request --
-it's a bug if we later handle the PIR differently from the KVM request,
-so the guest is going to be woken up on any halt blocking in KVM (even
-synthetic APF halt).
+Guenter
 
-Paolo, have I missed the point?
+> +};
+>   
+>   static struct platform_driver sama5d4_wdt_driver = {
+>   	.probe		= sama5d4_wdt_probe,
+> 
 
-Thanks.
