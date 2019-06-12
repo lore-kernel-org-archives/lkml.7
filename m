@@ -2,125 +2,140 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E545C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C84C31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2719A2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:16:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="nvjWYQ3O"
+	by mail.kernel.org (Postfix) with ESMTP id 34E71206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:17:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560356256;
+	bh=DoAGtyYmb38VamoZ+OytQ4Hu2lHFIzz8cmTYyEqDtJQ=;
+	h=From:Subject:To:Cc:References:Date:In-Reply-To:List-ID:From;
+	b=MNb3wLeR6zICoFRra8rbDgdDem7DkDB9vAnvdDCAW3CdP6+UgO0AOrJFVcUcD1FKf
+	 uINA57ISOFswhpNh4esrWPBC6Brz4+PeRQxSMSIuIKNfm0mMDRbUJUL0qPf2d3+MV3
+	 HdyijOF6oHc4alKHcPKnHB/Xq6ks4GL6DkLTLcCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbfFLQQp (ORCPT
+        id S1730421AbfFLQRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 12:16:45 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46416 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbfFLQQp (ORCPT
+        Wed, 12 Jun 2019 12:17:35 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33641 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbfFLQRe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:16:45 -0400
-Received: by mail-lf1-f68.google.com with SMTP id z15so9929970lfh.13
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 09:16:43 -0700 (PDT)
+        Wed, 12 Jun 2019 12:17:34 -0400
+Received: by mail-qt1-f193.google.com with SMTP id x2so18228737qtr.0;
+        Wed, 12 Jun 2019 09:17:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3Wj8tFDiZvzxFDGQ8FFfl+cfAEOeLDLTEH6503XcxMY=;
-        b=nvjWYQ3OHJDjWYibj/YNX20SWR28Rhln3Pwh8JIoMOB8OYo9eG07U/4EJIi9NQXKU8
-         FZ1/5iwJpMxE0klA5AmIIGuutxZJIxHeS6K+KXebsBLnYuO+t+KuX6kINQe7hjeoBDY3
-         0ZfXnRIiSqhRxTtwkbs5aoGhxHXWBwCKDHX5XpKeAaUVYQxyx/l5jNJiU2aLHbu2Sa7R
-         feNRdnrd20kbNrAFb52qXZK/9aKx48QdfVrgI34RuxVxGpsKru21y4gadhgZb7yfkdSE
-         iY1BePwQcyrF3ELgUklGxp9Ps2OI0ImZrPOFTAp1gGh5B2aZrBli2mw63UIYcMm86r88
-         RviA==
+        d=gmail.com; s=20161025;
+        h=sender:from:subject:to:cc:references:openpgp:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=U2vYqaPYdWtpzfrzovO9feBjUjZjzjyP3l5hohlZ2Qw=;
+        b=D9u7HA9acjMxG5IDmmk52QrmRvl60xY0S/bA+fJ34Ie35XIKGzY6OZbUdNy24KUCLn
+         v0k5PGGDhJJgsyTqYBiiIENrszMhPVIwWIZMJc/dqo5GOCau43SF6mKGAE5ODH5y1H13
+         U57jobrMEWYOn66qKQvvfFa4ja97bbNE9Tx1iBlqV2aFM0WA0Lq+G/DmW8CHWvISaq41
+         RGl1t9orYPpMJ3yC8uKY6EIXm1djVIRawvm5q3HOQbZWe6/wdZeCgq/AD9jliSdbJp9L
+         K8thiwuO7coFPOPDzo9o7IdUv3SZ3asi0RWidz41BJ1xgitsFXuoSyX9F5rR5kNX04Ls
+         KkNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3Wj8tFDiZvzxFDGQ8FFfl+cfAEOeLDLTEH6503XcxMY=;
-        b=WKi/Xfg4qsSyGuwhUIqRTDlKzR16O8HUaZsfsB3yKSwKppg/iEOyUbPpks3knLsRvP
-         8T2dY/hgkn7JKo5Dd706o/gt8i6kFzTG4P3FHt40OUehA8gFO7v9kFQfp0DiSTFkWNeC
-         uQJ7ZigUkAyYN7cyWViulEvid2nviAD7RjAPrzzlKQ1tmh/mMTeylyvoGjoWkSLtisaL
-         9MlrHGxSpFahNjKY5m9Gu+pROL6VjUw9DexHnz/+k9TTClIJ4GVrHVrN7NhYwtAodYYG
-         2UQ3Vo/FBTX7/KxBrNSDmWG//gkedN1otiV6zbleifpEWJrxJ7IvKXXiDLV//0/6dlPZ
-         Oulg==
-X-Gm-Message-State: APjAAAX+wWUE9XsO7xj1wjy7ZqK3wl4Lmmqb82uub8RPkVP2IJrCYUkp
-        8t5U/UyTNhDnZ19ireaOyo2/h6jCBVEsBaqRi1ds
-X-Google-Smtp-Source: APXvYqyI+wg+yow3qnp80fWW70DXTb4mtKkSJHSPj2mCVDEByCZl0pS3Ep6ghGCpZO/mj3aj2z0K6vWb/l6vy7tU9HE=
-X-Received: by 2002:a19:7716:: with SMTP id s22mr24362250lfc.64.1560356202660;
- Wed, 12 Jun 2019 09:16:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190612132821.GA3816@zhanggen-UX430UQ>
-In-Reply-To: <20190612132821.GA3816@zhanggen-UX430UQ>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 12 Jun 2019 12:16:31 -0400
-Message-ID: <CAHC9VhTVpTMBHDWtXVBcW94-Rt2jzW0-+D_krgyj6o3TotodwQ@mail.gmail.com>
-Subject: Re: [PATCH v4] selinux: fix a missing-check bug in
- selinux_add_mnt_opt( )
-To:     Gen Zhang <blackgod016574@gmail.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        h=x-gm-message-state:sender:from:subject:to:cc:references:openpgp
+         :autocrypt:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=U2vYqaPYdWtpzfrzovO9feBjUjZjzjyP3l5hohlZ2Qw=;
+        b=gmH5z9Fu6JNSzz4bjTnJCbkXB05mk0j25cMhPopK8Ujll9dpl3EJex/gvUhJb+8KtA
+         vt6X1jruHX3na5zhSy5hSJRAKyNXltj/CDTBRsQXmyYlK9+w0CNcAyO2CrTPkQJObVyz
+         p0cuRJGWBfvDk7vVRjtoCIQyfwryGQGU5hkP0251Cy75oKP5rn5y3wT77eP0t7GuKzM6
+         EuzulFGTsIFEH6AyV9aHc7UIYOfc0vtX8hFBoP+Opt/j2AmlUbLH2hlzvbNS4RNo34KP
+         jImBbEaqcNx8YoIgkCgkNOujdsiG22TVgL2EtkNIHsUdbK5iUQG12pmn4K65C+A6YAF6
+         xafQ==
+X-Gm-Message-State: APjAAAUn0RLjpXyTzIDsJnJVPePQDVhdXZQKZreltCAkktoukVpPDV7r
+        QkGGtjmM7fzCAqfyH4UzTK5keWuz
+X-Google-Smtp-Source: APXvYqwNdJ0Fb29xxjQiS/MFAVscn9cJ6eF2PqS8LVs89NTOxmhErJbcoeaTaWjZzxjqt76lwlO+AA==
+X-Received: by 2002:ac8:1016:: with SMTP id z22mr6334107qti.287.1560356253656;
+        Wed, 12 Jun 2019 09:17:33 -0700 (PDT)
+Received: from [10.84.150.66] ([167.220.149.66])
+        by smtp.gmail.com with ESMTPSA id n10sm36819qke.72.2019.06.12.09.17.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 09:17:32 -0700 (PDT)
+From:   Sinan Kaya <Okaya@kernel.org>
+X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
+Subject: Re: [PATCH 6/6] dma: qcom: hidma: no need to check return value of
+ debugfs_create functions
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     dan.j.williams@intel.com, vkoul@kernel.org,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20190612122557.24158-1-gregkh@linuxfoundation.org>
+ <20190612122557.24158-6-gregkh@linuxfoundation.org>
+ <8185a8b8-a0ce-4a86-84a2-b51391356052@kernel.org>
+ <20190612153948.GA21828@kroah.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <78da53a1-1363-fad8-16fa-4dfc6555f4e4@kernel.org>
+Date:   Wed, 12 Jun 2019 12:17:31 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190612153948.GA21828@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 9:28 AM Gen Zhang <blackgod016574@gmail.com> wrote:
-> In selinux_add_mnt_opt(), 'val' is allocated by kmemdup_nul(). It returns
-> NULL when fails. So 'val' should be checked. And 'mnt_opts' should be
-> freed when error.
->
-> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> Fixes: 757cbe597fe8 ("LSM: new method: ->sb_add_mnt_opt()")
-> ---
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index 3ec702c..b4b888e 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -1052,15 +1052,24 @@ static int selinux_add_mnt_opt(const char *option, const char *val, int len,
->         if (token == Opt_error)
->                 return -EINVAL;
->
-> -       if (token != Opt_seclabel)
-> -               val = kmemdup_nul(val, len, GFP_KERNEL);
-> +       if (token != Opt_seclabel) {
-> +                       val = kmemdup_nul(val, len, GFP_KERNEL);
-> +                       if (!val) {
-> +                               rc = -ENOMEM;
-> +                               goto free_opt;
-> +                       }
+On 6/12/2019 11:39 AM, Greg Kroah-Hartman wrote:
+>> Interesting. Wouldn't debugfs_create_file() blow up if dir is NULL
+>> for some reason?
+> It will create a file in the root of debugfs.  But how will that happen?
+> debugfs_create_dir() can not return NULL.
 
-This block has an extra indent, but I'll go ahead and fix that during
-the merge.  I have to mention that had you run this patch through
-./scripts/checkpatch.pl it would have caught the mistake :)
+I see.
 
-Regardless, thanks for the patch, I've merged it into the
-selinux/stable-5.2 branch and I'll be testing it shortly.
+> 
+>> +		debugfs_create_file("stats", S_IRUGO, dir, chan,
+>> +				    &hidma_chan_fops);
+>>
+>> Note that code ignores the return value of hidma_debug_init();
+>> It was just trying to do clean up on debugfs failure by calling
+>>
+>> 	debugfs_remove_recursive(dmadev->debugfs);
+> Is that a problem?
 
-> +       }
->         rc = selinux_add_opt(token, val, mnt_opts);
->         if (unlikely(rc)) {
->                 kfree(val);
-> -               if (*mnt_opts) {
-> -                       selinux_free_mnt_opts(*mnt_opts);
-> -                       *mnt_opts = NULL;
-> -               }
-> +               goto free_opt;
-> +       }
-> +       return rc;
-> +
-> +free_opt:
-> +       if (*mnt_opts) {
-> +               selinux_free_mnt_opts(*mnt_opts);
-> +               *mnt_opts = NULL;
->         }
->         return rc;
->  }
+I just wanted to double check. You probably want to remove the return
+value on debugfs_create_file() to prevent others from doing the same
+thing.
 
--- 
-paul moore
-www.paul-moore.com
+Acked-by: Sinan Kaya <okaya@kernel.org>
