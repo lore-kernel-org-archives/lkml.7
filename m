@@ -2,187 +2,119 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A847DC31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64313C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76DE12082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:25:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="Y3Sy90pb";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="pq/KdzLU"
+	by mail.kernel.org (Postfix) with ESMTP id 3AD5A208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:30:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409013AbfFLLZz (ORCPT
+        id S2406413AbfFLLae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:25:55 -0400
-Received: from mail177-30.suw61.mandrillapp.com ([198.2.177.30]:48153 "EHLO
-        mail177-30.suw61.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2409000AbfFLLZz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:25:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=cA3R4pJB9551xrjuB8IzZ/Uxj/3WlOh0i4J4iLjSJrM=;
- b=Y3Sy90pb1uO0Yn9uQG63fUB/ZAaEuC6rKByF1SCvOoN1YIl5Q4iNwKDKi8IsOESxdYjW4RXXw/TY
-   DbqlSCJKD7vI+YoR3oJBIshsfhF5sXNtck7RvMNSdsWxEudv5xqzisKb7UEa97/AcdfFuomENrf2
-   uOwtBVAQe+WOvrywVBE=
-Received: from pmta06.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail177-30.suw61.mandrillapp.com id h03gk422rtk0 for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 11:25:52 +0000 (envelope-from <bounce-md_31050260.5d00e140.v1-79d7397535ec47a3b80e0a9e74ed4b8c@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1560338752; h=From : 
- Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=cA3R4pJB9551xrjuB8IzZ/Uxj/3WlOh0i4J4iLjSJrM=; 
- b=pq/KdzLUtAYK2PeY9Qo5jY0mZCKnkJ5Qq28pQCj+uSWfKNKPRo2GPWmdoaQwUSZyWMxt+J
- sNGzMCeIy4kZK/v8ixZ4sPy74n+e2WbmYnzoAWkx+Aw6xa6vHmDFc5K4wH040FRFVB6u/oVG
- /IXQQezWSJYiwxgZ4mbC3twqkfXeI=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: [PATCH] fuse: require /dev/fuse reads to have enough buffer capacity (take 2)
-Received: from [87.98.221.171] by mandrillapp.com id 79d7397535ec47a3b80e0a9e74ed4b8c; Wed, 12 Jun 2019 11:25:52 +0000
-To:     Miklos Szeredi <mszeredi@redhat.com>,
-        Sander Eikelenboom <linux@eikelenboom.it>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>, <gluster-devel@gluster.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Message-Id: <20190612112544.GA21465@deco.navytux.spb.ru>
-References: <876aefd0-808a-bb4b-0897-191f0a8d9e12@eikelenboom.it> <CAJfpegvRBm3M8fUJ1Le1dPd0QSJgAWAYJGLCQKa6YLTE+4oucw@mail.gmail.com> <20190611202738.GA22556@deco.navytux.spb.ru> <CAOssrKfj-MDujX0_t_fgobL_KwpuG2fxFmT=4nURuJA=sUvYYg@mail.gmail.com>
-In-Reply-To: <CAOssrKfj-MDujX0_t_fgobL_KwpuG2fxFmT=4nURuJA=sUvYYg@mail.gmail.com>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.79d7397535ec47a3b80e0a9e74ed4b8c
-X-Mandrill-User: md_31050260
-Date:   Wed, 12 Jun 2019 11:25:52 +0000
+        Wed, 12 Jun 2019 07:30:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:50970 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727352AbfFLLae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 07:30:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F9C428;
+        Wed, 12 Jun 2019 04:30:33 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C93383F246;
+        Wed, 12 Jun 2019 04:32:14 -0700 (PDT)
+Subject: Re: [PATCH 1/8] iommu: Add I/O ASID allocator
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Will Deacon <Will.Deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
+ <20190610184714.6786-2-jean-philippe.brucker@arm.com>
+ <20190611052626.20bed59a@jacob-builder>
+ <95292b47-4cf4-5fd9-b096-1cb016e2264f@arm.com>
+ <20190611101052.35af46df@jacob-builder>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <f68f4ccb-1422-4f93-dc9c-2bcdf61c9ed4@arm.com>
+Date:   Wed, 12 Jun 2019 12:30:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190611101052.35af46df@jacob-builder>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 09:44:49AM +0200, Miklos Szeredi wrote:
-> On Tue, Jun 11, 2019 at 10:28 PM Kirill Smelkov <kirr@nexedi.com> wrote:
+On 11/06/2019 18:10, Jacob Pan wrote:
+>> The issue is theoretical at the moment because no users do this, but
+>> I'd be more comfortable taking the xa_lock, which prevents a
+>> concurrent xa_erase()+free(). (I commented on your v3 but you might
+>> have missed it)
+>>
+> Did you reply to my v3? I did not see it. I only saw your comments about
+> v3 in your commit message.
+
+My fault, I sneaked the comments in a random reply three levels down the
+thread:
+https://lore.kernel.org/linux-iommu/836caf0d-699e-33ba-5303-b1c9c949c9ca@arm.com/
+
+(Great, linux-iommu is indexed by lore! I won't have to Cc lkml anymore)
+
+>>>> +	ioasid_data = xa_load(&ioasid_xa, ioasid);
+>>>> +	if (ioasid_data)
+>>>> +		rcu_assign_pointer(ioasid_data->private, data);  
+>>> it is good to publish and have barrier here. But I just wonder even
+>>> for weakly ordered machine, this pointer update is quite far away
+>>> from its data update.  
+>>
+>> I don't know, it could be right before calling ioasid_set_data():
+>>
+>> 	mydata = kzalloc(sizeof(*mydata));
+>> 	mydata->ops = &my_ops;			(1)
+>> 	ioasid_set_data(ioasid, mydata);
+>> 		... /* no write barrier here */
+>> 		data->private = mydata;		(2)
+>>
+>> And then another thread calls ioasid_find():
+>>
+>> 	mydata = ioasid_find(ioasid);
+>> 	if (mydata)
+>> 		mydata->ops->do_something();
+>>
+>> On a weakly ordered machine, this thread could observe the pointer
+>> assignment (2) before the ops assignment (1), and dereference NULL.
+>> Using rcu_assign_pointer() should fix that
+>>
+> I agree it is better to have the barrier. Just thought there is already
+> a rcu_read_lock() in xa_load() in between. rcu_read_lock() may have
+> barrier in some case but better not count on it. 
+
+Yes, and even if rcu_read_lock() provided a barrier I don't think it
+would be sufficient, because acquire semantics don't guarantee that
+prior writes appear to happen before the barrier, only the other way
+round. A lock operation with release semantics, for example
+spin_unlock(), should work.
+
+Thanks,
+Jean
+
+> No issues here. I will
+> integrate this in the next version.
 > 
-> > Miklos, would 4K -> `sizeof(fuse_in_header) + sizeof(fuse_write_in)` for
-> > header room change be accepted?
+>> Thanks,
+>> Jean
 > 
-> Yes, next cycle.   For 4.2 I'll just push the revert.
+> [Jacob Pan]
+> 
 
-Thanks Miklos. Please consider queuing the following patch for 5.3.
-Sander, could you please confirm that glusterfs is not broken with this
-version of the check?
-
-Thanks beforehand,
-Kirill
-
----- 8< ----
-From 24a04e8be9bbf6e67de9e1908dcbe95d426d2521 Mon Sep 17 00:00:00 2001
-From: Kirill Smelkov <kirr@nexedi.com>
-Date: Wed, 27 Mar 2019 10:15:15 +0000
-Subject: [PATCH] fuse: require /dev/fuse reads to have enough buffer capacity (take 2)
-
-[ This retries commit d4b13963f217 which was reverted in 766741fcaa1f.
-
-  In this version we require only `sizeof(fuse_in_header) + sizeof(fuse_write_in)`
-  instead of 4K for FUSE request header room, because, contrary to
-  libfuse and kernel client behaviour, GlusterFS actually provides only
-  so much room for request header. ]
-
-A FUSE filesystem server queues /dev/fuse sys_read calls to get
-filesystem requests to handle. It does not know in advance what would be
-that request as it can be anything that client issues - LOOKUP, READ,
-WRITE, ... Many requests are short and retrieve data from the
-filesystem. However WRITE and NOTIFY_REPLY write data into filesystem.
-
-Before getting into operation phase, FUSE filesystem server and kernel
-client negotiate what should be the maximum write size the client will
-ever issue. After negotiation the contract in between server/client is
-that the filesystem server then should queue /dev/fuse sys_read calls with
-enough buffer capacity to receive any client request - WRITE in
-particular, while FUSE client should not, in particular, send WRITE
-requests with > negotiated max_write payload. FUSE client in kernel and
-libfuse historically reserve 4K for request header. However an existing
-filesystem server - GlusterFS - was found which reserves only 80 bytes
-for header room (= `sizeof(fuse_in_header) + sizeof(fuse_write_in)`).
-
-https://lore.kernel.org/linux-fsdevel/20190611202738.GA22556@deco.navytux.spb.ru/
-https://github.com/gluster/glusterfs/blob/v3.8.15-0-gd174f021a/xlators/mount/fuse/src/fuse-bridge.c#L4894
-
-Since
-
-	`sizeof(fuse_in_header) + sizeof(fuse_write_in)` ==
-	`sizeof(fuse_in_header) + sizeof(fuse_read_in)`  ==
-	`sizeof(fuse_in_header) + sizeof(fuse_notify_retrieve_in)`
-
-is the absolute minimum any sane filesystem should be using for header
-room, the contract is that filesystem server should queue sys_reads with
-`sizeof(fuse_in_header) + sizeof(fuse_write_in)` + max_write buffer.
-
-If the filesystem server does not follow this contract, what can happen
-is that fuse_dev_do_read will see that request size is > buffer size,
-and then it will return EIO to client who issued the request but won't
-indicate in any way that there is a problem to filesystem server.
-This can be hard to diagnose because for some requests, e.g. for
-NOTIFY_REPLY which mimics WRITE, there is no client thread that is
-waiting for request completion and that EIO goes nowhere, while on
-filesystem server side things look like the kernel is not replying back
-after successful NOTIFY_RETRIEVE request made by the server.
-
-We can make the problem easy to diagnose if we indicate via error return to
-filesystem server when it is violating the contract.  This should not
-practically cause problems because if a filesystem server is using shorter
-buffer, writes to it were already very likely to cause EIO, and if the
-filesystem is read-only it should be too following FUSE_MIN_READ_BUFFER
-minimum buffer size.
-
-Please see [1] for context where the problem of stuck filesystem was hit
-for real (because kernel client was incorrectly sending more than
-max_write data with NOTIFY_REPLY; see also previous patch), how the
-situation was traced and for more involving patch that did not make it
-into the tree.
-
-[1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
-
-Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-Cc: Han-Wen Nienhuys <hanwen@google.com>
-Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
----
- fs/fuse/dev.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index ea8237513dfa..15531ba560b5 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -1317,6 +1317,25 @@ static ssize_t fuse_dev_do_read(struct fuse_dev *fud, struct file *file,
- 	unsigned reqsize;
- 	unsigned int hash;
- 
-+	/*
-+	 * Require sane minimum read buffer - that has capacity for fixed part
-+	 * of any request header + negotiated max_write room for data. If the
-+	 * requirement is not satisfied return EINVAL to the filesystem server
-+	 * to indicate that it is not following FUSE server/client contract.
-+	 * Don't dequeue / abort any request.
-+	 *
-+	 * Historically libfuse reserves 4K for fixed header room, but e.g.
-+	 * GlusterFS reserves only 80 bytes
-+	 *
-+	 *	= `sizeof(fuse_in_header) + sizeof(fuse_write_in)`
-+	 *
-+	 * which is the absolute minimum any sane filesystem should be using
-+	 * for header room.
-+	 */
-+	if (nbytes < max_t(size_t, FUSE_MIN_READ_BUFFER,
-+			   sizeof(fuse_in_header) + sizeof(fuse_write_in) + fc->max_write))
-+		return -EINVAL;
-+
-  restart:
- 	spin_lock(&fiq->waitq.lock);
- 	err = -EAGAIN;
--- 
-2.20.1
