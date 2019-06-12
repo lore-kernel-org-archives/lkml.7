@@ -2,121 +2,183 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 287C3C31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F0EC31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E642054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:52:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FyH/B21A"
+	by mail.kernel.org (Postfix) with ESMTP id C101720883
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436924AbfFLBwq (ORCPT
+        id S2437065AbfFLBw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 21:52:46 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43606 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406607AbfFLBwp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 21:52:45 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w79so10479764oif.10;
-        Tue, 11 Jun 2019 18:52:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dZNefY29tKM9ryZRIGvVbjsKJ2b4TgUTWY8UBz9yJko=;
-        b=FyH/B21AKA+b64BgH5EUU4Egx3zWgkj7opUJGSUvScZPqFBjEoRrGyzBpdsyRTe7fk
-         SvCO7rsajEs/NnuDuKwOBV1aclkSLFhTEzq0uQLy4R+UClpRP7V21jkk7yYOX/S2ICe/
-         SWF7Rj4oKPI1IxytVmeCir81VYDsWoGtwxM1eIp3UQDXVEhf7zCrXt/r78EYX+26jLd+
-         LXEeoO0Zn65n/1deD15/PIgWVPXExqu0GjMDCKCW4pee2QvkmLqawYWPAVTaUOMKAZeI
-         U6zy7dK4khDFWM2EqCW1NIrEh89X7759fwcBVjV1hzbrzXhLbuhXdFEkM7+6BJsz2ygk
-         hhJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dZNefY29tKM9ryZRIGvVbjsKJ2b4TgUTWY8UBz9yJko=;
-        b=pNbKG4hQqh9fhf0l3TvDptZ2Xj0Hmkl93/DQnNiE/jd+bb2GuaiEo63SMoHOxi6zEG
-         tq0N2Id553El9BDxC+0r0RaDsxIHCqohoWyfdCujLK5ifgo1x4RfVvNdHSFNlLiHpHOR
-         kH6KYviUCvXi4xcP3BqJbQCiziiHBHv5a8MoxNA0DnkEiKvUpmruQ1GsqyCpVV0bu7OR
-         LmQcwdnm2Y3oM2ooplCP7J8Fm78HwQjvXZ4DdP0mJOR2JM/prmezqrvmEfOfOUnu+zp0
-         M0/tqrMe6rh/srBLVtxclhF6Vi8raLV50pAbp4loIOaOk6HTpMU420aSguYoEjHGnu+O
-         a7kg==
-X-Gm-Message-State: APjAAAWuAk0dGAqI9v7ExX3waiJ8tqqIdwRsjm3o+ASBUWZcLE+DcMqL
-        me8xoSnK1e8ENuBvFoBspV80Ej6S
-X-Google-Smtp-Source: APXvYqyt6I4dEKDJQaN7+xYncZIh+w6qVHdohQ3Aq8eNLhV8fo7OpKWR9D7GGsQBR6gEGLr1wrIgzw==
-X-Received: by 2002:aca:fdc3:: with SMTP id b186mr16827205oii.114.1560304364920;
-        Tue, 11 Jun 2019 18:52:44 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id x128sm1695129oig.54.2019.06.11.18.52.43
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 18:52:43 -0700 (PDT)
-Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
- <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
- <20190607172902.GA8183@lst.de>
- <30000803-3772-3edf-f4a9-55122d504f3f@lwfinger.net>
- <20190610081825.GA16534@lst.de>
- <153c13f5-a829-1eab-a3c5-fecfb84127ff@lwfinger.net>
- <20190611060521.GA19512@lst.de>
- <5aaa600b-5b59-1f68-454f-20403c318f1a@lwfinger.net>
- <0b257651bb7ac4a6f0a8dce5470120b7701720b9.camel@kernel.crashing.org>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <7dcf54a9-a7aa-3a4c-8e2d-556be633d6e0@lwfinger.net>
-Date:   Tue, 11 Jun 2019 20:52:42 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 11 Jun 2019 21:52:58 -0400
+Received: from mga18.intel.com ([134.134.136.126]:22044 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437016AbfFLBw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 21:52:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 18:52:56 -0700
+X-ExtLoop1: 1
+Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
+  by orsmga006.jf.intel.com with ESMTP; 11 Jun 2019 18:52:51 -0700
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+To:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>
+Cc:     Aubrey Li <aubrey.intel@gmail.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <cover.1559129225.git.vpillai@digitalocean.com>
+ <CAERHkruDE-7R5K=2yRqCJRCpV87HkHzDYbQA2WQkruVYpG7t7Q@mail.gmail.com>
+ <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com>
+ <20190531210816.GA24027@sinkpad> <20190606152637.GA5703@sinkpad>
+From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
+Message-ID: <4bd9a132-bbdb-ec45-331f-829df07a7376@linux.intel.com>
+Date:   Wed, 12 Jun 2019 09:52:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.1.1
 MIME-Version: 1.0
-In-Reply-To: <0b257651bb7ac4a6f0a8dce5470120b7701720b9.camel@kernel.crashing.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190606152637.GA5703@sinkpad>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/19 5:46 PM, Benjamin Herrenschmidt wrote:
-> On Tue, 2019-06-11 at 17:20 -0500, Larry Finger wrote:
->> b43-pci-bridge 0001:11:00.0: dma_direct_supported: failed (mask =
->> 0x3fffffff,
->> min_mask = 0x5ffff000/0x5ffff000, dma bits = 0x1f
+On 2019/6/6 23:26, Julien Desfossez wrote:
+> As mentioned above, we have come up with a fix for the long starvation
+> of untagged interactive threads competing for the same core with tagged
+> threads at the same priority. The idea is to detect the stall and boost
+> the stalling threads priority so that it gets a chance next time.
+> Boosting is done by a new counter(min_vruntime_boost) for every task
+> which we subtract from vruntime before comparison. The new logic looks
+> like this:
 > 
-> Ugh ? A mask with holes in it ? That's very wrong... That min_mask is
-> bogus.
+> If we see that normalized runtimes are equal, we check the min_vruntimes
+> of their runqueues and give a chance for the task in the runqueue with
+> less min_vruntime. That will help it to progress its vruntime. While
+> doing this, we boost the priority of the task in the sibling so that, we
+> don’t starve the task in the sibling until the min_vruntime of this
+> runqueue catches up.
+> 
+> If min_vruntimes are also equal, we do as before and consider the task
+> ‘a’ of higher priority. Here we boost the task ‘b’ so that it gets to
+> run next time.
+> 
+> The min_vruntime_boost is reset to zero once the task in on cpu. So only
+> waiting tasks will have a non-zero value if it is starved while matching
+> a task on the other sibling.
+> 
+> The attached patch has a sched_feature to enable the above feature so
+> that you can compare the results with and without this feature.
+> 
+> What we observe with this patch is that it helps for untagged
+> interactive tasks and fairness in general, but this increases the
+> overhead of core scheduling when there is contention for the CPU with
+> tasks of varying cpu usage. The general trend we see is that if there is
+> a cpu intensive thread and multiple relatively idle threads in different
+> tags, the cpu intensive tasks continuously yields to be fair to the
+> relatively idle threads when it becomes runnable. And if the relatively
+> idle threads make up for most of the tasks in a system and are tagged,
+> the cpu intensive tasks sees a considerable drop in performance.
+> 
+> If you have any feedback or creative ideas to help improve, let us
+> know !
 
-I agree, but that is not likely serious as most systems will have enough memory 
-that the max_pfn term will be much larger than the initial min_mask, and 
-min_mask will be unchanged by the min function. In addition, min_mask is not 
-used beyond this routine, and then only to decide if direct dma is supported. 
-The following patch generates masks with no holes, but I cannot see that it is 
-needed.
+The data on my side looks good with CORESCHED_STALL_FIX = true.
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 2c2772e9702a..e3edd4f29e80 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -384,7 +384,8 @@ int dma_direct_supported(struct device *dev, u64 mask)
-         else
-                 min_mask = DMA_BIT_MASK(32);
+Environment setup
+--------------------------
+Skylake 8170 server, 2 numa nodes, 52 cores, 104 CPUs (HT on)
+cgroup1 workload, sysbench (CPU mode, non AVX workload)
+cgroup2 workload, gemmbench (AVX512 workload)
 
--       min_mask = min_t(u64, min_mask, (max_pfn - 1) << PAGE_SHIFT);
-+       min_mask = min_t(u64, min_mask, ((max_pfn - 1) << PAGE_SHIFT) |
-+                                        DMA_BIT_MASK(PAGE_SHIFT));
+sysbench throughput result:
+.--------------------------------------------------------------------------------------------------------------------------------------.
+|NA/AVX	vanilla-SMT	[std% / sem%]	  cpu% |coresched-SMT	[std% / sem%]	  +/-	  cpu% |  no-SMT [std% / sem%]	 +/-	  cpu% |
+|--------------------------------------------------------------------------------------------------------------------------------------|
+|  1/1	      490.8	[ 0.1%/ 0.0%]	  1.9% |        492.6	[ 0.1%/ 0.0%]	  0.4%	  1.9% |   489.5 [ 0.1%/ 0.0%]  -0.3%	  3.9% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+|  2/2	      975.0	[ 0.6%/ 0.1%]	  3.9% |        970.4	[ 0.4%/ 0.0%]	 -0.5%	  3.9% |   975.6 [ 0.2%/ 0.0%]   0.1%	  7.7% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+|  4/4	     1856.9	[ 0.2%/ 0.0%]	  7.8% |       1854.5	[ 0.3%/ 0.0%]	 -0.1%	  7.8% |  1849.4 [ 0.8%/ 0.1%]  -0.4%	 14.8% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+|  8/8	     3622.8	[ 0.2%/ 0.0%]	 14.6% |       3618.3	[ 0.1%/ 0.0%]	 -0.1%	 14.7% |  3626.6 [ 0.4%/ 0.0%]   0.1%	 30.1% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+| 16/16	     6976.7	[ 0.2%/ 0.0%]	 30.1% |       6959.3	[ 0.3%/ 0.0%]	 -0.2%	 30.1% |  6964.4 [ 0.9%/ 0.1%]  -0.2%	 60.1% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+| 32/32	    10347.7	[ 3.8%/ 0.4%]	 60.1% |      11525.4	[ 2.8%/ 0.3%]	 11.4%	 59.5% |  9810.5 [ 9.4%/ 0.8%]  -5.2%	 97.7% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+| 64/64	    15284.9	[ 9.0%/ 0.9%]	 98.1% |      17022.1	[ 4.5%/ 0.5%]	 11.4%	 98.2% |  9989.7 [19.3%/ 1.1%] -34.6%	100.0% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+|128/128    16211.3	[18.9%/ 1.9%]	100.0% |      16507.9	[ 6.1%/ 0.6%]	  1.8%	 99.8% | 10379.0 [12.6%/ 0.8%] -36.0%	100.0% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+|256/256    16667.1	[ 3.1%/ 0.3%]	100.0% |      16499.1	[ 3.2%/ 0.3%]	 -1.0%	100.0% | 10540.9 [16.2%/ 1.0%] -36.8%	100.0% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
 
-         /*
-          * This check needs to be against the actual bit mask value, so
+sysbench latency result:
+(The story we care about latency is that some customers reported their
+latency critical job is affected when co-locating a deep learning job
+(AVX512 task) onto the same core, because when a core executes AVX512
+instructions, the core automatically reduces its frequency. This can
+lead to a significant overall performance loss for a non-AVX512 job
+on the same core.
 
+And now we have core cookie match mechanism, so if we put AVX512 task
+and non AVX512 task into the different cgroups, they are supposed not
+to be co-located. That's why we saw the improvements of 32/32 and 64/64
+cases.) 
 
-Larry
+.--------------------------------------------------------------------------------------------------------------------------------------.
+|NA/AVX	vanilla-SMT	[std% / sem%]	  cpu% |coresched-SMT	[std% / sem%]	  +/-	  cpu% |  no-SMT [std% / sem%]	 +/-	  cpu% |
+|--------------------------------------------------------------------------------------------------------------------------------------|
+|  1/1	        2.1	[ 0.6%/ 0.1%]	  1.9% |          2.0	[ 0.2%/ 0.0%]	  3.8%	  1.9% |     2.1 [ 0.7%/ 0.1%]  -0.8%	  3.9% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+|  2/2	        2.1	[ 0.7%/ 0.1%]	  3.9% |          2.1	[ 0.3%/ 0.0%]	  0.2%	  3.9% |     2.1 [ 0.6%/ 0.1%]   0.5%	  7.7% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+|  4/4	        2.2	[ 0.6%/ 0.1%]	  7.8% |          2.2	[ 0.4%/ 0.0%]	 -0.2%	  7.8% |     2.2 [ 0.2%/ 0.0%]  -0.3%	 14.8% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+|  8/8	        2.2	[ 0.4%/ 0.0%]	 14.6% |          2.2	[ 0.0%/ 0.0%]	  0.1%	 14.7% |     2.2 [ 0.0%/ 0.0%]   0.1%	 30.1% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+| 16/16	        2.4	[ 1.6%/ 0.2%]	 30.1% |          2.4	[ 1.6%/ 0.2%]	 -0.9%	 30.1% |     2.4 [ 1.9%/ 0.2%]  -0.3%	 60.1% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+| 32/32	        4.9	[ 6.2%/ 0.6%]	 60.1% |          3.1	[ 5.0%/ 0.5%]	 36.6%	 59.5% |     6.7 [17.3%/ 3.7%] -34.5%	 97.7% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+| 64/64	        9.4	[28.3%/ 2.8%]	 98.1% |          3.5	[25.6%/ 2.6%]	 62.4%	 98.2% |    18.5 [ 9.5%/ 5.0%] -97.9%	100.0% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+|128/128       21.3	[10.1%/ 1.0%]	100.0% |         24.8	[ 8.1%/ 0.8%]	-16.1%	 99.8% |    34.5 [ 4.9%/ 0.7%] -62.0%	100.0% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+|256/256       35.5	[ 7.8%/ 0.8%]	100.0% |         37.3	[ 5.4%/ 0.5%]	 -5.1%	100.0% |    40.8 [ 5.9%/ 0.6%] -15.0%	100.0% |
+'--------------------------------------------------------------------------------------------------------------------------------------'
+
+Note:
+----
+64/64:		64 sysbench threads(in one cgroup) and 64 gemmbench threads(in other cgroup) run simultaneously.
+Vanilla-SMT:	baseline with HT on
+coresched-SMT:	core scheduling enabled
+no-SMT:		HT off thru /sys/devices/system/cpu/smt/control
+std%:		standard deviation
+sem%:		standard error of the mean
+±:		improvement/regression against baseline
+cpu%:		derived by vmstat.idle and vmstat.iowait
