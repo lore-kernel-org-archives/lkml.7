@@ -2,165 +2,117 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67715C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C96FC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4046A20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:54:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WXpb9OJm"
+	by mail.kernel.org (Postfix) with ESMTP id 4D1DE208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437801AbfFLJyL (ORCPT
+        id S2437815AbfFLJyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:54:11 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:9802 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437698AbfFLJyL (ORCPT
+        Wed, 12 Jun 2019 05:54:16 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:38043 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437698AbfFLJyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:54:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d00cbc10001>; Wed, 12 Jun 2019 02:54:09 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 12 Jun 2019 02:54:09 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 12 Jun 2019 02:54:09 -0700
-Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Jun
- 2019 09:54:09 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 12 Jun 2019 09:54:09 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d00cbbb0003>; Wed, 12 Jun 2019 02:54:08 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
-CC:     <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V10 03/15] PCI: dwc: Perform dbi regs write lock towards the end
-Date:   Wed, 12 Jun 2019 15:23:27 +0530
-Message-ID: <20190612095339.20118-4-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190612095339.20118-1-vidyas@nvidia.com>
-References: <20190612095339.20118-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 12 Jun 2019 05:54:15 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 53DD1802E0; Wed, 12 Jun 2019 11:54:03 +0200 (CEST)
+Date:   Wed, 12 Jun 2019 11:54:13 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Brian Norris <briannorris@google.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Doug Anderson <dianders@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Guenter Roeck <groeck@google.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        kernel@collabora.com
+Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Message-ID: <20190612095413.GA12656@amd>
+References: <20180208113032.27810-1-enric.balletbo@collabora.com>
+ <20180208113032.27810-4-enric.balletbo@collabora.com>
+ <20190607220947.GR40515@google.com>
+ <20190608210226.GB2359@xo-6d-61-c0.localdomain>
+ <20190610205233.GB137143@google.com>
+ <20190611104913.egsbwcedshjdy3m5@holly.lan>
+ <CA+ASDXOq7KQ+f4KMh0gaC9hvXaxBDdsbiJxiTbeOJ9ZVaeNJag@mail.gmail.com>
+ <20190611223019.GH137143@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560333249; bh=WcSXvp11gg9YI2cNukyLr/N8pY0LWNSQ5+VIrAG3OOI=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=WXpb9OJmSklZ0ubQhNcyMwxfsm2ohFkmyEGz4EQswf9ycoc1qQUqAYYoeO8roB9wh
-         cVgDRGXEPbGVlm3/+cd5twAsgCjP7t0NGP+syLtc/X0vw9Vk5PT1dftskkg7agoazN
-         S1Au8InuUqgvCmD3hd+GY99L0RW3m87o2Rc/Htc7wF7xYW/D4wmxcDcH0443aWDvNs
-         VxaWoiJrmg231IUwMBxOP4uS5iBi9CUuvHUmsRQk0+NBCLMWfHpGzmzfUoFPj++R7C
-         e0pE4YxyHmhjKnyOAeRunJuqQK3tGR8ZuMIZj4txKzK+XtpHtjAWcgWFIaMCGHx0xo
-         i+Iq5HyCmJQ5w==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+Content-Disposition: inline
+In-Reply-To: <20190611223019.GH137143@google.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove multiple write enable and disable sequences of dbi registers as
-Tegra194 implements writes to BAR-0 register (offset: 0x10) controlled by
-DBI write-lock enable bit thereby not allowing any further writes to BAR-0
-register in config space to take place. Hence enabling write permission at
-the start of function and disabling the same only towards the end.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Reviewed-by: Thierry Reding <treding@nvidia.com>
----
-Changes since [v9]:
-* None
+--2fHTh5uZTiUOsy+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes since [v8]:
-* None
+On Tue 2019-06-11 15:30:19, Matthias Kaehlcke wrote:
+> On Tue, Jun 11, 2019 at 09:55:30AM -0700, Brian Norris wrote:
+> > On Tue, Jun 11, 2019 at 3:49 AM Daniel Thompson
+> > <daniel.thompson@linaro.org> wrote:
+> > > This is a long standing flaw in the backlight interfaces. AFAIK gener=
+ic
+> > > userspaces end up with a (flawed) heuristic.
+> >=20
+> > Bingo! Would be nice if we could start to fix this long-standing flaw.
+>=20
+> Agreed!
+>=20
+> How could a fix look like, a sysfs attribute? Would a boolean value
+> like 'logarithmic_scale' or 'linear_scale' be enough or could more
+> granularity be needed?
 
-Changes since [v7]:
-* None
+I'd expect attribute "scale" with values "linear" or "logarithmic".
 
-Changes since [v6]:
-* None
+> The new attribute could be optional (it only exists if explicitly
+> specified by the driver) or be set to a default based on a heuristic
+> if not specified and be 'fixed' on a case by case basis. The latter
+> might violate "don't break userspace" though, so I'm not sure it's a
+> good idea.
 
-Changes since [v5]:
-* Moved write enable to the beginning of the API and write disable to the end
+I'd do it only when we explicitely know. We don't want it to be buggy.
 
-Changes since [v4]:
-* None
+And I guess we should decide what interface we really want? (Linear?
+Logarithmic?) And make new drivers do that.
 
-Changes since [v3]:
-* None
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Changes since [v2]:
-* None
+--2fHTh5uZTiUOsy+g
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Changes since [v1]:
-* None
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
- drivers/pci/controller/dwc/pcie-designware-host.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+iEYEARECAAYFAl0Ay8UACgkQMOfwapXb+vIeJgCggLbpjHz3nKmV58LAUi3ZiuUa
+uScAn2D1iGqQP7z/oj5Jluw9Rq5L6vCE
+=G1uG
+-----END PGP SIGNATURE-----
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index f93252d0da5b..d3156446ff27 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -628,6 +628,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
- 	u32 val, ctrl, num_ctrls;
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 
-+	/*
-+	 * Enable DBI read-only registers for writing/updating configuration.
-+	 * Write permission gets disabled towards the end of this function.
-+	 */
-+	dw_pcie_dbi_ro_wr_en(pci);
-+
- 	dw_pcie_setup(pci);
- 
- 	if (!pp->ops->msi_host_init) {
-@@ -650,12 +656,10 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
- 	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
- 
- 	/* Setup interrupt pins */
--	dw_pcie_dbi_ro_wr_en(pci);
- 	val = dw_pcie_readl_dbi(pci, PCI_INTERRUPT_LINE);
- 	val &= 0xffff00ff;
- 	val |= 0x00000100;
- 	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
--	dw_pcie_dbi_ro_wr_dis(pci);
- 
- 	/* Setup bus numbers */
- 	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
-@@ -687,15 +691,13 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
- 
- 	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
- 
--	/* Enable write permission for the DBI read-only register */
--	dw_pcie_dbi_ro_wr_en(pci);
- 	/* Program correct class for RC */
- 	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
--	/* Better disable write permission right after the update */
--	dw_pcie_dbi_ro_wr_dis(pci);
- 
- 	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
- 	val |= PORT_LOGIC_SPEED_CHANGE;
- 	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
-+
-+	dw_pcie_dbi_ro_wr_dis(pci);
- }
- EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
--- 
-2.17.1
-
+--2fHTh5uZTiUOsy+g--
