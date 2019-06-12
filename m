@@ -2,82 +2,141 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614CFC31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F13C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3738420874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D9F20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:17:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7wTl0xJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407483AbfFLBPf (ORCPT
+        id S2408289AbfFLBRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 21:15:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42228 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404906AbfFLBPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 21:15:34 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 75BD8C04FFF1;
-        Wed, 12 Jun 2019 01:15:18 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-17.pek2.redhat.com [10.72.12.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0BC67643DA;
-        Wed, 12 Jun 2019 01:15:02 +0000 (UTC)
-Subject: Re: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel e820
- table
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org,
-        kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
-        akpm@linux-foundation.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, x86@kernel.org,
-        hpa@zytor.com, dyoung@redhat.com, Thomas.Lendacky@amd.com
-References: <20190423013007.17838-1-lijiang@redhat.com>
- <12847a03-3226-0b29-97b5-04d404410147@redhat.com>
- <20190607174211.GN20269@zn.tnic> <20190608035451.GB26148@MiWiFi-R3L-srv>
- <20190608091030.GB32464@zn.tnic> <20190608100139.GC26148@MiWiFi-R3L-srv>
- <20190608100623.GA9138@zn.tnic> <20190608102659.GA9130@MiWiFi-R3L-srv>
- <20190610113747.GD5488@zn.tnic>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <6d7f4c6f-9d7c-c316-ea53-0c6b8a7b9631@redhat.com>
-Date:   Wed, 12 Jun 2019 09:14:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190610113747.GD5488@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 12 Jun 2019 01:15:34 +0000 (UTC)
+        Tue, 11 Jun 2019 21:17:05 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34994 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404906AbfFLBRE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 21:17:04 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p1so5886558plo.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 18:17:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Y+UdVFpKtToAwMpoojIPPMwSl93o12ffMgVZ1H7mtl0=;
+        b=D7wTl0xJ9F9JNFbnpTSHd+uoY6rphqSDyENrPDTK9vqlDIunQWMaqUioQjDoy8GOn4
+         PRfOm6EUnzHx8fFcmQABEkb4Ub/N40sRuuAjchjz62qc2+rsm/3QrItPVf/khd6FJSdq
+         EClNsiNub7upjMZbKe7DPBkqOy+tkJNTRJK3FpcloYfk+K2DlvzWAz5Z7FZNE2KdtQJ1
+         NKz64kYmroru5tlFuqKGNb/g16+K+53I3kk8Vrd6fx4RTRlC+FZSkwwmBicr30wBqCaa
+         fcT0BEmLoSKGtoOcpq6AzEMPZoknHBg9Dat/rMYiX+S+3tO5Nk21z1JIgXQFJ5QTzGPf
+         Dj7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Y+UdVFpKtToAwMpoojIPPMwSl93o12ffMgVZ1H7mtl0=;
+        b=goREo5ShOCc6AD72dhTQBmZcT0HvKH1pNO/HWurL5ughHm0ZUa3HzjpfJf8pHyKnuz
+         ZCNGoONu2rgZbS4jpyPZFN035A55vvWMtQ/tbGgrgRTNp4uZtsLZNk+T1wPh8V3apTWN
+         PJkKyca9fyrpTTFHCKf3ACxSpAbEGFz7uQy7DpVDIfgyhiuQmpkJu7PnoBtDGbgSMwpo
+         ZeFWoXIHrvQNeYq6qI7FlJv85cMt++dSg4vNUX3aSV0Obc62E253FPUkxL4bEAgHT7gi
+         pJSTGFg0bsvD9q0seDfUcO6p+GIKcYqx/OSax6diECYPtQBDFkhQHOUOCAE4vq1H3L+R
+         69MQ==
+X-Gm-Message-State: APjAAAWAeIsGPqUIJmtlMLL5Ng90haGae8lAuhiC/FrFI9x+HJ9PKF70
+        VieNaAr/jUYXmM2jzakYqco=
+X-Google-Smtp-Source: APXvYqxR5efuvwybOL9xJecB56NAS7Qtog+UTb5ZkWMaesBYdMmalfp6I+k64C3dYE6NO9uoto9mQw==
+X-Received: by 2002:a17:902:848b:: with SMTP id c11mr56329787plo.217.1560302223851;
+        Tue, 11 Jun 2019 18:17:03 -0700 (PDT)
+Received: from mappy.world.mentorg.com (c-107-3-185-39.hsd1.ca.comcast.net. [107.3.185.39])
+        by smtp.gmail.com with ESMTPSA id y22sm13257015pgj.38.2019.06.11.18.17.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 18:17:03 -0700 (PDT)
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR FREESCALE
+        IMX), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/3] gpu: ipu-v3: image-convert: Fix input bytesperline width/height align
+Date:   Tue, 11 Jun 2019 18:16:55 -0700
+Message-Id: <20190612011657.12119-1-slongerbeam@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2019年06月10日 19:37, Borislav Petkov 写道:
-> On Sat, Jun 08, 2019 at 06:26:59PM +0800, Baoquan He wrote:
->> OK, I see. Then it should be the issue we have met and talked about with
->> Tom.
->> https://lkml.kernel.org/r/20190604134952.GC26891@MiWiFi-R3L-srv
->>
->> You can apply Tom's patch as below. I tested it, it can make kexec
->> kernel succeed to boot, but failed for kdump kernel booting. The kdump
->> kernel can boot till the end of kernel initialization, then hang with a
->> call trace. I have pasted the log in the above thread. Haven't got the
->> reason.
->> http://lkml.kernel.org/r/508c2853-dc4f-70a6-6fa8-97c950dc31c6@amd.com
-> 
-> I can confirm the same observation.
-> 
-Currently, i haven't seen any updates yet, so i'm not sure whether this patch
-passed your test.
+The output width and height alignment values were being used in the
+input bytesperline calculation. Fix by separating local vars w_align
+and h_align into w_align_in, h_align_in, w_align_out, and h_align_out.
 
-Thanks.
-Lianbo
+Fixes: d966e23d61a2c ("gpu: ipu-v3: image-convert: fix bytesperline
+adjustment")
 
-> Thx.
-> 
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+---
+ drivers/gpu/ipu-v3/ipu-image-convert.c | 32 +++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpu/ipu-v3/ipu-image-convert.c b/drivers/gpu/ipu-v3/ipu-image-convert.c
+index 36e88434513a..36eb4c77ad91 100644
+--- a/drivers/gpu/ipu-v3/ipu-image-convert.c
++++ b/drivers/gpu/ipu-v3/ipu-image-convert.c
+@@ -1876,7 +1876,8 @@ void ipu_image_convert_adjust(struct ipu_image *in, struct ipu_image *out,
+ 			      enum ipu_rotate_mode rot_mode)
+ {
+ 	const struct ipu_image_pixfmt *infmt, *outfmt;
+-	u32 w_align, h_align;
++	u32 w_align_out, h_align_out;
++	u32 w_align_in, h_align_in;
+ 
+ 	infmt = get_format(in->pix.pixelformat);
+ 	outfmt = get_format(out->pix.pixelformat);
+@@ -1908,22 +1909,31 @@ void ipu_image_convert_adjust(struct ipu_image *in, struct ipu_image *out,
+ 	}
+ 
+ 	/* align input width/height */
+-	w_align = ilog2(tile_width_align(IMAGE_CONVERT_IN, infmt, rot_mode));
+-	h_align = ilog2(tile_height_align(IMAGE_CONVERT_IN, infmt, rot_mode));
+-	in->pix.width = clamp_align(in->pix.width, MIN_W, MAX_W, w_align);
+-	in->pix.height = clamp_align(in->pix.height, MIN_H, MAX_H, h_align);
++	w_align_in = ilog2(tile_width_align(IMAGE_CONVERT_IN, infmt,
++					    rot_mode));
++	h_align_in = ilog2(tile_height_align(IMAGE_CONVERT_IN, infmt,
++					     rot_mode));
++	in->pix.width = clamp_align(in->pix.width, MIN_W, MAX_W,
++				    w_align_in);
++	in->pix.height = clamp_align(in->pix.height, MIN_H, MAX_H,
++				     h_align_in);
+ 
+ 	/* align output width/height */
+-	w_align = ilog2(tile_width_align(IMAGE_CONVERT_OUT, outfmt, rot_mode));
+-	h_align = ilog2(tile_height_align(IMAGE_CONVERT_OUT, outfmt, rot_mode));
+-	out->pix.width = clamp_align(out->pix.width, MIN_W, MAX_W, w_align);
+-	out->pix.height = clamp_align(out->pix.height, MIN_H, MAX_H, h_align);
++	w_align_out = ilog2(tile_width_align(IMAGE_CONVERT_OUT, outfmt,
++					     rot_mode));
++	h_align_out = ilog2(tile_height_align(IMAGE_CONVERT_OUT, outfmt,
++					      rot_mode));
++	out->pix.width = clamp_align(out->pix.width, MIN_W, MAX_W,
++				     w_align_out);
++	out->pix.height = clamp_align(out->pix.height, MIN_H, MAX_H,
++				      h_align_out);
+ 
+ 	/* set input/output strides and image sizes */
+ 	in->pix.bytesperline = infmt->planar ?
+-		clamp_align(in->pix.width, 2 << w_align, MAX_W, w_align) :
++		clamp_align(in->pix.width, 2 << w_align_in, MAX_W,
++			    w_align_in) :
+ 		clamp_align((in->pix.width * infmt->bpp) >> 3,
+-			    2 << w_align, MAX_W, w_align);
++			    2 << w_align_in, MAX_W, w_align_in);
+ 	in->pix.sizeimage = infmt->planar ?
+ 		(in->pix.height * in->pix.bytesperline * infmt->bpp) >> 3 :
+ 		in->pix.height * in->pix.bytesperline;
+-- 
+2.17.1
+
