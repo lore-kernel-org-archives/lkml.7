@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A85AC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE8CC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F08C208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E95208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560342379;
-	bh=IJFJ3UvGATTgDCH/PLIaXtkwkRHcWi82Y/Juds58mrE=;
+	s=default; t=1560342382;
+	bh=hapQOj2oV7lQmVlqOLUMvP5SDFlMe6BD5fHLQJfjJL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=knOUsEijibc1zi2lfEBUR4ChpSmjOF/jdkX0/brbeFwmpq3lWzsm+nwq2PNkvfSPr
-	 Q6vCJOA0w3srNT4ogwoDje4Y5bLav6375Y4OVGqdjTL8Wbn9aukNnNhWQnqqqXn5yG
-	 QyEvT4dZAdGxiXJ8+kKtyljSN059QDVWWl0Pt0Pg=
+	b=djFQN/PC6ZT6AKWMe7pZPFA/zUL+9nMc7zBB/j+L9zfAOjQ6GHCUsBi6xo1/y7oPw
+	 3iQ2jc1hzVBQ1CzPi6ZfuFzJULJZ9o+gWdWhayBVpdVKhD4spwUQuBq+S57mHxEl3+
+	 f5vwSM+pBbehkYyk6k0c+xZluONppfHULYu1+EKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732341AbfFLM0S (ORCPT
+        id S2438685AbfFLM0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:26:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59602 "EHLO mail.kernel.org"
+        Wed, 12 Jun 2019 08:26:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbfFLM0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:26:16 -0400
+        id S1727079AbfFLM0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:26:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11B8C208C4;
-        Wed, 12 Jun 2019 12:26:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26965208CA;
+        Wed, 12 Jun 2019 12:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560342375;
-        bh=IJFJ3UvGATTgDCH/PLIaXtkwkRHcWi82Y/Juds58mrE=;
+        s=default; t=1560342378;
+        bh=hapQOj2oV7lQmVlqOLUMvP5SDFlMe6BD5fHLQJfjJL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cyj6z+t1W8UH9uf7L8D7BUuk2eFG9Ja5ol0ko59+6SCHwnjS640uK8qP25NUZK2F9
-         aDU7vMn0BCCmQScLWEEK5J/BDLL+A7Ip2NNNZ+u8G+UuHOQMiX6vx2bEweBgy3ofBd
-         ++jtrkscdLgeMd5UVPal2D8TRNLGBhBo8dLo4Z00=
+        b=qlVHyjhoutddiPVuU37MsTDl/etrcfE/rThCBroetqyu1eMVEqDUPYPgO9FSKfrVW
+         q6UqidoZDJ1rYvU7vlG/fRU1SI5LqfKhFuD75u5e/N0JiFEpiHGqTtEBPNwJ3Q0xrd
+         67lmJduvIq5J4y5xJV+vZVmh9v6vBTEuKoLVDBpc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     dan.j.williams@intel.com, vkoul@kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] dma: pxa_dma: no need to check return value of debugfs_create functions
-Date:   Wed, 12 Jun 2019 14:25:55 +0200
-Message-Id: <20190612122557.24158-4-gregkh@linuxfoundation.org>
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 5/6] dma: mic_x100_dma: no need to check return value of debugfs_create functions
+Date:   Wed, 12 Jun 2019 14:25:56 +0200
+Message-Id: <20190612122557.24158-5-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190612122557.24158-1-gregkh@linuxfoundation.org>
 References: <20190612122557.24158-1-gregkh@linuxfoundation.org>
@@ -64,118 +62,34 @@ When calling debugfs functions, there is no need to ever check the
 return value.  The function can work or not, but the code logic should
 never do something different based on this.
 
-Also, because there is no need to save the file dentry, remove the
-variable that was saving it as it was never even being used once set.
-
-Cc: Daniel Mack <daniel@zonque.org>
-Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Sudeep Dutt <sudeep.dutt@intel.com>
+Cc: Ashutosh Dixit <ashutosh.dixit@intel.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: Vinod Koul <vkoul@kernel.org>
 Cc: dmaengine@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/dma/pxa_dma.c | 56 +++++++++----------------------------------
- 1 file changed, 11 insertions(+), 45 deletions(-)
+ drivers/dma/mic_x100_dma.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
-index b429642f3e7a..0f698f49ee26 100644
---- a/drivers/dma/pxa_dma.c
-+++ b/drivers/dma/pxa_dma.c
-@@ -132,7 +132,6 @@ struct pxad_device {
- 	spinlock_t			phy_lock;	/* Phy association */
- #ifdef CONFIG_DEBUG_FS
- 	struct dentry			*dbgfs_root;
--	struct dentry			*dbgfs_state;
- 	struct dentry			**dbgfs_chan;
- #endif
- };
-@@ -326,31 +325,18 @@ static struct dentry *pxad_dbg_alloc_chan(struct pxad_device *pdev,
- 					     int ch, struct dentry *chandir)
- {
- 	char chan_name[11];
--	struct dentry *chan, *chan_state = NULL, *chan_descr = NULL;
--	struct dentry *chan_reqs = NULL;
-+	struct dentry *chan;
- 	void *dt;
- 
- 	scnprintf(chan_name, sizeof(chan_name), "%d", ch);
- 	chan = debugfs_create_dir(chan_name, chandir);
- 	dt = (void *)&pdev->phys[ch];
- 
--	if (chan)
--		chan_state = debugfs_create_file("state", 0400, chan, dt,
--						 &chan_state_fops);
--	if (chan_state)
--		chan_descr = debugfs_create_file("descriptors", 0400, chan, dt,
--						 &descriptors_fops);
--	if (chan_descr)
--		chan_reqs = debugfs_create_file("requesters", 0400, chan, dt,
--						&requester_chan_fops);
--	if (!chan_reqs)
--		goto err_state;
-+	debugfs_create_file("state", 0400, chan, dt, &chan_state_fops);
-+	debugfs_create_file("descriptors", 0400, chan, dt, &descriptors_fops);
-+	debugfs_create_file("requesters", 0400, chan, dt, &requester_chan_fops);
- 
- 	return chan;
--
--err_state:
--	debugfs_remove_recursive(chan);
--	return NULL;
+diff --git a/drivers/dma/mic_x100_dma.c b/drivers/dma/mic_x100_dma.c
+index 6a91e28d537d..584e09661507 100644
+--- a/drivers/dma/mic_x100_dma.c
++++ b/drivers/dma/mic_x100_dma.c
+@@ -728,10 +728,8 @@ static int mic_dma_driver_probe(struct mbus_device *mbdev)
+ 	if (mic_dma_dbg) {
+ 		mic_dma_dev->dbg_dir = debugfs_create_dir(dev_name(&mbdev->dev),
+ 							  mic_dma_dbg);
+-		if (mic_dma_dev->dbg_dir)
+-			debugfs_create_file("mic_dma_reg", 0444,
+-					    mic_dma_dev->dbg_dir, mic_dma_dev,
+-					    &mic_dma_reg_fops);
++		debugfs_create_file("mic_dma_reg", 0444, mic_dma_dev->dbg_dir,
++				    mic_dma_dev, &mic_dma_reg_fops);
+ 	}
+ 	return 0;
  }
- 
- static void pxad_init_debugfs(struct pxad_device *pdev)
-@@ -358,40 +344,20 @@ static void pxad_init_debugfs(struct pxad_device *pdev)
- 	int i;
- 	struct dentry *chandir;
- 
--	pdev->dbgfs_root = debugfs_create_dir(dev_name(pdev->slave.dev), NULL);
--	if (IS_ERR(pdev->dbgfs_root) || !pdev->dbgfs_root)
--		goto err_root;
--
--	pdev->dbgfs_state = debugfs_create_file("state", 0400, pdev->dbgfs_root,
--						pdev, &state_fops);
--	if (!pdev->dbgfs_state)
--		goto err_state;
--
- 	pdev->dbgfs_chan =
--		kmalloc_array(pdev->nr_chans, sizeof(*pdev->dbgfs_state),
-+		kmalloc_array(pdev->nr_chans, sizeof(struct dentry *),
- 			      GFP_KERNEL);
- 	if (!pdev->dbgfs_chan)
--		goto err_alloc;
-+		return;
-+
-+	pdev->dbgfs_root = debugfs_create_dir(dev_name(pdev->slave.dev), NULL);
-+
-+	debugfs_create_file("state", 0400, pdev->dbgfs_root, pdev, &state_fops);
- 
- 	chandir = debugfs_create_dir("channels", pdev->dbgfs_root);
--	if (!chandir)
--		goto err_chandir;
- 
--	for (i = 0; i < pdev->nr_chans; i++) {
-+	for (i = 0; i < pdev->nr_chans; i++)
- 		pdev->dbgfs_chan[i] = pxad_dbg_alloc_chan(pdev, i, chandir);
--		if (!pdev->dbgfs_chan[i])
--			goto err_chans;
--	}
--
--	return;
--err_chans:
--err_chandir:
--	kfree(pdev->dbgfs_chan);
--err_alloc:
--err_state:
--	debugfs_remove_recursive(pdev->dbgfs_root);
--err_root:
--	pr_err("pxad: debugfs is not available\n");
- }
- 
- static void pxad_cleanup_debugfs(struct pxad_device *pdev)
 -- 
 2.22.0
 
