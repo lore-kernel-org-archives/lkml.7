@@ -2,163 +2,109 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA19C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62E2C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62DC7208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC5C20896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:37:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XCK8nLrx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VwfILO09"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408255AbfFLMgy (ORCPT
+        id S2408376AbfFLMhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:36:54 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:17513 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405938AbfFLMgy (ORCPT
+        Wed, 12 Jun 2019 08:37:00 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37003 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404384AbfFLMg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:36:54 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d00f1e40000>; Wed, 12 Jun 2019 05:36:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 12 Jun 2019 05:36:52 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 12 Jun 2019 05:36:52 -0700
-Received: from [10.21.132.143] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Jun
- 2019 12:36:49 +0000
-Subject: Re: [PATCH v2 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
-To:     Sameer Pujar <spujar@nvidia.com>, <thierry.reding@gmail.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <mkumard@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1560243406-2535-1-git-send-email-spujar@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <1f2020ae-12f3-2ad1-c844-b4b7885d41f9@nvidia.com>
-Date:   Wed, 12 Jun 2019 13:36:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 12 Jun 2019 08:36:57 -0400
+Received: by mail-lf1-f68.google.com with SMTP id d11so4130032lfb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 05:36:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W5ZcUb3ZYYyqexpun8Qj0H696dbroHsPGYQhJd7Effk=;
+        b=VwfILO09T4Z5Vgxg5LLncNH+Qmr7pUmjfT+5Jzb3WzyN6G7A2tBfEgXyftXagfT8Du
+         s6akg89YgtZnGgiA+o++zwTAO8XQmO0IDJGtMmUvUGY3nn76Ej3S5XXdZ/81lWVUPtlS
+         s+ToGxwqYWUZFi/Il+qYx2HotqrkUDbrxWg8OgHZ1q6Cv6W9S04F8AK4BjAakKzgCdeE
+         2Hab1EhG3q99Md/eLX9voBH8EpSdv4tefeLKacQaIyA/2ry0SG9gi9mZL/zs1vXk/BfZ
+         w0TIRRKQZVbfLUkD5SMr/h+O1GZWPU/lMQtC4rt3K7JTj8f9apLM7tSL58gdgQ1LHG8U
+         Bmjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W5ZcUb3ZYYyqexpun8Qj0H696dbroHsPGYQhJd7Effk=;
+        b=Ht/eKAjwhRfdmUtBRXzqmM799datrz+k6OedgTcgGuiVkPDg0BqG484XGqWtTUW85O
+         9+7Z9Qz6SgyddVzpDvY3jUiIpZg/b3uzIUJu6epVQgFkDA6izC7D8GL9mMtkBY/tTktg
+         IP+LA3DRuwrD3Lnwr9Ic7iPcIKQQm2Thn4hsGM+7yqnXNNk5GTLRDlHBULrzrMxcVo30
+         LsADQr+8mnD+Roaf1J04RBSwDpQ2bmKtGSkWPDBPB/B2uRt9NcUwOXwsuhfUDTA+UTgh
+         Z/57sUKI5clyoz/qeq3Vcv4t8HRu9y5mTDgUy+X5R5LgJuG/JLrbKZAEH7Zld894cSQO
+         oWTQ==
+X-Gm-Message-State: APjAAAVL4I8MDRDVCaHo6oEQbpHpYVzkVhE0ibHJCejQusPCJEFBZxr0
+        UMFw4G3iR4dNWLdI0JsxdrbFvXr9s0ghkaH8qvEuUw==
+X-Google-Smtp-Source: APXvYqwItuntklbPWZ740m/jW/60/m/o5TFEDtlKeNXqgWJx53OWmMyLvLS322F9vXpV1FpMsEDBzyjEugWzC7+3ics=
+X-Received: by 2002:ac2:598d:: with SMTP id w13mr39607037lfn.165.1560343016604;
+ Wed, 12 Jun 2019 05:36:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1560243406-2535-1-git-send-email-spujar@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560343013; bh=l/KPUA8SA1zZ0jib8qJ2prVlUEp09ihngQ3+RWqn+j0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=XCK8nLrxKZJM0vFDsRjUUSHFB2qrYL58qNKiKWkXI0dApwyz88s4wcB6ZQ9a+tXIG
-         wbO9BN/RHYDqYCJhT184/D4UiKy7Lod5dHbuG4zWVkvOleH3E21BLN+QllMyVn1ZiS
-         3/UwiCssSnEhbJivKwaZD3bD+0g1XPVYBUI8PlD24fA53LfyR3g3FfYjpT4PjwEgew
-         bVwK0X1AHHj4zLpZZsqoYKy0QWw0G4w1KaETAA6RbxcfvuQsB/F8JgY0kuylK3eRZb
-         ZqYppAvHFWVucKaduEXk0UxI0aw1p3uJhpvXV5st8wH8cY+YRwizCDs/ViuwpojsvY
-         tCakX2O0Koj4g==
+References: <20190612081147.1372-1-anders.roxell@linaro.org>
+In-Reply-To: <20190612081147.1372-1-anders.roxell@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 12 Jun 2019 14:36:44 +0200
+Message-ID: <CACRpkdbhRAdybqKdMgyM9Jy=eSJaRHjTpuOZO=KBgeaCbcP88Q@mail.gmail.com>
+Subject: Re: [PATCH v2] drivers: net: dsa: fix warning same module names
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 12, 2019 at 10:11 AM Anders Roxell <anders.roxell@linaro.org> wrote:
 
-On 11/06/2019 09:56, Sameer Pujar wrote:
-> Add DT nodes for following devices on Tegra186 and Tegra194
->  * ACONNECT
->  * ADMA
->  * AGIC
-> 
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 68 ++++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 68 ++++++++++++++++++++++++++++++++
->  2 files changed, 136 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> index 426ac0b..ccd902b 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> @@ -1295,4 +1295,72 @@
->  				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
->  		interrupt-parent = <&gic>;
->  	};
-> +
-> +	aconnect@2a41000 {
-> +		compatible = "nvidia,tegra210-aconnect";
-> +		clocks = <&bpmp TEGRA186_CLK_APE>,
-> +			 <&bpmp TEGRA186_CLK_APB2APE>;
-> +		clock-names = "ape", "apb2ape";
-> +		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_AUD>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x02930000 0x0 0x02930000 0x50000
-> +			  0x02a41000 0x0 0x02a41000 0x3000>;
+> When building with CONFIG_NET_DSA_REALTEK_SMI and CONFIG_REALTEK_PHY
+> enabled as loadable modules, we see the following warning:
+>
+> warning: same module names found:
+>   drivers/net/phy/realtek.ko
+>   drivers/net/dsa/realtek.ko
+>
+> Rework so the driver name is rtl8366 instead of realtek.
+>
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 
-We only need one address range here that covers the entire APE.
+Sorry for giving bad advice here on IRC... my wrong.
 
-> +		status = "disabled";
-> +
-> +		dma-controller@2930000 {
-> +			compatible = "nvidia,tegra186-adma";
-> +			reg = <0x02930000 0x50000>;
-> +			interrupt-parent = <&agic>;
-> +			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-> +			#dma-cells = <1>;
-> +			clocks = <&bpmp TEGRA186_CLK_AHUB>;
-> +			clock-names = "d_audio";
-> +			status = "disabled";
-> +		};
-> +
-> +		agic: agic@2a41000 {
-> +			compatible = "nvidia,tegra210-agic";
-> +			#interrupt-cells = <3>;
-> +			interrupt-controller;
-> +			reg = <0x02a41000 0x1000>,
-> +			      <0x02a41000 0x2000>;
+> -obj-$(CONFIG_NET_DSA_REALTEK_SMI) += realtek.o
+> -realtek-objs                   := realtek-smi.o rtl8366.o rtl8366rb.o
+> +obj-$(CONFIG_NET_DSA_REALTEK_SMI) += rtl8366.o
+> +rtl8366-objs                   := realtek-smi.o rtl8366-common.o rtl8366rb.o
 
-These addresses should not overlap.
+What is common for this family is not the name rtl8366
+(there is for example rtl8369 in this family, we just haven't
+added it yet) but the common technical item is SMI.
 
-Cheers
-Jon
+So I would suggest something like:
 
--- 
-nvpublic
+obj-$(CONFIG_NET_DSA_REALTEK_SMI) += realtek-smi.o
+realtek-smi-objs := realtek-smi-core.o rtl8366.o rtl8366rb.o
+
+I.e. rename the realtel-smi.c to realtek-smi-core.c instead
+and go with that.
+
+With that change:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
