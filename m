@@ -2,213 +2,167 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 153C6C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7779C31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5BE8215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8029021744
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:37:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3i9BlIkA"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="jpcYyBpR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438224AbfFLQfd (ORCPT
+        id S2502167AbfFLQh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 12:35:33 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38890 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438250AbfFLQfZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:35:25 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CGXeL1180963;
-        Wed, 12 Jun 2019 16:34:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=OZ07ptOy2B80GlbT6lz5k/wWg5JkWZcAoOSiGptgXoI=;
- b=3i9BlIkAgbpRW4KMrJFF9FVpB9aV6hrBUlUPolA2nBEAg5/HXhH0kpu9dzfwmo6/P9FQ
- uagMawXS8M+FkxYw/3Gfjg53hn3zq83vDGnx1EykNKBX5I4Z1QOwTa4r2z4BVOKKKbYT
- aar1NwqtxnMXMGVNJdgwBwTo+OU0YdwqcCS1ZNzkxrIRjVIUx88X1iUvxnCTb8d3edMK
- e3m7snvEwDXYyi5GjtFw05DWVUzpIXv0wj7hTBxaFKcK2PgSiduLNOZeAh5MfXL5L7s8
- yee+jPe7u5snkCX1+uya0zCp6gdh60fc3Mf/aQOtmh98x3c1lvoya2Ht7yWa+WTUbzrn cQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2t05nqvn9v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 16:34:57 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CGXJ5H113164;
-        Wed, 12 Jun 2019 16:34:57 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2t024v2urq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 16:34:57 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5CGYukW025982;
-        Wed, 12 Jun 2019 16:34:56 GMT
-Received: from ca-common-hq.us.oracle.com (/10.211.9.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 12 Jun 2019 09:34:56 -0700
-From:   Divya Indi <divya.indi@oracle.com>
-To:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Cc:     Divya Indi <divya.indi@oracle.com>,
-        Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-Subject: [PATCH 3/3] tracing: Add 2 new funcs. for kernel access to Ftrace instances.
-Date:   Wed, 12 Jun 2019 09:34:19 -0700
-Message-Id: <1560357259-3497-4-git-send-email-divya.indi@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1560357259-3497-3-git-send-email-divya.indi@oracle.com>
-References: <1560357259-3497-1-git-send-email-divya.indi@oracle.com>
- <1560357259-3497-2-git-send-email-divya.indi@oracle.com>
- <1560357259-3497-3-git-send-email-divya.indi@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906120112
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906120112
+        Wed, 12 Jun 2019 12:37:27 -0400
+Received: from mail-eopbgr130053.outbound.protection.outlook.com ([40.107.13.53]:13447
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2438342AbfFLQh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 12:37:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VQbqrJiISLa4uI+tR3Az4GTEGy3aPlGznHpcP/BLjOw=;
+ b=jpcYyBpRvXHXGJW+ds2BHG3uEO6ViklqATgjygElrZZQVfNMmzW5f33jWollfbLypTF2YbxuH3pQ4gqTMoYCFSKKMDwOlNSvtYgdJo/tbbmqXalCT7NmQelg6T6M6qlpFQJ6RKYNwvh0Sk8e6mzQbzgvgYmGWeTAvXXwRR3FOAE=
+Received: from VE1PR08MB4637.eurprd08.prod.outlook.com (10.255.27.14) by
+ VE1PR08MB4895.eurprd08.prod.outlook.com (10.255.113.212) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.15; Wed, 12 Jun 2019 16:37:20 +0000
+Received: from VE1PR08MB4637.eurprd08.prod.outlook.com
+ ([fe80::6574:1efb:6972:2b37]) by VE1PR08MB4637.eurprd08.prod.outlook.com
+ ([fe80::6574:1efb:6972:2b37%6]) with mapi id 15.20.1965.017; Wed, 12 Jun 2019
+ 16:37:20 +0000
+From:   Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+To:     Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     nd <nd@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v4 2/2] arm64: Relax
+ Documentation/arm64/tagged-pointers.txt
+Thread-Topic: [PATCH v4 2/2] arm64: Relax
+ Documentation/arm64/tagged-pointers.txt
+Thread-Index: AQHVIS/qgxSPAZqYS0apbOMTIFAdLaaYN9IA
+Date:   Wed, 12 Jun 2019 16:37:20 +0000
+Message-ID: <ebe4fffd-c8a5-35d4-9370-a6573b2a7c87@arm.com>
+References: <cover.1560339705.git.andreyknvl@google.com>
+ <20190612142111.28161-1-vincenzo.frascino@arm.com>
+ <20190612142111.28161-3-vincenzo.frascino@arm.com>
+In-Reply-To: <20190612142111.28161-3-vincenzo.frascino@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+x-originating-ip: [217.140.106.51]
+x-clientproxiedby: LO2P265CA0101.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:c::17) To VE1PR08MB4637.eurprd08.prod.outlook.com
+ (2603:10a6:802:b1::14)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Szabolcs.Nagy@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3fbc98d2-bb72-4fbf-3bbe-08d6ef543d41
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4895;
+x-ms-traffictypediagnostic: VE1PR08MB4895:
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VE1PR08MB4895AD6CA6AB833ECD306246EDEC0@VE1PR08MB4895.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0066D63CE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(396003)(346002)(376002)(136003)(189003)(199004)(99286004)(64126003)(6486002)(81166006)(65826007)(7736002)(53936002)(2906002)(66446008)(14444005)(6512007)(256004)(8676002)(66946007)(2201001)(64756008)(229853002)(478600001)(66556008)(14454004)(66476007)(6436002)(305945005)(8936002)(2501003)(5660300002)(72206003)(81156014)(71190400001)(6506007)(58126008)(186003)(11346002)(316002)(2616005)(102836004)(386003)(110136005)(44832011)(54906003)(73956011)(52116002)(4326008)(486006)(71200400001)(65956001)(25786009)(446003)(476003)(53546011)(31696002)(36756003)(6246003)(66066001)(68736007)(31686004)(65806001)(26005)(6116002)(3846002)(86362001)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4895;H:VE1PR08MB4637.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ArZcTyYDkh4Z7xUs60YEzHWJP6LZxH/M83BeKyobfcMkD0rM0j0OXX38PHpnekSqaNpVHu1m0FnQTPiHp83NqC7kqJyimE1E3LerE5teGYkqeCW6d6q/EhbG11Ugfu+fobIML+DQKY+2ETWI2x36APPL6dI91zs3D1o7GZCtAWI+BXupLe6cLLNbC8v8ZMgYt3E5HYzoGSxdHGgAFRlo02PZaJOPH8UT7Lf7eG5oQQOHV/NHdGyb9l64oGqYqjqEX9nQ7al00lDw0cm0aRvGr4kNr7HToGH/HwA1X1RHtRMFVfA1spzf2jV+Oq8z73p6wndUHbXsm4ZAYyxU65Kmb7ch9J8Eld5eALaR+i/1foPVNnp+MWJedToB/ixFM7nI5QQt4qc8uOn/l+1y5mnVa7TZChVe8r8zZdbNSrvHajo=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BA99E85AC8B5C34B87124BD326392332@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3fbc98d2-bb72-4fbf-3bbe-08d6ef543d41
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 16:37:20.6828
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Szabolcs.Nagy@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4895
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding 2 new functions -
-1) trace_array_lookup : Look up and return a trace array, given its
-name.
-2) trace_array_set_clr_event : Enable/disable event recording to the
-given trace array.
-
-Newly added functions trace_array_lookup and trace_array_create also
-need to increment the reference counter associated with the trace array
-they return. This is to ensure the trace array does not get freed
-while in use by the newly introduced APIs.
-The reference ctr is decremented in the trace_array_destroy.
-
-Signed-off-by: Divya Indi <divya.indi@oracle.com>
----
- include/linux/trace_events.h |  3 +++
- kernel/trace/trace.c         | 30 +++++++++++++++++++++++++++++-
- kernel/trace/trace_events.c  | 22 ++++++++++++++++++++++
- 3 files changed, 54 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index d7b7d85..0cc99a8 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -545,7 +545,10 @@ int trace_array_printk(struct trace_array *tr, unsigned long ip,
- struct trace_array *trace_array_create(const char *name);
- int trace_array_destroy(struct trace_array *tr);
- int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
-+struct trace_array *trace_array_lookup(const char *name);
- int trace_set_clr_event(const char *system, const char *event, int set);
-+int trace_array_set_clr_event(struct trace_array *tr, const char *system,
-+		const char *event, int set);
- 
- /*
-  * The double __builtin_constant_p is because gcc will give us an error
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index a60dc13..fb70ccc 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8364,6 +8364,8 @@ struct trace_array *trace_array_create(const char *name)
- 
- 	list_add(&tr->list, &ftrace_trace_arrays);
- 
-+	tr->ref++;
-+
- 	mutex_unlock(&trace_types_lock);
- 	mutex_unlock(&event_mutex);
- 
-@@ -8385,7 +8387,14 @@ struct trace_array *trace_array_create(const char *name)
- 
- static int instance_mkdir(const char *name)
- {
--	return PTR_ERR_OR_ZERO(trace_array_create(name));
-+	struct trace_array *tr;
-+
-+	tr = trace_array_create(name);
-+	if (IS_ERR(tr))
-+		return PTR_ERR(tr);
-+	trace_array_put(tr);
-+
-+	return 0;
- }
- 
- static int __remove_instance(struct trace_array *tr)
-@@ -8434,6 +8443,7 @@ int trace_array_destroy(struct trace_array *tr)
- 	mutex_lock(&event_mutex);
- 	mutex_lock(&trace_types_lock);
- 
-+	tr->ref--;
- 	ret = __remove_instance(tr);
- 
- 	mutex_unlock(&trace_types_lock);
-@@ -8465,6 +8475,24 @@ static int instance_rmdir(const char *name)
- 	return ret;
- }
- 
-+struct trace_array *trace_array_lookup(const char *name)
-+{
-+	struct trace_array *tr;
-+
-+	mutex_lock(&trace_types_lock);
-+
-+	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-+		if (tr->name && strcmp(tr->name, name) == 0) {
-+			tr->ref++;
-+			mutex_unlock(&trace_types_lock);
-+			return tr;
-+		}
-+	}
-+	mutex_unlock(&trace_types_lock);
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(trace_array_lookup);
-+
- static __init void create_trace_instances(struct dentry *d_tracer)
- {
- 	trace_instance_dir = tracefs_create_instance_dir("instances", d_tracer,
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 445b059..c126d2c 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -859,6 +859,28 @@ int trace_set_clr_event(const char *system, const char *event, int set)
- }
- EXPORT_SYMBOL_GPL(trace_set_clr_event);
- 
-+/**
-+ * trace_array_set_clr_event - enable or disable an event for a trace array
-+ * @system: system name to match (NULL for any system)
-+ * @event: event name to match (NULL for all events, within system)
-+ * @set: 1 to enable, 0 to disable
-+ *
-+ * This is a way for other parts of the kernel to enable or disable
-+ * event recording to instances.
-+ *
-+ * Returns 0 on success, -EINVAL if the parameters do not match any
-+ * registered events.
-+ */
-+int trace_array_set_clr_event(struct trace_array *tr, const char *system,
-+		const char *event, int set)
-+{
-+	if (!tr)
-+		return -ENODEV;
-+
-+	return __ftrace_set_clr_event(tr, NULL, system, event, set);
-+}
-+EXPORT_SYMBOL_GPL(trace_array_set_clr_event);
-+
- /* 128 should be much more than enough */
- #define EVENT_BUF_SIZE		127
- 
--- 
-1.8.3.1
-
+T24gMTIvMDYvMjAxOSAxNToyMSwgVmluY2Vuem8gRnJhc2Npbm8gd3JvdGU6DQo+IE9uIGFybTY0
+IHRoZSBUQ1JfRUwxLlRCSTAgYml0IGhhcyBiZWVuIGFsd2F5cyBlbmFibGVkIGhlbmNlDQo+IHRo
+ZSB1c2Vyc3BhY2UgKEVMMCkgaXMgYWxsb3dlZCB0byBzZXQgYSBub24temVybyB2YWx1ZSBpbiB0
+aGUNCj4gdG9wIGJ5dGUgYnV0IHRoZSByZXN1bHRpbmcgcG9pbnRlcnMgYXJlIG5vdCBhbGxvd2Vk
+IGF0IHRoZQ0KPiB1c2VyLWtlcm5lbCBzeXNjYWxsIEFCSSBib3VuZGFyeS4NCj4gDQo+IFdpdGgg
+dGhlIHJlbGF4ZWQgQUJJIHByb3Bvc2VkIGluIHRoaXMgc2V0LCBpdCBpcyBub3cgcG9zc2libGUg
+dG8gcGFzcw0KPiB0YWdnZWQgcG9pbnRlcnMgdG8gdGhlIHN5c2NhbGxzLCB3aGVuIHRoZXNlIHBv
+aW50ZXJzIGFyZSBpbiBtZW1vcnkNCj4gcmFuZ2VzIG9idGFpbmVkIGJ5IGFuIGFub255bW91cyAo
+TUFQX0FOT05ZTU9VUykgbW1hcCgpLg0KPiANCj4gUmVsYXggdGhlIHJlcXVpcmVtZW50cyBkZXNj
+cmliZWQgaW4gdGFnZ2VkLXBvaW50ZXJzLnR4dCB0byBiZSBjb21wbGlhbnQNCj4gd2l0aCB0aGUg
+YmVoYXZpb3VycyBndWFyYW50ZWVkIGJ5IHRoZSBBUk02NCBUYWdnZWQgQWRkcmVzcyBBQkkuDQo+
+IA0KPiBDYzogQ2F0YWxpbiBNYXJpbmFzIDxjYXRhbGluLm1hcmluYXNAYXJtLmNvbT4NCj4gQ2M6
+IFdpbGwgRGVhY29uIDx3aWxsLmRlYWNvbkBhcm0uY29tPg0KPiBDQzogQW5kcmV5IEtvbm92YWxv
+diA8YW5kcmV5a252bEBnb29nbGUuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBWaW5jZW56byBGcmFz
+Y2lubyA8dmluY2Vuem8uZnJhc2Npbm9AYXJtLmNvbT4NCj4gLS0tDQo+ICBEb2N1bWVudGF0aW9u
+L2FybTY0L3RhZ2dlZC1wb2ludGVycy50eHQgfCAyMyArKysrKysrKysrKysrKysrLS0tLS0tLQ0K
+PiAgMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQo+IA0K
+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9hcm02NC90YWdnZWQtcG9pbnRlcnMudHh0IGIv
+RG9jdW1lbnRhdGlvbi9hcm02NC90YWdnZWQtcG9pbnRlcnMudHh0DQo+IGluZGV4IGEyNWE5OWU4
+MmJiMS4uZGI1OGE3ZTk1ODA1IDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2FybTY0L3Rh
+Z2dlZC1wb2ludGVycy50eHQNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9hcm02NC90YWdnZWQtcG9p
+bnRlcnMudHh0DQo+IEBAIC0xOCw3ICsxOCw4IEBAIFBhc3NpbmcgdGFnZ2VkIGFkZHJlc3NlcyB0
+byB0aGUga2VybmVsDQo+ICAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
+PiAgDQo+ICBBbGwgaW50ZXJwcmV0YXRpb24gb2YgdXNlcnNwYWNlIG1lbW9yeSBhZGRyZXNzZXMg
+YnkgdGhlIGtlcm5lbCBhc3N1bWVzDQo+IC1hbiBhZGRyZXNzIHRhZyBvZiAweDAwLg0KPiArYW4g
+YWRkcmVzcyB0YWcgb2YgMHgwMCwgdW5sZXNzIHRoZSB1c2Vyc3BhY2Ugb3B0cy1pbiB0aGUgQVJN
+NjQgVGFnZ2VkDQo+ICtBZGRyZXNzIEFCSSB2aWEgdGhlIFBSX1NFVF9UQUdHRURfQUREUl9DVFJM
+IHByY3RsKCkuDQo+ICANCj4gIFRoaXMgaW5jbHVkZXMsIGJ1dCBpcyBub3QgbGltaXRlZCB0bywg
+YWRkcmVzc2VzIGZvdW5kIGluOg0KPiAgDQo+IEBAIC0zMSwxOCArMzIsMjMgQEAgVGhpcyBpbmNs
+dWRlcywgYnV0IGlzIG5vdCBsaW1pdGVkIHRvLCBhZGRyZXNzZXMgZm91bmQgaW46DQo+ICAgLSB0
+aGUgZnJhbWUgcG9pbnRlciAoeDI5KSBhbmQgZnJhbWUgcmVjb3JkcywgZS5nLiB3aGVuIGludGVy
+cHJldGluZw0KPiAgICAgdGhlbSB0byBnZW5lcmF0ZSBhIGJhY2t0cmFjZSBvciBjYWxsIGdyYXBo
+Lg0KPiAgDQo+IC1Vc2luZyBub24temVybyBhZGRyZXNzIHRhZ3MgaW4gYW55IG9mIHRoZXNlIGxv
+Y2F0aW9ucyBtYXkgcmVzdWx0IGluIGFuDQo+IC1lcnJvciBjb2RlIGJlaW5nIHJldHVybmVkLCBh
+IChmYXRhbCkgc2lnbmFsIGJlaW5nIHJhaXNlZCwgb3Igb3RoZXIgbW9kZXMNCj4gLW9mIGZhaWx1
+cmUuDQo+ICtVc2luZyBub24temVybyBhZGRyZXNzIHRhZ3MgaW4gYW55IG9mIHRoZXNlIGxvY2F0
+aW9ucyB3aGVuIHRoZQ0KPiArdXNlcnNwYWNlIGFwcGxpY2F0aW9uIGRpZCBub3Qgb3B0LWluIHRv
+IHRoZSBBUk02NCBUYWdnZWQgQWRkcmVzcyBBQkksDQo+ICttYXkgcmVzdWx0IGluIGFuIGVycm9y
+IGNvZGUgYmVpbmcgcmV0dXJuZWQsIGEgKGZhdGFsKSBzaWduYWwgYmVpbmcgcmFpc2VkLA0KPiAr
+b3Igb3RoZXIgbW9kZXMgb2YgZmFpbHVyZS4NCj4gIA0KPiAtRm9yIHRoZXNlIHJlYXNvbnMsIHBh
+c3Npbmcgbm9uLXplcm8gYWRkcmVzcyB0YWdzIHRvIHRoZSBrZXJuZWwgdmlhDQo+IC1zeXN0ZW0g
+Y2FsbHMgaXMgZm9yYmlkZGVuLCBhbmQgdXNpbmcgYSBub24temVybyBhZGRyZXNzIHRhZyBmb3Ig
+c3AgaXMNCj4gLXN0cm9uZ2x5IGRpc2NvdXJhZ2VkLg0KPiArRm9yIHRoZXNlIHJlYXNvbnMsIHdo
+ZW4gdGhlIHVzZXJzcGFjZSBhcHBsaWNhdGlvbiBkaWQgbm90IG9wdC1pbiwgcGFzc2luZw0KPiAr
+bm9uLXplcm8gYWRkcmVzcyB0YWdzIHRvIHRoZSBrZXJuZWwgdmlhIHN5c3RlbSBjYWxscyBpcyBm
+b3JiaWRkZW4sIGFuZCB1c2luZw0KPiArYSBub24temVybyBhZGRyZXNzIHRhZyBmb3Igc3AgaXMg
+c3Ryb25nbHkgZGlzY291cmFnZWQuDQo+ICANCj4gIFByb2dyYW1zIG1haW50YWluaW5nIGEgZnJh
+bWUgcG9pbnRlciBhbmQgZnJhbWUgcmVjb3JkcyB0aGF0IHVzZSBub24temVybw0KPiAgYWRkcmVz
+cyB0YWdzIG1heSBzdWZmZXIgaW1wYWlyZWQgb3IgaW5hY2N1cmF0ZSBkZWJ1ZyBhbmQgcHJvZmls
+aW5nDQo+ICB2aXNpYmlsaXR5Lg0KPiAgDQo+ICtBIGRlZmluaXRpb24gb2YgdGhlIG1lYW5pbmcg
+b2YgQVJNNjQgVGFnZ2VkIEFkZHJlc3MgQUJJIGFuZCBvZiB0aGUNCj4gK2d1YXJhbnRlZXMgdGhh
+dCB0aGUgQUJJIHByb3ZpZGVzIHdoZW4gdGhlIHVzZXJzcGFjZSBvcHRzLWluIHZpYSBwcmN0bCgp
+DQo+ICtjYW4gYmUgZm91bmQgaW46IERvY3VtZW50YXRpb24vYXJtNjQvdGFnZ2VkLWFkZHJlc3Mt
+YWJpLnR4dC4NCj4gKw0KDQpPSy4NCg0KPiAgDQo+ICBQcmVzZXJ2aW5nIHRhZ3MNCj4gIC0tLS0t
+LS0tLS0tLS0tLQ0KPiBAQCAtNTcsNiArNjMsOSBAQCBiZSBwcmVzZXJ2ZWQuDQo+ICBUaGUgYXJj
+aGl0ZWN0dXJlIHByZXZlbnRzIHRoZSB1c2Ugb2YgYSB0YWdnZWQgUEMsIHNvIHRoZSB1cHBlciBi
+eXRlIHdpbGwNCj4gIGJlIHNldCB0byBhIHNpZ24tZXh0ZW5zaW9uIG9mIGJpdCA1NSBvbiBleGNl
+cHRpb24gcmV0dXJuLg0KPiAgDQo+ICtUaGlzIGJlaGF2aW91cnMgYXJlIHByZXNlcnZlZCBldmVu
+IHdoZW4gdGhlIHRoZSB1c2Vyc3BhY2Ugb3B0cy1pbiB0aGUgQVJNNjQNCg0KdGhlc2UgYmVoYXZp
+b3Vycy4NCg0KPiArVGFnZ2VkIEFkZHJlc3MgQUJJIHZpYSB0aGUgUFJfU0VUX1RBR0dFRF9BRERS
+X0NUUkwgcHJjdGwoKS4NCj4gKw0KPiAgDQo+ICBPdGhlciBjb25zaWRlcmF0aW9ucw0KPiAgLS0t
+LS0tLS0tLS0tLS0tLS0tLS0NCj4gDQoNCg==
