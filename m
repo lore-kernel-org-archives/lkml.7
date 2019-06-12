@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D61C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090F1C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A535220665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC15E2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:00:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393240AbfFMRAu (ORCPT
+        id S2393248AbfFMRAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:00:50 -0400
-Received: from gate.crashing.org ([63.228.1.57]:49148 "EHLO gate.crashing.org"
+        Thu, 13 Jun 2019 13:00:52 -0400
+Received: from gate.crashing.org ([63.228.1.57]:49136 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729763AbfFLX56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 19:57:58 -0400
+        id S1729758AbfFLX4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 19:56:43 -0400
 Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5CNvXVL016754;
-        Wed, 12 Jun 2019 18:57:34 -0500
-Message-ID: <28912f8d0a39de519653472a3686fbd7317d18d3.camel@kernel.crashing.org>
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5CNuKVE016725;
+        Wed, 12 Jun 2019 18:56:21 -0500
+Message-ID: <78de2a9768cfd7d871d3b61f64ce18aefc8c3293.camel@kernel.crashing.org>
 Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
 From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
+To:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     James Morse <james.morse@arm.com>,
         "Hawa, Hanna" <hhhawa@amazon.com>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "Woodhouse, David" <dwmw@amazon.co.uk>,
@@ -43,18 +43,18 @@ Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         "Krupnik, Ronen" <ronenk@amazon.com>,
         "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
         "Hanoch, Uri" <hanochu@amazon.com>
-Date:   Thu, 13 Jun 2019 09:57:33 +1000
-In-Reply-To: <20190612122504.GI32652@zn.tnic>
-References: <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+Date:   Thu, 13 Jun 2019 09:56:20 +1000
+In-Reply-To: <20190612110039.GH32652@zn.tnic>
+References: <32431fa2-2285-6c41-ce32-09630205bb54@arm.com>
+         <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+         <20190608090556.GA32464@zn.tnic>
+         <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
          <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
          <20190611115651.GD31772@zn.tnic>
          <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
          <20190612034813.GA32652@zn.tnic>
          <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
          <20190612074242.53a4cf56@coco.lan> <20190612110039.GH32652@zn.tnic>
-         <20190612084213.4fb9e054@coco.lan>
-         <7705227ea831793cc9e45af32e0da8f5547cb14d.camel@kernel.crashing.org>
-         <20190612122504.GI32652@zn.tnic>
 Content-Type: text/plain; charset="UTF-8"
 X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
 Mime-Version: 1.0
@@ -64,23 +64,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-12 at 14:25 +0200, Borislav Petkov wrote:
-> > But for the main case that really needs to be in the kernel, which is
-> > DRAM, the recovery can usually be contained to the MC driver anyway.
+On Wed, 2019-06-12 at 13:00 +0200, Borislav Petkov wrote:
+> On Wed, Jun 12, 2019 at 07:42:42AM -0300, Mauro Carvalho Chehab wrote:
+> > That's said, from the admin PoV, it makes sense to have a single
+> > daemon that collect errors from all error sources and take the
+> > needed actions.
 > 
-> Right, if that is enough to handle the error properly.
-> 
-> The memory-failure.c example I gave before is the error reporting
-> mechanism (x86 MCA) calling into the mm subsystem to poison and isolate
-> page frames which are known to contain errors. So you have two things
-> talking to each other.
+> Doing recovery actions in userspace is too flaky. Daemon can get killed
+> at any point in time
 
-And none of them is an EDAC driver...
+So what ? If root kills your RAS daemon, then so be it. That has never
+been a problem on POWER8/POWER9 server platforms and those have some of
+the nastiest RAS in town.
 
-I mean yes, the network drivers talk to the network stack, or even the
-memory allocator :-)
+You can kill PID 1 too you know ... 
 
-I still don't see how that requires a big platform coordinator...
+>  and there are error types where you want to do recovery *before* you return to userspace.
+
+Very few (precise examples please) and I yet have to see why those need
+some kind of magic coordinator.
+
+> Yes, we do have different error reporting facilities but I still think
+> that concentrating all the error information needed in order to do
+> proper recovery action is the better approach here. And make that part
+> of the kernel so that it is robust. Userspace can still configure it and
+> so on.
 
 Ben.
 
