@@ -2,174 +2,106 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4315C31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B3BC31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B16220866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9975120883
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:27:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvB/JIM6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="agp8Ljxg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406648AbfFLBWP (ORCPT
+        id S2406706AbfFLB1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 21:22:15 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36279 "EHLO
+        Tue, 11 Jun 2019 21:27:13 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41418 "EHLO
         mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405843AbfFLBWP (ORCPT
+        with ESMTP id S2406215AbfFLB1M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 21:22:15 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r7so2678096pfl.3;
-        Tue, 11 Jun 2019 18:22:14 -0700 (PDT)
+        Tue, 11 Jun 2019 21:27:12 -0400
+Received: by mail-pf1-f196.google.com with SMTP id m30so8052610pff.8;
+        Tue, 11 Jun 2019 18:27:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Ky1cJOwHZ56JNmGYppilpULLontDldd/s3eyGI0m6U0=;
-        b=DvB/JIM6X6sMQrH9Y8WL3U7oZvQIzwOIQk+La/XXrFHdO15QBkDIKLqeaET/1Ep74o
-         SYyudSUvfV/5cHstBLovWzTLk8PYGV8V8yD5CEHNEAIARQkpbLLgfqnBR4oR41W2wO3J
-         4Bd6YcsJ30dwxmRisE9z6XiwSsb4f7F17W7AF/av2kAw/RcJ6WBelqHl1Dxy/FCH7GN/
-         BnxXrrhyjzQn4wnwzmD+gWjr3Pit/qteQKKVrx4mbeliQKt5sA8MUxPfhUtHhfMdekWm
-         Q/+29RX8dzEnm6sqmipV6wWmXH6Wut8hHHnjVr5/QvgbcCZny47E5We2DyfpkBL6I0Qo
-         p5HQ==
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CtAUnKccNVM3Ar1NimuBm5cYjQQHpUUV35G3NGl7I18=;
+        b=agp8LjxgsiKUNBRzMQ6B1lsikXTP9MXAxScOYcZnsKclD0N+jlNVoUl/hzW4poyT5e
+         3L5Kpn7BSqpfe4Vqr0OMLbW+npbpmydrSh4Nk6mj5SGyx5Jj6jf653H8VmcdoFa5nFlP
+         PVXiNmiBrwZEiKboElbWiL4LdjFKAAbWcoG28ZIwtcy8dPhR9hlh49PJ6xikrmMZLHzP
+         20qVkn6ttaCMzY1I08lsTIN5eoleBIFYn7aRuLf/OzGJBwoDwiiv7JFIo5WL8ooodEKt
+         b/SI9mnoX3vTwRgRrKm2an9+aTc8TPah2tNonQDJrq5z+DrzQV1yJmuEkhrXeIPbcuOQ
+         mhuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Ky1cJOwHZ56JNmGYppilpULLontDldd/s3eyGI0m6U0=;
-        b=fWlRK0FNlJhMp7Wz4SzA4XRqxtVvTbaeFMyDsul+7qCPBNaljYQzaDKzNGr/D7eZvQ
-         2Mwk+IkfsIO1rBVLwXZC8DjbQVRjazY3Z1eh4qZ0951ydVQEcyhM3/5eUDdMbwQz7Ul0
-         ww+yjdNGCyUHia1Ce39Sv+rjwuvoHsHaL1D0GaPOydobEY5MGGUDSlmXB3KODtQaMDR+
-         GoC1+fF5SngcMOgVg7Ko75UnyztorkWtBlF0jJzPlH0vRBAc0rsF7PTDMhQzdCIqeUOC
-         X6sPvJ3CK13Z8QhxG1PIY/mGjCv2MviG4trznqWSx9pSiX9hHeg3DAqxY1OSRoJtIokJ
-         PXtA==
-X-Gm-Message-State: APjAAAUTDP+lFCo67R+I7GDUaHkXguClnwQMob49JWBA/B5LuTQg2ova
-        lGpu7iIyKaw22vfFGEAoogQ=
-X-Google-Smtp-Source: APXvYqxoq0tlHQ6kgp/iduVCCMwBl8mA/veWFn8EQTI1GGwQscJmgo9L2tHZ8aJxWuG53y/8ArR7IA==
-X-Received: by 2002:aa7:8d89:: with SMTP id i9mr44034763pfr.77.1560302534005;
-        Tue, 11 Jun 2019 18:22:14 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id y22sm13265319pgj.38.2019.06.11.18.22.13
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CtAUnKccNVM3Ar1NimuBm5cYjQQHpUUV35G3NGl7I18=;
+        b=FzhAsGYxmBnN668L0avinUo4XrpGKzI143/f++HbbliQdoUWYL7rIB07JskNWd+DU7
+         9+jmbLvpyufPPU8eq2izcCQRPo6orwcxUzTS5OUq7UHKXLLbMSF/8DIg84j79oFaTWzH
+         E/Wf2FNiDzxa7xnKm9OoWDmikQTdDGdNnhVVBS6MJm6hrgiPmAba2fijUfhXxYpekJD5
+         un5jWa/UL28tWsTkCFge14d0BYjkEI442PL0hQcNImY80LK60XtCruQlHxXE12hXaNrD
+         TVcToHfg5GzGvJ2hFzaL1CPH0OrbIsZZwU7xYr0epJ4Xmv6eUpK9T9Zd/dtqzCSv62oS
+         Ovpw==
+X-Gm-Message-State: APjAAAW63NOZnX17illK661RcsXbWTv8zbb9LMRh6E+aeNPIC6DjZn8x
+        UlVnDtutcFL11xnw3IiiJkk=
+X-Google-Smtp-Source: APXvYqyJ4j/UPWrjvOrQasPCqbyNI8I79UTnDUErLKqAMrK1NLwjt0JJmzYLlyxhcupMkfrOP1908w==
+X-Received: by 2002:a17:90a:cb87:: with SMTP id a7mr10403544pju.130.1560302831475;
+        Tue, 11 Jun 2019 18:27:11 -0700 (PDT)
+Received: from [10.2.189.129] ([66.170.99.2])
+        by smtp.gmail.com with ESMTPSA id c10sm3547108pjq.14.2019.06.11.18.27.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 18:22:13 -0700 (PDT)
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     sumit.semwal@linaro.org, christian.koenig@amd.com
-Cc:     linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        daniel.vetter@ffwll.ch
-Subject: [PATCH] dma-buf: refcount the attachment for cache_sgt_mapping
-Date:   Tue, 11 Jun 2019 18:22:19 -0700
-Message-Id: <20190612012219.21652-1-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 11 Jun 2019 18:27:10 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 16/16] mm: pass get_user_pages_fast iterator arguments in
+ a structure
+From:   Nadav Amit <nadav.amit@gmail.com>
+In-Reply-To: <1560300464.nijubslu3h.astroid@bobo.none>
+Date:   Tue, 11 Jun 2019 18:27:09 -0700
+Cc:     Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-sh@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
+        the arch/x86 maintainers <x86@kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <0441EC80-B09F-4722-B186-E42EB6A83386@gmail.com>
+References: <20190611144102.8848-1-hch@lst.de>
+ <20190611144102.8848-17-hch@lst.de> <1560300464.nijubslu3h.astroid@bobo.none>
+To:     Nicholas Piggin <npiggin@gmail.com>, Christoph Hellwig <hch@lst.de>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit f13e143e7444 ("dma-buf: start caching of sg_table objects v2")
-added a support of caching the sgt pointer into an attach pointer to
-let users reuse the sgt pointer without another mapping. However, it
-might not totally work as most of dma-buf callers are doing attach()
-and map_attachment() back-to-back, using drm_prime.c for example:
-    drm_gem_prime_import_dev() {
-        attach = dma_buf_attach() {
-            /* Allocating a new attach */
-            attach = kzalloc();
-            /* .... */
-            return attach;
-        }
-        dma_buf_map_attachment(attach, direction) {
-            /* attach->sgt would be always empty as attach is new */
-            if (attach->sgt) {
-                /* Reuse attach->sgt */
-            }
-            /* Otherwise, map it */
-            attach->sgt = map();
-        }
-    }
+> On Jun 11, 2019, at 5:52 PM, Nicholas Piggin <npiggin@gmail.com> wrote:
+> 
+> Christoph Hellwig's on June 12, 2019 12:41 am:
+>> Instead of passing a set of always repeated arguments down the
+>> get_user_pages_fast iterators, create a struct gup_args to hold them and
+>> pass that by reference.  This leads to an over 100 byte .text size
+>> reduction for x86-64.
+> 
+> What does this do for performance? I've found this pattern can be
+> bad for store aliasing detection.
 
-So, for a cache_sgt_mapping use case, it would need to get the same
-attachment pointer in order to reuse its sgt pointer. So this patch
-adds a refcount to the attach() function and lets it search for the
-existing attach pointer by matching the dev pointer.
+Note that sometimes such an optimization can also have adverse effect due to
+stack protector code that gcc emits when you use such structs.
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
- drivers/dma-buf/dma-buf.c | 23 +++++++++++++++++++++++
- include/linux/dma-buf.h   |  2 ++
- 2 files changed, 25 insertions(+)
-
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index f4104a21b069..d0260553a31c 100644
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -559,6 +559,21 @@ struct dma_buf_attachment *dma_buf_attach(struct dma_buf *dmabuf,
- 	if (WARN_ON(!dmabuf || !dev))
- 		return ERR_PTR(-EINVAL);
- 
-+	/* cache_sgt_mapping requires to reuse the same attachment pointer */
-+	if (dmabuf->ops->cache_sgt_mapping) {
-+		mutex_lock(&dmabuf->lock);
-+
-+		/* Search for existing attachment and increase its refcount */
-+		list_for_each_entry(attach, &dmabuf->attachments, node) {
-+			if (dev != attach->dev)
-+				continue;
-+			atomic_inc_not_zero(&attach->refcount);
-+			goto unlock_attach;
-+		}
-+
-+		mutex_unlock(&dmabuf->lock);
-+	}
-+
- 	attach = kzalloc(sizeof(*attach), GFP_KERNEL);
- 	if (!attach)
- 		return ERR_PTR(-ENOMEM);
-@@ -575,6 +590,9 @@ struct dma_buf_attachment *dma_buf_attach(struct dma_buf *dmabuf,
- 	}
- 	list_add(&attach->node, &dmabuf->attachments);
- 
-+	atomic_set(&attach->refcount, 1);
-+
-+unlock_attach:
- 	mutex_unlock(&dmabuf->lock);
- 
- 	return attach;
-@@ -599,6 +617,11 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
- 	if (WARN_ON(!dmabuf || !attach))
- 		return;
- 
-+	/* Decrease the refcount for cache_sgt_mapping use cases */
-+	if (dmabuf->ops->cache_sgt_mapping &&
-+	    atomic_dec_return(&attach->refcount))
-+		return;
-+
- 	if (attach->sgt)
- 		dmabuf->ops->unmap_dma_buf(attach, attach->sgt, attach->dir);
- 
-diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
-index 8a327566d7f4..65f12212ca2e 100644
---- a/include/linux/dma-buf.h
-+++ b/include/linux/dma-buf.h
-@@ -333,6 +333,7 @@ struct dma_buf {
-  * @dev: device attached to the buffer.
-  * @node: list of dma_buf_attachment.
-  * @sgt: cached mapping.
-+ * @refcount: refcount of the attachment for the same device.
-  * @dir: direction of cached mapping.
-  * @priv: exporter specific attachment data.
-  *
-@@ -350,6 +351,7 @@ struct dma_buf_attachment {
- 	struct device *dev;
- 	struct list_head node;
- 	struct sg_table *sgt;
-+	atomic_t refcount;
- 	enum dma_data_direction dir;
- 	void *priv;
- };
--- 
-2.17.1
-
+Matthew Wilcox encountered such a case:
+https://patchwork.kernel.org/patch/10702741/
