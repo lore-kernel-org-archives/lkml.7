@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A38C31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95030C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C2220B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 617AC2177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:58:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="1kg41o7p"
+	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="VEZqKjqw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439503AbfFLN6v (ORCPT
+        id S2439514AbfFLN6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:58:51 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42402 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437142AbfFLN6t (ORCPT
+        Wed, 12 Jun 2019 09:58:55 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46690 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437126AbfFLN6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:58:49 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y13so12174915lfh.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 06:58:47 -0700 (PDT)
+        Wed, 12 Jun 2019 09:58:50 -0400
+Received: by mail-lf1-f66.google.com with SMTP id z15so9504616lfh.13
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 06:58:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=nikanor-nu.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=o8cjTTzgU1BuZShGhluhUvn/gIuNeI/1dPftVzArlb4=;
-        b=1kg41o7pejzEwVCQwmQNwlFRESAl+8p1OISMOEaRutDSKWF0OmWnucdVBgLy5cNaPm
-         Duxft+y78Z23F1GezmhlxSNnXMXkwj0HuZpv9ygTeBRAH0uuTh2meepHu7Ln/o8UKeiS
-         Z4YHQ7UFFrX/8KgqvS+Q2FRcBdmAKDNWdfkvrDbXBJbfmbyvYV2tOrzYVEj37KzRFvgc
-         Sg/StziPXtatCa1MG/30Y92Ri/ffKeeMGDCyTxe2e9tSBa8l2Ae/Rk0jWCqcMfB22ebT
-         AT8AvAinT//R4V/NHLyqgetXMfR43lqEice0HhFzu5QRm1LQx+U10ulfYw8n7NdoOA3u
-         vgnQ==
+        bh=3VrHMiNNbPTpWcXJEeQwNkvaq+Iwwq0qawqb4RHXlZg=;
+        b=VEZqKjqwL6+iGHJMAO9xlj3d1SX01w/7pyFL9dXh8yuSKwAUYA37V51u/JS7ckbvMn
+         eD/8yWhCsa2aQga2YnMxNvYlPMtH5otRHbBCy1h5zzF0Kmr8ONEx5w6sESk/AhoPdbiB
+         dyWTPncbg48IX7710iugaLLcuBMPDaK0X7utC1sNJc2S/7V+FSpjBpEsF+K+gL0s70yv
+         BzturJ1jvXB35VGtNQMFuKq1X9F+EhgpldO8dF5ZCgVwKPBArP0kHMuXUAmm0yzZgNgH
+         8Kkku8YrFVIGbxkvaQfDm4uQ3HvssFNHU2B5TFTsEtE8q3bLulTUxZ8COEN51yBqc2HF
+         bGHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=o8cjTTzgU1BuZShGhluhUvn/gIuNeI/1dPftVzArlb4=;
-        b=sJjLCwZKsjMiYZrx2RUxE6eifza0WRuCLK67NGJLY8eBIcF4wdTRyFZWUwaHwRlsvw
-         yo0pZ2ABOKudrqMbOFHt8SgOPIZ/8D7O23WMCGAlGIW8OUWaMbhzd0vwvAwXlW6DG+le
-         q/gpodDrX2u7tXpvHOgXl6KJqjtk4XWDstqKsu+5FprvzS4kyE/YpC6ybaGZ4/mSHUD5
-         UDhlDX6DfRAiukEbhgrL0kN1w7dMpKsCo1w2zNWcYrwxTpdNhKjxBXiRrfJtPjEgc8YQ
-         XfDnHPQwrUtdoogi+c1uhPBv25sbtRrb6bpTibHAVmHbbWxjsUcLhGmNUj1hE2wHX4kU
-         Fc2w==
-X-Gm-Message-State: APjAAAUs+2CL4ZyfEN7JrerRo3RiTO75UBbI8MB1oh8r69KNP/LiNOwo
-        1BTUNdZTwZNUTDbiDUBK3O1tKA==
-X-Google-Smtp-Source: APXvYqyjJ7GiWqxfDesRDknJ+PtFKayBgD0Ui4A0cRPWAMtWNbCFAuxs5zr0e87/V0RWBVJTTGNKIA==
-X-Received: by 2002:ac2:50c4:: with SMTP id h4mr28268495lfm.61.1560347927201;
-        Wed, 12 Jun 2019 06:58:47 -0700 (PDT)
+        bh=3VrHMiNNbPTpWcXJEeQwNkvaq+Iwwq0qawqb4RHXlZg=;
+        b=T28qCOVi5fRMizTE9EkM6zeGKc/YbF41Un/jluA9bUl2VKnSIJJIhNP42qu1JDTEuU
+         of7xxIqQgwHFlxnhqQOj3uJmJ+l29nOvYDbdMjkkX6wQe16uP4d7B6N6Z3Gcx4lmr5e7
+         OQ0mAx/0+DmnGe/0N4Whs+JybWh9t9wKVaJDx4tSQFz9SoHT5T7YEwv8lFs2nNj3Y4k0
+         sAfhKVUWJnYKCH43TNCrQLBl6eiw6tRFgiCNgZwT/IlYsPRWq614DPWApdEQ4HabPMwZ
+         psJtW6rsRrjKt3O7ew6Q/RdfUgsyBw+tLOhndi7NfvBo41IfpjkctSBg4Dk7ZE3CSybo
+         3xKg==
+X-Gm-Message-State: APjAAAVch8bMMz7Ot+8+aT90hpyesm4c9HB+yW1QN66EGBUh2oGWDcAy
+        yEanHExLg1g6PewGRe2UpXfMJg==
+X-Google-Smtp-Source: APXvYqzLqFzvEPkn8L8PgSefW0hP124LbXZGSbsWsOcTf6PCECAZ/sgmSq8nsRIpXj1UjsblJoYDcg==
+X-Received: by 2002:a05:6512:4c5:: with SMTP id w5mr2277429lfq.171.1560347928315;
+        Wed, 12 Jun 2019 06:58:48 -0700 (PDT)
 Received: from dev.nikanor.nu (78-72-133-4-no161.tbcn.telia.com. [78.72.133.4])
-        by smtp.gmail.com with ESMTPSA id x194sm2621999lfa.64.2019.06.12.06.58.46
+        by smtp.gmail.com with ESMTPSA id x194sm2621999lfa.64.2019.06.12.06.58.47
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 06:58:46 -0700 (PDT)
+        Wed, 12 Jun 2019 06:58:47 -0700 (PDT)
 From:   =?UTF-8?q?Simon=20Sandstr=C3=B6m?= <simon@nikanor.nu>
 To:     gregkh@linuxfoundation.org
 Cc:     simon@nikanor.nu, dan.carpenter@oracle.com,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] staging: kpc2000: improve label names in kp2000_pcie_probe
-Date:   Wed, 12 Jun 2019 15:58:35 +0200
-Message-Id: <20190612135836.23009-2-simon@nikanor.nu>
+Subject: [PATCH v2 2/2] staging: kpc2000: remove unnecessary comments in kp2000_pcie_probe
+Date:   Wed, 12 Jun 2019 15:58:36 +0200
+Message-Id: <20190612135836.23009-3-simon@nikanor.nu>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190610200535.31820-1-simon@nikanor.nu>
 References: <20190610200535.31820-1-simon@nikanor.nu>
@@ -74,162 +74,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use self-explanatory label names instead of the generic numbered ones,
-to make it easier to follow and understand the code.
+Much of the code comments in kp2000_pcie_probe just repeats the code and
+does not add any additional information. Delete them and make sure that
+comments still left in the function all use the same style.
 
 Signed-off-by: Simon Sandström <simon@nikanor.nu>
 ---
- drivers/staging/kpc2000/kpc2000/core.c | 42 ++++++++++++--------------
- 1 file changed, 20 insertions(+), 22 deletions(-)
+ drivers/staging/kpc2000/kpc2000/core.c | 38 ++++----------------------
+ 1 file changed, 5 insertions(+), 33 deletions(-)
 
 diff --git a/drivers/staging/kpc2000/kpc2000/core.c b/drivers/staging/kpc2000/kpc2000/core.c
-index 9b9b29ac90c5..ee6b9be7127d 100644
+index ee6b9be7127d..6a5999e8ff4e 100644
 --- a/drivers/staging/kpc2000/kpc2000/core.c
 +++ b/drivers/staging/kpc2000/kpc2000/core.c
-@@ -327,7 +327,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+@@ -311,18 +311,12 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+ 	unsigned long dma_bar_phys_len;
+ 	u16 regval;
+ 
+-	/*
+-	 * Step 1: Allocate a struct for the pcard
+-	 */
+ 	pcard = kzalloc(sizeof(*pcard), GFP_KERNEL);
+ 	if (!pcard)
+ 		return -ENOMEM;
+ 	dev_dbg(&pdev->dev, "probe: allocated struct kp2000_device @ %p\n",
+ 		pcard);
+ 
+-	/*
+-	 * Step 2: Initialize trivial pcard elements
+-	 */
+ 	err = ida_simple_get(&card_num_ida, 1, INT_MAX, GFP_KERNEL);
  	if (err < 0) {
  		dev_err(&pdev->dev, "probe: failed to get card number (%d)\n",
- 			err);
--		goto out2;
-+		goto err_free_pcard;
- 	}
- 	pcard->card_num = err;
- 	scnprintf(pcard->name, 16, "kpcard%u", pcard->card_num);
-@@ -346,7 +346,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+@@ -338,9 +332,6 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+ 	pcard->pdev = pdev;
+ 	pci_set_drvdata(pdev, pcard);
+ 
+-	/*
+-	 * Step 3: Enable PCI device
+-	 */
+ 	err = pci_enable_device(pcard->pdev);
+ 	if (err) {
  		dev_err(&pcard->pdev->dev,
- 			"probe: failed to enable PCIE2000 PCIe device (%d)\n",
- 			err);
--		goto out3;
-+		goto err_remove_ida;
+@@ -349,9 +340,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+ 		goto err_remove_ida;
  	}
  
- 	/*
-@@ -360,7 +360,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 		dev_err(&pcard->pdev->dev,
- 			"probe: REG_BAR could not remap memory to virtual space\n");
- 		err = -ENODEV;
--		goto out4;
-+		goto err_disable_device;
- 	}
- 	dev_dbg(&pcard->pdev->dev,
- 		"probe: REG_BAR virt hardware address start [%p]\n",
-@@ -373,7 +373,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 			"probe: failed to acquire PCI region (%d)\n",
- 			err);
- 		err = -ENODEV;
--		goto out4;
-+		goto err_disable_device;
- 	}
+-	/*
+-	 * Step 4: Setup the Register BAR
+-	 */
++	/* Setup the Register BAR */
+ 	reg_bar_phys_addr = pci_resource_start(pcard->pdev, REG_BAR);
+ 	reg_bar_phys_len = pci_resource_len(pcard->pdev, REG_BAR);
  
- 	pcard->regs_base_resource.start = reg_bar_phys_addr;
-@@ -393,7 +393,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 		dev_err(&pcard->pdev->dev,
- 			"probe: DMA_BAR could not remap memory to virtual space\n");
- 		err = -ENODEV;
--		goto out5;
-+		goto err_unmap_regs;
- 	}
- 	dev_dbg(&pcard->pdev->dev,
- 		"probe: DMA_BAR virt hardware address start [%p]\n",
-@@ -407,7 +407,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 		dev_err(&pcard->pdev->dev,
- 			"probe: failed to acquire PCI region (%d)\n", err);
- 		err = -ENODEV;
--		goto out5;
-+		goto err_unmap_regs;
- 	}
+@@ -381,9 +370,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+ 					  reg_bar_phys_len - 1;
+ 	pcard->regs_base_resource.flags = IORESOURCE_MEM;
  
- 	pcard->dma_base_resource.start = dma_bar_phys_addr;
-@@ -421,7 +421,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+-	/*
+-	 * Step 5: Setup the DMA BAR
+-	 */
++	/* Setup the DMA BAR */
+ 	dma_bar_phys_addr = pci_resource_start(pcard->pdev, DMA_BAR);
+ 	dma_bar_phys_len = pci_resource_len(pcard->pdev, DMA_BAR);
+ 
+@@ -415,9 +402,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+ 					 dma_bar_phys_len - 1;
+ 	pcard->dma_base_resource.flags = IORESOURCE_MEM;
+ 
+-	/*
+-	 * Step 6: System Regs
+-	 */
++	/* Read System Regs */
  	pcard->sysinfo_regs_base = pcard->regs_bar_base;
  	err = read_system_regs(pcard);
  	if (err)
--		goto out6;
-+		goto err_unmap_dma;
- 
- 	// Disable all "user" interrupts because they're not used yet.
+@@ -427,11 +412,9 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
  	writeq(0xFFFFFFFFFFFFFFFF,
-@@ -461,7 +461,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 	if (err) {
- 		dev_err(&pcard->pdev->dev,
- 			"CANNOT use DMA mask %0llx\n", DMA_BIT_MASK(64));
--		goto out7;
-+		goto err_unmap_dma;
- 	}
+ 	       pcard->sysinfo_regs_base + REG_INTERRUPT_MASK);
+ 
+-	/*
+-	 * Step 7: Configure PCI thingies
+-	 */
+ 	// let the card master PCIe
+ 	pci_set_master(pcard->pdev);
++
+ 	// enable IO and mem if not already done
+ 	pci_read_config_word(pcard->pdev, PCI_COMMAND, &regval);
+ 	regval |= (PCI_COMMAND_IO | PCI_COMMAND_MEMORY);
+@@ -466,9 +449,6 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
  	dev_dbg(&pcard->pdev->dev,
  		"Using DMA mask %0llx\n", dma_get_mask(PCARD_TO_DEV(pcard)));
-@@ -471,14 +471,14 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 	 */
+ 
+-	/*
+-	 * Step 8: Configure IRQs
+-	 */
  	err = pci_enable_msi(pcard->pdev);
  	if (err < 0)
--		goto out8a;
-+		goto err_unmap_dma;
- 
- 	rv = request_irq(pcard->pdev->irq, kp2000_irq_handler, IRQF_SHARED,
- 			 pcard->name, pcard);
- 	if (rv) {
- 		dev_err(&pcard->pdev->dev,
- 			"%s: failed to request_irq: %d\n", __func__, rv);
--		goto out8b;
-+		goto err_disable_msi;
+ 		goto err_unmap_dma;
+@@ -481,25 +461,17 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+ 		goto err_disable_msi;
  	}
  
- 	/*
-@@ -487,7 +487,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
+-	/*
+-	 * Step 9: Setup sysfs attributes
+-	 */
  	err = sysfs_create_files(&pdev->dev.kobj, kp_attr_list);
  	if (err) {
  		dev_err(&pdev->dev, "Failed to add sysfs files: %d\n", err);
--		goto out9;
-+		goto err_free_irq;
+ 		goto err_free_irq;
  	}
  
- 	/*
-@@ -495,7 +495,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 	 */
+-	/*
+-	 * Step 10: Probe cores
+-	 */
  	err = kp2000_probe_cores(pcard);
  	if (err)
--		goto out10;
-+		goto err_remove_sysfs;
+ 		goto err_remove_sysfs;
  
- 	/*
- 	 * Step 11: Enable IRQs in HW
-@@ -506,28 +506,26 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 	mutex_unlock(&pcard->sem);
- 	return 0;
+-	/*
+-	 * Step 11: Enable IRQs in HW
+-	 */
++	/* Enable IRQs in HW */
+ 	writel(KPC_DMA_CARD_IRQ_ENABLE | KPC_DMA_CARD_USER_INTERRUPT_MODE,
+ 	       pcard->dma_common_regs);
  
--out10:
-+err_remove_sysfs:
- 	sysfs_remove_files(&pdev->dev.kobj, kp_attr_list);
--out9:
-+err_free_irq:
- 	free_irq(pcard->pdev->irq, pcard);
--out8b:
-+err_disable_msi:
- 	pci_disable_msi(pcard->pdev);
--out8a:
--out7:
--out6:
-+err_unmap_dma:
- 	iounmap(pcard->dma_bar_base);
- 	pci_release_region(pdev, DMA_BAR);
- 	pcard->dma_bar_base = NULL;
--out5:
-+err_unmap_regs:
- 	iounmap(pcard->regs_bar_base);
- 	pci_release_region(pdev, REG_BAR);
- 	pcard->regs_bar_base = NULL;
--out4:
-+err_disable_device:
- 	pci_disable_device(pcard->pdev);
--out3:
-+err_remove_ida:
- 	mutex_unlock(&pcard->sem);
- 	ida_simple_remove(&card_num_ida, pcard->card_num);
--out2:
-+err_free_pcard:
- 	kfree(pcard);
- 	return err;
- }
 -- 
 2.20.1
 
