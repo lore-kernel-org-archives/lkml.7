@@ -2,188 +2,142 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2CAC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C182C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5292E208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A2A20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 20:55:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="mg3vmtbO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389198AbfFLUxI (ORCPT
+        id S2389605AbfFLUzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 16:53:08 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:40001 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727321AbfFLUxH (ORCPT
+        Wed, 12 Jun 2019 16:55:48 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41264 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388338AbfFLUzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 16:53:07 -0400
-Received: by mail-io1-f72.google.com with SMTP id v11so13309465iop.7
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 13:53:06 -0700 (PDT)
+        Wed, 12 Jun 2019 16:55:47 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c2so18363591wrm.8;
+        Wed, 12 Jun 2019 13:55:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lZ7Q02f4JEf34T5luLcOREHyEm4npQ5trSJ/nqzq8KI=;
+        b=mg3vmtbO7GQE8XVffQtxwJcZF/oIwU11kK+Acbjymrr2vinDGw7IyBsL9IgNyBZY9n
+         JLZ1XMsuYOhdNuxjBwTsptARffVdoBVduDOSs2kjL+wL4qr0Cn69+PcfWtsYo2lPTdKD
+         qdZDu8w4Ept3hxTEEOvo7hmqhqvgbFNm1rGKbUXi0HrzXU9wTGDdix1/vZmZhsbf52/U
+         WshRL/dw4YLGTk2yPYQTPDe32v753sbqy3j1Oc+Qh1oLxit5GuF6kl1u2b41+PmFmsWU
+         jvFVIRWqhMTU+LglW3YXP38+DkPHcVWHoKnl4DyBQXl/Ftbq9KZ110zaZjuQBKV5+kLJ
+         Ld2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=YBsdv8D7E1Ty0uu7Bg8lmNFZhiJqH52Q0qJzpfU5W4o=;
-        b=CR/WuDRjga7ViwnyBAhykBdkjHQL8gZBWN9HryKb35oXYsFERXuKq3jGsBdxrzYq+6
-         ylZ4vPHvazS3JY/UjfCY3YQTPB+gfRSy5sXeCx2l068qHC+x/witti0zD+5FrYxfm84B
-         Q9R0Ak36lR/tYOktWkYKbdowD/JDJtuA3u4MFjfU5Bvpk1mGjZwx3ER/9DLS2iDOAN+v
-         ATD7TMm0c17iDXJuqt/oMIFc+JkV9l2AHrWHTiqEdYwHbwDNHXWNdb3tKd8rO+cWYKVs
-         KLV0kGNrztRGMs2PGHnvDm57wbxb9Z4xmtPHEnHVETQT9Q3BiN0Iju7WiiMoTbDM1b/+
-         t8xA==
-X-Gm-Message-State: APjAAAXAG0+upKWSPqpMDeQCkdC5KuOyfpGR87IQtiNBgPCGQwqXEFtV
-        dIZiE3blpL0S8rS6VSZ+uUypa0JftPQ0y1d5kM2rHAYkssQ8
-X-Google-Smtp-Source: APXvYqzuitS9InGBPzlAzfrFxYdSGNVQ94lDMrNOMZJucaif7L6M7OVxv4aGh3ipFrw0WfecBg7mjuVwMvQnbjJDoVZZA3btnItR
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lZ7Q02f4JEf34T5luLcOREHyEm4npQ5trSJ/nqzq8KI=;
+        b=ivQOh/JdcB2qn9jzLl6p8PrGlAT7RUZ8Fi/6MFaD0AGnOBixCtHqvHKXTJ6TifVP2y
+         SqI4GTf3xCwgTiPN5heG6X3+zrXMQ8aYDaMb+LGJnlb5Rpu+QNAVbl9HhgESypb4MGX6
+         6COhFq9l/h0S09Qwq/OrkKJount0eQRayMk8HUEr8TDQgfzwx7cp3WS+R4fOhja1XnfG
+         8UPqbbFg3JTmm3lBTGHHyqOCDgD8/HJp/qdFn1IGSbkvoMi1oYscq7zg2qoeUSo5VYjE
+         DTjB37xUmPCzRPD51er8HaHqieCtZZXhDwciko6tPSdnKlLI0BNtMSXQDeKdL5iY8lO3
+         ZLag==
+X-Gm-Message-State: APjAAAXmhoiXhJLfygI//+fcryfNBUXW1c9vBo9qvIuWGVd3yHW2ddwI
+        nWTe9XE7wJrDl2Q5hXx04Zw=
+X-Google-Smtp-Source: APXvYqzPwLw3bVyQPoGki1H86cxQv/CaJAP/waZtaKCPgu6NSjHMKfqFNAFW/GHXnLzN8dcf/35BJQ==
+X-Received: by 2002:a5d:6212:: with SMTP id y18mr8369049wru.178.1560372945219;
+        Wed, 12 Jun 2019 13:55:45 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133DDA400428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:33dd:a400:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id s7sm3445793wmc.2.2019.06.12.13.55.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 13:55:44 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, linus.walleij@linaro.org, andrew@lunn.ch,
+        robin.murphy@arm.com,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/4] Ethernet PHY reset GPIO updates for Amlogic SoCs
+Date:   Wed, 12 Jun 2019 22:55:25 +0200
+Message-Id: <20190612205529.19834-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:660c:ac8:: with SMTP id k8mr862525itl.147.1560372786518;
- Wed, 12 Jun 2019 13:53:06 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 13:53:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a861f6058b2699e0@google.com>
-Subject: INFO: task syz-executor can't die for more than 143 seconds.
-From:   syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+While trying to add the Ethernet PHY interrupt on the X96 Max I found
+that the current reset line definition is incorrect. Patch #1 fixes
+this.
 
-syzbot found the following crash on:
+Since the fix requires moving from the deprecated "snps,reset-gpio"
+property to the generic Ethernet PHY reset bindings I decided to move
+all Amlogic boards over to the non-deprecated bindings. That's what
+patches #2 and #3 do.
 
-HEAD commit:    81a72c79 Add linux-next specific files for 20190612
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1451d31ea00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8aa46bbce201b8b6
-dashboard link: https://syzkaller.appspot.com/bug?extid=8ab2d0f39fb79fe6ca40
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1250ae3ea00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1568557aa00000
+Finally I found that Odroid-N2 doesn't define the Ethernet PHY's reset
+GPIO yet. I don't have that board so I can't test whether it really
+works but based on the schematics it should. 
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com
+This series is a partial successor to "stmmac: honor the GPIO flags
+for the PHY reset GPIO" from [0]. I decided not to take Linus W.'s
+Reviewed-by from patch #4 of that series because I had to change the
+wording and I want to be sure that he's happy with that now.
 
-INFO: task syz-executor050:8619 can't die for more than 143 seconds.
-syz-executor050 R  running task    27536  8619   8618 0x00004006
-Call Trace:
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/1046:
-  #0: 00000000f58b83ec (rcu_read_lock){....}, at:  
-debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5262
-1 lock held by rsyslogd/8504:
-  #0: 00000000b8867a10 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
-fs/file.c:801
-2 locks held by getty/8594:
-  #0: 000000008c94b07f (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 000000006c5169d5 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8595:
-  #0: 0000000042bd87ed (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 000000009ebc0e1a (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8596:
-  #0: 00000000ad647db4 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000f68a3152 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8597:
-  #0: 0000000072ec45a9 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000daa58f5f (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8598:
-  #0: 000000007698feb5 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 0000000017a6b41f (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8599:
-  #0: 00000000f5a5df8a (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 000000003ed47aa1 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/8600:
-  #0: 00000000ab9f490c (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000332ddba5 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-1 lock held by syz-executor050/8619:
-
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 PID: 1046 Comm: khungtaskd Not tainted 5.2.0-rc4-next-20190612 #13
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
-  check_hung_uninterruptible_tasks kernel/hung_task.c:249 [inline]
-  watchdog+0xb88/0x12b0 kernel/hung_task.c:333
-  kthread+0x354/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 PID: 8619 Comm: syz-executor050 Not tainted 5.2.0-rc4-next-20190612  
-#13
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:get_current arch/x86/include/asm/current.h:15 [inline]
-RIP: 0010:__sanitizer_cov_trace_pc+0x8/0x50 kernel/kcov.c:101
-Code: f4 ff ff ff e8 9d fa e9 ff 48 c7 05 ce b0 15 09 00 00 00 00 e9 a4 e9  
-ff ff 90 90 90 90 90 90 90 90 90 55 48 89 e5 48 8b 75 08 <65> 48 8b 04 25  
-c0 fd 01 00 65 8b 15 f0 fa 90 7e 81 e2 00 01 1f 00
-RSP: 0018:ffff8880a9acfd80 EFLAGS: 00000206
-RAX: 1ffffd40000720d9 RBX: 0000160000000000 RCX: ffffffff81682654
-RDX: 0000000000000000 RSI: ffffffff8168263c RDI: ffffea00003906c8
-RBP: ffff8880a9acfd80 R08: ffff88808fe146c0 R09: 0000000000000002
-R10: ffff88808fe14f78 R11: ffff88808fe146c0 R12: ffffea0000390688
-R13: dffffc0000000000 R14: ffffea0000390680 R15: 00000000049a5000
-FS:  0000555555a3e880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffff600400 CR3: 00000000a3d59000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  page_to_boot_pfn include/linux/kexec.h:325 [inline]
-  kimage_alloc_page+0xac/0x9f0 kernel/kexec_core.c:708
-  kimage_load_normal_segment kernel/kexec_core.c:802 [inline]
-  kimage_load_segment+0x25d/0x740 kernel/kexec_core.c:919
-  do_kexec_load+0x41a/0x600 kernel/kexec.c:157
-  __do_sys_kexec_load kernel/kexec.c:251 [inline]
-  __se_sys_kexec_load kernel/kexec.c:226 [inline]
-  __x64_sys_kexec_load+0x1d5/0x260 kernel/kexec.c:226
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441149
-Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffd407ca1e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000f6
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441149
-RDX: 0000000020000100 RSI: 0000000000000001 RDI: fffffffffffffffe
-RBP: 00000000006cb018 R08: 0000000000000004 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401f70
-R13: 0000000000402000 R14: 0000000000000000 R15: 0000000000000000
+One quick note regarding patches #1 and #4: I decided to violate the
+"max 80 characters per line" (by 4 characters) limit because I find
+that the result is easier to read then it would be if I split the
+line.
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Changes since v1 at [1]:
+- fixed the reset deassert delay for RTL8211F PHYs - spotted by Robin
+  Murphy (thank you). according to the public RTL8211E datasheet the
+  correct values seem to be: 10ms assert, 30ms deassert
+- fixed the reset assert and deassert delays for IP101GR PHYs. There
+  are two values given in the public datasheet, use the higher one
+  (10ms instead of 2.5)
+- update the patch descriptions to quote the datasheets (the RTL8211F
+  quotes are taken from the public RTL8211E datasheet because as far
+  as I can tell the reset sequence is identical on both PHYs)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+
+[0] https://patchwork.kernel.org/cover/10983801/
+[1] https://patchwork.kernel.org/cover/10985155/
+
+
+Martin Blumenstingl (4):
+  arm64: dts: meson: g12a: x96-max: fix the Ethernet PHY reset line
+  ARM: dts: meson: switch to the generic Ethernet PHY reset bindings
+  arm64: dts: meson: use the generic Ethernet PHY reset GPIO bindings
+  arm64: dts: meson: g12b: odroid-n2: add the Ethernet PHY reset line
+
+ arch/arm/boot/dts/meson8b-ec100.dts                   |  9 +++++----
+ arch/arm/boot/dts/meson8b-mxq.dts                     |  9 +++++----
+ arch/arm/boot/dts/meson8b-odroidc1.dts                |  9 +++++----
+ arch/arm/boot/dts/meson8m2-mxiii-plus.dts             |  8 ++++----
+ arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts    |  7 ++++---
+ arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts  |  4 ++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts  |  9 +++++----
+ .../arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts |  8 ++++----
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts   |  9 +++++----
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts       |  9 +++++----
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi  |  9 +++++----
+ arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi     |  8 ++++----
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts  | 11 ++++++-----
+ arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts | 10 +++++-----
+ arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts   |  8 ++++----
+ arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts        | 11 ++++++-----
+ arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts    |  8 ++++----
+ 17 files changed, 80 insertions(+), 66 deletions(-)
+
+-- 
+2.22.0
+
