@@ -2,76 +2,82 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC15FC31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AB3C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E3B2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E43F82086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:12:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408548AbfFLDLt (ORCPT
+        id S2408562AbfFLDMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 23:11:49 -0400
-Received: from mga11.intel.com ([192.55.52.93]:57220 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404957AbfFLDLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 23:11:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 20:11:48 -0700
-X-ExtLoop1: 1
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga004.jf.intel.com with ESMTP; 11 Jun 2019 20:11:42 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com, Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/9] iommu: Bounce page for untrusted devices
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-References: <20190603011620.31999-1-baolu.lu@linux.intel.com>
- <20190610161025.GZ28796@char.us.oracle.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <f12edbd5-d87d-562c-0efe-8ec62290c25f@linux.intel.com>
-Date:   Wed, 12 Jun 2019 11:04:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 11 Jun 2019 23:12:45 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:52245 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2408538AbfFLDMp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 23:12:45 -0400
+X-UUID: 4f80c4c4ccd3475f87596ca4a0de9668-20190612
+X-UUID: 4f80c4c4ccd3475f87596ca4a0de9668-20190612
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 516540313; Wed, 12 Jun 2019 11:12:41 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 12 Jun 2019 11:12:39 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 12 Jun 2019 11:12:39 +0800
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+CC:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <linux-wireless@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH 1/2] mt76: mt7615: fix incorrect settings in mesh mode
+Date:   Wed, 12 Jun 2019 11:12:33 +0800
+Message-ID: <3065a01998dfa04a5d2d680e820a17cb5c110d0f.1560221172.git.ryder.lee@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <22e5caff3581dc92fd6fec2f25966d86b7276bba.1560220443.git.ryder.lee@mediatek.com>
+References: <22e5caff3581dc92fd6fec2f25966d86b7276bba.1560220443.git.ryder.lee@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20190610161025.GZ28796@char.us.oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Fix wrong settings that will drop packets due to hardware's RX table
+searching flow.
 
-On 6/11/19 12:10 AM, Konrad Rzeszutek Wilk wrote:
-> On Mon, Jun 03, 2019 at 09:16:11AM +0800, Lu Baolu wrote:
->> The Thunderbolt vulnerabilities are public and have a nice
->> name as Thunderclap [1] [3] nowadays. This patch series aims
->> to mitigate those concerns.
-> 
-> .. Forgot to ask but should the patches also include the CVE number?
-> Or at least the last one that enables this?
+Fixes: f072c7ba2150 ("mt76: mt7615: enable support for mesh")
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ drivers/net/wireless/mediatek/mt76/mt7615/mcu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I am sorry, but what's CVE number and where could I get one?
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+index 76431d00a8ac..e82086eb8aa4 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+@@ -970,7 +970,7 @@ int mt7615_mcu_add_wtbl(struct mt7615_dev *dev, struct ieee80211_vif *vif,
+ 		.rx_wtbl = {
+ 			.tag = cpu_to_le16(WTBL_RX),
+ 			.len = cpu_to_le16(sizeof(struct wtbl_rx)),
+-			.rca1 = vif->type == NL80211_IFTYPE_STATION,
++			.rca1 = vif->type != NL80211_IFTYPE_AP,
+ 			.rca2 = 1,
+ 			.rv = 1,
+ 		},
+-- 
+2.18.0
 
-Best regards,
-Baolu
