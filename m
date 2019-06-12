@@ -2,176 +2,163 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC37C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA19C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75AEC208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62DC7208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:36:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="bXfGlx1k"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XCK8nLrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408013AbfFLMgc (ORCPT
+        id S2408255AbfFLMgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:36:32 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54349 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407867AbfFLMgc (ORCPT
+        Wed, 12 Jun 2019 08:36:54 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:17513 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405938AbfFLMgy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:36:32 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5CCaJcU686788
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 12 Jun 2019 05:36:20 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5CCaJcU686788
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560342980;
-        bh=0HgdtB4MlYHY8kJiOx0wsSNBk+4UuW1WUAN7QmeO3uw=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=bXfGlx1khjx1j+nlgwjeaSF1i9LGtOe3gsBCMPwu+mRLG+vB1vP2W84PIG2RAR7Xw
-         TYpDXOrZpwEqHOIuNeW2Z7vbRyWWfzsmK32DouRk5kyDyTGxz1m/m6FfngEH1NKlFw
-         v6KZ8rM4/Tc865I54dJ5Kfj8Bji85T73meO5Z7UBomwU4+6AaaA5sgveV8ZjbpmHId
-         DVbQ4FGzg3qOgAdjQ/j/NZKzSfxTY8aewvqmFwfOS+7db/5us4rOHE921Bf6Utn8Vy
-         +pB4ubcnnWD/mfkza17zWURR/1eB8esNCDcKIn2S9e5/wZgxaze/zRCm/WFGqw1G3W
-         s9GVMP6DEuRPA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5CCaJQP686785;
-        Wed, 12 Jun 2019 05:36:19 -0700
-Date:   Wed, 12 Jun 2019 05:36:19 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Aubrey Li <tipbot@zytor.com>
-Message-ID: <tip-711486fd18596315d42cebaac3dba8c408f60a3d@git.kernel.org>
-Cc:     adobriyan@gmail.com, arjan@linux.intel.com, tglx@linutronix.de,
-        aubrey.li@linux.intel.com, peterz@infradead.org, mingo@kernel.org,
-        tim.c.chen@linux.intel.com, linux-api@vger.kernel.org,
-        dave.hansen@intel.com, hpa@zytor.com, ak@linux.intel.com,
-        luto@kernel.org, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org
-Reply-To: linux-api@vger.kernel.org, ak@linux.intel.com, hpa@zytor.com,
-          dave.hansen@intel.com, luto@kernel.org,
-          linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-          adobriyan@gmail.com, arjan@linux.intel.com, tglx@linutronix.de,
-          aubrey.li@linux.intel.com, mingo@kernel.org,
-          peterz@infradead.org, tim.c.chen@linux.intel.com
-In-Reply-To: <20190606012236.9391-3-aubrey.li@linux.intel.com>
-References: <20190606012236.9391-3-aubrey.li@linux.intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/core] Documentation/filesystems/proc.txt: Add arch_status
- file
-Git-Commit-ID: 711486fd18596315d42cebaac3dba8c408f60a3d
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 12 Jun 2019 08:36:54 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d00f1e40000>; Wed, 12 Jun 2019 05:36:53 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 12 Jun 2019 05:36:52 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 12 Jun 2019 05:36:52 -0700
+Received: from [10.21.132.143] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Jun
+ 2019 12:36:49 +0000
+Subject: Re: [PATCH v2 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
+To:     Sameer Pujar <spujar@nvidia.com>, <thierry.reding@gmail.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <mkumard@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1560243406-2535-1-git-send-email-spujar@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <1f2020ae-12f3-2ad1-c844-b4b7885d41f9@nvidia.com>
+Date:   Wed, 12 Jun 2019 13:36:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <1560243406-2535-1-git-send-email-spujar@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560343013; bh=l/KPUA8SA1zZ0jib8qJ2prVlUEp09ihngQ3+RWqn+j0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=XCK8nLrxKZJM0vFDsRjUUSHFB2qrYL58qNKiKWkXI0dApwyz88s4wcB6ZQ9a+tXIG
+         wbO9BN/RHYDqYCJhT184/D4UiKy7Lod5dHbuG4zWVkvOleH3E21BLN+QllMyVn1ZiS
+         3/UwiCssSnEhbJivKwaZD3bD+0g1XPVYBUI8PlD24fA53LfyR3g3FfYjpT4PjwEgew
+         bVwK0X1AHHj4zLpZZsqoYKy0QWw0G4w1KaETAA6RbxcfvuQsB/F8JgY0kuylK3eRZb
+         ZqYppAvHFWVucKaduEXk0UxI0aw1p3uJhpvXV5st8wH8cY+YRwizCDs/ViuwpojsvY
+         tCakX2O0Koj4g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  711486fd18596315d42cebaac3dba8c408f60a3d
-Gitweb:     https://git.kernel.org/tip/711486fd18596315d42cebaac3dba8c408f60a3d
-Author:     Aubrey Li <aubrey.li@linux.intel.com>
-AuthorDate: Thu, 6 Jun 2019 09:22:36 +0800
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 12 Jun 2019 11:42:13 +0200
 
-Documentation/filesystems/proc.txt: Add arch_status file
+On 11/06/2019 09:56, Sameer Pujar wrote:
+> Add DT nodes for following devices on Tegra186 and Tegra194
+>  * ACONNECT
+>  * ADMA
+>  * AGIC
+> 
+> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 68 ++++++++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 68 ++++++++++++++++++++++++++++++++
+>  2 files changed, 136 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> index 426ac0b..ccd902b 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> @@ -1295,4 +1295,72 @@
+>  				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+>  		interrupt-parent = <&gic>;
+>  	};
+> +
+> +	aconnect@2a41000 {
+> +		compatible = "nvidia,tegra210-aconnect";
+> +		clocks = <&bpmp TEGRA186_CLK_APE>,
+> +			 <&bpmp TEGRA186_CLK_APB2APE>;
+> +		clock-names = "ape", "apb2ape";
+> +		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_AUD>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x02930000 0x0 0x02930000 0x50000
+> +			  0x02a41000 0x0 0x02a41000 0x3000>;
 
-Add documentation for /proc/<pid>/arch_status file and the x86 specific
-AVX512_elapsed_ms entry in it.
+We only need one address range here that covers the entire APE.
 
-[ tglx: Massage changelog ]
+> +		status = "disabled";
+> +
+> +		dma-controller@2930000 {
+> +			compatible = "nvidia,tegra186-adma";
+> +			reg = <0x02930000 0x50000>;
+> +			interrupt-parent = <&agic>;
+> +			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+> +			#dma-cells = <1>;
+> +			clocks = <&bpmp TEGRA186_CLK_AHUB>;
+> +			clock-names = "d_audio";
+> +			status = "disabled";
+> +		};
+> +
+> +		agic: agic@2a41000 {
+> +			compatible = "nvidia,tegra210-agic";
+> +			#interrupt-cells = <3>;
+> +			interrupt-controller;
+> +			reg = <0x02a41000 0x1000>,
+> +			      <0x02a41000 0x2000>;
 
-Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: akpm@linux-foundation.org
-Cc: peterz@infradead.org
-Cc: hpa@zytor.com
-Cc: ak@linux.intel.com
-Cc: tim.c.chen@linux.intel.com
-Cc: dave.hansen@intel.com
-Cc: arjan@linux.intel.com
-Cc: adobriyan@gmail.com
-Cc: aubrey.li@intel.com
-Cc: linux-api@vger.kernel.org
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linux API <linux-api@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20190606012236.9391-3-aubrey.li@linux.intel.com
+These addresses should not overlap.
 
----
- Documentation/filesystems/proc.txt | 40 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+Cheers
+Jon
 
-diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-index 66cad5c86171..a226061fa109 100644
---- a/Documentation/filesystems/proc.txt
-+++ b/Documentation/filesystems/proc.txt
-@@ -45,6 +45,7 @@ Table of Contents
-   3.9   /proc/<pid>/map_files - Information about memory mapped files
-   3.10  /proc/<pid>/timerslack_ns - Task timerslack value
-   3.11	/proc/<pid>/patch_state - Livepatch patch operation state
-+  3.12	/proc/<pid>/arch_status - Task architecture specific information
- 
-   4	Configuring procfs
-   4.1	Mount options
-@@ -1948,6 +1949,45 @@ patched.  If the patch is being enabled, then the task has already been
- patched.  If the patch is being disabled, then the task hasn't been
- unpatched yet.
- 
-+3.12 /proc/<pid>/arch_status - task architecture specific status
-+-------------------------------------------------------------------
-+When CONFIG_PROC_PID_ARCH_STATUS is enabled, this file displays the
-+architecture specific status of the task.
-+
-+Example
-+-------
-+ $ cat /proc/6753/arch_status
-+ AVX512_elapsed_ms:      8
-+
-+Description
-+-----------
-+
-+x86 specific entries:
-+---------------------
-+ AVX512_elapsed_ms:
-+ ------------------
-+  If AVX512 is supported on the machine, this entry shows the milliseconds
-+  elapsed since the last time AVX512 usage was recorded. The recording
-+  happens on a best effort basis when a task is scheduled out. This means
-+  that the value depends on two factors:
-+
-+    1) The time which the task spent on the CPU without being scheduled
-+       out. With CPU isolation and a single runnable task this can take
-+       several seconds.
-+
-+    2) The time since the task was scheduled out last. Depending on the
-+       reason for being scheduled out (time slice exhausted, syscall ...)
-+       this can be arbitrary long time.
-+
-+  As a consequence the value cannot be considered precise and authoritative
-+  information. The application which uses this information has to be aware
-+  of the overall scenario on the system in order to determine whether a
-+  task is a real AVX512 user or not. Precise information can be obtained
-+  with performance counters.
-+
-+  A special value of '-1' indicates that no AVX512 usage was recorded, thus
-+  the task is unlikely an AVX512 user, but depends on the workload and the
-+  scheduling scenario, it also could be a false negative mentioned above.
- 
- ------------------------------------------------------------------------------
- Configuring procfs
+-- 
+nvpublic
