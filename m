@@ -4,82 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2248FC31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F390BC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E93822080A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CECEF20883
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:59:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iB1LNB5E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FxB20Mgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406421AbfFLB5h (ORCPT
+        id S2406409AbfFLB71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 21:57:37 -0400
-Received: from mail-oi1-f173.google.com ([209.85.167.173]:36383 "EHLO
-        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404557AbfFLB5g (ORCPT
+        Tue, 11 Jun 2019 21:59:27 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:33828 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405070AbfFLB71 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 21:57:36 -0400
-Received: by mail-oi1-f173.google.com with SMTP id w7so10504633oic.3;
-        Tue, 11 Jun 2019 18:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6Z9WC8IIuQYglwsQB0e3uL6ecR5E4muSXX477jTQGh8=;
-        b=iB1LNB5EGSLpo7WgSDBrPmeEMZ93Mel9h5ylZ9HqRqs1gJhLWN86/njzn4XJevfmCu
-         db3MlOx94hwD3ngUE2V7wPLLQ8HFc5X/4aaCDN2LInVyw/NM0aIpWl22dzBLXUiOfS1g
-         sVBPhMzZAMjbsfr+JpAirucC7TFI0YeoWXBetnhPW2Iba/wwmBQNQFrKomZOQz9KMmUA
-         RKAhyYOHYT8QhUI5dl/veYPT/Bz+7gJcQA3o40NzSL+6wPjw+zGQf2xoYcrnbBo0NVsb
-         lWLvihSbKerJyuzT8gFbYbezGSA3mRft0Jf/NdHGVzmRuEQ3sp5xFAAvgi9i+i2vZFVM
-         u+mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6Z9WC8IIuQYglwsQB0e3uL6ecR5E4muSXX477jTQGh8=;
-        b=c1d0vxRzda9q+4IDfvTdgivClg4hYulQhCU0nwhfU/QRvsQ4qxtCG854L5Z26IHzhW
-         N1FUEdxZf43Yg4K5jAgOhb1bYtO/8HLGrO2E9mvENuMP/NWgQ7g5Gu/VSq7qo1NdIEwp
-         EJ+sCbss+u3/ZpS+lmwyxmhbourpf5gkBksqVs1I3OkiT7D1tugSQjDu37QcxJNRS5/L
-         eBY2RGP6bVhvk6PkqILWGZe7NIasz9KzUOp+M9CrzxNpHR9NeE8f8B+xuRZkmMPQH5GL
-         p4Z4uyHHWOR/HSd6vL4dLHxBmHBQenWzCu6YRemgOo87amkKiGT9RI2gu33iNUe6Z6SV
-         oK5g==
-X-Gm-Message-State: APjAAAUM+bZoWWT+sm71K+/S8LkfLB1FYkbPiS4mKk6/cx/r2k1dKoRo
-        rXCPwWPv9XAePkfOIpX4QYKDR7Jf
-X-Google-Smtp-Source: APXvYqziy+hwOJ/rBxaZYDd+TNhUBY53RQKM+KiMF+7YIA5VTYBc9yXxbDk19EaodEyzL0xN3GIxfA==
-X-Received: by 2002:aca:6208:: with SMTP id w8mr17923394oib.128.1560304656060;
-        Tue, 11 Jun 2019 18:57:36 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id 41sm5775218otm.6.2019.06.11.18.57.35
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 18:57:35 -0700 (PDT)
-Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-References: <20190605225059.GA9953@darkstar.musicnaut.iki.fi>
- <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net>
- <20190607172902.GA8183@lst.de>
- <30000803-3772-3edf-f4a9-55122d504f3f@lwfinger.net>
- <20190610081825.GA16534@lst.de>
- <153c13f5-a829-1eab-a3c5-fecfb84127ff@lwfinger.net>
- <20190611060521.GA19512@lst.de>
- <5aaa600b-5b59-1f68-454f-20403c318f1a@lwfinger.net>
- <20190611224623.GC26504@darkstar.musicnaut.iki.fi>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <74c8af35-6006-5ca8-0fe4-b5938b1139ff@lwfinger.net>
-Date:   Tue, 11 Jun 2019 20:57:34 -0500
+        Tue, 11 Jun 2019 21:59:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=AWbKt2KtWgJTN1uxsnE88jLMLGW5ow0PSYeJXbPq6D0=; b=FxB20MgmijgBY8UZBKxmqlg2Je
+        swFzOpXdpuGK99HU2Z/g9alsu7k548SvovP+5CtEhp0yb4JwLDsLkwXQM1lC07pEqO32Qjv01JTfM
+        /ZTIlIErGZtuFK/UGgciuxgUneo7WhDUp9nxnXxvTP9Pzf9UZZ/wOYoNn42gcmXg1iUfa62R+qRuF
+        MVlo8/ubiGxLmCJ/Iin6RQUEUdghV3GFWf02LjpsMHWj+8CDs3PGw4q2w3Ztkh3EhylXS1PJXNBfG
+        ykXCYrHI06XXcPFZUVqibJyJRBBGnsDKGfHIXf7zyifFh3wEcCUyVvNt+wf6Ydq4mypep1B6uVJyn
+        Q0x6LdkQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hasXr-0002Sm-UX; Wed, 12 Jun 2019 01:59:24 +0000
+To:     "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: linux-next 20190611: objtool warning
+Message-ID: <a9ceb8f8-f2fd-e57d-3428-aaf50e011a43@infradead.org>
+Date:   Tue, 11 Jun 2019 18:59:22 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190611224623.GC26504@darkstar.musicnaut.iki.fi>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -87,23 +56,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/19 5:46 PM, Aaro Koskinen wrote:
-> Hi,
-> 
-> On Tue, Jun 11, 2019 at 05:20:12PM -0500, Larry Finger wrote:
->> It is obvious that the case of a mask smaller than min_mask should be
->> handled by the IOMMU. In my system, CONFIG_IOMMU_SUPPORT is selected. All
->> other CONFIG variables containing IOMMU are not selected. When
->> dma_direct_supported() fails, should the system not try for an IOMMU
->> solution? Is the driver asking for the wrong type of memory? It is doing a
->> dma_and_set_mask_coherent() call.
-> 
-> I don't think we have IOMMU on G4. On G5 it should work (I remember fixing
-> b43 issue on G5, see 4c374af5fdee, unfortunately all my G5 Macs with b43
-> are dead and waiting for re-capping).
+Hi,
 
-You are right. My configuration has CONFIG_IOMMU_SUPPORT=y, but there is no 
-mention of an IOMMU in the log.
+New warning AFAIK:
 
-Larry
+drivers/hwmon/smsc47m1.o: warning: objtool: fan_div_store()+0x11f: sibling call from callable instruction with modified stack frame
 
+
+> gcc --version
+gcc (SUSE Linux) 7.4.1 20190424 [gcc-7-branch revision 270538]
+
+
+-- 
+~Randy
