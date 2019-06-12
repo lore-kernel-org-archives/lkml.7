@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE8EC31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB56DC31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F06162086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BA5D2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:30:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cj5dIYRv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/bgoMNU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408442AbfFLCaD (ORCPT
+        id S2408452AbfFLCaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 22:30:03 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35490 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405046AbfFLCaC (ORCPT
+        Tue, 11 Jun 2019 22:30:24 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38171 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405046AbfFLCaY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 22:30:02 -0400
-Received: by mail-pl1-f195.google.com with SMTP id p1so5958666plo.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 19:30:02 -0700 (PDT)
+        Tue, 11 Jun 2019 22:30:24 -0400
+Received: by mail-pf1-f194.google.com with SMTP id a186so8657525pfa.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 19:30:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=t/rKc3UZZprCkI3wfeBbbL1oVUA4HMdb6pTNv5jLyR8=;
-        b=Cj5dIYRv5xHkfWnoRUxXfl7u999Son8N/lGdopdqLfG+VmK+JRrGtBGsqlwTBFXbDZ
-         5VXTbjdmESfdMiySOW9wvkUQA98dtrx8sh46BmlJL9MjqgYCzfP+rmIADR6cFeeqCUyM
-         LVf0IOmzRiUKk+HjDtGhmM9GENkBKdmNuNfa7R4S0bSrAbqYOttG5cvIczCBYW5BOlpw
-         DnE9pLo8tPSjIKmwcY24WLMCt9e7xaKqpl/iusfIuVZ2ld43WEzvlk6+w/M2+JWmo2ti
-         tgG1gCC556flN8mvNBdNZNgTkbEGpzJie3a3Ih9gJM+yZSkgvtauMKaJiIRSQH4smUiA
-         ITxA==
+        bh=07Ezs23Foo3zNgzlpDf3FL7wZe6EwMZ3yF2BgR3VBVo=;
+        b=K/bgoMNUyw2wby7kVIaRRaUw/WlgixTvfojPmP0y0NIp7DyJueauySwpnV52heI47x
+         VTKzz9Wu7rIoXZG2tqaFdvySdqn+zSGNCJeDtk+DKEz590+6loyP3dIjx1g6SvSCVBK7
+         MKKD4ZsoZmHaEffD+5t680Z4P1wWQcGRq0VFlJJ1xO7o6iyErvg9tNqHwNzY57FKud8V
+         sIeWRZturJFxeHY9jDJBObsPN7i0Q4xOSK3WnsYIRHVCECfLWDeeJHpblQr77WCYzmb8
+         3KhXogZcPhaIKOp6pTZCFhr31/qXADNF0/lWgBjTLT/e91NxaE0BqH1NB2GYUpOfSZ5g
+         aHLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=t/rKc3UZZprCkI3wfeBbbL1oVUA4HMdb6pTNv5jLyR8=;
-        b=I1kIkj2zjY+nIuHe6p8gJ+8cmZhrhusCHJvpZWbsj9vC7OZlQClnIm4p/aciUkNFZg
-         bXlTIOxFWKxJKUprtyq58dN+ximiVsXBRn1LuLzjv01Kx4UHr/f3trIUYXiN7ToGctVu
-         /sSjT9cVWKwznbMyx/02V/0aaiw+OJmfhB9MMt+aujUSv3czdJR8g8NELW7boWT8eHEd
-         hDslTA9D8NFYhMacpW46vblP1xWlG+Kr/vwj3kQ+ZSxB5AkfS4KBJef0oVdiuK9BY+Vo
-         ehHO8eAnf/Kk8C+d1FGVNa92RohKW0+1bCGnM4697k0fX57XIXxiqe1EdcH3R4Uejl3H
-         LaVQ==
-X-Gm-Message-State: APjAAAWqcddtEv2ib0OWjMV14CX+OmC/OacN7hCkS4e05YhgzJi1dWC8
-        +G0BfkCYImCUgWUdbC0gJi/wH90t
-X-Google-Smtp-Source: APXvYqwf7Zp29rxomvSWiSoF/w4ki3aL363oWnSRiCls9jLx8X+BkZoR17yHp8KcSZoNLMHApQzbcA==
-X-Received: by 2002:a17:902:bb90:: with SMTP id m16mr12324750pls.54.1560306602272;
-        Tue, 11 Jun 2019 19:30:02 -0700 (PDT)
+        bh=07Ezs23Foo3zNgzlpDf3FL7wZe6EwMZ3yF2BgR3VBVo=;
+        b=Xcrxkw08hpVimaBxnR+H1gWxio4nmVyVtD8fBlU8vE71LQm+lhPiK3D65y8XRfGMcj
+         xyao/UWDpUufNvvIuOJXp7J7XkH1lDXgx84F02Ss9HNRJiG2nozVLsHTw13lgD8yDLsF
+         LfcFmmeHxvvTJlWPC/JCBimt17b3Y/nQcbtAXas1EZ8zeCxB9tc02FAhSMJ4LXAXjSqG
+         zDs/yJnX72WWFjQUvK4kpxtCKyipWPEMAlCKni0GIyH+X0m1Kn0WEF6hmD07RwHBOeUt
+         FDWHoQxBNa3h+Ntp7n0hPQz4/PAceOUnsm+5gYgq5BNfQ5pZI/U/EuVql4qaNutTUvpm
+         /TEA==
+X-Gm-Message-State: APjAAAUaJ5VtZcaKvhWzR8IFzto+b8Nr+NfU4lv+/vVkQ7zckrAxP65T
+        b+rBRWvtwOGHHjlga7wbIEff9Dwh
+X-Google-Smtp-Source: APXvYqwAUXmVXXezTykjSFQMndXDmdxTAvCH8DtlxhBbJFwpmlfE0wr2Z2vpJRrsyMqaa3iNUpI1iQ==
+X-Received: by 2002:a17:90a:9905:: with SMTP id b5mr24535070pjp.70.1560306623325;
+        Tue, 11 Jun 2019 19:30:23 -0700 (PDT)
 Received: from hari-Inspiron-1545 ([183.83.89.153])
-        by smtp.gmail.com with ESMTPSA id x17sm15448463pgk.72.2019.06.11.19.29.59
+        by smtp.gmail.com with ESMTPSA id e127sm16662594pfe.98.2019.06.11.19.30.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 19:30:01 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 07:59:57 +0530
+        Tue, 11 Jun 2019 19:30:22 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 08:00:19 +0530
 From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Hariprasad Kelam <hariprasad.kelam@gmail.com>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] staging: rtl8723bs: hal: sdio_halinit: fix comparison to
- true/false is error prone
-Message-ID: <20190612022956.GA23698@hari-Inspiron-1545>
+Subject: [PATCH 2/2] staging: rtl8723bs: hal: sdio_halinit: fix spaces
+ preferred around that unary operator
+Message-ID: <20190612023019.GA23721@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -74,84 +74,311 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CHECK: Using comparison to false is error prone
-CHECK: Using comparison to true is error prone
+CHECK: spaces preferred around that '+' (ctx:VxV)
+CHECK: spaces preferred around that '<<' (ctx:VxV)
+CHECK: spaces preferred around that '|' (ctx:VxV)
 
 Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
- drivers/staging/rtl8723bs/hal/sdio_halinit.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/staging/rtl8723bs/hal/sdio_halinit.c | 92 ++++++++++++++--------------
+ 1 file changed, 46 insertions(+), 46 deletions(-)
 
 diff --git a/drivers/staging/rtl8723bs/hal/sdio_halinit.c b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
-index 3c65a9c..70f9e1d 100644
+index 70f9e1d..8f1c8f0 100644
 --- a/drivers/staging/rtl8723bs/hal/sdio_halinit.c
 +++ b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
-@@ -26,7 +26,7 @@ static u8 CardEnable(struct adapter *padapter)
+@@ -112,17 +112,17 @@ u8 _InitPowerOn_8723BS(struct adapter *padapter)
+	/*  all of these MUST be configured before power on */
+ #ifdef CONFIG_EXT_CLK
+	/*  Use external crystal(XTAL) */
+-	value8 = rtw_read8(padapter, REG_PAD_CTRL1_8723B+2);
++	value8 = rtw_read8(padapter, REG_PAD_CTRL1_8723B + 2);
+	value8 |=  BIT(7);
+-	rtw_write8(padapter, REG_PAD_CTRL1_8723B+2, value8);
++	rtw_write8(padapter, REG_PAD_CTRL1_8723B + 2, value8);
 
-
-	rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
--	if (bMacPwrCtrlOn == false) {
-+	if (!bMacPwrCtrlOn) {
-		/*  RSV_CTRL 0x1C[7:0] = 0x00 */
-		/*  unlock ISO/CLK/Power control register */
-		rtw_write8(padapter, REG_RSV_CTRL, 0x0);
-@@ -127,7 +127,7 @@ u8 _InitPowerOn_8723BS(struct adapter *padapter)
+	/*  CLK_REQ High active or Low Active */
+	/*  Request GPIO polarity: */
+	/*  0: low active */
+	/*  1: high active */
+-	value8 = rtw_read8(padapter, REG_MULTI_FUNC_CTRL+1);
++	value8 = rtw_read8(padapter, REG_MULTI_FUNC_CTRL + 1);
+	value8 |= BIT(5);
+-	rtw_write8(padapter, REG_MULTI_FUNC_CTRL+1, value8);
++	rtw_write8(padapter, REG_MULTI_FUNC_CTRL + 1, value8);
+ #endif /*  CONFIG_EXT_CLK */
 
 	/*  only cmd52 can be used before power on(card enable) */
-	ret = CardEnable(padapter);
--	if (ret == false) {
-+	if (!ret) {
-		RT_TRACE(
-			_module_hci_hal_init_c_,
-			_drv_emerg_,
-@@ -838,7 +838,7 @@ static u32 rtl8723bs_hal_init(struct adapter *padapter)
-
- /*	SIC_Init(padapter); */
-
--	if (pwrctrlpriv->reg_rfoff == true)
-+	if (pwrctrlpriv->reg_rfoff)
-		pwrctrlpriv->rf_pwrstate = rf_off;
-
-	/*  2010/08/09 MH We need to check if we need to turnon or off RF after detecting */
-@@ -1081,7 +1081,7 @@ static void CardDisableRTL8723BSdio(struct adapter *padapter)
-	ret = false;
-	rtw_hal_set_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
-	ret = HalPwrSeqCmdParsing(padapter, PWR_CUT_ALL_MSK, PWR_FAB_ALL_MSK, PWR_INTF_SDIO_MSK, rtl8723B_card_disable_flow);
--	if (ret == false) {
-+	if (!ret) {
-		DBG_8192C(KERN_ERR "%s: run CARD DISABLE flow fail!\n", __func__);
+@@ -137,12 +137,12 @@ u8 _InitPowerOn_8723BS(struct adapter *padapter)
 	}
+
+	/*  Radio-Off Pin Trigger */
+-	value8 = rtw_read8(padapter, REG_GPIO_INTM+1);
++	value8 = rtw_read8(padapter, REG_GPIO_INTM + 1);
+	value8 |= BIT(1); /*  Enable falling edge triggering interrupt */
+-	rtw_write8(padapter, REG_GPIO_INTM+1, value8);
+-	value8 = rtw_read8(padapter, REG_GPIO_IO_SEL_2+1);
++	rtw_write8(padapter, REG_GPIO_INTM + 1, value8);
++	value8 = rtw_read8(padapter, REG_GPIO_IO_SEL_2 + 1);
+	value8 |= BIT(1);
+-	rtw_write8(padapter, REG_GPIO_IO_SEL_2+1, value8);
++	rtw_write8(padapter, REG_GPIO_IO_SEL_2 + 1, value8);
+
+	/*  Enable power down and GPIO interrupt */
+	value16 = rtw_read16(padapter, REG_APS_FSMCO);
+@@ -203,13 +203,13 @@ static void _init_available_page_threshold(struct adapter *padapter, u8 numHQ, u
+	u16 HQ_threshold, NQ_threshold, LQ_threshold;
+
+	HQ_threshold = (numPubQ + numHQ + 1) >> 1;
+-	HQ_threshold |= (HQ_threshold<<8);
++	HQ_threshold |= (HQ_threshold << 8);
+
+	NQ_threshold = (numPubQ + numNQ + 1) >> 1;
+-	NQ_threshold |= (NQ_threshold<<8);
++	NQ_threshold |= (NQ_threshold << 8);
+
+	LQ_threshold = (numPubQ + numLQ + 1) >> 1;
+-	LQ_threshold |= (LQ_threshold<<8);
++	LQ_threshold |= (LQ_threshold << 8);
+
+	rtw_write16(padapter, 0x218, HQ_threshold);
+	rtw_write16(padapter, 0x21A, NQ_threshold);
+@@ -271,7 +271,7 @@ static void _InitTxBufferBoundary(struct adapter *padapter)
+	rtw_write8(padapter, REG_TXPKTBUF_MGQ_BDNY_8723B, txpktbuf_bndy);
+	rtw_write8(padapter, REG_TXPKTBUF_WMAC_LBK_BF_HD_8723B, txpktbuf_bndy);
+	rtw_write8(padapter, REG_TRXFF_BNDY, txpktbuf_bndy);
+-	rtw_write8(padapter, REG_TDECTRL+1, txpktbuf_bndy);
++	rtw_write8(padapter, REG_TDECTRL + 1, txpktbuf_bndy);
  }
-@@ -1091,9 +1091,9 @@ static u32 rtl8723bs_hal_deinit(struct adapter *padapter)
-	struct dvobj_priv *psdpriv = padapter->dvobj;
-	struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
 
--	if (padapter->hw_init_completed == true) {
-+	if (padapter->hw_init_completed) {
-		if (adapter_to_pwrctl(padapter)->bips_processing == true) {
--			if (padapter->netif_up == true) {
-+			if (padapter->netif_up) {
-				int cnt = 0;
-				u8 val8 = 0;
-
-@@ -1387,7 +1387,7 @@ static s32 _ReadAdapterInfo8723BS(struct adapter *padapter)
-	RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("+_ReadAdapterInfo8723BS\n"));
-
-	/*  before access eFuse, make sure card enable has been called */
--	if (padapter->hw_init_completed == false)
-+	if (!padapter->hw_init_completed)
-		_InitPowerOn_8723BS(padapter);
-
-
-@@ -1404,7 +1404,7 @@ static s32 _ReadAdapterInfo8723BS(struct adapter *padapter)
-	_ReadPROMContent(padapter);
-	_InitOtherVariable(padapter);
-
--	if (padapter->hw_init_completed == false) {
-+	if (!padapter->hw_init_completed) {
-		rtw_write8(padapter, 0x67, 0x00); /*  for BT, Switch Ant control to BT */
-		CardDisableRTL8723BSdio(padapter);/* for the power consumption issue,  wifi ko module is loaded during booting, but wifi GUI is off */
+ static void _InitNormalChipRegPriority(
+@@ -569,7 +569,7 @@ static void HalRxAggr8723BSdio(struct adapter *padapter)
+		valueDMAPageCount = 0x06;
 	}
+
+-	rtw_write8(padapter, REG_RXDMA_AGG_PG_TH+1, valueDMATimeout);
++	rtw_write8(padapter, REG_RXDMA_AGG_PG_TH + 1, valueDMATimeout);
+	rtw_write8(padapter, REG_RXDMA_AGG_PG_TH, valueDMAPageCount);
+ }
+
+@@ -588,8 +588,8 @@ static void sdio_AggSettingRxUpdate(struct adapter *padapter)
+	rtw_write8(padapter, REG_TRXDMA_CTRL, valueDMA);
+
+	valueRxAggCtrl |= RXDMA_AGG_MODE_EN;
+-	valueRxAggCtrl |= ((aggBurstNum<<2) & 0x0C);
+-	valueRxAggCtrl |= ((aggBurstSize<<4) & 0x30);
++	valueRxAggCtrl |= ((aggBurstNum << 2) & 0x0C);
++	valueRxAggCtrl |= ((aggBurstSize << 4) & 0x30);
+	rtw_write8(padapter, REG_RXDMA_MODE_CTRL_8723B, valueRxAggCtrl);/* RxAggLowThresh = 4*1K */
+ }
+
+@@ -754,11 +754,11 @@ static u32 rtl8723bs_hal_init(struct adapter *padapter)
+		rtw_hal_get_hwreg(padapter, HW_VAR_CPWM, &cpwm_orig);
+
+		/* ser rpwm */
+-		val8 = rtw_read8(padapter, SDIO_LOCAL_BASE|SDIO_REG_HRPWM1);
++		val8 = rtw_read8(padapter, SDIO_LOCAL_BASE | SDIO_REG_HRPWM1);
+		val8 &= 0x80;
+		val8 += 0x80;
+		val8 |= BIT(6);
+-		rtw_write8(padapter, SDIO_LOCAL_BASE|SDIO_REG_HRPWM1, val8);
++		rtw_write8(padapter, SDIO_LOCAL_BASE | SDIO_REG_HRPWM1, val8);
+		DBG_871X("%s: write rpwm =%02x\n", __func__, val8);
+		adapter_to_pwrctl(padapter)->tog = (val8 + 0x80) & 0x80;
+
+@@ -788,7 +788,7 @@ static u32 rtl8723bs_hal_init(struct adapter *padapter)
+	}
+
+ #ifdef CONFIG_WOWLAN
+-	if (rtw_read8(padapter, REG_MCUFWDL)&BIT7) {
++	if (rtw_read8(padapter, REG_MCUFWDL) & BIT7) {
+		u8 reg_val = 0;
+		DBG_871X("+Reset Entry+\n");
+		rtw_write8(padapter, REG_MCUFWDL, 0x00);
+@@ -802,12 +802,12 @@ static u32 rtl8723bs_hal_init(struct adapter *padapter)
+		/* reset TRX path */
+		rtw_write16(padapter, REG_CR, 0);
+		/* reset MAC, Digital Core */
+-		reg_val = rtw_read8(padapter, REG_SYS_FUNC_EN+1);
++		reg_val = rtw_read8(padapter, REG_SYS_FUNC_EN + 1);
+		reg_val &= ~(BIT(4) | BIT(7));
+-		rtw_write8(padapter, REG_SYS_FUNC_EN+1, reg_val);
+-		reg_val = rtw_read8(padapter, REG_SYS_FUNC_EN+1);
++		rtw_write8(padapter, REG_SYS_FUNC_EN + 1, reg_val);
++		reg_val = rtw_read8(padapter, REG_SYS_FUNC_EN + 1);
+		reg_val |= BIT(4) | BIT(7);
+-		rtw_write8(padapter, REG_SYS_FUNC_EN+1, reg_val);
++		rtw_write8(padapter, REG_SYS_FUNC_EN + 1, reg_val);
+		DBG_871X("-Reset Entry-\n");
+	}
+ #endif /* CONFIG_WOWLAN */
+@@ -955,7 +955,7 @@ static u32 rtl8723bs_hal_init(struct adapter *padapter)
+	/*  Configure SDIO TxRx Control to enable Rx DMA timer masking. */
+	/*  2010.02.24. */
+	/*  */
+-	rtw_write32(padapter, SDIO_LOCAL_BASE|SDIO_REG_TX_CTRL, 0);
++	rtw_write32(padapter, SDIO_LOCAL_BASE | SDIO_REG_TX_CTRL, 0);
+
+	_RfPowerSave(padapter);
+
+@@ -979,7 +979,7 @@ static u32 rtl8723bs_hal_init(struct adapter *padapter)
+	rtw_hal_set_hwreg(padapter, HW_VAR_NAV_UPPER, (u8 *)&NavUpper);
+
+	/* ack for xmit mgmt frames. */
+-	rtw_write32(padapter, REG_FWHW_TXQ_CTRL, rtw_read32(padapter, REG_FWHW_TXQ_CTRL)|BIT(12));
++	rtw_write32(padapter, REG_FWHW_TXQ_CTRL, rtw_read32(padapter, REG_FWHW_TXQ_CTRL) | BIT(12));
+
+ /*	pHalData->PreRpwmVal = SdioLocalCmd52Read1Byte(padapter, SDIO_REG_HRPWM1) & 0x80; */
+
+@@ -1059,21 +1059,21 @@ static void CardDisableRTL8723BSdio(struct adapter *padapter)
+		rtl8723b_FirmwareSelfReset(padapter);
+
+	/*  Reset MCU 0x2[10]= 0. Suggested by Filen. 2011.01.26. by tynli. */
+-	u1bTmp = rtw_read8(padapter, REG_SYS_FUNC_EN+1);
++	u1bTmp = rtw_read8(padapter, REG_SYS_FUNC_EN + 1);
+	u1bTmp &= ~BIT(2);	/*  0x2[10], FEN_CPUEN */
+-	rtw_write8(padapter, REG_SYS_FUNC_EN+1, u1bTmp);
++	rtw_write8(padapter, REG_SYS_FUNC_EN + 1, u1bTmp);
+
+	/*  MCUFWDL 0x80[1:0]= 0 */
+	/*  reset MCU ready status */
+	rtw_write8(padapter, REG_MCUFWDL, 0);
+
+	/*  Reset MCU IO Wrapper, added by Roger, 2011.08.30 */
+-	u1bTmp = rtw_read8(padapter, REG_RSV_CTRL+1);
++	u1bTmp = rtw_read8(padapter, REG_RSV_CTRL + 1);
+	u1bTmp &= ~BIT(0);
+-	rtw_write8(padapter, REG_RSV_CTRL+1, u1bTmp);
+-	u1bTmp = rtw_read8(padapter, REG_RSV_CTRL+1);
++	rtw_write8(padapter, REG_RSV_CTRL + 1, u1bTmp);
++	u1bTmp = rtw_read8(padapter, REG_RSV_CTRL + 1);
+	u1bTmp |= BIT(0);
+-	rtw_write8(padapter, REG_RSV_CTRL+1, u1bTmp);
++	rtw_write8(padapter, REG_RSV_CTRL + 1, u1bTmp);
+
+	/*	==== Reset digital sequence end ====== */
+
+@@ -1110,10 +1110,10 @@ static u32 rtl8723bs_hal_deinit(struct adapter *padapter)
+				/* H2C done, enter 32k */
+				if (val8 == 0) {
+					/* ser rpwm to enter 32k */
+-					val8 = rtw_read8(padapter, SDIO_LOCAL_BASE|SDIO_REG_HRPWM1);
++					val8 = rtw_read8(padapter, SDIO_LOCAL_BASE | SDIO_REG_HRPWM1);
+					val8 += 0x80;
+					val8 |= BIT(0);
+-					rtw_write8(padapter, SDIO_LOCAL_BASE|SDIO_REG_HRPWM1, val8);
++					rtw_write8(padapter, SDIO_LOCAL_BASE | SDIO_REG_HRPWM1, val8);
+					DBG_871X("%s: write rpwm =%02x\n", __func__, val8);
+					adapter_to_pwrctl(padapter)->tog = (val8 + 0x80) & 0x80;
+					cnt = val8 = 0;
+@@ -1205,7 +1205,7 @@ static void rtl8723bs_interface_configure(struct adapter *padapter)
+
+	switch (pHalData->OutEpNumber) {
+	case 3:
+-		pHalData->OutEpQueueSel = TX_SELE_HQ | TX_SELE_LQ|TX_SELE_NQ;
++		pHalData->OutEpQueueSel = TX_SELE_HQ | TX_SELE_LQ | TX_SELE_NQ;
+		break;
+	case 2:
+		pHalData->OutEpQueueSel = TX_SELE_HQ | TX_SELE_NQ;
+@@ -1292,7 +1292,7 @@ static void Hal_EfuseParseBoardType_8723BS(
+	if (!AutoLoadFail) {
+		pHalData->BoardType = (hwinfo[EEPROM_RF_BOARD_OPTION_8723B] & 0xE0) >> 5;
+		if (pHalData->BoardType == 0xFF)
+-			pHalData->BoardType = (EEPROM_DEFAULT_BOARD_OPTION&0xE0)>>5;
++			pHalData->BoardType = (EEPROM_DEFAULT_BOARD_OPTION & 0xE0) >> 5;
+	} else
+		pHalData->BoardType = 0;
+	RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("Board Type: 0x%2x\n", pHalData->BoardType));
+@@ -1460,7 +1460,7 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
+		{
+			val8 = *val;
+			val8 &= 0xC1;
+-			rtw_write8(padapter, SDIO_LOCAL_BASE|SDIO_REG_HRPWM1, val8);
++			rtw_write8(padapter, SDIO_LOCAL_BASE | SDIO_REG_HRPWM1, val8);
+		}
+		break;
+	case HW_VAR_SET_REQ_FW_PS:
+@@ -1496,9 +1496,9 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
+
+			/*  2. RX DMA stop */
+			DBG_871X_LEVEL(_drv_always_, "Pause DMA\n");
+-			rtw_write32(padapter, REG_RXPKT_NUM, (rtw_read32(padapter, REG_RXPKT_NUM)|RW_RELEASE_EN));
++			rtw_write32(padapter, REG_RXPKT_NUM, (rtw_read32(padapter, REG_RXPKT_NUM) | RW_RELEASE_EN));
+			do {
+-				if ((rtw_read32(padapter, REG_RXPKT_NUM)&RXDMA_IDLE)) {
++				if ((rtw_read32(padapter, REG_RXPKT_NUM) & RXDMA_IDLE)) {
+					DBG_871X_LEVEL(_drv_always_, "RX_DMA_IDLE is true\n");
+					break;
+				} else {
+@@ -1530,7 +1530,7 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
+			sdio_local_read(padapter, SDIO_REG_HIMR, 4, (u8 *)&tmp);
+			DBG_871X("DisableInterruptButCpwm28723BSdio(): Read SDIO_REG_HIMR: 0x%08x\n", tmp);
+
+-			himr = cpu_to_le32(SDIO_HIMR_DISABLED)|SDIO_HIMR_CPWM2_MSK;
++			himr = cpu_to_le32(SDIO_HIMR_DISABLED) | SDIO_HIMR_CPWM2_MSK;
+			sdio_local_write(padapter, SDIO_REG_HIMR, 4, (u8 *)&himr);
+
+			sdio_local_read(padapter, SDIO_REG_HIMR, 4, (u8 *)&tmp);
+@@ -1545,7 +1545,7 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
+				DBG_871X_LEVEL(_drv_always_, "Check EnableWoWlan CMD is ready\n");
+				mstatus = rtw_read8(padapter, REG_WOW_CTRL);
+				trycnt = 10;
+-				while (!(mstatus&BIT1) && trycnt > 1) {
++				while (!(mstatus & BIT1) && trycnt > 1) {
+					mstatus = rtw_read8(padapter, REG_WOW_CTRL);
+					DBG_871X("Loop index: %d :0x%02x\n", trycnt, mstatus);
+					trycnt--;
+@@ -1603,7 +1603,7 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
+				DBG_871X_LEVEL(_drv_always_, "Check DisableWoWlan CMD is ready\n");
+				mstatus = rtw_read8(padapter, REG_WOW_CTRL);
+				trycnt = 50;
+-				while (mstatus&BIT1 && trycnt > 1) {
++				while (mstatus & BIT1 && trycnt > 1) {
+					mstatus = rtw_read8(padapter, REG_WOW_CTRL);
+					DBG_871X_LEVEL(_drv_always_, "Loop index: %d :0x%02x\n", trycnt, mstatus);
+					trycnt--;
+@@ -1613,9 +1613,9 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
+				if (mstatus & BIT1) {
+					DBG_871X_LEVEL(_drv_always_, "Disable WOW mode fail!!\n");
+					DBG_871X("Set 0x690 = 0x00\n");
+-					rtw_write8(padapter, REG_WOW_CTRL, (rtw_read8(padapter, REG_WOW_CTRL)&0xf0));
++					rtw_write8(padapter, REG_WOW_CTRL, (rtw_read8(padapter, REG_WOW_CTRL) & 0xf0));
+					DBG_871X_LEVEL(_drv_always_, "Release RXDMA\n");
+-					rtw_write32(padapter, REG_RXPKT_NUM, (rtw_read32(padapter, REG_RXPKT_NUM)&(~RW_RELEASE_EN)));
++					rtw_write32(padapter, REG_RXPKT_NUM, (rtw_read32(padapter, REG_RXPKT_NUM) & (~RW_RELEASE_EN)));
+				}
+
+				/*  3.1 read fw iv */
+@@ -1706,9 +1706,9 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
+			/*  2. RX DMA stop */
+			DBG_871X_LEVEL(_drv_always_, "Pause DMA\n");
+			rtw_write32(padapter, REG_RXPKT_NUM,
+-				(rtw_read32(padapter, REG_RXPKT_NUM)|RW_RELEASE_EN));
++				(rtw_read32(padapter, REG_RXPKT_NUM) | RW_RELEASE_EN));
+			do {
+-				if ((rtw_read32(padapter, REG_RXPKT_NUM)&RXDMA_IDLE)) {
++				if ((rtw_read32(padapter, REG_RXPKT_NUM) & RXDMA_IDLE)) {
+					DBG_871X_LEVEL(_drv_always_, "RX_DMA_IDLE is true\n");
+					break;
+				} else {
+@@ -1742,7 +1742,7 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
+			sdio_local_read(padapter, SDIO_REG_HIMR, 4, (u8 *)&tmp);
+			DBG_871X("DisableInterruptButCpwm28723BSdio(): Read SDIO_REG_HIMR: 0x%08x\n", tmp);
+
+-			himr = cpu_to_le32(SDIO_HIMR_DISABLED)|SDIO_HIMR_CPWM2_MSK;
++			himr = cpu_to_le32(SDIO_HIMR_DISABLED) | SDIO_HIMR_CPWM2_MSK;
+			sdio_local_write(padapter, SDIO_REG_HIMR, 4, (u8 *)&himr);
+
+			sdio_local_read(padapter, SDIO_REG_HIMR, 4, (u8 *)&tmp);
+@@ -1808,7 +1808,7 @@ static void GetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
+ {
+	switch (variable) {
+	case HW_VAR_CPWM:
+-		*val = rtw_read8(padapter, SDIO_LOCAL_BASE|SDIO_REG_HCPWM1_8723B);
++		*val = rtw_read8(padapter, SDIO_LOCAL_BASE | SDIO_REG_HCPWM1_8723B);
+		break;
+
+	case HW_VAR_FW_PS_STATE:
 --
 2.7.4
 
