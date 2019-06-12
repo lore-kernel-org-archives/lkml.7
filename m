@@ -1,128 +1,86 @@
 Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3CCC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F08C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56A84215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E693E2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:08:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440010AbfFLPIZ (ORCPT
+        id S2440037AbfFLPIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:08:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:55422 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439910AbfFLPIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:08:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79E1A2B;
-        Wed, 12 Jun 2019 08:08:24 -0700 (PDT)
-Received: from redmoon (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B4443F557;
-        Wed, 12 Jun 2019 08:08:22 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 16:08:20 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv5 10/20] PCI: mobiveil: Fix the INTx process errors
-Message-ID: <20190612150819.GD15747@redmoon>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-11-Zhiqiang.Hou@nxp.com>
+        Wed, 12 Jun 2019 11:08:39 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42559 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2439910AbfFLPIj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:08:39 -0400
+Received: by mail-io1-f68.google.com with SMTP id u19so13206968ior.9
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 08:08:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=T4gvFWYtLkStySYeJfjihrXgSdbJ0qlhnGb7+tRwORE=;
+        b=ckFkkEUCF5zQHb2Dz3F5AqUqVr2VNcq2cTSGev29vPRkqpaIHuG/Fh9wq1QsKCgM7p
+         u8F27UhM0TpyqoggB3U8Jy7G1d6IbVFmHe3C0S/HWLiEUh2APN3R6Meo1MPUH5di9F9I
+         tswro9LDSvHIVcaMxIW2CDhXEcN3f6q1RN8QioSV2+FJXlxsiW4D/lMpJAw4JjCnPPJp
+         yH8FWgDFn1+xGV1P9vI1lmR3sS7Iw1P8U37u4X3UxoZxPD2K9W+HsY83F0JzDR891LaR
+         /2Kmk7XIYFjzJnXayvDHOBy+uCHV6sYrXAQpR2N6D0P19W1WxNwp7YczV8c+va1lQe1J
+         vIlg==
+X-Gm-Message-State: APjAAAVh92HbD8GZZFTaLk5GQllj/3+QETPdpUVMFk961aRQFrHuESEP
+        IAgyWvA43JOqHVLiUovQkPN+szmn5DbzjA==
+X-Google-Smtp-Source: APXvYqxK1hRQsgALi0VHul0lTs5bK+ur4L3afqWtrN6Wlx3LUGoNVKanGehF3d+4VuDJOvL7K4QEqw==
+X-Received: by 2002:a6b:38c3:: with SMTP id f186mr8698281ioa.187.1560352118211;
+        Wed, 12 Jun 2019 08:08:38 -0700 (PDT)
+Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id j1sm4147iop.14.2019.06.12.08.08.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 08:08:37 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 09:08:32 -0600
+From:   Raul Rangel <rrangel@chromium.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     linux-mmc@vger.kernel.org, ernest.zhang@bayhubtech.com,
+        djkurtz@chromium.org, linux-kernel@vger.kernel.org,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 2/3] mmc: sdhci: sdhci-pci-o2micro: Check if controller
+ supports 8-bit width
+Message-ID: <20190612150832.GB27989@google.com>
+References: <20190610185354.35310-1-rrangel@chromium.org>
+ <20190610185354.35310-2-rrangel@chromium.org>
+ <d4939761-317c-ee78-b1e5-c2cdd86a12b4@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190412083635.33626-11-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <d4939761-317c-ee78-b1e5-c2cdd86a12b4@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 08:36:12AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Wed, Jun 12, 2019 at 04:09:47PM +0300, Adrian Hunter wrote:
+> On 10/06/19 9:53 PM, Raul E Rangel wrote:
+> > The O2 controller supports 8-bit EMMC access. mmc_select_bus_width()
+> > will be used to determine if the MMC supports 8-bit or 4-bit access.
 > 
-> In the loop block, there is not code to update the loop key,
-> this patch updates the loop key by re-read the INTx status
-> register.
-> 
-> This patch also add the clearing of the handled INTx status.
-> 
-> Note: Need MV to test this fix.
+> The problem is that the bit indicates a host controller capability, not how
+> many data lines there actually are on the board.  Will this break something
+> that does not have 8 lines?
 
-This means INTX were never tested and current code handling them is,
-AFAICS, an infinite loop which is very very bad.
+So I asked the controller vendor about that:
+> The capability shows the host controller can support 1,4,and 8 bit bus
+> data transfer but it also depends on if HW can support it. Driver or FW
+> should implement the bus testing procedure that is defined in A.6.3.a
+> in JESD84-B51 spec to decide the real bus width that is supported in HW.
 
-This is a gross bug and must be fixed as soon as possible.
+This seems to be what `mmc_select_bus_width()` is doing.
 
-I want Karthikeyan ACK and Tested-by on this patch.
+I don't actually have any 4-bit hardware to test with though.
 
-Lorenzo
-
-> Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> ---
-> V5:
->  - Corrected and retouched the subject and changelog.
-> 
->  drivers/pci/controller/pcie-mobiveil.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 4ba458474e42..78e575e71f4d 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -361,6 +361,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
->  	/* Handle INTx */
->  	if (intr_status & PAB_INTP_INTX_MASK) {
->  		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-> +		shifted_status &= PAB_INTP_INTX_MASK;
->  		shifted_status >>= PAB_INTX_START;
->  		do {
->  			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
-> @@ -372,12 +373,16 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
->  					dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n",
->  							    bit);
->  
-> -				/* clear interrupt */
-> -				csr_writel(pcie,
-> -					   shifted_status << PAB_INTX_START,
-> +				/* clear interrupt handled */
-> +				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
->  					   PAB_INTP_AMBA_MISC_STAT);
->  			}
-> -		} while ((shifted_status >> PAB_INTX_START) != 0);
-> +
-> +			shifted_status = csr_readl(pcie,
-> +						   PAB_INTP_AMBA_MISC_STAT);
-> +			shifted_status &= PAB_INTP_INTX_MASK;
-> +			shifted_status >>= PAB_INTX_START;
-> +		} while (shifted_status != 0);
->  	}
->  
->  	/* read extra MSI status register */
-> -- 
-> 2.17.1
-> 
+Thanks for the review!
