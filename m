@@ -1,86 +1,115 @@
 Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F08C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34F5C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E693E2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A47A12082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440037AbfFLPIj (ORCPT
+        id S2440063AbfFLPJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:08:39 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42559 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439910AbfFLPIj (ORCPT
+        Wed, 12 Jun 2019 11:09:22 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35984 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2439910AbfFLPJV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:08:39 -0400
-Received: by mail-io1-f68.google.com with SMTP id u19so13206968ior.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 08:08:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T4gvFWYtLkStySYeJfjihrXgSdbJ0qlhnGb7+tRwORE=;
-        b=ckFkkEUCF5zQHb2Dz3F5AqUqVr2VNcq2cTSGev29vPRkqpaIHuG/Fh9wq1QsKCgM7p
-         u8F27UhM0TpyqoggB3U8Jy7G1d6IbVFmHe3C0S/HWLiEUh2APN3R6Meo1MPUH5di9F9I
-         tswro9LDSvHIVcaMxIW2CDhXEcN3f6q1RN8QioSV2+FJXlxsiW4D/lMpJAw4JjCnPPJp
-         yH8FWgDFn1+xGV1P9vI1lmR3sS7Iw1P8U37u4X3UxoZxPD2K9W+HsY83F0JzDR891LaR
-         /2Kmk7XIYFjzJnXayvDHOBy+uCHV6sYrXAQpR2N6D0P19W1WxNwp7YczV8c+va1lQe1J
-         vIlg==
-X-Gm-Message-State: APjAAAVh92HbD8GZZFTaLk5GQllj/3+QETPdpUVMFk961aRQFrHuESEP
-        IAgyWvA43JOqHVLiUovQkPN+szmn5DbzjA==
-X-Google-Smtp-Source: APXvYqxK1hRQsgALi0VHul0lTs5bK+ur4L3afqWtrN6Wlx3LUGoNVKanGehF3d+4VuDJOvL7K4QEqw==
-X-Received: by 2002:a6b:38c3:: with SMTP id f186mr8698281ioa.187.1560352118211;
-        Wed, 12 Jun 2019 08:08:38 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id j1sm4147iop.14.2019.06.12.08.08.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 08:08:37 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 09:08:32 -0600
-From:   Raul Rangel <rrangel@chromium.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     linux-mmc@vger.kernel.org, ernest.zhang@bayhubtech.com,
-        djkurtz@chromium.org, linux-kernel@vger.kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 2/3] mmc: sdhci: sdhci-pci-o2micro: Check if controller
- supports 8-bit width
-Message-ID: <20190612150832.GB27989@google.com>
-References: <20190610185354.35310-1-rrangel@chromium.org>
- <20190610185354.35310-2-rrangel@chromium.org>
- <d4939761-317c-ee78-b1e5-c2cdd86a12b4@intel.com>
+        Wed, 12 Jun 2019 11:09:21 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CF5Vpf015821
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 11:09:20 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t32ff450g-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 11:09:19 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Wed, 12 Jun 2019 16:09:09 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 12 Jun 2019 16:08:53 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5CF8qKU27787328
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 15:08:52 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 214F85204E;
+        Wed, 12 Jun 2019 15:08:52 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id AFDCF52052;
+        Wed, 12 Jun 2019 15:08:51 +0000 (GMT)
+Date:   Wed, 12 Jun 2019 17:08:50 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: Re: [PATCH v3 0/4] s390/crypto: Use -ENODEV instead of -EOPNOTSUPP
+References: <20190612133306.10231-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d4939761-317c-ee78-b1e5-c2cdd86a12b4@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190612133306.10231-1-david@redhat.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19061215-0008-0000-0000-000002F327F4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061215-0009-0000-0000-000022602A52
+Message-Id: <20190612150850.GA4038@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=884 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906120101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 04:09:47PM +0300, Adrian Hunter wrote:
-> On 10/06/19 9:53 PM, Raul E Rangel wrote:
-> > The O2 controller supports 8-bit EMMC access. mmc_select_bus_width()
-> > will be used to determine if the MMC supports 8-bit or 4-bit access.
+On Wed, Jun 12, 2019 at 03:33:02PM +0200, David Hildenbrand wrote:
+> s390x crypto is one of the rare modules that returns -EOPNOTSUPP instead of
+> -ENODEV in case HW support is not available.
 > 
-> The problem is that the bit indicates a host controller capability, not how
-> many data lines there actually are on the board.  Will this break something
-> that does not have 8 lines?
+> Convert to -ENODEV, so e.g., systemd's systemd-modules-load.service
+> ignores this error properly.
+> 
+> v2 -> v3:
+> - "s390/pkey: Use -ENODEV instead of -EOPNOTSUPP"
+> -- Also convert pkey_clr2protkey() as requested by Harald
+> - Add r-b's (thanks!)
+> 
+> v1 -> v2:
+> - Include
+> -- "s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP"
+> -- "s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP"
+> -- "s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP"
+> 
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: Harald Freudenberger <freude@linux.ibm.com>
+> Cc: Cornelia Huck <cohuck@redhat.com>
+> 
+> David Hildenbrand (4):
+>   s390/pkey: Use -ENODEV instead of -EOPNOTSUPP
+>   s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP
+>   s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP
+>   s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP
 
-So I asked the controller vendor about that:
-> The capability shows the host controller can support 1,4,and 8 bit bus
-> data transfer but it also depends on if HW can support it. Driver or FW
-> should implement the bus testing procedure that is defined in A.6.3.a
-> in JESD84-B51 spec to decide the real bus width that is supported in HW.
+Should I pick these up so they can go upstream via the s390 tree?
 
-This seems to be what `mmc_select_bus_width()` is doing.
-
-I don't actually have any 4-bit hardware to test with though.
-
-Thanks for the review!
