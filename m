@@ -2,349 +2,132 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 062F7C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCEDC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B861021721
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:21:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="twuucmPo"
+	by mail.kernel.org (Postfix) with ESMTP id F23D121019
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730504AbfFLRVJ (ORCPT
+        id S1730771AbfFLRVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 13:21:09 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39089 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729818AbfFLRVI (ORCPT
+        Wed, 12 Jun 2019 13:21:13 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40221 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729818AbfFLRVM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 13:21:08 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b7so1855121pls.6
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 10:21:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oNTLwUTSY5WhAt45sJt+zKhBDQYZWzHj2fACPfshysA=;
-        b=twuucmPop9gtiFhsNDdAL+lzuqx79GXKxsQ6kjO7SaAhAz3wkZkxBNI2IyT9DU5l40
-         tCg9iXneElLDH1ceHLKd/Sf6ZhhKTw/4bAfriVJUKN5vKVRUrfnR7w/ZyI+GWIborsjy
-         nOd3mTVuWBm8KpDbjRiksTkCSJA+b1h8dPp2I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oNTLwUTSY5WhAt45sJt+zKhBDQYZWzHj2fACPfshysA=;
-        b=fdI4gJoqfnf+ZHds9thMqqQDVAhQImYo2982wsDZ05tK62hPkV7sIuqlyYG/3Eg8Yc
-         HCdRdnSJ5sBRx/n8Y/SQ9yzdLR48b6aWlcGp1hlOGldbho5eGVW6UjaSwu1rXmr/RB/m
-         2oKOswP1YfaBJgpyStF+JEZjoxjkFsfgdrAg82nJKfpkhKuiBeMApb0p5SXNgRBe6zgf
-         cTitU/iPk0aAANe5lmxYBJjD2sN3xiPOC2By716ea4ZqZ0yTfkHOjqdMc7Jh0iUAwR7e
-         /JAEr9pISzYYZDGOoXRPFWEGwg4zqkhO12uN7rvGOfphZMtJCtWFgj7Zy72NgL1/bCVd
-         6zNQ==
-X-Gm-Message-State: APjAAAUTVwshY0umXpaixbGuFFkmSwgruJe8maoLnRZFD6d6x03y7wjR
-        Z/FGLkXC/UDQAXV0FisL+hb2dw==
-X-Google-Smtp-Source: APXvYqwldvX+oqFNtAnxo9G2aeYtxAbYVZidQgUalR2ntQTcRd/WoRdTi3BvZ/JuqZYHYQixGICfog==
-X-Received: by 2002:a17:902:25ab:: with SMTP id y40mr26513311pla.268.1560360067065;
-        Wed, 12 Jun 2019 10:21:07 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id e124sm147426pfa.135.2019.06.12.10.21.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 10:21:06 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 13:21:04 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com
-Subject: Re: [PATCH v1 1/4] mm: introduce MADV_COLD
-Message-ID: <20190612172104.GA125771@google.com>
-References: <20190603053655.127730-1-minchan@kernel.org>
- <20190603053655.127730-2-minchan@kernel.org>
- <20190604203841.GC228607@google.com>
- <20190610100904.GC55602@google.com>
+        Wed, 12 Jun 2019 13:21:12 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1hb6vo-0001ZL-Jl; Wed, 12 Jun 2019 19:21:04 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1hb6vn-0007Dy-Qt; Wed, 12 Jun 2019 19:21:03 +0200
+Date:   Wed, 12 Jun 2019 19:21:03 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     =?iso-8859-1?Q?S=E9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 1/1] ARM: dts: imx6ul: Add PXP node
+Message-ID: <20190612172103.gat3yrub2iyurai5@pengutronix.de>
+References: <20190606164642.11539-1-sebastien.szymanski@armadeus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190610100904.GC55602@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190606164642.11539-1-sebastien.szymanski@armadeus.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 19:19:29 up 25 days, 23:37, 47 users,  load average: 0.00, 0.01,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 07:09:04PM +0900, Minchan Kim wrote:
-> Hi Joel,
+Hi Sébastien,
+
+On 19-06-06 18:46, Sébastien Szymanski wrote:
+> Add PXP node for i.MX6UL/L SoC.
 > 
-> On Tue, Jun 04, 2019 at 04:38:41PM -0400, Joel Fernandes wrote:
-> > On Mon, Jun 03, 2019 at 02:36:52PM +0900, Minchan Kim wrote:
-> > > When a process expects no accesses to a certain memory range, it could
-> > > give a hint to kernel that the pages can be reclaimed when memory pressure
-> > > happens but data should be preserved for future use.  This could reduce
-> > > workingset eviction so it ends up increasing performance.
-> > > 
-> > > This patch introduces the new MADV_COLD hint to madvise(2) syscall.
-> > > MADV_COLD can be used by a process to mark a memory range as not expected
-> > > to be used in the near future. The hint can help kernel in deciding which
-> > > pages to evict early during memory pressure.
-> > > 
-> > > It works for every LRU pages like MADV_[DONTNEED|FREE]. IOW, It moves
-> > > 
-> > > 	active file page -> inactive file LRU
-> > > 	active anon page -> inacdtive anon LRU
-> > > 
-> > > Unlike MADV_FREE, it doesn't move active anonymous pages to inactive
-> > > files's head because MADV_COLD is a little bit different symantic.
-> > > MADV_FREE means it's okay to discard when the memory pressure because
-> > > the content of the page is *garbage* so freeing such pages is almost zero
-> > > overhead since we don't need to swap out and access afterward causes just
-> > > minor fault. Thus, it would make sense to put those freeable pages in
-> > > inactive file LRU to compete other used-once pages. Even, it could
-> > > give a bonus to make them be reclaimed on swapless system. However,
-> > > MADV_COLD doesn't mean garbage so reclaiming them requires swap-out/in
-> > > in the end. So it's better to move inactive anon's LRU list, not file LRU.
-> > > Furthermore, it would help to avoid unnecessary scanning of cold anonymous
-> > > if system doesn't have a swap device.
-> > > 
-> > > All of error rule is same with MADV_DONTNEED.
-> > > 
-> > > Note:
-> > > This hint works with only private pages(IOW, page_mapcount(page) < 2)
-> > > because shared page could have more chance to be accessed from other
-> > > processes sharing the page although the caller reset the reference bits.
-> > > It ends up preventing the reclaim of the page and wastes CPU cycle.
-> > > 
-> > > * RFCv2
-> > >  * add more description - mhocko
-> > > 
-> > > * RFCv1
-> > >  * renaming from MADV_COOL to MADV_COLD - hannes
-> > > 
-> > > * internal review
-> > >  * use clear_page_youn in deactivate_page - joelaf
-> > >  * Revise the description - surenb
-> > >  * Renaming from MADV_WARM to MADV_COOL - surenb
-> > > 
-> > > Signed-off-by: Minchan Kim <minchan@kernel.org>
-> > > ---
-> > >  include/linux/page-flags.h             |   1 +
-> > >  include/linux/page_idle.h              |  15 ++++
-> > >  include/linux/swap.h                   |   1 +
-> > >  include/uapi/asm-generic/mman-common.h |   1 +
-> > >  mm/internal.h                          |   2 +-
-> > >  mm/madvise.c                           | 115 ++++++++++++++++++++++++-
-> > >  mm/oom_kill.c                          |   2 +-
-> > >  mm/swap.c                              |  43 +++++++++
-> > >  8 files changed, 176 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> > > index 9f8712a4b1a5..58b06654c8dd 100644
-> > > --- a/include/linux/page-flags.h
-> > > +++ b/include/linux/page-flags.h
-> > > @@ -424,6 +424,7 @@ static inline bool set_hwpoison_free_buddy_page(struct page *page)
-> > >  TESTPAGEFLAG(Young, young, PF_ANY)
-> > >  SETPAGEFLAG(Young, young, PF_ANY)
-> > >  TESTCLEARFLAG(Young, young, PF_ANY)
-> > > +CLEARPAGEFLAG(Young, young, PF_ANY)
-> > >  PAGEFLAG(Idle, idle, PF_ANY)
-> > >  #endif
-> > >  
-> > > diff --git a/include/linux/page_idle.h b/include/linux/page_idle.h
-> > > index 1e894d34bdce..f3f43b317150 100644
-> > > --- a/include/linux/page_idle.h
-> > > +++ b/include/linux/page_idle.h
-> > > @@ -19,6 +19,11 @@ static inline void set_page_young(struct page *page)
-> > >  	SetPageYoung(page);
-> > >  }
-> > >  
-> > > +static inline void clear_page_young(struct page *page)
-> > > +{
-> > > +	ClearPageYoung(page);
-> > > +}
-> > > +
-> > >  static inline bool test_and_clear_page_young(struct page *page)
-> > >  {
-> > >  	return TestClearPageYoung(page);
-> > > @@ -65,6 +70,16 @@ static inline void set_page_young(struct page *page)
-> > >  	set_bit(PAGE_EXT_YOUNG, &page_ext->flags);
-> > >  }
-> > >  
-> > > +static void clear_page_young(struct page *page)
-> > > +{
-> > > +	struct page_ext *page_ext = lookup_page_ext(page);
-> > > +
-> > > +	if (unlikely(!page_ext))
-> > > +		return;
-> > > +
-> > > +	clear_bit(PAGE_EXT_YOUNG, &page_ext->flags);
-> > > +}
-> > > +
-> > >  static inline bool test_and_clear_page_young(struct page *page)
-> > >  {
-> > >  	struct page_ext *page_ext = lookup_page_ext(page);
-> > > diff --git a/include/linux/swap.h b/include/linux/swap.h
-> > > index de2c67a33b7e..0ce997edb8bb 100644
-> > > --- a/include/linux/swap.h
-> > > +++ b/include/linux/swap.h
-> > > @@ -340,6 +340,7 @@ extern void lru_add_drain_cpu(int cpu);
-> > >  extern void lru_add_drain_all(void);
-> > >  extern void rotate_reclaimable_page(struct page *page);
-> > >  extern void deactivate_file_page(struct page *page);
-> > > +extern void deactivate_page(struct page *page);
-> > >  extern void mark_page_lazyfree(struct page *page);
-> > >  extern void swap_setup(void);
-> > >  
-> > > diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
-> > > index bea0278f65ab..1190f4e7f7b9 100644
-> > > --- a/include/uapi/asm-generic/mman-common.h
-> > > +++ b/include/uapi/asm-generic/mman-common.h
-> > > @@ -43,6 +43,7 @@
-> > >  #define MADV_SEQUENTIAL	2		/* expect sequential page references */
-> > >  #define MADV_WILLNEED	3		/* will need these pages */
-> > >  #define MADV_DONTNEED	4		/* don't need these pages */
-> > > +#define MADV_COLD	5		/* deactivatie these pages */
-> > >  
-> > >  /* common parameters: try to keep these consistent across architectures */
-> > >  #define MADV_FREE	8		/* free pages only if memory pressure */
-> > > diff --git a/mm/internal.h b/mm/internal.h
-> > > index 9eeaf2b95166..75a4f96ec0fb 100644
-> > > --- a/mm/internal.h
-> > > +++ b/mm/internal.h
-> > > @@ -43,7 +43,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf);
-> > >  void free_pgtables(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
-> > >  		unsigned long floor, unsigned long ceiling);
-> > >  
-> > > -static inline bool can_madv_dontneed_vma(struct vm_area_struct *vma)
-> > > +static inline bool can_madv_lru_vma(struct vm_area_struct *vma)
-> > >  {
-> > >  	return !(vma->vm_flags & (VM_LOCKED|VM_HUGETLB|VM_PFNMAP));
-> > >  }
-> > > diff --git a/mm/madvise.c b/mm/madvise.c
-> > > index 628022e674a7..ab158766858a 100644
-> > > --- a/mm/madvise.c
-> > > +++ b/mm/madvise.c
-> > > @@ -40,6 +40,7 @@ static int madvise_need_mmap_write(int behavior)
-> > >  	case MADV_REMOVE:
-> > >  	case MADV_WILLNEED:
-> > >  	case MADV_DONTNEED:
-> > > +	case MADV_COLD:
-> > >  	case MADV_FREE:
-> > >  		return 0;
-> > >  	default:
-> > > @@ -307,6 +308,113 @@ static long madvise_willneed(struct vm_area_struct *vma,
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
-> > > +				unsigned long end, struct mm_walk *walk)
-> > > +{
-> > > +	pte_t *orig_pte, *pte, ptent;
-> > > +	spinlock_t *ptl;
-> > > +	struct page *page;
-> > > +	struct vm_area_struct *vma = walk->vma;
-> > > +	unsigned long next;
-> > > +
-> > > +	next = pmd_addr_end(addr, end);
-> > > +	if (pmd_trans_huge(*pmd)) {
-> > > +		ptl = pmd_trans_huge_lock(pmd, vma);
-> > > +		if (!ptl)
-> > > +			return 0;
-> > > +
-> > > +		if (is_huge_zero_pmd(*pmd))
-> > > +			goto huge_unlock;
-> > > +
-> > > +		page = pmd_page(*pmd);
-> > > +		if (page_mapcount(page) > 1)
-> > > +			goto huge_unlock;
-> > > +
-> > > +		if (next - addr != HPAGE_PMD_SIZE) {
-> > > +			int err;
-> > > +
-> > > +			get_page(page);
-> > > +			spin_unlock(ptl);
-> > > +			lock_page(page);
-> > > +			err = split_huge_page(page);
-> > > +			unlock_page(page);
-> > > +			put_page(page);
-> > > +			if (!err)
-> > > +				goto regular_page;
-> > > +			return 0;
-> > > +		}
-> > > +
-> > > +		pmdp_test_and_clear_young(vma, addr, pmd);
-> > > +		deactivate_page(page);
-> > > +huge_unlock:
-> > > +		spin_unlock(ptl);
-> > > +		return 0;
-> > > +	}
-> > > +
-> > > +	if (pmd_trans_unstable(pmd))
-> > > +		return 0;
-> > > +
-> > > +regular_page:
-> > > +	orig_pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
-> > > +	for (pte = orig_pte; addr < end; pte++, addr += PAGE_SIZE) {
-> > > +		ptent = *pte;
-> > > +
-> > > +		if (pte_none(ptent))
-> > > +			continue;
-> > > +
-> > > +		if (!pte_present(ptent))
-> > > +			continue;
-> > > +
-> > > +		page = vm_normal_page(vma, addr, ptent);
-> > > +		if (!page)
-> > > +			continue;
-> > > +
-> > > +		if (page_mapcount(page) > 1)
-> > > +			continue;
-> > > +
-> > > +		ptep_test_and_clear_young(vma, addr, pte);
-> > 
-> > Wondering here how it interacts with idle page tracking. Here since young
-> > flag is cleared by the cold hint, page_referenced_one() or
-> > page_idle_clear_pte_refs_one() will not be able to clear the page-idle flag
-> > if it was previously set since it does not know any more that a page was
-> > actively referenced.
+> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+> ---
+>  arch/arm/boot/dts/imx6ul.dtsi  | 9 +++++++++
+>  arch/arm/boot/dts/imx6ull.dtsi | 6 ++++++
+>  2 files changed, 15 insertions(+)
 > 
-> ptep_test_and_clear_young doesn't change PG_idle/young so idle page tracking
-> doesn't affect.
+> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+> index f10012de5eb6..a3c005373ae1 100644
+> --- a/arch/arm/boot/dts/imx6ul.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul.dtsi
+> @@ -971,6 +971,15 @@
+>  				status = "disabled";
+>  			};
+>  
+> +			pxp: pxp@21cc000 {
+> +				compatible = "fsl,imx6ul-pxp";
+> +				reg = <0x021cc000 0x4000>;
+> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clks IMX6UL_CLK_PXP>;
+> +				clock-names = "axi";
+> +				status = "disabled";
 
-Clearing of the young bit in the PTE does affect idle tracking.
+Can you drop the status line because its a platform device and isn't
+removeable.
 
-Both page_referenced_one() and page_idle_clear_pte_refs_one() check this bit.
-
-> > bit was previously set, just so that page-idle tracking works smoothly when
-> > this hint is concurrently applied?
+> +			};
+> +
+>  			qspi: spi@21e0000 {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
+> index 22e4a307fa59..b017e925bd87 100644
+> --- a/arch/arm/boot/dts/imx6ull.dtsi
+> +++ b/arch/arm/boot/dts/imx6ull.dtsi
+> @@ -34,6 +34,12 @@
+>  	compatible = "fsl,imx6ull-ocotp", "syscon";
+>  };
+>  
+> +&pxp {
+> +	compatible = "fsl,imx6ull-pxp";
+> +	interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+> +};
+> +
+>  &usdhc1 {
+>  	compatible = "fsl,imx6ull-usdhc", "fsl,imx6sx-usdhc";
+>  };
+> -- 
+> 2.19.2
 > 
-> deactivate_page will remove PG_young bit so that the page will be reclaimed.
-> Do I miss your point?
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Say a process had accessed PTE bit not set, then idle tracking is run and PG_Idle
-is set. Now the page is accessed from userspace thus setting the accessed PTE
-bit.  Now a remote process passes this process_madvise cold hint (I know your
-current series does not support remote process, but I am saying for future
-when you post this). Because you cleared the PTE accessed bit through the
-hint, idle tracking no longer will know that the page is referenced and the
-user gets confused because accessed page appears to be idle.
-
-I think to fix this, what you should do is clear the PG_Idle flag if the
-young/accessed PTE bits are set. If PG_Idle is already cleared, then you
-don't need to do anything.
-
-thanks,
-
- - Joel
-
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
