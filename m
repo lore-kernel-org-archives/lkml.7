@@ -2,110 +2,197 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96EEDC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2992C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6966E206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:09:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m8hJ2c0e"
+	by mail.kernel.org (Postfix) with ESMTP id ABCC8206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:11:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730954AbfFLGJf (ORCPT
+        id S1730955AbfFLGLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 02:09:35 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39297 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730860AbfFLGJe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 02:09:34 -0400
-Received: by mail-wr1-f67.google.com with SMTP id x4so12813250wrt.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 23:09:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=jNHpo9jnwtLQwuoRcj9Ch+fhiSgA7li7+xLd+t9vX0c=;
-        b=m8hJ2c0e3XNePvN0CW1AiuPtb6Tsm06LSMqOrEr8m/J+EAR2QK9ql0ebHsCP92aYtm
-         6mqLiXGOBxsAgcaVMen9cmq1ZpkUojqFwNGKIwtxFMW7WyZKtUN5lpGdRMe0Gas16jpj
-         LAT07r46pjG8q0yGqgzQizG+DFkTulNQjXqCIVy7uFbfJvOqkXl0LUGpPnKAlJyZ69qZ
-         ukRc/AgAIoYDjFv5PLPBWCkh0YO8NkXsGen4B1A4NvEPVvnuVFSFyNnX14GS+Aa3aiBB
-         tkgCuX8/fXozn76HmTNJ00VbrHdXvIAdJJGEGk3lkGLF5stuCF/piv6JjYoIPvT2lIhL
-         Mw2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=jNHpo9jnwtLQwuoRcj9Ch+fhiSgA7li7+xLd+t9vX0c=;
-        b=HJYnDWX/rC3qZ6Ca4S0QP+pX543pV6HnpzsoglBiB5iab776OOQGfh5bgS+N8PhFEw
-         fd9szJYU/DJQlVKlBeiD1i0xEue5Y6XIZcvdxPau0dT+1eErhmMAtuqP8ULzOQcpLyOG
-         lfQhmLJ1b0HqlrWWA4yvSUJHuVsLimqL52DqvV4fr/WW589XQa5c4a5zRvCV6Tw9sLZ4
-         ttFGgsJFgKLWkHDiAMswRQtfHofg+81qHRJfTnLra5K7kJO6mIsNz5qWt9pf+FXiolSs
-         EY0QytWWgusQuxVlljYEyy8z57PVKeMo7xqLRd00yhaiS59Sv4J8UfepBU+rhE3RhO9z
-         sPUw==
-X-Gm-Message-State: APjAAAUMl32KBo8YGE1BE9itg7Kbv2rAwibENdT4tD76SEBZqolgwGf4
-        0qwnuPxYdJd5xkqSfZvxsWswIg==
-X-Google-Smtp-Source: APXvYqyfYkZe1DnheBkxB3YZco+J1bRcMmIGxS+HOyR0Pfaq+SvAfBz+F8jQnAiX9kHfVifedeh39g==
-X-Received: by 2002:adf:db02:: with SMTP id s2mr17167183wri.326.1560319771955;
-        Tue, 11 Jun 2019 23:09:31 -0700 (PDT)
-Received: from dell ([2.27.35.243])
-        by smtp.gmail.com with ESMTPSA id x16sm4926192wmj.4.2019.06.11.23.09.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 11 Jun 2019 23:09:31 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 07:09:29 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: [PATCH 00/33] fbcon notifier begone v3!
-Message-ID: <20190612060929.GR4797@dell>
-References: <20190528090304.9388-1-daniel.vetter@ffwll.ch>
- <CGME20190606073852epcas2p27b586b93869a30e4658581c290960fee@epcas2p2.samsung.com>
- <CAKMK7uHneUFYPiRr10X9xfWTkGtaoQBB=niDMGkAgJ-fgo5=mA@mail.gmail.com>
- <f848b4de-abab-116f-ad68-23348f1a4b76@samsung.com>
- <20190611141635.rowolr37vhalophr@holly.lan>
+        Wed, 12 Jun 2019 02:11:48 -0400
+Received: from mga09.intel.com ([134.134.136.24]:20914 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725902AbfFLGLs (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 02:11:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 23:11:47 -0700
+X-ExtLoop1: 1
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.123]) ([10.239.196.123])
+  by fmsmga007.fm.intel.com with ESMTP; 11 Jun 2019 23:11:45 -0700
+Subject: Re: [PATCH v2 4/7] perf diff: Use hists to manage basic blocks per
+ symbol
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <1559572577-25436-1-git-send-email-yao.jin@linux.intel.com>
+ <1559572577-25436-5-git-send-email-yao.jin@linux.intel.com>
+ <20190605114417.GB5868@krava>
+ <4bbc5085-c8b0-5e36-419c-6ee754186027@linux.intel.com>
+ <20190611085606.GA11510@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <c46ee356-9765-42cc-8cff-221bacb63c3d@linux.intel.com>
+Date:   Wed, 12 Jun 2019 14:11:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190611141635.rowolr37vhalophr@holly.lan>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190611085606.GA11510@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019, Daniel Thompson wrote:
-> On Fri, Jun 07, 2019 at 12:07:55PM +0200, Bartlomiej Zolnierkiewicz wrote:
-> > On 6/6/19 9:38 AM, Daniel Vetter wrote:
-> > 
-> > >> - Hash out actual merge plan.
-> > > 
-> > > I'd like to stuff this into drm.git somehow, I guess topic branch works
-> > > too.
-> > 
-> > I would like to have topic branch for this patchset.
-> 
-> From a backlight perspective its Lee Jones who hoovers up the patches
-> and worries about hiding merge conflicts from Linus.
-> 
-> I'll let him follow up if needed but I suspect he'd like an immutable
-> branch to work from also.
 
-Yes please.  Happy to either create one, or receive one.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+On 6/11/2019 4:56 PM, Jiri Olsa wrote:
+> On Sat, Jun 08, 2019 at 07:41:47PM +0800, Jin, Yao wrote:
+>>
+>>
+>> On 6/5/2019 7:44 PM, Jiri Olsa wrote:
+>>> On Mon, Jun 03, 2019 at 10:36:14PM +0800, Jin Yao wrote:
+>>>
+>>> SNIP
+>>>
+>>>> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+>>>> index 43623fa..d1641da 100644
+>>>> --- a/tools/perf/util/sort.h
+>>>> +++ b/tools/perf/util/sort.h
+>>>> @@ -79,6 +79,9 @@ struct hist_entry_diff {
+>>>>    		/* HISTC_WEIGHTED_DIFF */
+>>>>    		s64	wdiff;
+>>>> +
+>>>> +		/* PERF_HPP_DIFF__CYCLES */
+>>>> +		s64	cycles;
+>>>>    	};
+>>>>    };
+>>>> @@ -143,6 +146,9 @@ struct hist_entry {
+>>>>    	struct branch_info	*branch_info;
+>>>>    	long			time;
+>>>>    	struct hists		*hists;
+>>>> +	void			*block_hists;
+>>>> +	int			block_idx;
+>>>> +	int			block_num;
+>>>>    	struct mem_info		*mem_info;
+>>>>    	struct block_info	*block_info;
+>>>
+>>> could you please not add the new block* stuff in here,
+>>> and instead use the "c2c model" and use yourr own struct
+>>> on top of hist_entry? we are trying to librarize this
+>>> stuff and keep only necessary things in here..
+>>>
+>>> you're already using hist_entry_ops, so should be easy
+>>>
+>>> something like:
+>>>
+>>> 	struct block_hist_entry {
+>>> 		void			*block_hists;
+>>> 		int			block_idx;
+>>> 		int			block_num;
+>>> 		struct block_info	*block_info;
+>>>
+>>> 		struct hist_entry	he;
+>>> 	};
+>>>
+>>>
+>>>
+>>> jirka
+>>>
+>>
+>> Hi Jiri,
+>>
+>> After more considerations, maybe I can't move these stuffs from hist_entry
+>> to block_hist_entry.
+> 
+> why?
+> 
+>>
+>> Actually we use 2 kinds of hist_entry in this patch series. On kind of
+>> hist_entry is for symbol/function. The other kind of hist_entry is for basic
+>> block.
+> 
+> correct
+> 
+> so the way I see it the processing goes like this:
+> 
+> 
+> 1) there's standard hist_entry processing ending up
+>     with evsel->hists->rb_root full of hist entries
+> 
+> 2) then you process every hist_entry and create
+>     new 'struct hists' for each and fill it with
+>     symbol counts data
+> 
+> 
+> 
+> you could add 'struct hist_entry_ops' for the 1) processing
+> that adds the 'struct hists' object for each hist_entry
+> 
+> and add another 'struct hist_entry_ops' for 2) processing
+> to carry the block data for each hist_entry
+> 
+> jirka
+> 
+
+Hi Jiri,
+
+Yes, I can use two hist_entry_ops but one thing is still difficult to 
+handle that is the printing of blocks.
+
+One function may contain multiple blocks so I add 'block_num' in 'struct 
+hist_entry' to record the number of blocks.
+
+In patch "perf diff: Print the basic block cycles diff", I reuse most of 
+current code to print the blocks. The major change is:
+
+  static int hist_entry__fprintf(struct hist_entry *he, size_t size,
+                                char *bf, size_t bfsz, FILE *fp,
+                                bool ignore_callchains) {
+
++       if (he->block_hists)
++               return hist_entry__block_fprintf(he, bf, size, fp);
++
+         hist_entry__snprintf(he, &hpp);
+}
+
++static int hist_entry__block_fprintf(struct hist_entry *he,
++                                    char *bf, size_t size,
++                                    FILE *fp)
++{
++       int ret = 0;
++
++       for (int i = 0; i < he->block_num; i++) {
++               struct perf_hpp hpp = {
++                       .buf            = bf,
++                       .size           = size,
++                       .skip           = false,
++               };
++
++               he->block_idx = i;
++               hist_entry__snprintf(he, &hpp);
++
++               if (!hpp.skip)
++                       ret += fprintf(fp, "%s\n", bf);
++       }
++
++       return ret;
++}
++
+
+So it looks at least I need to add 'block_num' to 'struct hist_entry', 
+otherwise I can't reuse most of codes.
+
+Any idea for 'block_num'?
+
+Thanks
+Jin Yao
