@@ -2,83 +2,115 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BED5C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE47EC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31ABA20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 957C620866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:28:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pyuWS3GD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439399AbfFLN1E (ORCPT
+        id S1731622AbfFLN2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:27:04 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:45468 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728977AbfFLN1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:27:03 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 311D5202EC;
-        Wed, 12 Jun 2019 15:27:02 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 1A9AC1FF7C;
-        Wed, 12 Jun 2019 15:27:02 +0200 (CEST)
-To:     Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     DRI <dri-devel@lists.freedesktop.org>,
-        fbdev <linux-fbdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Antonino Daplas <adaplas@gmail.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: [PATCH v1] backlight: Don't build support by default
-Message-ID: <70bd61f9-8fc5-75b1-9f32-7a5826ce6b48@free.fr>
-Date:   Wed, 12 Jun 2019 15:27:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 12 Jun 2019 09:28:34 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45340 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727416AbfFLN2d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 09:28:33 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f9so16888886wre.12;
+        Wed, 12 Jun 2019 06:28:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=CNyDYbzNuel0dys1IQuV1nwZIY+t4+V7JKy2VJB2erY=;
+        b=pyuWS3GDx6wVjS6cEDEx8LRrR35dtKO2Hw2h58DLZsTWIJd3Ft4NL4fUx1jbTAY3kM
+         tT3LiJai1UlggNCC7V4HBpRgxHqM769GllY6CBPd6sxD2dpSZAa1Y1RwJZX4EJ3x57Q2
+         wOcm8yb3ksPFjwOk5A/V2YMiwxWUqBWmQylcFQT0qmQNWoVCs9XtSjwIWZYPmfYsYQjq
+         +48PSC5R//q1PaMxHoGOPPjPafiSyNRmqrasFtAtx/TrzuWdDgi2OCSCDmsFAh+hj59a
+         XUrt9hDF73gr/xGVcRnmKdQIKkl/YSzvKJNPSuN1Hl7wS9JV5HftOc5CJeemTfwRwDTg
+         JVYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=CNyDYbzNuel0dys1IQuV1nwZIY+t4+V7JKy2VJB2erY=;
+        b=lva8Bi2wvipy5R5bIpt9swu/k0iSxvJDzoP5TLWv4Jv25YTkNJgTxg7SRAqop8kwT3
+         f+t+KrMKzRBa4Ikry4Z6DNb9BoaazmWUPyww8/NzMb0CNvehNTmgLPl4dymR11SsbQaM
+         eCaBQxEZ92Os0AkVHd6uoPmpKee/xw0ina8zdsugfV56R74W7+P9pLQylMKJrq70+rKP
+         zMR1a4nGQVpg9yJt2KiTncAgJ0yo9OttNBRVM3U2owAqzCeF+SgNp1Q0eEjKEef36XVC
+         T3SFNx9eAOS3p+40FTeN0fgtiODxooYZtBU8CTRYczvf8DkBU7veWpNSteGLnDdxKp7S
+         R2aA==
+X-Gm-Message-State: APjAAAWdiyJjEQGqj7MTBVAvj52CRTBzxwX+jwQgmkLHjk/WvLwhP2dd
+        Fgmn3q/1HB0Q8/D6NGe/XHVETnFewEc=
+X-Google-Smtp-Source: APXvYqy9mInbXTt8kPG7W/KUJ5M8zbDloQLP+Puj+1e72bGowIAKkPFVRoBPZZxduk/GcAm86yd4Yg==
+X-Received: by 2002:adf:8044:: with SMTP id 62mr7474470wrk.20.1560346111335;
+        Wed, 12 Jun 2019 06:28:31 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([108.61.173.19])
+        by smtp.gmail.com with ESMTPSA id h90sm37628063wrh.15.2019.06.12.06.28.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 06:28:30 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 21:28:21 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     paul@paul-moore.com, sds@tycho.nsa.gov, eparis@parisplace.org
+Cc:     selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4] selinux: fix a missing-check bug in selinux_add_mnt_opt( )
+Message-ID: <20190612132821.GA3816@zhanggen-UX430UQ>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Jun 12 15:27:02 2019 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-b20c5249aa6a ("backlight: Fix compile error if CONFIG_FB is unset")
-added 'default m' for BACKLIGHT_CLASS_DEVICE and LCD_CLASS_DEVICE.
+In selinux_add_mnt_opt(), 'val' is allocated by kmemdup_nul(). It returns
+NULL when fails. So 'val' should be checked. And 'mnt_opts' should be 
+freed when error.
 
-Let's go back to not building support by default.
-
-Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Fixes: 757cbe597fe8 ("LSM: new method: ->sb_add_mnt_opt()")
 ---
- drivers/video/backlight/Kconfig | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-index 8b081d61773e..40676be2e46a 100644
---- a/drivers/video/backlight/Kconfig
-+++ b/drivers/video/backlight/Kconfig
-@@ -10,7 +10,6 @@ menu "Backlight & LCD device support"
- #
- config LCD_CLASS_DEVICE
-         tristate "Lowlevel LCD controls"
--	default m
- 	help
- 	  This framework adds support for low-level control of LCD.
- 	  Some framebuffer devices connect to platform-specific LCD modules
-@@ -143,7 +142,6 @@ endif # LCD_CLASS_DEVICE
- #
- config BACKLIGHT_CLASS_DEVICE
-         tristate "Lowlevel Backlight controls"
--	default m
- 	help
- 	  This framework adds support for low-level control of the LCD
-           backlight. This includes support for brightness and power.
--- 
-2.17.1
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 3ec702c..b4b888e 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -1052,15 +1052,24 @@ static int selinux_add_mnt_opt(const char *option, const char *val, int len,
+ 	if (token == Opt_error)
+ 		return -EINVAL;
+ 
+-	if (token != Opt_seclabel)
+-		val = kmemdup_nul(val, len, GFP_KERNEL);
++	if (token != Opt_seclabel) {
++			val = kmemdup_nul(val, len, GFP_KERNEL);
++			if (!val) {
++				rc = -ENOMEM;
++				goto free_opt;
++			}
++	}
+ 	rc = selinux_add_opt(token, val, mnt_opts);
+ 	if (unlikely(rc)) {
+ 		kfree(val);
+-		if (*mnt_opts) {
+-			selinux_free_mnt_opts(*mnt_opts);
+-			*mnt_opts = NULL;
+-		}
++		goto free_opt;
++	}
++	return rc;
++
++free_opt:
++	if (*mnt_opts) {
++		selinux_free_mnt_opts(*mnt_opts);
++		*mnt_opts = NULL;
+ 	}
+ 	return rc;
+ }
