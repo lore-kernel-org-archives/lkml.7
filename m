@@ -2,351 +2,138 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7324C31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F73C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9CC20645
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D4A20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:00:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="h5JueMEL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437049AbfFLA7a (ORCPT
+        id S2437058AbfFLBAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 20:59:30 -0400
-Received: from mga05.intel.com ([192.55.52.43]:39480 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404906AbfFLA7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 20:59:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 17:59:28 -0700
-X-ExtLoop1: 1
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga004.jf.intel.com with ESMTP; 11 Jun 2019 17:59:23 -0700
-Cc:     baolu.lu@linux.intel.com, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alan Cox <alan@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@intel.com>
-Subject: Re: [PATCH v4 4/9] iommu: Add bounce page APIs
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190603011620.31999-1-baolu.lu@linux.intel.com>
- <20190603011620.31999-5-baolu.lu@linux.intel.com>
- <e404133f-dade-6fdf-08e9-6e4f15d23b66@gmail.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <e9fd7b85-add4-04e6-c588-a48d6db49b1e@linux.intel.com>
-Date:   Wed, 12 Jun 2019 08:52:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 11 Jun 2019 21:00:15 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44186 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404906AbfFLBAP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 21:00:15 -0400
+Received: by mail-qt1-f195.google.com with SMTP id x47so16865917qtk.11
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 18:00:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=kGCYosRguXq4elehaPFOveEwgPcblLIUUh1tydiqlv0=;
+        b=h5JueMEL7krh+Lb8jEoJH4vzMieW9Ynm0WMNBzCOFjIznSTZa7pc332ziUaX7BXKJ3
+         pXHzyqkatzuzJneWeW7w9rbl7kg/VRwj+ApC7uDfSQVDTMekZStH2lvgviPm+9ZBTMEq
+         GdXEzbiYevwqVMZ8KpQZLdc7zGrbM8OLA7wKKtZFEwnDI0sEaF9/U9YRVe0P9ViIjz0l
+         DWoeIeyBgstsX0aObxmXHDz8HDCvqyLf3IefResEwj6NIad/+82M3bmTIiT/CdFAYgHA
+         mMy1WBGFRyGkbArSW8o2UvGVTGq84vm/oxhq2k7cCB21LRqAbT9pxMDOVEVxkVq6UuvM
+         uUag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=kGCYosRguXq4elehaPFOveEwgPcblLIUUh1tydiqlv0=;
+        b=A/f3I4wPkJLmUkFKUe1f03O3C4zOiwDSVIev6KnCotvpPX/m5HC2pNFzZf1H0hb/ge
+         4BoKPD9ivZP0TFRRj2jAL+EieZbGgz9iXqJot8GWa+rwGXwp//zDD+ckpQIpoy+C8WHU
+         faopogzHqmD0we193b7Zq4adzhpKWj0m6isZc8MinSrRzp7HCh98FA1vDxYMqyrhN1SR
+         Vj5cEHe2iUhmb3/hreanj/68n61FXMuL0hJy4inKlHIusesNQUpo9CVyPNISd06ww+4M
+         A+wlhdwUzXSUyfGG1Nd+kE2PBpqoiP/ybEwaoe7c9/yRER1Anasd7jS8JYo7vmgzt2FT
+         C36w==
+X-Gm-Message-State: APjAAAV3lv4OEOUUbjZlDsfxAFr4qA3prK63EWE/MzmnQxGXXq2UIqco
+        ZRAvfBNYP/Dikc4aV4nwgywQLA==
+X-Google-Smtp-Source: APXvYqxZuRR2hJ2pElF2t/9lGshSakTd6RGMsXt59FPQH7rSPXBg4udJBQ0orZJzB6AngdKEjeJO+w==
+X-Received: by 2002:ac8:2af8:: with SMTP id c53mr22206710qta.387.1560301214655;
+        Tue, 11 Jun 2019 18:00:14 -0700 (PDT)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id d188sm7473200qkf.40.2019.06.11.18.00.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 18:00:14 -0700 (PDT)
+Message-ID: <09e608da8abeb4cd9c84bf9f559af2438540eb2b.camel@ndufresne.ca>
+Subject: Re: [PATCH v7 2/4] media: videodev2: add
+ V4L2_FMT_FLAG_FIXED_RESOLUTION
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Maxime Jourdan <mjourdan@baylibre.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Date:   Tue, 11 Jun 2019 21:00:12 -0400
+In-Reply-To: <1d2adae2b6d0f370f17b9bac94ae4e9207dccbad.camel@ndufresne.ca>
+References: <20190531093126.26956-1-mjourdan@baylibre.com>
+         <20190531093126.26956-3-mjourdan@baylibre.com>
+         <9731b2db-efd4-87d0-c48d-87adec433747@xs4all.nl>
+         <1560243127.13886.3.camel@pengutronix.de>
+         <1d2adae2b6d0f370f17b9bac94ae4e9207dccbad.camel@ndufresne.ca>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <e404133f-dade-6fdf-08e9-6e4f15d23b66@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
-
-Thanks a lot for your reviewing.
-
-On 6/11/19 8:10 PM, Pavel Begunkov wrote:
+Le mardi 11 juin 2019 à 20:58 -0400, Nicolas Dufresne a écrit :
+> Le mardi 11 juin 2019 à 10:52 +0200, Philipp Zabel a écrit :
+> > On Wed, 2019-06-05 at 15:39 +0200, Hans Verkuil wrote:
+> > > Hi Maxime,
+> > > 
+> > > I am wondering if this flag shouldn't be inverted: you set
+> > > V4L2_FMT_FLAG_DYN_RESOLUTION if dynamic resolution is supported,
+> > > otherwise it isn't.
+> > > 
+> > > Can all the existing mainlined codec drivers handle midstream
+> > > resolution changes?
+> > > 
+> > > s5p-mfc, venus and mediatek can, but I see no SOURCE_CHANGE event in
+> > > the coda drivers, so I suspect that that can't handle this.
+> > > 
+> > > Philipp, what is the status of the coda driver for dynamic resolution
+> > > changes?
+> > 
+> > FTR, to my knowledge there is no dynamic resolution change support in
+> > the firmware, as there is no signal (interrupt nor picture run return
+> > value) to indicate that different headers were parsed.
+> > 
+> > I am planning to add the initial source change event required by the
+> > current decoder API documentation, but I am afraid there will be no
+> > support for source changes due to mid-stream resolution changes due to
+> > firmware limitations.
 > 
+> I'm far from familiar with this IP, but at least on CODA988, I can read
+> from the manual that the workflow is to first guess the allocation, and
+> if you guess it wrong, an error is returned. What seems to match the
+> SOURCE_CHANGE event in that version would be in the picture status
+> register, the bit 20, which is documented as triggered if the stream
+> requires bigger buffers sizes, or more buffers. After fixing that, you
+> should, if I read correctly, retry.
 > 
-> On 03/06/2019 04:16, Lu Baolu wrote:
->> IOMMU hardware always use paging for DMA remapping.  The
->> minimum mapped window is a page size. The device drivers
->> may map buffers not filling whole IOMMU window. It allows
->> device to access to possibly unrelated memory and various
->> malicious devices can exploit this to perform DMA attack.
->>
->> This introduces the bouce buffer mechanism for DMA buffers
->> which doesn't fill a minimal IOMMU page. It could be used
->> by various vendor specific IOMMU drivers as long as the
->> DMA domain is managed by the generic IOMMU layer. Below
->> APIs are added:
->>
->> * iommu_bounce_map(dev, addr, paddr, size, dir, attrs)
->>    - Map a buffer start at DMA address @addr in bounce page
->>      manner. For buffer parts that doesn't cross a whole
->>      minimal IOMMU page, the bounce page policy is applied.
->>      A bounce page mapped by swiotlb will be used as the DMA
->>      target in the IOMMU page table. Otherwise, the physical
->>      address @paddr is mapped instead.
->>
->> * iommu_bounce_unmap(dev, addr, size, dir, attrs)
->>    - Unmap the buffer mapped with iommu_bounce_map(). The bounce
->>      page will be torn down after the bounced data get synced.
->>
->> * iommu_bounce_sync(dev, addr, size, dir, target)
->>    - Synce the bounced data in case the bounce mapped buffer is
->>      reused.
->>
->> The whole APIs are included within a kernel option IOMMU_BOUNCE_PAGE.
->> It's useful for cases where bounce page doesn't needed, for example,
->> embedded cases.
->>
->> Cc: Ashok Raj <ashok.raj@intel.com>
->> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Cc: Kevin Tian <kevin.tian@intel.com>
->> Cc: Alan Cox <alan@linux.intel.com>
->> Cc: Mika Westerberg <mika.westerberg@intel.com>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/Kconfig |  14 +++++
->>   drivers/iommu/iommu.c | 119 ++++++++++++++++++++++++++++++++++++++++++
->>   include/linux/iommu.h |  35 +++++++++++++
->>   3 files changed, 168 insertions(+)
->>
->> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
->> index 83664db5221d..d837ec3f359b 100644
->> --- a/drivers/iommu/Kconfig
->> +++ b/drivers/iommu/Kconfig
->> @@ -86,6 +86,20 @@ config IOMMU_DEFAULT_PASSTHROUGH
->>   
->>   	  If unsure, say N here.
->>   
->> +config IOMMU_BOUNCE_PAGE
->> +	bool "Use bounce page for untrusted devices"
->> +	depends on IOMMU_API
->> +	select SWIOTLB
->> +	help
->> +	  IOMMU hardware always use paging for DMA remapping. The minimum
->> +	  mapped window is a page size. The device drivers may map buffers
->> +	  not filling whole IOMMU window. This allows device to access to
->> +	  possibly unrelated memory and malicious device can exploit this
->> +	  to perform a DMA attack. Select this to use a bounce page for the
->> +	  buffer which doesn't fill a whole IOMU page.
->> +
->> +	  If unsure, say N here.
->> +
->>   config OF_IOMMU
->>          def_bool y
->>          depends on OF && IOMMU_API
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index 2a906386bb8e..fa44f681a82b 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -2246,3 +2246,122 @@ int iommu_sva_get_pasid(struct iommu_sva *handle)
->>   	return ops->sva_get_pasid(handle);
->>   }
->>   EXPORT_SYMBOL_GPL(iommu_sva_get_pasid);
->> +
->> +#ifdef CONFIG_IOMMU_BOUNCE_PAGE
->> +
->> +/*
->> + * Bounce buffer support for external devices:
->> + *
->> + * IOMMU hardware always use paging for DMA remapping. The minimum mapped
->> + * window is a page size. The device drivers may map buffers not filling
->> + * whole IOMMU window. This allows device to access to possibly unrelated
->> + * memory and malicious device can exploit this to perform a DMA attack.
->> + * Use bounce pages for the buffer which doesn't fill whole IOMMU pages.
->> + */
->> +
->> +static inline size_t
->> +get_aligned_size(struct iommu_domain *domain, dma_addr_t addr, size_t size)
->> +{
->> +	unsigned long page_size = 1 << __ffs(domain->pgsize_bitmap);
->> +	unsigned long offset = page_size - 1;
->> +
->> +	return ALIGN((addr & offset) + size, page_size);
->> +}
->> +
->> +dma_addr_t iommu_bounce_map(struct device *dev, dma_addr_t iova,
->> +			    phys_addr_t paddr, size_t size,
->> +			    enum dma_data_direction dir,
->> +			    unsigned long attrs)
->> +{
->> +	struct iommu_domain *domain;
->> +	unsigned int min_pagesz;
->> +	phys_addr_t tlb_addr;
->> +	size_t aligned_size;
->> +	int prot = 0;
->> +	int ret;
->> +
->> +	domain = iommu_get_dma_domain(dev);
->> +	if (!domain)
->> +		return DMA_MAPPING_ERROR;
->> +
->> +	if (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL)
->> +		prot |= IOMMU_READ;
->> +	if (dir == DMA_FROM_DEVICE || dir == DMA_BIDIRECTIONAL)
->> +		prot |= IOMMU_WRITE;
->> +
->> +	aligned_size = get_aligned_size(domain, paddr, size);
->> +	min_pagesz = 1 << __ffs(domain->pgsize_bitmap);
->> +
->> +	/*
->> +	 * If both the physical buffer start address and size are
->> +	 * page aligned, we don't need to use a bounce page.
->> +	 */
->> +	if (!IS_ALIGNED(paddr | size, min_pagesz)) {
->> +		tlb_addr = swiotlb_tbl_map_single(dev,
->> +				__phys_to_dma(dev, io_tlb_start),
->> +				paddr, size, aligned_size, dir, attrs);
->> +		if (tlb_addr == DMA_MAPPING_ERROR)
->> +			return DMA_MAPPING_ERROR;
->> +	} else {
->> +		tlb_addr = paddr;
->> +	}
->> +
->> +	ret = iommu_map(domain, iova, tlb_addr, aligned_size, prot);
->> +	if (ret) {
->> +		swiotlb_tbl_unmap_single(dev, tlb_addr, size,
->> +					 aligned_size, dir, attrs);
-> You would probably want to check, whether @tlb_addr came from
-> swiotlb_tbl_map_single. (is_swiotlb_buffer() or reuse predicate above).
+> It does not notify if the buffers are too large, but you can detect,
+> since there is register with the output stream information. This
+> basically means that for V4L2 restriction, you'd have to bounce the
+> buffers on frame size boundary or something like thisé
+> 
+> This workflow is very similar to how OMX works, but V4L2 is even less
+> flexible on allocation vs format, forcing more re-allocation.
 
-Right. Good catch.
+Oh, actually, you already bounce the buffers through the color
+converter, so I guess this can all be hidden internally.
 
 > 
-> 
->> +		return DMA_MAPPING_ERROR;
->> +	}
->> +
->> +	return iova;
->> +}
->> +EXPORT_SYMBOL_GPL(iommu_bounce_map);
->> +
->> +static inline phys_addr_t
->> +iova_to_tlb_addr(struct iommu_domain *domain, dma_addr_t addr)
->> +{
->> +	if (unlikely(!domain->ops || !domain->ops->iova_to_phys))
->> +		return 0;
->> +
->> +	return domain->ops->iova_to_phys(domain, addr);
->> +}
->> +
->> +void iommu_bounce_unmap(struct device *dev, dma_addr_t iova, size_t size,
->> +			enum dma_data_direction dir, unsigned long attrs)
->> +{
->> +	struct iommu_domain *domain;
->> +	phys_addr_t tlb_addr;
->> +	size_t aligned_size;
->> +
->> +	domain = iommu_get_dma_domain(dev);
->> +	if (WARN_ON(!domain))
->> +		return;
->> +
->> +	aligned_size = get_aligned_size(domain, iova, size);
->> +	tlb_addr = iova_to_tlb_addr(domain, iova);
->> +	if (WARN_ON(!tlb_addr))
->> +		return;
->> +
->> +	iommu_unmap(domain, iova, aligned_size);
->> +	if (is_swiotlb_buffer(tlb_addr))
-> 
-> Is there any chance, this @tlb_addr is a swiotlb buffer, but owned by an
-> API user? I mean something like
-> iommu_bounce_map(swiotlb_tbl_map_single()).
-> 
-> Then, to retain ownership semantic, we shouldn't unmap it. Maybe to
-> check and fail iommu_bounce_map() to be sure?
+> > regards
+> > Philipp
 
-For untrusted devices, we always force iommu to enforce the DMA
-isolation. There are no cases where @tlb_addr is a swiotlb buffer
-owned by a device driver as far as I can see.
-
-Best regards,
-Baolu
-
-> 
-> 
->> +		swiotlb_tbl_unmap_single(dev, tlb_addr, size,
->> +					 aligned_size, dir, attrs);
->> +}
->> +EXPORT_SYMBOL_GPL(iommu_bounce_unmap);
->> +
->> +void iommu_bounce_sync(struct device *dev, dma_addr_t addr, size_t size,
->> +		       enum dma_data_direction dir, enum dma_sync_target target)
->> +{
->> +	struct iommu_domain *domain;
->> +	phys_addr_t tlb_addr;
->> +
->> +	domain = iommu_get_dma_domain(dev);
->> +	if (WARN_ON(!domain))
->> +		return;
->> +
->> +	tlb_addr = iova_to_tlb_addr(domain, addr);
->> +	if (is_swiotlb_buffer(tlb_addr))
->> +		swiotlb_tbl_sync_single(dev, tlb_addr, size, dir, target);
->> +}
->> +EXPORT_SYMBOL_GPL(iommu_bounce_sync);
->> +#endif /* CONFIG_IOMMU_BOUNCE_PAGE */
->> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
->> index 91af22a344e2..814c0da64692 100644
->> --- a/include/linux/iommu.h
->> +++ b/include/linux/iommu.h
->> @@ -25,6 +25,8 @@
->>   #include <linux/errno.h>
->>   #include <linux/err.h>
->>   #include <linux/of.h>
->> +#include <linux/swiotlb.h>
->> +#include <linux/dma-direct.h>
->>   
->>   #define IOMMU_READ	(1 << 0)
->>   #define IOMMU_WRITE	(1 << 1)
->> @@ -499,6 +501,39 @@ int iommu_sva_set_ops(struct iommu_sva *handle,
->>   		      const struct iommu_sva_ops *ops);
->>   int iommu_sva_get_pasid(struct iommu_sva *handle);
->>   
->> +#ifdef CONFIG_IOMMU_BOUNCE_PAGE
->> +dma_addr_t iommu_bounce_map(struct device *dev, dma_addr_t iova,
->> +			    phys_addr_t paddr, size_t size,
->> +			    enum dma_data_direction dir,
->> +			    unsigned long attrs);
->> +void iommu_bounce_unmap(struct device *dev, dma_addr_t iova, size_t size,
->> +			enum dma_data_direction dir, unsigned long attrs);
->> +void iommu_bounce_sync(struct device *dev, dma_addr_t addr, size_t size,
->> +		       enum dma_data_direction dir,
->> +		       enum dma_sync_target target);
->> +#else
->> +static inline
->> +dma_addr_t iommu_bounce_map(struct device *dev, dma_addr_t iova,
->> +			    phys_addr_t paddr, size_t size,
->> +			    enum dma_data_direction dir,
->> +			    unsigned long attrs)
->> +{
->> +	return DMA_MAPPING_ERROR;
->> +}
->> +
->> +static inline
->> +void iommu_bounce_unmap(struct device *dev, dma_addr_t iova, size_t size,
->> +			enum dma_data_direction dir, unsigned long attrs)
->> +{
->> +}
->> +
->> +static inline
->> +void iommu_bounce_sync(struct device *dev, dma_addr_t addr, size_t size,
->> +		       enum dma_data_direction dir, enum dma_sync_target target)
->> +{
->> +}
->> +#endif /* CONFIG_IOMMU_BOUNCE_PAGE */
->> +
->>   #else /* CONFIG_IOMMU_API */
->>   
->>   struct iommu_ops {};
->>
-> 
