@@ -2,340 +2,73 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA9DC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B427BC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAFC4208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:17:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="PpN6PEFO"
+	by mail.kernel.org (Postfix) with ESMTP id 8D96A208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:22:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731008AbfFLGRV (ORCPT
+        id S1731022AbfFLGWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 02:17:21 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38689 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730984AbfFLGRU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 02:17:20 -0400
-Received: by mail-pg1-f196.google.com with SMTP id v11so8324069pgl.5
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 23:17:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=XfFiCk2hi1loFtSR3ZjqlUfAHTiBWq39sAwp51Bhapc=;
-        b=PpN6PEFOS8qSJMctngFCBYS8DwxqTL8A0MvDrI8OYBi51IL1MooDjOSwr8kS/34Aa3
-         rgN5NL/7KMdG1BJZ7PFBMbNwGoGsLrsUS0ny07dPRed3UTCub5C2nJ6EWPzb/fOIZO3u
-         U0KW4ZAje8M3MAei0/BOJqOEndEpk3+NoTxvI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=XfFiCk2hi1loFtSR3ZjqlUfAHTiBWq39sAwp51Bhapc=;
-        b=mOF+5us/SjLwb4q7IUAg79H/Cbr0N5DT62KnOqUDqMYKleweGdzEuQ4FMYx690taCm
-         0Aigg1JAUjyfAF2ur5llYfCcotKCkfwmfB1zyKEHdIKCHDIeiBUmAGv7BzABVjYz6WSE
-         iMWasCAOvaCE1y8DFmHG+b2sacKoNkD3C/JTXxUYUHMdewFYBJcuiG5XicYJnaTvpBkU
-         fpIDOFYS2CkZv3L7b7g804rxTQSunaVXRquQmZunI8Y+uKj2U46FdNvux8cxo45tt1vg
-         et5IT1luJfCXI1orokyjhICeZTQynWdPqnM7N/URGbFlt2iYPYN8h5iEqOwh3zCozNLu
-         A9Yg==
-X-Gm-Message-State: APjAAAUKHcp2ykfMqdatzQ3mTjdzqghFKoqNo/mbC7BJm+SQESuf9pik
-        Y02ciF9LOY/uSu8GngcM6SOz5A==
-X-Google-Smtp-Source: APXvYqySJlPYC22TbdsrGitWsIlEDVh3N6b9eggOHerDOFQzVYMRWmAjE6cTAFrrhQFh7QhZKBhg4g==
-X-Received: by 2002:a17:90a:db42:: with SMTP id u2mr21939507pjx.48.1560320239501;
-        Tue, 11 Jun 2019 23:17:19 -0700 (PDT)
-Received: from localhost (ppp167-251-205.static.internode.on.net. [59.167.251.205])
-        by smtp.gmail.com with ESMTPSA id x129sm18478568pfb.29.2019.06.11.23.17.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 23:17:18 -0700 (PDT)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: Re: [PATCH v3 1/3] powerpc/powernv: Add OPAL API interface to get secureboot state
-In-Reply-To: <1560198837-18857-2-git-send-email-nayna@linux.ibm.com>
-References: <1560198837-18857-1-git-send-email-nayna@linux.ibm.com> <1560198837-18857-2-git-send-email-nayna@linux.ibm.com>
-Date:   Wed, 12 Jun 2019 16:17:14 +1000
-Message-ID: <87ftofpbth.fsf@dja-thinkpad.axtens.net>
+        Wed, 12 Jun 2019 02:22:34 -0400
+Received: from mga18.intel.com ([134.134.136.126]:39846 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730975AbfFLGWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 02:22:34 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jun 2019 23:22:32 -0700
+X-ExtLoop1: 1
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 11 Jun 2019 23:22:26 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 12 Jun 2019 09:22:25 +0300
+Date:   Wed, 12 Jun 2019 09:22:25 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        Ingo Molnar <mingo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        pengfei.xu@intel.com, Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/9] iommu: Bounce page for untrusted devices
+Message-ID: <20190612062225.GM2640@lahna.fi.intel.com>
+References: <20190603011620.31999-1-baolu.lu@linux.intel.com>
+ <20190610154241.GS28796@char.us.oracle.com>
+ <cd66dab1-9a18-13c1-e668-417036e2dbc1@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd66dab1-9a18-13c1-e668-417036e2dbc1@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nayna Jain <nayna@linux.ibm.com> writes:
+On Wed, Jun 12, 2019 at 11:00:06AM +0800, Lu Baolu wrote:
+> > What kind of devices did you test it with?
+> 
+> Most test work was done by Xu Pengfei (cc'ed). He has run the code
+> on real platforms with various thunderbolt peripherals (usb, disk,
+> network, etc.).
 
-> From: Claudio Carvalho <cclaudio@linux.ibm.com>
->
-> The X.509 certificates trusted by the platform and other information
-> required to secure boot the OS kernel are wrapped in secure variables,
-> which are controlled by OPAL.
->
-> This patch adds support to read OPAL secure variables through
-> OPAL_SECVAR_GET call. It returns the metadata and data for a given secure
-> variable based on the unique key.
->
-> Since OPAL can support different types of backend which can vary in the
-> variable interpretation, a new OPAL API call named OPAL_SECVAR_BACKEND, is
-> added to retrieve the supported backend version. This helps the consumer
-> to know how to interpret the variable.
->
-
-(Firstly, apologies that I haven't got around to asking about this yet!)
-
-Are pluggable/versioned backend a good idea?
-
-There are a few things that worry me about the idea:
-
- - It adds complexity in crypto (or crypto-adjacent) code, and that
-   increases the likelihood that we'll accidentally add a bug with bad
-   consequences.
-
- - Under what circumstances would would we change the kernel-visible
-   behaviour of skiboot? Are we expecting to change the behaviour,
-   content or names of the variables in future? Otherwise the only
-   relevant change I can think of is a change to hardware platforms, and
-   I'm not sure how a change in hardware would lead to change in
-   behaviour in the kernel. Wouldn't Skiboot hide h/w differences?
-
- - If we are worried about a long-term-future change to how secure-boot
-   works, would it be better to just add more get/set calls to opal at
-   the point at which we actually implement the new system?
-   
- - UEFI added EFI_VARIABLE_AUTHENTICATION_3 in a way that - as far
-   as I know - didn't break backwards compatibility. Is there a reason
-   we cannot add features that way instead? (It also dropped v1 of the
-   authentication header.)
-   
- - What is the correct fallback behaviour if a kernel receives a result
-   that it does not expect? If a kernel expecting BackendV1 is instead
-   informed that it is running on BackendV2, then the cannot access the
-   secure variable at all, so it cannot load keys that are potentially
-   required to successfully boot (e.g. to validate the module for
-   network card or graphics!)
-
-Kind regards,
-Daniel
-
-> This support can be enabled using CONFIG_OPAL_SECVAR
->
-> Signed-off-by: Claudio Carvalho <cclaudio@linux.ibm.com>
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> ---
-> This patch depends on a new OPAL call that is being added to skiboot.
-> The patch set that implements the new call has been posted to
-> https://patchwork.ozlabs.org/project/skiboot/list/?series=112868
->
->  arch/powerpc/include/asm/opal-api.h          |  4 +-
->  arch/powerpc/include/asm/opal-secvar.h       | 23 ++++++
->  arch/powerpc/include/asm/opal.h              |  6 ++
->  arch/powerpc/platforms/powernv/Kconfig       |  6 ++
->  arch/powerpc/platforms/powernv/Makefile      |  1 +
->  arch/powerpc/platforms/powernv/opal-call.c   |  2 +
->  arch/powerpc/platforms/powernv/opal-secvar.c | 85 ++++++++++++++++++++
->  7 files changed, 126 insertions(+), 1 deletion(-)
->  create mode 100644 arch/powerpc/include/asm/opal-secvar.h
->  create mode 100644 arch/powerpc/platforms/powernv/opal-secvar.c
->
-> diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-> index e1577cfa7186..a505e669b4b6 100644
-> --- a/arch/powerpc/include/asm/opal-api.h
-> +++ b/arch/powerpc/include/asm/opal-api.h
-> @@ -212,7 +212,9 @@
->  #define OPAL_HANDLE_HMI2			166
->  #define	OPAL_NX_COPROC_INIT			167
->  #define OPAL_XIVE_GET_VP_STATE			170
-> -#define OPAL_LAST				170
-> +#define OPAL_SECVAR_GET                         173
-> +#define OPAL_SECVAR_BACKEND                     177
-> +#define OPAL_LAST				177
->  
->  #define QUIESCE_HOLD			1 /* Spin all calls at entry */
->  #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
-> diff --git a/arch/powerpc/include/asm/opal-secvar.h b/arch/powerpc/include/asm/opal-secvar.h
-> new file mode 100644
-> index 000000000000..b677171a0368
-> --- /dev/null
-> +++ b/arch/powerpc/include/asm/opal-secvar.h
-> @@ -0,0 +1,23 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * PowerNV definitions for secure variables OPAL API.
-> + *
-> + * Copyright (C) 2019 IBM Corporation
-> + * Author: Claudio Carvalho <cclaudio@linux.ibm.com>
-> + *
-> + */
-> +#ifndef OPAL_SECVAR_H
-> +#define OPAL_SECVAR_H
-> +
-> +enum {
-> +	BACKEND_NONE = 0,
-> +	BACKEND_TC_COMPAT_V1,
-> +};
-> +
-> +extern int opal_get_variable(u8 *key, unsigned long ksize,
-> +			     u8 *metadata, unsigned long *mdsize,
-> +			     u8 *data, unsigned long *dsize);
-> +
-> +extern int opal_variable_version(unsigned long *backend);
-> +
-> +#endif
-> diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-> index 4cc37e708bc7..57d2c2356eda 100644
-> --- a/arch/powerpc/include/asm/opal.h
-> +++ b/arch/powerpc/include/asm/opal.h
-> @@ -394,6 +394,12 @@ void opal_powercap_init(void);
->  void opal_psr_init(void);
->  void opal_sensor_groups_init(void);
->  
-> +extern int opal_secvar_get(uint64_t k_key, uint64_t k_key_len,
-> +			   uint64_t k_metadata, uint64_t k_metadata_size,
-> +			   uint64_t k_data, uint64_t k_data_size);
-> +
-> +extern int opal_secvar_backend(uint64_t k_backend);
-> +
->  #endif /* __ASSEMBLY__ */
->  
->  #endif /* _ASM_POWERPC_OPAL_H */
-> diff --git a/arch/powerpc/platforms/powernv/Kconfig b/arch/powerpc/platforms/powernv/Kconfig
-> index 850eee860cf2..65b060539b5c 100644
-> --- a/arch/powerpc/platforms/powernv/Kconfig
-> +++ b/arch/powerpc/platforms/powernv/Kconfig
-> @@ -47,3 +47,9 @@ config PPC_VAS
->  	  VAS adapters are found in POWER9 based systems.
->  
->  	  If unsure, say N.
-> +
-> +config OPAL_SECVAR
-> +	bool "OPAL Secure Variables"
-> +	depends on PPC_POWERNV
-> +	help
-> +	  This enables the kernel to access OPAL secure variables.
-> diff --git a/arch/powerpc/platforms/powernv/Makefile b/arch/powerpc/platforms/powernv/Makefile
-> index da2e99efbd04..6651c742e530 100644
-> --- a/arch/powerpc/platforms/powernv/Makefile
-> +++ b/arch/powerpc/platforms/powernv/Makefile
-> @@ -16,3 +16,4 @@ obj-$(CONFIG_PERF_EVENTS) += opal-imc.o
->  obj-$(CONFIG_PPC_MEMTRACE)	+= memtrace.o
->  obj-$(CONFIG_PPC_VAS)	+= vas.o vas-window.o vas-debug.o
->  obj-$(CONFIG_OCXL_BASE)	+= ocxl.o
-> +obj-$(CONFIG_OPAL_SECVAR) += opal-secvar.o
-> diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-> index 36c8fa3647a2..0445980f294f 100644
-> --- a/arch/powerpc/platforms/powernv/opal-call.c
-> +++ b/arch/powerpc/platforms/powernv/opal-call.c
-> @@ -288,3 +288,5 @@ OPAL_CALL(opal_pci_set_pbcq_tunnel_bar,		OPAL_PCI_SET_PBCQ_TUNNEL_BAR);
->  OPAL_CALL(opal_sensor_read_u64,			OPAL_SENSOR_READ_U64);
->  OPAL_CALL(opal_sensor_group_enable,		OPAL_SENSOR_GROUP_ENABLE);
->  OPAL_CALL(opal_nx_coproc_init,			OPAL_NX_COPROC_INIT);
-> +OPAL_CALL(opal_secvar_get,                      OPAL_SECVAR_GET);
-> +OPAL_CALL(opal_secvar_backend,                  OPAL_SECVAR_BACKEND);
-> diff --git a/arch/powerpc/platforms/powernv/opal-secvar.c b/arch/powerpc/platforms/powernv/opal-secvar.c
-> new file mode 100644
-> index 000000000000..dba441dd5af1
-> --- /dev/null
-> +++ b/arch/powerpc/platforms/powernv/opal-secvar.c
-> @@ -0,0 +1,85 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PowerNV code for secure variables
-> + *
-> + * Copyright (C) 2019 IBM Corporation
-> + * Author: Claudio Carvalho <cclaudio@linux.ibm.com>
-> + *
-> + */
-> +
-> +/*
-> + * The opal wrappers in this file treat the @name, @vendor, and @data
-> + * parameters as little endian blobs.
-> + * @name is a ucs2 string
-> + * @vendor is the vendor GUID. It is converted to LE in the kernel
-> + * @data variable data, which layout may be different for each variable
-> + */
-> +
-> +#define pr_fmt(fmt) "secvar: "fmt
-> +
-> +#include <linux/types.h>
-> +#include <asm/opal.h>
-> +#include <asm/opal-secvar.h>
-> +
-> +static bool is_opal_secvar_supported(void)
-> +{
-> +	static bool opal_secvar_supported;
-> +	static bool initialized;
-> +
-> +	if (initialized)
-> +		return opal_secvar_supported;
-> +
-> +	if (!opal_check_token(OPAL_SECVAR_GET)
-> +	    || !opal_check_token(OPAL_SECVAR_BACKEND)) {
-> +		pr_err("OPAL doesn't support secure variables\n");
-> +		opal_secvar_supported = false;
-> +	} else {
-> +		opal_secvar_supported = true;
-> +	}
-> +
-> +	initialized = true;
-> +
-> +	return opal_secvar_supported;
-> +}
-> +
-> +int opal_get_variable(u8 *key, unsigned long ksize, u8 *metadata,
-> +		      unsigned long *mdsize, u8 *data, unsigned long *dsize)
-> +{
-> +	int rc;
-> +
-> +	if (!is_opal_secvar_supported())
-> +		return OPAL_UNSUPPORTED;
-> +
-> +	if (mdsize)
-> +		*mdsize = cpu_to_be64(*mdsize);
-> +	if (dsize)
-> +		*dsize = cpu_to_be64(*dsize);
-> +
-> +	rc = opal_secvar_get(__pa(key), ksize, __pa(metadata), __pa(mdsize),
-> +			     __pa(data), __pa(dsize));
-> +
-> +	if (mdsize)
-> +		*mdsize = be64_to_cpu(*mdsize);
-> +	if (dsize)
-> +		*dsize = be64_to_cpu(*dsize);
-> +
-> +	return rc;
-> +}
-> +
-> +int opal_variable_version(unsigned long *backend)
-> +{
-> +	int rc;
-> +
-> +	if (!is_opal_secvar_supported())
-> +		return OPAL_UNSUPPORTED;
-> +
-> +	if (backend)
-> +		*backend = cpu_to_be64(*backend);
-> +
-> +	rc = opal_secvar_backend(__pa(backend));
-> +
-> +	if (backend)
-> +		*backend = be64_to_cpu(*backend);
-> +
-> +	return rc;
-> +}
-> -- 
-> 2.20.1
+In addtition to that we are also in works to build a real thunderclap
+platform to verify it can only access the bounce buffer if the DMA
+transfer was to a memory not filling the whole page.
