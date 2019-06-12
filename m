@@ -2,110 +2,151 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AE8C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B01C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 658AD21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:20:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560352853;
-	bh=eSlOl/FrKZdWcnfDywclEUx75S0pbToZnLCx/u6+Wls=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=G62mdbky9zEWfErAHXVJU1e87wm8akoPPqJY/Fbz3sGbQiHZTTw3rAzIzwgjbEilf
-	 BT3gVFGj8oH/D8YiyE+r+bWFsB2/C7iK57JZj1iC6Qd9XRjb56RlcMENEXGPVOzJ9v
-	 h+P8wK9WSWj3I4xrwCFodsyGS/u6y4kr26nM4vaY=
+	by mail.kernel.org (Postfix) with ESMTP id 857F021019
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502031AbfFLPUw (ORCPT
+        id S2502042AbfFLPU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:20:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2501983AbfFLPUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:20:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8CDF21019;
-        Wed, 12 Jun 2019 15:20:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560352836;
-        bh=eSlOl/FrKZdWcnfDywclEUx75S0pbToZnLCx/u6+Wls=;
-        h=Date:From:To:Cc:Subject:From;
-        b=QkEgIInAKRVyU04Dhe5elLte+yGBRK4tC0ARQqovcwqTqpenKCFxewQXFl2M4lVvv
-         Lpr68smrIZJCGDX6jZXy5NxQBw2BW8u5phnK3xG/e1/SUHO5KbNuSZpAVSpUQMRrY+
-         KhvvYmeE7qn3G2NW9Hzwn/aX/VZnQwmbt/7Jj06M=
-Date:   Wed, 12 Jun 2019 17:20:33 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] pstore: no need to check return value of debugfs_create
- functions
-Message-ID: <20190612152033.GA17290@kroah.com>
+        Wed, 12 Jun 2019 11:20:57 -0400
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:36136 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2501948AbfFLPUd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:20:33 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 78C33405E5;
+        Wed, 12 Jun 2019 17:20:25 +0200 (CEST)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=vmwopensource.org header.i=@vmwopensource.org header.b=hrUiLx4A;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id BRzntngxnE9y; Wed, 12 Jun 2019 17:20:11 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id CE9B540572;
+        Wed, 12 Jun 2019 17:20:09 +0200 (CEST)
+Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 66BCF3619C2;
+        Wed, 12 Jun 2019 17:20:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=vmwopensource.org;
+        s=mail; t=1560352809;
+        bh=Yjmtl92sLAlEoB99F5XOnCklObajAbb4hpy0froOh7I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hrUiLx4AvjTxhRIGA/Le208AGL5hCC+aKe6Dz4kO+DpO6X5QQvqpLbFyVuFYDtcxw
+         DYgkI865pUqk1xhr/Ll4LTcNoLDpGuYApq9k/aCny2d/E8wUCYfcn6jp9+0252FYQP
+         gIhv4jRpSlU0NuRCd9EzhtVQRO0U9nNkK43wM9jE=
+From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
+        <thellstrom@vmwopensource.org>
+To:     dri-devel@lists.freedesktop.org
+Cc:     linux-graphics-maintainer@vmware.com, pv-drivers@vmware.com,
+        linux-kernel@vger.kernel.org, hch@infradead.org,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH v6 1/9] mm: Allow the [page|pfn]_mkwrite callbacks to drop the mmap_sem
+Date:   Wed, 12 Jun 2019 17:19:42 +0200
+Message-Id: <20190612151950.2870-2-thellstrom@vmwopensource.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190612151950.2870-1-thellstrom@vmwopensource.org>
+References: <20190612151950.2870-1-thellstrom@vmwopensource.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Anton Vorontsov <anton@enomsg.org>
-Cc: Colin Cross <ccross@android.com>
-Cc: Tony Luck <tony.luck@intel.com>
+Driver fault callbacks are allowed to drop the mmap_sem when expecting
+long hardware waits to avoid blocking other mm users. Allow the mkwrite
+callbacks to do the same by returning early on VM_FAULT_RETRY.
+
+In particular we want to be able to drop the mmap_sem when waiting for
+a reservation object lock on a GPU buffer object. These locks may be
+held while waiting for the GPU.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Huang Ying <ying.huang@intel.com>
+Cc: Souptick Joarder <jrdr.linux@gmail.com>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/pstore/ftrace.c | 18 ++----------------
- 1 file changed, 2 insertions(+), 16 deletions(-)
 
-diff --git a/fs/pstore/ftrace.c b/fs/pstore/ftrace.c
-index b8a0931568f8..fd9468928bef 100644
---- a/fs/pstore/ftrace.c
-+++ b/fs/pstore/ftrace.c
-@@ -120,27 +120,13 @@ static struct dentry *pstore_ftrace_dir;
- 
- void pstore_register_ftrace(void)
- {
--	struct dentry *file;
--
- 	if (!psinfo->write)
- 		return;
- 
- 	pstore_ftrace_dir = debugfs_create_dir("pstore", NULL);
--	if (!pstore_ftrace_dir) {
--		pr_err("%s: unable to create pstore directory\n", __func__);
--		return;
--	}
--
--	file = debugfs_create_file("record_ftrace", 0600, pstore_ftrace_dir,
--				   NULL, &pstore_knob_fops);
--	if (!file) {
--		pr_err("%s: unable to create record_ftrace file\n", __func__);
--		goto err_file;
--	}
- 
--	return;
--err_file:
--	debugfs_remove(pstore_ftrace_dir);
-+	debugfs_create_file("record_ftrace", 0600, pstore_ftrace_dir, NULL,
-+			    &pstore_knob_fops);
- }
- 
- void pstore_unregister_ftrace(void)
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+---
+ mm/memory.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/mm/memory.c b/mm/memory.c
+index ddf20bd0c317..168f546af1ad 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2238,7 +2238,7 @@ static vm_fault_t do_page_mkwrite(struct vm_fault *vmf)
+ 	ret = vmf->vma->vm_ops->page_mkwrite(vmf);
+ 	/* Restore original flags so that caller is not surprised */
+ 	vmf->flags = old_flags;
+-	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE)))
++	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+ 		return ret;
+ 	if (unlikely(!(ret & VM_FAULT_LOCKED))) {
+ 		lock_page(page);
+@@ -2515,7 +2515,7 @@ static vm_fault_t wp_pfn_shared(struct vm_fault *vmf)
+ 		pte_unmap_unlock(vmf->pte, vmf->ptl);
+ 		vmf->flags |= FAULT_FLAG_MKWRITE;
+ 		ret = vma->vm_ops->pfn_mkwrite(vmf);
+-		if (ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE))
++		if (ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY))
+ 			return ret;
+ 		return finish_mkwrite_fault(vmf);
+ 	}
+@@ -2536,7 +2536,8 @@ static vm_fault_t wp_page_shared(struct vm_fault *vmf)
+ 		pte_unmap_unlock(vmf->pte, vmf->ptl);
+ 		tmp = do_page_mkwrite(vmf);
+ 		if (unlikely(!tmp || (tmp &
+-				      (VM_FAULT_ERROR | VM_FAULT_NOPAGE)))) {
++				      (VM_FAULT_ERROR | VM_FAULT_NOPAGE |
++				       VM_FAULT_RETRY)))) {
+ 			put_page(vmf->page);
+ 			return tmp;
+ 		}
+@@ -3601,7 +3602,8 @@ static vm_fault_t do_shared_fault(struct vm_fault *vmf)
+ 		unlock_page(vmf->page);
+ 		tmp = do_page_mkwrite(vmf);
+ 		if (unlikely(!tmp ||
+-				(tmp & (VM_FAULT_ERROR | VM_FAULT_NOPAGE)))) {
++				(tmp & (VM_FAULT_ERROR | VM_FAULT_NOPAGE |
++					VM_FAULT_RETRY)))) {
+ 			put_page(vmf->page);
+ 			return tmp;
+ 		}
 -- 
-2.22.0
+2.20.1
 
