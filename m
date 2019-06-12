@@ -2,171 +2,148 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D66FC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D79D1C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1508221773
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2CFA20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 11:36:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GDzbgDhO"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pJ1Icy4X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438066AbfFLLgt (ORCPT
+        id S2438264AbfFLLgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 07:36:49 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33513 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409079AbfFLLgs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:36:48 -0400
-Received: by mail-pf1-f193.google.com with SMTP id x15so9539519pfq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 04:36:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MhkB743oojqt0jCijE6DsOt5IqaBpxqgWof9mFxCLr0=;
-        b=GDzbgDhOafy14R/X43UkUN/+wf8bZdqGlFyPynLyOoG20vlQgN7zE9jZaanLyn3zx5
-         qQhhso2gb34OxP/u3xHSg6zS8JjJRY1rM9k4rX+82IiHVqiDxz7X2a893Yf4graw7TMN
-         nSUF/2Gtu0ZiA9FjJgluVZwCMm/sY7nIvA/8cwZyNRO0pWttZ9rn4SJm4NDG5Og1LJ7q
-         69ebVQ9hxBQQPUib1nigJuccodsU3NmYrSrnehuErfe4YWQQvRoySvoE3IbFgIm+u5mm
-         oszynkP2bKoPt4/Zv/VgvQYlSIXKjNdvA3RFAgK5OHTEZyvWErx96s2gVUjdKfd7KRLc
-         uonQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MhkB743oojqt0jCijE6DsOt5IqaBpxqgWof9mFxCLr0=;
-        b=hfez54Nukf7EN8hHhIk3mmD64jdNcRNczNoDAIvGhN/2725SB+xgpXYneKZnMyHNhY
-         ZKJFMT1NCaYNMeoszPsUJ/sjOIyBoH2RDUia485uQEJbAMzskh9q1qxloKRvKTzLEVQz
-         nZqjEhWePi7Qu5kq+GRQY+DbTSv36VMcXs6xzFlzhva42HMSq5aa8Wh3SNjDvmLjgDf9
-         7k2CGyyjiewFFUixFsu6aGAFZlvV5hZ6Xxj1slu0TdyAkA/cawe1AyAF5jxP6VVpMokt
-         5xPngnZEnG8b8De1Omv/iwehbP/QucgNFG6zIsKWrIGv6QQWLhxA1mfeY6HI8FDhs5AY
-         0dUw==
-X-Gm-Message-State: APjAAAV0UbBe++jD90J6p6O/RSTyeGAPo1kMdN+vgXp/aphWPu+oFENW
-        0R0QelQJ/zkHoL7c6sbm198XttdVn1TK461WvtU3bw==
-X-Google-Smtp-Source: APXvYqzGzjPmF8qGtciCMiJ8cvvmFlnWp+2d9nBudQ86r37IgxuDA/rPCLSSJ3M+cA0egqf1SPnYkN9tXts/BubXkpo=
-X-Received: by 2002:aa7:97bb:: with SMTP id d27mr18575219pfq.93.1560339407628;
- Wed, 12 Jun 2019 04:36:47 -0700 (PDT)
+        Wed, 12 Jun 2019 07:36:52 -0400
+Received: from mail-eopbgr50075.outbound.protection.outlook.com ([40.107.5.75]:53566
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406901AbfFLLgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 07:36:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U2VSpsf4P4PWQkFxMn8yNndfjIS730z9WIfzYvrNnn4=;
+ b=pJ1Icy4XHriyiGhcdgcqsc8XdBphyXT0R7U98dcc12U2SdciMLEbWy3gHJWzMOy0uFaB8f2SpUd2STYKInt/3dOPTlveHfqMbOerkcxdlW7Dxx0ogi3gkLaddIVan5vwoBMzpZAVi9IZLiD0T4jgICg/wThuJi0PKt0nDiLYCzg=
+Received: from AM0PR04MB6738.eurprd04.prod.outlook.com (20.179.253.203) by
+ AM0PR04MB4291.eurprd04.prod.outlook.com (52.134.126.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.16; Wed, 12 Jun 2019 11:36:46 +0000
+Received: from AM0PR04MB6738.eurprd04.prod.outlook.com
+ ([fe80::f41f:5455:d0b3:2527]) by AM0PR04MB6738.eurprd04.prod.outlook.com
+ ([fe80::f41f:5455:d0b3:2527%4]) with mapi id 15.20.1965.017; Wed, 12 Jun 2019
+ 11:36:46 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCHv5 16/20] PCI: mobiveil: Add link up condition check
+Thread-Topic: [PATCHv5 16/20] PCI: mobiveil: Add link up condition check
+Thread-Index: AQHU8QreVEure7z7nE2dWdwI9OV746aXEQeAgAEyqdA=
+Date:   Wed, 12 Jun 2019 11:36:45 +0000
+Message-ID: <AM0PR04MB673830A6DF6FEDFC9155037184EC0@AM0PR04MB6738.eurprd04.prod.outlook.com>
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
+ <20190412083635.33626-17-Zhiqiang.Hou@nxp.com>
+ <20190611171733.GB22836@redmoon>
+In-Reply-To: <20190611171733.GB22836@redmoon>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 07d0eff2-ba6f-4478-e594-08d6ef2a3ff9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4291;
+x-ms-traffictypediagnostic: AM0PR04MB4291:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <AM0PR04MB4291F7DDEBC38D7BAF61A84584EC0@AM0PR04MB4291.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0066D63CE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(376002)(136003)(396003)(39860400002)(13464003)(199004)(189003)(2501003)(9686003)(52536014)(76116006)(6306002)(55016002)(81156014)(71200400001)(3846002)(316002)(66556008)(966005)(66446008)(110136005)(71190400001)(76176011)(6116002)(73956011)(478600001)(6436002)(5660300002)(256004)(66476007)(45080400002)(64756008)(66946007)(54906003)(486006)(25786009)(81166006)(8676002)(7696005)(4326008)(8936002)(14454004)(7736002)(99286004)(74316002)(68736007)(305945005)(229853002)(2906002)(186003)(476003)(53936002)(7416002)(11346002)(33656002)(66066001)(6506007)(53546011)(26005)(102836004)(86362001)(446003)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4291;H:AM0PR04MB6738.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: N/Q9A3FCHgIXR/TmY/Z727qcDl79bfSjF2uZ+0YAYJjj8eLD7e+A62tepRsrMLqi9w7datdj5zPWmdkCQz7LjAJZixq9kJmpX0wB78npwEQ9ryqCsSH0p0UBk1mnwdX286QHYQu0qeGkq0H+MhThJSd8j6cH6+szIlOXXiuJJuCYjHN/fxc4BxSEHKODRUaurL+WEI7o9fPG7hGyJR4yI1FP/w4F0/ZRmCTCQ8GVWuKtisMBsab32VptRp9RAKEYBir0Q82mAauDDbvllRkbrVCg4E1zUSKKjc2k2VeNy9lzN4RNqys2VNnT4veXEA9u9Min4tC5EzZB9M2E+gX2WyVV6TA0o7t0x3UV0Yc3d8kKw9B+tVd121vzIBV+bHjUoK5KtjwqmN4uCfcrSD9iliJ8XoqlnePC5n2ZaQu14bQ=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <cover.1559580831.git.andreyknvl@google.com> <51f44a12c4e81c9edea8dcd268f820f5d1fad87c.1559580831.git.andreyknvl@google.com>
- <201906072101.58C919E@keescook> <CAAeHK+y8CH4P3vheUDCEnPAuO-2L6mc-sz6wMA_hT=wC1Cy3KQ@mail.gmail.com>
-In-Reply-To: <CAAeHK+y8CH4P3vheUDCEnPAuO-2L6mc-sz6wMA_hT=wC1Cy3KQ@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 12 Jun 2019 13:36:36 +0200
-Message-ID: <CAAeHK+xCmc-x=Mvs8RC+xJOCw6AnEUgUzXXjjS3NJXeLwJkyqg@mail.gmail.com>
-Subject: Re: [PATCH v16 08/16] fs, arm64: untag user pointers in copy_mount_options
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07d0eff2-ba6f-4478-e594-08d6ef2a3ff9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 11:36:45.8821
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zhiqiang.hou@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4291
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 4:38 PM Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> On Sat, Jun 8, 2019 at 6:02 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Mon, Jun 03, 2019 at 06:55:10PM +0200, Andrey Konovalov wrote:
-> > > This patch is a part of a series that extends arm64 kernel ABI to allow to
-> > > pass tagged user pointers (with the top byte set to something else other
-> > > than 0x00) as syscall arguments.
-> > >
-> > > In copy_mount_options a user address is being subtracted from TASK_SIZE.
-> > > If the address is lower than TASK_SIZE, the size is calculated to not
-> > > allow the exact_copy_from_user() call to cross TASK_SIZE boundary.
-> > > However if the address is tagged, then the size will be calculated
-> > > incorrectly.
-> > >
-> > > Untag the address before subtracting.
-> > >
-> > > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> >
-> > One thing I just noticed in the commit titles... "arm64" is in the
-> > prefix, but these are arch-indep areas. Should the ", arm64" be left
-> > out?
-> >
-> > I would expect, instead:
-> >
-> >         fs/namespace: untag user pointers in copy_mount_options
->
-> Hm, I've added the arm64 tag in all of the patches because they are
-> related to changes in arm64 kernel ABI. I can remove it from all the
-> patches that only touch common code if you think that it makes sense.
-
-I'll keep the arm64 tags in commit titles for v17. Please reply
-explicitly if you think I should remove them. Thanks! :)
-
->
-> Thanks!
->
-> >
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> >
-> > -Kees
-> >
-> > > ---
-> > >  fs/namespace.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/fs/namespace.c b/fs/namespace.c
-> > > index b26778bdc236..2e85712a19ed 100644
-> > > --- a/fs/namespace.c
-> > > +++ b/fs/namespace.c
-> > > @@ -2993,7 +2993,7 @@ void *copy_mount_options(const void __user * data)
-> > >        * the remainder of the page.
-> > >        */
-> > >       /* copy_from_user cannot cross TASK_SIZE ! */
-> > > -     size = TASK_SIZE - (unsigned long)data;
-> > > +     size = TASK_SIZE - (unsigned long)untagged_addr(data);
-> > >       if (size > PAGE_SIZE)
-> > >               size = PAGE_SIZE;
-> > >
-> > > --
-> > > 2.22.0.rc1.311.g5d7573a151-goog
-> > >
-> >
-> > --
-> > Kees Cook
+SGkgTG9yZW56bywNCg0KVGhhbmtzIGEgbG90IGZvciB5b3VyIGNvbW1lbnRzIQ0KDQo+IC0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxsb3Jlbnpv
+LnBpZXJhbGlzaUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo21MIxMsjVIDE6MTgNCj4gVG86IFou
+cS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47IGJoZWxnYWFzQGdvb2dsZS5jb20NCj4gQ2M6
+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2Vy
+Lmtlcm5lbC5vcmc7DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207
+IGwuc3VicmFobWFueWFAbW9iaXZlaWwuY28uaW47DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExl
+byBMaSA8bGVveWFuZy5saUBueHAuY29tPjsNCj4gY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdp
+bGwuZGVhY29uQGFybS5jb207IE1pbmdrYWkgSHUNCj4gPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0u
+aC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgWGlhb3dlaSBCYW8NCj4gPHhpYW93ZWku
+YmFvQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NSAxNi8yMF0gUENJOiBtb2JpdmVp
+bDogQWRkIGxpbmsgdXAgY29uZGl0aW9uIGNoZWNrDQo+IA0KPiBOQjogUGxlYXNlIHRyaW0gdGhl
+IENDIGxpc3QgYW5kIGtlZXAgaXQgdG8gY29uY2VybmVkIG1haW50YWluZXJzLg0KPiANCj4gT24g
+RnJpLCBBcHIgMTIsIDIwMTkgYXQgMDg6MzY6NDhBTSArMDAwMCwgWi5xLiBIb3Ugd3JvdGU6DQo+
+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPg0KPiA+IEF2
+b2lkIHRvIGlzc3VlIENGRyB0cmFuc2FjdGlvbnMgdG8gbGluayBwYXJ0bmVyIHdoZW4gdGhlIFBD
+SWUgbGluayBpcw0KPiA+IG5vdCB1cC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEhvdSBaaGlx
+aWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4gLS0tDQo+ID4gVjU6DQo+ID4gIC0gQ29y
+cmVjdGVkIHRoZSBzdWJqZWN0Lg0KPiA+DQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNp
+ZS1tb2JpdmVpbC5jIHwgNCArKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
+KykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9i
+aXZlaWwuYw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMNCj4g
+PiBpbmRleCA2MjE4NTIwNzhjYWYuLjFlZTNlYTI1NzBjMCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2
+ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNp
+L2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jDQo+ID4gQEAgLTI4Myw2ICsyODMsMTAgQEAgc3Rh
+dGljIGJvb2wgbW9iaXZlaWxfcGNpZV92YWxpZF9kZXZpY2Uoc3RydWN0DQo+ID4gcGNpX2J1cyAq
+YnVzLCB1bnNpZ25lZCBpbnQgZGV2Zm4pICB7DQo+ID4gIAlzdHJ1Y3QgbW9iaXZlaWxfcGNpZSAq
+cGNpZSA9IGJ1cy0+c3lzZGF0YTsNCj4gPg0KPiA+ICsJLyogSWYgdGhlcmUgaXMgbm8gbGluaywg
+dGhlbiB0aGVyZSBpcyBubyBkZXZpY2UgKi8NCj4gPiArCWlmIChidXMtPm51bWJlciA+IHBjaWUt
+PnJvb3RfYnVzX25yICYmICFtb2JpdmVpbF9wY2llX2xpbmtfdXAocGNpZSkpDQo+IA0KPiBJIHRo
+aW5rIEJqb3JuIG1lbnRpb25lZCB0aGlzIGEgbWlsbGlvbiB0aW1lcyBhbHJlYWR5LCBlZzoNCj4g
+DQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1o
+dHRwcyUzQSUyRiUyRmxvcmUua2UNCj4gcm5lbC5vcmclMkZsaW51eC1wY2klMkYyMDE5MDQxMTIw
+MTUzNS5HUzI1NjA0NSU0MGdvb2dsZS5jb20lMkYmYW0NCj4gcDtkYXRhPTAyJTdDMDElN0N6aGlx
+aWFuZy5ob3UlNDBueHAuY29tJTdDZmZiNGM4ZGNlYmU0NDkzYTM3NTkwOA0KPiBkNmVlOTBiNDcx
+JTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNjk1DQo+IDg3
+MDI2Mzc5NzM1NDMmYW1wO3NkYXRhPW0lMkZxVjV6b2hxeUJNVURUN3pyVmpGJTJGTHRZZUpaTzM2
+cmRZDQo+IGVNVFBHR2JIZyUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiANCj4gdGhpcyBpcyByYWN5IGFu
+ZCBnaXZlcyBhIGZhbHNlIHNlbnNlIG9mIHJvYnVzdG5lc3MuIFdlIGhhdmUgY29kZSBpbiB0aGUg
+a2VybmVsDQo+IHRoYXQgY2hlY2tzIHRoZSBsaW5rIGJ1dCBhZGRpbmcgbW9yZSBzZWVtcyBzaWxs
+eSB0byBtZSwgc28gSSBhbSBpbmNsaW5lZCB0bw0KPiBkcm9wIHRoaXMgcGF0Y2guDQo+IA0KDQpV
+bmRlcnN0YW5kLCBkcm9wIGl0Lg0KDQpUaGFua3MsDQpaaGlxaWFuZw0KDQo+IExvcmVuem8NCj4g
+DQo+ID4gKwkJcmV0dXJuIGZhbHNlOw0KPiA+ICsNCj4gPiAgCS8qIE9ubHkgb25lIGRldmljZSBk
+b3duIG9uIGVhY2ggcm9vdCBwb3J0ICovDQo+ID4gIAlpZiAoKGJ1cy0+bnVtYmVyID09IHBjaWUt
+PnJvb3RfYnVzX25yKSAmJiAoZGV2Zm4gPiAwKSkNCj4gPiAgCQlyZXR1cm4gZmFsc2U7DQo+ID4g
+LS0NCj4gPiAyLjE3LjENCj4gPg0K
