@@ -2,144 +2,112 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D1FC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA76FC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D37C02063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:47:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ev+kVdsE"
+	by mail.kernel.org (Postfix) with ESMTP id A109B2063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:50:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408456AbfFLHrb (ORCPT
+        id S2408486AbfFLHuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 03:47:31 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46502 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731513AbfFLHra (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 03:47:30 -0400
-Received: by mail-pl1-f196.google.com with SMTP id e5so6272654pls.13
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 00:47:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RTEvowjVOZ1tt6yW3tt8znN/f0k1q7mGY13SshYdHu0=;
-        b=ev+kVdsEuZay+u/9fs+NWPIBWNJyQcyQ6Ur5EFF5tKrCyVYcgNizj2gLPu5bxid0Hz
-         tPLF7jTePnup5KqcxVjCHful3j9gTdvqX+Qriam8LVoek6qX29ezGElZwt6zYBEcb2SN
-         Q37YLJtAP03GlRDoXXFwr55GafpU0rlhDZGhQcl3SWX6gJA9KQpqiKwUOmlIGxRiYosn
-         dr9HK/RZVUvizdrr5OpBpHn4ChblEUXYJHENQsSph+PYnec44Z2CFtv0zFRptfx7TiLd
-         S7/PaXMj+7j/nP3bEQCPT+x48srxZ2LXHIsDlMch7Ni6dFdgIfKRdUiOcsa/OwOyp9cP
-         OrJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RTEvowjVOZ1tt6yW3tt8znN/f0k1q7mGY13SshYdHu0=;
-        b=GC9KQf/+BNnCC7GI7GFJ0mwTTZeyLs9EBLAuOg1Fb5WsVmFDyGZEcwioZKer/TKdW9
-         20qB31tviGPIF01NW+8VikZVbyhYYVncBlmoioCFcFr7pIYm2qu6IFry4lqyCvcg8/8T
-         oSt5jTVzl8pN943CCPwswb2SIw7L8qM4/zlLbbWIZksTM9FVsYC05OCScyl53dWZ/xyv
-         1CPjSbPoI2jIrMwtA1NHPtzmBtrt3oBPdgOJ4C4g3KLBwQ34J1RI8A5HxD+le4zK/T3i
-         j6XMaJBElMBJ04H0dLYoF2h3tGEPh0W0PICM1WHkZv7qYASiDuQE+z+RfvQBYlrI+SAs
-         TNqw==
-X-Gm-Message-State: APjAAAUDlTQB7Xcw5iyJwYn2x2d4NmSfQpZuqWGe0FRLKC2oAts95ETI
-        pRK3Vw5lx/jJnzoLe62m0JXr
-X-Google-Smtp-Source: APXvYqxdFNwHHUupAjw3XvuIJ/ZVdpM65R2uvHP1jCdfRej7cyXAdncrWoLq1ppn8UtyJYh5XGiOKw==
-X-Received: by 2002:a17:902:968b:: with SMTP id n11mr43028455plp.120.1560325649660;
-        Wed, 12 Jun 2019 00:47:29 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:894:d456:15b5:9ca9:e3ec:c06a])
-        by smtp.gmail.com with ESMTPSA id v5sm16896474pfm.22.2019.06.12.00.47.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Jun 2019 00:47:28 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 13:17:20 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        loic pallardy <loic.pallardy@st.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: arm: stm32: Convert STM32 SoC
- bindings to DT schema
-Message-ID: <20190612074720.GA5513@Mani-XPS-13-9360>
-References: <20190531063849.26142-1-manivannan.sadhasivam@linaro.org>
- <20190531063849.26142-3-manivannan.sadhasivam@linaro.org>
- <CAL_Jsq+N7NA7m+dp+zpwFeZLM6B+OwRrqZdzKkJp2TRWi_e3Mw@mail.gmail.com>
+        Wed, 12 Jun 2019 03:50:03 -0400
+Received: from mga12.intel.com ([192.55.52.136]:41179 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405233AbfFLHuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 03:50:03 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 00:50:03 -0700
+X-ExtLoop1: 1
+Received: from likexu-e5-2699-v4.sh.intel.com ([10.239.48.178])
+  by orsmga003.jf.intel.com with ESMTP; 12 Jun 2019 00:50:00 -0700
+From:   Like Xu <like.xu@linux.intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     Eduardo Habkost <ehabkost@redhat.com>,
+        sean.j.christopherson@intel.com, xiaoyao.li@linux.intel.com,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5] KVM: x86: Add Intel CPUID.1F cpuid emulation support
+Date:   Wed, 12 Jun 2019 15:47:38 +0800
+Message-Id: <20190612074738.21309-1-like.xu@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+N7NA7m+dp+zpwFeZLM6B+OwRrqZdzKkJp2TRWi_e3Mw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Add support to expose Intel V2 Extended Topology Enumeration Leaf for
+some new systems with multiple software-visible die within each package.
 
-On Mon, Jun 10, 2019 at 03:57:43PM -0600, Rob Herring wrote:
-> On Fri, May 31, 2019 at 12:39 AM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > This commit converts STM32 SoC bindings to DT schema using jsonschema.
-> >
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  .../devicetree/bindings/arm/stm32/stm32.yaml  | 29 +++++++++++++++++++
-> >  1 file changed, 29 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-> 
-> Converting implies removal of something. The schema looks fine though.
-> 
+Because unimplemented and unexposed leaves should be explicitly reported
+as zero, there is no need to limit cpuid.0.eax to the maximum value of
+feature configuration but limit it to the highest leaf implemented in
+the current code. A single clamping seems sufficient and cheaper.
 
-Ah, sorry. I forgot to delete the .txt file. Will do it in next revision.
+Reported-by: kbuild test robot <lkp@intel.com>
+Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
 
-Thanks,
-Mani
+---
 
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-> > new file mode 100644
-> > index 000000000000..f53dc0f2d7b3
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-> > @@ -0,0 +1,29 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/arm/stm32/stm32.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: STMicroelectronics STM32 Platforms Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Alexandre Torgue <alexandre.torgue@st.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +          - const: st,stm32f429
-> > +
-> > +      - items:
-> > +          - const: st,stm32f469
-> > +
-> > +      - items:
-> > +          - const: st,stm32f746
-> > +
-> > +      - items:
-> > +          - const: st,stm32h743
-> > +
-> > +      - items:
-> > +          - const: st,stm32mp157
-> > +...
-> > --
-> > 2.17.1
-> >
+==changelog==
+
+v5:
+- Fixed sparse warnings: ncompatible types in comparison expression
+
+v4: https://lkml.org/lkml/2019/6/5/1029
+- Limited cpuid.0.eax to the highest leaf implemented in KVM
+
+v3: https://lkml.org/lkml/2019/5/26/64
+- Refine commit message and comment
+
+v2: https://lkml.org/lkml/2019/4/25/1246
+
+- Apply cpuid.1f check rule on Intel SDM page 3-222 Vol.2A
+- Add comment to handle 0x1f anf 0xb in common code
+- Reduce check time in a descending-break style
+
+v1: https://lkml.org/lkml/2019/4/22/28
+
+---
+ arch/x86/kvm/cpuid.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index e18a9f9f65b5..d0dafaecf05b 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -426,7 +426,8 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ 
+ 	switch (function) {
+ 	case 0:
+-		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
++		/* Limited to the highest leaf implemented in KVM. */
++		entry->eax = min(entry->eax, (u32)0x1f);
+ 		break;
+ 	case 1:
+ 		entry->edx &= kvm_cpuid_1_edx_x86_features;
+@@ -546,7 +547,11 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+ 		entry->edx = edx.full;
+ 		break;
+ 	}
+-	/* function 0xb has additional index. */
++	/*
++	 * Per Intel's SDM, the 0x1f is a superset of 0xb,
++	 * thus they can be handled by common code.
++	 */
++	case 0x1f:
+ 	case 0xb: {
+ 		int i, level_type;
+ 
+-- 
+2.21.0
+
