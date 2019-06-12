@@ -2,115 +2,105 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7E9C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87924C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 703D5206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:38:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LLRmbEDv"
+	by mail.kernel.org (Postfix) with ESMTP id 640F0206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:39:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407374AbfFLIiv (ORCPT
+        id S1731543AbfFLIj5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:38:51 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37410 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406602AbfFLIiv (ORCPT
+        Wed, 12 Jun 2019 04:39:57 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:51816 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731299AbfFLIj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:38:51 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v14so15901565wrr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:38:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=zEGC7bloUInKKL+DUNhE6x/IkEkaiZLhwNuCCj09Fa4=;
-        b=LLRmbEDvN1F30J1ViNFt0jOcgI7x0HNEbqY73E1AJJxQ1BpRFKt1z1heNqlJbudX3F
-         Gwoemkihvre9pdvDS2T+WajYDN2ShUrn5LR5AbkOAyRNXTmWIUyL6vSEcIXPZ+yJpSlU
-         rwS+u6hb0W7g1gORjYZH6NPghSg5v0YmcBAKnGm0dNXJdiM+jxKMLuHbP5jJZsXqwFYk
-         J/M1M6Uj3e2WBYuMTuXueF6E4g+vrZWdG7kDGxiPgKON6f8k4qV1mFJAPG4tJgu2yzer
-         zwPJaBOny7m8vPp6+RFCJ5hi2zQMaywquIUYz0jpv4E09OKwhdHlsvWjWXHaTHesBOxs
-         MmjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=zEGC7bloUInKKL+DUNhE6x/IkEkaiZLhwNuCCj09Fa4=;
-        b=YV111lvy8oXdMfUx9/J6xJCyx2Rxt1otqdbMVZl8RolojkFS0zMxe+YSPH2O4yiLxC
-         HoL3QiJBG4VRMfDZFZfgw0n6laOcJG8wRO/QCY4GAtCLZVcYRZOEF9nrJIO6K2riu3St
-         iquzr2ZNFYcurS1fGazLuxrtCsOX/r5CEfNEXx4Uw0hQ5nA69QbGEZStAvtoYdEEwxI3
-         j0YlcvMfjENylZUBUp6LMAIPxJbuhxQjzYoWGdBe/4moTWSMS/pU7neGNcSlpSm6/pgY
-         +PwlGSpTOhYOE4gaox234YMx82ZdmU7f3mcgQzyROq5rWlDmTDItMuqwjWQDcfCi2X2e
-         o1og==
-X-Gm-Message-State: APjAAAWGGykxkv0Ekvml4i+34j2S61oX2FSCvPNhha9Iv2y+0r/oKagv
-        2o41bz/25RmrkBdKzIFL5GFwyQ==
-X-Google-Smtp-Source: APXvYqz4myACSUXii+sPixCR4wr3xycQ7CDZh1eGwODEpYlJozoSUkLSl9jz4rgOJMWI4nYDttAmmw==
-X-Received: by 2002:a5d:4f8b:: with SMTP id d11mr17257224wru.264.1560328729634;
-        Wed, 12 Jun 2019 01:38:49 -0700 (PDT)
-Received: from dell ([2a01:4c8:f:9687:619a:bb91:d243:fc8b])
-        by smtp.gmail.com with ESMTPSA id z5sm4369065wma.36.2019.06.12.01.38.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Jun 2019 01:38:48 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 09:38:46 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH 3/3] mfd: madera: Add Madera core support for CS47L92
-Message-ID: <20190612083846.GZ4797@dell>
-References: <20190530143953.25799-1-ckeepax@opensource.cirrus.com>
- <20190530143953.25799-3-ckeepax@opensource.cirrus.com>
+        Wed, 12 Jun 2019 04:39:57 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-77-sKXNtwkfNyeBMA4oS27QZg-1; Wed, 12 Jun 2019 09:39:54 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed,
+ 12 Jun 2019 09:39:53 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 12 Jun 2019 09:39:53 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Oleg Nesterov' <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>, "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "e@80x24.org" <e@80x24.org>,
+        "jbaron@akamai.com" <jbaron@akamai.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "omar.kilani@gmail.com" <omar.kilani@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: RE: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
+Thread-Topic: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
+Thread-Index: AQHVIIdIknGdQ9+D0UeylJNmvFzQKKaXsr4w
+Date:   Wed, 12 Jun 2019 08:39:53 +0000
+Message-ID: <fd2aab3d26754becbb0efe4ae65c32ac@AcuMS.aculab.com>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190529161157.GA27659@redhat.com> <20190604134117.GA29963@redhat.com>
+ <20190606140814.GA13440@redhat.com> <87k1dxaxcl.fsf_-_@xmission.com>
+ <87ef45axa4.fsf_-_@xmission.com> <20190610162244.GB8127@redhat.com>
+ <87lfy96sta.fsf@xmission.com> <20190611185548.GA31214@redhat.com>
+In-Reply-To: <20190611185548.GA31214@redhat.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190530143953.25799-3-ckeepax@opensource.cirrus.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MC-Unique: sKXNtwkfNyeBMA4oS27QZg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 May 2019, Charles Keepax wrote:
-
-> From: Richard Fitzgerald <rf@opensource.cirrus.com>
+From: Oleg Nesterov [mailto:oleg@redhat.com]
+> Sent: 11 June 2019 19:56
+> On 06/10, Eric W. Biederman wrote:
+> >
+> > Personally I don't think anyone sane would intentionally depend on this
+> > and I don't think there is a sufficiently reliable way to depend on this
+> > by accident that people would actually be depending on it.
 > 
-> This patch adds all the core support and defines for the Cirrus
-> Logic CS42L92, CS47L92 and CS47L93 smart audio CODECs.
+> Agreed.
 > 
-> Registers or fields are named MADERA_* if it is part of the
-> common hardware platform and does not conflict with any other
-> Madera codecs. It is named CS47L15_* if it is unique to CS47L15
-> and conflicts with definitions on other codecs.
+> As I said I like these changes and I see nothing wrong. To me they fix the
+> current behaviour, or at least make it more consistent.
 > 
-> Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
-> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
->  drivers/mfd/Kconfig                  |    7 +
->  drivers/mfd/Makefile                 |    3 +
->  drivers/mfd/cs47l92-tables.c         | 1948 ++++++++++++++++++++++++++++++++++
->  drivers/mfd/madera-core.c            |   58 +
->  drivers/mfd/madera-i2c.c             |   11 +
->  drivers/mfd/madera-spi.c             |   11 +
->  drivers/mfd/madera.h                 |    7 +
->  include/linux/mfd/madera/core.h      |    4 +
->  include/linux/mfd/madera/registers.h |  195 ++++
->  9 files changed, 2244 insertions(+)
->  create mode 100644 drivers/mfd/cs47l92-tables.c
+> But perhaps this should be documented in the changelog? To make it clear
+> that this change was intentional.
 
-Applied, thanks.
+What happens if you run the test program I posted yesterday after the changes?
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+It looks like pselect() and epoll_pwait() operated completely differently.
+pselect() would always calls the signal handlers.
+epoll_pwait() only calls them when EINTR is returned.
+So changing epoll_pwait() and pselect() to work the same way
+is bound to break some applications.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
