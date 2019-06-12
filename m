@@ -2,111 +2,88 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FADEC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9B8C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601B1206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 197C120896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560365052;
+	bh=k6XhKo4tLkZYiTtqJuhymE61FS6ceGjNgw92LnacGLA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Dk5dby9XMLqq+x2CkpjAa85U8iI0BAEtCwCa0xnws1cEu475amxlzxsbjn87y2455
+	 20wmAsHq0u0NS6iU2sQny4hmRxiwrvPgdODFwwwhi6w6AzseGLuLr+/sUbsp/hbAvK
+	 ydQuzfWeLAXqS/kuxa+jnyEFYF/hmfKY9fvRMELc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbfFLSnl (ORCPT
+        id S1728024AbfFLSoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 14:43:41 -0400
-Received: from mga05.intel.com ([192.55.52.43]:39216 "EHLO mga05.intel.com"
+        Wed, 12 Jun 2019 14:44:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbfFLSnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 14:43:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 11:43:40 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 12 Jun 2019 11:43:39 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id D014E5803E4;
-        Wed, 12 Jun 2019 11:43:39 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v2 1/1] PCI/IOV: Fix incorrect cfg_size for VF > 0
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        keith.busch@intel.com, mike.campin@intel.com
-References: <20190612170647.43220-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20190612121910.231368e2@x1.home>
-From:   sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <0b21c76e-53f3-c35e-cebf-00719e451b11@linux.intel.com>
-Date:   Wed, 12 Jun 2019 11:41:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726454AbfFLSoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 14:44:11 -0400
+Received: from ebiggers-linuxstation.mtv.corp.google.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 562BF206E0;
+        Wed, 12 Jun 2019 18:44:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560365050;
+        bh=k6XhKo4tLkZYiTtqJuhymE61FS6ceGjNgw92LnacGLA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gHvfgg1hqasjQa2CDaeC2qWRoB52XpPScocrDwcWENjw4puUMw9jTrqtm/5N8pYaT
+         kF0kZ8InqQCKAwHdx6S2V2v4MmQzp5e8v+2xgeTj9mO/kM20k6MhRzzEdRN2RrQ9Og
+         e87pXxd15WbSjzRxnTpxnVahlNd8zXEzkVs0BQ+4=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     David Howells <dhowells@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] vfs: fsmount: add missing mntget()
+Date:   Wed, 12 Jun 2019 11:43:13 -0700
+Message-Id: <20190612184313.143456-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
+In-Reply-To: <20190610183031.GE63833@gmail.com>
+References: <20190610183031.GE63833@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190612121910.231368e2@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Eric Biggers <ebiggers@google.com>
 
-On 6/12/19 11:19 AM, Alex Williamson wrote:
-> On Wed, 12 Jun 2019 10:06:47 -0700
-> sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> Commit 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for
->> other VFs") calculates and caches the cfg_size for VF0 device before
->> initializing the pcie_cap of the device which results in using incorrect
->> cfg_size for all VF devices > 0. So set pcie_cap of the device before
->> calculating the cfg_size of VF0 device.
->>
->> Fixes: 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for
->> other VFs")
->> Cc: Ashok Raj <ashok.raj@intel.com>
->> Suggested-by: Mike Campin <mike.campin@intel.com>
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> ---
->>
->> Changes since v1:
->>   * Fixed a typo in commit message.
->>
->>   drivers/pci/iov.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
->> index 3aa115ed3a65..2869011c0e35 100644
->> --- a/drivers/pci/iov.c
->> +++ b/drivers/pci/iov.c
->> @@ -160,6 +160,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
->>   	virtfn->device = iov->vf_device;
->>   	virtfn->is_virtfn = 1;
->>   	virtfn->physfn = pci_dev_get(dev);
->> +	virtfn->pcie_cap = pci_find_capability(virtfn, PCI_CAP_ID_EXP);
->>   
->>   	if (id == 0)
->>   		pci_read_vf_config_common(virtfn);
-> Why not re-order until after we've setup pcie_cap?
->
-> https://lore.kernel.org/linux-pci/20190604143617.0a226555@x1.home/T/#
+sys_fsmount() needs to take a reference to the new mount when adding it
+to the anonymous mount namespace.  Otherwise the filesystem can be
+unmounted while it's still in use, as found by syzkaller.
 
-pci_read_vf_config_common() also caches values for properties like 
-class, hdr_type, susbsystem_vendor/device. These values are read/used in 
-pci_setup_device(). So if we can use cached values in 
-pci_setup_device(), we don't have to read them from registers twice for 
-each device.
+Reported-by: Mark Rutland <mark.rutland@arm.com>
+Reported-by: syzbot+99de05d099a170867f22@syzkaller.appspotmail.com
+Reported-by: syzbot+7008b8b8ba7df475fdc8@syzkaller.appspotmail.com
+Fixes: 93766fbd2696 ("vfs: syscall: Add fsmount() to create a mount for a superblock")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ fs/namespace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
->
-> Thanks,
-> Alex
->
+diff --git a/fs/namespace.c b/fs/namespace.c
+index b26778bdc236e..5dc137a22d406 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -3445,6 +3445,7 @@ SYSCALL_DEFINE3(fsmount, int, fs_fd, unsigned int, flags,
+ 	ns->root = mnt;
+ 	ns->mounts = 1;
+ 	list_add(&mnt->mnt_list, &ns->list);
++	mntget(newmount.mnt);
+ 
+ 	/* Attach to an apparent O_PATH fd with a note that we need to unmount
+ 	 * it, not just simply put it.
 -- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+2.22.0.rc2.383.gf4fbbf30c2-goog
 
