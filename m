@@ -2,117 +2,144 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E12C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BF8C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A14C20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C30320874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:15:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OeGdVBad"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PWMgHjMg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437482AbfFLNPp (ORCPT
+        id S2439066AbfFLNPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:15:45 -0400
-Received: from ozlabs.org ([203.11.71.1]:40037 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729231AbfFLNPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:15:44 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45P6n72c4Fz9s7h;
-        Wed, 12 Jun 2019 23:15:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560345341;
-        bh=m3ulouF3seJudKzCN91mGBHIDhKeg6NrhQEyoc7Uu6A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OeGdVBadpLkeHc6WDmaemrvgCxAtc8E/v2k+b8BWyBH9NUqyDzHI2H3l+pIsSnxrV
-         jSzbXue3OAgKS7uI/SuWV270Sz2k8QwhsFbgXsbDAan05XPwoaNoJuPqnRor72VEfA
-         tgsRcCbWvDuc3GDY8DR7xNovwoeFNuAzV2KF2n1d6615QG9tSW8D3t4ej6N0l5Ahti
-         JrNSZeoV5FjkT1dAIF2Gb4OwTE9lri4BFQzYYkhhUt4J7NPgN5oo4gayCwEvMxj+5A
-         bmLtmz36ORVVfaZ3/8mo8jj5PXQ0NcIY5+NZU5Vq+/7K/wq7fyGDtVCtipUhh8ObjM
-         4lUN0R7NP7KCA==
-Date:   Wed, 12 Jun 2019 23:15:35 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mauro Carvalho Chehab <mchehab@infradead.org>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ruslan Babayev <ruslan@babayev.com>,
-        Andrew de Quincey <adq_dvb@lidskialf.net>
-Subject: Re: linux-next: build warning after merge of the i2c tree
-Message-ID: <20190612231535.253a8a20@canb.auug.org.au>
-In-Reply-To: <20190612093229.7f14a1e2@coco.lan>
-References: <20190611102528.44ad5783@canb.auug.org.au>
-        <20190612081929.GA1687@kunai>
-        <20190612080226.45d2115a@coco.lan>
-        <20190612110904.qhuoxyljgoo76yjj@ninjato>
-        <20190612084824.16671efa@coco.lan>
-        <20190612120439.GB2805@kunai>
-        <20190612093229.7f14a1e2@coco.lan>
+        Wed, 12 Jun 2019 09:15:52 -0400
+Received: from mail-eopbgr30085.outbound.protection.outlook.com ([40.107.3.85]:38241
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2437484AbfFLNPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 09:15:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WXdIHPpuSjDheyPgihf3Q7vYaDMAM59wyvzLKc7MtHk=;
+ b=PWMgHjMgAKCSU8dx/dSoYG/IYECgOllH386KQWzHOqqAcFAc60y4NZCZNo+B39m+NatK+e3Se/HFUu/SGSn8Cy/rnoZhurgjy/BNuClFt6ZQLQ9VdDtEJx0F+W+TOPKouFNDEqIDpM8U9CSMjfza7zvRRFv4GRFJNX/CptHZ9VQ=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB2877.eurprd04.prod.outlook.com (10.175.23.7) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.11; Wed, 12 Jun 2019 13:15:46 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1987.012; Wed, 12 Jun 2019
+ 13:15:46 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx7ulp: add crypto support
+Thread-Topic: [PATCH] ARM: dts: imx7ulp: add crypto support
+Thread-Index: AQHVHD5HxT1VnrKm20mxf/1ryD4CPA==
+Date:   Wed, 12 Jun 2019 13:15:46 +0000
+Message-ID: <VI1PR0402MB348596BF52CE43B5D4CD534798EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20190606080255.25504-1-horia.geanta@nxp.com>
+ <20190612103926.GE11086@dragon>
+ <VI1PR0402MB3485A573518D60A573BA55C298EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <20190612130602.GH11086@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2ef5e611-3773-4889-3fa7-08d6ef3814ac
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR0402MB2877;
+x-ms-traffictypediagnostic: VI1PR0402MB2877:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VI1PR0402MB2877041CF702412A516A242298EC0@VI1PR0402MB2877.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0066D63CE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(346002)(39860400002)(396003)(376002)(189003)(199004)(99286004)(6436002)(305945005)(76176011)(446003)(316002)(7416002)(74316002)(7696005)(6116002)(73956011)(76116006)(66946007)(4326008)(229853002)(64756008)(66476007)(66556008)(66446008)(14444005)(2906002)(6916009)(6246003)(66066001)(256004)(3846002)(71200400001)(71190400001)(8936002)(25786009)(8676002)(53546011)(6506007)(81166006)(81156014)(966005)(68736007)(52536014)(33656002)(102836004)(478600001)(5660300002)(44832011)(54906003)(14454004)(86362001)(9686003)(6306002)(186003)(476003)(26005)(7736002)(55016002)(53936002)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2877;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: G8XmBXCZJGn40PLT3TZJCE4KySzicfIQZv03UcS7DZbS8tYhWE8SWc/GN03xHePvSIUUz2q5aZLqWSsMGrCemtLCPYxok0GrBf5KgRLuULv2lTweYVvONuUskvr29W3WFEWhTXzGpdduzVelnfX9MtoxDuH7Lu12GPXK+NVy2twzWk8ZbkYs5XHoHGBz7bpV3i7GFsJ8W6fumlSe/0/EMTApNVaTSO/jeg2qzYo2GmftuvSmoPfxOexw5npNQILPoVn7v5awn8Ozytyt0huVD05mQBFy+xSsLJUMUjUJXBMwggFWNyhyKJH2nbj5Dgk1qc93hw73eYd05GJGR4QyjPU4i0fjogtfc8cv/udh4Pf9b3CaOWhbhJCIxN6xMYlUpcaij35RzJD5KVHqPL46mGFzmRRVPXN4p9cHLn62vHM=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/D_X6Efm71FC9C3REMQXnZ/e"; protocol="application/pgp-signature"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ef5e611-3773-4889-3fa7-08d6ef3814ac
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 13:15:46.2354
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2877
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/D_X6Efm71FC9C3REMQXnZ/e
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Wed, 12 Jun 2019 09:32:29 -0300 Mauro Carvalho Chehab <mchehab@infradead=
-.org> wrote:
->
-> Em Wed, 12 Jun 2019 14:04:39 +0200
-> Wolfram Sang <wsa@the-dreams.de> escreveu:
->=20
-> > > > OK, so that means I should send my pull request after yours in the =
-next
-> > > > merge window? To avoid the build breakage?   =20
-> > >=20
-> > > Either that or you can apply my patch on your tree before the
-> > > patch that caused the breakage.=20
-> > >=20
-> > > Just let me know what works best for you.   =20
-> >=20
-> > Hmm, the offending patch is already in -next and I don't rebase my tree.
-> > So, I guess it's the merge window dependency then.
-> >  =20
-> Ok, I'll merge it through my tree then.
-
-It should go into the i2c tree (since that is where the *warning* was
-introduced).  It is only a warning and there won't be many patches
-between the patch that introduced the warning and this one that fixes
-it.  This patch could then have a Fixes tag that makes sense i.e. it
-will reference a previous commit.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/D_X6Efm71FC9C3REMQXnZ/e
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0A+vcACgkQAVBC80lX
-0GwkiQf+PSLLJ32HJwYk/tNmjjZMB7vvinDaqj/Xk9IS92cD0vviuO4RKMOQSvZ2
-Lr7Bzlpr4gNX+rrvXfD9sdawTKV6G0/RFaWboCso1Y/nPiEmJymp9G1PAfQDHNMu
-fF6SGhbQNM2F7rc+vuq35f7D6+YFMhZB0WlrrwZoqOGh8h8ph7t56dktt0rD0s6O
-AKUwIpeM+jNIoSxtJgwRVEvVgQR4MYfzdyeyXHR49s8zyF6/LYjiDk1KVHA74reU
-70USaIxD3qu6NA75JDig8sTe7kgasLiV+rP5PvxNW5aEadCz7+9YhOO78+J5kf6f
-FhXdH43qRgg2mQOZ/UoDNx+b07++EQ==
-=9yjZ
------END PGP SIGNATURE-----
-
---Sig_/D_X6Efm71FC9C3REMQXnZ/e--
+On 6/12/2019 4:06 PM, Shawn Guo wrote:=0A=
+> On Wed, Jun 12, 2019 at 11:45:18AM +0000, Horia Geanta wrote:=0A=
+>> On 6/12/2019 1:40 PM, Shawn Guo wrote:=0A=
+>>> On Thu, Jun 06, 2019 at 11:02:55AM +0300, Horia Geant=E3 wrote:=0A=
+>>>> From: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+>>>>=0A=
+>>>> Add crypto node in device tree for CAAM support.=0A=
+>>>>=0A=
+>>>> Noteworthy is that on 7ulp the interrupt line is shared=0A=
+>>>> between the two job rings.=0A=
+>>>>=0A=
+>>>> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+>>>> Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>=0A=
+>>>> Signed-off-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+>>>> ---=0A=
+>>>>=0A=
+>>>> I've just realized that this patch should be merged through the crypto=
+ tree,=0A=
+>>>> else bisectability could be affected due to cryptodev-2.6=0A=
+>>>> commit 385cfc84a5a8 ("crypto: caam - disable some clock checks for iMX=
+7ULP")=0A=
+>>>> ( https://patchwork.kernel.org/patch/10970017/ )=0A=
+>>>> which should come first.=0A=
+>>>=0A=
+>>> I'm not sure I follow it.  This is a new device added to imx7ulp DT.=0A=
+>>> It's never worked before on imx7ulp.  How would it affect git bisect?=
+=0A=
+>>>=0A=
+>> Driver corresponding to this device (drivers/crypto/caam) has to be upda=
+ted=0A=
+>> before adding the node in DT.=0A=
+>> Is there any guarantee wrt. merge order of the crypto and DT trees?=0A=
+> =0A=
+> Do not merge DT changes until driver part hits mainline.=0A=
+> =0A=
+That would mean driver changes would be merged in v5.3 and DT node in v5.4.=
+=0A=
+=0A=
+Would going through the crypto tree with this patch be such a big issue?=0A=
+I don't think it's the first time (relatively small) DT patches=0A=
+are merged via other trees.=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
