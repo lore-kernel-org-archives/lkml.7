@@ -2,148 +2,88 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9416C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05294C31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B658D21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:23:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560367396;
-	bh=NV6CAWoAmAxUEUfbDMwR/y4kWphXPGu1oOy5Nizf0fs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A+MhX8GkPyYx72Tp9bx9mvXnPkburq49gVok5DUqngU9ZwEU0OD/PXRH/RbI7Fioj
-	 9OUqwwZC0VxmJ+oOct3F8zw2hmH651HA9M4jGQ47PXB5aXhb1kk/3pGmhXnisKECjZ
-	 HshmDh3WpQT7TUrADs1iwcAP8x5/UdUMzSHfNNbQ=
+	by mail.kernel.org (Postfix) with ESMTP id D57C02173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:23:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbfFLTXP (ORCPT
+        id S2387844AbfFLTXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:23:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbfFLTXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:23:15 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E91520896;
-        Wed, 12 Jun 2019 19:23:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560367394;
-        bh=NV6CAWoAmAxUEUfbDMwR/y4kWphXPGu1oOy5Nizf0fs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YA9bhlSCMj4KbygGwBHJT1K2gxbuDR6fl8c4iTJdA9/CZM8ZLzzSJ9/UIgyIcWUvQ
-         29nkRqarhkwbngAl1DBb1N7BQuHffboe+vNqVsOhuzOhG8hRUrJDIx97xCsPrIkzPA
-         FZobjhKujKUI7TkWnNupgJk2B/z2qpWRiKZd7NQg=
-Date:   Wed, 12 Jun 2019 12:23:12 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>
-Cc:     syzbot <syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: WARNING in binder_transaction_buffer_release
-Message-ID: <20190612192312.GF18795@gmail.com>
-References: <000000000000afe2c70589526668@google.com>
+        Wed, 12 Jun 2019 15:23:16 -0400
+Received: from mail-qt1-f176.google.com ([209.85.160.176]:41530 "EHLO
+        mail-qt1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727920AbfFLTXQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 15:23:16 -0400
+Received: by mail-qt1-f176.google.com with SMTP id 33so11603694qtr.8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 12:23:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=jTgyXnqAA1RWkM9GuN0X0PVMrNnVGRWkQvCz1tb289s=;
+        b=lBn+D/uQ1jpmz7pbLk1Rt4AVs/DB7RQqei79CZ7U21rMewZECXK98yhrlSk1hLxGUf
+         x9BQGjjXGjj6EiVhq2kAY1qmygFuJl8hDRv2TY6SHGyuTNywqUJpPB+RRQfiJZgmbJgT
+         poo7KX5MuTxW05EyCH+Ul22gdy+Xw8LVZmpvqRATkxLHuejSqRt5rh4EbKtVrAW0/v58
+         nNpK3KgblnhPCvb7UMdAGxddlHajfCM629Tzd/O19oVSYr7V6ksxfRgPJdaFwO/jDXcR
+         nLYB/KPENp4HbUkN5crfZI4ejjZBwTpSxnK6n9AOnC9qfBgw/StIytaai8fhpOq9lar5
+         Ib+g==
+X-Gm-Message-State: APjAAAWUHtlahI5SKGq5bwA3g24WMpIw8bXGZ+sFFlHDaRctFLYXPvhH
+        FkDab1hx3pDTxCUburUqJr118Zt5SGM=
+X-Google-Smtp-Source: APXvYqxVBIzDgHYsuro2G3S0PSUvtErDwfCVKs8QllR8Gq0rOvWEEtD9UsxSAKB1Ac6RLWtQ5Bslhw==
+X-Received: by 2002:ac8:7652:: with SMTP id i18mr62832443qtr.10.1560367394552;
+        Wed, 12 Jun 2019 12:23:14 -0700 (PDT)
+Received: from ?IPv6:2601:543:8101:1d87::fd60? ([2601:543:8101:1d87::fd60])
+        by smtp.gmail.com with ESMTPSA id j37sm323900qtb.76.2019.06.12.12.23.13
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 12:23:13 -0700 (PDT)
+To:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Stephane Eranian <eranian@google.com>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Laura Abbott <labbott@redhat.com>
+Subject: perf build failure with newer glibc headers
+Message-ID: <4c0a4264-7142-2e6d-540d-aa354700e0bb@redhat.com>
+Date:   Wed, 12 Jun 2019 15:23:12 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000afe2c70589526668@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 07:18:06AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    72cf0b07 Merge tag 'sound-fix-5.2-rc1' of git://git.kernel..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17c7d4bca00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d103f114f9010324
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8b3c354d33c4ac78bfad
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> userspace arch: i386
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15b99b44a00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+8b3c354d33c4ac78bfad@syzkaller.appspotmail.com
-> 
-> WARNING: CPU: 1 PID: 8535 at drivers/android/binder.c:2368
-> binder_transaction_buffer_release+0x673/0x8f0 drivers/android/binder.c:2368
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 1 PID: 8535 Comm: syz-executor.2 Not tainted 5.1.0+ #19
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->  panic+0x2cb/0x715 kernel/panic.c:214
->  __warn.cold+0x20/0x4c kernel/panic.c:571
->  report_bug+0x263/0x2b0 lib/bug.c:186
->  fixup_bug arch/x86/kernel/traps.c:179 [inline]
->  fixup_bug arch/x86/kernel/traps.c:174 [inline]
->  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
->  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
->  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-> RIP: 0010:binder_transaction_buffer_release+0x673/0x8f0
-> drivers/android/binder.c:2368
-> Code: 31 ff 41 89 c5 89 c6 e8 7b 04 1f fc 45 85 ed 0f 85 1f 41 01 00 49 8d
-> 47 40 48 89 85 50 fe ff ff e9 9d fa ff ff e8 dd 02 1f fc <0f> 0b e9 7f fc ff
-> ff e8 d1 02 1f fc 48 89 d8 45 31 c9 4c 89 fe 4c
-> RSP: 0018:ffff88807b2775f0 EFLAGS: 00010293
-> RAX: ffff888092b1e040 RBX: 0000000000000060 RCX: 1ffff11012563caa
-> RDX: 0000000000000000 RSI: ffffffff85519e13 RDI: ffff888097a2d248
-> RBP: ffff88807b2777d8 R08: ffff888092b1e040 R09: ffffed100f64eee3
-> R10: ffffed100f64eee2 R11: ffff88807b277717 R12: ffff88808fd2c340
-> R13: 0000000000000068 R14: ffff88807b2777b0 R15: ffff88809f7ea580
->  binder_transaction+0x153d/0x6620 drivers/android/binder.c:3484
->  binder_thread_write+0x87e/0x2820 drivers/android/binder.c:3792
->  binder_ioctl_write_read drivers/android/binder.c:4836 [inline]
->  binder_ioctl+0x102f/0x1833 drivers/android/binder.c:5013
->  __do_compat_sys_ioctl fs/compat_ioctl.c:1052 [inline]
->  __se_compat_sys_ioctl fs/compat_ioctl.c:998 [inline]
->  __ia32_compat_sys_ioctl+0x195/0x620 fs/compat_ioctl.c:998
->  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
->  do_fast_syscall_32+0x27b/0xd7d arch/x86/entry/common.c:408
->  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-> RIP: 0023:0xf7f9e849
-> Code: 85 d2 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 3c 24 c3 90 90
-> 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90
-> 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-> RSP: 002b:00000000f7f9a0cc EFLAGS: 00000296 ORIG_RAX: 0000000000000036
-> RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00000000c0306201
-> RDX: 0000000020000140 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
-> 
+Hi,
 
-Are any of the binder maintainers planning to fix this?  This seems to be the
-only open syzbot report for binder on the upstream kernel.
+While doing some build experiments, I found a compile failure with perf and jvmti:
 
-- Eric
+BUILDSTDERR:   gcc -Wp,-MD,./.xsk.o.d -Wp,-MT,xsk.o -O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions -fstack-protector-strong -grecord-gcc-jvmti/jvmti_agent.c:48:21: error: static declaration of 'gettid' follows non-static declaration
+BUILDSTDERR:    48 | static inline pid_t gettid(void)
+BUILDSTDERR:       |                     ^~~~~~
+BUILDSTDERR: In file included from /usr/include/unistd.h:1170,
+BUILDSTDERR:                  from jvmti/jvmti_agent.c:33:
+BUILDSTDERR: /usr/include/bits/unistd_ext.h:40:16: note: previous declaration of 'gettid' was here
+BUILDSTDERR:    40 | extern __pid_t gettid (void) __THROW;
+BUILDSTDERR:       |                ^~~~~~
+
+
+This is with the newer glibc headers that came into Fedora earlier this week
+(glibc-2.29.9000-27.fc31)  It looks like the newer headers now define gettid
+so the in file gettid no longer works. Note this was a custom build with
+jvmti enabled as regular Fedora doesn't have it enabled which is why this
+wasn't reported elsewhere.
+
+I don't know enough about either the glibc headers or perf to make a suggestion
+on how to fix this but I'm happy to test.
+
+Thanks,
+Laura
