@@ -6,59 +6,58 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99E1C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE94EC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B273520866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C497B20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:57:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cdDvAZo+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RiL/H776"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437257AbfFLI4B (ORCPT
+        id S1731636AbfFLI5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:56:01 -0400
-Received: from mail-lf1-f45.google.com ([209.85.167.45]:45239 "EHLO
-        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437164AbfFLI4A (ORCPT
+        Wed, 12 Jun 2019 04:57:09 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33388 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbfFLI5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:56:00 -0400
-Received: by mail-lf1-f45.google.com with SMTP id u10so11428187lfm.12
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:55:58 -0700 (PDT)
+        Wed, 12 Jun 2019 04:57:09 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y17so11461060lfe.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:57:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=S6dsc9hWBbsJ9ftcy5oIWdQeYlBaT7RnVpUbv8am+So=;
-        b=cdDvAZo+BI/4z2Gjdm90L1glbL5oSJei4EYJuA9mTlDlpUK2J0mpDznfRk/DdmnreZ
-         sGTgEGq/NrXG/+FkTauUqDUSnEfYnMgZW9F8eLlFFGI16rSZf6AyBxty18aDbh16Ercs
-         baT9ohslEOYLTztWBQynYAIhVJpSIuR3gE+pXd9iCtV/D0B0HPxnhD6+icAER68vr9Wr
-         p6j2SlRTsKlvkihYJAFHt79r+J2HCwn5OUAXH4tgUJxtYcIx8FFzR93yzPNLZUevLQW6
-         YosMYudXrNcLxU9VhUWaWtbzmh3o+rDlHuT97QSK6/19hanulIx0ZAzcm/R672NpCOg8
-         sEhQ==
+        bh=1EziaPVHwI3OsN4q5Q0m4XpCeZBocIr9dDoB/RcVNjs=;
+        b=RiL/H776u6ayTVWLP4Rrw0ebZQ3DKh3efnfcUVnvwGSkIgTbR+eWHbcPCZedkbXbsH
+         Mwcxf4g6FpWRQ90+/runRr9kZnXPcNNW0i/pWfCxnBnQpGfBQojgZX33jbwmIr8LkEBn
+         va8mu634mqOa4r7r/odvuSu6dIl3GVmN8rdKvF/jRcG1UnVI8033D1vgZfZfzniwH3na
+         ZqiH2elFYwFqaXbuDeshhpgt0Hs5zc4cb//Gt/fQ32rpmh6mqLBPJtloIdP/6BCc6NSf
+         VU/WZsqFNER2FzpFptEnFMA+1lFnpokcdcG1Fp5Yqs7FUG3RQJ4Gr8Lb4cDLr0my9zo0
+         h8NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=S6dsc9hWBbsJ9ftcy5oIWdQeYlBaT7RnVpUbv8am+So=;
-        b=hJmrL/0uOrErZ0MmYDIE7fWyFCAcoj10hYAAmAcWurCEQ+wLyjU5GH5NQCG1HGuExv
-         i4m5/PKI1NZ4DrczOA/MRATIkcpNIcLiUdOE7rM2jBNnxOI3lpU9Mszb9QQAcQcufs3V
-         hiRSoxXmE2PxwmUiiejg/5HpXudx3lQ4v7gukTt8JkrHWyf6iAtbywiIMYIF6ArKn7ZN
-         Q6svWK9R+FBfEMPFp1hpS1vNveHXCRLG5ilkQYbZPqyFJ2kQOWx5tgczQquW18umP/U4
-         VHgV4VBjiCslJkkpMVuEge6WNTPWW6DtvjFfgIj+1OEgWTPlPwKB2QYBo/X5Cb4EWTUR
-         +pXg==
-X-Gm-Message-State: APjAAAVgRb65NzA1i+VV40ud4Xs3Xhheo4ggGOfMmeL0e6tMnPsUmiLj
-        +spNVL9NgZWHIOKDp93IyDJT67LnxMIaV3sN9U2bVw==
-X-Google-Smtp-Source: APXvYqzPSx5XfdL5cdU82+TCxBTmCmwTndsIlHmjhMLF7KXn4u1Puk4//3L7dErprp1ZZvvjJHwNVyPpuMFsHUSjlJ4=
-X-Received: by 2002:a19:7616:: with SMTP id c22mr36812571lff.115.1560329758321;
- Wed, 12 Jun 2019 01:55:58 -0700 (PDT)
+        bh=1EziaPVHwI3OsN4q5Q0m4XpCeZBocIr9dDoB/RcVNjs=;
+        b=thUeWRUrLlao2JejXFTrkHcLB6bLFNo/fUnREQQInVvklDNRZF3O+0NIfRxA09AT6h
+         mHmDTcu2vXw1mIzShWFMptCxmDqedsKvMXm1C1a57Fj4UlAU6S3BJRdAuGsd6BuURXNk
+         fcV7KE2hlY5yhzpKyphCTz3UcMMPEemV0X9zKB8Le6vKQY+un6VTeofjkdbND224eWps
+         NVovwJnehSnMsnhDsDIIcYOEAFHxYhBlelwKxlnZAClIGbszMIDoZM45Q6UWhLNKiE5i
+         kSuj+VmE1mZjTPelQ8iMt1lPuL4vsDYOOPTXzSzw7eZUWTMCqcDjTerTspy8mb+BU7+T
+         v9/g==
+X-Gm-Message-State: APjAAAWXhfjpMf/YP3J3WuV6Iw4522J7o1B2GL5R/ym/nwKlaSGV8WvT
+        hSyKCSGMWhSyr9X9fHNIEINyna2IEObR0O9u6eAgHA==
+X-Google-Smtp-Source: APXvYqzdXC0nDBe338kDBZkoplEJnp9z+g++x8HvyKX6p6DHugHZB+t5hf2uxbdvplO64qLWE8dpOegyo1Bkz+japzE=
+X-Received: by 2002:ac2:5382:: with SMTP id g2mr39749313lfh.92.1560329827260;
+ Wed, 12 Jun 2019 01:57:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190610171103.30903-1-grygorii.strashko@ti.com> <20190610171103.30903-16-grygorii.strashko@ti.com>
-In-Reply-To: <20190610171103.30903-16-grygorii.strashko@ti.com>
+References: <20190610171103.30903-1-grygorii.strashko@ti.com> <20190610171103.30903-17-grygorii.strashko@ti.com>
+In-Reply-To: <20190610171103.30903-17-grygorii.strashko@ti.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Jun 2019 10:55:46 +0200
-Message-ID: <CACRpkdZQpG5eHdDUy4aRxr6vEgs0qZHRMXUkCfms_VBYwiQeXg@mail.gmail.com>
-Subject: Re: [PATCH-next 15/20] gpio: gpio-omap: remove dataout variation in
- context handling
+Date:   Wed, 12 Jun 2019 10:56:55 +0200
+Message-ID: <CACRpkda7d9SV-muuvEpO5VhCHrJozRtOMVGi+1siyWzabTMmww@mail.gmail.com>
+Subject: Re: [PATCH-next 16/20] gpio: gpio-omap: clean up omap_gpio_restore_context()
 To:     Grygorii Strashko <grygorii.strashko@ti.com>
 Cc:     Russell King <rmk@arm.linux.org.uk>,
         Tony Lindgren <tony@atomide.com>,
@@ -79,11 +78,10 @@ On Mon, Jun 10, 2019 at 7:13 PM Grygorii Strashko
 
 > From: Russell King <rmk+kernel@armlinux.org.uk>
 >
-> When a GPIO block has the set/clear dataout registers implemented, it
-> also has the normal dataout register implemented. Reading this register
-> reads the current GPIO output state, and writing it sets the GPIOs to
-> the explicit state. This is the behaviour that we want when saving and
-> restoring the context, so use the dataout register exclusively.
+> Use local variables to store the base iomem address and regs table
+> pointer like omap_gpio_init_context() does. Not only does this make
+> the function neater, it also avoids unnecessary reloads of the same
+> data multiple times.
 >
 > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 > Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
