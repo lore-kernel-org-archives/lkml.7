@@ -2,110 +2,72 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B43CC31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26461C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8012D20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED699208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:36:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408866AbfFLKgu (ORCPT
+        id S2408878AbfFLKgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:36:50 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52717 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408253AbfFLKgu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:36:50 -0400
-Received: by mail-wm1-f67.google.com with SMTP id s3so6029973wms.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 03:36:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=iB7poecQTyOsB8cRpdZU55/OXu7pHm3+QgOZegkblOA=;
-        b=RinAxVF0nn3BgErIz6g3jFZ4X2kXZfqiqsyAsho7boVRauD90R4MCJg3vNTmDYFhdV
-         C8hlzOUu/7wj8Ow+5zzJnC/pUE6E9m3saMQ5dIcO5YdrW1FolE8CPm/OyRP5qwsqH9FP
-         I6RjE2Qp/w++ZhK3hj1xdoyJajjRm++w8I0KKoL0bn7AeERoypP9tFdFkukA6KgzsReZ
-         QxVIaKwy0pWSB/I8m+6CdEarQedm0Pap4QKfis8dBYl1/tXJjLoK6LxEqVKIBmAQ6Am2
-         HnGimfumSuiiTRjyPcEVLQSZm5ioS06suayxXSA6eUlVlZttnK7PxO+cPDP6Cc4KH5pP
-         E8rQ==
-X-Gm-Message-State: APjAAAX5CiJc/M+NXkW+sflNgQIPqarKgeoXMQrP58iG9m4CTjtlRqBm
-        fYaksbC8XIzX6kr2ELAoWyI5ebj2t3E=
-X-Google-Smtp-Source: APXvYqy2Lghsff9p2s0NVwakfOM4HR5RGFJK7Z2VwhreSAptAgNhXLLGpYIKpQpgKAuNvJTn5PVdng==
-X-Received: by 2002:a1c:a6d1:: with SMTP id p200mr22496960wme.169.1560335808470;
-        Wed, 12 Jun 2019 03:36:48 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id q15sm9705618wrr.19.2019.06.12.03.36.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 03:36:48 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Maya Nakamura <m.maya.nakamura@gmail.com>
-Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org
-Subject: Re: [PATCH v2 2/5] x86: hv: hv_init.c: Add functions to allocate/deallocate page for Hyper-V
-In-Reply-To: <5cf4ad6f3fae8dec33e364b367b99cbb5b0f2ba4.1559807514.git.m.maya.nakamura@gmail.com>
-References: <cover.1559807514.git.m.maya.nakamura@gmail.com> <5cf4ad6f3fae8dec33e364b367b99cbb5b0f2ba4.1559807514.git.m.maya.nakamura@gmail.com>
-Date:   Wed, 12 Jun 2019 12:36:47 +0200
-Message-ID: <87muindr9c.fsf@vitty.brq.redhat.com>
+        Wed, 12 Jun 2019 06:36:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43978 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2408253AbfFLKgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 06:36:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A0633AF97;
+        Wed, 12 Jun 2019 10:36:50 +0000 (UTC)
+Subject: Re: [Xen-devel] [PATCH] x86/xen: disable nosmt in Xen guests
+To:     Jan Beulich <JBeulich@suse.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        tglx@linutronix.de, xen-devel <xen-devel@lists.xenproject.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, hpa@zytor.com
+References: <20190612101228.23898-1-jgross@suse.com>
+ <5D00D1A602000078002376A9@prv1-mh.provo.novell.com>
+From:   Juergen Gross <jgross@suse.com>
+Message-ID: <8392fdc4-a6b2-a3aa-dca6-0a0ad7a411be@suse.com>
+Date:   Wed, 12 Jun 2019 12:36:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <5D00D1A602000078002376A9@prv1-mh.provo.novell.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maya Nakamura <m.maya.nakamura@gmail.com> writes:
+On 12.06.19 12:19, Jan Beulich wrote:
+>>>> On 12.06.19 at 12:12, <jgross@suse.com> wrote:
+>> When running as a Xen guest selecting "nosmt" either via command line
+>> or implicitly via default settings makes no sense, as the guest has no
+>> clue about the real system topology it is running on. With Xen it is
+>> the hypervisor's job to ensure the proper bug mitigations are active
+>> regarding smt settings.
+> 
+> I don't agree with the second sentence: It is in principle fine for the
+> hypervisor to expose HT (i.e. not disable it as bug mitigation), and
+> leave it to the guest kernels to protect themselves. We're just not
+> at the point yet where Xen offers sufficient / reliable data to guest
+> kernels to do so, so _for the time being_ what you say is correct.
 
-> Introduce two new functions, hv_alloc_hyperv_page() and
-> hv_free_hyperv_page(), to allocate/deallocate memory with the size and
-> alignment that Hyper-V expects as a page. Although currently they are
-> not used, they are ready to be used to allocate/deallocate memory on x86
-> when their ARM64 counterparts are implemented, keeping symmetry between
-> architectures with potentially different guest page sizes.
->
-> Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
-> ---
->  arch/x86/hyperv/hv_init.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index e4ba467a9fc6..84baf0e9a2d4 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -98,6 +98,20 @@ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
->  u32 hv_max_vp_index;
->  EXPORT_SYMBOL_GPL(hv_max_vp_index);
->  
-> +void *hv_alloc_hyperv_page(void)
-> +{
-> +	BUILD_BUG_ON(!(PAGE_SIZE == HV_HYP_PAGE_SIZE));
+Okay, I'll add something like:
 
-(nit)
+This is true as long Xen doesn't support core scheduling together with
+exposing the (then) correct sibling information to the guest and
+indicating that case via a sutable interface.
 
-PAGE_SIZE != HV_HYP_PAGE_SIZE ?
 
-> +
-> +	return (void *)__get_free_page(GFP_KERNEL);
-> +}
-> +EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
-> +
-> +void hv_free_hyperv_page(unsigned long addr)
-> +{
-> +	free_page(addr);
-> +}
-> +EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
-> +
->  static int hv_cpu_init(unsigned int cpu)
->  {
->  	u64 msr_vp_index;
+Juergen
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
--- 
-Vitaly
