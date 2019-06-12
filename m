@@ -2,110 +2,102 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CFDC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93D0C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B707B21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:47:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BjIrGdvx"
+	by mail.kernel.org (Postfix) with ESMTP id 811A721734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560354611;
+	bh=6T0FWzHtxfc/QaxmWxb3GV47iewnf2UxFhYnXqqTDIs=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=FmtWfu5/U8sNWEo1T8swzQLbkI1MMpPrg/bs9LqE1LX4k44DYZ7VKSC/Px8Sa3Cgh
+	 qhfObWL2ZEhqbcZMcCK1LVIrecUJuMNIuVQfkiq/Tq6twim2Bkhunw+pTIpuuY5/bT
+	 VNGOCKLTa6FmIn/utCMihmHNTMDscfamOusF04WA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440133AbfFLPrk (ORCPT
+        id S2440090AbfFLPuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:47:40 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:42260 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437713AbfFLPrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:47:39 -0400
-Received: from zn.tnic (p200300EC2F0A6800329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6800:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AFAB91EC09C0;
-        Wed, 12 Jun 2019 17:47:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560354457;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=AmCfLyR4W8uwN4jCphyC/roQx44k2jx2XkPRIsRNW7A=;
-        b=BjIrGdvxNgr+CgSRlZNaf2lFfNhgWb3xvyJEpysjY6QRB/puv0oWUxLJz/C+dNsSoYThQV
-        S7FGJWGce8cM/PACHzg3YTauN3mkxONFjIHcqxBCXSwwwbD2KlUhVojmDmmqNg4e9cpMif
-        GmcI2LDtLCxL+iHqUhRHh8rbXXMfBdw=
-Date:   Wed, 12 Jun 2019 17:47:30 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Pu Wen <puwen@hygon.cn>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86: mce: no need to check return value of
- debugfs_create functions
-Message-ID: <20190612154730.GM32652@zn.tnic>
-References: <20190612151531.GA16278@kroah.com>
- <20190612151856.GK32652@zn.tnic>
- <20190612154122.GB21828@kroah.com>
+        Wed, 12 Jun 2019 11:50:10 -0400
+Received: from casper.infradead.org ([85.118.1.10]:55118 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437689AbfFLPuK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:50:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=lZ7jhMBykRVdY/yQT29SU8tqCwPRLhDwhRSycURiLbk=; b=m49CucLekkneu5UkgnMxLwpfx6
+        BPrQAcXZDq8UNx3QIACIXQRjR9QX/JrtQmUujeYWHJQA/f/qA4PgFVXbMuYkshqL1s/vzP/qTwfS7
+        i96PGjwqNZ7nT65nEQGHB4jiCV31rK9GZ1Ualni7IcRFESMjVKP8BpfeJGdoODkUaxj5+0ZMm7W27
+        jd4N/ylZU3iF0J8G8r1MBApxhb/y3prNO5rxXzcOYQNwodyD28kILi0qV2eYSbbEqmR0GmZdIsVgw
+        FH55Cq4BYA/bT3wPHfZznyDKcjCcUzeBbpPLmWb/43eSo0JQJKZ8cDwSA4disskKSa9nh2W+IOpW/
+        VQYLzMcQ==;
+Received: from 201.86.169.251.dynamic.adsl.gvt.net.br ([201.86.169.251] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hb5Vm-0002VI-Mr; Wed, 12 Jun 2019 15:50:07 +0000
+Date:   Wed, 12 Jun 2019 12:50:02 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL for v5.2-rc1] media updates
+Message-ID: <20190612125002.66e84492@coco.lan>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190612154122.GB21828@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 05:41:22PM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Jun 12, 2019 at 05:18:56PM +0200, Borislav Petkov wrote:
-> > On Wed, Jun 12, 2019 at 05:15:31PM +0200, Greg Kroah-Hartman wrote:
-> > > When calling debugfs functions, there is no need to ever check the
-> > > return value.  The function can work or not, but the code logic should
-> > > never do something different based on this.
-> > > 
-> > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > Cc: Ingo Molnar <mingo@redhat.com>
-> > > Cc: Borislav Petkov <bp@alien8.de>
-> > > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > > Cc: <x86@kernel.org>
-> > > Cc: Tony Luck <tony.luck@intel.com>
-> > > Cc: Vishal Verma <vishal.l.verma@intel.com>
-> > > Cc: Pu Wen <puwen@hygon.cn>
-> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > ---
-> > >  arch/x86/kernel/cpu/mce/core.c     | 16 +++++---------
-> > >  arch/x86/kernel/cpu/mce/inject.c   | 34 +++++-------------------------
-> > >  arch/x86/kernel/cpu/mce/severity.c | 14 +++---------
-> > >  3 files changed, 13 insertions(+), 51 deletions(-)
-> > 
-> > I think I'm having a deja-vu:
-> > 
-> > https://lkml.kernel.org/r/20190122215326.GM26587@zn.tnic
-> 
-> Ah, I thought I had sent this out before...
-> 
-> Anyway, I'll fix this up, but really, you will not have a debugfs file
-> fail creation unless the system is totally out of memory...
+Hi Linus,
 
-Promise? :-P
+Please pull from:
+  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.2-2
 
-I mean, I don't mind getting rid of all that error handling getting in
-the way of the code but we'll leave the injector in a half-init state if
-the allocation fails.
+For a couple patches:
 
-I guess I can take this and see what breaks. If it does, we can always
-revert it...
+  - a debug warning for satellite tuning at dvb core was producing
+    too much noise;
+  - a regression at hfi_parser on Venus driver.
 
-Btw, is your aim to make debugfs_create_file() return void or you're
-just doing some cleanups?
+Regards,
+Mauro
 
--- 
-Regards/Gruss,
-    Boris.
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.2-2
+
+for you to fetch changes up to a200c721956ca026f44416acccc8efcca41109c5:
+
+  media: venus: hfi_parser: fix a regression in parser (2019-05-29 10:20:06 -0400)
+
+----------------------------------------------------------------
+media updates for v5.2-rc1
+
+----------------------------------------------------------------
+Sean Young (1):
+      media: dvb: warning about dvb frequency limits produces too much noise
+
+Stanimir Varbanov (1):
+      media: venus: hfi_parser: fix a regression in parser
+
+ drivers/media/dvb-core/dvb_frontend.c          | 2 +-
+ drivers/media/platform/qcom/venus/hfi_helper.h | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
