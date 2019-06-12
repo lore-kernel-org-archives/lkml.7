@@ -2,61 +2,129 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427A1C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D628EC31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E8920866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B05CB20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:25:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="hkGN/gxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438866AbfFLMVe (ORCPT
+        id S1730955AbfFLMZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:21:34 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:39852 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405516AbfFLMVd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:21:33 -0400
-Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 6DC6425AD60;
-        Wed, 12 Jun 2019 22:21:31 +1000 (AEST)
-Received: by penelope.horms.nl (Postfix, from userid 7100)
-        id 63A62E21FE5; Wed, 12 Jun 2019 14:21:29 +0200 (CEST)
-Date:   Wed, 12 Jun 2019 14:21:29 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 5/6] dt-bindings: timer: renesas: tmu: Document r8a774a1
- bindings
-Message-ID: <20190612122129.eowqbenbaymtz3wv@verge.net.au>
-References: <1560258401-9517-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1560258401-9517-6-git-send-email-fabrizio.castro@bp.renesas.com>
+        Wed, 12 Jun 2019 08:25:14 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:39014 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727079AbfFLMZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:25:14 -0400
+Received: from zn.tnic (p200300EC2F0A68007943916066B63355.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6800:7943:9160:66b6:3355])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6EC4A1EC0997;
+        Wed, 12 Jun 2019 14:25:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560342312;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=gi/Aj6c8mOFcV7aCIIIQ6awXYflOyKeKgs4zOZSR1Gg=;
+        b=hkGN/gxLvBDDeN2/dthWOwVSqcQr7cbO08nBiSouqNBUDNSo6FN9E75mDRlQfmb1TUMQSW
+        f60AzaJR9J8u0qrz0qP86tcyQZhGKvXvHk6842x/JFCws8NmX7mh86lPBnAjWM68rluWfQ
+        /R7uZ405Cnz6m0R9ecxSQQq+x1nP+gc=
+Date:   Wed, 12 Jun 2019 14:25:04 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Message-ID: <20190612122504.GI32652@zn.tnic>
+References: <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+ <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+ <20190611115651.GD31772@zn.tnic>
+ <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
+ <20190612034813.GA32652@zn.tnic>
+ <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
+ <20190612074242.53a4cf56@coco.lan>
+ <20190612110039.GH32652@zn.tnic>
+ <20190612084213.4fb9e054@coco.lan>
+ <7705227ea831793cc9e45af32e0da8f5547cb14d.camel@kernel.crashing.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1560258401-9517-6-git-send-email-fabrizio.castro@bp.renesas.com>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <7705227ea831793cc9e45af32e0da8f5547cb14d.camel@kernel.crashing.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 02:06:40PM +0100, Fabrizio Castro wrote:
-> Document RZ/G2M (R8A774A1) SoC in the Renesas TMU bindings.
+On Wed, Jun 12, 2019 at 09:57:40PM +1000, Benjamin Herrenschmidt wrote:
+> On Wed, 2019-06-12 at 08:42 -0300, Mauro Carvalho Chehab wrote:
+> > > Yes, we do have different error reporting facilities but I still
+> > > think
+> > > that concentrating all the error information needed in order to do
+> > > proper recovery action is the better approach here. And make that
+> > > part
+> > > of the kernel so that it is robust. Userspace can still configure
+> > > it and
+> > > so on.
+> > 
+> > If the error reporting facilities are for the same hardware "group"
+> > (like the machine's memory controllers), I agree with you: it makes
+> > sense to have a single driver. 
+> > 
+> > If they are for completely independent hardware then implementing
+> > as separate drivers would work equally well, with the advantage of
+> > making easier to maintain and make it generic enough to support
+> > different vendors using the same IP block.
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Right. And if you really want a platform orchestrator for recovery in
+> the kenrel, it should be a separate one, that consumes data from the
+> individual IP block drivers that report the raw errors anyway.
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Yap, I think we're in agreement here. I believe the important question
+is whether you need to get error information from multiple sources
+together in order to do proper recovery or doing it per error source
+suffices.
 
+And I think the actual use cases could/should dictate our
+drivers/orchestrators design.
+
+Thus my question how you guys are planning on tying all that error info
+the drivers report, into the whole system design?
+
+> But for the main case that really needs to be in the kernel, which is
+> DRAM, the recovery can usually be contained to the MC driver anyway.
+
+Right, if that is enough to handle the error properly.
+
+The memory-failure.c example I gave before is the error reporting
+mechanism (x86 MCA) calling into the mm subsystem to poison and isolate
+page frames which are known to contain errors. So you have two things
+talking to each other.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
