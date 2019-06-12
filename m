@@ -2,98 +2,110 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C41C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B066C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE0F21744
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:02:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560358973;
-	bh=wm+5WcQRfJbnz//CCyMX9+vekrFgXyfxfNrI9oF65uE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AARvWeRobewMObBWqpZ3xkRPpU9ewc7t4k5hDtGJ/rQO5t64DGoMGUKrm5jefrcD8
-	 KDrEqR8a5TnM/lm2RdM43w4KgSe2XBPFSqRisIQ2HJChaUWqhzwkl/lfXKlrwU3ke0
-	 zPB/1g2xlsGk2LiiY6p/KqMfbnx0uzQ6kjnrgEEQ=
+	by mail.kernel.org (Postfix) with ESMTP id D85E421744
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:03:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="qlDkCCC/";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="gyUQ2OA+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730982AbfFLRCw (ORCPT
+        id S1731170AbfFLRDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 13:02:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730565AbfFLRCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 13:02:52 -0400
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43DD7206BB;
-        Wed, 12 Jun 2019 17:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560358971;
-        bh=wm+5WcQRfJbnz//CCyMX9+vekrFgXyfxfNrI9oF65uE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=17E6SyeNw6ZnKarS0veB9PZx5/4zF4Yp4MRLZD+59Nj1gd70dPyRErF2J1VkfrNkT
-         ncoeqQbdZCODxKeI4zkQ7HKfCc8xS/O//l6oRddEVCxPJPoGrwo/n3KDaNdRqa2pdd
-         VYUl7NuxxUiDHf0nG1gJxHdqJruLyPXhP4Q6KUzI=
-Received: by mail-qk1-f171.google.com with SMTP id g18so10843458qkl.3;
-        Wed, 12 Jun 2019 10:02:51 -0700 (PDT)
-X-Gm-Message-State: APjAAAWGnRaGxbjRY/WDnz9ZiKBlCnIr6200BMDuPhW6gvh+nhhGkvu/
-        gBOYmYNlzf2yczlI3or42FGYoiJvaI/qIo9DNA==
-X-Google-Smtp-Source: APXvYqxn/t5SpdMAOZKVGkLfsgJbeVeWbNLaVCgN9g2E8d6YQWTmTBKgNCoQ/G6XvynII/wN2xt4CKVsW+/qwPEnzAA=
-X-Received: by 2002:a05:620a:16c1:: with SMTP id a1mr24460916qkn.269.1560358970567;
- Wed, 12 Jun 2019 10:02:50 -0700 (PDT)
+        Wed, 12 Jun 2019 13:03:09 -0400
+Received: from mail177-30.suw61.mandrillapp.com ([198.2.177.30]:35904 "EHLO
+        mail177-30.suw61.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731040AbfFLRDI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 13:03:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=Hm2gC+regS6aFJ0Z5S9VnOE8zeLWgmtCRNQHokPDkY8=;
+ b=qlDkCCC/dPk74baVrVBLmOyLG+QU2eZx1SW9cdMEM2vAaKwb3Uj1ZVjG9dQUHZG7CqHgOKn2opNw
+   zmxoR6WyKbtWnRPy0A3ja3InFo6aPJahQB5TCVqrIi/05h1Z+SbKhFGfSjJMOoHXrKFtPRyDFNDs
+   sGOxzYm5BnXaxI0RabQ=
+Received: from pmta06.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail177-30.suw61.mandrillapp.com id h04o4m22rtkd for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 17:03:05 +0000 (envelope-from <bounce-md_31050260.5d013049.v1-145d451a13654eaaa66dd24b26a9f854@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1560358985; h=From : 
+ Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=Hm2gC+regS6aFJ0Z5S9VnOE8zeLWgmtCRNQHokPDkY8=; 
+ b=gyUQ2OA+FpqROVGuWEuouAFmLCuyTSCFEJiHlRTKoqy65wnR2sJIcjFX6zHmJTmBUjJUBd
+ tCnYKV/guLBZNJGm9WNTM8TzJc3brbd9Ugs71cZMXWAcHd8uowf6wkBR8w/0ePcRTlWG6AVs
+ GdTomTrpwS3dagPdbDPvj+LIn55Rg=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [PATCH] fuse: require /dev/fuse reads to have enough buffer capacity (take 2)
+Received: from [87.98.221.171] by mandrillapp.com id 145d451a13654eaaa66dd24b26a9f854; Wed, 12 Jun 2019 17:03:05 +0000
+To:     Sander Eikelenboom <linux@eikelenboom.it>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        <gluster-devel@gluster.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Message-Id: <20190612170259.GA27637@deco.navytux.spb.ru>
+References: <876aefd0-808a-bb4b-0897-191f0a8d9e12@eikelenboom.it> <CAJfpegvRBm3M8fUJ1Le1dPd0QSJgAWAYJGLCQKa6YLTE+4oucw@mail.gmail.com> <20190611202738.GA22556@deco.navytux.spb.ru> <CAOssrKfj-MDujX0_t_fgobL_KwpuG2fxFmT=4nURuJA=sUvYYg@mail.gmail.com> <20190612112544.GA21465@deco.navytux.spb.ru> <f31ca7b5-0c9b-5fde-6a75-967265de67c6@eikelenboom.it> <20190612141220.GA25389@deco.navytux.spb.ru> <f79ff13f-701b-89d8-149c-e53bb880bb77@eikelenboom.it>
+In-Reply-To: <f79ff13f-701b-89d8-149c-e53bb880bb77@eikelenboom.it>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.145d451a13654eaaa66dd24b26a9f854
+X-Mandrill-User: md_31050260
+Date:   Wed, 12 Jun 2019 17:03:05 +0000
 MIME-Version: 1.0
-References: <20190612043258.166048-1-hsinyi@chromium.org> <20190612043258.166048-3-hsinyi@chromium.org>
-In-Reply-To: <20190612043258.166048-3-hsinyi@chromium.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 12 Jun 2019 11:02:39 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+RTpRkn22RDTQe9De9se3suoM1ZrYH=Nk8aOKZuJLdGg@mail.gmail.com>
-Message-ID: <CAL_Jsq+RTpRkn22RDTQe9De9se3suoM1ZrYH=Nk8aOKZuJLdGg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/3] fdt: add support for rng-seed
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Miles Chen <miles.chen@mediatek.com>,
-        James Morse <james.morse@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:34 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
->
-> Introducing a chosen node, rng-seed, which is an entropy that can be
-> passed to kernel called very early to increase initial device
-> randomness. Bootloader should provide this entropy and the value is
-> read from /chosen/rng-seed in DT.
->
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> change log v5->v6:
-> * remove Documentation change
-> ---
->  drivers/of/fdt.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+On Wed, Jun 12, 2019 at 06:28:17PM +0200, Sander Eikelenboom wrote:
+> On 12/06/2019 16:12, Kirill Smelkov wrote:
+> > On Wed, Jun 12, 2019 at 03:03:49PM +0200, Sander Eikelenboom wrote:
+> >> On 12/06/2019 13:25, Kirill Smelkov wrote:
+> >>> On Wed, Jun 12, 2019 at 09:44:49AM +0200, Miklos Szeredi wrote:
+> >>>> On Tue, Jun 11, 2019 at 10:28 PM Kirill Smelkov <kirr@nexedi.com> wr=
+ote:
+> >>>>
+> >>>>> Miklos, would 4K -> `sizeof(fuse_in_header) + sizeof(fuse_write_in)=
+` for
+> >>>>> header room change be accepted?
+> >>>>
+> >>>> Yes, next cycle.   For 4.2 I'll just push the revert.
+> >>>
+> >>> Thanks Miklos. Please consider queuing the following patch for 5.3.
+> >>> Sander, could you please confirm that glusterfs is not broken with th=
+is
+> >>> version of the check?
+> >>>
+> >>> Thanks beforehand,
+> >>> Kirill
+> >>
+> >>
+> >> Hmm unfortunately it doesn't build, see below.
+> >> [...]
+> >> fs/fuse/dev.c:1336:14: error: =E2=80=98fuse_in_header=E2=80=99 undecla=
+red (first use in this function)
+> >>        sizeof(fuse_in_header) + sizeof(fuse_write_in) + fc->max_write)=
+)
+> > 
+> > Sorry, my bad, it was missing "struct" before fuse_in_header. I
+> > originally compile-tested the patch with `make -j4`, was distracted ont=
+o
+> > other topic and did not see the error after returning due to long tail
+> > of successful CC lines. Apologize for the inconvenience. Below is a
+> > fixed patch that was both compile-tested and runtime-tested with my FUS=
+E
+> > workloads (non-glusterfs).
+> > 
+> > Kirill
+> > 
+> 
+> Just tested and it works for me, thanks !
 
-I assume this will go thru the arm64 tree.
+Thanks for feedback. Kirill
 
-Reviewed-by: Rob Herring <robh@kernel.org>
