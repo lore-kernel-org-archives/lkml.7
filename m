@@ -2,103 +2,195 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8260EC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 478B7C31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49F7B2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:35:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9hscLxT"
+	by mail.kernel.org (Postfix) with ESMTP id 1150A20896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731178AbfFLGfe (ORCPT
+        id S2404920AbfFLGhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 02:35:34 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:56021 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfFLGfe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 02:35:34 -0400
-Received: by mail-it1-f193.google.com with SMTP id i21so9000117ita.5
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 23:35:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MHcvYWRnrXWxsWWs0BejJhNYWntQgPzwqsTyK3JVcEE=;
-        b=S9hscLxT9U0oYcldK6EV5J/lbYqp/LZmLHawIS7nzJVR0hsF1YqVy150zNpRA9eZtS
-         04C0Hbr1JbzSiOoaoXFWJijWoXICJeBvkpEM2EMr+QojWFDJ8UlLUaUSBOpD2z9Nlfgc
-         F6zwaVjxQlFzllxXNlNlaICFHIf4OAVLxZbKKCgBXFSFsBKTRA1B1KYpGaN4woeCH091
-         GNSM6lSXYFA+slAMAiohXpmR69HFHKhg/lxP3dP1h954Fc/oEsyat+AX0WldkvkU2u94
-         81Otxa9+L7GosJ3ZF8B3x8fOUMRgxm3yuiWt+QNnp/cOpbigVendTpVFvhXldkxI+/D3
-         x2Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MHcvYWRnrXWxsWWs0BejJhNYWntQgPzwqsTyK3JVcEE=;
-        b=K+VzZmUlN9j24946oOjFNyAE6igtFwtkMu9V9SCEfD9LbLqHj7TeD6BFzCcCwxcr6g
-         5BA/JPXTdM9rj3YKYIrTiU7xsXd+FgH3tQxrrRx60OY2KuYJFyz9ysfF+zwGanhXb9Zt
-         VOdJ7Ig0/6yVkpcn7iRIU5vm7A92pb2NYpg18H4uYi4TSxkmqAmDTEHHEwzVZ8y2bARr
-         bFZqcmOh+SCroVUEU/9JCyXpFqmeq/rrVkBdWT8cDOSSDWyE7RsI7Ziz7poifAmWos2v
-         ccSLtyNCWAFy034P5IYTlCztYJac9+d/08yQ6CEv1uiKnAD0tEQh/pNCyeFRUW1qCfJW
-         bRoQ==
-X-Gm-Message-State: APjAAAVEovKXNzWR2lLPjbMvlSk26U55XirmlaR0I9Bz32kP69Fha1IT
-        XRRMpPAUXE7ltnO3iUhItBaWH0ufFb4TlnCMBUcQFE/t
-X-Google-Smtp-Source: APXvYqx16rAJnIPnPFPqqoZ7lmzh1vpi/yzIxiE9JzX1lPl2u7spnY33oJUFEHnBbB8dL05qV9YE/DbB9OoGggJpIo4=
-X-Received: by 2002:a24:d145:: with SMTP id w66mr20513709itg.71.1560321333285;
- Tue, 11 Jun 2019 23:35:33 -0700 (PDT)
+        Wed, 12 Jun 2019 02:37:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40664 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730957AbfFLGho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 02:37:44 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 95C7F308421A;
+        Wed, 12 Jun 2019 06:37:43 +0000 (UTC)
+Received: from gondolin (ovpn-116-169.ams2.redhat.com [10.36.116.169])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E4994173C3;
+        Wed, 12 Jun 2019 06:37:14 +0000 (UTC)
+Date:   Wed, 12 Jun 2019 08:37:11 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     dm-devel@redhat.com, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        dan j williams <dan.j.williams@intel.com>,
+        zwisler@kernel.org, vishal l verma <vishal.l.verma@intel.com>,
+        dave jiang <dave.jiang@intel.com>, mst@redhat.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
+        adilger kernel <adilger.kernel@dilger.ca>,
+        darrick wong <darrick.wong@oracle.com>, lcapitulino@redhat.com,
+        kwolf@redhat.com, imammedo@redhat.com, jmoyer@redhat.com,
+        nilal@redhat.com, riel@surriel.com, stefanha@redhat.com,
+        aarcange@redhat.com, david@redhat.com, david@fromorbit.com,
+        xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        pbonzini@redhat.com, yuval shaia <yuval.shaia@oracle.com>,
+        kilobyte@angband.pl, jstaron@google.com, rdunlap@infradead.org,
+        snitzer@redhat.com
+Subject: Re: [PATCH v12 2/7] virtio-pmem: Add virtio pmem driver
+Message-ID: <20190612083711.2c0cfd7e.cohuck@redhat.com>
+In-Reply-To: <1003601865.34513553.1560310490030.JavaMail.zimbra@redhat.com>
+References: <20190611163802.25352-1-pagupta@redhat.com>
+        <20190611163802.25352-3-pagupta@redhat.com>
+        <20190611190209.0b25033e.cohuck@redhat.com>
+        <1003601865.34513553.1560310490030.JavaMail.zimbra@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20190611092144.11194-1-oded.gabbay@gmail.com> <20190611095857.GB24058@kroah.com>
- <20190611151753.GA11404@infradead.org> <20190611152655.GA3972@kroah.com>
- <CAFCwf13A73AxKzaa7Dk3tU-1NDgTFs4+xCO2os7SuSyUHZ9Z3Q@mail.gmail.com> <CAFCwf134nTD4FM_9Q+THQ7ZAZzGxhs15O6EheaRJMqM5wxi+aA@mail.gmail.com>
-In-Reply-To: <CAFCwf134nTD4FM_9Q+THQ7ZAZzGxhs15O6EheaRJMqM5wxi+aA@mail.gmail.com>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Wed, 12 Jun 2019 16:35:22 +1000
-Message-ID: <CAOSf1CE82uVVni638jkJJpQ7XLXX+HdD7xuB7Wv-f8mn=SBMeg@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] habanalabs: enable 64-bit DMA mask in POWER9
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, linuxppc-dev@ozlabs.org,
-        Christoph Hellwig <hch@infradead.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 12 Jun 2019 06:37:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 3:25 AM Oded Gabbay <oded.gabbay@gmail.com> wrote:
->
-> On Tue, Jun 11, 2019 at 8:03 PM Oded Gabbay <oded.gabbay@gmail.com> wrote:
-> >
-> > On Tue, Jun 11, 2019 at 6:26 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > *snip*
-> >
-> > Now, when I tried to integrate Goya into a POWER9 machine, I got a
-> > reject from the call to pci_set_dma_mask(pdev, 48). The standard code,
-> > as I wrote above, is to call the same function with 32-bits. That
-> > works BUT it is not practical, as our applications require much more
-> > memory mapped then 32-bits.
+Hi Pankaj,
 
-Setting a 48 bit DMA mask doesn't work today because we only allocate
-IOMMU tables to cover the 0..2GB range of PCI bus addresses. Alexey
-has some patches to expand that range so we can support devices that
-can't hit the 64 bit bypass window. You need:
+On Tue, 11 Jun 2019 23:34:50 -0400 (EDT)
+Pankaj Gupta <pagupta@redhat.com> wrote:
 
-This fix: http://patchwork.ozlabs.org/patch/1113506/
-This series: http://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=110810
+> Hi Cornelia,
+> 
+> > On Tue, 11 Jun 2019 22:07:57 +0530
+> > Pankaj Gupta <pagupta@redhat.com> wrote:
 
-Give that a try and see if the IOMMU overhead is tolerable.
 
-> >In addition, once you add more cards which
-> > are all mapped to the same range, it is simply not usable at all.
+> > > +	err1 = virtqueue_kick(vpmem->req_vq);
+> > > +	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> > > +	/*
+> > > +	 * virtqueue_add_sgs failed with error different than -ENOSPC, we can't
+> > > +	 * do anything about that.
+> > > +	 */  
+> > 
+> > Does it make sense to kick if you couldn't add at all?  
+> 
+> When we could not add because of -ENOSPC we are waiting and when buffer is added
+> then only we do a kick. For any other error which might be a rare occurrence, I think
+> kick is harmless here and keeps the code clean?
 
-Each IOMMU group should have a separate bus address space and seperate
-cards shouldn't be in the same IOMMU group. If they are then there's
-something up.
+Yes, I agree it does not hurt. Let's keep it as-is.
 
-Oliver
+
+> Sure, Thank you. Attaching below on top changes on current patch2 based on
+> your suggestions. Let me know if these are okay and then will send official
+> v13 to for upstream merging.
+
+Looks good to me, except for one change.
+
+[Again sorry for the late review, did not want to get the version
+numbers up :)]
+
+> 
+> Thanks,
+> Pankaj
+> 
+> ===============
+> 
+> diff --git a/drivers/nvdimm/nd_virtio.c b/drivers/nvdimm/nd_virtio.c
+> index efc535723517..5b8d2367da0b 100644
+> --- a/drivers/nvdimm/nd_virtio.c
+> +++ b/drivers/nvdimm/nd_virtio.c
+> @@ -10,7 +10,7 @@
+>  #include "nd.h"
+>  
+>   /* The interrupt handler */
+> -void host_ack(struct virtqueue *vq)
+> +void virtio_pmem_host_ack(struct virtqueue *vq)
+>  {
+>         struct virtio_pmem *vpmem = vq->vdev->priv;
+>         struct virtio_pmem_request *req_data, *req_buf;
+> @@ -32,10 +32,10 @@ void host_ack(struct virtqueue *vq)
+>         }
+>         spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+>  }
+> -EXPORT_SYMBOL_GPL(host_ack);
+> +EXPORT_SYMBOL_GPL(virtio_pmem_host_ack);
+>  
+>   /* The request submission function */
+> -int virtio_pmem_flush(struct nd_region *nd_region)
+> +static int virtio_pmem_flush(struct nd_region *nd_region)
+>  {
+>         struct virtio_device *vdev = nd_region->provider_data;
+>         struct virtio_pmem *vpmem  = vdev->priv;
+> @@ -69,7 +69,7 @@ int virtio_pmem_flush(struct nd_region *nd_region)
+>         while ((err = virtqueue_add_sgs(vpmem->req_vq, sgs, 1, 1, req_data,
+>                                         GFP_ATOMIC)) == -ENOSPC) {
+>  
+> -               dev_err(&vdev->dev, "failed to send command to virtio pmem device, no free slots in the virtqueue\n");
+> +               dev_info(&vdev->dev, "failed to send command to virtio pmem device, no free slots in the virtqueue\n");
+>                 req_data->wq_buf_avail = false;
+>                 list_add_tail(&req_data->list, &vpmem->req_list);
+>                 spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> @@ -90,7 +90,8 @@ int virtio_pmem_flush(struct nd_region *nd_region)
+>         } else {
+>                 /* A host repsonse results in "host_ack" getting called */
+>                 wait_event(req_data->host_acked, req_data->done);
+> -               err = virtio32_to_cpu(vdev, req_data->resp.ret);
+> +               if ((err = virtio32_to_cpu(vdev, req_data->resp.ret)))
+> +                       err = -EIO;
+
+Hm, why are you making this change? I think the previous code was fine.
+
+>         }
+>  
+>         kfree(req_data);
+> @@ -100,7 +101,8 @@ int virtio_pmem_flush(struct nd_region *nd_region)
+>  /* The asynchronous flush callback function */
+>  int async_pmem_flush(struct nd_region *nd_region, struct bio *bio)
+>  {
+> -       /* Create child bio for asynchronous flush and chain with
+> +       /*
+> +        * Create child bio for asynchronous flush and chain with
+>          * parent bio. Otherwise directly call nd_region flush.
+>          */
+>         if (bio && bio->bi_iter.bi_sector != -1) {
+> diff --git a/drivers/nvdimm/virtio_pmem.c b/drivers/nvdimm/virtio_pmem.c
+> index b60ebd8cd2fd..5e3d07b47e0c 100644
+> --- a/drivers/nvdimm/virtio_pmem.c
+> +++ b/drivers/nvdimm/virtio_pmem.c
+> @@ -19,7 +19,7 @@ static int init_vq(struct virtio_pmem *vpmem)
+>  {
+>         /* single vq */
+>         vpmem->req_vq = virtio_find_single_vq(vpmem->vdev,
+> -                                               host_ack, "flush_queue");
+> +                                       virtio_pmem_host_ack, "flush_queue");
+>         if (IS_ERR(vpmem->req_vq))
+>                 return PTR_ERR(vpmem->req_vq);
+>  
+> diff --git a/drivers/nvdimm/virtio_pmem.h b/drivers/nvdimm/virtio_pmem.h
+> index 6e47521be158..998efbc7660c 100644
+> --- a/drivers/nvdimm/virtio_pmem.h
+> +++ b/drivers/nvdimm/virtio_pmem.h
+> @@ -50,6 +50,6 @@ struct virtio_pmem {
+>         uint64_t size;
+>  };
+>  
+> -void host_ack(struct virtqueue *vq);
+> +void virtio_pmem_host_ack(struct virtqueue *vq);
+>  int async_pmem_flush(struct nd_region *nd_region, struct bio *bio);
+>  #endif
+
