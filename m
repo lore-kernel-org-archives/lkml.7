@@ -2,71 +2,115 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EC0C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B5FC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C436217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:00:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560355204;
-	bh=1kX0SjKOuIugm8qKiYSM4LCHqGtJ2yMFlEstCcq37SM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=0LwBl4W4/vBzM9k54nCFjFWsDLEDCm3Vc0falyDLHKKa5WswUW3+0Q3CMQImCmOgv
-	 0iy5q7+ukLZ3TgaGmh6FLiUVT/5KBB+Axt+dkruB7sIwpTuumdCCutAQqT/z8NDLlf
-	 CmO66+4tMl1PsM2ggY6TrS08TIWiYKKajwL0HUu4=
+	by mail.kernel.org (Postfix) with ESMTP id 5BC4121734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:01:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440417AbfFLQAD (ORCPT
+        id S1729816AbfFLQBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 12:00:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55094 "EHLO mail.kernel.org"
+        Wed, 12 Jun 2019 12:01:25 -0400
+Received: from mga04.intel.com ([192.55.52.120]:50366 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440381AbfFLQAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:00:02 -0400
-Subject: Re: [GIT PULL for v5.2-rc1] media updates
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560355202;
-        bh=1kX0SjKOuIugm8qKiYSM4LCHqGtJ2yMFlEstCcq37SM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=s0bf2wtKuKOtk+E1UhbdJPrsglXmxPEy15dZbTBvBqL2OldIldrntVJyXtV7UT8Qd
-         Q2/bnUvKHMdvRyJfi5dEVFU0BWksnHCI1pp/QgpKfXNPR5f4oA9HYBun1qAYn1R50h
-         7hAOP/iniLe4ARe6cU8FkpoVhQlU2ui/XF/rpnpE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190612125002.66e84492@coco.lan>
-References: <20190612125002.66e84492@coco.lan>
-X-PR-Tracked-List-Id: <linux-media.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190612125002.66e84492@coco.lan>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
- tags/media/v5.2-2
-X-PR-Tracked-Commit-Id: a200c721956ca026f44416acccc8efcca41109c5
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 35110e38e6c59b0db9618701d75c7c2a36f98d55
-Message-Id: <156035520195.8444.11059520836448082611.pr-tracker-bot@kernel.org>
-Date:   Wed, 12 Jun 2019 16:00:01 +0000
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        id S1728847AbfFLQBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 12:01:24 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 09:01:23 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga002.jf.intel.com with ESMTP; 12 Jun 2019 09:01:23 -0700
+Date:   Wed, 12 Jun 2019 09:01:23 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v2 1/5] KVM: X86: Dynamic allocate core residency msr
+ state
+Message-ID: <20190612160123.GH20308@linux.intel.com>
+References: <1560238451-19495-1-git-send-email-wanpengli@tencent.com>
+ <1560238451-19495-2-git-send-email-wanpengli@tencent.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1560238451-19495-2-git-send-email-wanpengli@tencent.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 12 Jun 2019 12:50:02 -0300:
+On Tue, Jun 11, 2019 at 03:34:07PM +0800, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> Dynamic allocate core residency msr state. MSR_CORE_C1_RES is unreadable 
+> except for ATOM platform, so it is ignore here.
+> 
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 11 +++++++++++
+>  arch/x86/kvm/vmx/vmx.c          |  5 +++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 15e973d..bd615ee 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -538,6 +538,15 @@ struct kvm_vcpu_hv {
+>  	cpumask_t tlb_flush;
+>  };
+>  
+> +#define NR_CORE_RESIDENCY_MSRS 3
+> +
+> +struct kvm_residency_msr {
+> +	s64 value;
+> +	u32 index;
+> +	bool delta_from_host;
+> +	bool count_with_host;
+> +};
+> +
+>  struct kvm_vcpu_arch {
+>  	/*
+>  	 * rip and regs accesses must go through
+> @@ -785,6 +794,8 @@ struct kvm_vcpu_arch {
+>  
+>  	/* AMD MSRC001_0015 Hardware Configuration */
+>  	u64 msr_hwcr;
+> +
+> +	struct kvm_residency_msr *core_cstate_msrs;
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.2-2
+Why are these in kvm_vcpu_arch?  AFAICT they're only wired up for VMX.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/35110e38e6c59b0db9618701d75c7c2a36f98d55
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+>  };
+>  
+>  struct kvm_lpage_info {
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 0b241f4..4dc2459 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -6658,6 +6658,11 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+>  			goto free_vmcs;
+>  	}
+>  
+> +	vmx->vcpu.arch.core_cstate_msrs = kzalloc(sizeof(struct kvm_residency_msr) *
+> +		NR_CORE_RESIDENCY_MSRS, GFP_KERNEL_ACCOUNT);
+> +	if (!vmx->vcpu.arch.core_cstate_msrs)
+> +		goto free_vmcs;
+> +
+>  	if (nested)
+>  		nested_vmx_setup_ctls_msrs(&vmx->nested.msrs,
+>  					   vmx_capability.ept,
+> -- 
+> 2.7.4
+> 
