@@ -2,103 +2,98 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DBDC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0ABC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7173A20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F40020874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:49:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731271AbfFLGsE (ORCPT
+        id S2391232AbfFLGtj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 02:48:04 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39925 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbfFLGsE (ORCPT
+        Wed, 12 Jun 2019 02:49:39 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:39397 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390376AbfFLGtj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 02:48:04 -0400
-Received: from mail-pf1-f197.google.com ([209.85.210.197])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <po-hsu.lin@canonical.com>)
-        id 1hax3C-0000VR-0E
-        for linux-kernel@vger.kernel.org; Wed, 12 Jun 2019 06:48:02 +0000
-Received: by mail-pf1-f197.google.com with SMTP id 5so11359778pff.11
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 23:48:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iQGtsCBn1c5Cv/4lGqwB4bSu8wIK/ZdJUuePfHlu3Os=;
-        b=Yoi3nQIS7324HUGA4I9RhuAsW9pbWhWT+yNB/zNqilMzDkfRIF2T5G+puZNum8Sw5k
-         rr9tVEHrXbQxdsPqZyO2ztyg6T6lXCznmf8rnSbwQotCoW5vUeXZq3ml4UrJD1nPMgEr
-         DGYwMiOuQfYDfSRlMTXdLXg8K0UB76dXb2coSXOPDdkkrxlIkoIQe7IOJY+LC7VdZDQV
-         +gn4Qr3HmHm0n7OLnw1bgRDJbO8n0/9L3SlXlM4U7qBdsPCbkpgFcrmvtJrF+v6z/G2u
-         heA+jHAbuAX/TBCv49GQeOkNyWxg9Ul6QrZskSvGEHzO8qQ3GR5GYnA8VtB9dZBN+0aa
-         SRqw==
-X-Gm-Message-State: APjAAAWzV5kMmNozjM9RieELQ/M22w2QyGtwQDl9flF1q81zHL2/8Pho
-        XfFLpNz0lIWKmB1gzS+gASRRT2v1DGMDoE4GMOJTngYzOn1hXXcO7KyDSjjd6yjpEA7QyqXevqv
-        EN0x9C5ajyTun4knbG4Jl88PBLdyjyDTLgER2uHLk
-X-Received: by 2002:a17:902:2926:: with SMTP id g35mr34534392plb.269.1560322080598;
-        Tue, 11 Jun 2019 23:48:00 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqydXTegqwqULkVpf/E0LtN7OvqKB1CDRD/xCDPTfnA0oYlo/soUUvOX7voWPt0GmlHRFF0Cpg==
-X-Received: by 2002:a17:902:2926:: with SMTP id g35mr34534368plb.269.1560322080271;
-        Tue, 11 Jun 2019 23:48:00 -0700 (PDT)
-Received: from Leggiero.taipei.internal (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
-        by smtp.gmail.com with ESMTPSA id p68sm9888878pfb.80.2019.06.11.23.47.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 23:47:59 -0700 (PDT)
-From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
-To:     davem@davemloft.net, shuah@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests/net: skip psock_tpacket test if KALLSYMS was not enabled
-Date:   Wed, 12 Jun 2019 14:47:52 +0800
-Message-Id: <20190612064752.6701-1-po-hsu.lin@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 12 Jun 2019 02:49:39 -0400
+Received: from [192.168.2.10] ([46.9.252.75])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id ax4dhACelbiAgax4ghBTsF; Wed, 12 Jun 2019 08:49:37 +0200
+Subject: Re: [PATCHv4 1/2] media: docs-rst: Document memory-to-memory video
+ decoder interface
+To:     Nicolas Dufresne <nicolas@ndufresne.ca>,
+        linux-media@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        Maxime Jourdan <mjourdan@baylibre.com>
+References: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
+ <20190603112835.19661-2-hverkuil-cisco@xs4all.nl>
+ <ffaad429bbdcf1a15049ec6df404618f4f2a9a36.camel@ndufresne.ca>
+ <9c19ece0-f980-62a6-f26e-a91930d117f3@xs4all.nl>
+ <3ced040be477ca0d17405157f919deee3cd4675d.camel@ndufresne.ca>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <f016182a-e7b8-2dc9-edde-e62e8aacc63b@xs4all.nl>
+Date:   Wed, 12 Jun 2019 08:49:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <3ced040be477ca0d17405157f919deee3cd4675d.camel@ndufresne.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfDKin55+5JKQlwresyM7SGiB0viexchg1pco6TMLoagwhqMDZjJzGmKjHfWa+gWRIYMVMipsZRpelgmvWlXhlqSWYe58zwmdYqzQVHjx+Xv6TpkQo6Wt
+ qotjfnPjCTjQQod+LrBYIWFxuJxVRxFhdblbRBqL6R54xGlXBA/bH14lpHyyXwbhBr1hWbeZjza4lUHnfji5rekA53JLvA/Z8kPL3n//xW6FevpN2FvXxd8R
+ E4X9CnNsuTJZBhZsUoE7HdH1UMARnyYDk8yRpniw/wYxR1WDoOJNoB9aIui2K+sFsLPn9IdbLRyCbP8jjv2pVnAJkMHqLlmGZcyvrUMOAYYiihJc9MGfT2BR
+ BZ6k63N+TjprgNyGzoR7FlSf1nkudO+rzaJZsUeJUpngjPsV3SS3yBFD8xriXRhIPDRzYc/pN4G7GZrVI3YFpGU1jHH+KFJF+k/F3KubxPoS9eaGwCm6Fvrs
+ Q4IGtgg3erZlQS7zSLlDJO4lXy+1r+TmQzJAxFrqrUWpFbK6sCLEBI0txfI/Bh0J1CDva3IqgJc01Zs7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The psock_tpacket test will need to access /proc/kallsyms, this would
-require the kernel config CONFIG_KALLSYMS to be enabled first.
+On 6/12/19 2:25 AM, Nicolas Dufresne wrote:
+> Le mardi 11 juin 2019 à 10:29 +0200, Hans Verkuil a écrit :
+>> On 6/10/19 9:54 PM, Nicolas Dufresne wrote:
+>>> Hi Hans,
+>>>
+>>> I went through it, and I think we are close to ready. Unfortunately, I
+>>> believe the SOURCE_CHANGE event is still under specified. There was a
+>>> post recently to try and add a new flag for changes in color space
+>>> which is not included here. We are also missing a workflow for changes
+>>> that don't affect the allocation but will affect the rendering on a
+>>> display (like colorimetry). Userspace needs to know at which frames
+>>> these parameter changes in order to signal that to the following
+>>> processing block. I think we must have a plane for this.
+>>
+>> Yes, we need a new flag for the SOURCE_CHANGE event to indicate colorimetry
+>> changes. That's actually useful for e.g. HDMI receivers as well.
+>>
+>> But I don't see why that should make much of a change to the spec: you still
+>> have to drain the capture queue, the only difference is that you don't need
+>> to reallocate buffers, you can just restart the decoder.
+> 
+> I don't think you need to drain the queue if the change is just
+> metadata that have no impact on the buffers allocation or layout. I
+> think we should have a way to communicate these changed while
+> streaming. Basically, something like the event, but serialized.
 
-Check the file existence to determine if we can run this test.
+I guess we can extend the struct v4l2_event_src_change and add a buffer
+index field to indicate at which capture buffer index the colorimetry
+change takes effect. Then there is no need for draining.
 
-Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
----
- tools/testing/selftests/net/run_afpackettests | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+In the future when we create replacement streaming ioctls and have a
+new, larger struct v4l2_buffer, then we can add the colorimetry information
+there as well.
 
-diff --git a/tools/testing/selftests/net/run_afpackettests b/tools/testing/selftests/net/run_afpackettests
-index ea5938e..8b42e8b 100755
---- a/tools/testing/selftests/net/run_afpackettests
-+++ b/tools/testing/selftests/net/run_afpackettests
-@@ -21,12 +21,16 @@ fi
- echo "--------------------"
- echo "running psock_tpacket test"
- echo "--------------------"
--./in_netns.sh ./psock_tpacket
--if [ $? -ne 0 ]; then
--	echo "[FAIL]"
--	ret=1
-+if [ -f /proc/kallsyms ]; then
-+	./in_netns.sh ./psock_tpacket
-+	if [ $? -ne 0 ]; then
-+		echo "[FAIL]"
-+		ret=1
-+	else
-+		echo "[PASS]"
-+	fi
- else
--	echo "[PASS]"
-+	echo "[SKIP] CONFIG_KALLSYMS not enabled"
- fi
- 
- echo "--------------------"
--- 
-2.7.4
+Regards,
 
+	Hans
