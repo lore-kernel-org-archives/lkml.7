@@ -2,51 +2,49 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FFEC31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C917C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C90D0215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322192175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502009AbfFLPUk (ORCPT
+        id S2502021AbfFLPUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:20:40 -0400
-Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:6353 "EHLO
-        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2501953AbfFLPUd (ORCPT
+        Wed, 12 Jun 2019 11:20:44 -0400
+Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:51482 "EHLO
+        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2501953AbfFLPUn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:20:33 -0400
+        Wed, 12 Jun 2019 11:20:43 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 81EC53FFD0;
-        Wed, 12 Jun 2019 17:20:25 +0200 (CEST)
-Authentication-Results: ste-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=vmwopensource.org header.i=@vmwopensource.org header.b=FSWI6sRm;
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 6531A3FBDC;
+        Wed, 12 Jun 2019 17:20:35 +0200 (CEST)
+Authentication-Results: pio-pvt-msa3.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=vmwopensource.org header.i=@vmwopensource.org header.b=w/adqvAZ;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
-        dkim=pass (1024-bit key) header.d=vmwopensource.org
-Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SjYhfxFOrPSz; Wed, 12 Jun 2019 17:20:11 +0200 (CEST)
+Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id KKfFjVyV6tCd; Wed, 12 Jun 2019 17:20:21 +0200 (CEST)
 Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
         (Authenticated sender: mb878879)
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id E6A5E3FFCC;
-        Wed, 12 Jun 2019 17:20:09 +0200 (CEST)
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 2D2E43FBE2;
+        Wed, 12 Jun 2019 17:20:10 +0200 (CEST)
 Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 98822361C0E;
+        by mail1.shipmail.org (Postfix) with ESMTPSA id C5E56361DE0;
         Wed, 12 Jun 2019 17:20:09 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=vmwopensource.org;
         s=mail; t=1560352809;
-        bh=MG0HfLcgqDRwxcPIDolCLkQDrfh6DF2qVfbCiXX/p4A=;
+        bh=oDQQZpNtRPA3kHDLYhK4x6N9U1hVC2W22kTL8rIAhNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FSWI6sRmNc0IzZObCPw4IFUggWR8mSWrzJ2XPrhdCvMWICcEBPcs1odxlfKbIUYov
-         cGsp2nd82qRocjzK7wBkFoIz0j9tTieIUaqJylj9P6oRC0/4yBu24DY33qbnfKqfOr
-         AOln+k7crrJs3zQ8MRqxdrjuIOl9SBtP+6S9dBac=
+        b=w/adqvAZ//L29D8ZXgScWhgDE7/L78qsjAMjWZVf2r3OSxQOnOPjawnVoVn51b9+2
+         edOdzJLwI2JU3xioGRvbWjBPhUN89/ZJZS5nKT9+mn2FzkdU4y3V8xkIoewgMrdIlo
+         RJkV+kmLoYbitkctF0PryOi8O3zXvVlaBpe4sD5M=
 From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
         <thellstrom@vmwopensource.org>
 To:     dri-devel@lists.freedesktop.org
@@ -64,9 +62,9 @@ Cc:     linux-graphics-maintainer@vmware.com, pv-drivers@vmware.com,
         Souptick Joarder <jrdr.linux@gmail.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH v6 2/9] mm: Add an apply_to_pfn_range interface
-Date:   Wed, 12 Jun 2019 17:19:43 +0200
-Message-Id: <20190612151950.2870-3-thellstrom@vmwopensource.org>
+Subject: [PATCH v6 3/9] mm: Add write-protect and clean utilities for address space ranges
+Date:   Wed, 12 Jun 2019 17:19:44 +0200
+Message-Id: <20190612151950.2870-4-thellstrom@vmwopensource.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190612151950.2870-1-thellstrom@vmwopensource.org>
 References: <20190612151950.2870-1-thellstrom@vmwopensource.org>
@@ -80,21 +78,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Hellstrom <thellstrom@vmware.com>
 
-This is basically apply_to_page_range with added functionality:
-Allocating missing parts of the page table becomes optional, which
-means that the function can be guaranteed not to error if allocation
-is disabled. Also passing of the closure struct and callback function
-becomes different and more in line with how things are done elsewhere.
+Add two utilities to a) write-protect and b) clean all ptes pointing into
+a range of an address space.
+The utilities are intended to aid in tracking dirty pages (either
+driver-allocated system memory or pci device memory).
+The write-protect utility should be used in conjunction with
+page_mkwrite() and pfn_mkwrite() to trigger write page-faults on page
+accesses. Typically one would want to use this on sparse accesses into
+large memory regions. The clean utility should be used to utilize
+hardware dirtying functionality and avoid the overhead of page-faults,
+typically on large accesses into small memory regions.
 
-Finally we keep apply_to_page_range as a wrapper around apply_to_pfn_range
-
-The reason for not using the page-walk code is that we want to perform
-the page-walk on vmas pointing to an address space without requiring the
-mmap_sem to be held rather than on vmas belonging to a process with the
-mmap_sem held.
+The added file "as_dirty_helpers.c" is initially listed as maintained by
+VMware under our DRM driver. If somebody would like it elsewhere,
+that's of course no problem.
 
 Notable changes since RFC:
-Don't export apply_to_pfn range.
+- Added comments to help avoid the usage of these function for VMAs
+  it's not intended for. We also do advisory checks on the vm_flags and
+  warn on illegal usage.
+- Perform the pte modifications the same way softdirty does.
+- Add mmu_notifier range invalidation calls.
+- Add a config option so that this code is not unconditionally included.
+- Tell the mmu_gather code about pending tlb flushes.
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Matthew Wilcox <willy@infradead.org>
@@ -112,261 +118,373 @@ Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 Reviewed-by: Ralph Campbell <rcampbell@nvidia.com> #v1
 ---
- include/linux/mm.h |  10 ++++
- mm/memory.c        | 135 ++++++++++++++++++++++++++++++++++-----------
- 2 files changed, 113 insertions(+), 32 deletions(-)
+ MAINTAINERS           |   1 +
+ include/linux/mm.h    |   9 +-
+ mm/Kconfig            |   3 +
+ mm/Makefile           |   1 +
+ mm/as_dirty_helpers.c | 300 ++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 313 insertions(+), 1 deletion(-)
+ create mode 100644 mm/as_dirty_helpers.c
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7a2f487ea49a..a55d4ef91b0b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5179,6 +5179,7 @@ T:	git git://people.freedesktop.org/~thomash/linux
+ S:	Supported
+ F:	drivers/gpu/drm/vmwgfx/
+ F:	include/uapi/drm/vmwgfx_drm.h
++F:	mm/as_dirty_helpers.c
+ 
+ DRM DRIVERS
+ M:	David Airlie <airlied@linux.ie>
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0e8834ac32b7..3d06ce2a64af 100644
+index 3d06ce2a64af..a0bc2a82917e 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -2675,6 +2675,16 @@ typedef int (*pte_fn_t)(pte_t *pte, pgtable_t token, unsigned long addr,
- extern int apply_to_page_range(struct mm_struct *mm, unsigned long address,
- 			       unsigned long size, pte_fn_t fn, void *data);
- 
-+struct pfn_range_apply;
-+typedef int (*pter_fn_t)(pte_t *pte, pgtable_t token, unsigned long addr,
-+			 struct pfn_range_apply *closure);
-+struct pfn_range_apply {
-+	struct mm_struct *mm;
-+	pter_fn_t ptefn;
-+	unsigned int alloc;
-+};
-+extern int apply_to_pfn_range(struct pfn_range_apply *closure,
-+			      unsigned long address, unsigned long size);
- 
+@@ -2685,7 +2685,14 @@ struct pfn_range_apply {
+ };
+ extern int apply_to_pfn_range(struct pfn_range_apply *closure,
+ 			      unsigned long address, unsigned long size);
+-
++unsigned long apply_as_wrprotect(struct address_space *mapping,
++				 pgoff_t first_index, pgoff_t nr);
++unsigned long apply_as_clean(struct address_space *mapping,
++			     pgoff_t first_index, pgoff_t nr,
++			     pgoff_t bitmap_pgoff,
++			     unsigned long *bitmap,
++			     pgoff_t *start,
++			     pgoff_t *end);
  #ifdef CONFIG_PAGE_POISONING
  extern bool page_poisoning_enabled(void);
-diff --git a/mm/memory.c b/mm/memory.c
-index 168f546af1ad..462aa47f8878 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2032,18 +2032,17 @@ int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long
- }
- EXPORT_SYMBOL(vm_iomap_memory);
+ extern void kernel_poison_pages(struct page *page, int numpages, int enable);
+diff --git a/mm/Kconfig b/mm/Kconfig
+index f0c76ba47695..5006d0e6a5c7 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -765,4 +765,7 @@ config GUP_BENCHMARK
+ config ARCH_HAS_PTE_SPECIAL
+ 	bool
  
--static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
--				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data)
-+static int apply_to_pte_range(struct pfn_range_apply *closure, pmd_t *pmd,
-+			      unsigned long addr, unsigned long end)
- {
- 	pte_t *pte;
- 	int err;
- 	pgtable_t token;
- 	spinlock_t *uninitialized_var(ptl);
- 
--	pte = (mm == &init_mm) ?
-+	pte = (closure->mm == &init_mm) ?
- 		pte_alloc_kernel(pmd, addr) :
--		pte_alloc_map_lock(mm, pmd, addr, &ptl);
-+		pte_alloc_map_lock(closure->mm, pmd, addr, &ptl);
- 	if (!pte)
- 		return -ENOMEM;
- 
-@@ -2054,86 +2053,109 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
- 	token = pmd_pgtable(*pmd);
- 
- 	do {
--		err = fn(pte++, token, addr, data);
-+		err = closure->ptefn(pte++, token, addr, closure);
- 		if (err)
- 			break;
- 	} while (addr += PAGE_SIZE, addr != end);
- 
- 	arch_leave_lazy_mmu_mode();
- 
--	if (mm != &init_mm)
-+	if (closure->mm != &init_mm)
- 		pte_unmap_unlock(pte-1, ptl);
- 	return err;
- }
- 
--static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
--				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data)
-+static int apply_to_pmd_range(struct pfn_range_apply *closure, pud_t *pud,
-+			      unsigned long addr, unsigned long end)
- {
- 	pmd_t *pmd;
- 	unsigned long next;
--	int err;
-+	int err = 0;
- 
- 	BUG_ON(pud_huge(*pud));
- 
--	pmd = pmd_alloc(mm, pud, addr);
-+	pmd = pmd_alloc(closure->mm, pud, addr);
- 	if (!pmd)
- 		return -ENOMEM;
++config AS_DIRTY_HELPERS
++        bool
 +
- 	do {
- 		next = pmd_addr_end(addr, end);
--		err = apply_to_pte_range(mm, pmd, addr, next, fn, data);
-+		if (!closure->alloc && pmd_none_or_clear_bad(pmd))
-+			continue;
-+		err = apply_to_pte_range(closure, pmd, addr, next);
- 		if (err)
- 			break;
- 	} while (pmd++, addr = next, addr != end);
- 	return err;
- }
- 
--static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
--				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data)
-+static int apply_to_pud_range(struct pfn_range_apply *closure, p4d_t *p4d,
-+			      unsigned long addr, unsigned long end)
- {
- 	pud_t *pud;
- 	unsigned long next;
--	int err;
-+	int err = 0;
- 
--	pud = pud_alloc(mm, p4d, addr);
-+	pud = pud_alloc(closure->mm, p4d, addr);
- 	if (!pud)
- 		return -ENOMEM;
-+
- 	do {
- 		next = pud_addr_end(addr, end);
--		err = apply_to_pmd_range(mm, pud, addr, next, fn, data);
-+		if (!closure->alloc && pud_none_or_clear_bad(pud))
-+			continue;
-+		err = apply_to_pmd_range(closure, pud, addr, next);
- 		if (err)
- 			break;
- 	} while (pud++, addr = next, addr != end);
- 	return err;
- }
- 
--static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
--				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data)
-+static int apply_to_p4d_range(struct pfn_range_apply *closure, pgd_t *pgd,
-+			      unsigned long addr, unsigned long end)
- {
- 	p4d_t *p4d;
- 	unsigned long next;
--	int err;
-+	int err = 0;
- 
--	p4d = p4d_alloc(mm, pgd, addr);
-+	p4d = p4d_alloc(closure->mm, pgd, addr);
- 	if (!p4d)
- 		return -ENOMEM;
-+
- 	do {
- 		next = p4d_addr_end(addr, end);
--		err = apply_to_pud_range(mm, p4d, addr, next, fn, data);
-+		if (!closure->alloc && p4d_none_or_clear_bad(p4d))
-+			continue;
-+		err = apply_to_pud_range(closure, p4d, addr, next);
- 		if (err)
- 			break;
- 	} while (p4d++, addr = next, addr != end);
- 	return err;
- }
- 
--/*
-- * Scan a region of virtual memory, filling in page tables as necessary
-- * and calling a provided function on each leaf page table.
-+/**
-+ * apply_to_pfn_range - Scan a region of virtual memory, calling a provided
-+ * function on each leaf page table entry
-+ * @closure: Details about how to scan and what function to apply
-+ * @addr: Start virtual address
-+ * @size: Size of the region
-+ *
-+ * If @closure->alloc is set to 1, the function will fill in the page table
-+ * as necessary. Otherwise it will skip non-present parts.
-+ * Note: The caller must ensure that the range does not contain huge pages.
-+ * The caller must also assure that the proper mmu_notifier functions are
-+ * called before and after the call to apply_to_pfn_range.
-+ *
-+ * WARNING: Do not use this function unless you know exactly what you are
-+ * doing. It is lacking support for huge pages and transparent huge pages.
-+ *
-+ * Return: Zero on success. If the provided function returns a non-zero status,
-+ * the page table walk will terminate and that status will be returned.
-+ * If @closure->alloc is set to 1, then this function may also return memory
-+ * allocation errors arising from allocating page table memory.
-  */
--int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
--			unsigned long size, pte_fn_t fn, void *data)
-+int apply_to_pfn_range(struct pfn_range_apply *closure,
-+		       unsigned long addr, unsigned long size)
- {
- 	pgd_t *pgd;
- 	unsigned long next;
-@@ -2143,16 +2165,65 @@ int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
- 	if (WARN_ON(addr >= end))
- 		return -EINVAL;
- 
--	pgd = pgd_offset(mm, addr);
-+	pgd = pgd_offset(closure->mm, addr);
- 	do {
- 		next = pgd_addr_end(addr, end);
--		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data);
-+		if (!closure->alloc && pgd_none_or_clear_bad(pgd))
-+			continue;
-+		err = apply_to_p4d_range(closure, pgd, addr, next);
- 		if (err)
- 			break;
- 	} while (pgd++, addr = next, addr != end);
- 
- 	return err;
- }
+ endmenu
+diff --git a/mm/Makefile b/mm/Makefile
+index ac5e5ba78874..f5d412bbc2f7 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -104,3 +104,4 @@ obj-$(CONFIG_HARDENED_USERCOPY) += usercopy.o
+ obj-$(CONFIG_PERCPU_STATS) += percpu-stats.o
+ obj-$(CONFIG_HMM) += hmm.o
+ obj-$(CONFIG_MEMFD_CREATE) += memfd.o
++obj-$(CONFIG_AS_DIRTY_HELPERS) += as_dirty_helpers.o
+diff --git a/mm/as_dirty_helpers.c b/mm/as_dirty_helpers.c
+new file mode 100644
+index 000000000000..f600e31534fb
+--- /dev/null
++++ b/mm/as_dirty_helpers.c
+@@ -0,0 +1,300 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/mm.h>
++#include <linux/mm_types.h>
++#include <linux/hugetlb.h>
++#include <linux/bitops.h>
++#include <linux/mmu_notifier.h>
++#include <asm/cacheflush.h>
++#include <asm/tlbflush.h>
 +
 +/**
-+ * struct page_range_apply - Closure structure for apply_to_page_range()
-+ * @pter: The base closure structure we derive from
-+ * @fn: The leaf pte function to call
-+ * @data: The leaf pte function closure
++ * struct apply_as - Closure structure for apply_as_range
++ * @base: struct pfn_range_apply we derive from
++ * @start: Address of first modified pte
++ * @end: Address of last modified pte + 1
++ * @total: Total number of modified ptes
++ * @vma: Pointer to the struct vm_area_struct we're currently operating on
 + */
-+struct page_range_apply {
-+	struct pfn_range_apply pter;
-+	pte_fn_t fn;
-+	void *data;
++struct apply_as {
++	struct pfn_range_apply base;
++	unsigned long start;
++	unsigned long end;
++	unsigned long total;
++	struct vm_area_struct *vma;
 +};
 +
-+/*
-+ * Callback wrapper to enable use of apply_to_pfn_range for
-+ * the apply_to_page_range interface
++/**
++ * apply_pt_wrprotect - Leaf pte callback to write-protect a pte
++ * @pte: Pointer to the pte
++ * @token: Page table token, see apply_to_pfn_range()
++ * @addr: The virtual page address
++ * @closure: Pointer to a struct pfn_range_apply embedded in a
++ * struct apply_as
++ *
++ * The function write-protects a pte and records the range in
++ * virtual address space of touched ptes for efficient range TLB flushes.
++ *
++ * Return: Always zero.
 + */
-+static int apply_to_page_range_wrapper(pte_t *pte, pgtable_t token,
-+				       unsigned long addr,
-+				       struct pfn_range_apply *pter)
++static int apply_pt_wrprotect(pte_t *pte, pgtable_t token,
++			      unsigned long addr,
++			      struct pfn_range_apply *closure)
 +{
-+	struct page_range_apply *pra =
-+		container_of(pter, typeof(*pra), pter);
++	struct apply_as *aas = container_of(closure, typeof(*aas), base);
++	pte_t ptent = *pte;
 +
-+	return pra->fn(pte, token, addr, pra->data);
++	if (pte_write(ptent)) {
++		pte_t old_pte = ptep_modify_prot_start(aas->vma, addr, pte);
++
++		ptent = pte_wrprotect(old_pte);
++		ptep_modify_prot_commit(aas->vma, addr, pte, old_pte, ptent);
++		aas->total++;
++		aas->start = min(aas->start, addr);
++		aas->end = max(aas->end, addr + PAGE_SIZE);
++	}
++
++	return 0;
 +}
 +
-+/*
-+ * Scan a region of virtual memory, filling in page tables as necessary
-+ * and calling a provided function on each leaf page table.
-+ *
-+ * WARNING: Do not use this function unless you know exactly what you are
-+ * doing. It is lacking support for huge pages and transparent huge pages.
++/**
++ * struct apply_as_clean - Closure structure for apply_as_clean
++ * @base: struct apply_as we derive from
++ * @bitmap_pgoff: Address_space Page offset of the first bit in @bitmap
++ * @bitmap: Bitmap with one bit for each page offset in the address_space range
++ * covered.
++ * @start: Address_space page offset of first modified pte relative
++ * to @bitmap_pgoff
++ * @end: Address_space page offset of last modified pte relative
++ * to @bitmap_pgoff
 + */
-+int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
-+			unsigned long size, pte_fn_t fn, void *data)
++struct apply_as_clean {
++	struct apply_as base;
++	pgoff_t bitmap_pgoff;
++	unsigned long *bitmap;
++	pgoff_t start;
++	pgoff_t end;
++};
++
++/**
++ * apply_pt_clean - Leaf pte callback to clean a pte
++ * @pte: Pointer to the pte
++ * @token: Page table token, see apply_to_pfn_range()
++ * @addr: The virtual page address
++ * @closure: Pointer to a struct pfn_range_apply embedded in a
++ * struct apply_as_clean
++ *
++ * The function cleans a pte and records the range in
++ * virtual address space of touched ptes for efficient TLB flushes.
++ * It also records dirty ptes in a bitmap representing page offsets
++ * in the address_space, as well as the first and last of the bits
++ * touched.
++ *
++ * Return: Always zero.
++ */
++static int apply_pt_clean(pte_t *pte, pgtable_t token,
++			  unsigned long addr,
++			  struct pfn_range_apply *closure)
 +{
-+	struct page_range_apply pra = {
-+		.pter = {.mm = mm,
-+			 .alloc = 1,
-+			 .ptefn = apply_to_page_range_wrapper },
-+		.fn = fn,
-+		.data = data
++	struct apply_as *aas = container_of(closure, typeof(*aas), base);
++	struct apply_as_clean *clean = container_of(aas, typeof(*clean), base);
++	pte_t ptent = *pte;
++
++	if (pte_dirty(ptent)) {
++		pgoff_t pgoff = ((addr - aas->vma->vm_start) >> PAGE_SHIFT) +
++			aas->vma->vm_pgoff - clean->bitmap_pgoff;
++		pte_t old_pte = ptep_modify_prot_start(aas->vma, addr, pte);
++
++		ptent = pte_mkclean(old_pte);
++		ptep_modify_prot_commit(aas->vma, addr, pte, old_pte, ptent);
++
++		aas->total++;
++		aas->start = min(aas->start, addr);
++		aas->end = max(aas->end, addr + PAGE_SIZE);
++
++		__set_bit(pgoff, clean->bitmap);
++		clean->start = min(clean->start, pgoff);
++		clean->end = max(clean->end, pgoff + 1);
++	}
++
++	return 0;
++}
++
++/**
++ * apply_as_range - Apply a pte callback to all PTEs pointing into a range
++ * of an address_space.
++ * @mapping: Pointer to the struct address_space
++ * @aas: Closure structure
++ * @first_index: First page offset in the address_space
++ * @nr: Number of incremental page offsets to cover
++ *
++ * Return: Number of ptes touched. Note that this number might be larger
++ * than @nr if there are overlapping vmas
++ */
++static unsigned long apply_as_range(struct address_space *mapping,
++				    struct apply_as *aas,
++				    pgoff_t first_index, pgoff_t nr)
++{
++	struct vm_area_struct *vma;
++	pgoff_t vba, vea, cba, cea;
++	unsigned long start_addr, end_addr;
++	struct mmu_notifier_range range;
++
++	i_mmap_lock_read(mapping);
++	vma_interval_tree_foreach(vma, &mapping->i_mmap, first_index,
++				  first_index + nr - 1) {
++		unsigned long vm_flags = READ_ONCE(vma->vm_flags);
++
++		/*
++		 * We can only do advisory flag tests below, since we can't
++		 * require the vm's mmap_sem to be held to protect the flags.
++		 * Therefore, callers that strictly depend on specific mmap
++		 * flags to remain constant throughout the operation must
++		 * either ensure those flags are immutable for all relevant
++		 * vmas or can't use this function. Fixing this properly would
++		 * require the vma::vm_flags to be protected by a separate
++		 * lock taken after the i_mmap_lock
++		 */
++
++		/* Skip non-applicable VMAs */
++		if ((vm_flags & (VM_SHARED | VM_WRITE)) !=
++		    (VM_SHARED | VM_WRITE))
++			continue;
++
++		/* Warn on and skip VMAs whose flags indicate illegal usage */
++		if (WARN_ON((vm_flags & (VM_HUGETLB | VM_IO)) != VM_IO))
++			continue;
++
++		/* Clip to the vma */
++		vba = vma->vm_pgoff;
++		vea = vba + vma_pages(vma);
++		cba = first_index;
++		cba = max(cba, vba);
++		cea = first_index + nr;
++		cea = min(cea, vea);
++
++		/* Translate to virtual address */
++		start_addr = ((cba - vba) << PAGE_SHIFT) + vma->vm_start;
++		end_addr = ((cea - vba) << PAGE_SHIFT) + vma->vm_start;
++		if (start_addr >= end_addr)
++			continue;
++
++		aas->base.mm = vma->vm_mm;
++		aas->vma = vma;
++		aas->start = end_addr;
++		aas->end = start_addr;
++
++		mmu_notifier_range_init(&range, MMU_NOTIFY_PROTECTION_PAGE, 0,
++					vma, vma->vm_mm, start_addr, end_addr);
++		mmu_notifier_invalidate_range_start(&range);
++
++		/* Needed when we only change protection? */
++		flush_cache_range(vma, start_addr, end_addr);
++
++		/*
++		 * We're not using tlb_gather_mmu() since typically
++		 * only a small subrange of PTEs are affected.
++		 */
++		inc_tlb_flush_pending(vma->vm_mm);
++
++		/* Should not error since aas->base.alloc == 0 */
++		WARN_ON(apply_to_pfn_range(&aas->base, start_addr,
++					   end_addr - start_addr));
++		if (aas->end > aas->start)
++			flush_tlb_range(vma, aas->start, aas->end);
++
++		mmu_notifier_invalidate_range_end(&range);
++		dec_tlb_flush_pending(vma->vm_mm);
++	}
++	i_mmap_unlock_read(mapping);
++
++	return aas->total;
++}
++
++/**
++ * apply_as_wrprotect - Write-protect all ptes in an address_space range
++ * @mapping: The address_space we want to write protect
++ * @first_index: The first page offset in the range
++ * @nr: Number of incremental page offsets to cover
++ *
++ * WARNING: This function should only be used for address spaces whose
++ * vmas are marked VM_IO and that do not contain huge pages.
++ * To avoid interference with COW'd pages, vmas not marked VM_SHARED are
++ * simply skipped.
++ *
++ * Return: The number of ptes actually write-protected. Note that
++ * already write-protected ptes are not counted.
++ */
++unsigned long apply_as_wrprotect(struct address_space *mapping,
++				 pgoff_t first_index, pgoff_t nr)
++{
++	struct apply_as aas = {
++		.base = {
++			.alloc = 0,
++			.ptefn = apply_pt_wrprotect,
++		},
++		.total = 0,
 +	};
 +
-+	return apply_to_pfn_range(&pra.pter, addr, size);
++	return apply_as_range(mapping, &aas, first_index, nr);
 +}
- EXPORT_SYMBOL_GPL(apply_to_page_range);
- 
- /*
++EXPORT_SYMBOL_GPL(apply_as_wrprotect);
++
++/**
++ * apply_as_clean - Clean all ptes in an address_space range
++ * @mapping: The address_space we want to clean
++ * @first_index: The first page offset in the range
++ * @nr: Number of incremental page offsets to cover
++ * @bitmap_pgoff: The page offset of the first bit in @bitmap
++ * @bitmap: Pointer to a bitmap of at least @nr bits. The bitmap needs to
++ * cover the whole range @first_index..@first_index + @nr.
++ * @start: Pointer to number of the first set bit in @bitmap.
++ * is modified as new bits are set by the function.
++ * @end: Pointer to the number of the last set bit in @bitmap.
++ * none set. The value is modified as new bits are set by the function.
++ *
++ * Note: When this function returns there is no guarantee that a CPU has
++ * not already dirtied new ptes. However it will not clean any ptes not
++ * reported in the bitmap.
++ *
++ * If a caller needs to make sure all dirty ptes are picked up and none
++ * additional are added, it first needs to write-protect the address-space
++ * range and make sure new writers are blocked in page_mkwrite() or
++ * pfn_mkwrite(). And then after a TLB flush following the write-protection
++ * pick up all dirty bits.
++ *
++ * WARNING: This function should only be used for address spaces whose
++ * vmas are marked VM_IO and that do not contain huge pages.
++ * To avoid interference with COW'd pages, vmas not marked VM_SHARED are
++ * simply skipped.
++ *
++ * Return: The number of dirty ptes actually cleaned.
++ */
++unsigned long apply_as_clean(struct address_space *mapping,
++			     pgoff_t first_index, pgoff_t nr,
++			     pgoff_t bitmap_pgoff,
++			     unsigned long *bitmap,
++			     pgoff_t *start,
++			     pgoff_t *end)
++{
++	bool none_set = (*start >= *end);
++	struct apply_as_clean clean = {
++		.base = {
++			.base = {
++				.alloc = 0,
++				.ptefn = apply_pt_clean,
++			},
++			.total = 0,
++		},
++		.bitmap_pgoff = bitmap_pgoff,
++		.bitmap = bitmap,
++		.start = none_set ? nr : *start,
++		.end = none_set ? 0 : *end,
++	};
++	unsigned long ret = apply_as_range(mapping, &clean.base, first_index,
++					   nr);
++
++	*start = clean.start;
++	*end = clean.end;
++	return ret;
++}
++EXPORT_SYMBOL_GPL(apply_as_clean);
 -- 
 2.20.1
 
