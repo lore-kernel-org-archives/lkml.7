@@ -2,117 +2,94 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752D0C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5642EC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597CA20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C14206BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:44:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IFX91dVs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731996AbfFLOoN (ORCPT
+        id S1732252AbfFLOoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:44:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48558 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727846AbfFLOoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:44:13 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4CD033087958;
-        Wed, 12 Jun 2019 14:44:07 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (unknown [10.36.118.125])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C4DF6061E;
-        Wed, 12 Jun 2019 14:43:59 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v10)
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com>
-        <87muj2k4ov.fsf@oldenburg2.str.redhat.com>
-        <1528929896.22217.1559326257155.JavaMail.zimbra@efficios.com>
-        <87o93d4lqb.fsf@oldenburg2.str.redhat.com>
-        <117220011.27079.1559663870037.JavaMail.zimbra@efficios.com>
-        <87wohzorj0.fsf@oldenburg2.str.redhat.com>
-        <1329439108.43041.1560348962006.JavaMail.zimbra@efficios.com>
-        <87blz27uio.fsf@oldenburg2.str.redhat.com>
-        <512441263.43096.1560350163180.JavaMail.zimbra@efficios.com>
-Date:   Wed, 12 Jun 2019 16:43:58 +0200
-In-Reply-To: <512441263.43096.1560350163180.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Wed, 12 Jun 2019 10:36:03 -0400
-        (EDT)")
-Message-ID: <8736ke7tjl.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Wed, 12 Jun 2019 10:44:38 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43694 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732022AbfFLOoi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:44:38 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f25so9039204pgv.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 07:44:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:to:from:cc:subject:user-agent:date;
+        bh=bn95yZEQkFdm8IUCbmAacr/m8l86WxEth291aVhdSlM=;
+        b=IFX91dVs/IB2uQK3729zPrJd1Knz4V7aZ3QpOygS7GTDRBVhMj7KbxcyEvtjveJJR1
+         FXZzSv8Kt22j9edDD5+tQeVuKivqBejTI61b0MqQYaxytVcPL75KotXQ6tlJj2UeUYG6
+         wmvi++xeRnLF6l4+9zP3EmyJCLQ4PU2nvxyJw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:to:from:cc:subject
+         :user-agent:date;
+        bh=bn95yZEQkFdm8IUCbmAacr/m8l86WxEth291aVhdSlM=;
+        b=JqHr5K6B+C9OuPiUvm8KKCX7QnTZoBf1Evm2XZbIf6uxfjG++XNOUVOaaaQxz4SSBX
+         9MrxQnnY+BJW6q4LBJAk0oEZmvKx9lxoqBBsCaj3GN22/rh23Q7hmmsxcrXY15pewuaI
+         YUwXJDr5rxAleh53ur/qetfVnjqBXnC+QjePXzUJvXs1QpdH2NaYAUeXUrxpadZAUOKO
+         nNcmCBrcLuD69o/4xOW1m8dcQQrTe3H+l5JYE3TZYw0S4908oud8YlMX7wlxcSMjq0n8
+         Gom39qKmM/2kJytLZcFm4hgsqAEdVsfZ1kSPCNayHoLztdYOjKx9n+YXCMZDWL7tWMQ/
+         t7KA==
+X-Gm-Message-State: APjAAAV/Dejojw+w/Kj0mdCoIU3/0GpEDxuBLMQpElEk8KkZjRMg+NzY
+        DgHlvqgnhO/MKZaFmaozDLAif1HxRMI=
+X-Google-Smtp-Source: APXvYqw1pRLfvl+MD405r1Flh6E/r+OXWy06xK5xfjFjE5fHv/YEJIPlfXeLmPTH94Oncwk11xcypA==
+X-Received: by 2002:a62:5487:: with SMTP id i129mr82578482pfb.68.1560350677533;
+        Wed, 12 Jun 2019 07:44:37 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id c133sm21450858pfb.111.2019.06.12.07.44.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 07:44:37 -0700 (PDT)
+Message-ID: <5d010fd5.1c69fb81.e7b77.87ae@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 12 Jun 2019 14:44:12 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190612010011.90185-1-wangkefeng.wang@huawei.com>
+References: <20190612010011.90185-1-wangkefeng.wang@huawei.com>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Rob Herring <robh@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH next] of/fdt: Fix defined but not used compiler warning
+User-Agent: alot/0.8.1
+Date:   Wed, 12 Jun 2019 07:44:36 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+Quoting Kefeng Wang (2019-06-11 18:00:11)
+> When CONFIG_OF_EARLY_FLATTREE is disabled, there is a compiler warning,
+>=20
+> drivers/of/fdt.c:129:19: warning: =E2=80=98of_fdt_match=E2=80=99 defined =
+but not used [-Wunused-function]
+>  static int __init of_fdt_match(const void *blob, unsigned long node,
+>=20
+> Move of_fdt_match() and of_fdt_is_compatible() under CONFIG_OF_EARLY_FLAT=
+TREE
+> to fix it.
+>=20
+> Cc: Stephen Boyd <swboyd@chromium.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
 
-> ----- On Jun 12, 2019, at 4:22 PM, Florian Weimer fweimer@redhat.com wrote:
->
->> * Mathieu Desnoyers:
->> 
->>>> It's the registration from libc.so which needs some care.  In
->>>> particular, we must not override an existing registration.
->>>
->>> OK, so it could check if __rseq_abi.cpu_id is -1, and only
->>> perform registration if it is the case. Or do you have another
->>> approach in mind ?
->> 
->> No, __rseq_abi will not be shared with the outer libc, so the inner libc
->> will always see -1 there, even if the outer libc has performed
->> registration.
->> 
->> libio/vtables.c has some example what you can do:
->> 
->>  /* In case this libc copy is in a non-default namespace, we always
->>     need to accept foreign vtables because there is always a
->>     possibility that FILE * objects are passed across the linking
->>     boundary.  */
->>  {
->>    Dl_info di;
->>    struct link_map *l;
->>    if (!rtld_active ()
->>        || (_dl_addr (_IO_vtable_check, &di, &l, NULL) != 0
->>            && l->l_ns != LM_ID_BASE))
->>      return;
->>  }
->> 
->> _IO_vtable_check would have to be replaced with your own function; the
->> actual function doesn't really matter.
->> 
->> The rtld_active check covers the static dlopen case, where
->> rtld_active () is false in the inner libc.
->
-> Then out of curiosity, would it also work if I check for
->
-> if (!__libc_multiple_libcs)
->
-> in LIBC_START_MAIN ?
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-In my experience, __libc_multiple_libcs is not reliable.  I have not yet
-figured out why.
-
-Thanks,
-Florian
