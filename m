@@ -2,115 +2,145 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58452C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA25C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3276F20896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C23B20896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbfFLTdP (ORCPT
+        id S1728523AbfFLThA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 15:33:15 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:50454 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728405AbfFLTcs (ORCPT
+        Wed, 12 Jun 2019 15:37:00 -0400
+Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:49613 "EHLO
+        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727496AbfFLThA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:32:48 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1hb8z2-0001BN-1R; Wed, 12 Jun 2019 15:32:32 -0400
-From:   Rik van Riel <riel@surriel.com>
-To:     peterz@infradead.org
-Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        morten.rasmussen@arm.com, tglx@linutronix.de,
-        dietmar.eggeman@arm.com, mgorman@techsingularity.com,
-        vincent.guittot@linaro.org, Rik van Riel <riel@surriel.com>
-Subject: [PATCH 6/8] sched,cfs: fix zero length timeslice calculation
-Date:   Wed, 12 Jun 2019 15:32:25 -0400
-Message-Id: <20190612193227.993-7-riel@surriel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190612193227.993-1-riel@surriel.com>
-References: <20190612193227.993-1-riel@surriel.com>
+        Wed, 12 Jun 2019 15:37:00 -0400
+Received: from [4.30.142.84] (helo=srivatsab-a01.vmware.com)
+        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
+        (Exim 4.82)
+        (envelope-from <srivatsa@csail.mit.edu>)
+        id 1hb93J-000Cx6-6M; Wed, 12 Jun 2019 15:36:57 -0400
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+To:     Jan Kara <jack@suse.cz>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Jeff Moyer <jmoyer@redhat.com>,
+        Theodore Ts'o <tytso@mit.edu>, amakhalov@vmware.com,
+        anishs@vmware.com, srivatsab@vmware.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stable <stable@vger.kernel.org>
+References: <6FE0A98F-1E3D-4EF6-8B38-2C85741924A4@linaro.org>
+ <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
+ <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
+ <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
+ <5b71028c-72f0-73dd-0cd5-f28ff298a0a3@csail.mit.edu>
+ <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
+ <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
+ <7B74A790-BD98-412B-ADAB-3B513FB1944E@linaro.org>
+ <6a6f4aa4-fc95-f132-55b2-224ff52bd2d8@csail.mit.edu>
+ <7c5e9d11-4a3d-7df4-c1e6-7c95919522ab@csail.mit.edu>
+ <20190612130446.GD14578@quack2.suse.cz>
+From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Message-ID: <dd32ed59-a543-fc76-9a9a-2462f0119270@csail.mit.edu>
+Date:   Wed, 12 Jun 2019 12:36:53 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612130446.GD14578@quack2.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The way the time slice length is currently calculated, not only do high
-priority tasks get longer time slices than low priority tasks, but due
-to fixed point math, low priority tasks could end up with a zero length
-time slice. This can lead to cache thrashing and other inefficiencies.
 
-Simplify the logic a little bit, and cap the minimum time slice length
-to sysctl_sched_min_granularity.
+[ Adding Greg to CC ]
 
-Tasks that end up getting a time slice length too long for their relative
-priority will simply end up having their vruntime advanced much faster than
-other tasks, resulting in them receiving time slices less frequently.
+On 6/12/19 6:04 AM, Jan Kara wrote:
+> On Tue 11-06-19 15:34:48, Srivatsa S. Bhat wrote:
+>> On 6/2/19 12:04 AM, Srivatsa S. Bhat wrote:
+>>> On 5/30/19 3:45 AM, Paolo Valente wrote:
+>>>>
+>> [...]
+>>>> At any rate, since you pointed out that you are interested in
+>>>> out-of-the-box performance, let me complete the context: in case
+>>>> low_latency is left set, one gets, in return for this 12% loss,
+>>>> a) at least 1000% higher responsiveness, e.g., 1000% lower start-up
+>>>> times of applications under load [1];
+>>>> b) 500-1000% higher throughput in multi-client server workloads, as I
+>>>> already pointed out [2].
+>>>>
+>>>
+>>> I'm very happy that you could solve the problem without having to
+>>> compromise on any of the performance characteristics/features of BFQ!
+>>>
+>>>
+>>>> I'm going to prepare complete patches.  In addition, if ok for you,
+>>>> I'll report these results on the bug you created.  Then I guess we can
+>>>> close it.
+>>>>
+>>>
+>>> Sounds great!
+>>>
+>>
+>> Hi Paolo,
+>>
+>> Hope you are doing great!
+>>
+>> I was wondering if you got a chance to post these patches to LKML for
+>> review and inclusion... (No hurry, of course!)
+>>
+>> Also, since your fixes address the performance issues in BFQ, do you
+>> have any thoughts on whether they can be adapted to CFQ as well, to
+>> benefit the older stable kernels that still support CFQ?
+> 
+> Since CFQ doesn't exist in current upstream kernel anymore, I seriously
+> doubt you'll be able to get any performance improvements for it in the
+> stable kernels...
+> 
 
-Signed-off-by: Rik van Riel <riel@surriel.com>
----
- kernel/sched/fair.c | 25 ++++++++-----------------
- 1 file changed, 8 insertions(+), 17 deletions(-)
+I suspected as much, but that seems unfortunate though. The latest LTS
+kernel is based on 4.19, which still supports CFQ. It would have been
+great to have a process to address significant issues on older
+kernels too.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index c6ede2ecc935..35153a89d5c5 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -670,22 +670,6 @@ static inline u64 calc_delta_fair(u64 delta, struct sched_entity *se)
- 	return delta;
- }
- 
--/*
-- * The idea is to set a period in which each task runs once.
-- *
-- * When there are too many tasks (sched_nr_latency) we have to stretch
-- * this period because otherwise the slices get too small.
-- *
-- * p = (nr <= nl) ? l : l*nr/nl
-- */
--static u64 __sched_period(unsigned long nr_running)
--{
--	if (unlikely(nr_running > sched_nr_latency))
--		return nr_running * sysctl_sched_min_granularity;
--	else
--		return sysctl_sched_latency;
--}
--
- /*
-  * We calculate the wall-time slice from the period by taking a part
-  * proportional to the weight.
-@@ -694,7 +678,7 @@ static u64 __sched_period(unsigned long nr_running)
-  */
- static u64 sched_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
- {
--	u64 slice = __sched_period(cfs_rq->nr_running + !se->on_rq);
-+	u64 slice = sysctl_sched_latency;
- 
- 	for_each_sched_entity(se) {
- 		struct load_weight *load;
-@@ -711,6 +695,13 @@ static u64 sched_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
- 		}
- 		slice = __calc_delta(slice, se->load.weight, load);
- 	}
-+
-+	/*
-+	 * To avoid cache thrashing, run at least sysctl_sched_min_granularity.
-+	 * The vruntime of a low priority task advances faster; those tasks
-+	 * will simply get time slices less frequently.
-+	 */
-+	slice = max_t(u64, slice, sysctl_sched_min_granularity);
- 	return slice;
- }
- 
--- 
-2.20.1
+Greg, do you have any thoughts on this? The context is that both CFQ
+and BFQ I/O schedulers have issues that cause I/O throughput to suffer
+upto 10x - 30x on certain workloads and system configurations, as
+reported in [1].
 
+In this thread, Paolo posted patches to fix BFQ performance on
+mainline. However CFQ suffers from the same performance collapse, but
+CFQ was removed from the kernel in v5.0. So obviously the usual stable
+backporting path won't work here for several reasons:
+
+  1. There won't be a mainline commit to backport from, as CFQ no
+     longer exists in mainline.
+
+  2. This is not a security/stability fix, and is likely to involve
+     invasive changes.
+
+I was wondering if there was a way to address the performance issues
+in CFQ in the older stable kernels (including the latest LTS 4.19),
+despite the above constraints, since the performance drop is much too
+significant. I guess not, but thought I'd ask :-)
+
+[1]. https://lore.kernel.org/lkml/8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu/ 
+
+
+Regards,
+Srivatsa
+VMware Photon OS
