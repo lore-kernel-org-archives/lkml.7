@@ -2,101 +2,152 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2784BC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB92C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F110C2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494862175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:13:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YxplCJLk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EByOcF5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408871AbfFLQMo (ORCPT
+        id S2409491AbfFLQN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 12:12:44 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37089 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405740AbfFLQMn (ORCPT
+        Wed, 12 Jun 2019 12:13:26 -0400
+Received: from mail-pl1-f173.google.com ([209.85.214.173]:46432 "EHLO
+        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409460AbfFLQNZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:12:43 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 19so9109362pfa.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 09:12:43 -0700 (PDT)
+        Wed, 12 Jun 2019 12:13:25 -0400
+Received: by mail-pl1-f173.google.com with SMTP id e5so6817157pls.13
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 09:13:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ofOjnQO6wMRVhMaUq5s5XBY0W/Gr9lBkHwBz+qOWpPM=;
-        b=YxplCJLkptJjdPNVhI7idLGcCZQdb66rR7Tcxoj5L7eeemO7dRE60CK/PUbJSDLhno
-         RwfUUKPEmkdkQ8VCo67I6kOSNkPvLyMYgiGMh1unSkGcDHEDVsHYJjNXFHoUeWK/Fl+V
-         DxyqmY2vir8siz0HSUki1QVc5sjDgDKy0MdTDk6pf6GztSiRRtjjlwSwtvIcSAMtltG7
-         1l0yh86/x3si+9Zg6oITa1qnpOWcgxQCrt+yN+N3uDprSDCipjYmqEpTr9t05FYx0WwY
-         i//i+EUihPjhegUtMqXLX0z4pkmoe3GnXDQAifT7jMykqJnudFp0xrvbuLzC2cVsfNcf
-         65sA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e4ItLxshqMfqM68z4YCARRhGpvs/wbTADgtzp6LLi8k=;
+        b=EByOcF5oR5p8jLYaIHj/W3OAyPEwMFyxrCSaDMZ710yE5WD1Y/b+UNqhkabWO+KS1l
+         IgRWkQvJ2NjRclyAP+f+rEMc+so66/pJayjBsfvCjka+fdtro0rRT+G7kG/mV7cxYud+
+         DqLOkvG+jeTuQuRkwivcdqKUg66y8+r9eNK3GSX6WWwVM0LTkEGNYmcMgV8xtaI71jUo
+         gFzG+TD6/zdIHpyrirE/qQrbJQeDR0ghIWFeujzm+5W4gmflXpO4QMnJsFIg6kJrAry+
+         pv87Rmlg0j8CYSgiU2v0e0ld97KdTEUF+/M94iRv9qKosgsTDP8ev18imoJavVyGJMMs
+         5lxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ofOjnQO6wMRVhMaUq5s5XBY0W/Gr9lBkHwBz+qOWpPM=;
-        b=j5z5BHzeQjYlBPW5H6ma9AWcDtb8iMZeTm6hi244lGG8K8ZCK0G216rNcRTuFNF6In
-         JZQ9/laSSrvgkMFjHsV09Yrq2zQXp8kLD9choexFO0uCD5kKuTAlPCVJgfAf3WUuUkc2
-         zK6AAC27tlNH2rYLeLLcvDN1qv8EkZUEb0QWxVJUuh74/Bl51a35rUGBaY9ga+ZjaZD1
-         kv92eNt4nFmgbGvwWBu2vmbjvq7HficxXVpDMfKRTUjRU3IkM4wIJx8G4S2ZpL/a/dfH
-         XvGps8GHcCT6ovKhLpeOeds/z5httkbPRAjCHB8VrkOEByZHuVxk+fiRXjDF8Lkn0NFe
-         W1JA==
-X-Gm-Message-State: APjAAAWmCvuVTJxweCTfRGwbhVURWfM/QrynJWHgbq1G6yt9pcY3Lspf
-        SuQDC2ON0mT3siQWZ1IPv7Zmjw==
-X-Google-Smtp-Source: APXvYqzIewVEMZ44U/OEIOqM3RrSgyFo9R1pMdl8Nl71Jbc+tC5GZhhJw9OW2DquOv7T/biJ3LqgLQ==
-X-Received: by 2002:a63:a02:: with SMTP id 2mr1665934pgk.315.1560355963056;
-        Wed, 12 Jun 2019 09:12:43 -0700 (PDT)
-Received: from davidb.org (cn-co-b07400e8c3-142422-1.tingfiber.com. [64.98.48.55])
-        by smtp.gmail.com with ESMTPSA id m96sm566195pjb.1.2019.06.12.09.12.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 09:12:42 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 10:12:39 -0600
-From:   David Brown <david.brown@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Remove myself as qcom maintainer
-Message-ID: <20190612161239.GA9155@davidb.org>
-References: <20190612155411.GA28186@davidb.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e4ItLxshqMfqM68z4YCARRhGpvs/wbTADgtzp6LLi8k=;
+        b=dC+iTG+UHFJ+i7mYYJyGdcEkqnCkD+JcKzN0ZxnIub4ubVOqG2Hxq/0OqGKux2XQOT
+         ClD2xPdnekeNbHAeU/hVpL3phuUC4Mklumnr1soWcDeRdQ9bBb3ZYVMpABWVMv1DZcLR
+         X+RgVQRzwN13i7aG3vmFdJviFZjHDnEFn5u4Ur3Pf5Xc/W/JchWH9T+++PoZZTRa3OFq
+         fL+HWkSSckhiHOv+BudAkmwC9AwewmeR7S6dcHTc1l7Or05Tml0cDH+K3YB/bVX5vmy/
+         VWg7G8ZTbG8LzSiq9BpXp1YLPQvvTdgqY44HLi6KsMJh3I5Hyzh5DPn928ec7B9mKzBs
+         vZpw==
+X-Gm-Message-State: APjAAAWKVpVvHCCOjRT3Y4Gsmr/SwKBFgRbOfaagYXP0DUDLs1kTBaLc
+        7fpbv0/N5Tmv1wPekGRvHfrMtNHJgrC1T/0B/kNWjQ==
+X-Google-Smtp-Source: APXvYqzmdD5qKrrrXe+HCEiDQQKVQS4JJibsx3w0GVW5imo8nYDvtycFLQxTBoJXvBBVIDupEJMTzYRQD7ldjOaUjJg=
+X-Received: by 2002:a17:902:1566:: with SMTP id b35mr84417865plh.147.1560356003612;
+ Wed, 12 Jun 2019 09:13:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612155411.GA28186@davidb.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <000000000000927a7b0586561537@google.com> <MN2PR18MB263783F52CAD4A335FD8BB34A01A0@MN2PR18MB2637.namprd18.prod.outlook.com>
+ <CACT4Y+aQzBkAq86Hx4jNFnAUzjXnq8cS2NZKfeCaFrZa__g-cg@mail.gmail.com>
+ <MN2PR18MB26372D98386D79736A7947EEA0140@MN2PR18MB2637.namprd18.prod.outlook.com>
+ <MN2PR18MB263710E8F1F8FFA06B2EDB3CA0EC0@MN2PR18MB2637.namprd18.prod.outlook.com>
+In-Reply-To: <MN2PR18MB263710E8F1F8FFA06B2EDB3CA0EC0@MN2PR18MB2637.namprd18.prod.outlook.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 12 Jun 2019 18:13:12 +0200
+Message-ID: <CAAeHK+wpzHG73AbB+199-TN35Kb1kEjGrKScSqU++7q7RSUGGg@mail.gmail.com>
+Subject: Re: [EXT] INFO: trying to register non-static key in del_timer_sync (2)
+To:     Ganapathi Bhat <gbhat@marvell.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>,
+        "amitkarwar@gmail.com" <amitkarwar@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "huxinming820@gmail.com" <huxinming820@gmail.com>,
+        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "nishants@marvell.com" <nishants@marvell.com>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
+Content-Type: multipart/mixed; boundary="00000000000052860b058b22b16c"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I no longer regularly work on this platform, and only have a few
-increasingly outdated boards.  Andy has primarily been doing the
-maintenance.
+--00000000000052860b058b22b16c
+Content-Type: text/plain; charset="UTF-8"
 
-Signed-off-by: David Brown <david.brown@linaro.org>
----
-Resending this, hopefully with text=flowed not set in the email
-headers.
+On Wed, Jun 12, 2019 at 6:03 PM Ganapathi Bhat <gbhat@marvell.com> wrote:
+>
+> Hi Dmitry,
+>
+> We have a patch to fix this: https://patchwork.kernel.org/patch/10990275/
 
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+Hi Ganapathi,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 57f496cff999..27df8f46a283 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2050,7 +2050,6 @@ S:	Maintained
- 
- ARM/QUALCOMM SUPPORT
- M:	Andy Gross <agross@kernel.org>
--M:	David Brown <david.brown@linaro.org>
- L:	linux-arm-msm@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/soc/qcom/
--- 
-2.21.0
+Great, thanks for working on this!
 
+We can ask syzbot to test the fix:
+
+#syz test: https://github.com/google/kasan.git usb-fuzzer
+
+Thanks!
+
+>
+> Regards,
+> Ganapathi
+
+--00000000000052860b058b22b16c
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="mwifiex-avoid-deleting-uninitialized-timer-during-USB-cleanup.diff"
+Content-Disposition: attachment; 
+	filename="mwifiex-avoid-deleting-uninitialized-timer-during-USB-cleanup.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jwtfnzut0>
+X-Attachment-Id: f_jwtfnzut0
+
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL21hcnZlbGwvbXdpZmlleC91c2IuYyBi
+L2RyaXZlcnMvbmV0L3dpcmVsZXNzL21hcnZlbGwvbXdpZmlleC91c2IuYwppbmRleCBjMjM2NWVl
+Li45MzlmMWU5IDEwMDY0NAotLS0gYS9kcml2ZXJzL25ldC93aXJlbGVzcy9tYXJ2ZWxsL213aWZp
+ZXgvdXNiLmMKKysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvbWFydmVsbC9td2lmaWV4L3VzYi5j
+CkBAIC0xMzQ4LDYgKzEzNDgsOCBAQCBzdGF0aWMgdm9pZCBtd2lmaWV4X3VzYl9jbGVhbnVwX3R4
+X2FnZ3Ioc3RydWN0IG13aWZpZXhfYWRhcHRlciAqYWRhcHRlcikKIAogCWZvciAoaWR4ID0gMDsg
+aWR4IDwgTVdJRklFWF9UWF9EQVRBX1BPUlQ7IGlkeCsrKSB7CiAJCXBvcnQgPSAmY2FyZC0+cG9y
+dFtpZHhdOworCQlpZiAoIXBvcnQtPnR4X2RhdGFfZXApCisJCQljb250aW51ZTsKIAkJaWYgKGFk
+YXB0ZXItPmJ1c19hZ2dyLmVuYWJsZSkKIAkJCXdoaWxlICgoc2tiX3RtcCA9CiAJCQkJc2tiX2Rl
+cXVldWUoJnBvcnQtPnR4X2FnZ3IuYWdncl9saXN0KSkpCkBAIC0xMzY1LDggKzEzNjcsNiBAQCBz
+dGF0aWMgdm9pZCBtd2lmaWV4X3VucmVnaXN0ZXJfZGV2KHN0cnVjdCBtd2lmaWV4X2FkYXB0ZXIg
+KmFkYXB0ZXIpCiAKIAltd2lmaWV4X3VzYl9mcmVlKGNhcmQpOwogCi0JbXdpZmlleF91c2JfY2xl
+YW51cF90eF9hZ2dyKGFkYXB0ZXIpOwotCiAJY2FyZC0+YWRhcHRlciA9IE5VTEw7CiB9CiAKQEAg
+LTE1MTAsNyArMTUxMCw3IEBAIHN0YXRpYyBpbnQgbXdpZmlleF9wcm9nX2Z3X3dfaGVscGVyKHN0
+cnVjdCBtd2lmaWV4X2FkYXB0ZXIgKmFkYXB0ZXIsCiBzdGF0aWMgaW50IG13aWZpZXhfdXNiX2Ru
+bGRfZncoc3RydWN0IG13aWZpZXhfYWRhcHRlciAqYWRhcHRlciwKIAkJCXN0cnVjdCBtd2lmaWV4
+X2Z3X2ltYWdlICpmdykKIHsKLQlpbnQgcmV0OworCWludCByZXQgPSAwOwogCXN0cnVjdCB1c2Jf
+Y2FyZF9yZWMgKmNhcmQgPSAoc3RydWN0IHVzYl9jYXJkX3JlYyAqKWFkYXB0ZXItPmNhcmQ7CiAK
+IAlpZiAoY2FyZC0+dXNiX2Jvb3Rfc3RhdGUgPT0gVVNCOFhYWF9GV19ETkxEKSB7CkBAIC0xNTIz
+LDEwICsxNTIzLDYgQEAgc3RhdGljIGludCBtd2lmaWV4X3VzYl9kbmxkX2Z3KHN0cnVjdCBtd2lm
+aWV4X2FkYXB0ZXIgKmFkYXB0ZXIsCiAJCQlyZXR1cm4gLTE7CiAJfQogCi0JcmV0ID0gbXdpZmll
+eF91c2JfcnhfaW5pdChhZGFwdGVyKTsKLQlpZiAoIXJldCkKLQkJcmV0ID0gbXdpZmlleF91c2Jf
+dHhfaW5pdChhZGFwdGVyKTsKLQogCXJldHVybiByZXQ7CiB9CiAKQEAgLTE1ODQsNyArMTU4MCwy
+OSBAQCBzdGF0aWMgdm9pZCBtd2lmaWV4X3VzYl9zdWJtaXRfcmVtX3J4X3VyYnMoc3RydWN0IG13
+aWZpZXhfYWRhcHRlciAqYWRhcHRlcikKIAlyZXR1cm4gMDsKIH0KIAorc3RhdGljIGludCBtd2lm
+aWV4X2luaXRfdXNiKHN0cnVjdCBtd2lmaWV4X2FkYXB0ZXIgKmFkYXB0ZXIpCit7CisJc3RydWN0
+IHVzYl9jYXJkX3JlYyAqY2FyZCA9IChzdHJ1Y3QgdXNiX2NhcmRfcmVjICopYWRhcHRlci0+Y2Fy
+ZDsKKwlpbnQgcmV0ID0gMDsKKworCWlmIChjYXJkLT51c2JfYm9vdF9zdGF0ZSA9PSBVU0I4WFhY
+X0ZXX0ROTEQpCisJCXJldHVybiAwOworCisJcmV0ID0gbXdpZmlleF91c2JfcnhfaW5pdChhZGFw
+dGVyKTsKKwlpZiAoIXJldCkKKwkJcmV0ID0gbXdpZmlleF91c2JfdHhfaW5pdChhZGFwdGVyKTsK
+KworCXJldHVybiByZXQ7Cit9CisKK3N0YXRpYyB2b2lkIG13aWZpZXhfY2xlYW51cF91c2Ioc3Ry
+dWN0IG13aWZpZXhfYWRhcHRlciAqYWRhcHRlcikKK3sKKwltd2lmaWV4X3VzYl9jbGVhbnVwX3R4
+X2FnZ3IoYWRhcHRlcik7Cit9CisKIHN0YXRpYyBzdHJ1Y3QgbXdpZmlleF9pZl9vcHMgdXNiX29w
+cyA9IHsKKwkuaW5pdF9pZiA9CQltd2lmaWV4X2luaXRfdXNiLAorCS5jbGVhbnVwX2lmID0JCW13
+aWZpZXhfY2xlYW51cF91c2IsCiAJLnJlZ2lzdGVyX2RldiA9CQltd2lmaWV4X3JlZ2lzdGVyX2Rl
+diwKIAkudW5yZWdpc3Rlcl9kZXYgPQltd2lmaWV4X3VucmVnaXN0ZXJfZGV2LAogCS53YWtldXAg
+PQkJbXdpZmlleF9wbV93YWtldXBfY2FyZCwK
+--00000000000052860b058b22b16c--
