@@ -2,103 +2,131 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B724CC31E45
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2E2C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937B32080A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954E220896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 02:02:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p5WwRCYK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tub0/eAy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406470AbfFLCB3 (ORCPT
+        id S2406637AbfFLCCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 22:01:29 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:52673 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405070AbfFLCB3 (ORCPT
+        Tue, 11 Jun 2019 22:02:21 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38034 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404880AbfFLCCU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 22:01:29 -0400
-Received: by mail-it1-f193.google.com with SMTP id l21so8287979ita.2;
-        Tue, 11 Jun 2019 19:01:28 -0700 (PDT)
+        Tue, 11 Jun 2019 22:02:20 -0400
+Received: by mail-io1-f67.google.com with SMTP id k13so11632601iop.5;
+        Tue, 11 Jun 2019 19:02:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=iHeTl9h5MAISC73trVD9Z9vYX3/i6GRbRI15G+TC7d4=;
-        b=p5WwRCYKXyFPfLjGMHtHkZUxI7g1Wr8ep6fol34IecTcd7Fen5hswE5Nfh3DSlIdet
-         hFaBAumqeGhSdfBtn7B0cy6w/YYTwzOQ/4SsRIAUYm2DSBua7fyiwx7PWPmK5zS6bD88
-         y+FGWaVEAB0y0rS8lmoPQUByuovlWqVYHFtH6fRVqxxBmdwnrtaEYsaaNyBq4fnvBZhV
-         ZrlMhfQXeZTEw9MtP6mp+b+exiU/xlbPG3/RayJA50MSpY1sd7Z+571sZ7yW9J5hOezz
-         7RSAq6CfmSwDjZEyXkEK0RJQqbV8/gCQKuUUmUtg9gcCLBaUIi4FZlMhBe1+KZIxfsVa
-         23gw==
+        bh=KQq32cKsqkY3NhJq+BP0fPox4yAfuAv9Yt0Vd+TjtfI=;
+        b=tub0/eAyDdq+sRrwDwUrU99nQ79e61+rN5hQoUhUhValhU2tmBJCOnvKq3fAolklIc
+         emcxzOyraQ+OxeLfwG0bClVZRw87xiBpNoIWAhUglhWghg/R8abLDJ3UnQ3ZdzFTQ/NB
+         JwERulhBzXtiBAcs42auD6oLqdlrc4xanWiuudqm22XEglv/OUwPOt5eTe0f/O14gQgE
+         8lg3NzHzFOwSdZtyjWHHzwDydciIiq9213CO448ZyjnXZzdveD3EgvLZLD4Eq1CXwRlz
+         ljr8oxeGFt0muOa3z5/kAwPs5WYypsMYqcua3zhQZ4d9NErltJ+wGAnTVxDvg4tfzW3L
+         bUAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=iHeTl9h5MAISC73trVD9Z9vYX3/i6GRbRI15G+TC7d4=;
-        b=KmTsusZP+1XYL+vFLleVvrNREc5RHTbFldAP4qFXCil+5CNHm83Nn0jY0QHxEuaDsZ
-         aiOJk9eU/Mtj7lt8kdU+X4lXX69Tcu/0yPfQe5Mlc+eyqlhh1Q+BZ7xhZ4OljlBgbsHY
-         8AfcOgGHnX/jSVIuaZZxchfI7ViouEWEO2m8x9Nqxt9bE6KcmLPKdd2vRj+3v4efnA2w
-         sEH4GBFV37MZP0TIZ2owEeXzyqanfraBmhZoULmgSa9eYIUnlhm6NbUxIWjE1+gZniN1
-         3JKwrYl57pl6rq5iXi6QYoC3u4Hwjt1HpRs++xQtmmnm6s+b5cJ0iRG6x2+XLlwX8vNA
-         AcUg==
-X-Gm-Message-State: APjAAAVLUkV53stQa5qntCQtbq13oMuy+FOTXttXmep3FVi0+fxCHNmT
-        tptAeVP7OGJWBsWXeF94Wxd/8aGcuEeVFTvDzEk=
-X-Google-Smtp-Source: APXvYqydEFgmHWzcLByfz0Xbu9y58yiU4/4j49WJ5O9z2avVjWScConp9krearwOkeSkCy0gZjMRSftCqtqf5M+FICo=
-X-Received: by 2002:a02:5b05:: with SMTP id g5mr49218359jab.114.1560304888209;
- Tue, 11 Jun 2019 19:01:28 -0700 (PDT)
+        bh=KQq32cKsqkY3NhJq+BP0fPox4yAfuAv9Yt0Vd+TjtfI=;
+        b=OKmLkagcas3ch1swWc1ruuXLMeL/D/jkXcIPbHNhPSs/AB31oR9uY9GmI4eb4iq2vX
+         KJCGDiQ38DrhuAFpZ3HGL2GAMjt1mxaqrBem16aen06JwiXLv9f/3TLV84imw0MaHaAW
+         N0frrExPBvJvV6ZAJe8kqHI3bZTof7GyXT6pTCtO274ExffjR9PVjdd9egdDMauXbbV2
+         foPFi9vKIRQxBDiCRg4Na1xmhIA2kzihBh3DxvW6577YcSPAtSgNha6wL0EqDD+I0FnX
+         ZWKVB/5gX7rU58UkgFntQ/dvKoEFcZ8YsekIn7Ff6YImbLW9/17NmlkbjFDAJtFjKqm3
+         jptw==
+X-Gm-Message-State: APjAAAWGzxINDYCptf17jy4kSsnmjIy5ORk5iZgv3L4HFoHajzNZbV8p
+        G/0mk+4piySZDB4foV4z0ndpu0w1aoB1tIlBbQI=
+X-Google-Smtp-Source: APXvYqzw2+qxOTW6nrAL3jdeotVKD4/lA7a5sLEteyM3MYFpjQuA5p/uQ/x2jo7fwG8N2NNvXKzsTAt6ZQckOPHzC7s=
+X-Received: by 2002:a6b:f607:: with SMTP id n7mr16284029ioh.263.1560304939465;
+ Tue, 11 Jun 2019 19:02:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190607200225.21419-1-andrew.smirnov@gmail.com>
- <20190607200225.21419-2-andrew.smirnov@gmail.com> <VI1PR0402MB34855AC8C617A3D7A584A1B798ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB34855AC8C617A3D7A584A1B798ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20190605072323.21990-1-andrew.smirnov@gmail.com>
+ <20190605072323.21990-3-andrew.smirnov@gmail.com> <d9d8b0c4-e9f4-5a92-3832-3449153f807d@ti.com>
+ <CAHQ1cqFRVmZvcFyV93udAHEwZG8NhtM350BSm7JcchNFiqZDjA@mail.gmail.com>
+ <20190605183945.GA2442@roeck-us.net> <20190611194651.rmyo4jhdy7xgrgpu@earth.universe>
+In-Reply-To: <20190611194651.rmyo4jhdy7xgrgpu@earth.universe>
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Tue, 11 Jun 2019 19:01:16 -0700
-Message-ID: <CAHQ1cqGcDm6MGnmn3=SKBYNkToP_T+-SEHSvOBtq8FGcRoTb6Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] crypto: caam - do not initialise clocks on the i.MX8
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Chris Spencer <christopher.spencer@sea.co.uk>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
+Date:   Tue, 11 Jun 2019 19:02:08 -0700
+Message-ID: <CAHQ1cqG3c3CvQymEH6uQNrmbSJAmapDBubc6jPke9y1BXWY76A@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] power: supply: ucs1002: Add HWMON interface
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, "Andrew F. Davis" <afd@ti.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
         Chris Healy <cphealy@gmail.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
         Lucas Stach <l.stach@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 2:56 AM Horia Geanta <horia.geanta@nxp.com> wrote:
+On Tue, Jun 11, 2019 at 12:46 PM Sebastian Reichel <sre@kernel.org> wrote:
 >
-> On 6/7/2019 11:03 PM, Andrey Smirnov wrote:
-> > From: Chris Spencer <christopher.spencer@sea.co.uk>
-> >
-> > There are no clocks that the CAAM driver needs to initialise on the
-> > i.MX8.
-> >
-> RM lists 5 clocks for CAAM module (instance.clock): caam.aclk, caam.ipg_clk,
-> caam.ipg_clk_s, caam_exsc.aclk_exsc, caam_mem.clk
+> Hi,
 >
-> Wouldn't it be better to have these clocks in DT, instead of relying that their
-> root clocks (ccm_ahb_clk_root, ccm_ipg_clk_root) are critical / always on?
+> On Wed, Jun 05, 2019 at 11:39:45AM -0700, Guenter Roeck wrote:
+> > On Wed, Jun 05, 2019 at 10:47:25AM -0700, Andrey Smirnov wrote:
+> > > On Wed, Jun 5, 2019 at 9:26 AM Andrew F. Davis <afd@ti.com> wrote:
+> > > >
+> > > > On 6/5/19 3:23 AM, Andrey Smirnov wrote:
+> > > > > Expose current sensors found on UCS1002 via HWMON.
+> > > > >
+> > > > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > > > > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> > > > > Cc: Chris Healy <cphealy@gmail.com>
+> > > > > Cc: Cory Tusar <cory.tusar@zii.aero>
+> > > > > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > > > > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > > > > Cc: Guenter Roeck <linux@roeck-us.net>
+> > > > > Cc: Sebastian Reichel <sre@kernel.org>
+> > > > > Cc: linux-kernel@vger.kernel.org
+> > > > > Cc: linux-pm@vger.kernel.org
+> > > > > ---
+> > > > >   drivers/power/supply/ucs1002_power.c | 6 ++++++
+> > > > >   1 file changed, 6 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/power/supply/ucs1002_power.c b/drivers/power/supply/ucs1002_power.c
+> > > > > index 677f20a4d76f..a4b6b37549cf 100644
+> > > > > --- a/drivers/power/supply/ucs1002_power.c
+> > > > > +++ b/drivers/power/supply/ucs1002_power.c
+> > > > > @@ -571,6 +571,12 @@ static int ucs1002_probe(struct i2c_client *client,
+> > > > >               return ret;
+> > > > >       }
+> > > > >
+> > > > > +     ret = devm_power_supply_add_hwmon_sysfs(info->charger);
+> > > >
+> > > > Could this be added to the core power supply framework on registering so
+> > > > all devices get this, vs each driver having to add this line?
+> > > >
+> > >
+> > > I'd say it is up to Sebastian to decide if this should be opt-out
+> > > rather than opt-in. I have no objections to either approach.
+> > >
+> >
+> > Same here, and agreed.
+>
+> I think this should be registered in power_supply_register() and
+> free'd in power_supply_unregister(). It's not device specific at
+> all and the functionality can be configured via Kconfig.
 >
 
-Is it even possible to use the SoC in a meaningful way if
-ccm_ahb_clk_root or ccm_ipg_clk_root are disabled? It doesn't seem
-that dependency on either is expressed in a consistent manner for
-other IP blocks in imx8mq.dtsi. OTOH, it should be trivial to add
-<&clk IMX8MQ_CLK_IPG_ROOT> and <&clk IMX8MQ_CLK_AHB> as "ipg" and
-"aclk" to CAAM node and it would allow me to drop an extra patch from
-the series, so I may as well do it.
+Sure, will do in v4.
 
 Thanks,
 Andrey Smirnov
