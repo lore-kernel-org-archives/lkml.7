@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A19EC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C70C31E4B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAB3208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8830208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:15:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437261AbfFLJPD (ORCPT
+        id S2437225AbfFLJPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:15:03 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18559 "EHLO huawei.com"
+        Wed, 12 Jun 2019 05:15:02 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18556 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2436777AbfFLJPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:15:01 -0400
+        id S2407442AbfFLJPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:15:00 -0400
 Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 06646C5C9D43BF77E6DD;
-        Wed, 12 Jun 2019 17:11:56 +0800 (CST)
+        by Forcepoint Email with ESMTP id 0785F7029CD80C359046;
+        Wed, 12 Jun 2019 17:11:51 +0800 (CST)
 Received: from HGHY2Y004646261.china.huawei.com (10.184.12.158) by
  DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 12 Jun 2019 17:11:46 +0800
+ 14.3.439.0; Wed, 12 Jun 2019 17:11:44 +0800
 From:   Zenghui Yu <yuzenghui@huawei.com>
 To:     <linux-arm-kernel@lists.infradead.org>,
         <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
@@ -37,9 +37,9 @@ CC:     <christoffer.dall@arm.com>, <marc.zyngier@arm.com>,
         <namhyung@kernel.org>, <wanghaibin.wang@huawei.com>,
         <xiexiangyou@huawei.com>, <linuxarm@huawei.com>,
         Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH v1 3/5] perf tools arm64: Add support for get_cpuid() function
-Date:   Wed, 12 Jun 2019 09:08:44 +0000
-Message-ID: <1560330526-15468-4-git-send-email-yuzenghui@huawei.com>
+Subject: [PATCH v1 1/5] KVM: arm/arm64: Remove kvm_mmio_emulate tracepoint
+Date:   Wed, 12 Jun 2019 09:08:42 +0000
+Message-ID: <1560330526-15468-2-git-send-email-yuzenghui@huawei.com>
 X-Mailer: git-send-email 2.6.4.windows.1
 In-Reply-To: <1560330526-15468-1-git-send-email-yuzenghui@huawei.com>
 References: <1560330526-15468-1-git-send-email-yuzenghui@huawei.com>
@@ -52,150 +52,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The get_cpuid() function returns the MIDR string of the first CPU.
+In current KVM/ARM code, no one will invoke trace_kvm_mmio_emulate().
+Remove this TRACE_EVENT definition.
 
-Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Christoffer Dall <christoffer.dall@arm.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-
 ---
-When recording, perf will write host's cpuid (through get_cpuid()) into
-perf.data.guest file:
+ virt/kvm/arm/trace.h | 21 ---------------------
+ 1 file changed, 21 deletions(-)
 
-  __cmd_record
-    record__finish_output
-      perf_session__write_header
-        perf_header__adds_write
-          do_write_feat (type == HEADER_CPUID)
-            write_cpuid
-
-When reporting, perf will read cpuid from perf.data.guest file:
-
-  read_events
-    perf_session__new
-      perf_session__open
-        perf_session__read_header
-          perf_header__process_sections
-            perf_file_section__process
-              process_cpuid
-
-I'm not familiar with ARM ID register usage, and how does perf code make
-use of get_cpuid() function. If we left get_cpuid() unimplemented on
-arm64 (we have a default implementation in tools/perf/util/header.c),
-'perf kvm stat report' will failed with following error:
-        "Failed to look up CPU type"
-
-I will read the code further, and any comments or suggestions from both
-sides (arm64 & perf) will be appreciated.
-
----
- tools/perf/arch/arm64/util/header.c | 74 +++++++++++++++++++++++--------------
- 1 file changed, 47 insertions(+), 27 deletions(-)
-
-diff --git a/tools/perf/arch/arm64/util/header.c b/tools/perf/arch/arm64/util/header.c
-index 534cd25..5c17b86 100644
---- a/tools/perf/arch/arm64/util/header.c
-+++ b/tools/perf/arch/arm64/util/header.c
-@@ -9,17 +9,56 @@
- #define MIDR_VARIANT_SHIFT      20
- #define MIDR_VARIANT_MASK       (0xf << MIDR_VARIANT_SHIFT)
+diff --git a/virt/kvm/arm/trace.h b/virt/kvm/arm/trace.h
+index 204d210..8b7dff2 100644
+--- a/virt/kvm/arm/trace.h
++++ b/virt/kvm/arm/trace.h
+@@ -114,27 +114,6 @@
+ 		  __entry->type, __entry->vcpu_idx, __entry->irq_num, __entry->level)
+ );
  
--char *get_cpuid_str(struct perf_pmu *pmu)
-+/* Return value of midr_el1 if success, else return 0. */
-+static int read_midr_el1(char *buf, int cpu_nr)
- {
--	char *buf = NULL;
- 	char path[PATH_MAX];
- 	const char *sysfs = sysfs__mountpoint();
-+	u64 midr = 0;
-+	FILE *file;
-+
-+	if (!sysfs)
-+		return 0;
-+
-+	scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d"MIDR,
-+		  sysfs, cpu_nr);
-+
-+	file = fopen(path, "r");
-+	if (!file) {
-+		pr_debug("fopen failed for file %s\n", path);
-+		return 0;
-+	}
-+
-+	if (!fgets(buf, MIDR_SIZE, file)) {
-+		fclose(file);
-+		return 0;
-+	}
-+	fclose(file);
-+
-+	/* Ignore/clear Variant[23:20] and Revision[3:0] of MIDR */
-+	midr = strtoul(buf, NULL, 16);
-+	midr &= (~(MIDR_VARIANT_MASK | MIDR_REVISION_MASK));
-+	scnprintf(buf, MIDR_SIZE, "0x%016lx", midr);
-+
-+	return midr;
-+}
-+
-+int get_cpuid(char *buffer, size_t sz __maybe_unused)
-+{
-+	if (read_midr_el1(buffer, 0))
-+		return 0;
-+
-+	return -1;
-+}
-+
-+char *get_cpuid_str(struct perf_pmu *pmu)
-+{
-+	char *buf = NULL;
- 	int cpu;
- 	u64 midr = 0;
- 	struct cpu_map *cpus;
--	FILE *file;
- 
--	if (!sysfs || !pmu || !pmu->cpus)
-+	if (!pmu || !pmu->cpus)
- 		return NULL;
- 
- 	buf = malloc(MIDR_SIZE);
-@@ -29,29 +68,10 @@ char *get_cpuid_str(struct perf_pmu *pmu)
- 	/* read midr from list of cpus mapped to this pmu */
- 	cpus = cpu_map__get(pmu->cpus);
- 	for (cpu = 0; cpu < cpus->nr; cpu++) {
--		scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d"MIDR,
--				sysfs, cpus->map[cpu]);
+-TRACE_EVENT(kvm_mmio_emulate,
+-	TP_PROTO(unsigned long vcpu_pc, unsigned long instr,
+-		 unsigned long cpsr),
+-	TP_ARGS(vcpu_pc, instr, cpsr),
 -
--		file = fopen(path, "r");
--		if (!file) {
--			pr_debug("fopen failed for file %s\n", path);
--			continue;
--		}
+-	TP_STRUCT__entry(
+-		__field(	unsigned long,	vcpu_pc		)
+-		__field(	unsigned long,	instr		)
+-		__field(	unsigned long,	cpsr		)
+-	),
 -
--		if (!fgets(buf, MIDR_SIZE, file)) {
--			fclose(file);
--			continue;
--		}
--		fclose(file);
+-	TP_fast_assign(
+-		__entry->vcpu_pc		= vcpu_pc;
+-		__entry->instr			= instr;
+-		__entry->cpsr			= cpsr;
+-	),
 -
--		/* Ignore/clear Variant[23:20] and
--		 * Revision[3:0] of MIDR
--		 */
--		midr = strtoul(buf, NULL, 16);
--		midr &= (~(MIDR_VARIANT_MASK | MIDR_REVISION_MASK));
--		scnprintf(buf, MIDR_SIZE, "0x%016lx", midr);
--		/* got midr break loop */
--		break;
-+		midr = read_midr_el1(buf, cpus->map[cpu]);
-+		if (midr)
-+			/* got midr break loop */
-+			break;
- 	}
- 
- 	if (!midr) {
+-	TP_printk("Emulate MMIO at: 0x%08lx (instr: %08lx, cpsr: %08lx)",
+-		  __entry->vcpu_pc, __entry->instr, __entry->cpsr)
+-);
+-
+ TRACE_EVENT(kvm_unmap_hva_range,
+ 	TP_PROTO(unsigned long start, unsigned long end),
+ 	TP_ARGS(start, end),
 -- 
 1.8.3.1
 
