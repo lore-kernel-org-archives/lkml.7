@@ -2,123 +2,86 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFC6C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537BDC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C668D2086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED879206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:28:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="rneOP3I/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DTGYZ21w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403940AbfFLFQe (ORCPT
+        id S1730331AbfFLF2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 01:16:34 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35156 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbfFLFQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 01:16:34 -0400
-Received: from zn.tnic (p200300EC2F0A6800EC6A653BF86B372A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6800:ec6a:653b:f86b:372a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BA42D1EC0997;
-        Wed, 12 Jun 2019 07:16:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560316591;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=uZvUrReB+RHLzSd6kF/1jCDl/jkPW47i90g2lP+OZWI=;
-        b=rneOP3I/FIcX/zUChYjTMNqLmHOhJ9uhQISz3P+01lalYd8uNCQcDcblA+dzdoRgiLRlzz
-        DF6tlZQzEX3JOpUeN5oXSy45m3PJqlH7D/Vuz7dsX+ZgGRJB1IJmgDnx3BvoXK3lDQfFIj
-        +JvMJTzNX1N/CKAPKQpaI/76LsvEzBk=
-Date:   Wed, 12 Jun 2019 07:16:24 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Zhen Lei <thunder.leizhen@huawei.com>
-Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>
-Subject: Re: [PATCH v8 2/7] x86/dma: use IS_ENABLED() to simplify the code
-Message-ID: <20190612051624.GF32652@zn.tnic>
-References: <20190530034831.4184-1-thunder.leizhen@huawei.com>
- <20190530034831.4184-3-thunder.leizhen@huawei.com>
+        Wed, 12 Jun 2019 01:28:24 -0400
+Received: from mail-io1-f50.google.com ([209.85.166.50]:43558 "EHLO
+        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbfFLF2Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 01:28:24 -0400
+Received: by mail-io1-f50.google.com with SMTP id k20so11910833ios.10
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 22:28:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=0egADaKHPgxEseV+5zTmwO02LpSCL+ELQpPqc7dluDI=;
+        b=DTGYZ21wKGFW8ESp2178P057vVW9OtYlyO0lh1uR+Fq4qsEofRlNXVtwAsg6xwcdVS
+         73cFj+JmPdmdo6NkoJivXGqzverYG6kWj8mmnxL6q2j1gVcegLL9g+xJ8cYz3M0qX0hS
+         PVGaiOBPX3ml1L9PBmOj/WaviM8GnXRPTS9H22T7Qy8lysss3HgNokx+oDnFhv9okMzY
+         sXotzhgTwD5e5ignqjWDKZoL+RyMxw1+0f4lySedm7IoT52fqyEjeMje6tWbhCX4AGq8
+         fWy137D9h5ipiTcXxcDeNKlri5LqmWQnioTL/fCT6ykdUMoeNFlREP51cjunTHxsF8cs
+         09mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=0egADaKHPgxEseV+5zTmwO02LpSCL+ELQpPqc7dluDI=;
+        b=lKzazwX+dYoHqGM2Woy7txSsertm5maAm9zkpLq2qm6yGPidNTdGPQUXiu846aIgZj
+         gPYnpu9+3KFdzD56l+xh09aEBdBZejeYKVSHGlaP+95Qv0+a5ui7Vwt1sRs/N9SxcPEt
+         mTKcy/3nYq+ceIywC7oM421i3sBFypIo/WcZsoQ73VrKJ9xNyr67rV6DlwSBhq51wFEz
+         DmDmaDXBP9fWVUQb5prWXKL+io3fAP16EjgTZSx5O+pseTGjOq7sWW+mbtYlAS8rtJp7
+         wVadu6NOYR4iDSk6jMQQ+SsDClddgKWKKFFznSyb14ByWe1+BPIgXqa5H7Lb/GSmMMkm
+         oUBw==
+X-Gm-Message-State: APjAAAU24AOjY1fJp9WY28jzlR1bPCC6yYrZoLMy7azLReut9auSCBlI
+        ehTYGWZ+HYh6xat4CSxDmQvEPP87IJe12ikgdbQgK7Bt
+X-Google-Smtp-Source: APXvYqxxNRo4wxH2jLBqUQXkw6LPwhrEcORYeGAzeHIGr0Ve5O5Hwsp9J+c4ZQJjXe8Qrmd6mIi52qcnzFbtg6tvYSQ=
+X-Received: by 2002:a6b:4107:: with SMTP id n7mr6420390ioa.12.1560317302867;
+ Tue, 11 Jun 2019 22:28:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190530034831.4184-3-thunder.leizhen@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   dharmendra hans <dharamhans87@gmail.com>
+Date:   Wed, 12 Jun 2019 10:58:11 +0530
+Message-ID: <CACUYsyG03ysubRp7UKPEQzz3Fm9e-J_yxp4S60jZ37WwagiXxA@mail.gmail.com>
+Subject: madvise() flags for not to sync dirty pages to the disk in shared mapping
+To:     linux-kernel@vger.kernel.org
+Cc:     dharmendra singh <dharamhans87@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 30, 2019 at 11:48:26AM +0800, Zhen Lei wrote:
-> This patch removes the ifdefs around CONFIG_IOMMU_DEFAULT_PASSTHROUGH to
-> improve readablity.
+Hi,
+I was searching for some  madvise() flag options which allow my
+application to have choice of not syncing dirty pages created through
+shared mmap() to the disk. Issue is that currently dirty pages created
+by the application will be synced to the disk and there is no way
+application can avoid that except MADV_REMOVE. But MADV_REMOVE punches
+the hole in the file and it takes a lot of time if mapping size was
+big, therefore one wants to avoid this option as it delays the further
+state change in application.
 
-Avoid having "This patch" or "This commit" in the commit message. It is
-tautologically useless.
+So  one seems to have two issue.
+1) Application is forced to wait during munmap() as dirty pages are synced.
+2) if one kill the application process, it lands in process defunct
+state for long time and it seems pages which were created by
+application are being synced to the disk.
 
-Also, do
+MADV_REMOVE seems to solve it but it is really slow due to file
+truncation on mapped file.
+What is desired is that application should be allowed choice of no
+dirty pages sync without creating hole in the mapped file.
 
-$ git grep 'This patch' Documentation/process
-
-for more details.
-
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-> ---
->  arch/x86/kernel/pci-dma.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
-> index dcd272dbd0a9330..9f2b19c35a060df 100644
-> --- a/arch/x86/kernel/pci-dma.c
-> +++ b/arch/x86/kernel/pci-dma.c
-> @@ -43,11 +43,8 @@
->   * It is also possible to disable by default in kernel config, and enable with
->   * iommu=nopt at boot time.
->   */
-> -#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
-> -int iommu_pass_through __read_mostly = 1;
-> -#else
-> -int iommu_pass_through __read_mostly;
-> -#endif
-> +int iommu_pass_through __read_mostly =
-> +			IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
-
-Let that line stick out.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+-Dharmendra
