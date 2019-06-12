@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD4CC31E45
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765B9C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E4F2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599992086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 03:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437113AbfFLDMr (ORCPT
+        id S2408576AbfFLDNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 23:12:47 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:62965 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2406968AbfFLDMq (ORCPT
+        Tue, 11 Jun 2019 23:13:01 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:28867 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2406872AbfFLDNA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 23:12:46 -0400
-X-UUID: 258c2d2ab540419aa812d3d847caffb7-20190612
-X-UUID: 258c2d2ab540419aa812d3d847caffb7-20190612
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        Tue, 11 Jun 2019 23:13:00 -0400
+X-UUID: dfb021c722e34194afb53bd68c7cfd93-20190612
+X-UUID: dfb021c722e34194afb53bd68c7cfd93-20190612
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
         (envelope-from <ryder.lee@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1835256952; Wed, 12 Jun 2019 11:12:40 +0800
+        with ESMTP id 174732528; Wed, 12 Jun 2019 11:12:47 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 12 Jun 2019 11:12:39 +0800
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 12 Jun 2019 11:12:40 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 12 Jun 2019 11:12:38 +0800
+ Transport; Wed, 12 Jun 2019 11:12:40 +0800
 From:   Ryder Lee <ryder.lee@mediatek.com>
 To:     Felix Fietkau <nbd@nbd.name>,
         Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
@@ -42,99 +42,123 @@ CC:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
         <linux-wireless@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v2] mt76: mt7615: add support for per-chain signal strength reporting
-Date:   Wed, 12 Jun 2019 11:12:32 +0800
-Message-ID: <22e5caff3581dc92fd6fec2f25966d86b7276bba.1560220443.git.ryder.lee@mediatek.com>
+Subject: [PATCH 2/2] mt76: mt7615: update peer's bssid when state transition changes
+Date:   Wed, 12 Jun 2019 11:12:34 +0800
+Message-ID: <449fee28c558b6f02b62275f9beefaab02b47efc.1560221172.git.ryder.lee@mediatek.com>
 X-Mailer: git-send-email 2.18.0
+In-Reply-To: <3065a01998dfa04a5d2d680e820a17cb5c110d0f.1560221172.git.ryder.lee@mediatek.com>
+References: <3065a01998dfa04a5d2d680e820a17cb5c110d0f.1560221172.git.ryder.lee@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-SNTS-SMTP: 3F5B734C7013F11341551BE8410EA107F2318531696F13E719DF083F3416BACF2000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fill in RX status->chain_signal to avoid empty value.
+Driver should update peer's bssid and bss information when
+state transition changes.
 
 Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 ---
-Changes since v2 - correct calculation sequence
----
- .../net/wireless/mediatek/mt76/mt7615/mac.c   | 30 ++++++++++++++++++-
- .../net/wireless/mediatek/mt76/mt7615/mac.h   |  5 ++++
- 2 files changed, 34 insertions(+), 1 deletion(-)
+ .../net/wireless/mediatek/mt76/mt7615/main.c  |  5 +-
+ .../net/wireless/mediatek/mt76/mt7615/mcu.c   | 49 ++++++++++---------
+ 2 files changed, 27 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-index b60d42b5923d..2f49a99e77b1 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-@@ -13,6 +13,11 @@
- #include "../dma.h"
- #include "mac.h"
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+index d21407ddda31..e0824392c019 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+@@ -283,9 +283,8 @@ static void mt7615_bss_info_changed(struct ieee80211_hw *hw,
  
-+static inline s8 to_rssi(u32 field, u32 rxv)
-+{
-+	return (FIELD_GET(field, rxv) - 220) / 2;
-+}
+ 	mutex_lock(&dev->mt76.mutex);
+ 
+-	/* TODO: sta mode connect/disconnect
+-	 * BSS_CHANGED_ASSOC | BSS_CHANGED_BSSID
+-	 */
++	if (changed & BSS_CHANGED_ASSOC)
++		mt7615_mcu_set_bss_info(dev, vif, info->assoc);
+ 
+ 	/* TODO: update beacon content
+ 	 * BSS_CHANGED_BEACON
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+index e82086eb8aa4..8fc12cd37906 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+@@ -741,17 +741,6 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
+ 	u8 *buf, *data, tx_wlan_idx = 0;
+ 	struct req_hdr *hdr;
+ 
+-	if (en) {
+-		len += sizeof(struct bss_info_omac);
+-		features |= BIT(BSS_INFO_OMAC);
+-		if (mvif->omac_idx > EXT_BSSID_START) {
+-			len += sizeof(struct bss_info_ext_bss);
+-			features |= BIT(BSS_INFO_EXT_BSS);
+-			ntlv++;
+-		}
+-		ntlv++;
+-	}
+-
+ 	switch (vif->type) {
+ 	case NL80211_IFTYPE_AP:
+ 	case NL80211_IFTYPE_MESH_POINT:
+@@ -759,22 +748,23 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
+ 		conn_type = CONNECTION_INFRA_AP;
+ 		break;
+ 	case NL80211_IFTYPE_STATION: {
+-		struct ieee80211_sta *sta;
+-		struct mt7615_sta *msta;
+-
+-		rcu_read_lock();
+-
+-		sta = ieee80211_find_sta(vif, vif->bss_conf.bssid);
+-		if (!sta) {
++		/* TODO: enable BSS_INFO_UAPSD & BSS_INFO_PM */
++		if (en) {
++			struct ieee80211_sta *sta;
++			struct mt7615_sta *msta;
 +
- static struct mt76_wcid *mt7615_rx_get_wcid(struct mt7615_dev *dev,
- 					    u8 idx, bool unicast)
- {
-@@ -120,6 +125,7 @@ int mt7615_mac_fill_rx(struct mt7615_dev *dev, struct sk_buff *skb)
- 	if (rxd0 & MT_RXD0_NORMAL_GROUP_3) {
- 		u32 rxdg0 = le32_to_cpu(rxd[0]);
- 		u32 rxdg1 = le32_to_cpu(rxd[1]);
-+		u32 rxdg3 = le32_to_cpu(rxd[3]);
- 		u8 stbc = FIELD_GET(MT_RXV1_HT_STBC, rxdg0);
- 		bool cck = false;
- 
-@@ -169,7 +175,29 @@ int mt7615_mac_fill_rx(struct mt7615_dev *dev, struct sk_buff *skb)
- 
- 		status->enc_flags |= RX_ENC_FLAG_STBC_MASK * stbc;
- 
--		/* TODO: RSSI */
-+		status->chains = dev->mt76.antenna_mask;
-+		status->chain_signal[0] = to_rssi(MT_RXV4_RCPI0, rxdg3);
-+		status->chain_signal[1] = to_rssi(MT_RXV4_RCPI1, rxdg3);
-+		status->chain_signal[2] = to_rssi(MT_RXV4_RCPI2, rxdg3);
-+		status->chain_signal[3] = to_rssi(MT_RXV4_RCPI3, rxdg3);
-+		status->signal = status->chain_signal[0];
++			rcu_read_lock();
++			sta = ieee80211_find_sta(vif, vif->bss_conf.bssid);
++			if (!sta) {
++				rcu_read_unlock();
++				return -EINVAL;
++			}
 +
-+		switch (status->chains) {
-+		case 0xf:
-+			status->signal = max(status->signal,
-+					     status->chain_signal[3]);
-+			/* fall through */
-+		case 0x7:
-+			status->signal = max(status->signal,
-+					     status->chain_signal[2]);
-+			/* fall through */
-+		case 0x3:
-+			status->signal = max(status->signal,
-+					     status->chain_signal[1]);
-+			break;
-+		default:
-+			break;
++			msta = (struct mt7615_sta *)sta->drv_priv;
++			tx_wlan_idx = msta->wcid.idx;
+ 			rcu_read_unlock();
+-			return -EINVAL;
+ 		}
+-
+-		msta = (struct mt7615_sta *)sta->drv_priv;
+-		tx_wlan_idx = msta->wcid.idx;
+ 		conn_type = CONNECTION_INFRA_STA;
+-
+-		rcu_read_unlock();
+ 		break;
+ 	}
+ 	default:
+@@ -782,6 +772,17 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
+ 		break;
+ 	}
+ 
++	if (en) {
++		len += sizeof(struct bss_info_omac);
++		features |= BIT(BSS_INFO_OMAC);
++		if (mvif->omac_idx > EXT_BSSID_START) {
++			len += sizeof(struct bss_info_ext_bss);
++			features |= BIT(BSS_INFO_EXT_BSS);
++			ntlv++;
 +		}
- 		rxd += 6;
- 		if ((u8 *)rxd - skb->data >= skb->len)
- 			return -EINVAL;
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.h b/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
-index 18ad4b8a3807..b00ce8db58e9 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
-@@ -98,6 +98,11 @@ enum rx_pkt_type {
- #define MT_RXV2_GROUP_ID		GENMASK(26, 21)
- #define MT_RXV2_LENGTH			GENMASK(20, 0)
- 
-+#define MT_RXV4_RCPI3			GENMASK(31, 24)
-+#define MT_RXV4_RCPI2			GENMASK(23, 16)
-+#define MT_RXV4_RCPI1			GENMASK(15, 8)
-+#define MT_RXV4_RCPI0			GENMASK(7, 0)
++		ntlv++;
++	}
 +
- enum tx_header_format {
- 	MT_HDR_FORMAT_802_3,
- 	MT_HDR_FORMAT_CMD,
+ 	buf = kzalloc(len, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
 -- 
 2.18.0
 
