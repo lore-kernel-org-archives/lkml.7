@@ -2,104 +2,63 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE39C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E5FC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 440C2215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:25:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=eikelenboom.it header.i=@eikelenboom.it header.b="RSlgjpwa"
+	by mail.kernel.org (Postfix) with ESMTP id 613C021019
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:25:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502108AbfFLQZG (ORCPT
+        id S2440248AbfFLQZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 12:25:06 -0400
-Received: from server.eikelenboom.it ([91.121.65.215]:56262 "EHLO
-        server.eikelenboom.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727337AbfFLQZG (ORCPT
+        Wed, 12 Jun 2019 12:25:15 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:37692 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437944AbfFLQZP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:25:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=eikelenboom.it; s=20180706; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ktowEjqF/CBPxhQY3pu7cziNBjpasaaInkiP4lM1ITk=; b=RSlgjpwaOad4S6Af3UpDb10U4o
-        dC7hhgdeQYuNplE4lMwObyLofK5gd7ONp6mAexVHPXXBoFTRvgqpdJmyUudt/WiPUNIj7jjICxEmj
-        IpNyVa0Nz254ZSjkoJpQjgIBcexHaR8UVvXVNPXoUZtLmlIXHUMs5NBuGuJ8gZdmoyUs=;
-Received: from ip4da85049.direct-adsl.nl ([77.168.80.73]:38718 helo=[172.16.1.50])
-        by server.eikelenboom.it with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <linux@eikelenboom.it>)
-        id 1hb63Y-0004wh-UT; Wed, 12 Jun 2019 18:25:00 +0200
-Subject: Re: [PATCH] fuse: require /dev/fuse reads to have enough buffer
- capacity (take 2)
-To:     Kirill Smelkov <kirr@nexedi.com>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>, gluster-devel@gluster.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <876aefd0-808a-bb4b-0897-191f0a8d9e12@eikelenboom.it>
- <CAJfpegvRBm3M8fUJ1Le1dPd0QSJgAWAYJGLCQKa6YLTE+4oucw@mail.gmail.com>
- <20190611202738.GA22556@deco.navytux.spb.ru>
- <CAOssrKfj-MDujX0_t_fgobL_KwpuG2fxFmT=4nURuJA=sUvYYg@mail.gmail.com>
- <20190612112544.GA21465@deco.navytux.spb.ru>
- <f31ca7b5-0c9b-5fde-6a75-967265de67c6@eikelenboom.it>
- <20190612141220.GA25389@deco.navytux.spb.ru>
-From:   Sander Eikelenboom <linux@eikelenboom.it>
-Message-ID: <f79ff13f-701b-89d8-149c-e53bb880bb77@eikelenboom.it>
-Date:   Wed, 12 Jun 2019 18:28:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190612141220.GA25389@deco.navytux.spb.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 12 Jun 2019 12:25:15 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id BCC581513DD13;
+        Wed, 12 Jun 2019 09:25:14 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 09:25:07 -0700 (PDT)
+Message-Id: <20190612.092507.915453305221203158.davem@davemloft.net>
+To:     maowenan@huawei.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        edumazet@google.com
+Subject: Re: [PATCH net v2] tcp: avoid creating multiple req socks with the
+ same tuples
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190612035715.166676-1-maowenan@huawei.com>
+References: <20190612035715.166676-1-maowenan@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 12 Jun 2019 09:25:14 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/06/2019 16:12, Kirill Smelkov wrote:
-> On Wed, Jun 12, 2019 at 03:03:49PM +0200, Sander Eikelenboom wrote:
->> On 12/06/2019 13:25, Kirill Smelkov wrote:
->>> On Wed, Jun 12, 2019 at 09:44:49AM +0200, Miklos Szeredi wrote:
->>>> On Tue, Jun 11, 2019 at 10:28 PM Kirill Smelkov <kirr@nexedi.com> wrote:
->>>>
->>>>> Miklos, would 4K -> `sizeof(fuse_in_header) + sizeof(fuse_write_in)` for
->>>>> header room change be accepted?
->>>>
->>>> Yes, next cycle.   For 4.2 I'll just push the revert.
->>>
->>> Thanks Miklos. Please consider queuing the following patch for 5.3.
->>> Sander, could you please confirm that glusterfs is not broken with this
->>> version of the check?
->>>
->>> Thanks beforehand,
->>> Kirill
->>
->>
->> Hmm unfortunately it doesn't build, see below.
->> [...]
->> fs/fuse/dev.c:1336:14: error: ‘fuse_in_header’ undeclared (first use in this function)
->>        sizeof(fuse_in_header) + sizeof(fuse_write_in) + fc->max_write))
-> 
-> Sorry, my bad, it was missing "struct" before fuse_in_header. I
-> originally compile-tested the patch with `make -j4`, was distracted onto
-> other topic and did not see the error after returning due to long tail
-> of successful CC lines. Apologize for the inconvenience. Below is a
-> fixed patch that was both compile-tested and runtime-tested with my FUSE
-> workloads (non-glusterfs).
-> 
-> Kirill
-> 
+From: Mao Wenan <maowenan@huawei.com>
+Date: Wed, 12 Jun 2019 11:57:15 +0800
 
-Just tested and it works for me, thanks !
+> diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
+> index c4503073248b..b6a1b5334565 100644
+> --- a/net/ipv4/inet_hashtables.c
+> +++ b/net/ipv4/inet_hashtables.c
+> @@ -477,6 +477,7 @@ bool inet_ehash_insert(struct sock *sk, struct sock *osk)
+>  	struct inet_ehash_bucket *head;
+>  	spinlock_t *lock;
+>  	bool ret = true;
+> +	struct sock *reqsk = NULL;
 
---
-Sander
+Please preserve the reverse christmas tree local variable ordering here.
+
+Thank you.
