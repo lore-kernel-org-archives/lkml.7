@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FADFC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21877C31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0C920896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F06B121734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731966AbfFLJ6C (ORCPT
+        id S1731979AbfFLJ6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:58:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60418 "EHLO mx1.redhat.com"
+        Wed, 12 Jun 2019 05:58:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37456 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731931AbfFLJ6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:58:01 -0400
+        id S1731963AbfFLJ6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:58:02 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 645087DD03;
-        Wed, 12 Jun 2019 09:58:00 +0000 (UTC)
-Received: from localhost.default (ovpn-116-101.phx2.redhat.com [10.3.116.101])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4D20B7836B;
+        by mx1.redhat.com (Postfix) with ESMTPS id 0508E30917AC;
         Wed, 12 Jun 2019 09:57:57 +0000 (UTC)
+Received: from localhost.default (ovpn-116-101.phx2.redhat.com [10.3.116.101])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E287E2CFA7;
+        Wed, 12 Jun 2019 09:57:53 +0000 (UTC)
 From:   Daniel Bristot de Oliveira <bristot@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -42,46 +42,97 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Baron <jbaron@akamai.com>, Scott Wood <swood@redhat.com>,
         Marcelo Tosatti <mtosatti@redhat.com>,
         Clark Williams <williams@redhat.com>, x86@kernel.org
-Subject: [PATCH V6 6/6] x86/jump_label: Batch jump label updates
-Date:   Wed, 12 Jun 2019 11:57:31 +0200
-Message-Id: <57b4caa654bad7e3b066301c9a9ae233dea065b5.1560325897.git.bristot@redhat.com>
+Subject: [PATCH V6 5/6] jump_label: Batch updates if arch supports it
+Date:   Wed, 12 Jun 2019 11:57:30 +0200
+Message-Id: <acc891dbc2dbc9fd616dd680529a2337b1d1274c.1560325897.git.bristot@redhat.com>
 In-Reply-To: <cover.1560325897.git.bristot@redhat.com>
 References: <cover.1560325897.git.bristot@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 12 Jun 2019 09:58:00 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 12 Jun 2019 09:57:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the jump label of a static key is transformed via the arch
-specific function:
+If the architecture supports the batching of jump label updates, use it!
 
-    void arch_jump_label_transform(struct jump_entry *entry,
-                                   enum jump_label_type type)
+An easy way to see the benefits of this patch is switching the
+schedstats on and off. For instance:
 
-The new approach (batch mode) uses two arch functions, the first has the
-same arguments of the arch_jump_label_transform(), and is the function:
+-------------------------- %< ----------------------------
+  #!/bin/sh
+  while [ true ]; do
+      sysctl -w kernel.sched_schedstats=1
+      sleep 2
+      sysctl -w kernel.sched_schedstats=0
+      sleep 2
+  done
+-------------------------- >% ----------------------------
 
-    bool arch_jump_label_transform_queue(struct jump_entry *entry,
-                                         enum jump_label_type type)
+while watching the IPI count:
 
-Rather than transforming the code, it adds the jump_entry in a queue of
-entries to be updated. This functions returns true in the case of a
-successful enqueue of an entry. If it returns false, the caller must to
-apply the queue and then try to queue again, for instance, because the
-queue is full.
+-------------------------- %< ----------------------------
+  # watch -n1 "cat /proc/interrupts | grep Function"
+-------------------------- >% ----------------------------
 
-This function expects the caller to sort the entries by the address before
-enqueueuing then. This is already done by the arch independent code, though.
+With the current mode, it is possible to see +- 168 IPIs each 2 seconds,
+while with this patch the number of IPIs goes to 3 each 2 seconds.
 
-After queuing all jump_entries, the function:
+Regarding the performance impact of this patch set, I made two measurements:
 
-    void arch_jump_label_transform_apply(void)
+    The time to update a key (the task that is causing the change)
+    The time to run the int3 handler (the side effect on a thread that
+                                      hits the code being changed)
 
-Applies the changes in the queue.
+The schedstats static key was chosen as the key to being switched on and off.
+The reason being is that it is used in more than 56 places, in a hot path. The
+change in the schedstats static key will be done with the following command:
+
+while [ true ]; do
+    sysctl -w kernel.sched_schedstats=1
+    usleep 500000
+    sysctl -w kernel.sched_schedstats=0
+    usleep 500000
+done
+
+In this way, they key will be updated twice per second. To force the hit of the
+int3 handler, the system will also run a kernel compilation with two jobs per
+CPU. The test machine is a two nodes/24 CPUs box with an Intel Xeon processor
+@2.27GHz.
+
+Regarding the update part, on average, the regular kernel takes 57 ms to update
+the schedstats key, while the kernel with the batch updates takes just 1.4 ms
+on average. Although it seems to be too good to be true, it makes sense: the
+schedstats key is used in 56 places, so it was expected that it would take
+around 56 times to update the keys with the current implementation, as the
+IPIs are the most expensive part of the update.
+
+Regarding the int3 handler, the non-batch handler takes 45 ns on average, while
+the batch version takes around 180 ns. At first glance, it seems to be a high
+value. But it is not, considering that it is doing 56 updates, rather than one!
+It is taking four times more, only. This gain is possible because the patch
+uses a binary search in the vector: log2(56)=5.8. So, it was expected to have
+an overhead within four times.
+
+(voice of tv propaganda) But, that is not all! As the int3 handler keeps on for
+a shorter period (because the update part is on for a shorter time), the number
+of hits in the int3 handler decreased by 10%.
+
+The question then is: Is it worth paying the price of "135 ns" more in the int3
+handler?
+
+Considering that, in this test case, we are saving the handling of 53 IPIs,
+that takes more than these 135 ns, it seems to be a meager price to be paid.
+Moreover, the test case was forcing the hit of the int3, in practice, it
+does not take that often. While the IPI takes place on all CPUs, hitting
+the int3 handler or not!
+
+For instance, in an isolated CPU with a process running in user-space
+(nohz_full use-case), the chances of hitting the int3 handler is barely zero,
+while there is no way to avoid the IPIs. By bounding the IPIs, we are improving
+a lot this scenario.
 
 Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
@@ -102,103 +153,65 @@ Cc: Clark Williams <williams@redhat.com>
 Cc: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/x86/include/asm/jump_label.h |  2 +
- arch/x86/kernel/jump_label.c      | 69 +++++++++++++++++++++++++++++++
- 2 files changed, 71 insertions(+)
+ include/linux/jump_label.h |  3 +++
+ kernel/jump_label.c        | 23 +++++++++++++++++++++++
+ 2 files changed, 26 insertions(+)
 
-diff --git a/arch/x86/include/asm/jump_label.h b/arch/x86/include/asm/jump_label.h
-index 65191ce8e1cf..06c3cc22a058 100644
---- a/arch/x86/include/asm/jump_label.h
-+++ b/arch/x86/include/asm/jump_label.h
-@@ -2,6 +2,8 @@
- #ifndef _ASM_X86_JUMP_LABEL_H
- #define _ASM_X86_JUMP_LABEL_H
- 
-+#define HAVE_JUMP_LABEL_BATCH
-+
- #define JUMP_LABEL_NOP_SIZE 5
- 
- #ifdef CONFIG_X86_64
-diff --git a/arch/x86/kernel/jump_label.c b/arch/x86/kernel/jump_label.c
-index d3328062b8cf..7391d6d90bcf 100644
---- a/arch/x86/kernel/jump_label.c
-+++ b/arch/x86/kernel/jump_label.c
-@@ -110,6 +110,75 @@ void arch_jump_label_transform(struct jump_entry *entry,
- 	mutex_unlock(&text_mutex);
+diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
+index 3e113a1fa0f1..3526c0aee954 100644
+--- a/include/linux/jump_label.h
++++ b/include/linux/jump_label.h
+@@ -215,6 +215,9 @@ extern void arch_jump_label_transform(struct jump_entry *entry,
+ 				      enum jump_label_type type);
+ extern void arch_jump_label_transform_static(struct jump_entry *entry,
+ 					     enum jump_label_type type);
++extern bool arch_jump_label_transform_queue(struct jump_entry *entry,
++					    enum jump_label_type type);
++extern void arch_jump_label_transform_apply(void);
+ extern int jump_label_text_reserved(void *start, void *end);
+ extern void static_key_slow_inc(struct static_key *key);
+ extern void static_key_slow_dec(struct static_key *key);
+diff --git a/kernel/jump_label.c b/kernel/jump_label.c
+index 2bd172e1e95f..812c7d66f339 100644
+--- a/kernel/jump_label.c
++++ b/kernel/jump_label.c
+@@ -414,6 +414,7 @@ static bool jump_label_can_update(struct jump_entry *entry, bool init)
+ 	return true;
  }
  
-+#define TP_VEC_MAX (PAGE_SIZE / sizeof(struct text_patch_loc))
-+static struct text_patch_loc tp_vec[TP_VEC_MAX];
-+int tp_vec_nr = 0;
-+
-+bool arch_jump_label_transform_queue(struct jump_entry *entry,
-+				     enum jump_label_type type)
++#ifndef HAVE_JUMP_LABEL_BATCH
+ static void __jump_label_update(struct static_key *key,
+ 				struct jump_entry *entry,
+ 				struct jump_entry *stop,
+@@ -425,6 +426,28 @@ static void __jump_label_update(struct static_key *key,
+ 		}
+ 	}
+ }
++#else
++static void __jump_label_update(struct static_key *key,
++				struct jump_entry *entry,
++				struct jump_entry *stop,
++				bool init)
 +{
-+	struct text_patch_loc *tp;
-+	void *entry_code;
++	for (; (entry < stop) && (jump_entry_key(entry) == key); entry++) {
 +
-+	if (system_state == SYSTEM_BOOTING) {
-+		/*
-+		 * Fallback to the non-batching mode.
-+		 */
-+		arch_jump_label_transform(entry, type);
-+		return true;
++		if (!jump_label_can_update(entry, init))
++			continue;
++
++		if (!arch_jump_label_transform_queue(entry, jump_label_type(entry))) {
++			/*
++			 * Queue is full: Apply the current queue and try again.
++			 */
++			arch_jump_label_transform_apply();
++			BUG_ON(!arch_jump_label_transform_queue(entry, jump_label_type(entry)));
++		}
 +	}
-+
-+	/*
-+	 * No more space in the vector, tell upper layer to apply
-+	 * the queue before continuing.
-+	 */
-+	if (tp_vec_nr == TP_VEC_MAX)
-+		return false;
-+
-+	tp = &tp_vec[tp_vec_nr];
-+
-+	entry_code = (void *)jump_entry_code(entry);
-+
-+	/*
-+	 * The int3 handler will do a bsearch in the queue, so we need entries
-+	 * to be sorted. We can survive an unsorted list by rejecting the entry,
-+	 * forcing the generic jump_label code to apply the queue. Warning once,
-+	 * to raise the attention to the case of an unsorted entry that is
-+	 * better not happen, because, in the worst case we will perform in the
-+	 * same way as we do without batching - with some more overhead.
-+	 */
-+	if (tp_vec_nr > 0) {
-+		int prev = tp_vec_nr - 1;
-+		struct text_patch_loc *prev_tp = &tp_vec[prev];
-+
-+		if (WARN_ON_ONCE(prev_tp->addr > entry_code))
-+			return false;
-+	}
-+
-+	__jump_label_set_jump_code(entry, type,
-+				   (union jump_code_union *) &tp->opcode, 0);
-+
-+	tp->addr = entry_code;
-+	tp->detour = entry_code + JUMP_LABEL_NOP_SIZE;
-+	tp->len = JUMP_LABEL_NOP_SIZE;
-+
-+	tp_vec_nr++;
-+
-+	return true;
++	arch_jump_label_transform_apply();
 +}
-+
-+void arch_jump_label_transform_apply(void)
-+{
-+	if (!tp_vec_nr)
-+		return;
-+
-+	mutex_lock(&text_mutex);
-+	text_poke_bp_batch(tp_vec, tp_vec_nr);
-+	mutex_unlock(&text_mutex);
-+
-+	tp_vec_nr = 0;
-+}
-+
- static enum {
- 	JL_STATE_START,
- 	JL_STATE_NO_UPDATE,
++#endif
+ 
+ void __init jump_label_init(void)
+ {
 -- 
 2.20.1
 
