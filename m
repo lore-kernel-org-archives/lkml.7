@@ -2,179 +2,125 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF118C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0185CC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E37208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC0B3215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:26:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sY3xBWdH"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="w5d1TU14"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407701AbfFLRZG (ORCPT
+        id S2409538AbfFLR0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 13:25:06 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:32932 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407329AbfFLRZF (ORCPT
+        Wed, 12 Jun 2019 13:26:53 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39935 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407690AbfFLR0w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 13:25:05 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k187so8786120pga.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 10:25:05 -0700 (PDT)
+        Wed, 12 Jun 2019 13:26:52 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v18so15812161ljh.6
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 10:26:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=psJpbPCxhcOIVS0VxFu9jSQkVNPb46vsQ50rVBDku0E=;
-        b=sY3xBWdHj5p/R7MgELA6Nw35UkFCSHEvAjuwpVWNpZTDLJP1F9V7WAdZUMsS//VMsq
-         vty9Qdz6v/0MFbVE5QIDPckf0UGTeFUb+VITM7+1Bv9r86tXA7C1ZpIqTfnJemClpYcl
-         TM/vMw7enq1aNbeOoRm/+f3FIO1juubW1jkdIAI4vgSZ/0KuveFr+oKW3lgG8yHBB8l/
-         0YyQrPjfTKH6gsrboxY73wAjmYa4qemfPaee8UA96Lo6bK1/evx/RruVEVh8tM5GcHZf
-         axL7aeioREE9VvB3Tk149KI9kut8vvtcNhXoLHbjGXeOeTd04CCP79EFjl8bv72tRESZ
-         cmMw==
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z/wD0QJ9RiffS4UzglPccxwbPf6d8Ks2XdoeuHLmBXs=;
+        b=w5d1TU14lrrj3HnnDDQnOEVkkcfWbBYc25cgBf5VCq3WlJPM/3lH8Dc2z7+CywYv91
+         bitBEBToOHg/te9pzmS0UINedWbYyLD06OVQZYGI8XIAVcL3z1DNSkFA5+nuS+dgolja
+         Trv4Nm9jbbqEcSLXVcnokHkneU4+vsAR4FEBw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=psJpbPCxhcOIVS0VxFu9jSQkVNPb46vsQ50rVBDku0E=;
-        b=WHUKfdgXMWrQ6JM8RJsPjq6tUyv0mkiVn6zYI0u4bSsLLpHjhhuSnApyQFqrvmKGWZ
-         ZBWffs/gC+Elw1Up4ZPBgynA9MG52FxntC5YV4cFYOfB/+iTv6rRh9GpmBtzs8NLq55I
-         qBs9DlmLkf0FuCYt/v7Tuqni0hfMSVW59uzz4OCxCJGd4rPCSLmJtyaf5FODnFPUPQ/H
-         wTIVnx3tBokDTwHgFbM/LsUEUmQ53+tyO2y0AbBEejAUjdyfUaFFLohG6H83plYSrYKI
-         PjVVvH0OJsq6M1z7efbL9nVs8n/bATUA5/LffFyjFcrhky7J/Z01PYAHN68h9KB0mOTe
-         sUMQ==
-X-Gm-Message-State: APjAAAUMg2NsTXxGg2+fzcy4ATa5xkBirxCtQ1Fd1jBrp9/hufc9eabX
-        raqScTzqMNwKT5Rs31bMRhiYcQ==
-X-Google-Smtp-Source: APXvYqxDGWZ70XddNBdPLPLyIeL4KDxzjTZP1ZVe0SFGGd56LwNcKoDNBTMCI4/+A1NgAhbBTn87mA==
-X-Received: by 2002:a63:1a59:: with SMTP id a25mr822363pgm.173.1560360304569;
-        Wed, 12 Jun 2019 10:25:04 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f7sm153313pfd.43.2019.06.12.10.25.03
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 10:25:03 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 10:25:01 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH] phy: qcom-qmp: Correct READY_STATUS poll break condition
-Message-ID: <20190612172501.GY4814@minitux>
-References: <20190604232443.3417-1-bjorn.andersson@linaro.org>
- <619d2559-6d88-e795-76e0-3078236933ef@free.fr>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z/wD0QJ9RiffS4UzglPccxwbPf6d8Ks2XdoeuHLmBXs=;
+        b=M594tUIWvQmg5HwTfCTS2WEh3dekWqsYgmAEqu2+f2OGduT9wkl3QZYPSRnfYa6DRo
+         xO2B2XtIA0tCdDTwV32UkEloYGMEjZPA67sDgCn2+q5dgTIQ+nFkui9+6B2nhuQVOfj4
+         T6XrFL0NS7mbP/gnWXrbZdTj57RVRsSs5q74m5OvQ9Q0OPPCRppXj2vv/NOo6ri1CYB4
+         BBflN+8QXzwWgcB6xmHuDaFDRxDRyUQuzOjsggumwjQvFv7EkOfC7MThcRBtLRZ9Lk8s
+         +G6qU/V+8U3XOK8nKq+vc+IQjUhZB+yUiP5IhfUndcDTeBJGK7tbfhwYl+ztrUkbC0De
+         DPmg==
+X-Gm-Message-State: APjAAAUCyOiZaiRL3NgI385yRT6wXXb13v0crd4VNVpsRUmNKv9Iej5U
+        8FVHreizY3Om99sKu9cGG6Pi+ISA6UbbsDQd5TM1fg==
+X-Google-Smtp-Source: APXvYqxwBbbf2tchhGee7G+BUcoLVr9gIao9rlePNt1eVtRJzm0B8Rh8KeE9uvRZV56v3hZvGI+ucGuZ1HdNBOt6cYU=
+X-Received: by 2002:a2e:50e:: with SMTP id 14mr25364375ljf.5.1560360410333;
+ Wed, 12 Jun 2019 10:26:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <619d2559-6d88-e795-76e0-3078236933ef@free.fr>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190612153513.GA21082@kroah.com> <20190612165819.GA123863@google.com>
+ <20190612171026.GB6986@kroah.com>
+In-Reply-To: <20190612171026.GB6986@kroah.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Wed, 12 Jun 2019 13:26:38 -0400
+Message-ID: <CAEXW_YRyUc6Wavf8CrQtVZ4izkEQei4XDqu4BYfJDCAt+YG1bg@mail.gmail.com>
+Subject: Re: [PATCH] lib: debugobjects: no need to check return value of
+ debugfs_create functions
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Qian Cai <cai@gmx.us>, Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Waiman Long <longman@redhat.com>,
+        Zhong Jiang <zhongjiang@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 12 Jun 09:24 PDT 2019, Marc Gonzalez wrote:
+On Wed, Jun 12, 2019 at 1:10 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Jun 12, 2019 at 12:58:19PM -0400, Joel Fernandes wrote:
+> > On Wed, Jun 12, 2019 at 05:35:13PM +0200, Greg Kroah-Hartman wrote:
+> > > When calling debugfs functions, there is no need to ever check the
+> > > return value.  The function can work or not, but the code logic should
+> > > never do something different based on this.
+> > >
+> > > Cc: Qian Cai <cai@gmx.us>
+> > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > Cc: Waiman Long <longman@redhat.com>
+> > > Cc: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+> > > Cc: Zhong Jiang <zhongjiang@huawei.com>
+> > > Cc: linux-kernel@vger.kernel.org
+> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > ---
+> > >  lib/debugobjects.c | 14 ++------------
+> > >  1 file changed, 2 insertions(+), 12 deletions(-)
+> > >
+> > > diff --git a/lib/debugobjects.c b/lib/debugobjects.c
+> > > index 55437fd5128b..2ac42286cd08 100644
+> > > --- a/lib/debugobjects.c
+> > > +++ b/lib/debugobjects.c
+> > > @@ -850,26 +850,16 @@ static const struct file_operations debug_stats_fops = {
+> > >
+> > >  static int __init debug_objects_init_debugfs(void)
+> > >  {
+> > > -   struct dentry *dbgdir, *dbgstats;
+> > > +   struct dentry *dbgdir;
+> > >
+> > >     if (!debug_objects_enabled)
+> > >             return 0;
+> > >
+> > >     dbgdir = debugfs_create_dir("debug_objects", NULL);
+> > > -   if (!dbgdir)
+> > > -           return -ENOMEM;
+> > >
+> > > -   dbgstats = debugfs_create_file("stats", 0444, dbgdir, NULL,
+> > > -                                  &debug_stats_fops);
+> > > -   if (!dbgstats)
+> > > -           goto err;
+> > > +   debugfs_create_file("stats", 0444, dbgdir, NULL, &debug_stats_fops);
+> >
+> >
+> > One weirdness is, if dbgdir is ever NULL, then debugfs_create_file() may end
+> > up creating the stats file in the root.
+>
+> Yes, but dbgdir can not be NULL.
 
-> On 05/06/2019 01:24, Bjorn Andersson wrote:
-> 
-> > After issuing a PHY_START request to the QMP, the hardware documentation
-> > states that the software should wait for the PCS_READY_STATUS to become
-> > 1.
-> > 
-> > With the introduction of c9b589791fc1 ("phy: qcom: Utilize UFS reset
-> > controller") an additional 1ms delay was introduced between the start
-> > request and the check of the status bit. This greatly increases the
-> > chances for the hardware to actually becoming ready before the status
-> > bit is read.
-> > 
-> > The result can be seen in that UFS PHY enabling is now reported as a
-> > failure in 10% of the boots on SDM845, which is a clear regression from
-> > the previous rare/occasional failure.
-> > 
-> > This patch fixes the "break condition" of the poll to check for the
-> > correct state of the status bit.
-> > 
-> > Unfortunately PCIe on 8996 and 8998 does not specify the mask_pcs_ready
-> > register, which means that the code checks a bit that's always 0. So the
-> > patch also fixes these, in order to not regress these targets.
-> > 
-> > Cc: stable@vger.kernel.org
-> > Cc: Evan Green <evgreen@chromium.org>
-> > Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> > Cc: Vivek Gautam <vivek.gautam@codeaurora.org>
-> > Fixes: 73d7ec899bd8 ("phy: qcom-qmp: Add msm8998 PCIe QMP PHY support")
-> > Fixes: e78f3d15e115 ("phy: qcom-qmp: new qmp phy driver for qcom-chipsets")
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> > 
-> > @Kishon, this is a regression spotted in v5.2-rc1, so please consider applying
-> > this towards v5.2.
-> > 
-> >  drivers/phy/qualcomm/phy-qcom-qmp.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> > index cd91b4179b10..43abdfd0deed 100644
-> > --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> > +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> > @@ -1074,6 +1074,7 @@ static const struct qmp_phy_cfg msm8996_pciephy_cfg = {
-> >  
-> >  	.start_ctrl		= PCS_START | PLL_READY_GATE_EN,
-> >  	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
-> > +	.mask_pcs_ready		= PHYSTATUS,
-> >  	.mask_com_pcs_ready	= PCS_READY,
-> >  
-> >  	.has_phy_com_ctrl	= true,
-> > @@ -1253,6 +1254,7 @@ static const struct qmp_phy_cfg msm8998_pciephy_cfg = {
-> >  
-> >  	.start_ctrl             = SERDES_START | PCS_START,
-> >  	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
-> > +	.mask_pcs_ready		= PHYSTATUS,
-> >  	.mask_com_pcs_ready	= PCS_READY,
-> >  };
-> >  
-> > @@ -1547,7 +1549,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
-> >  	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
-> >  	mask = cfg->mask_pcs_ready;
-> >  
-> > -	ret = readl_poll_timeout(status, val, !(val & mask), 1,
-> > +	ret = readl_poll_timeout(status, val, val & mask, 1,
-> >  				 PHY_INIT_COMPLETE_TIMEOUT);
-> >  	if (ret) {
-> >  		dev_err(qmp->dev, "phy initialization timed-out\n");
-> 
-> Your patch made me realize that:
-> msm8998_pciephy_cfg.has_phy_com_ctrl = false
-> thus
-> msm8998_pciephy_cfg.mask_com_pcs_ready is useless, AFAICT.
-> 
+Makes sense, thanks for clarification,
 
-While 8998 has a COM block, it does (among other things) not have a
-ready bit. So afaict has_phy_com_ctrl = false is correct.
-
-The addition of mask_pcs_ready is part of resolving the regression in
-5.2, so I suggest that we remove mask_com_pcs_ready separately.
-
-> (I copied msm8996_pciephy_cfg for msm8998_pciephy_cfg)
-> 
-> Does msm8996_pciephy_cfg really need both mask_pcs_ready AND
-> mask_com_pcs_ready?
-> 
-
-8996 has a COM block and it contains both the control bits and the
-status bits, so that looks correct.
-
-> I'll test your patch tomorrow.
-> 
-
-I appreciate that.
-
-Thanks,
-Bjorn
+- Joel
