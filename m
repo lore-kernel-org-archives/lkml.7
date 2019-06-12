@@ -2,140 +2,96 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AFAC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D667AC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE8821019
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D17C21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:54:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xgxAHv9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440145AbfFLPxP (ORCPT
+        id S1729109AbfFLPyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:53:15 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46846 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409452AbfFLPxP (ORCPT
+        Wed, 12 Jun 2019 11:54:15 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34861 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfFLPyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:53:15 -0400
-Received: from turingmachine.home (unknown [IPv6:2804:431:d719:d9b5:d711:794d:1c68:5ed3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tonyk)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0E7D52808F4;
-        Wed, 12 Jun 2019 16:53:10 +0100 (BST)
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-        kernel@collabora.com, akpm@linux-foundation.org,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-Subject: [PATCH v2 2/2] docs: kmemleak: add more documentation details
-Date:   Wed, 12 Jun 2019 12:52:31 -0300
-Message-Id: <20190612155231.19448-2-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190612155231.19448-1-andrealmeid@collabora.com>
-References: <20190612155231.19448-1-andrealmeid@collabora.com>
+        Wed, 12 Jun 2019 11:54:15 -0400
+Received: by mail-pg1-f193.google.com with SMTP id s27so9152720pgl.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 08:54:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=dk7iIfVemqp1qY21HX0k9m6z8Gfm7pIDU7ArSW1lF8A=;
+        b=xgxAHv9PF8NhuGiJryzFh11JsxLEP0bY4ROwPF8j0vMIqevh3bdvpJnI2LOeuZl7Rl
+         7YUEftyKnrQ7Lrfryz0W36tsBRJZ4rA81eA2mKmNjYzf5jjPCbthA4ePLT3TKJslkb9Y
+         7lyT0xFlNyOpwdSJZcZRfhDxAFjwnHJromrcO5Xwb7H8G7cqMh9SIuZJI0MIIGMi2OCq
+         uReLi8ldAXbKK+coXFPHBKOu4yGUX0kaAYGZLno0Cz4rXDxUkcm6clvKxYEV+9D6z7Gs
+         d9UQZaTg45KVMLnKVMl5l595EEZaKZmYLv++9v3tonm5uJ6vSNs9LuW5fDKdFxTNner1
+         8z5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=dk7iIfVemqp1qY21HX0k9m6z8Gfm7pIDU7ArSW1lF8A=;
+        b=B2hi93dIqvjyRw7mnHMruRAGOo2HjaGK5VYCtg5H34+d/bxGMWmuXeboZGrwbXR2aO
+         y2KLtzhzlr7hrx56OgpIcJRQ+ZzpLHRJFp0cqWMkkVOeuRgegnEd2gt0UcEhlVuNahLW
+         V/kgZlKUx/x/JuiPcFyRMBF6H/9hQ2l9D4+MwsMCIzI05yS1cDBlXlZWJ3oEj9W0DSIb
+         pkBjuubnbvmswX5fUxWj5bO6XO1I7+we8XES6nQ3It3rb4dpH7WfkCOfnjCk744NuTSK
+         ZHztvqApOJ197NtsGeljF8ADSMGe9vzBy/5U/1TWkguQ0PppjoQtTu/RmIricPA+I69q
+         jwYA==
+X-Gm-Message-State: APjAAAXWEYZCJo8eJumouIcTNJdNt0RAbprk8G9pGXzyrNQNgF0gZIgX
+        ZjVpfpPs9uVGBsQfiH4y/8cXB9xchdvU6w==
+X-Google-Smtp-Source: APXvYqw2Ko/nufD2xW1ZxC799E9vrB2BlLdKlWf43KzA5IEoAbjRBaopeHab8jUS0oB064lDw6WKcQ==
+X-Received: by 2002:a63:4a1f:: with SMTP id x31mr15786976pga.150.1560354854729;
+        Wed, 12 Jun 2019 08:54:14 -0700 (PDT)
+Received: from davidb.org (cn-co-b07400e8c3-142422-1.tingfiber.com. [64.98.48.55])
+        by smtp.gmail.com with ESMTPSA id l21sm1115pff.40.2019.06.12.08.54.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 08:54:14 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 09:54:11 -0600
+From:   David Brown <david.brown@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] Remove myself as qcom maintainer
+Message-ID: <20190612155411.GA28186@davidb.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wikipedia now has a main article to "tracing garbage collector" topic.
-Change the URL and use the reStructuredText syntax for hyperlinks and add
-more details about the use of the tool. Add a section about how to use
-the kmemleak-test module to test the memory leak scanning.
+I no longer regularly work on this platform, and only have a few
+increasingly outdated boards.  Andy has primarily been doing the
+maintenance.
 
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
+Signed-off-by: David Brown <david.brown@linaro.org>
 ---
-Changes in v2: none
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
 
- Documentation/dev-tools/kmemleak.rst | 48 +++++++++++++++++++++++++---
- 1 file changed, 44 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/dev-tools/kmemleak.rst b/Documentation/dev-tools/kmemleak.rst
-index e6f51260ff32..3621cd5e1eef 100644
---- a/Documentation/dev-tools/kmemleak.rst
-+++ b/Documentation/dev-tools/kmemleak.rst
-@@ -2,8 +2,8 @@ Kernel Memory Leak Detector
- ===========================
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 57f496cff999..27df8f46a283 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2050,7 +2050,6 @@ S:	Maintained
  
- Kmemleak provides a way of detecting possible kernel memory leaks in a
--way similar to a tracing garbage collector
--(https://en.wikipedia.org/wiki/Garbage_collection_%28computer_science%29#Tracing_garbage_collectors),
-+way similar to a `tracing garbage collector
-+<https://en.wikipedia.org/wiki/Tracing_garbage_collection>`_,
- with the difference that the orphan objects are not freed but only
- reported via /sys/kernel/debug/kmemleak. A similar method is used by the
- Valgrind tool (``memcheck --leak-check``) to detect the memory leaks in
-@@ -15,10 +15,13 @@ Usage
- 
- CONFIG_DEBUG_KMEMLEAK in "Kernel hacking" has to be enabled. A kernel
- thread scans the memory every 10 minutes (by default) and prints the
--number of new unreferenced objects found. To display the details of all
--the possible memory leaks::
-+number of new unreferenced objects found. If the ``debugfs`` isn't already
-+mounted, mount with::
- 
-   # mount -t debugfs nodev /sys/kernel/debug/
-+
-+To display the details of all the possible scanned memory leaks::
-+
-   # cat /sys/kernel/debug/kmemleak
- 
- To trigger an intermediate memory scan::
-@@ -72,6 +75,9 @@ If CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF are enabled, the kmemleak is
- disabled by default. Passing ``kmemleak=on`` on the kernel command
- line enables the function. 
- 
-+If you are getting errors like "Error while writing to stdout" or "write_loop:
-+Invalid argument", make sure kmemleak is properly enabled.
-+
- Basic Algorithm
- ---------------
- 
-@@ -218,3 +224,37 @@ the pointer is calculated by other methods than the usual container_of
- macro or the pointer is stored in a location not scanned by kmemleak.
- 
- Page allocations and ioremap are not tracked.
-+
-+Testing with kmemleak-test
-+--------------------------
-+
-+To check if you have all set up to use kmemleak, you can use the kmemleak-test
-+module, a module that deliberately leaks memory. Set CONFIG_DEBUG_KMEMLEAK_TEST
-+as module (it can't be used as bult-in) and boot the kernel with kmemleak
-+enabled. Load the module and perform a scan with::
-+
-+        # modprobe kmemleak-test
-+        # echo scan > /sys/kernel/debug/kmemleak
-+
-+Note that the you may not get results instantly or on the first scanning. When
-+kmemleak gets results, it'll log ``kmemleak: <count of leaks> new suspected
-+memory leaks``. Then read the file to see then::
-+
-+        # cat /sys/kernel/debug/kmemleak
-+        unreferenced object 0xffff89862ca702e8 (size 32):
-+          comm "modprobe", pid 2088, jiffies 4294680594 (age 375.486s)
-+          hex dump (first 32 bytes):
-+            6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkkkkkkkkk
-+            6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b a5  kkkkkkkkkkkkkkk.
-+          backtrace:
-+            [<00000000e0a73ec7>] 0xffffffffc01d2036
-+            [<000000000c5d2a46>] do_one_initcall+0x41/0x1df
-+            [<0000000046db7e0a>] do_init_module+0x55/0x200
-+            [<00000000542b9814>] load_module+0x203c/0x2480
-+            [<00000000c2850256>] __do_sys_finit_module+0xba/0xe0
-+            [<000000006564e7ef>] do_syscall_64+0x43/0x110
-+            [<000000007c873fa6>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-+        ...
-+
-+Removing the module with ``rmmod kmemleak_test`` should also trigger some
-+kmemleak results.
+ ARM/QUALCOMM SUPPORT
+ M:	Andy Gross <agross@kernel.org>
+-M:	David Brown <david.brown@linaro.org>
+ L:	linux-arm-msm@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/soc/qcom/
 -- 
-2.22.0
+2.21.0
 
