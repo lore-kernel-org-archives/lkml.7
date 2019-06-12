@@ -2,110 +2,126 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E86C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DCBC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 271C320684
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:12:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ulhd5qz+"
+	by mail.kernel.org (Postfix) with ESMTP id 4DCA320684
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 19:12:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbfFLTM2 (ORCPT
+        id S1728322AbfFLTMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 12 Jun 2019 15:12:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59198 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728147AbfFLTM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Jun 2019 15:12:28 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37380 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbfFLTM2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 15:12:28 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t76so12532099oih.4;
-        Wed, 12 Jun 2019 12:12:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sfLPcL25crERXrHmndKdN43HIkrSYCz0GOmOHCLrbTE=;
-        b=ulhd5qz+prqvRTlbEb33O83a8dJZJItyzAOFrAUu3qDrKHWht7BK1Pz0cTuQ3rlOot
-         2oxjZoPmXhooSS9W7VtVDWGm1BFzamAwNbSSfjM/pXF04rZ4meJ8D10Dq6X9o86cXgho
-         mc4iWqGCqZX/6AWPmo5M4+dnUBaHr685eYyUmxN/pQzfPI1qXJqqlG9EiE6ynSEJOmbb
-         WKm73I+W83G1gtEckWP4i0LOeq/CZ8kegVEBEvQeCH0dtHAVCVYGcM4cYLzfZIyGI75b
-         2yPqbQPEtDTGqt2i9ZMpliCmi4PWVK0DWXL+iuP9yfoUszCtj9oyO/1tqJctfeyjc1Il
-         vkkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sfLPcL25crERXrHmndKdN43HIkrSYCz0GOmOHCLrbTE=;
-        b=o/nd9SShCNgWootFhu7x80Eo99CpCWnyPdM47ezIoSjOvcMTWGO1lc8aI0yEvxFiqZ
-         qwkPp8t8A6oSpETOuNvuGtD+iZC2o3xzhK7rYnDF5ZLkywA0p0EPzGw41eIkrjG/k7qf
-         QYdAuZUibetQvoRenAXQKYN2RrejSS0fHEJvn3t2R3i8bjg6c2uRCTWdR7gquE4V5JGB
-         DK2uafAJds4z7ZBE0JolKDG4SqMHYeOK4pIyzZVud4eemqwPXZ8UpHcFdn9jZ2lxy5If
-         u7PLMTj4cTKDRF8jIKrAoN2rikfC7hpWg+beaG6ksSC75oRUELtZzNdwu5kcUd3TjiMb
-         czGA==
-X-Gm-Message-State: APjAAAUmDV2MvQTV2O+dmc3XbAR92QSEYQLQotSFmlCiMqMMpiT30Si6
-        h/KiRhOdM69W9PG1Zah6cwgcWsD/BizCTOxvJLA=
-X-Google-Smtp-Source: APXvYqy1dUlZ1GjSxaAhR2GBYxG+eBb73qatzfmqC3RzvvJ0mVsraiypMKNRkXEumiF39w8vn4DIrw2Km7vMogL4Qho=
-X-Received: by 2002:aca:4ad2:: with SMTP id x201mr501939oia.129.1560366747250;
- Wed, 12 Jun 2019 12:12:27 -0700 (PDT)
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 323497FDF0;
+        Wed, 12 Jun 2019 19:12:23 +0000 (UTC)
+Received: from x1.home (ovpn-116-190.phx2.redhat.com [10.3.116.190])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8E8AC1001B13;
+        Wed, 12 Jun 2019 19:12:22 +0000 (UTC)
+Date:   Wed, 12 Jun 2019 13:12:22 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+Cc:     sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keith.busch@intel.com, mike.campin@intel.com,
+        KarimAllah Ahmed <karahmed@amazon.de>
+Subject: Re: [PATCH v2 1/1] PCI/IOV: Fix incorrect cfg_size for VF > 0
+Message-ID: <20190612131222.56f99944@x1.home>
+In-Reply-To: <20190612190303.GA29348@otc-nc-03>
+References: <20190612170647.43220-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+        <20190612121910.231368e2@x1.home>
+        <0b21c76e-53f3-c35e-cebf-00719e451b11@linux.intel.com>
+        <20190612125817.42909d83@x1.home>
+        <20190612190303.GA29348@otc-nc-03>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20190611135842.8396-1-narmstrong@baylibre.com>
- <CAFBinCAkwjf9oDV6AGPi2PzzQ2KNTXXDHW6FTfN3kXpDT6cFpg@mail.gmail.com> <8950adde-0942-5f04-0ce6-922a9886c440@baylibre.com>
-In-Reply-To: <8950adde-0942-5f04-0ce6-922a9886c440@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 12 Jun 2019 21:12:16 +0200
-Message-ID: <CAFBinCBaBBv1buJ=U022GyHN+UJdfA+DC0t7wkSEt5aqvjdG-g@mail.gmail.com>
-Subject: Re: [PATCH] usb: dwc3: meson-g12a: Add support for IRQ based OTG switching
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     balbi@kernel.org, linux-amlogic@lists.infradead.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 12 Jun 2019 19:12:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+On Wed, 12 Jun 2019 12:03:03 -0700
+"Raj, Ashok" <ashok.raj@intel.com> wrote:
 
-On Wed, Jun 12, 2019 at 5:13 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
-[...]
-> >> @@ -436,6 +452,19 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
-> >>         /* Get dr_mode */
-> >>         priv->otg_mode = usb_get_dr_mode(dev);
-> >>
-> >> +       if (priv->otg_mode == USB_DR_MODE_OTG) {
-> >> +               /* Ack irq before registering */
-> >> +               regmap_update_bits(priv->regmap, USB_R5,
-> >> +                                  USB_R5_ID_DIG_IRQ, 0);
-> > I assume that either the IRQ line is:
-> > - always enabled
-> > - enabled when (USB_R5_ID_DIG_EN_0 | USB_R5_ID_DIG_EN_1 |
-> > USB_R5_ID_DIG_TH_MASK) are set (which we already do in
-> > dwc3_meson_g12a_usb_init)
->
-> Can't say... I suspect the (USB_R5_ID_DIG_EN_0 | USB_R5_ID_DIG_EN_1 |
-> > USB_R5_ID_DIG_TH_MASK) enables the detection.
-> The regmap_update_bits(USB_R5_ID_DIG_IRQ) is only here to make sure the "current"
-> irq event is masked, whatever the previous init.
->
-> Or I misunderstood question ?
-that perfectly answers my question - thank you!
+> On Wed, Jun 12, 2019 at 12:58:17PM -0600, Alex Williamson wrote:
+> > On Wed, 12 Jun 2019 11:41:36 -0700
+> > sathyanarayanan kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > wrote:
+> >   
+> > > On 6/12/19 11:19 AM, Alex Williamson wrote:  
+> > > > On Wed, 12 Jun 2019 10:06:47 -0700
+> > > > sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > >    
+> > > >> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > >>
+> > > >> Commit 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for
+> > > >> other VFs") calculates and caches the cfg_size for VF0 device before
+> > > >> initializing the pcie_cap of the device which results in using incorrect
+> > > >> cfg_size for all VF devices > 0. So set pcie_cap of the device before
+> > > >> calculating the cfg_size of VF0 device.
+> > > >>
+> > > >> Fixes: 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for
+> > > >> other VFs")
+> > > >> Cc: Ashok Raj <ashok.raj@intel.com>
+> > > >> Suggested-by: Mike Campin <mike.campin@intel.com>
+> > > >> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > >> ---
+> > > >>
+> > > >> Changes since v1:
+> > > >>   * Fixed a typo in commit message.
+> > > >>
+> > > >>   drivers/pci/iov.c | 1 +
+> > > >>   1 file changed, 1 insertion(+)
+> > > >>
+> > > >> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > > >> index 3aa115ed3a65..2869011c0e35 100644
+> > > >> --- a/drivers/pci/iov.c
+> > > >> +++ b/drivers/pci/iov.c
+> > > >> @@ -160,6 +160,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+> > > >>   	virtfn->device = iov->vf_device;
+> > > >>   	virtfn->is_virtfn = 1;
+> > > >>   	virtfn->physfn = pci_dev_get(dev);
+> > > >> +	virtfn->pcie_cap = pci_find_capability(virtfn, PCI_CAP_ID_EXP);
+> > > >>   
+> > > >>   	if (id == 0)
+> > > >>   		pci_read_vf_config_common(virtfn);    
+> > > > Why not re-order until after we've setup pcie_cap?
+> > > >
+> > > > https://lore.kernel.org/linux-pci/20190604143617.0a226555@x1.home/T/#    
+> > > 
+> > > pci_read_vf_config_common() also caches values for properties like 
+> > > class, hdr_type, susbsystem_vendor/device. These values are read/used in 
+> > > pci_setup_device(). So if we can use cached values in 
+> > > pci_setup_device(), we don't have to read them from registers twice for 
+> > > each device.  
+> > 
+> > Sorry, I missed that dependency, a bit too subtle.  It's still pretty
+> > ugly that pci_setup_device()->set_pcie_port_type() is the canonical
+> > location for setting pcie_cap and now we need to kludge it earlier.
+> > What about the question in the self follow-up to my patch in the link
+> > above, can we simply assume 4K config space on a VF?  Thanks,  
+> 
+> There should be no issue simply reading them once? I don't know
+> what that exact optimization saves, unless some broken VFs didn't
+> actually expose all the capabilities in config space and this happens
+> to workaround the problem.
 
-> >
-> >> +               irq = platform_get_irq(pdev, 0);
-> > do we need to check the IRQ before trying to request it?
-> > drivers/gpu/drm/meson/meson_dw_hdmi.c and drivers/usb/dwc3/host.c for
-> > example error out if irq number is lower than 0
->
-> No, devm_request_threaded_irq() will fail if -1 is given, I've using this scheme
-> for a while now !
-OK, it wasn't obvious to me when I looked at devm_request_threaded_irq.
-thank you for clarifying this
+AIUI the original commit only saves us a few config space reads for VFs
+after the first where we test that extended config space is available
+and not simply an alias of standard config space.  Thanks,
 
-
-Martin
+Alex
