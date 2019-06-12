@@ -7,70 +7,70 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C1EC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF72C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53070207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B7C207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:41:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v9c3s1/A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s4x/t4m1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437663AbfFLJlg (ORCPT
+        id S2437672AbfFLJlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:41:36 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40273 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437298AbfFLJlf (ORCPT
+        Wed, 12 Jun 2019 05:41:46 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46916 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406059AbfFLJlq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:41:35 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v19so5783800wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 02:41:34 -0700 (PDT)
+        Wed, 12 Jun 2019 05:41:46 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n4so16082750wrw.13
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 02:41:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=GbyCcP0P6CtvOUhdOB2kGSjXvxXCXy0VBA/B3vFhrYM=;
-        b=v9c3s1/Ac06DyH1iUKtg7MdnBEsehlR5I0sut5tbdZ8qlsFcfAmYKJU8KJQcu5o5Lb
-         y42upQrN3qOS0CtmlPoFSNambsDTHhzG9C/L8/PHIKCMqTiLdEvEWcQx4diMP0k0uswh
-         JKRA9sj9V1Vavijyu3+LKDhUFhhWqI4a9zV4VSKgsc8gqNt95OyZgrpV8Cvp5nCajLjK
-         eS/6zB6jAo2ApKcWPq5YRF0LYXhGfdOzfRy8uly0VYPQ5Hw3XxHaFDaNhBTi31ucaJtf
-         5fGm3zRfxAJqZ2IFlRngUk+yQgB+RWOU7mk8scPoJfyPmV3GmXzYYsWCSGqVqWsRLKWE
-         3lPQ==
+        bh=DjwvTNI/CdJpPRhUaL8QOE53B9cqUtgqTen6I5hJkuI=;
+        b=s4x/t4m1Bv3JIF78+tmkQNOT/deiMfzEpipdoQhG2GclFb+x8Xoyh2T5CTQ2shXxAA
+         OX1jQtq/3E/xHZrUUrIFX/AyZt9ztwKkZNKjQrl+7dxhwZ36m2Oo9n6zUMfzWkvQ2jio
+         14Grqt/yrRY90POB4j5SApoWtQHH+dKxcNAXYyo79iBFIBJZhRfKOdm4yEvRPacKkd0o
+         Jq4VXyv5BhfIxcaj43cAaIkDoJM3KdhafzzJrivIsZ84Tvy2IeLmUgmTY3Kg9ZRY1KH9
+         5KYUE7Pl0mpk6I/QCbZ07u5WGZzzWS+hzKI9P4t1gz8rhBEipSIaB3bkJEz9VJu5ASUN
+         VYqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=GbyCcP0P6CtvOUhdOB2kGSjXvxXCXy0VBA/B3vFhrYM=;
-        b=MM2GFvZeKapdp6gv0F+9NalzOvLnD9JMiejjvHhmb8LEs6GFMSSgv78BTrgEyNfJjy
-         eekyw2ILyQtWcklAsKY9pwEalSrS5sHF/w+FAlwT8s9GY4Wkl4NECesM4n9+y+KEm5OT
-         ajjDciySes+RioLUM2pSaABolBwKauAwXhknWtrm5gU0raliSfTx2RZCVzXtlqw5blkU
-         c0f0QQ/jqQeLYQVH22DElyRuznrqIiF9UDV4pWfFEVX9drLvAtdRVnWOxLHrzErBbvgC
-         5cTgg2WTK/WwP5t6i+joa2plJtB1PlVn389Y8fZjAtSbPHyPQPyuJeHBa0hi7qTdW0V3
-         OeEA==
-X-Gm-Message-State: APjAAAVu+ug87J8PUKw+dlr7JJk/XIOxN63q7vcan5lxwFZNbhnX1H8B
-        9ZKt1/+xxBqoXcQjET2BYnwLimqLlJA=
-X-Google-Smtp-Source: APXvYqygiw+/5k24/WpB6qD2mtSTr45HzlnWx9+WNEOkC2du6jSGIMSHh2qVU7IcSAPxRhf2t++/rQ==
-X-Received: by 2002:a1c:678a:: with SMTP id b132mr20709233wmc.17.1560332493322;
-        Wed, 12 Jun 2019 02:41:33 -0700 (PDT)
+        bh=DjwvTNI/CdJpPRhUaL8QOE53B9cqUtgqTen6I5hJkuI=;
+        b=EzF+tK12aOsInEtbGle6KZmMtcehqGFlnmgE6kVWMUn0BGwoNhEXsVw22X3b27ZnU1
+         jltQTZo11ieHIqTpwvIBP58zjRrdmUJKfYhSMyEvN1T9onY4t2hcqw5MKhE9hYHEcVo6
+         6555LjBfk3FSyLIMS1yQBCcp2Nybf+ZoIFGZ8Pn1pjjFMY0dLtaHoj4WTPv42viZS2Hk
+         DoslCB/YxagXRGZkdSy2MEg4Uv66XQsEfic6VE45TffJshA3zY2JGXZwfWdVLh2ypzXa
+         rzjO5jQlHTD4PbPp1Rz41X6RaOH/7GvC3OUQVzkL8yZ629jtGJ/6lAHZbS1yHPDtf+I2
+         FZCQ==
+X-Gm-Message-State: APjAAAULbdgnAdum0Xr7Re8S0RSlisbZbBi0Ox9RU7iiUX5kyYjemlto
+        HzaXT5ZqgKY2jciLSwH8ZaqpybxF4xw=
+X-Google-Smtp-Source: APXvYqyjWINeFcR5hi2Rkm+lpyNCDo9ZFhr032AbmzqnGxorzE/fWtCRWvVLOcy4f592VJi86h87yw==
+X-Received: by 2002:a5d:63cb:: with SMTP id c11mr54141291wrw.65.1560332504489;
+        Wed, 12 Jun 2019 02:41:44 -0700 (PDT)
 Received: from dell ([185.80.132.160])
-        by smtp.gmail.com with ESMTPSA id v67sm4493632wme.24.2019.06.12.02.41.32
+        by smtp.gmail.com with ESMTPSA id 6sm17596767wrd.51.2019.06.12.02.41.43
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Jun 2019 02:41:32 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 10:41:31 +0100
+        Wed, 12 Jun 2019 02:41:44 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 10:41:42 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Stefan Mavrodiev <stefan@olimex.com>
 Cc:     Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] mfd: rk808: Check pm_power_off pointer
-Message-ID: <20190612094131.GG4797@dell>
+Subject: Re: [PATCH v3 2/2] mfd: rk808: Prepare rk805 for poweroff
+Message-ID: <20190612094142.GH4797@dell>
 References: <20190607124226.17694-1-stefan@olimex.com>
- <20190607124226.17694-2-stefan@olimex.com>
+ <20190607124226.17694-3-stefan@olimex.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190607124226.17694-2-stefan@olimex.com>
+In-Reply-To: <20190607124226.17694-3-stefan@olimex.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -79,22 +79,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, 07 Jun 2019, Stefan Mavrodiev wrote:
 
-> The function pointer pm_power_off may point to function from other
-> module (PSCI for example). If rk808 is removed, pm_power_off is
-> overwritten to NULL and the system cannot be powered off.
+> RK805 has SLEEP signal, which can put the device into SLEEP or OFF
+> mode. The default is SLEEP mode.
 > 
-> This patch checks if pm_power_off points to a module function.
+> However, when the kernel performs power-off (actually the ATF) the
+> device will not go fully off and this will result in higher power
+> consumption and inability to wake the device with RTC alarm.
+> 
+> The solution is to enable pm_power_off_prepare function, which will
+> configure SLEEP pin for OFF function.
 > 
 > Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
 > ---
-> Changes is v3:
+> Change for v3:
+>  - Remove useless warning messages
+>  - Change poweroff error messages
 >  - Add explanation comments
-> Changes in v2:
->  - Initial release actually
+> Changes for v2:
+>  - Move pm_pwroff_prep_fn to header
+>  - Check pm_power_off_prepare before make it NULL
 > 
->  drivers/mfd/rk808.c       | 17 +++++++++++------
+>  drivers/mfd/rk808.c       | 50 +++++++++++++++++++++++++++------------
 >  include/linux/mfd/rk808.h |  1 +
->  2 files changed, 12 insertions(+), 6 deletions(-)
+>  2 files changed, 36 insertions(+), 15 deletions(-)
 
 Applied, thanks.
 
