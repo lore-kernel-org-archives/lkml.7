@@ -2,245 +2,103 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D285AC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DBDC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7CB20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:43:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=vmwopensource.org header.i=@vmwopensource.org header.b="tv4UDuJ0"
+	by mail.kernel.org (Postfix) with ESMTP id 7173A20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731214AbfFLGns (ORCPT
+        id S1731271AbfFLGsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 02:43:48 -0400
-Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:39189 "EHLO
-        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405327AbfFLGnJ (ORCPT
+        Wed, 12 Jun 2019 02:48:04 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39925 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbfFLGsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 02:43:09 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id C125B3F73B;
-        Wed, 12 Jun 2019 08:43:07 +0200 (CEST)
-Authentication-Results: ste-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=vmwopensource.org header.i=@vmwopensource.org header.b=tv4UDuJ0;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
-        dkim=pass (1024-bit key) header.d=vmwopensource.org
-Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 6PtAJeu4ctSG; Wed, 12 Jun 2019 08:42:56 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 3472F3F771;
-        Wed, 12 Jun 2019 08:42:56 +0200 (CEST)
-Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id C67703620E6;
-        Wed, 12 Jun 2019 08:42:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=vmwopensource.org;
-        s=mail; t=1560321775;
-        bh=ywu99SLn6S80+sqVBhdQUXNvrrN564QuiBbE0vgNWMU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tv4UDuJ0c1XhTovcVDcrA+4Aslw9sV3VsihhlIO8lFr+rkJr6zKqyJFnvgLXNsjwU
-         p2vn2EIK3KHsDa5xfC4UgbwBr2fMNCX+QvSeBEKdEG6koT5DFa/ZXKihILg0n4Vv0p
-         FmZ4cjGcPxhAnHN87+10xUXhTqPLrde4C/H/OYok=
-From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
-        <thellstrom@vmwopensource.org>
-To:     dri-devel@lists.freedesktop.org
-Cc:     linux-graphics-maintainer@vmware.com, pv-drivers@vmware.com,
-        linux-kernel@vger.kernel.org, nadav.amit@gmail.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Deepak Rawat <drawat@vmware.com>
-Subject: [PATCH v5 7/9] drm/vmwgfx: Use an RBtree instead of linked list for MOB resources
-Date:   Wed, 12 Jun 2019 08:42:41 +0200
-Message-Id: <20190612064243.55340-8-thellstrom@vmwopensource.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190612064243.55340-1-thellstrom@vmwopensource.org>
-References: <20190612064243.55340-1-thellstrom@vmwopensource.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 12 Jun 2019 02:48:04 -0400
+Received: from mail-pf1-f197.google.com ([209.85.210.197])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <po-hsu.lin@canonical.com>)
+        id 1hax3C-0000VR-0E
+        for linux-kernel@vger.kernel.org; Wed, 12 Jun 2019 06:48:02 +0000
+Received: by mail-pf1-f197.google.com with SMTP id 5so11359778pff.11
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 23:48:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iQGtsCBn1c5Cv/4lGqwB4bSu8wIK/ZdJUuePfHlu3Os=;
+        b=Yoi3nQIS7324HUGA4I9RhuAsW9pbWhWT+yNB/zNqilMzDkfRIF2T5G+puZNum8Sw5k
+         rr9tVEHrXbQxdsPqZyO2ztyg6T6lXCznmf8rnSbwQotCoW5vUeXZq3ml4UrJD1nPMgEr
+         DGYwMiOuQfYDfSRlMTXdLXg8K0UB76dXb2coSXOPDdkkrxlIkoIQe7IOJY+LC7VdZDQV
+         +gn4Qr3HmHm0n7OLnw1bgRDJbO8n0/9L3SlXlM4U7qBdsPCbkpgFcrmvtJrF+v6z/G2u
+         heA+jHAbuAX/TBCv49GQeOkNyWxg9Ul6QrZskSvGEHzO8qQ3GR5GYnA8VtB9dZBN+0aa
+         SRqw==
+X-Gm-Message-State: APjAAAWzV5kMmNozjM9RieELQ/M22w2QyGtwQDl9flF1q81zHL2/8Pho
+        XfFLpNz0lIWKmB1gzS+gASRRT2v1DGMDoE4GMOJTngYzOn1hXXcO7KyDSjjd6yjpEA7QyqXevqv
+        EN0x9C5ajyTun4knbG4Jl88PBLdyjyDTLgER2uHLk
+X-Received: by 2002:a17:902:2926:: with SMTP id g35mr34534392plb.269.1560322080598;
+        Tue, 11 Jun 2019 23:48:00 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqydXTegqwqULkVpf/E0LtN7OvqKB1CDRD/xCDPTfnA0oYlo/soUUvOX7voWPt0GmlHRFF0Cpg==
+X-Received: by 2002:a17:902:2926:: with SMTP id g35mr34534368plb.269.1560322080271;
+        Tue, 11 Jun 2019 23:48:00 -0700 (PDT)
+Received: from Leggiero.taipei.internal (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
+        by smtp.gmail.com with ESMTPSA id p68sm9888878pfb.80.2019.06.11.23.47.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 23:47:59 -0700 (PDT)
+From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
+To:     davem@davemloft.net, shuah@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests/net: skip psock_tpacket test if KALLSYMS was not enabled
+Date:   Wed, 12 Jun 2019 14:47:52 +0800
+Message-Id: <20190612064752.6701-1-po-hsu.lin@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+The psock_tpacket test will need to access /proc/kallsyms, this would
+require the kernel config CONFIG_KALLSYMS to be enabled first.
 
-With emulated coherent memory we need to be able to quickly look up
-a resource from the MOB offset. Instead of traversing a linked list with
-O(n) worst case, use an RBtree with O(log n) worst case complexity.
+Check the file existence to determine if we can run this test.
 
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Reviewed-by: Deepak Rawat <drawat@vmware.com>
+Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_bo.c       |  5 ++--
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.h      | 10 +++----
- drivers/gpu/drm/vmwgfx/vmwgfx_resource.c | 33 +++++++++++++++++-------
- 3 files changed, 32 insertions(+), 16 deletions(-)
+ tools/testing/selftests/net/run_afpackettests | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c b/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
-index 90ca866640fe..e8bc7a7ac031 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_bo.c
-@@ -464,6 +464,7 @@ void vmw_bo_bo_free(struct ttm_buffer_object *bo)
- 	struct vmw_buffer_object *vmw_bo = vmw_buffer_object(bo);
+diff --git a/tools/testing/selftests/net/run_afpackettests b/tools/testing/selftests/net/run_afpackettests
+index ea5938e..8b42e8b 100755
+--- a/tools/testing/selftests/net/run_afpackettests
++++ b/tools/testing/selftests/net/run_afpackettests
+@@ -21,12 +21,16 @@ fi
+ echo "--------------------"
+ echo "running psock_tpacket test"
+ echo "--------------------"
+-./in_netns.sh ./psock_tpacket
+-if [ $? -ne 0 ]; then
+-	echo "[FAIL]"
+-	ret=1
++if [ -f /proc/kallsyms ]; then
++	./in_netns.sh ./psock_tpacket
++	if [ $? -ne 0 ]; then
++		echo "[FAIL]"
++		ret=1
++	else
++		echo "[PASS]"
++	fi
+ else
+-	echo "[PASS]"
++	echo "[SKIP] CONFIG_KALLSYMS not enabled"
+ fi
  
- 	WARN_ON(vmw_bo->dirty);
-+	WARN_ON(!RB_EMPTY_ROOT(&vmw_bo->res_tree));
- 	vmw_bo_unmap(vmw_bo);
- 	kfree(vmw_bo);
- }
-@@ -480,6 +481,7 @@ static void vmw_user_bo_destroy(struct ttm_buffer_object *bo)
- 	struct vmw_buffer_object *vbo = &vmw_user_bo->vbo;
- 
- 	WARN_ON(vbo->dirty);
-+	WARN_ON(!RB_EMPTY_ROOT(&vbo->res_tree));
- 	vmw_bo_unmap(vbo);
- 	ttm_prime_object_kfree(vmw_user_bo, prime);
- }
-@@ -515,8 +517,7 @@ int vmw_bo_init(struct vmw_private *dev_priv,
- 	memset(vmw_bo, 0, sizeof(*vmw_bo));
- 	BUILD_BUG_ON(TTM_MAX_BO_PRIORITY <= 3);
- 	vmw_bo->base.priority = 3;
--
--	INIT_LIST_HEAD(&vmw_bo->res_list);
-+	vmw_bo->res_tree = RB_ROOT;
- 
- 	ret = ttm_bo_init(bdev, &vmw_bo->base, size,
- 			  ttm_bo_type_device, placement,
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-index 27c259395790..9b347923196f 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-@@ -89,7 +89,7 @@ struct vmw_fpriv {
- /**
-  * struct vmw_buffer_object - TTM buffer object with vmwgfx additions
-  * @base: The TTM buffer object
-- * @res_list: List of resources using this buffer object as a backing MOB
-+ * @res_tree: RB tree of resources using this buffer object as a backing MOB
-  * @pin_count: pin depth
-  * @dx_query_ctx: DX context if this buffer object is used as a DX query MOB
-  * @map: Kmap object for semi-persistent mappings
-@@ -98,7 +98,7 @@ struct vmw_fpriv {
-  */
- struct vmw_buffer_object {
- 	struct ttm_buffer_object base;
--	struct list_head res_list;
-+	struct rb_root res_tree;
- 	s32 pin_count;
- 	/* Not ref-counted.  Protected by binding_mutex */
- 	struct vmw_resource *dx_query_ctx;
-@@ -146,8 +146,8 @@ struct vmw_res_func;
-  * pin-count greater than zero. It is not on the resource LRU lists and its
-  * backup buffer is pinned. Hence it can't be evicted.
-  * @func: Method vtable for this resource. Immutable.
-+ * @mob_node; Node for the MOB backup rbtree. Protected by @backup reserved.
-  * @lru_head: List head for the LRU list. Protected by @dev_priv::resource_lock.
-- * @mob_head: List head for the MOB backup list. Protected by @backup reserved.
-  * @binding_head: List head for the context binding list. Protected by
-  * the @dev_priv::binding_mutex
-  * @res_free: The resource destructor.
-@@ -168,8 +168,8 @@ struct vmw_resource {
- 	unsigned long backup_offset;
- 	unsigned long pin_count;
- 	const struct vmw_res_func *func;
-+	struct rb_node mob_node;
- 	struct list_head lru_head;
--	struct list_head mob_head;
- 	struct list_head binding_head;
- 	struct vmw_resource_dirty *dirty;
- 	void (*res_free) (struct vmw_resource *res);
-@@ -742,7 +742,7 @@ void vmw_resource_dirty_update(struct vmw_resource *res, pgoff_t start,
-  */
- static inline bool vmw_resource_mob_attached(const struct vmw_resource *res)
- {
--	return !list_empty(&res->mob_head);
-+	return !RB_EMPTY_NODE(&res->mob_node);
- }
- 
- /**
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c b/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
-index da9afa83fb4f..b84dd5953886 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_resource.c
-@@ -41,11 +41,24 @@
- void vmw_resource_mob_attach(struct vmw_resource *res)
- {
- 	struct vmw_buffer_object *backup = res->backup;
-+	struct rb_node **new = &backup->res_tree.rb_node, *parent = NULL;
- 
- 	lockdep_assert_held(&backup->base.resv->lock.base);
- 	res->used_prio = (res->res_dirty) ? res->func->dirty_prio :
- 		res->func->prio;
--	list_add_tail(&res->mob_head, &backup->res_list);
-+
-+	while (*new) {
-+		struct vmw_resource *this =
-+			container_of(*new, struct vmw_resource, mob_node);
-+
-+		parent = *new;
-+		new = (res->backup_offset < this->backup_offset) ?
-+			&((*new)->rb_left) : &((*new)->rb_right);
-+	}
-+
-+	rb_link_node(&res->mob_node, parent, new);
-+	rb_insert_color(&res->mob_node, &backup->res_tree);
-+
- 	vmw_bo_prio_add(backup, res->used_prio);
- }
- 
-@@ -59,7 +72,8 @@ void vmw_resource_mob_detach(struct vmw_resource *res)
- 
- 	lockdep_assert_held(&backup->base.resv->lock.base);
- 	if (vmw_resource_mob_attached(res)) {
--		list_del_init(&res->mob_head);
-+		rb_erase(&res->mob_node, &backup->res_tree);
-+		RB_CLEAR_NODE(&res->mob_node);
- 		vmw_bo_prio_del(backup, res->used_prio);
- 	}
- }
-@@ -206,8 +220,8 @@ int vmw_resource_init(struct vmw_private *dev_priv, struct vmw_resource *res,
- 	res->res_free = res_free;
- 	res->dev_priv = dev_priv;
- 	res->func = func;
-+	RB_CLEAR_NODE(&res->mob_node);
- 	INIT_LIST_HEAD(&res->lru_head);
--	INIT_LIST_HEAD(&res->mob_head);
- 	INIT_LIST_HEAD(&res->binding_head);
- 	res->id = -1;
- 	res->backup = NULL;
-@@ -756,19 +770,20 @@ int vmw_resource_validate(struct vmw_resource *res, bool intr)
-  */
- void vmw_resource_unbind_list(struct vmw_buffer_object *vbo)
- {
--
--	struct vmw_resource *res, *next;
- 	struct ttm_validate_buffer val_buf = {
- 		.bo = &vbo->base,
- 		.num_shared = 0
- 	};
- 
- 	lockdep_assert_held(&vbo->base.resv->lock.base);
--	list_for_each_entry_safe(res, next, &vbo->res_list, mob_head) {
--		if (!res->func->unbind)
--			continue;
-+	while (!RB_EMPTY_ROOT(&vbo->res_tree)) {
-+		struct rb_node *node = vbo->res_tree.rb_node;
-+		struct vmw_resource *res =
-+			container_of(node, struct vmw_resource, mob_node);
-+
-+		if (!WARN_ON_ONCE(!res->func->unbind))
-+			(void) res->func->unbind(res, res->res_dirty, &val_buf);
- 
--		(void) res->func->unbind(res, res->res_dirty, &val_buf);
- 		res->backup_dirty = true;
- 		res->res_dirty = false;
- 		vmw_resource_mob_detach(res);
+ echo "--------------------"
 -- 
-2.20.1
+2.7.4
 
