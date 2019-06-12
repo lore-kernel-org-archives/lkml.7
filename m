@@ -2,198 +2,171 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDCEC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C19C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B73D21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AC9F208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:34:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aTi7+AmN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409536AbfFLRaW (ORCPT
+        id S1729911AbfFLRek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 13:30:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39098 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406395AbfFLRaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 13:30:22 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 664E4552FC;
-        Wed, 12 Jun 2019 17:30:21 +0000 (UTC)
-Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 12E435DE8D;
-        Wed, 12 Jun 2019 17:30:15 +0000 (UTC)
-Date:   Wed, 12 Jun 2019 13:30:13 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Joel Savitz <jsavitz@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
-        Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, cgroups@vger.kernel.org
-Subject: Re: [RESEND PATCH v3] cpuset: restore sanity to
- cpuset_cpus_allowed_fallback()
-Message-ID: <20190612173013.GD12415@pauld.bos.csb>
-References: <1560354648-23632-1-git-send-email-jsavitz@redhat.com>
+        Wed, 12 Jun 2019 13:34:40 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36176 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727672AbfFLRek (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 13:34:40 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d21so6918435plr.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 10:34:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hf77Z7okHs6KAWJMSKNVF4d5KTz/UD7D/pDjyEK/gYs=;
+        b=aTi7+AmNi+MLs9q+r2+2Oe6atamFZY7EWfGeRNfBIg2NjakNPPZ43cfHjCccLr2OOo
+         p46JPMzb+PauyVyL6JqaMeTK2J4XfqUrUQGeI+ZLHAWeD5McQUhUrEi7KFrbFPxHjM9f
+         T/zymGxAKPZhoIx85qzNUx4yFkEv7qeiQsUtvXO9atO6NBEitjcS66KPloQrjvsm8o+e
+         xORntiGIiFJr8wKUMDQPOFVyovoRDTmkBBa5A/evBxZ0ps867zg0iIrVyNf97dx6Zm/n
+         IdjLIJN0UQ/eRwW/b5FC16lkaAqBnNzXWi1pAfuNzRNRi9LVDsSclZMmT4lSvJwIh4xP
+         E5dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hf77Z7okHs6KAWJMSKNVF4d5KTz/UD7D/pDjyEK/gYs=;
+        b=gVh5LzSyfH7A62hsB4bnqve3pSBdrFUuB7KNslCAEkYPkkfQ2NJKgkk5Ztg1n7ZLvh
+         FP+1/wkN6XoUYMn6FE13Qyneub5mAeB+aB/UTmoc5TrPJ7ZtWdhwCbdiam0apR6V/X1w
+         Rm3qWbBDONG7FLvdbmSagV0uyGdwC3QO5kxzJKXLu2PHSv3eLtfuLogXIA0nikm/6/U0
+         N/GHOBxh6UVMueDjHXOkydY9j9Eiq55YlYUcUegiLGtVsG6v1u3bVO1/9AzjF0wUkfxd
+         HpJBzDOKSmHJS/+yI0nOfXJf/Jar0t9CVDQnUwFWCEWHJRYbSVy8lfebHC22jpcsxCyz
+         a9OA==
+X-Gm-Message-State: APjAAAWDvEIcXPk8Y5eY6FdbZbN0uFEWIkuwOwVt4Z+e5JcVI5T8ey+w
+        7aw8fyu1wUduIWxSA1RRX+BHww==
+X-Google-Smtp-Source: APXvYqy4DZ49qp2EU0kGEhJdBUUq/lv7cA/TCZctxhPe/YZuPI9ZnWTiGzXXhAkf7DiepbF2F9ehCg==
+X-Received: by 2002:a17:902:8d92:: with SMTP id v18mr59822777plo.211.1560360878876;
+        Wed, 12 Jun 2019 10:34:38 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z3sm75832pjn.16.2019.06.12.10.34.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 10:34:38 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 10:34:36 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH] phy: qcom-qmp: Correct READY_STATUS poll break condition
+Message-ID: <20190612173436.GZ4814@minitux>
+References: <20190604232443.3417-1-bjorn.andersson@linaro.org>
+ <20190612130858.GA11167@centauri>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1560354648-23632-1-git-send-email-jsavitz@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 12 Jun 2019 17:30:21 +0000 (UTC)
+In-Reply-To: <20190612130858.GA11167@centauri>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 11:50:48AM -0400 Joel Savitz wrote:
-> In the case that a process is constrained by taskset(1) (i.e.
-> sched_setaffinity(2)) to a subset of available cpus, and all of those are
-> subsequently offlined, the scheduler will set tsk->cpus_allowed to
-> the current value of task_cs(tsk)->effective_cpus.
+On Wed 12 Jun 06:08 PDT 2019, Niklas Cassel wrote:
+
+> On Tue, Jun 04, 2019 at 04:24:43PM -0700, Bjorn Andersson wrote:
+> > After issuing a PHY_START request to the QMP, the hardware documentation
+> > states that the software should wait for the PCS_READY_STATUS to become
+> > 1.
+> > 
+> > With the introduction of c9b589791fc1 ("phy: qcom: Utilize UFS reset
+> > controller") an additional 1ms delay was introduced between the start
+> > request and the check of the status bit. This greatly increases the
+> > chances for the hardware to actually becoming ready before the status
+> > bit is read.
+> > 
+> > The result can be seen in that UFS PHY enabling is now reported as a
+> > failure in 10% of the boots on SDM845, which is a clear regression from
+> > the previous rare/occasional failure.
+> > 
+> > This patch fixes the "break condition" of the poll to check for the
+> > correct state of the status bit.
+> > 
+> > Unfortunately PCIe on 8996 and 8998 does not specify the mask_pcs_ready
+> > register, which means that the code checks a bit that's always 0. So the
+> > patch also fixes these, in order to not regress these targets.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Cc: Evan Green <evgreen@chromium.org>
+> > Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> > Cc: Vivek Gautam <vivek.gautam@codeaurora.org>
+> > Fixes: 73d7ec899bd8 ("phy: qcom-qmp: Add msm8998 PCIe QMP PHY support")
+> > Fixes: e78f3d15e115 ("phy: qcom-qmp: new qmp phy driver for qcom-chipsets")
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> > 
+> > @Kishon, this is a regression spotted in v5.2-rc1, so please consider applying
+> > this towards v5.2.
+> > 
+> >  drivers/phy/qualcomm/phy-qcom-qmp.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > index cd91b4179b10..43abdfd0deed 100644
+> > --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > @@ -1074,6 +1074,7 @@ static const struct qmp_phy_cfg msm8996_pciephy_cfg = {
+> >  
+> >  	.start_ctrl		= PCS_START | PLL_READY_GATE_EN,
+> >  	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+> > +	.mask_pcs_ready		= PHYSTATUS,
+> >  	.mask_com_pcs_ready	= PCS_READY,
+> >  
+> >  	.has_phy_com_ctrl	= true,
+> > @@ -1253,6 +1254,7 @@ static const struct qmp_phy_cfg msm8998_pciephy_cfg = {
+> >  
+> >  	.start_ctrl             = SERDES_START | PCS_START,
+> >  	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+> > +	.mask_pcs_ready		= PHYSTATUS,
+> >  	.mask_com_pcs_ready	= PCS_READY,
+> >  };
+> >  
+> > @@ -1547,7 +1549,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+> >  	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
+> >  	mask = cfg->mask_pcs_ready;
+> >  
+> > -	ret = readl_poll_timeout(status, val, !(val & mask), 1,
+> > +	ret = readl_poll_timeout(status, val, val & mask, 1,
+> >  				 PHY_INIT_COMPLETE_TIMEOUT);
+> >  	if (ret) {
+> >  		dev_err(qmp->dev, "phy initialization timed-out\n");
+> > -- 
+> > 2.18.0
+> > 
 > 
-> This is done via a call to do_set_cpus_allowed() in the context of 
-> cpuset_cpus_allowed_fallback() made by the scheduler when this case is
-> detected. This is the only call made to cpuset_cpus_allowed_fallback()
-> in the latest mainline kernel.
-> 
-> However, this is not sane behavior.
-> 
-> I will demonstrate this on a system running the latest upstream kernel
-> with the following initial configuration:
-> 
-> 	# grep -i cpu /proc/$$/status
-> 	Cpus_allowed:	ffffffff,fffffff
-> 	Cpus_allowed_list:	0-63
-> 
-> (Where cpus 32-63 are provided via smt.)
-> 
-> If we limit our current shell process to cpu2 only and then offline it
-> and reonline it:
-> 
-> 	# taskset -p 4 $$
-> 	pid 2272's current affinity mask: ffffffffffffffff
-> 	pid 2272's new affinity mask: 4
-> 
-> 	# echo off > /sys/devices/system/cpu/cpu2/online
-> 	# dmesg | tail -3
-> 	[ 2195.866089] process 2272 (bash) no longer affine to cpu2
-> 	[ 2195.872700] IRQ 114: no longer affine to CPU2
-> 	[ 2195.879128] smpboot: CPU 2 is now offline
-> 
-> 	# echo on > /sys/devices/system/cpu/cpu2/online
-> 	# dmesg | tail -1
-> 	[ 2617.043572] smpboot: Booting Node 0 Processor 2 APIC 0x4
-> 
-> 
-> We see that our current process now has an affinity mask containing
-> every cpu available on the system _except_ the one we originally
-> constrained it to:
-> 
-> 	# grep -i cpu /proc/$$/status
-> 	Cpus_allowed:   ffffffff,fffffffb
-> 	Cpus_allowed_list:      0-1,3-63 
-> 
-> This is not sane behavior, as the scheduler can now not only place the
-> process on previously forbidden cpus, it can't even schedule it on
-> the cpu it was originally constrained to!
-> 
-> Other cases result in even more exotic affinity masks. Take for instance
-> a process with an affinity mask containing only cpus provided by smt at
-> the moment that smt is toggled, in a configuration such as the following:
-> 
-> 	# taskset -p f000000000 $$
-> 	# grep -i cpu /proc/$$/status
-> 	Cpus_allowed:	000000f0,00000000
-> 	Cpus_allowed_list:	36-39
-> 
-> A double toggle of smt results in the following behavior:
-> 
-> 	# echo off > /sys/devices/system/cpu/smt/control
-> 	# echo on > /sys/devices/system/cpu/smt/control
-> 	# grep -i cpus /proc/$$/status
-> 	Cpus_allowed:	ffffff00,ffffffff
-> 	Cpus_allowed_list:	0-31,40-63
-> 
-> This is even less sane than the previous case, as the new affinity mask
-> excludes all smt-provided cpus with ids less than those that were
-> previously in the affinity mask, as well as those that were actually in
-> the mask.
-> 
-> With this patch applied, both of these cases end in the following state:
-> 
-> 	# grep -i cpu /proc/$$/status
-> 	Cpus_allowed:	ffffffff,ffffffff
-> 	Cpus_allowed_list:	0-63
-> 
-> The original policy is discarded. Though not ideal, it is the simplest way
-> to restore sanity to this fallback case without reinventing the cpuset
-> wheel that rolls down the kernel just fine in cgroup v2. A user who wishes
-> for the previous affinity mask to be restored in this fallback case can use
-> that mechanism instead.
-> 
-> This patch modifies scheduler behavior by instead resetting the mask to
-> task_cs(tsk)->cpus_allowed by default, and cpu_possible mask in legacy
-> mode. I tested the cases above on both modes.
-> 
-> Note that the scheduler uses this fallback mechanism if and only if
-> _every_ other valid avenue has been traveled, and it is the last resort
-> before calling BUG().
-> 
-> Suggested-by: Waiman Long <longman@redhat.com>
-> Suggested-by: Phil Auld <pauld@redhat.com>
-> Signed-off-by: Joel Savitz <jsavitz@redhat.com>
-> ---
->  kernel/cgroup/cpuset.c | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> index 6a1942ed781c..515525ff1cfd 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -3254,10 +3254,23 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
->  	spin_unlock_irqrestore(&callback_lock, flags);
->  }
->  
-> +/**
-> + * cpuset_cpus_allowed_fallback - final fallback before complete catastrophe.
-> + * @tsk: pointer to task_struct with which the scheduler is struggling
-> + *
-> + * Description: In the case that the scheduler cannot find an allowed cpu in
-> + * tsk->cpus_allowed, we fall back to task_cs(tsk)->cpus_allowed. In legacy
-> + * mode however, this value is the same as task_cs(tsk)->effective_cpus,
-> + * which will not contain a sane cpumask during cases such as cpu hotplugging.
-> + * This is the absolute last resort for the scheduler and it is only used if
-> + * _every_ other avenue has been traveled.
-> + **/
-> +
->  void cpuset_cpus_allowed_fallback(struct task_struct *tsk)
->  {
->  	rcu_read_lock();
-> -	do_set_cpus_allowed(tsk, task_cs(tsk)->effective_cpus);
-> +	do_set_cpus_allowed(tsk, is_in_v2_mode() ?
-> +		task_cs(tsk)->cpus_allowed : cpu_possible_mask);
->  	rcu_read_unlock();
->  
->  	/*
-> -- 
-> 2.18.1
+> msm8996_pciephy_cfg and msm8998_pciephy_cfg not having a bit mask defined
+> for PCS ready is really a separate bug, so personally I would have created
+> two patches, one that adds the missing masks, and one patch that fixes the
+> broken break condition.
 > 
 
+We can't add mask_pcs_ready in a separate commit after the poll change,
+because this would introduce a regression in the history and we can't
+add the mask_pcs_ready before because when I tested this on db820c I saw
+occasional initialization failures.
 
-I think this makes a lot more sense that what it currently does.
+I was not able to verify 8998, but I presume that the same dependency
+exists there.
 
-Fwiw,
+> Either way:
+> 
+> Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
 
-Acked-by: Phil Auld <pauld@redhat.com>
- 
-
-Cheers,
-Phil
-
--- 
+Thanks,
+Bjorn
