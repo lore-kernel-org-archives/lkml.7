@@ -2,136 +2,238 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62563C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7914BC46477
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E6F21744
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BE6215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:31:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=globallogic.com header.i=@globallogic.com header.b="cM2YdyHP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440267AbfFLQbY (ORCPT
+        id S2440275AbfFLQb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 12:31:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:56864 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405901AbfFLQbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:31:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62D892B;
-        Wed, 12 Jun 2019 09:31:23 -0700 (PDT)
-Received: from redmoon (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 603CE3F73C;
-        Wed, 12 Jun 2019 09:31:22 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 17:31:20 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, linux-arm-kernel@lists.infradead.org,
-        rgummal@xilinx.com
-Subject: Re: [PATCH v4] PCI: xilinx-nwl: Fix Multi MSI data programming
-Message-ID: <20190612163120.GG15747@redmoon>
-References: <1560334679-9206-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <86r27zarej.wl-marc.zyngier@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86r27zarej.wl-marc.zyngier@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 12 Jun 2019 12:31:56 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38995 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406352AbfFLQb4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 12:31:56 -0400
+Received: by mail-lf1-f67.google.com with SMTP id p24so12664307lfo.6
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 09:31:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=globallogic.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=uyGy4WWNd2ICdtMeMw4Zv+i9/3GDsNbkiJ11wIkXVHk=;
+        b=cM2YdyHPEuHJeH6B4zlWv7cFDZ58r/VLbHAjpEq7LRr4gfQuJgyJVY8V7eqma8hgte
+         4zGM0EC3wvKYWvhAAB+wiA89/DLZ7cZ+w+jCKeHn3apaCzmlnKJxVqZTHJiHufE0+9Mz
+         QpJ6bZNRmZzIzi5TUNQGP6Cec/IxleJOQAiWNRceu0qYiIiSSpt8Yi03c/qcS3/S/QE2
+         HYAXO9oAqV46cS9rpAQUr6ZlNHHpKeA2cQrpJUCCod2ERVIppHZSaIAS6XlgwlBpIZno
+         4lZ46FPrXVeSpOx3J1ujNz1AunbzDoe3C9O52LCg25K+JRdropo2buWQjcQl/FesB8Jo
+         aONw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uyGy4WWNd2ICdtMeMw4Zv+i9/3GDsNbkiJ11wIkXVHk=;
+        b=PUCYhA7FvXIP6OMRMra6oxtaAbZ0kvk66qNqyebepk9qGyZeDwOwzThKDft2/JUXQr
+         38NSug0Dp7u0M5+q/FQ1627yKYEZ3aPjZi4X8iujB/8MvQMw5vt8O+CE37EXdZgZsByb
+         ZCv1Q3QTqRpBQByA5wK+JIEqfPAMibiiDQfzBp1qJSrtPcwwQ/iNJYZCSA76pI/oHGQE
+         bnzxQqOlQa3nq/5SfF76e9/yBAb+NVYvij0Kf3ty71P4sctslSDRVf9npreshSfkz8So
+         UlxWzyDx926TaroIyMUvA+x+vU6t8VKY7UCSizQJfwJx3vgU+XZonUVS2jYGaye+PDiP
+         tu0g==
+X-Gm-Message-State: APjAAAXd14mELZFYH2q4B1l8eGCUO5McOccJyEK/Mlv1KKithQ8AGITw
+        gcVGcX8aMhPnpz89MGlQxNIbp6F1J5w=
+X-Google-Smtp-Source: APXvYqxXheLkvoces0WjHrstT2gH4vDKkOotaV8dXkmVihwqMr/COQ6Whd22gTXlZGmoX2kwSjz5tQ==
+X-Received: by 2002:a19:ae01:: with SMTP id f1mr40901890lfc.29.1560357113198;
+        Wed, 12 Jun 2019 09:31:53 -0700 (PDT)
+Received: from virtualhost-PowerEdge-R810.synapse.com ([195.238.92.107])
+        by smtp.gmail.com with ESMTPSA id e26sm54358ljl.33.2019.06.12.09.31.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 09:31:52 -0700 (PDT)
+From:   roman.stratiienko@globallogic.com
+To:     linux-kernel@vger.kernel.org, josef@toxicpanda.com,
+        nbd@other.debian.org, A.Bulyshchenko@globallogic.com,
+        linux-block@vger.kernel.org, axboe@kernel.dkn.org
+Cc:     Roman Stratiienko <roman.stratiienko@globallogic.com>
+Subject: [PATCH 1/2] nbd: make sock_xmit() and nbd_add_socket() more generic
+Date:   Wed, 12 Jun 2019 19:31:43 +0300
+Message-Id: <20190612163144.18486-1-roman.stratiienko@globallogic.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 02:01:56PM +0100, Marc Zyngier wrote:
-> On Wed, 12 Jun 2019 11:17:59 +0100,
-> Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com> wrote:
-> > 
-> > The current Multi MSI data programming fails if multiple end points
-> > requesting MSI and multi MSI are connected with switch, i.e the current
-> > multi MSI data being given is not considering the number of vectors
-> > being requested in case of multi MSI.
-> > Ex: Two EP's connected via switch, EP1 requesting single MSI first,
-> > EP2 requesting Multi MSI of count four. The current code gives
-> > MSI data 0x0 to EP1 and 0x1 to EP2, but EP2 can modify lower two bits
-> > due to which EP2 also sends interrupt with MSI data 0x0 which results
-> > in always invoking virq of EP1 due to which EP2 MSI interrupt never
-> > gets handled.
-> 
-> I think there is a much simpler explanation for this: Multi-MSI
-> mandates that the base interrupt number is naturally aligned to its
-> size. Having switches in the middle is just a way to expose the issue,
-> but you could see it failing with a single end-point and two MSIs that
-> are assigned on an odd boundary.
+From: Roman Stratiienko <roman.stratiienko@globallogic.com>
 
-Agreed, I will rewrite the commit log with a link to the specs,
-a switch has no role to play in this bug.
+Prepare base for the nbd-root patch:
+ - allow to reuse sock_xmit without struct nbd_device as an argument.
+ - allow to reuse nbd_add_socket with struct socket as an argument.
 
-Lorenzo
+Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
+Reviewed-by: Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>
+---
+ drivers/block/nbd.c | 62 +++++++++++++++++++++++++++------------------
+ 1 file changed, 38 insertions(+), 24 deletions(-)
 
-> > Fix Multi MSI data programming with required alignment by
-> > using number of vectors being requested.
-> > 
-> > Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe
-> > Host Controller")
-> > 
-> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> > ---
-> > V4:
-> >  - Using a different bitmap registration API whcih serves single and multi
-> >    MSI requests.
-> > ---
-> >  drivers/pci/controller/pcie-xilinx-nwl.c | 11 +++++------
-> >  1 file changed, 5 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-> > index 81538d7..a9e07b8 100644
-> > --- a/drivers/pci/controller/pcie-xilinx-nwl.c
-> > +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-> > @@ -483,15 +483,13 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> >  	int i;
-> >  
-> >  	mutex_lock(&msi->lock);
-> > -	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
-> > -					 nr_irqs, 0);
-> > -	if (bit >= INT_PCI_MSI_NR) {
-> > +	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
-> > +				      get_count_order(nr_irqs));
-> > +	if (bit < 0) {
-> >  		mutex_unlock(&msi->lock);
-> >  		return -ENOSPC;
-> >  	}
-> >  
-> > -	bitmap_set(msi->bitmap, bit, nr_irqs);
-> > -
-> >  	for (i = 0; i < nr_irqs; i++) {
-> >  		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
-> >  				domain->host_data, handle_simple_irq,
-> > @@ -509,7 +507,8 @@ static void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
-> >  	struct nwl_msi *msi = &pcie->msi;
-> >  
-> >  	mutex_lock(&msi->lock);
-> > -	bitmap_clear(msi->bitmap, data->hwirq, nr_irqs);
-> > +	bitmap_release_region(msi->bitmap, data->hwirq,
-> > +			      get_count_order(nr_irqs));
-> >  	mutex_unlock(&msi->lock);
-> >  }
-> >  
-> > -- 
-> > 2.7.4
-> > 
-> 
-> As for the body of the patch:
-> 
-> Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
-> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-> 
-> Thanks,
-> 
-> 	M.
-> 
-> -- 
-> Jazz is not dead, it just smells funny.
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 3a9bca3aa093..63fcfb38e640 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -404,22 +404,13 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
+ /*
+  *  Send or receive packet.
+  */
+-static int sock_xmit(struct nbd_device *nbd, int index, int send,
++static int sock_xmit(struct socket *sock, int send,
+ 		     struct iov_iter *iter, int msg_flags, int *sent)
+ {
+-	struct nbd_config *config = nbd->config;
+-	struct socket *sock = config->socks[index]->sock;
+ 	int result;
+ 	struct msghdr msg;
+ 	unsigned int noreclaim_flag;
+ 
+-	if (unlikely(!sock)) {
+-		dev_err_ratelimited(disk_to_dev(nbd->disk),
+-			"Attempted %s on closed socket in sock_xmit\n",
+-			(send ? "send" : "recv"));
+-		return -EINVAL;
+-	}
+-
+ 	msg.msg_iter = *iter;
+ 
+ 	noreclaim_flag = memalloc_noreclaim_save();
+@@ -450,6 +441,22 @@ static int sock_xmit(struct nbd_device *nbd, int index, int send,
+ 	return result;
+ }
+ 
++static int nbd_xmit(struct nbd_device *nbd, int index, int send,
++		     struct iov_iter *iter, int msg_flags, int *sent)
++{
++	struct nbd_config *config = nbd->config;
++	struct socket *sock = config->socks[index]->sock;
++
++	if (unlikely(!sock)) {
++		dev_err_ratelimited(disk_to_dev(nbd->disk),
++			"Attempted %s on closed socket in %s\n",
++			(send ? "send" : "recv"), __func__);
++		return -EINVAL;
++	}
++
++	return sock_xmit(sock, send, iter, msg_flags, sent);
++}
++
+ /*
+  * Different settings for sk->sk_sndtimeo can result in different return values
+  * if there is a signal pending when we enter sendmsg, because reasons?
+@@ -537,7 +544,7 @@ static int nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd, int index)
+ 	dev_dbg(nbd_to_dev(nbd), "request %p: sending control (%s@%llu,%uB)\n",
+ 		req, nbdcmd_to_ascii(type),
+ 		(unsigned long long)blk_rq_pos(req) << 9, blk_rq_bytes(req));
+-	result = sock_xmit(nbd, index, 1, &from,
++	result = nbd_xmit(nbd, index, 1, &from,
+ 			(type == NBD_CMD_WRITE) ? MSG_MORE : 0, &sent);
+ 	trace_nbd_header_sent(req, handle);
+ 	if (result <= 0) {
+@@ -583,7 +590,7 @@ static int nbd_send_cmd(struct nbd_device *nbd, struct nbd_cmd *cmd, int index)
+ 				iov_iter_advance(&from, skip);
+ 				skip = 0;
+ 			}
+-			result = sock_xmit(nbd, index, 1, &from, flags, &sent);
++			result = nbd_xmit(nbd, index, 1, &from, flags, &sent);
+ 			if (result <= 0) {
+ 				if (was_interrupted(result)) {
+ 					/* We've already sent the header, we
+@@ -635,7 +642,7 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
+ 
+ 	reply.magic = 0;
+ 	iov_iter_kvec(&to, READ, &iov, 1, sizeof(reply));
+-	result = sock_xmit(nbd, index, 0, &to, MSG_WAITALL, NULL);
++	result = nbd_xmit(nbd, index, 0, &to, MSG_WAITALL, NULL);
+ 	if (result <= 0) {
+ 		if (!nbd_disconnected(config))
+ 			dev_err(disk_to_dev(nbd->disk),
+@@ -690,7 +697,7 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
+ 
+ 		rq_for_each_segment(bvec, req, iter) {
+ 			iov_iter_bvec(&to, READ, &bvec, 1, bvec.bv_len);
+-			result = sock_xmit(nbd, index, 0, &to, MSG_WAITALL, NULL);
++			result = nbd_xmit(nbd, index, 0, &to, MSG_WAITALL, NULL);
+ 			if (result <= 0) {
+ 				dev_err(disk_to_dev(nbd->disk), "Receive data failed (result %d)\n",
+ 					result);
+@@ -931,18 +938,12 @@ static blk_status_t nbd_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 	return ret;
+ }
+ 
+-static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
++static int nbd_add_socket(struct nbd_device *nbd, struct socket *sock,
+ 			  bool netlink)
+ {
+ 	struct nbd_config *config = nbd->config;
+-	struct socket *sock;
+ 	struct nbd_sock **socks;
+ 	struct nbd_sock *nsock;
+-	int err;
+-
+-	sock = sockfd_lookup(arg, &err);
+-	if (!sock)
+-		return err;
+ 
+ 	if (!netlink && !nbd->task_setup &&
+ 	    !test_bit(NBD_BOUND, &config->runtime_flags))
+@@ -984,6 +985,19 @@ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
+ 	return 0;
+ }
+ 
++static int nbd_add_socket_fd(struct nbd_device *nbd, unsigned long arg,
++			  bool netlink)
++{
++	struct socket *sock;
++	int err;
++
++	sock = sockfd_lookup(arg, &err);
++	if (!sock)
++		return err;
++
++	return nbd_add_socket(nbd, sock, netlink);
++}
++
+ static int nbd_reconnect_socket(struct nbd_device *nbd, unsigned long arg)
+ {
+ 	struct nbd_config *config = nbd->config;
+@@ -1087,7 +1101,7 @@ static void send_disconnects(struct nbd_device *nbd)
+ 
+ 		iov_iter_kvec(&from, WRITE, &iov, 1, sizeof(request));
+ 		mutex_lock(&nsock->tx_lock);
+-		ret = sock_xmit(nbd, i, 1, &from, 0, NULL);
++		ret = nbd_xmit(nbd, i, 1, &from, 0, NULL);
+ 		if (ret <= 0)
+ 			dev_err(disk_to_dev(nbd->disk),
+ 				"Send disconnect failed %d\n", ret);
+@@ -1249,7 +1263,7 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
+ 		nbd_clear_sock_ioctl(nbd, bdev);
+ 		return 0;
+ 	case NBD_SET_SOCK:
+-		return nbd_add_socket(nbd, arg, false);
++		return nbd_add_socket_fd(nbd, arg, false);
+ 	case NBD_SET_BLKSIZE:
+ 		if (!arg || !is_power_of_2(arg) || arg < 512 ||
+ 		    arg > PAGE_SIZE)
+@@ -1821,7 +1835,7 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
+ 			if (!socks[NBD_SOCK_FD])
+ 				continue;
+ 			fd = (int)nla_get_u32(socks[NBD_SOCK_FD]);
+-			ret = nbd_add_socket(nbd, fd, true);
++			ret = nbd_add_socket_fd(nbd, fd, true);
+ 			if (ret)
+ 				goto out;
+ 		}
+-- 
+2.17.1
+
