@@ -2,168 +2,196 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B572C31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03189C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00B5C208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:51:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjVRjE0A"
+	by mail.kernel.org (Postfix) with ESMTP id D00F821734
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406013AbfFLAvY (ORCPT
+        id S2406187AbfFLAxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 20:51:24 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41839 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405015AbfFLAvX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 20:51:23 -0400
-Received: by mail-pl1-f194.google.com with SMTP id s24so5840650plr.8;
-        Tue, 11 Jun 2019 17:51:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cO1aoOgamWKzIBPutERy4+vShJ7ff0SjV7iwgqOmOxU=;
-        b=bjVRjE0AIuXeVIkRPq5d1Q0m6f/ChSKt7gvzCfbsz28S9ZzhVQDoKcXtAbRw1ACu7m
-         7kp5ZXFytWCzXikbqIWU3/EvpxFMQfB2WIIUqTOSaJMIVSVV+Dhm+q2vF1nsxPL0ZQZN
-         Xr4PWhZzFjjKM8olQlI+MNryiceHMLT2yhZwrxNEe+PPQiJHcsAN3gqc/Mj1eyT37wpG
-         c97pPNrG3ML1GaEN+kj4zNEVcoHq9wcOmaqbjGvpzCgZTLuyoJtUrBdZ/iSO7t17EGrG
-         4euwRIk+oYorOyunXr8AfmtpioQuylyPP3xvwk0CbS+/E00uzYIB370WOdBdaH6J7lDA
-         PWDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cO1aoOgamWKzIBPutERy4+vShJ7ff0SjV7iwgqOmOxU=;
-        b=DWHzqi77Honw22GNNGKJzjDVztRrpEDpOJN5MPQ81TQJOo7LHKh/cc+G84ZMw8DkKp
-         Re1wzNCtbLHlqgtrUaDvpXVGCxuf14elkTVvDBgwGzzbko145AbCYrEPDAxf/IIqDPib
-         Jt9ReXI60Bks+QfCXw6cj9toj2bYAqiGFYqWV4QBsZoOK8uTk6vcn+3v8hS2YXyBbUHw
-         gPI5JWgjDAU9qV/G164RE2uvsoI/0N/0RX4KFnw0GCyNiiupYpe134uKfnSAr+Qs/MCz
-         mpv448I3LadB4Ux9q+zQmGzC/KzS8sEa44i1XiRiBFImnl6AVm3nwohIJ2r97XShFHG/
-         5PxQ==
-X-Gm-Message-State: APjAAAUfealE+WXDh4NNevwFORAZjwLc+3Rzw+5DTot2W3xOJiM5y5JD
-        Vdw9MiZKG0I7wtIyntw+Yan0o03iM2Q=
-X-Google-Smtp-Source: APXvYqyv4mJyfH+lo6mByyMGtaJjJbLmgLMkrNCaA8Qe4uCJ+nryDBS0GuP0K4qXtHGMM5kn8Y9Izg==
-X-Received: by 2002:a17:902:28:: with SMTP id 37mr15273311pla.188.1560300682592;
-        Tue, 11 Jun 2019 17:51:22 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id y5sm14480199pgv.12.2019.06.11.17.51.21
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 17:51:21 -0700 (PDT)
-Date:   Tue, 11 Jun 2019 17:51:20 -0700
-From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [RESEND] input: keyboard: imx: make sure keyboard can always
- wake up system
-Message-ID: <20190612005120.GI143729@dtor-ws>
-References: <1554341727-16084-1-git-send-email-Anson.Huang@nxp.com>
+        Tue, 11 Jun 2019 20:53:01 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48896 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405015AbfFLAxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 11 Jun 2019 20:53:00 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 56A38F832C6C8D33FA9E;
+        Wed, 12 Jun 2019 08:52:58 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 12 Jun 2019 08:52:50 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: [PATCH next] of/fdt: Fix defined but not used compiler warning
+Date:   Wed, 12 Jun 2019 09:00:11 +0800
+Message-ID: <20190612010011.90185-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1554341727-16084-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 01:40:16AM +0000, Anson Huang wrote:
-> There are several scenarios that keyboard can NOT wake up system
-> from suspend, e.g., if a keyboard is depressed between system
-> device suspend phase and device noirq suspend phase, the keyboard
-> ISR will be called and both keyboard depress and release interrupts
-> will be disabled, then keyboard will no longer be able to wake up
-> system. Another scenario would be, if a keyboard is kept depressed,
-> and then system goes into suspend, the expected behavior would be
-> when keyboard is released, system will be waked up, but current
-> implementation can NOT achieve that, because both depress and release
-> interrupts are disabled in ISR, and the event check is still in
-> progress.
-> 
-> To fix these issues, need to make sure keyboard's depress or release
-> interrupt is enabled after noirq device suspend phase, this patch
-> moves the suspend/resume callback to noirq suspend/resume phase, and
-> enable the corresponding interrupt according to current keyboard status.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+When CONFIG_OF_EARLY_FLATTREE is disabled, there is a compiler warning,
 
-Applied, thank you.
+drivers/of/fdt.c:129:19: warning: ‘of_fdt_match’ defined but not used [-Wunused-function]
+ static int __init of_fdt_match(const void *blob, unsigned long node,
 
-> ---
->  drivers/input/keyboard/imx_keypad.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/input/keyboard/imx_keypad.c b/drivers/input/keyboard/imx_keypad.c
-> index cf08f4a..97500a2 100644
-> --- a/drivers/input/keyboard/imx_keypad.c
-> +++ b/drivers/input/keyboard/imx_keypad.c
-> @@ -524,11 +524,12 @@ static int imx_keypad_probe(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static int __maybe_unused imx_kbd_suspend(struct device *dev)
-> +static int __maybe_unused imx_kbd_noirq_suspend(struct device *dev)
->  {
->  	struct platform_device *pdev = to_platform_device(dev);
->  	struct imx_keypad *kbd = platform_get_drvdata(pdev);
->  	struct input_dev *input_dev = kbd->input_dev;
-> +	unsigned short reg_val = readw(kbd->mmio_base + KPSR);
->  
->  	/* imx kbd can wake up system even clock is disabled */
->  	mutex_lock(&input_dev->mutex);
-> @@ -538,13 +539,20 @@ static int __maybe_unused imx_kbd_suspend(struct device *dev)
->  
->  	mutex_unlock(&input_dev->mutex);
->  
-> -	if (device_may_wakeup(&pdev->dev))
-> +	if (device_may_wakeup(&pdev->dev)) {
-> +		if (reg_val & KBD_STAT_KPKD)
-> +			reg_val |= KBD_STAT_KRIE;
-> +		if (reg_val & KBD_STAT_KPKR)
-> +			reg_val |= KBD_STAT_KDIE;
-> +		writew(reg_val, kbd->mmio_base + KPSR);
-> +
->  		enable_irq_wake(kbd->irq);
-> +	}
->  
->  	return 0;
->  }
->  
-> -static int __maybe_unused imx_kbd_resume(struct device *dev)
-> +static int __maybe_unused imx_kbd_noirq_resume(struct device *dev)
->  {
->  	struct platform_device *pdev = to_platform_device(dev);
->  	struct imx_keypad *kbd = platform_get_drvdata(pdev);
-> @@ -568,7 +576,9 @@ static int __maybe_unused imx_kbd_resume(struct device *dev)
->  	return ret;
->  }
->  
-> -static SIMPLE_DEV_PM_OPS(imx_kbd_pm_ops, imx_kbd_suspend, imx_kbd_resume);
-> +static const struct dev_pm_ops imx_kbd_pm_ops = {
-> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_kbd_noirq_suspend, imx_kbd_noirq_resume)
-> +};
->  
->  static struct platform_driver imx_keypad_driver = {
->  	.driver		= {
-> -- 
-> 2.7.4
-> 
+Move of_fdt_match() and of_fdt_is_compatible() under CONFIG_OF_EARLY_FLATTREE
+to fix it.
 
+Cc: Stephen Boyd <swboyd@chromium.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+ drivers/of/fdt.c | 106 +++++++++++++++++++++++------------------------
+ 1 file changed, 53 insertions(+), 53 deletions(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 3d36b5afd9bd..d6afd5b22940 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -78,38 +78,6 @@ void __init of_fdt_limit_memory(int limit)
+ 	}
+ }
+ 
+-/**
+- * of_fdt_is_compatible - Return true if given node from the given blob has
+- * compat in its compatible list
+- * @blob: A device tree blob
+- * @node: node to test
+- * @compat: compatible string to compare with compatible list.
+- *
+- * On match, returns a non-zero value with smaller values returned for more
+- * specific compatible values.
+- */
+-static int of_fdt_is_compatible(const void *blob,
+-		      unsigned long node, const char *compat)
+-{
+-	const char *cp;
+-	int cplen;
+-	unsigned long l, score = 0;
+-
+-	cp = fdt_getprop(blob, node, "compatible", &cplen);
+-	if (cp == NULL)
+-		return 0;
+-	while (cplen > 0) {
+-		score++;
+-		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
+-			return score;
+-		l = strlen(cp) + 1;
+-		cp += l;
+-		cplen -= l;
+-	}
+-
+-	return 0;
+-}
+-
+ static bool of_fdt_device_is_available(const void *blob, unsigned long node)
+ {
+ 	const char *status = fdt_getprop(blob, node, "status", NULL);
+@@ -123,27 +91,6 @@ static bool of_fdt_device_is_available(const void *blob, unsigned long node)
+ 	return false;
+ }
+ 
+-/**
+- * of_fdt_match - Return true if node matches a list of compatible values
+- */
+-static int __init of_fdt_match(const void *blob, unsigned long node,
+-			       const char *const *compat)
+-{
+-	unsigned int tmp, score = 0;
+-
+-	if (!compat)
+-		return 0;
+-
+-	while (*compat) {
+-		tmp = of_fdt_is_compatible(blob, node, *compat);
+-		if (tmp && (score == 0 || (tmp < score)))
+-			score = tmp;
+-		compat++;
+-	}
+-
+-	return score;
+-}
+-
+ static void *unflatten_dt_alloc(void **mem, unsigned long size,
+ 				       unsigned long align)
+ {
+@@ -764,6 +711,59 @@ const void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
+ 	return fdt_getprop(initial_boot_params, node, name, size);
+ }
+ 
++/**
++ * of_fdt_is_compatible - Return true if given node from the given blob has
++ * compat in its compatible list
++ * @blob: A device tree blob
++ * @node: node to test
++ * @compat: compatible string to compare with compatible list.
++ *
++ * On match, returns a non-zero value with smaller values returned for more
++ * specific compatible values.
++ */
++static int of_fdt_is_compatible(const void *blob,
++		      unsigned long node, const char *compat)
++{
++	const char *cp;
++	int cplen;
++	unsigned long l, score = 0;
++
++	cp = fdt_getprop(blob, node, "compatible", &cplen);
++	if (cp == NULL)
++		return 0;
++	while (cplen > 0) {
++		score++;
++		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
++			return score;
++		l = strlen(cp) + 1;
++		cp += l;
++		cplen -= l;
++	}
++
++	return 0;
++}
++
++/**
++ * of_fdt_match - Return true if node matches a list of compatible values
++ */
++static int __init of_fdt_match(const void *blob, unsigned long node,
++			       const char *const *compat)
++{
++	unsigned int tmp, score = 0;
++
++	if (!compat)
++		return 0;
++
++	while (*compat) {
++		tmp = of_fdt_is_compatible(blob, node, *compat);
++		if (tmp && (score == 0 || (tmp < score)))
++			score = tmp;
++		compat++;
++	}
++
++	return score;
++}
++
+ /**
+  * of_flat_dt_is_compatible - Return true if given node has compat in compatible list
+  * @node: node to test
 -- 
-Dmitry
+2.20.1
+
