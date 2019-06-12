@@ -7,144 +7,136 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D911C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2E6C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2070920896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2EB620896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:26:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="CzYODQvD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eyDsg02x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731050AbfFLGYp (ORCPT
+        id S1731061AbfFLG0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 02:24:45 -0400
-Received: from mout.web.de ([212.227.15.14]:49463 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731018AbfFLGYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 02:24:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1560320662;
-        bh=Na84Tq5h53VwT/D6R1kesN31WJoCkGJYNZzkVe2nTyg=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=CzYODQvDOQ4y4mroeyYSwQCbzicv1j50bxigPYySrlWUtgJV8YyxznxiMAukcTuX/
-         zV/4R665rbTcSxZJB4gZYqEpSx2QZrEjSViFMjR1swB8ItCRFArGbYuMrjPanZa9f4
-         YckW7zcz7R3rLpKnBtBUXLUYha8SP0z3ctZ8QRo4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.21.30]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MEZPl-1hqd4h1mUz-00Fhos; Wed, 12
- Jun 2019 08:24:22 +0200
-Subject: Re: Coccinelle: api: add devm_platform_ioremap_resource script
-To:     Enrico Weigelt <lkml@metux.net>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>,
-        Himanshu Jha <himanshujha199640@gmail.com>,
-        cocci@systeme.lip6.fr, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>
-References: <20190406061112.31620-1-himanshujha199640@gmail.com>
- <f09006a3-691c-382a-23b8-8e9ff5b4a5f1@web.de>
- <alpine.DEB.2.21.1906081925090.2543@hadrien>
- <7b4fe770-dadd-80ba-2ba4-0f2bc90984ef@web.de>
- <f573b2d3-11d0-92b5-f8ab-4c4b6493e152@metux.net>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <f6fe6400-8fdd-cb53-f7e1-ac6188c9e785@web.de>
-Date:   Wed, 12 Jun 2019 08:24:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 12 Jun 2019 02:26:12 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:38216 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfFLG0M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 02:26:12 -0400
+Received: by mail-vs1-f67.google.com with SMTP id k9so386830vso.5
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 23:26:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lKi9fDU0Lxa/G5VIecJ7zcekWrVtK+7i/1xldaoGnKM=;
+        b=eyDsg02xExXKcTNUxPVULiXqWMYD105i/SYss3Q7V7I4w3D6V8UOwCLq2ZoHI3mfQg
+         OTOZo+12wHolv7tBGv3sdkmuSCqRtGRtsH/CXaw+WsTDMgkJfbsIxMXGQHVukIrCMeIp
+         WMJtP4K8mh4CfnD/OzA0LsD4n5zUmMJFuZbqIliJxj+/ysyNeX8d0WMZJkgvyDtB53cj
+         r8AAjqQ2NGyvklSU8TGfeou44Ndc8sZVnQxufRmi9ZUNRSE31V2H7I8bSiLHmCPd18cI
+         IzURSSp1riW/tb78SPfnulXCdtyqSevY9l/dVLxcqTLtox2ZZPsTDydfn6bTGUfVyk/U
+         s8xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lKi9fDU0Lxa/G5VIecJ7zcekWrVtK+7i/1xldaoGnKM=;
+        b=oGUp/1YCtsc2dayZuFucHQpVA8VonfwIWWJGBtZwZVG3UAvlXZjeOHdC+asa5tweom
+         WeIyZCvrU72BEB8dR8+1L0u+k4Y4X7v0xf+mGNEWeweoocfqfpZq+WJkR/z3ujlqPcPt
+         iqJuoiscHUlUJl9rNisD2lAmqyspuq2RiPZDIELiCbRZqD/1XkShlxwGpxC7uEWBiqyh
+         bG+qN65PJRHaoyoasS9JA/bV+2OM+4cT/IIwyxM83vyb3gsa5+6QS+4afrO3J87tGqfH
+         LEBbkzUQ+3XN7QO1dwRrU+x64bKzqParWSPz5m2zp1HkEwdlpOS9QDXiiSutTbvj9JWQ
+         bt/A==
+X-Gm-Message-State: APjAAAXNxnO4Qyj5RvTe2AVfWBnHYjZLiPPSVgszJlL76T4L/LdL3vQA
+        EUw7IvOAjnyw3jdiFmVGDmp4JhqWoYZ/Ao4gfu0=
+X-Google-Smtp-Source: APXvYqwH8H0IVDzCPTEFhE+jcQW08UumKLElWDBxov+7klCRUS6XvGsbE9i0ORzHeyhkcLy76VZViwB8rgx59DVP6D8=
+X-Received: by 2002:a67:e3d5:: with SMTP id k21mr28292559vsm.172.1560320771385;
+ Tue, 11 Jun 2019 23:26:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f573b2d3-11d0-92b5-f8ab-4c4b6493e152@metux.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:eg+5SLbiCpk5lx6pcF6ODtIkClAzwUJ4oIktvk6OaqI5h5uMxt7
- Hxa/aNSxFhgLSQzo2FT3WSot9yJxODf1dxLqtUbRTg4Lf0UkAtI5wjea3JOGQAmxy9kZx9r
- SVhOJtsJNXhq9RQoxb1298x87lTMHGbvM5PTWP1A0NLin2QihLMyBhiuuys/dDuM6rDXNz0
- lOFrgFWJRwAOrCZ+nsS+Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TzAEwWl+fKw=:VXj124DHKE+3x+A6VKMdzD
- ucPfljpbod/cgMAx6WNO15DtkBWHmec1vJYzEs/YG040vIBogLwBZ0ww0+ZW4glFLK0sQBloK
- TanEVzXUWlrClXEzS7rhHLKWKQzy0e0xiEpn/5otml7wOoiFGAexEhoVnHSoO1IGAto1Y1ZyM
- Bg6WA1zu+bC2W9+yHmXFjQqMcEr43R5WGgt5ldYGyFsloXwetDcYMVoym9WOKLzkTicaVQju0
- cAp0vvw7YS8CoPoQRE8NEzMcm75s4qoTKtyOHPZsjoQ+Mb0C492LKV5TiERSggoB0Y2U1X2s+
- ZE6qGribALQZBQoVvl3B2dUttLU7hr6p4k1kzRND+LJtBWT7UIBp/5GG08sb0XZ2kVC9wV37g
- BlPJmYE+723u/JNsv/2wQFsV5sgK/H4vC3G0BR4VJ5ns/MhrphjrKjCvkDzr67GhdmN+tcqrm
- lJze53IkrP6+NUWK6+K6VIGf2to8vglZtW84LS5Mp1Z+Gf25lrKObFp/LMoX6pqwy2WpH4UX9
- 3fAUJbkESK65ptJHLeeoDaMqtzHT1XgoFyTLHNpLZhl7e0y8kWJy6cEicapDbTnlE8mtzb1fF
- M5agcfXgjgNmFbEQ5OtptqHA5bl9GwDBsqyB3UiTpumSh2bxvpwG8NmRUWUSAwEVsDALIxZBQ
- BkWQ3fjk3hsY21za8ljrhKpg3k+YGceajKEz/8WT0l/1wEOeun1wf3bc0xP2BujzEwyyibAA6
- e1I20UYSAMDK38tme8Wu7ifPoVnobcmn9Ov8Z+0hvUHFFHSxmb14hv//88AnQ5pgxz4FnbbbK
- xyjV+ojioOeM11ukDWoVKuX5XcZGFUqmHFfMM21fv20ojveQFdmrKo4eXT3NSJzMt41X1DhYI
- 3Nc7DUgfP86xxDq23thMh5sLvywHdBbS/PRfP0M2K30AvmT5ZhhBDQIOBLe5TYsPMnzlJb3CT
- rULKG/bddNGcNo4ByJJDZMpkguIix+C1nh3GApC0MCUcpw2C8OMIH
+References: <20190611092144.11194-1-oded.gabbay@gmail.com> <20190611095857.GB24058@kroah.com>
+ <20190611151753.GA11404@infradead.org> <20190611152655.GA3972@kroah.com>
+ <CAFCwf13A73AxKzaa7Dk3tU-1NDgTFs4+xCO2os7SuSyUHZ9Z3Q@mail.gmail.com>
+ <CAFCwf134nTD4FM_9Q+THQ7ZAZzGxhs15O6EheaRJMqM5wxi+aA@mail.gmail.com> <ca81ca5d56a3a12db5a92f5cf9745763a86572e8.camel@kernel.crashing.org>
+In-Reply-To: <ca81ca5d56a3a12db5a92f5cf9745763a86572e8.camel@kernel.crashing.org>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Wed, 12 Jun 2019 09:25:45 +0300
+Message-ID: <CAFCwf11naDCqotNx2mrr18WpJ80T=9=jfsJWMSBu7KPrF5paJw@mail.gmail.com>
+Subject: Re: [PATCH v2 8/8] habanalabs: enable 64-bit DMA mask in POWER9
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, linuxppc-dev@ozlabs.org,
+        Christoph Hellwig <hch@infradead.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Oliver OHalloran <oliveroh@au1.ibm.com>,
+        Russell Currey <ruscur@au1.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> The flag =E2=80=9CIORESOURCE_MEM=E2=80=9D is passed as the second param=
-eter for the call
->> of the function =E2=80=9Cplatform_get_resource=E2=80=9D in this refacto=
-ring.
+On Wed, Jun 12, 2019 at 1:53 AM Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
 >
-> In that particular case, we maybe should consider separate inline
-> helpers instead of passing this is a parameter.
+> On Tue, 2019-06-11 at 20:22 +0300, Oded Gabbay wrote:
+> >
+> > > So, to summarize:
+> > > If I call pci_set_dma_mask with 48, then it fails on POWER9. However,
+> > > in runtime, I don't know if its POWER9 or not, so upon failure I will
+> > > call it again with 32, which makes our device pretty much unusable.
+> > > If I call pci_set_dma_mask with 64, and do the dedicated configuration
+> > > in Goya's PCIe controller, then it won't work on x86-64, because bit
+> > > 59 will be set and the host won't like it (I checked it). In addition,
+> > > I might get addresses above 50 bits, which my device can't generate.
+> > >
+> > > I hope this makes things more clear. Now, please explain to me how I
+> > > can call pci_set_dma_mask without any regard to whether I run on
+> > > x86-64 or POWER9, considering what I wrote above ?
+> > >
+> > > Thanks,
+> > > Oded
+> >
+> > Adding ppc mailing list.
 >
-> Maybe it would even be more efficient to have completely separate
-> versions of devm_platform_ioremap_resource(), so we don't even have
-> to pass that parameter on stack.
+> You can't. Your device is broken. Devices that don't support DMAing to
+> the full 64-bit deserve to be added to the trash pile.
+>
+Hmm... right know they are added to customers data-centers but what do I know ;)
 
-Would you like to add another function which should be called instead of
-the combination of the functions =E2=80=9Cplatform_get_resource=E2=80=9D a=
-nd =E2=80=9Cdevm_ioremap_resource=E2=80=9D?
+> As a result, getting it to work will require hacks. Some GPUs have
+> similar issues and require similar hacks, it's unfortunate.
+>
+> Added a couple of guys on CC who might be able to help get those hacks
+> right.
+Thanks :)
+>
+> It's still very fishy .. the idea is to detect the case where setting a
+> 64-bit mask will give your system memory mapped at a fixed high address
+> (1 << 59 in our case) and program that in your chip in the "Fixed high
+> bits" register that you seem to have (also make sure it doesn't affect
+> MSIs or it will break them).
+MSI-X are working. The set of bit 59 doesn't apply to MSI-X
+transactions (AFAICS from the PCIe controller spec we have).
+>
+> This will only work as long as all of the system memory can be
+> addressed at an offset from that fixed address that itself fits your
+> device addressing capabilities (50 bits in this case). It may or may
+> not be the case but there's no way to check since the DMA mask logic
+> won't really apply.
+Understood. In the specific system we are integrated to, that is the
+case - we have less then 48 bits. But, as you pointed out, it is not a
+generic solution but with my H/W I can't give a generic fit-all
+solution for POWER9. I'll settle for the best that I can do.
 
-Regards,
-Markus
+>
+> You might want to consider fixing your HW in the next iteration... This
+> is going to bite you when x86 increases the max physical memory for
+> example, or on other architectures.
+Understood and taken care of.
+
+>
+> Cheers,
+> Ben.
+>
+>
+>
+>
