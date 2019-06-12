@@ -2,102 +2,161 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93D0C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC9CC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811A721734
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:50:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560354611;
-	bh=6T0FWzHtxfc/QaxmWxb3GV47iewnf2UxFhYnXqqTDIs=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=FmtWfu5/U8sNWEo1T8swzQLbkI1MMpPrg/bs9LqE1LX4k44DYZ7VKSC/Px8Sa3Cgh
-	 qhfObWL2ZEhqbcZMcCK1LVIrecUJuMNIuVQfkiq/Tq6twim2Bkhunw+pTIpuuY5/bT
-	 VNGOCKLTa6FmIn/utCMihmHNTMDscfamOusF04WA=
+	by mail.kernel.org (Postfix) with ESMTP id 759B920449
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440090AbfFLPuK (ORCPT
+        id S2440140AbfFLPw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:50:10 -0400
-Received: from casper.infradead.org ([85.118.1.10]:55118 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437689AbfFLPuK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:50:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lZ7jhMBykRVdY/yQT29SU8tqCwPRLhDwhRSycURiLbk=; b=m49CucLekkneu5UkgnMxLwpfx6
-        BPrQAcXZDq8UNx3QIACIXQRjR9QX/JrtQmUujeYWHJQA/f/qA4PgFVXbMuYkshqL1s/vzP/qTwfS7
-        i96PGjwqNZ7nT65nEQGHB4jiCV31rK9GZ1Ualni7IcRFESMjVKP8BpfeJGdoODkUaxj5+0ZMm7W27
-        jd4N/ylZU3iF0J8G8r1MBApxhb/y3prNO5rxXzcOYQNwodyD28kILi0qV2eYSbbEqmR0GmZdIsVgw
-        FH55Cq4BYA/bT3wPHfZznyDKcjCcUzeBbpPLmWb/43eSo0JQJKZ8cDwSA4disskKSa9nh2W+IOpW/
-        VQYLzMcQ==;
-Received: from 201.86.169.251.dynamic.adsl.gvt.net.br ([201.86.169.251] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hb5Vm-0002VI-Mr; Wed, 12 Jun 2019 15:50:07 +0000
-Date:   Wed, 12 Jun 2019 12:50:02 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL for v5.2-rc1] media updates
-Message-ID: <20190612125002.66e84492@coco.lan>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 12 Jun 2019 11:52:26 -0400
+Received: from fieldses.org ([173.255.197.46]:51348 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726829AbfFLPw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:52:26 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id A606C1E3B; Wed, 12 Jun 2019 11:52:24 -0400 (EDT)
+Date:   Wed, 12 Jun 2019 11:52:24 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Wenbin Zeng <wenbin.zeng@gmail.com>
+Cc:     viro@zeniv.linux.org.uk, davem@davemloft.net, jlayton@kernel.org,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        wenbinzeng@tencent.com, dsahern@gmail.com,
+        nicolas.dichtel@6wind.com, willy@infradead.org,
+        edumazet@google.com, jakub.kicinski@netronome.com,
+        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] auth_gss: netns refcount leaks when
+ use-gss-proxy==1
+Message-ID: <20190612155224.GF16331@fieldses.org>
+References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
+ <1557470163-30071-1-git-send-email-wenbinzeng@tencent.com>
+ <20190515010331.GA3232@fieldses.org>
+ <20190612083755.GA27776@bridge.tencent.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612083755.GA27776@bridge.tencent.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Jun 12, 2019 at 04:37:55PM +0800, Wenbin Zeng wrote:
+> On Tue, May 14, 2019 at 09:03:31PM -0400, J. Bruce Fields wrote:
+> > Whoops, I was slow to test these.  I'm getting failuring krb5 nfs
+> > mounts, and the following the server's logs.  Dropping the three patches
+> > for now.
+> My bad, I should have found it earlier. Thank you for testing it, Bruce.
+> 
+> I figured it out, the problem that you saw is due to the following code:
+> the if-condition is incorrect here because sn->gssp_clnt==NULL doesn't mean
+> inexistence of 'use-gss-proxy':
 
-Please pull from:
-  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.2-2
+Thanks, but with the new patches I see the following.  I haven't tried
+to investigate.
 
-For a couple patches:
+--b.
 
-  - a debug warning for satellite tuning at dvb core was producing
-    too much noise;
-  - a regression at hfi_parser on Venus driver.
-
-Regards,
-Mauro
-
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.2-2
-
-for you to fetch changes up to a200c721956ca026f44416acccc8efcca41109c5:
-
-  media: venus: hfi_parser: fix a regression in parser (2019-05-29 10:20:06 -0400)
-
-----------------------------------------------------------------
-media updates for v5.2-rc1
-
-----------------------------------------------------------------
-Sean Young (1):
-      media: dvb: warning about dvb frequency limits produces too much noise
-
-Stanimir Varbanov (1):
-      media: venus: hfi_parser: fix a regression in parser
-
- drivers/media/dvb-core/dvb_frontend.c          | 2 +-
- drivers/media/platform/qcom/venus/hfi_helper.h | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
+[ 2908.134813] ------------[ cut here ]------------
+[ 2908.135732] name 'use-gss-proxy'
+[ 2908.136276] WARNING: CPU: 2 PID: 15032 at fs/proc/generic.c:673 remove_proc_entry+0x124/0x190
+[ 2908.138144] Modules linked in: nfsv4 rpcsec_gss_krb5 nfsv3 nfs_acl nfs lockd grace auth_rpcgss sunrpc
+[ 2908.140183] CPU: 2 PID: 15032 Comm: (coredump) Not tainted 5.2.0-rc2-00441-gaef575f54640 #2257
+[ 2908.142062] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+[ 2908.143756] RIP: 0010:remove_proc_entry+0x124/0x190
+[ 2908.144519] Code: c3 48 c7 c7 60 24 8b 82 e8 29 16 a5 00 eb d5 48 c7 c7 60 24 8b 82 e8 1b 16 a5 00 4c 89 e6 48 c7 c7 ec 4c 52 82 e8 50 fd db ff <0f> 0b eb b6 48 8b 04 24 83 a8 90 00 00 00 01 e9 78 ff ff ff 4c 89
+[ 2908.148138] RSP: 0018:ffffc900047bbdb0 EFLAGS: 00010282
+[ 2908.148945] RAX: 0000000000000000 RBX: ffff888036060580 RCX: 0000000000000000
+[ 2908.150139] RDX: ffff88807fd24e80 RSI: ffff88807fd165b8 RDI: 00000000ffffffff
+[ 2908.151334] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+[ 2908.152564] R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffa00adb1b
+[ 2908.153816] R13: 00007ffc8bda5d30 R14: 0000000000000000 R15: ffff88805e2873a8
+[ 2908.155007] FS:  00007f470bc27e40(0000) GS:ffff88807fd00000(0000) knlGS:0000000000000000
+[ 2908.156421] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 2908.157333] CR2: 0000562b07764c58 CR3: 000000005e8ea001 CR4: 00000000001606e0
+[ 2908.158529] Call Trace:
+[ 2908.158796]  destroy_use_gss_proxy_proc_entry+0xb7/0x150 [auth_rpcgss]
+[ 2908.159966]  gss_svc_shutdown_net+0x11/0x170 [auth_rpcgss]
+[ 2908.160830]  netns_evict+0x2f/0x40
+[ 2908.161266]  nsfs_evict+0x27/0x40
+[ 2908.161685]  evict+0xd0/0x1a0
+[ 2908.162035]  __dentry_kill+0xdf/0x180
+[ 2908.162520]  dentry_kill+0x50/0x1c0
+[ 2908.163005]  ? dput+0x1c/0x2b0
+[ 2908.163369]  dput+0x260/0x2b0
+[ 2908.163739]  path_put+0x12/0x20
+[ 2908.164155]  do_faccessat+0x17c/0x240
+[ 2908.164643]  do_syscall_64+0x50/0x1c0
+[ 2908.165170]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[ 2908.165959] RIP: 0033:0x7f47098e2157
+[ 2908.166445] Code: 77 01 c3 48 8b 15 69 dd 2c 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 15 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 39 dd 2c 00 f7 d8 64 89 02 b8
+[ 2908.169994] RSP: 002b:00007ffc8bda5d28 EFLAGS: 00000246 ORIG_RAX: 0000000000000015
+[ 2908.171315] RAX: ffffffffffffffda RBX: 0000562b0774d979 RCX: 00007f47098e2157
+[ 2908.172563] RDX: 00007ffc8bda5d3e RSI: 0000000000000000 RDI: 00007ffc8bda5d30
+[ 2908.173753] RBP: 00007ffc8bda5d70 R08: 0000000000000000 R09: 0000562b07d0b130
+[ 2908.174943] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffc8bda5d30
+[ 2908.176163] R13: 0000562b07b34c80 R14: 0000562b07b35120 R15: 0000000000000000
+[ 2908.177395] irq event stamp: 4256
+[ 2908.177835] hardirqs last  enabled at (4255): [<ffffffff811221ee>] console_unlock+0x41e/0x590
+[ 2908.179378] hardirqs last disabled at (4256): [<ffffffff81001b2f>] trace_hardirqs_off_thunk+0x1a/0x1c
+[ 2908.181031] softirqs last  enabled at (4252): [<ffffffff820002be>] __do_softirq+0x2be/0x4aa
+[ 2908.182458] softirqs last disabled at (4233): [<ffffffff810bf8e0>] irq_exit+0x80/0x90
+[ 2908.183869] ---[ end trace d88132b63efc09d8 ]---
+[ 2908.184620] BUG: kernel NULL pointer dereference, address: 0000000000000030
+[ 2908.185829] #PF: supervisor read access in kernel mode
+[ 2908.186924] #PF: error_code(0x0000) - not-present page
+[ 2908.187887] PGD 0 P4D 0 
+[ 2908.188318] Oops: 0000 [#1] PREEMPT SMP PTI
+[ 2908.189254] CPU: 2 PID: 15032 Comm: (coredump) Tainted: G        W         5.2.0-rc2-00441-gaef575f54640 #2257
+[ 2908.192506] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+[ 2908.195137] RIP: 0010:__lock_acquire+0x3d2/0x1d90
+[ 2908.196414] Code: db 48 8b 84 24 88 00 00 00 65 48 33 04 25 28 00 00 00 0f 85 be 10 00 00 48 8d 65 d8 44 89 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 <48> 81 3f 60 0d 01 83 41 bb 00 00 00 00 45 0f 45 d8 83 fe 01 0f 87
+[ 2908.202720] RSP: 0018:ffffc900047bbc80 EFLAGS: 00010002
+[ 2908.204165] RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
+[ 2908.206125] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000030
+[ 2908.208203] RBP: ffffc900047bbd40 R08: 0000000000000001 R09: 0000000000000000
+[ 2908.210219] R10: 0000000000000001 R11: 0000000000000001 R12: ffff88807ad91500
+[ 2908.211386] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000282
+[ 2908.212532] FS:  00007f470bc27e40(0000) GS:ffff88807fd00000(0000) knlGS:0000000000000000
+[ 2908.213647] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 2908.214400] CR2: 0000000000000030 CR3: 000000005e8ea001 CR4: 00000000001606e0
+[ 2908.215393] Call Trace:
+[ 2908.215589]  ? __lock_acquire+0x255/0x1d90
+[ 2908.216071]  ? clear_gssp_clnt+0x1b/0x50 [auth_rpcgss]
+[ 2908.216720]  ? __mutex_lock+0x99/0x920
+[ 2908.217114]  lock_acquire+0x95/0x1b0
+[ 2908.217484]  ? cache_purge+0x1c/0x110 [sunrpc]
+[ 2908.218000]  _raw_spin_lock+0x2f/0x40
+[ 2908.218370]  ? cache_purge+0x1c/0x110 [sunrpc]
+[ 2908.218882]  cache_purge+0x1c/0x110 [sunrpc]
+[ 2908.219346]  gss_svc_shutdown_net+0xb8/0x170 [auth_rpcgss]
+[ 2908.220104]  netns_evict+0x2f/0x40
+[ 2908.220439]  nsfs_evict+0x27/0x40
+[ 2908.220786]  evict+0xd0/0x1a0
+[ 2908.221050]  __dentry_kill+0xdf/0x180
+[ 2908.221458]  dentry_kill+0x50/0x1c0
+[ 2908.221842]  ? dput+0x1c/0x2b0
+[ 2908.222126]  dput+0x260/0x2b0
+[ 2908.222384]  path_put+0x12/0x20
+[ 2908.222753]  do_faccessat+0x17c/0x240
+[ 2908.223125]  do_syscall_64+0x50/0x1c0
+[ 2908.223479]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[ 2908.224152] RIP: 0033:0x7f47098e2157
+[ 2908.224566] Code: 77 01 c3 48 8b 15 69 dd 2c 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 15 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 39 dd 2c 00 f7 d8 64 89 02 b8
+[ 2908.228198] RSP: 002b:00007ffc8bda5d28 EFLAGS: 00000246 ORIG_RAX: 0000000000000015
+[ 2908.229496] RAX: ffffffffffffffda RBX: 0000562b0774d979 RCX: 00007f47098e2157
+[ 2908.230938] RDX: 00007ffc8bda5d3e RSI: 0000000000000000 RDI: 00007ffc8bda5d30
+[ 2908.232182] RBP: 00007ffc8bda5d70 R08: 0000000000000000 R09: 0000562b07d0b130
+[ 2908.233481] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffc8bda5d30
+[ 2908.234750] R13: 0000562b07b34c80 R14: 0000562b07b35120 R15: 0000000000000000
+[ 2908.236068] Modules linked in: nfsv4 rpcsec_gss_krb5 nfsv3 nfs_acl nfs lockd grace auth_rpcgss sunrpc
+[ 2908.237861] CR2: 0000000000000030
+[ 2908.238277] ---[ end trace d88132b63efc09d9 ]---
