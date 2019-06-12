@@ -2,134 +2,221 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C54AC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D512C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0192221773
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:50:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="gmeYon7z"
+	by mail.kernel.org (Postfix) with ESMTP id 6DE0920896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:50:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfFLSuE (ORCPT
+        id S1727584AbfFLSuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 14:50:04 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38900 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726928AbfFLSuD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 14:50:03 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v186so12476315oie.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 11:50:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oLKBk3Q7ccO0NJJMRJYYFBU09UJHS0/ornRP0j3Fxnk=;
-        b=gmeYon7zauy3OQh0dds8NZYm6t5UDisLz6yhyFv+zAHzAQld3I1PlASf7zsZM+CaaZ
-         CehQMBgQdj6gortTquDOB3N7bsSZoRiiIPq0F65TSYhGSEiVglTlgXcZdamdruNK0EZE
-         L4hW+NB6I/OXN8FIUSFL51bNjJWJFW8hzlwgXFjesNuMtfLc6oA7+M/3K2vidJa0br9V
-         czG4Eoe/orE9D++K3+lLCE4n/UgTBq+X11qW/QB7IGhWEAbaQV6NagrYsJ8UOQey3FsU
-         R4uBxwDIf6zhdzoruyQQmgKdtCNWOHRzy7IMkgSp8cIYB925DCaZB8zX5lMCi8WnCkui
-         Earw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oLKBk3Q7ccO0NJJMRJYYFBU09UJHS0/ornRP0j3Fxnk=;
-        b=jGO9yMhkaHo2QgcmklKqgs/6K0QNTSjHv8bG98PJ7wl8HutAtFQIDNqahm6L46PW1M
-         baBG8K1AV0gufxIt2mlmDDtmrObU/otCdm9BQCIfXmmHyLpF9PN2IGUybyN+PJYrs+it
-         Qhh+RVxSUCcsBYpKoc8ZwzO8lWTiqrmKetIHumupBpLSB41n1EKtwiTDJeL3Ll0dzIPO
-         qRmmmJ/m1ec1vSeieA2nPyv46DisaWw+I3wOv/ZZINNWQw2w9eID9ruKGNGW4nIvncpN
-         fMhAZcwIDIJJYaJp01iDyKYggomTSLfPTMPvfJxa8lScYqhQnuCTZ7cI6GkzDoIThkzc
-         LIOQ==
-X-Gm-Message-State: APjAAAXlx9E86Gdz5ANwhV+qzUdvxkLKc9HqHNLh1eczV6uN5qhT5a/S
-        9TS2mSevi7RxKsxIZ3sZcZOwfTsqEwUjCUos7XTeXQ==
-X-Google-Smtp-Source: APXvYqxnUAltCxrDlkjMuVh0Fis6UXRXzk4ak5OCGI7cs5NoWVrVaXVk3zYCAPwY8b7pSu88qbXHjB+1CYR77yxpUws=
-X-Received: by 2002:aca:ec82:: with SMTP id k124mr420099oih.73.1560365403007;
- Wed, 12 Jun 2019 11:50:03 -0700 (PDT)
+        Wed, 12 Jun 2019 14:50:50 -0400
+Received: from mga02.intel.com ([134.134.136.20]:41659 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726825AbfFLSuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 14:50:50 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 11:50:49 -0700
+X-ExtLoop1: 1
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga004.jf.intel.com with ESMTP; 12 Jun 2019 11:50:49 -0700
+Date:   Wed, 12 Jun 2019 11:53:58 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Marc Zyngier <Marc.Zyngier@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Vincent Stehle <Vincent.Stehle@arm.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v8 26/29] vfio-pci: Register an iommu fault handler
+Message-ID: <20190612115358.0d90b322@jacob-builder>
+In-Reply-To: <905f130b-02dc-6971-8d5b-ce87d9bc96a4@arm.com>
+References: <20190526161004.25232-1-eric.auger@redhat.com>
+        <20190526161004.25232-27-eric.auger@redhat.com>
+        <20190603163139.70fe8839@x1.home>
+        <10dd60d9-4af0-c0eb-08c9-a0db7ee1925e@redhat.com>
+        <20190605154553.0d00ad8d@jacob-builder>
+        <2753d192-1c46-d78e-c425-0c828e48cde2@arm.com>
+        <20190606132903.064f7ac4@jacob-builder>
+        <dc051424-67d7-02ff-9b8e-0d7a8a4e59eb@arm.com>
+        <20190607104301.6b1bbd74@jacob-builder>
+        <e02b024f-6ebc-e8fa-c30c-5bf3f4b164d6@arm.com>
+        <20190610143134.7bff96e9@jacob-builder>
+        <905f130b-02dc-6971-8d5b-ce87d9bc96a4@arm.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190606014544.8339-1-ira.weiny@intel.com> <20190606104203.GF7433@quack2.suse.cz>
- <20190606195114.GA30714@ziepe.ca> <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
- <20190607103636.GA12765@quack2.suse.cz> <20190607121729.GA14802@ziepe.ca>
- <20190607145213.GB14559@iweiny-DESK2.sc.intel.com> <20190612102917.GB14578@quack2.suse.cz>
-In-Reply-To: <20190612102917.GB14578@quack2.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 12 Jun 2019 11:49:52 -0700
-Message-ID: <CAPcyv4jSyTjC98UsWb3-FnZekV0oyboiSe9n1NYDC2TSKAqiqw@mail.gmail.com>
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-To:     Jan Kara <jack@suse.cz>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        "Theodore Ts'o" <tytso@mit.edu>, Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 3:29 AM Jan Kara <jack@suse.cz> wrote:
->
-> On Fri 07-06-19 07:52:13, Ira Weiny wrote:
-> > On Fri, Jun 07, 2019 at 09:17:29AM -0300, Jason Gunthorpe wrote:
-> > > On Fri, Jun 07, 2019 at 12:36:36PM +0200, Jan Kara wrote:
-> > >
-> > > > Because the pins would be invisible to sysadmin from that point on.
-> > >
-> > > It is not invisible, it just shows up in a rdma specific kernel
-> > > interface. You have to use rdma netlink to see the kernel object
-> > > holding this pin.
-> > >
-> > > If this visibility is the main sticking point I suggest just enhancing
-> > > the existing MR reporting to include the file info for current GUP
-> > > pins and teaching lsof to collect information from there as well so it
-> > > is easy to use.
-> > >
-> > > If the ownership of the lease transfers to the MR, and we report that
-> > > ownership to userspace in a way lsof can find, then I think all the
-> > > concerns that have been raised are met, right?
-> >
-> > I was contemplating some new lsof feature yesterday.  But what I don't
-> > think we want is sysadmins to have multiple tools for multiple
-> > subsystems.  Or even have to teach lsof something new for every potential
-> > new subsystem user of GUP pins.
->
-> Agreed.
->
-> > I was thinking more along the lines of reporting files which have GUP
-> > pins on them directly somewhere (dare I say procfs?) and teaching lsof to
-> > report that information.  That would cover any subsystem which does a
-> > longterm pin.
->
-> So lsof already parses /proc/<pid>/maps to learn about files held open by
-> memory mappings. It could parse some other file as well I guess. The good
-> thing about that would be that then "longterm pin" structure would just hold
-> struct file reference. That would avoid any needs of special behavior on
-> file close (the file reference in the "longterm pin" structure would make
-> sure struct file and thus the lease stays around, we'd just need to make
-> explicit lease unlock block until the "longterm pin" structure is freed).
-> The bad thing is that it requires us to come up with a sane new proc
-> interface for reporting "longterm pins" and associated struct file. Also we
-> need to define what this interface shows if the pinned pages are in DRAM
-> (either page cache or anon) and not on NVDIMM.
+On Tue, 11 Jun 2019 14:14:33 +0100
+Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
 
-The anon vs shared detection case is important because a longterm pin
-might be blocking a memory-hot-unplug operation if it is pinning
-ZONE_MOVABLE memory, but I don't think we want DRAM vs NVDIMM to be an
-explicit concern of the interface. For the anon / cached case I expect
-it might be useful to put that communication under the memory-blocks
-sysfs interface. I.e. a list of pids that are pinning that
-memory-block from being hot-unplugged.
+> On 10/06/2019 22:31, Jacob Pan wrote:
+> > On Mon, 10 Jun 2019 13:45:02 +0100
+> > Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
+> >   
+> >> On 07/06/2019 18:43, Jacob Pan wrote:  
+> >>>>> So it seems we agree on the following:
+> >>>>> - iommu_unregister_device_fault_handler() will never fail
+> >>>>> - iommu driver cleans up all pending faults when handler is
+> >>>>> unregistered
+> >>>>> - assume device driver or guest not sending more page response
+> >>>>> _after_ handler is unregistered.
+> >>>>> - system will tolerate rare spurious response
+> >>>>>
+> >>>>> Sounds right?      
+> >>>>
+> >>>> Yes, I'll add that to the fault series    
+> >>> Hold on a second please, I think we need more clarifications.
+> >>> Ashok pointed out to me that the spurious response can be harmful
+> >>> to other devices when it comes to mdev, where PRQ group id is not
+> >>> per PASID, device may reuse the group number and receiving
+> >>> spurious page response can confuse the entire PF.     
+> >>
+> >> I don't understand how mdev differs from the non-mdev situation
+> >> (but I also still don't fully get how mdev+PASID will be
+> >> implemented). Is the following the case you're worried about?
+> >>
+> >>   M#: mdev #
+> >>
+> >> # Dev         Host        mdev drv       VFIO/QEMU        Guest
+> >> ====================================================================
+> >> 1                     <- reg(handler)
+> >> 2 PR1 G1 P1    ->         M1 PR1 G1        inject ->     M1 PR1 G1
+> >> 3                     <- unreg(handler)
+> >> 4       <- PS1 G1 P1 (F)      |
+> >> 5                        unreg(handler)
+> >> 6                     <- reg(handler)
+> >> 7 PR2 G1 P1    ->         M2 PR2 G1        inject ->     M2 PR2 G1
+> >> 8                                                     <- M1 PS1 G1
+> >> 9         accept ??    <- PS1 G1 P1
+> >> 10                                                    <- M2 PS2 G1
+> >> 11        accept       <- PS2 G1 P1
+> >>  
+> > Not really. I am not worried about PASID reuse or unbind. Just
+> > within the same PASID bind lifetime of a single mdev, back to back
+> > register/unregister fault handler.
+> > After Step 4, device will think G1 is done. Device could reuse G1
+> > for the next PR, if we accept PS1 in step 9, device will terminate
+> > G1 before the real G1 PS arrives in Step 11. The real G1 PS might
+> > have a different response code. Then we just drop the PS in Step
+> > 11?  
+> 
+> Yes, I think we do. Two possibilities:
+> 
+> * G1 is reused at step 7 for the same PASID context, which means that
+> it is for the same mdev. The problem is then identical to the non-mdev
+> case, new page faults and old page response may cross:
+> 
+> # Dev         Host        mdev drv       VFIO/QEMU        Guest
+> ====================================================================
+> 7 PR2 G1 P1  --.
+> 8               \                         .------------- M1 PS1 G1
+> 9                '----->  PR2 G1 P1  ->  /   inject  --> M1 PR2 G1
+> 10           accept <---  PS1 G1 P1  <--'
+> 11           reject <---  PS2 G1 P1  <------------------ M1 PS2 G1
+> 
+> And the incorrect page response is returned to the guest. However it
+> affects a single mdev/guest context, it doesn't affect other mdevs.
+> 
+> * Or G1 is reused at step 7 for a different PASID. At step 10 the
+> fault handler rejects the page response because the PASID is
+> different, and step 11 is accepted.
+> 
+> 
+> >>> Having spurious page response is also not
+> >>> abiding the PCIe spec. exactly.    
+> >>
+> >> We are following the PCI spec though, in that we don't send page
+> >> responses for PRGIs that aren't in flight.
+> >>  
+> > You are right, the worst case of the spurious PS is to terminate the
+> > group prematurely. Need to know the scope of the HW damage in case
+> > of mdev where group IDs can be shared among mdevs belong to the
+> > same PF.  
+> 
+> But from the IOMMU fault API point of view, the full page request is
+> identified by both PRGI and PASID. Given that each mdev has its own
+> set of PASIDs, it should be easy to isolate page responses per mdev.
+> 
+On Intel platform, devices sending page request with private data must
+receive page response with matching private data. If we solely depend
+on PRGI and PASID, we may send stale private data to the device in
+those incorrect page response. Since private data may represent PF
+device wide contexts, the consequence of sending page response with
+wrong private data may affect other mdev/PASID.
+
+One solution we are thinking to do is to inject the sequence #(e.g.
+ktime raw mono clock) as vIOMMU private data into to the guest. Guest
+would return this fake private data in page response, then host will
+send page response back to the device that matches PRG1 and PASID and
+private_data.
+
+This solution does not expose HW context related private data to the
+guest but need to extend page response in iommu uapi.
+
+/**
+ * struct iommu_page_response - Generic page response information
+ * @version: API version of this structure
+ * @flags: encodes whether the corresponding fields are valid
+ *         (IOMMU_FAULT_PAGE_RESPONSE_* values)
+ * @pasid: Process Address Space ID
+ * @grpid: Page Request Group Index
+ * @code: response code from &enum iommu_page_response_code
+ * @private_data: private data for the matching page request
+ */
+struct iommu_page_response {
+#define IOMMU_PAGE_RESP_VERSION_1	1
+	__u32	version;
+#define IOMMU_PAGE_RESP_PASID_VALID	(1 << 0)
+#define IOMMU_PAGE_RESP_PRIVATE_DATA	(1 << 1)
+	__u32	flags;
+	__u32	pasid;
+	__u32	grpid;
+	__u32	code;
+	__u32	padding;
+	__u64	private_data[2];
+};
+
+There is also the change needed for separating storage for the real and
+fake private data.
+
+Sorry for the last minute change, did not realize the HW implications.
+
+I see this as a future extension due to limited testing, perhaps for
+now, can you add paddings similar to page request? Make it 64B as well.
+
+struct iommu_page_response {
+#define IOMMU_PAGE_RESP_VERSION_1	1
+	__u32	version;
+#define IOMMU_PAGE_RESP_PASID_VALID	(1 << 0)
+	__u32	flags;
+	__u32	pasid;
+	__u32	grpid;
+	__u32	code;
+	__u8	padding[44];
+};
+
+Thanks!
+
+Jacob
