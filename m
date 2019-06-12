@@ -2,169 +2,217 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11438C31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE16BC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01B0208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BAD52175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UcaAlYAJ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mQ6YOJno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408767AbfFLJ1h (ORCPT
+        id S2408792AbfFLJ2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:27:37 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:56215 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407865AbfFLJ1g (ORCPT
+        Wed, 12 Jun 2019 05:28:08 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:14864 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406209AbfFLJ2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:27:36 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a15so5769020wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 02:27:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mF1ZZIqX0fVgmACtu99hDygnph7n89tfAuCMAfh6B8w=;
-        b=UcaAlYAJVozvXtiF7F8GXev0nXIqbmMzwhuQ1PB+H04+cwHYz9NBMi6p+AnKOBkTSx
-         KZvqZZfIzpTTo9zcNkuKYFUL1JpoLl0RnDjXXQePseqqCoGnj8/kQOXDj7DnlOwUefZb
-         QcvdqbkpLaaKYmE/3Wlb/Q3HnUyoINIVJPPbK5WI/K/5jYITh0Ep7Gl4IMsbH2vG/ZlR
-         llpGk14nqREp4b8vB1mFT2Le3w4kaxyfl4nvjhJETmPK2rXN7NP0vhGWq5jg7K1CS/Ug
-         RdWhTKZhSJHwfMYKwRQbNQW4xHty4DCWdnOn+PzOQ0M4xEkEY14jEVBMvDM4TkLcavUU
-         H7fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=mF1ZZIqX0fVgmACtu99hDygnph7n89tfAuCMAfh6B8w=;
-        b=KDS6CA159ijpwFw69xmFxrOWa4WVml837LwyN0fn95o/JmD2dxiTxUEvmoba41cq99
-         ZMSzcpRFRxVn5tZ1p11NYRztJgfJImbx6DI0kf3R0G0N9T9VXl2WLtR2rUsw2T7cxsye
-         9sq/9AbVY9VawLHGfT9cpvrJxImH2B3KDtXqWsw4GIBl/QufVQ20JK/NEVnRsTrUup4z
-         VdKa1hVRC0Yf9Bd3/d03XVHV557r36imA0Rgqut3LFvrrt/92yuMuNNCRtPXhZyeTnpy
-         tmSdVRrEHawQYxoxzydc5XSy+oesBCAr0ctUFw574JWMDr0VOitN6qjdg9OFe55HmSsC
-         2y/g==
-X-Gm-Message-State: APjAAAWGISU4zmarukGcTvLRYDRB+Th16itBnW2WOWgUJ4xMso98fvuX
-        sgVDoB3gKe7z5ahP897RVW8KTKGGJxM=
-X-Google-Smtp-Source: APXvYqwufgong1ncp9HKmZfLz2jY82v+4fTKjifwjzfUpmZBWzzsgb094Ud3jLgbkhbDIhoGryExqA==
-X-Received: by 2002:a7b:cb4b:: with SMTP id v11mr20533383wmj.85.1560331653524;
-        Wed, 12 Jun 2019 02:27:33 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id o2sm2016803wrq.56.2019.06.12.02.27.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 02:27:32 -0700 (PDT)
-Subject: Re: [PATCH v5 0/3] Make IPA use PM_EM
-To:     Quentin Perret <quentin.perret@arm.com>, edubezval@gmail.com,
-        rui.zhang@intel.com, javi.merino@kernel.org,
-        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
-        will.deacon@arm.com, catalin.marinas@arm.com,
-        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
-        mka@chromium.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190530092038.12020-1-quentin.perret@arm.com>
- <20190612091351.jet5sew5dnirsapz@queper01-lin>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e9b57e71-81eb-2ac8-cd4a-76b57eee63df@linaro.org>
-Date:   Wed, 12 Jun 2019 11:27:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Wed, 12 Jun 2019 05:28:08 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d00c5a60000>; Wed, 12 Jun 2019 02:28:06 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 12 Jun 2019 02:28:05 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 12 Jun 2019 02:28:05 -0700
+Received: from [10.24.47.96] (10.124.1.5) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Jun
+ 2019 09:27:59 +0000
+Subject: Re: [PATCH V9 13/15] phy: tegra: Add PCIe PIPE2UPHY support
+To:     Dmitry Osipenko <digetx@gmail.com>, <lorenzo.pieralisi@arm.com>,
+        <bhelgaas@google.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>
+CC:     <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190607144640.13427-1-vidyas@nvidia.com>
+ <20190607144640.13427-14-vidyas@nvidia.com>
+ <58349f3f-b9c2-2653-3a69-3bb5e836a9ef@gmail.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <a126dbca-29e3-963b-5a41-f5f29d48de77@nvidia.com>
+Date:   Wed, 12 Jun 2019 14:57:57 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190612091351.jet5sew5dnirsapz@queper01-lin>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <58349f3f-b9c2-2653-3a69-3bb5e836a9ef@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL108.nvidia.com (172.18.146.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560331686; bh=541DzlQkqOt5dL1lSa3BUJErRlZQ32ioMvRKqpVpig0=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=mQ6YOJnot6aqdlRCEkLoePlM0lyJltEzF8WkZvM16UW/oFBpy7M4MzBJIzgUgFFcc
+         X38XRtSV+nWLuTzxP6QKXTvmPBwqP5Jmg2SVGfn0Wd81BhPE1JhzcMYkmQ92kaWidw
+         F4PeLGPDF7BPWqqmgofXFAaDLwUoshwxDbJzA/gHMgtA3GZVypPG9/YIWpi0UguL7x
+         cNdxq4hp70JjFJmJRpdhD12N2PdIYogQmh037TZdMbWbdY9h9mYy7D7iX9P/UOvT5n
+         upq8VmkmqK1lfbaz1casmdUTfcXfqYZxCctcsotBRmytpjm/zRJ/WAk2/nMHY7q+Ld
+         j0KvUZWG5iDUw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/06/2019 11:13, Quentin Perret wrote:
-> Hi,
-> 
-> On Thursday 30 May 2019 at 10:20:35 (+0100), Quentin Perret wrote:
->> Changes in v5:
->> **************
->>  - Changed patch 02 to guard IPA-specific code in cpu_cooling.c with
->>    appropriate ifdefery (Daniel)
->>  - Rebased on 5.2-rc2
-> 
-> Is there anything else I can do on this series ? Should I send a v6 with
-> Viresh's and Daniel's Acked-by ?
+On 6/10/2019 5:24 PM, Dmitry Osipenko wrote:
+> 07.06.2019 17:46, Vidya Sagar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> Synopsys DesignWare core based PCIe controllers in Tegra 194 SoC interfa=
+ce
+>> with Universal PHY (UPHY) module through a PIPE2UPHY (P2U) module.
+>> For each PCIe lane of a controller, there is a P2U unit instantiated at
+>> hardware level. This driver provides support for the programming require=
+d
+>> for each P2U that is going to be used for a PCIe controller.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>> Changes since [v8]:
+>> * Made it dependent on ARCH_TEGRA_194_SOC directly instead of ARCH_TEGRA
+>>
+>> Changes since [v7]:
+>> * Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-=
+p2u.c
+>>
+>> Changes since [v6]:
+>> * None
+>>
+>> Changes since [v5]:
+>> * Addressed review comments from Thierry
+>>
+>> Changes since [v4]:
+>> * None
+>>
+>> Changes since [v3]:
+>> * Rebased on top of linux-next top of the tree
+>>
+>> Changes since [v2]:
+>> * Replaced spaces with tabs in Kconfig file
+>> * Sorted header file inclusion alphabetically
+>>
+>> Changes since [v1]:
+>> * Added COMPILE_TEST in Kconfig
+>> * Removed empty phy_ops implementations
+>> * Modified code according to DT documentation file modifications
+>>
+>>   drivers/phy/tegra/Kconfig            |   7 ++
+>>   drivers/phy/tegra/Makefile           |   1 +
+>>   drivers/phy/tegra/phy-tegra194-p2u.c | 109 +++++++++++++++++++++++++++
+>>   3 files changed, 117 insertions(+)
+>>   create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
+>>
+>> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+>> index e516967d695b..f9817c3ae85f 100644
+>> --- a/drivers/phy/tegra/Kconfig
+>> +++ b/drivers/phy/tegra/Kconfig
+>> @@ -7,3 +7,10 @@ config PHY_TEGRA_XUSB
+>>  =20
+>>   	  To compile this driver as a module, choose M here: the module will
+>>   	  be called phy-tegra-xusb.
+>> +
+>> +config PHY_TEGRA194_P2U
+>> +	tristate "NVIDIA Tegra194 PIPE2UPHY PHY driver"
+>> +	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
+>> +	select GENERIC_PHY
+>> +	help
+>> +	  Enable this to support the P2U (PIPE to UPHY) that is part of Tegra =
+19x SOCs.
+>> diff --git a/drivers/phy/tegra/Makefile b/drivers/phy/tegra/Makefile
+>> index 64ccaeacb631..320dd389f34d 100644
+>> --- a/drivers/phy/tegra/Makefile
+>> +++ b/drivers/phy/tegra/Makefile
+>> @@ -6,3 +6,4 @@ phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_124_SOC) +=3D xusb-te=
+gra124.o
+>>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_132_SOC) +=3D xusb-tegra124.o
+>>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_210_SOC) +=3D xusb-tegra210.o
+>>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_186_SOC) +=3D xusb-tegra186.o
+>> +obj-$(CONFIG_PHY_TEGRA194_P2U) +=3D phy-tegra194-p2u.o
+>> diff --git a/drivers/phy/tegra/phy-tegra194-p2u.c b/drivers/phy/tegra/ph=
+y-tegra194-p2u.c
+>> new file mode 100644
+>> index 000000000000..7b84b4c55e43
+>> --- /dev/null
+>> +++ b/drivers/phy/tegra/phy-tegra194-p2u.c
+>> @@ -0,0 +1,109 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +/*
+>> + * P2U (PIPE to UPHY) driver for Tegra T194 SoC
+>> + *
+>> + * Copyright (C) 2019 NVIDIA Corporation.
+>> + *
+>> + * Author: Vidya Sagar <vidyas@nvidia.com>
+>> + */
+>> +
+>> +#include <linux/err.h>
+>> +#include <linux/io.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/phy/phy.h>
+>> +
+>> +#define P2U_PERIODIC_EQ_CTRL_GEN3	0xc0
+>> +#define P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN		BIT(0)
+>> +#define P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
+>> +#define P2U_PERIODIC_EQ_CTRL_GEN4	0xc4
+>> +#define P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
+>> +
+>> +#define P2U_RX_DEBOUNCE_TIME				0xa4
+>> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK	0xffff
+>> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL		160
+>> +
+>> +struct tegra_p2u {
+>> +	void __iomem *base;
+>> +};
+>> +
+>> +static int tegra_p2u_power_on(struct phy *x)
+>> +{
+>> +	struct tegra_p2u *phy =3D phy_get_drvdata(x);
+>> +	u32 val;
+>> +
+>> +	val =3D readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
+>> +	val &=3D ~P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN;
+>> +	val |=3D P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN;
+>> +	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
+>> +
+>> +	val =3D readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
+>> +	val |=3D P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN;
+>> +	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
+>> +
+>> +	val =3D readl(phy->base + P2U_RX_DEBOUNCE_TIME);
+>> +	val &=3D ~P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK;
+>> +	val |=3D P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL;
+>> +	writel(val, phy->base + P2U_RX_DEBOUNCE_TIME);
+>=20
+> I'm wondering whether you're really need to insert memory barriers for
+> each readl/writel, can't the relaxed versions be used instead?
+Well, there is no real need to use readl/writel with their memory barriers.
+I'll push new series replacing them with their _relaxed() counterparts.
 
-No need to send a V6 if there are no changes in the patches. The
-maintainer will take care of collecting the tags (which is usually
-automatic when using the patchwork tools).
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+>=20
+> The same applies to other patches as well.
+>=20
 
