@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F6AC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A16D5C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA23F21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716A521721
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 17:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560362203;
-	bh=VoAawK2xOQH5NjRKqSvezRO2WgOms/jtM3IzOhLvjKQ=;
+	s=default; t=1560362208;
+	bh=j3FHrglBK3ElzFAtaKKCdxepOVkIjQNLuGnT28xuhAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0E8s4dVcFhvFI+zWFvMjEz/HvC/QVcHUa40Hc+Czj6KBlTyWoQB/Fi6/kLMU+a31v
-	 68jYNQeCLLO/ZFm9wwZKH5/ccIhbD/FlXCDlL8hgiRRZIzyLTXuOQWRiQmRG1EblQD
-	 A4FXWJ0JrWMTWZ/W7WIEHcHT3hQwWVU/xmpRautM=
+	b=fwLsCT8fjkn4Lonbo+X25oUQK6f4QkAQ0asMAkvsRLAkgN5F+1KqFIfygrv5urK5s
+	 Mhqmt8V1alzngEGiUPo6VbdD36g3G89fqlK5ksTorFPGWF1LNT3yg+IXQNNWRuUNH8
+	 zJCtyDwMQcMHhy2nPoVZ6fH+wv+NgRyC1HLuOQGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388615AbfFLRxM (ORCPT
+        id S1730673AbfFLR4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 13:53:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40390 "EHLO
+        Wed, 12 Jun 2019 13:56:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40414 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387793AbfFLRxL (ORCPT
+        with ESMTP id S2388381AbfFLRxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 13:53:11 -0400
+        Wed, 12 Jun 2019 13:53:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=vL4lOYobBwCnYeVEKz9+S+U0qDj+pEo1Zutn3iMRF3w=; b=bVniTSEq3eGp3ZnjsE6pnPwGL6
-        TZk9luV9nGuNHvWkeiNmoA45pY9qIt75u0NyaHokBpcoDAU70f5Ghs70gmPhejltHdwbg9+IPhgT9
-        9tp3TFsK5WA/8SQ0y50q6yinOZYKyD2sth38rRfA8b6w6u4t5mjrDBjFbm3G2cYz/tNLA5fAdAMap
-        F2bdJFSgzgz+6l0eyb276DrHYeKnBt9PfhFw+0ZQIFMA77sdJsr2oyBJy4GVPNwu6JuLdppSWI9tw
-        RRFOwqTlyEpZy/OGQQRL4wh2MouDUfxf54Moc9U5oOL5bKxgPEiq2Y5KPG4bwwy772T3bnabxLL6l
-        19ZRnPnw==;
+        bh=HSCm9fmHq45iKXWvH1z71kgLM8Zr/K08UPBWZ48G3rQ=; b=kJCrYJnNRG+T/i8p0SFrwjrMkr
+        19SZQRfn+IMOssbbwMr8p9eTJLbxQlE0CzEkxNP3MDXn4axwXKcIf7ZdtmsZmvd8UDdorMizZQ2+o
+        5Rj6PaL+4gFRZ7u0/uaVsAWLvbuhA3GOf1+1zB8sPlBcWfuPL0JyiUeIMU+1IXtvQRQxtzCm+p8m4
+        QCTAmLTM3n/h9lC+xGRm279b/s8RELcGxSL4O/B2FyCmN/bf2CaJUgrt9tO6dUHt/N9o77ZWrGn/I
+        C26XwUhNCztYHr2ma86mt2WbUMhmhnKhTLNRp+OK5mhc9oJ2jcDnm4397XlflfOcy4E9bq0fBqP9l
+        YWRznc0w==;
 Received: from 201.86.169.251.dynamic.adsl.gvt.net.br ([201.86.169.251] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hb7Qs-0002Dm-R9; Wed, 12 Jun 2019 17:53:10 +0000
+        id 1hb7Qt-0002Dg-23; Wed, 12 Jun 2019 17:53:11 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hb7Qq-0001hF-JY; Wed, 12 Jun 2019 14:53:08 -0300
+        id 1hb7Qq-0001gm-De; Wed, 12 Jun 2019 14:53:08 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Richard Cochran <richardcochran@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: [PATCH v4 21/28] docs: ptp.txt: convert to ReST and move to driver-api
-Date:   Wed, 12 Jun 2019 14:52:57 -0300
-Message-Id: <7855f0fd13e76718a182f877927f4cbd690a4a38.1560361364.git.mchehab+samsung@kernel.org>
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>
+Subject: [PATCH v4 15/28] docs: mic: convert docs to ReST and rename to *.rst
+Date:   Wed, 12 Jun 2019 14:52:51 -0300
+Message-Id: <b2e5b38de65402453e48c6e0aa5cc362f1824e13.1560361364.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560361364.git.mchehab+samsung@kernel.org>
 References: <cover.1560361364.git.mchehab+samsung@kernel.org>
@@ -66,124 +66,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The conversion is trivial: just adjust title markups.
+Convert Intel Many Integrated Core architecture docs to ReST.
 
-In order to avoid conflicts, let's add an :orphan: tag
-to it, to be removed when this file gets added to the
-driver-api book.
+The conversion is trivial: just add title and literal block
+markups, and adjust some identation.
+
+At its new index.rst, let's add a :orphan: while this is not linked to
+the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
 ---
- .../{ptp/ptp.txt => driver-api/ptp.rst}       | 26 +++++++++++++------
- Documentation/networking/timestamping.txt     |  2 +-
- MAINTAINERS                                   |  2 +-
- 3 files changed, 20 insertions(+), 10 deletions(-)
- rename Documentation/{ptp/ptp.txt => driver-api/ptp.rst} (88%)
+ Documentation/mic/index.rst                   | 18 ++++++
+ .../{mic_overview.txt => mic_overview.rst}    |  6 +-
+ .../{scif_overview.txt => scif_overview.rst}  | 58 +++++++++++--------
+ 3 files changed, 57 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/mic/index.rst
+ rename Documentation/mic/{mic_overview.txt => mic_overview.rst} (96%)
+ rename Documentation/mic/{scif_overview.txt => scif_overview.rst} (76%)
 
-diff --git a/Documentation/ptp/ptp.txt b/Documentation/driver-api/ptp.rst
-similarity index 88%
-rename from Documentation/ptp/ptp.txt
-rename to Documentation/driver-api/ptp.rst
-index 11e904ee073f..b6e65d66d37a 100644
---- a/Documentation/ptp/ptp.txt
-+++ b/Documentation/driver-api/ptp.rst
-@@ -1,5 +1,8 @@
+diff --git a/Documentation/mic/index.rst b/Documentation/mic/index.rst
+new file mode 100644
+index 000000000000..082fa8f6a260
+--- /dev/null
++++ b/Documentation/mic/index.rst
+@@ -0,0 +1,18 @@
 +:orphan:
- 
--* PTP hardware clock infrastructure for Linux
-+===========================================
-+PTP hardware clock infrastructure for Linux
-+===========================================
- 
-   This patch set introduces support for IEEE 1588 PTP clocks in
-   Linux. Together with the SO_TIMESTAMPING socket options, this
-@@ -22,7 +25,8 @@
-     - Period output signals configurable from user space
-     - Synchronization of the Linux system time via the PPS subsystem
- 
--** PTP hardware clock kernel API
-+PTP hardware clock kernel API
-+=============================
- 
-    A PTP clock driver registers itself with the class driver. The
-    class driver handles all of the dealings with user space. The
-@@ -36,7 +40,8 @@
-    development, it can be useful to have more than one clock in a
-    single system, in order to allow performance comparisons.
- 
--** PTP hardware clock user space API
-+PTP hardware clock user space API
-+=================================
- 
-    The class driver also creates a character device for each
-    registered clock. User space can use an open file descriptor from
-@@ -49,7 +54,8 @@
-    ancillary clock features. User space can receive time stamped
-    events via blocking read() and poll().
- 
--** Writing clock drivers
-+Writing clock drivers
-+=====================
- 
-    Clock drivers include include/linux/ptp_clock_kernel.h and register
-    themselves by presenting a 'struct ptp_clock_info' to the
-@@ -66,14 +72,17 @@
-    class driver, since the lock may also be needed by the clock
-    driver's interrupt service routine.
- 
--** Supported hardware
-+Supported hardware
-+==================
 +
-+   * Freescale eTSEC gianfar
- 
--   + Freescale eTSEC gianfar
-      - 2 Time stamp external triggers, programmable polarity (opt. interrupt)
-      - 2 Alarm registers (optional interrupt)
-      - 3 Periodic signals (optional interrupt)
- 
--   + National DP83640
-+   * National DP83640
++=============================================
++Intel Many Integrated Core (MIC) architecture
++=============================================
 +
-      - 6 GPIOs programmable as inputs or outputs
-      - 6 GPIOs with dedicated functions (LED/JTAG/clock) can also be
-        used as general inputs or outputs
-@@ -81,6 +90,7 @@
-      - GPIO outputs can produce periodic signals
-      - 1 interrupt pin
- 
--   + Intel IXP465
-+   * Intel IXP465
++.. toctree::
++    :maxdepth: 1
 +
-      - Auxiliary Slave/Master Mode Snapshot (optional interrupt)
-      - Target Time (optional interrupt)
-diff --git a/Documentation/networking/timestamping.txt b/Documentation/networking/timestamping.txt
-index bbdaf8990031..8dd6333c3270 100644
---- a/Documentation/networking/timestamping.txt
-+++ b/Documentation/networking/timestamping.txt
-@@ -368,7 +368,7 @@ ts[1] used to hold hardware timestamps converted to system time.
- Instead, expose the hardware clock device on the NIC directly as
- a HW PTP clock source, to allow time conversion in userspace and
- optionally synchronize system time with a userspace PTP stack such
--as linuxptp. For the PTP clock API, see Documentation/ptp/ptp.txt.
-+as linuxptp. For the PTP clock API, see Documentation/driver-api/ptp.rst.
++    mic_overview
++    scif_overview
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/mic/mic_overview.txt b/Documentation/mic/mic_overview.rst
+similarity index 96%
+rename from Documentation/mic/mic_overview.txt
+rename to Documentation/mic/mic_overview.rst
+index 074adbdf83a4..17d956bdaf7c 100644
+--- a/Documentation/mic/mic_overview.txt
++++ b/Documentation/mic/mic_overview.rst
+@@ -1,3 +1,7 @@
++======================================================
++Intel Many Integrated Core (MIC) architecture overview
++======================================================
++
+ An Intel MIC X100 device is a PCIe form factor add-in coprocessor
+ card based on the Intel Many Integrated Core (MIC) architecture
+ that runs a Linux OS. It is a PCIe endpoint in a platform and therefore
+@@ -45,7 +49,7 @@ Here is a block diagram of the various components described above. The
+ virtio backends are situated on the host rather than the card given better
+ single threaded performance for the host compared to MIC, the ability of
+ the host to initiate DMA's to/from the card using the MIC DMA engine and
+-the fact that the virtio block storage backend can only be on the host.
++the fact that the virtio block storage backend can only be on the host::
  
- Note that if the SO_TIMESTAMP or SO_TIMESTAMPNS option is enabled
- together with SO_TIMESTAMPING using SOF_TIMESTAMPING_SOFTWARE, a false
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5c5714eddde4..9d9399c9cf47 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12815,7 +12815,7 @@ L:	netdev@vger.kernel.org
- S:	Maintained
- W:	http://linuxptp.sourceforge.net/
- F:	Documentation/ABI/testing/sysfs-ptp
--F:	Documentation/ptp/*
-+F:	Documentation/driver-api/ptp.rst
- F:	drivers/net/phy/dp83640*
- F:	drivers/ptp/*
- F:	include/linux/ptp_cl*
+                +----------+           |             +----------+
+                | Card OS  |           |             | Host OS  |
+diff --git a/Documentation/mic/scif_overview.txt b/Documentation/mic/scif_overview.rst
+similarity index 76%
+rename from Documentation/mic/scif_overview.txt
+rename to Documentation/mic/scif_overview.rst
+index 0a280d986731..4c8ad9e43706 100644
+--- a/Documentation/mic/scif_overview.txt
++++ b/Documentation/mic/scif_overview.rst
+@@ -1,3 +1,7 @@
++========================================
++Symmetric Communication Interface (SCIF)
++========================================
++
+ The Symmetric Communication Interface (SCIF (pronounced as skiff)) is a low
+ level communications API across PCIe currently implemented for MIC. Currently
+ SCIF provides inter-node communication within a single host platform, where a
+@@ -8,8 +12,11 @@ is to deliver the maximum possible performance given the communication
+ abilities of the hardware. SCIF has been used to implement an offload compiler
+ runtime and OFED support for MPI implementations for MIC coprocessors.
+ 
+-==== SCIF API Components ====
++SCIF API Components
++===================
++
+ The SCIF API has the following parts:
++
+ 1. Connection establishment using a client server model
+ 2. Byte stream messaging intended for short messages
+ 3. Node enumeration to determine online nodes
+@@ -28,9 +35,12 @@ can also register local memory which is followed by data transfer using either
+ DMA, CPU copies or remote memory mapping via mmap. SCIF supports both user and
+ kernel mode clients which are functionally equivalent.
+ 
+-==== SCIF Performance for MIC ====
++SCIF Performance for MIC
++========================
++
+ DMA bandwidth comparison between the TCP (over ethernet over PCIe) stack versus
+-SCIF shows the performance advantages of SCIF for HPC applications and runtimes.
++SCIF shows the performance advantages of SCIF for HPC applications and
++runtimes::
+ 
+              Comparison of TCP and SCIF based BW
+ 
+@@ -66,33 +76,33 @@ space API similar to the kernel API in scif.h. The SCIF user space library
+ is distributed @ https://software.intel.com/en-us/mic-developer
+ 
+ Here is some pseudo code for an example of how two applications on two PCIe
+-nodes would typically use the SCIF API:
++nodes would typically use the SCIF API::
+ 
+-Process A (on node A)			Process B (on node B)
++  Process A (on node A)			Process B (on node B)
+ 
+-/* get online node information */
+-scif_get_node_ids(..)			scif_get_node_ids(..)
+-scif_open(..)				scif_open(..)
+-scif_bind(..)				scif_bind(..)
+-scif_listen(..)
+-scif_accept(..)				scif_connect(..)
+-/* SCIF connection established */
++  /* get online node information */
++  scif_get_node_ids(..)			scif_get_node_ids(..)
++  scif_open(..)				scif_open(..)
++  scif_bind(..)				scif_bind(..)
++  scif_listen(..)
++  scif_accept(..)				scif_connect(..)
++  /* SCIF connection established */
+ 
+-/* Send and receive short messages */
+-scif_send(..)/scif_recv(..)		scif_send(..)/scif_recv(..)
++  /* Send and receive short messages */
++  scif_send(..)/scif_recv(..)		scif_send(..)/scif_recv(..)
+ 
+-/* Register memory */
+-scif_register(..)			scif_register(..)
++  /* Register memory */
++  scif_register(..)			scif_register(..)
+ 
+-/* RDMA */
+-scif_readfrom(..)/scif_writeto(..)	scif_readfrom(..)/scif_writeto(..)
++  /* RDMA */
++  scif_readfrom(..)/scif_writeto(..)	scif_readfrom(..)/scif_writeto(..)
+ 
+-/* Fence DMAs */
+-scif_fence_signal(..)			scif_fence_signal(..)
++  /* Fence DMAs */
++  scif_fence_signal(..)			scif_fence_signal(..)
+ 
+-mmap(..)				mmap(..)
++  mmap(..)				mmap(..)
+ 
+-/* Access remote registered memory */
++  /* Access remote registered memory */
+ 
+-/* Close the endpoints */
+-scif_close(..)				scif_close(..)
++  /* Close the endpoints */
++  scif_close(..)				scif_close(..)
 -- 
 2.21.0
 
