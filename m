@@ -2,150 +2,182 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E39CC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7947C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047B020896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0F3420665
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 04:42:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nqTKRZCK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eBXhtMqX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbfFLEfM (ORCPT
+        id S1729919AbfFLEmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 00:35:12 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39813 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725613AbfFLEfL (ORCPT
+        Wed, 12 Jun 2019 00:42:25 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34972 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727384AbfFLEmY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 00:35:11 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 196so8193470pgc.6
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 21:35:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rJn1YZ706aJfrT07Hn2oI2Mia8615vCPrYsCrOsg17g=;
-        b=nqTKRZCKIs+8kG9Liz37bjElzQMgiWIkqbp++oZGf4NKeWcTbix2jRPp8mGO/hAgR6
-         4+HNZHFyqoG6vx+pkuGWDOYH/mueiggyXED2gqRaFTKHeVEUfGhAMGncR0Y61bP1+Jng
-         XWbBDY7gsgQmfzGku7MtRuYYrk4EaxY1CoudU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rJn1YZ706aJfrT07Hn2oI2Mia8615vCPrYsCrOsg17g=;
-        b=qlhIglcvnuQNtT4P5FRY0apMtLzLZu9y4ndaO0cqhX88toW3abMk3T/S1D1UAefZ+i
-         rV5S9GDCcBPp7YvcMv2ZGdX1kmmUIjNQSbo9HuWA31+Kvu3p/JwNDwPeXXyAoi3Vjh2W
-         3FPlxdg88d7qedmniFjiLb2RjpRShuSwK8kK1+mOz0+MReLO+N81H+6Zl6BH9HBJOWWz
-         iNvIN2GalLTdKYd0sDbEqxZJYyWNd3NQoWDajvZ0u7vGUO4euGKxxjjarYQSQoiPW75U
-         OqY3U5tRau3AmTUPU66z+dhICeK7l43Q6SNHBwhalGZRSxLITYfgmkZE0ZgWhU1oSCDO
-         amlQ==
-X-Gm-Message-State: APjAAAVGRykDQzo/8O3jPPr7qvhEeBiqX7Xl+47DGEb67VtUKj22T+nC
-        jQZzEx1x7SNfV8lJg/0Eg3jOyg==
-X-Google-Smtp-Source: APXvYqy6WDq4Lk5pwGNHojTbI4ATefffHsAeuBNNuE8NFwZSff+br4DhRCYcJDdPXvX4l1j7ZaLK6w==
-X-Received: by 2002:a65:63c6:: with SMTP id n6mr18294203pgv.370.1560314110645;
-        Tue, 11 Jun 2019 21:35:10 -0700 (PDT)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id k8sm15285998pfi.168.2019.06.11.21.35.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 11 Jun 2019 21:35:10 -0700 (PDT)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Miles Chen <miles.chen@mediatek.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        James Morse <james.morse@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH v6 3/3] arm64: kexec_file: add rng-seed support
-Date:   Wed, 12 Jun 2019 12:33:02 +0800
-Message-Id: <20190612043258.166048-4-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190612043258.166048-1-hsinyi@chromium.org>
-References: <20190612043258.166048-1-hsinyi@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 12 Jun 2019 00:42:24 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5C4Y7QG151814;
+        Wed, 12 Jun 2019 04:40:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=Dvgzk7NkhDjyOBKbHEmBJhstfiU7BL6wh43neF+ZDkY=;
+ b=eBXhtMqXh8EbDaA5cd4D3GN7ltogiLw0wHdiLQVI1uQwRHXIS3DHjZvRCRaEUcd5xHkz
+ JAM7IoXdBgfIrH7+JznevmT1Mp2ZJRe/trIkEPNY44SRY43R3Tshf1Qe1hyOJUnJK1St
+ Y4nYDWdh19ikRfbs0EWiuUo/w/RPjr3A4/jMTbNPYc3SFuyCfx/n3r+qbGS/kGvhALLL
+ Bs4Wm6qJ35n3iYR4qvcSbs4Jiqc/V6TnjFt/17JJfEkRJ0nDaXI695/drkHljkQrW/wp
+ 3PPttF8sqdA/OqPKJZW0ZYXnj4t1CeN3cMmitwxQsx1iORublrBr082JGosrJPHMP7H7 2w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2t05nqrvse-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 04:40:51 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5C4bIUd020268;
+        Wed, 12 Jun 2019 04:38:50 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2t024us0pr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 04:38:50 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5C4cVCg022576;
+        Wed, 12 Jun 2019 04:38:31 GMT
+Received: from [10.39.217.163] (/10.39.217.163)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 11 Jun 2019 21:38:30 -0700
+Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
+Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+From:   Alex Kogan <alex.kogan@oracle.com>
+In-Reply-To: <cc3eee8c-5212-7af5-c932-897ab8f3f8bf@huawei.com>
+Date:   Wed, 12 Jun 2019 00:38:29 -0400
+Cc:     linux@armlinux.org.uk, Peter Zijlstra <peterz@infradead.org>,
+        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
+        Waiman Long <longman@redhat.com>, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, dave.dice@oracle.com,
+        Rahul Yadav <rahul.x.yadav@oracle.com>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <54241445-458C-4AE2-840B-6DFCCD410399@oracle.com>
+References: <20190329152006.110370-1-alex.kogan@oracle.com>
+ <20190329152006.110370-4-alex.kogan@oracle.com>
+ <cc3eee8c-5212-7af5-c932-897ab8f3f8bf@huawei.com>
+To:     "liwei (GF)" <liwei391@huawei.com>
+X-Mailer: Apple Mail (2.3259)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9285 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906120030
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9285 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906120030
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding "rng-seed" to dtb. It's fine to add this property if original
-fdt doesn't contain it. Since original seed will be wiped after
-read, so use a default size 128 bytes here.
+Hi, Wei.
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
-change log v5->v6:
-* no change
----
- arch/arm64/kernel/machine_kexec_file.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+> On Jun 11, 2019, at 12:22 AM, liwei (GF) <liwei391@huawei.com> wrote:
+>=20
+> Hi Alex,
+>=20
+> On 2019/3/29 23:20, Alex Kogan wrote:
+>> In CNA, spinning threads are organized in two queues, a main queue =
+for
+>> threads running on the same node as the current lock holder, and a
+>> secondary queue for threads running on other nodes. At the unlock =
+time,
+>> the lock holder scans the main queue looking for a thread running on
+>> the same node. If found (call it thread T), all threads in the main =
+queue
+>> between the current lock holder and T are moved to the end of the
+>> secondary queue, and the lock is passed to T. If such T is not found, =
+the
+>> lock is passed to the first node in the secondary queue. Finally, if =
+the
+>> secondary queue is empty, the lock is passed to the next thread in =
+the
+>> main queue. For more details, see =
+https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__arxiv.org_abs_1810.=
+05600&d=3DDwICbg&c=3DRoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=3DHvhk3=
+F4omdCk-GE1PTOm3Kn0A7ApWOZ2aZLTuVxFK4k&m=3DU7mfTbYj1r2Te2BBUUNbVrRPuTa_ujl=
+pR4GZfUsrGTM&s=3DDw4O1EniF-nde4fp6RA9ISlSMOjWuqeR9OS1G0iauj0&e=3D.
+>>=20
+>> Note that this variant of CNA may introduce starvation by =
+continuously
+>> passing the lock to threads running on the same node. This issue
+>> will be addressed later in the series.
+>>=20
+>> Enabling CNA is controlled via a new configuration option
+>> (NUMA_AWARE_SPINLOCKS), which is enabled by default if NUMA is =
+enabled.
+>>=20
+>> Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
+>> Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
+>> ---
+>> arch/x86/Kconfig                      |  14 +++
+>> include/asm-generic/qspinlock_types.h |  13 +++
+>> kernel/locking/mcs_spinlock.h         |  10 ++
+>> kernel/locking/qspinlock.c            |  29 +++++-
+>> kernel/locking/qspinlock_cna.h        | 173 =
+++++++++++++++++++++++++++++++++++
+>> 5 files changed, 236 insertions(+), 3 deletions(-)
+>> create mode 100644 kernel/locking/qspinlock_cna.h
+>>=20
+> (SNIP)
+>> +
+>> +static __always_inline int get_node_index(struct mcs_spinlock *node)
+>> +{
+>> +	return decode_count(node->node_and_count++);
+> When nesting level is > 4, it won't return a index >=3D 4 here and the =
+numa node number
+> is changed by mistake. It will go into a wrong way instead of the =
+following branch.
+>=20
+>=20
+> 	/*
+> 	 * 4 nodes are allocated based on the assumption that there will
+> 	 * not be nested NMIs taking spinlocks. That may not be true in
+> 	 * some architectures even though the chance of needing more =
+than
+> 	 * 4 nodes will still be extremely unlikely. When that happens,
+> 	 * we fall back to spinning on the lock directly without using
+> 	 * any MCS node. This is not the most elegant solution, but is
+> 	 * simple enough.
+> 	 */
+> 	if (unlikely(idx >=3D MAX_NODES)) {
+> 		while (!queued_spin_trylock(lock))
+> 			cpu_relax();
+> 		goto release;
+> 	}
+Good point.
+This patch does not handle count overflows gracefully.
+It can be easily fixed by allocating more bits for the count =E2=80=94 =
+we don=E2=80=99t really need 30 bits for #NUMA nodes.
 
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 58871333737a..d40fde72a023 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -27,6 +27,8 @@
- #define FDT_PROP_INITRD_END	"linux,initrd-end"
- #define FDT_PROP_BOOTARGS	"bootargs"
- #define FDT_PROP_KASLR_SEED	"kaslr-seed"
-+#define FDT_PROP_RNG_SEED	"rng-seed"
-+#define RNG_SEED_SIZE		128
- 
- const struct kexec_file_ops * const kexec_file_loaders[] = {
- 	&kexec_image_ops,
-@@ -102,6 +104,23 @@ static int setup_dtb(struct kimage *image,
- 				FDT_PROP_KASLR_SEED);
- 	}
- 
-+	/* add rng-seed */
-+	if (rng_is_initialized()) {
-+		void *rng_seed = kmalloc(RNG_SEED_SIZE, GFP_ATOMIC);
-+		get_random_bytes(rng_seed, RNG_SEED_SIZE);
-+
-+		ret = fdt_setprop(dtb, off, FDT_PROP_RNG_SEED, rng_seed,
-+				RNG_SEED_SIZE);
-+		kfree(rng_seed);
-+
-+		if (ret)
-+			goto out;
-+
-+	} else {
-+		pr_notice("RNG is not initialised: omitting \"%s\" property\n",
-+				FDT_PROP_RNG_SEED);
-+	}
-+
- out:
- 	if (ret)
- 		return (ret == -FDT_ERR_NOSPACE) ? -ENOMEM : -EINVAL;
-@@ -110,7 +129,8 @@ static int setup_dtb(struct kimage *image,
- }
- 
- /*
-- * More space needed so that we can add initrd, bootargs and kaslr-seed.
-+ * More space needed so that we can add initrd, bootargs, kaslr-seed, and
-+ * rng-seed.
-  */
- #define DTB_EXTRA_SPACE 0x1000
- 
--- 
-2.20.1
+However, I am working on a new revision of the patch, in which the cna =
+node encapsulates the mcs node (following Peter=E2=80=99s suggestion and =
+similarly to pv_node).
+With that approach, this issue is gone.
+
+Best regards,
+=E2=80=94 Alex
+
+
 
