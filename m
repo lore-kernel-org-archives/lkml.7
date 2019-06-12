@@ -2,216 +2,133 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C492FC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE44C46477
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94633207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:26:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lhh3bjCi"
+	by mail.kernel.org (Postfix) with ESMTP id BBCB0208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407305AbfFLK0W (ORCPT
+        id S1732019AbfFLK3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:26:22 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37429 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405987AbfFLK0V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:26:21 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v14so16280147wrr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 03:26:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WOZgls7V/J5HLYwy0qbOPqukCLjTUBeaw4pQKR6aMhA=;
-        b=Lhh3bjCi9LPQOsYgV2u5hHUquMAX8JaWupSQ0JJTR6kRfdaSHWk58EUThXr5aoduGG
-         ZaDBW5Rgxtx5MA3vhep8sB0LIJiKcNNOZvWeos4oEZNcCqrv3Dq4Jgo/l7SNmtJpqIh0
-         eCN2+hUuhLKq356XSn10+47M5mvGcNQfRhYqLLd0GQ5+vy5cM3GZl8K6bFe8Zx+Mf1Op
-         vb+mljL6fOKjJ7mN7cDXb9OdK3XStpJYR2ptBCaYVB5YwVwpVE915mtXtLVw6vMxWcZz
-         SYHfU+fjaW2cicwf823jWJjZ0GQ2uFsjxWf0So9lW0hsRof5D2cWQXXzbfFJf0lc6Vtq
-         iSrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WOZgls7V/J5HLYwy0qbOPqukCLjTUBeaw4pQKR6aMhA=;
-        b=FwqlUR/cqUFB4V/+vEIVMnN8D13qFxAjrmPxm4TNz1Pr6Vh2YiubuS5xiY9VS3RFKo
-         co5CXJFoqvvh8Rys0/Uq70KxLSnTVsqNFDC3IY+lDE4JSFTWXwE7dkmt1Wd0Wt2pmE22
-         d+7vUu2Mp0o7BRdWKBx6ZxwmwwY281e8Om5oJ/kFVJZMST0J29HWaFwtBHHWWOhsFGIb
-         ITw6biPywESmcp97zQB4oEUWV0V96BBN4Ki8MnTojFNg80NvtfckPmynBOQxltR+AmYP
-         Ix1+bhvOgRF0h8W9JQqTd3V2B2iPDaJYCJW2r4j1ipkX6JJcZt7jxzsSMZNgeyWeM9Vw
-         rapg==
-X-Gm-Message-State: APjAAAX+fIfipW84SZPgmFl2MO43Rva9m6M7AKo1mX+4Ev6390cwAQs8
-        OseQM7IM/BPsGaQbzhVEiBmwUA==
-X-Google-Smtp-Source: APXvYqy2ExsmO9A/pnY9mOCCX4rJ8sv2zoGHwjcelZMJjAJyJZBRrQByS3dzi6opNGCwn+DrY/Df2A==
-X-Received: by 2002:a5d:6644:: with SMTP id f4mr40097019wrw.51.1560335178466;
-        Wed, 12 Jun 2019 03:26:18 -0700 (PDT)
-Received: from holly.lan ([185.80.132.160])
-        by smtp.gmail.com with ESMTPSA id c16sm15265578wrr.53.2019.06.12.03.26.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 03:26:17 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 11:26:15 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Shobhit Kukreti <shobhitkukreti@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] video: backlight: Replace old GPIO APIs with GPIO
- Consumer APIs for sky81542-backlight driver
-Message-ID: <20190612102615.f4zbprojjxfuahqc@holly.lan>
-References: <20190612043229.GA18179@t-1000>
+        Wed, 12 Jun 2019 06:29:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42614 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726851AbfFLK3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 06:29:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 16DA0AE07;
+        Wed, 12 Jun 2019 10:29:19 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id BA8661E4328; Wed, 12 Jun 2019 12:29:17 +0200 (CEST)
+Date:   Wed, 12 Jun 2019 12:29:17 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190612102917.GB14578@quack2.suse.cz>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606195114.GA30714@ziepe.ca>
+ <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
+ <20190607103636.GA12765@quack2.suse.cz>
+ <20190607121729.GA14802@ziepe.ca>
+ <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190612043229.GA18179@t-1000>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shobhit
-
-Thanks for the patch. Feedback below...
-
-
-On Tue, Jun 11, 2019 at 09:32:32PM -0700, Shobhit Kukreti wrote:
-> Port the sky81452-backlight driver to adhere to new gpio descriptor based
-> APIs. Modified the file sky81452-backlight.c and sky81452-backlight.h.
-> The gpio descriptor property in device tree should be "sky81452-en-gpios"
-
-That is contradicted by the device tree bindings. The property should
-remain "gpios" as it was before this conversion.
-
-
-> Removed unnecessary header files "linux/gpio.h" and "linux/of_gpio.h".
+On Fri 07-06-19 07:52:13, Ira Weiny wrote:
+> On Fri, Jun 07, 2019 at 09:17:29AM -0300, Jason Gunthorpe wrote:
+> > On Fri, Jun 07, 2019 at 12:36:36PM +0200, Jan Kara wrote:
+> > 
+> > > Because the pins would be invisible to sysadmin from that point on. 
+> > 
+> > It is not invisible, it just shows up in a rdma specific kernel
+> > interface. You have to use rdma netlink to see the kernel object
+> > holding this pin.
+> > 
+> > If this visibility is the main sticking point I suggest just enhancing
+> > the existing MR reporting to include the file info for current GUP
+> > pins and teaching lsof to collect information from there as well so it
+> > is easy to use.
+> > 
+> > If the ownership of the lease transfers to the MR, and we report that
+> > ownership to userspace in a way lsof can find, then I think all the
+> > concerns that have been raised are met, right?
 > 
-> Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>
+> I was contemplating some new lsof feature yesterday.  But what I don't
+> think we want is sysadmins to have multiple tools for multiple
+> subsystems.  Or even have to teach lsof something new for every potential
+> new subsystem user of GUP pins.
 
-What level of testing have you done? Is this a fix for hardware you own
-or a cleanup after searching the sources?
+Agreed.
 
+> I was thinking more along the lines of reporting files which have GUP
+> pins on them directly somewhere (dare I say procfs?) and teaching lsof to
+> report that information.  That would cover any subsystem which does a
+> longterm pin.
 
-> ---
->  drivers/video/backlight/sky81452-backlight.c     | 24 ++++++++++++------------
->  include/linux/platform_data/sky81452-backlight.h |  4 +++-
->  2 files changed, 15 insertions(+), 13 deletions(-)
+So lsof already parses /proc/<pid>/maps to learn about files held open by
+memory mappings. It could parse some other file as well I guess. The good
+thing about that would be that then "longterm pin" structure would just hold
+struct file reference. That would avoid any needs of special behavior on
+file close (the file reference in the "longterm pin" structure would make
+sure struct file and thus the lease stays around, we'd just need to make
+explicit lease unlock block until the "longterm pin" structure is freed).
+The bad thing is that it requires us to come up with a sane new proc
+interface for reporting "longterm pins" and associated struct file. Also we
+need to define what this interface shows if the pinned pages are in DRAM
+(either page cache or anon) and not on NVDIMM.
+
+> > > ugly to live so we have to come up with something better. The best I can
+> > > currently come up with is to have a method associated with the lease that
+> > > would invalidate the RDMA context that holds the pins in the same way that
+> > > a file close would do it.
+> > 
+> > This is back to requiring all RDMA HW to have some new behavior they
+> > currently don't have..
+> > 
+> > The main objection to the current ODP & DAX solution is that very
+> > little HW can actually implement it, having the alternative still
+> > require HW support doesn't seem like progress.
+> > 
+> > I think we will eventually start seein some HW be able to do this
+> > invalidation, but it won't be universal, and I'd rather leave it
+> > optional, for recovery from truely catastrophic errors (ie my DAX is
+> > on fire, I need to unplug it).
 > 
-> diff --git a/drivers/video/backlight/sky81452-backlight.c b/drivers/video/backlight/sky81452-backlight.c
-> index d414c7a..12ef628 100644
-> --- a/drivers/video/backlight/sky81452-backlight.c
-> +++ b/drivers/video/backlight/sky81452-backlight.c
-> @@ -19,12 +19,10 @@
->  
->  #include <linux/backlight.h>
->  #include <linux/err.h>
-> -#include <linux/gpio.h>
->  #include <linux/init.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/platform_data/sky81452-backlight.h>
-> @@ -193,7 +191,6 @@ static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
->  	pdata->ignore_pwm = of_property_read_bool(np, "skyworks,ignore-pwm");
->  	pdata->dpwm_mode = of_property_read_bool(np, "skyworks,dpwm-mode");
->  	pdata->phase_shift = of_property_read_bool(np, "skyworks,phase-shift");
-> -	pdata->gpio_enable = of_get_gpio(np, 0);
->  
->  	ret = of_property_count_u32_elems(np, "led-sources");
->  	if (ret < 0) {
-> @@ -274,13 +271,17 @@ static int sky81452_bl_probe(struct platform_device *pdev)
->  		if (IS_ERR(pdata))
->  			return PTR_ERR(pdata);
->  	}
-> -
-> -	if (gpio_is_valid(pdata->gpio_enable)) {
-> -		ret = devm_gpio_request_one(dev, pdata->gpio_enable,
-> -					GPIOF_OUT_INIT_HIGH, "sky81452-en");
-> -		if (ret < 0) {
-> -			dev_err(dev, "failed to request GPIO. err=%d\n", ret);
-> -			return ret;
-> +	pdata->gpiod_enable = devm_gpiod_get(dev, "sk81452-en", GPIOD_OUT_HIGH);
+> Agreed.  I think software wise there is not much some of the devices can do
+> with such an "invalidate".
 
-As above... I think the second argument here needs to be NULL in order
-to preserve the current DT bindings.
+So out of curiosity: What does RDMA driver do when userspace just closes
+the file pointing to RDMA object? It has to handle that somehow by aborting
+everything that's going on... And I wanted similar behavior here.
 
+								Honza
 
-> +	if (IS_ERR(pdata->gpiod_enable)) {
-> +		long ret = PTR_ERR(pdata->gpiod_enable);
-> +
-> +		/**
-
-Nitpicking... but no second star here. That's a trigger symbold for
-documentation processors.
-
-> +		 * gpiod_enable is optional in device tree.
-> +		 * Return error only if gpio was assigned in device tree
-
-Also nitpicking but I had to read this a few times because
-gpiod_enable is not in device tree, gpios is.
-
-This is a common pattern so the comment can be very short. Something
-like:
-
-    This DT property is optional so no need to propagate ENOENT
-
-
-> +		 */
-> +		if (ret != -ENOENT) {
-> +			dev_err(dev, "failed to request GPIO. err=%ld\n", ret);
-> +			return PTR_ERR(pdata->gpiod_enable);
->  		}
->  	}
->  
-> @@ -323,8 +324,7 @@ static int sky81452_bl_remove(struct platform_device *pdev)
->  	bd->props.brightness = 0;
->  	backlight_update_status(bd);
->  
-> -	if (gpio_is_valid(pdata->gpio_enable))
-> -		gpio_set_value_cansleep(pdata->gpio_enable, 0);
-> +	gpiod_set_value_cansleep(pdata->gpiod_enable, 0);
->  
->  	return 0;
->  }
-> diff --git a/include/linux/platform_data/sky81452-backlight.h b/include/linux/platform_data/sky81452-backlight.h
-> index 1231e9b..dc4cb85 100644
-> --- a/include/linux/platform_data/sky81452-backlight.h
-> +++ b/include/linux/platform_data/sky81452-backlight.h
-> @@ -20,6 +20,8 @@
->  #ifndef _SKY81452_BACKLIGHT_H
->  #define _SKY81452_BACKLIGHT_H
->  
-> +#include <linux/gpio/consumer.h>
-> +
-
-This heaer file should be included from the C file... it is not required
-to parse the header.
-
-
-Daniel.
-
-
->  /**
->   * struct sky81452_platform_data
->   * @name:	backlight driver name.
-> @@ -34,7 +36,7 @@
->   */
->  struct sky81452_bl_platform_data {
->  	const char *name;
-> -	int gpio_enable;
-> +	struct gpio_desc *gpiod_enable;
->  	unsigned int enable;
->  	bool ignore_pwm;
->  	bool dpwm_mode;
-> -- 
-> 2.7.4
-> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
