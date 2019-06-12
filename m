@@ -2,52 +2,173 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D50CC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A17C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8D32086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B29112086A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:37:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560328668;
+	bh=QfcH+GmJd1oDP1Fb6wQ/0cPqLTDuAsgxIHYxQTMx+qM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PBmxCnYBK8l90ffLlpCQojChWt66xEXm6DlCJ+Ce71Vren6mwjXIeuq4XH2zzCZz5
+	 HvTnub07YEkzSz+zum0hdeO5fpYZL9FwoWQ+gWAT8DuejXQ7VwQkLujkOiJp8ggFpS
+	 WuQCgncKmsSyBKQ7/aecM/qozUUWrBZG/huTmGt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406059AbfFLIh2 (ORCPT
+        id S1731341AbfFLIhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:37:28 -0400
-Received: from 8bytes.org ([81.169.241.247]:43552 "EHLO theia.8bytes.org"
+        Wed, 12 Jun 2019 04:37:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727027AbfFLIh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:37:28 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 2237A642; Wed, 12 Jun 2019 10:37:27 +0200 (CEST)
-Date:   Wed, 12 Jun 2019 10:37:25 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        sai.praneeth.prakhya@intel.com, cai@lca.pw,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] iommu/vt-d: Fixes and cleanups for linux-next
-Message-ID: <20190612083725.GE17505@8bytes.org>
-References: <20190612002851.17103-1-baolu.lu@linux.intel.com>
+        id S2404447AbfFLIhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 04:37:47 -0400
+Received: from localhost.localdomain (nat-pool-mxp-t.redhat.com [149.6.153.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4858D206E0;
+        Wed, 12 Jun 2019 08:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560328666;
+        bh=QfcH+GmJd1oDP1Fb6wQ/0cPqLTDuAsgxIHYxQTMx+qM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D6nuiLQs2fgx3D5vhiy2mrTQVmuJsCV9oPBQiT+szo3kUNPAflzfmJxF3ocK9uyUl
+         9EkMtTI3Qq/1xt7U+GtILKOQEIQLnKCqUSQCVID5FvDOjSmp75DJ7z4OQ2wEdyh093
+         OlNq4k6kLg4xfWk6+A20GnVNP4vIql88aErwoAh0=
+Date:   Wed, 12 Jun 2019 10:37:40 +0200
+From:   Lorenzo Bianconi <lorenzo@kernel.org>
+To:     Ryder Lee <ryder.lee@mediatek.com>
+Cc:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mt76: mt7615: add support for per-chain signal
+ strength reporting
+Message-ID: <20190612083739.GB8107@localhost.localdomain>
+References: <22e5caff3581dc92fd6fec2f25966d86b7276bba.1560220443.git.ryder.lee@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yEPQxsgoJgBvi8ip"
 Content-Disposition: inline
-In-Reply-To: <20190612002851.17103-1-baolu.lu@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <22e5caff3581dc92fd6fec2f25966d86b7276bba.1560220443.git.ryder.lee@mediatek.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 08:28:44AM +0800, Lu Baolu wrote:
-> Lu Baolu (6):
->   iommu/vt-d: Don't return error when device gets right domain
->   iommu/vt-d: Set domain type for a private domain
->   iommu/vt-d: Don't enable iommu's which have been ignored
->   iommu/vt-d: Allow DMA domain attaching to rmrr locked device
->   iommu/vt-d: Fix suspicious RCU usage in probe_acpi_namespace_devices()
->   iommu/vt-d: Consolidate domain_init() to avoid duplication
 
-Applied, thanks.
+--yEPQxsgoJgBvi8ip
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+> Fill in RX status->chain_signal to avoid empty value.
+>=20
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+> Changes since v2 - correct calculation sequence
+> ---
+>  .../net/wireless/mediatek/mt76/mt7615/mac.c   | 30 ++++++++++++++++++-
+>  .../net/wireless/mediatek/mt76/mt7615/mac.h   |  5 ++++
+>  2 files changed, 34 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/ne=
+t/wireless/mediatek/mt76/mt7615/mac.c
+> index b60d42b5923d..2f49a99e77b1 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+> @@ -13,6 +13,11 @@
+>  #include "../dma.h"
+>  #include "mac.h"
+> =20
+
+[...]
+
+> @@ -169,7 +175,29 @@ int mt7615_mac_fill_rx(struct mt7615_dev *dev, struc=
+t sk_buff *skb)
+> =20
+>  		status->enc_flags |=3D RX_ENC_FLAG_STBC_MASK * stbc;
+> =20
+> -		/* TODO: RSSI */
+> +		status->chains =3D dev->mt76.antenna_mask;
+> +		status->chain_signal[0] =3D to_rssi(MT_RXV4_RCPI0, rxdg3);
+> +		status->chain_signal[1] =3D to_rssi(MT_RXV4_RCPI1, rxdg3);
+> +		status->chain_signal[2] =3D to_rssi(MT_RXV4_RCPI2, rxdg3);
+> +		status->chain_signal[3] =3D to_rssi(MT_RXV4_RCPI3, rxdg3);
+> +		status->signal =3D status->chain_signal[0];
+> +
+> +		switch (status->chains) {
+> +		case 0xf:
+> +			status->signal =3D max(status->signal,
+> +					     status->chain_signal[3]);
+> +			/* fall through */
+> +		case 0x7:
+> +			status->signal =3D max(status->signal,
+> +					     status->chain_signal[2]);
+> +			/* fall through */
+> +		case 0x3:
+> +			status->signal =3D max(status->signal,
+> +					     status->chain_signal[1]);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+
+is it possible to enable rx chains selectively (e.g. chain 0 and 2)?
+If so we can do something like:
+
+for (i =3D 1; i < hweight8(dev->mt76.antenna_mask); i++) {
+	if (!(status->chains & BIT(i)))
+		continue;
+
+	status->signal =3D max(status->signal,
+			     status->chain_signal[i]);
+}
+
+Regards,
+Lorenzo
+
+>  		rxd +=3D 6;
+>  		if ((u8 *)rxd - skb->data >=3D skb->len)
+>  			return -EINVAL;
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.h b/drivers/ne=
+t/wireless/mediatek/mt76/mt7615/mac.h
+> index 18ad4b8a3807..b00ce8db58e9 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
+> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.h
+> @@ -98,6 +98,11 @@ enum rx_pkt_type {
+>  #define MT_RXV2_GROUP_ID		GENMASK(26, 21)
+>  #define MT_RXV2_LENGTH			GENMASK(20, 0)
+> =20
+> +#define MT_RXV4_RCPI3			GENMASK(31, 24)
+> +#define MT_RXV4_RCPI2			GENMASK(23, 16)
+> +#define MT_RXV4_RCPI1			GENMASK(15, 8)
+> +#define MT_RXV4_RCPI0			GENMASK(7, 0)
+> +
+>  enum tx_header_format {
+>  	MT_HDR_FORMAT_802_3,
+>  	MT_HDR_FORMAT_CMD,
+> --=20
+> 2.18.0
+>=20
+
+--yEPQxsgoJgBvi8ip
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXQC50QAKCRA6cBh0uS2t
+rI6hAP9Warx35hWYlrpmqbAqHAOcATtC3HRS5Vgg2y5PiTNWDwD8C/oyAz5+UBIJ
+0DP/Sqd38fAYdghH3zy/ZhxyNT/VRgU=
+=1Un8
+-----END PGP SIGNATURE-----
+
+--yEPQxsgoJgBvi8ip--
