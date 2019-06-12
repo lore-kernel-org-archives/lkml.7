@@ -2,89 +2,93 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2F7C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96883C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D3D208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:23:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jKAjTw51"
+	by mail.kernel.org (Postfix) with ESMTP id 6CF3021019
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:23:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560349430;
+	bh=Epy3kS13Rkvvvma6r/YPkgen0bYM96jquMd812WLj7s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1QbIB7pEK7D7nNJ58GxpmlTXeuIWS00spa7gLuPD1mIo7WAjrae1O9mTQb/ahhGwA
+	 e6d7Sm0HqV2fPA2Fwlh2aO0Xfuu91G4Xu7RlWLssY5kqkjBPaFwCQXf6X64pMN7d8f
+	 cgaxGPRjmm9LSi7C7l0FEtc5WFTUrw9SYwdC3tQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437257AbfFLOXp (ORCPT
+        id S2409351AbfFLOXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:23:45 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14351 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbfFLOXp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:23:45 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d010aed0001>; Wed, 12 Jun 2019 07:23:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 12 Jun 2019 07:23:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 12 Jun 2019 07:23:44 -0700
-Received: from [10.21.132.143] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 12 Jun
- 2019 14:23:42 +0000
-Subject: Re: [REGRESSION v5.2-rc] SUNRPC: Declare RPC timers as
- TIMER_DEFERRABLE (431235818bc3)
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <c54db63b-0d5d-2012-162a-cb08cf32245a@nvidia.com>
- <b2c142996bc25aff51a197db52015bf9222139fe.camel@hammerspace.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <36e34e81-8399-be71-2dd6-399d70057657@nvidia.com>
-Date:   Wed, 12 Jun 2019 15:23:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 12 Jun 2019 10:23:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407842AbfFLOXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:23:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72C47208CA;
+        Wed, 12 Jun 2019 14:23:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560349428;
+        bh=Epy3kS13Rkvvvma6r/YPkgen0bYM96jquMd812WLj7s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LkTq40C0qTdaAi59xMNtWhOngjBAjv2RA1O3Cm1GHRWG87eu/iIGkSMAClu9KzsPP
+         dKgMgxbntbq3vLUtMeyMUKsEXTV5vS+xrv2jiKHDeRFAq2WUTCTGiJXG/8geCGRAuR
+         SU8Xt4frLmZ6Mxumzc42sXXZ15ZMCUmM/oF4n5oI=
+Date:   Wed, 12 Jun 2019 16:23:45 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Gen Zhang <blackgod016574@gmail.com>
+Cc:     nico@fluxnic.net, kilobyte@angband.pl, textshell@uchuujin.de,
+        mpatocka@redhat.com, daniel.vetter@ffwll.ch,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] vt: fix a missing-check bug in con_init()
+Message-ID: <20190612142345.GB11563@kroah.com>
+References: <20190612131506.GA3526@zhanggen-UX430UQ>
+ <20190612133838.GA7748@kroah.com>
+ <20190612134449.GA4015@zhanggen-UX430UQ>
 MIME-Version: 1.0
-In-Reply-To: <b2c142996bc25aff51a197db52015bf9222139fe.camel@hammerspace.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560349421; bh=N5MzEerQSEvD2TnbxfmlJKEEgNNcq60nOgCTwn1HUfY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=jKAjTw51G219XqRyB0ZJa7GBqFnXZ9/IObybwBeg3h50DbhSjH6ZrIk4o1BaspG6L
-         i16DYLhk2AZyasU+tAEDGlAHlmBEp39qus6gMP8gii6WR7p9+6AMtzs5F2zqkSCYZm
-         qS3kmVRviJz0g2HUoJHrsSAOIpXJQ9OMtSSFX4j/PkS2Sj5bFOBcQ4VRZqt3WlLIHR
-         NRvjAOXTSa3BHWDZ22CKSB0Yd5W6YDGTD9E0GV8QTM6sLh8fYahOb4AoaSsq4N4cTc
-         s7cq32cGYC5BlkIok1SnSAbS/4+aETpMRp8+dQ05HODpeyjwJCG8YlbDn2fFw4TZqf
-         K4s34cT0zT0nw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612134449.GA4015@zhanggen-UX430UQ>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 12, 2019 at 09:44:49PM +0800, Gen Zhang wrote:
+> On Wed, Jun 12, 2019 at 03:38:38PM +0200, Greg KH wrote:
+> > On Wed, Jun 12, 2019 at 09:15:06PM +0800, Gen Zhang wrote:
+> > > In function con_init(), the pointer variable vc_cons[currcons].d, vc and 
+> > > vc->vc_screenbuf is allocated by kzalloc(). However, kzalloc() returns 
+> > > NULL when fails. Therefore, we should check the return value and handle 
+> > > the error.
+> > > 
+> > > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > > ---
+> > 
+> > What changed from v1, v2, and v3?
+> Thanks for your timely response. I am not a native English speaker, so
+> I am not sure I understand this correctly. Does this mean that I should
+> use "v5", rather than "v4"? 
 
-On 05/06/2019 23:01, Trond Myklebust wrote:
+"v" means "version".
 
-...
+You need to list what you changed with each version of this patch.
 
-> I'd be OK with just reverting this patch if it is causing a performance
-> issue.
-> 
-> Anna?
+The documentation in the kernel tells you how to do this.
 
-Any update on this?
+> > That always goes below the --- line.
+> And I can't see what goes wrong with "---". Could you please make some
+> explaination?
 
-Thanks
-Jon
+Again, please read the documentation, it describes how to do this for
+patches that have gone through multiple versions.
 
--- 
-nvpublic
+thanks,
+
+greg k-h
