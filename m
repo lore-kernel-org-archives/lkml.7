@@ -2,82 +2,89 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED43C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21918C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7926B208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25ED20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:10:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QQ0PwDAe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439285AbfFLNK0 (ORCPT
+        id S2439359AbfFLNK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:10:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46866 "EHLO mail.kernel.org"
+        Wed, 12 Jun 2019 09:10:58 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:48586 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729528AbfFLNK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:10:26 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C24A420874;
-        Wed, 12 Jun 2019 13:10:24 +0000 (UTC)
-Date:   Wed, 12 Jun 2019 09:10:23 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Kairui Song <kasong@redhat.com>,
-        Alexei Starovoitov <ast@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: Re: Getting empty callchain from perf_callchain_kernel()
-Message-ID: <20190612091023.6bccf262@gandalf.local.home>
-In-Reply-To: <20190612030501.7tbsjy353g7l74ej@treble>
-References: <CACPcB9cpNp5CBqoRs+XMCwufzAFa8Pj-gbmj9fb+g5wVdue=ig@mail.gmail.com>
-        <20190522140233.GC16275@worktop.programming.kicks-ass.net>
-        <ab047883-69f6-1175-153f-5ad9462c6389@fb.com>
-        <20190522174517.pbdopvookggen3d7@treble>
-        <20190522234635.a47bettklcf5gt7c@treble>
-        <CACPcB9dRJ89YAMDQdKoDMU=vFfpb5AaY0mWC_Xzw1ZMTFBf6ng@mail.gmail.com>
-        <20190523133253.tad6ywzzexks6hrp@treble>
-        <CACPcB9fQKg7xhzhCZaF4UGi=EQs1HLTFgg-C_xJQaUfho3yMyA@mail.gmail.com>
-        <20190523152413.m2pbnamihu3s2c5s@treble>
-        <20190524085319.GE2589@hirez.programming.kicks-ass.net>
-        <20190612030501.7tbsjy353g7l74ej@treble>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S2439328AbfFLNK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 09:10:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Zzc6GI7lGEPaQXGvlamBcEyrm5Fho0Vz0zqRdDP5hq0=; b=QQ0PwDAeuICS/1pKrFIl9qqFCV
+        DVvk65aiWdgNZKve6NvZEweANaJXywqmPwYKrmAVNEvtvFwEVTj7E+J2FualB+Tb+98QSaZKGqZgO
+        pc0lw2PM0jUsWWW9P6hUqGY37Dc4KXe0Ps3dd4cQbhHZq5gx9+yKnAXHrTjlMkvVm/1o=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hb31d-0004Fu-AP; Wed, 12 Jun 2019 15:10:49 +0200
+Date:   Wed, 12 Jun 2019 15:10:49 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Y.b. Lu" <yangbo.lu@nxp.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/6] ptp: add QorIQ PTP support for DPAA2
+Message-ID: <20190612131049.GC23615@lunn.ch>
+References: <20190610032108.5791-1-yangbo.lu@nxp.com>
+ <20190610032108.5791-2-yangbo.lu@nxp.com>
+ <20190610130601.GD8247@lunn.ch>
+ <VI1PR0401MB2237247525AB5DB5B5F275A8F8EC0@VI1PR0401MB2237.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR0401MB2237247525AB5DB5B5F275A8F8EC0@VI1PR0401MB2237.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Jun 2019 22:05:01 -0500
-Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-
-> Right now, ftrace has a special hook in the ORC unwinder
-> (orc_ftrace_find).  It would be great if we could get rid of that in
-> favor of the "always use frame pointers" approach.  I'll hold off on
-> doing the kpatch/kprobe trampoline conversions in my patches since it
-> would conflict with yours.
-
-Basically, IIUC, what you are saying is that the ftrace trampoline
-should always store the %sp in %rb even when CONFIG_FRAME_POINTER is not
-enabled? And this can allow you to remove the ftrace specific code from
-the orc unwinder?
-
--- Steve
-
-
+> > > diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig index
+> > > 9b8fee5..b1b454f 100644
+> > > --- a/drivers/ptp/Kconfig
+> > > +++ b/drivers/ptp/Kconfig
+> > > @@ -44,7 +44,7 @@ config PTP_1588_CLOCK_DTE
+> > >
+> > >  config PTP_1588_CLOCK_QORIQ
+> > >  	tristate "Freescale QorIQ 1588 timer as PTP clock"
+> > > -	depends on GIANFAR || FSL_DPAA_ETH || FSL_ENETC || FSL_ENETC_VF
+> > > +	depends on GIANFAR || FSL_DPAA_ETH || FSL_DPAA2_ETH ||
+> > FSL_ENETC ||
+> > > +FSL_ENETC_VF
+> > >  	depends on PTP_1588_CLOCK
+> > 
+> > Hi Yangbo
+> > 
+> > Could COMPILE_TEST also be added?
 > 
-> Though, hm, because of pt_regs I guess ORC would need to be able to
-> decode an encoded frame pointer?  I was hoping we could leave those
-> encoded frame pointers behind in CONFIG_FRAME_POINTER-land forever...
+> [Y.b. Lu] COMPILE_TEST is usually for other ARCHs build coverage.
+> Do you want me to append it after these Ethernet driver dependencies?
 
+Hii Y.b. Lu
+
+Normally, drivers like this should be able to compile independent of
+the MAC driver. So you should be able to add COMPILE_TEST here.
+
+    Andrew
