@@ -2,73 +2,63 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F7AC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 279F8C31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8665D20896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC99021019
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 18:39:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560364751;
-	bh=oM93TZtVwpYIQYCT2PgLRqzNS21FWsiNsNpj6Hvn+lQ=;
+	s=default; t=1560364757;
+	bh=Tx4yzeKOn5NiTOVlB95W0NqTuuKsLURCYXh7k/fGou0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YhMOPqrwHDMkDFKMFMMDlrQaumiS6p7BlD48xCfoNiSVQjdWwjxE3/SCIKdOx6KR8
-	 OZsIzqBGzcN920M4O/Rl1E11ZwYgXeGYEJ2qL9dMoqSsmb0kWYTrpZhhpmGhY9GXEI
-	 qP52hcRi6lk8DWdOdw65WYab6PPDs5hFNtI7AX04=
+	b=FQHDicVTAGnrF+8QT9qyKbK+gytIqkBZObDqKCe8erMoBnuPe8mkz9XazqeV9rUmN
+	 r0/RxUVVT6vWeCIYc6R2OWzsExM/4HO/plLFJ85WI87yFBuT5ZigBTUfrVDbyWu5NI
+	 WbHh6jJcNEhanB+5mmZIYte8D3Uol7idxnQvfIz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388277AbfFLSjK (ORCPT
+        id S2387934AbfFLSjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 14:39:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45864 "EHLO
+        Wed, 12 Jun 2019 14:39:07 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45698 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbfFLSip (ORCPT
+        with ESMTP id S1727736AbfFLSim (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 14:38:45 -0400
+        Wed, 12 Jun 2019 14:38:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Ld2irvyKN4+i2DGOkqncDZT6B/HwDCi86fcXHC7vUdQ=; b=dCufwtOp/097q3y1i6cwypiZk8
-        xPx32/NJzQ3Y+dJiVF54msPJGF5c49+p9mfddOoZLfFj/+zBu/3gWqf8jHbsUR0TKdBLym90KdrMu
-        xI+55A4vXqdHBYprsxNjbTdd8/v0C7sR+feuu4BrzT23/GUBdHoXqHUmOTnD2XGHnrGA02+w0NjOZ
-        qCVPkpWq3JIS28PDSLV2dR5a10gXJkHNltH9+g7UdW0LonJ2M4jmirnb/ebzAgHQBdnZ8Qcreo6zy
-        EH7NRiM/HP1akHtxX/TB8nNglTBx6fF9Dm45MQwvtbgnHyVOk4ySEc0AbvAonKm/6HMIk1pllHNHn
-        y7wKtEFA==;
+        bh=0jFbf4CsZxRGMAGEVdh4CfAW6Or9jokvwGq4/zFWi/Y=; b=YKMG5XQDUV4IPxKkUi2ssjmLF/
+        Gqgs2+VSrzIY7zektVEGbIiIgECcrGfoPABI+vfJtd0f2plPg8BjjjBzu2BDvBE0vjlO8dJeGcCb5
+        o+0svbiegOdmxPwhY+9x+uInRWHwGCSjTnJeYC90dfy9HUOnN7cTQUyHJAcEkSnnNLdfmXBhGlWdX
+        SHy1ZRDwmmCxqlwl1xCaY12PneE6TB8aolLg78BluWS9OtUpFTAZd6L51ouXsiF1bDqcDGK0v+447
+        Psc2le9uuET1Apffa1r9hAt7lRQOe2kmxSh4lYMfBZ+tkddjDg/1wDGJzovZCQU2QmT+1bmSJwXMI
+        W3s2lD2A==;
 Received: from 201.86.169.251.dynamic.adsl.gvt.net.br ([201.86.169.251] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hb88s-0006Yb-R5; Wed, 12 Jun 2019 18:38:39 +0000
+        id 1hb88s-0006YX-Uy; Wed, 12 Jun 2019 18:38:40 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hb88q-0002Aq-0Q; Wed, 12 Jun 2019 15:38:36 -0300
+        id 1hb88q-0002Bc-BM; Wed, 12 Jun 2019 15:38:36 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        cocci@systeme.lip6.fr
-Subject: [PATCH v1 09/31] docs: driver-model: convert docs to ReST and rename to *.rst
-Date:   Wed, 12 Jun 2019 15:38:12 -0300
-Message-Id: <c90bb60d65aaba4ce5957894cc6890ebe5048d95.1560364494.git.mchehab+samsung@kernel.org>
+        Pat Gefre <pfg@sgi.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        linux-efi@vger.kernel.org
+Subject: [PATCH v1 21/31] docs: ia64: convert to ReST
+Date:   Wed, 12 Jun 2019 15:38:24 -0300
+Message-Id: <a07be841f9821eecb22d7bbee0e633b7399f0e1a.1560364494.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560364493.git.mchehab+samsung@kernel.org>
 References: <cover.1560364493.git.mchehab+samsung@kernel.org>
@@ -79,2055 +69,2079 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the various documents at the driver-model, preparing
-them to be part of the driver-api book.
+Rename the ia64 documentation files to ReST, add an
+index for them and adjust in order to produce a nice html
+output via the Sphinx build system.
 
-The conversion is actually:
-  - add blank lines and identation in order to identify paragraphs;
-  - fix tables markups;
-  - add some lists markups;
-  - mark literal blocks;
-  - adjust title markups.
+There are two upper case file names. Rename them to
+lower case, as we're working to avoid upper case file
+names at Documentation.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/driver-api/gpio/driver.rst      |   2 +-
- .../driver-model/{binding.txt => binding.rst} |  20 +-
- .../driver-model/{bus.txt => bus.rst}         |  69 ++--
- .../driver-model/{class.txt => class.rst}     |  74 ++--
- ...esign-patterns.txt => design-patterns.rst} | 106 +++---
- .../driver-model/{device.txt => device.rst}   |  57 +--
- .../driver-model/{devres.txt => devres.rst}   |  50 +--
- .../driver-model/{driver.txt => driver.rst}   | 112 +++---
- Documentation/driver-model/index.rst          |  26 ++
- .../{overview.txt => overview.rst}            |  37 +-
- .../{platform.txt => platform.rst}            |  30 +-
- .../driver-model/{porting.txt => porting.rst} | 333 +++++++++---------
- Documentation/eisa.txt                        |   4 +-
- Documentation/hwmon/submitting-patches.rst    |   2 +-
- drivers/base/platform.c                       |   2 +-
- drivers/gpio/gpio-cs5535.c                    |   2 +-
- drivers/net/ethernet/intel/ice/ice_main.c     |   2 +-
- scripts/coccinelle/free/devm_free.cocci       |   2 +-
- 18 files changed, 489 insertions(+), 441 deletions(-)
- rename Documentation/driver-model/{binding.txt => binding.rst} (92%)
- rename Documentation/driver-model/{bus.txt => bus.rst} (76%)
- rename Documentation/driver-model/{class.txt => class.rst} (75%)
- rename Documentation/driver-model/{design-patterns.txt => design-patterns.rst} (59%)
- rename Documentation/driver-model/{device.txt => device.rst} (71%)
- rename Documentation/driver-model/{devres.txt => devres.rst} (93%)
- rename Documentation/driver-model/{driver.txt => driver.rst} (75%)
- create mode 100644 Documentation/driver-model/index.rst
- rename Documentation/driver-model/{overview.txt => overview.rst} (90%)
- rename Documentation/driver-model/{platform.txt => platform.rst} (95%)
- rename Documentation/driver-model/{porting.txt => porting.rst} (62%)
+ .../ia64/{aliasing.txt => aliasing.rst}       |  73 ++--
+ Documentation/ia64/{efirtc.txt => efirtc.rst} | 118 +++---
+ .../ia64/{err_inject.txt => err_inject.rst}   | 349 +++++++++---------
+ Documentation/ia64/{fsys.txt => fsys.rst}     | 127 ++++---
+ Documentation/ia64/{README => ia64.rst}       |  26 +-
+ Documentation/ia64/index.rst                  |  18 +
+ .../ia64/{IRQ-redir.txt => irq-redir.rst}     |  31 +-
+ Documentation/ia64/{mca.txt => mca.rst}       |  10 +-
+ Documentation/ia64/{serial.txt => serial.rst} |  36 +-
+ Documentation/ia64/xen.rst                    | 206 +++++++++++
+ Documentation/ia64/xen.txt                    | 183 ---------
+ MAINTAINERS                                   |   2 +-
+ arch/ia64/kernel/efi.c                        |   2 +-
+ arch/ia64/kernel/fsys.S                       |   2 +-
+ arch/ia64/mm/ioremap.c                        |   2 +-
+ arch/ia64/pci/pci.c                           |   2 +-
+ 16 files changed, 660 insertions(+), 527 deletions(-)
+ rename Documentation/ia64/{aliasing.txt => aliasing.rst} (83%)
+ rename Documentation/ia64/{efirtc.txt => efirtc.rst} (70%)
+ rename Documentation/ia64/{err_inject.txt => err_inject.rst} (82%)
+ rename Documentation/ia64/{fsys.txt => fsys.rst} (76%)
+ rename Documentation/ia64/{README => ia64.rst} (61%)
+ create mode 100644 Documentation/ia64/index.rst
+ rename Documentation/ia64/{IRQ-redir.txt => irq-redir.rst} (86%)
+ rename Documentation/ia64/{mca.txt => mca.rst} (96%)
+ rename Documentation/ia64/{serial.txt => serial.rst} (87%)
+ create mode 100644 Documentation/ia64/xen.rst
+ delete mode 100644 Documentation/ia64/xen.txt
 
-diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
-index 4af9aae724f0..349f2dc33029 100644
---- a/Documentation/driver-api/gpio/driver.rst
-+++ b/Documentation/driver-api/gpio/driver.rst
-@@ -399,7 +399,7 @@ symbol:
-   will pass the struct gpio_chip* for the chip to all IRQ callbacks, so the
-   callbacks need to embed the gpio_chip in its state container and obtain a
-   pointer to the container using container_of().
--  (See Documentation/driver-model/design-patterns.txt)
-+  (See Documentation/driver-model/design-patterns.rst)
+diff --git a/Documentation/ia64/aliasing.txt b/Documentation/ia64/aliasing.rst
+similarity index 83%
+rename from Documentation/ia64/aliasing.txt
+rename to Documentation/ia64/aliasing.rst
+index 5a4dea6abebd..a08b36aba015 100644
+--- a/Documentation/ia64/aliasing.txt
++++ b/Documentation/ia64/aliasing.rst
+@@ -1,20 +1,25 @@
+-	         MEMORY ATTRIBUTE ALIASING ON IA-64
++==================================
++Memory Attribute Aliasing on IA-64
++==================================
  
- - gpiochip_irqchip_add_nested(): adds a nested cascaded irqchip to a gpiochip,
-   as discussed above regarding different types of cascaded irqchips. The
-diff --git a/Documentation/driver-model/binding.txt b/Documentation/driver-model/binding.rst
-similarity index 92%
-rename from Documentation/driver-model/binding.txt
-rename to Documentation/driver-model/binding.rst
-index abfc8e290d53..7ea1d7a41e1d 100644
---- a/Documentation/driver-model/binding.txt
-+++ b/Documentation/driver-model/binding.rst
-@@ -1,5 +1,6 @@
--
-+==============
- Driver Binding
-+==============
+-			   Bjorn Helgaas
+-		       <bjorn.helgaas@hp.com>
+-			    May 4, 2006
++Bjorn Helgaas <bjorn.helgaas@hp.com>
  
- Driver binding is the process of associating a device with a device
- driver that can control it. Bus drivers have typically handled this
-@@ -25,7 +26,7 @@ device_register
- When a new device is added, the bus's list of drivers is iterated over
- to find one that supports it. In order to determine that, the device
- ID of the device must match one of the device IDs that the driver
--supports. The format and semantics for comparing IDs is bus-specific. 
-+supports. The format and semantics for comparing IDs is bus-specific.
- Instead of trying to derive a complex state machine and matching
- algorithm, it is up to the bus driver to provide a callback to compare
- a device against the IDs of a driver. The bus returns 1 if a match was
-@@ -36,14 +37,14 @@ int match(struct device * dev, struct device_driver * drv);
- If a match is found, the device's driver field is set to the driver
- and the driver's probe callback is called. This gives the driver a
- chance to verify that it really does support the hardware, and that
--it's in a working state. 
-+it's in a working state.
++May 4, 2006
  
- Device Class
- ~~~~~~~~~~~~
- 
- Upon the successful completion of probe, the device is registered with
- the class to which it belongs. Device drivers belong to one and only one
--class, and that is set in the driver's devclass field. 
-+class, and that is set in the driver's devclass field.
- devclass_add_device is called to enumerate the device within the class
- and actually register it with the class, which happens with the
- class's register_dev callback.
-@@ -53,7 +54,7 @@ Driver
- ~~~~~~
- 
- When a driver is attached to a device, the device is inserted into the
--driver's list of devices. 
-+driver's list of devices.
- 
- 
- sysfs
-@@ -67,18 +68,18 @@ to the device's directory in the physical hierarchy.
- 
- A directory for the device is created in the class's directory. A
- symlink is created in that directory that points to the device's
--physical location in the sysfs tree. 
-+physical location in the sysfs tree.
- 
- A symlink can be created (though this isn't done yet) in the device's
- physical directory to either its class directory, or the class's
- top-level directory. One can also be created to point to its driver's
--directory also. 
-+directory also.
- 
- 
- driver_register
- ~~~~~~~~~~~~~~~
- 
--The process is almost identical for when a new driver is added. 
-+The process is almost identical for when a new driver is added.
- The bus's list of devices is iterated over to find a match. Devices
- that already have a driver are skipped. All the devices are iterated
- over, to bind as many devices as possible to the driver.
-@@ -94,5 +95,4 @@ of the driver is decremented. All symlinks between the two are removed.
- 
- When a driver is removed, the list of devices that it supports is
- iterated over, and the driver's remove callback is called for each
--one. The device is removed from that list and the symlinks removed. 
--
-+one. The device is removed from that list and the symlinks removed.
-diff --git a/Documentation/driver-model/bus.txt b/Documentation/driver-model/bus.rst
-similarity index 76%
-rename from Documentation/driver-model/bus.txt
-rename to Documentation/driver-model/bus.rst
-index c247b488a567..016b15a6e8ea 100644
---- a/Documentation/driver-model/bus.txt
-+++ b/Documentation/driver-model/bus.rst
-@@ -1,5 +1,6 @@
--
--Bus Types 
-+=========
-+Bus Types
-+=========
- 
- Definition
- ~~~~~~~~~~
-@@ -13,12 +14,12 @@ Declaration
- 
- Each bus type in the kernel (PCI, USB, etc) should declare one static
- object of this type. They must initialize the name field, and may
--optionally initialize the match callback.
-+optionally initialize the match callback::
- 
--struct bus_type pci_bus_type = {
--       .name	= "pci",
--       .match	= pci_bus_match,
--};
-+   struct bus_type pci_bus_type = {
-+          .name	= "pci",
-+          .match	= pci_bus_match,
-+   };
- 
- The structure should be exported to drivers in a header file:
- 
-@@ -30,8 +31,8 @@ Registration
- 
- When a bus driver is initialized, it calls bus_register. This
- initializes the rest of the fields in the bus object and inserts it
--into a global list of bus types. Once the bus object is registered, 
--the fields in it are usable by the bus driver. 
-+into a global list of bus types. Once the bus object is registered,
-+the fields in it are usable by the bus driver.
- 
- 
- Callbacks
-@@ -43,17 +44,17 @@ match(): Attaching Drivers to Devices
- The format of device ID structures and the semantics for comparing
- them are inherently bus-specific. Drivers typically declare an array
- of device IDs of devices they support that reside in a bus-specific
--driver structure. 
-+driver structure.
- 
- The purpose of the match callback is to give the bus an opportunity to
- determine if a particular driver supports a particular device by
- comparing the device IDs the driver supports with the device ID of a
- particular device, without sacrificing bus-specific functionality or
--type-safety. 
-+type-safety.
- 
- When a driver is registered with the bus, the bus's list of devices is
- iterated over, and the match callback is called for each device that
--does not have a driver associated with it. 
-+does not have a driver associated with it.
- 
- 
- 
-@@ -64,22 +65,23 @@ The lists of devices and drivers are intended to replace the local
- lists that many buses keep. They are lists of struct devices and
- struct device_drivers, respectively. Bus drivers are free to use the
- lists as they please, but conversion to the bus-specific type may be
--necessary. 
-+necessary.
- 
--The LDM core provides helper functions for iterating over each list.
-+The LDM core provides helper functions for iterating over each list::
- 
--int bus_for_each_dev(struct bus_type * bus, struct device * start, void * data,
--		     int (*fn)(struct device *, void *));
-+  int bus_for_each_dev(struct bus_type * bus, struct device * start,
-+		       void * data,
-+		       int (*fn)(struct device *, void *));
- 
--int bus_for_each_drv(struct bus_type * bus, struct device_driver * start, 
--		     void * data, int (*fn)(struct device_driver *, void *));
-+  int bus_for_each_drv(struct bus_type * bus, struct device_driver * start,
-+		       void * data, int (*fn)(struct device_driver *, void *));
- 
- These helpers iterate over the respective list, and call the callback
- for each device or driver in the list. All list accesses are
- synchronized by taking the bus's lock (read currently). The reference
- count on each object in the list is incremented before the callback is
- called; it is decremented after the next object has been obtained. The
--lock is not held when calling the callback. 
-+lock is not held when calling the callback.
- 
- 
- sysfs
-@@ -87,14 +89,14 @@ sysfs
- There is a top-level directory named 'bus'.
- 
- Each bus gets a directory in the bus directory, along with two default
--directories:
-+directories::
- 
- 	/sys/bus/pci/
- 	|-- devices
- 	`-- drivers
- 
- Drivers registered with the bus get a directory in the bus's drivers
--directory:
-+directory::
- 
- 	/sys/bus/pci/
- 	|-- devices
-@@ -106,7 +108,7 @@ directory:
- 
- Each device that is discovered on a bus of that type gets a symlink in
- the bus's devices directory to the device's directory in the physical
--hierarchy:
-+hierarchy::
- 
- 	/sys/bus/pci/
- 	|-- devices
-@@ -118,26 +120,27 @@ hierarchy:
- 
- Exporting Attributes
- ~~~~~~~~~~~~~~~~~~~~
--struct bus_attribute {
+-MEMORY ATTRIBUTES
 +
-+::
-+
-+  struct bus_attribute {
- 	struct attribute	attr;
- 	ssize_t (*show)(struct bus_type *, char * buf);
- 	ssize_t (*store)(struct bus_type *, const char * buf, size_t count);
--};
-+  };
- 
- Bus drivers can export attributes using the BUS_ATTR_RW macro that works
- similarly to the DEVICE_ATTR_RW macro for devices. For example, a
--definition like this:
-+definition like this::
- 
--static BUS_ATTR_RW(debug);
-+	static BUS_ATTR_RW(debug);
- 
--is equivalent to declaring:
-+is equivalent to declaring::
- 
--static bus_attribute bus_attr_debug;
-+	static bus_attribute bus_attr_debug;
- 
- This can then be used to add and remove the attribute from the bus's
--sysfs directory using:
--
--int bus_create_file(struct bus_type *, struct bus_attribute *);
--void bus_remove_file(struct bus_type *, struct bus_attribute *);
--
-+sysfs directory using::
- 
-+	int bus_create_file(struct bus_type *, struct bus_attribute *);
-+	void bus_remove_file(struct bus_type *, struct bus_attribute *);
-diff --git a/Documentation/driver-model/class.txt b/Documentation/driver-model/class.rst
-similarity index 75%
-rename from Documentation/driver-model/class.txt
-rename to Documentation/driver-model/class.rst
-index 1fefc480a80b..fff55b80e86a 100644
---- a/Documentation/driver-model/class.txt
-+++ b/Documentation/driver-model/class.rst
-@@ -1,6 +1,6 @@
--
-+==============
- Device Classes
--
-+==============
- 
- Introduction
- ~~~~~~~~~~~~
-@@ -13,37 +13,37 @@ device. The following device classes have been identified:
- Each device class defines a set of semantics and a programming interface
- that devices of that class adhere to. Device drivers are the
- implementation of that programming interface for a particular device on
--a particular bus. 
-+a particular bus.
- 
- Device classes are agnostic with respect to what bus a device resides
--on. 
-+on.
- 
- 
- Programming Interface
- ~~~~~~~~~~~~~~~~~~~~~
--The device class structure looks like: 
-+The device class structure looks like::
- 
- 
--typedef int (*devclass_add)(struct device *);
--typedef void (*devclass_remove)(struct device *);
-+  typedef int (*devclass_add)(struct device *);
-+  typedef void (*devclass_remove)(struct device *);
- 
- See the kerneldoc for the struct class.
- 
--A typical device class definition would look like: 
-+A typical device class definition would look like::
- 
--struct device_class input_devclass = {
-+  struct device_class input_devclass = {
-         .name		= "input",
-         .add_device	= input_add_device,
- 	.remove_device	= input_remove_device,
--};
-+  };
- 
- Each device class structure should be exported in a header file so it
- can be used by drivers, extensions and interfaces.
- 
--Device classes are registered and unregistered with the core using: 
-+Device classes are registered and unregistered with the core using::
- 
--int devclass_register(struct device_class * cls);
--void devclass_unregister(struct device_class * cls);
-+  int devclass_register(struct device_class * cls);
-+  void devclass_unregister(struct device_class * cls);
- 
- 
- Devices
-@@ -52,16 +52,16 @@ As devices are bound to drivers, they are added to the device class
- that the driver belongs to. Before the driver model core, this would
- typically happen during the driver's probe() callback, once the device
- has been initialized. It now happens after the probe() callback
--finishes from the core. 
-+finishes from the core.
- 
- The device is enumerated in the class. Each time a device is added to
- the class, the class's devnum field is incremented and assigned to the
- device. The field is never decremented, so if the device is removed
- from the class and re-added, it will receive a different enumerated
--value. 
-+value.
- 
- The class is allowed to create a class-specific structure for the
--device and store it in the device's class_data pointer. 
-+device and store it in the device's class_data pointer.
- 
- There is no list of devices in the device class. Each driver has a
- list of devices that it supports. The device class has a list of
-@@ -73,15 +73,15 @@ Device Drivers
- ~~~~~~~~~~~~~~
- Device drivers are added to device classes when they are registered
- with the core. A driver specifies the class it belongs to by setting
--the struct device_driver::devclass field. 
-+the struct device_driver::devclass field.
- 
- 
- sysfs directory structure
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--There is a top-level sysfs directory named 'class'. 
-+There is a top-level sysfs directory named 'class'.
- 
- Each class gets a directory in the class directory, along with two
--default subdirectories:
-+default subdirectories::
- 
-         class/
-         `-- input
-@@ -89,8 +89,8 @@ default subdirectories:
-             `-- drivers
- 
- 
--Drivers registered with the class get a symlink in the drivers/ directory 
--that points to the driver's directory (under its bus directory):
-+Drivers registered with the class get a symlink in the drivers/ directory
-+that points to the driver's directory (under its bus directory)::
- 
-    class/
-    `-- input
-@@ -99,8 +99,8 @@ that points to the driver's directory (under its bus directory):
-            `-- usb:usb_mouse -> ../../../bus/drivers/usb_mouse/
- 
- 
--Each device gets a symlink in the devices/ directory that points to the 
--device's directory in the physical hierarchy:
-+Each device gets a symlink in the devices/ directory that points to the
-+device's directory in the physical hierarchy::
- 
-    class/
-    `-- input
-@@ -111,37 +111,39 @@ device's directory in the physical hierarchy:
- 
- Exporting Attributes
- ~~~~~~~~~~~~~~~~~~~~
--struct devclass_attribute {
-+
-+::
-+
-+  struct devclass_attribute {
-         struct attribute        attr;
-         ssize_t (*show)(struct device_class *, char * buf, size_t count, loff_t off);
-         ssize_t (*store)(struct device_class *, const char * buf, size_t count, loff_t off);
--};
-+  };
- 
- Class drivers can export attributes using the DEVCLASS_ATTR macro that works
--similarly to the DEVICE_ATTR macro for devices. For example, a definition 
--like this:
-+similarly to the DEVICE_ATTR macro for devices. For example, a definition
-+like this::
- 
--static DEVCLASS_ATTR(debug,0644,show_debug,store_debug);
-+  static DEVCLASS_ATTR(debug,0644,show_debug,store_debug);
- 
--is equivalent to declaring:
-+is equivalent to declaring::
- 
--static devclass_attribute devclass_attr_debug;
-+  static devclass_attribute devclass_attr_debug;
- 
- The bus driver can add and remove the attribute from the class's
--sysfs directory using:
-+sysfs directory using::
- 
--int devclass_create_file(struct device_class *, struct devclass_attribute *);
--void devclass_remove_file(struct device_class *, struct devclass_attribute *);
-+  int devclass_create_file(struct device_class *, struct devclass_attribute *);
-+  void devclass_remove_file(struct device_class *, struct devclass_attribute *);
- 
- In the example above, the file will be named 'debug' in placed in the
--class's directory in sysfs. 
-+class's directory in sysfs.
- 
- 
- Interfaces
- ~~~~~~~~~~
- There may exist multiple mechanisms for accessing the same device of a
--particular class type. Device interfaces describe these mechanisms. 
-+particular class type. Device interfaces describe these mechanisms.
- 
- When a device is added to a device class, the core attempts to add it
- to every interface that is registered with the device class.
--
-diff --git a/Documentation/driver-model/design-patterns.txt b/Documentation/driver-model/design-patterns.rst
-similarity index 59%
-rename from Documentation/driver-model/design-patterns.txt
-rename to Documentation/driver-model/design-patterns.rst
-index ba7b2df64904..41eb8f41f7dd 100644
---- a/Documentation/driver-model/design-patterns.txt
-+++ b/Documentation/driver-model/design-patterns.rst
-@@ -1,6 +1,6 @@
--
-+=============================
- Device Driver Design Patterns
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+=============================
- 
- This document describes a few common design patterns found in device drivers.
- It is likely that subsystem maintainers will ask driver developers to
-@@ -19,23 +19,23 @@ that the device the driver binds to will appear in several instances. This
- means that the probe() function and all callbacks need to be reentrant.
- 
- The most common way to achieve this is to use the state container design
--pattern. It usually has this form:
-+pattern. It usually has this form::
- 
--struct foo {
--    spinlock_t lock; /* Example member */
--    (...)
--};
-+  struct foo {
-+      spinlock_t lock; /* Example member */
-+      (...)
-+  };
- 
--static int foo_probe(...)
--{
--    struct foo *foo;
-+  static int foo_probe(...)
-+  {
-+      struct foo *foo;
- 
--    foo = devm_kzalloc(dev, sizeof(*foo), GFP_KERNEL);
--    if (!foo)
--        return -ENOMEM;
--    spin_lock_init(&foo->lock);
--    (...)
--}
-+      foo = devm_kzalloc(dev, sizeof(*foo), GFP_KERNEL);
-+      if (!foo)
-+          return -ENOMEM;
-+      spin_lock_init(&foo->lock);
-+      (...)
-+  }
- 
- This will create an instance of struct foo in memory every time probe() is
- called. This is our state container for this instance of the device driver.
-@@ -43,21 +43,21 @@ Of course it is then necessary to always pass this instance of the
- state around to all functions that need access to the state and its members.
- 
- For example, if the driver is registering an interrupt handler, you would
--pass around a pointer to struct foo like this:
-+pass around a pointer to struct foo like this::
- 
--static irqreturn_t foo_handler(int irq, void *arg)
--{
--    struct foo *foo = arg;
--    (...)
--}
-+  static irqreturn_t foo_handler(int irq, void *arg)
-+  {
-+      struct foo *foo = arg;
-+      (...)
-+  }
- 
--static int foo_probe(...)
--{
--    struct foo *foo;
-+  static int foo_probe(...)
-+  {
-+      struct foo *foo;
- 
--    (...)
--    ret = request_irq(irq, foo_handler, 0, "foo", foo);
--}
-+      (...)
-+      ret = request_irq(irq, foo_handler, 0, "foo", foo);
-+  }
- 
- This way you always get a pointer back to the correct instance of foo in
- your interrupt handler.
-@@ -66,38 +66,38 @@ your interrupt handler.
- 2. container_of()
- ~~~~~~~~~~~~~~~~~
- 
--Continuing on the above example we add an offloaded work:
-+Continuing on the above example we add an offloaded work::
- 
--struct foo {
--    spinlock_t lock;
--    struct workqueue_struct *wq;
--    struct work_struct offload;
--    (...)
--};
-+  struct foo {
-+      spinlock_t lock;
-+      struct workqueue_struct *wq;
-+      struct work_struct offload;
-+      (...)
-+  };
- 
--static void foo_work(struct work_struct *work)
--{
--    struct foo *foo = container_of(work, struct foo, offload);
-+  static void foo_work(struct work_struct *work)
-+  {
-+      struct foo *foo = container_of(work, struct foo, offload);
- 
--    (...)
--}
-+      (...)
-+  }
- 
--static irqreturn_t foo_handler(int irq, void *arg)
--{
--    struct foo *foo = arg;
-+  static irqreturn_t foo_handler(int irq, void *arg)
-+  {
-+      struct foo *foo = arg;
- 
--    queue_work(foo->wq, &foo->offload);
--    (...)
--}
-+      queue_work(foo->wq, &foo->offload);
-+      (...)
-+  }
- 
--static int foo_probe(...)
--{
--    struct foo *foo;
-+  static int foo_probe(...)
-+  {
-+      struct foo *foo;
- 
--    foo->wq = create_singlethread_workqueue("foo-wq");
--    INIT_WORK(&foo->offload, foo_work);
--    (...)
--}
-+      foo->wq = create_singlethread_workqueue("foo-wq");
-+      INIT_WORK(&foo->offload, foo_work);
-+      (...)
-+  }
- 
- The design pattern is the same for an hrtimer or something similar that will
- return a single argument which is a pointer to a struct member in the
-diff --git a/Documentation/driver-model/device.txt b/Documentation/driver-model/device.rst
-similarity index 71%
-rename from Documentation/driver-model/device.txt
-rename to Documentation/driver-model/device.rst
-index 2403eb856187..2b868d49d349 100644
---- a/Documentation/driver-model/device.txt
-+++ b/Documentation/driver-model/device.rst
-@@ -1,6 +1,6 @@
--
-+==========================
- The Basic Device Structure
--~~~~~~~~~~~~~~~~~~~~~~~~~~
-+==========================
- 
- See the kerneldoc for the struct device.
- 
-@@ -8,9 +8,9 @@ See the kerneldoc for the struct device.
- Programming Interface
- ~~~~~~~~~~~~~~~~~~~~~
- The bus driver that discovers the device uses this to register the
--device with the core:
-+device with the core::
- 
--int device_register(struct device * dev);
-+  int device_register(struct device * dev);
- 
- The bus should initialize the following fields:
- 
-@@ -20,30 +20,33 @@ The bus should initialize the following fields:
-     - bus
- 
- A device is removed from the core when its reference count goes to
--0. The reference count can be adjusted using:
-+0. The reference count can be adjusted using::
- 
--struct device * get_device(struct device * dev);
--void put_device(struct device * dev);
-+  struct device * get_device(struct device * dev);
-+  void put_device(struct device * dev);
- 
- get_device() will return a pointer to the struct device passed to it
- if the reference is not already 0 (if it's in the process of being
- removed already).
- 
--A driver can access the lock in the device structure using: 
-+A driver can access the lock in the device structure using::
- 
--void lock_device(struct device * dev);
--void unlock_device(struct device * dev);
-+  void lock_device(struct device * dev);
-+  void unlock_device(struct device * dev);
- 
- 
- Attributes
- ~~~~~~~~~~
--struct device_attribute {
-+
-+::
-+
-+  struct device_attribute {
- 	struct attribute	attr;
- 	ssize_t (*show)(struct device *dev, struct device_attribute *attr,
- 			char *buf);
- 	ssize_t (*store)(struct device *dev, struct device_attribute *attr,
- 			 const char *buf, size_t count);
--};
-+  };
- 
- Attributes of devices can be exported by a device driver through sysfs.
- 
-@@ -54,39 +57,39 @@ As explained in Documentation/kobject.txt, device attributes must be
- created before the KOBJ_ADD uevent is generated. The only way to realize
- that is by defining an attribute group.
- 
--Attributes are declared using a macro called DEVICE_ATTR:
-+Attributes are declared using a macro called DEVICE_ATTR::
- 
--#define DEVICE_ATTR(name,mode,show,store)
-+  #define DEVICE_ATTR(name,mode,show,store)
- 
--Example:
-+Example:::
- 
--static DEVICE_ATTR(type, 0444, show_type, NULL);
--static DEVICE_ATTR(power, 0644, show_power, store_power);
-+  static DEVICE_ATTR(type, 0444, show_type, NULL);
-+  static DEVICE_ATTR(power, 0644, show_power, store_power);
- 
- This declares two structures of type struct device_attribute with respective
- names 'dev_attr_type' and 'dev_attr_power'. These two attributes can be
--organized as follows into a group:
-+organized as follows into a group::
- 
--static struct attribute *dev_attrs[] = {
-+  static struct attribute *dev_attrs[] = {
- 	&dev_attr_type.attr,
- 	&dev_attr_power.attr,
- 	NULL,
--};
-+  };
- 
--static struct attribute_group dev_attr_group = {
-+  static struct attribute_group dev_attr_group = {
- 	.attrs = dev_attrs,
--};
-+  };
- 
--static const struct attribute_group *dev_attr_groups[] = {
-+  static const struct attribute_group *dev_attr_groups[] = {
- 	&dev_attr_group,
- 	NULL,
--};
-+  };
- 
- This array of groups can then be associated with a device by setting the
--group pointer in struct device before device_register() is invoked:
-+group pointer in struct device before device_register() is invoked::
- 
--      dev->groups = dev_attr_groups;
--      device_register(dev);
-+        dev->groups = dev_attr_groups;
-+        device_register(dev);
- 
- The device_register() function will use the 'groups' pointer to create the
- device attributes and the device_unregister() function will use this pointer
-diff --git a/Documentation/driver-model/devres.txt b/Documentation/driver-model/devres.rst
-similarity index 93%
-rename from Documentation/driver-model/devres.txt
-rename to Documentation/driver-model/devres.rst
-index 69c7fa7f616c..4ac99122b5f1 100644
---- a/Documentation/driver-model/devres.txt
-+++ b/Documentation/driver-model/devres.rst
-@@ -1,3 +1,4 @@
-+================================
- Devres - Managed Device Resource
- ================================
- 
-@@ -5,17 +6,18 @@ Tejun Heo	<teheo@suse.de>
- 
- First draft	10 January 2007
- 
-+.. contents
- 
--1. Intro			: Huh? Devres?
--2. Devres			: Devres in a nutshell
--3. Devres Group			: Group devres'es and release them together
--4. Details			: Life time rules, calling context, ...
--5. Overhead			: How much do we have to pay for this?
--6. List of managed interfaces	: Currently implemented managed interfaces
-+   1. Intro			: Huh? Devres?
-+   2. Devres			: Devres in a nutshell
-+   3. Devres Group		: Group devres'es and release them together
-+   4. Details			: Life time rules, calling context, ...
-+   5. Overhead			: How much do we have to pay for this?
-+   6. List of managed interfaces: Currently implemented managed interfaces
- 
- 
--  1. Intro
--  --------
-+1. Intro
-+--------
- 
- devres came up while trying to convert libata to use iomap.  Each
- iomapped address should be kept and unmapped on driver detach.  For
-@@ -42,8 +44,8 @@ would leak resources or even cause oops when failure occurs.  iomap
- adds more to this mix.  So do msi and msix.
- 
- 
--  2. Devres
--  ---------
-+2. Devres
++Memory Attributes
++=================
+ 
+     Itanium supports several attributes for virtual memory references.
+     The attribute is part of the virtual translation, i.e., it is
+     contained in the TLB entry.  The ones of most interest to the Linux
+     kernel are:
+ 
+-	WB		Write-back (cacheable)
++	==		======================
++        WB		Write-back (cacheable)
+ 	UC		Uncacheable
+ 	WC		Write-coalescing
++	==		======================
+ 
+     System memory typically uses the WB attribute.  The UC attribute is
+     used for memory-mapped I/O devices.  The WC attribute is uncacheable
+@@ -29,7 +34,8 @@ MEMORY ATTRIBUTES
+     support either WB or UC access to main memory, while others support
+     only WB access.
+ 
+-MEMORY MAP
++Memory Map
++==========
+ 
+     Platform firmware describes the physical memory map and the
+     supported attributes for each region.  At boot-time, the kernel uses
+@@ -55,7 +61,8 @@ MEMORY MAP
+     The efi_memmap table is preserved unmodified because the original
+     boot-time information is required for kexec.
+ 
+-KERNEL IDENTITY MAPPINGS
++Kernel Identify Mappings
++========================
+ 
+     Linux/ia64 identity mappings are done with large pages, currently
+     either 16MB or 64MB, referred to as "granules."  Cacheable mappings
+@@ -74,17 +81,20 @@ KERNEL IDENTITY MAPPINGS
+     are only partially populated, or populated with a combination of UC
+     and WB regions.
+ 
+-USER MAPPINGS
++User Mappings
++=============
+ 
+     User mappings are typically done with 16K or 64K pages.  The smaller
+     page size allows more flexibility because only 16K or 64K has to be
+     homogeneous with respect to memory attributes.
+ 
+-POTENTIAL ATTRIBUTE ALIASING CASES
++Potential Attribute Aliasing Cases
++==================================
+ 
+     There are several ways the kernel creates new mappings:
+ 
+-    mmap of /dev/mem
++mmap of /dev/mem
++----------------
+ 
+ 	This uses remap_pfn_range(), which creates user mappings.  These
+ 	mappings may be either WB or UC.  If the region being mapped
+@@ -98,7 +108,8 @@ POTENTIAL ATTRIBUTE ALIASING CASES
+ 	Since the EFI memory map does not describe MMIO on some
+ 	machines, this should use an uncacheable mapping as a fallback.
+ 
+-    mmap of /sys/class/pci_bus/.../legacy_mem
++mmap of /sys/class/pci_bus/.../legacy_mem
++-----------------------------------------
+ 
+ 	This is very similar to mmap of /dev/mem, except that legacy_mem
+ 	only allows mmap of the one megabyte "legacy MMIO" area for a
+@@ -112,9 +123,10 @@ POTENTIAL ATTRIBUTE ALIASING CASES
+ 
+ 	The /dev/mem mmap constraints apply.
+ 
+-    mmap of /proc/bus/pci/.../??.?
++mmap of /proc/bus/pci/.../??.?
++------------------------------
+ 
+-    	This is an MMIO mmap of PCI functions, which additionally may or
++	This is an MMIO mmap of PCI functions, which additionally may or
+ 	may not be requested as using the WC attribute.
+ 
+ 	If WC is requested, and the region in kern_memmap is either WC
+@@ -124,7 +136,8 @@ POTENTIAL ATTRIBUTE ALIASING CASES
+ 	Otherwise, the user mapping must use the same attribute as the
+ 	kernel mapping.
+ 
+-    read/write of /dev/mem
++read/write of /dev/mem
++----------------------
+ 
+ 	This uses copy_from_user(), which implicitly uses a kernel
+ 	identity mapping.  This is obviously safe for things in
+@@ -138,7 +151,8 @@ POTENTIAL ATTRIBUTE ALIASING CASES
+ 	eight-byte accesses, and the copy_from_user() path doesn't allow
+ 	any control over the access size, so this would be dangerous.
+ 
+-    ioremap()
++ioremap()
 +---------
  
- devres is basically linked list of arbitrarily sized memory areas
- associated with a struct device.  Each devres entry is associated with
-@@ -58,7 +60,7 @@ using dma_alloc_coherent().  The managed version is called
- dmam_alloc_coherent().  It is identical to dma_alloc_coherent() except
- for the DMA memory allocated using it is managed and will be
- automatically released on driver detach.  Implementation looks like
--the following.
-+the following::
+ 	This returns a mapping for use inside the kernel.
  
-   struct dma_devres {
- 	size_t		size;
-@@ -98,7 +100,7 @@ If a driver uses dmam_alloc_coherent(), the area is guaranteed to be
- freed whether initialization fails half-way or the device gets
- detached.  If most resources are acquired using managed interface, a
- driver can have much simpler init and exit code.  Init path basically
--looks like the following.
-+looks like the following::
+@@ -155,9 +169,11 @@ POTENTIAL ATTRIBUTE ALIASING CASES
  
-   my_init_one()
-   {
-@@ -119,7 +121,7 @@ looks like the following.
- 	return register_to_upper_layer(d);
-   }
+ 	Failing all of the above, we have to fall back to a UC mapping.
  
--And exit path,
-+And exit path::
+-PAST PROBLEM CASES
++Past Problem Cases
++==================
  
-   my_remove_one()
-   {
-@@ -140,13 +142,13 @@ on you. In some cases this may mean introducing checks that were not
- necessary before moving to the managed devm_* calls.
+-    mmap of various MMIO regions from /dev/mem by "X" on Intel platforms
++mmap of various MMIO regions from /dev/mem by "X" on Intel platforms
++--------------------------------------------------------------------
  
+       The EFI memory map may not report these MMIO regions.
  
--  3. Devres group
--  ---------------
-+3. Devres group
-+---------------
+@@ -166,12 +182,16 @@ PAST PROBLEM CASES
+       succeed.  It may create either WB or UC user mappings, depending
+       on whether the region is in kern_memmap or the EFI memory map.
  
- Devres entries can be grouped using devres group.  When a group is
- released, all contained normal devres entries and properly nested
- groups are released.  One usage is to rollback series of acquired
--resources on failure.  For example,
-+resources on failure.  For example::
+-    mmap of 0x0-0x9FFFF /dev/mem by "hwinfo" on HP sx1000 with VGA enabled
++mmap of 0x0-0x9FFFF /dev/mem by "hwinfo" on HP sx1000 with VGA enabled
++----------------------------------------------------------------------
  
-   if (!devres_open_group(dev, NULL, GFP_KERNEL))
- 	return -ENOMEM;
-@@ -172,7 +174,7 @@ like above are usually useful in midlayer driver (e.g. libata core
- layer) where interface function shouldn't have side effect on failure.
- For LLDs, just returning error code suffices in most cases.
+       The EFI memory map reports the following attributes:
++
++        =============== ======= ==================
+         0x00000-0x9FFFF WB only
+         0xA0000-0xBFFFF UC only (VGA frame buffer)
+         0xC0000-0xFFFFF WB only
++        =============== ======= ==================
  
--Each group is identified by void *id.  It can either be explicitly
-+Each group is identified by `void *id`.  It can either be explicitly
- specified by @id argument to devres_open_group() or automatically
- created by passing NULL as @id as in the above example.  In both
- cases, devres_open_group() returns the group's id.  The returned id
-@@ -180,7 +182,7 @@ can be passed to other devres functions to select the target group.
- If NULL is given to those functions, the latest open group is
- selected.
+       This mmap is done with user pages, not kernel identity mappings,
+       so it is safe to use WB mappings.
+@@ -182,7 +202,8 @@ PAST PROBLEM CASES
+       never generate an uncacheable reference to the WB-only areas unless
+       the driver explicitly touches them.
  
--For example, you can do something like the following.
-+For example, you can do something like the following::
+-    mmap of 0x0-0xFFFFF legacy_mem by "X"
++mmap of 0x0-0xFFFFF legacy_mem by "X"
++-------------------------------------
  
-   int my_midlayer_create_something()
-   {
-@@ -199,8 +201,8 @@ For example, you can do something like the following.
-   }
+       If the EFI memory map reports that the entire range supports the
+       same attributes, we can allow the mmap (and we will prefer WB if
+@@ -197,15 +218,18 @@ PAST PROBLEM CASES
+       that doesn't report the VGA frame buffer at all), we should fail the
+       mmap and force the user to map just the specific region of interest.
  
+-    mmap of 0xA0000-0xBFFFF legacy_mem by "X" on HP sx1000 with VGA disabled
++mmap of 0xA0000-0xBFFFF legacy_mem by "X" on HP sx1000 with VGA disabled
++------------------------------------------------------------------------
++
++      The EFI memory map reports the following attributes::
  
--  4. Details
--  ----------
-+4. Details
-+----------
+-      The EFI memory map reports the following attributes:
+         0x00000-0xFFFFF WB only (no VGA MMIO hole)
  
- Lifetime of a devres entry begins on devres allocation and finishes
- when it is released or destroyed (removed and freed) - no reference
-@@ -220,8 +222,8 @@ All devres interface functions can be called without context if the
- right gfp mask is given.
+       This is a special case of the previous case, and the mmap should
+       fail for the same reason as above.
  
+-    read of /sys/devices/.../rom
++read of /sys/devices/.../rom
++----------------------------
  
--  5. Overhead
--  -----------
-+5. Overhead
-+-----------
+       For VGA devices, this may cause an ioremap() of 0xC0000.  This
+       used to be done with a UC mapping, because the VGA frame buffer
+@@ -215,7 +239,8 @@ PAST PROBLEM CASES
+       We should use WB page table mappings to avoid covering the VGA
+       frame buffer.
  
- Each devres bookkeeping info is allocated together with requested data
- area.  With debug option turned off, bookkeeping info occupies 16
-@@ -237,8 +239,8 @@ and 400 bytes on 32bit machine after naive conversion (we can
- certainly invest a bit more effort into libata core layer).
+-NOTES
++Notes
++=====
  
+     [1] SDM rev 2.2, vol 2, sec 4.4.1.
+     [2] SDM rev 2.2, vol 2, sec 4.4.6.
+diff --git a/Documentation/ia64/efirtc.txt b/Documentation/ia64/efirtc.rst
+similarity index 70%
+rename from Documentation/ia64/efirtc.txt
+rename to Documentation/ia64/efirtc.rst
+index 057e6bebda8f..2f7ff5026308 100644
+--- a/Documentation/ia64/efirtc.txt
++++ b/Documentation/ia64/efirtc.rst
+@@ -1,12 +1,16 @@
++==========================
+ EFI Real Time Clock driver
+--------------------------------
++==========================
++
+ S. Eranian <eranian@hpl.hp.com>
++
+ March 2000
  
--  6. List of managed interfaces
--  -----------------------------
-+6. List of managed interfaces
-+-----------------------------
+-I/ Introduction
++1. Introduction
++===============
  
- CLOCK
-   devm_clk_get()
-diff --git a/Documentation/driver-model/driver.txt b/Documentation/driver-model/driver.rst
-similarity index 75%
-rename from Documentation/driver-model/driver.txt
-rename to Documentation/driver-model/driver.rst
-index d661e6f7e6a0..11d281506a04 100644
---- a/Documentation/driver-model/driver.txt
-+++ b/Documentation/driver-model/driver.rst
-@@ -1,5 +1,6 @@
+ This document describes the efirtc.c driver has provided for
+-the IA-64 platform. 
++the IA-64 platform.
+ 
+ The purpose of this driver is to supply an API for kernel and user applications
+ to get access to the Time Service offered by EFI version 0.92.
+@@ -16,112 +20,124 @@ SetTime(), GetWakeupTime(), SetWakeupTime() which are all supported by this
+ driver. We describe those calls as well the design of the driver in the
+ following sections.
+ 
+-II/ Design Decisions
++2. Design Decisions
++===================
+ 
+-The original ideas was to provide a very simple driver to get access to, 
+-at first, the time of day service. This is required in order to access, in a 
+-portable way, the CMOS clock. A program like /sbin/hwclock uses such a clock 
++The original ideas was to provide a very simple driver to get access to,
++at first, the time of day service. This is required in order to access, in a
++portable way, the CMOS clock. A program like /sbin/hwclock uses such a clock
+ to initialize the system view of the time during boot.
+ 
+ Because we wanted to minimize the impact on existing user-level apps using
+ the CMOS clock, we decided to expose an API that was very similar to the one
+-used today with the legacy RTC driver (driver/char/rtc.c). However, because 
++used today with the legacy RTC driver (driver/char/rtc.c). However, because
+ EFI provides a simpler services, not all ioctl() are available. Also
+-new ioctl()s have been introduced for things that EFI provides but not the 
++new ioctl()s have been introduced for things that EFI provides but not the
+ legacy.
+ 
+ EFI uses a slightly different way of representing the time, noticeably
+ the reference date is different. Year is the using the full 4-digit format.
+ The Epoch is January 1st 1998. For backward compatibility reasons we don't
+-expose this new way of representing time. Instead we use something very 
++expose this new way of representing time. Instead we use something very
+ similar to the struct tm, i.e. struct rtc_time, as used by hwclock.
+ One of the reasons for doing it this way is to allow for EFI to still evolve
+ without necessarily impacting any of the user applications. The decoupling
+ enables flexibility and permits writing wrapper code is ncase things change.
+ 
+ The driver exposes two interfaces, one via the device file and a set of
+-ioctl()s. The other is read-only via the /proc filesystem. 
++ioctl()s. The other is read-only via the /proc filesystem.
+ 
+ As of today we don't offer a /proc/sys interface.
+ 
+ To allow for a uniform interface between the legacy RTC and EFI time service,
+-we have created the include/linux/rtc.h header file to contain only the 
+-"public" API of the two drivers.  The specifics of the legacy RTC are still 
++we have created the include/linux/rtc.h header file to contain only the
++"public" API of the two drivers.  The specifics of the legacy RTC are still
+ in include/linux/mc146818rtc.h.
+ 
+- 
+-III/ Time of day service
++
++3. Time of day service
++======================
+ 
+ The part of the driver gives access to the time of day service of EFI.
+ Two ioctl()s, compatible with the legacy RTC calls:
+ 
+-	Read the CMOS clock: ioctl(d, RTC_RD_TIME, &rtc);
++	Read the CMOS clock::
+ 
+-	Write the CMOS clock: ioctl(d, RTC_SET_TIME, &rtc);
++		ioctl(d, RTC_RD_TIME, &rtc);
++
++	Write the CMOS clock::
++
++		ioctl(d, RTC_SET_TIME, &rtc);
+ 
+ The rtc is a pointer to a data structure defined in rtc.h which is close
+-to a struct tm:
++to a struct tm::
+ 
+-struct rtc_time {
+-        int tm_sec;
+-        int tm_min;
+-        int tm_hour;
+-        int tm_mday;
+-        int tm_mon;
+-        int tm_year;
+-        int tm_wday;
+-        int tm_yday;
+-        int tm_isdst;
+-};
++  struct rtc_time {
++          int tm_sec;
++          int tm_min;
++          int tm_hour;
++          int tm_mday;
++          int tm_mon;
++          int tm_year;
++          int tm_wday;
++          int tm_yday;
++          int tm_isdst;
++  };
+ 
+ The driver takes care of converting back an forth between the EFI time and
+ this format.
+ 
+ Those two ioctl()s can be exercised with the hwclock command:
+ 
+-For reading:
+-# /sbin/hwclock --show
+-Mon Mar  6 15:32:32 2000  -0.910248 seconds
++For reading::
+ 
+-For setting:
+-# /sbin/hwclock --systohc
++	# /sbin/hwclock --show
++	Mon Mar  6 15:32:32 2000  -0.910248 seconds
++
++For setting::
++
++	# /sbin/hwclock --systohc
+ 
+ Root privileges are required to be able to set the time of day.
+ 
+-IV/ Wakeup Alarm service
++4. Wakeup Alarm service
++=======================
+ 
+ EFI provides an API by which one can program when a machine should wakeup,
+ i.e. reboot. This is very different from the alarm provided by the legacy
+ RTC which is some kind of interval timer alarm. For this reason we don't use
+ the same ioctl()s to get access to the service. Instead we have
+-introduced 2 news ioctl()s to the interface of an RTC. 
++introduced 2 news ioctl()s to the interface of an RTC.
+ 
+ We have added 2 new ioctl()s that are specific to the EFI driver:
+ 
+-	Read the current state of the alarm
+-	ioctl(d, RTC_WKLAM_RD, &wkt)
++	Read the current state of the alarm::
+ 
+-	Set the alarm or change its status
+-	ioctl(d, RTC_WKALM_SET, &wkt)
++		ioctl(d, RTC_WKLAM_RD, &wkt)
+ 
+-The wkt structure encapsulates a struct rtc_time + 2 extra fields to get 
+-status information:
+-	
+-struct rtc_wkalrm {
++	Set the alarm or change its status::
+ 
+-        unsigned char enabled; /* =1 if alarm is enabled */
+-        unsigned char pending; /* =1 if alarm is pending  */
++		ioctl(d, RTC_WKALM_SET, &wkt)
+ 
+-        struct rtc_time time;
+-} 
++The wkt structure encapsulates a struct rtc_time + 2 extra fields to get
++status information::
++
++  struct rtc_wkalrm {
++
++          unsigned char enabled; /* =1 if alarm is enabled */
++          unsigned char pending; /* =1 if alarm is pending  */
++
++          struct rtc_time time;
++  }
+ 
+ As of today, none of the existing user-level apps supports this feature.
+-However writing such a program should be hard by simply using those two 
+-ioctl(). 
++However writing such a program should be hard by simply using those two
++ioctl().
+ 
+ Root privileges are required to be able to set the alarm.
+ 
+-V/ References.
++5. References
++=============
+ 
+ Checkout the following Web site for more information on EFI:
+ 
+diff --git a/Documentation/ia64/err_inject.txt b/Documentation/ia64/err_inject.rst
+similarity index 82%
+rename from Documentation/ia64/err_inject.txt
+rename to Documentation/ia64/err_inject.rst
+index 9f651c181429..900f71e93a29 100644
+--- a/Documentation/ia64/err_inject.txt
++++ b/Documentation/ia64/err_inject.rst
+@@ -1,4 +1,4 @@
 -
-+==============
- Device Drivers
-+==============
++========================================
+ IPF Machine Check (MC) error inject tool
+ ========================================
  
- See the kerneldoc for the struct device_driver.
+@@ -32,94 +32,94 @@ Errata: Itanium 2 Processors Specification Update lists some errata against
+ the pal_mc_error_inject PAL procedure. The following err.conf has been tested
+ on latest Montecito PAL.
  
-@@ -26,50 +27,50 @@ Declaration
- As stated above, struct device_driver objects are statically
- allocated. Below is an example declaration of the eepro100
- driver. This declaration is hypothetical only; it relies on the driver
--being converted completely to the new model. 
-+being converted completely to the new model::
+-err.conf:
++err.conf::
  
--static struct device_driver eepro100_driver = {
--       .name		= "eepro100",
--       .bus		= &pci_bus_type,
--       
--       .probe		= eepro100_probe,
--       .remove		= eepro100_remove,
--       .suspend		= eepro100_suspend,
--       .resume		= eepro100_resume,
+-#This is configuration file for err_inject_tool.
+-#The format of the each line is:
+-#cpu, loop, interval, err_type_info, err_struct_info, err_data_buffer
+-#where
+-#	cpu: logical cpu number the error will be inject in.
+-#	loop: times the error will be injected.
+-#	interval: In second. every so often one error is injected.
+-#	err_type_info, err_struct_info: PAL parameters.
+-#
+-#Note: All values are hex w/o or w/ 0x prefix.
++  #This is configuration file for err_inject_tool.
++  #The format of the each line is:
++  #cpu, loop, interval, err_type_info, err_struct_info, err_data_buffer
++  #where
++  #	cpu: logical cpu number the error will be inject in.
++  #	loop: times the error will be injected.
++  #	interval: In second. every so often one error is injected.
++  #	err_type_info, err_struct_info: PAL parameters.
++  #
++  #Note: All values are hex w/o or w/ 0x prefix.
+ 
+ 
+-#On cpu2, inject only total 0x10 errors, interval 5 seconds
+-#corrected, data cache, hier-2, physical addr(assigned by tool code).
+-#working on Montecito latest PAL.
+-2, 10, 5, 4101, 95
++  #On cpu2, inject only total 0x10 errors, interval 5 seconds
++  #corrected, data cache, hier-2, physical addr(assigned by tool code).
++  #working on Montecito latest PAL.
++  2, 10, 5, 4101, 95
+ 
+-#On cpu4, inject and consume total 0x10 errors, interval 5 seconds
+-#corrected, data cache, hier-2, physical addr(assigned by tool code).
+-#working on Montecito latest PAL.
+-4, 10, 5, 4109, 95
++  #On cpu4, inject and consume total 0x10 errors, interval 5 seconds
++  #corrected, data cache, hier-2, physical addr(assigned by tool code).
++  #working on Montecito latest PAL.
++  4, 10, 5, 4109, 95
+ 
+-#On cpu15, inject and consume total 0x10 errors, interval 5 seconds
+-#recoverable, DTR0, hier-2.
+-#working on Montecito latest PAL.
+-0xf, 0x10, 5, 4249, 15
++  #On cpu15, inject and consume total 0x10 errors, interval 5 seconds
++  #recoverable, DTR0, hier-2.
++  #working on Montecito latest PAL.
++  0xf, 0x10, 5, 4249, 15
+ 
+ The sample application source code:
+ 
+-err_injection_tool.c:
++err_injection_tool.c::
+ 
+-/*
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or
+- * NON INFRINGEMENT.  See the GNU General Public License for more
+- * details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+- *
+- * Copyright (C) 2006 Intel Co
+- *	Fenghua Yu <fenghua.yu@intel.com>
+- *
+- */
+-#include <sys/types.h>
+-#include <sys/stat.h>
+-#include <fcntl.h>
+-#include <stdio.h>
+-#include <sched.h>
+-#include <unistd.h>
+-#include <stdlib.h>
+-#include <stdarg.h>
+-#include <string.h>
+-#include <errno.h>
+-#include <time.h>
+-#include <sys/ipc.h>
+-#include <sys/sem.h>
+-#include <sys/wait.h>
+-#include <sys/mman.h>
+-#include <sys/shm.h>
++  /*
++   * This program is free software; you can redistribute it and/or modify
++   * it under the terms of the GNU General Public License as published by
++   * the Free Software Foundation; either version 2 of the License, or
++   * (at your option) any later version.
++   *
++   * This program is distributed in the hope that it will be useful, but
++   * WITHOUT ANY WARRANTY; without even the implied warranty of
++   * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or
++   * NON INFRINGEMENT.  See the GNU General Public License for more
++   * details.
++   *
++   * You should have received a copy of the GNU General Public License
++   * along with this program; if not, write to the Free Software
++   * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++   *
++   * Copyright (C) 2006 Intel Co
++   *	Fenghua Yu <fenghua.yu@intel.com>
++   *
++   */
++  #include <sys/types.h>
++  #include <sys/stat.h>
++  #include <fcntl.h>
++  #include <stdio.h>
++  #include <sched.h>
++  #include <unistd.h>
++  #include <stdlib.h>
++  #include <stdarg.h>
++  #include <string.h>
++  #include <errno.h>
++  #include <time.h>
++  #include <sys/ipc.h>
++  #include <sys/sem.h>
++  #include <sys/wait.h>
++  #include <sys/mman.h>
++  #include <sys/shm.h>
+ 
+-#define MAX_FN_SIZE 		256
+-#define MAX_BUF_SIZE 		256
+-#define DATA_BUF_SIZE 		256
+-#define NR_CPUS 		512
+-#define MAX_TASK_NUM		2048
+-#define MIN_INTERVAL		5	// seconds
+-#define	ERR_DATA_BUFFER_SIZE 	3	// Three 8-byte.
+-#define PARA_FIELD_NUM		5
+-#define MASK_SIZE		(NR_CPUS/64)
+-#define PATH_FORMAT "/sys/devices/system/cpu/cpu%d/err_inject/"
++  #define MAX_FN_SIZE 		256
++  #define MAX_BUF_SIZE 		256
++  #define DATA_BUF_SIZE 		256
++  #define NR_CPUS 		512
++  #define MAX_TASK_NUM		2048
++  #define MIN_INTERVAL		5	// seconds
++  #define	ERR_DATA_BUFFER_SIZE 	3	// Three 8-byte.
++  #define PARA_FIELD_NUM		5
++  #define MASK_SIZE		(NR_CPUS/64)
++  #define PATH_FORMAT "/sys/devices/system/cpu/cpu%d/err_inject/"
+ 
+-int sched_setaffinity(pid_t pid, unsigned int len, unsigned long *mask);
++  int sched_setaffinity(pid_t pid, unsigned int len, unsigned long *mask);
+ 
+-int verbose;
+-#define vbprintf if (verbose) printf
++  int verbose;
++  #define vbprintf if (verbose) printf
+ 
+-int log_info(int cpu, const char *fmt, ...)
+-{
++  int log_info(int cpu, const char *fmt, ...)
++  {
+ 	FILE *log;
+ 	char fn[MAX_FN_SIZE];
+ 	char buf[MAX_BUF_SIZE];
+@@ -142,12 +142,12 @@ int log_info(int cpu, const char *fmt, ...)
+ 	fclose(log);
+ 
+ 	return 0;
+-}
++  }
+ 
+-typedef unsigned long u64;
+-typedef unsigned int  u32;
++  typedef unsigned long u64;
++  typedef unsigned int  u32;
+ 
+-typedef union err_type_info_u {
++  typedef union err_type_info_u {
+ 	struct {
+ 		u64	mode		: 3,	/* 0-2 */
+ 			err_inj		: 3,	/* 3-5 */
+@@ -157,9 +157,9 @@ typedef union err_type_info_u {
+ 			reserved	: 48;	/* 16-63 */
+ 	} err_type_info_u;
+ 	u64	err_type_info;
+-} err_type_info_t;
++  } err_type_info_t;
+ 
+-typedef union err_struct_info_u {
++  typedef union err_struct_info_u {
+ 	struct {
+ 		u64	siv		: 1,	/* 0	 */
+ 			c_t		: 2,	/* 1-2	 */
+@@ -197,9 +197,9 @@ typedef union err_struct_info_u {
+ 		u64	reserved;
+ 	} err_struct_info_bus_processor_interconnect;
+ 	u64	err_struct_info;
+-} err_struct_info_t;
++  } err_struct_info_t;
+ 
+-typedef union err_data_buffer_u {
++  typedef union err_data_buffer_u {
+ 	struct {
+ 		u64	trigger_addr;		/* 0-63		*/
+ 		u64	inj_addr;		/* 64-127 	*/
+@@ -221,9 +221,9 @@ typedef union err_data_buffer_u {
+ 		u64	reserved;		/* 0-63		*/
+ 	} err_data_buffer_bus_processor_interconnect;
+ 	u64 err_data_buffer[ERR_DATA_BUFFER_SIZE];
+-} err_data_buffer_t;
++  } err_data_buffer_t;
+ 
+-typedef union capabilities_u {
++  typedef union capabilities_u {
+ 	struct {
+ 		u64	i		: 1,
+ 			d		: 1,
+@@ -276,9 +276,9 @@ typedef union capabilities_u {
+ 	struct {
+ 		u64	reserved;
+ 	} capabilities_bus_processor_interconnect;
+-} capabilities_t;
++  } capabilities_t;
+ 
+-typedef struct resources_s {
++  typedef struct resources_s {
+ 	u64	ibr0		: 1,
+ 		ibr2		: 1,
+ 		ibr4		: 1,
+@@ -288,24 +288,24 @@ typedef struct resources_s {
+ 		dbr4		: 1,
+ 		dbr6		: 1,
+ 		reserved	: 48;
+-} resources_t;
++  } resources_t;
+ 
+ 
+-long get_page_size(void)
+-{
++  long get_page_size(void)
++  {
+ 	long page_size=sysconf(_SC_PAGESIZE);
+ 	return page_size;
+-}
++  }
+ 
+-#define PAGE_SIZE (get_page_size()==-1?0x4000:get_page_size())
+-#define SHM_SIZE (2*PAGE_SIZE*NR_CPUS)
+-#define SHM_VA 0x2000000100000000
++  #define PAGE_SIZE (get_page_size()==-1?0x4000:get_page_size())
++  #define SHM_SIZE (2*PAGE_SIZE*NR_CPUS)
++  #define SHM_VA 0x2000000100000000
+ 
+-int shmid;
+-void *shmaddr;
++  int shmid;
++  void *shmaddr;
+ 
+-int create_shm(void)
+-{
++  int create_shm(void)
++  {
+ 	key_t key;
+ 	char fn[MAX_FN_SIZE];
+ 
+@@ -343,34 +343,34 @@ int create_shm(void)
+ 	mlock(shmaddr, SHM_SIZE);
+ 
+ 	return 0;
+-}
++  }
+ 
+-int free_shm()
+-{
++  int free_shm()
++  {
+ 	munlock(shmaddr, SHM_SIZE);
+-        shmdt(shmaddr);
++          shmdt(shmaddr);
+ 	semctl(shmid, 0, IPC_RMID);
+ 
+ 	return 0;
+-}
++  }
+ 
+-#ifdef _SEM_SEMUN_UNDEFINED
+-union semun
+-{
++  #ifdef _SEM_SEMUN_UNDEFINED
++  union semun
++  {
+ 	int val;
+ 	struct semid_ds *buf;
+ 	unsigned short int *array;
+ 	struct seminfo *__buf;
 -};
-+  static struct device_driver eepro100_driver = {
-+         .name		= "eepro100",
-+         .bus		= &pci_bus_type,
+-#endif
++  };
++  #endif
+ 
+-u32 mode=1; /* 1: physical mode; 2: virtual mode. */
+-int one_lock=1;
+-key_t key[NR_CPUS];
+-int semid[NR_CPUS];
++  u32 mode=1; /* 1: physical mode; 2: virtual mode. */
++  int one_lock=1;
++  key_t key[NR_CPUS];
++  int semid[NR_CPUS];
+ 
+-int create_sem(int cpu)
+-{
++  int create_sem(int cpu)
++  {
+ 	union semun arg;
+ 	char fn[MAX_FN_SIZE];
+ 	int sid;
+@@ -407,37 +407,37 @@ int create_sem(int cpu)
+ 	}
+ 
+ 	return 0;
+-}
++  }
+ 
+-static int lock(int cpu)
+-{
++  static int lock(int cpu)
++  {
+ 	struct sembuf lock;
+ 
+ 	lock.sem_num = cpu;
+ 	lock.sem_op = 1;
+ 	semop(semid[cpu], &lock, 1);
+ 
+-        return 0;
+-}
++          return 0;
++  }
+ 
+-static int unlock(int cpu)
+-{
++  static int unlock(int cpu)
++  {
+ 	struct sembuf unlock;
+ 
+ 	unlock.sem_num = cpu;
+ 	unlock.sem_op = -1;
+ 	semop(semid[cpu], &unlock, 1);
+ 
+-        return 0;
+-}
++          return 0;
++  }
+ 
+-void free_sem(int cpu)
+-{
++  void free_sem(int cpu)
++  {
+ 	semctl(semid[cpu], 0, IPC_RMID);
+-}
++  }
+ 
+-int wr_multi(char *fn, unsigned long *data, int size)
+-{
++  int wr_multi(char *fn, unsigned long *data, int size)
++  {
+ 	int fd;
+ 	char buf[MAX_BUF_SIZE];
+ 	int ret;
+@@ -459,15 +459,15 @@ int wr_multi(char *fn, unsigned long *data, int size)
+ 	ret=write(fd, buf, sizeof(buf));
+ 	close(fd);
+ 	return ret;
+-}
++  }
+ 
+-int wr(char *fn, unsigned long data)
+-{
++  int wr(char *fn, unsigned long data)
++  {
+ 	return wr_multi(fn, &data, 1);
+-}
++  }
+ 
+-int rd(char *fn, unsigned long *data)
+-{
++  int rd(char *fn, unsigned long *data)
++  {
+ 	int fd;
+ 	char buf[MAX_BUF_SIZE];
+ 
+@@ -480,10 +480,10 @@ int rd(char *fn, unsigned long *data)
+ 	*data=strtoul(buf, NULL, 16);
+ 	close(fd);
+ 	return 0;
+-}
++  }
+ 
+-int rd_status(char *path, int *status)
+-{
++  int rd_status(char *path, int *status)
++  {
+ 	char fn[MAX_FN_SIZE];
+ 	sprintf(fn, "%s/status", path);
+ 	if (rd(fn, (u64*)status)<0) {
+@@ -492,10 +492,10 @@ int rd_status(char *path, int *status)
+ 	}
+ 
+ 	return 0;
+-}
++  }
+ 
+-int rd_capabilities(char *path, u64 *capabilities)
+-{
++  int rd_capabilities(char *path, u64 *capabilities)
++  {
+ 	char fn[MAX_FN_SIZE];
+ 	sprintf(fn, "%s/capabilities", path);
+ 	if (rd(fn, capabilities)<0) {
+@@ -504,10 +504,10 @@ int rd_capabilities(char *path, u64 *capabilities)
+ 	}
+ 
+ 	return 0;
+-}
++  }
+ 
+-int rd_all(char *path)
+-{
++  int rd_all(char *path)
++  {
+ 	unsigned long err_type_info, err_struct_info, err_data_buffer;
+ 	int status;
+ 	unsigned long capabilities, resources;
+@@ -556,11 +556,11 @@ int rd_all(char *path)
+ 	printf("resources=%lx\n", resources);
+ 
+ 	return 0;
+-}
++  }
+ 
+-int query_capabilities(char *path, err_type_info_t err_type_info,
++  int query_capabilities(char *path, err_type_info_t err_type_info,
+ 			u64 *capabilities)
+-{
++  {
+ 	char fn[MAX_FN_SIZE];
+ 	err_struct_info_t err_struct_info;
+ 	err_data_buffer_t err_data_buffer;
+@@ -583,10 +583,10 @@ int query_capabilities(char *path, err_type_info_t err_type_info,
+ 		return -1;
+ 
+ 	return 0;
+-}
++  }
+ 
+-int query_all_capabilities()
+-{
++  int query_all_capabilities()
++  {
+ 	int status;
+ 	err_type_info_t err_type_info;
+ 	int err_sev, err_struct, struct_hier;
+@@ -629,12 +629,12 @@ int query_all_capabilities()
+ 	}
+ 
+ 	return 0;
+-}
++  }
+ 
+-int err_inject(int cpu, char *path, err_type_info_t err_type_info,
++  int err_inject(int cpu, char *path, err_type_info_t err_type_info,
+ 		err_struct_info_t err_struct_info,
+ 		err_data_buffer_t err_data_buffer)
+-{
++  {
+ 	int status;
+ 	char fn[MAX_FN_SIZE];
+ 
+@@ -667,13 +667,13 @@ int err_inject(int cpu, char *path, err_type_info_t err_type_info,
+ 	}
+ 
+ 	return status;
+-}
++  }
+ 
+-static int construct_data_buf(char *path, err_type_info_t err_type_info,
++  static int construct_data_buf(char *path, err_type_info_t err_type_info,
+ 		err_struct_info_t err_struct_info,
+ 		err_data_buffer_t *err_data_buffer,
+ 		void *va1)
+-{
++  {
+ 	char fn[MAX_FN_SIZE];
+ 	u64 virt_addr=0, phys_addr=0;
+ 
+@@ -710,22 +710,22 @@ static int construct_data_buf(char *path, err_type_info_t err_type_info,
+ 	}
+ 
+ 	return 0;
+-}
++  }
+ 
+-typedef struct {
++  typedef struct {
+ 	u64 cpu;
+ 	u64 loop;
+ 	u64 interval;
+ 	u64 err_type_info;
+ 	u64 err_struct_info;
+ 	u64 err_data_buffer[ERR_DATA_BUFFER_SIZE];
+-} parameters_t;
++  } parameters_t;
+ 
+-parameters_t line_para;
+-int para;
++  parameters_t line_para;
++  int para;
+ 
+-static int empty_data_buffer(u64 *err_data_buffer)
+-{
++  static int empty_data_buffer(u64 *err_data_buffer)
++  {
+ 	int empty=1;
+ 	int i;
+ 
+@@ -734,10 +734,10 @@ static int empty_data_buffer(u64 *err_data_buffer)
+ 		empty=0;
+ 
+ 	return empty;
+-}
++  }
+ 
+-int err_inj()
+-{
++  int err_inj()
++  {
+ 	err_type_info_t err_type_info;
+ 	err_struct_info_t err_struct_info;
+ 	err_data_buffer_t err_data_buffer;
+@@ -951,10 +951,10 @@ int err_inj()
+ 	printf("All done.\n");
+ 
+ 	return 0;
+-}
++  }
+ 
+-void help()
+-{
++  void help()
++  {
+ 	printf("err_inject_tool:\n");
+ 	printf("\t-q: query all capabilities. default: off\n");
+ 	printf("\t-m: procedure mode. 1: physical 2: virtual. default: 1\n");
+@@ -977,10 +977,10 @@ void help()
+ 	printf("The tool will take err.conf file as ");
+ 	printf("input to inject single or multiple errors ");
+ 	printf("on one or multiple cpus in parallel.\n");
+-}
++  }
+ 
+-int main(int argc, char **argv)
+-{
++  int main(int argc, char **argv)
++  {
+ 	char c;
+ 	int do_err_inj=0;
+ 	int do_query_all=0;
+@@ -1031,7 +1031,7 @@ int main(int argc, char **argv)
+ 				if (count!=PARA_FIELD_NUM+3) {
+ 				    line_para.err_data_buffer[0]=-1,
+ 				    line_para.err_data_buffer[1]=-1,
+-			 	    line_para.err_data_buffer[2]=-1;
++				    line_para.err_data_buffer[2]=-1;
+ 				    count=sscanf(optarg, "%lx, %lx, %lx, %lx, %lx\n",
+ 						&line_para.cpu,
+ 						&line_para.loop,
+@@ -1064,5 +1064,4 @@ int main(int argc, char **argv)
+ 		help();
+ 
+ 	return 0;
+-}
+-
++  }
+diff --git a/Documentation/ia64/fsys.txt b/Documentation/ia64/fsys.rst
+similarity index 76%
+rename from Documentation/ia64/fsys.txt
+rename to Documentation/ia64/fsys.rst
+index 59dd689d9b86..a702d2cc94b6 100644
+--- a/Documentation/ia64/fsys.txt
++++ b/Documentation/ia64/fsys.rst
+@@ -1,9 +1,9 @@
+--*-Mode: outline-*-
+-
+-		Light-weight System Calls for IA-64
+-		-----------------------------------
++===================================
++Light-weight System Calls for IA-64
++===================================
+ 
+ 		        Started: 13-Jan-2003
 +
-+         .probe		= eepro100_probe,
-+         .remove		= eepro100_remove,
-+         .suspend		= eepro100_suspend,
-+         .resume		= eepro100_resume,
-+  };
+ 		    Last update: 27-Sep-2003
  
- Most drivers will not be able to be converted completely to the new
- model because the bus they belong to has a bus-specific structure with
--bus-specific fields that cannot be generalized. 
-+bus-specific fields that cannot be generalized.
+ 	              David Mosberger-Tang
+@@ -52,12 +52,13 @@ privilege level is at level 0, this means that fsys-mode requires some
+ care (see below).
  
- The most common example of this are device ID structures. A driver
- typically defines an array of device IDs that it supports. The format
- of these structures and the semantics for comparing device IDs are
- completely bus-specific. Defining them as bus-specific entities would
--sacrifice type-safety, so we keep bus-specific structures around. 
-+sacrifice type-safety, so we keep bus-specific structures around.
  
- Bus-specific drivers should include a generic struct device_driver in
--the definition of the bus-specific driver. Like this:
-+the definition of the bus-specific driver. Like this::
+-* How to tell fsys-mode
++How to tell fsys-mode
++=====================
  
--struct pci_driver {
--       const struct pci_device_id *id_table;
--       struct device_driver	  driver;
--};
-+  struct pci_driver {
-+         const struct pci_device_id *id_table;
-+         struct device_driver	  driver;
-+  };
+ Linux operates in fsys-mode when (a) the privilege level is 0 (most
+ privileged) and (b) the stacks have NOT been switched to kernel memory
+ yet.  For convenience, the header file <asm-ia64/ptrace.h> provides
+-three macros:
++three macros::
  
- A definition that included bus-specific fields would look like
--(using the eepro100 driver again):
-+(using the eepro100 driver again)::
+ 	user_mode(regs)
+ 	user_stack(task,regs)
+@@ -70,11 +71,12 @@ to by "regs" was executing in user mode (privilege level 3).
+ user_stack() returns TRUE if the state pointed to by "regs" was
+ executing on the user-level stack(s).  Finally, fsys_mode() returns
+ TRUE if the CPU state pointed to by "regs" was executing in fsys-mode.
+-The fsys_mode() macro is equivalent to the expression:
++The fsys_mode() macro is equivalent to the expression::
  
--static struct pci_driver eepro100_driver = {
--       .id_table       = eepro100_pci_tbl,
--       .driver	       = {
-+  static struct pci_driver eepro100_driver = {
-+         .id_table       = eepro100_pci_tbl,
-+         .driver	       = {
- 		.name		= "eepro100",
- 		.bus		= &pci_bus_type,
- 		.probe		= eepro100_probe,
- 		.remove		= eepro100_remove,
- 		.suspend	= eepro100_suspend,
- 		.resume		= eepro100_resume,
--       },
--};
-+         },
-+  };
+ 	!user_mode(regs) && user_stack(task,regs)
  
- Some may find the syntax of embedded struct initialization awkward or
- even a bit ugly. So far, it's the best way we've found to do what we want...
-@@ -77,12 +78,14 @@ even a bit ugly. So far, it's the best way we've found to do what we want...
- Registration
- ~~~~~~~~~~~~
+-* How to write an fsyscall handler
++How to write an fsyscall handler
++================================
  
--int driver_register(struct device_driver * drv);
+ The file arch/ia64/kernel/fsys.S contains a table of fsyscall-handlers
+ (fsyscall_table).  This table contains one entry for each system call.
+@@ -87,66 +89,72 @@ of the getpid() system call.
+ 
+ The entry and exit-state of an fsyscall handler is as follows:
+ 
+-** Machine state on entry to fsyscall handler:
++Machine state on entry to fsyscall handler
++------------------------------------------
+ 
+- - r10	  = 0
+- - r11	  = saved ar.pfs (a user-level value)
+- - r15	  = system call number
+- - r16	  = "current" task pointer (in normal kernel-mode, this is in r13)
+- - r32-r39 = system call arguments
+- - b6	  = return address (a user-level value)
+- - ar.pfs = previous frame-state (a user-level value)
+- - PSR.be = cleared to zero (i.e., little-endian byte order is in effect)
+- - all other registers may contain values passed in from user-mode
++  ========= ===============================================================
++  r10	    0
++  r11	    saved ar.pfs (a user-level value)
++  r15	    system call number
++  r16	    "current" task pointer (in normal kernel-mode, this is in r13)
++  r32-r39   system call arguments
++  b6	    return address (a user-level value)
++  ar.pfs    previous frame-state (a user-level value)
++  PSR.be    cleared to zero (i.e., little-endian byte order is in effect)
++  -         all other registers may contain values passed in from user-mode
++  ========= ===============================================================
+ 
+-** Required machine state on exit to fsyscall handler:
++Required machine state on exit to fsyscall handler
++--------------------------------------------------
+ 
+- - r11	  = saved ar.pfs (as passed into the fsyscall handler)
+- - r15	  = system call number (as passed into the fsyscall handler)
+- - r32-r39 = system call arguments (as passed into the fsyscall handler)
+- - b6	  = return address (as passed into the fsyscall handler)
+- - ar.pfs = previous frame-state (as passed into the fsyscall handler)
++  ========= ===========================================================
++  r11	    saved ar.pfs (as passed into the fsyscall handler)
++  r15	    system call number (as passed into the fsyscall handler)
++  r32-r39   system call arguments (as passed into the fsyscall handler)
++  b6	    return address (as passed into the fsyscall handler)
++  ar.pfs    previous frame-state (as passed into the fsyscall handler)
++  ========= ===========================================================
+ 
+ Fsyscall handlers can execute with very little overhead, but with that
+ speed comes a set of restrictions:
+ 
+- o Fsyscall-handlers MUST check for any pending work in the flags
++ * Fsyscall-handlers MUST check for any pending work in the flags
+    member of the thread-info structure and if any of the
+    TIF_ALLWORK_MASK flags are set, the handler needs to fall back on
+    doing a full system call (by calling fsys_fallback_syscall).
+ 
+- o Fsyscall-handlers MUST preserve incoming arguments (r32-r39, r11,
++ * Fsyscall-handlers MUST preserve incoming arguments (r32-r39, r11,
+    r15, b6, and ar.pfs) because they will be needed in case of a
+    system call restart.  Of course, all "preserved" registers also
+    must be preserved, in accordance to the normal calling conventions.
+ 
+- o Fsyscall-handlers MUST check argument registers for containing a
++ * Fsyscall-handlers MUST check argument registers for containing a
+    NaT value before using them in any way that could trigger a
+    NaT-consumption fault.  If a system call argument is found to
+    contain a NaT value, an fsyscall-handler may return immediately
+    with r8=EINVAL, r10=-1.
+ 
+- o Fsyscall-handlers MUST NOT use the "alloc" instruction or perform
++ * Fsyscall-handlers MUST NOT use the "alloc" instruction or perform
+    any other operation that would trigger mandatory RSE
+    (register-stack engine) traffic.
+ 
+- o Fsyscall-handlers MUST NOT write to any stacked registers because
++ * Fsyscall-handlers MUST NOT write to any stacked registers because
+    it is not safe to assume that user-level called a handler with the
+    proper number of arguments.
+ 
+- o Fsyscall-handlers need to be careful when accessing per-CPU variables:
++ * Fsyscall-handlers need to be careful when accessing per-CPU variables:
+    unless proper safe-guards are taken (e.g., interruptions are avoided),
+    execution may be pre-empted and resumed on another CPU at any given
+    time.
+ 
+- o Fsyscall-handlers must be careful not to leak sensitive kernel'
++ * Fsyscall-handlers must be careful not to leak sensitive kernel'
+    information back to user-level.  In particular, before returning to
+    user-level, care needs to be taken to clear any scratch registers
+    that could contain sensitive information (note that the current
+    task pointer is not considered sensitive: it's already exposed
+    through ar.k6).
+ 
+- o Fsyscall-handlers MUST NOT access user-memory without first
++ * Fsyscall-handlers MUST NOT access user-memory without first
+    validating access-permission (this can be done typically via
+    probe.r.fault and/or probe.w.fault) and without guarding against
+    memory access exceptions (this can be done with the EX() macros
+@@ -162,7 +170,8 @@ fast system call execution (while fully preserving system call
+ semantics), but there is also a lot of flexibility in handling more
+ complicated cases.
+ 
+-* Signal handling
++Signal handling
++===============
+ 
+ The delivery of (asynchronous) signals must be delayed until fsys-mode
+ is exited.  This is accomplished with the help of the lower-privilege
+@@ -173,7 +182,8 @@ PSR.lp and returns immediately.  When fsys-mode is exited via the
+ occur.  The trap handler clears PSR.lp again and returns immediately.
+ The kernel exit path then checks for and delivers any pending signals.
+ 
+-* PSR Handling
++PSR Handling
++============
+ 
+ The "epc" instruction doesn't change the contents of PSR at all.  This
+ is in contrast to a regular interruption, which clears almost all
+@@ -181,6 +191,7 @@ bits.  Because of that, some care needs to be taken to ensure things
+ work as expected.  The following discussion describes how each PSR bit
+ is handled.
+ 
++======= =======================================================================
+ PSR.be	Cleared when entering fsys-mode.  A srlz.d instruction is used
+ 	to ensure the CPU is in little-endian mode before the first
+ 	load/store instruction is executed.  PSR.be is normally NOT
+@@ -202,7 +213,8 @@ PSR.pp	Unchanged.
+ PSR.di	Unchanged.
+ PSR.si	Unchanged.
+ PSR.db	Unchanged.  The kernel prevents user-level from setting a hardware
+-	breakpoint that triggers at any privilege level other than 3 (user-mode).
++	breakpoint that triggers at any privilege level other than
++	3 (user-mode).
+ PSR.lp	Unchanged.
+ PSR.tb	Lazy redirect.  If a taken-branch trap occurs while in
+ 	fsys-mode, the trap-handler modifies the saved machine state
+@@ -235,47 +247,52 @@ PSR.ed	Unchanged.  Note: This bit could only have an effect if an fsys-mode
+ PSR.bn	Unchanged.  Note: fsys-mode handlers may clear the bit, if needed.
+ 	Doing so requires clearing PSR.i and PSR.ic as well.
+ PSR.ia	Unchanged.  Note: the ia64 linux kernel never sets this bit.
++======= =======================================================================
+ 
+-* Using fast system calls
++Using fast system calls
++=======================
+ 
+ To use fast system calls, userspace applications need simply call
+ __kernel_syscall_via_epc().  For example
+ 
+ -- example fgettimeofday() call --
++
+ -- fgettimeofday.S --
+ 
+-#include <asm/asmmacro.h>
 +::
+ 
+-GLOBAL_ENTRY(fgettimeofday)
+-.prologue
+-.save ar.pfs, r11
+-mov r11 = ar.pfs
+-.body 
++  #include <asm/asmmacro.h>
+ 
+-mov r2 = 0xa000000000020660;;  // gate address 
+-			       // found by inspection of System.map for the 
++  GLOBAL_ENTRY(fgettimeofday)
++  .prologue
++  .save ar.pfs, r11
++  mov r11 = ar.pfs
++  .body
 +
-+  int driver_register(struct device_driver *drv);
++  mov r2 = 0xa000000000020660;;  // gate address
++			       // found by inspection of System.map for the
+ 			       // __kernel_syscall_via_epc() function.  See
+ 			       // below for how to do this for real.
  
- The driver registers the structure on startup. For drivers that have
- no bus-specific fields (i.e. don't have a bus-specific driver
- structure), they would use driver_register and pass a pointer to their
--struct device_driver object. 
-+struct device_driver object.
+-mov b7 = r2
+-mov r15 = 1087		       // gettimeofday syscall
+-;;
+-br.call.sptk.many b6 = b7
+-;;
++  mov b7 = r2
++  mov r15 = 1087		       // gettimeofday syscall
++  ;;
++  br.call.sptk.many b6 = b7
++  ;;
  
- Most drivers, however, will have a bus-specific structure and will
- need to register with the bus using something like pci_driver_register.
-@@ -101,7 +104,7 @@ By defining wrapper functions, the transition to the new model can be
- made easier. Drivers can ignore the generic structure altogether and
- let the bus wrapper fill in the fields. For the callbacks, the bus can
- define generic callbacks that forward the call to the bus-specific
--callbacks of the drivers. 
-+callbacks of the drivers.
+-.restore sp
++  .restore sp
  
- This solution is intended to be only temporary. In order to get class
- information in the driver, the drivers must be modified anyway. Since
-@@ -113,16 +116,16 @@ Access
- ~~~~~~
+-mov ar.pfs = r11
+-br.ret.sptk.many rp;;	      // return to caller
+-END(fgettimeofday)
++  mov ar.pfs = r11
++  br.ret.sptk.many rp;;	      // return to caller
++  END(fgettimeofday)
  
- Once the object has been registered, it may access the common fields of
--the object, like the lock and the list of devices. 
-+the object, like the lock and the list of devices::
+ -- end fgettimeofday.S --
  
--int driver_for_each_dev(struct device_driver * drv, void * data, 
--		        int (*callback)(struct device * dev, void * data));
-+  int driver_for_each_dev(struct device_driver *drv, void *data,
-+			  int (*callback)(struct device *dev, void *data));
+ In reality, getting the gate address is accomplished by two extra
+ values passed via the ELF auxiliary vector (include/asm-ia64/elf.h)
  
- The devices field is a list of all the devices that have been bound to
- the driver. The LDM core provides a helper function to operate on all
- the devices a driver controls. This helper locks the driver on each
- node access, and does proper reference counting on each device as it
--accesses it. 
-+accesses it.
+- o AT_SYSINFO : is the address of __kernel_syscall_via_epc()
+- o AT_SYSINFO_EHDR : is the address of the kernel gate ELF DSO
++ * AT_SYSINFO : is the address of __kernel_syscall_via_epc()
++ * AT_SYSINFO_EHDR : is the address of the kernel gate ELF DSO
  
+ The ELF DSO is a pre-linked library that is mapped in by the kernel at
+ the gate page.  It is a proper ELF shared object so, with a dynamic
+diff --git a/Documentation/ia64/README b/Documentation/ia64/ia64.rst
+similarity index 61%
+rename from Documentation/ia64/README
+rename to Documentation/ia64/ia64.rst
+index aa17f2154cba..b725019a9492 100644
+--- a/Documentation/ia64/README
++++ b/Documentation/ia64/ia64.rst
+@@ -1,43 +1,49 @@
+-        Linux kernel release 2.4.xx for the IA-64 Platform
++===========================================
++Linux kernel release for the IA-64 Platform
++===========================================
  
- sysfs
-@@ -142,7 +145,9 @@ supports.
- Callbacks
- ~~~~~~~~~
+-   These are the release notes for Linux version 2.4 for IA-64
++   These are the release notes for Linux since version 2.4 for IA-64
+    platform.  This document provides information specific to IA-64
+    ONLY, to get additional information about the Linux kernel also
+    read the original Linux README provided with the kernel.
  
--	int	(*probe)	(struct device * dev);
-+::
-+
-+	int	(*probe)	(struct device *dev);
+-INSTALLING the kernel:
++Installing the Kernel
++=====================
  
- The probe() entry is called in task context, with the bus's rwsem locked
- and the driver partially bound to the device.  Drivers commonly use
-@@ -162,9 +167,9 @@ the driver to that device.
- 
- A driver's probe() may return a negative errno value to indicate that
- the driver did not bind to this device, in which case it should have
--released all resources it allocated.
-+released all resources it allocated::
- 
--	int 	(*remove)	(struct device * dev);
-+	int 	(*remove)	(struct device *dev);
- 
- remove is called to unbind a driver from a device. This may be
- called if a device is physically removed from the system, if the
-@@ -173,43 +178,46 @@ in other cases.
- 
- It is up to the driver to determine if the device is present or
- not. It should free any resources allocated specifically for the
--device; i.e. anything in the device's driver_data field. 
-+device; i.e. anything in the device's driver_data field.
- 
- If the device is still present, it should quiesce the device and place
--it into a supported low-power state.
-+it into a supported low-power state::
- 
--	int	(*suspend)	(struct device * dev, pm_message_t state);
-+	int	(*suspend)	(struct device *dev, pm_message_t state);
- 
--suspend is called to put the device in a low power state.
-+suspend is called to put the device in a low power state::
- 
--	int	(*resume)	(struct device * dev);
-+	int	(*resume)	(struct device *dev);
- 
- Resume is used to bring a device back from a low power state.
+  - IA-64 kernel installation is the same as the other platforms, see
+    original README for details.
  
  
- Attributes
- ~~~~~~~~~~
--struct driver_attribute {
--        struct attribute        attr;
--        ssize_t (*show)(struct device_driver *driver, char *buf);
--        ssize_t (*store)(struct device_driver *, const char * buf, size_t count);
--};
+-SOFTWARE REQUIREMENTS
++Software Requirements
++=====================
  
--Device drivers can export attributes via their sysfs directories. 
-+::
-+
-+  struct driver_attribute {
-+          struct attribute        attr;
-+          ssize_t (*show)(struct device_driver *driver, char *buf);
-+          ssize_t (*store)(struct device_driver *, const char *buf, size_t count);
-+  };
-+
-+Device drivers can export attributes via their sysfs directories.
- Drivers can declare attributes using a DRIVER_ATTR_RW and DRIVER_ATTR_RO
- macro that works identically to the DEVICE_ATTR_RW and DEVICE_ATTR_RO
- macros.
+    Compiling and running this kernel requires an IA-64 compliant GCC
+    compiler.  And various software packages also compiled with an
+    IA-64 compliant GCC compiler.
  
--Example:
-+Example::
  
--DRIVER_ATTR_RW(debug);
-+	DRIVER_ATTR_RW(debug);
+-CONFIGURING the kernel:
++Configuring the Kernel
++======================
  
--This is equivalent to declaring:
-+This is equivalent to declaring::
+    Configuration is the same, see original README for details.
  
--struct driver_attribute driver_attr_debug;
-+	struct driver_attribute driver_attr_debug;
  
- This can then be used to add and remove the attribute from the
--driver's directory using:
-+driver's directory using::
+-COMPILING the kernel:
++Compiling the Kernel:
  
--int driver_create_file(struct device_driver *, const struct driver_attribute *);
--void driver_remove_file(struct device_driver *, const struct driver_attribute *);
-+  int driver_create_file(struct device_driver *, const struct driver_attribute *);
-+  void driver_remove_file(struct device_driver *, const struct driver_attribute *);
-diff --git a/Documentation/driver-model/index.rst b/Documentation/driver-model/index.rst
+  - Compiling this kernel doesn't differ from other platform so read
+    the original README for details BUT make sure you have an IA-64
+    compliant GCC compiler.
+ 
+-IA-64 SPECIFICS
++IA-64 Specifics
++===============
+ 
+  - General issues:
+ 
+-    o Hardly any performance tuning has been done. Obvious targets
++    * Hardly any performance tuning has been done. Obvious targets
+       include the library routines (IP checksum, etc.). Less
+       obvious targets include making sure we don't flush the TLB
+       needlessly, etc.
+ 
+-    o SMP locks cleanup/optimization
++    * SMP locks cleanup/optimization
+ 
+-    o IA32 support.  Currently experimental.  It mostly works.
++    * IA32 support.  Currently experimental.  It mostly works.
+diff --git a/Documentation/ia64/index.rst b/Documentation/ia64/index.rst
 new file mode 100644
-index 000000000000..9f85d579ce56
+index 000000000000..a3e3052ad6e2
 --- /dev/null
-+++ b/Documentation/driver-model/index.rst
-@@ -0,0 +1,26 @@
++++ b/Documentation/ia64/index.rst
+@@ -0,0 +1,18 @@
 +:orphan:
 +
-+============
-+Driver Model
-+============
++==================
++IA-64 Architecture
++==================
 +
 +.. toctree::
 +   :maxdepth: 1
 +
-+   binding
-+   bus
-+   class
-+   design-patterns
-+   device
-+   devres
-+   driver
-+   overview
-+   platform
-+   porting
++   ia64
++   aliasing
++   efirtc
++   err_inject
++   fsys
++   irq-redir
++   mca
++   serial
++   xen
+diff --git a/Documentation/ia64/IRQ-redir.txt b/Documentation/ia64/irq-redir.rst
+similarity index 86%
+rename from Documentation/ia64/IRQ-redir.txt
+rename to Documentation/ia64/irq-redir.rst
+index f7bd72261283..39bf94484a15 100644
+--- a/Documentation/ia64/IRQ-redir.txt
++++ b/Documentation/ia64/irq-redir.rst
+@@ -1,6 +1,8 @@
++==============================
+ IRQ affinity on IA64 platforms
+-------------------------------
+-                           07.01.2002, Erich Focht <efocht@ess.nec.de>
++==============================
 +
-+.. only::  subproject and html
++07.01.2002, Erich Focht <efocht@ess.nec.de>
+ 
+ 
+ By writing to /proc/irq/IRQ#/smp_affinity the interrupt routing can be
+@@ -12,22 +14,27 @@ IRQ target is one particular CPU and cannot be a mask of several
+ CPUs. Only the first non-zero bit is taken into account.
+ 
+ 
+-Usage examples:
++Usage examples
++==============
+ 
+ The target CPU has to be specified as a hexadecimal CPU mask. The
+ first non-zero bit is the selected CPU. This format has been kept for
+ compatibility reasons with i386.
+ 
+ Set the delivery mode of interrupt 41 to fixed and route the
+-interrupts to CPU #3 (logical CPU number) (2^3=0x08):
++interrupts to CPU #3 (logical CPU number) (2^3=0x08)::
 +
-+   Indices
-+   =======
+      echo "8" >/proc/irq/41/smp_affinity
+ 
+ Set the default route for IRQ number 41 to CPU 6 in lowest priority
+-delivery mode (redirectable):
++delivery mode (redirectable)::
 +
-+   * :ref:`genindex`
-diff --git a/Documentation/driver-model/overview.txt b/Documentation/driver-model/overview.rst
-similarity index 90%
-rename from Documentation/driver-model/overview.txt
-rename to Documentation/driver-model/overview.rst
-index 6a8f9a8075d8..d4d1e9b40e0c 100644
---- a/Documentation/driver-model/overview.txt
-+++ b/Documentation/driver-model/overview.rst
-@@ -1,4 +1,6 @@
-+=============================
- The Linux Kernel Device Model
-+=============================
+      echo "r 40" >/proc/irq/41/smp_affinity
  
- Patrick Mochel	<mochel@digitalimplant.org>
+-The output of the command
++The output of the command::
++
+      cat /proc/irq/IRQ#/smp_affinity
++
+ gives the target CPU mask for the specified interrupt vector. If the CPU
+ mask is preceded by the character "r", the interrupt is redirectable
+ (i.e. lowest priority mode routing is used), otherwise its route is
+@@ -35,7 +42,8 @@ fixed.
  
-@@ -41,14 +43,14 @@ data structure. These fields must still be accessed by the bus layers,
- and sometimes by the device-specific drivers.
  
- Other bus layers are encouraged to do what has been done for the PCI layer.
--struct pci_dev now looks like this:
-+struct pci_dev now looks like this::
  
--struct pci_dev {
-+  struct pci_dev {
- 	...
+-Initialization and default behavior:
++Initialization and default behavior
++===================================
  
- 	struct device dev;     /* Generic device interface */
- 	...
--};
-+  };
+ If the platform features IRQ redirection (info provided by SAL) all
+ IO-SAPIC interrupts are initialized with CPU#0 as their default target
+@@ -43,9 +51,11 @@ and the routing is the so called "lowest priority mode" (actually
+ fixed SAPIC mode with hint). The XTP chipset registers are used as hints
+ for the IRQ routing. Currently in Linux XTP registers can have three
+ values:
++
+ 	- minimal for an idle task,
+ 	- normal if any other task runs,
+ 	- maximal if the CPU is going to be switched off.
++
+ The IRQ is routed to the CPU with lowest XTP register value, the
+ search begins at the default CPU. Therefore most of the interrupts
+ will be handled by CPU #0.
+@@ -53,12 +63,14 @@ will be handled by CPU #0.
+ If the platform doesn't feature interrupt redirection IOSAPIC fixed
+ routing is used. The target CPUs are distributed in a round robin
+ manner. IRQs will be routed only to the selected target CPUs. Check
+-with
++with::
++
+         cat /proc/interrupts
  
- Note first that the struct device dev within the struct pci_dev is
- statically allocated. This means only one allocation on device discovery.
-@@ -80,26 +82,26 @@ easy. This has been accomplished by implementing a special purpose virtual
- file system named sysfs.
  
- Almost all mainstream Linux distros mount this filesystem automatically; you
--can see some variation of the following in the output of the "mount" command:
-+can see some variation of the following in the output of the "mount" command::
  
--$ mount
--...
--none on /sys type sysfs (rw,noexec,nosuid,nodev)
--...
--$
-+  $ mount
-+  ...
-+  none on /sys type sysfs (rw,noexec,nosuid,nodev)
-+  ...
-+  $
+-Comments:
++Comments
++========
  
- The auto-mounting of sysfs is typically accomplished by an entry similar to
--the following in the /etc/fstab file:
-+the following in the /etc/fstab file::
- 
--none     	/sys	sysfs    defaults	  	0 0
-+  none     	/sys	sysfs    defaults	  	0 0
- 
--or something similar in the /lib/init/fstab file on Debian-based systems:
-+or something similar in the /lib/init/fstab file on Debian-based systems::
- 
--none            /sys    sysfs    nodev,noexec,nosuid    0 0
-+  none            /sys    sysfs    nodev,noexec,nosuid    0 0
- 
--If sysfs is not automatically mounted, you can always do it manually with:
-+If sysfs is not automatically mounted, you can always do it manually with::
- 
--# mount -t sysfs sysfs /sys
-+	# mount -t sysfs sysfs /sys
- 
- Whenever a device is inserted into the tree, a directory is created for it.
- This directory may be populated at each layer of discovery - the global layer,
-@@ -108,7 +110,7 @@ the bus layer, or the device layer.
- The global layer currently creates two files - 'name' and 'power'. The
- former only reports the name of the device. The latter reports the
- current power state of the device. It will also be used to set the current
--power state. 
-+power state.
- 
- The bus layer may also create files for the devices it finds while probing the
- bus. For example, the PCI layer currently creates 'irq' and 'resource' files
-@@ -118,6 +120,5 @@ A device-specific driver may also export files in its directory to expose
- device-specific data or tunable interfaces.
- 
- More information about the sysfs directory layout can be found in
--the other documents in this directory and in the file 
-+the other documents in this directory and in the file
- Documentation/filesystems/sysfs.txt.
+ On large (multi-node) systems it is recommended to route the IRQs to
+ the node to which the corresponding device is connected.
+@@ -66,4 +78,3 @@ For systems like the NEC AzusA we get IRQ node-affinity for free. This
+ is because usually the chipsets on each node redirect the interrupts
+ only to their own CPUs (as they cannot see the XTP registers on the
+ other nodes).
 -
-diff --git a/Documentation/driver-model/platform.txt b/Documentation/driver-model/platform.rst
-similarity index 95%
-rename from Documentation/driver-model/platform.txt
-rename to Documentation/driver-model/platform.rst
-index 9d9e47dfc013..334dd4071ae4 100644
---- a/Documentation/driver-model/platform.txt
-+++ b/Documentation/driver-model/platform.rst
-@@ -1,5 +1,7 @@
-+============================
- Platform Devices and Drivers
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+============================
+diff --git a/Documentation/ia64/mca.txt b/Documentation/ia64/mca.rst
+similarity index 96%
+rename from Documentation/ia64/mca.txt
+rename to Documentation/ia64/mca.rst
+index f097c60cba1b..08270bba44a4 100644
+--- a/Documentation/ia64/mca.txt
++++ b/Documentation/ia64/mca.rst
+@@ -1,5 +1,8 @@
+-An ad-hoc collection of notes on IA64 MCA and INIT processing.  Feel
+-free to update it with notes about any area that is not clear.
++=============================================================
++An ad-hoc collection of notes on IA64 MCA and INIT processing
++=============================================================
 +
- See <linux/platform_device.h> for the driver model interface to the
- platform bus:  platform_device, and platform_driver.  This pseudo-bus
- is used to connect devices on busses with minimal infrastructure,
-@@ -19,15 +21,15 @@ be connected through a segment of some other kind of bus; but its
- registers will still be directly addressable.
++Feel free to update it with notes about any area that is not clear.
  
- Platform devices are given a name, used in driver binding, and a
--list of resources such as addresses and IRQs.
-+list of resources such as addresses and IRQs::
+ ---
  
--struct platform_device {
-+  struct platform_device {
- 	const char	*name;
- 	u32		id;
- 	struct device	dev;
- 	u32		num_resources;
- 	struct resource	*resource;
--};
-+  };
+@@ -82,7 +85,8 @@ if we have a choice here.
+   own stack as running on that cpu.  Then a recursive error gets a
+   trace of the failing handler's "task".
  
+-[1] My (Keith Owens) original design called for ia64 to separate its
++[1]
++    My (Keith Owens) original design called for ia64 to separate its
+     struct task and the kernel stacks.  Then the MCA/INIT data would be
+     chained stacks like i386 interrupt stacks.  But that required
+     radical surgery on the rest of ia64, plus extra hard wired TLB
+diff --git a/Documentation/ia64/serial.txt b/Documentation/ia64/serial.rst
+similarity index 87%
+rename from Documentation/ia64/serial.txt
+rename to Documentation/ia64/serial.rst
+index a63d2c54329b..1de70c305a79 100644
+--- a/Documentation/ia64/serial.txt
++++ b/Documentation/ia64/serial.rst
+@@ -1,4 +1,9 @@
+-SERIAL DEVICE NAMING
++==============
++Serial Devices
++==============
++
++Serial Device Naming
++====================
  
- Platform drivers
-@@ -35,9 +37,9 @@ Platform drivers
- Platform drivers follow the standard driver model convention, where
- discovery/enumeration is handled outside the drivers, and drivers
- provide probe() and remove() methods.  They support power management
--and shutdown notifications using the standard conventions.
-+and shutdown notifications using the standard conventions::
+     As of 2.6.10, serial devices on ia64 are named based on the
+     order of ACPI and PCI enumeration.  The first device in the
+@@ -30,17 +35,21 @@ SERIAL DEVICE NAMING
+     (described in the ACPI namespace) plus an MP[2] (a PCI device) has
+     these ports:
  
--struct platform_driver {
-+  struct platform_driver {
- 	int (*probe)(struct platform_device *);
- 	int (*remove)(struct platform_device *);
- 	void (*shutdown)(struct platform_device *);
-@@ -46,25 +48,25 @@ struct platform_driver {
- 	int (*resume_early)(struct platform_device *);
- 	int (*resume)(struct platform_device *);
- 	struct device_driver driver;
--};
-+  };
+-                                  pre-2.6.10      pre-2.6.10
+-                    MMIO         (EFI console    (EFI console
+-                   address        on builtin)     on MP port)    2.6.10
+-                  ==========      ==========      ==========     ======
++      ==========  ==========     ============    ============   =======
++      Type        MMIO           pre-2.6.10      pre-2.6.10     2.6.10+
++		  address
++				 (EFI console    (EFI console
++                                 on builtin)     on MP port)
++      ==========  ==========     ============    ============   =======
+       builtin     0xff5e0000        ttyS0           ttyS1         ttyS0
+       MP UPS      0xf8031000        ttyS1           ttyS2         ttyS1
+       MP Console  0xf8030000        ttyS2           ttyS0         ttyS2
+       MP 2        0xf8030010        ttyS3           ttyS3         ttyS3
+       MP 3        0xf8030038        ttyS4           ttyS4         ttyS4
++      ==========  ==========     ============    ============   =======
  
- Note that probe() should in general verify that the specified device hardware
- actually exists; sometimes platform setup code can't be sure.  The probing
- can use device resources, including clocks, and device platform_data.
+-CONSOLE SELECTION
++Console Selection
++=================
  
--Platform drivers register themselves the normal way:
-+Platform drivers register themselves the normal way::
+     EFI knows what your console devices are, but it doesn't tell the
+     kernel quite enough to actually locate them.  The DIG64 HCDP
+@@ -67,7 +76,8 @@ CONSOLE SELECTION
+     entries in /etc/inittab (for getty) and /etc/securetty (to allow
+     root login).
  
- 	int platform_driver_register(struct platform_driver *drv);
+-EARLY SERIAL CONSOLE
++Early Serial Console
++====================
  
- Or, in common situations where the device is known not to be hot-pluggable,
- the probe() routine can live in an init section to reduce the driver's
--runtime memory footprint:
-+runtime memory footprint::
+     The kernel can't start using a serial console until it knows where
+     the device lives.  Normally this happens when the driver enumerates
+@@ -80,7 +90,8 @@ EARLY SERIAL CONSOLE
+     or if the EFI console path contains only a UART device and the
+     firmware supplies an HCDP.
  
- 	int platform_driver_probe(struct platform_driver *drv,
- 			  int (*probe)(struct platform_device *))
- 
- Kernel modules can be composed of several platform drivers. The platform core
--provides helpers to register and unregister an array of drivers:
-+provides helpers to register and unregister an array of drivers::
- 
- 	int __platform_register_drivers(struct platform_driver * const *drivers,
- 				      unsigned int count, struct module *owner);
-@@ -73,7 +75,7 @@ provides helpers to register and unregister an array of drivers:
- 
- If one of the drivers fails to register, all drivers registered up to that
- point will be unregistered in reverse order. Note that there is a convenience
--macro that passes THIS_MODULE as owner parameter:
-+macro that passes THIS_MODULE as owner parameter::
- 
- 	#define platform_register_drivers(drivers, count)
- 
-@@ -81,7 +83,7 @@ macro that passes THIS_MODULE as owner parameter:
- Device Enumeration
- ~~~~~~~~~~~~~~~~~~
- As a rule, platform specific (and often board-specific) setup code will
--register platform devices:
-+register platform devices::
- 
- 	int platform_device_register(struct platform_device *pdev);
- 
-@@ -133,14 +135,14 @@ tend to already have "normal" modes, such as ones using device nodes that
- were created by PNP or by platform device setup.
- 
- None the less, there are some APIs to support such legacy drivers.  Avoid
--using these calls except with such hotplug-deficient drivers.
-+using these calls except with such hotplug-deficient drivers::
- 
- 	struct platform_device *platform_device_alloc(
- 			const char *name, int id);
- 
- You can use platform_device_alloc() to dynamically allocate a device, which
- you will then initialize with resources and platform_device_register().
--A better solution is usually:
-+A better solution is usually::
- 
- 	struct platform_device *platform_device_register_simple(
- 			const char *name, int id,
-diff --git a/Documentation/driver-model/porting.txt b/Documentation/driver-model/porting.rst
-similarity index 62%
-rename from Documentation/driver-model/porting.txt
-rename to Documentation/driver-model/porting.rst
-index 453053f1661f..ae4bf843c1d6 100644
---- a/Documentation/driver-model/porting.txt
-+++ b/Documentation/driver-model/porting.rst
-@@ -1,5 +1,6 @@
--
-+=======================================
- Porting Drivers to the New Driver Model
+-TROUBLESHOOTING SERIAL CONSOLE PROBLEMS
++Troubleshooting Serial Console Problems
 +=======================================
  
- Patrick Mochel
+     No kernel output after elilo prints "Uncompressing Linux... done":
  
-@@ -8,8 +9,8 @@ Patrick Mochel
- 
- Overview
- 
--Please refer to Documentation/driver-model/*.txt for definitions of
--various driver types and concepts. 
-+Please refer to `Documentation/driver-model/*.rst` for definitions of
-+various driver types and concepts.
- 
- Most of the work of porting devices drivers to the new model happens
- at the bus driver layer. This was intentional, to minimize the
-@@ -18,11 +19,11 @@ of bus drivers.
- 
- In a nutshell, the driver model consists of a set of objects that can
- be embedded in larger, bus-specific objects. Fields in these generic
--objects can replace fields in the bus-specific objects. 
-+objects can replace fields in the bus-specific objects.
- 
- The generic objects must be registered with the driver model core. By
- doing so, they will exported via the sysfs filesystem. sysfs can be
--mounted by doing 
-+mounted by doing::
- 
- 	# mount -t sysfs sysfs /sys
- 
-@@ -30,108 +31,109 @@ mounted by doing
- 
- The Process
- 
--Step 0: Read include/linux/device.h for object and function definitions. 
-+Step 0: Read include/linux/device.h for object and function definitions.
- 
--Step 1: Registering the bus driver. 
-+Step 1: Registering the bus driver.
+@@ -133,19 +144,22 @@ TROUBLESHOOTING SERIAL CONSOLE PROBLEMS
  
  
--- Define a struct bus_type for the bus driver.
-+- Define a struct bus_type for the bus driver::
  
--struct bus_type pci_bus_type = {
--        .name           = "pci",
--};
-+    struct bus_type pci_bus_type = {
-+          .name           = "pci",
-+    };
+-[1] http://www.dig64.org/specifications/agreement 
++[1]
++    http://www.dig64.org/specifications/agreement
+     The table was originally defined as the "HCDP" for "Headless
+     Console/Debug Port."  The current version is the "PCDP" for
+     "Primary Console and Debug Port Devices."
  
+-[2] The HP MP (management processor) is a PCI device that provides
++[2]
++    The HP MP (management processor) is a PCI device that provides
+     several UARTs.  One of the UARTs is often used as a console; the
+     EFI Boot Manager identifies it as "Acpi(HWP0002,700)/Pci(...)/Uart".
+     The external connection is usually a 25-pin connector, and a
+     special dongle converts that to three 9-pin connectors, one of
+     which is labelled "Console."
  
- - Register the bus type.
+-[3] EFI console devices are configured using the EFI Boot Manager
++[3]
++    EFI console devices are configured using the EFI Boot Manager
+     "Boot option maintenance" menu.  You may have to interrupt the
+     boot sequence to use this menu, and you will have to reset the
+     box after changing console configuration.
+diff --git a/Documentation/ia64/xen.rst b/Documentation/ia64/xen.rst
+new file mode 100644
+index 000000000000..831339c74441
+--- /dev/null
++++ b/Documentation/ia64/xen.rst
+@@ -0,0 +1,206 @@
++********************************************************
++Recipe for getting/building/running Xen/ia64 with pv_ops
++********************************************************
++This recipe describes how to get xen-ia64 source and build it,
++and run domU with pv_ops.
 +
-   This should be done in the initialization function for the bus type,
--  which is usually the module_init(), or equivalent, function. 
-+  which is usually the module_init(), or equivalent, function::
- 
--static int __init pci_driver_init(void)
--{
--        return bus_register(&pci_bus_type);
--}
-+    static int __init pci_driver_init(void)
-+    {
-+            return bus_register(&pci_bus_type);
-+    }
- 
--subsys_initcall(pci_driver_init);
-+    subsys_initcall(pci_driver_init);
- 
- 
-   The bus type may be unregistered (if the bus driver may be compiled
--  as a module) by doing:
-+  as a module) by doing::
- 
-      bus_unregister(&pci_bus_type);
- 
- 
--- Export the bus type for others to use. 
-+- Export the bus type for others to use.
- 
--  Other code may wish to reference the bus type, so declare it in a 
-+  Other code may wish to reference the bus type, so declare it in a
-   shared header file and export the symbol.
- 
--From include/linux/pci.h:
-+From include/linux/pci.h::
- 
--extern struct bus_type pci_bus_type;
-+  extern struct bus_type pci_bus_type;
- 
- 
--From file the above code appears in:
-+From file the above code appears in::
- 
--EXPORT_SYMBOL(pci_bus_type);
-+  EXPORT_SYMBOL(pci_bus_type);
- 
- 
- 
- - This will cause the bus to show up in /sys/bus/pci/ with two
--  subdirectories: 'devices' and 'drivers'.
-+  subdirectories: 'devices' and 'drivers'::
- 
--# tree -d /sys/bus/pci/
--/sys/bus/pci/
--|-- devices
--`-- drivers
-+    # tree -d /sys/bus/pci/
-+    /sys/bus/pci/
-+    |-- devices
-+    `-- drivers
- 
- 
- 
--Step 2: Registering Devices. 
-+Step 2: Registering Devices.
- 
- struct device represents a single device. It mainly contains metadata
--describing the relationship the device has to other entities. 
-+describing the relationship the device has to other entities.
- 
- 
--- Embed a struct device in the bus-specific device type. 
-+- Embed a struct device in the bus-specific device type::
- 
- 
--struct pci_dev {
--       ...
--       struct  device  dev;            /* Generic device interface */
--       ...
--};
-+    struct pci_dev {
-+           ...
-+           struct  device  dev;            /* Generic device interface */
-+           ...
-+    };
- 
--  It is recommended that the generic device not be the first item in 
-+  It is recommended that the generic device not be the first item in
-   the struct to discourage programmers from doing mindless casts
-   between the object types. Instead macros, or inline functions,
--  should be created to convert from the generic object type.
-+  should be created to convert from the generic object type::
- 
- 
--#define to_pci_dev(n) container_of(n, struct pci_dev, dev)
-+    #define to_pci_dev(n) container_of(n, struct pci_dev, dev)
- 
--or 
-+    or
- 
--static inline struct pci_dev * to_pci_dev(struct kobject * kobj)
--{
-+    static inline struct pci_dev * to_pci_dev(struct kobject * kobj)
-+    {
- 	return container_of(n, struct pci_dev, dev);
--}
-+    }
- 
--  This allows the compiler to verify type-safety of the operations 
-+  This allows the compiler to verify type-safety of the operations
-   that are performed (which is Good).
- 
- 
- - Initialize the device on registration.
- 
--  When devices are discovered or registered with the bus type, the 
-+  When devices are discovered or registered with the bus type, the
-   bus driver should initialize the generic device. The most important
-   things to initialize are the bus_id, parent, and bus fields.
- 
-   The bus_id is an ASCII string that contains the device's address on
-   the bus. The format of this string is bus-specific. This is
--  necessary for representing devices in sysfs. 
-+  necessary for representing devices in sysfs.
- 
-   parent is the physical parent of the device. It is important that
--  the bus driver sets this field correctly. 
-+  the bus driver sets this field correctly.
- 
-   The driver model maintains an ordered list of devices that it uses
-   for power management. This list must be in order to guarantee that
-@@ -140,13 +142,13 @@ static inline struct pci_dev * to_pci_dev(struct kobject * kobj)
-   devices.
- 
-   Also, the location of the device's sysfs directory depends on a
--  device's parent. sysfs exports a directory structure that mirrors 
-+  device's parent. sysfs exports a directory structure that mirrors
-   the device hierarchy. Accurately setting the parent guarantees that
-   sysfs will accurately represent the hierarchy.
- 
-   The device's bus field is a pointer to the bus type the device
-   belongs to. This should be set to the bus_type that was declared
--  and initialized before. 
-+  and initialized before.
- 
-   Optionally, the bus driver may set the device's name and release
-   fields.
-@@ -155,107 +157,107 @@ static inline struct pci_dev * to_pci_dev(struct kobject * kobj)
- 
-      "ATI Technologies Inc Radeon QD"
- 
--  The release field is a callback that the driver model core calls 
--  when the device has been removed, and all references to it have 
-+  The release field is a callback that the driver model core calls
-+  when the device has been removed, and all references to it have
-   been released. More on this in a moment.
- 
- 
--- Register the device. 
-+- Register the device.
- 
-   Once the generic device has been initialized, it can be registered
--  with the driver model core by doing:
-+  with the driver model core by doing::
- 
-        device_register(&dev->dev);
- 
--  It can later be unregistered by doing: 
-+  It can later be unregistered by doing::
- 
-        device_unregister(&dev->dev);
- 
--  This should happen on buses that support hotpluggable devices. 
-+  This should happen on buses that support hotpluggable devices.
-   If a bus driver unregisters a device, it should not immediately free
--  it. It should instead wait for the driver model core to call the 
--  device's release method, then free the bus-specific object. 
-+  it. It should instead wait for the driver model core to call the
-+  device's release method, then free the bus-specific object.
-   (There may be other code that is currently referencing the device
--  structure, and it would be rude to free the device while that is 
-+  structure, and it would be rude to free the device while that is
-   happening).
- 
- 
--  When the device is registered, a directory in sysfs is created. 
--  The PCI tree in sysfs looks like: 
-+  When the device is registered, a directory in sysfs is created.
-+  The PCI tree in sysfs looks like::
- 
--/sys/devices/pci0/
--|-- 00:00.0
--|-- 00:01.0
--|   `-- 01:00.0
--|-- 00:02.0
--|   `-- 02:1f.0
--|       `-- 03:00.0
--|-- 00:1e.0
--|   `-- 04:04.0
--|-- 00:1f.0
--|-- 00:1f.1
--|   |-- ide0
--|   |   |-- 0.0
--|   |   `-- 0.1
--|   `-- ide1
--|       `-- 1.0
--|-- 00:1f.2
--|-- 00:1f.3
--`-- 00:1f.5
-+    /sys/devices/pci0/
-+    |-- 00:00.0
-+    |-- 00:01.0
-+    |   `-- 01:00.0
-+    |-- 00:02.0
-+    |   `-- 02:1f.0
-+    |       `-- 03:00.0
-+    |-- 00:1e.0
-+    |   `-- 04:04.0
-+    |-- 00:1f.0
-+    |-- 00:1f.1
-+    |   |-- ide0
-+    |   |   |-- 0.0
-+    |   |   `-- 0.1
-+    |   `-- ide1
-+    |       `-- 1.0
-+    |-- 00:1f.2
-+    |-- 00:1f.3
-+    `-- 00:1f.5
- 
-   Also, symlinks are created in the bus's 'devices' directory
--  that point to the device's directory in the physical hierarchy. 
-+  that point to the device's directory in the physical hierarchy::
- 
--/sys/bus/pci/devices/
--|-- 00:00.0 -> ../../../devices/pci0/00:00.0
--|-- 00:01.0 -> ../../../devices/pci0/00:01.0
--|-- 00:02.0 -> ../../../devices/pci0/00:02.0
--|-- 00:1e.0 -> ../../../devices/pci0/00:1e.0
--|-- 00:1f.0 -> ../../../devices/pci0/00:1f.0
--|-- 00:1f.1 -> ../../../devices/pci0/00:1f.1
--|-- 00:1f.2 -> ../../../devices/pci0/00:1f.2
--|-- 00:1f.3 -> ../../../devices/pci0/00:1f.3
--|-- 00:1f.5 -> ../../../devices/pci0/00:1f.5
--|-- 01:00.0 -> ../../../devices/pci0/00:01.0/01:00.0
--|-- 02:1f.0 -> ../../../devices/pci0/00:02.0/02:1f.0
--|-- 03:00.0 -> ../../../devices/pci0/00:02.0/02:1f.0/03:00.0
--`-- 04:04.0 -> ../../../devices/pci0/00:1e.0/04:04.0
-+    /sys/bus/pci/devices/
-+    |-- 00:00.0 -> ../../../devices/pci0/00:00.0
-+    |-- 00:01.0 -> ../../../devices/pci0/00:01.0
-+    |-- 00:02.0 -> ../../../devices/pci0/00:02.0
-+    |-- 00:1e.0 -> ../../../devices/pci0/00:1e.0
-+    |-- 00:1f.0 -> ../../../devices/pci0/00:1f.0
-+    |-- 00:1f.1 -> ../../../devices/pci0/00:1f.1
-+    |-- 00:1f.2 -> ../../../devices/pci0/00:1f.2
-+    |-- 00:1f.3 -> ../../../devices/pci0/00:1f.3
-+    |-- 00:1f.5 -> ../../../devices/pci0/00:1f.5
-+    |-- 01:00.0 -> ../../../devices/pci0/00:01.0/01:00.0
-+    |-- 02:1f.0 -> ../../../devices/pci0/00:02.0/02:1f.0
-+    |-- 03:00.0 -> ../../../devices/pci0/00:02.0/02:1f.0/03:00.0
-+    `-- 04:04.0 -> ../../../devices/pci0/00:1e.0/04:04.0
- 
- 
- 
- Step 3: Registering Drivers.
- 
- struct device_driver is a simple driver structure that contains a set
--of operations that the driver model core may call. 
-+of operations that the driver model core may call.
- 
- 
--- Embed a struct device_driver in the bus-specific driver. 
-+- Embed a struct device_driver in the bus-specific driver.
- 
--  Just like with devices, do something like:
-+  Just like with devices, do something like::
- 
--struct pci_driver {
--       ...
--       struct device_driver    driver;
--};
-+    struct pci_driver {
-+           ...
-+           struct device_driver    driver;
-+    };
- 
- 
--- Initialize the generic driver structure. 
-+- Initialize the generic driver structure.
- 
-   When the driver registers with the bus (e.g. doing pci_register_driver()),
-   initialize the necessary fields of the driver: the name and bus
--  fields. 
-+  fields.
- 
- 
- - Register the driver.
- 
--  After the generic driver has been initialized, call
-+  After the generic driver has been initialized, call::
- 
- 	driver_register(&drv->driver);
- 
-   to register the driver with the core.
- 
-   When the driver is unregistered from the bus, unregister it from the
--  core by doing:
-+  core by doing::
- 
-         driver_unregister(&drv->driver);
- 
-@@ -265,15 +267,15 @@ struct pci_driver {
- 
- - Sysfs representation.
- 
--  Drivers are exported via sysfs in their bus's 'driver's directory. 
--  For example:
-+  Drivers are exported via sysfs in their bus's 'driver's directory.
-+  For example::
- 
--/sys/bus/pci/drivers/
--|-- 3c59x
--|-- Ensoniq AudioPCI
--|-- agpgart-amdk7
--|-- e100
--`-- serial
-+    /sys/bus/pci/drivers/
-+    |-- 3c59x
-+    |-- Ensoniq AudioPCI
-+    |-- agpgart-amdk7
-+    |-- e100
-+    `-- serial
- 
- 
- Step 4: Define Generic Methods for Drivers.
-@@ -281,30 +283,30 @@ Step 4: Define Generic Methods for Drivers.
- struct device_driver defines a set of operations that the driver model
- core calls. Most of these operations are probably similar to
- operations the bus already defines for drivers, but taking different
--parameters. 
-+parameters.
- 
- It would be difficult and tedious to force every driver on a bus to
- simultaneously convert their drivers to generic format. Instead, the
- bus driver should define single instances of the generic methods that
--forward call to the bus-specific drivers. For instance: 
-+forward call to the bus-specific drivers. For instance::
- 
- 
--static int pci_device_remove(struct device * dev)
--{
--        struct pci_dev * pci_dev = to_pci_dev(dev);
--        struct pci_driver * drv = pci_dev->driver;
-+  static int pci_device_remove(struct device * dev)
-+  {
-+          struct pci_dev * pci_dev = to_pci_dev(dev);
-+          struct pci_driver * drv = pci_dev->driver;
- 
--        if (drv) {
--                if (drv->remove)
--                        drv->remove(pci_dev);
--                pci_dev->driver = NULL;
--        }
--        return 0;
--}
-+          if (drv) {
-+                  if (drv->remove)
-+                          drv->remove(pci_dev);
-+                  pci_dev->driver = NULL;
-+          }
-+          return 0;
-+  }
- 
- 
- The generic driver should be initialized with these methods before it
--is registered. 
-+is registered::
- 
-         /* initialize common driver fields */
-         drv->driver.name = drv->name;
-@@ -320,23 +322,23 @@ is registered.
- 
- Ideally, the bus should only initialize the fields if they are not
- already set. This allows the drivers to implement their own generic
--methods. 
-+methods.
- 
- 
--Step 5: Support generic driver binding. 
-+Step 5: Support generic driver binding.
- 
- The model assumes that a device or driver can be dynamically
- registered with the bus at any time. When registration happens,
- devices must be bound to a driver, or drivers must be bound to all
--devices that it supports. 
-+devices that it supports.
- 
- A driver typically contains a list of device IDs that it supports. The
--bus driver compares these IDs to the IDs of devices registered with it. 
-+bus driver compares these IDs to the IDs of devices registered with it.
- The format of the device IDs, and the semantics for comparing them are
--bus-specific, so the generic model does attempt to generalize them. 
-+bus-specific, so the generic model does attempt to generalize them.
- 
- Instead, a bus may supply a method in struct bus_type that does the
--comparison: 
-+comparison::
- 
-   int (*match)(struct device * dev, struct device_driver * drv);
- 
-@@ -346,59 +348,59 @@ and zero otherwise. It may also return error code (for example
- not possible.
- 
- When a device is registered, the bus's list of drivers is iterated
--over. bus->match() is called for each one until a match is found. 
-+over. bus->match() is called for each one until a match is found.
- 
- When a driver is registered, the bus's list of devices is iterated
- over. bus->match() is called for each device that is not already
--claimed by a driver. 
-+claimed by a driver.
- 
- When a device is successfully bound to a driver, device->driver is
- set, the device is added to a per-driver list of devices, and a
- symlink is created in the driver's sysfs directory that points to the
--device's physical directory:
-+device's physical directory::
- 
--/sys/bus/pci/drivers/
--|-- 3c59x
--|   `-- 00:0b.0 -> ../../../../devices/pci0/00:0b.0
--|-- Ensoniq AudioPCI
--|-- agpgart-amdk7
--|   `-- 00:00.0 -> ../../../../devices/pci0/00:00.0
--|-- e100
--|   `-- 00:0c.0 -> ../../../../devices/pci0/00:0c.0
--`-- serial
-+  /sys/bus/pci/drivers/
-+  |-- 3c59x
-+  |   `-- 00:0b.0 -> ../../../../devices/pci0/00:0b.0
-+  |-- Ensoniq AudioPCI
-+  |-- agpgart-amdk7
-+  |   `-- 00:00.0 -> ../../../../devices/pci0/00:00.0
-+  |-- e100
-+  |   `-- 00:0c.0 -> ../../../../devices/pci0/00:0c.0
-+  `-- serial
- 
- 
- This driver binding should replace the existing driver binding
--mechanism the bus currently uses. 
-+mechanism the bus currently uses.
- 
- 
- Step 6: Supply a hotplug callback.
- 
- Whenever a device is registered with the driver model core, the
--userspace program /sbin/hotplug is called to notify userspace. 
-+userspace program /sbin/hotplug is called to notify userspace.
- Users can define actions to perform when a device is inserted or
--removed. 
-+removed.
- 
- The driver model core passes several arguments to userspace via
- environment variables, including
- 
- - ACTION: set to 'add' or 'remove'
--- DEVPATH: set to the device's physical path in sysfs. 
-+- DEVPATH: set to the device's physical path in sysfs.
- 
- A bus driver may also supply additional parameters for userspace to
- consume. To do this, a bus must implement the 'hotplug' method in
--struct bus_type:
-+struct bus_type::
- 
--     int (*hotplug) (struct device *dev, char **envp, 
-+     int (*hotplug) (struct device *dev, char **envp,
-                      int num_envp, char *buffer, int buffer_size);
- 
--This is called immediately before /sbin/hotplug is executed. 
-+This is called immediately before /sbin/hotplug is executed.
- 
- 
- Step 7: Cleaning up the bus driver.
- 
- The generic bus, device, and driver structures provide several fields
--that can replace those defined privately to the bus driver. 
-+that can replace those defined privately to the bus driver.
- 
- - Device list.
- 
-@@ -407,36 +409,36 @@ type. This includes all devices on all instances of that bus type.
- An internal list that the bus uses may be removed, in favor of using
- this one.
- 
--The core provides an iterator to access these devices. 
-+The core provides an iterator to access these devices::
- 
--int bus_for_each_dev(struct bus_type * bus, struct device * start, 
--                     void * data, int (*fn)(struct device *, void *));
-+  int bus_for_each_dev(struct bus_type * bus, struct device * start,
-+                       void * data, int (*fn)(struct device *, void *));
- 
- 
- - Driver list.
- 
- struct bus_type also contains a list of all drivers registered with
--it. An internal list of drivers that the bus driver maintains may 
--be removed in favor of using the generic one. 
-+it. An internal list of drivers that the bus driver maintains may
-+be removed in favor of using the generic one.
- 
--The drivers may be iterated over, like devices: 
-+The drivers may be iterated over, like devices::
- 
--int bus_for_each_drv(struct bus_type * bus, struct device_driver * start,
--                     void * data, int (*fn)(struct device_driver *, void *));
-+  int bus_for_each_drv(struct bus_type * bus, struct device_driver * start,
-+                       void * data, int (*fn)(struct device_driver *, void *));
- 
- 
- Please see drivers/base/bus.c for more information.
- 
- 
--- rwsem 
-+- rwsem
- 
- struct bus_type contains an rwsem that protects all core accesses to
- the device and driver lists. This can be used by the bus driver
- internally, and should be used when accessing the device or driver
--lists the bus maintains. 
-+lists the bus maintains.
- 
- 
--- Device and driver fields. 
-+- Device and driver fields.
- 
- Some of the fields in struct device and struct device_driver duplicate
- fields in the bus-specific representations of these objects. Feel free
-@@ -444,4 +446,3 @@ to remove the bus-specific ones and favor the generic ones. Note
- though, that this will likely mean fixing up all the drivers that
- reference the bus-specific fields (though those should all be 1-line
- changes).
++Requirements
++============
++
++  - python
++  - mercurial
++    it (aka "hg") is an open-source source code
++    management software. See the below.
++    http://www.selenic.com/mercurial/wiki/
++  - git
++  - bridge-utils
++
++Getting and Building Xen and Dom0
++=================================
++
++  My environment is:
++
++    - Machine  : Tiger4
++    - Domain0 OS  : RHEL5
++    - DomainU OS  : RHEL5
++
++ 1. Download source::
++
++	# hg clone http://xenbits.xensource.com/ext/ia64/xen-unstable.hg
++	# cd xen-unstable.hg
++	# hg clone http://xenbits.xensource.com/ext/ia64/linux-2.6.18-xen.hg
++
++ 2. # make world
++
++ 3. # make install-tools
++
++ 4. copy kernels and xen::
++
++	# cp xen/xen.gz /boot/efi/efi/redhat/
++	# cp build-linux-2.6.18-xen_ia64/vmlinux.gz \
++	/boot/efi/efi/redhat/vmlinuz-2.6.18.8-xen
++
++ 5. make initrd for Dom0/DomU::
++
++	# make -C linux-2.6.18-xen.hg ARCH=ia64 modules_install \
++          O=$(pwd)/build-linux-2.6.18-xen_ia64
++	# mkinitrd -f /boot/efi/efi/redhat/initrd-2.6.18.8-xen.img \
++	  2.6.18.8-xen --builtin mptspi --builtin mptbase \
++	  --builtin mptscsih --builtin uhci-hcd --builtin ohci-hcd \
++	  --builtin ehci-hcd
++
++Making a disk image for guest OS
++================================
++
++ 1. make file::
++
++      # dd if=/dev/zero of=/root/rhel5.img bs=1M seek=4096 count=0
++      # mke2fs -F -j /root/rhel5.img
++      # mount -o loop /root/rhel5.img /mnt
++      # cp -ax /{dev,var,etc,usr,bin,sbin,lib} /mnt
++      # mkdir /mnt/{root,proc,sys,home,tmp}
++
++      Note: You may miss some device files. If so, please create them
++      with mknod. Or you can use tar instead of cp.
++
++ 2. modify DomU's fstab::
++
++      # vi /mnt/etc/fstab
++         /dev/xvda1  /            ext3    defaults        1 1
++         none        /dev/pts     devpts  gid=5,mode=620  0 0
++         none        /dev/shm     tmpfs   defaults        0 0
++         none        /proc        proc    defaults        0 0
++         none        /sys         sysfs   defaults        0 0
++
++ 3. modify inittab
++
++    set runlevel to 3 to avoid X trying to start::
++
++      # vi /mnt/etc/inittab
++         id:3:initdefault:
++
++    Start a getty on the hvc0 console::
++
++       X0:2345:respawn:/sbin/mingetty hvc0
++
++    tty1-6 mingetty can be commented out
++
++ 4. add hvc0 into /etc/securetty::
++
++      # vi /mnt/etc/securetty (add hvc0)
++
++ 5. umount::
++
++      # umount /mnt
++
++FYI, virt-manager can also make a disk image for guest OS.
++It's GUI tools and easy to make it.
++
++Boot Xen & Domain0
++==================
++
++ 1. replace elilo
++    elilo of RHEL5 can boot Xen and Dom0.
++    If you use old elilo (e.g RHEL4), please download from the below
++    http://elilo.sourceforge.net/cgi-bin/blosxom
++    and copy into /boot/efi/efi/redhat/::
++
++      # cp elilo-3.6-ia64.efi /boot/efi/efi/redhat/elilo.efi
++
++ 2. modify elilo.conf (like the below)::
++
++      # vi /boot/efi/efi/redhat/elilo.conf
++      prompt
++      timeout=20
++      default=xen
++      relocatable
++
++      image=vmlinuz-2.6.18.8-xen
++             label=xen
++             vmm=xen.gz
++             initrd=initrd-2.6.18.8-xen.img
++             read-only
++             append=" -- rhgb root=/dev/sda2"
++
++The append options before "--" are for xen hypervisor,
++the options after "--" are for dom0.
++
++FYI, your machine may need console options like
++"com1=19200,8n1 console=vga,com1". For example,
++append="com1=19200,8n1 console=vga,com1 -- rhgb console=tty0 \
++console=ttyS0 root=/dev/sda2"
++
++Getting and Building domU with pv_ops
++=====================================
++
++ 1. get pv_ops tree::
++
++      # git clone http://people.valinux.co.jp/~yamahata/xen-ia64/linux-2.6-xen-ia64.git/
++
++ 2. git branch (if necessary)::
++
++      # cd linux-2.6-xen-ia64/
++      # git checkout -b your_branch origin/xen-ia64-domu-minimal-2008may19
++
++   Note:
++     The current branch is xen-ia64-domu-minimal-2008may19.
++     But you would find the new branch. You can see with
++     "git branch -r" to get the branch lists.
++
++       http://people.valinux.co.jp/~yamahata/xen-ia64/for_eagl/linux-2.6-ia64-pv-ops.git/
++
++     is also available.
++
++     The tree is based on
++
++      git://git.kernel.org/pub/scm/linux/kernel/git/aegl/linux-2.6 test)
++
++ 3. copy .config for pv_ops of domU::
++
++      # cp arch/ia64/configs/xen_domu_wip_defconfig .config
++
++ 4. make kernel with pv_ops::
++
++      # make oldconfig
++      # make
++
++ 5. install the kernel and initrd::
++
++      # cp vmlinux.gz /boot/efi/efi/redhat/vmlinuz-2.6-pv_ops-xenU
++      # make modules_install
++      # mkinitrd -f /boot/efi/efi/redhat/initrd-2.6-pv_ops-xenU.img \
++        2.6.26-rc3xen-ia64-08941-g1b12161 --builtin mptspi \
++        --builtin mptbase --builtin mptscsih --builtin uhci-hcd \
++        --builtin ohci-hcd --builtin ehci-hcd
++
++Boot DomainU with pv_ops
++========================
++
++ 1. make config of DomU::
++
++     # vi /etc/xen/rhel5
++       kernel = "/boot/efi/efi/redhat/vmlinuz-2.6-pv_ops-xenU"
++       ramdisk = "/boot/efi/efi/redhat/initrd-2.6-pv_ops-xenU.img"
++       vcpus = 1
++       memory = 512
++       name = "rhel5"
++       disk = [ 'file:/root/rhel5.img,xvda1,w' ]
++       root = "/dev/xvda1 ro"
++       extra= "rhgb console=hvc0"
++
++ 2. After boot xen and dom0, start xend::
++
++	# /etc/init.d/xend start
++
++   ( In the debugging case, `# XEND_DEBUG=1 xend trace_start` )
++
++ 3. start domU::
++
++	# xm create -c rhel5
++
++Reference
++=========
++- Wiki of Xen/IA64 upstream merge
++  http://wiki.xensource.com/xenwiki/XenIA64/UpstreamMerge
++
++Written by Akio Takebe <takebe_akio@jp.fujitsu.com> on 28 May 2008
+diff --git a/Documentation/ia64/xen.txt b/Documentation/ia64/xen.txt
+deleted file mode 100644
+index a12c74ce2773..000000000000
+--- a/Documentation/ia64/xen.txt
++++ /dev/null
+@@ -1,183 +0,0 @@
+-       Recipe for getting/building/running Xen/ia64 with pv_ops
+-       --------------------------------------------------------
 -
-diff --git a/Documentation/eisa.txt b/Documentation/eisa.txt
-index 2806e5544e43..f388545a85a7 100644
---- a/Documentation/eisa.txt
-+++ b/Documentation/eisa.txt
-@@ -103,7 +103,7 @@ id_table	an array of NULL terminated EISA id strings,
- 		(driver_data).
+-This recipe describes how to get xen-ia64 source and build it,
+-and run domU with pv_ops.
+-
+-============
+-Requirements
+-============
+-
+-  - python
+-  - mercurial
+-    it (aka "hg") is an open-source source code
+-    management software. See the below.
+-    http://www.selenic.com/mercurial/wiki/
+-  - git
+-  - bridge-utils
+-
+-=================================
+-Getting and Building Xen and Dom0
+-=================================
+-
+-  My environment is;
+-    Machine  : Tiger4
+-    Domain0 OS  : RHEL5
+-    DomainU OS  : RHEL5
+-
+- 1. Download source
+-    # hg clone http://xenbits.xensource.com/ext/ia64/xen-unstable.hg
+-    # cd xen-unstable.hg
+-    # hg clone http://xenbits.xensource.com/ext/ia64/linux-2.6.18-xen.hg
+-
+- 2. # make world
+-
+- 3. # make install-tools
+-
+- 4. copy kernels and xen
+-    # cp xen/xen.gz /boot/efi/efi/redhat/
+-    # cp build-linux-2.6.18-xen_ia64/vmlinux.gz \
+-      /boot/efi/efi/redhat/vmlinuz-2.6.18.8-xen
+-
+- 5. make initrd for Dom0/DomU
+-    # make -C linux-2.6.18-xen.hg ARCH=ia64 modules_install \
+-      O=$(pwd)/build-linux-2.6.18-xen_ia64
+-    # mkinitrd -f /boot/efi/efi/redhat/initrd-2.6.18.8-xen.img \
+-      2.6.18.8-xen --builtin mptspi --builtin mptbase \
+-      --builtin mptscsih --builtin uhci-hcd --builtin ohci-hcd \
+-      --builtin ehci-hcd
+-
+-================================
+-Making a disk image for guest OS
+-================================
+-
+- 1. make file
+-    # dd if=/dev/zero of=/root/rhel5.img bs=1M seek=4096 count=0
+-    # mke2fs -F -j /root/rhel5.img
+-    # mount -o loop /root/rhel5.img /mnt
+-    # cp -ax /{dev,var,etc,usr,bin,sbin,lib} /mnt
+-    # mkdir /mnt/{root,proc,sys,home,tmp}
+-
+-    Note: You may miss some device files. If so, please create them
+-    with mknod. Or you can use tar instead of cp.
+-
+- 2. modify DomU's fstab
+-    # vi /mnt/etc/fstab
+-       /dev/xvda1  /            ext3    defaults        1 1
+-       none        /dev/pts     devpts  gid=5,mode=620  0 0
+-       none        /dev/shm     tmpfs   defaults        0 0
+-       none        /proc        proc    defaults        0 0
+-       none        /sys         sysfs   defaults        0 0
+-
+- 3. modify inittab
+-    set runlevel to 3 to avoid X trying to start
+-    # vi /mnt/etc/inittab
+-       id:3:initdefault:
+-    Start a getty on the hvc0 console
+-       X0:2345:respawn:/sbin/mingetty hvc0
+-    tty1-6 mingetty can be commented out
+-
+- 4. add hvc0 into /etc/securetty
+-    # vi /mnt/etc/securetty (add hvc0)
+-
+- 5. umount
+-    # umount /mnt
+-
+-FYI, virt-manager can also make a disk image for guest OS.
+-It's GUI tools and easy to make it.
+-
+-==================
+-Boot Xen & Domain0
+-==================
+-
+- 1. replace elilo
+-    elilo of RHEL5 can boot Xen and Dom0.
+-    If you use old elilo (e.g RHEL4), please download from the below
+-    http://elilo.sourceforge.net/cgi-bin/blosxom
+-    and copy into /boot/efi/efi/redhat/
+-    # cp elilo-3.6-ia64.efi /boot/efi/efi/redhat/elilo.efi
+-
+- 2. modify elilo.conf (like the below)
+-    # vi /boot/efi/efi/redhat/elilo.conf
+-     prompt
+-     timeout=20
+-     default=xen
+-     relocatable
+-
+-     image=vmlinuz-2.6.18.8-xen
+-             label=xen
+-             vmm=xen.gz
+-             initrd=initrd-2.6.18.8-xen.img
+-             read-only
+-             append=" -- rhgb root=/dev/sda2"
+-
+-The append options before "--" are for xen hypervisor,
+-the options after "--" are for dom0.
+-
+-FYI, your machine may need console options like
+-"com1=19200,8n1 console=vga,com1". For example,
+-append="com1=19200,8n1 console=vga,com1 -- rhgb console=tty0 \
+-console=ttyS0 root=/dev/sda2"
+-
+-=====================================
+-Getting and Building domU with pv_ops
+-=====================================
+-
+- 1. get pv_ops tree
+-    # git clone http://people.valinux.co.jp/~yamahata/xen-ia64/linux-2.6-xen-ia64.git/
+-
+- 2. git branch (if necessary)
+-    # cd linux-2.6-xen-ia64/
+-    # git checkout -b your_branch origin/xen-ia64-domu-minimal-2008may19
+-    (Note: The current branch is xen-ia64-domu-minimal-2008may19.
+-    But you would find the new branch. You can see with
+-    "git branch -r" to get the branch lists.
+-    http://people.valinux.co.jp/~yamahata/xen-ia64/for_eagl/linux-2.6-ia64-pv-ops.git/
+-    is also available. The tree is based on
+-    git://git.kernel.org/pub/scm/linux/kernel/git/aegl/linux-2.6 test)
+-
+-
+- 3. copy .config for pv_ops of domU
+-    # cp arch/ia64/configs/xen_domu_wip_defconfig .config
+-
+- 4. make kernel with pv_ops
+-    # make oldconfig
+-    # make
+-
+- 5. install the kernel and initrd
+-    # cp vmlinux.gz /boot/efi/efi/redhat/vmlinuz-2.6-pv_ops-xenU
+-    # make modules_install
+-    # mkinitrd -f /boot/efi/efi/redhat/initrd-2.6-pv_ops-xenU.img \
+-      2.6.26-rc3xen-ia64-08941-g1b12161 --builtin mptspi \
+-      --builtin mptbase --builtin mptscsih --builtin uhci-hcd \
+-      --builtin ohci-hcd --builtin ehci-hcd
+-
+-========================
+-Boot DomainU with pv_ops
+-========================
+-
+- 1. make config of DomU
+-   # vi /etc/xen/rhel5
+-     kernel = "/boot/efi/efi/redhat/vmlinuz-2.6-pv_ops-xenU"
+-     ramdisk = "/boot/efi/efi/redhat/initrd-2.6-pv_ops-xenU.img"
+-     vcpus = 1
+-     memory = 512
+-     name = "rhel5"
+-     disk = [ 'file:/root/rhel5.img,xvda1,w' ]
+-     root = "/dev/xvda1 ro"
+-     extra= "rhgb console=hvc0"
+-
+- 2. After boot xen and dom0, start xend
+-   # /etc/init.d/xend start
+-   ( In the debugging case, # XEND_DEBUG=1 xend trace_start )
+-
+- 3. start domU
+-   # xm create -c rhel5
+-
+-=========
+-Reference
+-=========
+-- Wiki of Xen/IA64 upstream merge
+-  http://wiki.xensource.com/xenwiki/XenIA64/UpstreamMerge
+-
+-Written by Akio Takebe <takebe_akio@jp.fujitsu.com> on 28 May 2008
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 969225e6bfce..f8f2394f9e84 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14263,7 +14263,7 @@ SGI SN-IA64 (Altix) SERIAL CONSOLE DRIVER
+ M:	Pat Gefre <pfg@sgi.com>
+ L:	linux-ia64@vger.kernel.org
+ S:	Supported
+-F:	Documentation/ia64/serial.txt
++F:	Documentation/ia64/serial.rst
+ F:	drivers/tty/serial/ioc?_serial.c
+ F:	include/linux/ioc?.h
  
- driver		a generic driver, such as described in
--		Documentation/driver-model/driver.txt. Only .name,
-+		Documentation/driver-model/driver.rst. Only .name,
- 		.probe and .remove members are mandatory.
- =============== ====================================================
- 
-@@ -152,7 +152,7 @@ state    set of flags indicating the state of the device. Current
- 	 flags are EISA_CONFIG_ENABLED and EISA_CONFIG_FORCED.
- res	 set of four 256 bytes I/O regions allocated to this device
- dma_mask DMA mask set from the parent device.
--dev	 generic device (see Documentation/driver-model/device.txt)
-+dev	 generic device (see Documentation/driver-model/device.rst)
- ======== ============================================================
- 
- You can get the 'struct eisa_device' from 'struct device' using the
-diff --git a/Documentation/hwmon/submitting-patches.rst b/Documentation/hwmon/submitting-patches.rst
-index f9796b9d9db6..d5b05d3e54ba 100644
---- a/Documentation/hwmon/submitting-patches.rst
-+++ b/Documentation/hwmon/submitting-patches.rst
-@@ -89,7 +89,7 @@ increase the chances of your change being accepted.
-   console. Excessive logging can seriously affect system performance.
- 
- * Use devres functions whenever possible to allocate resources. For rationale
--  and supported functions, please see Documentation/driver-model/devres.txt.
-+  and supported functions, please see Documentation/driver-model/devres.rst.
-   If a function is not supported by devres, consider using devm_add_action().
- 
- * If the driver has a detect function, make sure it is silent. Debug messages
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 4d1729853d1a..713903290385 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -5,7 +5,7 @@
-  * Copyright (c) 2002-3 Patrick Mochel
-  * Copyright (c) 2002-3 Open Source Development Labs
-  *
-- * Please see Documentation/driver-model/platform.txt for more
-+ * Please see Documentation/driver-model/platform.rst for more
-  * information.
-  */
- 
-diff --git a/drivers/gpio/gpio-cs5535.c b/drivers/gpio/gpio-cs5535.c
-index 6314225dbed0..3611a0571667 100644
---- a/drivers/gpio/gpio-cs5535.c
-+++ b/drivers/gpio/gpio-cs5535.c
-@@ -41,7 +41,7 @@ MODULE_PARM_DESC(mask, "GPIO channel mask.");
+diff --git a/arch/ia64/kernel/efi.c b/arch/ia64/kernel/efi.c
+index 8f106638913c..3795d18276c4 100644
+--- a/arch/ia64/kernel/efi.c
++++ b/arch/ia64/kernel/efi.c
+@@ -852,7 +852,7 @@ valid_phys_addr_range (phys_addr_t phys_addr, unsigned long size)
+ 	 * /dev/mem reads and writes use copy_to_user(), which implicitly
+ 	 * uses a granule-sized kernel identity mapping.  It's really
+ 	 * only safe to do this for regions in kern_memmap.  For more
+-	 * details, see Documentation/ia64/aliasing.txt.
++	 * details, see Documentation/ia64/aliasing.rst.
+ 	 */
+ 	attr = kern_mem_attribute(phys_addr, size);
+ 	if (attr & EFI_MEMORY_WB || attr & EFI_MEMORY_UC)
+diff --git a/arch/ia64/kernel/fsys.S b/arch/ia64/kernel/fsys.S
+index d80c99a5f55d..0750a716adc7 100644
+--- a/arch/ia64/kernel/fsys.S
++++ b/arch/ia64/kernel/fsys.S
+@@ -28,7 +28,7 @@
+ #include <asm/native/inst.h>
  
  /*
-  * FIXME: convert this singleton driver to use the state container
-- * design pattern, see Documentation/driver-model/design-patterns.txt
-+ * design pattern, see Documentation/driver-model/design-patterns.rst
-  */
- static struct cs5535_gpio_chip {
- 	struct gpio_chip chip;
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 28ec0d57941d..41c90f2ddb31 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -2286,7 +2286,7 @@ ice_probe(struct pci_dev *pdev, const struct pci_device_id __always_unused *ent)
- 	struct ice_hw *hw;
- 	int err;
+- * See Documentation/ia64/fsys.txt for details on fsyscalls.
++ * See Documentation/ia64/fsys.rst for details on fsyscalls.
+  *
+  * On entry to an fsyscall handler:
+  *   r10	= 0 (i.e., defaults to "successful syscall return")
+diff --git a/arch/ia64/mm/ioremap.c b/arch/ia64/mm/ioremap.c
+index 43964cde6214..c7da3376b6f8 100644
+--- a/arch/ia64/mm/ioremap.c
++++ b/arch/ia64/mm/ioremap.c
+@@ -45,7 +45,7 @@ ioremap (unsigned long phys_addr, unsigned long size)
+ 	/*
+ 	 * For things in kern_memmap, we must use the same attribute
+ 	 * as the rest of the kernel.  For more details, see
+-	 * Documentation/ia64/aliasing.txt.
++	 * Documentation/ia64/aliasing.rst.
+ 	 */
+ 	attr = kern_mem_attribute(phys_addr, size);
+ 	if (attr & EFI_MEMORY_WB)
+diff --git a/arch/ia64/pci/pci.c b/arch/ia64/pci/pci.c
+index e308196c2229..165e561dc81a 100644
+--- a/arch/ia64/pci/pci.c
++++ b/arch/ia64/pci/pci.c
+@@ -450,7 +450,7 @@ pci_mmap_legacy_page_range(struct pci_bus *bus, struct vm_area_struct *vma,
+ 		return -ENOSYS;
  
--	/* this driver uses devres, see Documentation/driver-model/devres.txt */
-+	/* this driver uses devres, see Documentation/driver-model/devres.rst */
- 	err = pcim_enable_device(pdev);
- 	if (err)
- 		return err;
-diff --git a/scripts/coccinelle/free/devm_free.cocci b/scripts/coccinelle/free/devm_free.cocci
-index b2a2cf8bf81f..e32236a979a8 100644
---- a/scripts/coccinelle/free/devm_free.cocci
-+++ b/scripts/coccinelle/free/devm_free.cocci
-@@ -2,7 +2,7 @@
- /// functions.  Values allocated using the devm_functions are freed when
- /// the device is detached, and thus the use of the standard freeing
- /// function would cause a double free.
--/// See Documentation/driver-model/devres.txt for more information.
-+/// See Documentation/driver-model/devres.rst for more information.
- ///
- /// A difficulty of detecting this problem is that the standard freeing
- /// function might be called from a different function than the one
+ 	/*
+-	 * Avoid attribute aliasing.  See Documentation/ia64/aliasing.txt
++	 * Avoid attribute aliasing.  See Documentation/ia64/aliasing.rst
+ 	 * for more details.
+ 	 */
+ 	if (!valid_mmap_phys_addr_range(vma->vm_pgoff, size))
 -- 
 2.21.0
 
