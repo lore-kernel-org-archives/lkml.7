@@ -2,529 +2,220 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42861C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8828BC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F042321743
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:49:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="m8f8RUS3"
+	by mail.kernel.org (Postfix) with ESMTP id 5F5452082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408030AbfFLKtV (ORCPT
+        id S2408069AbfFLKup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:49:21 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46517 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407236AbfFLKtU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:49:20 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 81so9422683pfy.13
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 03:49:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=B+jLj9d2GFBQiXewEtLlJA1Uy0gGbUagTzXGUwe+M6o=;
-        b=m8f8RUS3KQ/JoGs/doSaK5b8FuWlq6KXG/Ve4OSpIK7tNx3x7U9wklceUYXhrRGBE7
-         aHlYW6kkRDX2r8hUB0crhexp/xGzaGsiwzbv5XpbjTFLYtpWFpo6gwJMB13Om3V/7XCq
-         DRvEp8JZRmWafb9S8tNk2Nd63lQmYdAokpZyWNQT6xab/a7MA2jFvrWH6Ay57YvXbzUr
-         PJrKf7syV6G/f72WQOJBTgrnCo+Lwg2ZbyHCx5m5q9k66n8kdTCLItA9555oa1r4wVo6
-         qbJVdkJuZSak8Y+OooWEu3PV047djK6G0pQC0RZ1nfxGnMhoEo5spyjEBJ40EjtrgvIS
-         zEYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=B+jLj9d2GFBQiXewEtLlJA1Uy0gGbUagTzXGUwe+M6o=;
-        b=ASJTsQJeEMR9ufeC2v09TZ3eXRAVIG78HWp8HfNOnRVp2YnPjm/miyJBMVxIrEK0En
-         Kav3sES/QBRQ7vK4stCPpuMEnyK5BXcl1Z6Bmfm8uaiGsM8J0dI+4NguMRPsHeGJp4L7
-         fjzc2J5P7the1QeO0pbR/dE6WEYICgpZWjQGxMeaUkuOfcsj7t5XaVarh0yUYYZpR4PX
-         rDtjHWSZg+zoEpuRGW7rC0lp2qnHT60CcOieg6Cru3uudUnnGzJX50ZGAZi6FjfA8LAx
-         efKVakwFHFLvYoHu59W/m7CjXWavI2hwlCglrRuN44z0z1ppwni3cQj+zUvPCW93CNg4
-         uIMg==
-X-Gm-Message-State: APjAAAU2/yxtRrEKYpM6T0Somdd+A4lHTFLaD28ULEvLdyLJFjP1RW9c
-        6Kea9H+iR2OpjWZRWp44Qalhhg==
-X-Google-Smtp-Source: APXvYqyGmSkU0BcgxTghXy0FdP1Uq2LgFnjGJW6Sn8JZGYksVvbD2OpHV+0mZAfeEFMN8QjKBYwkIg==
-X-Received: by 2002:a62:2582:: with SMTP id l124mr62840927pfl.43.1560336559375;
-        Wed, 12 Jun 2019 03:49:19 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id y22sm12241561pfm.70.2019.06.12.03.49.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 12 Jun 2019 03:49:18 -0700 (PDT)
-From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-To:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Cc:     palmer@sifive.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com,
-        wesley@sifive.com, Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Subject: [PATCH v5 3/3] mtd: spi-nor: add locking support for is25xxxxx device
-Date:   Wed, 12 Jun 2019 16:17:56 +0530
-Message-Id: <1560336476-31763-4-git-send-email-sagar.kadam@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1560336476-31763-1-git-send-email-sagar.kadam@sifive.com>
-References: <1560336476-31763-1-git-send-email-sagar.kadam@sifive.com>
+        Wed, 12 Jun 2019 06:50:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53694 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405021AbfFLKup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 06:50:45 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6E5BBC057F2C;
+        Wed, 12 Jun 2019 10:50:39 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C07D795AD;
+        Wed, 12 Jun 2019 10:50:37 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id BDF7E1806B16;
+        Wed, 12 Jun 2019 10:50:34 +0000 (UTC)
+Date:   Wed, 12 Jun 2019 06:50:34 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     rdunlap@infradead.org, jack@suse.cz, kvm@vger.kernel.org,
+        mst@redhat.com, jasowang@redhat.com, david@fromorbit.com,
+        qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
+        dm-devel@redhat.com, adilger kernel <adilger.kernel@dilger.ca>,
+        zwisler@kernel.org, aarcange@redhat.com,
+        dave jiang <dave.jiang@intel.com>, jstaron@google.com,
+        linux-nvdimm@lists.01.org,
+        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
+        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
+        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
+        kilobyte@angband.pl, riel@surriel.com,
+        yuval shaia <yuval.shaia@oracle.com>, stefanha@redhat.com,
+        pbonzini@redhat.com, dan j williams <dan.j.williams@intel.com>,
+        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
+        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        snitzer@redhat.com, darrick wong <darrick.wong@oracle.com>,
+        rjw@rjwysocki.net, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        imammedo@redhat.com
+Message-ID: <977172256.34591602.1560336634257.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190612083711.2c0cfd7e.cohuck@redhat.com>
+References: <20190611163802.25352-1-pagupta@redhat.com> <20190611163802.25352-3-pagupta@redhat.com> <20190611190209.0b25033e.cohuck@redhat.com> <1003601865.34513553.1560310490030.JavaMail.zimbra@redhat.com> <20190612083711.2c0cfd7e.cohuck@redhat.com>
+Subject: Re: [Qemu-devel] [PATCH v12 2/7] virtio-pmem: Add virtio pmem
+ driver
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.228, 10.4.195.25]
+Thread-Topic: virtio-pmem: Add virtio pmem driver
+Thread-Index: JA2T0z0G1tIHKmlJmlUYn7dmJ8rB0Q==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 12 Jun 2019 10:50:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement a locking scheme for ISSI devices based on stm_lock mechanism.
-The is25xxxxx  devices have 4 bits for selecting the range of blocks to
-be locked/protected from erase/write operations and function register
-gives feasibility to select TOP / Bottom area for protection.
-Added opcodes to read and write function registers.
 
-The current implementation enables block protection as per the table
-defined into datasheet for is25wp256 device having erase size of 0x1000.
-ISSI and stm devices differ in terms of TBS (Top/Bottom area protection)
-bits. In case of issi this is in Function register and is OTP memory, so
-once FR bits are programmed  cannot be modified.
+> 
+> Hi Pankaj,
+> 
+> On Tue, 11 Jun 2019 23:34:50 -0400 (EDT)
+> Pankaj Gupta <pagupta@redhat.com> wrote:
+> 
+> > Hi Cornelia,
+> > 
+> > > On Tue, 11 Jun 2019 22:07:57 +0530
+> > > Pankaj Gupta <pagupta@redhat.com> wrote:
+> 
+> 
+> > > > +	err1 = virtqueue_kick(vpmem->req_vq);
+> > > > +	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> > > > +	/*
+> > > > +	 * virtqueue_add_sgs failed with error different than -ENOSPC, we
+> > > > can't
+> > > > +	 * do anything about that.
+> > > > +	 */
+> > > 
+> > > Does it make sense to kick if you couldn't add at all?
+> > 
+> > When we could not add because of -ENOSPC we are waiting and when buffer is
+> > added
+> > then only we do a kick. For any other error which might be a rare
+> > occurrence, I think
+> > kick is harmless here and keeps the code clean?
+> 
+> Yes, I agree it does not hurt. Let's keep it as-is.
 
-Some common code from stm_lock/unlock implementation is extracted so that
-it can be re-used for issi devices. The locking scheme has been tested on
-HiFive Unleashed board, having is25wp256 flash memory.
+Sure.
 
-Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
----
- drivers/mtd/spi-nor/spi-nor.c | 291 ++++++++++++++++++++++++++++++++++--------
- include/linux/mtd/spi-nor.h   |   5 +
- 2 files changed, 245 insertions(+), 51 deletions(-)
+> 
+> 
+> > Sure, Thank you. Attaching below on top changes on current patch2 based on
+> > your suggestions. Let me know if these are okay and then will send official
+> > v13 to for upstream merging.
+> 
+> Looks good to me, except for one change.
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index b7c6261..9281ec0 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -288,6 +288,45 @@ struct flash_info {
- 
- #define JEDEC_MFR(info)	((info)->id[0])
- 
-+/**
-+ * read_fr() -read function register
-+ * @nor: pointer to a 'struct spi_nor'.
-+ *
-+ * ISSI devices have top/bottom area protection bits selection into function
-+ * reg.The bits in FR are OTP.So once it's written, it cannot be changed.
-+ *
-+ * Return: Value in function register or Negative if error.
-+ */
-+static int read_fr(struct spi_nor *nor)
-+{
-+	int ret;
-+	u8 val;
-+
-+	ret = nor->read_reg(nor, SPINOR_OP_RDFR, &val, 1);
-+	if (ret < 0) {
-+		pr_err("error %d reading FR\n", (int) ret);
-+		return ret;
-+	}
-+
-+	return val;
-+}
-+
-+/**
-+ * write_fr() -Write function register
-+ * @nor: pointer to a 'struct spi_nor'.
-+ *
-+ * ISSI devices have top/bottom area selection protection bits into function
-+ * reg whereas other devices have the TBS bit into Status Register.
-+ * The bits in FR are OTP.So once it's written, it cannot be changed.
-+ *
-+ * Return: Negative if error
-+ */
-+static int write_fr(struct spi_nor *nor, u8 val)
-+{
-+	nor->cmd_buf[0] = val;
-+	return nor->write_reg(nor, SPINOR_OP_WRFR, nor->cmd_buf, 1);
-+}
-+
- /*
-  * Read the status register, returning its value in the location
-  * Return the status register value.
-@@ -1088,10 +1127,17 @@ static void stm_get_locked_range(struct spi_nor *nor, u8 sr, loff_t *ofs,
- 				 uint64_t *len)
- {
- 	struct mtd_info *mtd = &nor->mtd;
--	u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
--	int shift = ffs(mask) - 1;
-+	u8 mask = 0;
-+	int shift = 0;
- 	int pow;
- 
-+	if (JEDEC_MFR(nor->info) == SNOR_MFR_ISSI)
-+		mask = SR_BP3 | SR_BP2 | SR_BP1 | SR_BP0;
-+	else
-+		mask = SR_BP2 | SR_BP1 | SR_BP0;
-+
-+	shift = ffs(mask) - 1;
-+
- 	if (!(sr & mask)) {
- 		/* No protection */
- 		*ofs = 0;
-@@ -1099,10 +1145,19 @@ static void stm_get_locked_range(struct spi_nor *nor, u8 sr, loff_t *ofs,
- 	} else {
- 		pow = ((sr & mask) ^ mask) >> shift;
- 		*len = mtd->size >> pow;
--		if (nor->flags & SNOR_F_HAS_SR_TB && sr & SR_TB)
--			*ofs = 0;
--		else
--			*ofs = mtd->size - *len;
-+
-+		if (JEDEC_MFR(nor->info) == SNOR_MFR_ISSI) {
-+			if (nor->flags & SNOR_F_HAS_SR_TB &&
-+					(read_fsr(nor) & FR_TB))
-+				*ofs = 0;
-+			else
-+				*ofs = mtd->size - *len;
-+		} else {
-+			if (nor->flags & SNOR_F_HAS_SR_TB && sr & SR_TB)
-+				*ofs = 0;
-+			else
-+				*ofs = mtd->size - *len;
-+		}
- 	}
- }
- 
-@@ -1129,18 +1184,108 @@ static int stm_check_lock_status_sr(struct spi_nor *nor, loff_t ofs, uint64_t le
- 		return (ofs >= lock_offs + lock_len) || (ofs + len <= lock_offs);
- }
- 
--static int stm_is_locked_sr(struct spi_nor *nor, loff_t ofs, uint64_t len,
-+/*
-+ * check if memory region is locked
-+ *
-+ * Returns false if region is locked 0 otherwise.
-+ */
-+static int fl_is_locked_sr(struct spi_nor *nor, loff_t ofs, uint64_t len,
- 			    u8 sr)
- {
- 	return stm_check_lock_status_sr(nor, ofs, len, sr, true);
- }
- 
--static int stm_is_unlocked_sr(struct spi_nor *nor, loff_t ofs, uint64_t len,
-+/*
-+ * check if memory region is unlocked
-+ *
-+ * Returns false if region is locked 0 otherwise.
-+ */
-+static int fl_is_unlocked_sr(struct spi_nor *nor, loff_t ofs, uint64_t len,
- 			      u8 sr)
- {
- 	return stm_check_lock_status_sr(nor, ofs, len, sr, false);
- }
- 
-+/**
-+ * flash_select_zone() - Select TOP area or bottom area to lock/unlock
-+ * @nor: pointer to a 'struct spi_nor'.
-+ * @ofs: offset from which to lock memory.
-+ * @len: number of bytes to unlock.
-+ * @sr: status register
-+ * @tb: pointer to top/bottom bool used in caller function
-+ * @op: zone selection is for lock/unlock operation. 1: lock 0:unlock
-+ *
-+ * Select the top area / bottom area paattern to protect memory blocks.
-+ *
-+ * Returns negative on errors, 0 on success.
-+ */
-+static int fl_select_zone(struct spi_nor *nor, loff_t ofs, uint64_t len,
-+				u8 sr, bool *tb, bool op)
-+{
-+	int retval;
-+	bool can_be_top = true, can_be_bottom = nor->flags & SNOR_F_HAS_SR_TB;
-+
-+	if (op) {
-+		/* Select for lock zone operation */
-+
-+		/*
-+		 * If nothing in our range is unlocked, we don't need
-+		 * to do anything.
-+		 */
-+		if (fl_is_locked_sr(nor, ofs, len, sr))
-+			return 0;
-+
-+		/*
-+		 * If anything below us is unlocked, we can't use 'bottom'
-+		 * protection.
-+		 */
-+		if (!fl_is_locked_sr(nor, 0, ofs, sr))
-+			can_be_bottom = false;
-+
-+		/*
-+		 * If anything above us is unlocked, we can't use 'top'
-+		 * protection.
-+		 */
-+		if (!fl_is_locked_sr(nor, ofs + len,
-+					nor->mtd.size - (ofs + len), sr))
-+			can_be_top = false;
-+	} else {
-+		/* Select unlock zone */
-+
-+		/*
-+		 * If nothing in our range is locked, we don't need to
-+		 * do anything.
-+		 */
-+		if (fl_is_unlocked_sr(nor, ofs, len, sr))
-+			return 0;
-+
-+		/*
-+		 * If anything below us is locked, we can't use 'top'
-+		 * protection
-+		 */
-+		if (!fl_is_unlocked_sr(nor, 0, ofs, sr))
-+			can_be_top = false;
-+
-+		/*
-+		 * If anything above us is locked, we can't use 'bottom'
-+		 * protection
-+		 */
-+		if (!fl_is_unlocked_sr(nor, ofs + len,
-+					nor->mtd.size - (ofs + len), sr))
-+			can_be_bottom = false;
-+	}
-+
-+	if (!can_be_bottom && !can_be_top)
-+		retval = -EINVAL;
-+	else {
-+		/* Prefer top, if both are valid */
-+		*tb = can_be_top;
-+		retval = 1;
-+	}
-+
-+	return retval;
-+}
-+
- /*
-  * Lock a region of the flash. Compatible with ST Micro and similar flash.
-  * Supports the block protection bits BP{0,1,2} in the status register
-@@ -1178,33 +1323,19 @@ static int stm_lock(struct spi_nor *nor, loff_t ofs, uint64_t len)
- 	struct mtd_info *mtd = &nor->mtd;
- 	int status_old, status_new;
- 	u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
--	u8 shift = ffs(mask) - 1, pow, val;
-+	u8 shift = ffs(mask) - 1, pow, val, ret;
- 	loff_t lock_len;
--	bool can_be_top = true, can_be_bottom = nor->flags & SNOR_F_HAS_SR_TB;
- 	bool use_top;
- 
- 	status_old = read_sr(nor);
- 	if (status_old < 0)
- 		return status_old;
- 
--	/* If nothing in our range is unlocked, we don't need to do anything */
--	if (stm_is_locked_sr(nor, ofs, len, status_old))
-+	ret = fl_select_zone(nor, ofs, len, status_old, &use_top, 1);
-+	if (!ret)
- 		return 0;
--
--	/* If anything below us is unlocked, we can't use 'bottom' protection */
--	if (!stm_is_locked_sr(nor, 0, ofs, status_old))
--		can_be_bottom = false;
--
--	/* If anything above us is unlocked, we can't use 'top' protection */
--	if (!stm_is_locked_sr(nor, ofs + len, mtd->size - (ofs + len),
--				status_old))
--		can_be_top = false;
--
--	if (!can_be_bottom && !can_be_top)
--		return -EINVAL;
--
--	/* Prefer top, if both are valid */
--	use_top = can_be_top;
-+	else if (ret < 0)
-+		return ret;
- 
- 	/* lock_len: length of region that should end up locked */
- 	if (use_top)
-@@ -1258,35 +1389,21 @@ static int stm_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
- 	struct mtd_info *mtd = &nor->mtd;
- 	int status_old, status_new;
- 	u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
--	u8 shift = ffs(mask) - 1, pow, val;
-+	u8 shift = ffs(mask) - 1, pow, val, ret;
- 	loff_t lock_len;
--	bool can_be_top = true, can_be_bottom = nor->flags & SNOR_F_HAS_SR_TB;
- 	bool use_top;
- 
- 	status_old = read_sr(nor);
- 	if (status_old < 0)
- 		return status_old;
- 
--	/* If nothing in our range is locked, we don't need to do anything */
--	if (stm_is_unlocked_sr(nor, ofs, len, status_old))
-+	ret = fl_select_zone(nor, ofs, len, status_old, &use_top, 0);
-+	if (!ret)
- 		return 0;
-+	else if (ret < 0)
-+		return ret;
- 
--	/* If anything below us is locked, we can't use 'top' protection */
--	if (!stm_is_unlocked_sr(nor, 0, ofs, status_old))
--		can_be_top = false;
--
--	/* If anything above us is locked, we can't use 'bottom' protection */
--	if (!stm_is_unlocked_sr(nor, ofs + len, mtd->size - (ofs + len),
--				status_old))
--		can_be_bottom = false;
--
--	if (!can_be_bottom && !can_be_top)
--		return -EINVAL;
--
--	/* Prefer top, if both are valid */
--	use_top = can_be_top;
--
--	/* lock_len: length of region that should remain locked */
-+	/* lock_len: length of region that should end up locked */
- 	if (use_top)
- 		lock_len = mtd->size - (ofs + len);
- 	else
-@@ -1338,7 +1455,7 @@ static int stm_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
-  * Returns 1 if entire region is locked, 0 if any portion is unlocked, and
-  * negative on errors.
-  */
--static int stm_is_locked(struct spi_nor *nor, loff_t ofs, uint64_t len)
-+static int fl_is_locked(struct spi_nor *nor, loff_t ofs, uint64_t len)
- {
- 	int status;
- 
-@@ -1346,7 +1463,7 @@ static int stm_is_locked(struct spi_nor *nor, loff_t ofs, uint64_t len)
- 	if (status < 0)
- 		return status;
- 
--	return stm_is_locked_sr(nor, ofs, len, status);
-+	return fl_is_locked_sr(nor, ofs, len, status);
- }
- 
- static int spi_nor_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
-@@ -1461,6 +1578,77 @@ static int macronix_quad_enable(struct spi_nor *nor)
- }
- 
- /**
-+ * issi_lock() - set BP[0123] write-protection.
-+ * @nor: pointer to a 'struct spi_nor'.
-+ * @ofs: offset from which to lock memory.
-+ * @len: number of bytes to unlock.
-+ *
-+ * Lock a region of the flash.Implementation is based on stm_lock
-+ * Supports the block protection bits BP{0,1,2,3} in the status register
-+ *
-+ * Return: 0 on success, -errno otherwise.
-+ */
-+static int issi_lock(struct spi_nor *nor, loff_t ofs, uint64_t len)
-+{
-+	int status_old, status_new, blk_prot;
-+	u8 mask = SR_BP3 | SR_BP2 | SR_BP1 | SR_BP0;
-+	u8 shift = ffs(mask) - 1;
-+	u8 pow, ret, func_reg;
-+	bool use_top;
-+	loff_t lock_len;
-+
-+	status_old = read_sr(nor);
-+
-+	/* if status reg is Write protected don't update bit protection */
-+	if (status_old & SR_SRWD) {
-+		dev_err(nor->dev,
-+			"SR is Write Protected,can't update BP bits...\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = fl_select_zone(nor, ofs, len, status_old, &use_top, 1);
-+	if (!ret)
-+		/* Older protected blocks include the new requested block's */
-+		return 0;
-+	else if (ret < 0)
-+		return ret;
-+
-+	func_reg = read_fr(nor);
-+	/* lock_len: length of region that should end up locked */
-+	if (use_top) {
-+		/* Update Function register to use TOP area */
-+		if ((func_reg >> 1) & 0x1) {
-+			/* Currently bootom selected change to top */
-+			func_reg ^= FR_TB;
-+			write_fr(nor, func_reg);
-+		}
-+		lock_len = nor->mtd.size - ofs;
-+	} else {
-+
-+		/* Update Function register to use bottom area */
-+		if (!((func_reg >> 1) & 0x1)) {
-+			/*Currently top is selected, change to bottom */
-+			func_reg ^= FR_TB;
-+			write_fr(nor, func_reg);
-+		}
-+		lock_len = ofs + len;
-+	}
-+
-+	pow = order_base_2(lock_len);
-+	blk_prot = mask & (((pow+1) & 0xf)<<shift);
-+	if (lock_len <= 0) {
-+		dev_err(nor->dev, "invalid Length to protect");
-+		return -EINVAL;
-+	}
-+
-+	status_new = status_old | blk_prot;
-+	if (status_old == status_new)
-+		return 0;
-+
-+	return write_sr_and_check(nor, status_new, mask);
-+}
-+
-+/**
-  * issi_unlock() - clear BP[0123] write-protection.
-  * @nor: pointer to a 'struct spi_nor'.
-  * @ofs: offset from which to unlock memory.
-@@ -1879,7 +2067,7 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
- 			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
- 	{ "is25wp256", INFO(0x9d7019, 0, 64 * 1024, 1024,
- 			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
--			SPI_NOR_4B_OPCODES | SPI_NOR_HAS_LOCK)
-+			SPI_NOR_4B_OPCODES | SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB)
- 	},
- 
- 	/* Macronix */
-@@ -4120,12 +4308,13 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
- 	    info->flags & SPI_NOR_HAS_LOCK) {
- 		nor->flash_lock = stm_lock;
- 		nor->flash_unlock = stm_unlock;
--		nor->flash_is_locked = stm_is_locked;
-+		nor->flash_is_locked = fl_is_locked;
- 	}
- 
- 	/* NOR protection support for ISSI chips */
- 	if (JEDEC_MFR(info) == SNOR_MFR_ISSI ||
- 	    info->flags & SPI_NOR_HAS_LOCK) {
-+		nor->flash_lock = issi_lock;
- 		nor->flash_unlock = issi_unlock;
- 
- 	}
-diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index 9a7d719..a15d012 100644
---- a/include/linux/mtd/spi-nor.h
-+++ b/include/linux/mtd/spi-nor.h
-@@ -40,6 +40,8 @@
- #define SPINOR_OP_RDSR		0x05	/* Read status register */
- #define SPINOR_OP_WRSR		0x01	/* Write status register 1 byte */
- #define SPINOR_OP_RDSR2		0x3f	/* Read status register 2 */
-+#define SPINOR_OP_RDFR		0x48	/* Read Function register */
-+#define SPINOR_OP_WRFR		0x42	/* Write Function register 1 byte */
- #define SPINOR_OP_WRSR2		0x3e	/* Write status register 2 */
- #define SPINOR_OP_READ		0x03	/* Read data bytes (low frequency) */
- #define SPINOR_OP_READ_FAST	0x0b	/* Read data bytes (high frequency) */
-@@ -139,6 +141,9 @@
- /* Enhanced Volatile Configuration Register bits */
- #define EVCR_QUAD_EN_MICRON	BIT(7)	/* Micron Quad I/O */
- 
-+/*Function register bit */
-+#define FR_TB			BIT(1)	/*ISSI: Top/Bottom protect */
-+
- /* Flag Status Register bits */
- #define FSR_READY		BIT(7)	/* Device status, 0 = Busy, 1 = Ready */
- #define FSR_E_ERR		BIT(5)	/* Erase operation status */
--- 
-1.9.1
+Sure. Will send v13 shortly.
 
+> 
+> [Again sorry for the late review, did not want to get the version
+> numbers up :)]
+
+Thank you :)
+
+> 
+> > 
+> > Thanks,
+> > Pankaj
+> > 
+> > ===============
+> > 
+> > diff --git a/drivers/nvdimm/nd_virtio.c b/drivers/nvdimm/nd_virtio.c
+> > index efc535723517..5b8d2367da0b 100644
+> > --- a/drivers/nvdimm/nd_virtio.c
+> > +++ b/drivers/nvdimm/nd_virtio.c
+> > @@ -10,7 +10,7 @@
+> >  #include "nd.h"
+> >  
+> >   /* The interrupt handler */
+> > -void host_ack(struct virtqueue *vq)
+> > +void virtio_pmem_host_ack(struct virtqueue *vq)
+> >  {
+> >         struct virtio_pmem *vpmem = vq->vdev->priv;
+> >         struct virtio_pmem_request *req_data, *req_buf;
+> > @@ -32,10 +32,10 @@ void host_ack(struct virtqueue *vq)
+> >         }
+> >         spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> >  }
+> > -EXPORT_SYMBOL_GPL(host_ack);
+> > +EXPORT_SYMBOL_GPL(virtio_pmem_host_ack);
+> >  
+> >   /* The request submission function */
+> > -int virtio_pmem_flush(struct nd_region *nd_region)
+> > +static int virtio_pmem_flush(struct nd_region *nd_region)
+> >  {
+> >         struct virtio_device *vdev = nd_region->provider_data;
+> >         struct virtio_pmem *vpmem  = vdev->priv;
+> > @@ -69,7 +69,7 @@ int virtio_pmem_flush(struct nd_region *nd_region)
+> >         while ((err = virtqueue_add_sgs(vpmem->req_vq, sgs, 1, 1, req_data,
+> >                                         GFP_ATOMIC)) == -ENOSPC) {
+> >  
+> > -               dev_err(&vdev->dev, "failed to send command to virtio pmem
+> > device, no free slots in the virtqueue\n");
+> > +               dev_info(&vdev->dev, "failed to send command to virtio pmem
+> > device, no free slots in the virtqueue\n");
+> >                 req_data->wq_buf_avail = false;
+> >                 list_add_tail(&req_data->list, &vpmem->req_list);
+> >                 spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> > @@ -90,7 +90,8 @@ int virtio_pmem_flush(struct nd_region *nd_region)
+> >         } else {
+> >                 /* A host repsonse results in "host_ack" getting called */
+> >                 wait_event(req_data->host_acked, req_data->done);
+> > -               err = virtio32_to_cpu(vdev, req_data->resp.ret);
+> > +               if ((err = virtio32_to_cpu(vdev, req_data->resp.ret)))
+> > +                       err = -EIO;
+> 
+> Hm, why are you making this change? I think the previous code was fine.
+
+Yes, Something came to my mind while making the change but I agree will keep
+this as it was before.
+
+> 
+> >         }
+> >  
+> >         kfree(req_data);
+> > @@ -100,7 +101,8 @@ int virtio_pmem_flush(struct nd_region *nd_region)
+> >  /* The asynchronous flush callback function */
+> >  int async_pmem_flush(struct nd_region *nd_region, struct bio *bio)
+> >  {
+> > -       /* Create child bio for asynchronous flush and chain with
+> > +       /*
+> > +        * Create child bio for asynchronous flush and chain with
+> >          * parent bio. Otherwise directly call nd_region flush.
+> >          */
+> >         if (bio && bio->bi_iter.bi_sector != -1) {
+> > diff --git a/drivers/nvdimm/virtio_pmem.c b/drivers/nvdimm/virtio_pmem.c
+> > index b60ebd8cd2fd..5e3d07b47e0c 100644
+> > --- a/drivers/nvdimm/virtio_pmem.c
+> > +++ b/drivers/nvdimm/virtio_pmem.c
+> > @@ -19,7 +19,7 @@ static int init_vq(struct virtio_pmem *vpmem)
+> >  {
+> >         /* single vq */
+> >         vpmem->req_vq = virtio_find_single_vq(vpmem->vdev,
+> > -                                               host_ack, "flush_queue");
+> > +                                       virtio_pmem_host_ack,
+> > "flush_queue");
+> >         if (IS_ERR(vpmem->req_vq))
+> >                 return PTR_ERR(vpmem->req_vq);
+> >  
+> > diff --git a/drivers/nvdimm/virtio_pmem.h b/drivers/nvdimm/virtio_pmem.h
+> > index 6e47521be158..998efbc7660c 100644
+> > --- a/drivers/nvdimm/virtio_pmem.h
+> > +++ b/drivers/nvdimm/virtio_pmem.h
+> > @@ -50,6 +50,6 @@ struct virtio_pmem {
+> >         uint64_t size;
+> >  };
+> >  
+> > -void host_ack(struct virtqueue *vq);
+> > +void virtio_pmem_host_ack(struct virtqueue *vq);
+> >  int async_pmem_flush(struct nd_region *nd_region, struct bio *bio);
+> >  #endif
+> 
+> 
+> 
