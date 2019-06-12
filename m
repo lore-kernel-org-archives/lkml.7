@@ -2,110 +2,107 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F00CC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A61EC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21CB421019
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3339A2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 16:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FLdu7JFm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNy5kaOz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730898AbfFLQ2B (ORCPT
+        id S1730936AbfFLQ21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 12:28:01 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54112 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405745AbfFLQ2B (ORCPT
+        Wed, 12 Jun 2019 12:28:27 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36392 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729440AbfFLQ21 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 12:28:01 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CGRqKs166693;
-        Wed, 12 Jun 2019 16:27:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=BtyrYOTdSrHiTcGtRyqOs74mIFiGcMgAHiAWh896lrs=;
- b=FLdu7JFmRlwrvUWWXB0G/7LpOxiEPR+lCwHv+y9Ay6N9SFKQjiAJPCjb2NDjBLBVEm2e
- FCY0aKnxtJHIEu7DbkKfNKEoO/G7OGAr37IdXvtARJGcgLb7HOj8f09f6ViIHaHQVxFu
- WiMsHL9aW6o58jJhAFIjDIgocW/3m3znxJEVPl2yFNFtyS7mUfrDmb5Y2W9VoFqqFhsb
- ZWBsPD36jJVGJmMQtj9gUNX+Bw7Sb+k4v0RKFRQOQItXH6lIBwEmvxlmF55vEiVgjD8j
- 9PUG0PkS7OvBkHoqPY88y6hjgMjTbQeeNbnlFlWbyvlRQvCelYYiRH1K8ig993c6us6M 9w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t04etvqgs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 16:27:58 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5CGQurD041984;
-        Wed, 12 Jun 2019 16:27:58 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2t04j012u9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 16:27:58 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5CGRvb4001914;
-        Wed, 12 Jun 2019 16:27:57 GMT
-Received: from [10.209.242.19] (/10.209.242.19)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 12 Jun 2019 09:27:57 -0700
-Subject: Re: [PATCH] linux-next: DOC: RDS: Fix a typo in rds.txt
-To:     Masanari Iida <standby24x7@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-References: <20190612122934.3515-1-standby24x7@gmail.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <b3fae27d-633d-e164-9f59-44eabf74ed7e@oracle.com>
-Date:   Wed, 12 Jun 2019 09:27:56 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190612122934.3515-1-standby24x7@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906120111
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906120111
+        Wed, 12 Jun 2019 12:28:27 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r7so4081324pfl.3;
+        Wed, 12 Jun 2019 09:28:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/637Q6mpGunbWTAeL4j92iIRZqh/BthAxQ35Wp87uVo=;
+        b=kNy5kaOzUSULBLa2qpUzpPcKl9RFuSXoIoKo4YGwkexxHVmH7oVF+JRzf/aXzjmedx
+         wgLvedExBw5Y/CiYz5LCXINEWiyH52vC7JBcpT2VTz5o79G12beH25AjyR6zLj5rdA0N
+         PmI9m8JbXr9lVOMew+i8MVa39wlPpxGIXT8skMLPsvBWbNCx0cWvbdR3RI+EZcx3tOlR
+         j+w0hgzFtY+qTJVKaZ24eYjvCoI1m9YCNAbPm6CuRK+UW4w/zWy3Vj1BRq7hLNyrsLlT
+         sfR1Jxa3Bu6HR5XBTGziok1krxisyYpPyaUNt2EaGN/J9CdYVmgKKvS7obCU2x3jR+pk
+         iW/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/637Q6mpGunbWTAeL4j92iIRZqh/BthAxQ35Wp87uVo=;
+        b=QYzl2YnIXCrazxGJN/pgmx969KmA0+Jzqr0M0F8zgitXwp4OmOTWbGHIjwhkbn6fsR
+         nglpjyMa/eOwslFbjEhwu2dAdzFKAA3koF60EEOZr06pwqgXEeDdGUkBcLQWcPKcLgeY
+         ZKShH0Ib3FIgORfPcryuZYyTfJ56f/cUrR6tsANjHKI5jh/VyMkB3bQTxCX1HYAV8FgC
+         KQffC1kr8CetOwhGMyj30Y47617P44wr14OpOS3p6MDKnpdh9X1tw1yLCQ/6vrtbp/Vb
+         ySCYhLeZlM0om8tVoo3W8v34yX7NgS9twPzQleQ2JlJ7HmVwYk0pTyxj+4TclalndC+Z
+         dS0A==
+X-Gm-Message-State: APjAAAV55F/sgR2OVZ4EQ9rZ5Fg5isi44RJbfXnb5p499E+LWUQiBMQ/
+        7zisbzc5KQE7lqtR5tFX3kE=
+X-Google-Smtp-Source: APXvYqzmt51QG675QIk4A/SHIYXjiiU69ZTW95jyerlieuhn1HcqSs1SkgZqH1PrPgv+PJHvJ+J6tQ==
+X-Received: by 2002:a17:90a:4803:: with SMTP id a3mr80503pjh.58.1560356906597;
+        Wed, 12 Jun 2019 09:28:26 -0700 (PDT)
+Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
+        by smtp.gmail.com with ESMTPSA id 201sm70084pfz.24.2019.06.12.09.28.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Jun 2019 09:28:25 -0700 (PDT)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        maxime.ripard@bootlin.com, wens@csie.org, rjw@rjwysocki.net,
+        davem@davemloft.net, mchehab+samsung@kernel.org,
+        gregkh@linuxfoundation.org, linus.walleij@linaro.org,
+        nicolas.ferre@microchip.com, paulmck@linux.ibm.com
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yangtao Li <tiny.windzz@gmail.com>
+Subject: [RESEND, PATCH v4 0/2] cpufreq: Add sunxi nvmem based CPU scaling driver
+Date:   Wed, 12 Jun 2019 12:28:14 -0400
+Message-Id: <20190612162816.31713-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/19 5:29 AM, Masanari Iida wrote:
-> This patch fixes a spelling typo in rds.txt
-> 
-> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
-> ---
->   Documentation/networking/rds.txt | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/networking/rds.txt b/Documentation/networking/rds.txt
-> index 0235ae69af2a..f2a0147c933d 100644
-> --- a/Documentation/networking/rds.txt
-> +++ b/Documentation/networking/rds.txt
-> @@ -389,7 +389,7 @@ Multipath RDS (mprds)
->     a common (to all paths) part, and a per-path struct rds_conn_path. All
->     I/O workqs and reconnect threads are driven from the rds_conn_path.
->     Transports such as TCP that are multipath capable may then set up a
-> -  TPC socket per rds_conn_path, and this is managed by the transport via
-> +  TCP socket per rds_conn_path, and this is managed by the transport via
->     the transport privatee cp_transport_data pointer.
->   
->     Transports announce themselves as multipath capable by setting the
-> 
-Thanks !!
+Add sunxi nvmem based CPU scaling driver, refers to qcom-cpufreq-kryo.
 
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Yangtao Li (2):
+  cpufreq: Add sun50i nvmem based CPU scaling driver
+  dt-bindings: cpufreq: Document allwinner,sun50i-h6-operating-points
+
+ .../bindings/opp/sun50i-nvmem-cpufreq.txt     | 167 +++++++++++++
+ MAINTAINERS                                   |   7 +
+ drivers/cpufreq/Kconfig.arm                   |  12 +
+ drivers/cpufreq/Makefile                      |   1 +
+ drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +
+ drivers/cpufreq/sun50i-cpufreq-nvmem.c        | 226 ++++++++++++++++++
+ 6 files changed, 415 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+ create mode 100644 drivers/cpufreq/sun50i-cpufreq-nvmem.c
+
+---
+v4:
+-Remove sunxi_cpufreq_soc_data structure for now.
+-Convert to less generic name.
+-Update soc_bin xlate.
+v3:
+-update changelog and title
+-convert compatibles to allwinner,cpu-operating-points-v2
+-document the valid names for opp-microvolt-<name>
+v2:
+-update changelog
+-convert to dev_pm_opp_set_prop_name instead of
+ dev_pm_opp_set_supported_hw
+-some change in OPP Node  
+--- 
+2.17.0
+
