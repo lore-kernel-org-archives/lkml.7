@@ -2,142 +2,98 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F643C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03896C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC8A42080A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C322080A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="EmICF+S+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ywhFsERM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436673AbfFLHzf (ORCPT
+        id S1731636AbfFLH4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 03:55:35 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:38498 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbfFLHze (ORCPT
+        Wed, 12 Jun 2019 03:56:12 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38665 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbfFLH4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 03:55:34 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,363,1557212400"; 
-   d="scan'208";a="34080989"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Jun 2019 00:55:33 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.87.71) by
- chn-vm-ex01.mchp-main.com (10.10.87.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 12 Jun 2019 00:55:32 -0700
-Received: from NAM01-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5 via Frontend
- Transport; Wed, 12 Jun 2019 00:55:32 -0700
+        Wed, 12 Jun 2019 03:56:12 -0400
+Received: by mail-lj1-f193.google.com with SMTP id o13so14236920lji.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 00:56:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NXSDa9DWzTco6T0nG/cxa6bKscMVuLsU5NrSuJMDljk=;
- b=EmICF+S+fXJasEH86dpp+vQQMlbEAX6ZZeVWcgkKva+UK3Ms1pYlXB99kdqrPGkop+8/M08zwFFxLw6oOUxFFuBgHAGaMRvHucodcoWV989iTSfhObCaO1cjNd07Ynq6MFHbBtfpgG3Dzz2vAy/noViEviLONW8NZG8F2hsA5e8=
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
- MWHPR11MB1646.namprd11.prod.outlook.com (10.172.54.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Wed, 12 Jun 2019 07:55:30 +0000
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::7534:63dc:8504:c2b3]) by MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::7534:63dc:8504:c2b3%6]) with mapi id 15.20.1965.017; Wed, 12 Jun 2019
- 07:55:30 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <colin.king@canonical.com>, <b.zolnierkie@samsung.com>,
-        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
-        <linux-fbdev@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] video: fbdev: atmel_lcdfb: remove redundant
- initialization to variable ret
-Thread-Topic: [PATCH][next] video: fbdev: atmel_lcdfb: remove redundant
- initialization to variable ret
-Thread-Index: AQHVIHhxNzg6Tx2rZEi/BuBHE6ieyaaXp22A
-Date:   Wed, 12 Jun 2019 07:55:30 +0000
-Message-ID: <37ac8530-6601-a1a0-37e0-8c6d5d1702cd@microchip.com>
-References: <20190611170913.20913-1-colin.king@canonical.com>
-In-Reply-To: <20190611170913.20913-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0228.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1e::24) To MWHPR11MB1662.namprd11.prod.outlook.com
- (2603:10b6:301:e::15)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [213.41.198.74]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f7757d5c-afab-4fdf-557a-08d6ef0b56ee
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR11MB1646;
-x-ms-traffictypediagnostic: MWHPR11MB1646:
-x-microsoft-antispam-prvs: <MWHPR11MB1646FB9DAAA4376C23EA3DEDE0EC0@MWHPR11MB1646.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:862;
-x-forefront-prvs: 0066D63CE6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(136003)(366004)(396003)(376002)(189003)(199004)(72206003)(386003)(64756008)(66476007)(476003)(6512007)(68736007)(26005)(53546011)(99286004)(53936002)(2616005)(6506007)(102836004)(86362001)(11346002)(186003)(229853002)(486006)(6246003)(2501003)(446003)(36756003)(2201001)(66446008)(66556008)(31686004)(4326008)(6436002)(8676002)(305945005)(81166006)(316002)(31696002)(8936002)(6486002)(25786009)(81156014)(7736002)(478600001)(76176011)(52116002)(4744005)(54906003)(256004)(66946007)(2906002)(14444005)(110136005)(73956011)(5660300002)(14454004)(66066001)(71190400001)(71200400001)(6116002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1646;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /x8SIDZnpkmA1BFQPgZKYF+oi2q7DRkAz+6Z7cZtpB0JVgainvWKkaGtIfDgjF4mh1bYp4ZWrXbfaHlmemNiwkTLoXSqcHgxc4tRp2JEaE7AFGfeTM4XpWiR21ydD5T0bATz9vl1Vv0C9StkWG13b7fHvB58XaYdbTQysP/eF3L9GwN8FoAUUFWC2ZuJ3fL6AT1LuIR9NO9g07PZwvge34fIhaTfh/nbgbZxvf2elKFNTzVJGHfddy2XYltx/kG/NIY+gF321ZUt7icG/S9ZsGyCWP/C0T2I3IpyfIzj4Dta53U7Z8ePZ2HV9h7umkuk1kzNJQ1cbw8KeGv5dAPb5q6ASQ7ZC9YDLiTcYGPW5CfkIfRRY97Z/Iz/8SfAI4dbrfyBGMssuRW5WvLxqKOVXOzCAPxylPtBmGs1sAYoqkk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BAA8371C89283945AE7EC078E4004321@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MpVyyIY+84Nucp0CGFI/TVYjVMVNEKw90ADvLXHqdCE=;
+        b=ywhFsERMuu6cckroCnmO4n7s8QukIAuyz0zLikfSlsBUYZFkfXANfIGjA5/KhVSGhU
+         wsTIS0bWPWJna21j3rW8yvYs+F3NDlNqUUNiwkURwt7WWjHQqvSdAVutVveDLoeATPmt
+         YORL3OagMZLOBpPjV+Lzr3Zc5+emLQXq8fBsmzAk+ZzLkaAJi8UAoaKnj+VxyW7Gz8TH
+         ZkfgwAA8LK1D47ev74wBPQDWl+uzPcltC2JGYtqEHXKChCSe2HGOK/amvFPZaQpfcYa8
+         sP35dsdokzVNIdfr8KF3qAK8nz6YpxVF9GycG2qi5PIFNksCy8C4t63BybmL5wEh/Sng
+         wPwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MpVyyIY+84Nucp0CGFI/TVYjVMVNEKw90ADvLXHqdCE=;
+        b=gTjy0A9ZKJ1Q18sZvZgLkX85DeH8I1jlxCjxg3O9IPZNjkA1QRtjwTMoCV2xIuryLV
+         8Q4eAfL/RIPQ+35u37uX6NaFr9U8xlDxVt1PGZ54BTGvU5udm1lYtdy/1s1jZq8RxNrz
+         SLbZkNmDCjzsfTp4Sgaas0cSH3FfeNpH4mFTcbrVfFAmezxgY5dMVWweIukGBkW2SaTU
+         6orbSjpAjQ9AGtiisrl2/Fg/tyQZkTWwYr/oJm4D9r32u4iQRzOl4991jn/IXAHn7A/t
+         DeS+9O+niFOJKPSgJtkXAquK6PA2ZSdDrr1EZTDMLLyYaa91VziI/lUpUwAftk45nmQY
+         A9mw==
+X-Gm-Message-State: APjAAAVYesJfSRizB4HKHJ9SrJ12519XlMPuPNDD+vN3/Q6De+dD7jiR
+        9OZuQw9KhaxuS/d8EuwYYuQluzvPLiN9eU8ke3nauQ==
+X-Google-Smtp-Source: APXvYqwBtvb1aHOu8BGk+6o3Llz+ZVHUG284rkHqlGevLtNgB6RjYMYSnQnZgYw64OXncNMQfXgGGBNNy6xlBvlYPQA=
+X-Received: by 2002:a2e:7508:: with SMTP id q8mr26686053ljc.165.1560326170850;
+ Wed, 12 Jun 2019 00:56:10 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7757d5c-afab-4fdf-557a-08d6ef0b56ee
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 07:55:30.5045
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nicolas.ferre@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1646
+References: <20190610171103.30903-1-grygorii.strashko@ti.com> <20190610171103.30903-3-grygorii.strashko@ti.com>
+In-Reply-To: <20190610171103.30903-3-grygorii.strashko@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 12 Jun 2019 09:55:59 +0200
+Message-ID: <CACRpkdZdCxvFQp9xssmqToeT5FrC4quusEgJOAbYo+TxUzGujw@mail.gmail.com>
+Subject: Re: [PATCH-next 02/20] gpio: gpio-omap: fix lack of irqstatus_raw0
+ for OMAP4
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Russell King <rmk@arm.linux.org.uk>,
+        Tony Lindgren <tony@atomide.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTEvMDYvMjAxOSBhdCAxOTowOSwgQ29saW4gS2luZyB3cm90ZToNCj4gRXh0ZXJuYWwgRS1N
-YWlsDQo+IA0KPiANCj4gRnJvbTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2Fs
-LmNvbT4NCj4gDQo+IEN1cnJlbnRseSB2YXJpYWJsZSByZXQgaXMgYmVpbmcgaW5pdGlhbGl6ZWQg
-d2l0aCAtRU5PRU5UIGhvd2V2ZXIgdGhhdA0KPiB2YWx1ZSBpcyBuZXZlciByZWFkIGFuZCByZXQg
-aXMgYmVpbmcgcmUtYXNzaWduZWQgbGF0ZXIgb24uIEhlbmNlIHRoaXMNCj4gYXNzaWdubWVudCBp
-cyByZWR1bmRhbnQgYW5kIGNhbiBiZSByZW1vdmVkLg0KPiANCj4gQWRkcmVzc2VzLUNvdmVyaXR5
-OiAoIlVudXNlZCB2YWx1ZSIpDQo+IFNpZ25lZC1vZmYtYnk6IENvbGluIElhbiBLaW5nIDxjb2xp
-bi5raW5nQGNhbm9uaWNhbC5jb20+DQoNCkluZGVlZDoNCkFja2VkLWJ5OiBOaWNvbGFzIEZlcnJl
-IDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb20+DQoNClRoYW5rcywgYmVzdCByZWdhcmRzLA0K
-ICAgTmljb2xhcw0KDQoNCj4gLS0tDQo+ICAgZHJpdmVycy92aWRlby9mYmRldi9hdG1lbF9sY2Rm
-Yi5jIHwgMiArLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlv
-bigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdmlkZW8vZmJkZXYvYXRtZWxfbGNkZmIu
-YyBiL2RyaXZlcnMvdmlkZW8vZmJkZXYvYXRtZWxfbGNkZmIuYw0KPiBpbmRleCBmYjExN2NjYmVh
-YjMuLjkzMGNjM2Y5MmUwMSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy92aWRlby9mYmRldi9hdG1l
-bF9sY2RmYi5jDQo+ICsrKyBiL2RyaXZlcnMvdmlkZW8vZmJkZXYvYXRtZWxfbGNkZmIuYw0KPiBA
-QCAtOTUwLDcgKzk1MCw3IEBAIHN0YXRpYyBpbnQgYXRtZWxfbGNkZmJfb2ZfaW5pdChzdHJ1Y3Qg
-YXRtZWxfbGNkZmJfaW5mbyAqc2luZm8pDQo+ICAgCXN0cnVjdCBmYl92aWRlb21vZGUgZmJfdm07
-DQo+ICAgCXN0cnVjdCBncGlvX2Rlc2MgKmdwaW9kOw0KPiAgIAlzdHJ1Y3QgdmlkZW9tb2RlIHZt
-Ow0KPiAtCWludCByZXQgPSAtRU5PRU5UOw0KPiArCWludCByZXQ7DQo+ICAgCWludCBpOw0KPiAg
-IA0KPiAgIAlzaW5mby0+Y29uZmlnID0gKHN0cnVjdCBhdG1lbF9sY2RmYl9jb25maWcqKQ0KPiAN
-Cg0KDQotLSANCk5pY29sYXMgRmVycmUNCg==
+On Mon, Jun 10, 2019 at 7:11 PM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+
+> From: Russell King <rmk+kernel@armlinux.org.uk>
+>
+> Commit 384ebe1c2849 ("gpio/omap: Add DT support to GPIO driver") added
+> the register definition tables to the gpio-omap driver. Subsequently to
+> that commit, commit 4e962e8998cc ("gpio/omap: remove cpu_is_omapxxxx()
+> checks from *_runtime_resume()") added definitions for irqstatus_raw*
+> registers to the legacy OMAP4 definitions, but missed the DT
+> definitions.
+>
+> This causes an unintentional change of behaviour for the 1.101 errata
+> workaround on OMAP4 platforms. Fix this oversight.
+>
+> Fixes: 4e962e8998cc ("gpio/omap: remove cpu_is_omapxxxx() checks from *_runtime_resume()")
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+
+Patch applied.
+
+Yours,
+Linus Walleij
