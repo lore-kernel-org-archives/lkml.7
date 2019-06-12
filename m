@@ -2,237 +2,199 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EFBC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 412CAC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5AA2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:17:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="a4pnaBEi"
+	by mail.kernel.org (Postfix) with ESMTP id 25B9B208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfFLKRA (ORCPT
+        id S1727246AbfFLKR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:17:00 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:34139 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbfFLKRA (ORCPT
+        Wed, 12 Jun 2019 06:17:29 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38130 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727117AbfFLKR3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:17:00 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190612101658euoutp0161265aa34792a83a39904ba9d48d318b~nbBGJ8pdP2980929809euoutp01u
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 10:16:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190612101658euoutp0161265aa34792a83a39904ba9d48d318b~nbBGJ8pdP2980929809euoutp01u
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1560334618;
-        bh=nenqkDXBlGquYGp2/Nq01svR1C1yL5SreYVqcUsRLu4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=a4pnaBEipqqcGjNqpOPKEw8iI+jO6LM2RJzx/2aXYnDaXnrSC2XRE8Mqrjf+xtB2N
-         CVxJssaPGC1eRGiP/if1q8ibtrkRDjHUHeKptXTSRtGHD8qgvgy92bHpBS9dDkloKD
-         /s8gGVfaZOiVaF1lwgdHHwgD+uxz8xwxesdz6B3c=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190612101657eucas1p2ed277e7786ff4a14f9a9814768548461~nbBFK42EZ0234702347eucas1p2g;
-        Wed, 12 Jun 2019 10:16:57 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 90.9B.04298.911D00D5; Wed, 12
-        Jun 2019 11:16:57 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190612101656eucas1p2bacf1537ff5aff54d1e24f3c7ac878be~nbBEYh7yf0232502325eucas1p2r;
-        Wed, 12 Jun 2019 10:16:56 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190612101656eusmtrp2a67b60e92b619fc30e4296fca7e7eaf0~nbBEJcHxk0080900809eusmtrp2W;
-        Wed, 12 Jun 2019 10:16:56 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-bd-5d00d1193e4b
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 59.04.04146.811D00D5; Wed, 12
-        Jun 2019 11:16:56 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190612101655eusmtip1c605a516b0d1dc52b5159c6165ce6322~nbBDWHlfv2408224082eusmtip1A;
-        Wed, 12 Jun 2019 10:16:55 +0000 (GMT)
-Subject: Re: [PATCH v2 1/7] drm/bridge: move ANA78xx driver to analogix
- subdirectory
-To:     Torsten Duwe <duwe@lst.de>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <5617d9f2-9935-eec6-748b-02cd00450d76@samsung.com>
-Date:   Wed, 12 Jun 2019 12:16:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.0
+        Wed, 12 Jun 2019 06:17:29 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d18so16244032wrs.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 03:17:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=Kv7LCbEgp/ES7E3A9FpL8uznQf+7YZrzEljrXGATpdE=;
+        b=F83w0zkHsYzF1CBcaLwDadMPgcVM5WQd1zs8mhAc8C65Y+YV8IGQqffy2Er4dMJah7
+         Wv9HqLkjJKtY3+STOVD34FJ0iN5WdADolfPl3VCUYFNuZkX7clwiUQLBaVkUrRzNYSEq
+         UdMUHv+oHaMLZrWXqy4ilEIo1x8nLdt2kJ72WesVcQ3wShezCOW5NJW0Vlk6sw4C2REk
+         15s5/je+jByGgiulSJY/IKNZLSw4dloQuaFYf1mHGKGNaQiFCOLXXR8nV0SX1ZRtQrN0
+         RH3d6cWMTae9cn7nHGp8RQb325oG1w4x8tiZ7txiJbNXvUwlzyTI/TnTBkpdSjW914SH
+         Ulhw==
+X-Gm-Message-State: APjAAAVoRGDKQ0QyxyBcfYBo+xjStHprgCHdbQsOpW9YA4vtOYin70N/
+        gIq2OUp6gRg2QAdq98aIxhk9Ow==
+X-Google-Smtp-Source: APXvYqxzPAQxgfE805E8ecOhU0d3jxt3B5r61pAm0pxDc2tqk8vXILX/wSNAPsyKIcVAa7zcSi3nnw==
+X-Received: by 2002:adf:e841:: with SMTP id d1mr54673237wrn.204.1560334646423;
+        Wed, 12 Jun 2019 03:17:26 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id 32sm39077824wra.35.2019.06.12.03.17.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 03:17:25 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Prasanna Panchamukhi <panchamukhi@arista.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Cathy Avery <cavery@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        "Michael Kelley \(EOSG\)" <Michael.H.Kelley@microsoft.com>,
+        Mohammed Gamal <mmorsy@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devel@linuxdriverproject.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] x86/hyperv: Disable preemption while setting reenlightenment vector
+In-Reply-To: <20190611212003.26382-1-dima@arista.com>
+References: <20190611212003.26382-1-dima@arista.com>
+Date:   Wed, 12 Jun 2019 12:17:24 +0200
+Message-ID: <8736kff6q3.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190604122251.676BF68B05@newverein.lst.de>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRj2O7cdpdVxFnsrK1pIGnQxCr6opMjgUD/qV3TRctXBhpvaTqvM
-        ouUNtaIMuzhN10USGzSmU2eZMafrpjWz0m5KapBiiTphdDHnUfLf8z7P+7zf88DHkopiZh6r
-        STwm6BPVWhUTRFU1+V4tn+sJiF1l75Xhiy3PCJzZ9A3hsao8Epe4Wmjc5v3J4NG25wROv/OA
-        wZW1zTQevvWFwDl5d2XY1v2Oxm9qixhc+t5D4K7v9Qhn1rlk+LO1GeEK21US+2qLKexzviI2
-        hfB3fH8J3lJsQXyxJZXvbeiX8YVGD8Vbv96n+bpRM8U7TJ/HuewCmreV5zD8j5YWGV892kXz
-        9TctMr7zvJvgK+6e5R92GJmdwXuDNhwWtJrjgn5lVFzQkfzSXCK5fcnJX0O3kBFdXpiLAlng
-        1kBOu5HMRUGsgitDcLusHknDCILMc2mENAwj6La8JKYs+Y9rKEm4h2C0um/SP4Dg0aVW2r8V
-        wu0CS961iVuzuQYK8i89p/0DyWUiMFcMU/4thouAPxUdTC5iWTkXBUV1rJ+muDDo8/rNgewc
-        bjeMOGwTWM4Fw7OCnglrILcOujsbST8muUWQbi+cxEr40FMykRu4Tyxc7TMyUu5oaOuZ6hAC
-        fe5KmYRDYcxRMsmfhc6yDFIyZyOwWx2kJKyHBreH9gclx0M/qF0p0ZvB/vGXzE8DNxPaB4Kl
-        DDPhStV1UqLlkJ2lkLYXQ2ezffKgEkpfe5nLSGWa1sw0rY1pWhvT/3fNiCpHSsEg6uIFMTJR
-        OLFCVOtEQ2L8ikNJOhsa/7Uv/rqHapC39aATcSxSzZA/uT4Wo6DVx8UUnRMBS6pmy1cnBMQq
-        5IfVKacEfdIBvUEriE40n6VUSnlqQNc+BRevPiYkCEKyoJ9SCTZwnhFho2awe8MSXVavpqCk
-        8OmTxXGuhft/R8Ro32RE+VIbN0W6rM7vwUPbS7cV1CS3GkbIsLTYhEjzxWuaPO+etdHVS7/d
-        sJZfeGood4W//p02K6utRrHgTPrpdUehYzhUbHzb0+/QZww2Dap3JIUrz23OD0lZtWWu2a29
-        udqztWjj0EcVJR5RRy4j9aL6H2juCJKxAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHfc85OzsTF6ep+WJ0Yd1I6NSZma/XCgpe6EsUVJRSow5auU12
-        Nsn60EIEXRcbWNnUOW9RNiidmW1Na6aWoWGlXUAXZYJKSZbSyLRNDfz2f57/83su8DCkol4S
-        zZzUGgS9Vp2lpEOplzOdA5tgb0j6loohBbrc84JA+R3DAM02WUhU8axHgt5OjtNo6m0XgfKq
-        79Go0dUtQT8rBwlUaKmRooYv/RL0xlVGo9p3vQT6NNIKUL7nmRQN3O8GyNlwjUR+l41Cfu8r
-        Ykc4rvbPENhhcwBsc5zDX9vGpLjU1Evh+5/vSrBnyk7hR9aBQK7gpgQ31BXS+HtPjxQ/nPok
-        wa3lDin2XewksLPmPHZ/MNF7lx7mkvU6o0FYnakTDSnKIzxScXwC4lRbEzg+Nj49URWn3Jya
-        fELIOpkj6DenHuMyi2vNRPb7NWf+TFQCE7i60gxkDGS3wuKWZsoMQhkFWwug/0IfPW9EQXfF
-        N3Jeh8PpfjM9XzQGYPs9FxU0wtkD0GG5DoJGBNtJQfN4CREMSDYfwOlLI9J5xA3gtUGLNIjQ
-        7Eb41/kh0Ith5GwqLPMwwTTFroOjk8FOMiaSPQRLXaa5CXJ2KXxxc2hOy9gE+MXXPrcSyW6A
-        07bXC3oVzHtQuqCj4MehCuIqUFgX4dZFiHURYl2E2AFVByIEo6jJ0Ig8J6o1olGbwR3XaRpA
-        4F2aOvzOZvC6fr8XsAxQhsmf3JhNU0jUOWKuxgsgQyoj5KrTIekK+Ql17llBrzuqN2YJohfE
-        BY6zkNGRx3WB59MajvJxfDxK4ONj42O3IWWUvIB9mqZgM9QG4bQgZAv6/xzByKJNIC3MZ/es
-        8Pt2Pb69a9/vpK64STse4a68ait2970ZGH8XXgT3FLUN91fyeGNSDBipKomW5St8g94y+06l
-        xxdyzHiJ6msZ5X4sm4lVjZd3LFm/ovvXoTsbHldNnGKdKQWJjbw39ev27GSb9pZBVWjNbGEM
-        z3cfdKiXr3WL7aUqJSVmqvkYUi+q/wE8TxNWRAMAAA==
-X-CMS-MailID: 20190612101656eucas1p2bacf1537ff5aff54d1e24f3c7ac878be
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190604122320epcas3p3bdb18dc38aaad91e8c132625649db9ba
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190604122320epcas3p3bdb18dc38aaad91e8c132625649db9ba
-References: <20190604122150.29D6468B05@newverein.lst.de>
-        <CGME20190604122320epcas3p3bdb18dc38aaad91e8c132625649db9ba@epcas3p3.samsung.com>
-        <20190604122251.676BF68B05@newverein.lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.06.2019 14:22, Torsten Duwe wrote:
-> From: Icenowy Zheng <icenowy@aosc.io>
->
-> As ANA78xx chips are designed and produced by Analogix Semiconductor,
-> Inc, move their driver codes into analogix subdirectory.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Dmitry Safonov <dima@arista.com> writes:
 
- --
-Regards
-Andrzej
+> KVM support may be compiled as dynamic module, which triggers the
+> following splat on modprobe:
+>
+>  KVM: vmx: using Hyper-V Enlightened VMCS
+>  BUG: using smp_processor_id() in preemptible [00000000] code: modprobe/466 caller is debug_smp_processor_id+0x17/0x19
+>  CPU: 0 PID: 466 Comm: modprobe Kdump: loaded Not tainted 4.19.43 #1
+>  Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090007  06/02/2017
+>  Call Trace:
+>   dump_stack+0x61/0x7e
+>   check_preemption_disabled+0xd4/0xe6
+>   debug_smp_processor_id+0x17/0x19
+>   set_hv_tscchange_cb+0x1b/0x89
+>   kvm_arch_init+0x14a/0x163 [kvm]
+>   kvm_init+0x30/0x259 [kvm]
+>   vmx_init+0xed/0x3db [kvm_intel]
+>   do_one_initcall+0x89/0x1bc
+>   do_init_module+0x5f/0x207
+>   load_module+0x1b34/0x209b
+>   __ia32_sys_init_module+0x17/0x19
+>   do_fast_syscall_32+0x121/0x1fa
+>   entry_SYSENTER_compat+0x7f/0x91
+
+Hm, I never noticed this one, you probably need something like
+CONFIG_PREEMPT enabled so see it.
+
+>
+> The easiest solution seems to be disabling preemption while setting up
+> reenlightment MSRs. While at it, fix hv_cpu_*() callbacks.
+>
+> Fixes: 93286261de1b4 ("x86/hyperv: Reenlightenment notifications
+> support")
+>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Cathy Avery <cavery@redhat.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>
+> Cc: Mohammed Gamal <mmorsy@redhat.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Roman Kagan <rkagan@virtuozzo.com>
+> Cc: Sasha Levin <sashal@kernel.org>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+>
+> Cc: devel@linuxdriverproject.org
+> Cc: kvm@vger.kernel.org
+> Cc: linux-hyperv@vger.kernel.org
+> Cc: x86@kernel.org
+> Reported-by: Prasanna Panchamukhi <panchamukhi@arista.com>
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
 > ---
->  drivers/gpu/drm/bridge/Kconfig                           | 10 ----------
->  drivers/gpu/drm/bridge/Makefile                          |  4 ++--
->  drivers/gpu/drm/bridge/analogix/Kconfig                  | 10 ++++++++++
->  drivers/gpu/drm/bridge/analogix/Makefile                 |  1 +
->  drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c |  0
->  drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h |  0
->  6 files changed, 13 insertions(+), 12 deletions(-)
->  rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.c (100%)
->  rename drivers/gpu/drm/bridge/{ => analogix}/analogix-anx78xx.h (100%)
+>  arch/x86/hyperv/hv_init.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index ee777469293a..862789bf64a0 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -16,16 +16,6 @@ config DRM_PANEL_BRIDGE
->  menu "Display Interface Bridges"
->  	depends on DRM && DRM_BRIDGE
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 1608050e9df9..0bdd79ecbff8 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -91,7 +91,7 @@ EXPORT_SYMBOL_GPL(hv_max_vp_index);
+>  static int hv_cpu_init(unsigned int cpu)
+>  {
+>  	u64 msr_vp_index;
+> -	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
+> +	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[cpu];
+>  	void **input_arg;
+>  	struct page *pg;
 >  
-> -config DRM_ANALOGIX_ANX78XX
-> -	tristate "Analogix ANX78XX bridge"
-> -	select DRM_KMS_HELPER
-> -	select REGMAP_I2C
-> -	---help---
-> -	  ANX78XX is an ultra-low Full-HD SlimPort transmitter
-> -	  designed for portable devices. The ANX78XX transforms
-> -	  the HDMI output of an application processor to MyDP
-> -	  or DisplayPort.
-> -
->  config DRM_CDNS_DSI
->  	tristate "Cadence DPI/DSI bridge"
->  	select DRM_KMS_HELPER
-> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> index 4934fcf5a6f8..a6c7dd7727ea 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -1,5 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
->  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
->  obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
->  obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
-> @@ -12,8 +11,9 @@ obj-$(CONFIG_DRM_SII9234) += sii9234.o
->  obj-$(CONFIG_DRM_THINE_THC63LVD1024) += thc63lvd1024.o
->  obj-$(CONFIG_DRM_TOSHIBA_TC358764) += tc358764.o
->  obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
-> -obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix/
->  obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
->  obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
->  obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
-> +
-> +obj-y += analogix/
->  obj-y += synopsys/
-> diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/bridge/analogix/Kconfig
-> index e930ff9b5cd4..704fb0f41dc3 100644
-> --- a/drivers/gpu/drm/bridge/analogix/Kconfig
-> +++ b/drivers/gpu/drm/bridge/analogix/Kconfig
-> @@ -1,4 +1,14 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> +config DRM_ANALOGIX_ANX78XX
-> +	tristate "Analogix ANX78XX bridge"
-> +	select DRM_KMS_HELPER
-> +	select REGMAP_I2C
-> +	help
-> +	  ANX78XX is an ultra-low Full-HD SlimPort transmitter
-> +	  designed for portable devices. The ANX78XX transforms
-> +	  the HDMI output of an application processor to MyDP
-> +	  or DisplayPort.
-> +
->  config DRM_ANALOGIX_DP
->  	tristate
->  	depends on DRM
-> diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bridge/analogix/Makefile
-> index fdbf3fd2f087..6fcbfd3ee560 100644
-> --- a/drivers/gpu/drm/bridge/analogix/Makefile
-> +++ b/drivers/gpu/drm/bridge/analogix/Makefile
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  analogix_dp-objs := analogix_dp_core.o analogix_dp_reg.o
-> +obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
->  obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix_dp.o
-> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
-> similarity index 100%
-> rename from drivers/gpu/drm/bridge/analogix-anx78xx.c
-> rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
-> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
-> similarity index 100%
-> rename from drivers/gpu/drm/bridge/analogix-anx78xx.h
-> rename to drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+> @@ -103,7 +103,7 @@ static int hv_cpu_init(unsigned int cpu)
+>  
+>  	hv_get_vp_index(msr_vp_index);
+>  
+> -	hv_vp_index[smp_processor_id()] = msr_vp_index;
+> +	hv_vp_index[cpu] = msr_vp_index;
+>  
+>  	if (msr_vp_index > hv_max_vp_index)
+>  		hv_max_vp_index = msr_vp_index;
 
+The above is unrelated cleanup (as cpu == smp_processor_id() for
+CPUHP_AP_ONLINE_DYN callbacks), right? As I'm pretty sure these can'd be
+preempted.
 
+> @@ -182,7 +182,6 @@ void set_hv_tscchange_cb(void (*cb)(void))
+>  	struct hv_reenlightenment_control re_ctrl = {
+>  		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
+>  		.enabled = 1,
+> -		.target_vp = hv_vp_index[smp_processor_id()]
+>  	};
+>  	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
+>  
+> @@ -196,7 +195,11 @@ void set_hv_tscchange_cb(void (*cb)(void))
+>  	/* Make sure callback is registered before we write to MSRs */
+>  	wmb();
+>  
+> +	preempt_disable();
+> +	re_ctrl.target_vp = hv_vp_index[smp_processor_id()];
+>  	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
+> +	preempt_enable();
+> +
+
+My personal preference would be to do something like
+   int cpu = get_cpu();
+
+   ... set things up ...
+
+   put_cpu();
+
+instead, there are no long-running things in the whole function. But
+what you've done should work too, so
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+>  	wrmsrl(HV_X64_MSR_TSC_EMULATION_CONTROL, *((u64 *)&emu_ctrl));
+>  }
+>  EXPORT_SYMBOL_GPL(set_hv_tscchange_cb);
+
+-- 
+Vitaly
