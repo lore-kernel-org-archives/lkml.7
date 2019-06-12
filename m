@@ -2,131 +2,186 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6498C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD61C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86E18208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04D74206BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:47:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="OXL0DJrv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nWSFMXqw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732553AbfFLOrm (ORCPT
+        id S1732569AbfFLOru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:47:42 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36756 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728707AbfFLOrm (ORCPT
+        Wed, 12 Jun 2019 10:47:50 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37987 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728707AbfFLOrt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:47:42 -0400
-Received: by mail-wm1-f67.google.com with SMTP id u8so6854458wmm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 07:47:40 -0700 (PDT)
+        Wed, 12 Jun 2019 10:47:49 -0400
+Received: by mail-wm1-f66.google.com with SMTP id s15so6853046wmj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 07:47:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xVfFJLv5dW5aoHUXpc1sbJZh/y+oS0CZ+4jF9K929Ic=;
-        b=OXL0DJrvcuXnFE6j3/rttToGT7J8dbIWTIpGZw2iNsWo3aTmAoVkFzJyCr05LqGz8X
-         cnzpG334ZYRq5Gc5Vck+gPJXBpslNBUSwpuA6L3qt3suXolVqb6B54eD3fUWQwxfCt+q
-         /9qpskkDkpxaqK+SImjqYcea2sMKQbq7Us+Hh0hxlSE1E5a7aw10adBhzEUScbnVSajd
-         pW79Pb5gI0sq6doAnODKqhGh4MYN50IDBON5fkioe6DA/KpyQrysI8F1pFUVjSKbxqG+
-         9Rq3qZpeUyl4xE7Zlv+jfD+W5gQbtFpwXnTLC+HhTbK2CpGR/h6L9MmLdzaAike3tdQQ
-         oH8Q==
+        d=linaro.org; s=google;
+        h=from:subject:openpgp:autocrypt:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=YYv2rj2H4SsvxGcxZ5F9wKxoils4EaNXIwonhjms/lM=;
+        b=nWSFMXqwah/WpvEJZU7SgpM2sVn46mgf/uWBa8VOcUkVjGKmo01a2PUtwqQYmngqye
+         sG0wO/VM3Io7e6eGkrDEikQM3Avg1kRVRsdnyQQHYBB1BQRoi6E8p8G1OD5Sijkz71Tn
+         5uqHoyFEf7kMPsqNjvmfa7SOApiZw6D/3peqiEEdujTz9KoQbTxeAppZHreXL9d/2sYw
+         jEt5N5LS1lY3LcSxX0VgVBJinMg5AsqItTFUQEPJ/6YNLhmb0O9Dr/lL7axKNxaJiE2F
+         /VLavDfQkoxDpm+N/0fh3QIdEX74HIv/WysNoV5z/V12AUOtYmh6OAt3xCbQ8PCmNLZh
+         0y2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:subject:openpgp:autocrypt:to:cc:message-id
+         :date:user-agent:mime-version:content-language
          :content-transfer-encoding;
-        bh=xVfFJLv5dW5aoHUXpc1sbJZh/y+oS0CZ+4jF9K929Ic=;
-        b=e2vvqXAUoeWg/NfbGad73894gqpJQVofsfH/d62CeYEN2e+nr4djjGmNacIaLIHAJG
-         YsfgLvrgs3MB1E0E3FHpAew0tMFDW/99qYrA9Ta+L2bkxrEaGQSK6Z2UUoloUYY6wowT
-         aDDHdr6isZlu7DyDyVuAQUkyeXdlMrULe59XH5sOcG/9qysG4kkdIr8jNzIvzUSBoC2F
-         J3MnoyRC7OW06ny6j4XzJypWlZMqkcf3DIAorWM3OjMBhthGwlhTA1r1Qb1OpuvZbqq5
-         xK2HvlWK5CEixBRIu9uNK3wW2d3zLfS5oOcsDxrILu1aD9WZYISK8XE+99tfWlGvw96C
-         Sdsw==
-X-Gm-Message-State: APjAAAVkYXvx7/CC2fGqVDrI7qi3kKg++n4YOIafo3/h1Do7AAckvOQB
-        r6FHGHkQF28hS7ksNinteztAU9HYKTQ=
-X-Google-Smtp-Source: APXvYqwMEP9IsARouhljexIF2ov+S/cFFLZePUwjrlALbWU1ji3V37i6Q9oBb26w6TYFPVRjg/X0KQ==
-X-Received: by 2002:a7b:c251:: with SMTP id b17mr22212885wmj.143.1560350860016;
-        Wed, 12 Jun 2019 07:47:40 -0700 (PDT)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id c24sm256466wmb.21.2019.06.12.07.47.38
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 07:47:39 -0700 (PDT)
-Subject: Re: [RFC] printk/sysrq: Don't play with console_loglevel
-To:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-References: <20190528002412.1625-1-dima@arista.com>
- <20190528041500.GB26865@jagdpanzerIV> <20190528044619.GA3429@jagdpanzerIV>
- <20190528134227.xyb3622gjwu52q4r@pathway.suse.cz>
- <20190603065153.GA13072@jagdpanzerIV>
- <20190606071039.txqczrjlntrljlrx@pathway.suse.cz>
- <20190612083643.GA7722@jagdpanzerIV>
- <20190612120012.mmokgz4yybywfs26@pathway.suse.cz>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <34698b8a-5204-e9e8-b96b-dbb16340423d@arista.com>
-Date:   Wed, 12 Jun 2019 15:47:38 +0100
+        bh=YYv2rj2H4SsvxGcxZ5F9wKxoils4EaNXIwonhjms/lM=;
+        b=FgoW7uEw3AzaAduU1RBZoz45FeXA3+wvsmOSJkmMpjA/yZ+68Qtd+hfPA6SqgPj5Wg
+         0HCvPuanyfz25HUqQR7H64FHERo+uUiOdQqH3Ubc+fCy57yxq0tKUOPYxua6+Fo34e9j
+         4C4oS7Obvd2VRoGPqVsFjK73C+C7mWP+uFfIgXbB2c8CBf07fI0iztFbF1yzTQ7HAZRW
+         yAXiv5xlGRWkmP7xy0jmbqUNc62wUT7hftFXvYsFIoOcwgWIsfYTzcnrOurVU/lOb5uY
+         H6jSldiYyAMMC1UyfIYncYe6YcIYVK9cbnMp1qFqj4IlVqXkPnkmdbhFEpd4G0ms2Rr0
+         l2kA==
+X-Gm-Message-State: APjAAAUsqrD9pUR2C0bxPPyBxtC7VSQQ+hhsPDAi0E2yPKWHnTPRXPzG
+        wBibBV5ePFRW94vxi0CXQ34gCtGsc/8=
+X-Google-Smtp-Source: APXvYqxmp3X3YIGxUCB/t49hLfC7iM/5nBSSvU4FT+4ljF95aj9rx6q3yrm2BzUYX47pLXQe/UtYDA==
+X-Received: by 2002:a1c:544d:: with SMTP id p13mr23657507wmi.78.1560350866418;
+        Wed, 12 Jun 2019 07:47:46 -0700 (PDT)
+Received: from [192.168.0.41] (237.65.130.77.rev.sfr.net. [77.130.65.237])
+        by smtp.googlemail.com with ESMTPSA id x11sm294546wmg.23.2019.06.12.07.47.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 07:47:45 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PULL] clockevents fixes for v5.2-rc
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Julien Thierry <julien.thierry@arm.com>,
+        Philippe Mazenauer <philippe.mazenauer@outlook.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <8c3a53e2-4c4d-8080-1379-692ec8badd43@linaro.org>
+Date:   Wed, 12 Jun 2019 16:47:44 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190612120012.mmokgz4yybywfs26@pathway.suse.cz>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/19 1:00 PM, Petr Mladek wrote:
-> On Wed 2019-06-12 17:36:43, Sergey Senozhatsky wrote:
->> On (06/06/19 09:10), Petr Mladek wrote:
->>> Just to be sure. I wanted to say that I like the idea with
->>> KERN_UNSUPRESSED. So, I think that we are on the same page.
->>
->> I understand. All I wanted to say is that KERN_UNSUPRESSED is
->> per-message, while the most interesting (and actually broken)
->> cases, IMHO, are per-context, IOW things like this one
->>
->> 	console_loglevel = NEW
->> 	foo()
->> 	  dump_stack()
->> 	     printk
->> 	     ...
->> 	     printk
->> 	console_loglevel = OLD
->>
->> KERN_UNSUPRESSED does not help here. We probably can't convert
->> dump_stack() to KERN_UNSUPRESSED.
-> 
-> I agree. I take KERN_UNSUPRESSED like a nice trick how to pass
-> the information about the unsupressed printk context via
-> printk_safe and printk_nmi per-CPU buffers.
-> 
-> The single line in sysrq __handle_sysrq() seems to be the only
-> location where KERN_UNSUPRESSED can be used directly.
 
-I likely don't understand all the reasons why it's not possible.
+Hi Thomas,
 
-Looking at kdb - prints those can't be converted straight-away are
-show_regs() and show_stack().. could we add helpers those take a
-loglevel to show the info? (having as an example show_trace_log_lvl()
-that can "eat" a modifier already).
+this a couple of fixes for v5.2-rc
 
-Not that I want to sell the idea of KERN_UNSUPRESSED, but to my mind the
-alternative patches were kind of too intricate and bring more complexity
-to printk.. and there are only ~3(?) places those manipulate
-console_loglevel directly in the kernel tree (so we might want something
-simple and dumb as hell).
+Thanks
 
-Thanks,
-          Dima
+  -- Daniel
+
+The following changes since commit 4dde821e4296e156d133b98ddc4c45861935a4fb:
+
+  Merge tag 'xfs-5.2-fixes-1' of
+git://git.kernel.org/pub/scm/fs/xfs/xfs-linux (2019-05-23 11:18:18 -0700)
+
+are available in the Git repository at:
+
+  https://git.linaro.org/people/daniel.lezcano/linux.git
+tags/timers-v5.2-rc1
+
+for you to fetch changes up to 5d6168fc61b7f13baf27ae5567be7ea1fccb463e:
+
+  clocksource/drivers/arm_arch_timer: Don't trace count reader functions
+(2019-06-12 15:38:54 +0200)
+
+----------------------------------------------------------------
+- Fix missing notrace leading to deadlock on arch_arm_timer (Julien Thierry)
+
+- Fix compilation warning on timer-ti-dm (Philippe Mazenauer)
+
+----------------------------------------------------------------
+Julien Thierry (1):
+      clocksource/drivers/arm_arch_timer: Don't trace count reader functions
+
+Philippe Mazenauer (1):
+      clocksource/drivers/timer-ti-dm: Change to new style declaration
+
+ drivers/clocksource/arm_arch_timer.c | 8 ++++----
+ drivers/clocksource/timer-ti-dm.c    | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
