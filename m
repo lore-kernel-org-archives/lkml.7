@@ -2,124 +2,76 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AA4C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D37C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E852086A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:52:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="RBdMUJ9B"
+	by mail.kernel.org (Postfix) with ESMTP id B60E220874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730695AbfFLFwS (ORCPT
+        id S1730706AbfFLFzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 01:52:18 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:64620 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbfFLFwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 01:52:18 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45NwxW2rMFz9v0lc;
-        Wed, 12 Jun 2019 07:52:15 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=RBdMUJ9B; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id dBgxHB_AY2Yx; Wed, 12 Jun 2019 07:52:15 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45NwxW1jKtz9v0lL;
-        Wed, 12 Jun 2019 07:52:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1560318735; bh=ohAp/YSXJJ0PS41E8peTUSFPOADBTv6CNhYclehwS+E=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=RBdMUJ9BIMIA2W6herx08iJdndrXtUWfahMDw0rDznctgcLh8nTtHlc62fud6SoT8
-         iHNTY4o8nkhRbj1Ihknh4gnAqKO3IydSH/cBO22/OEN+erLaCu5smSuTLuwhUbO7Hy
-         ZLV0v/g1glyhL9n8M6tbWaEGPr5dt1ZnvYe8Augc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1D6468B802;
-        Wed, 12 Jun 2019 07:52:16 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id BBvVVHRFsBJn; Wed, 12 Jun 2019 07:52:16 +0200 (CEST)
-Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.230.107])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EB1C68B75A;
-        Wed, 12 Jun 2019 07:52:15 +0200 (CEST)
-Subject: Re: [PATCH v2 0/4] Additional fixes on Talitos driver
-To:     Horia Geanta <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <cover.1560263641.git.christophe.leroy@c-s.fr>
- <VI1PR0402MB34853CAF031426F4183FE29B98ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <0cb7c534-6e48-5284-899c-c0ef85c3c126@c-s.fr>
- <VI1PR0402MB3485AD965F36709F27EFB72698ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <58787543-76d3-e0db-9517-ccd0f6494d85@c-s.fr>
-Date:   Wed, 12 Jun 2019 07:52:13 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 12 Jun 2019 01:55:32 -0400
+Received: from eddie.linux-mips.org ([148.251.95.138]:60554 "EHLO
+        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbfFLFzb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 01:55:31 -0400
+Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
+        with ESMTP id S23990398AbfFLFz2EBmjF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org> + 1 other);
+        Wed, 12 Jun 2019 07:55:28 +0200
+Date:   Wed, 12 Jun 2019 06:55:28 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@linux-mips.org>
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>
+cc:     Alexandre Oliva <lxoliva@fsfla.org>, Tom Li <tomli@tomli.me>,
+        James Hogan <jhogan@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] On the Current Troubles of Mainlining Loongson Platform
+ Drivers
+In-Reply-To: <20190610214938.GB7147@darkstar.musicnaut.iki.fi>
+Message-ID: <alpine.LFD.2.21.1906102253080.19418@eddie.linux-mips.org>
+References: <20190211230614.GB22242@darkstar.musicnaut.iki.fi> <orva1jj9ht.fsf@lxoliva.fsfla.org> <20190217235951.GA20700@darkstar.musicnaut.iki.fi> <orpnrpj2rk.fsf@lxoliva.fsfla.org> <alpine.LFD.2.21.1902180227090.15915@eddie.linux-mips.org>
+ <orlg1ryyo2.fsf@lxoliva.fsfla.org> <alpine.LFD.2.21.1903071744560.7728@eddie.linux-mips.org> <orwolaw5u1.fsf@lxoliva.fsfla.org> <alpine.LFD.2.21.1903082347330.31648@eddie.linux-mips.org> <or7ead4lq3.fsf@lxoliva.fsfla.org>
+ <20190610214938.GB7147@darkstar.musicnaut.iki.fi>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <VI1PR0402MB3485AD965F36709F27EFB72698ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 11 Jun 2019, Aaro Koskinen wrote:
 
+> However, with your patch the "nobody cared" is never reached so all is
+> good. I tried 10 boots with the patch and all were successful. Without
+> the patch 8 out of 10 failed with the "nobody cared" warning.
 
-Le 11/06/2019 à 18:30, Horia Geanta a écrit :
-> On 6/11/2019 6:40 PM, Christophe Leroy wrote:
->>
->>
->> Le 11/06/2019 à 17:37, Horia Geanta a écrit :
->>> On 6/11/2019 5:39 PM, Christophe Leroy wrote:
->>>> This series is the last set of fixes for the Talitos driver.
->>>>
->>>> We now get a fully clean boot on both SEC1 (SEC1.2 on mpc885) and
->>>> SEC2 (SEC2.2 on mpc8321E) with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:
->>>>
->>> I am getting below failures on a sec 3.3.2 (p1020rdb) for hmac(sha384) and
->>> hmac(sha512):
->>
->> Is that new with this series or did you already have it before ?
->>
-> Looks like this happens with or without this series.
+ I wouldn't call it "good", just less obvious or painful.  This is still 
+causing wasted CPU cycles that are used for taking the phantom interrupts.
 
-Found the issue, that's in 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=b8fbdc2bc4e71b62646031d5df5f08aafe15d5ad
+ There is clearly a completion barrier missing somewhere that causes the 
+interrupt request to linger beyond the point interrupts are reenabled at 
+the CPU.
 
-CONFIG_CRYPTO_DEV_TALITOS_SEC2 should be CONFIG_CRYPTO_DEV_TALITOS2 instead.
+ One way to attempt to narrow it down might be taking a backtrace from 
+where IRQ 14 is found to be spurious.  This would indicate the offending 
+interrupt unmask action.  E.g. I see no explicit completion barrier 
+between the final `outb' in `mask_and_ack_8259A' and the following call to 
+`raw_spin_unlock_irqrestore', which are obviously otherwise unordered WRT 
+each other (because `outb' is I/O or MMIO and `raw_spin_unlock_irqrestore' 
+is contained within the CPU on UP).  I can see provisions however for 
+issuing an architecture-specific barrier in `do_raw_spin_unlock', which is 
+the workhorse for `raw_spin_unlock_irqrestore', so maybe this is the place 
+to look into?
 
-Just sent a patch to fix it.
+ Also how's IRQ 14 registered as indicated by /proc/interrupts?
 
-Thanks
-Christophe
-
-> 
-> I haven't checked the state of this driver for quite some time.
-> Since I've noticed increased activity, I thought it would be worth
-> actually testing the changes.
-> 
-> Are changes in patch 2/4 ("crypto: talitos - fix hash on SEC1.")
-> strictly for sec 1.x or they affect all revisions?
-> 
->> What do you mean by "fuzz testing" enabled ? Is that
->> CONFIG_CRYPTO_MANAGER_EXTRA_TESTS or something else ?
->>
-> Yes, it's this config symbol.
-> 
-> Horia
-> 
+  Maciej
