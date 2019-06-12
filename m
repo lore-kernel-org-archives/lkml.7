@@ -2,75 +2,93 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3011C31E47
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50891C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B67B420866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B61120866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 13:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439413AbfFLNcx (ORCPT
+        id S2439448AbfFLNdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 09:32:53 -0400
-Received: from mga04.intel.com ([192.55.52.120]:39218 "EHLO mga04.intel.com"
+        Wed, 12 Jun 2019 09:33:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:4932 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728141AbfFLNcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:32:52 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 06:32:52 -0700
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 12 Jun 2019 06:32:49 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hb3Mw-000DYM-BQ; Wed, 12 Jun 2019 21:32:50 +0800
-Date:   Wed, 12 Jun 2019 21:32:26 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     kbuild-all@01.org, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [linux-next:master 4948/6049]
- drivers/net/dsa/sja1105/sja1105_main.c:1718:6: sparse: sparse: symbol
- 'sja1105_port_txtstamp' was not declared. Should it be static?
-Message-ID: <201906122110.yHrGtn9w%lkp@intel.com>
+        id S2439430AbfFLNdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 09:33:12 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 11CAE2F8BC0;
+        Wed, 12 Jun 2019 13:33:12 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-116-159.ams2.redhat.com [10.36.116.159])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7ED68785D2;
+        Wed, 12 Jun 2019 13:33:07 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: [PATCH v3 0/4] s390/crypto: Use -ENODEV instead of -EOPNOTSUPP
+Date:   Wed, 12 Jun 2019 15:33:02 +0200
+Message-Id: <20190612133306.10231-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 12 Jun 2019 13:33:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-head:   81a72c79224f83af18e26dc0c599f917312e6c78
-commit: 47ed985e97f513b7746270e8c5d1f3a3f959b2da [4948/6049] net: dsa: sja1105: Add logic for TX timestamping
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
-        git checkout 47ed985e97f513b7746270e8c5d1f3a3f959b2da
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+s390x crypto is one of the rare modules that returns -EOPNOTSUPP instead of
+-ENODEV in case HW support is not available.
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+Convert to -ENODEV, so e.g., systemd's systemd-modules-load.service
+ignores this error properly.
 
+v2 -> v3:
+- "s390/pkey: Use -ENODEV instead of -EOPNOTSUPP"
+-- Also convert pkey_clr2protkey() as requested by Harald
+- Add r-b's (thanks!)
 
-sparse warnings: (new ones prefixed by >>)
+v1 -> v2:
+- Include
+-- "s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP"
+-- "s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP"
+-- "s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP"
 
->> drivers/net/dsa/sja1105/sja1105_main.c:1718:6: sparse: sparse: symbol 'sja1105_port_txtstamp' was not declared. Should it be static?
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Harald Freudenberger <freude@linux.ibm.com>
+Cc: Cornelia Huck <cohuck@redhat.com>
 
-Please review and possibly fold the followup patch.
+David Hildenbrand (4):
+  s390/pkey: Use -ENODEV instead of -EOPNOTSUPP
+  s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP
+  s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP
+  s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ arch/s390/crypto/ghash_s390.c  | 2 +-
+ arch/s390/crypto/prng.c        | 4 ++--
+ arch/s390/crypto/sha1_s390.c   | 2 +-
+ arch/s390/crypto/sha256_s390.c | 2 +-
+ arch/s390/crypto/sha512_s390.c | 2 +-
+ drivers/s390/crypto/pkey_api.c | 8 ++++----
+ 6 files changed, 10 insertions(+), 10 deletions(-)
+
+-- 
+2.21.0
+
