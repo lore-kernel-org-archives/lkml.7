@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0E9C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B25C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF1C208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D30D6208C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 05:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730781AbfFLFz5 (ORCPT
+        id S1730808AbfFLF4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 01:55:57 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:24092 "EHLO
+        Wed, 12 Jun 2019 01:56:05 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:34952 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730749AbfFLFzz (ORCPT
+        with ESMTP id S1730695AbfFLF4B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 01:55:55 -0400
-X-UUID: 48e9c147d8c44588a3ac909c68a8706f-20190612
-X-UUID: 48e9c147d8c44588a3ac909c68a8706f-20190612
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        Wed, 12 Jun 2019 01:56:01 -0400
+X-UUID: 64847a9f3a504d1c88cde0d4f142c093-20190612
+X-UUID: 64847a9f3a504d1c88cde0d4f142c093-20190612
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 9459312; Wed, 12 Jun 2019 13:55:49 +0800
+        with ESMTP id 1279344623; Wed, 12 Jun 2019 13:55:51 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 12 Jun 2019 13:55:47 +0800
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 12 Jun 2019 13:55:49 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 12 Jun 2019 13:55:45 +0800
+ Transport; Wed, 12 Jun 2019 13:55:48 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -44,9 +44,9 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, Jumin Li <jumin.li@mediatek.com>
-Subject: [PATCH 4/5] usb: mtu3: support force_vbus mode
-Date:   Wed, 12 Jun 2019 13:55:20 +0800
-Message-ID: <80b3e7ed4d7719b854816dfdd974772999a2e672.1560246390.git.chunfeng.yun@mediatek.com>
+Subject: [PATCH 5/5] usb: xhci-mtk: add an optional xhci_ck clock
+Date:   Wed, 12 Jun 2019 13:55:21 +0800
+Message-ID: <41bb0198ef2a4059685a8736b54c88487864a517.1560246390.git.chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <5e06482a0be15476c7b5825f155accf98275afa8.1560246390.git.chunfeng.yun@mediatek.com>
 References: <5e06482a0be15476c7b5825f155accf98275afa8.1560246390.git.chunfeng.yun@mediatek.com>
@@ -58,127 +58,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some SoCs don't support Vbus detection due to non-exist Vbus PIN,
-so software need set force_vbus state when the controller works
-as device mode.
+Some SoCs may have an optional clock xhci_ck (125M or 200M), it
+usually uses the same PLL as sys_ck, so support it.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/mtu3/mtu3.h      |  3 +++
- drivers/usb/mtu3/mtu3_core.c |  1 +
- drivers/usb/mtu3/mtu3_dr.c   |  2 ++
- drivers/usb/mtu3/mtu3_host.c |  1 +
- drivers/usb/mtu3/mtu3_plat.c | 23 +++++++++++++++++++++++
- 5 files changed, 30 insertions(+)
+ drivers/usb/host/xhci-mtk.c | 13 +++++++++++++
+ drivers/usb/host/xhci-mtk.h |  1 +
+ 2 files changed, 14 insertions(+)
 
-diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
-index 76ecf12fdf62..01b0dc9caa3e 100644
---- a/drivers/usb/mtu3/mtu3.h
-+++ b/drivers/usb/mtu3/mtu3.h
-@@ -231,6 +231,7 @@ struct otg_switch_mtk {
-  * @u3p_dis_msk: mask of disabling usb3 ports, for example, bit0==1 to
-  *		disable u3port0, bit1==1 to disable u3port1,... etc
-  * @dbgfs_root: only used when supports manual dual-role switch via debugfs
-+ * @force_vbus: without Vbus PIN, SW need set force_vbus state for device
-  * @uwk_en: it's true when supports remote wakeup in host mode
-  * @uwk: syscon including usb wakeup glue layer between SSUSB IP and SPM
-  * @uwk_reg_base: the base address of the wakeup glue layer in @uwk
-@@ -257,6 +258,7 @@ struct ssusb_mtk {
- 	int u3_ports;
- 	int u3p_dis_msk;
- 	struct dentry *dbgfs_root;
-+	bool force_vbus;
- 	/* usb wakeup for host mode */
- 	bool uwk_en;
- 	struct regmap *uwk;
-@@ -415,6 +417,7 @@ static inline void mtu3_clrbits(void __iomem *base, u32 offset, u32 bits)
- }
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index 026fe18972d3..b18a6baef204 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -216,6 +216,10 @@ static int xhci_mtk_clks_get(struct xhci_hcd_mtk *mtk)
+ 		return PTR_ERR(mtk->sys_clk);
+ 	}
  
- int ssusb_check_clocks(struct ssusb_mtk *ssusb, u32 ex_clks);
-+void ssusb_set_force_vbus(struct ssusb_mtk *ssusb, bool vbus_on);
- struct usb_request *mtu3_alloc_request(struct usb_ep *ep, gfp_t gfp_flags);
- void mtu3_free_request(struct usb_ep *ep, struct usb_request *req);
- void mtu3_req_complete(struct mtu3_ep *mep,
-diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
-index f8bd1d57e795..65aa382ffb85 100644
---- a/drivers/usb/mtu3/mtu3_core.c
-+++ b/drivers/usb/mtu3/mtu3_core.c
-@@ -604,6 +604,7 @@ static void mtu3_regs_init(struct mtu3 *mtu)
- 	/* enable automatical HWRW from L1 */
- 	mtu3_setbits(mbase, U3D_POWER_MANAGEMENT, LPM_HRWE);
- 
-+	ssusb_set_force_vbus(mtu->ssusb, true);
- 	/* use new QMU format when HW version >= 0x1003 */
- 	if (mtu->gen2cp)
- 		mtu3_writel(mbase, U3D_QFCR, ~0x0);
-diff --git a/drivers/usb/mtu3/mtu3_dr.c b/drivers/usb/mtu3/mtu3_dr.c
-index 5fcb71af875a..006c5864ff45 100644
---- a/drivers/usb/mtu3/mtu3_dr.c
-+++ b/drivers/usb/mtu3/mtu3_dr.c
-@@ -173,8 +173,10 @@ static void ssusb_set_mailbox(struct otg_switch_mtk *otg_sx,
- 	case MTU3_VBUS_OFF:
- 		mtu3_stop(mtu);
- 		pm_relax(ssusb->dev);
-+		ssusb_set_force_vbus(ssusb, false);
- 		break;
- 	case MTU3_VBUS_VALID:
-+		ssusb_set_force_vbus(ssusb, true);
- 		/* avoid suspend when works as device */
- 		pm_stay_awake(ssusb->dev);
- 		mtu3_start(mtu);
-diff --git a/drivers/usb/mtu3/mtu3_host.c b/drivers/usb/mtu3/mtu3_host.c
-index c871b94f3e6f..7618a0c384f9 100644
---- a/drivers/usb/mtu3/mtu3_host.c
-+++ b/drivers/usb/mtu3/mtu3_host.c
-@@ -205,6 +205,7 @@ static void ssusb_host_setup(struct ssusb_mtk *ssusb)
- 		ssusb_set_force_mode(ssusb, MTU3_DR_FORCE_HOST);
- 
- 	/* if port0 supports dual-role, works as host mode by default */
-+	ssusb_set_force_vbus(ssusb, false);
- 	ssusb_set_vbus(&ssusb->otg_switch, 1);
- }
- 
-diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
-index fd0f6c5dfbc1..e9d313e92fc3 100644
---- a/drivers/usb/mtu3/mtu3_plat.c
-+++ b/drivers/usb/mtu3/mtu3_plat.c
-@@ -45,6 +45,27 @@ int ssusb_check_clocks(struct ssusb_mtk *ssusb, u32 ex_clks)
- 	return 0;
- }
- 
-+void ssusb_set_force_vbus(struct ssusb_mtk *ssusb, bool vbus_on)
-+{
-+	u32 u2ctl;
-+	u32 misc;
++	mtk->xhci_clk = devm_clk_get_optional(dev, "xhci_ck");
++	if (IS_ERR(mtk->xhci_clk))
++		return PTR_ERR(mtk->xhci_clk);
 +
-+	if (!ssusb->force_vbus)
-+		return;
-+
-+	u2ctl = mtu3_readl(ssusb->ippc_base, SSUSB_U2_CTRL(0));
-+	misc = mtu3_readl(ssusb->mac_base, U3D_MISC_CTRL);
-+	if (vbus_on) {
-+		u2ctl &= ~SSUSB_U2_PORT_OTG_SEL;
-+		misc |= VBUS_FRC_EN | VBUS_ON;
-+	} else {
-+		u2ctl |= SSUSB_U2_PORT_OTG_SEL;
-+		misc &= ~(VBUS_FRC_EN | VBUS_ON);
+ 	mtk->ref_clk = devm_clk_get_optional(dev, "ref_ck");
+ 	if (IS_ERR(mtk->ref_clk))
+ 		return PTR_ERR(mtk->ref_clk);
+@@ -244,6 +248,12 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
+ 		goto sys_clk_err;
+ 	}
+ 
++	ret = clk_prepare_enable(mtk->xhci_clk);
++	if (ret) {
++		dev_err(mtk->dev, "failed to enable xhci_clk\n");
++		goto xhci_clk_err;
 +	}
-+	mtu3_writel(ssusb->ippc_base, SSUSB_U2_CTRL(0), u2ctl);
-+	mtu3_writel(ssusb->mac_base, U3D_MISC_CTRL, misc);
-+}
 +
- static int ssusb_phy_init(struct ssusb_mtk *ssusb)
+ 	ret = clk_prepare_enable(mtk->mcu_clk);
+ 	if (ret) {
+ 		dev_err(mtk->dev, "failed to enable mcu_clk\n");
+@@ -261,6 +271,8 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
+ dma_clk_err:
+ 	clk_disable_unprepare(mtk->mcu_clk);
+ mcu_clk_err:
++	clk_disable_unprepare(mtk->xhci_clk);
++xhci_clk_err:
+ 	clk_disable_unprepare(mtk->sys_clk);
+ sys_clk_err:
+ 	clk_disable_unprepare(mtk->ref_clk);
+@@ -272,6 +284,7 @@ static void xhci_mtk_clks_disable(struct xhci_hcd_mtk *mtk)
  {
- 	int i;
-@@ -268,6 +289,8 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
- 	if (IS_ERR(ssusb->ippc_base))
- 		return PTR_ERR(ssusb->ippc_base);
- 
-+	ssusb->force_vbus = of_property_read_bool(node, "mediatek,force-vbus");
-+
- 	ssusb->dr_mode = usb_get_dr_mode(dev);
- 	if (ssusb->dr_mode == USB_DR_MODE_UNKNOWN)
- 		ssusb->dr_mode = USB_DR_MODE_OTG;
+ 	clk_disable_unprepare(mtk->dma_clk);
+ 	clk_disable_unprepare(mtk->mcu_clk);
++	clk_disable_unprepare(mtk->xhci_clk);
+ 	clk_disable_unprepare(mtk->sys_clk);
+ 	clk_disable_unprepare(mtk->ref_clk);
+ }
+diff --git a/drivers/usb/host/xhci-mtk.h b/drivers/usb/host/xhci-mtk.h
+index 8be8c5f7ff62..5ac458b7d2e0 100644
+--- a/drivers/usb/host/xhci-mtk.h
++++ b/drivers/usb/host/xhci-mtk.h
+@@ -139,6 +139,7 @@ struct xhci_hcd_mtk {
+ 	struct regulator *vusb33;
+ 	struct regulator *vbus;
+ 	struct clk *sys_clk;	/* sys and mac clock */
++	struct clk *xhci_clk;
+ 	struct clk *ref_clk;
+ 	struct clk *mcu_clk;
+ 	struct clk *dma_clk;
 -- 
 2.21.0
 
