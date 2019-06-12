@@ -2,100 +2,143 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E3BC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B12C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8FA32080A
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45282063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:50:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MxOgXdPv"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="NM/fZdYl";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IrsdjC7S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408594AbfFLHuK (ORCPT
+        id S2408601AbfFLHu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 03:50:10 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42883 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408494AbfFLHuI (ORCPT
+        Wed, 12 Jun 2019 03:50:56 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:37803 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405233AbfFLHu4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 03:50:08 -0400
-Received: by mail-lj1-f195.google.com with SMTP id t28so14184491lje.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 00:50:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IEaEkHGgpzdEriV3OpBUDcZF+KYsAf8LOl6nPBOdL0I=;
-        b=MxOgXdPvNtfxAeQKrsT6Hhks3ZJt5BbhJTAVPBRxH2NTM0bwdeOB3XxaszrRVJ8l9+
-         VWsL6ISsBFvP+YlNVumKlbdeBsd+Vq8pbeA033UZIughCukKYSKF8MrVmIYZHq53An+P
-         l0wBipa1xKndvyvg0c7UF5i8yf5YpBtkZsSqPn6GdysoNn+e6HfsSyT7R3Hc9FyYmUms
-         lAHjkrVnZoVr8d3Iy/SeNcpqx4mJBq4WV5Ncbd+DHQQxYYu4ww6iSaeJ6VxbaIXPibCu
-         4QTq+nY14JrmffPXRcD6eoSD80Fu329m6RZWZEYnYUjyQx9jBka1uKNwyHZ2UB1vbM93
-         gdjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IEaEkHGgpzdEriV3OpBUDcZF+KYsAf8LOl6nPBOdL0I=;
-        b=k3PwlNlDsRG297MjwJiqJc2X+ks8Q/y5wKnO9MCb5BdOQPmbwQ++kLhOv1LIePe/c0
-         4MZU/HCtKsBR52/zweZxKrsYIQ1BFZZ2niwhkDgYyhKxWvzqrwT3a9v4TtIKAAhOHLVI
-         rw7dQvaNz/nCQSwW5woMbsqZRXx294yd55idALrD5BYQtFqhRmTFxAx/MRTyQSnEVZYP
-         R2AAUmoqQqsLEHQ7qq2jUbYBCft2Zv9g/Te0W15QCkERT4ivbdT4DYAqeF68W/6rH+nQ
-         mYuDPLV8qLoPbuQkOsxI9wFWiEcphxtQf+djKye8GCFw5Q9/YFlPebe0N9x3rapzXzLF
-         CCsQ==
-X-Gm-Message-State: APjAAAVCQ+7z06u+Vjgn3BuamJGcYaLO7lzdHMCXHzZvqAz/a5P4ctUj
-        92dCg0m7PKKUWl/xDUtXop+noH9FRlrkiC/nj8X9zoaHf/cX9g==
-X-Google-Smtp-Source: APXvYqzzh0lP2GP0zIA0B/CjEu8rHnPuiyl2/5JjJotWd+XukV1gNSf6KSOn2KcSDsb1T6tKaT1WrBmGn5bHZWiacxo=
-X-Received: by 2002:a2e:5bdd:: with SMTP id m90mr33630569lje.46.1560325806228;
- Wed, 12 Jun 2019 00:50:06 -0700 (PDT)
+        Wed, 12 Jun 2019 03:50:56 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id E4B234DF;
+        Wed, 12 Jun 2019 03:50:51 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Wed, 12 Jun 2019 03:50:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=ibnfl+8xKs40HASLH7el8ogm6D7
+        fXLbZYdTL2iD4vcQ=; b=NM/fZdYl0Cq1bfgm5IT3B33aeNuPMS9hmSYPmeq0S9j
+        w3BAbcmccRBUibbsCfiA5Tdp4C6nu95MLTuBhOfTWSY9Lxw4Pr01G/PXJ9BmHPTu
+        CZhHqKdfwZ48eA+TCne2DudbVUGFe98IBcb3ygWQDcNqNQkc1QPmftGP+1V41O9a
+        GEBR5r9w+2OOtrAiI3vIffymQfS1bbeTqY867is3nUUjYvAI3U3MryBcGgniMnDa
+        pg/15qArkkrq92CjbfLgaH57VpWgznJOqCb0hZyucjeh41Ag2TbuDDKpsGmwi2Y+
+        FMxDSQV0cTLc9EikIjFSIsUQqj5ayUUkFF33Mjiaf1w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ibnfl+
+        8xKs40HASLH7el8ogm6D7fXLbZYdTL2iD4vcQ=; b=IrsdjC7SrNhyzj+rtqjnqJ
+        pLm9ZNCrnbrm/xQrHkaXwGnkq87242dkM7dDNm0KjtOjvHyYyDHAi8OMvF3uY0Tk
+        AVgshoX3D7J1rZ5IV+6ADil6dU/RLEAEVDrdTWZfLd+FTJRsFHgC7jFKJWIWv+y6
+        mAYDmzL922KJaEdsHSAqrwR8Mq4LIjg/UfjoECWsNoBVFatWG2sQ2JwOqcpAHf0m
+        5lFyFF+AjgeBbYhajo83Z+hN/ZO6P8nPvflwOHkvuXz8fmENAgz9GLQHHEogkD9u
+        4EJUV+1n3xpJJCBTyRWYKHEZU4kWHfanfY1jLtjZBFK4jMSAXAznZjb6V+pxNWvw
+        ==
+X-ME-Sender: <xms:264AXXpbBEkp4MhaDU5UYOrIc7VBrG89WjfZtogX9pD5pE-ezWIrJQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudehiedguddvgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
+    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrd
+    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:264AXcS-AqMVU-L3-qlnj37Yp41RRi-n5xkH4r_kvBsvf-y07KbSvg>
+    <xmx:264AXaMH4cXEa5APKJdr9xykdvrkr1u5RxiuTvvoUzy6_ROHiyqz-A>
+    <xmx:264AXaiu95q0rZ3GtK1OJjjvbubARo8dGhgeTBAHAqj0RNiZX_7IsA>
+    <xmx:264AXeBiKpIGaHkHLtj6qWbSf7hfvetUlu-XPhG9l3QX9E4b4YMSwg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id C27878005C;
+        Wed, 12 Jun 2019 03:50:50 -0400 (EDT)
+Date:   Wed, 12 Jun 2019 09:50:49 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Rolf Eike Beer <eb@emlix.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        stable@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 4.9.180 build fails =?utf-8?Q?wi?=
+ =?utf-8?Q?th_gcc_9_and_'cleanup=5Fmodule'_specifies_less_restrictive_attr?=
+ =?utf-8?Q?ibute_than_its_target_=E2=80=A6?=
+Message-ID: <20190612075049.GB17662@kroah.com>
+References: <259986242.BvXPX32bHu@devpool35>
+ <CANiq72nfFqYkiYgKJ1UZV3Mx2C3wzu_7TRtXFn=iafNt+Oc_2g@mail.gmail.com>
+ <20190606185900.GA19937@kroah.com>
+ <3659495.RxnUGBN4mp@devpool35>
 MIME-Version: 1.0
-References: <20190610170523.26554-1-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20190610170523.26554-1-martin.blumenstingl@googlemail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Jun 2019 09:49:54 +0200
-Message-ID: <CACRpkdboUO1iEipXTvhy2x6bxuVJuwxd5FduMdk-KtK3f8FeaA@mail.gmail.com>
-Subject: Re: [PATCH 0/1] gpio: of: prepare for switching stmmac to GPIO descriptors
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3659495.RxnUGBN4mp@devpool35>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 7:05 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
+On Wed, Jun 12, 2019 at 09:19:15AM +0200, Rolf Eike Beer wrote:
+> Am Donnerstag, 6. Juni 2019, 20:59:00 CEST schrieb Greg KH:
+> > On Thu, Jun 06, 2019 at 08:25:28PM +0200, Miguel Ojeda wrote:
+> > > On Thu, Jun 6, 2019 at 5:29 PM Greg KH <greg@kroah.com> wrote:
+> > > > And if you want this, you should look at how the backports to 4.14.y
+> > > > worked, they did not include a3f8a30f3f00 ("Compiler Attributes: use
+> > > > feature checks instead of version checks"), as that gets really messy...
+> > > 
+> > > I am confused -- I interpreted Rolf's message as reporting that he
+> > > already successfully built 4.9 by applying a6e60d84989f
+> > > ("include/linux/module.h: copy __init/__exit attrs to
+> > > init/cleanup_module") and manually fixing it up. But maybe I am
+> > > completely wrong... :-)
+> > 
+> > "manually fixing it up" means "hacked it to pieces" to me, I have no
+> > idea what the end result really was :)
+> > 
+> > If someone wants to send me some patches I can actually apply, that
+> > would be best...
+> 
+> Hi all,
+> 
+> the patch I actually used was this:
+> 
+> diff --git a/include/linux/module.h b/include/linux/module.h
+> index 8fa38d3e7538..f5bc4c046461 100644
+> --- a/include/linux/module.h
+> +++ b/include/linux/module.h
+> @@ -129,13 +129,13 @@ extern void cleanup_module(void);
+>  #define module_init(initfn)					\
+>  	static inline initcall_t __maybe_unused __inittest(void)		\
+>  	{ return initfn; }					\
+> -	int init_module(void) __attribute__((alias(#initfn)));
+> +	int init_module(void) __attribute__((__copy__(initfn))) __attribute__((alias(#initfn)));
+>  
+>  /* This is only required if you want to be unloadable. */
+>  #define module_exit(exitfn)					\
+>  	static inline exitcall_t __maybe_unused __exittest(void)		\
+>  	{ return exitfn; }					\
+> -	void cleanup_module(void) __attribute__((alias(#exitfn)));
+> +	void cleanup_module(void) __attribute__((__copy__(exitfn))) __attribute__((alias(#exitfn)));
+>  
+>  #endif
+>  
+> 
+> So the final question is: do we want 4.9.x to be buildable with gcc 9.x? If
+> yes then we can probably get this patches into shape.
 
-> This is a preparation patch which is needed before we can switch stmmac
-> to GPIO descriptors. stmmac has a custom "snps,reset-active-low"
-> property because it has ignored the GPIO flags including the polarity.
->
-> Add the parsing to gpiolib-of so we can port stmmac over to GPIO
-> descriptors.
->
-> This patch is split from my series at [0].
->
-> Linus W.: please create an immutable branch as discussed so I can send
-> the stmmac patches to the net-next tree (which will then have to pull
-> in your immutable branch).
+Eventually, yes, we (or at least I) will want to build 4.9.x with gcc
+9.x.  We went through this same process for gcc 8.x as all of my builder
+test machines switched their default version of gcc...
 
-Thanks Martin!
-I have applied the patch and created an immutable branch:
-git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-ib-snps-reset-gpio
+thanks,
 
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=ib-snps-reset-gpio
-
-Please refer to this so the network maintainer can pull it in.
-
-It is based on v5.2-rc1
-
-Yours,
-Linus Walleij
+greg k-h
