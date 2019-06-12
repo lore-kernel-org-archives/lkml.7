@@ -2,194 +2,152 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27438C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EC1C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1BCF2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83BBD208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731459AbfFLO2S (ORCPT
+        id S2501859AbfFLO2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:28:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44916 "EHLO mx1.redhat.com"
+        Wed, 12 Jun 2019 10:28:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:54180 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731374AbfFLO2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:28:17 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0F2D9308A963;
-        Wed, 12 Jun 2019 14:27:57 +0000 (UTC)
-Received: from ovpn-112-16.rdu2.redhat.com (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2CF501710F;
-        Wed, 12 Jun 2019 14:27:50 +0000 (UTC)
-Message-ID: <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-From:   Dan Williams <dcbw@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com,
-        Ben Chan <benchan@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
-        DTML <devicetree@vger.kernel.org>,
-        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
-        syadagir@codeaurora.org
-Date:   Wed, 12 Jun 2019 09:27:49 -0500
-In-Reply-To: <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
-         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
-         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
-         <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
-         <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
-         <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
-         <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        id S1731463AbfFLO2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:28:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFE382B;
+        Wed, 12 Jun 2019 07:28:21 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E45733F557;
+        Wed, 12 Jun 2019 07:28:16 -0700 (PDT)
+Subject: Re: [PATCH v17 02/15] lib, arm64: untag user pointers in strn*_user
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+References: <cover.1560339705.git.andreyknvl@google.com>
+ <a76c014f9b12a082d31ef1459907cabdab78491e.1560339705.git.andreyknvl@google.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <0bbc5f4f-9812-463c-48c1-4929bef801da@arm.com>
+Date:   Wed, 12 Jun 2019 15:28:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <a76c014f9b12a082d31ef1459907cabdab78491e.1560339705.git.andreyknvl@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 12 Jun 2019 14:28:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-12 at 10:31 +0200, Arnd Bergmann wrote:
-> On Tue, Jun 11, 2019 at 7:23 PM Dan Williams <dcbw@redhat.com> wrote:
-> > On Tue, 2019-06-11 at 10:52 -0600, Subash Abhinov Kasiviswanathan
-> > wrote:
-> > 
-> > rmnet should handle muxing the QMAP, QoS, and aggregation and pass
-> > the
-> > resulting packet to the lower layer. That lower layer could be IPA
-> > or
-> > qmi_wwan, which in turn passes that QMAP packet to USB or GSI or
-> > whatever. This is typically how Linux handles clean abstractions
-> > between different protocol layers in drivers.
-> > 
-> > Similar to some WiFi drivers (drivers/net/wireless/marvell/libertas
-> > for
-> > example) where the same firmware interface can be accessed via PCI,
-> > SDIO, USB, SPI, etc. The bus-specific code is self-contained and
-> > does
-> > not creep into the upper more generic parts.
+On 12/06/2019 12:43, Andrey Konovalov wrote:
+> This patch is a part of a series that extends arm64 kernel ABI to allow to
+> pass tagged user pointers (with the top byte set to something else other
+> than 0x00) as syscall arguments.
 > 
-> Yes, I think that is a good model. In case of libertas, we have
-> multiple
-> layers inheritence from the basic device (slightly different in the
-> implementation,
-> but that is how it should be):
-
-To be clear (and I probably wasn't earlier) I wasn't talking as deep
-about the actual code structures as you are here but this a great
-discussion.
-
-I was trying to make the point that rmnet doesn't need to care about
-how the QMAP packets get to the device itself; it can be pretty generic
-so that it can be used by IPA/qmi_wwan/rmnet_smd/etc.
-
-Your points below are a great discussion though...
-
-> struct if_cs_card { /* pcmcia specific */
->      struct lbs_private {  /* libertas specific */
->            struct wireless_dev { /* 802.11 specific */
->                   struct net_device {
->                         struct device {
->                               ...
->                         };
->                         ...
->                   };
->                   ...
->            };
->            ...
->       };
->       ...
-> };
-
-> The outer structure gets allocated when probing the hardware specific
-> driver, and everything below it is implemented as direct function
-> calls
-> into the more generic code, or as function pointers into the more
-> specific
-> code.
+> strncpy_from_user and strnlen_user accept user addresses as arguments, and
+> do not go through the same path as copy_from_user and others, so here we
+> need to handle the case of tagged user addresses separately.
 > 
-> The current rmnet model is different in that by design the upper
-> layer
-> (rmnet) and the lower layer (qmi_wwan, ipa, ...) are kept independent
-> in
-> both directions, i.e. ipa has (almost) no knowledge of rmnet, and
-> just
-> has pointers to the other net_device:
+> Untag user pointers passed to these functions.
 > 
->        ipa_device
->            net_device
+> Note, that this patch only temporarily untags the pointers to perform
+> validity checks, but then uses them as is to perform user memory accesses.
 > 
->        rmnet_port
->            net_device
+> Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
+> Acked-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+
+> ---
+>  lib/strncpy_from_user.c | 3 ++-
+>  lib/strnlen_user.c      | 3 ++-
+>  2 files changed, 4 insertions(+), 2 deletions(-)
 > 
-> I understand that the rmnet model was intended to provide a cleaner
-> abstraction, but it's not how we normally structure subsystems in
-> Linux, and moving to a model more like how wireless_dev works
-> would improve both readability and performance, as you describe
-> it, it would be more like (ignoring for now the need for multiple
-> connections):
+> diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
+> index 023ba9f3b99f..dccb95af6003 100644
+> --- a/lib/strncpy_from_user.c
+> +++ b/lib/strncpy_from_user.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/kernel.h>
+>  #include <linux/errno.h>
+> +#include <linux/mm.h>
+>  
+>  #include <asm/byteorder.h>
+>  #include <asm/word-at-a-time.h>
+> @@ -108,7 +109,7 @@ long strncpy_from_user(char *dst, const char __user *src, long count)
+>  		return 0;
+>  
+>  	max_addr = user_addr_max();
+> -	src_addr = (unsigned long)src;
+> +	src_addr = (unsigned long)untagged_addr(src);
+>  	if (likely(src_addr < max_addr)) {
+>  		unsigned long max = max_addr - src_addr;
+>  		long retval;
+> diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
+> index 7f2db3fe311f..28ff554a1be8 100644
+> --- a/lib/strnlen_user.c
+> +++ b/lib/strnlen_user.c
+> @@ -2,6 +2,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/export.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/mm.h>
+>  
+>  #include <asm/word-at-a-time.h>
+>  
+> @@ -109,7 +110,7 @@ long strnlen_user(const char __user *str, long count)
+>  		return 0;
+>  
+>  	max_addr = user_addr_max();
+> -	src_addr = (unsigned long)str;
+> +	src_addr = (unsigned long)untagged_addr(str);
+>  	if (likely(src_addr < max_addr)) {
+>  		unsigned long max = max_addr - src_addr;
+>  		long retval;
 > 
->    ipa_dev
->         rmnet_dev
->                wwan_dev
->                       net_device
 
-Perhaps I'm assuming too much from this diagram but this shows a 1:1
-between wwan_dev and "lower" devices.
-
-What Johannes is proposing (IIRC) is something a bit looser where a
-wwan_dev does not necessarily provide netdev itself, but is instead the
-central point that various channels (control, data, gps, sim card, etc)
-register with. That way the wwan_dev can provide an overall view of the
-WWAN device to userspace, and userspace can talk to the wwan_dev to ask
-the lower drivers (ipa, rmnet, etc) to create new channels (netdev,
-tty, otherwise) when the control channel has told the modem firmware to
-expect one.
-
-For example, say you have told the firmware to create a new data
-channel with ID 5 via QMI (which the kernel is unaware of because it
-does not process higher-level QMI requests).
-
-Perhaps (and this is all just brainstorming) then userspace asks the
-wwan_dev to create a new data channel with ID 5 and a certain QoS. IPA
-(or rmnet because that's the data channel provider for IPA) has
-registered callbacks to the wwan_dev, receives this request, and
-creates a new rmnet_dev/net_device, and then the wwan_dev passes the
-ifindex back to userspace so we don't have to play the dance of "match
-up my request with a random netlink ADD event".
-
-The point being that since data channels aren't actually useful until
-the control channel agrees with the firmware that one should exist, if
-we have a wwan_dev that represents the entire WWAN device then we don't
-need the initial-but-useless net_device.
-
-Just some thoughts; Johannes can feel free to correct me at any time :)
-
-> Where each layer is a specialization of the next. Note: this is a
-> common change when moving from proprietary code to upstream
-> code. If a driver module is designed to live out of tree, there
-> is a strong incentive to limit the number of interfaces it uses,
-> but when it gets merged, it becomes much more flexible, as
-> an internal interface between wwan_dev and the hardware driver(s)
-> can be easily changed by modifying all drivers at once.
-
-Yep, I've seen this time and time again.
-
-Dan
-
+-- 
+Regards,
+Vincenzo
