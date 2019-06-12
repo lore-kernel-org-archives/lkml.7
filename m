@@ -7,72 +7,72 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDD2C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98943C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64EC720874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7E320874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:32:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t1zV2wo7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uL0P0jZV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437171AbfFLIbx (ORCPT
+        id S2437184AbfFLIcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:31:53 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42995 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730602AbfFLIbx (ORCPT
+        Wed, 12 Jun 2019 04:32:04 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54979 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437172AbfFLIcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:31:53 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x17so602789wrl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:31:51 -0700 (PDT)
+        Wed, 12 Jun 2019 04:32:04 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g135so5598894wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 01:32:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=H5W3E9cOzUJxWwVYxO+yb51ErcnMPVK+SL4opotcBac=;
-        b=t1zV2wo7etW4QH+rcxFBMWSscFLjoDZvgSFRgm4gY0wA8+UoeJ2vavuAoOfY5oshey
-         AHQ35AERzlftVpaXHvktU1tZGzrVLc2d2wZnYirVFM/8lJ1+JiD1pXqqOL5/15QN6bVg
-         f1/L2whjjpkOtny8nNuxB0QiyPMjQFokCqNVNey08Y/8ncIoc2KzcvJdcrJ10A6PSC1F
-         WtAO1jJio3/LVIh8+LzoubIcewTxOySbYtKQilSAg7udGF+2RlfU9yrnYeZNolcndo8c
-         URBn1JBpAlozO5kJvVIc59Bnb8pBrsNi2A038G6XuiLoXsgN/7HGS8780xhYzCFiznJ9
-         6YuQ==
+        bh=SCbAKtZetnO5Z22X20EZ6GG20W2TItgwn42uTS6LP74=;
+        b=uL0P0jZV6KYM9+gGGt/TmrJ477DVL0qT+1CFzUMhiAsCmdorZUxLXfvQ+mFtC1d5KA
+         eyZtozvyTTC/uCymmI27/Zb/2POkSSFm/z8Tirs0QyqNiGEGmj+Rr56SqX7gGwtVJ3tK
+         /cwsuhDmpOMJdN6vW7nriByORclvUP8aSllBTF+mM5q61eyl+kAhlkbzCghxuhkOGq+R
+         d97VvfyJE/CDDDZUvuGDRHtk7rF1ohbXl7x15SY5dHrURaHQJaPUc5+xFewCjJZLSLMp
+         bmXLnUn6jpGMK3p4FhvgowaT4sHe7CLHSwSfqOCCXRaXvOgX0OyALE+OtukOSCgBnkjn
+         l7Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=H5W3E9cOzUJxWwVYxO+yb51ErcnMPVK+SL4opotcBac=;
-        b=bgQaEkUgODqhOk3w0oJLsAD6hdOLCS3OZcKnjLylP+Gc+f8Q4q/wSFXjVLf3pUFkEA
-         mRaKJsT+5sD11Z4H1iSymzmp/Py0zkma7bQaaVPL0oQ5Q0kEP+i2rwhmG4OM4wUKmABK
-         D03iJopKTecLP6zBovFFgNpRTKD6xxD8kMsJJw+XpEGMI9pbEzMxDVffBUpp1Zb2E3Rh
-         1AbbttDXLDOQ1f/lEjyg7rPfynYYZALTR2VtlssbVpuJOUxmaAlX8DgYg/lFwNSB/aIO
-         gzPko9BaH5eq7xJbowMsbN+XSIurkZx2GQVgfhBijk0ASHK/75IjDQCSV+WMbFTXAIaL
-         tSoQ==
-X-Gm-Message-State: APjAAAXytf9nM/hxvu7f41HxNzos2HlFv1ByC7P4M9pKK+qwCg+R5LtF
-        OgWlqB2DrxDAdr4zPk7uJnVO/w==
-X-Google-Smtp-Source: APXvYqw5DOg8Yb3mXUYmhy5QCQzcrOu88ail/4XiF9p6Oboi0PbyoymIsJn8tHpHkuS82dyat1Sx8Q==
-X-Received: by 2002:a05:6000:1c6:: with SMTP id t6mr9726824wrx.236.1560328311032;
-        Wed, 12 Jun 2019 01:31:51 -0700 (PDT)
+        bh=SCbAKtZetnO5Z22X20EZ6GG20W2TItgwn42uTS6LP74=;
+        b=qsvLqasJ8ZbgqJDfQyAHqVuFCAbV1Yehloml5tWK6cmqTBfUef9lVNTF1PwSX57il2
+         Ss2mzya/dbnjR1CGivjxpvMGY1tCLX9ugxL+kCWd10GGHdMahTPiWfapeqV20F3XibaS
+         4x/llzhazuFXBeYLVFJSeCJB0zDSbyNGEDj1Qs1DY4BxV0euSJCl7GVKYNX+rZxpnYej
+         qCD+GW+QWjMcpb4KCHGrnlZYpF6Ecivxc/qNhCrDZSYCEtJIo3GyT6X6iGlqx8K2xjNP
+         e9iqGVNC0RURkssEevr94JtlRS+oNQfkYTjvU5paVtZv4jMuNHohraPR8H5FWj1+/E4O
+         16cA==
+X-Gm-Message-State: APjAAAW5clydJ1u/U3louoXnmjmsaxMEPmwN+s0Y9kpLcqvGGETf09rQ
+        W8c3j3FY4MT0R4lHEBOsH0ti1g==
+X-Google-Smtp-Source: APXvYqyCyBRn8P3jhZrt9QzMD5iHTN6JSPV29E5itdR4GZdzttcCYVL1p8p8Bvcf7ZdV7xlXu1ytGA==
+X-Received: by 2002:a1c:1bc1:: with SMTP id b184mr22631453wmb.42.1560328322104;
+        Wed, 12 Jun 2019 01:32:02 -0700 (PDT)
 Received: from dell ([2a01:4c8:f:9687:619a:bb91:d243:fc8b])
-        by smtp.gmail.com with ESMTPSA id t140sm1663646wmt.0.2019.06.12.01.31.50
+        by smtp.gmail.com with ESMTPSA id x6sm22052044wru.0.2019.06.12.01.32.01
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 12 Jun 2019 01:31:50 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 09:31:48 +0100
+        Wed, 12 Jun 2019 01:32:01 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 09:31:59 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Charles Keepax <ckeepax@opensource.cirrus.com>
 Cc:     arnd@arndb.de, natechancellor@gmail.com, ottosabart@seberm.com,
         linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-Subject: Re: [PATCH 2/4 RESEND] mfd: madera: Fix bad reference to pinctrl.txt
- file
-Message-ID: <20190612083148.GU4797@dell>
+Subject: Re: [PATCH 3/4] mfd: madera: Fix potential uninitialised use of
+ variable
+Message-ID: <20190612083159.GV4797@dell>
 References: <20190520090628.29061-1-ckeepax@opensource.cirrus.com>
- <20190520090628.29061-2-ckeepax@opensource.cirrus.com>
+ <20190520090628.29061-3-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190520090628.29061-2-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20190520090628.29061-3-ckeepax@opensource.cirrus.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -81,17 +81,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, 20 May 2019, Charles Keepax wrote:
 
-> From: Otto Sabart <ottosabart@seberm.com>
+> From: Stuart Henderson <stuarth@opensource.cirrus.com>
 > 
-> The pinctrl.txt file was converted into reStructuredText and moved into
-> driver-api folder. This patch updates the broken reference.
+> regmap_read won't set val to anything if an ACKed bus fails.
 > 
-> Fixes: 5a9b73832e9e ("pinctrl.txt: move it to the driver-api book")
-> Signed-off-by: Otto Sabart <ottosabart@seberm.com>
+> Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
 > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 > ---
->  include/linux/mfd/madera/pdata.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/mfd/madera-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Applied, thanks.
 
