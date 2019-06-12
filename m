@@ -2,127 +2,132 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12776C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4A3C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E45C4208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 542002080A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:02:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P9M1dR9n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbfFLIBY (ORCPT
+        id S2436754AbfFLIC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:01:24 -0400
-Received: from mga09.intel.com ([134.134.136.24]:29902 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbfFLIBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:01:24 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 01:01:22 -0700
-X-ExtLoop1: 1
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 12 Jun 2019 01:01:19 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 12 Jun 2019 11:01:18 +0300
-Date:   Wed, 12 Jun 2019 11:01:18 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Subject: Re: How to inject fwnode/oftree/acpi data by platform driver ?
-Message-ID: <20190612080118.GA18301@kuha.fi.intel.com>
-References: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
- <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
+        Wed, 12 Jun 2019 04:02:26 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44612 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfFLIC0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 04:02:26 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n2so8470581pgp.11;
+        Wed, 12 Jun 2019 01:02:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SXiUTg8P9kKRgYZobjR73yxrvyBI+QR3gHSn3xV2sNk=;
+        b=P9M1dR9nnALM0dwbM3XxQXTmmeCHWxxCR3IdHx6vDUqJrBbj3MJw+iS5S5/t9RDNy8
+         VXM0Wep6hlSbFgGcCd4t1g+rTd06lxmB90ehFdzKpl/nfPQkkJaaLXID0bb++uh5ZRWb
+         4f+eIAuGIQnSryRWwgi45NBtdSPkdKegHBuGbZYbDgDdACaI3HsmF2yZ1mkdDte/HPTn
+         MA7CPzCi+udHsV8KE61Vy23DzLpjmpJlkHiXrnQzduJsR8hnjOL988mxO+N43knNyH4j
+         MEQOEY/QXxjH4Gk8+6G3M0peyt8kYn4YW85dLcb2p55BwVIImhoBA+TvMkPFoCTVvEj/
+         pTxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SXiUTg8P9kKRgYZobjR73yxrvyBI+QR3gHSn3xV2sNk=;
+        b=GxLjlLMYgpOA6Qz6FurumSFs4IUd923W9E8xGHu69CIOOKIE9ejvJof+1LFTds7eXh
+         GpiYerZ8E/mS3oTgyLsVQmJGRKZ8edIZsFGEXiPhHwyLEdL9DChXYGSs2zKdH3fFL/fT
+         tFfJ0+ML/fkgehd/kaUmMYiia7pnKt5QY/QC06WEUf2Ykoiws69zTuseMd76coqTFgaS
+         We7xjZ5eCOHc514qmBNVfrfAeNlLmumybEYxE99M0Wc4QHwBwck72a9llxjlOFIRnoDj
+         Ih6EWR23c9lUB+37SnNkrm99dBSFxMVn7WM3P/BV0ZNnLHqMRNlv0+LzZzSJs7Vz0Ixp
+         ianw==
+X-Gm-Message-State: APjAAAVJ0xNatyYpSGQ7EjMJfabqSzfqoYnr4GR5P0MLHEew8bcXb+SN
+        o2lY+x3NfzgUu9Smez4aYZTt0M2d
+X-Google-Smtp-Source: APXvYqyXLoIbAePeHwNO0OOIUhplzQIrUNiANS5SrI0lvbzh0NuVJupyWFCAT364ZRU/Gs+muPfmOQ==
+X-Received: by 2002:aa7:972a:: with SMTP id k10mr52413613pfg.116.1560326545252;
+        Wed, 12 Jun 2019 01:02:25 -0700 (PDT)
+Received: from Asurada (c-98-248-47-108.hsd1.ca.comcast.net. [98.248.47.108])
+        by smtp.gmail.com with ESMTPSA id w62sm18263465pfw.132.2019.06.12.01.02.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 01:02:25 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 01:02:14 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     "Koenig, Christian" <Christian.Koenig@amd.com>
+Cc:     "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>
+Subject: Re: [PATCH] dma-buf: refcount the attachment for cache_sgt_mapping
+Message-ID: <20190612080214.GA8876@Asurada>
+References: <20190612012219.21652-1-nicoleotsuka@gmail.com>
+ <261b46c7-0c5e-4268-619d-f8381fbc3aeb@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <261b46c7-0c5e-4268-619d-f8381fbc3aeb@amd.com>
+User-Agent: Mutt/1.5.22 (2013-10-16)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Christian,
 
-On Tue, Jun 11, 2019 at 09:44:23PM +0300, Andy Shevchenko wrote:
-> +Cc: Heikki.
-> Heikki, can you help here with swnodes?
+Thanks for the quick reply.
+
+On Wed, Jun 12, 2019 at 07:45:38AM +0000, Koenig, Christian wrote:
+> Am 12.06.19 um 03:22 schrieb Nicolin Chen:
+> > Commit f13e143e7444 ("dma-buf: start caching of sg_table objects v2")
+> > added a support of caching the sgt pointer into an attach pointer to
+> > let users reuse the sgt pointer without another mapping. However, it
+> > might not totally work as most of dma-buf callers are doing attach()
+> > and map_attachment() back-to-back, using drm_prime.c for example:
+> >      drm_gem_prime_import_dev() {
+> >          attach = dma_buf_attach() {
+> >              /* Allocating a new attach */
+> >              attach = kzalloc();
+> >              /* .... */
+> >              return attach;
+> >          }
+> >          dma_buf_map_attachment(attach, direction) {
+> >              /* attach->sgt would be always empty as attach is new */
+> >              if (attach->sgt) {
+> >                  /* Reuse attach->sgt */
+> >              }
+> >              /* Otherwise, map it */
+> >              attach->sgt = map();
+> >          }
+> >      }
+> >
+> > So, for a cache_sgt_mapping use case, it would need to get the same
+> > attachment pointer in order to reuse its sgt pointer. So this patch
+> > adds a refcount to the attach() function and lets it search for the
+> > existing attach pointer by matching the dev pointer.
 > 
-> On Sat, Jun 1, 2019 at 5:17 PM Enrico Weigelt, metux IT consult
-> <lkml@metux.net> wrote:
-> >
-> > Hi folks,
-> >
-> >
-> > I'm looking for a way to inject fwnode data from a platform driver,
-> > in order to initialize generic drivers w/ board specific configuration.
-> > The idea is getting rid of passing driver specific pdata structs
-> > (which, IIRC, seem to be deprecated).
-> >
-> > An example usecase is the APUv2/3 board, which have things like gpios
-> > wired to buttons and LEDs. The board can only be detected via DMI
-> > string, no way to probe the platform devices - have to be initialized
-> > explicitly (that's how I'm already doing it now).
-> >
-> > The nicest way, IMHO, would be if I could just write some piece of DTS
-> > and some fancy magic all the rest under the hood. Such thing doesn't
-> > seem to exist yet. Does it make sense to implement that ? How could
-> > we do it ?
-> >
-> > Which other options do we have ?
-> >
-> > Or should we just leave everything as it is and stick w/ pdata structs ?
+> I don't think that this is a good idea.
+> 
+> We use sgt caching as workaround for locking order problems and want to 
+> remove it again in the long term.
 
-The software nodes (drivers/base/swnode.c) were designed to supply
-fwnodes that describe devices in the same way DT does. The goal I had
-with the software nodes was exaclty to get rid of pdata, so they do
-sound like the thing you are looking for. If you check Rafael's latest
-linux-next branch [1], drivers/platform/x86/intel_cht_int33fe.c can be
-used as an example how to use the software nodes.
+Oh. I thought it was for a performance improving purpose. It may
+be a misunderstanding then.
 
-I think it's time to add documentation for the software nodes to the
-kernel, but I'll list here the features the software nodes have:
+> So what is the actual use case of this?
 
-- The software nodes are created independently from device entries.
-- Software nodes support hierarchy. Every software node has a pointer
-  to a parent software node.
-- Software nodes can have device properties.
-- Software nodes can have reference pointers to other software nodes
-  (outside of the hierarchy).
+We have some similar downstream changes at dma_buf to reduce the
+overhead from multiple clients of the same device doing attach()
+and map_attachment() calls for the same dma_buf.
 
-Creating the software nodes from static description (struct
-software_node - available from Linux kernel v5.3 onwards) is
-straightforward. Once you have them, when you create your device
-entries (struct device), you can associate a software node with a
-device just like like any other fwnode:
+We haven't used DRM/GRM_PRIME yet but I am also curious would it
+benefit DRM also if we reduce this overhead in the dma_buf?
 
-        device_initialize(&my_dev);
-        my_dev.parent = parent;
-        my_dev.fwnode = software_node_fwnode(&my_node);
-        ...
-        device_add(&my_device);
-
-After that, you can access all the information the software nodes
-supply to the device by using fwnode_* APIs from your driver, just
-like with ACPI or DT. Basically the entire fwnode_* API is now
-supported with softwarw nodes, except the device graph (fwnode_graph*)
-API.
-
-One final note. The hardware description must always primarily come
-from the system firmware. You only use software nodes if it's too
-late to influence what goes to the ACPI tables, or if using DTS is not
-an option.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=linux-next
-
-thanks,
-
--- 
-heikki
+Thanks
+Nicolin
