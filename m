@@ -2,87 +2,151 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DACC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04592C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 716CE2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDC132053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:17:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5m+xNA8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbfFMRQz (ORCPT
+        id S2393568AbfFMRRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:16:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57880 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbfFLV1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 17:27:35 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F2171C18B2E4;
-        Wed, 12 Jun 2019 21:27:34 +0000 (UTC)
-Received: from krava (ovpn-204-42.brq.redhat.com [10.40.204.42])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4F68F5D9D5;
-        Wed, 12 Jun 2019 21:27:33 +0000 (UTC)
-Date:   Wed, 12 Jun 2019 23:27:32 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Laura Abbott <labbott@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: perf build failure with newer glibc headers
-Message-ID: <20190612212732.GA14171@krava>
-References: <4c0a4264-7142-2e6d-540d-aa354700e0bb@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4c0a4264-7142-2e6d-540d-aa354700e0bb@redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 12 Jun 2019 21:27:35 +0000 (UTC)
+        Thu, 13 Jun 2019 13:17:09 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46658 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbfFLV1Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 17:27:25 -0400
+Received: by mail-pl1-f194.google.com with SMTP id e5so7144092pls.13;
+        Wed, 12 Jun 2019 14:27:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=y+wv7iX7SMqE+W9hLG2VgA3zTP87AXC2cEtK/8C9IT8=;
+        b=b5m+xNA8Efyi+r2WOXDP2kSW3aiv+dZt9eBtAIRennxzgY2X3R6YColvPxqu06SZRi
+         rxgcZlXpRDI7HJOdhFF85t2GdKbVenHQmRdJRm9ZH/fsynL/axVRXmVbaWxxKFRwt2m3
+         jD1N+oEwZNgFrldWru6EI4uhMJLzZPMjfQ8mR1g8WtQHKQSspy95XIrCG+suvIs06Lje
+         LXbdhsbh/D0u11MxwKsR4T8iINWGaCwCs+PLXp7sPYKFcI6ijgDBg/eiE/TNlIoYj+ek
+         3E+XGNy8URB1pqNwrxNeFrBaJPke+3K7fEZ4D9oyZO8LEUeGAjqPFxKIJtZQ31dsy/UG
+         E98g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=y+wv7iX7SMqE+W9hLG2VgA3zTP87AXC2cEtK/8C9IT8=;
+        b=lJzpnXQDYIv+6d4lzdiXob3iQZ43/DBsl3fRW8VqHHv2X06YVM0G7c9CvLIlrrpaAN
+         LStIGorhcx31KJIIlJKsGKxhFgT3er275I/g3gqTMey8duvHuGXCbNTpQIYFpRFqvRPH
+         EYeVbkPntBV1CWcUI0r5EQ7Cik1IV8Cv2UcVnLS6+TPrPvN1QcyxVXcRHfUoOoYbEB1H
+         vQdu67fkmEgUh+ElI087snEcfpgFnMll1JO894bCpxf6QBZ+2q0JVuAdsVPM+NBaz5j4
+         5g1Kbj1S0lJlEFrSnvIBg9lrxUHsJMr2m6fL2T9WxFSYQfAw0msU9ZpJMGqWyQNPLJhR
+         x13w==
+X-Gm-Message-State: APjAAAXOtwLayoFppv5m8WJ1mdel27aO7zHba6JZD91xgF2lzDhp8WqV
+        BL940wvfwf6at8s6rh4yfAo=
+X-Google-Smtp-Source: APXvYqyk+af3ljb+IEPx5dom264fLKvAzHu11B+zZ0MFoNlDkLVB49AGCOThA8e2flaZ57ISyJF88A==
+X-Received: by 2002:a17:902:b497:: with SMTP id y23mr59306507plr.309.1560374844699;
+        Wed, 12 Jun 2019 14:27:24 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id y133sm505346pfb.28.2019.06.12.14.27.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 14:27:24 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
+        jikos@kernel.org
+Cc:     hdegoede@redhat.com, bjorn.andersson@linaro.org, agross@kernel.org,
+        lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v6 2/5] HID: quirks: Refactor ELAN 400 and 401 handling
+Date:   Wed, 12 Jun 2019 14:27:21 -0700
+Message-Id: <20190612212721.32195-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
+References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 03:23:12PM -0400, Laura Abbott wrote:
-> Hi,
-> 
-> While doing some build experiments, I found a compile failure with perf and jvmti:
-> 
-> BUILDSTDERR:   gcc -Wp,-MD,./.xsk.o.d -Wp,-MT,xsk.o -O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions -fstack-protector-strong -grecord-gcc-jvmti/jvmti_agent.c:48:21: error: static declaration of 'gettid' follows non-static declaration
-> BUILDSTDERR:    48 | static inline pid_t gettid(void)
-> BUILDSTDERR:       |                     ^~~~~~
-> BUILDSTDERR: In file included from /usr/include/unistd.h:1170,
-> BUILDSTDERR:                  from jvmti/jvmti_agent.c:33:
-> BUILDSTDERR: /usr/include/bits/unistd_ext.h:40:16: note: previous declaration of 'gettid' was here
-> BUILDSTDERR:    40 | extern __pid_t gettid (void) __THROW;
-> BUILDSTDERR:       |                ^~~~~~
-> 
-> 
-> This is with the newer glibc headers that came into Fedora earlier this week
-> (glibc-2.29.9000-27.fc31)  It looks like the newer headers now define gettid
-> so the in file gettid no longer works. Note this was a custom build with
-> jvmti enabled as regular Fedora doesn't have it enabled which is why this
-> wasn't reported elsewhere.
+There needs to be coordination between hid-quirks and the elan_i2c driver
+about which devices are handled by what drivers.  Currently, both use
+whitelists, which results in valid devices being unhandled by default,
+when they should not be rejected by hid-quirks.  This is quickly becoming
+an issue.
 
-hum, I guess we need some version macro conditions
-if that's the case
+Since elan_i2c has a maintained whitelist of what devices it will handle,
+which is now in a header file that hid-quirks can access, use that to
+implement a blacklist in hid-quirks so that only the devices that need to
+be handled by elan_i2c get rejected by hid-quirks, and everything else is
+handled by default.
 
-so this glibc version is available on rawhide now?
-I'll try to get some server with it
+Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/hid/hid-quirks.c | 27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
-thanks,
-jirka
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index e5ca6fe2ca57..bd81bb090222 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -16,6 +16,7 @@
+ #include <linux/export.h>
+ #include <linux/slab.h>
+ #include <linux/mutex.h>
++#include <linux/input/elan-i2c-ids.h>
+ 
+ #include "hid-ids.h"
+ 
+@@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
+ 
+ bool hid_ignore(struct hid_device *hdev)
+ {
++	int i;
++
+ 	if (hdev->quirks & HID_QUIRK_NO_IGNORE)
+ 		return false;
+ 	if (hdev->quirks & HID_QUIRK_IGNORE)
+@@ -978,18 +981,20 @@ bool hid_ignore(struct hid_device *hdev)
+ 		break;
+ 	case USB_VENDOR_ID_ELAN:
+ 		/*
+-		 * Many Elan devices have a product id of 0x0401 and are handled
+-		 * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
+-		 * is not (and cannot be) handled by that driver ->
+-		 * Ignore all 0x0401 devs except for the ELAN0800 dev.
++		 * Blacklist of everything that gets handled by the elan_i2c
++		 * input driver.  This avoids disabling valid touchpads and
++		 * other ELAN devices.
+ 		 */
+-		if (hdev->product == 0x0401 &&
+-		    strncmp(hdev->name, "ELAN0800", 8) != 0)
+-			return true;
+-		/* Same with product id 0x0400 */
+-		if (hdev->product == 0x0400 &&
+-		    strncmp(hdev->name, "QTEC0001", 8) != 0)
+-			return true;
++		if ((hdev->product == 0x0401 || hdev->product == 0x0400)) {
++			for (i = 0; strlen(elan_acpi_id[i].id); ++i)
++				if (!strncmp(hdev->name, elan_acpi_id[i].id,
++					     strlen(elan_acpi_id[i].id)))
++					return true;
++			for (i = 0; strlen(elan_of_match[i].name); ++i)
++				if (!strncmp(hdev->name, elan_of_match[i].name,
++					     strlen(elan_of_match[i].name)))
++					return true;
++		}
+ 		break;
+ 	}
+ 
+-- 
+2.17.1
 
-> 
-> I don't know enough about either the glibc headers or perf to make a suggestion
-> on how to fix this but I'm happy to test.
-> 
-> Thanks,
-> Laura
