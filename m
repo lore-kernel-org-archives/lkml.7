@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2493DC31E44
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8559C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 000A120874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A07F120883
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:17:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmVQmVsO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mc/O/i/G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408302AbfFLBRJ (ORCPT
+        id S2408313AbfFLBRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 21:17:09 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44080 "EHLO
+        Tue, 11 Jun 2019 21:17:12 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38980 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404906AbfFLBRG (ORCPT
+        with ESMTP id S2408290AbfFLBRH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 21:17:06 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t16so8542324pfe.11
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 18:17:06 -0700 (PDT)
+        Tue, 11 Jun 2019 21:17:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id j2so8557659pfe.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 18:17:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/4mZhjz2dkfafdy2bqfClO5VTqYAkHEFd5uOF7sABt0=;
-        b=PmVQmVsONHga6z7L+7IIh6Vn/kPjgNT39RFZMidKSw3Pgd/4JDPThUO75CI9v/y44p
-         CecZm6fAk7kAc/6KJJ2TC/0a2uH5FikGxfqcCFyimpHf/N9hXZ1ErtF870SdTKdGIwM2
-         BY07MsFVyL9kUD155wafDB6U621Vj+775KUvYStLxHoNpiZULS67vpHLWfo8CoZEx2Jm
-         jhmb15UNv70f9hPKn7B9FLK0adghG3I/eJVS4tsA+fn+Cg6xwPL8ORyr87boMRkPg5cf
-         FdDkHxtnXxH5asbRveQGAFLr5nPthyykU2pHMDlKujuK/iZbRsTHykR9f4KBamyhsP9C
-         Qoww==
+        bh=UeBUMK8zne5r7f1B94AFloQ1yKIBEwqxYhdWNW1rcVE=;
+        b=Mc/O/i/G8dA9XR5Z2xuOdd78Q3EZA8MUm/uNTtjjqL7M9eg6OoaPGsm3+vX5liu8Eu
+         OjaofnIGVXtsD846o0FACmuimMFXHM7GW8NNtNXbQkJuGLHCEAoHFxvY3cPW3eHif7mv
+         rCh7+o9qUbJdHA63GM4lKNQXVZWl6FF6gUIwkYE+apHfaUJIm7rhwH99Tcc805aAf8Ad
+         Wmm9UBPe0z9REZ10l5vmksImiWRxacTHAIOrYR7rU5KPpOc6DmNfO75z0k/g/gJWEJmB
+         tcZiNGiayqBoTJd1l81xwR5dqG1SP0w0UVDu8/iYmV8+FEMWBYSNuT1/JCxkjuVqJ//n
+         RS/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=/4mZhjz2dkfafdy2bqfClO5VTqYAkHEFd5uOF7sABt0=;
-        b=Rm2qsApAtlMsRHL3ws9ktc4J6aH2G5AAqoHg2xaXPups2iUjsnpQnDwJrNYjkjFavl
-         anGAOaLJ1V77lJMgoxME0bGYThhcSfEmjbivWiA5jat+rrThKO13GLTaANKS/diMwD7s
-         ZcwCb6tGwt7IeIQqBb7Ou7nqsIwwJEfHfcVtABY7h+6sG6BPHqfZuiKfNWTkkMRrv17l
-         g5rE+B2ZUSycN8+QEO/+W/w7+u7E0OKsCXXqrmzswh10NT7yk3Js0X0bnI/i8LX6yr7g
-         GGUGDvMexrowepLXtXrPvG1yMBTwa7L5ULk2WjDU2yD7BnxrZGnV8gOFm1ClYWGpl2Dg
-         ZhUg==
-X-Gm-Message-State: APjAAAVWeSTrAwxZg8EJZmO26ftdib2RwnF/chR4SeKlH2YNCu1QTNeH
-        0qmjTc793heyT30o0mUZggA=
-X-Google-Smtp-Source: APXvYqx8w3UNZJYyEfyesl8GJz44ySL1V6YwpvRUhn3tlhK/Vom10lrDEoqmya0nS0qFRQcHkUOFAA==
-X-Received: by 2002:a17:90a:290b:: with SMTP id g11mr29801294pjd.122.1560302225650;
-        Tue, 11 Jun 2019 18:17:05 -0700 (PDT)
+        bh=UeBUMK8zne5r7f1B94AFloQ1yKIBEwqxYhdWNW1rcVE=;
+        b=HoFCnUd1rkOiUz1YSXHq4hVQDiF8KpvJtqnWC+pGCpDZFlVJFt7i04Q+HuxdyRvBxx
+         vS8iWps0WK1KkVG5M92jzTSX5k90d1+HJi/xQc6FVYrvQcvooPI7MeX0ffQ7bd4qZns9
+         1o2j3CcAxNvJ0yWQrVu73KnhdAaYxtxCVb5ERrkWn9c2/YgfXCbWfhrA34cW/MUo92y9
+         yVHkEN4EzIPbi7MuRNcFScm9/wFyZ0HdNpKNyb+jzjFKD+2F3DTkjMp4rTYqsDcEb2VR
+         V76zv4Hy16J0T3wUnqcoK6m47kwb1JihatOJVA3l5vfD2mJ3LFw3sCR7l0MWzsw+R1p+
+         8hmQ==
+X-Gm-Message-State: APjAAAUrwQ5C3dcsdV0CenNr2rnEinzNZUJW8v0qymUuISEVU3Bp05eT
+        51iuitNsMq0cn4nA1PFG7lk=
+X-Google-Smtp-Source: APXvYqyntFmaxAJbB17U4xr3GVjEA8ueDHeFxsQX18ZK8YIFTCP+Ma8Wk0S8hW5kzNdVIgLGkWK4ew==
+X-Received: by 2002:a17:90a:5887:: with SMTP id j7mr9058636pji.136.1560302226962;
+        Tue, 11 Jun 2019 18:17:06 -0700 (PDT)
 Received: from mappy.world.mentorg.com (c-107-3-185-39.hsd1.ca.comcast.net. [107.3.185.39])
-        by smtp.gmail.com with ESMTPSA id y22sm13257015pgj.38.2019.06.11.18.17.04
+        by smtp.gmail.com with ESMTPSA id y22sm13257015pgj.38.2019.06.11.18.17.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 11 Jun 2019 18:17:05 -0700 (PDT)
+        Tue, 11 Jun 2019 18:17:06 -0700 (PDT)
 From:   Steve Longerbeam <slongerbeam@gmail.com>
 To:     Philipp Zabel <p.zabel@pengutronix.de>
 Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
         dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR FREESCALE
         IMX), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/3] gpu: ipu-v3: image-convert: Fix input bytesperline for packed formats
-Date:   Tue, 11 Jun 2019 18:16:56 -0700
-Message-Id: <20190612011657.12119-2-slongerbeam@gmail.com>
+Subject: [PATCH 3/3] gpu: ipu-v3: image-convert: Fix image downsize coefficients
+Date:   Tue, 11 Jun 2019 18:16:57 -0700
+Message-Id: <20190612011657.12119-3-slongerbeam@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190612011657.12119-1-slongerbeam@gmail.com>
 References: <20190612011657.12119-1-slongerbeam@gmail.com>
@@ -72,37 +72,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The input bytesperline calculation for packed pixel formats was
-incorrect. The min/max clamping values must be multiplied by the
-packed bits-per-pixel. This was causing corrupted converted images
-when the input format was RGB4 (probably also other input packed
-formats).
+The output of the IC downsizer unit in both dimensions must be <= 1024
+before being passed to the IC resizer unit. This was causing corrupted
+images when:
 
-Fixes: d966e23d61a2c ("gpu: ipu-v3: image-convert: fix bytesperline
-adjustment")
+input_dim > 1024, and
+input_dim / 2 < output_dim < input_dim
 
-Reported-by: Harsha Manjula Mallikarjun <Harsha.ManjulaMallikarjun@in.bosch.com>
-Suggested-by: Harsha Manjula Mallikarjun <Harsha.ManjulaMallikarjun@in.bosch.com>
+Some broken examples were 1920x1080 -> 1024x768 and 1920x1080 ->
+1280x1080.
+
+Fixes: 70b9b6b3bcb21 ("gpu: ipu-v3: image-convert: calculate per-tile
+resize coefficients")
+
 Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 ---
- drivers/gpu/ipu-v3/ipu-image-convert.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/ipu-v3/ipu-image-convert.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/ipu-v3/ipu-image-convert.c b/drivers/gpu/ipu-v3/ipu-image-convert.c
-index 36eb4c77ad91..4dfdbd1adf0d 100644
+index 4dfdbd1adf0d..e744f3527ce1 100644
 --- a/drivers/gpu/ipu-v3/ipu-image-convert.c
 +++ b/drivers/gpu/ipu-v3/ipu-image-convert.c
-@@ -1933,7 +1933,9 @@ void ipu_image_convert_adjust(struct ipu_image *in, struct ipu_image *out,
- 		clamp_align(in->pix.width, 2 << w_align_in, MAX_W,
- 			    w_align_in) :
- 		clamp_align((in->pix.width * infmt->bpp) >> 3,
--			    2 << w_align_in, MAX_W, w_align_in);
-+			    ((2 << w_align_in) * infmt->bpp) >> 3,
-+			    (MAX_W * infmt->bpp) >> 3,
-+			    w_align_in);
- 	in->pix.sizeimage = infmt->planar ?
- 		(in->pix.height * in->pix.bytesperline * infmt->bpp) >> 3 :
- 		in->pix.height * in->pix.bytesperline;
+@@ -400,12 +400,14 @@ static int calc_image_resize_coefficients(struct ipu_image_convert_ctx *ctx,
+ 	if (WARN_ON(resized_width == 0 || resized_height == 0))
+ 		return -EINVAL;
+ 
+-	while (downsized_width >= resized_width * 2) {
++	while (downsized_width > 1024 ||
++	       downsized_width >= resized_width * 2) {
+ 		downsized_width >>= 1;
+ 		downsize_coeff_h++;
+ 	}
+ 
+-	while (downsized_height >= resized_height * 2) {
++	while (downsized_height > 1024 ||
++	       downsized_height >= resized_height * 2) {
+ 		downsized_height >>= 1;
+ 		downsize_coeff_v++;
+ 	}
 -- 
 2.17.1
 
