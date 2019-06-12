@@ -2,101 +2,133 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4695DC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2F6C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F52221721
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9427C205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 00:58:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NiAwzvuW"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="KVoUy7zQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406472AbfFLAzx (ORCPT
+        id S2436924AbfFLA6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 20:55:53 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43276 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406117AbfFLAzx (ORCPT
+        Tue, 11 Jun 2019 20:58:37 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44557 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405497AbfFLA6h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 20:55:53 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i189so8515090pfg.10;
-        Tue, 11 Jun 2019 17:55:52 -0700 (PDT)
+        Tue, 11 Jun 2019 20:58:37 -0400
+Received: by mail-qk1-f195.google.com with SMTP id w187so8895562qkb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 17:58:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=JNCR25wKoUF8GmXR1+h5Qxc2sputayqDi9OAgx3GkdA=;
-        b=NiAwzvuW1158vo7YqCqImrGi+gOspOS5ptLbXAIoG+Z9ze7uMdcN2eGWAsbNMH7+TG
-         3ZkAe/orroen/eLz2qm7eGvkJnmLfn0Ao/sWgWXpra1h3e97Fbq8GTUU6tsqNa0XX05a
-         hylXtqpcRAnnO0Mj6KHPmtmbR1ePDFiDX84pGRfqnwJNRN6N/PrW6Cr39MB8mYO7MJlz
-         5R3W6R2v9YZy+6iSs2yC/ugh7qMnOvJh1iKbpPuLSnT/ouMOHYhMPkWq+xopLIjw9uu9
-         yeTUr5c2xq1OasjqxvVRtr5VrtPFnBVEv4hsmatE9KIsBtR0qj+CcdswIM50TMbSCQvN
-         o6Dw==
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=lCyIvXUF/KVDLpAYcUT+Ck5ZH0kz/HDS3rHiDVetioQ=;
+        b=KVoUy7zQH//7/UopVPM441Ud29XCSoOL3F993oSS4Aju2MULAyOcmNN1ggtBuDt5wd
+         dOKY1LEltzP9rNvjuAUtL4rTWo1rVE/dMmU6311VzxTBvXevWRHkTZIOlFOIG00r7BCU
+         ZVhfMWYEx22jcetcnXnMGuttdFW4pWXCRrrJTCxYlOFKqW1ZQ6YgppnX3KVqxGsbCdf1
+         QhvP5VIxeUshfA9QA+bUbSq3m6jD8uBDucMEXNGEdl6JrBrKJzJZWVHsskqpyS/eWyzP
+         O9nHDuHfAcr2Ysfr4F/kgtxJysGn67Dfh5QuXab+86bcIaafX5I2OG20jz7FlX8fAaHU
+         OP2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=JNCR25wKoUF8GmXR1+h5Qxc2sputayqDi9OAgx3GkdA=;
-        b=R5HR+XjXj44+vHeimHoFKSAZgrjD2qTGGD+MQgsUPI4z7uXaCcWDYG3h+GayoOpzuG
-         nVaw5jp4rawhj5qcHlGwskh0y59Ema2P2UHD7Qh+FQs8lVS4SJ76ZawDq/bbHlKOIJYE
-         jEKaKbFYoYC8dWo+F6uNDkb3pTHWZYbZOogeedxhji7S5vMLYIegdanZlVrCvC2F9iAj
-         klPEufI0RO+ch8AEvfaDZBQh7tEc/PwrAFEUg5/9RKKbP1kU6K0uF1xSNIw/iupjO5Ic
-         H9f50qdaOvraM4bpQCXeQlzz9IOlwaxQE2P/KGfNsGI4NOjj6yl3EWPd4pdUpAq6EZAn
-         cHFQ==
-X-Gm-Message-State: APjAAAXHgo2fBKJZ/cJIY1QCDao4cP0bspsylNKZIwL5kEOJ8jueygfx
-        K/Kv4B/+WzgfPLrvS+5gr2U=
-X-Google-Smtp-Source: APXvYqwFJLADjuhoiaHTsjm93GY2KEIrK+4logzMa1qKh7V/rBYbqMu9MhPfYO/mkPAOmVvGgW7CCQ==
-X-Received: by 2002:a63:b07:: with SMTP id 7mr22723250pgl.21.1560300952204;
-        Tue, 11 Jun 2019 17:55:52 -0700 (PDT)
-Received: from localhost (242.60.168.202.static.comindico.com.au. [202.168.60.242])
-        by smtp.gmail.com with ESMTPSA id u2sm3765259pjv.9.2019.06.11.17.55.50
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=lCyIvXUF/KVDLpAYcUT+Ck5ZH0kz/HDS3rHiDVetioQ=;
+        b=LaoSJFYLv9kMPfG9uplYxchGOq8ThdmXSzNlFYoUUwBYJUXDeI2pbQU7MZNJLOo/H0
+         cJlv01QKzkbpXkfDPxdLghadNBp1vT58r5RLpMIf1x1kF/SbgkiHH62RKLOaTNPSIc1h
+         4vvzz9Ns528SV8sTfFATB3LSmmEv3lB6xL5P13Ci5mHKmFdcVGBXDy85VmBM+3zik+vE
+         svtwvQIFRZaJVUYjVVdAcVY1NW4pp5iy6pNp/zQkMyYk2rxpFFRO7F0IfMU7j3AbgovY
+         hY/eARhGJvxZUbORIzDqZr2r1tE+UjXN5LrFEoTeNooGVxrKdgbtVptpNy/+pQYlNSZz
+         QGvw==
+X-Gm-Message-State: APjAAAWyH0j7wVoRlBY7vO9CawL1ZCxdT8TIs5NipDPlnYCx2QsxfxlL
+        xJCRLjdZMkc3a37JOM/D3jVxqg==
+X-Google-Smtp-Source: APXvYqxZR85xJdgsXY+YNlNTC3iOdxqJUmzjZIfm3dI75Ue5eLolzP3t9Y33Jnlpbd7riDNlFijOCg==
+X-Received: by 2002:a37:660b:: with SMTP id a11mr62787324qkc.342.1560301116293;
+        Tue, 11 Jun 2019 17:58:36 -0700 (PDT)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id u125sm7255907qkd.5.2019.06.11.17.58.33
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 11 Jun 2019 17:55:51 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 10:52:53 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH 16/16] mm: pass get_user_pages_fast iterator arguments in
- a structure
-To:     Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-sh@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
-        x86@kernel.org
-References: <20190611144102.8848-1-hch@lst.de>
-        <20190611144102.8848-17-hch@lst.de>
-In-Reply-To: <20190611144102.8848-17-hch@lst.de>
+        Tue, 11 Jun 2019 17:58:34 -0700 (PDT)
+Message-ID: <1d2adae2b6d0f370f17b9bac94ae4e9207dccbad.camel@ndufresne.ca>
+Subject: Re: [PATCH v7 2/4] media: videodev2: add
+ V4L2_FMT_FLAG_FIXED_RESOLUTION
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Maxime Jourdan <mjourdan@baylibre.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Date:   Tue, 11 Jun 2019 20:58:32 -0400
+In-Reply-To: <1560243127.13886.3.camel@pengutronix.de>
+References: <20190531093126.26956-1-mjourdan@baylibre.com>
+         <20190531093126.26956-3-mjourdan@baylibre.com>
+         <9731b2db-efd4-87d0-c48d-87adec433747@xs4all.nl>
+         <1560243127.13886.3.camel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1560300464.nijubslu3h.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christoph Hellwig's on June 12, 2019 12:41 am:
-> Instead of passing a set of always repeated arguments down the
-> get_user_pages_fast iterators, create a struct gup_args to hold them and
-> pass that by reference.  This leads to an over 100 byte .text size
-> reduction for x86-64.
+Le mardi 11 juin 2019 à 10:52 +0200, Philipp Zabel a écrit :
+> On Wed, 2019-06-05 at 15:39 +0200, Hans Verkuil wrote:
+> > Hi Maxime,
+> > 
+> > I am wondering if this flag shouldn't be inverted: you set
+> > V4L2_FMT_FLAG_DYN_RESOLUTION if dynamic resolution is supported,
+> > otherwise it isn't.
+> > 
+> > Can all the existing mainlined codec drivers handle midstream
+> > resolution changes?
+> > 
+> > s5p-mfc, venus and mediatek can, but I see no SOURCE_CHANGE event in
+> > the coda drivers, so I suspect that that can't handle this.
+> > 
+> > Philipp, what is the status of the coda driver for dynamic resolution
+> > changes?
+> 
+> FTR, to my knowledge there is no dynamic resolution change support in
+> the firmware, as there is no signal (interrupt nor picture run return
+> value) to indicate that different headers were parsed.
+> 
+> I am planning to add the initial source change event required by the
+> current decoder API documentation, but I am afraid there will be no
+> support for source changes due to mid-stream resolution changes due to
+> firmware limitations.
 
-What does this do for performance? I've found this pattern can be
-bad for store aliasing detection.
+I'm far from familiar with this IP, but at least on CODA988, I can read
+from the manual that the workflow is to first guess the allocation, and
+if you guess it wrong, an error is returned. What seems to match the
+SOURCE_CHANGE event in that version would be in the picture status
+register, the bit 20, which is documented as triggered if the stream
+requires bigger buffers sizes, or more buffers. After fixing that, you
+should, if I read correctly, retry.
 
-Thanks,
-Nick
-=
+It does not notify if the buffers are too large, but you can detect,
+since there is register with the output stream information. This
+basically means that for V4L2 restriction, you'd have to bounce the
+buffers on frame size boundary or something like thisé
+
+This workflow is very similar to how OMX works, but V4L2 is even less
+flexible on allocation vs format, forcing more re-allocation.
+
+> 
+> regards
+> Philipp
+
