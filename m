@@ -2,92 +2,150 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71940C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D85C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF0D20896
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB752063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:43:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="b6L0hfL3";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="U/s1AWqw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407510AbfFLHm7 (ORCPT
+        id S2407583AbfFLHnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 03:42:59 -0400
-Received: from gofer.mess.org ([88.97.38.141]:47575 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406649AbfFLHm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 03:42:59 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 79842602BB; Wed, 12 Jun 2019 08:42:55 +0100 (BST)
-Date:   Wed, 12 Jun 2019 08:42:55 +0100
-From:   Sean Young <sean@mess.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     mchehab@kernel.org, tglx@linutronix.de, corbet@lwn.net,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] media: ttpci: Fix build error without RC_CORE
-Message-ID: <20190612074254.eky2xo7bajorkhfy@gofer.mess.org>
-References: <20190612034310.4640-1-yuehaibing@huawei.com>
+        Wed, 12 Jun 2019 03:43:03 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40284 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406728AbfFLHnB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 03:43:01 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id AB99660F3A; Wed, 12 Jun 2019 07:42:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560325378;
+        bh=akNFareB34O+WoELW9a+vXLpK/S7e9w6RCo5AwPjb2A=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=b6L0hfL3FpRwBcfm7DqTiSOJXV1qO+cKG6vdFUKA92yPW42Gg4GSTg7oWylS6l0CP
+         NT1Qa14L+91OHy3VP0yw1NC7oTgFa8WU/nEZ+rwAXpxqniua5APd1uwAV5WysKbNeq
+         U4zu3+X2m030hPWSus3HgHdDx30BlqWfec1xEzII=
+Received: from [10.131.117.43] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F04D960CF1;
+        Wed, 12 Jun 2019 07:42:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560325377;
+        bh=akNFareB34O+WoELW9a+vXLpK/S7e9w6RCo5AwPjb2A=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=U/s1AWqwx7q0I8Ng/jLB1n8gUT0Mk/9P2K9ccSQ7OCjYnbfmz3j/qMd/2j7W+KCy8
+         E34Zus5a4XaR6M5L9kZwN0qpKgm6ECocxs25r9Fw3cev2eJHHhQZJNVk4z+w5ABMnd
+         ThX+4IziXS3BDPUulhM0GRvNTDLUqxX6Tbi1AUG4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F04D960CF1
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [RFC v2 01/11] OPP: Don't overwrite rounded clk rate
+To:     Viresh Kumar <viresh.kumar@linaro.org>, swboyd@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-scsi@vger.kernel.org, ulf.hansson@linaro.org,
+        dianders@chromium.org, rafael@kernel.org
+References: <20190320094918.20234-1-rnayak@codeaurora.org>
+ <20190320094918.20234-2-rnayak@codeaurora.org>
+ <20190611105432.x3nzqiib35t6mvyg@vireshk-i7>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <c173a57d-a4de-99f7-e8d8-28a7612f4ca3@codeaurora.org>
+Date:   Wed, 12 Jun 2019 13:12:51 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612034310.4640-1-yuehaibing@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190611105432.x3nzqiib35t6mvyg@vireshk-i7>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 11:43:10AM +0800, YueHaibing wrote:
-> If RC_CORE is not set, building fails:
+
+On 6/11/2019 4:24 PM, Viresh Kumar wrote:
+> On 20-03-19, 15:19, Rajendra Nayak wrote:
+>> From: Stephen Boyd <swboyd@chromium.org>
+>>
+>> Doing this allows us to call this API with any rate requested and have
+>> it not need to match in the OPP table. Instead, we'll round the rate up
+>> to the nearest OPP that we see so that we can get the voltage or level
+>> that's required for that OPP. This supports users of OPP that want to
+>> specify the 'fmax' tables of a device instead of every single frequency
+>> that they need. And for devices that required the exact frequency, we
+>> can rely on the clk framework to round the rate to the nearest supported
+>> frequency instead of the OPP framework to do so.
+>>
+>> Note that this may affect drivers that don't want the clk framework to
+>> do rounding, but instead want the OPP table to do the rounding for them.
+>> Do we have that case? Should we add some flag to the OPP table to
+>> indicate this and then not have that flag set when there isn't an OPP
+>> table for the device and also introduce a property like 'opp-use-clk' to
+>> tell the table that it should use the clk APIs to round rates instead of
+>> OPP?
+>>
+>> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> ---
+
+[]...
+
 > 
-> drivers/media/pci/ttpci/av7110_ir.o: In function `av7110_ir_init':
-> av7110_ir.c:(.text+0x1b0): undefined reference to `rc_allocate_device'
-> av7110_ir.c:(.text+0x2c1): undefined reference to `rc_register_device'
-> av7110_ir.c:(.text+0x2dc): undefined reference to `rc_free_device'
+> I see a logical problem with this patch.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 71f49a8bf5c5 ("media: ttpci: use rc-core for the IR receiver")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-
-Thank you for spotting this and writing a patch.
-
-> ---
->  drivers/media/pci/ttpci/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Suppose the clock driver supports following frequencies: 500M, 800M,
+> 1G, 1.2G and the OPP table contains following list: 500M, 1G, 1.2G
+> (i.e. missing 800M).
 > 
-> diff --git a/drivers/media/pci/ttpci/Kconfig b/drivers/media/pci/ttpci/Kconfig
-> index d96d4fa..b705631 100644
-> --- a/drivers/media/pci/ttpci/Kconfig
-> +++ b/drivers/media/pci/ttpci/Kconfig
-> @@ -7,7 +7,7 @@ config DVB_AV7110
->  	depends on DVB_CORE && PCI && I2C
->  	select TTPCI_EEPROM
->  	select VIDEO_SAA7146_VV
-> -	select DVB_AV7110_IR if INPUT_EVDEV=y || INPUT_EVDEV=DVB_AV7110
+> Now 800M should never get programmed as it isn't part of the OPP
+> table. But if you pass 600M to opp-set-rate, then it will end up
+> selecting 800M as clock driver will round up to the closest value.
 
-This says if
- - select DVB_AV7110_IR if INPUT_EVDEV and DVB_AV7110 are both y or m
- - select DVB_AV7110_IR if INPUT_EVDEV=y
-   This exists for the case when INPUT_EVDEV=y and DVB_AV7110=m, which is fine
+correct
 
-> +	select DVB_AV7110_IR if RC_CORE=DVB_AV7110 && (INPUT_EVDEV=y || INPUT_EVDEV=DVB_AV7110)
-
-That's not exactly the same. For one thing it should not longer depend on
-INPUT_EVDEV=y.
-
-Now if DVB_AV7110=m and RC_CORE=y is not allowed which should be (this is
-the case in Fedora default kernel config for example).
-
->  	depends on VIDEO_DEV	# dependencies of VIDEO_SAA7146_VV
->  	select DVB_VES1820 if MEDIA_SUBDRV_AUTOSELECT
->  	select DVB_VES1X93 if MEDIA_SUBDRV_AUTOSELECT
-> -- 
-> 2.7.4
 > 
+> Even if no one is doing this right now, it is a sensible usecase,
+> specially during testing of patches and I don't think we should avoid
+> it.
+> 
+> What exactly is the use case for which we need this patch ? 
+Like the changelog says 'This supports users of OPP that want to
+specify the 'fmax' tables of a device instead of every single frequency
+that they need'
 
-Thanks,
+so the 'fmax' tables basically say what the max frequency the device can
+operate at for a given performance state/voltage level.
 
-Sean
+so in your example it would be for instance
+
+500M, Perf state = 2
+1G, Perf state = 3
+1.2G, Perf state = 4
+
+Now when the device wants to operate at say 800Mhz, you need to set the
+Perf state to 3, so this patch basically avoids you having to put those additional
+OPPs in the table which would otherwise look something like this
+
+500M, Perf state = 2
+800M, Perf state = 3 <-- redundant OPP
+1G, Perf state = 3
+1.2G, Perf state = 4
+
+Your example had just 1 missing entry in the 'fmax' tables in reality its a lot more,
+atleast on all qualcomm platforms.
+
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
