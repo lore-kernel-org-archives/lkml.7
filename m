@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2530C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04418C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 963CC2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C69BE2080A
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:11:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Tg/uhL+i"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="zIQhadd+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437836AbfFLKJH (ORCPT
+        id S2437916AbfFLKLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:09:07 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42495 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437611AbfFLKJH (ORCPT
+        Wed, 12 Jun 2019 06:11:06 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45582 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437611AbfFLKLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:09:07 -0400
-Received: by mail-ed1-f65.google.com with SMTP id z25so24849659edq.9
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 03:09:06 -0700 (PDT)
+        Wed, 12 Jun 2019 06:11:05 -0400
+Received: by mail-ed1-f68.google.com with SMTP id a14so22967788edv.12
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 03:11:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=IFDigL4vy3b62qjT1WszXB3PDewotHj2dqglzXL17hc=;
-        b=Tg/uhL+iL9PuNKj7XqCbh3ZlwnLo3Bkb5j6KENo20u6kFaYzi532JwLfbpnW1eZKEn
-         qg/O9uyq8wQk4gj/Lpi0h1MpOw3w9F5BoCTyMcJdkPEwqLRDn/s6v2Metm2m9kCUBo40
-         xGWjB/G5W4hGI6GA+FOM2MkB8IrBmZciapsN0KRQaX3C/Vg3EdL8wOnroO77kkmOlL79
-         mClDpnY4zoMtcRhJr0uE22Wdfo+yAkT8PNyQGB3TEaidmVa2qs5YWFnbdgSrcFEHmPyw
-         yjNiLnvfO8k23ResCBgbXP/gSUZgTBmozNcdxSAYu3Ju0S0ckgmdJ1e9/fCZptLcwZkE
-         WrWg==
+        bh=yBJOOYa+63AgBYj8hVQxRRZyU5YRkS/ufWkxMFtkQpw=;
+        b=zIQhadd+m2T9tT/6mG1ziuNw3VMUalNu4Kz48WIlrtDQYzMP38mSSA9Jbqssq+cETX
+         wj/ORIpO4Bj9LqPBqsJ5kAJ7SuygwJvhr4eGeF6cridQOyXQ1ETvJIT8hOAa6qbtkCfj
+         XYkIDwzKSQbv+2LsM54cilOSMN0r9OIRCZy4N8EndEomyOavMVP/NXZ5/zYqZtME1xnW
+         PuifSMFFGEujEnWkoe2tAlEvda/LQc8tVUFQ1LGnWYwUnRAaghvGuhr8xi5DhMkIlOhU
+         TGeZz76wqc4IKqwqewFUwuYP6rd9OErqQ+4/OI8x6xWu8zJfmcT8HrjtRen9Z3EyE7u0
+         J0EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IFDigL4vy3b62qjT1WszXB3PDewotHj2dqglzXL17hc=;
-        b=n97J5Wstz5ZPItSg3jHJRA9C899eurvceddc8+1/+tXJ64FAD1NsHVaB5TChFx+Nr0
-         uyYlPdk8a+CiLShc/Kx7y4Oz8xMkrN2WPlle5qdawiWP2PfoiVJHOZmArjN5XW0RFHAK
-         ar1OxmYtgFRdN+Wn9/Qsq6E+D6Y4oPp8tgaAhFynOYJPCuG/1OV3krlWau9rRAmSZ4eM
-         S7FBzML+NJS/Czsde70XgwWyoVIUBpZugwF5p2foCtZN/muvQNP93yIAQmLD1YF4dNj1
-         uWu0qHkx9d7JtFqT59wK4bJYic1UBcvBGzl2WcoWLHxE5cLxemkH4QnPfBVeRzPCyUP9
-         +LvA==
-X-Gm-Message-State: APjAAAWD266UbxRRxXLqTpNf0TOzA+/sM6HLnfqc77KGYwHhWoAgg2Fx
-        F/uMGlGMmMk4Ys9/+kj7lzfo8g==
-X-Google-Smtp-Source: APXvYqxLR+/UiDQosNM49+jAIr4tIfd9cSPCVBqomYavVwUMuZ0jfVhYTiMeBZXpDB37wwwcRWjQrQ==
-X-Received: by 2002:a17:906:6056:: with SMTP id p22mr7266053ejj.171.1560334145847;
-        Wed, 12 Jun 2019 03:09:05 -0700 (PDT)
+        bh=yBJOOYa+63AgBYj8hVQxRRZyU5YRkS/ufWkxMFtkQpw=;
+        b=ZATS+wMpaWN4syXmswtMe+wImyjRqqiJElmPW9BWYWJ12ve8jnTeD0q8FJdykoR3Td
+         6y3DI0PxZ63cbOIdMqIX9UXGnTDw79hSxGC7ImPKo8zYYOvh5fkb1W5je6TvaWB5gO5D
+         3Y6biCLx2jkw8YpoPhh2swEuY0Rs1q1UmNl2gF/YCf185q9Fzsd4b15+WwUwEzo7+fh7
+         VzzlSSRqEwOgClrZONYfmLIBhh7A+LBe1PpyfXucIWstqYMr49CQV0n8+9chpNa6yWF/
+         Ium5EI6sWRBzi84Ssm2pNz8H8DCw2IRuLWzSN7A4W+PkalXMumE3ZkAwXvdpM0JgsI+I
+         sjRw==
+X-Gm-Message-State: APjAAAWyQDYV9Z3PN9vzGhd7vLM1aIK2mByiOl5aUdBJRRduN09WBDjI
+        dH6yDeHO1fwi1Soaxmy3FdQpGw==
+X-Google-Smtp-Source: APXvYqzRmP8bkDzJtJb53QwuVwjTPB6C7X3I5M9sEgDKVw9ul38KEs25tZVf2ubiErLjeWv2/fbQ1w==
+X-Received: by 2002:a50:95ae:: with SMTP id w43mr57909279eda.115.1560334264050;
+        Wed, 12 Jun 2019 03:11:04 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id c8sm2674841ejm.55.2019.06.12.03.09.05
+        by smtp.gmail.com with ESMTPSA id j3sm4419416edh.82.2019.06.12.03.11.03
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 03:09:05 -0700 (PDT)
+        Wed, 12 Jun 2019 03:11:03 -0700 (PDT)
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 1914A102306; Wed, 12 Jun 2019 13:09:06 +0300 (+03)
-Date:   Wed, 12 Jun 2019 13:09:06 +0300
+        id 4FD7F102306; Wed, 12 Jun 2019 13:11:04 +0300 (+03)
+Date:   Wed, 12 Jun 2019 13:11:04 +0300
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 To:     Yang Shi <yang.shi@linux.alibaba.com>
 Cc:     ktkhai@virtuozzo.com, kirill.shutemov@linux.intel.com,
@@ -65,53 +65,43 @@ Cc:     ktkhai@virtuozzo.com, kirill.shutemov@linux.intel.com,
         shakeelb@google.com, rientjes@google.com,
         akpm@linux-foundation.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] mm: thp: make deferred split shrinker memcg aware
-Message-ID: <20190612100906.xllp2bfgmadvbh2q@box>
+Subject: Re: [PATCH 4/4] mm: shrinker: make shrinker not depend on memcg kmem
+Message-ID: <20190612101104.7rmjzmfy5owhqcif@box>
 References: <1559887659-23121-1-git-send-email-yang.shi@linux.alibaba.com>
- <1559887659-23121-3-git-send-email-yang.shi@linux.alibaba.com>
- <20190612024747.f5nsol7ntvubjckq@box>
- <ace52062-e6be-a3f2-7ef1-d8612f3a76f9@linux.alibaba.com>
+ <1559887659-23121-5-git-send-email-yang.shi@linux.alibaba.com>
+ <20190612025257.7fv55qmx6p45hz7o@box>
+ <a8f6f119-fd72-9a93-de99-fc7bea6404c0@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ace52062-e6be-a3f2-7ef1-d8612f3a76f9@linux.alibaba.com>
+In-Reply-To: <a8f6f119-fd72-9a93-de99-fc7bea6404c0@linux.alibaba.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:06:36PM -0700, Yang Shi wrote:
+On Tue, Jun 11, 2019 at 10:07:54PM -0700, Yang Shi wrote:
 > 
 > 
-> On 6/11/19 7:47 PM, Kirill A. Shutemov wrote:
-> > On Fri, Jun 07, 2019 at 02:07:37PM +0800, Yang Shi wrote:
-> > > +	/*
-> > > +	 * The THP may be not on LRU at this point, e.g. the old page of
-> > > +	 * NUMA migration.  And PageTransHuge is not enough to distinguish
-> > > +	 * with other compound page, e.g. skb, THP destructor is not used
-> > > +	 * anymore and will be removed, so the compound order sounds like
-> > > +	 * the only choice here.
-> > > +	 */
-> > > +	if (PageTransHuge(page) && compound_order(page) == HPAGE_PMD_ORDER) {
-> > What happens if the page is the same order as THP is not THP? Why removing
+> On 6/11/19 7:52 PM, Kirill A. Shutemov wrote:
+> > On Fri, Jun 07, 2019 at 02:07:39PM +0800, Yang Shi wrote:
+> > > Currently shrinker is just allocated and can work when memcg kmem is
+> > > enabled.  But, THP deferred split shrinker is not slab shrinker, it
+> > > doesn't make too much sense to have such shrinker depend on memcg kmem.
+> > > It should be able to reclaim THP even though memcg kmem is disabled.
+> > > 
+> > > Introduce a new shrinker flag, SHRINKER_NONSLAB, for non-slab shrinker,
+> > > i.e. THP deferred split shrinker.  When memcg kmem is disabled, just
+> > > such shrinkers can be called in shrinking memcg slab.
+> > Looks like it breaks bisectability. It has to be done before makeing
+> > shrinker memcg-aware, hasn't it?
 > 
-> It may corrupt the deferred split queue since it is never added into the
-> list, but deleted here.
-> 
-> > of destructor is required?
-> 
-> Due to the change to free_transhuge_page() (extracted deferred split queue
-> manipulation and moved before memcg uncharge since page->mem_cgroup is
-> needed), it just calls free_compound_page(). So, it sounds pointless to
-> still keep THP specific destructor.
-> 
-> It looks there is not a good way to tell if the compound page is THP in
-> free_page path or not, we may keep the destructor just for this?
+> No, it doesn't break bisectability. But, THP shrinker just can be called
+> with kmem charge enabled without this patch.
 
-Other option would be to move mem_cgroup_uncharge(page); from
-__page_cache_release() to destructors. Destructors will be able to
-call it as it fits.
+So, if kmem is disabled, it will not be called, right? Then it is
+regression in my opinion. This patch has to go in before 2/4.
 
 -- 
  Kirill A. Shutemov
