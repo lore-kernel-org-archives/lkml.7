@@ -2,114 +2,184 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CC9C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1702C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F7E2063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:26:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZYqaWP9l"
+	by mail.kernel.org (Postfix) with ESMTP id 9899B20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 08:26:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560327987;
+	bh=SeltQsCC2wy87yYogYLFuJgW6iFbwpA137PBXuDvuw8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mSGA/PVGKj6OF5dzuGXQZkwlfXGmvlrbtUnAPhfXbCSeSQE5zloE6tniiSrHHettV
+	 yw604L9OrGYHTsi5jHWcmG/UZm5ls9gW4qxbe+HSP55SF0qfDew1jrC67OnoZaAo8o
+	 VjlPAmZ502K14jaLwl9uJnzFF5+s5qZ5QIUwnCjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436988AbfFLI0A (ORCPT
+        id S2437037AbfFLI01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 04:26:00 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36881 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730187AbfFLI0A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 04:26:00 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bh12so6329165plb.4;
-        Wed, 12 Jun 2019 01:26:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5KktLArBUOD7UNE/RSxB9p8yeyZnfK95gCsWMNHlRI8=;
-        b=ZYqaWP9lhPsCU5OjDxArTJB5bBr4l60KVhHS/jHUjG0wBQDRFQpBEhDmx5aof0x96V
-         xjAt27Ss6TIkjXNmtY+RFHZnaxtcUoBKCrRq6hBJmyE5DsOXVe6qpikOqvhV+CrbPIrJ
-         DRBQWcUkBtQ1EAClTDvvKXdT4YhaWCsWjjeoIJOO6AIStMNtxp9IA7BumEfocc3nIJCz
-         2Dq4HNBkXl43mc40bIu2GAlyr6YqsVb+W2EftfI0vRHokLBujYKRXygDmHHK6+VuqI5P
-         1K3ee0AjKVuyG69fEJvJPVGLFAdLSGldLcrjGD2Rfv9mrSlEKx8nan4G79zx9HsnIDuU
-         1FAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5KktLArBUOD7UNE/RSxB9p8yeyZnfK95gCsWMNHlRI8=;
-        b=Pd8gaoEW3fzgU8L82gNy2+hW4QPzXbonnItGzGsF7PZ+sveVd1NvHJJ4uFG6NMg8J5
-         6xoFdr2HaL5b+waVWGu8njrgcHiMPFqSfsV8FJ4Wld2dEPg1HzuQFf7obP/tWePpwXFn
-         rpmKDZXUdyeR7kb/9nYMDlfqH9Ag66FeGRlVW9VCVBRhrfrEFXJ2v2117ZjhsOXrkeV9
-         JD8W4naxF53KpESHWdz1LweEd9AnEXOyPhG+xeV+heSrcMxvPsAt311tkTFY0EcD7NUU
-         LobcqEWtgpP3ZYbfJBqVYb/EOCm1oCyW7PolcOJeemZKV3v//wmZMJW74Sp4evn2ncWV
-         FC0w==
-X-Gm-Message-State: APjAAAV2HqiaCgaKZCAM1osEGSH/kbOO1Oi1d9XtJj820PeQqw1Vv6bl
-        1klJ9mRh0yqVK6UScSDHfTg=
-X-Google-Smtp-Source: APXvYqy3uLUDObUndlzZKGCHTjtuqh5HyOuDno0Hn+nbevH0PlkBlwuEdIxdnRDaQ0zyrH0ATf2A9g==
-X-Received: by 2002:a17:902:d717:: with SMTP id w23mr36501859ply.275.1560327959741;
-        Wed, 12 Jun 2019 01:25:59 -0700 (PDT)
-Received: from Asurada (c-98-248-47-108.hsd1.ca.comcast.net. [98.248.47.108])
-        by smtp.gmail.com with ESMTPSA id s15sm14381203pfd.183.2019.06.12.01.25.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 01:25:59 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 01:25:49 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>
-Cc:     "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>
-Subject: Re: [PATCH] dma-buf: refcount the attachment for cache_sgt_mapping
-Message-ID: <20190612082549.GA9072@Asurada>
-References: <20190612012219.21652-1-nicoleotsuka@gmail.com>
- <261b46c7-0c5e-4268-619d-f8381fbc3aeb@amd.com>
- <20190612080214.GA8876@Asurada>
- <170c3828-115b-38e5-35fc-1b88c08c492a@amd.com>
- <20190612081554.GB8876@Asurada>
- <c5e04bf7-d07e-9e26-df65-d7382d6051ba@amd.com>
+        Wed, 12 Jun 2019 04:26:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436841AbfFLI00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 04:26:26 -0400
+Received: from localhost.localdomain (nat-pool-mxp-t.redhat.com [149.6.153.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F9DB2063F;
+        Wed, 12 Jun 2019 08:26:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560327985;
+        bh=SeltQsCC2wy87yYogYLFuJgW6iFbwpA137PBXuDvuw8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=z60Xj9On58T+P2b+vKcLPGEtZ42GiW/RfLcgtgOOTH4zidvls+lPgCT3rk1Pi9e+d
+         lB+dwJbXAeUovwForh+dh589bmRPglSuNBQJtAYx0l/eNwcWHmK4VoRKns3DwuVjCi
+         J+xowcZtQoU7GNWi7jHRk0YTgGNbSLN6c4g+jUHk=
+Date:   Wed, 12 Jun 2019 10:26:19 +0200
+From:   Lorenzo Bianconi <lorenzo@kernel.org>
+To:     Ryder Lee <ryder.lee@mediatek.com>
+Cc:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mt76: mt7615: update peer's bssid when state
+ transition changes
+Message-ID: <20190612082618.GA8107@localhost.localdomain>
+References: <3065a01998dfa04a5d2d680e820a17cb5c110d0f.1560221172.git.ryder.lee@mediatek.com>
+ <449fee28c558b6f02b62275f9beefaab02b47efc.1560221172.git.ryder.lee@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
 Content-Disposition: inline
-In-Reply-To: <c5e04bf7-d07e-9e26-df65-d7382d6051ba@amd.com>
-User-Agent: Mutt/1.5.22 (2013-10-16)
+In-Reply-To: <449fee28c558b6f02b62275f9beefaab02b47efc.1560221172.git.ryder.lee@mediatek.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 08:20:41AM +0000, Koenig, Christian wrote:
-> Am 12.06.19 um 10:15 schrieb Nicolin Chen:
-> > Hi Christian,
-> >
-> > On Wed, Jun 12, 2019 at 08:05:53AM +0000, Koenig, Christian wrote:
-> >> Am 12.06.19 um 10:02 schrieb Nicolin Chen:
-> >> [SNIP]
-> >>> We haven't used DRM/GRM_PRIME yet but I am also curious would it
-> >>> benefit DRM also if we reduce this overhead in the dma_buf?
-> >> No, not at all.
-> >  From you replies, in a summary, does it means that there won't be a case
-> > of DRM having a dma_buf attaching to the same device, i.e. multiple calls
-> > of drm_gem_prime_import() function with same parameters of dev + dma_buf?
-> 
-> Well, there are some cases where this happens. But in those cases we 
-> intentionally want to get a new attachment :)
 
-Got it.
+--dDRMvlgZJXvWKvBx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> So thinking more about it you would actually break those and that is not 
-> something we can do.
+> Driver should update peer's bssid and bss information when
+> state transition changes.
+>=20
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+>  .../net/wireless/mediatek/mt76/mt7615/main.c  |  5 +-
+>  .../net/wireless/mediatek/mt76/mt7615/mcu.c   | 49 ++++++++++---------
+>  2 files changed, 27 insertions(+), 27 deletions(-)
+>=20
 
-That's true...
+[...]
 
-> > If so, we can just ignore/drop this patch. Sorry for the misunderstanding.
-> 
-> It might be interesting for things like P2P, but even then it might be 
-> better to just cache the P2P settings instead of the full attachment.
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/ne=
+t/wireless/mediatek/mt76/mt7615/mcu.c
+> index e82086eb8aa4..8fc12cd37906 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+> +++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+> @@ -741,17 +741,6 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
+>  	u8 *buf, *data, tx_wlan_idx =3D 0;
+>  	struct req_hdr *hdr;
+> =20
+> -	if (en) {
+> -		len +=3D sizeof(struct bss_info_omac);
+> -		features |=3D BIT(BSS_INFO_OMAC);
+> -		if (mvif->omac_idx > EXT_BSSID_START) {
+> -			len +=3D sizeof(struct bss_info_ext_bss);
+> -			features |=3D BIT(BSS_INFO_EXT_BSS);
+> -			ntlv++;
+> -		}
+> -		ntlv++;
+> -	}
+> -
+>  	switch (vif->type) {
+>  	case NL80211_IFTYPE_AP:
+>  	case NL80211_IFTYPE_MESH_POINT:
+> @@ -759,22 +748,23 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
+>  		conn_type =3D CONNECTION_INFRA_AP;
+>  		break;
+>  	case NL80211_IFTYPE_STATION: {
+> -		struct ieee80211_sta *sta;
+> -		struct mt7615_sta *msta;
+> -
+> -		rcu_read_lock();
+> -
+> -		sta =3D ieee80211_find_sta(vif, vif->bss_conf.bssid);
+> -		if (!sta) {
+> +		/* TODO: enable BSS_INFO_UAPSD & BSS_INFO_PM */
+> +		if (en) {
+> +			struct ieee80211_sta *sta;
+> +			struct mt7615_sta *msta;
+> +
+> +			rcu_read_lock();
+> +			sta =3D ieee80211_find_sta(vif, vif->bss_conf.bssid);
+> +			if (!sta) {
+> +				rcu_read_unlock();
+> +				return -EINVAL;
+> +			}
+> +
+> +			msta =3D (struct mt7615_sta *)sta->drv_priv;
+> +			tx_wlan_idx =3D msta->wcid.idx;
+>  			rcu_read_unlock();
+> -			return -EINVAL;
+>  		}
+> -
+> -		msta =3D (struct mt7615_sta *)sta->drv_priv;
+> -		tx_wlan_idx =3D msta->wcid.idx;
+>  		conn_type =3D CONNECTION_INFRA_STA;
+> -
+> -		rcu_read_unlock();
+>  		break;
+>  	}
+>  	default:
+> @@ -782,6 +772,17 @@ int mt7615_mcu_set_bss_info(struct mt7615_dev *dev,
+>  		break;
+>  	}
+> =20
+> +	if (en) {
+> +		len +=3D sizeof(struct bss_info_omac);
+> +		features |=3D BIT(BSS_INFO_OMAC);
+> +		if (mvif->omac_idx > EXT_BSSID_START) {
+> +			len +=3D sizeof(struct bss_info_ext_bss);
+> +			features |=3D BIT(BSS_INFO_EXT_BSS);
+> +			ntlv++;
+> +		}
+> +		ntlv++;
+> +	}
 
-I see. Thank you for the answers!
+What did you move this chunk down?
+
+Regards,
+Lorenzo
+
+> +
+>  	buf =3D kzalloc(len, GFP_KERNEL);
+>  	if (!buf)
+>  		return -ENOMEM;
+> --=20
+> 2.18.0
+>=20
+
+--dDRMvlgZJXvWKvBx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXQC3JwAKCRA6cBh0uS2t
+rFJyAQCPhUzOHTO9oIBENFN5792OnafbeU2m65jRccNwracrZQD/WD/HqK3FoDS4
+EeDnEIgj1yzcCgdAU7vhN8a9VE9gtA4=
+=rUIW
+-----END PGP SIGNATURE-----
+
+--dDRMvlgZJXvWKvBx--
