@@ -2,122 +2,140 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F6AC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA356C31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1769B2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B7D2082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731083AbfFLG1A (ORCPT
+        id S1731105AbfFLG2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 02:27:00 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18137 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726010AbfFLG07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 02:26:59 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 81C41E146AD85FC4BB65;
-        Wed, 12 Jun 2019 14:26:54 +0800 (CST)
-Received: from [127.0.0.1] (10.133.215.186) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 12 Jun 2019
- 14:26:46 +0800
-Subject: Re: [PATCH v8 2/7] x86/dma: use IS_ENABLED() to simplify the code
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>
-References: <20190530034831.4184-1-thunder.leizhen@huawei.com>
- <20190530034831.4184-3-thunder.leizhen@huawei.com>
- <20190612051624.GF32652@zn.tnic>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <bd743433-73e9-3cf1-c159-4371abebd989@huawei.com>
-Date:   Wed, 12 Jun 2019 14:26:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 12 Jun 2019 02:28:30 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:44590 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726010AbfFLG2a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 02:28:30 -0400
+X-UUID: ee68a5836ab848e7bba4d9c3af397e7a-20190612
+X-UUID: ee68a5836ab848e7bba4d9c3af397e7a-20190612
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 653344176; Wed, 12 Jun 2019 14:28:16 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 12 Jun 2019 14:28:14 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 12 Jun 2019 14:28:15 +0800
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Macpaul Lin <macpaul.lin@mediatek.com>,
+        <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <wsd_upstream@mediatek.com>
+Subject: [PATCH] mtu3: fix setup packet response for HNP and SRP request
+Date:   Wed, 12 Jun 2019 14:28:07 +0800
+Message-ID: <1560320892-30551-1-git-send-email-macpaul.lin@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-In-Reply-To: <20190612051624.GF32652@zn.tnic>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.215.186]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-TM-SNTS-SMTP: CE1AD9F9C4AB7DD47709BB3955B3B7E2FF4BB35A299C25F5C5745B5492155FC12000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+1. Add OTG_HNP_REQD and OTG_SRP_REQD definitions in ch9.h.
+2. When OTG_HNP_REQD and OTG_SRP_REQD has been received,
+usb hardware must not enter TEST mode but need to response setup packet.
+3. Add otg_srp_reqd and otg_hnp_reqd in struct ssusb_mtk for futher
+implementation.
 
+Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+---
+ drivers/usb/mtu3/mtu3.h            |  4 ++++
+ drivers/usb/mtu3/mtu3_gadget_ep0.c | 13 +++++++++++++
+ include/uapi/linux/usb/ch9.h       |  5 +++++
+ 3 files changed, 22 insertions(+)
 
-On 2019/6/12 13:16, Borislav Petkov wrote:
-> On Thu, May 30, 2019 at 11:48:26AM +0800, Zhen Lei wrote:
->> This patch removes the ifdefs around CONFIG_IOMMU_DEFAULT_PASSTHROUGH to
->> improve readablity.
-> 
-> Avoid having "This patch" or "This commit" in the commit message. It is
-> tautologically useless.
-
-OK, thanks.
-
-> 
-> Also, do
-> 
-> $ git grep 'This patch' Documentation/process
-> 
-> for more details.
-> 
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->>  arch/x86/kernel/pci-dma.c | 7 ++-----
->>  1 file changed, 2 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
->> index dcd272dbd0a9330..9f2b19c35a060df 100644
->> --- a/arch/x86/kernel/pci-dma.c
->> +++ b/arch/x86/kernel/pci-dma.c
->> @@ -43,11 +43,8 @@
->>   * It is also possible to disable by default in kernel config, and enable with
->>   * iommu=nopt at boot time.
->>   */
->> -#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
->> -int iommu_pass_through __read_mostly = 1;
->> -#else
->> -int iommu_pass_through __read_mostly;
->> -#endif
->> +int iommu_pass_through __read_mostly =
->> +			IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
-> 
-> Let that line stick out.
-
-OK, I will merge them on the same line.
-
-> 
-> Thx.
-> 
+diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
+index 76ecf12fdf62..bb8a31bc6e4d 100644
+--- a/drivers/usb/mtu3/mtu3.h
++++ b/drivers/usb/mtu3/mtu3.h
+@@ -226,6 +226,8 @@ struct otg_switch_mtk {
+  * @dma_clk: dma_bus_ck clock for AXI bus etc
+  * @dr_mode: works in which mode:
+  *		host only, device only or dual-role mode
++ * @otg_srp_reqd: used for SRP request handling.
++ * @otg_hnp_reqd: used for HNP request handling.
+  * @u2_ports: number of usb2.0 host ports
+  * @u3_ports: number of usb3.0 host ports
+  * @u3p_dis_msk: mask of disabling usb3 ports, for example, bit0==1 to
+@@ -252,6 +254,8 @@ struct ssusb_mtk {
+ 	/* otg */
+ 	struct otg_switch_mtk otg_switch;
+ 	enum usb_dr_mode dr_mode;
++	bool otg_srp_reqd;
++	bool otg_hnp_reqd;
+ 	bool is_host;
+ 	int u2_ports;
+ 	int u3_ports;
+diff --git a/drivers/usb/mtu3/mtu3_gadget_ep0.c b/drivers/usb/mtu3/mtu3_gadget_ep0.c
+index 4da216c99726..1247c43a63e6 100644
+--- a/drivers/usb/mtu3/mtu3_gadget_ep0.c
++++ b/drivers/usb/mtu3/mtu3_gadget_ep0.c
+@@ -285,11 +285,24 @@ static int handle_test_mode(struct mtu3 *mtu, struct usb_ctrlrequest *setup)
+ 		dev_dbg(mtu->dev, "TEST_PACKET\n");
+ 		mtu->test_mode_nr = TEST_PACKET_MODE;
+ 		break;
++	case OTG_SRP_REQD:
++		dev_dbg(mtu->dev, "OTG_SRP_REQD\n");
++		mtu->ssusb->otg_srp_reqd = 1;
++		break;
++	case OTG_HNP_REQD:
++		dev_dbg(mtu->dev, "OTG_HNP_REQD\n");
++		mtu->ssusb->otg_hnp_reqd = 1;
++		break;
+ 	default:
+ 		handled = -EINVAL;
+ 		goto out;
+ 	}
+ 
++	if (mtu->ssusb->otg_srp_reqd || mtu->ssusb->otg_hnp_reqd) {
++		mtu->ep0_state = MU3D_EP0_STATE_SETUP;
++		goto out;
++	}
++
+ 	mtu->test_mode = true;
+ 
+ 	/* no TX completion interrupt, and need restart platform after test */
+diff --git a/include/uapi/linux/usb/ch9.h b/include/uapi/linux/usb/ch9.h
+index d5a5caec8fbc..545918c83fd1 100644
+--- a/include/uapi/linux/usb/ch9.h
++++ b/include/uapi/linux/usb/ch9.h
+@@ -143,6 +143,11 @@
+ #define	TEST_SE0_NAK	3
+ #define	TEST_PACKET	4
+ #define	TEST_FORCE_EN	5
++/*
++ * OTG HNP and SRP REQD
++ */
++#define	OTG_SRP_REQD	6
++#define	OTG_HNP_REQD	7
+ 
+ /* Status Type */
+ #define USB_STATUS_TYPE_STANDARD	0
+-- 
+2.18.0
 
