@@ -2,201 +2,101 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE45C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA0CC31E48
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A49DB20866
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B811E20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 09:47:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=raithlin.onmicrosoft.com header.i=@raithlin.onmicrosoft.com header.b="PERUtsr9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437686AbfFLJqB (ORCPT
+        id S2437696AbfFLJrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 05:46:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46114 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2437379AbfFLJqA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:46:00 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5C9gHwQ063699
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 05:45:59 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t2xncs79v-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 05:45:58 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
-        Wed, 12 Jun 2019 10:45:57 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 12 Jun 2019 10:45:53 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5C9jqEP39190948
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 09:45:52 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B78B0AE045;
-        Wed, 12 Jun 2019 09:45:52 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 40B8AAE04D;
-        Wed, 12 Jun 2019 09:45:51 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.124.35.98])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 12 Jun 2019 09:45:51 +0000 (GMT)
-X-Mailer: emacs 26.2 (via feedmail 11-beta-1 Q)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org
-Cc:     mhocko@suse.com, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        linux-mm@kvack.org, osalvador@suse.de
-Subject: Re: [PATCH v9 11/12] libnvdimm/pfn: Fix fsdax-mode namespace info-block zero-fields
-In-Reply-To: <155977193862.2443951.10284714500308539570.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com> <155977193862.2443951.10284714500308539570.stgit@dwillia2-desk3.amr.corp.intel.com>
-Date:   Wed, 12 Jun 2019 15:11:46 +0530
+        Wed, 12 Jun 2019 05:47:45 -0400
+Received: from mail-eopbgr670101.outbound.protection.outlook.com ([40.107.67.101]:21776
+        "EHLO CAN01-TO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2437315AbfFLJro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 05:47:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=raithlin.onmicrosoft.com; s=selector1-raithlin-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eHwinwiRTyd7elaRQ4eGRyuD4IaBeL0SL6+sc7DP3fM=;
+ b=PERUtsr91lOIUSqI2dLSpvwFl02mrftBVEbeIWRRWDbF5L+MVhSNAAUj8NYs8eynisF2RjxJFJBA+o9gtmA4woXocapUcjRZAgqyscF+/dy0+pN+DV41zdQxoPhENhiY1hBB1TNsphQ5bnchGjNPcXRbgJJ9ftfzvttBVxEYumk=
+Received: from YQXPR0101MB0792.CANPRD01.PROD.OUTLOOK.COM (52.132.75.161) by
+ YQXPR0101MB1797.CANPRD01.PROD.OUTLOOK.COM (52.132.78.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.15; Wed, 12 Jun 2019 09:47:40 +0000
+Received: from YQXPR0101MB0792.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::dc19:eb46:8b29:e502]) by YQXPR0101MB0792.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::dc19:eb46:8b29:e502%6]) with mapi id 15.20.1965.017; Wed, 12 Jun 2019
+ 09:47:40 +0000
+From:   "Stephen  Bates" <sbates@raithlin.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        "shhuiw@foxmail.com" <shhuiw@foxmail.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH] io_uring: fix SQPOLL cpu check
+Thread-Topic: [PATCH] io_uring: fix SQPOLL cpu check
+Thread-Index: AQHVILE8MKvlFSwx2kqc/AjEamoMkaaXv8UAgAAXWoA=
+Date:   Wed, 12 Jun 2019 09:47:40 +0000
+Message-ID: <DCE71F95-F72A-414C-8A02-98CC81237F40@raithlin.com>
+References: <5D2859FE-DB39-48F5-BBB5-6EDD3791B6C3@raithlin.com>
+ <20190612092403.GA38578@lakrids.cambridge.arm.com>
+In-Reply-To: <20190612092403.GA38578@lakrids.cambridge.arm.com>
+Accept-Language: en-CA, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Microsoft-MacOutlook/10.1a.0.190609
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=sbates@raithlin.com; 
+x-originating-ip: [2001:bb6:a2c:ed58:2ca3:41e6:9240:e71d]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a1fe94ea-82a4-494d-2714-08d6ef1b0258
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:YQXPR0101MB1797;
+x-ms-traffictypediagnostic: YQXPR0101MB1797:
+x-microsoft-antispam-prvs: <YQXPR0101MB17971289C5E96B4B10091EEDAAEC0@YQXPR0101MB1797.CANPRD01.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:2512;
+x-forefront-prvs: 0066D63CE6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39830400003)(376002)(396003)(366004)(136003)(199004)(189003)(4744005)(76176011)(81156014)(54906003)(508600001)(6116002)(2906002)(8936002)(446003)(486006)(14444005)(36756003)(102836004)(99286004)(6506007)(71200400001)(14454004)(5660300002)(25786009)(33656002)(256004)(71190400001)(4326008)(2616005)(229853002)(6916009)(186003)(6246003)(7736002)(58126008)(305945005)(53936002)(8676002)(6486002)(11346002)(476003)(86362001)(66446008)(66476007)(68736007)(316002)(81166006)(73956011)(6512007)(46003)(66556008)(64756008)(76116006)(91956017)(66946007)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:YQXPR0101MB1797;H:YQXPR0101MB0792.CANPRD01.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: raithlin.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gj87e061HACEbkw7MSULW6nHSxRBzrrGWMJtYXQtiaG34stO+gtjL5UG9y/pjB0x7JGB5pSdkW2dq1VacqyQf6A7+kd/RPlRzPd6mkePxgY22D1NsOFhyjdpHVWU8xpH4Q47OPNgwE/FM6La2qkrsuxmWjqhWde1n0lkLnFo59pIf8StX6FF1SYIkcaU662IlyRCqDACUr3ZkaFYj+cxcBivjAqwmypyvvNvw9mzWHJEbGoY2vo/nTrLNDa+DKJe5RRjA97Ba2f5X1+Dkd5eoL3VXdJFZyX/cuLIyg/B1Il82wIsLeurw1mtnPB/aD0mJI4AzNquoiLO7rxYqndWJFo5uI6pUGyxIvch1OB6x2Oct09TMxUxUKxmLcDorExtdhgilgNcLWq2wPp2hlvM9SSGNNUg0AhvGgp9gg8/3Go=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F256B79C2DC9584FBE3C0FEB46796B20@CANPRD01.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19061209-4275-0000-0000-000003419E4E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061209-4276-0000-0000-00003851B3FC
-Message-Id: <87r27zi1id.fsf@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906120067
+X-OriginatorOrg: raithlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1fe94ea-82a4-494d-2714-08d6ef1b0258
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2019 09:47:40.1021
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 18519031-7ff4-4cbb-bbcb-c3252d330f4b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sbates@raithlin.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQXPR0101MB1797
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
-
-> At namespace creation time there is the potential for the "expected to
-> be zero" fields of a 'pfn' info-block to be filled with indeterminate
-> data. While the kernel buffer is zeroed on allocation it is immediately
-> overwritten by nd_pfn_validate() filling it with the current contents of
-> the on-media info-block location. For fields like, 'flags' and the
-> 'padding' it potentially means that future implementations can not rely
-> on those fields being zero.
->
-> In preparation to stop using the 'start_pad' and 'end_trunc' fields for
-> section alignment, arrange for fields that are not explicitly
-> initialized to be guaranteed zero. Bump the minor version to indicate it
-> is safe to assume the 'padding' and 'flags' are zero. Otherwise, this
-> corruption is expected to benign since all other critical fields are
-> explicitly initialized.
->
-> Fixes: 32ab0a3f5170 ("libnvdimm, pmem: 'struct page' for pmem")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/nvdimm/dax_devs.c |    2 +-
->  drivers/nvdimm/pfn.h      |    1 +
->  drivers/nvdimm/pfn_devs.c |   18 +++++++++++++++---
->  3 files changed, 17 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/nvdimm/dax_devs.c b/drivers/nvdimm/dax_devs.c
-> index 0453f49dc708..326f02ffca81 100644
-> --- a/drivers/nvdimm/dax_devs.c
-> +++ b/drivers/nvdimm/dax_devs.c
-> @@ -126,7 +126,7 @@ int nd_dax_probe(struct device *dev, struct nd_namespace_common *ndns)
->  	nvdimm_bus_unlock(&ndns->dev);
->  	if (!dax_dev)
->  		return -ENOMEM;
-> -	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
-> +	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
->  	nd_pfn->pfn_sb = pfn_sb;
->  	rc = nd_pfn_validate(nd_pfn, DAX_SIG);
->  	dev_dbg(dev, "dax: %s\n", rc == 0 ? dev_name(dax_dev) : "<none>");
-> diff --git a/drivers/nvdimm/pfn.h b/drivers/nvdimm/pfn.h
-> index dde9853453d3..e901e3a3b04c 100644
-> --- a/drivers/nvdimm/pfn.h
-> +++ b/drivers/nvdimm/pfn.h
-> @@ -36,6 +36,7 @@ struct nd_pfn_sb {
->  	__le32 end_trunc;
->  	/* minor-version-2 record the base alignment of the mapping */
->  	__le32 align;
-> +	/* minor-version-3 guarantee the padding and flags are zero */
->  	u8 padding[4000];
->  	__le64 checksum;
->  };
-> diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
-> index 01f40672507f..a2406253eb70 100644
-> --- a/drivers/nvdimm/pfn_devs.c
-> +++ b/drivers/nvdimm/pfn_devs.c
-> @@ -420,6 +420,15 @@ static int nd_pfn_clear_memmap_errors(struct nd_pfn *nd_pfn)
->  	return 0;
->  }
->  
-> +/**
-> + * nd_pfn_validate - read and validate info-block
-> + * @nd_pfn: fsdax namespace runtime state / properties
-> + * @sig: 'devdax' or 'fsdax' signature
-> + *
-> + * Upon return the info-block buffer contents (->pfn_sb) are
-> + * indeterminate when validation fails, and a coherent info-block
-> + * otherwise.
-> + */
->  int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
->  {
->  	u64 checksum, offset;
-> @@ -565,7 +574,7 @@ int nd_pfn_probe(struct device *dev, struct nd_namespace_common *ndns)
->  	nvdimm_bus_unlock(&ndns->dev);
->  	if (!pfn_dev)
->  		return -ENOMEM;
-> -	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
-> +	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
->  	nd_pfn = to_nd_pfn(pfn_dev);
->  	nd_pfn->pfn_sb = pfn_sb;
->  	rc = nd_pfn_validate(nd_pfn, PFN_SIG);
-> @@ -702,7 +711,7 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
->  	u64 checksum;
->  	int rc;
->  
-> -	pfn_sb = devm_kzalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
-> +	pfn_sb = devm_kmalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
->  	if (!pfn_sb)
->  		return -ENOMEM;
->  
-> @@ -711,11 +720,14 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
->  		sig = DAX_SIG;
->  	else
->  		sig = PFN_SIG;
-> +
->  	rc = nd_pfn_validate(nd_pfn, sig);
->  	if (rc != -ENODEV)
->  		return rc;
->  
->  	/* no info block, do init */;
-> +	memset(pfn_sb, 0, sizeof(*pfn_sb));
-> +
->  	nd_region = to_nd_region(nd_pfn->dev.parent);
->  	if (nd_region->ro) {
->  		dev_info(&nd_pfn->dev,
-> @@ -768,7 +780,7 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
->  	memcpy(pfn_sb->uuid, nd_pfn->uuid, 16);
->  	memcpy(pfn_sb->parent_uuid, nd_dev_to_uuid(&ndns->dev), 16);
->  	pfn_sb->version_major = cpu_to_le16(1);
-> -	pfn_sb->version_minor = cpu_to_le16(2);
-> +	pfn_sb->version_minor = cpu_to_le16(3);
->  	pfn_sb->start_pad = cpu_to_le32(start_pad);
->  	pfn_sb->end_trunc = cpu_to_le32(end_trunc);
->  	pfn_sb->align = cpu_to_le32(nd_pfn->align);
->
-
-How will this minor version 3 be used? If we are not having
-start_pad/end_trunc updated in pfn_sb, how will the older kernel enable these namesapces?
-
-Do we need a patch like
-https://lore.kernel.org/linux-mm/20190604091357.32213-2-aneesh.kumar@linux.ibm.com
-
--aneesh
-
+PiBBYXJnaC4gTXkgb3JpZ2luYWwgcGF0Y2ggWzFdIGhhbmRsZWQgdGhhdCBjb3JyZWN0bHksIGFu
+ZCB0aGlzIGNhc2Ugd2FzDQo+IGV4cGxpY2l0bHkgY2FsbGVkIG91dCBpbiB0aGUgY29tbWl0IG1l
+c3NhZ2UsIHdoaWNoIHdhcyByZXRhaW5lZCBldmVuDQo+IHdoZW4gdGhlIHBhdGNoIHdhcyAic2lt
+cGxpZmllZCIuIFRoYXQncyByYXRoZXIgZGlzYXBwb2ludGluZy4gOi8NCiAgDQpJdCBsb29rcyBs
+aWtlIEplbnMgZGlkIGEgZml4IGZvciB0aGlzICg0NGE5YmQxOGEwZjA2YmJhIA0KIiBpb191cmlu
+ZzogZml4IGZhaWx1cmUgdG8gdmVyaWZ5IFNRX0FGRiBjcHUiKSB3aGljaCBpcyBpbiB0aGUgNS4y
+LXJjIHNlcmllcyANCmJ1dCB3aGljaCBoYXNu4oCZdCBiZWVuIGFwcGxpZWQgdG8gdGhlIHN0YWJs
+ZSBzZXJpZXMgeWV0LiBJIGFtIG5vdCBzdXJlIGhvdyANCkkgbWlzc2VkIHRoYXQgYnV0IGl0IG1h
+a2VzIG15IHBhdGNoIHJlZHVuZGFudC4NCg0KSmVucywgd2lsbCA0NGE5YmQxOGEwZjA2YmJhIGJl
+IGFwcGxpZWQgdG8gc3RhYmxlIGtlcm5lbHM/DQoNClN0ZXBoZW4NCg0K
