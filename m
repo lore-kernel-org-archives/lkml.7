@@ -2,97 +2,137 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC3DC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C798C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2812173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26B052082C
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 10:38:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pkZ3HlON"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408911AbfFLKiL (ORCPT
+        id S2408937AbfFLKis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 06:38:11 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51727 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408930AbfFLKiL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 06:38:11 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 207so6033611wma.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 03:38:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=A1jkMuy2ezqCdqyisgnv02b0t1awTPsqQ7eTgJGgrxg=;
-        b=dD/2W5FpBEIoalknSO3MTwFyvZXcRU3d6LPIgqoSL4DLRm4Thw84yw0Be5Xqv5jxd3
-         vjJmumiAgUKhqWs5dTWSVUauCBcbdtkqPh6GgaQ5xSemuT+7JO7HfOgyN8zKJcoD4H/S
-         1I/6LTEhTlUpgp5S0JZFUnrioax4tPd8f6Yl/eVHHHtHl81yYtlhXGevYNQ10hFMldDG
-         Nmh4dSF0eoz3whzejus8IA3eAbHlpDzZUxwznYgKCB8zbOefa1yq/ooHnUEmxc1V5Pa5
-         bya3d+eNgO0H1WEbwuHF1fRWtxeWucin3UPCa1ecIEZkvZ/2+sPrjSbeIfN4EyucO51a
-         H5tA==
-X-Gm-Message-State: APjAAAUwUS8IIMFRuOFsMpwWGadpzwTFre407ahXlWYzFaXx4K6CfWg9
-        vKupuHVYgoVJSosQ5X6wBU4ziQ==
-X-Google-Smtp-Source: APXvYqxXO+6aHPpfLeLSipxttxiVN8qTTbQpyRvwqi+hESAewbXZNZZ6k/FIv5A28SvjTqPy+7RCkA==
-X-Received: by 2002:a7b:cc09:: with SMTP id f9mr13723692wmh.68.1560335889404;
-        Wed, 12 Jun 2019 03:38:09 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 6sm17809682wrd.51.2019.06.12.03.38.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 03:38:08 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Maya Nakamura <m.maya.nakamura@gmail.com>
-Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org
-Subject: Re: [PATCH v2 3/5] hv: vmbus: Replace page definition with Hyper-V specific one
-In-Reply-To: <210c56ddb1dafc20ba289e6be9165efe8a5e818c.1559807514.git.m.maya.nakamura@gmail.com>
-References: <cover.1559807514.git.m.maya.nakamura@gmail.com> <210c56ddb1dafc20ba289e6be9165efe8a5e818c.1559807514.git.m.maya.nakamura@gmail.com>
-Date:   Wed, 12 Jun 2019 12:38:08 +0200
-Message-ID: <87k1drdr73.fsf@vitty.brq.redhat.com>
+        Wed, 12 Jun 2019 06:38:48 -0400
+Received: from mout.web.de ([212.227.17.12]:35415 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407474AbfFLKis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 06:38:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1560335920;
+        bh=w7Zapu97qEenwfGP8VjODN6jV86L8V7ffF+//76IatM=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=pkZ3HlONe4+40eHueQucv6Xeqc1A/rYbNkDUO3XhfCvN/rCGD8DODqaj7aT2ayAzG
+         SKgDsJ/kn16PZRo9/AWahOg2zy5pLqDUyJj9rVQNFzGF4vzA8U3A44+GJaZMGawj0r
+         7hih7dCuoPuVICCCQnKvH6N+wEDl4DSUjGGGcMhQ=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.43.108] ([89.15.237.104]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MZlZK-1hwOLh1sdC-00LXk3; Wed, 12
+ Jun 2019 12:38:39 +0200
+Subject: Re: [PATCH] Revert "usb: core: remove local_irq_save() around
+ ->complete() handler"
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20190531215340.24539-1-smoch@web.de>
+ <20190531220535.GA16603@kroah.com>
+ <6c03445c-3607-9f33-afee-94613f8d6978@web.de>
+ <20190601105008.zfqrtu6krw4mhisb@linutronix.de>
+ <20190601110247.v4lzwvqhuwrjrotb@linutronix.de>
+From:   Soeren Moch <smoch@web.de>
+Message-ID: <fb64b378-57a1-19f4-0fd2-1689fc3d8540@web.de>
+Date:   Wed, 12 Jun 2019 12:38:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190601110247.v4lzwvqhuwrjrotb@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ITNzeUPAh3LVNjomSsgP/7ESekNXFtNIcYrM8VUzfhsiM22HdCO
+ CWmklggNCUM0Uf4ZW2ZKTToWeTInSyP6JbGKafvWIP6EWHdDZ71Pic8v2sQXSlSz0jBYdKl
+ SGZjq3HugqgJi0zhQl0zw3gbMgJkoqf1rUw4h/RS4cNzv4oVRvhzG6IYNcFsJbSKrM9sDd2
+ GexEeIchvU8IqpVb1PH6Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mKTjyQwiRoo=:jxymFFKr2qEOQchX/kGA8F
+ 3Vb44yIm2uxAibNMScG0Q39c+yZMRO6Ly82yoN7ZYkQUTw1ddGd0AOeD1R93IgHeBuA3LPpy2
+ S3iibh9PXMiC6laGMQJwPtB+A8OSQ/+H0w/IoxCB7NP8tocZP/qSvTcismqjjnagJi1npxKuM
+ 1iNNDnt66/53JrWALQqNghnE8FJKBojKSkjHkGzlcL3nAhjwCdshD5J1fnd0uYqsxZIcUPIh4
+ cW8KC0rxuNegknB+zqQ6pSqfGO/jV8HKJhYJ2vgvMVVmhIBb2emrR0IZVUT02TwxDebHRlDC/
+ GTVLvx2Fi2PVW6EZ5CQUAhHbdNGLU6uzkl41o9TiiukD7TtubMMD8sraRwHT3t3bb6GhDeOjw
+ OplazHsqxLjy0BLOD+mHKUTVhGvjtWrE4YKBzLnYowpcI/gkuNGgx5tbUQRnPmyKDLKy0Cxjg
+ IbZr5ePmwgpPQWMc0mbUf5zp2pmDOYlqrjD+D2CJUKBAnfKotceym9fPSx5lXW8RRU3uXczmN
+ LK9bSO2wcomdNUp+YB/wGDVc/c6hrHMAymlMNYQ5FZCVgQtJ7y5YgWN8hj/dufE/b3qsDM01f
+ /s1Bsh3WM3EWSyytA1I9Qqap9KUnV+lpV1nAdGfYsDmkx1QOjZ6lrvV1SBW/wfGQvpCHPnxMT
+ mUmx6LBPAAK2SS/6jNghnknFFXKCIwmDTvQUVOf5K5wP/piVV4sjyqWRV6O3stnyOPxcsuuyx
+ VvaasqNBwSmDoO3o9SMlaYIMrtZso+46ZshdYIByDkmxlioKlNylR3ClB5F0mYQeCYrFe02uk
+ /ji5C80f7yyJKg5Ul0cAYhNCv9PjD+K1rxsmPewnnISdhDP8DZ60omTmzmeOaeib16XBiym4o
+ t2g62ePBcjlcdTYku3h6tYD0oslZl7BdCDEN1sdEmMbrinwVU1BYZ9ahU9PiMufHEmiZEGg54
+ VFcLhy9Yh5+ruw1LmrwvUJsa/Gpq+JbVYvzfhZJyiv/SARdiciy9NAssRSZdLhEe2WT6KEX1e
+ 5A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maya Nakamura <m.maya.nakamura@gmail.com> writes:
 
-> Replace PAGE_SIZE with HV_HYP_PAGE_SIZE because the guest page size may
-> not be 4096 on all architectures and Hyper-V always runs with a page
-> size of 4096.
+
+On 01.06.19 13:02, Sebastian Andrzej Siewior wrote:
+> On 2019-06-01 12:50:08 [+0200], To Soeren Moch wrote:
+>> I will look into this.
 >
-> Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
-> ---
->  drivers/hv/hyperv_vmbus.h | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> nothing obvious. If there is really blocken lock, could you please
+> enable lockdep
+> |CONFIG_LOCK_DEBUGGING_SUPPORT=3Dy
+> |CONFIG_PROVE_LOCKING=3Dy
+> |# CONFIG_LOCK_STAT is not set
+> |CONFIG_DEBUG_RT_MUTEXES=3Dy
+> |CONFIG_DEBUG_SPINLOCK=3Dy
+> |CONFIG_DEBUG_MUTEXES=3Dy
+> |CONFIG_DEBUG_WW_MUTEX_SLOWPATH=3Dy
+> |CONFIG_DEBUG_RWSEMS=3Dy
+> |CONFIG_DEBUG_LOCK_ALLOC=3Dy
+> |CONFIG_LOCKDEP=3Dy
+> |# CONFIG_DEBUG_LOCKDEP is not set
+> |CONFIG_DEBUG_ATOMIC_SLEEP=3Dy
 >
-> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> index e5467b821f41..5489b061d261 100644
-> --- a/drivers/hv/hyperv_vmbus.h
-> +++ b/drivers/hv/hyperv_vmbus.h
-> @@ -208,11 +208,11 @@ int hv_ringbuffer_read(struct vmbus_channel *channel,
->  		       u64 *requestid, bool raw);
->  
->  /*
-> - * Maximum channels is determined by the size of the interrupt page
-> - * which is PAGE_SIZE. 1/2 of PAGE_SIZE is for send endpoint interrupt
-> - * and the other is receive endpoint interrupt
-> + * Maximum channels, 16348, is determined by the size of the interrupt page,
-> + * which is HV_HYP_PAGE_SIZE. 1/2 of HV_HYP_PAGE_SIZE is to send endpoint
-> + * interrupt, and the other is to receive endpoint interrupt.
->   */
-> -#define MAX_NUM_CHANNELS	((PAGE_SIZE >> 1) << 3)	/* 16348 channels */
-> +#define MAX_NUM_CHANNELS	((HV_HYP_PAGE_SIZE >> 1) << 3)
->  
->  /* The value here must be in multiple of 32 */
->  /* TODO: Need to make this configurable */
+> and send me the splat that lockdep will report?
+>
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Nothing interesting:
 
--- 
-Vitaly
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 5.1.0 (root@matrix) (gcc version 7.4.0
+(Debian 7.4.0-6)) #6 SMP PREEMPT Wed Jun 12 11:28:41 CEST 2019
+[    0.000000] CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7),
+cr=3D10c5387d
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing
+instruction cache
+[    0.000000] OF: fdt: Machine model: TBS2910 Matrix ARM mini PC
+...
+[    0.000000] rcu: Preemptible hierarchical RCU implementation.
+[    0.000000] rcu:     RCU lockdep checking is enabled.
+...
+[    0.003546] Lock dependency validator: Copyright (c) 2006 Red Hat,
+Inc., Ingo Molnar
+[    0.003657] ... MAX_LOCKDEP_SUBCLASSES:  8
+[    0.003713] ... MAX_LOCK_DEPTH:          48
+[    0.003767] ... MAX_LOCKDEP_KEYS:        8191
+[    0.003821] ... CLASSHASH_SIZE:          4096
+[    0.003876] ... MAX_LOCKDEP_ENTRIES:     32768
+[    0.003931] ... MAX_LOCKDEP_CHAINS:      65536
+[    0.003986] ... CHAINHASH_SIZE:          32768
+[    0.004042]  memory used by lock dependency info: 5243 kB
+
+Nothing else.
+
+When stopping hostapd after it hangs:
+[  903.504475] ieee80211 phy0: rt2x00queue_flush_queue: Warning - Queue
+14 failed to flush
+
+Soeren
