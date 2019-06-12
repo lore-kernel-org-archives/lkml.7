@@ -2,68 +2,235 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5DCC31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53B0C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC512063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F2A12063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:45:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408389AbfFLHpC (ORCPT
+        id S2408410AbfFLHph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 03:45:02 -0400
-Received: from mail-io1-f45.google.com ([209.85.166.45]:38333 "EHLO
-        mail-io1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406575AbfFLHpB (ORCPT
+        Wed, 12 Jun 2019 03:45:37 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:35055 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406508AbfFLHph (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 03:45:01 -0400
-Received: by mail-io1-f45.google.com with SMTP id k13so12148149iop.5
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 00:45:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l36l6rgXJjBp7WT8DoKnKddflMVkAl9NPX+tIDTsP7M=;
-        b=LCxaiEicvK++Msy9vjxFeK36MnBlMzdM7v8FxciipFp7OnvPOBT4Njwn1C2JyQKbCU
-         cD9afUkWmGcNfnAcHTK75iNA68gXG7fh6ybgQZWJMOM5Bj7U2jm/1xoaCwwFEAQUbxc2
-         4jJavOFaaNNgrhA/VnbVC60BM4FKdM1neX5O8FwgR4+cAQG//wZ6TUwzCfXbpjbF3cRK
-         cJk4mVRS3jESCRBfxxfZEpUWFmcaLUFi2k4Bbn0gM2j9UbN2OaVGGZovhR/WSnPVCJeK
-         obapZBDesv09V4UxbQgNF/m6DiExeO3OpTg3a97EPCaobu7kZa0zjkrRHCLqXVvXUX+A
-         tDEg==
-X-Gm-Message-State: APjAAAWt7JRJLdclE/qs+LZuknqG+OavUc4Ou1uIpMhZn5/6jI1n4Kw7
-        jrhz0Q8CogZ4RFLfhtnaHED4sELgfJuk91GTgAGtzSK9
-X-Google-Smtp-Source: APXvYqwwaZWfePLYFsCiLtb7oYBD6kiahVJodU8/jNzkVTzP70DSAzO+zjV8pQUTTo5nxDK+A4PLeeWqYL2eCMCE8sI=
-X-Received: by 2002:a6b:ed01:: with SMTP id n1mr17892965iog.255.1560325500724;
- Wed, 12 Jun 2019 00:45:00 -0700 (PDT)
+        Wed, 12 Jun 2019 03:45:37 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TTytOsC_1560325535;
+Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0TTytOsC_1560325535)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 12 Jun 2019 15:45:35 +0800
+Subject: Re: [PATCH V4 3/3] ocfs2: add first lock wait time in locking_state
+To:     Gang He <ghe@suse.com>, jlbec@evilplan.org, mark@fasheh.com
+Cc:     akpm@linux-foundation.org, ocfs2-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org
+References: <20190611015414.27754-1-ghe@suse.com>
+ <20190611015414.27754-3-ghe@suse.com>
+ <fe52ae81-2140-9f68-8ec2-cc7c1fb3bc1a@linux.alibaba.com>
+ <5D00A9F7020000F90006BBB4@prv1-mh.provo.novell.com>
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+Message-ID: <5b57dfc8-30cf-5ad2-1971-58809c70d517@linux.alibaba.com>
+Date:   Wed, 12 Jun 2019 15:45:35 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <876aefd0-808a-bb4b-0897-191f0a8d9e12@eikelenboom.it>
- <CAJfpegvRBm3M8fUJ1Le1dPd0QSJgAWAYJGLCQKa6YLTE+4oucw@mail.gmail.com> <20190611202738.GA22556@deco.navytux.spb.ru>
-In-Reply-To: <20190611202738.GA22556@deco.navytux.spb.ru>
-From:   Miklos Szeredi <mszeredi@redhat.com>
-Date:   Wed, 12 Jun 2019 09:44:49 +0200
-Message-ID: <CAOssrKfj-MDujX0_t_fgobL_KwpuG2fxFmT=4nURuJA=sUvYYg@mail.gmail.com>
-Subject: Re: Linux 5.2-RC regression bisected, mounting glusterfs volumes
- fails after commit: fuse: require /dev/fuse reads to have enough buffer capacity
-To:     Kirill Smelkov <kirr@nexedi.com>
-Cc:     Sander Eikelenboom <linux@eikelenboom.it>,
-        Miklos Szeredi <miklos@szeredi.hu>, gluster-devel@gluster.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5D00A9F7020000F90006BBB4@prv1-mh.provo.novell.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:28 PM Kirill Smelkov <kirr@nexedi.com> wrote:
 
-> Miklos, would 4K -> `sizeof(fuse_in_header) + sizeof(fuse_write_in)` for
-> header room change be accepted?
 
-Yes, next cycle.   For 4.2 I'll just push the revert.
+On 19/6/12 15:29, Gang He wrote:
+> Hello Joseph,
+> 
+>>>> On 6/12/2019 at  3:03 pm, in message
+> <fe52ae81-2140-9f68-8ec2-cc7c1fb3bc1a@linux.alibaba.com>, Joseph Qi
+> <joseph.qi@linux.alibaba.com> wrote:
+>> Hi Gang,
+>>
+>> On 19/6/11 09:54, Gang He wrote:
+>>> ocfs2 file system uses locking_state file under debugfs to dump
+>>> each ocfs2 file system's dlm lock resources, but the users ever
+>>> encountered some hang(deadlock) problems in ocfs2 file system.
+>>> I'd like to add first lock wait time in locking_state file, which
+>>> can help the upper scripts detect these deadlock problems via
+>>> comparing the first lock wait time with the current time.
+>>>
+>>> Signed-off-by: Gang He <ghe@suse.com>
+>>> ---
+>>>  fs/ocfs2/dlmglue.c | 32 +++++++++++++++++++++++++++++---
+>>>  fs/ocfs2/ocfs2.h   |  1 +
+>>>  2 files changed, 30 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
+>>> index d4caa6d117c6..8ce4b76f81ee 100644
+>>> --- a/fs/ocfs2/dlmglue.c
+>>> +++ b/fs/ocfs2/dlmglue.c
+>>> @@ -440,6 +440,7 @@ static void ocfs2_remove_lockres_tracking(struct 
+>> ocfs2_lock_res *res)
+>>>  static void ocfs2_init_lock_stats(struct ocfs2_lock_res *res)
+>>>  {
+>>>  	res->l_lock_refresh = 0;
+>>> +	res->l_lock_wait = 0;
+>>>  	memset(&res->l_lock_prmode, 0, sizeof(struct ocfs2_lock_stats));
+>>>  	memset(&res->l_lock_exmode, 0, sizeof(struct ocfs2_lock_stats));
+>>>  }
+>>> @@ -483,6 +484,21 @@ static inline void ocfs2_track_lock_refresh(struct 
+>> ocfs2_lock_res *lockres)
+>>>  	lockres->l_lock_refresh++;
+>>>  }
+>>>  
+>>> +static inline void ocfs2_track_lock_wait(struct ocfs2_lock_res *lockres)
+>>> +{
+>>> +	struct ocfs2_mask_waiter *mw;
+>>> +
+>>> +	if (list_empty(&lockres->l_mask_waiters)) {
+>>> +		lockres->l_lock_wait = 0;
+>>> +		return;
+>>> +	}
+>>> +
+>>> +	mw = list_first_entry(&lockres->l_mask_waiters,
+>>> +				struct ocfs2_mask_waiter, mw_item);
+>>> +	lockres->l_lock_wait =
+>>> +			ktime_to_us(ktime_mono_to_real(mw->mw_lock_start));
+>>
+>> I wonder why ktime_mono_to_real() here?
+> The new item l_lock_wait is a statistic (or debugging) related, which will be dumping to the user-space via debugfs file locking_state for the further analysis if need.
+> As the last comments from Wengang, the dumping is from different nodes in the cluster, it is better to use wall time (instead of mono or boot time) to display the related absolute times.
+> Of course, the existing delta time (use mono time) will not affected.
+> 
+> Thanks
+> Gang
+> 
+Got it,
 
-Thanks,
-Miklos
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+
+>>
+>> Thanks,
+>> Joseph
+>>
+>>> +}
+>>> +
+>>>  static inline void ocfs2_init_start_time(struct ocfs2_mask_waiter *mw)
+>>>  {
+>>>  	mw->mw_lock_start = ktime_get();
+>>> @@ -498,6 +514,9 @@ static inline void ocfs2_update_lock_stats(struct 
+>> ocfs2_lock_res *res,
+>>>  static inline void ocfs2_track_lock_refresh(struct ocfs2_lock_res *lockres)
+>>>  {
+>>>  }
+>>> +static inline void ocfs2_track_lock_wait(struct ocfs2_lock_res *lockres)
+>>> +{
+>>> +}
+>>>  static inline void ocfs2_init_start_time(struct ocfs2_mask_waiter *mw)
+>>>  {
+>>>  }
+>>> @@ -891,6 +910,7 @@ static void lockres_set_flags(struct ocfs2_lock_res 
+>> *lockres,
+>>>  		list_del_init(&mw->mw_item);
+>>>  		mw->mw_status = 0;
+>>>  		complete(&mw->mw_complete);
+>>> +		ocfs2_track_lock_wait(lockres);
+>>>  	}
+>>>  }
+>>>  static void lockres_or_flags(struct ocfs2_lock_res *lockres, unsigned long 
+>> or)
+>>> @@ -1402,6 +1422,7 @@ static void lockres_add_mask_waiter(struct 
+>> ocfs2_lock_res *lockres,
+>>>  	list_add_tail(&mw->mw_item, &lockres->l_mask_waiters);
+>>>  	mw->mw_mask = mask;
+>>>  	mw->mw_goal = goal;
+>>> +	ocfs2_track_lock_wait(lockres);
+>>>  }
+>>>  
+>>>  /* returns 0 if the mw that was removed was already satisfied, -EBUSY
+>>> @@ -1418,6 +1439,7 @@ static int __lockres_remove_mask_waiter(struct 
+>> ocfs2_lock_res *lockres,
+>>>  
+>>>  		list_del_init(&mw->mw_item);
+>>>  		init_completion(&mw->mw_complete);
+>>> +		ocfs2_track_lock_wait(lockres);
+>>>  	}
+>>>  
+>>>  	return ret;
+>>> @@ -3098,7 +3120,7 @@ static void *ocfs2_dlm_seq_next(struct seq_file *m, 
+>> void *v, loff_t *pos)
+>>>   * New in version 3
+>>>   *	- Max time in lock stats is in usecs (instead of nsecs)
+>>>   * New in version 4
+>>> - *	- Add last pr/ex unlock times in usecs
+>>> + *	- Add last pr/ex unlock times and first lock wait time in usecs
+>>>   */
+>>>  #define OCFS2_DLM_DEBUG_STR_VERSION 4
+>>>  static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+>>> @@ -3116,7 +3138,7 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void 
+>> *v)
+>>>  		return -EINVAL;
+>>>  
+>>>  #ifdef CONFIG_OCFS2_FS_STATS
+>>> -	if (dlm_debug->d_filter_secs) {
+>>> +	if (!lockres->l_lock_wait && dlm_debug->d_filter_secs) {
+>>>  		now = ktime_to_us(ktime_get_real());
+>>>  		if (lockres->l_lock_prmode.ls_last >
+>>>  		    lockres->l_lock_exmode.ls_last)
+>>> @@ -3177,6 +3199,7 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void 
+>> *v)
+>>>  # define lock_refresh(_l)		((_l)->l_lock_refresh)
+>>>  # define lock_last_prmode(_l)		((_l)->l_lock_prmode.ls_last)
+>>>  # define lock_last_exmode(_l)		((_l)->l_lock_exmode.ls_last)
+>>> +# define lock_wait(_l)			((_l)->l_lock_wait)
+>>>  #else
+>>>  # define lock_num_prmode(_l)		(0)
+>>>  # define lock_num_exmode(_l)		(0)
+>>> @@ -3189,6 +3212,7 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void 
+>> *v)
+>>>  # define lock_refresh(_l)		(0)
+>>>  # define lock_last_prmode(_l)		(0ULL)
+>>>  # define lock_last_exmode(_l)		(0ULL)
+>>> +# define lock_wait(_l)			(0ULL)
+>>>  #endif
+>>>  	/* The following seq_print was added in version 2 of this output */
+>>>  	seq_printf(m, "%u\t"
+>>> @@ -3201,6 +3225,7 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void 
+>> *v)
+>>>  		   "%u\t"
+>>>  		   "%u\t"
+>>>  		   "%llu\t"
+>>> +		   "%llu\t"
+>>>  		   "%llu\t",
+>>>  		   lock_num_prmode(lockres),
+>>>  		   lock_num_exmode(lockres),
+>>> @@ -3212,7 +3237,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void 
+>> *v)
+>>>  		   lock_max_exmode(lockres),
+>>>  		   lock_refresh(lockres),
+>>>  		   lock_last_prmode(lockres),
+>>> -		   lock_last_exmode(lockres));
+>>> +		   lock_last_exmode(lockres),
+>>> +		   lock_wait(lockres));
+>>>  
+>>>  	/* End the line */
+>>>  	seq_printf(m, "\n");
+>>> diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
+>>> index 6d0a77703d0e..99ce40063da6 100644
+>>> --- a/fs/ocfs2/ocfs2.h
+>>> +++ b/fs/ocfs2/ocfs2.h
+>>> @@ -206,6 +206,7 @@ struct ocfs2_lock_res {
+>>>  #ifdef CONFIG_OCFS2_FS_STATS
+>>>  	struct ocfs2_lock_stats  l_lock_prmode;		/* PR mode stats */
+>>>  	u32                      l_lock_refresh;	/* Disk refreshes */
+>>> +	u64                      l_lock_wait;	/* First lock wait time */
+>>>  	struct ocfs2_lock_stats  l_lock_exmode;		/* EX mode stats */
+>>>  #endif
+>>>  #ifdef CONFIG_DEBUG_LOCK_ALLOC
+>>>
