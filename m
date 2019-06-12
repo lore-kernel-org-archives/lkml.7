@@ -2,212 +2,126 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C46C31E46
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3738C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD5D208C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:35:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FreZ+Ydx"
+	by mail.kernel.org (Postfix) with ESMTP id 9B68F208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 12:36:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560342968;
+	bh=3HOt9Y5a+Ju6nO9LGaOzbgHTq1M8TaQzr922dhQ5TnQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NJ9/nrDn0vcAMGwMiVpOv3yp/3grFN5VforsUoSpOIcGFVgTNeYHmSzDFjK97iopW
+	 DOjQr5xInyqZaQm+ueK9spBU0vYUj6T3JLtTHWS3ueAv4ulOyqTg2dzZ2ngrMXnzzx
+	 IUqda/RUWMBH5uVI+h+QQONI0biHMssv98i7GRKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407844AbfFLMft (ORCPT
+        id S1731540AbfFLMgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 08:35:49 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:56157 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407663AbfFLMfs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 08:35:48 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5CCZZK9686452
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 12 Jun 2019 05:35:35 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5CCZZK9686452
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560342936;
-        bh=h3in5hBREftm3C57eF1wFkPde9gIToHd7JgiCVF5P9M=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=FreZ+Ydxy/Khf4anThvGthBBEmuVdCezI6VqQQ4j+mhBLU66eE5luEvgjbSB9CTVX
-         T3Rfyur5hLwcQSW0njN05QOT8Dbm3FYxjG9iJwx2P88zhzC9QOmyBJu6RfoxPFbTVw
-         WBwveRa1ECBDL1Kd98rPlY8rvCCMoiXdPmvjMl2yHNbGG5v3NeMUYEnsqabEOl8SMN
-         zdfy2gzS6oHfdCWhswi9qYehgRV1U+sVL05m55Ezxoy/2XeU/i6bQD6m11bJ1z/sfB
-         YWygKTNcmaFTCOrUa4r2ZbE5aazJDtIWBuayktmOmPWFctFKubHuFecGuRRJ4xchGj
-         6Og/J3ZVHYZoQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5CCZYDI686448;
-        Wed, 12 Jun 2019 05:35:34 -0700
-Date:   Wed, 12 Jun 2019 05:35:34 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Aubrey Li <tipbot@zytor.com>
-Message-ID: <tip-0c608dad2a771c0a11b6d12148d1a8b975e015d4@git.kernel.org>
-Cc:     adobriyan@gmail.com, mingo@kernel.org, luto@kernel.org,
-        tim.c.chen@linux.intel.com, hpa@zytor.com, ak@linux.intel.com,
-        peterz@infradead.org, dave.hansen@intel.com, tglx@linutronix.de,
-        aubrey.li@linux.intel.com, linux-kernel@vger.kernel.org,
-        arjan@linux.intel.com, akpm@linux-foundation.org,
-        linux-api@vger.kernel.org
-Reply-To: ak@linux.intel.com, dave.hansen@intel.com, peterz@infradead.org,
-          aubrey.li@linux.intel.com, arjan@linux.intel.com,
-          linux-kernel@vger.kernel.org, tglx@linutronix.de,
-          linux-api@vger.kernel.org, akpm@linux-foundation.org,
-          luto@kernel.org, mingo@kernel.org, adobriyan@gmail.com,
-          hpa@zytor.com, tim.c.chen@linux.intel.com
-In-Reply-To: <20190606012236.9391-2-aubrey.li@linux.intel.com>
-References: <20190606012236.9391-2-aubrey.li@linux.intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/core] x86/process: Add AVX-512 usage elapsed time to
- /proc/pid/arch_status
-Git-Commit-ID: 0c608dad2a771c0a11b6d12148d1a8b975e015d4
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 12 Jun 2019 08:36:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728606AbfFLMgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:36:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86D5820874;
+        Wed, 12 Jun 2019 12:36:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560342967;
+        bh=3HOt9Y5a+Ju6nO9LGaOzbgHTq1M8TaQzr922dhQ5TnQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C11RJh7A4vZMWNXJuoazV3DYDx2qkdbblS3KcHXbH5hng0/TQ3s8E7oZgJ0MX0Nw4
+         tGPsVAmB8hSwvRRm8o3pcTcXOohgwOMHW33yXdhv3INzovfPGLs45olc1lE+CHaoGm
+         gze5n/2rwVKnAARiifQllQ/V91FNa4o3xJM1PTwY=
+Date:   Wed, 12 Jun 2019 14:36:04 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     dvhart@infradead.org, andy@infradead.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/8] platform: x86: dell-laptop: no need to check return
+ value of debugfs_create functions
+Message-ID: <20190612123604.GB25718@kroah.com>
+References: <20190612121258.19535-1-gregkh@linuxfoundation.org>
+ <20190612121258.19535-3-gregkh@linuxfoundation.org>
+ <20190612122105.miyyfkmae24kddwt@pali>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612122105.miyyfkmae24kddwt@pali>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  0c608dad2a771c0a11b6d12148d1a8b975e015d4
-Gitweb:     https://git.kernel.org/tip/0c608dad2a771c0a11b6d12148d1a8b975e015d4
-Author:     Aubrey Li <aubrey.li@linux.intel.com>
-AuthorDate: Thu, 6 Jun 2019 09:22:35 +0800
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 12 Jun 2019 11:42:13 +0200
+On Wed, Jun 12, 2019 at 02:21:05PM +0200, Pali Rohár wrote:
+> On Wednesday 12 June 2019 14:12:53 Greg Kroah-Hartman wrote:
+> > When calling debugfs functions, there is no need to ever check the
+> > return value.  The function can work or not, but the code logic should
+> > never do something different based on this.
+> > 
+> > Cc: Matthew Garrett <mjg59@srcf.ucam.org>
+> > Cc: "Pali Rohár" <pali.rohar@gmail.com>
+> > Cc: Darren Hart <dvhart@infradead.org>
+> > Cc: Andy Shevchenko <andy@infradead.org>
+> > Cc: platform-driver-x86@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> >  drivers/platform/x86/dell-laptop.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+> > index a561f653cf13..94a2f259031c 100644
+> > --- a/drivers/platform/x86/dell-laptop.c
+> > +++ b/drivers/platform/x86/dell-laptop.c
+> > @@ -2176,9 +2176,8 @@ static int __init dell_init(void)
+> >  	kbd_led_init(&platform_device->dev);
+> >  
+> >  	dell_laptop_dir = debugfs_create_dir("dell_laptop", NULL);
+> > -	if (dell_laptop_dir != NULL)
+> > -		debugfs_create_file("rfkill", 0444, dell_laptop_dir, NULL,
+> > -				    &dell_debugfs_fops);
+> > +	debugfs_create_file("rfkill", 0444, dell_laptop_dir, NULL,
+> > +			    &dell_debugfs_fops);
+> 
+> Hi!
+> 
+> So... debugfs_create_dir() can return NULL, right?
 
-x86/process: Add AVX-512 usage elapsed time to /proc/pid/arch_status
+Nope.
 
-AVX-512 components usage can result in turbo frequency drop. So it's useful
-to expose AVX-512 usage elapsed time as a heuristic hint for user space job
-schedulers to cluster the AVX-512 using tasks together.
+> And it is then OK to call
+> debugfs_create_file("rfkill", 0444, dell_laptop_dir, ...) with
+> dell_laptop_dir = NULL?
 
-Examples:
-$ while [ 1 ]; do cat /proc/tid/arch_status | grep AVX512; sleep 1; done
-AVX512_elapsed_ms:      4
-AVX512_elapsed_ms:      8
-AVX512_elapsed_ms:      4
+Yes.
 
-This means that 4 milliseconds have elapsed since the tsks AVX512 usage was
-detected when the task was scheduled out.
+> Where would be that "rfkill" file created?
 
-$ cat /proc/tid/arch_status | grep AVX512
-AVX512_elapsed_ms:      -1
+The root of debugfs.
 
-'-1' indicates that no AVX512 usage was recorded for this task.
+But, if debugfs_create_dir() return an error, and you pass that value
+into debugfs_create_file() it will happily just return an error back
+again, and move on.
 
-The time exposed is not necessarily accurate when the arch_status file is
-read as the AVX512 usage is only evaluated when a task is scheduled
-out. Accurate usage information can be obtained with performance counters.
+So it is always safe to pass the return value of one debugfs call into
+another, no need to check anything.  If the system is so messed up that
+debugfs_create_dir() fails (i.e. you are out of memory), failing to
+create a debugfs file is the least of your worries :)
 
-[ tglx: Massaged changelog ]
+And even then, no need to change your code logic, the functionality of
+your code should never depend on if debugfs is working properly at the
+moment or not.
 
-Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: akpm@linux-foundation.org
-Cc: peterz@infradead.org
-Cc: hpa@zytor.com
-Cc: ak@linux.intel.com
-Cc: tim.c.chen@linux.intel.com
-Cc: dave.hansen@intel.com
-Cc: arjan@linux.intel.com
-Cc: adobriyan@gmail.com
-Cc: aubrey.li@intel.com
-Cc: linux-api@vger.kernel.org
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linux API <linux-api@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20190606012236.9391-2-aubrey.li@linux.intel.com
+thanks,
 
----
- arch/x86/Kconfig             |  1 +
- arch/x86/kernel/fpu/xstate.c | 47 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 48 insertions(+)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 2bbbd4d1ba31..8a49b4b03f6b 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -217,6 +217,7 @@ config X86
- 	select USER_STACKTRACE_SUPPORT
- 	select VIRT_TO_BUS
- 	select X86_FEATURE_NAMES		if PROC_FS
-+	select PROC_PID_ARCH_STATUS		if PROC_FS
- 
- config INSTRUCTION_DECODER
- 	def_bool y
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 3c36dd1784db..591ddde3b3e8 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -8,6 +8,8 @@
- #include <linux/cpu.h>
- #include <linux/mman.h>
- #include <linux/pkeys.h>
-+#include <linux/seq_file.h>
-+#include <linux/proc_fs.h>
- 
- #include <asm/fpu/api.h>
- #include <asm/fpu/internal.h>
-@@ -1240,3 +1242,48 @@ int copy_user_to_xstate(struct xregs_state *xsave, const void __user *ubuf)
- 
- 	return 0;
- }
-+
-+#ifdef CONFIG_PROC_PID_ARCH_STATUS
-+/*
-+ * Report the amount of time elapsed in millisecond since last AVX512
-+ * use in the task.
-+ */
-+static void avx512_status(struct seq_file *m, struct task_struct *task)
-+{
-+	unsigned long timestamp = READ_ONCE(task->thread.fpu.avx512_timestamp);
-+	long delta;
-+
-+	if (!timestamp) {
-+		/*
-+		 * Report -1 if no AVX512 usage
-+		 */
-+		delta = -1;
-+	} else {
-+		delta = (long)(jiffies - timestamp);
-+		/*
-+		 * Cap to LONG_MAX if time difference > LONG_MAX
-+		 */
-+		if (delta < 0)
-+			delta = LONG_MAX;
-+		delta = jiffies_to_msecs(delta);
-+	}
-+
-+	seq_put_decimal_ll(m, "AVX512_elapsed_ms:\t", delta);
-+	seq_putc(m, '\n');
-+}
-+
-+/*
-+ * Report architecture specific information
-+ */
-+int proc_pid_arch_status(struct seq_file *m, struct pid_namespace *ns,
-+			struct pid *pid, struct task_struct *task)
-+{
-+	/*
-+	 * Report AVX512 state if the processor and build option supported.
-+	 */
-+	if (cpu_feature_enabled(X86_FEATURE_AVX512F))
-+		avx512_status(m, task);
-+
-+	return 0;
-+}
-+#endif /* CONFIG_PROC_PID_ARCH_STATUS */
+greg k-h
