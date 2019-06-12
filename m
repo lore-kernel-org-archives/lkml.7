@@ -2,142 +2,174 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C456C31E45
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4315C31E44
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31EA620883
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B16220866
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 01:22:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fak8lK+4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvB/JIM6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408325AbfFLBSJ (ORCPT
+        id S2406648AbfFLBWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 11 Jun 2019 21:18:09 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41522 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406608AbfFLBSI (ORCPT
+        Tue, 11 Jun 2019 21:22:15 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36279 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405843AbfFLBWP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 11 Jun 2019 21:18:08 -0400
-Received: by mail-oi1-f195.google.com with SMTP id g7so7257197oia.8;
-        Tue, 11 Jun 2019 18:18:08 -0700 (PDT)
+        Tue, 11 Jun 2019 21:22:15 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r7so2678096pfl.3;
+        Tue, 11 Jun 2019 18:22:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nSDY8zFKF7PHOkb9LEHVAO61FULkhNk92Ig0WDAkMeo=;
-        b=Fak8lK+4PNF9fTphDDAZgqPro0aWiW8+A1NlJtFHUsSkFFzto70eTDEOmYx+vU+Gcb
-         IGC4MMxyC6DlqpylYL/43ZaCCZfEWok0L/KwJAqYHHPikQH7pbIsSJVPd5uICx+/4MJM
-         LVeEiUXzkEHfmdxk8TaJ80bbulOZFI7e8SnfyfTsuyh5M5P6n9X03Bn+acaym/QH69hh
-         IJ1VIjtBel3XjtrALGiDcDIjetB/S2sDRTwLH0R4ZlKOVEUIMVAR00CtpxZyXLi2gEte
-         hrO8ozymXOWlDHv3X8nErfVdUe3OOcBxOGNv0F5SmjAeBGRxUTjfgmj7ez6kZVT9oFZW
-         Wk9A==
+        h=from:to:cc:subject:date:message-id;
+        bh=Ky1cJOwHZ56JNmGYppilpULLontDldd/s3eyGI0m6U0=;
+        b=DvB/JIM6X6sMQrH9Y8WL3U7oZvQIzwOIQk+La/XXrFHdO15QBkDIKLqeaET/1Ep74o
+         SYyudSUvfV/5cHstBLovWzTLk8PYGV8V8yD5CEHNEAIARQkpbLLgfqnBR4oR41W2wO3J
+         4Bd6YcsJ30dwxmRisE9z6XiwSsb4f7F17W7AF/av2kAw/RcJ6WBelqHl1Dxy/FCH7GN/
+         BnxXrrhyjzQn4wnwzmD+gWjr3Pit/qteQKKVrx4mbeliQKt5sA8MUxPfhUtHhfMdekWm
+         Q/+29RX8dzEnm6sqmipV6wWmXH6Wut8hHHnjVr5/QvgbcCZny47E5We2DyfpkBL6I0Qo
+         p5HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nSDY8zFKF7PHOkb9LEHVAO61FULkhNk92Ig0WDAkMeo=;
-        b=ZM0DRNI62J4dnQECvgA6Ac87+Jgi4l1vM4mb0LFEr9TPvIma4ekmKvv96rLfRMMfY7
-         PmH4vR7XAF0gLh+b/UPVpvXKUm1JF7QwnB1AikPSNfuKIfDnfeDwi5BtpbPoMU9L44XY
-         B6EuJpLEpPjsVJ3URC3NcTMuQlLU92SKkKYf1YJrOhcYd6WfmzYaT06iTcM/O28UN5p3
-         2geCS8QpBAGSbQCzkePhzyDkuqmzSdSztmtIa2nuLxCimp4zbhKhRgGBuDyQitT6x4Tq
-         fw4HjzkUKREeMdeGpb2lMevs3ckCscfB6sdtUDVFNRFGbuWFaJwIFq4N8PkotIzg6lyW
-         fjaw==
-X-Gm-Message-State: APjAAAVa1ADofxpvAcPVNPO/6olLYeWAVxKE4aJ13VcvgYHhnyXuUzDI
-        6pNFXsJH4swEG5j2KZXaKetoHgc1G6jLFhEDHFQ=
-X-Google-Smtp-Source: APXvYqxOePRL5Ast7RADB3O0vCgjL79/XpjmQIDrsy0dacjkgNNOLQ/cxOC3E7txveiyXCan4jJtl65RR5rjp+2kc6I=
-X-Received: by 2002:aca:3305:: with SMTP id z5mr15303551oiz.141.1560302288094;
- Tue, 11 Jun 2019 18:18:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <1559178307-6835-1-git-send-email-wanpengli@tencent.com>
- <20190610143420.GA6594@flask> <20190611011100.GB24835@linux.intel.com>
- <CANRm+Cwv5jqxBW=Ss5nkX7kZM3_Y-Ucs66yx5+wN09=W4pUdzA@mail.gmail.com>
- <F136E492-5350-49EE-A856-FBAEDB12FF99@gmail.com> <CANRm+CyZcvuT80ixp9f0FNmjN+rTUtw8MshtBG0Uk4L1B1UjDw@mail.gmail.com>
- <153047ED-75E2-4E70-BC33-C5FF27C08638@gmail.com>
-In-Reply-To: <153047ED-75E2-4E70-BC33-C5FF27C08638@gmail.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 12 Jun 2019 09:18:51 +0800
-Message-ID: <CANRm+Cx6Z=jxLaXqwhBDpVTsKH8mgoo4iC=U8GbAAJz-5gk5ZA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] KVM: Yield to IPI target if necessary
-To:     Nadav Amit <nadav.amit@gmail.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ky1cJOwHZ56JNmGYppilpULLontDldd/s3eyGI0m6U0=;
+        b=fWlRK0FNlJhMp7Wz4SzA4XRqxtVvTbaeFMyDsul+7qCPBNaljYQzaDKzNGr/D7eZvQ
+         2Mwk+IkfsIO1rBVLwXZC8DjbQVRjazY3Z1eh4qZ0951ydVQEcyhM3/5eUDdMbwQz7Ul0
+         ww+yjdNGCyUHia1Ce39Sv+rjwuvoHsHaL1D0GaPOydobEY5MGGUDSlmXB3KODtQaMDR+
+         GoC1+fF5SngcMOgVg7Ko75UnyztorkWtBlF0jJzPlH0vRBAc0rsF7PTDMhQzdCIqeUOC
+         X6sPvJ3CK13Z8QhxG1PIY/mGjCv2MviG4trznqWSx9pSiX9hHeg3DAqxY1OSRoJtIokJ
+         PXtA==
+X-Gm-Message-State: APjAAAUTDP+lFCo67R+I7GDUaHkXguClnwQMob49JWBA/B5LuTQg2ova
+        lGpu7iIyKaw22vfFGEAoogQ=
+X-Google-Smtp-Source: APXvYqxoq0tlHQ6kgp/iduVCCMwBl8mA/veWFn8EQTI1GGwQscJmgo9L2tHZ8aJxWuG53y/8ArR7IA==
+X-Received: by 2002:aa7:8d89:: with SMTP id i9mr44034763pfr.77.1560302534005;
+        Tue, 11 Jun 2019 18:22:14 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id y22sm13265319pgj.38.2019.06.11.18.22.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 11 Jun 2019 18:22:13 -0700 (PDT)
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     sumit.semwal@linaro.org, christian.koenig@amd.com
+Cc:     linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        daniel.vetter@ffwll.ch
+Subject: [PATCH] dma-buf: refcount the attachment for cache_sgt_mapping
+Date:   Tue, 11 Jun 2019 18:22:19 -0700
+Message-Id: <20190612012219.21652-1-nicoleotsuka@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Jun 2019 at 00:57, Nadav Amit <nadav.amit@gmail.com> wrote:
->
-> > On Jun 11, 2019, at 3:02 AM, Wanpeng Li <kernellwp@gmail.com> wrote:
-> >
-> > On Tue, 11 Jun 2019 at 09:48, Nadav Amit <nadav.amit@gmail.com> wrote:
-> >>> On Jun 10, 2019, at 6:45 PM, Wanpeng Li <kernellwp@gmail.com> wrote:
-> >>>
-> >>> On Tue, 11 Jun 2019 at 09:11, Sean Christopherson
-> >>> <sean.j.christopherson@intel.com> wrote:
-> >>>> On Mon, Jun 10, 2019 at 04:34:20PM +0200, Radim Kr=C4=8Dm=C3=A1=C5=
-=99 wrote:
-> >>>>> 2019-05-30 09:05+0800, Wanpeng Li:
-> >>>>>> The idea is from Xen, when sending a call-function IPI-many to vCP=
-Us,
-> >>>>>> yield if any of the IPI target vCPUs was preempted. 17% performanc=
-e
-> >>>>>> increasement of ebizzy benchmark can be observed in an over-subscr=
-ibe
-> >>>>>> environment. (w/ kvm-pv-tlb disabled, testing TLB flush call-funct=
-ion
-> >>>>>> IPI-many since call-function is not easy to be trigged by userspac=
-e
-> >>>>>> workload).
-> >>>>>
-> >>>>> Have you checked if we could gain performance by having the yield a=
-s an
-> >>>>> extension to our PV IPI call?
-> >>>>>
-> >>>>> It would allow us to skip the VM entry/exit overhead on the caller.
-> >>>>> (The benefit of that might be negligible and it also poses a
-> >>>>> complication when splitting the target mask into several PV IPI
-> >>>>> hypercalls.)
-> >>>>
-> >>>> Tangetially related to splitting PV IPI hypercalls, are there any ma=
-jor
-> >>>> hurdles to supporting shorthand?  Not having to generate the mask fo=
-r
-> >>>> ->send_IPI_allbutself and ->kvm_send_ipi_all seems like an easy to w=
-ay
-> >>>> shave cycles for affected flows.
-> >>>
-> >>> Not sure why shorthand is not used for native x2apic mode.
-> >>
-> >> Why do you say so? native_send_call_func_ipi() checks if allbutself
-> >> shorthand should be used and does so (even though the check can be mor=
-e
-> >> efficient - I=E2=80=99m looking at that code right now=E2=80=A6)
-> >
-> > Please continue to follow the apic/x2apic driver. Just apic_flat set
-> > APIC_DEST_ALLBUT/APIC_DEST_ALLINC to ICR.
->
-> Indeed - I was sure by the name that it does it correctly. That=E2=80=99s=
- stupid.
->
-> I=E2=80=99ll add it to the patch-set I am working on (TLB shootdown impro=
-vements),
-> if you don=E2=80=99t mind.
+Commit f13e143e7444 ("dma-buf: start caching of sg_table objects v2")
+added a support of caching the sgt pointer into an attach pointer to
+let users reuse the sgt pointer without another mapping. However, it
+might not totally work as most of dma-buf callers are doing attach()
+and map_attachment() back-to-back, using drm_prime.c for example:
+    drm_gem_prime_import_dev() {
+        attach = dma_buf_attach() {
+            /* Allocating a new attach */
+            attach = kzalloc();
+            /* .... */
+            return attach;
+        }
+        dma_buf_map_attachment(attach, direction) {
+            /* attach->sgt would be always empty as attach is new */
+            if (attach->sgt) {
+                /* Reuse attach->sgt */
+            }
+            /* Otherwise, map it */
+            attach->sgt = map();
+        }
+    }
 
-Original for hotplug cpu safe.
-https://lwn.net/Articles/138365/
-https://lwn.net/Articles/138368/
-Not sure shortcut native support is acceptable, I will play my
-kvm_send_ipi_allbutself and kvm_send_ipi_all. :)
+So, for a cache_sgt_mapping use case, it would need to get the same
+attachment pointer in order to reuse its sgt pointer. So this patch
+adds a refcount to the attach() function and lets it search for the
+existing attach pointer by matching the dev pointer.
 
-Regards,
-Wanpeng Li
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+---
+ drivers/dma-buf/dma-buf.c | 23 +++++++++++++++++++++++
+ include/linux/dma-buf.h   |  2 ++
+ 2 files changed, 25 insertions(+)
+
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index f4104a21b069..d0260553a31c 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -559,6 +559,21 @@ struct dma_buf_attachment *dma_buf_attach(struct dma_buf *dmabuf,
+ 	if (WARN_ON(!dmabuf || !dev))
+ 		return ERR_PTR(-EINVAL);
+ 
++	/* cache_sgt_mapping requires to reuse the same attachment pointer */
++	if (dmabuf->ops->cache_sgt_mapping) {
++		mutex_lock(&dmabuf->lock);
++
++		/* Search for existing attachment and increase its refcount */
++		list_for_each_entry(attach, &dmabuf->attachments, node) {
++			if (dev != attach->dev)
++				continue;
++			atomic_inc_not_zero(&attach->refcount);
++			goto unlock_attach;
++		}
++
++		mutex_unlock(&dmabuf->lock);
++	}
++
+ 	attach = kzalloc(sizeof(*attach), GFP_KERNEL);
+ 	if (!attach)
+ 		return ERR_PTR(-ENOMEM);
+@@ -575,6 +590,9 @@ struct dma_buf_attachment *dma_buf_attach(struct dma_buf *dmabuf,
+ 	}
+ 	list_add(&attach->node, &dmabuf->attachments);
+ 
++	atomic_set(&attach->refcount, 1);
++
++unlock_attach:
+ 	mutex_unlock(&dmabuf->lock);
+ 
+ 	return attach;
+@@ -599,6 +617,11 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
+ 	if (WARN_ON(!dmabuf || !attach))
+ 		return;
+ 
++	/* Decrease the refcount for cache_sgt_mapping use cases */
++	if (dmabuf->ops->cache_sgt_mapping &&
++	    atomic_dec_return(&attach->refcount))
++		return;
++
+ 	if (attach->sgt)
+ 		dmabuf->ops->unmap_dma_buf(attach, attach->sgt, attach->dir);
+ 
+diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+index 8a327566d7f4..65f12212ca2e 100644
+--- a/include/linux/dma-buf.h
++++ b/include/linux/dma-buf.h
+@@ -333,6 +333,7 @@ struct dma_buf {
+  * @dev: device attached to the buffer.
+  * @node: list of dma_buf_attachment.
+  * @sgt: cached mapping.
++ * @refcount: refcount of the attachment for the same device.
+  * @dir: direction of cached mapping.
+  * @priv: exporter specific attachment data.
+  *
+@@ -350,6 +351,7 @@ struct dma_buf_attachment {
+ 	struct device *dev;
+ 	struct list_head node;
+ 	struct sg_table *sgt;
++	atomic_t refcount;
+ 	enum dma_data_direction dir;
+ 	void *priv;
+ };
+-- 
+2.17.1
+
