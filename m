@@ -2,140 +2,237 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA356C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3CEC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0B7D2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CA820896
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 06:31:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uUFu1DVc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731105AbfFLG2a (ORCPT
+        id S1731133AbfFLGbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 02:28:30 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:44590 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726010AbfFLG2a (ORCPT
+        Wed, 12 Jun 2019 02:31:01 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39588 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731112AbfFLGbA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 02:28:30 -0400
-X-UUID: ee68a5836ab848e7bba4d9c3af397e7a-20190612
-X-UUID: ee68a5836ab848e7bba4d9c3af397e7a-20190612
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 653344176; Wed, 12 Jun 2019 14:28:16 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 12 Jun 2019 14:28:14 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 12 Jun 2019 14:28:15 +0800
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Macpaul Lin <macpaul.lin@mediatek.com>,
-        <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <wsd_upstream@mediatek.com>
-Subject: [PATCH] mtu3: fix setup packet response for HNP and SRP request
-Date:   Wed, 12 Jun 2019 14:28:07 +0800
-Message-ID: <1560320892-30551-1-git-send-email-macpaul.lin@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Wed, 12 Jun 2019 02:31:00 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j2so9018000pfe.6
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2019 23:31:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gRU97u8F3heZwksD5NXw0YJFqwH/QRlGkCsX4mDvygU=;
+        b=uUFu1DVciMRXhSOTU5k0VpTZdcd+0DQP7nnLOmG5vdfT08Q7T6XA80IVAoo4PK1rMI
+         CnyREE5R0Ndvi+TKKM2GKivx0VqpJGt4Qg/xcyJ3kx2cp19q3U2GjCuGTBTN7TsBsKpx
+         xi2oIGkfHotbx8ybVO7pYyrn/voiHo5O/CEH5t3tZlqE/MIN6oGzmVFB6t6LERYyHkmK
+         co8psl8W6TjG036PEe5As8Gq4e4pTaWw+JaOXM45k9RUk+3f2TwzachJrM1Eoj1uR0Wl
+         kONgrevcnbqhCUzCbM+8kFCL9IHt1a/sN6IHDzWjRyP1mDdSxiNsyO5PNJczNvk5ZUQH
+         fTyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gRU97u8F3heZwksD5NXw0YJFqwH/QRlGkCsX4mDvygU=;
+        b=kEXPJWWvEGVRTPgBIKbc5RTyZ64zCQna6WPRkxMM6hxnM5CVNGzbdYQHdeJyprYxeA
+         1dtNFQRm/Ue6b9oVbuHJPcsXV3XmSZc+I/CXhIM5Ed7Bh4eUnPzPHqmD3SNlsPHOOV1e
+         E9DyeLsnilwT/rOjQTCoxlpIv+qlWcHJQytOySYujkE1DAGHjFs3Kjo72dxNWmbMy8P5
+         HlFZ1mkmaAhe+zjhL6DSWbHNVExEfavzXhN9JD1nH7cILbhaO4PqgbNzfxkGAwloijMn
+         o9eEVCw95cxoM4ZdMOlTUbq76cSsU+ogaTDX5CXdaaqUG1pVAGp4yac/71+h6Tmw2UXY
+         y/WA==
+X-Gm-Message-State: APjAAAWdyvgrKODJ2uTC2g9UoUal3gq8YgpwMG0ArTU2G1EKtO0kguyg
+        C7LhbVtItFvQvkS+BC7YgHjDNQ==
+X-Google-Smtp-Source: APXvYqyqeocc93w7xNJCHOiQGj0GObB6w9hjNxSzx+wtommrrEgQn6nhVSqyv7l1OkxpaA85zCP5Mg==
+X-Received: by 2002:a62:5387:: with SMTP id h129mr86969334pfb.6.1560321059827;
+        Tue, 11 Jun 2019 23:30:59 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id l38sm4124385pje.12.2019.06.11.23.30.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 23:30:59 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 23:31:43 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Andy Gross <agross@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: [EXT] [PATCH v3 2/3] scsi: ufs-qcom: Implement device_reset vops
+Message-ID: <20190612063143.GD22737@tuxbook-pro>
+References: <20190608050450.12056-1-bjorn.andersson@linaro.org>
+ <20190608050450.12056-3-bjorn.andersson@linaro.org>
+ <BN7PR08MB56848AB3CC413CBEC211130EDBED0@BN7PR08MB5684.namprd08.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: CE1AD9F9C4AB7DD47709BB3955B3B7E2FF4BB35A299C25F5C5745B5492155FC12000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN7PR08MB56848AB3CC413CBEC211130EDBED0@BN7PR08MB5684.namprd08.prod.outlook.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Add OTG_HNP_REQD and OTG_SRP_REQD definitions in ch9.h.
-2. When OTG_HNP_REQD and OTG_SRP_REQD has been received,
-usb hardware must not enter TEST mode but need to response setup packet.
-3. Add otg_srp_reqd and otg_hnp_reqd in struct ssusb_mtk for futher
-implementation.
+On Tue 11 Jun 09:08 PDT 2019, Bean Huo (beanhuo) wrote:
 
-Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
----
- drivers/usb/mtu3/mtu3.h            |  4 ++++
- drivers/usb/mtu3/mtu3_gadget_ep0.c | 13 +++++++++++++
- include/uapi/linux/usb/ch9.h       |  5 +++++
- 3 files changed, 22 insertions(+)
+> Hi, Bjorn
+> This HW reset is dedicated to QUALCOMM based platform case.
+> how about adding a SW reset as to be default reset routine if platform doesn't support HW reset?
+> 
 
-diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
-index 76ecf12fdf62..bb8a31bc6e4d 100644
---- a/drivers/usb/mtu3/mtu3.h
-+++ b/drivers/usb/mtu3/mtu3.h
-@@ -226,6 +226,8 @@ struct otg_switch_mtk {
-  * @dma_clk: dma_bus_ck clock for AXI bus etc
-  * @dr_mode: works in which mode:
-  *		host only, device only or dual-role mode
-+ * @otg_srp_reqd: used for SRP request handling.
-+ * @otg_hnp_reqd: used for HNP request handling.
-  * @u2_ports: number of usb2.0 host ports
-  * @u3_ports: number of usb3.0 host ports
-  * @u3p_dis_msk: mask of disabling usb3 ports, for example, bit0==1 to
-@@ -252,6 +254,8 @@ struct ssusb_mtk {
- 	/* otg */
- 	struct otg_switch_mtk otg_switch;
- 	enum usb_dr_mode dr_mode;
-+	bool otg_srp_reqd;
-+	bool otg_hnp_reqd;
- 	bool is_host;
- 	int u2_ports;
- 	int u3_ports;
-diff --git a/drivers/usb/mtu3/mtu3_gadget_ep0.c b/drivers/usb/mtu3/mtu3_gadget_ep0.c
-index 4da216c99726..1247c43a63e6 100644
---- a/drivers/usb/mtu3/mtu3_gadget_ep0.c
-+++ b/drivers/usb/mtu3/mtu3_gadget_ep0.c
-@@ -285,11 +285,24 @@ static int handle_test_mode(struct mtu3 *mtu, struct usb_ctrlrequest *setup)
- 		dev_dbg(mtu->dev, "TEST_PACKET\n");
- 		mtu->test_mode_nr = TEST_PACKET_MODE;
- 		break;
-+	case OTG_SRP_REQD:
-+		dev_dbg(mtu->dev, "OTG_SRP_REQD\n");
-+		mtu->ssusb->otg_srp_reqd = 1;
-+		break;
-+	case OTG_HNP_REQD:
-+		dev_dbg(mtu->dev, "OTG_HNP_REQD\n");
-+		mtu->ssusb->otg_hnp_reqd = 1;
-+		break;
- 	default:
- 		handled = -EINVAL;
- 		goto out;
- 	}
- 
-+	if (mtu->ssusb->otg_srp_reqd || mtu->ssusb->otg_hnp_reqd) {
-+		mtu->ep0_state = MU3D_EP0_STATE_SETUP;
-+		goto out;
-+	}
-+
- 	mtu->test_mode = true;
- 
- 	/* no TX completion interrupt, and need restart platform after test */
-diff --git a/include/uapi/linux/usb/ch9.h b/include/uapi/linux/usb/ch9.h
-index d5a5caec8fbc..545918c83fd1 100644
---- a/include/uapi/linux/usb/ch9.h
-+++ b/include/uapi/linux/usb/ch9.h
-@@ -143,6 +143,11 @@
- #define	TEST_SE0_NAK	3
- #define	TEST_PACKET	4
- #define	TEST_FORCE_EN	5
-+/*
-+ * OTG HNP and SRP REQD
-+ */
-+#define	OTG_SRP_REQD	6
-+#define	OTG_HNP_REQD	7
- 
- /* Status Type */
- #define USB_STATUS_TYPE_STANDARD	0
--- 
-2.18.0
+Can you please advice how I perform such software reset?
 
+Regards,
+Bjorn
+
+> >-----Original Message-----
+> >From: linux-scsi-owner@vger.kernel.org <linux-scsi-owner@vger.kernel.org>
+> >On Behalf Of Bjorn Andersson
+> >Sent: Saturday, June 8, 2019 7:05 AM
+> >To: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> ><mark.rutland@arm.com>; Alim Akhtar <alim.akhtar@samsung.com>; Avri
+> >Altman <avri.altman@wdc.com>; Pedro Sousa
+> ><pedrom.sousa@synopsys.com>; James E.J. Bottomley <jejb@linux.ibm.com>;
+> >Martin K. Petersen <martin.petersen@oracle.com>
+> >Cc: Andy Gross <agross@kernel.org>; devicetree@vger.kernel.org; linux-
+> >kernel@vger.kernel.org; linux-arm-msm@vger.kernel.org; linux-
+> >scsi@vger.kernel.org
+> >Subject: [EXT] [PATCH v3 2/3] scsi: ufs-qcom: Implement device_reset vops
+> >
+> >The UFS_RESET pin on Qualcomm SoCs are controlled by TLMM and exposed
+> >through the GPIO framework. Acquire the device-reset GPIO and use this to
+> >implement the device_reset vops, to allow resetting the attached memory.
+> >
+> >Based on downstream support implemented by Subhash Jadavani
+> ><subhashj@codeaurora.org>.
+> >
+> >Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> >---
+> >
+> >Changes since v2:
+> >- Moved implementation to Qualcomm driver
+> >
+> > .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |  2 ++
+> > drivers/scsi/ufs/ufs-qcom.c                   | 32 +++++++++++++++++++
+> > drivers/scsi/ufs/ufs-qcom.h                   |  4 +++
+> > 3 files changed, 38 insertions(+)
+> >
+> >diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> >b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> >index a74720486ee2..d562d8b4919c 100644
+> >--- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> >+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> >@@ -54,6 +54,8 @@ Optional properties:
+> > 			  PHY reset from the UFS controller.
+> > - resets            : reset node register
+> > - reset-names       : describe reset node register, the "rst" corresponds to
+> >reset the whole UFS IP.
+> >+- device-reset-gpios	: A phandle and gpio specifier denoting the GPIO
+> >connected
+> >+			  to the RESET pin of the UFS memory device.
+> >
+> > Note: If above properties are not defined it can be assumed that the supply
+> >regulators or clocks are always on.
+> >diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c index
+> >ea7219407309..efaf57ba618a 100644
+> >--- a/drivers/scsi/ufs/ufs-qcom.c
+> >+++ b/drivers/scsi/ufs/ufs-qcom.c
+> >@@ -16,6 +16,7 @@
+> > #include <linux/of.h>
+> > #include <linux/platform_device.h>
+> > #include <linux/phy/phy.h>
+> >+#include <linux/gpio/consumer.h>
+> > #include <linux/reset-controller.h>
+> >
+> > #include "ufshcd.h"
+> >@@ -1141,6 +1142,15 @@ static int ufs_qcom_init(struct ufs_hba *hba)
+> > 		goto out_variant_clear;
+> > 	}
+> >
+> >+	host->device_reset = devm_gpiod_get_optional(dev, "device-reset",
+> >+						     GPIOD_OUT_HIGH);
+> >+	if (IS_ERR(host->device_reset)) {
+> >+		err = PTR_ERR(host->device_reset);
+> >+		if (err != -EPROBE_DEFER)
+> >+			dev_err(dev, "failed to acquire reset gpio: %d\n", err);
+> >+		goto out_variant_clear;
+> >+	}
+> >+
+> > 	err = ufs_qcom_bus_register(host);
+> > 	if (err)
+> > 		goto out_variant_clear;
+> >@@ -1546,6 +1556,27 @@ static void ufs_qcom_dump_dbg_regs(struct
+> >ufs_hba *hba)
+> > 	usleep_range(1000, 1100);
+> > }
+> >
+> >+/**
+> >+ * ufs_qcom_device_reset() - toggle the (optional) device reset line
+> >+ * @hba: per-adapter instance
+> >+ *
+> >+ * Toggles the (optional) reset line to reset the attached device.
+> >+ */
+> >+static void ufs_qcom_device_reset(struct ufs_hba *hba) {
+> >+	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> >+
+> >+	/*
+> >+	 * The UFS device shall detect reset pulses of 1us, sleep for 10us to
+> >+	 * be on the safe side.
+> >+	 */
+> >+	gpiod_set_value_cansleep(host->device_reset, 1);
+> >+	usleep_range(10, 15);
+> >+
+> >+	gpiod_set_value_cansleep(host->device_reset, 0);
+> >+	usleep_range(10, 15);
+> >+}
+> >+
+> > /**
+> >  * struct ufs_hba_qcom_vops - UFS QCOM specific variant operations
+> >  *
+> >@@ -1566,6 +1597,7 @@ static struct ufs_hba_variant_ops
+> >ufs_hba_qcom_vops = {
+> > 	.suspend		= ufs_qcom_suspend,
+> > 	.resume			= ufs_qcom_resume,
+> > 	.dbg_register_dump	= ufs_qcom_dump_dbg_regs,
+> >+	.device_reset		= ufs_qcom_device_reset,
+> > };
+> >
+> > /**
+> >diff --git a/drivers/scsi/ufs/ufs-qcom.h b/drivers/scsi/ufs/ufs-qcom.h index
+> >68a880185752..b96ffb6804e4 100644
+> >--- a/drivers/scsi/ufs/ufs-qcom.h
+> >+++ b/drivers/scsi/ufs/ufs-qcom.h
+> >@@ -204,6 +204,8 @@ struct ufs_qcom_testbus {
+> > 	u8 select_minor;
+> > };
+> >
+> >+struct gpio_desc;
+> >+
+> > struct ufs_qcom_host {
+> > 	/*
+> > 	 * Set this capability if host controller supports the QUniPro mode
+> >@@ -241,6 +243,8 @@ struct ufs_qcom_host {
+> > 	struct ufs_qcom_testbus testbus;
+> >
+> > 	struct reset_controller_dev rcdev;
+> >+
+> >+	struct gpio_desc *device_reset;
+> > };
+> >
+> > static inline u32
+> >--
+> >2.18.0
+> 
