@@ -2,129 +2,117 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1408DC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B9BC31E47
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA78E2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B90208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 14:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731645AbfFLOeJ (ORCPT
+        id S1731924AbfFLOek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 10:34:09 -0400
-Received: from mga07.intel.com ([134.134.136.100]:6916 "EHLO mga07.intel.com"
+        Wed, 12 Jun 2019 10:34:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:54596 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728048AbfFLOeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:34:08 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 07:34:07 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Jun 2019 07:34:05 -0700
-Date:   Wed, 12 Jun 2019 07:34:05 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>, q@linux.intel.com
-Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        id S1726840AbfFLOej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:34:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 74C632B;
+        Wed, 12 Jun 2019 07:34:38 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D68633F557;
+        Wed, 12 Jun 2019 07:34:32 -0700 (PDT)
+Subject: Re: [PATCH v17 06/15] mm, arm64: untag user pointers in
+ get_vaddr_frames
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        "Tricca, Philip B" <philip.b.tricca@intel.com>
-Subject: Re: [RFC PATCH v2 2/5] x86/sgx: Require userspace to define enclave
- pages' protection bits
-Message-ID: <20190612143405.GC20308@linux.intel.com>
-References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
- <20190606021145.12604-3-sean.j.christopherson@intel.com>
- <960B34DE67B9E140824F1DCDEC400C0F65500E13@ORSMSX116.amr.corp.intel.com>
- <CALCETrWv9FYDtiHMfnfH==jE00tt7F22t-zcnP+XjfRCQgLr7A@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F655010EF@ORSMSX116.amr.corp.intel.com>
- <331B31BF-9892-4FB3-9265-3E37412F80F4@amacapital.net>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+References: <cover.1560339705.git.andreyknvl@google.com>
+ <4c0b9a258e794437a1c6cec97585b4b5bd2d3bba.1560339705.git.andreyknvl@google.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <89b0c166-9a83-ba09-42e1-4fa478417b3d@arm.com>
+Date:   Wed, 12 Jun 2019 15:34:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <4c0b9a258e794437a1c6cec97585b4b5bd2d3bba.1560339705.git.andreyknvl@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <331B31BF-9892-4FB3-9265-3E37412F80F4@amacapital.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 05:09:28PM -0700, Andy Lutomirski wrote:
+On 12/06/2019 12:43, Andrey Konovalov wrote:
+> This patch is a part of a series that extends arm64 kernel ABI to allow to
+> pass tagged user pointers (with the top byte set to something else other
+> than 0x00) as syscall arguments.
 > 
-> On Jun 10, 2019, at 3:28 PM, Xing, Cedric <cedric.xing@intel.com> wrote:
+> get_vaddr_frames uses provided user pointers for vma lookups, which can
+> only by done with untagged pointers. Instead of locating and changing
+> all callers of this function, perform untagging in it.
 > 
-> >> From: Andy Lutomirski [mailto:luto@kernel.org]
-> >> Sent: Monday, June 10, 2019 12:15 PM
-> >> This seems like an odd workflow.  Shouldn't the #PF return back to
-> >> untrusted userspace so that the untrusted user code can make its own
-> >> decision as to whether it wants to EAUG a page there as opposed to, say,
-> >> killing the enclave or waiting to keep resource usage under control?
-> > 
-> > This may seem odd to some at the first glance. But if you can think of how
-> > static heap (pre-allocated by EADD before EINIT) works, the load parses the
-> > "metadata" coming with the enclave to decide the address/size of the heap,
-> > EADDs it, and calls it done. In the case of "dynamic" heap (allocated
-> > dynamically by EAUG after EINIT), the same thing applies - the loader
-> > determines the range of the heap, tells the SGX module about it, and calls
-> > it done. Everything else is the between the enclave and the SGX module.
-> > 
-> > In practice, untrusted code usually doesn't know much about enclaves, just
-> > like it doesn't know much about the shared objects loaded into its address
-> > space either. Without the necessary knowledge, untrusted code usually just
-> > does what it is told (via o-calls, or return value from e-calls), without
-> > judging that's right or wrong. 
-> > 
-> > When it comes to #PF like what I described, of course a signal could be
-> > sent to the untrusted code but what would it do then? Usually it'd just
-> > come back asking for a page at the fault address. So we figured it'd be
-> > more efficient to just have the kernel EAUG at #PF. 
-> > 
-> > Please don't get me wrong though, as I'm not dictating what the s/w flow
-> > shall be. It's just going to be a choice offered to user mode. And that
-> > choice was planned to be offered via mprotect() - i.e. a writable vma
-> > causes kernel to EAUG while a non-writable vma will result in a signal
-> > (then the user mode could decide whether to EAUG). The key point is
-> > flexibility - as we want to allow all reasonable s/w flows instead of
-> > dictating one over others. We had similar discussions on vDSO API before.
-> > And I think you accepted my approach because of its flexibility. Am I
-> > right?
-> 
-> As long as user code can turn this off, I have no real objection. But it
-> might make sense to have it be more explicit — have an ioctl set up a range
-> as “EAUG-on-demand”.
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 
-This was part of the motivation behind changing SGX_IOC_ENCLAVE_ADD_PAGE
-to SGX_IOC_ENCLAVE_ADD_REGION and adding a @flags parameter.  E.g. adding
-support for "EAUG-on-demand" regions would just be a new flag.
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-> But this is all currently irrelevant. We can argue about it when the patches
-> show up. :)
+> ---
+>  mm/frame_vector.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/mm/frame_vector.c b/mm/frame_vector.c
+> index c64dca6e27c2..c431ca81dad5 100644
+> --- a/mm/frame_vector.c
+> +++ b/mm/frame_vector.c
+> @@ -46,6 +46,8 @@ int get_vaddr_frames(unsigned long start, unsigned int nr_frames,
+>  	if (WARN_ON_ONCE(nr_frames > vec->nr_allocated))
+>  		nr_frames = vec->nr_allocated;
+>  
+> +	start = untagged_addr(start);
+> +
+>  	down_read(&mm->mmap_sem);
+>  	locked = 1;
+>  	vma = find_vma_intersection(mm, start, start + 1);
+> 
+
+-- 
+Regards,
+Vincenzo
