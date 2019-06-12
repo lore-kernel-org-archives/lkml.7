@@ -2,100 +2,100 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3823FC31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB304C31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C77F20874
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7C9215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 15:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408727AbfFLPVS (ORCPT
+        id S2408748AbfFLPWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 11:21:18 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44031 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728137AbfFLPVR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:21:17 -0400
-Received: by mail-qt1-f196.google.com with SMTP id z24so5697902qtj.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 08:21:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gMRaFc3/hEiSi70Ix5/f3einSpUu2nV4TVmJ7D/hed4=;
-        b=W053NTWS7vMSs6KTP5Y63k8NLCpN5bfjB1+FDyJwOgy0ggC1OwvsDGVWKPRgb1UgS0
-         jXvLpsdtv4XYMQrACQsVcqpZP5d6PDOgOK2xOLeFGyCrLuxieV5iax0SCll+E7GVdwbq
-         a5jQ8zVWdKb7zgsviHp2Do+vD4QBzGcMNZxXNhj2arCY5xCsG4yXQI27qoBRScF+8GB6
-         HJ8o19xKjuscyVz8Vf04Rda81kzO0WNg4TJ3YurTnffBx/U+O47SNE/0U6NFAMzAceI1
-         FNwEYGA1DHn40WvkM6/gWE9H/ChGe+LCkUGPQy5FHtS+goyaY8KMNErGxQs1h/sQDV83
-         mAQA==
-X-Gm-Message-State: APjAAAUyTJNjzXUa8GI/tq4873utMAMdtYiE3kw/Ro8ovd9ioaOt6a26
-        6gfp0dzEx+Pp2EBqDnmbsL04AGbOvou0xxLfCKNWJQ==
-X-Google-Smtp-Source: APXvYqxHbmq550GcVIRTXA5tocwW+ku4/cuYE4oFs0POCYRKMQzp1djocUEawn+SEa0+NCVlpuDhdB86iHxSww+zPq0=
-X-Received: by 2002:ac8:303c:: with SMTP id f57mr71183256qte.294.1560352876572;
- Wed, 12 Jun 2019 08:21:16 -0700 (PDT)
+        Wed, 12 Jun 2019 11:22:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58206 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727419AbfFLPWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:22:35 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 50B5C11549;
+        Wed, 12 Jun 2019 15:22:35 +0000 (UTC)
+Received: from flask (unknown [10.40.205.10])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 32E4A377B;
+        Wed, 12 Jun 2019 15:22:31 +0000 (UTC)
+Received: by flask (sSMTP sendmail emulation); Wed, 12 Jun 2019 17:22:31 +0200
+Date:   Wed, 12 Jun 2019 17:22:31 +0200
+From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     Marcelo Tosatti <mtosatti@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v3 2/4] KVM: LAPIC: lapic timer interrupt is injected by
+ posted interrupt
+Message-ID: <20190612152231.GA22785@flask>
+References: <1560255429-7105-1-git-send-email-wanpengli@tencent.com>
+ <1560255429-7105-3-git-send-email-wanpengli@tencent.com>
+ <20190611201849.GA7520@amt.cnet>
+ <CANRm+CwrbMQpQ1d_KMp-EBMd-pXFVePQ8GV4Y4X0oy8-zGZCBQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190606161055.47089-1-jeffrey.l.hugo@gmail.com>
- <20190606161322.47192-1-jeffrey.l.hugo@gmail.com> <20190612003507.GG143729@dtor-ws>
- <nycvar.YFH.7.76.1906121644160.27227@cbobk.fhfr.pm> <CAKdAkRQOxTX51rhodoFyYpwi85pk8apvWjCLLX5Sw6NTH=j1kA@mail.gmail.com>
-In-Reply-To: <CAKdAkRQOxTX51rhodoFyYpwi85pk8apvWjCLLX5Sw6NTH=j1kA@mail.gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Wed, 12 Jun 2019 17:21:04 +0200
-Message-ID: <CAO-hwJKDxu0Bxxjd9reAojHODQTnW1POmifBCVsnjt8+CT4rmw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] HID: quirks: Refactor ELAN 400 and 401 handling
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANRm+CwrbMQpQ1d_KMp-EBMd-pXFVePQ8GV4Y4X0oy8-zGZCBQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 12 Jun 2019 15:22:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 5:14 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Wed, Jun 12, 2019 at 7:45 AM Jiri Kosina <jikos@kernel.org> wrote:
-> >
-> > On Tue, 11 Jun 2019, Dmitry Torokhov wrote:
-> >
-> > > > +static const char *hid_elan_i2c_ignore[] = {
+2019-06-12 09:48+0800, Wanpeng Li:
+> On Wed, 12 Jun 2019 at 04:39, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> > On Tue, Jun 11, 2019 at 08:17:07PM +0800, Wanpeng Li wrote:
+> > > From: Wanpeng Li <wanpengli@tencent.com>
+> > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > > @@ -133,6 +133,12 @@ inline bool posted_interrupt_inject_timer_enabled(struct kvm_vcpu *vcpu)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer_enabled);
 > > >
-> > > If this is a copy of elan whitelist, then, if we do not want to bother
-> > > with sharing it in object form (as a elan-i2c-ids module), can we at
-> > > least move it into include/linux/input/elan-i2c-ids.h and consume from
-> > > hid-quirks.c?
+> > > +static inline bool can_posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
+> > > +{
+> > > +     return posted_interrupt_inject_timer_enabled(vcpu) &&
+> > > +             kvm_hlt_in_guest(vcpu->kvm);
+> > > +}
 > >
-> > Let's just not duplicate it in both objects. Why not properly export it
-> > from hid_quirks?
->
-> Strictly speaking Elan does not depend on HID; exporting it from
-> quirks would mean adding this dependency. This also mean that you
-> can't make Elan built-in while keeping HID as a module (I think this
-> at least used to be config on some Chromebooks).
->
+> > Hi Li,
+> 
+> Hi Marcelo,
+> 
+> >
+> > Don't think its necessary to depend on kvm_hlt_in_guest: Can also use
+> > exitless injection if the guest is running (think DPDK style workloads
+> > that busy-spin on network card).
 
-I also think it would me things cleaner to have the list of devices in elan_i2c.
-If we put the list of devices supported by elan_i2c in a header, and
-have HID read this .h file directly, there will be no runtime
-dependency.
+I agree.
 
-I am sure we can work something out to remove Jeffrey's fears.
+> There are some discussions here.
+> 
+> https://lkml.org/lkml/2019/6/11/424
+> https://lkml.org/lkml/2019/6/5/436
 
-Cheers,
-Benjamin
+Paolo wants to disable the APF synthetic halt first, which I think is
+unrelated to the timer implementation.
+The synthetic halt happens when the VCPU cannot progress because the
+host swapped out its memory and any asynchronous event should unhalt it,
+because we assume that the interrupt path wasn't swapped out.
+
+The posted interrupt does a swake_up_one (part of vcpu kick), which is
+everything what the non-posted path does after setting a KVM request --
+it's a bug if we later handle the PIR differently from the KVM request,
+so the guest is going to be woken up on any halt blocking in KVM (even
+synthetic APF halt).
+
+Paolo, have I missed the point?
+
+Thanks.
