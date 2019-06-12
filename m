@@ -2,143 +2,84 @@ Return-Path: <SRS0=n7Fw=UL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B12C31E48
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78ECC31E46
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E45282063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:50:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="NM/fZdYl";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IrsdjC7S"
+	by mail.kernel.org (Postfix) with ESMTP id A658F20684
+	for <linux-kernel@archiver.kernel.org>; Wed, 12 Jun 2019 07:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408601AbfFLHu4 (ORCPT
+        id S1729382AbfFLHyP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 12 Jun 2019 03:50:56 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:37803 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405233AbfFLHu4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 03:50:56 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id E4B234DF;
-        Wed, 12 Jun 2019 03:50:51 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Wed, 12 Jun 2019 03:50:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=ibnfl+8xKs40HASLH7el8ogm6D7
-        fXLbZYdTL2iD4vcQ=; b=NM/fZdYl0Cq1bfgm5IT3B33aeNuPMS9hmSYPmeq0S9j
-        w3BAbcmccRBUibbsCfiA5Tdp4C6nu95MLTuBhOfTWSY9Lxw4Pr01G/PXJ9BmHPTu
-        CZhHqKdfwZ48eA+TCne2DudbVUGFe98IBcb3ygWQDcNqNQkc1QPmftGP+1V41O9a
-        GEBR5r9w+2OOtrAiI3vIffymQfS1bbeTqY867is3nUUjYvAI3U3MryBcGgniMnDa
-        pg/15qArkkrq92CjbfLgaH57VpWgznJOqCb0hZyucjeh41Ag2TbuDDKpsGmwi2Y+
-        FMxDSQV0cTLc9EikIjFSIsUQqj5ayUUkFF33Mjiaf1w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ibnfl+
-        8xKs40HASLH7el8ogm6D7fXLbZYdTL2iD4vcQ=; b=IrsdjC7SrNhyzj+rtqjnqJ
-        pLm9ZNCrnbrm/xQrHkaXwGnkq87242dkM7dDNm0KjtOjvHyYyDHAi8OMvF3uY0Tk
-        AVgshoX3D7J1rZ5IV+6ADil6dU/RLEAEVDrdTWZfLd+FTJRsFHgC7jFKJWIWv+y6
-        mAYDmzL922KJaEdsHSAqrwR8Mq4LIjg/UfjoECWsNoBVFatWG2sQ2JwOqcpAHf0m
-        5lFyFF+AjgeBbYhajo83Z+hN/ZO6P8nPvflwOHkvuXz8fmENAgz9GLQHHEogkD9u
-        4EJUV+1n3xpJJCBTyRWYKHEZU4kWHfanfY1jLtjZBFK4jMSAXAznZjb6V+pxNWvw
-        ==
-X-ME-Sender: <xms:264AXXpbBEkp4MhaDU5UYOrIc7VBrG89WjfZtogX9pD5pE-ezWIrJQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudehiedguddvgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
-    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrd
-    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
-    ucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:264AXcS-AqMVU-L3-qlnj37Yp41RRi-n5xkH4r_kvBsvf-y07KbSvg>
-    <xmx:264AXaMH4cXEa5APKJdr9xykdvrkr1u5RxiuTvvoUzy6_ROHiyqz-A>
-    <xmx:264AXaiu95q0rZ3GtK1OJjjvbubARo8dGhgeTBAHAqj0RNiZX_7IsA>
-    <xmx:264AXeBiKpIGaHkHLtj6qWbSf7hfvetUlu-XPhG9l3QX9E4b4YMSwg>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C27878005C;
-        Wed, 12 Jun 2019 03:50:50 -0400 (EDT)
-Date:   Wed, 12 Jun 2019 09:50:49 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Rolf Eike Beer <eb@emlix.com>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        stable@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 4.9.180 build fails =?utf-8?Q?wi?=
- =?utf-8?Q?th_gcc_9_and_'cleanup=5Fmodule'_specifies_less_restrictive_attr?=
- =?utf-8?Q?ibute_than_its_target_=E2=80=A6?=
-Message-ID: <20190612075049.GB17662@kroah.com>
-References: <259986242.BvXPX32bHu@devpool35>
- <CANiq72nfFqYkiYgKJ1UZV3Mx2C3wzu_7TRtXFn=iafNt+Oc_2g@mail.gmail.com>
- <20190606185900.GA19937@kroah.com>
- <3659495.RxnUGBN4mp@devpool35>
+        Wed, 12 Jun 2019 03:54:15 -0400
+Received: from mga17.intel.com ([192.55.52.151]:56056 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbfFLHyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 03:54:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 00:54:14 -0700
+X-ExtLoop1: 1
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
+  by fmsmga001.fm.intel.com with ESMTP; 12 Jun 2019 00:54:12 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@collabora.com>,
+        linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net, kernel@collabora.com,
+        =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@collabora.com>
+Subject: Re: [PATCH] sphinx.rst: Add note about code snippets embedded in the text
+In-Reply-To: <20190611200316.30054-1-andrealmeid@collabora.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20190611200316.30054-1-andrealmeid@collabora.com>
+Date:   Wed, 12 Jun 2019 10:57:12 +0300
+Message-ID: <87ftofxmlj.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3659495.RxnUGBN4mp@devpool35>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 09:19:15AM +0200, Rolf Eike Beer wrote:
-> Am Donnerstag, 6. Juni 2019, 20:59:00 CEST schrieb Greg KH:
-> > On Thu, Jun 06, 2019 at 08:25:28PM +0200, Miguel Ojeda wrote:
-> > > On Thu, Jun 6, 2019 at 5:29 PM Greg KH <greg@kroah.com> wrote:
-> > > > And if you want this, you should look at how the backports to 4.14.y
-> > > > worked, they did not include a3f8a30f3f00 ("Compiler Attributes: use
-> > > > feature checks instead of version checks"), as that gets really messy...
-> > > 
-> > > I am confused -- I interpreted Rolf's message as reporting that he
-> > > already successfully built 4.9 by applying a6e60d84989f
-> > > ("include/linux/module.h: copy __init/__exit attrs to
-> > > init/cleanup_module") and manually fixing it up. But maybe I am
-> > > completely wrong... :-)
-> > 
-> > "manually fixing it up" means "hacked it to pieces" to me, I have no
-> > idea what the end result really was :)
-> > 
-> > If someone wants to send me some patches I can actually apply, that
-> > would be best...
-> 
-> Hi all,
-> 
-> the patch I actually used was this:
-> 
-> diff --git a/include/linux/module.h b/include/linux/module.h
-> index 8fa38d3e7538..f5bc4c046461 100644
-> --- a/include/linux/module.h
-> +++ b/include/linux/module.h
-> @@ -129,13 +129,13 @@ extern void cleanup_module(void);
->  #define module_init(initfn)					\
->  	static inline initcall_t __maybe_unused __inittest(void)		\
->  	{ return initfn; }					\
-> -	int init_module(void) __attribute__((alias(#initfn)));
-> +	int init_module(void) __attribute__((__copy__(initfn))) __attribute__((alias(#initfn)));
->  
->  /* This is only required if you want to be unloadable. */
->  #define module_exit(exitfn)					\
->  	static inline exitcall_t __maybe_unused __exittest(void)		\
->  	{ return exitfn; }					\
-> -	void cleanup_module(void) __attribute__((alias(#exitfn)));
-> +	void cleanup_module(void) __attribute__((__copy__(exitfn))) __attribute__((alias(#exitfn)));
->  
->  #endif
->  
-> 
-> So the final question is: do we want 4.9.x to be buildable with gcc 9.x? If
-> yes then we can probably get this patches into shape.
+On Tue, 11 Jun 2019, André Almeida <andrealmeid@collabora.com> wrote:
+> There's a paragraph that explains how to create fixed width text block,
+> but it doesn't explains how to create fixed width text inline, although
+> this feature is really used through the documentation. Fix that adding a
+> quick note about it.
 
-Eventually, yes, we (or at least I) will want to build 4.9.x with gcc
-9.x.  We went through this same process for gcc 8.x as all of my builder
-test machines switched their default version of gcc...
+I don't mind this addition, it's simple enough, but in general I think
+we should reference the Sphinx and reStructuredText documentation,
+whichever is more applicable, instead of duplicating the
+documentation. The idea is that this document describes how to use them
+in kernel. Contrast with coding style and language reference.
 
-thanks,
+BR,
+Jani.
 
-greg k-h
+
+>
+> Signed-off-by: André Almeida <andrealmeid@collabora.com>
+> ---
+>  Documentation/doc-guide/sphinx.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/doc-guide/sphinx.rst b/Documentation/doc-guide/sphinx.rst
+> index c039224b404e..f48abc07f4c5 100644
+> --- a/Documentation/doc-guide/sphinx.rst
+> +++ b/Documentation/doc-guide/sphinx.rst
+> @@ -218,7 +218,7 @@ Here are some specific guidelines for the kernel documentation:
+>    examples, etc.), use ``::`` for anything that doesn't really benefit
+>    from syntax highlighting, especially short snippets. Use
+>    ``.. code-block:: <language>`` for longer code blocks that benefit
+> -  from highlighting.
+> +  from highlighting. For a short snippet of code embedded in the text, use \`\`.
+>  
+>  
+>  the C domain
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
