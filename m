@@ -2,105 +2,163 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C74FC468B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A200C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7552D21721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443451;
-	bh=HTx1fHVj5uezsO/DXs83fYpWV86qC1ZT8ZkQv5D7U4A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DS/q6xZYGei9ODhXHZQdt6phbu4GIYWXfAeWRFg1QCSqK3XloWIntupbfMy9oAKiC
-	 fuCApnqAPGLtODhJrj+9JZVbdEMSYAfKXKvINUQQQNBlT19ZtPug2nd7xOoVtkEBLz
-	 Gb8fm1ywBRnF9yXOeAYvNl5T10FTwNh/aWXHzcoc=
+	by mail.kernel.org (Postfix) with ESMTP id 1D9AA21743
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392385AbfFMQao (ORCPT
+        id S1730897AbfFMQbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:30:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730871AbfFMIeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:34:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 592AE206E0;
-        Thu, 13 Jun 2019 08:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560414889;
-        bh=HTx1fHVj5uezsO/DXs83fYpWV86qC1ZT8ZkQv5D7U4A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hop/hQfVKHHpr8J7TGCpXzVtonMfk7Ehc7ZhgydcmYyjsqQM2ek8pOd47/5ZP07VC
-         c2D3qqxt2u3wtUbj1WEwe+A235uBJduyrT/Y7Bt64qa1Ns7Oo7BZFQniLbAezW2mUw
-         QSw1LDWMGJDYRjLZSWlwTH1lbdEJneDX3fTPEO4o=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 01/81] rapidio: fix a NULL pointer dereference when create_workqueue() fails
-Date:   Thu, 13 Jun 2019 10:32:44 +0200
-Message-Id: <20190613075649.180044179@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
-References: <20190613075649.074682929@linuxfoundation.org>
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
+        Thu, 13 Jun 2019 12:31:04 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48284 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730896AbfFMIaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:30:24 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2AE1F7854A4A77E18E06;
+        Thu, 13 Jun 2019 16:30:18 +0800 (CST)
+Received: from [127.0.0.1] (10.133.215.186) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 13 Jun 2019
+ 16:30:11 +0800
+Subject: Re: [PATCH v8 1/7] iommu: enhance IOMMU default DMA mode build
+ options
+To:     John Garry <john.garry@huawei.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Will Deacon" <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
+CC:     Hanjun Guo <guohanjun@huawei.com>, Linuxarm <linuxarm@huawei.com>
+References: <20190530034831.4184-1-thunder.leizhen@huawei.com>
+ <20190530034831.4184-2-thunder.leizhen@huawei.com>
+ <645bd526-4eb0-4a36-2dda-023f009247ab@huawei.com>
+ <030bafab-58f5-8bb1-0533-2977d6e138b2@huawei.com>
+ <55d0e30c-5bca-41fc-5bf0-4366dc387afd@huawei.com>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <7d3727e3-a455-3a26-1104-5b85c196bbdf@huawei.com>
+Date:   Thu, 13 Jun 2019 16:30:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <55d0e30c-5bca-41fc-5bf0-4366dc387afd@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.215.186]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 23015b22e47c5409620b1726a677d69e5cd032ba ]
-
-In case create_workqueue fails, the fix releases resources and returns
--ENOMEM to avoid NULL pointer dereference.
-
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Acked-by: Alexandre Bounine <alex.bou9@gmail.com>
-Cc: Matt Porter <mporter@kernel.crashing.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/rapidio/rio_cm.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/rapidio/rio_cm.c b/drivers/rapidio/rio_cm.c
-index bad0e0ea4f30..ef989a15aefc 100644
---- a/drivers/rapidio/rio_cm.c
-+++ b/drivers/rapidio/rio_cm.c
-@@ -2145,6 +2145,14 @@ static int riocm_add_mport(struct device *dev,
- 	mutex_init(&cm->rx_lock);
- 	riocm_rx_fill(cm, RIOCM_RX_RING_SIZE);
- 	cm->rx_wq = create_workqueue(DRV_NAME "/rxq");
-+	if (!cm->rx_wq) {
-+		riocm_error("failed to allocate IBMBOX_%d on %s",
-+			    cmbox, mport->name);
-+		rio_release_outb_mbox(mport, cmbox);
-+		kfree(cm);
-+		return -ENOMEM;
-+	}
-+
- 	INIT_WORK(&cm->rx_work, rio_ibmsg_handler);
- 
- 	cm->tx_slot = 0;
--- 
-2.20.1
 
 
+On 2019/5/31 18:42, John Garry wrote:
+> 
+>>>> -config IOMMU_DEFAULT_PASSTHROUGH
+>>>> -    bool "IOMMU passthrough by default"
+>>>> +choice
+>>>> +    prompt "IOMMU default DMA mode"
+>>>>      depends on IOMMU_API
+>>>> -        help
+>>>> -      Enable passthrough by default, removing the need to pass in
+>>>> -      iommu.passthrough=on or iommu=pt through command line. If this
+>>>> -      is enabled, you can still disable with iommu.passthrough=off
+>>>> -      or iommu=nopt depending on the architecture.
+>>>> +    default IOMMU_DEFAULT_STRICT
+>>>> +    help
+>>>> +      This option allows IOMMU DMA mode to be chose at build time, to
+>>>
+>>> As before:
+>>> /s/chose/chosen/, /s/allows IOMMU/allows an IOMMU/
+>> I'm sorry that the previous version was not modified.
+>>
+>>>
+>>>> +      override the default DMA mode of each ARCHs, removing the need to
+>>>
+>>> Again, as before:
+>>> ARCHs should be singular
+>> OK
+>>
+>>>
+>>>> +      pass in kernel parameters through command line. You can still use
+>>>> +      ARCHs specific boot options to override this option again.
+> 
+> *
+> 
+>>>> +
+>>>> +config IOMMU_DEFAULT_PASSTHROUGH
+>>>> +    bool "passthrough"
+>>>> +    help
+>>>> +      In this mode, the DMA access through IOMMU without any addresses
+>>>> +      translation. That means, the wrong or illegal DMA access can not
+>>>> +      be caught, no error information will be reported.
+>>>>
+>>>>        If unsure, say N here.
+>>>>
+>>>> +config IOMMU_DEFAULT_LAZY
+>>>> +    bool "lazy"
+>>>> +    help
+>>>> +      Support lazy mode, where for every IOMMU DMA unmap operation, the
+>>>> +      flush operation of IOTLB and the free operation of IOVA are deferred.
+>>>> +      They are only guaranteed to be done before the related IOVA will be
+>>>> +      reused.
+>>>
+>>> why no advisory on how to set if unsure?
+>> Because the LAZY and STRICT have their own advantages and disadvantages.
+>>
+>> Should I say: If unsure, keep the default。
+> 
+> Maybe. So you could put this in the help for the choice, * above, and remove the advisory on IOMMU_DEFAULT_PASSTHROUGH.
+
+OK, I'll revise it according to this idea in v9.
+
+> 
+> However the maintainer may have a different view.
+> 
+> Thanks,
+> John
+> 
+>>
+>>>
+>>>> +
+>>>> +config IOMMU_DEFAULT_STRICT
+>>>> +    bool "strict"
+>>>> +    help
+>>>> +      For every IOMMU DMA unmap operation, the flush operation of IOTLB and
+>>>> +      the free operation of IOVA are guaranteed to be done in the unmap
+>>>> +      function.
+>>>> +
+>>>> +      This mode is safer than the two above, but it maybe slower in some
+>>>> +      high performace scenarios.
+>>>
+>>> and here?
+> 
+> 
+> .
+> 
 
