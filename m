@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CB4C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DF8C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE79E20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034C5208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:00:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441648;
-	bh=5ZfNQPaK5EaeOZ4tHIr9RQr40RleU2rV8jXkcEN/Ujg=;
+	s=default; t=1560441650;
+	bh=JRsUTwz51DTYuVKxaSW4tNqWcZDbdHFid2P6ie/a+ss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QQzVYEfNJezjO+BnjZ1njA6TjFhhiBvRSGkqmcrhrSbGWHgN8Dy5EtsduH4XOPgAW
-	 ET2ESo7EPQjRbZNfldXwTGlJ3m8WtkQOa2b+epaHxJvaV8164Voc4/SoiSJTfB5nG3
-	 kskUFS/bX2pGNb1D1LGiRI3zXBzT6RfFvAwkmGP4=
+	b=D4nh7Yt6UawBj9Kqp+WiRcZbMTzzP/ShTDUFiMENQlvofzyiuUCKSGN5+Y+7abJ9/
+	 SbMw35QBrW7IocbT4bfnbfza6oa99mxjceKWA7EGmfq0FU5fhHRq0CSBAw4mkjC2E9
+	 kbgOHqX5L0d8NE/O7Ny5OMKpAdhKvjGsxArc/4gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390218AbfFMQAh (ORCPT
+        id S1728932AbfFMQAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:00:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36880 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:00:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731463AbfFMItB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:49:01 -0400
+        id S1731465AbfFMItE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:49:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0FF620851;
-        Thu, 13 Jun 2019 08:48:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07F7A206BA;
+        Thu, 13 Jun 2019 08:49:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415740;
-        bh=5ZfNQPaK5EaeOZ4tHIr9RQr40RleU2rV8jXkcEN/Ujg=;
+        s=default; t=1560415743;
+        bh=JRsUTwz51DTYuVKxaSW4tNqWcZDbdHFid2P6ie/a+ss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J3/OAWuffdnSv7ps+pKgIPfd1+Uxc36G6Y0CcWsfSKhdEH6lz29lLM4rS5DTalHH2
-         PHbcA143vWaqGj8WkmU8lexi6YyyMZws58W/fQh0x31hyJkjoOs6FlPgWV+/xsQCsg
-         Zab0v5r7hNk2Y5J9tN5B8OtiiXTmGBGFLGvqxEls=
+        b=TN0Me5dc2Wf6SU5zsr6mTz4Pt10R0nuT9fiTBaolIoWylzVQH6IHQfEO6td4lQ27C
+         gIvnsyvS+lplBTO/o5kEYB+B+XMIQ6aU5aISVssaoMSsTDcZHs0KTfAYaEkxTrykdk
+         SBjjWZ5L+0EpsCAlzhVwyy1FcQ3wFGU920Bi6KIs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -50,9 +50,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Shawn Guo <shawnguo@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 110/155] ARM: dts: imx7d: Specify IMX7D_CLK_IPG as "ipg" clock to SDMA
-Date:   Thu, 13 Jun 2019 10:33:42 +0200
-Message-Id: <20190613075659.130595423@linuxfoundation.org>
+Subject: [PATCH 5.1 111/155] ARM: dts: imx6ul: Specify IMX6UL_CLK_IPG as "ipg" clock to SDMA
+Date:   Thu, 13 Jun 2019 10:33:43 +0200
+Message-Id: <20190613075659.178190351@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -65,14 +65,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 412b032a1dc72fc9d1c258800355efa6671b6315 ]
+[ Upstream commit 7b3132ecefdd1fcdf6b86e62021d0e55ea8034db ]
 
 Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
 clock to determine if it needs to configure the IP block as operating
 at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
-clocks as IMX7D_CLK_SDMA results in driver incorrectly thinking that
+clocks as IMX6UL_CLK_SDMA results in driver incorrectly thinking that
 ratio is 1:1 which results in broken SDMA funtionality. Fix the code
-to specify IMX7D_CLK_IPG as "ipg" clock for SDMA, to avoid detecting
+to specify IMX6UL_CLK_IPG as "ipg" clock for SDMA, to avoid detecting
 incorrect clock ratio.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
@@ -86,24 +86,22 @@ Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx7s.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6ul.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index e88f53a4c7f4..2f45ef527e6c 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -1067,8 +1067,8 @@
- 				compatible = "fsl,imx7d-sdma", "fsl,imx35-sdma";
- 				reg = <0x30bd0000 0x10000>;
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 62ed30c781ed..facd65602c2d 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -708,7 +708,7 @@
+ 					     "fsl,imx35-sdma";
+ 				reg = <0x020ec000 0x4000>;
  				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX7D_SDMA_CORE_CLK>,
--					 <&clks IMX7D_AHB_CHANNEL_ROOT_CLK>;
-+				clocks = <&clks IMX7D_IPG_ROOT_CLK>,
-+					 <&clks IMX7D_SDMA_CORE_CLK>;
+-				clocks = <&clks IMX6UL_CLK_SDMA>,
++				clocks = <&clks IMX6UL_CLK_IPG>,
+ 					 <&clks IMX6UL_CLK_SDMA>;
  				clock-names = "ipg", "ahb";
  				#dma-cells = <3>;
- 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
 -- 
 2.20.1
 
