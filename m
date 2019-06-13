@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70ECC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A11BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA4020679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC4220679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441451;
-	bh=vHSQZIwXtZosShzoxpKcKbWrLhesbOIeQYP0cPMcoSw=;
+	s=default; t=1560441453;
+	bh=uz75LieGNqizsVbiK595rPV0Y5C+lbCAJI48RNMXAFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hiQzo13Z9le4KlHpqRLqPzgQuNPxIFDILk75XqHoykJCDhJOiJ7T6PZKyDBXerwvG
-	 M1vYSwVFoxAmiK467/QoZTk9ylf0JhWrHOSoe9l61V8V19aClCfqJ+gGdE9AOWr6fr
-	 LOIV46i75C38QNyRU+rrwwdW4XTmA2ZlNvamRvmE=
+	b=X3eWhOi/3zm4YIc3gmCTkQx9r7NBAJZJCckbhbUdqn2ueQosSYLWPJt0aWvTec3px
+	 yjNbzmRM8siNXoMIbzqIXBIP1PvqIj9yuKdE36pD56e1GwyuxV8FOd/GmG3FgrNzcW
+	 aTMk3fE1fUz5XWU9SSHBd28PrY5tIHddJpJXQz1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390496AbfFMP5a (ORCPT
+        id S2390513AbfFMP5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:57:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38292 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:57:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731509AbfFMIur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:50:47 -0400
+        id S1731505AbfFMIui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:50:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF009206BA;
-        Thu, 13 Jun 2019 08:50:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB02120851;
+        Thu, 13 Jun 2019 08:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415846;
-        bh=vHSQZIwXtZosShzoxpKcKbWrLhesbOIeQYP0cPMcoSw=;
+        s=default; t=1560415837;
+        bh=uz75LieGNqizsVbiK595rPV0Y5C+lbCAJI48RNMXAFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cBe8Nu7z7xW/it7W2+WPNvkGtHctw7XvY48OTFdDG1QiUUqoGRij7bteD9sFmmQiU
-         utrXwSMHU1mKz7Z0JP34spQoUqHs9R6pQ+BO6lKcDxFBtsKhbwLh4zZvp7ikrff6o6
-         4rsES6HmK3RB48fzxAmIP1nyAeqcEdBe8F7uoW60=
+        b=wbOorSpafSODhHlJgYlozjFAB9nD4l6eabHuoX5rJD/CaXzKUoQTXuWynGeajps4V
+         h+tz6rGK+/q+nGmNWz7gOona8zZOhivai+BMJxv8uiapfRxctmqw1YylT77ZN1q24I
+         s5vQDcMbdBKBZy47lDTIB2xHAWzFtX91kdxtopBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Christopher N Bednarz <christopher.n.bednarz@intel.com>,
+        Bruce Allan <bruce.w.allan@intel.com>,
+        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 143/155] media: v4l2-fwnode: Defaults may not override endpoint configuration in firmware
-Date:   Thu, 13 Jun 2019 10:34:15 +0200
-Message-Id: <20190613075701.021874674@linuxfoundation.org>
+Subject: [PATCH 5.1 140/155] ice: Do not set LB_EN for prune switch rules
+Date:   Thu, 13 Jun 2019 10:34:12 +0200
+Message-Id: <20190613075700.519695780@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -61,51 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9d3863736a267068a0ae67c6695af8770ef330b7 ]
+[ Upstream commit b58dafbc6f1089942c1e74b8ab9c616fe06dbfac ]
 
-The lack of defaults provided by the caller to
-v4l2_fwnode_endpoint_parse() signals the use of the default lane mapping.
-The default lane mapping must not be used however if the firmmare contains
-the lane mapping. Disable the default lane mapping in that case, and
-improve the debug messages telling of the use of the defaults.
+LB_EN for prune switch rules was causing all TX traffic
+to loopback to the internal switch and dropped.  When
+running bi-directional stress workloads with RDMA
+the RDPU would hang blocking tx and rx traffic.
 
-This was missed previously since the default mapping will only unsed in
-this case if the bus type is set, and no driver did both while still
-needing the lane mapping configuration.
-
-Fixes: b4357d21d674 ("media: v4l: fwnode: Support default CSI-2 lane mapping for drivers")
-
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Christopher N Bednarz <christopher.n.bednarz@intel.com>
+Reviewed-by: Bruce Allan <bruce.w.allan@intel.com>
+Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/v4l2-core/v4l2-fwnode.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/ice/ice_switch.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 7495f8323147..ccefa55813ad 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -163,7 +163,7 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
- 		}
- 
- 		if (use_default_lane_mapping)
--			pr_debug("using default lane mapping\n");
-+			pr_debug("no lane mapping given, using defaults\n");
- 	}
- 
- 	rval = fwnode_property_read_u32_array(fwnode, "data-lanes", NULL, 0);
-@@ -175,6 +175,10 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
- 					       num_data_lanes);
- 
- 		have_data_lanes = true;
-+		if (use_default_lane_mapping) {
-+			pr_debug("data-lanes property exists; disabling default mapping\n");
-+			use_default_lane_mapping = false;
-+		}
- 	}
- 
- 	for (i = 0; i < num_data_lanes; i++) {
+diff --git a/drivers/net/ethernet/intel/ice/ice_switch.c b/drivers/net/ethernet/intel/ice/ice_switch.c
+index e40d5f34d59d..c5f6cfecc042 100644
+--- a/drivers/net/ethernet/intel/ice/ice_switch.c
++++ b/drivers/net/ethernet/intel/ice/ice_switch.c
+@@ -643,7 +643,12 @@ static void ice_fill_sw_info(struct ice_hw *hw, struct ice_fltr_info *fi)
+ 	     fi->fltr_act == ICE_FWD_TO_VSI_LIST ||
+ 	     fi->fltr_act == ICE_FWD_TO_Q ||
+ 	     fi->fltr_act == ICE_FWD_TO_QGRP)) {
+-		fi->lb_en = true;
++		/* Setting LB for prune actions will result in replicated
++		 * packets to the internal switch that will be dropped.
++		 */
++		if (fi->lkup_type != ICE_SW_LKUP_VLAN)
++			fi->lb_en = true;
++
+ 		/* Set lan_en to TRUE if
+ 		 * 1. The switch is a VEB AND
+ 		 * 2
 -- 
 2.20.1
 
