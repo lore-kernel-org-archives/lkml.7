@@ -2,132 +2,123 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6433C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8C4C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7B420B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D5512173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560452777;
+	bh=+h8Qcm3LMeVJYiEj5KsKSppuaONZydDUlh3kBTjIEMc=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=IiWXzEfYbKTgFmilC+uCJPxzoBNhWNgLEhEWXMyKnLrxh0Mp3JxQQ7+TvbGAPybpm
+	 xnhKiIjGJmLSE4nKBkgIMXiZgOKXtUuxfRf1bxPaZdo2EkiaFlVzc5HOxXyUIercyr
+	 ZIL3AHYHF50oJP5ioUZi7c3cX0Bk8gcoybyLdEHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729462AbfFMTFw (ORCPT
+        id S1729409AbfFMTGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 15:05:52 -0400
-Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:36525 "EHLO
-        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727298AbfFMTFw (ORCPT
+        Thu, 13 Jun 2019 15:06:15 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37734 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbfFMTGP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:05:52 -0400
-Received: from [4.30.142.84] (helo=srivatsab-a01.vmware.com)
-        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <srivatsa@csail.mit.edu>)
-        id 1hbV2i-0007Iv-Mi; Thu, 13 Jun 2019 15:05:48 -0400
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-To:     Jan Kara <jack@suse.cz>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Jeff Moyer <jmoyer@redhat.com>,
-        Theodore Ts'o <tytso@mit.edu>, amakhalov@vmware.com,
-        anishs@vmware.com, srivatsab@vmware.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stable <stable@vger.kernel.org>
-References: <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
- <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
- <5b71028c-72f0-73dd-0cd5-f28ff298a0a3@csail.mit.edu>
- <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
- <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
- <7B74A790-BD98-412B-ADAB-3B513FB1944E@linaro.org>
- <6a6f4aa4-fc95-f132-55b2-224ff52bd2d8@csail.mit.edu>
- <7c5e9d11-4a3d-7df4-c1e6-7c95919522ab@csail.mit.edu>
- <20190612130446.GD14578@quack2.suse.cz>
- <dd32ed59-a543-fc76-9a9a-2462f0119270@csail.mit.edu>
- <20190613082053.GD26505@quack2.suse.cz>
-From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Message-ID: <f30aaec1-d629-1c82-50da-16b2eaea16c5@csail.mit.edu>
-Date:   Thu, 13 Jun 2019 12:05:46 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190613082053.GD26505@quack2.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 13 Jun 2019 15:06:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=8jJl8VZ4I6jak2R3cVTa4dr3b/FXaZA6ihC8BpRzKRI=; b=jbeeXD19yNAO
+        99Uqe88Riw+/sN6QGMXYe9sO1xy1AbKd6vLsFeLg+XMx6VWL6OpLz5jJ3tVysFmK/NHJ1Rg+4aZWi
+        iErxXjc2O7MG/ZS5n01C8UpjuvPzIuPLeajbpFxvfZRQ/HY2T50lX+ludpNCNsFJLRSVYYE7jZb20
+        jvNwE=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hbV34-0005SU-HS; Thu, 13 Jun 2019 19:06:10 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 10949440046; Thu, 13 Jun 2019 20:06:10 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Kevin Hilman <khilman@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: meson: axg-tdm: consistently use SND_SOC_DAIFMT defines" to the asoc tree
+In-Reply-To: <20190613114233.21130-5-jbrunet@baylibre.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190613190610.10949440046@finisterre.sirena.org.uk>
+Date:   Thu, 13 Jun 2019 20:06:09 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/19 1:20 AM, Jan Kara wrote:
-> On Wed 12-06-19 12:36:53, Srivatsa S. Bhat wrote:
->>
->> [ Adding Greg to CC ]
->>
->> On 6/12/19 6:04 AM, Jan Kara wrote:
->>> On Tue 11-06-19 15:34:48, Srivatsa S. Bhat wrote:
->>>> On 6/2/19 12:04 AM, Srivatsa S. Bhat wrote:
->>>>> On 5/30/19 3:45 AM, Paolo Valente wrote:
->>>>>>
->>>> [...]
->>>>>> At any rate, since you pointed out that you are interested in
->>>>>> out-of-the-box performance, let me complete the context: in case
->>>>>> low_latency is left set, one gets, in return for this 12% loss,
->>>>>> a) at least 1000% higher responsiveness, e.g., 1000% lower start-up
->>>>>> times of applications under load [1];
->>>>>> b) 500-1000% higher throughput in multi-client server workloads, as I
->>>>>> already pointed out [2].
->>>>>>
->>>>>
->>>>> I'm very happy that you could solve the problem without having to
->>>>> compromise on any of the performance characteristics/features of BFQ!
->>>>>
->>>>>
->>>>>> I'm going to prepare complete patches.  In addition, if ok for you,
->>>>>> I'll report these results on the bug you created.  Then I guess we can
->>>>>> close it.
->>>>>>
->>>>>
->>>>> Sounds great!
->>>>>
->>>>
->>>> Hi Paolo,
->>>>
->>>> Hope you are doing great!
->>>>
->>>> I was wondering if you got a chance to post these patches to LKML for
->>>> review and inclusion... (No hurry, of course!)
->>>>
->>>> Also, since your fixes address the performance issues in BFQ, do you
->>>> have any thoughts on whether they can be adapted to CFQ as well, to
->>>> benefit the older stable kernels that still support CFQ?
->>>
->>> Since CFQ doesn't exist in current upstream kernel anymore, I seriously
->>> doubt you'll be able to get any performance improvements for it in the
->>> stable kernels...
->>>
->>
->> I suspected as much, but that seems unfortunate though. The latest LTS
->> kernel is based on 4.19, which still supports CFQ. It would have been
->> great to have a process to address significant issues on older
->> kernels too.
-> 
-> Well, you could still tune the performance difference by changing
-> slice_idle and group_idle tunables for CFQ (in
-> /sys/block/<device>/queue/iosched/).  Changing these to lower values will
-> reduce the throughput loss when switching between cgroups at the cost of
-> lower accuracy of enforcing configured IO proportions among cgroups.
-> 
+The patch
 
-Good point, and seems fair enough, thank you!
+   ASoC: meson: axg-tdm: consistently use SND_SOC_DAIFMT defines
 
-Regards,
-Srivatsa
-VMware Photon OS
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 05113483fd300d7a4605a726770e7255e29f1ac7 Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Thu, 13 Jun 2019 13:42:33 +0200
+Subject: [PATCH] ASoC: meson: axg-tdm: consistently use SND_SOC_DAIFMT defines
+
+There a mix of SND_SOC_DAIFMT_ and SND_SOC_DAI_FORMAT_ in
+axg-tdm-interface.c. Even, if this is currently the same thing, lets use
+the same group consistently.
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/meson/axg-tdm-interface.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/meson/axg-tdm-interface.c b/sound/soc/meson/axg-tdm-interface.c
+index 585ce030b79b..d51f3344be7c 100644
+--- a/sound/soc/meson/axg-tdm-interface.c
++++ b/sound/soc/meson/axg-tdm-interface.c
+@@ -306,8 +306,8 @@ static int axg_tdm_iface_hw_params(struct snd_pcm_substream *substream,
+ 		}
+ 		break;
+ 
+-	case SND_SOC_DAI_FORMAT_DSP_A:
+-	case SND_SOC_DAI_FORMAT_DSP_B:
++	case SND_SOC_DAIFMT_DSP_A:
++	case SND_SOC_DAIFMT_DSP_B:
+ 		break;
+ 
+ 	default:
+-- 
+2.20.1
+
