@@ -5,52 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D779C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A609BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DABBA20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F1F220644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443382;
-	bh=soxBsKMW4Jv4niIPGiv6RKPFrE6/htODN+ez2BEi8/4=;
+	s=default; t=1560443385;
+	bh=+9Og/o81Y9qJ5aqH7Cm1b4XJ1OWrZoHmBkfRzrDbxCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AAU2f0Siy6ADftlbtGLpy/Xsp6FXKSLFWmqvP07bpdo2D8j+Cg7YpfQBao0I3NqO0
-	 N7O5eBnXQY/bnq7/WpMnoR8rEaJ3lTKlnS2u4E4bv2b4Ucsox8BSRgjjPLYyZAJsTc
-	 onm/PlKXrs257Ls60MTt47Ep7CLM8whF03qyOYLg=
+	b=wsZTdAKMogRIc9PhZwtVAYXtNwoUXuqSicOyjT+TEYJEzhvg2DwVcBJbe0PR6KmSp
+	 dy+InGE14IqQ8mlD97RsVG6hiub1H2r6DW3H5zXfG7mUn07qWE3yen0xs4bQfJbUYR
+	 SvR2X2/R/BDErVgca12DcpnKx8lJc053h76oNxPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392495AbfFMQ3Y (ORCPT
+        id S2392486AbfFMQ3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:29:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53076 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:29:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730926AbfFMIfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:35:19 -0400
+        id S1730928AbfFMIfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:35:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D9DC20851;
-        Thu, 13 Jun 2019 08:35:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF8E420B7C;
+        Thu, 13 Jun 2019 08:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560414918;
-        bh=soxBsKMW4Jv4niIPGiv6RKPFrE6/htODN+ez2BEi8/4=;
+        s=default; t=1560414921;
+        bh=+9Og/o81Y9qJ5aqH7Cm1b4XJ1OWrZoHmBkfRzrDbxCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K498kQUa1BtM5kM7QLpVUZAay2NNtWZLc/tyFoPr4/dok7w+THiXo1Ryy7vK26uwR
-         ycEmJbQ0iG/iPOsdr7wbftA7xvilFIF5ul9Tlj4J7oRIJs2o05hewTh2ZX2rPUEkGu
-         QA4fTfSZN1ZuGsdpxcfGIWTPQTWQ0avQ8UmYnv2w=
+        b=EDJYIGYnjMtUv5n4QaFZqJ+tG11pjzQQF9F5i29anSHZliJXZxeIYi1TszdR89eO8
+         hER2LUdQe5yTpgxiEoOey+/UuIAz5oValNLxozDmDOJyRpa4Z6MTgc3hKtCMQEnIy5
+         xURUp5R3colSRQG1pM4jgygKBTQhYNeKszHscZms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, jolsa@redhat.com,
-        kan.liang@intel.com, vincent.weaver@maine.edu,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 20/81] perf/x86/intel: Allow PEBS multi-entry in watermark mode
-Date:   Thu, 13 Jun 2019 10:33:03 +0200
-Message-Id: <20190613075650.601940431@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Matt Redfearn <matt.redfearn@thinci.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 21/81] drm/bridge: adv7511: Fix low refresh rate selection
+Date:   Thu, 13 Jun 2019 10:33:04 +0200
+Message-Id: <20190613075650.698756464@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -63,45 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c7a286577d7592720c2f179aadfb325a1ff48c95 ]
+[ Upstream commit 67793bd3b3948dc8c8384b6430e036a30a0ecb43 ]
 
-This patch fixes a restriction/bug introduced by:
+The driver currently sets register 0xfb (Low Refresh Rate) based on the
+value of mode->vrefresh. Firstly, this field is specified to be in Hz,
+but the magic numbers used by the code are Hz * 1000. This essentially
+leads to the low refresh rate always being set to 0x01, since the
+vrefresh value will always be less than 24000. Fix the magic numbers to
+be in Hz.
+Secondly, according to the comment in drm_modes.h, the field is not
+supposed to be used in a functional way anyway. Instead, use the helper
+function drm_mode_vrefresh().
 
-   583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
-
-The original patch prevented using multi-entry PEBS when wakeup_events != 0.
-However given that wakeup_events is part of a union with wakeup_watermark, it
-means that in watermark mode, PEBS multi-entry is also disabled which is not the
-intent. This patch fixes this by checking is watermark mode is enabled.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: jolsa@redhat.com
-Cc: kan.liang@intel.com
-Cc: vincent.weaver@maine.edu
-Fixes: 583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
-Link: http://lkml.kernel.org/r/20190514003400.224340-1-eranian@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 9c8af882bf12 ("drm: Add adv7511 encoder driver")
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Matt Redfearn <matt.redfearn@thinci.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190424132210.26338-1-matt.redfearn@thinci.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 0b93f5519dda..d44bb077c6cf 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3051,7 +3051,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 		return ret;
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+index f5091827628a..3c94d838863e 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+@@ -735,11 +735,11 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
+ 			vsync_polarity = 1;
+ 	}
  
- 	if (event->attr.precise_ip) {
--		if (!(event->attr.freq || event->attr.wakeup_events)) {
-+		if (!(event->attr.freq || (event->attr.wakeup_events && !event->attr.watermark))) {
- 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
- 			if (!(event->attr.sample_type &
- 			      ~intel_pmu_free_running_flags(event)))
+-	if (mode->vrefresh <= 24000)
++	if (drm_mode_vrefresh(mode) <= 24)
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_24HZ;
+-	else if (mode->vrefresh <= 25000)
++	else if (drm_mode_vrefresh(mode) <= 25)
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_25HZ;
+-	else if (mode->vrefresh <= 30000)
++	else if (drm_mode_vrefresh(mode) <= 30)
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_30HZ;
+ 	else
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_NONE;
 -- 
 2.20.1
 
