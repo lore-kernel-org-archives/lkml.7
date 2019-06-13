@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C3BC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5977C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0298820449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8130A21721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443348;
-	bh=bfjKRZ8PumLntFhqebr+c1LpFuDm8z5HRUJ1uSrw4WA=;
+	s=default; t=1560443355;
+	bh=ehFxs3Y45qn6MCgbminxHnbEpP6fju9VVBe5cF608wM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OQ56dBP0PpHBW0NwMhf+Q2m9M5V9mHlJ8CulgIQE+Rjoyc/UbNSvquFifu/8Lq6yj
-	 F0g6TzBqeLjRmaDhW1A7tQRhBsIEQCjSgcatzDHFj2S1JTd4VziavBuYwRHsJCWnZf
-	 B11oXRCle/2e8esdSS18Lv8sNqOoAsIEhAEmZTVE=
+	b=BKvfOxBimjIZiP637tckd/h7aIJSo9a3HVgOZRKyhtKjgRfSm+5PfMKMhgqJKEEnt
+	 EfjUdR2V5OElq5NIRlst9Yapf9J+Z7M3OWDszSGNDlZRSaFlC7jnCiSKU45R/ZiFpB
+	 g9i7d5JzoJKSFYuqEpyLPoRSPQdcSfsyniWf/Eic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbfFMQ2y (ORCPT
+        id S1733016AbfFMQ3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:28:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53346 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:29:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730942AbfFMIfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:35:38 -0400
+        id S1730931AbfFMIfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:35:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65AF720B7C;
-        Thu, 13 Jun 2019 08:35:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D477206E0;
+        Thu, 13 Jun 2019 08:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560414937;
-        bh=bfjKRZ8PumLntFhqebr+c1LpFuDm8z5HRUJ1uSrw4WA=;
+        s=default; t=1560414924;
+        bh=ehFxs3Y45qn6MCgbminxHnbEpP6fju9VVBe5cF608wM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mtu0MuR5id9nBw1mBWqJtxUVjErwU43zx83gjNGbdO+p5qna705a74KSE+Sen7afW
-         Hc3nAe7OEcOBS52j58KAEXLr297CWaqzaAnuRfGAGDvdq9hFzBI27jopetnNrU59nL
-         sthmkTV8IfHADSvLi0V5hib4uSKECy68sPM6QKyY=
+        b=Fl24fKEXofJsY9HKPpZpOTVUkKeIRNc6kvidGBgFjtg8Zr8zpgYfDHcB6aan4spU+
+         VqHxqMJm6nfftKQNh3fy3TNjfdIkUvkOmdspm2iUGSUNe58fFR1J7TzO/XcQSwVV+k
+         H1cgXRsVNAVwOUP34fQjTmwVWaHPHMcHWzMVq+dk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 27/81] f2fs: fix to clear dirty inode in error path of f2fs_iget()
-Date:   Thu, 13 Jun 2019 10:33:10 +0200
-Message-Id: <20190613075651.133506185@linuxfoundation.org>
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 22/81] objtool: Dont use ignore flag for fake jumps
+Date:   Thu, 13 Jun 2019 10:33:05 +0200
+Message-Id: <20190613075650.774016278@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -60,67 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 546d22f070d64a7b96f57c93333772085d3a5e6d ]
+[ Upstream commit e6da9567959e164f82bc81967e0d5b10dee870b4 ]
 
-As Jungyeon reported in bugzilla:
+The ignore flag is set on fake jumps in order to keep
+add_jump_destinations() from setting their jump_dest, since it already
+got set when the fake jump was created.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203217
+But using the ignore flag is a bit of a hack.  It's normally used to
+skip validation of an instruction, which doesn't really make sense for
+fake jumps.
 
-- Overview
-When mounting the attached crafted image and running program, I got this error.
-Additionally, it hangs on sync after running the program.
+Also, after the next patch, using the ignore flag for fake jumps can
+trigger a false "why am I validating an ignored function?" warning.
 
-The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
+Instead just add an explicit check in add_jump_destinations() to skip
+fake jumps.
 
-- Reproduces
-cc poc_test_05.c
-mkdir test
-mount -t f2fs tmp.img test
-sudo ./a.out
-sync
-
-- Messages
- kernel BUG at fs/f2fs/inode.c:707!
- RIP: 0010:f2fs_evict_inode+0x33f/0x3a0
- Call Trace:
-  evict+0xba/0x180
-  f2fs_iget+0x598/0xdf0
-  f2fs_lookup+0x136/0x320
-  __lookup_slow+0x92/0x140
-  lookup_slow+0x30/0x50
-  walk_component+0x1c1/0x350
-  path_lookupat+0x62/0x200
-  filename_lookup+0xb3/0x1a0
-  do_readlinkat+0x56/0x110
-  __x64_sys_readlink+0x16/0x20
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-During inode loading, __recover_inline_status() can recovery inode status
-and set inode dirty, once we failed in following process, it will fail
-the check in f2fs_evict_inode, result in trigger BUG_ON().
-
-Let's clear dirty inode in error path of f2fs_iget() to avoid panic.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/71abc072ff48b2feccc197723a9c52859476c068.1557766718.git.jpoimboe@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/inode.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/objtool/check.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 50818b519df8..e02ed16bc35c 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -397,6 +397,7 @@ make_now:
- 	return inode;
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index ae3446768181..95326c6a7a24 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -28,6 +28,8 @@
+ #include <linux/hashtable.h>
+ #include <linux/kernel.h>
  
- bad_inode:
-+	f2fs_inode_synced(inode);
- 	iget_failed(inode);
- 	trace_f2fs_iget_exit(inode, ret);
- 	return ERR_PTR(ret);
++#define FAKE_JUMP_OFFSET -1
++
+ struct alternative {
+ 	struct list_head list;
+ 	struct instruction *insn;
+@@ -498,7 +500,7 @@ static int add_jump_destinations(struct objtool_file *file)
+ 		    insn->type != INSN_JUMP_UNCONDITIONAL)
+ 			continue;
+ 
+-		if (insn->ignore)
++		if (insn->ignore || insn->offset == FAKE_JUMP_OFFSET)
+ 			continue;
+ 
+ 		rela = find_rela_by_dest_range(insn->sec, insn->offset,
+@@ -645,10 +647,10 @@ static int handle_group_alt(struct objtool_file *file,
+ 		clear_insn_state(&fake_jump->state);
+ 
+ 		fake_jump->sec = special_alt->new_sec;
+-		fake_jump->offset = -1;
++		fake_jump->offset = FAKE_JUMP_OFFSET;
+ 		fake_jump->type = INSN_JUMP_UNCONDITIONAL;
+ 		fake_jump->jump_dest = list_next_entry(last_orig_insn, list);
+-		fake_jump->ignore = true;
++		fake_jump->func = orig_insn->func;
+ 	}
+ 
+ 	if (!special_alt->new_len) {
 -- 
 2.20.1
 
