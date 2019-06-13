@@ -2,560 +2,561 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0BAC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DE7C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039372133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EAC52147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:54:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="PneAh+QW";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="LhFaEsGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbfFMUuv (ORCPT
+        id S1729791AbfFMUyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:50:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59160 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730021AbfFMUut (ORCPT
+        Thu, 13 Jun 2019 16:54:09 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:40118 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725747AbfFMUyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:50:49 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DKktrP013750
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 16:50:49 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t3vxgsumn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 16:50:48 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
-        Thu, 13 Jun 2019 21:50:46 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 13 Jun 2019 21:50:43 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5DKofZN12255418
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Jun 2019 20:50:41 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C7A0052052;
-        Thu, 13 Jun 2019 20:50:40 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.85.207.125])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E9D4D5204F;
-        Thu, 13 Jun 2019 20:50:37 +0000 (GMT)
-From:   Nayna Jain <nayna@linux.ibm.com>
-To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>
-Subject: [PATCH 2/2] powerpc: expose secure variables via sysfs
-Date:   Thu, 13 Jun 2019 16:50:27 -0400
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1560459027-5248-1-git-send-email-nayna@linux.ibm.com>
-References: <1560459027-5248-1-git-send-email-nayna@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19061320-4275-0000-0000-000003421DD7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061320-4276-0000-0000-00003852391E
-Message-Id: <1560459027-5248-3-git-send-email-nayna@linux.ibm.com>
+        Thu, 13 Jun 2019 16:54:09 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DKmJLX026892;
+        Thu, 13 Jun 2019 13:53:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=3+S8LE4Ao2Sr7pbFkjuJBIJrZXMTPGZ1VSFx7JD+2T8=;
+ b=PneAh+QW+2EGxTMR8nOmdCKpsGRbnycc/KNdoa5sdsTd6wS9dDCTmHKiE5css9JwgHe2
+ haDFBXwbgKFWW+bAZ+frJJ5P87XSb/d/+xCXBaSXQ1WMt8OfqE58Jvdzt/GhmWizeaUL
+ XPm9VOc5ZKldPHJIDackAaybWegUcyEEziZmXYKkZGM0vdhYxeWlKKFA8GUIrf9MV/PS
+ SOz/B4wYwq7MzWpwf3iDhszqVMlS7K90phHOoV8JN0yMmyyIzWU3gs3y9wfRnKdMwM8/
+ Kt8Cj+q5bF/WL9Ecvc754h/Glxh6EVyqE9+pulpaFo2YqFWvDqS1w+Kcc2P1eajbN0wM FQ== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2t3hvptw1t-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jun 2019 13:53:53 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 13 Jun
+ 2019 13:52:29 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.58) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 13 Jun 2019 13:52:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3+S8LE4Ao2Sr7pbFkjuJBIJrZXMTPGZ1VSFx7JD+2T8=;
+ b=LhFaEsGEsFJTbM2AZKafmO3mFW8Zq4DIc6dXqe08gfXDLgQe2+cg0x70bWACqmaErebhW4Z0guWcewmIhs6jtqUM81IYwosHIe7ZGtgNQyrS++DI5iDQcfsb/AH1URLvOEWN3oRspoJk6bL9lT+RQEdmhuoN7PFeaSNnIBns0WA=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
+ MN2PR18MB2703.namprd18.prod.outlook.com (20.178.255.92) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.11; Thu, 13 Jun 2019 20:52:27 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::d3:794c:1b94:cf3]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::d3:794c:1b94:cf3%4]) with mapi id 15.20.1965.017; Thu, 13 Jun 2019
+ 20:52:27 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     James Morse <james.morse@arm.com>
+CC:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 14/21] EDAC, ghes: Extract numa node information for each
+ dimm
+Thread-Topic: [PATCH 14/21] EDAC, ghes: Extract numa node information for each
+ dimm
+Thread-Index: AQHVIinoQDz9TIkOwEuZ4YTuyFfFBA==
+Date:   Thu, 13 Jun 2019 20:52:27 +0000
+Message-ID: <20190613205220.yeczoxxdhidnwcrf@rric.localdomain>
+References: <20190529084344.28562-1-rrichter@marvell.com>
+ <20190529084344.28562-15-rrichter@marvell.com>
+ <42d1cb7f-de7a-31e8-eb89-8d0651a3501a@arm.com>
+In-Reply-To: <42d1cb7f-de7a-31e8-eb89-8d0651a3501a@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0502CA0015.eurprd05.prod.outlook.com
+ (2603:10a6:3:e3::25) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:16c::25)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [92.254.182.202]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 40086ec5-30b1-4772-cd08-08d6f0410b25
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2703;
+x-ms-traffictypediagnostic: MN2PR18MB2703:
+x-microsoft-antispam-prvs: <MN2PR18MB2703421BE5D481C05A8F888BD9EF0@MN2PR18MB2703.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(376002)(39850400004)(136003)(396003)(189003)(199004)(99286004)(102836004)(86362001)(68736007)(30864003)(25786009)(8936002)(81166006)(6246003)(4326008)(66066001)(76176011)(54906003)(6506007)(5660300002)(53936002)(386003)(53546011)(478600001)(8676002)(1076003)(256004)(52116002)(81156014)(14454004)(5024004)(14444005)(316002)(7736002)(229853002)(64756008)(66946007)(66446008)(66556008)(66476007)(73956011)(305945005)(6436002)(6486002)(6916009)(71190400001)(9686003)(6512007)(6116002)(26005)(3716004)(476003)(11346002)(71200400001)(186003)(486006)(446003)(2906002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2703;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Cw9MT7ACx9hmZsZtDbCN0wBenMXd6xG/Bzs67wnfQq18aZq6CgTfzRFVjKCFGaw64oaYgWlzB5Gsj3lJt18UYEIKkYZo0yxKpFymNGxOd5T2ulidWSs+MFSTLVmOFCQA5vUL6+5QHwNxgZFkhpcHs3iJgOEldgC5whrwBKHQOpocwv7ckISUhW7QVQmeZdqXRNpcvv80sUt5ukSTijSEnV3YMj3UTC1tmD4xcLopgvkCE6BkdLKNTv+KFEkg7f8uSEKGnLC4DZXAQIXLaGl1cx6GiT7Oa7PAAKIIw0rx7I6GuOifh521lSwH5xmk1E0a1GmcsUgkdnyi40hcon2jy2SoeQ/7NPJmyGDFHguIWgkjA1w/L+uOcvTo6u5c3d5EVmadWq9R8GGDpuT9KmzsR9IOu9Rl3OKdAU3DoBd1gpA=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D44F177EC4E8734D8305E8BA6EB57877@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40086ec5-30b1-4772-cd08-08d6f0410b25
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 20:52:27.5737
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rrichter@marvell.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2703
+X-OriginatorOrg: marvell.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_12:,,
  signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906130156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As part of PowerNV secure boot support, OS verification keys are stored
-and controlled by OPAL as secure variables. These need to be exposed to
-the userspace so that sysadmins can perform key management tasks.
+Hi James,
 
-This patch adds the support to expose secure variables via a sysfs
-interface It reuses the the existing efi defined hooks and backend in
-order to maintain the compatibility with the userspace tools.
+thank you for your review and response here. See my comments below.
 
-Though it reuses a great deal of efi, POWER platforms do not use EFI.
-A new config, POWER_SECVAR_SYSFS, is defined to enable this new sysfs
-interface.
+On 29.05.19 18:51:00, James Morse wrote:
+> On 29/05/2019 09:44, Robert Richter wrote:
+> > In a later patch we want to have one mc device per node. This patch
+> > extracts the numa node information for each dimm. This is done by
+> > collecting the physical address ranges from the DMI table (Memory
+> > Array Mapped Address - Type 19 of SMBIOS spec). The node information> f=
+or a physical address is already know to a numa aware system (e.g. by
+> > using the ACPI _PXM method or the ACPI SRAT table), so based on the PA
+> > we can assign the node id to the dimms.
+>=20
+> I think you're letting the smbios information drive you here. We'd like t=
+o do as much as
+> possible without it, all its really good for is telling us the label on t=
+he PCB.
+>=20
+> With this approach, you only get numa information by parsing more smbios,=
+ which we have to
+> try and validate, and fall back to some error path if it smells wrong. We=
+ end up needing
+> things like a 'fallback memory controller' in the case the firmware fault=
+-time value is
+> missing, or nuts.
+>=20
+> What bugs me is we already know the numa information from the address. We=
+ could expose
+> that without the smbios tables at all, and it would be useful to someone =
+playing the
+> dimm-bisect game. Not making it depend on smbios means there is a good ch=
+ance it can
+> become common with other edac drivers.
 
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
----
- arch/powerpc/Kconfig                 |   2 +
- drivers/firmware/Makefile            |   1 +
- drivers/firmware/efi/efivars.c       |   2 +-
- drivers/firmware/powerpc/Kconfig     |  12 +
- drivers/firmware/powerpc/Makefile    |   3 +
- drivers/firmware/powerpc/efi_error.c |  46 ++++
- drivers/firmware/powerpc/secvar.c    | 326 +++++++++++++++++++++++++++
- 7 files changed, 391 insertions(+), 1 deletion(-)
- create mode 100644 drivers/firmware/powerpc/Kconfig
- create mode 100644 drivers/firmware/powerpc/Makefile
- create mode 100644 drivers/firmware/powerpc/efi_error.c
- create mode 100644 drivers/firmware/powerpc/secvar.c
+What a ghes driver will never have common with other edac drivers
+is the knowledge of the memory hierarchy. Other drivers know the
+underlying hardware and can determine the total number of dimms and
+their location mapping indicated by a tuple (card/module, row/channel,
+top_layer/mid_layer, etc.) using something like:
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 9de77bb14f54..1548dd8cf1a0 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -916,6 +916,8 @@ config PPC_SECURE_BOOT
- 	  allows user to enable OS Secure Boot on PowerPC systems that
- 	  have firmware secure boot support.
- 
-+source "drivers/firmware/powerpc/Kconfig"
-+
- endmenu
- 
- config ISA_DMA_API
-diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-index 3fa0b34eb72f..8cfaf7e6769d 100644
---- a/drivers/firmware/Makefile
-+++ b/drivers/firmware/Makefile
-@@ -33,3 +33,4 @@ obj-$(CONFIG_UEFI_CPER)		+= efi/
- obj-y				+= imx/
- obj-y				+= tegra/
- obj-y				+= xilinx/
-+obj-$(CONFIG_POWER_SECVAR_SYSFS) += powerpc/
-diff --git a/drivers/firmware/efi/efivars.c b/drivers/firmware/efi/efivars.c
-index 7576450c8254..30ef53003c24 100644
---- a/drivers/firmware/efi/efivars.c
-+++ b/drivers/firmware/efi/efivars.c
-@@ -664,7 +664,7 @@ int efivars_sysfs_init(void)
- 	struct kobject *parent_kobj = efivars_kobject();
- 	int error = 0;
- 
--	if (!efi_enabled(EFI_RUNTIME_SERVICES))
-+	if (IS_ENABLED(CONFIG_EFI) && !efi_enabled(EFI_RUNTIME_SERVICES))
- 		return -ENODEV;
- 
- 	/* No efivars has been registered yet */
-diff --git a/drivers/firmware/powerpc/Kconfig b/drivers/firmware/powerpc/Kconfig
-new file mode 100644
-index 000000000000..e0303fc517d5
---- /dev/null
-+++ b/drivers/firmware/powerpc/Kconfig
-@@ -0,0 +1,12 @@
-+config POWER_SECVAR_SYSFS
-+	tristate "Enable sysfs interface for POWER secure variables"
-+	default n
-+	depends on PPC_SECURE_BOOT
-+	select UCS2_STRING
-+	help
-+	  POWER secure variables are managed and controlled by OPAL.
-+	  These variables are exposed to userspace via sysfs to allow
-+	  user to read/write these variables. Say Y if you have secure
-+	  boot enabled and want to expose variables to userspace.
-+
-+source "drivers/firmware/efi/Kconfig"
-diff --git a/drivers/firmware/powerpc/Makefile b/drivers/firmware/powerpc/Makefile
-new file mode 100644
-index 000000000000..d5fa3b007315
---- /dev/null
-+++ b/drivers/firmware/powerpc/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+obj-$(CONFIG_POWER_SECVAR_SYSFS) += ../efi/efivars.o efi_error.o ../efi/vars.o secvar.o
-diff --git a/drivers/firmware/powerpc/efi_error.c b/drivers/firmware/powerpc/efi_error.c
-new file mode 100644
-index 000000000000..b5cabd52e6b4
---- /dev/null
-+++ b/drivers/firmware/powerpc/efi_error.c
-@@ -0,0 +1,46 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 IBM Corporation
-+ * Author: Nayna Jain <nayna@linux.ibm.com>
-+ *
-+ * efi_error.c
-+ *      - Error codes as understood by efi based tools
-+ *      Taken from drivers/firmware/efi/efi.c
-+ */
-+#include<linux/efi.h>
-+
-+int efi_status_to_err(efi_status_t status)
-+{
-+	int err;
-+
-+	switch (status) {
-+	case EFI_SUCCESS:
-+		err = 0;
-+		break;
-+	case EFI_INVALID_PARAMETER:
-+		err = -EINVAL;
-+		break;
-+	case EFI_OUT_OF_RESOURCES:
-+		err = -ENOSPC;
-+		break;
-+	case EFI_DEVICE_ERROR:
-+		err = -EIO;
-+		break;
-+	case EFI_WRITE_PROTECTED:
-+		err = -EROFS;
-+		break;
-+	case EFI_SECURITY_VIOLATION:
-+		err = -EACCES;
-+		break;
-+	case EFI_NOT_FOUND:
-+		err = -ENOENT;
-+		break;
-+	case EFI_ABORTED:
-+		err = -EINTR;
-+		break;
-+	default:
-+		err = -EINVAL;
-+	}
-+
-+	return err;
-+}
-diff --git a/drivers/firmware/powerpc/secvar.c b/drivers/firmware/powerpc/secvar.c
-new file mode 100644
-index 000000000000..f1f134a0bb7c
---- /dev/null
-+++ b/drivers/firmware/powerpc/secvar.c
-@@ -0,0 +1,326 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 IBM Corporation
-+ * Author: Nayna Jain <nayna@linux.ibm.com>
-+ *
-+ * secvar.c
-+ * - wrappers to expose secure variables to userspace
-+ */
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/types.h>
-+#include <linux/errno.h>
-+#include <linux/string.h>
-+#include <linux/spinlock.h>
-+#include <linux/fs.h>
-+#include <linux/slab.h>
-+#include <linux/ioctl.h>
-+#include <linux/uaccess.h>
-+#include <linux/kdebug.h>
-+#include <linux/efi.h>
-+#include <linux/module.h>
-+#include <linux/ucs2_string.h>
-+#include <asm/opal-secvar.h>
-+#include <asm/opal.h>
-+
-+static struct efivars efivars;
-+struct kobject *powerpc_kobj;
-+
-+efi_status_t opal_to_efi_status_log(int rc, const char *func_name)
-+{
-+	efi_status_t status;
-+
-+	switch (rc) {
-+	case OPAL_EMPTY:
-+		status = EFI_NOT_FOUND;
-+		break;
-+	case OPAL_HARDWARE:
-+		status = EFI_DEVICE_ERROR;
-+		break;
-+	case OPAL_NO_MEM:
-+		pr_err("%s: No space in the volatile storage\n", func_name);
-+		status = EFI_OUT_OF_RESOURCES;
-+		break;
-+	case OPAL_PARAMETER:
-+		status = EFI_INVALID_PARAMETER;
-+		break;
-+	case OPAL_PARTIAL:
-+		status = EFI_BUFFER_TOO_SMALL;
-+		break;
-+	case OPAL_PERMISSION:
-+		status = EFI_WRITE_PROTECTED;
-+		break;
-+	case OPAL_RESOURCE:
-+		pr_err("%s: No space in the non-volatile storage\n", func_name);
-+		status = EFI_OUT_OF_RESOURCES;
-+		break;
-+	case OPAL_SUCCESS:
-+		status = EFI_SUCCESS;
-+		break;
-+	default:
-+		pr_err("%s: Unknown OPAL error %d\n", func_name, rc);
-+		status = EFI_DEVICE_ERROR;
-+		break;
-+	}
-+
-+	return status;
-+}
-+
-+#define opal_to_efi_status(rc) opal_to_efi_status_log(rc, __func__)
-+
-+static void createkey(efi_char16_t *name, u8 **key, unsigned long *keylen)
-+{
-+	*keylen = ucs2_utf8size(name) + 1;
-+
-+	*key = kzalloc(*keylen, GFP_KERNEL);
-+	if (!*key) {
-+		*keylen = 0;
-+		*key = NULL;
-+		return;
-+	}
-+
-+	ucs2_as_utf8(*key, name, *keylen);
-+}
-+
-+static void createmetadata(efi_char16_t *name, efi_guid_t *vendor, u32 *attr,
-+			   u8 **mdata, unsigned long *mdsize)
-+{
-+	int size = 0;
-+
-+	*mdsize = ucs2_strsize(name, 1024) + sizeof(efi_guid_t) + sizeof(u32);
-+	*mdata = kzalloc(*mdsize, GFP_KERNEL);
-+
-+	memcpy(*mdata, name, ucs2_strsize(name, 1024));
-+	size = ucs2_strsize(name, 1024);
-+
-+	memcpy(*mdata + size, vendor, sizeof(efi_guid_t));
-+	size += sizeof(efi_guid_t);
-+
-+	if (attr != NULL)
-+		memcpy(*mdata + size, attr, sizeof(u32));
-+	else
-+		memset(*mdata + size, 0, sizeof(u32));
-+}
-+
-+static int convert_buffer_to_efi_guid(u8 *buffer, efi_guid_t *guid)
-+{
-+	u32 *a1;
-+	u16 *a2;
-+	u16 *a3;
-+
-+	a1 = kzalloc(4, GFP_KERNEL);
-+	memcpy(a1, buffer, 4);
-+	*a1 = be32_to_cpu(*a1);
-+
-+	a2 = kzalloc(2, GFP_KERNEL);
-+	memcpy(a2, buffer+4, 2);
-+	*a2 = be16_to_cpu(*a2);
-+
-+	a3 = kzalloc(2, GFP_KERNEL);
-+	memcpy(a3, buffer+6, 2);
-+	*a3 = be16_to_cpu(*a3);
-+
-+	*guid = EFI_GUID(*a1, *a2, *a3, *(buffer + 8),
-+			*(buffer + 9),
-+			*(buffer + 10),
-+			*(buffer + 11),
-+			*(buffer + 12),
-+			*(buffer + 13),
-+			*(buffer + 14),
-+			*(buffer + 15));
-+
-+	kfree(a1);
-+	kfree(a2);
-+	kfree(a3);
-+	return 0;
-+}
-+
-+static efi_status_t powerpc_get_variable(efi_char16_t *name, efi_guid_t *vendor,
-+					 u32 *attr, unsigned long *data_size,
-+					 void *data)
-+{
-+	int rc;
-+	u8 *key;
-+	unsigned long keylen;
-+	u8 *metadata;
-+	unsigned long mdsize;
-+	unsigned long dsize;
-+	unsigned long namesize;
-+
-+	if (!name)
-+		return EFI_INVALID_PARAMETER;
-+
-+	if (!vendor)
-+		return EFI_INVALID_PARAMETER;
-+
-+	if (*data_size == 0) {
-+		/* If *data_size is zero, it implies data size is being asked */
-+		createkey(name, &key, &keylen);
-+		rc = opal_get_variable_size(key, keylen, &mdsize, &dsize);
-+		*data_size = dsize;
-+		kfree(key);
-+		return opal_to_efi_status(rc);
-+	}
-+
-+	createkey(name, &key, &keylen);
-+	createmetadata(name, vendor, attr, &metadata, &mdsize);
-+
-+	rc = opal_get_variable(key, keylen, metadata, &mdsize, data, data_size);
-+
-+	if (rc)
-+		return opal_to_efi_status(rc);
-+
-+	if (mdsize > 0) {
-+		namesize = mdsize - sizeof(efi_guid_t) - sizeof(u32);
-+		if (!attr)
-+			return opal_to_efi_status(rc);
-+		memset(attr, 0, sizeof(u32));
-+		memcpy(attr, metadata + namesize + sizeof(efi_guid_t),
-+		       sizeof(u32));
-+		*attr = be32_to_cpu(*attr);
-+	}
-+
-+	kfree(key);
-+	kfree(metadata);
-+
-+	return opal_to_efi_status(rc);
-+}
-+
-+
-+static efi_status_t powerpc_get_next_variable(unsigned long *name_size,
-+					      efi_char16_t *name,
-+					      efi_guid_t *vendor)
-+{
-+	int rc;
-+	u8 *key;
-+	int namesize;
-+	unsigned long keylen;
-+	unsigned long keysize = 1024;
-+	unsigned long *mdsize;
-+	u8 *mdata = NULL;
-+	efi_guid_t guid;
-+
-+	if (ucs2_strnlen(name, 1024) > 0) {
-+		createkey(name, &key, &keylen);
-+	} else {
-+		keylen = 0;
-+		key = kzalloc(1024, GFP_KERNEL);
-+	}
-+
-+	pr_info("%s: powerpc get next variable, key is %s\n", __func__, key);
-+
-+	rc = opal_get_next_variable(key, &keylen, keysize);
-+	if (rc) {
-+		kfree(key);
-+		return opal_to_efi_status(rc);
-+	}
-+
-+	mdsize = kzalloc(sizeof(unsigned long), GFP_KERNEL);
-+	rc = opal_get_variable_size(key, keylen, mdsize, NULL);
-+	if (rc)
-+		goto out;
-+
-+	if (*mdsize <= 0)
-+		goto out;
-+
-+	mdata = kzalloc(*mdsize, GFP_KERNEL);
-+
-+	rc = opal_get_variable(key, keylen, mdata, mdsize, NULL, NULL);
-+	if (rc)
-+		goto out;
-+
-+	if (*mdsize > 0) {
-+		namesize = *mdsize - sizeof(efi_guid_t) - sizeof(u32);
-+		if (namesize > 0) {
-+			memset(&guid, 0, sizeof(efi_guid_t));
-+			convert_buffer_to_efi_guid(mdata + namesize, &guid);
-+			memcpy(vendor, &guid, sizeof(efi_guid_t));
-+			memset(name, 0, namesize + 2);
-+			memcpy(name, mdata, namesize);
-+			*name_size = namesize + 2;
-+			name[namesize++] = 0;
-+			name[namesize] = 0;
-+		}
-+	}
-+
-+out:
-+	kfree(mdsize);
-+	kfree(mdata);
-+
-+	return opal_to_efi_status(rc);
-+}
-+
-+static efi_status_t powerpc_set_variable(efi_char16_t *name, efi_guid_t *vendor,
-+					 u32 attr, unsigned long data_size,
-+					 void *data)
-+{
-+	int rc;
-+	u8 *key;
-+	unsigned long keylen;
-+	u8 *metadata;
-+	unsigned long mdsize;
-+
-+	if (!name)
-+		return EFI_INVALID_PARAMETER;
-+
-+	if (!vendor)
-+		return EFI_INVALID_PARAMETER;
-+
-+	createkey(name, &key, &keylen);
-+	pr_info("%s: nayna key is %s\n", __func__, key);
-+
-+	createmetadata(name, vendor, &attr, &metadata, &mdsize);
-+
-+	rc = opal_set_variable(key, keylen, metadata, mdsize, data, data_size);
-+
-+	return opal_to_efi_status(rc);
-+}
-+
-+
-+static const struct efivar_operations efivar_ops = {
-+	.get_variable = powerpc_get_variable,
-+	.set_variable = powerpc_set_variable,
-+	.get_next_variable = powerpc_get_next_variable,
-+};
-+
-+
-+static __init int power_secvar_init(void)
-+{
-+	int rc = 0;
-+	unsigned long ver = 0;
-+
-+	rc = opal_variable_version(&ver);
-+	if (ver != BACKEND_TC_COMPAT_V1) {
-+		pr_info("Compatible backend unsupported\n");
-+		return -1;
-+	}
-+
-+	powerpc_kobj = kobject_create_and_add("secvar", firmware_kobj);
-+	if (!powerpc_kobj) {
-+		pr_info("secvar: Failed to create firmware kobj\n");
-+		goto out_err;
-+	}
-+
-+	rc = efivars_register(&efivars, &efivar_ops, powerpc_kobj);
-+	if (rc) {
-+		pr_info("powerpc: Failed to register efivars\n");
-+		return rc;
-+	}
-+
-+	return 0;
-+out_err:
-+	kobject_put(powerpc_kobj);
-+	pr_info("powerpc: failed to load: %d\n", rc);
-+	return rc;
-+}
-+arch_initcall(power_secvar_init);
-+
-+static void __exit power_secvar_exit(void)
-+{
-+	efivars_unregister(&efivars);
-+	kobject_put(powerpc_kobj);
-+}
-+module_exit(power_secvar_exit);
-+
-+MODULE_AUTHOR("Nayna Jain");
-+MODULE_LICENSE("GPL");
--- 
-2.20.1
+  index =3D top_layer * mid_layer_size + mid_layer;
 
+The ghes driver cannot calculate a dimm index in that way since the
+size of each layer is unknown. This only leaves you using the
+dmi_handle from the error record to do the dimm mapping. I don't see
+any other way here.
+
+>=20
+> I don't think we need to know the dimm->node mapping up front. When we ge=
+t an error,
+> pfn_to_nid() on the address tells us which node that memory is attached t=
+o. This should be
+> the only place nid information comes from, that way we don't need to chec=
+k it. Trying to
+> correlate it with smbios tables is much more code. If the CPER comes with=
+ a DIMM handle,
+> we know the DIMM too.
+
+The dimm/node mapping is not the issue here and we could also use the
+phys addr to select the node's memory controller. But we still need to
+be able to somehow select the dimm the error belongs to. The ghes
+driver cannot use the location tuple here to get the dimm index in the
+mc's array.
+
+> So all we really need is to know at setup time is how many numa-nodes the=
+re are, and the
+> maximum DIMM per node if we don't want phantom-dimms. Type-17 already has=
+ a
+> Physical-Memory-Array-Handle, which points at Type-19... but we don't nee=
+d to read it,
+> just count them and find the biggest.
+>=20
+> If the type-19 information is missing from smbios, or not linked up prope=
+rly, or the
+> values provided at fault-time don't overlap with the values in the table,=
+ or there is no
+> fault-time node information: you still get the numa-node information base=
+d on the address.
+>=20
+> Using the minimum information should give us the least code, and the leas=
+t exposure to
+> misdescribed tables.
+
+As said, we need the firmware here to locate the correct dimm an error
+is reported for. I also would like to use the information of the
+smbios at a minimum, but we rely on correct firmware tables here.
+Assuming a broken fw and still having a correct driver does not work.
+Why not just blame the firmware if something is wrong? I am sure it
+will be corrected if edac does not properly work.
+
+>=20
+>=20
+> > A fallback that disables numa is implemented in case the node
+> > information is inconsistent.
+>=20
+> > diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> > index 50f4ee36b755..083452a48b42 100644
+> > --- a/drivers/edac/ghes_edac.c
+> > +++ b/drivers/edac/ghes_edac.c
+> > @@ -67,14 +67,34 @@ struct memdev_dmi_entry {
+> >  	u16 conf_mem_clk_speed;
+> >  } __attribute__((__packed__));
+> > =20
+> > +/* Memory Array Mapped Address - Type 19 of SMBIOS spec */
+> > +struct memarr_dmi_entry {
+> > +	u8		type;
+> > +	u8		length;
+> > +	u16		handle;
+> > +	u32		start;
+> > +	u32		end;
+> > +	u16		phys_mem_array_handle;
+> > +	u8		partition_width;
+> > +	u64		ext_start;
+> > +	u64		ext_end;
+> > +} __attribute__((__packed__));
+>=20
+> Any chance we could collect the structures from the smbios spec in a head=
+er file somewhere?
+
+I could create a new ghes_edac.h file, but the only user is
+ghes_edac.c? Does not make sense to me.
+
+>=20
+> I'd prefer not to read this thing at all if we can help it.
+
+I don't see how else we identify the dimm other than the phys addr
+range and the smbios handle?
+
+>=20
+> >  struct ghes_dimm_info {
+> >  	struct dimm_info dimm_info;
+> >  	int		idx;
+> > +	int		numa_node;
+>=20
+> (I thought nid was the preferred term)
+
+struct device uses numa_node here, so I chose this one.
+
+>=20
+>=20
+> > +	phys_addr_t	start;
+> > +	phys_addr_t	end;
+>=20
+> I think start and end are deceptive as they overlap with other DIMMs on s=
+ystems with
+> interleaving memory controllers. I'd prefer not to keep these values arou=
+nd.
+
+The (start) address is only used for dimm/node mapping.
+
+>=20
+>=20
+> > +	u16		phys_handle;
+> >  };
+> > =20
+> >  struct ghes_mem_info {
+> > -	int num_dimm;
+> > +	int		num_dimm;
+> >  	struct ghes_dimm_info *dimms;
+> > +	int		num_nodes;
+>=20
+> > +	int		num_per_node[MAX_NUMNODES];
+>=20
+> Number of what?
+
+dimms_per_node, will change.
+
+>=20
+>=20
+> > +	bool		enable_numa;
+>=20
+> This is used locally in mem_info_setup(), but its not read from here by a=
+ny of the later
+> patches in the series. Is it needed?
+
+No, not really, will remove it.
+
+>=20
+> I don't like the idea that this is behaviour that is turned on/off. Its a=
+ property of the
+> system. I think it would be better if CONFIG_NUMA causes you to get multi=
+ple
+> memory-controllers created, but if its not actually a NUMA machine there =
+would only be
+> one. This lets us test that code on not-really-numa systems.
+
+There is only one node if CONFIG_NUMA is disabled and only one mc is
+created.
+
+We disable per-node memory controllers only if the node id cannot be
+determined properly for some reason.
+
+>=20
+>=20
+> >  };
+> > =20
+> >  struct ghes_mem_info mem_info;
+> > @@ -97,10 +117,50 @@ static void ghes_dimm_info_init(void)
+> > =20
+> >  	for_each_dimm(dimm) {
+> >  		dimm->idx	=3D idx;
+> > +		dimm->numa_node	=3D NUMA_NO_NODE;
+> >  		idx++;
+> >  	}
+> >  }
+> > =20
+> > +static void ghes_edac_set_nid(const struct dmi_header *dh, void *arg)
+> > +{
+> > +	struct memarr_dmi_entry *entry =3D (struct memarr_dmi_entry *)dh;
+> > +	struct ghes_dimm_info *dimm;
+> > +	phys_addr_t start, end;
+> > +	int nid;
+> > +
+> > +	if (dh->type !=3D DMI_ENTRY_MEM_ARRAY_MAPPED_ADDR)
+> > +		return;
+>=20
+> > +	/* only support SMBIOS 2.7+ */
+> > +	if (entry->length < sizeof(*entry))
+> > +		return;
+>=20
+> Lovely. I still hope we can get away without parsing this table.
+>=20
+>=20
+> > +	if (entry->start =3D=3D 0xffffffff)
+> > +		start =3D entry->ext_start;
+> > +	else
+> > +		start =3D entry->start;
+> > +	if (entry->end =3D=3D 0xffffffff)
+> > +		end =3D entry->ext_end;
+> > +	else
+> > +		end =3D entry->end;
+>=20
+>=20
+> > +	if (!pfn_valid(PHYS_PFN(start)))
+> > +		return;
+>=20
+> Eh? Just because there is no struct page doesn't mean firmware won't repo=
+rt errors for it.
+> This is going to bite on arm64 if the 'start' page happens to have been r=
+eserved by
+> firmware, and thus doesn't have a struct page. Bottom-up allocation doesn=
+'t sound unlikely.
+
+It looks like the memblock areas have a finer granularity than the
+memory ranges in the DMI and SRAT table. DMI and SRAT have the same
+areas on the system that I have used for testing.=20
+
+SRAT is the area used to setup pfns. If that maps with the dmi table
+and the memblocks are within that range, I don't see an issue.
+
+The fallback would be the node is not detectable and per-node mc
+allocation is disabled.
+
+----
+# dmidecode | grep -A 5 'Memory Array Mapped Address'
+Memory Array Mapped Address
+       Starting Address: 0x0000000080000000k
+       Ending Address: 0x00000000FEFFFFFFk
+       Range Size: 2032 MB
+       Physical Array Handle: 0x0037
+       Partition Width: 1
+--
+Memory Array Mapped Address
+       Starting Address: 0x0000000880000000k
+       Ending Address: 0x0000000FFFFFFFFFk
+       Range Size: 30 GB
+       Physical Array Handle: 0x0037
+       Partition Width: 1
+--
+Memory Array Mapped Address
+       Starting Address: 0x0000008800000000k
+       Ending Address: 0x0000009FFCFFFFFFk
+       Range Size: 98256 MB
+       Physical Array Handle: 0x0037
+       Partition Width: 1
+--
+Memory Array Mapped Address
+       Starting Address: 0x0000009FFD000000k
+       Ending Address: 0x000000BFFCFFFFFFk
+       Range Size: 128 GB
+       Physical Array Handle: 0x004E
+       Partition Width: 1
+# dmesg | grep SRAT:.*mem
+[    0.000000] ACPI: SRAT: Node 0 PXM 0 [mem 0x80000000-0xfeffffff]
+[    0.000000] ACPI: SRAT: Node 0 PXM 0 [mem 0x880000000-0xfffffffff]
+[    0.000000] ACPI: SRAT: Node 0 PXM 0 [mem 0x8800000000-0x9ffcffffff]
+[    0.000000] ACPI: SRAT: Node 1 PXM 1 [mem 0x9ffd000000-0xbffcffffff]
+# dmesg
+[...]
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x00000000802f0000-0x000000008030ffff]
+[    0.000000]   node   0: [mem 0x0000000080310000-0x00000000bfffffff]
+[    0.000000]   node   0: [mem 0x00000000c0000000-0x00000000c0ccffff]
+[    0.000000]   node   0: [mem 0x00000000c0cd0000-0x00000000f95effff]
+[    0.000000]   node   0: [mem 0x00000000f95f0000-0x00000000f961ffff]
+[    0.000000]   node   0: [mem 0x00000000f9620000-0x00000000fac3ffff]
+[    0.000000]   node   0: [mem 0x00000000fac40000-0x00000000faddffff]
+[    0.000000]   node   0: [mem 0x00000000fade0000-0x00000000fc8dffff]
+[    0.000000]   node   0: [mem 0x00000000fc8e0000-0x00000000fc8effff]
+[    0.000000]   node   0: [mem 0x00000000fc8f0000-0x00000000fcaaffff]
+[    0.000000]   node   0: [mem 0x00000000fcab0000-0x00000000fcacffff]
+[    0.000000]   node   0: [mem 0x00000000fcad0000-0x00000000fcb4ffff]
+[    0.000000]   node   0: [mem 0x00000000fcb50000-0x00000000fd1fffff]
+[    0.000000]   node   0: [mem 0x00000000fd200000-0x00000000fecfffff]
+[    0.000000]   node   0: [mem 0x00000000fed00000-0x00000000fed2ffff]
+[    0.000000]   node   0: [mem 0x00000000fed30000-0x00000000fed3ffff]
+[    0.000000]   node   0: [mem 0x00000000fed40000-0x00000000fedeffff]
+[    0.000000]   node   0: [mem 0x00000000fedf0000-0x00000000feffffff]
+[    0.000000]   node   0: [mem 0x0000000880000000-0x0000000fffffffff]
+[    0.000000]   node   0: [mem 0x0000008800000000-0x0000009ffcffffff]
+[    0.000000]   node   1: [mem 0x0000009ffd000000-0x000000bffcffffff]
+[...]
+----
+
+>=20
+>=20
+> > +	nid =3D pfn_to_nid(PHYS_PFN(start));
+>=20
+> ... Ugh, because pfn_to_nid() goes via struct page.
+>=20
+> You can make this robust by scanning start->end looking for a pfn_valid()=
+ you can pull the
+> nid out of. (no, I don't think its a good idea either!)
+>=20
+> I'd like to see if we can get rid of the 'via address' part of this.
+>=20
+>=20
+> > +	if (nid < 0 || nid >=3D MAX_NUMNODES || !node_possible(nid))
+> > +		nid =3D NUMA_NO_NODE;
+>=20
+> Can this happen? Does this indicate the firmware tables are wrong, or mm =
+is about derail?
+
+It's a range check, pfn_to_nid() is implementation defined, just make
+sure things are as expected.
+
+>=20
+>=20
+> > +	for_each_dimm(dimm) {
+> > +		if (entry->phys_mem_array_handle =3D=3D dimm->phys_handle) {
+> > +			dimm->numa_node	=3D nid;
+> > +			dimm->start	=3D start;
+> > +			dimm->end	=3D end;
+> > +		}
+> > +	}
+> > +}
+> > +
+> >  static int get_dimm_smbios_index(u16 handle)
+> >  {
+> >  	struct mem_ctl_info *mci =3D ghes_pvt->mci;
+> > @@ -213,8 +273,25 @@ static void ghes_edac_dmidecode(const struct dmi_h=
+eader *dh, void *arg)
+> >  	}
+> >  }
+> > =20
+> > +static void mem_info_disable_numa(void)
+> > +{
+> > +	struct ghes_dimm_info *dimm;
+> > +
+> > +	for_each_dimm(dimm) {
+> > +		if (dimm->numa_node !=3D NUMA_NO_NODE)
+> > +			mem_info.num_per_node[dimm->numa_node] =3D 0;
+>=20
+> > +		dimm->numa_node =3D 0;
+>=20
+> NUMA_NO_NODE?
+
+No, this is the index to the one and only mem controller that we have
+with numa disabled for edac.
+
+>=20
+> > +	}
+> > +
+> > +	mem_info.num_per_node[0] =3D mem_info.num_dimm;
+> > +	mem_info.num_nodes =3D 1;
+> > +	mem_info.enable_numa =3D false;
+> > +}
+> > +
+> >  static int mem_info_setup(void)
+> >  {
+> > +	struct ghes_dimm_info *dimm;
+> > +	bool enable_numa =3D true;
+> >  	int idx =3D 0;
+> > =20
+> >  	memset(&mem_info, 0, sizeof(mem_info));
+> > @@ -231,6 +308,29 @@ static int mem_info_setup(void)
+> > =20
+> >  	ghes_dimm_info_init();
+> >  	dmi_walk(ghes_edac_dmidecode, &idx);
+> > +	dmi_walk(ghes_edac_set_nid, NULL);
+> > +
+> > +	for_each_dimm(dimm) {
+> > +		if (dimm->numa_node =3D=3D NUMA_NO_NODE) {
+> > +			enable_numa =3D false;
+> > +		} else {
+>=20
+> > +			if (!mem_info.num_per_node[dimm->numa_node])
+> > +				mem_info.num_nodes++;
+>=20
+> This is to try and hide empty nodes?
+
+This is consumed nowhere and can be removed.
+
+>=20
+>=20
+> > +			mem_info.num_per_node[dimm->numa_node]++;
+>=20
+> Could you do these two in your previous for_each_dimm() walk?
+
+This must be called after the ghes_edac_set_nid walker.
+
+>=20
+>=20
+> > +		}
+> > +
+> > +		edac_dbg(1, "DIMM%i: Found mem range [%pa-%pa] on node %d\n",
+> > +			dimm->idx, &dimm->start, &dimm->end, dimm->numa_node);
+> > +	}
+>=20
+>=20
+> > +	mem_info.enable_numa =3D enable_numa;
+> > +	if (enable_numa)
+> > +		return 0;
+> > +
+> > +	/* something went wrong, disable numa */
+> > +	if (num_possible_nodes() > 1)
+> > +		pr_warn("Can't get numa info, disabling numa\n");
+> > +	mem_info_disable_numa();
+>=20
+> I'd like to find a way of doing this where we don't need this sort of thi=
+ng!
+
+I fear that might not be possible and you can't have one without the
+other. You need the tables to setup the dimms and you need the smbios
+handle to map the error to the dimm.
+
+-Robert
+
+>=20
+>=20
+> Thanks,
+>=20
+> James
