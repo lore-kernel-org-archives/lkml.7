@@ -2,152 +2,123 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEF5C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C98F6C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE7E21473
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F3232054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:21:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="XGC4QkHz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732091AbfFMPU4 (ORCPT
+        id S1732537AbfFMPVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:20:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:39440 "EHLO foss.arm.com"
+        Thu, 13 Jun 2019 11:21:20 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:54985 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732009AbfFMMvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 08:51:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7BF2C2B;
-        Thu, 13 Jun 2019 05:51:12 -0700 (PDT)
-Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 432713F694;
-        Thu, 13 Jun 2019 05:51:11 -0700 (PDT)
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2] clocksource/arm_arch_timer: extract elf_hwcap use to arch-helper
-Date:   Thu, 13 Jun 2019 13:51:02 +0100
-Message-Id: <20190613125102.23879-1-andrew.murray@arm.com>
-X-Mailer: git-send-email 2.21.0
+        id S1732006AbfFMMuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 08:50:18 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45Pk9K4M2Dz9v00J;
+        Thu, 13 Jun 2019 14:50:13 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=XGC4QkHz; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id r2jrMUr4S6_f; Thu, 13 Jun 2019 14:50:13 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45Pk9K3CjSz9tyyl;
+        Thu, 13 Jun 2019 14:50:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1560430213; bh=tSiFMtfMvkoo1YAalFTMO8Zl4haXafUMn4htZhOOXBw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=XGC4QkHz/G0dORO17fuH504YhMMnNB4P+pF78ct0KiG+4jyQdmULNQdkyH/XqHHht
+         6s66fVMxgJEgh+Aip60kOx7jIFbYrY5g2IJCAANf+1A8GN3geioEzUWdoQsN8elEES
+         Gs03Zln4G2Is0qj+AL0P2O8FfS0JZ5k+IeDT+sQI=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CB8C18B8E4;
+        Thu, 13 Jun 2019 14:50:14 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id vxc-WCLWMvLI; Thu, 13 Jun 2019 14:50:14 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2DEFD8B8B9;
+        Thu, 13 Jun 2019 14:50:14 +0200 (CEST)
+Subject: Re: [PATCH v2 1/4] crypto: talitos - move struct talitos_edesc into
+ talitos.h
+To:     Horia Geanta <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <cover.1560263641.git.christophe.leroy@c-s.fr>
+ <d9b5fade242f0806a587392d31c272709949479f.1560263641.git.christophe.leroy@c-s.fr>
+ <VI1PR0402MB3485C0F4CB13F8674B8B5A5598EF0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <7fb54918-4524-1e6b-dd29-46be8843577b@c-s.fr>
+ <VI1PR0402MB34858ABA5DE0324FA6E2CFCD98EF0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <ce6beda2-75c8-f360-9e01-5a883128d153@c-s.fr>
+ <VI1PR0402MB348514C4AA9E41C26FF4430998EF0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <4c3808ec-783d-d5b3-6c0b-ae5092652233@c-s.fr>
+Date:   Thu, 13 Jun 2019 14:50:13 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <VI1PR0402MB348514C4AA9E41C26FF4430998EF0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Different mechanisms are used to test and set elf_hwcaps between ARM
-and ARM64, this results in the use of ifdeferry in this file when
-setting/testing for the EVTSTRM hwcap.
 
-Let's improve readability by extracting this to an arch helper.
 
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Will Deacon <will.deacon@arm.com>
----
- arch/arm/include/asm/arch_timer.h    | 10 ++++++++++
- arch/arm64/include/asm/arch_timer.h  | 13 +++++++++++++
- drivers/clocksource/arm_arch_timer.c | 15 ++-------------
- 3 files changed, 25 insertions(+), 13 deletions(-)
+Le 13/06/2019 à 14:39, Horia Geanta a écrit :
+> On 6/13/2019 3:32 PM, Christophe Leroy wrote:
+>>
+>>
+>> Le 13/06/2019 à 14:24, Horia Geanta a écrit :
+>>> On 6/13/2019 3:16 PM, Christophe Leroy wrote:
+>>>>
+>>>>
+>>>> Le 13/06/2019 à 14:13, Horia Geanta a écrit :
+>>>>> On 6/11/2019 5:39 PM, Christophe Leroy wrote:
+>>>>>> Next patch will require struct talitos_edesc to be defined
+>>>>>> earlier in talitos.c
+>>>>>>
+>>>>>> This patch moves it into talitos.h so that it can be used
+>>>>>> from any place in talitos.c
+>>>>>>
+>>>>>> Fixes: 37b5e8897eb5 ("crypto: talitos - chain in buffered data for ahash on SEC1")
+>>>>>> Cc: stable@vger.kernel.org
+>>>>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>>>>> Again, this patch does not qualify as a fix.
+>>>>>
+>>>>
+>>>> But as I said, the following one is a fix and require that one, you told
+>>>> me to add stable in Cc: to make it explicit it was to go into stable.
+>>> Yes, but you should remove the Fixes tag.
+>>> And probably replace "Next patch" with the commit headline.
+>>>
+>>>> If someone tries to merge following one into stable with taking that one
+>>>> first, build will fail.
+>>> This shouldn't happen, order from main tree should be preserved.
+>>>
+>>
+>> When they pick up fixes, AFAIK they don't take all the preceeding commits.
+>>
+> This is not about Fixes tag, but Cc tag:
+> https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html#option-1
+> 
 
-diff --git a/arch/arm/include/asm/arch_timer.h b/arch/arm/include/asm/arch_timer.h
-index 4b66ecd6be99..ae533caec1e9 100644
---- a/arch/arm/include/asm/arch_timer.h
-+++ b/arch/arm/include/asm/arch_timer.h
-@@ -4,6 +4,7 @@
- 
- #include <asm/barrier.h>
- #include <asm/errno.h>
-+#include <asm/hwcap.h>
- #include <linux/clocksource.h>
- #include <linux/init.h>
- #include <linux/types.h>
-@@ -124,6 +125,15 @@ static inline void arch_timer_set_cntkctl(u32 cntkctl)
- 	isb();
- }
- 
-+static inline bool arch_timer_set_evtstrm_feature(void)
-+{
-+	elf_hwcap |= HWCAP_EVTSTRM;
-+}
-+
-+static inline bool arch_timer_have_evtstrm_feature(void)
-+{
-+	return elf_hwcap & HWCAP_EVTSTRM;
-+}
- #endif
- 
- #endif
-diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
-index 50b3ab7ded4f..a847a3ee6cab 100644
---- a/arch/arm64/include/asm/arch_timer.h
-+++ b/arch/arm64/include/asm/arch_timer.h
-@@ -20,6 +20,7 @@
- #define __ASM_ARCH_TIMER_H
- 
- #include <asm/barrier.h>
-+#include <asm/hwcap.h>
- #include <asm/sysreg.h>
- 
- #include <linux/bug.h>
-@@ -240,4 +241,16 @@ static inline int arch_timer_arch_init(void)
- 	return 0;
- }
- 
-+static inline void arch_timer_set_evtstrm_feature(void)
-+{
-+	cpu_set_named_feature(EVTSTRM);
-+#ifdef CONFIG_COMPAT
-+	compat_elf_hwcap |= COMPAT_HWCAP_EVTSTRM;
-+#endif
-+}
-+
-+static inline bool arch_timer_have_evtstrm_feature(void)
-+{
-+	return cpu_have_named_feature(EVTSTRM);
-+}
- #endif
-diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index b2a951a798e2..3583a92ad960 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -804,14 +804,7 @@ static void arch_timer_evtstrm_enable(int divider)
- 	cntkctl |= (divider << ARCH_TIMER_EVT_TRIGGER_SHIFT)
- 			| ARCH_TIMER_VIRT_EVT_EN;
- 	arch_timer_set_cntkctl(cntkctl);
--#ifdef CONFIG_ARM64
--	cpu_set_named_feature(EVTSTRM);
--#else
--	elf_hwcap |= HWCAP_EVTSTRM;
--#endif
--#ifdef CONFIG_COMPAT
--	compat_elf_hwcap |= COMPAT_HWCAP_EVTSTRM;
--#endif
-+	arch_timer_set_evtstrm_feature();
- 	cpumask_set_cpu(smp_processor_id(), &evtstrm_available);
- }
- 
-@@ -1040,11 +1033,7 @@ static int arch_timer_cpu_pm_notify(struct notifier_block *self,
- 	} else if (action == CPU_PM_ENTER_FAILED || action == CPU_PM_EXIT) {
- 		arch_timer_set_cntkctl(__this_cpu_read(saved_cntkctl));
- 
--#ifdef CONFIG_ARM64
--		if (cpu_have_named_feature(EVTSTRM))
--#else
--		if (elf_hwcap & HWCAP_EVTSTRM)
--#endif
-+		if (arch_timer_have_evtstrm_feature())
- 			cpumask_set_cpu(smp_processor_id(), &evtstrm_available);
- 	}
- 	return NOTIFY_OK;
--- 
-2.21.0
-
+Ah, ok. So I need to keep the Cc tag. I misunderstood sorry.
