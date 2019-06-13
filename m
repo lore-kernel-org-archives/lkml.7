@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD78C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 792CBC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86F0920644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4370F20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443005;
-	bh=X+R5vzI3sP3DJBHPZdTdhePeFCbETwqSZUEN09NkQjo=;
+	s=default; t=1560443013;
+	bh=lLHyH9FgPjztw2NLsdFLkbTreI6zU16PHl8zia8TiL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vgm6EtBi/BFxqWUCOGK59Ey6TzXXqEruhiaoK6yoe5GkdqtokU2MGUSlHEYnizIBV
-	 nIAd1QPgpKb2sLyrFWkrRrgMkAJbNX2iX4c6l8gisT1BwgRUjj74R7Pu+2Skr3uDx4
-	 BIOo2zPsDw4ws3GN4ezHGvN8MRN374yb9RzrOfaA=
+	b=Th5XtDrvZtBfUyCnnF0ju415mjd7a+vON58b3lVjTT0M350/ebk2MXS0aVB7U5Ypi
+	 +utVYv/5pgDzvlfcY9eoM6hBhjXKLb1YFqaIP7acnkhQkuOx4EW33yaGdjtE3XuywD
+	 yP64pkI4Nz3OAf0lm6IV86Am9Xfp/KLJRMiQo6Gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391478AbfFMQXD (ORCPT
+        id S1732947AbfFMQXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:23:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55420 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:23:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731034AbfFMIh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:37:59 -0400
+        id S1731026AbfFMIhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:37:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC89C21473;
-        Thu, 13 Jun 2019 08:37:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F09BD2064A;
+        Thu, 13 Jun 2019 08:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415078;
-        bh=X+R5vzI3sP3DJBHPZdTdhePeFCbETwqSZUEN09NkQjo=;
+        s=default; t=1560415060;
+        bh=lLHyH9FgPjztw2NLsdFLkbTreI6zU16PHl8zia8TiL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HCDCczUYgm6G+WxEidmZKZqp97q9ZIqXtIatdAeICyHm4jb+VRqSeCU7ZxGhiOQvb
-         BjzEEQijYQ6J7mJCF+A+nvr/XGWVp7eZ+rvrop53dm+xxulUOb1wg75oInEPiFiWcs
-         Itgy6CC3TaSkMgAFhski253d1KxhbbZhFo6ANdzY=
+        b=fdFO15DeiSr/OLw83g5Lp7P8C91hWi0rSC6CKQnyR17Tmuiej8ovdO27Ig2ygW3El
+         fRwdgYNpb3rexGOeZbRMXQGESohPYusV9v55aYGVJqm98zzRHd1Bdk5XfmXmJNseun
+         o9UibfPZXhJA5idnP4AoGhx/zMe1NQ53kTVy9Nfo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dennis Zhou <dennis@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 78/81] percpu: do not search past bitmap when allocating an area
-Date:   Thu, 13 Jun 2019 10:34:01 +0200
-Message-Id: <20190613075654.739666493@linuxfoundation.org>
+        stable@vger.kernel.org, Farhan Ali <alifm@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 45/81] vfio: Fix WARNING "do not call blocking ops when !TASK_RUNNING"
+Date:   Thu, 13 Jun 2019 10:33:28 +0200
+Message-Id: <20190613075652.609955264@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -59,39 +60,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8c43004af01635cc9fbb11031d070e5e0d327ef2 ]
+[ Upstream commit 41be3e2618174fdf3361e49e64f2bf530f40c6b0 ]
 
-pcpu_find_block_fit() guarantees that a fit is found within
-PCPU_BITMAP_BLOCK_BITS. Iteration is used to determine the first fit as
-it compares against the block's contig_hint. This can lead to
-incorrectly scanning past the end of the bitmap. The behavior was okay
-given the check after for bit_off >= end and the correctness of the
-hints from pcpu_find_block_fit().
+vfio_dev_present() which is the condition to
+wait_event_interruptible_timeout(), will call vfio_group_get_device
+and try to acquire the mutex group->device_lock.
 
-This patch fixes this by bounding the end offset by the number of bits
-in a chunk.
+wait_event_interruptible_timeout() will set the state of the current
+task to TASK_INTERRUPTIBLE, before doing the condition check. This
+means that we will try to acquire the mutex while already in a
+sleeping state. The scheduler warns us by giving the following
+warning:
 
-Signed-off-by: Dennis Zhou <dennis@kernel.org>
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
+[ 4050.264464] ------------[ cut here ]------------
+[ 4050.264508] do not call blocking ops when !TASK_RUNNING; state=1 set at [<00000000b33c00e2>] prepare_to_wait_event+0x14a/0x188
+[ 4050.264529] WARNING: CPU: 12 PID: 35924 at kernel/sched/core.c:6112 __might_sleep+0x76/0x90
+....
+
+ 4050.264756] Call Trace:
+[ 4050.264765] ([<000000000017bbaa>] __might_sleep+0x72/0x90)
+[ 4050.264774]  [<0000000000b97edc>] __mutex_lock+0x44/0x8c0
+[ 4050.264782]  [<0000000000b9878a>] mutex_lock_nested+0x32/0x40
+[ 4050.264793]  [<000003ff800d7abe>] vfio_group_get_device+0x36/0xa8 [vfio]
+[ 4050.264803]  [<000003ff800d87c0>] vfio_del_group_dev+0x238/0x378 [vfio]
+[ 4050.264813]  [<000003ff8015f67c>] mdev_remove+0x3c/0x68 [mdev]
+[ 4050.264825]  [<00000000008e01b0>] device_release_driver_internal+0x168/0x268
+[ 4050.264834]  [<00000000008de692>] bus_remove_device+0x162/0x190
+[ 4050.264843]  [<00000000008daf42>] device_del+0x1e2/0x368
+[ 4050.264851]  [<00000000008db12c>] device_unregister+0x64/0x88
+[ 4050.264862]  [<000003ff8015ed84>] mdev_device_remove+0xec/0x130 [mdev]
+[ 4050.264872]  [<000003ff8015f074>] remove_store+0x6c/0xa8 [mdev]
+[ 4050.264881]  [<000000000046f494>] kernfs_fop_write+0x14c/0x1f8
+[ 4050.264890]  [<00000000003c1530>] __vfs_write+0x38/0x1a8
+[ 4050.264899]  [<00000000003c187c>] vfs_write+0xb4/0x198
+[ 4050.264908]  [<00000000003c1af2>] ksys_write+0x5a/0xb0
+[ 4050.264916]  [<0000000000b9e270>] system_call+0xdc/0x2d8
+[ 4050.264925] 4 locks held by sh/35924:
+[ 4050.264933]  #0: 000000001ef90325 (sb_writers#4){.+.+}, at: vfs_write+0x9e/0x198
+[ 4050.264948]  #1: 000000005c1ab0b3 (&of->mutex){+.+.}, at: kernfs_fop_write+0x1cc/0x1f8
+[ 4050.264963]  #2: 0000000034831ab8 (kn->count#297){++++}, at: kernfs_remove_self+0x12e/0x150
+[ 4050.264979]  #3: 00000000e152484f (&dev->mutex){....}, at: device_release_driver_internal+0x5c/0x268
+[ 4050.264993] Last Breaking-Event-Address:
+[ 4050.265002]  [<000000000017bbaa>] __might_sleep+0x72/0x90
+[ 4050.265010] irq event stamp: 7039
+[ 4050.265020] hardirqs last  enabled at (7047): [<00000000001cee7a>] console_unlock+0x6d2/0x740
+[ 4050.265029] hardirqs last disabled at (7054): [<00000000001ce87e>] console_unlock+0xd6/0x740
+[ 4050.265040] softirqs last  enabled at (6416): [<0000000000b8fe26>] __udelay+0xb6/0x100
+[ 4050.265049] softirqs last disabled at (6415): [<0000000000b8fe06>] __udelay+0x96/0x100
+[ 4050.265057] ---[ end trace d04a07d39d99a9f9 ]---
+
+Let's fix this as described in the article
+https://lwn.net/Articles/628628/.
+
+Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+[remove now redundant vfio_dev_present()]
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/percpu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/vfio/vfio.c | 30 ++++++++++--------------------
+ 1 file changed, 10 insertions(+), 20 deletions(-)
 
-diff --git a/mm/percpu.c b/mm/percpu.c
-index bc58bcbe4b60..9beb84800d8d 100644
---- a/mm/percpu.c
-+++ b/mm/percpu.c
-@@ -984,7 +984,8 @@ static int pcpu_alloc_area(struct pcpu_chunk *chunk, int alloc_bits,
+diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+index f5a86f651f38..0d73d913c18b 100644
+--- a/drivers/vfio/vfio.c
++++ b/drivers/vfio/vfio.c
+@@ -34,6 +34,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/vfio.h>
+ #include <linux/wait.h>
++#include <linux/sched/signal.h>
+ 
+ #define DRIVER_VERSION	"0.3"
+ #define DRIVER_AUTHOR	"Alex Williamson <alex.williamson@redhat.com>"
+@@ -909,30 +910,17 @@ void *vfio_device_data(struct vfio_device *device)
+ }
+ EXPORT_SYMBOL_GPL(vfio_device_data);
+ 
+-/* Given a referenced group, check if it contains the device */
+-static bool vfio_dev_present(struct vfio_group *group, struct device *dev)
+-{
+-	struct vfio_device *device;
+-
+-	device = vfio_group_get_device(group, dev);
+-	if (!device)
+-		return false;
+-
+-	vfio_device_put(device);
+-	return true;
+-}
+-
+ /*
+  * Decrement the device reference count and wait for the device to be
+  * removed.  Open file descriptors for the device... */
+ void *vfio_del_group_dev(struct device *dev)
+ {
++	DEFINE_WAIT_FUNC(wait, woken_wake_function);
+ 	struct vfio_device *device = dev_get_drvdata(dev);
+ 	struct vfio_group *group = device->group;
+ 	void *device_data = device->device_data;
+ 	struct vfio_unbound_dev *unbound;
+ 	unsigned int i = 0;
+-	long ret;
+ 	bool interrupted = false;
+ 
  	/*
- 	 * Search to find a fit.
+@@ -969,6 +957,8 @@ void *vfio_del_group_dev(struct device *dev)
+ 	 * interval with counter to allow the driver to take escalating
+ 	 * measures to release the device if it has the ability to do so.
  	 */
--	end = start + alloc_bits + PCPU_BITMAP_BLOCK_BITS;
-+	end = min_t(int, start + alloc_bits + PCPU_BITMAP_BLOCK_BITS,
-+		    pcpu_chunk_map_bits(chunk));
- 	bit_off = bitmap_find_next_zero_area(chunk->alloc_map, end, start,
- 					     alloc_bits, align_mask);
- 	if (bit_off >= end)
++	add_wait_queue(&vfio.release_q, &wait);
++
+ 	do {
+ 		device = vfio_group_get_device(group, dev);
+ 		if (!device)
+@@ -980,12 +970,10 @@ void *vfio_del_group_dev(struct device *dev)
+ 		vfio_device_put(device);
+ 
+ 		if (interrupted) {
+-			ret = wait_event_timeout(vfio.release_q,
+-					!vfio_dev_present(group, dev), HZ * 10);
++			wait_woken(&wait, TASK_UNINTERRUPTIBLE, HZ * 10);
+ 		} else {
+-			ret = wait_event_interruptible_timeout(vfio.release_q,
+-					!vfio_dev_present(group, dev), HZ * 10);
+-			if (ret == -ERESTARTSYS) {
++			wait_woken(&wait, TASK_INTERRUPTIBLE, HZ * 10);
++			if (signal_pending(current)) {
+ 				interrupted = true;
+ 				dev_warn(dev,
+ 					 "Device is currently in use, task"
+@@ -994,8 +982,10 @@ void *vfio_del_group_dev(struct device *dev)
+ 					 current->comm, task_pid_nr(current));
+ 			}
+ 		}
+-	} while (ret <= 0);
+ 
++	} while (1);
++
++	remove_wait_queue(&vfio.release_q, &wait);
+ 	/*
+ 	 * In order to support multiple devices per group, devices can be
+ 	 * plucked from the group while other devices in the group are still
 -- 
 2.20.1
 
