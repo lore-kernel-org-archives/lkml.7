@@ -2,99 +2,131 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 701D6C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FBDC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5794720896
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E542054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbfFMTML (ORCPT
+        id S1728627AbfFMTNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 15:12:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:62326 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbfFMTML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:12:11 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2DA4085A03;
-        Thu, 13 Jun 2019 19:12:11 +0000 (UTC)
-Received: from treble (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C1C11001B06;
-        Thu, 13 Jun 2019 19:12:10 +0000 (UTC)
-Date:   Thu, 13 Jun 2019 14:12:08 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     X86 ML <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kairui Song <kasong@redhat.com>
-Subject: Re: [PATCH 3/9] x86/bpf: Move epilogue generation to a dedicated
- function
-Message-ID: <20190613191208.s7m7ijkcsagaxotv@treble>
-References: <cover.1560431531.git.jpoimboe@redhat.com>
- <b091755f6053b4a3f66de9c168d4f73a751a5661.1560431531.git.jpoimboe@redhat.com>
- <A753FBC1-3781-4A47-B0AD-A4300C552F7B@fb.com>
+        Thu, 13 Jun 2019 15:13:14 -0400
+Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:36676 "EHLO
+        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725842AbfFMTNN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 15:13:13 -0400
+Received: from [4.30.142.84] (helo=srivatsab-a01.vmware.com)
+        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
+        (Exim 4.82)
+        (envelope-from <srivatsa@csail.mit.edu>)
+        id 1hbV9n-0009Ya-TR; Thu, 13 Jun 2019 15:13:08 -0400
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
+        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
+ <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
+ <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
+ <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
+ <686D6469-9DE7-4738-B92A-002144C3E63E@linaro.org>
+ <01d55216-5718-767a-e1e6-aadc67b632f4@csail.mit.edu>
+ <CA8A23E2-6F22-4444-9A20-E052A94CAA9B@linaro.org>
+ <cc148388-3c82-d7c0-f9ff-8c31bb5dc77d@csail.mit.edu>
+ <6FE0A98F-1E3D-4EF6-8B38-2C85741924A4@linaro.org>
+ <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
+ <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
+ <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
+ <5b71028c-72f0-73dd-0cd5-f28ff298a0a3@csail.mit.edu>
+ <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
+ <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
+ <7B74A790-BD98-412B-ADAB-3B513FB1944E@linaro.org>
+ <6a6f4aa4-fc95-f132-55b2-224ff52bd2d8@csail.mit.edu>
+ <7c5e9d11-4a3d-7df4-c1e6-7c95919522ab@csail.mit.edu>
+ <43486E4F-2237-4E40-BDFE-07CFCCFFFA25@linaro.org>
+From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Message-ID: <72856150-d678-42bd-0377-82dbee6513ba@csail.mit.edu>
+Date:   Thu, 13 Jun 2019 12:13:05 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <A753FBC1-3781-4A47-B0AD-A4300C552F7B@fb.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 13 Jun 2019 19:12:11 +0000 (UTC)
+In-Reply-To: <43486E4F-2237-4E40-BDFE-07CFCCFFFA25@linaro.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 06:57:10PM +0000, Song Liu wrote:
+On 6/12/19 10:46 PM, Paolo Valente wrote:
+> 
+>> Il giorno 12 giu 2019, alle ore 00:34, Srivatsa S. Bhat <srivatsa@csail.mit.edu> ha scritto:
+>>
+[...]
+>>
+>> Hi Paolo,
+>>
+> 
+> Hi
+> 
+>> Hope you are doing great!
+>>
+> 
+> Sort of, thanks :)
+> 
+>> I was wondering if you got a chance to post these patches to LKML for
+>> review and inclusion... (No hurry, of course!)
+>>
 > 
 > 
-> > On Jun 13, 2019, at 6:21 AM, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > 
-> > Improve code readability by moving the BPF JIT function epilogue
-> > generation code to a dedicated emit_epilogue() function, analagous to
-> > the existing emit_prologue() function.
-> > 
-> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > ---
-> > arch/x86/net/bpf_jit_comp.c | 37 ++++++++++++++++++++++++-------------
-> > 1 file changed, 24 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-> > index 32bfab4e21eb..da8c988b0f0f 100644
-> > --- a/arch/x86/net/bpf_jit_comp.c
-> > +++ b/arch/x86/net/bpf_jit_comp.c
-> > @@ -240,6 +240,28 @@ static void emit_prologue(u8 **pprog, u32 stack_depth, bool ebpf_from_cbpf)
-> > 	*pprog = prog;
-> > }
-> > 
-> > +static void emit_epilogue(u8 **pprog)
-> > +{
-> > +	u8 *prog = *pprog;
-> > +	int cnt = 0;
-> > +
-> > +	/* mov rbx, qword ptr [rbp+0] */
-> > +	EMIT4(0x48, 0x8B, 0x5D, 0);
-> > +	/* mov r13, qword ptr [rbp+8] */
-> > +	EMIT4(0x4C, 0x8B, 0x6D, 8);
-> > +	/* mov r14, qword ptr [rbp+16] */
-> > +	EMIT4(0x4C, 0x8B, 0x75, 16);
-> > +	/* mov r15, qword ptr [rbp+24] */
-> > +	EMIT4(0x4C, 0x8B, 0x7D, 24);
+> I'm having troubles testing these new patches on 5.2-rc4.  As it
+> happened with the first release candidates for 5.1, the CPU of my test
+> machine (Intel Core i7-2760QM@2.40GHz) is so slowed down that results
+> are heavily distorted with every I/O scheduler.
 > 
-> Shall we update these comments to AT&T syntax? 
 
-Yes, but they're updated with all the others in patch 8.
+Oh, that's unfortunate!
 
--- 
-Josh
+> Unfortunately, I'm not competent enough to spot the cause of this
+> regression in a feasible amount of time.  I hope it'll go away with
+> next release candidates, or I'll test on 5.1.
+> 
+
+Sounds good to me!
+
+>> Also, since your fixes address the performance issues in BFQ, do you
+>> have any thoughts on whether they can be adapted to CFQ as well, to
+>> benefit the older stable kernels that still support CFQ?
+>>
+> 
+> I have implanted my fixes on the existing throughput-boosting
+> infrastructure of BFQ.  CFQ doesn't have such an infrastructure.
+> 
+> If you need I/O control with older kernels, you may want to check my
+> version of BFQ for legacy block, named bfq-sq and available in this
+> repo:
+> https://github.com/Algodev-github/bfq-mq/
+>
+
+Great! Thank you for sharing this!
+ 
+> I'm willing to provide you with any information or help if needed.
+> 
+Thank you!
+
+Regards,
+Srivatsa
+VMware Photon OS
