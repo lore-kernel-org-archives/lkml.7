@@ -2,52 +2,55 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5CDC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6012C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6344520866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED08208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442552;
-	bh=glGAQulXkaG0h3nhf3yMOgZuD6vGHDRD7v3JNTNpgSI=;
+	s=default; t=1560442555;
+	bh=32RJqGO3C8WFy8yJ+VFstTzfIIsdO5tnH9ziPinK1RI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tue7L4VCui7xXpUnNTfPauIcw3LhniOFS7qWju8DncN+WOeA7Hr7aaI57A7kOkESj
-	 uFnJQfdEdGwGgw6Xxv3S8uQ+q2X8YkZvthwEzr2ryVDZClZftrDwH9WRW8S/fjt2j2
-	 DFodKipXB++bFpBnN60OXZeeaeayf8PUWsE6BI2c=
+	b=YOMOPNKfyOZweYLqoVrmchpokxeaNJRDcTDsNhg7pXFBltd96j88UeP9oO03yVUmi
+	 6rYOq29RYcP3NKTzh1MY6hVQw9w6OQtYD/6d1pHhFIYPieimdiTYASRRz5RKUQ98yz
+	 SnX3Ks+nmbNSJQtwi14T7HuVTjr3aGRPrlHFslZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391887AbfFMQPv (ORCPT
+        id S2391650AbfFMQPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:15:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58834 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:15:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731164AbfFMIlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:41:40 -0400
+        id S1731167AbfFMIlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:41:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB98B2147A;
-        Thu, 13 Jun 2019 08:41:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8262721479;
+        Thu, 13 Jun 2019 08:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415299;
-        bh=glGAQulXkaG0h3nhf3yMOgZuD6vGHDRD7v3JNTNpgSI=;
+        s=default; t=1560415302;
+        bh=32RJqGO3C8WFy8yJ+VFstTzfIIsdO5tnH9ziPinK1RI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BE0YxSoJShJmrjchEa2+yLT+QPQDXcGRT1PJm8PszZTryN25ebHIXHMPxMUMzLv6+
-         y9N2pOLD+NRSC/pFIg03nS+pU8UDZDeoBM1IZvaqEMHbQG+rEANrndvJVgwhqRfvLO
-         Lnz+9/XTg5ML2PW7C3eulmdidJcuf6D/jQYiJ84M=
+        b=jHtQ1FHCZ/5Na3rrWsqCn2+xUaTASIPHjA4jDULhlkonrg+A4YwjYTUTBKEBRqx5t
+         s38SqA0JsNIpb/HLxt6voaiJaixuzJDFzAB9FFl2yZuacGJPP0kgzFmyV9g6hVgTmc
+         AwiCuzZUjQpbo4h1siFyMU2lV2v7l84kLCInHiok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 068/118] nfsd: avoid uninitialized variable warning
-Date:   Thu, 13 Jun 2019 10:33:26 +0200
-Message-Id: <20190613075647.789649503@linuxfoundation.org>
+Subject: [PATCH 4.19 077/118] soc: mediatek: pwrap: Zero initialize rdata in pwrap_init_cipher
+Date:   Thu, 13 Jun 2019 10:33:35 +0200
+Message-Id: <20190613075648.328559204@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -60,60 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0ab88ca4bcf18ba21058d8f19220f60afe0d34d8 ]
+[ Upstream commit 89e28da82836530f1ac7a3a32fecc31f22d79b3e ]
 
-clang warns that 'contextlen' may be accessed without an initialization:
+When building with -Wsometimes-uninitialized, Clang warns:
 
-fs/nfsd/nfs4xdr.c:2911:9: error: variable 'contextlen' is uninitialized when used here [-Werror,-Wuninitialized]
-                                                                contextlen);
-                                                                ^~~~~~~~~~
-fs/nfsd/nfs4xdr.c:2424:16: note: initialize the variable 'contextlen' to silence this warning
-        int contextlen;
-                      ^
-                       = 0
+drivers/soc/mediatek/mtk-pmic-wrap.c:1358:6: error: variable 'rdata' is
+used uninitialized whenever '||' condition is true
+[-Werror,-Wsometimes-uninitialized]
 
-Presumably this cannot happen, as FATTR4_WORD2_SECURITY_LABEL is
-set if CONFIG_NFSD_V4_SECURITY_LABEL is enabled.
-Adding another #ifdef like the other two in this function
-avoids the warning.
+If pwrap_write returns non-zero, pwrap_read will not be called to
+initialize rdata, meaning that we will use some random uninitialized
+stack value in our print statement. Zero initialize rdata in case this
+happens.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/401
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4xdr.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/soc/mediatek/mtk-pmic-wrap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 418fa9c78186..db0beefe65ec 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2413,8 +2413,10 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 	__be32 status;
- 	int err;
- 	struct nfs4_acl *acl = NULL;
-+#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- 	void *context = NULL;
- 	int contextlen;
-+#endif
- 	bool contextsupport = false;
- 	struct nfsd4_compoundres *resp = rqstp->rq_resp;
- 	u32 minorversion = resp->cstate.minorversion;
-@@ -2899,12 +2901,14 @@ out_acl:
- 			*p++ = cpu_to_be32(NFS4_CHANGE_TYPE_IS_TIME_METADATA);
- 	}
+diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+index 4e931fdf4d09..011a40b5fb49 100644
+--- a/drivers/soc/mediatek/mtk-pmic-wrap.c
++++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+@@ -1104,7 +1104,7 @@ static bool pwrap_is_pmic_cipher_ready(struct pmic_wrapper *wrp)
+ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
+ {
+ 	int ret;
+-	u32 rdata;
++	u32 rdata = 0;
  
-+#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- 	if (bmval2 & FATTR4_WORD2_SECURITY_LABEL) {
- 		status = nfsd4_encode_security_label(xdr, rqstp, context,
- 								contextlen);
- 		if (status)
- 			goto out;
- 	}
-+#endif
- 
- 	attrlen = htonl(xdr->buf->len - attrlen_offset - 4);
- 	write_bytes_to_xdr_buf(xdr->buf, attrlen_offset, &attrlen, 4);
+ 	pwrap_writel(wrp, 0x1, PWRAP_CIPHER_SWRST);
+ 	pwrap_writel(wrp, 0x0, PWRAP_CIPHER_SWRST);
 -- 
 2.20.1
 
