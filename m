@@ -2,107 +2,134 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53D3C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A83AFC31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B874E215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D524215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:38:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qR4pO6bw"
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="VKaOqZrl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404065AbfFMQh5 (ORCPT
+        id S2392708AbfFMQhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:37:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41334 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730620AbfFMHJ7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 03:09:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=T3Eo5sxQqIJbJF4QyIRsu/lJY1U0q5nAAdAJnHrYrpU=; b=qR4pO6bw2gsxHkiazstPS8oEWM
-        FKYMb2SaaIyHmSdhji58kmzc431ERCifOKrpDxBApHJE7IgtwBxrW369WQGKC5gCVcha1mWTZY5GD
-        WXoqBl37DzrmY0JsK8g33U+Wyb3rYh3Y0I17JyJrurkteICYq36mzW7LqYqtbNHT3RrR2edx/Gr8E
-        pcneECKWd3ucje3iZ3DEOd8MoRsSkZ28YxSsJJqkQvOLon8ZJnGqBbnSEtTFlD00Wf+vC7NzzICEl
-        LEVvWKERR+zQxJSAdCF7ep0QFsP8pht5TIN8z/LZWhp3J67XIPvOn3DOiuEBwHV5zEpePy33Hhk9R
-        DtlhUctg==;
-Received: from mpp-cp1-natpool-1-013.ethz.ch ([82.130.71.13] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbJrv-0004VL-4D; Thu, 13 Jun 2019 07:09:55 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Greg Ungerer <gerg@linux-m68k.org>
-Cc:     Michal Simek <monstr@monstr.eu>,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        uclinux-h8-devel@lists.sourceforge.jp,
-        linux-m68k@lists.linux-m68k.org, linux-riscv@lists.infradead.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 15/17] binfmt_flat: move the MAX_SHARED_LIBS definition to binfmt_flat.c
-Date:   Thu, 13 Jun 2019 09:09:01 +0200
-Message-Id: <20190613070903.17214-16-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190613070903.17214-1-hch@lst.de>
-References: <20190613070903.17214-1-hch@lst.de>
+        Thu, 13 Jun 2019 12:37:55 -0400
+Received: from m15-111.126.com ([220.181.15.111]:58751 "EHLO m15-111.126.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730618AbfFMHKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 03:10:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=pQt7H
+        gkGjDiOkh+wd5Sa+sRL4h8CMsOHEzAP3mBBeC8=; b=VKaOqZrlpaLx1J+5Bg/Cx
+        7ltBFnLNLNqG6vgB2T4PCQ7ZgqZbbzpbGeSOQQybU4a3oOJFvdKhWZODRoJPP0n0
+        It9lqYyN01oPi0970JeyUDIZniH0eP6Bz4gPgwudRCWlM5P2kw6DfmU4mlMybFU/
+        MfqzH8cLakatQT+rv0rdU8=
+Received: from localhost.localdomain (unknown [159.226.223.206])
+        by smtp1 (Coremail) with SMTP id C8mowADXoDSj9gFdCHxqCg--.49261S2;
+        Thu, 13 Jun 2019 15:09:23 +0800 (CST)
+From:   Lu Shuaibing <shuaibinglu@126.com>
+To:     ericvh@gmail.com
+Cc:     lucho@ionkov.net, asmadeus@codewreck.org, davem@davemloft.net,
+        v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lu Shuaibing <shuaibinglu@126.com>
+Subject: [PATCH] 9p: Transport error uninitialized
+Date:   Thu, 13 Jun 2019 15:08:54 +0800
+Message-Id: <20190613070854.10434-1-shuaibinglu@126.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-CM-TRANSID: C8mowADXoDSj9gFdCHxqCg--.49261S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXrWrZr1fJr4UKFW5tw45GFg_yoW5XFW5pr
+        nIkrWxCr48tryUZF4Dtay8Ar18JF4DZ3W7XryIyr12yanrGr18Aa4UKrWUWFyUCr15AFy7
+        JF1qq3y5tr1UGaUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jJ6pPUUUUU=
+X-Originating-IP: [159.226.223.206]
+X-CM-SenderInfo: 5vkxtxpelqwzbx6rjloofrz/1tbiFxHSq1pD8kc0nAABs6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MAX_SHARED_LIBS is an implementation detail of the kernel loader,
-and should be kept away from the file format definition.
+The p9_tag_alloc() does not initialize the transport error t_err field.
+The struct p9_req_t *req is allocated and stored in a struct p9_client
+variable. The field t_err is never initialized before p9_conn_cancel()
+checks its value.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+KUMSAN(KernelUninitializedMemorySantizer, a new error detection tool)
+reports this bug.
+
+==================================================================
+BUG: KUMSAN: use of uninitialized memory in p9_conn_cancel+0x2d9/0x3b0
+Read of size 4 at addr ffff88805f9b600c by task kworker/1:2/1216
+
+CPU: 1 PID: 1216 Comm: kworker/1:2 Not tainted 5.2.0-rc4+ #28
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+Workqueue: events p9_write_work
+Call Trace:
+ dump_stack+0x75/0xae
+ __kumsan_report+0x17c/0x3e6
+ kumsan_report+0xe/0x20
+ p9_conn_cancel+0x2d9/0x3b0
+ p9_write_work+0x183/0x4a0
+ process_one_work+0x4d1/0x8c0
+ worker_thread+0x6e/0x780
+ kthread+0x1ca/0x1f0
+ ret_from_fork+0x35/0x40
+
+Allocated by task 1979:
+ save_stack+0x19/0x80
+ __kumsan_kmalloc.constprop.3+0xbc/0x120
+ kmem_cache_alloc+0xa7/0x170
+ p9_client_prepare_req.part.9+0x3b/0x380
+ p9_client_rpc+0x15e/0x880
+ p9_client_create+0x3d0/0xac0
+ v9fs_session_init+0x192/0xc80
+ v9fs_mount+0x67/0x470
+ legacy_get_tree+0x70/0xd0
+ vfs_get_tree+0x4a/0x1c0
+ do_mount+0xba9/0xf90
+ ksys_mount+0xa8/0x120
+ __x64_sys_mount+0x62/0x70
+ do_syscall_64+0x6d/0x1e0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 0:
+(stack is not available)
+
+The buggy address belongs to the object at ffff88805f9b6008
+ which belongs to the cache p9_req_t of size 144
+The buggy address is located 4 bytes inside of
+ 144-byte region [ffff88805f9b6008, ffff88805f9b6098)
+The buggy address belongs to the page:
+page:ffffea00017e6d80 refcount:1 mapcount:0 mapping:ffff888068b63740 index:0xffff88805f9b7d90 compound_mapcount: 0
+flags: 0x100000000010200(slab|head)
+raw: 0100000000010200 ffff888068b66450 ffff888068b66450 ffff888068b63740
+raw: ffff88805f9b7d90 0000000000100001 00000001ffffffff 0000000000000000
+page dumped because: kumsan: bad access detected
+==================================================================
+
+Signed-off-by: Lu Shuaibing <shuaibinglu@126.com>
 ---
- fs/binfmt_flat.c     | 6 ++++++
- include/linux/flat.h | 6 ------
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ net/9p/client.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
-index 0ca65d51bb01..ccd9843e979e 100644
---- a/fs/binfmt_flat.c
-+++ b/fs/binfmt_flat.c
-@@ -68,6 +68,12 @@
- #define RELOC_FAILED 0xff00ff01		/* Relocation incorrect somewhere */
- #define UNLOADED_LIB 0x7ff000ff		/* Placeholder for unused library */
+diff --git a/net/9p/client.c b/net/9p/client.c
+index 9622f3e469f6..148acdcd0217 100644
+--- a/net/9p/client.c
++++ b/net/9p/client.c
+@@ -310,6 +310,7 @@ p9_tag_alloc(struct p9_client *c, int8_t type, unsigned int max_size)
+ 	 */
+ 	refcount_set(&req->refcount.refcount, 2);
  
-+#ifdef CONFIG_BINFMT_SHARED_FLAT
-+#define	MAX_SHARED_LIBS			(4)
-+#else
-+#define	MAX_SHARED_LIBS			(1)
-+#endif
-+
- struct lib_info {
- 	struct {
- 		unsigned long start_code;		/* Start of text segment */
-diff --git a/include/linux/flat.h b/include/linux/flat.h
-index d586bb6e64a7..83977c0ce3de 100644
---- a/include/linux/flat.h
-+++ b/include/linux/flat.h
-@@ -12,12 +12,6 @@
++	req->t_err = 0;
+ 	return req;
  
- #define	FLAT_VERSION			0x00000004L
- 
--#ifdef CONFIG_BINFMT_SHARED_FLAT
--#define	MAX_SHARED_LIBS			(4)
--#else
--#define	MAX_SHARED_LIBS			(1)
--#endif
--
- /*
-  * To make everything easier to port and manage cross platform
-  * development,  all fields are in network byte order.
+ free:
 -- 
-2.20.1
+2.19.1
 
