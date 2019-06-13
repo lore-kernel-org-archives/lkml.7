@@ -2,187 +2,204 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 811BBC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63911C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDEA21743
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F8FE20896
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="slju5Mk6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oKVNvJa5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387880AbfFMPJx (ORCPT
+        id S1733183AbfFMPJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:09:53 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40281 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732351AbfFMN5O (ORCPT
+        Thu, 13 Jun 2019 11:09:54 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38958 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732352AbfFMN5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Jun 2019 09:57:14 -0400
-Received: by mail-qk1-f194.google.com with SMTP id c70so12754403qkg.7
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 06:57:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=f8oWkNqIH/DyMOHXpAxjAXd9mO+eys1GPI1tYBrhm3o=;
-        b=slju5Mk6NV/PybHINi/s0pm6qI/7D6HmQM7KjmNLHuc4tFszrsyyy2yzDtVxHIyZXU
-         D16qWNlslGJsEDu9eDPf3JwbhandiXXH++FTeppARL3Qd/NiqI5Pp2oCtFEZhIAwLyUv
-         yeeTLdKcReDi3yCS+hpmrO9v6m1Cue5zcQwZ7NMqUeGI09kjehpUfvP/YAp+4+5/1aHs
-         yJCLWDijzSXk/Vb0zuf0I0T+fN/Axvx4dP/JbBiWZxiHsw8xEqHo/XuCklQnd+DUeRQn
-         bvbiuPQMt6+MjmCX57lD2xIeNihagvn8rpuGrrJSKJkTh66ndPXMZmwj2z7rOEgjWcLW
-         UvbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f8oWkNqIH/DyMOHXpAxjAXd9mO+eys1GPI1tYBrhm3o=;
-        b=DijbktqvZOqIM+9T5eLYWm4Dvt5jzIvNItv0BftfuaKl7DoOHyVQSQD7j6fcnk3pe5
-         gZg3us9LN7OA9ef5KehcQ0vnsx/jRWckbZsHIOci3hsu+K68YOcWkmDj2VUhW31OkAe+
-         g9cUzh1eep0bKCB+8LQUfiqgLzv1nVmPWRCVXOtq/1K/e/GB+CbC0i8HYnjZAaBKAejU
-         N7K9q6fRQHuQgT94Lofx7HOM/lFSc6dJZaPNCSmet89R12TIQ+jLjVcDg8nUjgdUlDLE
-         Dw+cSEHhCrDq1DXE7SPdD7yaCpZqQcQWpmSDxi/qty7OhHawy5vIJkxzU9S5r49Kjumr
-         PHFA==
-X-Gm-Message-State: APjAAAWUHG7fl7OUCnzu3Iq+Rsn0FKPfMvQsm3qtUDOYn+Y/KjzjdtQa
-        zLJGSuPu3aytgbQ6ozaIaGiPZfFx1InhhjQd
-X-Google-Smtp-Source: APXvYqxGT1il2X6VOFbyz2RJsVGEMTFswkGE2VcTUWavs7aHJ61x1eQsmlCA1IQqdvrv4u7hG1Ld+w==
-X-Received: by 2002:ae9:f303:: with SMTP id p3mr5719058qkg.320.1560434233077;
-        Thu, 13 Jun 2019 06:57:13 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::9d6b])
-        by smtp.gmail.com with ESMTPSA id m44sm1846636qtm.54.2019.06.13.06.57.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 06:57:12 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 09:57:11 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Naohiro Aota <naohiro.aota@wdc.com>
-Cc:     linux-btrfs@vger.kernel.org, David Sterba <dsterba@suse.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
-        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
-        linux-fsdevel@vger.kernel.org,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Matias =?utf-8?B?QmrDuHJsaW5n?= <mb@lightnvm.io>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH 03/19] btrfs: Check and enable HMZONED mode
-Message-ID: <20190613135710.nu5r5bpcwdm4we2w@MacBook-Pro-91.local>
-References: <20190607131025.31996-1-naohiro.aota@wdc.com>
- <20190607131025.31996-4-naohiro.aota@wdc.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=mLSldcVcVz9TAKo5kEex8eRnPnqh+Wg+iTyVmwvGgcI=; b=oKVNvJa5qFzq78yIg/hrGZqbbD
+        BGcX3F8BxJIB6nAOd8vlcGqp0meSUGJDuYrhPfVEsLFuPKwXMW/1gFUF+WSkMc2vj2F6FCfD74xxe
+        1498iLobQ8ULuS2SW/HmYre9qfVGsDQ5Xa6wRssQCvK974yP0/7cj76SP1iuox7D1shWnVjehUZPW
+        +cCW14iIK0S+ECCcloVJ3DV8IR7kY+z9+EnvFocNPBRH5qqhY3EnOPpG3aTU9pKdQqrJrkjZfDyf0
+        D0rxJuA+S29ObyoPl3Tz95Tm6kA1fJfAFRtHLXycL13Pk3H8jAKbSyrTMC7Yf9urV5sjSpR3x7XXf
+        o32A0fNw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbQDy-0005lL-HU; Thu, 13 Jun 2019 13:57:06 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 0E78320435AA0; Thu, 13 Jun 2019 15:57:05 +0200 (CEST)
+Message-Id: <20190613135653.310055383@infradead.org>
+User-Agent: quilt/0.65
+Date:   Thu, 13 Jun 2019 15:54:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     torvalds@linux-foundation.org, mingo@kernel.org, bp@alien8.de,
+        tglx@linutronix.de, luto@kernel.org, namit@vmware.com,
+        peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>
+Subject: [PATCH v2 2/5] x86/percpu: Relax smp_processor_id()
+References: <20190613135445.318096781@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607131025.31996-4-naohiro.aota@wdc.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 10:10:09PM +0900, Naohiro Aota wrote:
-> HMZONED mode cannot be used together with the RAID5/6 profile for now.
-> Introduce the function btrfs_check_hmzoned_mode() to check this. This
-> function will also check if HMZONED flag is enabled on the file system and
-> if the file system consists of zoned devices with equal zone size.
-> 
-> Additionally, as updates to the space cache are in-place, the space cache
-> cannot be located over sequential zones and there is no guarantees that the
-> device will have enough conventional zones to store this cache. Resolve
-> this problem by disabling completely the space cache.  This does not
-> introduces any problems with sequential block groups: all the free space is
-> located after the allocation pointer and no free space before the pointer.
-> There is no need to have such cache.
-> 
-> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
-> ---
->  fs/btrfs/ctree.h       |  3 ++
->  fs/btrfs/dev-replace.c |  7 +++
->  fs/btrfs/disk-io.c     |  7 +++
->  fs/btrfs/super.c       | 12 ++---
->  fs/btrfs/volumes.c     | 99 ++++++++++++++++++++++++++++++++++++++++++
->  fs/btrfs/volumes.h     |  1 +
->  6 files changed, 124 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-> index b81c331b28fa..6c00101407e4 100644
-> --- a/fs/btrfs/ctree.h
-> +++ b/fs/btrfs/ctree.h
-> @@ -806,6 +806,9 @@ struct btrfs_fs_info {
->  	struct btrfs_root *uuid_root;
->  	struct btrfs_root *free_space_root;
->  
-> +	/* Zone size when in HMZONED mode */
-> +	u64 zone_size;
-> +
->  	/* the log root tree is a directory of all the other log roots */
->  	struct btrfs_root *log_root_tree;
->  
-> diff --git a/fs/btrfs/dev-replace.c b/fs/btrfs/dev-replace.c
-> index ee0989c7e3a9..fbe5ea2a04ed 100644
-> --- a/fs/btrfs/dev-replace.c
-> +++ b/fs/btrfs/dev-replace.c
-> @@ -201,6 +201,13 @@ static int btrfs_init_dev_replace_tgtdev(struct btrfs_fs_info *fs_info,
->  		return PTR_ERR(bdev);
->  	}
->  
-> +	if ((bdev_zoned_model(bdev) == BLK_ZONED_HM &&
-> +	     !btrfs_fs_incompat(fs_info, HMZONED)) ||
-> +	    (!bdev_is_zoned(bdev) && btrfs_fs_incompat(fs_info, HMZONED))) {
+Nadav reported that since this_cpu_read() became asm-volatile, many
+smp_processor_id() users generated worse code due to the extra
+constraints.
 
-You do this in a few places, turn this into a helper please.
+However since smp_processor_id() is reading a stable value, we can use
+__this_cpu_read().
 
-> +		ret = -EINVAL;
-> +		goto error;
-> +	}
-> +
->  	filemap_write_and_wait(bdev->bd_inode->i_mapping);
->  
->  	devices = &fs_info->fs_devices->devices;
-> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-> index 663efce22d98..7c1404c76768 100644
-> --- a/fs/btrfs/disk-io.c
-> +++ b/fs/btrfs/disk-io.c
-> @@ -3086,6 +3086,13 @@ int open_ctree(struct super_block *sb,
->  
->  	btrfs_free_extra_devids(fs_devices, 1);
->  
-> +	ret = btrfs_check_hmzoned_mode(fs_info);
-> +	if (ret) {
-> +		btrfs_err(fs_info, "failed to init hmzoned mode: %d",
-> +				ret);
-> +		goto fail_block_groups;
-> +	}
-> +
->  	ret = btrfs_sysfs_add_fsid(fs_devices, NULL);
->  	if (ret) {
->  		btrfs_err(fs_info, "failed to init sysfs fsid interface: %d",
-> diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-> index 2c66d9ea6a3b..740a701f16c5 100644
-> --- a/fs/btrfs/super.c
-> +++ b/fs/btrfs/super.c
-> @@ -435,11 +435,13 @@ int btrfs_parse_options(struct btrfs_fs_info *info, char *options,
->  	bool saved_compress_force;
->  	int no_compress = 0;
->  
-> -	cache_gen = btrfs_super_cache_generation(info->super_copy);
-> -	if (btrfs_fs_compat_ro(info, FREE_SPACE_TREE))
-> -		btrfs_set_opt(info->mount_opt, FREE_SPACE_TREE);
-> -	else if (cache_gen)
-> -		btrfs_set_opt(info->mount_opt, SPACE_CACHE);
-> +	if (!btrfs_fs_incompat(info, HMZONED)) {
-> +		cache_gen = btrfs_super_cache_generation(info->super_copy);
-> +		if (btrfs_fs_compat_ro(info, FREE_SPACE_TREE))
-> +			btrfs_set_opt(info->mount_opt, FREE_SPACE_TREE);
-> +		else if (cache_gen)
-> +			btrfs_set_opt(info->mount_opt, SPACE_CACHE);
-> +	}
->  
+While this does reduce text size somewhat, this mostly results in code
+movement to .text.unlikely as a result of more/larger .cold.
+subfunctions. Less text on the hotpath is good for I$.
 
-This disables the free space tree as well as the cache, sounds like you only
-need to disable the free space cache?  Thanks,
+$ ./compare.sh defconfig-build1 defconfig-build2 vmlinux.o
+setup_APIC_ibs                                             90         98   -12,+20
+force_ibs_eilvt_setup                                     400        413   -57,+70
+pci_serr_error                                            109        104   -54,+49
+pci_serr_error                                            109        104   -54,+49
+unknown_nmi_error                                         125        120   -76,+71
+unknown_nmi_error                                         125        120   -76,+71
+io_check_error                                            125        132   -97,+104
+intel_thermal_interrupt                                   730        822   +92,+0
+intel_init_thermal                                        951        945   -6,+0
+generic_get_mtrr                                          301        294   -7,+0
+generic_get_mtrr                                          301        294   -7,+0
+generic_set_all                                           749        754   -44,+49
+get_fixed_ranges                                          352        360   -41,+49
+x86_acpi_suspend_lowlevel                                 369        363   -6,+0
+check_tsc_sync_source                                     412        412   -71,+71
+irq_migrate_all_off_this_cpu                              662        674   -14,+26
+clocksource_watchdog                                      748        748   -113,+113
+__perf_event_account_interrupt                            204        197   -7,+0
+attempt_merge                                            1748       1741   -7,+0
+intel_guc_send_ct                                        1424       1409   -15,+0
+__fini_doorbell                                           235        231   -4,+0
+bdw_set_cdclk                                             928        923   -5,+0
+gen11_dsi_disable                                        1571       1556   -15,+0
+gmbus_wait                                                493        488   -5,+0
+md_make_request                                           376        369   -7,+0
+__split_and_process_bio                                   543        536   -7,+0
+delay_tsc                                                  96         89   -7,+0
+hsw_disable_pc8                                           696        691   -5,+0
+tsc_verify_tsc_adjust                                     215        228   -22,+35
+cpuidle_driver_unref                                       56         49   -7,+0
+blk_account_io_completion                                 159        148   -11,+0
+mtrr_wrmsr                                                 95         99   -29,+33
+__intel_wait_for_register_fw                              401        419   +18,+0
+cpuidle_driver_ref                                         43         36   -7,+0
+cpuidle_get_driver                                         15          8   -7,+0
+blk_account_io_done                                       535        528   -7,+0
+irq_migrate_all_off_this_cpu                              662        674   -14,+26
+check_tsc_sync_source                                     412        412   -71,+71
+irq_wait_for_poll                                         170        163   -7,+0
+generic_end_io_acct                                       329        322   -7,+0
+x86_acpi_suspend_lowlevel                                 369        363   -6,+0
+nohz_balance_enter_idle                                   198        191   -7,+0
+generic_start_io_acct                                     254        247   -7,+0
+blk_account_io_start                                      341        334   -7,+0
+perf_event_task_tick                                      682        675   -7,+0
+intel_init_thermal                                        951        945   -6,+0
+amd_e400_c1e_apic_setup                                    47         51   -28,+32
+setup_APIC_eilvt                                          350        328   -22,+0
+hsw_enable_pc8                                           1611       1605   -6,+0
+                                             total   12985947   12985892   -994,+939
 
-Josef
+Reported-by: Nadav Amit <nadav.amit@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/include/asm/smp.h |    3 ++-
+ include/linux/smp.h        |   45 +++++++++++++++++++++++++++++++--------------
+ 2 files changed, 33 insertions(+), 15 deletions(-)
+
+--- a/arch/x86/include/asm/smp.h
++++ b/arch/x86/include/asm/smp.h
+@@ -162,7 +162,8 @@ __visible void smp_call_function_single_
+  * from the initial startup. We map APIC_BASE very early in page_setup(),
+  * so this is correct in the x86 case.
+  */
+-#define raw_smp_processor_id() (this_cpu_read(cpu_number))
++#define raw_smp_processor_id()  this_cpu_read(cpu_number)
++#define __smp_processor_id() __this_cpu_read(cpu_number)
+ 
+ #ifdef CONFIG_X86_32
+ extern int safe_smp_processor_id(void);
+--- a/include/linux/smp.h
++++ b/include/linux/smp.h
+@@ -181,29 +181,46 @@ static inline int get_boot_cpu_id(void)
+ 
+ #endif /* !SMP */
+ 
+-/*
+- * smp_processor_id(): get the current CPU ID.
++/**
++ * raw_processor_id() - get the current (unstable) CPU id
++ *
++ * For then you know what you are doing and need an unstable
++ * CPU id.
++ */
++
++/**
++ * smp_processor_id() - get the current (stable) CPU id
++ *
++ * This is the normal accessor to the CPU id and should be used
++ * whenever possible.
+  *
+- * if DEBUG_PREEMPT is enabled then we check whether it is
+- * used in a preemption-safe way. (smp_processor_id() is safe
+- * if it's used in a preemption-off critical section, or in
+- * a thread that is bound to the current CPU.)
++ * The CPU id is stable when:
++ *
++ *  - IRQs are disabled;
++ *  - preemption is disabled;
++ *  - the task is CPU affine.
+  *
+- * NOTE: raw_smp_processor_id() is for internal use only
+- * (smp_processor_id() is the preferred variant), but in rare
+- * instances it might also be used to turn off false positives
+- * (i.e. smp_processor_id() use that the debugging code reports but
+- * which use for some reason is legal). Don't use this to hack around
+- * the warning message, as your code might not work under PREEMPT.
++ * When CONFIG_DEBUG_PREEMPT; we verify these assumption and WARN
++ * when smp_processor_id() is used when the CPU id is not stable.
+  */
++
++/*
++ * Allow the architecture to differentiate between a stable and unstable read.
++ * For example, x86 uses an IRQ-safe asm-volatile read for the unstable but a
++ * regular asm read for the stable.
++ */
++#ifndef __smp_processor_id
++#define __smp_processor_id(x) raw_smp_processor_id(x)
++#endif
++
+ #ifdef CONFIG_DEBUG_PREEMPT
+   extern unsigned int debug_smp_processor_id(void);
+ # define smp_processor_id() debug_smp_processor_id()
+ #else
+-# define smp_processor_id() raw_smp_processor_id()
++# define smp_processor_id() __smp_processor_id()
+ #endif
+ 
+-#define get_cpu()		({ preempt_disable(); smp_processor_id(); })
++#define get_cpu()		({ preempt_disable(); __smp_processor_id(); })
+ #define put_cpu()		preempt_enable()
+ 
+ /*
+
+
