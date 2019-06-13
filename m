@@ -2,117 +2,129 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0533FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838C6C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEDC420B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:21:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="JtxVxN0Z"
+	by mail.kernel.org (Postfix) with ESMTP id 65E4D21473
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:21:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387940AbfFMPVy (ORCPT
+        id S2388752AbfFMPV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:21:54 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:39319 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731994AbfFMMss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 08:48:48 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45Pk7c3C35z9tyyl;
-        Thu, 13 Jun 2019 14:48:44 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=JtxVxN0Z; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id ijpIqmAsa4gU; Thu, 13 Jun 2019 14:48:44 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45Pk7c28d9z9tyyY;
-        Thu, 13 Jun 2019 14:48:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1560430124; bh=m9v/syJUwAcHZGCUPwHk7l5TNta5QwacZWNaxTvFrc8=;
-        h=From:Subject:To:Cc:Date:From;
-        b=JtxVxN0Zyv6Oa3kfTyge7crL8g9I/N2iKAyjjbaXmTfYPmM0Y10uq5T/XTLqidpa+
-         kKB1pgmf9ODXW8E6brPFHC7V2jB1h8M1Qvs44f6Pt7eEwi8Ao2jx+jZy2dqlAPpdQy
-         5TZRtTf36dt6C5PNRlXWUNiB1Nxd3eNSh60EYOT4=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AA5388B8E4;
-        Thu, 13 Jun 2019 14:48:45 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id dokx723z3qzG; Thu, 13 Jun 2019 14:48:45 +0200 (CEST)
-Received: from po16838vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 590298B8B9;
-        Thu, 13 Jun 2019 14:48:45 +0200 (CEST)
-Received: by po16838vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id EC32368D71; Thu, 13 Jun 2019 12:48:44 +0000 (UTC)
-Message-Id: <cover.1560429844.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 0/4] Additional fixes on Talitos driver
+        Thu, 13 Jun 2019 11:21:57 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47402 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731992AbfFMPVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 11:21:55 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5B032930F6C48A56E290;
+        Thu, 13 Jun 2019 23:21:51 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 13 Jun 2019
+ 23:21:42 +0800
+Subject: Re: [PATCH v4 1/3] lib: logic_pio: Use logical PIO low-level
+ accessors for !CONFIG_INDIRECT_PIO
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
+ <1560262374-67875-2-git-send-email-john.garry@huawei.com>
+ <20190613135825.GG13533@google.com>
+CC:     <lorenzo.pieralisi@arm.com>, <arnd@arndb.de>,
+        <linux-pci@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <linux-arm-kernel@lists.infradead.org>, <will.deacon@arm.com>,
+        <wangkefeng.wang@huawei.com>, <linuxarm@huawei.com>,
+        <andriy.shevchenko@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>, <catalin.marinas@arm.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <5b03c093-26fb-0e01-6104-5f92eef7956e@huawei.com>
+Date:   Thu, 13 Jun 2019 16:21:35 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, horia.geanta@nxp.com
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 13 Jun 2019 12:48:44 +0000 (UTC)
+In-Reply-To: <20190613135825.GG13533@google.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series is the last set of fixes for the Talitos driver.
+On 13/06/2019 14:58, Bjorn Helgaas wrote:
+> On Tue, Jun 11, 2019 at 10:12:52PM +0800, John Garry wrote:
+> Another thought here:
+>
+>>  	if (addr < MMIO_UPPER_LIMIT) {					\
+>>  		ret = read##bw(PCI_IOBASE + addr);			\
+>>  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) { \
+>> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+>> +		struct logic_pio_hwaddr *range = find_io_range(addr);	\
+>> +		size_t sz = sizeof(type);				\
+>>  									\
+>> -		if (entry && entry->ops)				\
+>> -			ret = entry->ops->in(entry->hostdata,		\
+>> -					addr, sizeof(type));		\
+>> +		if (range && range->ops)				\
+>> +			ret = range->ops->in(range->hostdata, addr, sz);\
+>>  		else							\
+>>  			WARN_ON_ONCE(1);
 
-We now get a fully clean boot on both SEC1 (SEC1.2 on mpc885) and
-SEC2 (SEC2.2 on mpc8321E) with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:
+Hi Bjorn,
+				\
+>
+> Could this be simplified a little by requiring callers to set
+> range->ops for LOGIC_PIO_INDIRECT ranges *before* calling
+> logic_pio_register_range()?  E.g.,
+>
+>   hisi_lpc_probe(...)
+>   {
+>     range = devm_kzalloc(...);
+>     range->flags = LOGIC_PIO_INDIRECT;
+>     range->ops = &hisi_lpc_ops;
+>     logic_pio_register_range(range);
+>     ...
+>
+> and
+>
+>   logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+>   {
+>     if (new_range->flags == LOGIC_PIO_INDIRECT && !new_range->ops)
+>       return -EINVAL;
+>     ...
+>
+> Then maybe you wouldn't need to check range->ops in the accessors.
+>
 
-[    3.385197] bus: 'platform': really_probe: probing driver talitos with device ff020000.crypto
-[    3.450982] random: fast init done
-[   12.252548] alg: No test for authenc(hmac(md5),cbc(aes)) (authenc-hmac-md5-cbc-aes-talitos-hsna)
-[   12.262226] alg: No test for authenc(hmac(md5),cbc(des3_ede)) (authenc-hmac-md5-cbc-3des-talitos-hsna)
-[   43.310737] Bug in SEC1, padding ourself
-[   45.603318] random: crng init done
-[   54.612333] talitos ff020000.crypto: fsl,sec1.2 algorithms registered in /proc/crypto
-[   54.620232] driver: 'talitos': driver_bound: bound to device 'ff020000.crypto'
+I think I know the reason why it was done this way.
 
-[    1.193721] bus: 'platform': really_probe: probing driver talitos with device b0030000.crypto
-[    1.229197] random: fast init done
-[    2.714920] alg: No test for authenc(hmac(sha224),cbc(aes)) (authenc-hmac-sha224-cbc-aes-talitos)
-[    2.724312] alg: No test for authenc(hmac(sha224),cbc(aes)) (authenc-hmac-sha224-cbc-aes-talitos-hsna)
-[    4.482045] alg: No test for authenc(hmac(md5),cbc(aes)) (authenc-hmac-md5-cbc-aes-talitos)
-[    4.490940] alg: No test for authenc(hmac(md5),cbc(aes)) (authenc-hmac-md5-cbc-aes-talitos-hsna)
-[    4.500280] alg: No test for authenc(hmac(md5),cbc(des3_ede)) (authenc-hmac-md5-cbc-3des-talitos)
-[    4.509727] alg: No test for authenc(hmac(md5),cbc(des3_ede)) (authenc-hmac-md5-cbc-3des-talitos-hsna)
-[    6.631781] random: crng init done
-[   11.521795] talitos b0030000.crypto: fsl,sec2.2 algorithms registered in /proc/crypto
-[   11.529803] driver: 'talitos': driver_bound: bound to device 'b0030000.crypto'
+So currently there is no method to unregister a logical PIO region (the 
+old code leaked ranges as well). As such, if hisi_lpc_probe() fails 
+after we register the logical PIO range, there would be a range 
+registered but no actual host backing it. So we set the ops at the point 
+at which the probe cannot fail to avoid a potential problem.
 
-v2: dropped patch 1 which was irrelevant due to a rebase weirdness. Added Cc to stable on the 2 first patches.
+And now I realise that there is a bug in the code - range is allocated 
+with devm_kzalloc and is passed to logic_pio_register_range(). As such, 
+if the hisi_lpc_probe() goes on to fail, then this memory would be 
+free'd and we have an issue.
 
-v3:
- - removed stable reference in patch 1
- - reworded patch 1 to include name of patch 2 for the dependency.
- - mentionned this dependency in patch 2 as well.
- - corrected the Fixes: sha1 in patch 4
+PCI code should be ok as it uses kzalloc().
 
-Christophe Leroy (4):
-  crypto: talitos - move struct talitos_edesc into talitos.h
-  crypto: talitos - fix hash on SEC1.
-  crypto: talitos - eliminate unneeded 'done' functions at build time
-  crypto: talitos - drop icv_ool
+The simplest solution is to not change the logical PIO API to allocate 
+this memory itself, but rather make hisi_lpc_probe() use kzalloc(). And, 
+if we go this way, we can use your idea to set the ops.
 
- drivers/crypto/talitos.c | 98 ++++++++++++++++++++----------------------------
- drivers/crypto/talitos.h | 28 ++++++++++++++
- 2 files changed, 69 insertions(+), 57 deletions(-)
+I'll spin a separate patch for this.
 
--- 
-2.13.3
+Thanks,
+John
+
+> Bjorn
+>
+> .
+>
+
 
