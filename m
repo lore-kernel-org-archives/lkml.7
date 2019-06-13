@@ -2,77 +2,97 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B03C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397D7C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72AF7206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12FDB206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560439694;
+	bh=z3Dn3El1yjq4ZvN1Ri3867ZpWWj2G37nsF3RYxODv08=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zJ6nDEahOkFlCRnAQdqoBSbV2DFthzMI7vqLEM83hGul5crt7cOyA5vblUZCKQUo5
+	 xT9kH2AGHOKY4xDiISTiFIQWC28Tsf9TXMO5K6KbW2egMxdOs8jjh1ceI8W5IVbnqT
+	 9K7VbWcgZNiWaEmf43c/dxBREx/gD5jYhBHTTQo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730375AbfFMP2J (ORCPT
+        id S1727831AbfFMP2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:28:09 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:60940 "EHLO ns.iliad.fr"
+        Thu, 13 Jun 2019 11:28:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728966AbfFMLcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 07:32:09 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 322AA20A7E;
-        Thu, 13 Jun 2019 13:32:08 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 1A28220514;
-        Thu, 13 Jun 2019 13:32:08 +0200 (CEST)
-To:     Kishon Vijay Abraham <kishon@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: [PATCH v1] phy: qcom-qmp: Raise qcom_qmp_phy_enable() polling delay
-Message-ID: <92d97c68-d226-6290-37d6-f46f42ea604b@free.fr>
-Date:   Thu, 13 Jun 2019 13:32:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1728956AbfFMLbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 07:31:50 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FC31208CA;
+        Thu, 13 Jun 2019 11:31:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560425509;
+        bh=z3Dn3El1yjq4ZvN1Ri3867ZpWWj2G37nsF3RYxODv08=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GFYVhGQ3k33CajiXZk+jbxVz7EZ3Rz+ks8Pa5+6chQG+Btl/GPCbJoELkp/mAXOHi
+         bTV8mobxXxFEM5yKFgRgfVZ9W05srC52Od/N7jzgg5NhmGqAZptmHahcxgCRTAMQyo
+         0hF15okOvub9atx5RxaZDDDIDD8T8E426aBTEVWg=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-mtd@lists.infradead.org
+Cc:     dinguyen@kernel.org, marex@denx.de, tudor.ambarus@microchip.com,
+        dwmw2@infradead.org, computersforpeace@gmail.com,
+        bbrezillon@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCHv6 1/2] dt-bindings: cadence-quadspi: add options reset property
+Date:   Thu, 13 Jun 2019 06:31:37 -0500
+Message-Id: <20190613113138.8280-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Jun 13 13:32:08 2019 +0200 (CEST)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-readl_poll_timeout() calls usleep_range() to sleep between reads.
-usleep_range() doesn't work efficiently for tiny values.
+The QSPI module can have an optional reset signals that will hold the
+module in a reset state.
 
-Raise the polling delay in qcom_qmp_phy_enable() to bring it in line
-with the delay in qcom_qmp_phy_com_init().
-
-Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 ---
-Vivek, do you remember why you didn't use the same delay value in
-qcom_qmp_phy_enable) and qcom_qmp_phy_com_init() ?
+v6: no change
+v5: document reset-names
+v4: no change
+v3: created base on review comments
+v2: did not exist
+v1: did not exist
 ---
- drivers/phy/qualcomm/phy-qcom-qmp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/mtd/cadence-quadspi.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index bb522b915fa9..34ff6434da8f 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -1548,7 +1548,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
- 	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
- 	mask = cfg->mask_pcs_ready;
+diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+index 4345c3a6f530..945be7d5b236 100644
+--- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
++++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+@@ -35,6 +35,9 @@ custom properties:
+ 		  (qspi_n_ss_out).
+ - cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
+                   and first bit transfer.
++- resets	: Must contain an entry for each entry in reset-names.
++		  See ../reset/reset.txt for details.
++- reset-names	: Must include either "qspi" and/or "qspi-ocp".
  
--	ret = readl_poll_timeout(status, val, val & mask, 1,
-+	ret = readl_poll_timeout(status, val, val & mask, 10,
- 				 PHY_INIT_COMPLETE_TIMEOUT);
- 	if (ret) {
- 		dev_err(qmp->dev, "phy initialization timed-out\n");
+ Example:
+ 
+@@ -50,6 +53,8 @@ Example:
+ 		cdns,fifo-depth = <128>;
+ 		cdns,fifo-width = <4>;
+ 		cdns,trigger-address = <0x00000000>;
++		resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
++		reset-names = "qspi", "qspi-ocp";
+ 
+ 		flash0: n25q00@0 {
+ 			...
 -- 
-2.17.1
+2.20.0
+
