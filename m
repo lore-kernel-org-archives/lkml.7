@@ -2,345 +2,338 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D765BC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D9FC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98AC42080A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560444869;
-	bh=IITyHjiv62SNhJ4yXoRzm4f7+2+5GIlSE+irIAPOEwI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Bb75fuWuWnoRU8p+PI+K3b2yHyWewoPzstY/+XHlmtttPcv3BSCmOtnf7poX0OeL8
-	 lJqqIaAIpEgXX8lNkLRk1kqoUrc8D7feVOAVWbZ1swaNokkXHDJ1CWSRfXJ1XF8h1o
-	 Lwkc5wx1Tzhzx9S+cglTMzms12Beyi1kC+d9c7EI=
+	by mail.kernel.org (Postfix) with ESMTP id C67B72080A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:54:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730114AbfFMQy2 (ORCPT
+        id S2393119AbfFMQyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:54:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59320 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730051AbfFMCjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 22:39:54 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A0A2208CA;
-        Thu, 13 Jun 2019 02:39:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560393592;
-        bh=IITyHjiv62SNhJ4yXoRzm4f7+2+5GIlSE+irIAPOEwI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OAZN3L4pHvi36KeY3wFF29+S+Rf1vVorb8eMMyYAEdD89hesFlqveQcV376mHhamQ
-         5btlDzDL6f2O89IrmMl3lGt+06Zf83DuFF3JD9kBn41bB1gMw8wy0U8POMNRIXBuoP
-         T8jfC3V0Lq5yhgm7EZN2qo3QwgHqWFedHrKm/xrk=
-Date:   Wed, 12 Jun 2019 21:39:47 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     lorenzo.pieralisi@arm.com, arnd@arndb.de,
-        linux-pci@vger.kernel.org, rjw@rjwysocki.net,
-        linux-arm-kernel@lists.infradead.org, will.deacon@arm.com,
-        wangkefeng.wang@huawei.com, linuxarm@huawei.com,
-        andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com
-Subject: Re: [PATCH v4 1/3] lib: logic_pio: Use logical PIO low-level
- accessors for !CONFIG_INDIRECT_PIO
-Message-ID: <20190613023947.GD13533@google.com>
-References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
- <1560262374-67875-2-git-send-email-john.garry@huawei.com>
+        Thu, 13 Jun 2019 12:54:31 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:29217 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730049AbfFMCjJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 22:39:09 -0400
+X-IronPort-AV: E=Sophos;i="5.63,367,1557158400"; 
+   d="scan'208";a="67169352"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 13 Jun 2019 10:38:57 +0800
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
+        by cn.fujitsu.com (Postfix) with ESMTP id 624274CDD0CA;
+        Thu, 13 Jun 2019 10:38:56 +0800 (CST)
+Received: from [10.167.226.33] (10.167.226.33) by
+ G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Thu, 13 Jun 2019 10:39:06 +0800
+Subject: Re: [PATCH] sctp: Add rcu lock to protect dst entry in
+ sctp_transport_route
+To:     Neil Horman <nhorman@tuxdriver.com>
+CC:     <vyasevich@gmail.com>, <marcelo.leitner@gmail.com>,
+        <davem@davemloft.net>, <linux-sctp@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1560136800-17961-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+ <20190610111209.GA15599@hmswarspite.think-freely.org>
+ <08f76a75-9e5b-2434-9175-e5371fa9cb7e@cn.fujitsu.com>
+ <20190612131346.GA23166@hmswarspite.think-freely.org>
+From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Message-ID: <d5d2f354-1358-e8fe-7c80-15d6f5757600@cn.fujitsu.com>
+Date:   Thu, 13 Jun 2019 10:37:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560262374-67875-2-git-send-email-john.garry@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190612131346.GA23166@hmswarspite.think-freely.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.167.226.33]
+X-yoursite-MailScanner-ID: 624274CDD0CA.AC483
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:12:52PM +0800, John Garry wrote:
-> Currently we only use logical PIO low-level accessors for when
-> CONFIG_INDIRECT_PIO is enabled.
-> 
-> Otherwise we just use inb/out et all directly.
-> 
-> It is useful to now use logical PIO accessors for all cases, so we can add
-> legality checks to accesses. Such a check would be for ensuring that the
-> PCI IO port has been IO remapped prior to the access.
 
-IIUC, *this* patch doesn't actually add any additional checks, so no
-need to mention that in this commit log.
+在 2019/6/12 21:13, Neil Horman 写道:
+> On Tue, Jun 11, 2019 at 10:33:17AM +0800, Su Yanjun wrote:
+>> 在 2019/6/10 19:12, Neil Horman 写道:
+>>> On Mon, Jun 10, 2019 at 11:20:00AM +0800, Su Yanjun wrote:
+>>>> syzbot found a crash in rt_cache_valid. Problem is that when more
+>>>> threads release dst in sctp_transport_route, the route cache can
+>>>> be freed.
+>>>>
+>>>> As follows,
+>>>> p1:
+>>>> sctp_transport_route
+>>>>     dst_release
+>>>>     get_dst
+>>>>
+>>>> p2:
+>>>> sctp_transport_route
+>>>>     dst_release
+>>>>     get_dst
+>>>> ...
+>>>>
+>>>> If enough threads calling dst_release will cause dst->refcnt==0
+>>>> then rcu softirq will reclaim the dst entry,get_dst then use
+>>>> the freed memory.
+>>>>
+>>>> This patch adds rcu lock to protect the dst_entry here.
+>>>>
+>>>> Fixes: 6e91b578bf3f("sctp: re-use sctp_transport_pmtu in
+>>> sctp_transport_route")
+>>>> Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+>>>> Reported-by: syzbot+a9e23ea2aa21044c2798@syzkaller.appspotmail.com
+>>>> ---
+>>>>    net/sctp/transport.c | 5 +++++
+>>>>    1 file changed, 5 insertions(+)
+>>>>
+>>>> diff --git a/net/sctp/transport.c b/net/sctp/transport.c
+>>>> index ad158d3..5ad7e20 100644
+>>>> --- a/net/sctp/transport.c
+>>>> +++ b/net/sctp/transport.c
+>>>> @@ -308,8 +308,13 @@ void sctp_transport_route(struct sctp_transport
+>>> *transport,
+>>>>    	struct sctp_association *asoc = transport->asoc;
+>>>>    	struct sctp_af *af = transport->af_specific;
+>>>> +	/* When dst entry is being released, route cache may be referred
+>>>> +	 * again. Add rcu lock here to protect dst entry.
+>>>> +	 */
+>>>> +	rcu_read_lock();
+>>>>    	sctp_transport_dst_release(transport);
+>>>>    	af->get_dst(transport, saddr, &transport->fl, sctp_opt2sk(opt));
+>>>> +	rcu_read_unlock();
+>>> What is the exact error that syzbot reported?  This doesn't seem like it
+>>> fixes
+>> BUG: KASAN: slab-out-of-bounds in rt_cache_valid+0x158/0x190
+>> net/ipv4/route.c:1556
+>> Read of size 2 at addr ffff8880654f3ac7 by task syz-executor.0/26603
+>>
+>> CPU: 0 PID: 26603 Comm: syz-executor.0 Not tainted 5.2.0-rc2+ #9
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+>> Google 01/01/2011
+>> Call Trace:
+>>   __dump_stack lib/dump_stack.c:77 [inline]
+>>   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>>   print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
+>>   __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+>>   kasan_report+0x12/0x20 mm/kasan/common.c:614
+>>   __asan_report_load2_noabort+0x14/0x20 mm/kasan/generic_report.c:130
+>>   rt_cache_valid+0x158/0x190 net/ipv4/route.c:1556
+>>   __mkroute_output net/ipv4/route.c:2332 [inline]
+>>   ip_route_output_key_hash_rcu+0x819/0x2d50 net/ipv4/route.c:2564
+>>   ip_route_output_key_hash+0x1ef/0x360 net/ipv4/route.c:2393
+>>   __ip_route_output_key include/net/route.h:125 [inline]
+>>   ip_route_output_flow+0x28/0xc0 net/ipv4/route.c:2651
+>>   ip_route_output_key include/net/route.h:135 [inline]
+>>   sctp_v4_get_dst+0x467/0x1260 net/sctp/protocol.c:435
+>>   sctp_transport_route+0x12d/0x360 net/sctp/transport.c:297
+>>   sctp_assoc_add_peer+0x53e/0xfc0 net/sctp/associola.c:663
+>>   sctp_process_param net/sctp/sm_make_chunk.c:2531 [inline]
+>>   sctp_process_init+0x2491/0x2b10 net/sctp/sm_make_chunk.c:2344
+>>   sctp_cmd_process_init net/sctp/sm_sideeffect.c:667 [inline]
+>>   sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1369 [inline]
+>>   sctp_side_effects net/sctp/sm_sideeffect.c:1179 [inline]
+>>   sctp_do_sm+0x3a30/0x50e0 net/sctp/sm_sideeffect.c:1150
+>>   sctp_assoc_bh_rcv+0x343/0x660 net/sctp/associola.c:1059
+>>   sctp_inq_push+0x1e4/0x280 net/sctp/inqueue.c:80
+>>   sctp_backlog_rcv+0x196/0xbe0 net/sctp/input.c:339
+>>   sk_backlog_rcv include/net/sock.h:945 [inline]
+>>   __release_sock+0x129/0x390 net/core/sock.c:2412
+>>   release_sock+0x59/0x1c0 net/core/sock.c:2928
+>>   sctp_wait_for_connect+0x316/0x540 net/sctp/socket.c:9039
+>>   __sctp_connect+0xab2/0xcd0 net/sctp/socket.c:1226
+>>   __sctp_setsockopt_connectx+0x133/0x1a0 net/sctp/socket.c:1334
+>>   sctp_setsockopt_connectx_old net/sctp/socket.c:1350 [inline]
+>>   sctp_setsockopt net/sctp/socket.c:4644 [inline]
+>>   sctp_setsockopt+0x22c0/0x6d10 net/sctp/socket.c:4608
+>>   compat_sock_common_setsockopt+0x106/0x140 net/core/sock.c:3137
+>>   __compat_sys_setsockopt+0x185/0x380 net/compat.c:383
+>>   __do_compat_sys_setsockopt net/compat.c:396 [inline]
+>>   __se_compat_sys_setsockopt net/compat.c:393 [inline]
+>>   __ia32_compat_sys_setsockopt+0xbd/0x150 net/compat.c:393
+>>   do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+>>   do_fast_syscall_32+0x27b/0xd7d arch/x86/entry/common.c:408
+>>   entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+>> RIP: 0023:0xf7ff5849
+>> Code: 85 d2 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 3c 24 c3 90 90
+>> 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90
+>> 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+>> RSP: 002b:00000000f5df10cc EFLAGS: 00000296 ORIG_RAX: 000000000000016e
+>> RAX: ffffffffffffffda RBX: 0000000000000007 RCX: 0000000000000084
+>> RDX: 000000000000006b RSI: 000000002055bfe4 RDI: 000000000000001c
+>> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+>> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+>> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+>>
+>> Allocated by task 480:
+>>   save_stack+0x23/0x90 mm/kasan/common.c:71
+>>   set_track mm/kasan/common.c:79 [inline]
+>>   __kasan_kmalloc mm/kasan/common.c:489 [inline]
+>>   __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+>>   kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:497
+>>   slab_post_alloc_hook mm/slab.h:437 [inline]
+>>   slab_alloc mm/slab.c:3326 [inline]
+>>   kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3488
+>>   dst_alloc+0x10e/0x200 net/core/dst.c:93
+>>   rt_dst_alloc+0x83/0x3f0 net/ipv4/route.c:1624
+>>   __mkroute_output net/ipv4/route.c:2337 [inline]
+>>   ip_route_output_key_hash_rcu+0x8f3/0x2d50 net/ipv4/route.c:2564
+>>   ip_route_output_key_hash+0x1ef/0x360 net/ipv4/route.c:2393
+>>   __ip_route_output_key include/net/route.h:125 [inline]
+>>   ip_route_output_flow+0x28/0xc0 net/ipv4/route.c:2651
+>>   ip_route_output_key include/net/route.h:135 [inline]
+>>   sctp_v4_get_dst+0x467/0x1260 net/sctp/protocol.c:435
+>>   sctp_transport_route+0x12d/0x360 net/sctp/transport.c:297
+>>   sctp_assoc_add_peer+0x53e/0xfc0 net/sctp/associola.c:663
+>>   sctp_process_param net/sctp/sm_make_chunk.c:2531 [inline]
+>>   sctp_process_init+0x2491/0x2b10 net/sctp/sm_make_chunk.c:2344
+>>   sctp_sf_do_unexpected_init net/sctp/sm_statefuns.c:1541 [inline]
+>>
+>> sctp_sf_do_unexpected_init.isra.0+0x7cd/0x1350net/sctp/sm_statefuns.c:1441
+>>   sctp_sf_do_5_2_1_siminit+0x35/0x40 net/sctp/sm_statefuns.c:1670
+>>   sctp_do_sm+0x121/0x50e0 net/sctp/sm_sideeffect.c:1147
+>>   sctp_assoc_bh_rcv+0x343/0x660 net/sctp/associola.c:1059
+>>   sctp_inq_push+0x1e4/0x280 net/sctp/inqueue.c:80
+>>   sctp_backlog_rcv+0x196/0xbe0 net/sctp/input.c:339
+>>   sk_backlog_rcv include/net/sock.h:945 [inline]
+>>   __release_sock+0x129/0x390 net/core/sock.c:2412
+>>   release_sock+0x59/0x1c0 net/core/sock.c:2928
+>>   sctp_wait_for_connect+0x316/0x540 net/sctp/socket.c:9039
+>>   __sctp_connect+0xab2/0xcd0 net/sctp/socket.c:1226
+>>   sctp_connect net/sctp/socket.c:4846 [inline]
+>>   sctp_inet_connect+0x29c/0x340 net/sctp/socket.c:4862
+>>   __sys_connect+0x264/0x330 net/socket.c:1834
+>>   __do_sys_connect net/socket.c:1845 [inline]
+>>   __se_sys_connect net/socket.c:1842 [inline]
+>>   __ia32_sys_connect+0x72/0xb0 net/socket.c:1842
+>>   do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+>>   do_fast_syscall_32+0x27b/0xd7d arch/x86/entry/common.c:408
+>>   entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+>>
+>> Freed by task 9:
+>>   save_stack+0x23/0x90 mm/kasan/common.c:71
+>>   set_track mm/kasan/common.c:79 [inline]
+>>   __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+>>   kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+>>   __cache_free mm/slab.c:3432 [inline]
+>>   kmem_cache_free+0x86/0x260 mm/slab.c:3698
+>>   dst_destroy+0x29e/0x3c0 net/core/dst.c:129
+>>   dst_destroy_rcu+0x16/0x19 net/core/dst.c:142
+>>   __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
+>>   rcu_do_batch kernel/rcu/tree.c:2092 [inline]
+>>   invoke_rcu_callbacks kernel/rcu/tree.c:2310 [inline]
+>>   rcu_core+0xba5/0x1500 kernel/rcu/tree.c:2291
+>>   __do_softirq+0x25c/0x94c kernel/softirq.c:293
+>>
+>> The buggy address belongs to the object at ffff8880654f3a00
+>>   which belongs to the cache ip_dst_cache of size 176
+>> The buggy address is located 23 bytes to the right of
+>>   176-byte region [ffff8880654f3a00, ffff8880654f3ab0)
+>> The buggy address belongs to the page:
+>> page:ffffea0001953cc0 refcount:1 mapcount:0 mapping:ffff8880a76ad600
+>> index:0xffff8880654f3c00
+>> flags: 0x1fffc0000000200(slab)
+>> raw: 01fffc0000000200 ffffea00026be808 ffffea000181c088 ffff8880a76ad600
+>> raw: ffff8880654f3c00 ffff8880654f3000 0000000100000002 0000000000000000
+>> page dumped because: kasan: bad access detected
+>>
+>> Memory state around the buggy address:
+>>   ffff8880654f3980: fb fb fb fb fb fb fc fc fc fc fc fc fc fc fc fc
+>>   ffff8880654f3a00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>>> ffff8880654f3a80: 00 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc
+>>                                             ^
+>>   ffff8880654f3b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>>   ffff8880654f3b80: fb fb fb fb fb fb fc fc fc fc fc fc fc fc fc fc
+>> ==================================================================
+>>> anything.  Based on what you've said above, we have multiple processes
+>>> looking
+>>> up and releasing routes in parallel (which IIRC should never happen, as
+>>> only one
+>>> process should traverse the sctp state machine for a given association
+>>> at
+>>> any
+>>> one time).
+>> Looks like multiple process could run into sctp_transport_route.
+> Yeah, I'm sorry, my previous comment was a bit overstated, you can
+> definately
+> have multiple process going through the state machine, but not with the same
+> packet.
+>
+> That said, this fix still isn't right.  Looking at the code, It appears that
+> we
+> are manipulating a route inside __mkroute_output that is in the process of
+> being
+> destroyed.  But the destruction occurs from an rcu_callback, and the lookup
+> process in __mkroute_output is under the protection of the rcu_read_lock
+> already
+> (as seen in ip_route_output_key_hash), so the destruction should be delayed
+> until that _mkroute_output call is complete, and the call in
+> __mkroute_output
+> should skip any route that is in-flight to be destroyed, because the
+> reference
+> count should be zero (causing dst_hold_safe to return 0).
+Yes, you are right. __mkroute_output is impossible to cause dst entry to 
+be released.
+> Basically, it seems like somehow, __mkroute_output has found a route, and
+> started to dereference parts of it, while it is at the same time being
+> freed,
+But dst entry may be  released somewhere.
 
-One thing this patch *does* do is "#define inb logic_inb" whenever
-PCI_IOBASE is defined (we used to do that #define only when
-CONFIG_INDIRECT_PIO was defined).  That's a pretty important change
-and needs to be very clear in the commit log.
+As syzbot reports,
+HEAD commit:    9221dced Merge tag 'for-linus-20190601' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=114cdc0ea00000
+kernel config: https://syzkaller.appspot.com/x/.config?x=1fa7e451a5cac069
+dashboard link: https://syzkaller.appspot.com/bug?extid=a9e23ea2aa21044c2798
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: i386
 
-I'm not sure it's even safe, because CONFIG_INDIRECT_PIO depends on
-ARM64, but PCI_IOBASE is defined on most arches via asm-generic/io.h,
-so this potentially affects arches other than ARM64.
+i searched dst_release in sctp code, sctp_transport_dst_release is a big 
+suspicion.
+If multiple processes calling sctp_transport_dst_release would cause 
+refcnt==0,
+dst entry will be reclaimed.
 
-If possible, split out the cleanup patches as below and make the patch
-that does this PCI_IOBASE change as small as possible so we can
-evaluate that change by itself.
+__mkroute_output in route.c:
+prth = raw_cpu_ptr(nh->nh_pcpu_rth_output);
+rth = rcu_dereference(*prth);
+it uses *nh_pcpu_rth_output* to refer the route cache. If dst entry has 
+been released, no one
+sets *nh_pcpu_rth_output* to null, only rt_cache_route updates it with a 
+new one.
 
-> Using the logical PIO accesses will add a little processing overhead, but
-> that's ok as IO port accesses are relatively slow anyway.
-> 
-> Some changes are also made to stop spilling so many lines under
-> CONFIG_INDIRECT_PIO.
+anywhere release_dst and get_dst which may access the same dst 
+concurrently should
+be under rcu lock protection.
 
-"Some changes are also made" is a good hint to me that this patch
-might be able to be split up :)
+I'm not familar with sctp. but looks like a problem  dst_release related.
+> which should never happen.  How we are getting into that situation though, I
+> have no idea yet.
+>
+> Neil
+>
+>>> Protecting the lookup/release operations with a read side rcu
+>>> lock
+>>> won't fix that.
+>>>
+>>> Neil
+>>>
+>>>>    	if (saddr)
+>>>>    		memcpy(&transport->saddr, saddr, sizeof(union sctp_addr));
+>>>> -- 
+>>>> 2.7.4
+>>>>
+>>>>
+>>>>
+>>>>
+>>
+>
 
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> ---
->  include/linux/logic_pio.h |  7 ++--
->  lib/logic_pio.c           | 83 ++++++++++++++++++++++++++++-----------
->  2 files changed, 63 insertions(+), 27 deletions(-)
-> 
-> diff --git a/include/linux/logic_pio.h b/include/linux/logic_pio.h
-> index cbd9d8495690..06d22b2ec99f 100644
-> --- a/include/linux/logic_pio.h
-> +++ b/include/linux/logic_pio.h
-> @@ -37,7 +37,7 @@ struct logic_pio_host_ops {
->  		     size_t dwidth, unsigned int count);
->  };
->  
-> -#ifdef CONFIG_INDIRECT_PIO
-> +#if defined(PCI_IOBASE)
 
-Why change the #ifdef style?  I understand these are equivalent, but
-unless there's a movement to change from "#ifdef X" to "#if defined(X)"
-I wouldn't bother.
-
->  u8 logic_inb(unsigned long addr);
->  void logic_outb(u8 value, unsigned long addr);
->  void logic_outw(u16 value, unsigned long addr);
-> @@ -102,6 +102,7 @@ void logic_outsl(unsigned long addr, const void *buffer, unsigned int count);
->  #define outsl logic_outsl
->  #endif
->  
-> +#if defined(CONFIG_INDIRECT_PIO)
->  /*
->   * We reserve 0x4000 bytes for Indirect IO as so far this library is only
->   * used by the HiSilicon LPC Host. If needed, we can reserve a wider IO
-> @@ -109,10 +110,10 @@ void logic_outsl(unsigned long addr, const void *buffer, unsigned int count);
->   */
->  #define PIO_INDIRECT_SIZE 0x4000
->  #define MMIO_UPPER_LIMIT (IO_SPACE_LIMIT - PIO_INDIRECT_SIZE)
-> -#else
-> +#else /* CONFIG_INDIRECT_PIO */
->  #define MMIO_UPPER_LIMIT IO_SPACE_LIMIT
->  #endif /* CONFIG_INDIRECT_PIO */
-> -
-> +#endif /* PCI_IOBASE */
->  struct logic_pio_hwaddr *find_io_range_by_fwnode(struct fwnode_handle *fwnode);
->  unsigned long logic_pio_trans_hwaddr(struct fwnode_handle *fwnode,
->  			resource_size_t hw_addr, resource_size_t size);
-> diff --git a/lib/logic_pio.c b/lib/logic_pio.c
-> index feea48fd1a0d..40d9428010e1 100644
-> --- a/lib/logic_pio.c
-> +++ b/lib/logic_pio.c
-> @@ -191,7 +191,8 @@ unsigned long logic_pio_trans_cpuaddr(resource_size_t addr)
->  	return ~0UL;
->  }
->  
-> -#if defined(CONFIG_INDIRECT_PIO) && defined(PCI_IOBASE)
-> +#if defined(PCI_IOBASE)
-> +#if defined(CONFIG_INDIRECT_PIO)
->  #define BUILD_LOGIC_IO(bw, type)					\
->  type logic_in##bw(unsigned long addr)					\
->  {									\
-> @@ -200,11 +201,11 @@ type logic_in##bw(unsigned long addr)					\
->  	if (addr < MMIO_UPPER_LIMIT) {					\
->  		ret = read##bw(PCI_IOBASE + addr);			\
->  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) { \
-> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
-> +		struct logic_pio_hwaddr *range = find_io_range(addr);	\
-> +		size_t sz = sizeof(type);				\
-
-I don't mind changing "entry" to "range" and adding "sz".  But that
-could be done in a separate "no functional change" patch that is
-trivial to review, which would make *this* patch smaller and easier to
-review.
-
-Another "no functional change" simplification patch would be to
-replace this:
-
-  type ret = (type)~0;
-
-  if (addr < MMIO_UPPER_LIMIT) {
-    ret = read##bw(...);
-  } else if (...) {
-    if (range && range->ops)
-      ret = range->ops->in(...);
-    else
-      WARN_ON_ONCE();
-  }
-  return ret;
-
-with this:
-
-  if (addr < MMIO_UPPER_LIMIT)
-    return read##bw(...);
-
-  if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {
-    if (range && range->ops)
-      return range->ops->in(...);
-    else
-      WARN_ON_ONCE();
-  }
-
-  return (type)~0;
-
-Finally, I think the end result would be a little easier to read if
-you restructured the #ifdefs like this:
-
-  #ifdef PCI_IOBASE
-  #define BUILD_LOGIC_IO(...)
-  type logic_in##bw(...)
-  {
-    if (addr < MMIO_UPPER_LIMIT)
-      return read##bw(...);
-
-  #ifdef CONFIG_INDIRECT_PIO
-    if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {
-      if (range && range->ops)
-	return range->ops->in(...);
-      else
-	WARN_ON_ONCE();
-    }
-  #endif
-
-    return (type)~0;
-  }
-
-That does mean a CONFIG_INDIRECT_PIO #ifdef in each in/out/ins/outs
-builder, but it's more localized so I think it's easier to understand
-that INDIRECT_PIO is just adding a new case to the default path.
-
-> -		if (entry && entry->ops)				\
-> -			ret = entry->ops->in(entry->hostdata,		\
-> -					addr, sizeof(type));		\
-> +		if (range && range->ops)				\
-> +			ret = range->ops->in(range->hostdata, addr, sz);\
->  		else							\
->  			WARN_ON_ONCE(1);				\
->  	}								\
-> @@ -216,49 +217,83 @@ void logic_out##bw(type value, unsigned long addr)			\
->  	if (addr < MMIO_UPPER_LIMIT) {					\
->  		write##bw(value, PCI_IOBASE + addr);			\
->  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
-> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
-> +		struct logic_pio_hwaddr *range = find_io_range(addr);	\
-> +		size_t sz = sizeof(type);				\
->  									\
-> -		if (entry && entry->ops)				\
-> -			entry->ops->out(entry->hostdata,		\
-> -					addr, value, sizeof(type));	\
-> +		if (range && range->ops)				\
-> +			range->ops->out(range->hostdata,		\
-> +					addr, value, sz);		\
->  		else							\
->  			WARN_ON_ONCE(1);				\
->  	}								\
->  }									\
->  									\
-> -void logic_ins##bw(unsigned long addr, void *buffer,		\
-> -		   unsigned int count)					\
-> +void logic_ins##bw(unsigned long addr, void *buf, unsigned int cnt)	\
->  {									\
->  	if (addr < MMIO_UPPER_LIMIT) {					\
-> -		reads##bw(PCI_IOBASE + addr, buffer, count);		\
-> +		reads##bw(PCI_IOBASE + addr, buf, cnt);			\
->  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
-> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
-> +		struct logic_pio_hwaddr *range = find_io_range(addr);	\
-> +		size_t sz = sizeof(type);				\
->  									\
-> -		if (entry && entry->ops)				\
-> -			entry->ops->ins(entry->hostdata,		\
-> -				addr, buffer, sizeof(type), count);	\
-> +		if (range && range->ops)				\
-> +			range->ops->ins(range->hostdata,		\
-> +					addr, buf, sz, cnt);		\
->  		else							\
->  			WARN_ON_ONCE(1);				\
->  	}								\
->  									\
->  }									\
->  									\
-> -void logic_outs##bw(unsigned long addr, const void *buffer,		\
-> -		    unsigned int count)					\
-> +void logic_outs##bw(unsigned long addr, const void *buf,		\
-> +		    unsigned int cnt)					\
->  {									\
->  	if (addr < MMIO_UPPER_LIMIT) {					\
-> -		writes##bw(PCI_IOBASE + addr, buffer, count);		\
-> +		writes##bw(PCI_IOBASE + addr, buf, cnt);		\
->  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
-> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
-> +		struct logic_pio_hwaddr *range = find_io_range(addr);	\
-> +		size_t sz = sizeof(type);				\
->  									\
-> -		if (entry && entry->ops)				\
-> -			entry->ops->outs(entry->hostdata,		\
-> -				addr, buffer, sizeof(type), count);	\
-> +		if (range && range->ops)				\
-> +			range->ops->outs(range->hostdata,		\
-> +					 addr, buf, sz, cnt);		\
->  		else							\
->  			WARN_ON_ONCE(1);				\
->  	}								\
->  }
->  
-> +#else /* CONFIG_INDIRECT_PIO */
-> +
-> +#define BUILD_LOGIC_IO(bw, type)					\
-> +type logic_in##bw(unsigned long addr)					\
-> +{									\
-> +	type ret = (type)~0;						\
-> +									\
-> +	if (addr < MMIO_UPPER_LIMIT)					\
-> +		ret = read##bw(PCI_IOBASE + addr);			\
-> +	return ret;							\
-> +}									\
-> +									\
-> +void logic_out##bw(type value, unsigned long addr)			\
-> +{									\
-> +	if (addr < MMIO_UPPER_LIMIT)					\
-> +		write##bw(value, PCI_IOBASE + addr);			\
-> +}									\
-> +									\
-> +void logic_ins##bw(unsigned long addr, void *buf, unsigned int cnt)	\
-> +{									\
-> +	if (addr < MMIO_UPPER_LIMIT)					\
-> +		reads##bw(PCI_IOBASE + addr, buf, cnt);			\
-> +}									\
-> +									\
-> +void logic_outs##bw(unsigned long addr, const void *buf,		\
-> +		    unsigned int cnt)					\
-> +{									\
-> +	if (addr < MMIO_UPPER_LIMIT)					\
-> +		writes##bw(PCI_IOBASE + addr, buf, cnt);		\
-> +}
-> +#endif /* CONFIG_INDIRECT_PIO */
-> +
->  BUILD_LOGIC_IO(b, u8)
->  EXPORT_SYMBOL(logic_inb);
->  EXPORT_SYMBOL(logic_insb);
-> @@ -277,4 +312,4 @@ EXPORT_SYMBOL(logic_insl);
->  EXPORT_SYMBOL(logic_outl);
->  EXPORT_SYMBOL(logic_outsl);
->  
-> -#endif /* CONFIG_INDIRECT_PIO && PCI_IOBASE */
-> +#endif /* PCI_IOBASE */
-> -- 
-> 2.17.1
-> 
