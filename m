@@ -2,138 +2,96 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DA2C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1DCC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3545120673
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C55B21537
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:38:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4ID1AGz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726011AbfFMWhY (ORCPT
+        id S1726582AbfFMWiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 18:37:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55510 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725798AbfFMWhY (ORCPT
+        Thu, 13 Jun 2019 18:38:18 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43282 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfFMWiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 18:37:24 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DMWHoX014019;
-        Thu, 13 Jun 2019 18:36:07 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t3x5ftmbv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jun 2019 18:36:07 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5DMWPn8014412;
-        Thu, 13 Jun 2019 18:36:07 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t3x5ftmb8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jun 2019 18:36:07 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5DMYFFs032479;
-        Thu, 13 Jun 2019 22:36:06 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma03dal.us.ibm.com with ESMTP id 2t1x6frgq4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jun 2019 22:36:06 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5DMa5I839321908
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Jun 2019 22:36:05 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0D589B206A;
-        Thu, 13 Jun 2019 22:36:05 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EC9D5B2067;
-        Thu, 13 Jun 2019 22:36:04 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.175.192])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Jun 2019 22:36:04 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id F17A516C8EAB; Thu, 13 Jun 2019 15:36:04 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 15:36:04 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org
-Subject: Re: [PATCH tip/core/rcu 6/9] rcu: Upgrade sync_exp_work_done() to
- smp_mb()
-Message-ID: <20190613223604.GE28207@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190530145942.GA30318@linux.ibm.com>
- <20190530150015.30995-6-paulmck@linux.ibm.com>
- <20190606074849.GD3402@hirez.programming.kicks-ass.net>
+        Thu, 13 Jun 2019 18:38:17 -0400
+Received: by mail-pl1-f194.google.com with SMTP id cl9so121837plb.10;
+        Thu, 13 Jun 2019 15:38:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nBv/R182uhuCafyQYbQVEhkRbrB37kIxJPAogDFYLDo=;
+        b=C4ID1AGzLHSV4WlcejkSs+WUZYDDZRU0ceOadoCNvY5crkGII0Ax3BiBWFEJOs8hME
+         uVgrS0bHKHuYqU8df8ZqblmPhmwLmIAPEFU5ZHSxheIq/fR3jy8BhDdd/PeHjEw17kMK
+         NCqz2/0ApPegBel7QHf0YQUmUVl2+NdDeMfTJI8uVeEntD12dZqp9OsSIdhmp6S9pUS1
+         pEJ3vcXXX9oojFcIMuP7zA8Bio4TFasdMsKTY9ZvwsZqDGkYjvA8kYvQ5JOnJP0XOfgv
+         Ao9+JPkp2wbNRfh3Xgkw/ulzTy4JYtkxuUhmOHit+/SPQ63qmmDb6LzWP6peXEZKQjx6
+         qgOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nBv/R182uhuCafyQYbQVEhkRbrB37kIxJPAogDFYLDo=;
+        b=RpNXXmueU1cYA0Gav6XJqSRFEW27MN8dSMZ1fU3QPKfckhNEG4jbyDSfxZRsFqCq14
+         9aGOvO1GdcfqFGv4AvgNirgDhbvPfjxM92P0DgAjAMpRhh5aTGuQaRRLrKM2Z1KrMW87
+         h2PcuMIS/GRFZDSoOZweGznsJ+8a8b8vy/A86ePUNnngVYM3HS9SzIwweQ/+7zo1Nozp
+         fGprOqG4q3hcDIuLNKBj6H5yrXK+EgL+ENzogBinn4hSGJ7TSqM1Vjw/y5Mbr2knu8KS
+         jRqvx/MpQsVDfIQU2DLCMrnkN2Re5Wk9J4pFJ8Y21o4g5iOS9TAYXSwTJxvI/xuf0yAD
+         kx1g==
+X-Gm-Message-State: APjAAAW7CNpH9YSwG5novLcEv0c9H0Q9w2tq9z9qc9tTR8NTWy+V+Jds
+        9TXcCkB7LifJBL7FPcJeKRIfHQRV
+X-Google-Smtp-Source: APXvYqwOYVT2Vf4vs1Ozh4HBWLARCY8WzAVyxtWkJRoaIjWdl2aQJIHePtegseZh1ArkIRkMH0Ia0A==
+X-Received: by 2002:a17:902:22e:: with SMTP id 43mr86565994plc.272.1560465496554;
+        Thu, 13 Jun 2019 15:38:16 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p1sm693427pff.74.2019.06.13.15.38.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 15:38:15 -0700 (PDT)
+Subject: Re: [PATCH 4.14 00/81] 4.14.126-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20190613075649.074682929@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <39e4eba7-e40e-4e75-7c31-6e201980eaab@roeck-us.net>
+Date:   Thu, 13 Jun 2019 15:38:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190606074849.GD3402@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906130170
+In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 09:48:49AM +0200, Peter Zijlstra wrote:
-> On Thu, May 30, 2019 at 08:00:12AM -0700, Paul E. McKenney wrote:
-> > The sync_exp_work_done() function uses smp_mb__before_atomic(), but
-> > there is no obvious atomic in the ensuing code.  The ordering is
-> > absolutely required for grace periods to work correctly, so this
-> > commit upgrades the smp_mb__before_atomic() to smp_mb().
-> > 
+On 6/13/19 1:32 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.126 release.
+> There are 81 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Did this commit want a Fixes: line? Such that robots can find the right
-> kernels to backport this to?
+> Responses should be made by Sat 15 Jun 2019 07:54:51 AM UTC.
+> Anything received after that time might be too late.
+> 
 
-Indeed it does, and thanks to Andrea for finding the commit.
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 345 pass: 345 fail: 0
 
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit 96050c68be33edef18800ad6748f61f81db81a20
-Author: Paul E. McKenney <paulmck@linux.ibm.com>
-Date:   Sat Apr 20 01:40:54 2019 -0700
-
-    rcu: Upgrade sync_exp_work_done() to smp_mb()
-    
-    The sync_exp_work_done() function uses smp_mb__before_atomic(), but
-    there is no obvious atomic in the ensuing code.  The ordering is
-    absolutely required for grace periods to work correctly, so this
-    commit upgrades the smp_mb__before_atomic() to smp_mb().
-    
-    Fixes: 6fba2b3767ea ("rcu: Remove deprecated RCU debugfs tracing code")
-    Reported-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-
-diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index 9c990df880d1..d969650a72c6 100644
---- a/kernel/rcu/tree_exp.h
-+++ b/kernel/rcu/tree_exp.h
-@@ -259,8 +259,7 @@ static bool sync_exp_work_done(unsigned long s)
- {
- 	if (rcu_exp_gp_seq_done(s)) {
- 		trace_rcu_exp_grace_period(rcu_state.name, s, TPS("done"));
--		/* Ensure test happens before caller kfree(). */
--		smp_mb__before_atomic(); /* ^^^ */
-+		smp_mb(); /* Ensure test happens before caller kfree(). */
- 		return true;
- 	}
- 	return false;
+Guenter
