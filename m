@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6D5C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965ECC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0672D20866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B069208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442063;
-	bh=OCgOXJAykaxpw9/xIwXFpkpV3yLlSkKdd+71zIGSmyM=;
+	s=default; t=1560442073;
+	bh=Q9uG9TijeqznwzAyRj4c59Zw+iKYFG9CMGH4OdKPW+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FT52S5hjLgLflv/+bwXCTX1BYLVgnZRVGHFw3s8CL34XVK/dUENjGf+QaCa6LIxE7
-	 XNDe3qJGvCb4zrueaZwJrCXrcaAftgEy+ZGmhPkVN4GMNG4u8dbyXOIqEaQ17tRy20
-	 5ppjBa2T6pEGA2BdH3iOcxvBztEuTWb5jw+9PWRg=
+	b=RwJ+V7ZNw3dd2NOfpGJHP+7MIGjKrUz8zsxatsT2gx14NVj1E2v0iWu+xQOc+NN33
+	 dubjibuJAltDLMLhS1Z39NaUCcXkOdJ+UQHKGp4SxA8CrvYfbWgm16kYPdumvtOP7y
+	 x7U4gqJiREEJvbWp6YJaOkLjXeuTOHHcn0tih6iA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389825AbfFMQHK (ORCPT
+        id S1732739AbfFMQHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:07:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34406 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:07:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731309AbfFMIpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:45:45 -0400
+        id S1731301AbfFMIp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:45:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8C082175B;
-        Thu, 13 Jun 2019 08:45:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C96CD21743;
+        Thu, 13 Jun 2019 08:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415544;
-        bh=OCgOXJAykaxpw9/xIwXFpkpV3yLlSkKdd+71zIGSmyM=;
+        s=default; t=1560415527;
+        bh=Q9uG9TijeqznwzAyRj4c59Zw+iKYFG9CMGH4OdKPW+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WKqUoYiHh7dxPtl98KxS/drb4TGNyrhCwWUI8enObQSffrZqtRUTrDmXIbvh/ZqRa
-         yOmllm/jIGKJfcXuLTsro6WGYBT4didNyMOorSCwY9ZtoMRhIKgX8t9YhrDCCgVttE
-         XIQaL4YeYGKLAEhbStSaDt2KW25kCC7s2YYRmK40=
+        b=YkmxgnlxVUJWKQ78xyW5oVHuL/NZ20GeIsStnqU57tqya7biBs25Sb3nkAbGuyCs7
+         xz0xiFPzraST0KDb1BlZSK0ZzA+Ol5C1La4VOUnIwMKxyrev8TQbyeexFb8yJC1FWG
+         05b3Pq+keH8dP3SORkcaOHYerMFPOzbEcTeSwCpY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linxu Fang <fanglinxu@huawei.com>,
-        Taku Izumi <izumi.taku@jp.fujitsu.com>,
-        Xishi Qiu <qiuxishi@huawei.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 015/155] mem-hotplug: fix node spanned pages when we have a node with only ZONE_MOVABLE
-Date:   Thu, 13 Jun 2019 10:32:07 +0200
-Message-Id: <20190613075653.624436735@linuxfoundation.org>
+Subject: [PATCH 5.1 032/155] drm/nouveau/kms/gf119-gp10x: push HeadSetControlOutputResource() mthd when encoders change
+Date:   Thu, 13 Jun 2019 10:32:24 +0200
+Message-Id: <20190613075654.788007417@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -67,109 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 299c83dce9ea3a79bb4b5511d2cb996b6b8e5111 ]
+[ Upstream commit a0b694d0af21c9993d1a39a75fd814bd48bf7eb4 ]
 
-342332e6a925 ("mm/page_alloc.c: introduce kernelcore=mirror option") and
-later patches rewrote the calculation of node spanned pages.
+HW has error checks in place which check that pixel depth is explicitly
+provided on DP, while HDMI has a "default" setting that we use.
 
-e506b99696a2 ("mem-hotplug: fix node spanned pages when we have a movable
-node"), but the current code still has problems,
+In multi-display configurations with identical modelines, but different
+protocols (HDMI + DP, in this case), it was possible for the DP head to
+get swapped to the head which previously drove the HDMI output, without
+updating HeadSetControlOutputResource(), triggering the error check and
+hanging the core update.
 
-When we have a node with only zone_movable and the node id is not zero,
-the size of node spanned pages is double added.
-
-That's because we have an empty normal zone, and zone_start_pfn or
-zone_end_pfn is not between arch_zone_lowest_possible_pfn and
-arch_zone_highest_possible_pfn, so we need to use clamp to constrain the
-range just like the commit <96e907d13602> (bootmem: Reimplement
-__absent_pages_in_range() using for_each_mem_pfn_range()).
-
-e.g.
-Zone ranges:
-  DMA      [mem 0x0000000000001000-0x0000000000ffffff]
-  DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
-  Normal   [mem 0x0000000100000000-0x000000023fffffff]
-Movable zone start for each node
-  Node 0: 0x0000000100000000
-  Node 1: 0x0000000140000000
-Early memory node ranges
-  node   0: [mem 0x0000000000001000-0x000000000009efff]
-  node   0: [mem 0x0000000000100000-0x00000000bffdffff]
-  node   0: [mem 0x0000000100000000-0x000000013fffffff]
-  node   1: [mem 0x0000000140000000-0x000000023fffffff]
-
-node 0 DMA	spanned:0xfff   present:0xf9e   absent:0x61
-node 0 DMA32	spanned:0xff000 present:0xbefe0	absent:0x40020
-node 0 Normal	spanned:0	present:0	absent:0
-node 0 Movable	spanned:0x40000 present:0x40000 absent:0
-On node 0 totalpages(node_present_pages): 1048446
-node_spanned_pages:1310719
-node 1 DMA	spanned:0	    present:0		absent:0
-node 1 DMA32	spanned:0	    present:0		absent:0
-node 1 Normal	spanned:0x100000    present:0x100000	absent:0
-node 1 Movable	spanned:0x100000    present:0x100000	absent:0
-On node 1 totalpages(node_present_pages): 2097152
-node_spanned_pages:2097152
-Memory: 6967796K/12582392K available (16388K kernel code, 3686K rwdata,
-4468K rodata, 2160K init, 10444K bss, 5614596K reserved, 0K
-cma-reserved)
-
-It shows that the current memory of node 1 is double added.
-After this patch, the problem is fixed.
-
-node 0 DMA	spanned:0xfff   present:0xf9e   absent:0x61
-node 0 DMA32	spanned:0xff000 present:0xbefe0	absent:0x40020
-node 0 Normal	spanned:0	present:0	absent:0
-node 0 Movable	spanned:0x40000 present:0x40000 absent:0
-On node 0 totalpages(node_present_pages): 1048446
-node_spanned_pages:1310719
-node 1 DMA	spanned:0	    present:0		absent:0
-node 1 DMA32	spanned:0	    present:0		absent:0
-node 1 Normal	spanned:0	    present:0		absent:0
-node 1 Movable	spanned:0x100000    present:0x100000	absent:0
-On node 1 totalpages(node_present_pages): 1048576
-node_spanned_pages:1048576
-memory: 6967796K/8388088K available (16388K kernel code, 3686K rwdata,
-4468K rodata, 2160K init, 10444K bss, 1420292K reserved, 0K
-cma-reserved)
-
-Link: http://lkml.kernel.org/r/1554178276-10372-1-git-send-email-fanglinxu@huawei.com
-Signed-off-by: Linxu Fang <fanglinxu@huawei.com>
-Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
-Cc: Xishi Qiu <qiuxishi@huawei.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page_alloc.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/nouveau/dispnv50/head.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index c02cff1ed56e..475ca5b1a824 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6244,13 +6244,15 @@ static unsigned long __init zone_spanned_pages_in_node(int nid,
- 					unsigned long *zone_end_pfn,
- 					unsigned long *ignored)
- {
-+	unsigned long zone_low = arch_zone_lowest_possible_pfn[zone_type];
-+	unsigned long zone_high = arch_zone_highest_possible_pfn[zone_type];
- 	/* When hotadd a new node from cpu_up(), the node should be empty */
- 	if (!node_start_pfn && !node_end_pfn)
- 		return 0;
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/head.c b/drivers/gpu/drm/nouveau/dispnv50/head.c
+index 2e7a0c347ddb..8efb778a3b20 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/head.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/head.c
+@@ -306,7 +306,7 @@ nv50_head_atomic_check(struct drm_crtc *crtc, struct drm_crtc_state *state)
+ 			asyh->set.or = head->func->or != NULL;
+ 		}
  
- 	/* Get the start and end of the zone */
--	*zone_start_pfn = arch_zone_lowest_possible_pfn[zone_type];
--	*zone_end_pfn = arch_zone_highest_possible_pfn[zone_type];
-+	*zone_start_pfn = clamp(node_start_pfn, zone_low, zone_high);
-+	*zone_end_pfn = clamp(node_end_pfn, zone_low, zone_high);
- 	adjust_zone_range_for_zone_movable(nid, zone_type,
- 				node_start_pfn, node_end_pfn,
- 				zone_start_pfn, zone_end_pfn);
+-		if (asyh->state.mode_changed)
++		if (asyh->state.mode_changed || asyh->state.connectors_changed)
+ 			nv50_head_atomic_check_mode(head, asyh);
+ 
+ 		if (asyh->state.color_mgmt_changed ||
 -- 
 2.20.1
 
