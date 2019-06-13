@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAE3C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC43C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66EDC20866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F1FB20866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442058;
-	bh=MwDJ6yHKjBfG64uMwyxXIftvLVqGvedoBER/Rnl76Rc=;
+	s=default; t=1560442061;
+	bh=dGUA0Urkx9ruKsW9olwWAt3eXBBm6IJ5mxcw/w2C3hM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ht4r1QNK1ZsTSltWiZOA3bzqciMf5lMwMHyxDUtDfwsFyQC0SsmbP9qopI3tnCCuH
-	 ZUxjPBQZv7ZrVuRlqTXfF3UOnlrFFpKhPRxcopQsb/pNe9OdBh1wqOHvLDLE689+oA
-	 N/GwuY5O/eVCH1iGK01o1/pt5Qzp0mgfqrR1h4ac=
+	b=LEl2eCPPl67GrSG5UlmXXaJBiOhuT9BLsdUxaDl8MMMD70ckkB6GY6QoNmLRptVo6
+	 gjgBu2NuAbqqqyX6ggK5vFPqL+Z+NUsHUEFkTo9Wfd5AYWcgHbUCXxDS5C+wmJXrMn
+	 j93QHy4wXOIBd3XBJTDULkwnKq+7GBa7lZv+2PEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391187AbfFMQHS (ORCPT
+        id S2390723AbfFMQHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:07:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34340 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:07:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731306AbfFMIpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:45:39 -0400
+        id S1731307AbfFMIpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:45:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65C0A21743;
-        Thu, 13 Jun 2019 08:45:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2338121744;
+        Thu, 13 Jun 2019 08:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415538;
-        bh=MwDJ6yHKjBfG64uMwyxXIftvLVqGvedoBER/Rnl76Rc=;
+        s=default; t=1560415541;
+        bh=dGUA0Urkx9ruKsW9olwWAt3eXBBm6IJ5mxcw/w2C3hM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xpsuPSHTXKlLEpxxUIODav9r/1Kow4+NS6cFMGEuWZLj3wmR3Iqz+KF226Ecbr359
-         g/mLIKvQzEJtQYQztpdm/+jZV5+Q8tdMArwGD2X7IDxkp9vpEZ5aAaKiBxVLOzayM4
-         RSPO0LsJo+sT9ISMtxzWiiBvyzkJd04mzVCLsklY=
+        b=Kdj03s7CFf3ZQ+YwQcTsIZbv1eYLtuLKal+6q6JhKQ8G5rcN+Hk++SqMladvSNSlS
+         yCD08Vp0dIDZ6Y64QwFmUGG2F6eah1YLzFNdb0Gk5Qv9+6yCstsYPapxAyOnF4jOL9
+         K4dju59PioqEBME8o2LMNDa1TjYVPJo5SjQFPA3Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Alban Crequy <alban@kinvolk.io>,
+        =?UTF-8?q?Iago=20L=C3=B3pez=20Galeiras?= <iago@kinvolk.io>,
+        Krzesimir Nowak <krzesimir@kinvolk.io>,
+        Yonghong Song <yhs@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 036/155] drm/nouveau/kms/gv100-: fix spurious window immediate interlocks
-Date:   Thu, 13 Jun 2019 10:32:28 +0200
-Message-Id: <20190613075655.095326181@linuxfoundation.org>
+Subject: [PATCH 5.1 037/155] bpf: fix undefined behavior in narrow load handling
+Date:   Thu, 13 Jun 2019 10:32:29 +0200
+Message-Id: <20190613075655.152967066@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,60 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d2434e4d942c32cadcbdbcd32c58f35098f3b604 ]
+[ Upstream commit e2f7fc0ac6957cabff4cecf6c721979b571af208 ]
 
-Cursor position updates were accidentally causing us to attempt to interlock
-window with window immediate, and without a matching window immediate update,
-NVDisplay could hang forever in some circumstances.
+Commit 31fd85816dbe ("bpf: permits narrower load from bpf program
+context fields") made the verifier add AND instructions to clear the
+unwanted bits with a mask when doing a narrow load. The mask is
+computed with
 
-Fixes suspend/resume on (at least) Quadro RTX4000 (TU104).
+  (1 << size * 8) - 1
 
-Reported-by: Lyude Paul <lyude@redhat.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+where "size" is the size of the narrow load. When doing a 4 byte load
+of a an 8 byte field the verifier shifts the literal 1 by 32 places to
+the left. This results in an overflow of a signed integer, which is an
+undefined behavior. Typically, the computed mask was zero, so the
+result of the narrow load ended up being zero too.
+
+Cast the literal to long long to avoid overflows. Note that narrow
+load of the 4 byte fields does not have the undefined behavior,
+because the load size can only be either 1 or 2 bytes, so shifting 1
+by 8 or 16 places will not overflow it. And reading 4 bytes would not
+be a narrow load of a 4 bytes field.
+
+Fixes: 31fd85816dbe ("bpf: permits narrower load from bpf program context fields")
+Reviewed-by: Alban Crequy <alban@kinvolk.io>
+Reviewed-by: Iago López Galeiras <iago@kinvolk.io>
+Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
+Cc: Yonghong Song <yhs@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/dispnv50/disp.h     | 1 +
- drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c | 1 +
- drivers/gpu/drm/nouveau/dispnv50/wndw.c     | 2 +-
- 3 files changed, 3 insertions(+), 1 deletion(-)
+ kernel/bpf/verifier.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.h b/drivers/gpu/drm/nouveau/dispnv50/disp.h
-index 2216c58620c2..7c41b0599d1a 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.h
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.h
-@@ -41,6 +41,7 @@ struct nv50_disp_interlock {
- 		NV50_DISP_INTERLOCK__SIZE
- 	} type;
- 	u32 data;
-+	u32 wimm;
- };
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 09d5d972c9ff..950fac024fbb 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -7296,7 +7296,7 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
+ 									insn->dst_reg,
+ 									shift);
+ 				insn_buf[cnt++] = BPF_ALU64_IMM(BPF_AND, insn->dst_reg,
+-								(1 << size * 8) - 1);
++								(1ULL << size * 8) - 1);
+ 			}
+ 		}
  
- void corec37d_ntfy_init(struct nouveau_bo *, u32);
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c b/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c
-index 9103b8494279..f7dbd965e4e7 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c
-@@ -75,6 +75,7 @@ wimmc37b_init_(const struct nv50_wimm_func *func, struct nouveau_drm *drm,
- 		return ret;
- 	}
- 
-+	wndw->interlock.wimm = wndw->interlock.data;
- 	wndw->immd = func;
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/wndw.c b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
-index b95181027b31..471a39a077e5 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/wndw.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
-@@ -149,7 +149,7 @@ nv50_wndw_flush_set(struct nv50_wndw *wndw, u32 *interlock,
- 	if (asyw->set.point) {
- 		if (asyw->set.point = false, asyw->set.mask)
- 			interlock[wndw->interlock.type] |= wndw->interlock.data;
--		interlock[NV50_DISP_INTERLOCK_WIMM] |= wndw->interlock.data;
-+		interlock[NV50_DISP_INTERLOCK_WIMM] |= wndw->interlock.wimm;
- 
- 		wndw->immd->point(wndw, asyw);
- 		wndw->immd->update(wndw, interlock);
 -- 
 2.20.1
 
