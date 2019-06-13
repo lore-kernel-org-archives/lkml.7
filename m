@@ -2,142 +2,97 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29064C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD8CC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F14DD208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0F7220679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441955;
-	bh=994kqqEkIg9LEioQBOGu0Y0DgK2bJ62WMOEFKBdX/3g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bz5ikbjfdRmy4EMF1N4fOWUBXfJh0EDkq1ka+b2zXygNd3XCuhHPWkO13zvI1dDz+
-	 7UVzvmvYDlf+DJ8FPSqlJioFo2Wm9/0+j+Gh2XR++SUqP4WENfDJxj0vgJLvJ3v3CW
-	 xuJnACSVkgP69xc1WSw5tjy8YR0m6qyFTeZInnJQ=
+	s=default; t=1560441961;
+	bh=P1wkxTZGOpT5BCcrFmtqkjjbqGKiBUwFhsHjv9bjMJU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SJV+1P2Xlw9BAsGHh0f7sp/FSRUAmqDXaSOFYJt9vp25f4dzUpz/7XB03qV88/8Xj
+	 QFbIRJRs9HhpMcYwyKIgE1oH4VDmT/sEnh1TlKMDP/C2fESLqcnfVRbgn+ELZGrPAx
+	 SpSpohpbZsvkAo3gg5v7Encmvh+O+ilnhQfNJ6Yk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391099AbfFMQFx (ORCPT
+        id S2391268AbfFMQGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:05:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731331AbfFMIqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:46:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9C5720851;
-        Thu, 13 Jun 2019 08:46:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415578;
-        bh=994kqqEkIg9LEioQBOGu0Y0DgK2bJ62WMOEFKBdX/3g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G6j0uyuFJImqjFhR2EEo7e+BcF/CD7TVW1bkU2h0Zq+YW27juDAVazClRKC7InVIz
-         WFVnh4gM1oGTEtA0ZYRtjucL84XZweyNLtey3wm+yA3rxKeDP123mv6UcrSX+wgxqa
-         aw8w/9RZ8QSJGIuwLnxT8UF8wruFoEJMBi8uTFGo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 052/155] f2fs: fix to avoid deadloop in foreground GC
-Date:   Thu, 13 Jun 2019 10:32:44 +0200
-Message-Id: <20190613075656.043957194@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
-References: <20190613075652.691765927@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 13 Jun 2019 12:06:00 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45168 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391139AbfFMQF4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:05:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=k1BfP3/B157lk2y6ylx2EwJnrgPJxO1VUkk949sZ92E=; b=jkH3TRu+zstcpIvrdgfMif11J
+        zlZP1iF/JvPfRZohZ8QyAuP9FkTT6xsvv6hAwpQ7+0yLNjuWtgUNiAGsRaBIRF0sU3jKF1K1ddtOA
+        F6/ClT0UpEbyRRtrhCP1rQy+AuWXaYWmYnl0pmw7zHN4LBiwz3aPvk6clz9aoymb5ATw4=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hbSEY-0005Hv-Ow; Thu, 13 Jun 2019 16:05:50 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 2F1AD440046; Thu, 13 Jun 2019 17:05:50 +0100 (BST)
+Date:   Thu, 13 Jun 2019 17:05:50 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Nisha Kumari <nishakumari@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com,
+        david.brown@linaro.org, linux-kernel@vger.kernel.org,
+        kgunda@codeaurora.org, rnayak@codeaurora.org
+Subject: Re: [PATCH 1/4] dt-bindings: regulator: Add labibb regulator
+Message-ID: <20190613160550.GM5316@sirena.org.uk>
+References: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
+ <1560337252-27193-2-git-send-email-nishakumari@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="1rguoi8KZGYj2k4L"
+Content-Disposition: inline
+In-Reply-To: <1560337252-27193-2-git-send-email-nishakumari@codeaurora.org>
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 793ab1c8a792f8bccd7ae4c5be02bd275410b3af ]
 
-As Jungyeon reported in bugzilla:
+--1rguoi8KZGYj2k4L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203211
+On Wed, Jun 12, 2019 at 04:30:49PM +0530, Nisha Kumari wrote:
 
-- Overview
-When mounting the attached crafted image and making a new file, I got this error and the error messages keep repeating.
+> +- reg:				Specifies the SPMI address and size for this peripheral.
+> +- regulator-name:		A string used to describe the regulator.
 
-The image is intentionally fuzzed from a normal f2fs image for testing and I run with option CONFIG_F2FS_CHECK_FS on.
+Why specifically list regulator-name here?  This is just one of the many
+generic regulator properties that could be applied.
 
-- Reproduces
-mkdir test
-mount -t f2fs tmp.img test
-cd test
-touch t
+--1rguoi8KZGYj2k4L
+Content-Type: application/pgp-signature; name="signature.asc"
 
-- Messages
-[   58.820451] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.821485] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.822530] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.823571] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.824616] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.825640] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.826663] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.827698] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.828719] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.829759] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.830783] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.831828] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.832869] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.833888] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.834945] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.835996] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.837028] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.838051] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.839072] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.840100] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.841147] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.842186] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.843214] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.844267] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.845282] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.846305] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-[   58.847341] F2FS-fs (sdb): Inconsistent segment (1) type [1, 0] in SSA and SIT
-... (repeating)
+-----BEGIN PGP SIGNATURE-----
 
-During GC, if segment type stored in SSA and SIT is inconsistent, we just
-skip migrating current segment directly, since we need to know the exact
-type to decide the migration function we use.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0CdF0ACgkQJNaLcl1U
+h9Chrgf/X5b1ow0UwfKQUAoQ7UmNNaW+VQnSWNn1sjJedj/BegsNd1myeOJCje7k
+2ED26OFMqxwVb41tReWNbjdPpToF8AOicHj1O71JXgTogMs2nbiE3n9EMlpIolMZ
+Y2wJMwYOSjorIALXWPqN3Af+YS2tL4Qsn736zF+0N8VukEReuCDZCC9MsNL28MkK
+UV45QsVBB1ZOgEGXQUuS9a6/f+XM3PjFDXiOMLdIV1INBh1feoxZPLQs/pKXD58A
+EVbSe9/AZWIZufMbNDbSxm8lRleSjlhueHPz0eD5zS2Zz1xEHkvNgOGDUsuOWclo
+jGPIFi4yXjnaFzot+CMTsJW8I63e9g==
+=oJNP
+-----END PGP SIGNATURE-----
 
-So in foreground GC, we will easily run into a infinite loop as we may
-select the same victim segment which has inconsistent type due to greedy
-policy. In order to end up this, we choose to shutdown filesystem. For
-backgrond GC, we need to do that as well, so that we can avoid latter
-potential infinite looped foreground GC.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/f2fs/gc.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index ab764bd106de..a66a8752e5f6 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -1175,6 +1175,7 @@ static int do_garbage_collect(struct f2fs_sb_info *sbi,
- 				"type [%d, %d] in SSA and SIT",
- 				segno, type, GET_SUM_TYPE((&sum->footer)));
- 			set_sbi_flag(sbi, SBI_NEED_FSCK);
-+			f2fs_stop_checkpoint(sbi, false);
- 			goto skip;
- 		}
- 
--- 
-2.20.1
-
-
-
+--1rguoi8KZGYj2k4L--
