@@ -2,95 +2,226 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126DEC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19408C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5714215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5409215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbfFMQl6 (ORCPT
+        id S2392782AbfFMQlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:41:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:46448 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731742AbfFMQlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:41:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23D96367;
-        Thu, 13 Jun 2019 09:41:53 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B7EF3F694;
-        Thu, 13 Jun 2019 09:41:49 -0700 (PDT)
-Subject: Re: [PATCH 05/10] iommu/dma-iommu: convert to SPDX license tags
-To:     Yangtao Li <tiny.windzz@gmail.com>, joro@8bytes.org,
-        m.szyprowski@samsung.com, kgene@kernel.org, krzk@kernel.org,
-        will.deacon@arm.com, agross@kernel.org, david.brown@linaro.org,
-        robdclark@gmail.com, heiko@sntech.de, thierry.reding@gmail.com,
-        jonathanh@nvidia.com
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org
-References: <20190613162703.986-1-tiny.windzz@gmail.com>
- <20190613162703.986-5-tiny.windzz@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <867e7308-7ef7-b2a3-e088-7e9419878b76@arm.com>
-Date:   Thu, 13 Jun 2019 17:41:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 13 Jun 2019 12:41:47 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43529 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730532AbfFMGtg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 02:49:36 -0400
+Received: by mail-pl1-f194.google.com with SMTP id cl9so7673333plb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 23:49:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=fnertesbJ1ky5VNOHvy8V97q4rQRGGj1Ze6Uf+AOdXE=;
+        b=W8Lo0C7Gs+GD227+hKxWjrrCyoxSdFFMAAOKPgdCWcBDhAiCDd4aG8o6rOGngm/Z68
+         gm30tHgDkKhPJRJhy8ZEduWD5DpzmXD7NHl7imrqdkI1DjkGvFGNfNLG2r6sDCf4BiJM
+         AbzHEVeQwOvYrE4OdhbgR4ZLGd9T03kHNCS8MC88cCMUlTH7J4qLWDijGfQbf/OTnrMY
+         Sw5se10y+5cnfl5AyM52X2ANycLQ97ce7VHQ8Sv/Hu2WdA5ohoaMk+WNSmatKsOaqvYo
+         cJufpumy1ZVA0f8TyEVorylDJ4Fi8r8oIvXr2t06/rKhhRStuQDiy/SNUE0I+TSG1aRz
+         3Tcw==
+X-Gm-Message-State: APjAAAWxvnSpTb/Kx2ivCrDMA1Gq9DS5qrpi6LmFp7cK/906BstDeFgm
+        LcXSDqKX+co4zF1tHOyaa9k=
+X-Google-Smtp-Source: APXvYqyQIIzOjoK84w6LVe/4Kg2T/YnSP9C0HmlP/V6eto2AU/zC+lQAkgjrXqsiopngDqUen7UlYQ==
+X-Received: by 2002:a17:902:22e:: with SMTP id 43mr82630968plc.272.1560408575791;
+        Wed, 12 Jun 2019 23:49:35 -0700 (PDT)
+Received: from htb-2n-eng-dhcp405.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id i3sm1559973pfa.175.2019.06.12.23.49.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 23:49:35 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>
+Subject: [PATCH 8/9] x86/tlb: Privatize cpu_tlbstate
+Date:   Wed, 12 Jun 2019 23:48:12 -0700
+Message-Id: <20190613064813.8102-9-namit@vmware.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190613064813.8102-1-namit@vmware.com>
+References: <20190613064813.8102-1-namit@vmware.com>
 MIME-Version: 1.0
-In-Reply-To: <20190613162703.986-5-tiny.windzz@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/06/2019 17:26, Yangtao Li wrote:
-> Updates license to use SPDX-License-Identifier.
+cpu_tlbstate is mostly private and only the variable is_lazy is shared.
+This causes some false-sharing when TLB flushes are performed.
 
-A more complete version of this (which also covers the header) is 
-already queued in -next.
+Break cpu_tlbstate intro cpu_tlbstate and cpu_tlbstate_shared, and mark
+each one accordingly.
 
-Robin.
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+---
+ arch/x86/include/asm/tlbflush.h | 40 ++++++++++++++++++---------------
+ arch/x86/mm/init.c              |  2 +-
+ arch/x86/mm/tlb.c               | 15 ++++++++-----
+ 3 files changed, 32 insertions(+), 25 deletions(-)
 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->   drivers/iommu/dma-iommu.c | 13 +------------
->   1 file changed, 1 insertion(+), 12 deletions(-)
-> 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index 129c4badf9ae..2d76bac43b82 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -1,3 +1,4 @@
-> +// SPDX-License-Identifier: GPL-2.0
->   /*
->    * A fairly generic DMA-API to IOMMU-API glue layer.
->    *
-> @@ -5,18 +6,6 @@
->    *
->    * based in part on arch/arm/mm/dma-mapping.c:
->    * Copyright (C) 2000-2004 Russell King
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License version 2 as
-> - * published by the Free Software Foundation.
-> - *
-> - * This program is distributed in the hope that it will be useful,
-> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> - * GNU General Public License for more details.
-> - *
-> - * You should have received a copy of the GNU General Public License
-> - * along with this program.  If not, see <http://www.gnu.org/licenses/>.
->    */
->   
->   #include <linux/acpi_iort.h>
-> 
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index 79272938cf79..a1fea36d5292 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -178,23 +178,6 @@ struct tlb_state {
+ 	u16 loaded_mm_asid;
+ 	u16 next_asid;
+ 
+-	/*
+-	 * We can be in one of several states:
+-	 *
+-	 *  - Actively using an mm.  Our CPU's bit will be set in
+-	 *    mm_cpumask(loaded_mm) and is_lazy == false;
+-	 *
+-	 *  - Not using a real mm.  loaded_mm == &init_mm.  Our CPU's bit
+-	 *    will not be set in mm_cpumask(&init_mm) and is_lazy == false.
+-	 *
+-	 *  - Lazily using a real mm.  loaded_mm != &init_mm, our bit
+-	 *    is set in mm_cpumask(loaded_mm), but is_lazy == true.
+-	 *    We're heuristically guessing that the CR3 load we
+-	 *    skipped more than makes up for the overhead added by
+-	 *    lazy mode.
+-	 */
+-	bool is_lazy;
+-
+ 	/*
+ 	 * If set we changed the page tables in such a way that we
+ 	 * needed an invalidation of all contexts (aka. PCIDs / ASIDs).
+@@ -240,7 +223,27 @@ struct tlb_state {
+ 	 */
+ 	struct tlb_context ctxs[TLB_NR_DYN_ASIDS];
+ };
+-DECLARE_PER_CPU_SHARED_ALIGNED(struct tlb_state, cpu_tlbstate);
++DECLARE_PER_CPU_ALIGNED(struct tlb_state, cpu_tlbstate);
++
++struct tlb_state_shared {
++	/*
++	 * We can be in one of several states:
++	 *
++	 *  - Actively using an mm.  Our CPU's bit will be set in
++	 *    mm_cpumask(loaded_mm) and is_lazy == false;
++	 *
++	 *  - Not using a real mm.  loaded_mm == &init_mm.  Our CPU's bit
++	 *    will not be set in mm_cpumask(&init_mm) and is_lazy == false.
++	 *
++	 *  - Lazily using a real mm.  loaded_mm != &init_mm, our bit
++	 *    is set in mm_cpumask(loaded_mm), but is_lazy == true.
++	 *    We're heuristically guessing that the CR3 load we
++	 *    skipped more than makes up for the overhead added by
++	 *    lazy mode.
++	 */
++	bool is_lazy;
++};
++DECLARE_PER_CPU_SHARED_ALIGNED(struct tlb_state_shared, cpu_tlbstate_shared);
+ 
+ /*
+  * Blindly accessing user memory from NMI context can be dangerous
+@@ -439,6 +442,7 @@ static inline void __native_flush_tlb_one_user(unsigned long addr)
+ {
+ 	u32 loaded_mm_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
+ 
++	//invpcid_flush_one(kern_pcid(loaded_mm_asid), addr);
+ 	asm volatile("invlpg (%0)" ::"r" (addr) : "memory");
+ 
+ 	if (!static_cpu_has(X86_FEATURE_PTI))
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index fd10d91a6115..34027f36a944 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -951,7 +951,7 @@ void __init zone_sizes_init(void)
+ 	free_area_init_nodes(max_zone_pfns);
+ }
+ 
+-__visible DEFINE_PER_CPU_SHARED_ALIGNED(struct tlb_state, cpu_tlbstate) = {
++__visible DEFINE_PER_CPU_ALIGNED(struct tlb_state, cpu_tlbstate) = {
+ 	.loaded_mm = &init_mm,
+ 	.next_asid = 1,
+ 	.cr4 = ~0UL,	/* fail hard if we screw up cr4 shadow initialization */
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index ceb03b8cad32..ffa3c94abe6a 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -145,7 +145,7 @@ void leave_mm(int cpu)
+ 		return;
+ 
+ 	/* Warn if we're not lazy. */
+-	WARN_ON(!this_cpu_read(cpu_tlbstate.is_lazy));
++	WARN_ON(!this_cpu_read(cpu_tlbstate_shared.is_lazy));
+ 
+ 	switch_mm(NULL, &init_mm, NULL);
+ }
+@@ -277,7 +277,7 @@ void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
+ {
+ 	struct mm_struct *real_prev = this_cpu_read(cpu_tlbstate.loaded_mm);
+ 	u16 prev_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
+-	bool was_lazy = this_cpu_read(cpu_tlbstate.is_lazy);
++	bool was_lazy = this_cpu_read(cpu_tlbstate_shared.is_lazy);
+ 	unsigned cpu = smp_processor_id();
+ 	u64 next_tlb_gen;
+ 	bool need_flush;
+@@ -322,7 +322,7 @@ void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
+ 		__flush_tlb_all();
+ 	}
+ #endif
+-	this_cpu_write(cpu_tlbstate.is_lazy, false);
++	this_cpu_write(cpu_tlbstate_shared.is_lazy, false);
+ 
+ 	/*
+ 	 * The membarrier system call requires a full memory barrier and
+@@ -463,7 +463,7 @@ void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+ 	if (this_cpu_read(cpu_tlbstate.loaded_mm) == &init_mm)
+ 		return;
+ 
+-	this_cpu_write(cpu_tlbstate.is_lazy, true);
++	this_cpu_write(cpu_tlbstate_shared.is_lazy, true);
+ }
+ 
+ /*
+@@ -544,7 +544,7 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
+ 	VM_WARN_ON(this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].ctx_id) !=
+ 		   loaded_mm->context.ctx_id);
+ 
+-	if (this_cpu_read(cpu_tlbstate.is_lazy)) {
++	if (this_cpu_read(cpu_tlbstate_shared.is_lazy)) {
+ 		/*
+ 		 * We're in lazy mode.  We need to at least flush our
+ 		 * paging-structure cache to avoid speculatively reading
+@@ -660,11 +660,14 @@ static void flush_tlb_func_remote(void *info)
+ 
+ static inline bool tlb_is_not_lazy(int cpu)
+ {
+-	return !per_cpu(cpu_tlbstate.is_lazy, cpu);
++	return !per_cpu(cpu_tlbstate_shared.is_lazy, cpu);
+ }
+ 
+ static DEFINE_PER_CPU(cpumask_t, flush_tlb_mask);
+ 
++DEFINE_PER_CPU_ALIGNED(struct tlb_state_shared, cpu_tlbstate_shared);
++EXPORT_PER_CPU_SYMBOL(cpu_tlbstate_shared);
++
+ void native_flush_tlb_multi(const struct cpumask *cpumask,
+ 			    const struct flush_tlb_info *info)
+ {
+-- 
+2.20.1
+
