@@ -5,52 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5C9C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FABC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B76442147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC9D120644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442804;
-	bh=ARCRTzY0suUhboJLtjKbJugIFTrD91XgKQg1R1GXuBU=;
+	s=default; t=1560442807;
+	bh=xHK2yznNvP7abV7OQvqrwN/hV3EsN1/XtGCm2HbYo8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BXoT6+uT62YZbCcB/dbBGbJMtfgYMJwWdiDuk6zNiXcYDnnEFuMX/FQRJkxPQjkJe
-	 3IMkfia55QgpNqi7WAcDH6oAn5w2XTdJuL1T1Nr953egJOsjnufa3qoNM5u/GlqpfA
-	 bd90853SrYT22scw9MBhukdXrZxwq2no6CzG6plg=
+	b=HOdcHnA009UaaZT2c27T2VUj81P19Z9r+2Zbu3NiH4EK2kfJ53MAnF/ecDGz9ApxV
+	 ySarR4jVYiXbY+Z5AGEo8H8ZYu0Iyc1p9/oVZNcIC5XJwuKeLXfpoFz0FHONanfG6S
+	 KAjqNUb8uUVYIKCLJ2S6R6zNNYzK/JB/16mjPLzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392115AbfFMQUD (ORCPT
+        id S2403756AbfFMQUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:20:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57042 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:20:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731083AbfFMIjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:39:31 -0400
+        id S1731086AbfFMIje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:39:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89D7520851;
-        Thu, 13 Jun 2019 08:39:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94BF321479;
+        Thu, 13 Jun 2019 08:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415171;
-        bh=ARCRTzY0suUhboJLtjKbJugIFTrD91XgKQg1R1GXuBU=;
+        s=default; t=1560415174;
+        bh=xHK2yznNvP7abV7OQvqrwN/hV3EsN1/XtGCm2HbYo8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nmYw9qPO19sSqPZgdLMeuivUL9ZgtAfb8SvaSZKTfUqiP+WBJrxL/tLgiKeI9MlZB
-         flc+08RbwtlWauZr0FS5X7phIKzBsKrT2xbQQ9j++z+DEVFS2wBANkYiWXgOnDn65r
-         i1d332IXidphruD30UHd3s2ZJ69yl4+Jd3+0JQ78=
+        b=lkutTp2URsBZM1H1R1YxN7hr6dCGBQucHjHK1gt68BaY+M1PzI1kcuBpVn5OnRnsg
+         nRg590R7zeoeCdzy/Czc0+HniYXH1wwHzosuGH2Jm9xS0qgVuWoCj4Mzq3mBsh0ctL
+         fMD1EZX55ciriPehBfqyjuBLDMqxC12AqeIpkXSE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alban Crequy <alban@kinvolk.io>,
-        =?UTF-8?q?Iago=20L=C3=B3pez=20Galeiras?= <iago@kinvolk.io>,
-        Krzesimir Nowak <krzesimir@kinvolk.io>,
-        Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 028/118] bpf: fix undefined behavior in narrow load handling
-Date:   Thu, 13 Jun 2019 10:32:46 +0200
-Message-Id: <20190613075645.165720767@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Borislav Petkov <bp@suse.de>,
+        Johannes Thumshirn <jth@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>, linuxppc-dev@ozlabs.org,
+        morbidrsa@gmail.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 029/118] EDAC/mpc85xx: Prevent building as a module
+Date:   Thu, 13 Jun 2019 10:32:47 +0200
+Message-Id: <20190613075645.207725772@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -63,51 +64,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e2f7fc0ac6957cabff4cecf6c721979b571af208 ]
+[ Upstream commit 2b8358a951b1e2a534a54924cd8245e58a1c5fb8 ]
 
-Commit 31fd85816dbe ("bpf: permits narrower load from bpf program
-context fields") made the verifier add AND instructions to clear the
-unwanted bits with a mask when doing a narrow load. The mask is
-computed with
+The mpc85xx EDAC driver can be configured as a module but then fails to
+build because it uses two unexported symbols:
 
-  (1 << size * 8) - 1
+  ERROR: ".pci_find_hose_for_OF_device" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
+  ERROR: ".early_find_capability" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
 
-where "size" is the size of the narrow load. When doing a 4 byte load
-of a an 8 byte field the verifier shifts the literal 1 by 32 places to
-the left. This results in an overflow of a signed integer, which is an
-undefined behavior. Typically, the computed mask was zero, so the
-result of the narrow load ended up being zero too.
+We don't want to export those symbols just for this driver, so make the
+driver only configurable as a built-in.
 
-Cast the literal to long long to avoid overflows. Note that narrow
-load of the 4 byte fields does not have the undefined behavior,
-because the load size can only be either 1 or 2 bytes, so shifting 1
-by 8 or 16 places will not overflow it. And reading 4 bytes would not
-be a narrow load of a 4 bytes field.
+This seems to have been broken since at least
 
-Fixes: 31fd85816dbe ("bpf: permits narrower load from bpf program context fields")
-Reviewed-by: Alban Crequy <alban@kinvolk.io>
-Reviewed-by: Iago López Galeiras <iago@kinvolk.io>
-Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
-Cc: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+  c92132f59806 ("edac/85xx: Add PCIe error interrupt edac support")
+
+(Nov 2013).
+
+ [ bp: make it depend on EDAC=y so that the EDAC core doesn't get built
+   as a module. ]
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Johannes Thumshirn <jth@kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: linuxppc-dev@ozlabs.org
+Cc: morbidrsa@gmail.com
+Link: https://lkml.kernel.org/r/20190502141941.12927-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/verifier.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/edac/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index acc2305ad895..d3580a68dbef 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -5743,7 +5743,7 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
- 									insn->dst_reg,
- 									shift);
- 				insn_buf[cnt++] = BPF_ALU64_IMM(BPF_AND, insn->dst_reg,
--								(1 << size * 8) - 1);
-+								(1ULL << size * 8) - 1);
- 			}
- 		}
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 57304b2e989f..b00cc03ad6b6 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -250,8 +250,8 @@ config EDAC_PND2
+ 	  micro-server but may appear on others in the future.
  
+ config EDAC_MPC85XX
+-	tristate "Freescale MPC83xx / MPC85xx"
+-	depends on FSL_SOC
++	bool "Freescale MPC83xx / MPC85xx"
++	depends on FSL_SOC && EDAC=y
+ 	help
+ 	  Support for error detection and correction on the Freescale
+ 	  MPC8349, MPC8560, MPC8540, MPC8548, T4240
 -- 
 2.20.1
 
