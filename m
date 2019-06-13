@@ -2,104 +2,104 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99017C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 210D2C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E49920B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=globallogic.com header.i=@globallogic.com header.b="EhoeFLRH"
+	by mail.kernel.org (Postfix) with ESMTP id E446520B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560442941;
+	bh=HbA5eCN6xurGIQ6BGkFFfMgHr7GRTlSAQnHbchCGmoY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rld8rkx80+M/ekYIYwc6bFxmhA3W97DZ8Q9JpUQhjQgJNRVrvPtSZef1+AGdCvmxK
+	 uGWLqgYsl50t7TAG3PsI7hH9WlAywBP5GHL6Pp8kad3aPGcAljz994y75RGdy5VMnC
+	 rwXb4OoV53zuZHNZrwwSViPiZYQLF2f39pOVVlF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392074AbfFMQWL (ORCPT
+        id S1731798AbfFMQWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:22:11 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34275 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731137AbfFMQV4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:21:56 -0400
-Received: by mail-ed1-f67.google.com with SMTP id s49so2264791edb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 09:21:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=globallogic.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mz6GIPKtlkGerT/pt6ZWWFPZs8Zmg5qBehaRfeC+EUo=;
-        b=EhoeFLRHnBhKbWvy9HbsUZYnmSqkMjgbw/4JBVzBmKwtC2BYciZon/sGwYlwxD2ArB
-         820lhaGvsyDxIQBlup+5VKFfAjqc0UgL0AndVHVEjCUhxyB6MYwWpt9rVeipesbYJm9O
-         9LctzS/TEIahM6LL9VOCpzIV8wbDeIGYc6LpG/4Ag9cMHwzd7NIdHtF03n3uFJ5oSCsa
-         3G8seNu4kPRGCTWh5OLMltNpswqlywnH6ctZu426ea1q3OKYycClQ4ZPMg8bCkDfv5pf
-         qrUMZwVvDtNADcRslOs9acphTWeWGkYvfzJ9d44UO3i9kqBf746dXPNN4G9zYO82urgl
-         cWsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mz6GIPKtlkGerT/pt6ZWWFPZs8Zmg5qBehaRfeC+EUo=;
-        b=lMcdXlQcu644DiusZQ19IIczNb+Ys4QgQBkHOeMOiXoM+gUbV4NVzRF0Xp9+EbUpNM
-         EbcTKjrE7LFN8PjT3QR4nsxLvoP3x0ESDDs6blmnihrNu5y6bosKpYD0+yr+sp2JyncP
-         tqvWB87PAuO/F6hV9FZQPOhgQG2EUaFTeUBX7WZ1LZjK+Fqkh7IdFyJkceR+5gB4lmom
-         o6Vs1ClxGxmL7kI/azwfRKcdN4gbMnCntrejKtmJmubqCANtvmEnd3V7y2gIxhryhAgh
-         xW8Il3tuPTP2nBLo85/LyeaL5Gpber+2vCGWTYwkWMW8jQ887Bev+ORUgINnlaMdeCJx
-         +Uzg==
-X-Gm-Message-State: APjAAAXnfDdLKxp8bRK1XSqEz2A5Cf4KNi3u8ye0z90y0B1FQziSsDhO
-        qW9sYbQJaB8lhcYKFwy5CZpImf0MhfuZuSK1Y/auRf69HUQ=
-X-Google-Smtp-Source: APXvYqxuWVuyBpuxXeXaLydjVhfXhrVUHymBl4vNZ13Z3Lq3A6ZwUrJo9f7zawIdyv/dg+ZkFHQ0nrTO50sHeOAATfU=
-X-Received: by 2002:a17:906:3948:: with SMTP id g8mr45653628eje.168.1560442914546;
- Thu, 13 Jun 2019 09:21:54 -0700 (PDT)
+        Thu, 13 Jun 2019 12:22:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731048AbfFMIi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:38:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A3FC20851;
+        Thu, 13 Jun 2019 08:38:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560415105;
+        bh=HbA5eCN6xurGIQ6BGkFFfMgHr7GRTlSAQnHbchCGmoY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qut/aBVCB+5QUB0it8ZxTCkflOaOQ1MEXKUknL6BoerTuHRNKu9l9P6pw0/2WOS5s
+         1Nm4SHA1KSJ0EUUYdgyktLU8zihKaga3N2LDi/eefXj0VYLfniHtxG9EG9W2Tg1ni6
+         bUVXqG6LOTjasKBQXbsa6IZaSdET3fXPRwkwiH9w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christoph=20Vogtl=C3=A4nder?= 
+        <c.vogtlaender@sigma-surface-science.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 72/81] pwm: tiehrpwm: Update shadow register for disabling PWMs
+Date:   Thu, 13 Jun 2019 10:33:55 +0200
+Message-Id: <20190613075654.232458019@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
+References: <20190613075649.074682929@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190612163144.18486-1-roman.stratiienko@globallogic.com>
- <20190612163144.18486-2-roman.stratiienko@globallogic.com>
- <20190613135241.aghcrrz7rg2au3bw@MacBook-Pro-91.local> <CAODwZ7v=RSsmVj5GjcvGn2dn+ejLRBHZ79x-+S9DrX4GoXuVaQ@mail.gmail.com>
- <20190613145535.tdesq3y2xy6ycpw7@MacBook-Pro-91.local>
-In-Reply-To: <20190613145535.tdesq3y2xy6ycpw7@MacBook-Pro-91.local>
-From:   Roman Stratiienko <roman.stratiienko@globallogic.com>
-Date:   Thu, 13 Jun 2019 19:21:43 +0300
-Message-ID: <CAODwZ7so4cVVJmPHXGGOxKRO_0L2NjZJac73wfaHPV7ZN6ce1g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] nbd: add support for nbd as root device
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     linux-kernel@vger.kernel.org, nbd@other.debian.org,
-        Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>,
-        linux-block@vger.kernel.org, axboe@kernel.dkn.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I don't doubt you have a good reason to want it, I'm just not clear on why an
-> initramfs isn't an option?  You have this special kernel with your special
-> option, and you manage to get these things to boot your special kernel right?
-> So why is a initramfs with a tiny nbd-client binary in there not an option?
->
-> Also I mean that there are a bunch of different nbd servers out there.  We have
-> our own here at Facebook, qemu has one, IIRC there's a ceph one.  They all have
-> their own connection protocols.  The beauty of NBD is that it doesn't have to
-> know about that part, it just does the block device part, and I'd really rather
-> leave it that way.  Thanks,
->
-> Josef
+[ Upstream commit b00ef53053191d3025c15e8041699f8c9d132daf ]
+
+It must be made sure that immediate mode is not already set, when
+modifying shadow register value in ehrpwm_pwm_disable(). Otherwise
+modifications to the action-qualifier continuous S/W force
+register(AQSFRC) will be done in the active register.
+This may happen when both channels are being disabled. In this case,
+only the first channel state will be recorded as disabled in the shadow
+register. Later, when enabling the first channel again, the second
+channel would be enabled as well. Setting RLDCSF to zero, first, ensures
+that the shadow register is updated as desired.
+
+Fixes: 38dabd91ff0b ("pwm: tiehrpwm: Fix disabling of output of PWMs")
+Signed-off-by: Christoph Vogtländer <c.vogtlaender@sigma-surface-science.com>
+[vigneshr@ti.com: Improve commit message]
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pwm/pwm-tiehrpwm.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+index f7b8a86fa5c5..ad4a40c0f27c 100644
+--- a/drivers/pwm/pwm-tiehrpwm.c
++++ b/drivers/pwm/pwm-tiehrpwm.c
+@@ -382,6 +382,8 @@ static void ehrpwm_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	}
+ 
+ 	/* Update shadow register first before modifying active register */
++	ehrpwm_modify(pc->mmio_base, AQSFRC, AQSFRC_RLDCSF_MASK,
++		      AQSFRC_RLDCSF_ZRO);
+ 	ehrpwm_modify(pc->mmio_base, AQCSFRC, aqcsfrc_mask, aqcsfrc_val);
+ 	/*
+ 	 * Changes to immediate action on Action Qualifier. This puts
+-- 
+2.20.1
 
 
-The only reason I prefer embed client into the kernel is to save
-valuable engineering time creating and supporting custom initramfs,
-that is not so easy especially on Android-based systems.
 
-Taking into account that if using NBD and creating custom initramfs
-required only for automated testing, many companies would choose
-manual deployment instead, that is bad for the human progress.
-
-I believe that all users of non-standard NBD handshake protocols could
-continue to use custom nbd-clients.
-
-Either you accept this patch or not I would like to pass review from
-maintainers and other persons that was involved in NBD development,
-thus making a step closer to get this mainlined in some future.
-
---
-Regards,
-Roman
