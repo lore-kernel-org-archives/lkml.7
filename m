@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334CDC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD005C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 035E8208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978C5208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441377;
-	bh=egVTssJezJuO5TTf/IN4qmOTXmAMMqK8Ii9LVI6I2sU=;
+	s=default; t=1560441380;
+	bh=T2SUF5nERlkCdOrURqPAw3KiYCcClNT45NcbR3pBk6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lb/x7jv3yYsww7RkbvHRtNZ9Hy8XFo7UdEsFDxegosFVuI8yUEIAqU+s9ZWCRJdAV
-	 2aehIEaBFxtf2cMDeSPfN4n0zsh1sM1upbGkT11PpvUyTXtZWeNvJALZMOfCBmiYQp
-	 Af3qVO4o8Q4lWxMjsbrKRfmcVW9PssA4B/qLYYXc=
+	b=rLmlV2xCUc+8+7nXALlwABu/V/Og4gZKfj2EU0SHBSPJyVSs1DUcb4y5/jldOcOyP
+	 aY8ch53yrZM6SIXhi1L5MYMRasy7J2XCcmXor4tEatiKDXZz3QSVEeADz+As0WkvJH
+	 wQZQc+4rJErkeWvjKMODHNAtpshA+0ekEarSrbN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390381AbfFMP4P (ORCPT
+        id S2390357AbfFMP4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:56:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38744 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:56:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731523AbfFMIvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:51:15 -0400
+        id S1731525AbfFMIvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:51:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2250120851;
-        Thu, 13 Jun 2019 08:51:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BA8421473;
+        Thu, 13 Jun 2019 08:51:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415874;
-        bh=egVTssJezJuO5TTf/IN4qmOTXmAMMqK8Ii9LVI6I2sU=;
+        s=default; t=1560415871;
+        bh=T2SUF5nERlkCdOrURqPAw3KiYCcClNT45NcbR3pBk6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JwSiMmYZU0yT7dPqo1RMEWuysB3pn0qqn/Eenre/Rc0xDudMUYsqP8m5+SHjvsh+i
-         e4TKa/JJvETu0J1WNnr4m3J5VVdmy6GWj/P0YljKovx7JqITpYnHx/c/MuhqB7eRUM
-         7eQ8SZFCOXathOk4qiG8D7oHxOiDmDzTI4Gw+qMQ=
+        b=mWSbm6cCJwur7h/IXipqJvpDL42ypNTnykE7B9A60b5tpCfXn+DK8HvJnt6L6rlnc
+         UlWito45sP9lFzve5G1d7bwYGG2kczpqb7k28cOB+/bh4wIblzmSPDUgRb/l8hMCHB
+         tX/y3y7QhyAv9rjxHBh1g7Mqz4B6/LvwC5xA2WOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>,
-        Rob Herring <robh@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Giridhar Malavali <gmalavali@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 128/155] Input: goodix - add GT5663 CTP support
-Date:   Thu, 13 Jun 2019 10:34:00 +0200
-Message-Id: <20190613075659.968440813@linuxfoundation.org>
+Subject: [PATCH 5.1 127/155] scsi: qla2xxx: Reset the FCF_ASYNC_{SENT|ACTIVE} flags
+Date:   Thu, 13 Jun 2019 10:33:59 +0200
+Message-Id: <20190613075659.923182240@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -61,59 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a5f50c501321249d67611353dde6d68d48c5b959 ]
+[ Upstream commit 0257eda08e806b82ee1fc90ef73583b6f022845c ]
 
-GT5663 is capacitive touch controller with customized smart
-wakeup gestures.
+Driver maintains state machine for processing and completing switch
+commands. This patch resets FCF_ASYNC_{SENT|ACTIVE} flag to indicate if the
+previous command is active or sent, in order for next GPSC command to
+advance the state machine.
 
-Add support for it by adding compatible and supported chip data.
+[mkp: commit desc typo]
 
-The chip data on GT5663 is similar to GT1151, like
-- config data register has 0x8050 address
-- config data register max len is 240
-- config data checksum has 16-bit
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Giridhar Malavali <gmalavali@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
- drivers/input/touchscreen/goodix.c                             | 2 ++
- 2 files changed, 3 insertions(+)
+ drivers/scsi/qla2xxx/qla_gs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-index 8cf0b4d38a7e..109cc0cebaa2 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-@@ -3,6 +3,7 @@ Device tree bindings for Goodix GT9xx series touchscreen controller
- Required properties:
+diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
+index c6fdad12428e..2e377814d7c1 100644
+--- a/drivers/scsi/qla2xxx/qla_gs.c
++++ b/drivers/scsi/qla2xxx/qla_gs.c
+@@ -3031,6 +3031,8 @@ static void qla24xx_async_gpsc_sp_done(void *s, int res)
+ 	    "Async done-%s res %x, WWPN %8phC \n",
+ 	    sp->name, res, fcport->port_name);
  
-  - compatible		: Should be "goodix,gt1151"
-+				 or "goodix,gt5663"
- 				 or "goodix,gt5688"
- 				 or "goodix,gt911"
- 				 or "goodix,gt9110"
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index f57d82220a88..dd029e689903 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -216,6 +216,7 @@ static const struct goodix_chip_data *goodix_get_chip_data(u16 id)
- {
- 	switch (id) {
- 	case 1151:
-+	case 5663:
- 	case 5688:
- 		return &gt1x_chip_data;
++	fcport->flags &= ~(FCF_ASYNC_SENT | FCF_ASYNC_ACTIVE);
++
+ 	if (res == QLA_FUNCTION_TIMEOUT)
+ 		return;
  
-@@ -945,6 +946,7 @@ MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
- #ifdef CONFIG_OF
- static const struct of_device_id goodix_of_match[] = {
- 	{ .compatible = "goodix,gt1151" },
-+	{ .compatible = "goodix,gt5663" },
- 	{ .compatible = "goodix,gt5688" },
- 	{ .compatible = "goodix,gt911" },
- 	{ .compatible = "goodix,gt9110" },
+@@ -4370,6 +4372,7 @@ int qla24xx_async_gnnid(scsi_qla_host_t *vha, fc_port_t *fcport)
+ 
+ done_free_sp:
+ 	sp->free(sp);
++	fcport->flags &= ~FCF_ASYNC_SENT;
+ done:
+ 	return rval;
+ }
 -- 
 2.20.1
 
