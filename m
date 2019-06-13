@@ -2,59 +2,58 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A29C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAD9C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1002082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C602082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:35:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qQC72Jqy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YkW4wOsm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732048AbfFMPex (ORCPT
+        id S1731105AbfFMPfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:34:53 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33668 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728019AbfFMKbs (ORCPT
+        Thu, 13 Jun 2019 11:35:05 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39245 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727944AbfFMKbX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 06:31:48 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x15so11603481pfq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 03:31:48 -0700 (PDT)
+        Thu, 13 Jun 2019 06:31:23 -0400
+Received: by mail-pl1-f196.google.com with SMTP id b7so2917510pls.6
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 03:31:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=X1ybKF8wUkHdnaXcEVMx2e6e4CdYBWVAzo6oWbimFYQ=;
-        b=qQC72JqyNS5M5jXNAY8R3qU0KXWZM5lNzLTY1x45KapGIu5nY1kzXvtp8ytpYYAhNe
-         VgEDc2Xb0TO9QjIR1scrGcXdU1EZBuzhgCjzfe7X1+jpmGG6K1x+Pf/9uqbgffhKrmNG
-         wAPT1c1JfaM31idoL06nNamvN48hNPdql4a3HXfHAOdWsQOsfRkD3H3nKJpZB6TPX0ee
-         lVLcpBU+49fTw+3zzRIdis+1cNwUKR2A2T/WWhA/MY121JqRxbEReGNv2toR6GuMHHgy
-         yiSnAlAD6mp1f8mPJKrUvuiGbO6NmXN56mS8pPbZRAPe4I32m2XLpwja0iWkRglQCnZf
-         F3Uw==
+        h=from:to:cc:subject:date:message-id;
+        bh=c4lD5Ja/W68zU30yx+ZIDKDyIrqaAIZ94VRiCyeCO0Y=;
+        b=YkW4wOsmtRXKF39IQeQs8ZdcwD+6X2M5iCF/r6jKCp49Ml1bgkwnn9qLqERse4MXnS
+         JvE/JUr1cR6fI4sYp9RHlrto71AB7k+bS6GVAtsKrhT2Wmz0R/Nn7NUSf9qGlSMRGqGX
+         VFRL05138Hd3JVcXhBoLNfRo+SP5MpLwlqKq3bPblTc9ut7nk6RpFrhz/AS0kQLMdp7W
+         NYPunno5BmFlawT6AG9mFdUyJvmrBka68PEWDGES8yBZtUknvd3nXlEXBJq+d80A2PuT
+         pOlbAZYM12CmFbPUcdVThV/+qdhyEwwMTvqzkqBEoGhYmCw5qx4Uu3CqrowG+fxR70zk
+         EXuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=X1ybKF8wUkHdnaXcEVMx2e6e4CdYBWVAzo6oWbimFYQ=;
-        b=P0jdWxYU11WFZjM+uPbEr0+VkHA0h23HGYz5gkzya74bYk1olzWbl/I01xL3t2QftM
-         T17H8e1Yu3VWOtwt7Vr108P+P2VseirR1n36jHUp0IU9GjH2AfygY9REAVqqe4T8PvDV
-         LUQlUu9rZ9JAooiuJeXmUmiNgO5a3EzGWsbAOx+Vsd27VYmI2OR5e8M8QOJ+sKGnMTlK
-         /iXpamUZGJj+fi50SHvEi/kYfUzv3vv/RoyLYph18TcYXMN931S363pFweuaK4Nc2he8
-         08Dg631xwIbuZ3uM9a/7R/nBcr3orHBFcpcnt1kMkoYfbdSsAUAXT6FUz5ZnhipUWx93
-         zXUA==
-X-Gm-Message-State: APjAAAVK595017ZESi1z6ijGd3Y+wll1r25kwh1yd0SePnWZveaqERNk
-        lNLtaFaNE7513gIbNTDwVmRacQ==
-X-Google-Smtp-Source: APXvYqw0m+SBvdVQmbAIqGHxz8wWKmEDiAXyPgV/c4Ovyt4Pnd4N4physSGHsq7lD1C9XamuJuH9gA==
-X-Received: by 2002:a63:e24:: with SMTP id d36mr29935015pgl.80.1560421908050;
-        Thu, 13 Jun 2019 03:31:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=c4lD5Ja/W68zU30yx+ZIDKDyIrqaAIZ94VRiCyeCO0Y=;
+        b=G9mrUWk4xZ2jgdTDrADLLFdea2b7cDQzIN0HmlmfydFlzuxSR4N0DZdNSwwpbq3bkp
+         4xY5tuxwyxMAtvlLHORSpLIq//IsjuR2XnF6A8D1u4GzB+cMMdxwbdKbRMVAX8Wg60WM
+         3bAQfaROOl5ZBbisO08Sm1a9Yj5zW3Mds7Typ/PK5i9EpbOfGwJRW3gXfKdNQG3OWOu2
+         cbGkByvEEkTjCUAs7Lvt8UMVWdd1ztKAvDqvYZd7EKb2vd8fSo9EOR+oGuEMaNZU7fWM
+         uJs5s5K42VSfjH6jBBr3CJ8F18K/eW095naAYgbiw44Bkg/wIq38LNtJgWB5ymgQb/Ko
+         /ijg==
+X-Gm-Message-State: APjAAAWmDD+dRG58svYc9iOjDB/C62pguPsoDtSffEKXuxri/0cT6ojG
+        KQZODprzByHstlLG2oi+9CV4UA==
+X-Google-Smtp-Source: APXvYqwf629GmUVbhLZnIAU/FAePATiykUd+OC7xErJfaA+0pIRy9XJpSrc4JheBzy9dpn/uP2D0ug==
+X-Received: by 2002:a17:902:106:: with SMTP id 6mr23919253plb.64.1560421882686;
+        Thu, 13 Jun 2019 03:31:22 -0700 (PDT)
 Received: from localhost.localdomain ([117.196.234.139])
-        by smtp.gmail.com with ESMTPSA id a12sm2265078pgq.0.2019.06.13.03.31.35
+        by smtp.gmail.com with ESMTPSA id a12sm2265078pgq.0.2019.06.13.03.31.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 13 Jun 2019 03:31:47 -0700 (PDT)
+        Thu, 13 Jun 2019 03:31:21 -0700 (PDT)
 From:   Sumit Garg <sumit.garg@linaro.org>
 To:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org
@@ -64,85 +63,63 @@ Cc:     jens.wiklander@linaro.org, corbet@lwn.net, dhowells@redhat.com,
         ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         tee-dev@lists.linaro.org, Sumit Garg <sumit.garg@linaro.org>
-Subject: [RFC 2/7] tee: enable support to register kernel memory
-Date:   Thu, 13 Jun 2019 16:00:28 +0530
-Message-Id: <1560421833-27414-3-git-send-email-sumit.garg@linaro.org>
+Subject: [RFC 0/7] Introduce TEE based Trusted Keys support
+Date:   Thu, 13 Jun 2019 16:00:26 +0530
+Message-Id: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
-References: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable support to register kernel memory reference with TEE. This change
-will allow TEE bus drivers to register memory references.
+Add support for TEE based trusted keys where TEE provides the functionality
+to seal and unseal trusted keys using hardware unique key. Also, this is
+an alternative in case platform doesn't possess a TPM device.
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
- drivers/tee/tee_shm.c   | 16 ++++++++++++++--
- include/linux/tee_drv.h |  1 +
- 2 files changed, 15 insertions(+), 2 deletions(-)
+This series also adds some TEE features like:
 
-diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-index 2da026f..5c69b89 100644
---- a/drivers/tee/tee_shm.c
-+++ b/drivers/tee/tee_shm.c
-@@ -9,6 +9,7 @@
- #include <linux/sched.h>
- #include <linux/slab.h>
- #include <linux/tee_drv.h>
-+#include <linux/uio.h>
- #include "tee_private.h"
- 
- static void tee_shm_release(struct tee_shm *shm)
-@@ -224,13 +225,14 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
- {
- 	struct tee_device *teedev = ctx->teedev;
- 	const u32 req_flags = TEE_SHM_DMA_BUF | TEE_SHM_USER_MAPPED;
-+	const u32 req_ker_flags = TEE_SHM_DMA_BUF | TEE_SHM_KERNEL_MAPPED;
- 	struct tee_shm *shm;
- 	void *ret;
- 	int rc;
- 	int num_pages;
- 	unsigned long start;
- 
--	if (flags != req_flags)
-+	if (flags != req_flags && flags != req_ker_flags)
- 		return ERR_PTR(-ENOTSUPP);
- 
- 	if (!tee_device_get(teedev))
-@@ -264,7 +266,17 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
- 		goto err;
- 	}
- 
--	rc = get_user_pages_fast(start, num_pages, FOLL_WRITE, shm->pages);
-+	if (flags & TEE_SHM_USER_MAPPED) {
-+		rc = get_user_pages_fast(start, num_pages, FOLL_WRITE,
-+					 shm->pages);
-+	} else {
-+		const struct kvec kiov = {
-+			.iov_base = (void *)start,
-+			.iov_len = PAGE_SIZE
-+		};
-+
-+		rc = get_kernel_pages(&kiov, num_pages, 0, shm->pages);
-+	}
- 	if (rc > 0)
- 		shm->num_pages = rc;
- 	if (rc != num_pages) {
-diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
-index 7a03f68..dedf8fa 100644
---- a/include/linux/tee_drv.h
-+++ b/include/linux/tee_drv.h
-@@ -26,6 +26,7 @@
- #define TEE_SHM_REGISTER	BIT(3)  /* Memory registered in secure world */
- #define TEE_SHM_USER_MAPPED	BIT(4)  /* Memory mapped in user space */
- #define TEE_SHM_POOL		BIT(5)  /* Memory allocated from pool */
-+#define TEE_SHM_KERNEL_MAPPED	BIT(6)  /* Memory mapped in kernel space */
- 
- struct device;
- struct tee_device;
+Patch #1, #2 enables support for registered kernel shared memory with TEE.
+
+Patch #3 enables support for private kernel login method required for
+cases like trusted keys where we don't wan't user-space to directly access
+TEE service to retrieve trusted key contents.
+
+Rest of the patches from #4 to #7 adds support for TEE based trusted keys.
+
+This patch-set has been tested with OP-TEE based pseudo TA which can be
+found here [1].
+
+Looking forward to your valuable feedback/suggestions.
+
+[1] https://github.com/OP-TEE/optee_os/pull/3082
+
+Sumit Garg (7):
+  tee: optee: allow kernel pages to register as shm
+  tee: enable support to register kernel memory
+  tee: add private login method for kernel clients
+  KEYS: trusted: Introduce TEE based Trusted Keys
+  KEYS: encrypted: Allow TEE based trusted master keys
+  doc: keys: Document usage of TEE based Trusted Keys
+  MAINTAINERS: Add entry for TEE based Trusted Keys
+
+ Documentation/security/keys/tee-trusted.rst      |  93 +++++
+ MAINTAINERS                                      |   9 +
+ drivers/tee/optee/call.c                         |   7 +
+ drivers/tee/tee_core.c                           |   6 +
+ drivers/tee/tee_shm.c                            |  16 +-
+ include/keys/tee_trusted.h                       |  84 ++++
+ include/keys/trusted-type.h                      |   1 +
+ include/linux/tee_drv.h                          |   1 +
+ include/uapi/linux/tee.h                         |   2 +
+ security/keys/Kconfig                            |   3 +
+ security/keys/Makefile                           |   3 +
+ security/keys/encrypted-keys/masterkey_trusted.c |  10 +-
+ security/keys/tee_trusted.c                      | 506 +++++++++++++++++++++++
+ 13 files changed, 737 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/security/keys/tee-trusted.rst
+ create mode 100644 include/keys/tee_trusted.h
+ create mode 100644 security/keys/tee_trusted.c
+
 -- 
 2.7.4
 
