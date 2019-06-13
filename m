@@ -2,158 +2,160 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2A8C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6804C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF92207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B68C820B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:06:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387430AbfFMPGE (ORCPT
+        id S1733189AbfFMPGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:06:04 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18604 "EHLO huawei.com"
+        Thu, 13 Jun 2019 11:06:16 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18603 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732425AbfFMOK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:10:56 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id F0DDEB0324DE52C9396E;
-        Thu, 13 Jun 2019 22:10:42 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 13 Jun 2019 22:10:34 +0800
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-To:     <vvs@virtuozzo.com>, <adobriyan@sw.ru>, <adobriyan@gmail.com>,
-        <akpm@linux-foundation.org>, <tglx@linutronix.de>,
-        <gregkh@linuxfoundation.org>, <mingo@kernel.org>,
-        <viresh.kumar@linaro.org>, <luto@kernel.org>,
-        <arjan@linux.intel.com>, <Nadia.Derbey@bull.net>
-CC:     <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
-        <stern@rowland.harvard.edu>, <paulmck@linux.vnet.ibm.com>,
-        <masami.hiramatsu.pt@hitachi.com>, <alex.huangjianhui@huawei.com>,
-        <dylix.dailei@huawei.com>
-Subject: [PATCH] kernel/notifier.c: remove notifier_chain_register
-Date:   Thu, 13 Jun 2019 22:07:44 +0800
-Message-ID: <1560434864-98664-1-git-send-email-nixiaoming@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
+        id S1732420AbfFMOJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 10:09:35 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C543B7C6445F292C5592;
+        Thu, 13 Jun 2019 22:09:28 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 13 Jun 2019
+ 22:09:17 +0800
+Subject: Re: [PATCH v4 2/3] lib: logic_pio: Reject accesses to unregistered
+ CPU MMIO regions
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
+ <1560262374-67875-3-git-send-email-john.garry@huawei.com>
+ <20190613032034.GE13533@google.com>
+ <2d5e6112-be27-33c2-c1fd-6ab06405fa40@huawei.com>
+ <20190613134650.GF13533@google.com>
+CC:     <lorenzo.pieralisi@arm.com>, <arnd@arndb.de>,
+        <linux-pci@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <linux-arm-kernel@lists.infradead.org>, <will.deacon@arm.com>,
+        <wangkefeng.wang@huawei.com>, <linuxarm@huawei.com>,
+        <andriy.shevchenko@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>, <catalin.marinas@arm.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <d1ed7c02-9bad-c584-9b0e-1e3fc22ea46e@huawei.com>
+Date:   Thu, 13 Jun 2019 15:09:10 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.174]
+In-Reply-To: <20190613134650.GF13533@google.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Registering the same notifier to a hook repeatedly can cause the hook
-list to form a ring or lose other members of the list.
 
-case1: An infinite loop in notifier_chain_register can cause soft lockup
-	atomic_notifier_chain_register(&test_notifier_list, &test_notifier1);
-	atomic_notifier_chain_register(&test_notifier_list, &test_notifier1);
-	atomic_notifier_chain_register(&test_notifier_list, &test_notifier2);
+Hi Bjorn,
 
-case2: An infinite loop in notifier_chain_register can cause soft lockup
-	atomic_notifier_chain_register(&test_notifier_list, &test_notifier1);
-	atomic_notifier_chain_register(&test_notifier_list, &test_notifier1);
-	atomic_notifier_call_chain(&test_notifier_list, 0, NULL);
+>> There were many different names along the way to this support merged, and I
+>> think that the naming became almost irrelevant in the end.
+>
+> Yep, Arnd is right.  The "PIO" name contributed a little to my
+> confusion, but I think the bigger piece was that I read the "indirect
+> PIO addresses" above as being parallel to the "CPU MMIO regions"
+> below, when in fact, they are not.  The arguments to logic_inb() are
+> always port addresses, never CPU MMIO addresses, but in some cases
+> logic_inb() internally references a CPU MMIO region that corresponds
+> to the port address.
 
-case3: lose other hook "test_notifier2"
-	atomic_notifier_chain_register(&test_notifier_list, &test_notifier1);
-	atomic_notifier_chain_register(&test_notifier_list, &test_notifier2);
-	atomic_notifier_chain_register(&test_notifier_list, &test_notifier1);
+Right
 
-case4: Unregister returns 0, but the hook is still in the linked list,
-	and it is not really registered. If you call notifier_call_chain
-	after ko is unloaded, it will trigger oops.
+>
+> Possible commit log text:
+>
+>   The logic_{in,out}*() functions access two regions of I/O port
+>   addresses:
+>
+>     1) [0, MMIO_UPPER_LIMIT): these are assumed to be
+>        LOGIC_PIO_CPU_MMIO regions, where a bridge converts CPU loads
+>        and stores to MMIO space on its primary side into I/O port
+>        transactions on its secondary side.
+>
+>     2) [MMIO_UPPER_LIMIT, IO_SPACE_LIMIT): these are assumed to be
+>        LOGIC_PIO_INDIRECT regions, where we verify that the region was
+>        registered by logic_pio_register_range() before calling the
+>        logic_pio_host_ops functions to perform the access.
+>
+>   Previously there was no requirement that accesses to the
+>   LOGIC_PIO_CPU_MMIO area matched anything registered by
+>   logic_pio_register_range(), and accesses to unregistered I/O ports
+>   could cause exceptions like the one below.
+>
+>   Verify that accesses to ports in the LOGIC_PIO_CPU_MMIO area
+>   correspond to registered ranges.  Accesses to ports outside those
+>   registered ranges fail (logic_in*() returns ~0 data and logic_out*()
+>   does nothing).
+>
+>   This matches the x86 behavior where in*() returns ~0 if no device
+>   responds, and out*() is dropped if no device claims it.
 
-If the system is configured with softlockup_panic and the same
-hook is repeatedly registered on the panic_notifier_list, it
-will cause a loop panic.
+It reads quite well so I can incorporate it. I'd still like to mention 
+about request_{muxed_}region(), and how this does not protect against 
+accesses to unregistered regions.
 
-The only difference between notifier_chain_cond_register and
-notifier_chain_register is that a check is added in order to
-avoid registering the same notifier multiple times to the same hook.
-So consider removing notifier_chain_register and replacing it
-with notifier_chain_cond_register.
+>
+>>>   1) The simple "bridge converts CPU MMIO space to PCI I/O port space"
+>>>      flavor is essentially identical to what ia64 (and probably other
+>>>      architectures) does.  This should really be combined somehow.
+>>
+>> Maybe. For ia64, it seems to have some "platform" versions of IO port
+>> accessors, and then also accessors need a fence barrier. I'm not sure how
+>> well that would fit with logical PIO. It would need further analysis.
+>
+> Right.  That shouldn't be part of this series, but I think it would be
+> nice to someday unify the ia64 add_io_space() path with the
+> pci_register_io_range() path.  There might have to be ia64-specific
+> accessors at the bottom for the fences, but I think the top side could
+> be unified because it's conceptually the same thing -- an MMIO region
+> that is translated by a bridge to an I/O port region.
 
-Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
----
- kernel/notifier.c | 26 ++++++--------------------
- 1 file changed, 6 insertions(+), 20 deletions(-)
+Yes, it would be good to move any arch-specific port IO function to this 
+common framework. To mention it again, what's under 
+CONFIG_PPC_INDIRECT_PIO seems an obvious candidate.
 
-diff --git a/kernel/notifier.c b/kernel/notifier.c
-index d9f5081..56efd54 100644
---- a/kernel/notifier.c
-+++ b/kernel/notifier.c
-@@ -19,20 +19,6 @@
-  *	are layered on top of these, with appropriate locking added.
-  */
- 
--static int notifier_chain_register(struct notifier_block **nl,
--		struct notifier_block *n)
--{
--	while ((*nl) != NULL) {
--		WARN_ONCE(((*nl) == n), "double register detected");
--		if (n->priority > (*nl)->priority)
--			break;
--		nl = &((*nl)->next);
--	}
--	n->next = *nl;
--	rcu_assign_pointer(*nl, n);
--	return 0;
--}
--
- static int notifier_chain_cond_register(struct notifier_block **nl,
- 		struct notifier_block *n)
- {
-@@ -127,7 +113,7 @@ int atomic_notifier_chain_register(struct atomic_notifier_head *nh,
- 	int ret;
- 
- 	spin_lock_irqsave(&nh->lock, flags);
--	ret = notifier_chain_register(&nh->head, n);
-+	ret = notifier_chain_cond_register(&nh->head, n);
- 	spin_unlock_irqrestore(&nh->lock, flags);
- 	return ret;
- }
-@@ -223,10 +209,10 @@ int blocking_notifier_chain_register(struct blocking_notifier_head *nh,
- 	 * such times we must not call down_write().
- 	 */
- 	if (unlikely(system_state == SYSTEM_BOOTING))
--		return notifier_chain_register(&nh->head, n);
-+		return notifier_chain_cond_register(&nh->head, n);
- 
- 	down_write(&nh->rwsem);
--	ret = notifier_chain_register(&nh->head, n);
-+	ret = notifier_chain_cond_register(&nh->head, n);
- 	up_write(&nh->rwsem);
- 	return ret;
- }
-@@ -349,7 +335,7 @@ int blocking_notifier_call_chain(struct blocking_notifier_head *nh,
- int raw_notifier_chain_register(struct raw_notifier_head *nh,
- 		struct notifier_block *n)
- {
--	return notifier_chain_register(&nh->head, n);
-+	return notifier_chain_cond_register(&nh->head, n);
- }
- EXPORT_SYMBOL_GPL(raw_notifier_chain_register);
- 
-@@ -431,10 +417,10 @@ int srcu_notifier_chain_register(struct srcu_notifier_head *nh,
- 	 * such times we must not call mutex_lock().
- 	 */
- 	if (unlikely(system_state == SYSTEM_BOOTING))
--		return notifier_chain_register(&nh->head, n);
-+		return notifier_chain_cond_register(&nh->head, n);
- 
- 	mutex_lock(&nh->mutex);
--	ret = notifier_chain_register(&nh->head, n);
-+	ret = notifier_chain_cond_register(&nh->head, n);
- 	mutex_unlock(&nh->mutex);
- 	return ret;
- }
--- 
-1.8.5.6
+>
+>>>   2) If you made a default set of logic_pio_host_ops that merely did
+>>>      loads/stores and maybe added a couple fields in the struct
+>>>      logic_pio_hwaddr, I bet you could unify the two kinds so
+>>>      logic_inb() would look something like this:
+>>
+>> Yeah, I did consider this. We do not provide host operators for PCI MMIO
+>> ranges. We could simply provide regular versions of inb et al for this. A
+>> small obstacle for this is that we redefine inb et al, so would need
+>> "direct" versions also. It would be strange.
+>
+> Yeah, just a thought, maybe it wouldn't work out.
+>
+>>>> Any failed checks silently return.
+>>>
+>>> I *think* what you're doing here is making inb/outb/etc work the same
+>>> as on x86, i.e., if no device responds to an inb(), the caller gets
+>>> ~0, and if no device claims an outb() the data gets dropped.
+>>
+>> Correct, but with a caveat: when you say no device responds, this means that
+>> - for arm64 case - no PCI MMIO region is mapped.
+>
+> Yep.  I was describing the x86 behavior, where we don't do any mapping
+> and all we can say is that no device responded.
+>
+> Bjorn
+>
+
+Thanks,
+John
+
+> .
+>
+
 
