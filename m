@@ -2,111 +2,161 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6540C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5FCC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C89820896
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3734720896
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Ue87XHvD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tlOOQm+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388116AbfFMPMK (ORCPT
+        id S2388147AbfFMPMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:12:10 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:12784 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732289AbfFMNuW (ORCPT
+        Thu, 13 Jun 2019 11:12:14 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35629 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732330AbfFMPMM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:50:22 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DDkNs6010989;
-        Thu, 13 Jun 2019 15:50:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=5gqbigQzuPm78gX6OwWptVfTPVoyB0SK+37QgGiOQ8o=;
- b=Ue87XHvD5ZKIXu6PdZuN239KmgTduC8gejRAYkFkvfwojL9J57hHlgZBKo5PsLmrW3j0
- pcORKZuIIkSE0HQeNcsaAH2k0JakIIGhef2Xb8qblyKU+Qor45JuCUMdhp/Unv0NsPKI
- xZKYTst+hHzM5S/TIMAbAS+QDqLVpG7nQ8zZsyPI4Bi/mOM7XmyBoz9EzDiySOBJVoO/
- XWGY/IGjQ4hJaaibCL6PDrWS8B+Qp6yyRNN/qWG8dw6VKQN6EdbodfP14L7oWk27gsAT
- aNOVid0gtvqUN7ppYoRfS22IvyFBF/GdZY+1CLzDnrgrbGAWlHgj956WjWKY3yPVMnmP dQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2t2f8ecgqn-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 13 Jun 2019 15:50:06 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B91BE34;
-        Thu, 13 Jun 2019 13:50:05 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 94B2F2BC0;
-        Thu, 13 Jun 2019 13:50:05 +0000 (GMT)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 13 Jun
- 2019 15:50:05 +0200
-Received: from localhost (10.201.23.31) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 13 Jun 2019 15:50:04
- +0200
-From:   Erwan Le Ray <erwan.leray@st.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "Alexandre Torgue" <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>
-CC:     <linux-serial@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Erwan Le Ray <erwan.leray@st.com>,
-        "Fabrice Gasnier" <fabrice.gasnier@st.com>
-Subject: [PATCH v3 00/10] STM32 usart power improvements
-Date:   Thu, 13 Jun 2019 15:49:50 +0200
-Message-ID: <1560433800-12255-1-git-send-email-erwan.leray@st.com>
-X-Mailer: git-send-email 1.9.1
+        Thu, 13 Jun 2019 11:12:12 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p1so8292504plo.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 08:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=whmO4VHJLH3yhLw88WoBAtjYDYrD7FKUhcW2qIhfTgQ=;
+        b=tlOOQm+9yvPlQK5EZ1zeDGAddCr36NZ94jYyPKZ2ztLXivCoKRdHBC4dlDcTC1Kgyu
+         7wUgtEAItK8J1ttV38DaXqd1byZFOAlM3SOVfIhRI87d8nVKSamRrYK/633Yoc3gOwYv
+         6K1MvQl0ZwpenunM3yUjBHCbWwLtr/cArA3DdXKVRtquu4ggCw3uFe6dDA0Ox1IQ0fq6
+         8KIvoLHQL0h3iVJrtkjs+HTv3CsLOkbQysUKhYw9b7qq9+FlZ9jS4l3cEfRL+4QfkA+U
+         CdUw8GAVk/5jcOTaxtyXMQjnGWNPM/D0H8KoEd52ir+7EhvqwI7XmxhwXYfypKtPBCB2
+         +RYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=whmO4VHJLH3yhLw88WoBAtjYDYrD7FKUhcW2qIhfTgQ=;
+        b=lK5bFHWcQwobDeIWYk1lnKJzC1+GuScxEPLqA73VOhX3WU10Jf+OIXOe33g2hc4atr
+         UrPkdJVghKBc6IViEQVkHI1WvRuTrGDhYl2U3H7SYGdmah0rajieSgAu/V4nQqUwoxur
+         ElJGvXPvIQi4HRUXQQgKf4mLyhq2uH1h61VwRSzPyBDTD6f4bdL6sJNFGUZGs9e2hhwI
+         ifZ6oBA2vvIaD9lCAAkOZIDHItaHCh94kI179cU24DDQS99+7p7NQqQCan0MgCGUzVMU
+         //ARMzLuJ5d8x7CGM2QPEP5aVXruxLEsQNpvx2A3uRusi4KTTJn7tfFARCqC3NjGasTP
+         nZSw==
+X-Gm-Message-State: APjAAAUKuqObNG9ugRpNv5XHpUjZBTywf9GdMIo6ABJ6RyXaFtPrWS5O
+        Zu7D86nqMXENjf8x5CGfNMXZE0WI4xI=
+X-Google-Smtp-Source: APXvYqzoiQTYF5wmclAxV+dqIhBAbzCFcTV5+wZZW09rVWJlA/V7DDkAGzQio4XBdDOyOMf2OvBGdA==
+X-Received: by 2002:a17:902:868b:: with SMTP id g11mr85657934plo.183.1560438732172;
+        Thu, 13 Jun 2019 08:12:12 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id m24sm117215pgh.75.2019.06.13.08.12.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Jun 2019 08:12:11 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 08:12:09 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, agross@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 2/7] drivers: regulator: qcom_spmi: Refactor
+ get_mode/set_mode
+Message-ID: <20190613151209.GB6792@builder>
+References: <20190613142157.8674-1-jeffrey.l.hugo@gmail.com>
+ <20190613142239.8779-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.31]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_08:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613142239.8779-1-jeffrey.l.hugo@gmail.com>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series delivers power improvements for stm32-usart driver.
+On Thu 13 Jun 07:22 PDT 2019, Jeffrey Hugo wrote:
 
-Changes in v3:
-Move pinctrl/consumer.h include from "add support for no_console_suspend"
-patch to "select pinctrl state" patch in order to solve a compilation 
-issue.
+> spmi_regulator_common_get_mode and spmi_regulator_common_set_mode use
+> multi-level ifs which mirror a switch statement.  Refactor to use a switch
+> statement to make the code flow more clear.
+> 
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
+>  drivers/regulator/qcom_spmi-regulator.c | 28 ++++++++++++++++---------
+>  1 file changed, 18 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
+> index fd55438c25d6..1c18fe5969b5 100644
+> --- a/drivers/regulator/qcom_spmi-regulator.c
+> +++ b/drivers/regulator/qcom_spmi-regulator.c
+> @@ -911,13 +911,14 @@ static unsigned int spmi_regulator_common_get_mode(struct regulator_dev *rdev)
+>  
+>  	spmi_vreg_read(vreg, SPMI_COMMON_REG_MODE, &reg, 1);
+>  
+> -	if (reg & SPMI_COMMON_MODE_HPM_MASK)
+> +	switch (reg) {
+> +	case SPMI_COMMON_MODE_HPM_MASK:
+>  		return REGULATOR_MODE_NORMAL;
+> -
+> -	if (reg & SPMI_COMMON_MODE_AUTO_MASK)
+> +	case SPMI_COMMON_MODE_AUTO_MASK:
+>  		return REGULATOR_MODE_FAST;
+> -
+> -	return REGULATOR_MODE_IDLE;
+> +	default:
+> +		return REGULATOR_MODE_IDLE;
+> +	}
+>  }
+>  
+>  static int
+> @@ -925,12 +926,19 @@ spmi_regulator_common_set_mode(struct regulator_dev *rdev, unsigned int mode)
+>  {
+>  	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+>  	u8 mask = SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
+> -	u8 val = 0;
+> +	u8 val;
+>  
+> -	if (mode == REGULATOR_MODE_NORMAL)
+> +	switch (mode) {
+> +	case REGULATOR_MODE_NORMAL:
+>  		val = SPMI_COMMON_MODE_HPM_MASK;
+> -	else if (mode == REGULATOR_MODE_FAST)
+> +		break;
+> +	case REGULATOR_MODE_FAST:
+>  		val = SPMI_COMMON_MODE_AUTO_MASK;
+> +		break;
+> +	default:
+> +		val = 0;
+> +		break;
+> +	}
 
-Bich Hemon (3):
-  dt-bindings: serial: add optional pinctrl states
-  ARM: dts: stm32: Update pin states for uart4 on stm32mp157c-ed1
-  ARM: dts: stm32: Update UART4 pin states on stm32mp157a-dk1
+For this part:
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>  
+>  	return spmi_vreg_update_bits(vreg, SPMI_COMMON_REG_MODE, val, mask);
+>  }
+> @@ -1834,9 +1842,9 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
+>  			}
+>  		}
+>  
+> -		if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_HFS430) {
 
-Erwan Le Ray (7):
-  dt-bindings: serial: stm32: add wakeup option
-  serial: stm32: select pinctrl state in each suspend/resume function
-  serial: stm32: add pm_runtime support
-  serial: stm32: Use __maybe_unused instead of #if CONFIG_PM_SLEEP
-  serial: stm32: add support for no_console_suspend
-  ARM: dts: stm32: update uart4 pin configurations for low power
-  ARM: dts: stm32: add wakeup capability on each usart/uart on
-    stm32mp157c
+Squash this into patch 1.
 
- .../devicetree/bindings/serial/st,stm32-usart.txt  | 19 ++++-
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi          | 17 +++++
- arch/arm/boot/dts/stm32mp157a-dk1.dts              |  5 +-
- arch/arm/boot/dts/stm32mp157c-ed1.dts              |  5 +-
- arch/arm/boot/dts/stm32mp157c.dtsi                 | 40 ++++++++--
- drivers/tty/serial/stm32-usart.c                   | 88 ++++++++++++++++++++--
- drivers/tty/serial/stm32-usart.h                   |  1 +
- 7 files changed, 155 insertions(+), 20 deletions(-)
+Regards,
+Bjorn
 
--- 
-1.9.1
-
+> +		if (vreg->set_points->count == 1) {
+>  			/* since there is only one range */
+> -			range = spmi_regulator_find_range(vreg);
+> +			range = vreg->set_points->range;
+>  			vreg->desc.uV_step = range->step_uV;
+>  		}
+>  
+> -- 
+> 2.17.1
+> 
