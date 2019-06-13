@@ -2,167 +2,224 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C42D3C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC590C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 965C52173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:33:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560457998;
-	bh=4ORjBm9h1PVzfT1T37ZB0z9YsICQkKnBW1Bwmyrjpzs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xVHx79THizVQIJVCbzUxqVl7qXTyT/g7TKIjGWSe4jnehxSyQ/H4VcdaDA+vwj1df
-	 p3XRhkkVf7JnHMkbrpdFqbRFKHaGgzAgRL0kxovIJk2chtwxYvpIQ6r0kZEvVRkugC
-	 E8yDsh2XE+a7y6lGfV9CmA5s+cyrf6EpR1GwKgzM=
+	by mail.kernel.org (Postfix) with ESMTP id 9662721537
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:33:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fMe8BuJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730029AbfFMUdR (ORCPT
+        id S1730066AbfFMUdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:33:17 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36268 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfFMUdQ (ORCPT
+        Thu, 13 Jun 2019 16:33:24 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:42444 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfFMUdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:33:16 -0400
-Received: by mail-qt1-f194.google.com with SMTP id p15so4792006qtl.3;
-        Thu, 13 Jun 2019 13:33:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R2FstjYRqQg59DXy+7LjAPTotoewKiLMGMYZxUsswDg=;
-        b=slXjkj1j5Jm7zPn/DBlhDdXtqvGdl5k2k1Vc9O+nBLlxdfjSRYODAuHyOVgKkFYzxh
-         vp7TBDYBmQV/SF7e4gpa52WkRlEqvCtkxyzPBnLYNNHCQc5ISp7MrCHqhKlQySTkRS+D
-         cK+xlSOasWhT+qWKPcUHD3lDddzb0JLK7QIAlVwSrNyGxHbE8wdNHXL1zcfR/mPZ6hVe
-         SyV+fPQBNAiWSmIEocUb8DSLtvEu7n3wbVBIEpTIUjWym1LHsDXWjcz1+XKyLTdM2kUL
-         iVZxl70Ah7J1S1g8YonLd1bwB2t7p/O725vgTxX2DJ42kLwjAF30ualKT/NyVDqyQyOk
-         Z4qg==
-X-Gm-Message-State: APjAAAXdy2T2hFZC0+J4w2mc3Ls4aE1x7WIyvxeyj1oq1DsA05PQax3Y
-        vDaF/ADNTLo2Kwb2QwmlVw==
-X-Google-Smtp-Source: APXvYqz/AjvzkvNZlLu61SiHZDfFw95Oeihx85WNdMpZRhlJlbJo2We6Ewob7bP6MREJhRmhkvqgzQ==
-X-Received: by 2002:a0c:887c:: with SMTP id 57mr4994570qvm.192.1560457995500;
-        Thu, 13 Jun 2019 13:33:15 -0700 (PDT)
-Received: from localhost ([64.188.179.243])
-        by smtp.gmail.com with ESMTPSA id l88sm423749qte.33.2019.06.13.13.33.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 13:33:14 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 14:33:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: hwmon: Add DT bindings for TI
- ads1000/ads1100 ADCs
-Message-ID: <20190613203313.GA23102@bogus>
-References: <20190514225810.12591-1-fancer.lancer@gmail.com>
- <20190514225810.12591-2-fancer.lancer@gmail.com>
+        Thu, 13 Jun 2019 16:33:23 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5DKX9mU095248;
+        Thu, 13 Jun 2019 15:33:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560457989;
+        bh=Iw66ZlMG9g4IKHXricwFmXq3+LquUzDHIWFykeidiDU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fMe8BuJPRnWf59pXtSPpXfH1rrGsEQFEuhYqEI6j8x9PtLxDwvrF+03GmkkBhRKzq
+         UKLqYX8TZ/xO726R6wAJymbubg4NOj3KWikf6wfcR9hS9VPCa8qlEO9E7OJG0EPgsT
+         tLyB5Tc3cVsP7kfvIG/gtc/+qHjOGTFpPAKriSnU=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5DKX9lv093210
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 13 Jun 2019 15:33:09 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 13
+ Jun 2019 15:33:09 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 13 Jun 2019 15:33:09 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5DKX5AS026254;
+        Thu, 13 Jun 2019 15:33:06 -0500
+Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
+To:     Rob Herring <robh@kernel.org>
+CC:     <vkoul@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>
+References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
+ <20190506123456.6777-10-peter.ujfalusi@ti.com> <20190613181626.GA7039@bogus>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
+Date:   Thu, 13 Jun 2019 23:33:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514225810.12591-2-fancer.lancer@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190613181626.GA7039@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 01:58:08AM +0300, Serge Semin wrote:
-> Add dt-binding documentation for the Texas Instruments ads1000/ads1100 ADCs
-> driver.
+Rob,
+
+On 13/06/2019 21.16, Rob Herring wrote:
+>> +Remote PSI-L endpoint
+>> +
+>> +Required properties:
+>> +--------------------
+>> +- ti,psil-base:		PSI-L thread ID base of the endpoint
+>> +
+>> +Within the PSI-L endpoint node thread configuration subnodes must present with:
+>> +ti,psil-configX naming convention, where X is the thread ID offset.
 > 
-> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-> ---
->  .../devicetree/bindings/hwmon/ads1000.txt     | 61 ++++++++++++++++
+> Don't use vendor prefixes on node names.
 
-Bindings should be separate patch.
+OK.
 
->  Documentation/hwmon/ads1000.rst               | 72 +++++++++++++++++++
->  2 files changed, 133 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/ads1000.txt
->  create mode 100644 Documentation/hwmon/ads1000.rst
+>> +
+>> +Configuration node Required properties:
+>> +--------------------
+>> +- linux,udma-mode:	Channel mode, can be:
+>> +			- UDMA_PKT_MODE: for Packet mode channels (peripherals)
+>> +			- UDMA_TR_MODE: for Third-Party mode
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/ads1000.txt b/Documentation/devicetree/bindings/hwmon/ads1000.txt
-> new file mode 100644
-> index 000000000000..3907b7da9b33
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/ads1000.txt
-> @@ -0,0 +1,61 @@
-> +ADS1000/ADS1100 (I2C)
-> +
-> +This device is a 12-16 bit A-D converter with 1 input.
+> This is hardly a common linux thing. What determines the value here.
 
-ADC's should be in bindings/iio/adc/
+Unfortunately it is.
+Each channel can be configured to Packet or TR mode. For some
+peripherals it is true that they only support packet mode, these are the
+newer PSI-L native peripherals.
+For these channels a udma-mode property would be correct.
 
-> +
-> +The inputs can be used either as a differential pair of Vin+ Vin- or as a single
-> +ended sensor for Vin+ GND. The inputs mode is platform-dependent and isn't
-> +configured by software in any case.
-> +
-> +Device A-D converter sensitivity can be configured using two parameters:
-> + - pga is the programmable gain amplifier
-> +    0: x1 (default) 
-> +    1: x2
-> +    2: x4
-> +    3: x8
-> + - data_rate in samples per second also affecting the output code accuracy
-> +    0: 128SPS - +/- Vdd*0.488mV (default, ads1000 accepts this rate only)
-> +    1: 32SPS  - +/- Vdd*0.122mV
-> +    2: 16SPS  - +/- Vdd*0.061mV
-> +    3: 8SPS   - +/- Vdd*0.030mV
-> +   Since this parameter also affects the output accuracy, be aware the greater
-> +   SPS the worse accuracy.
-> +
-> +As a result the output value is calculated by the next formulae:
-> +dVin = Cod * Vdd / (PGA * max(|Cod|)), where
-> +max(|Cod|) - maximum possible value of the output code, which depends on the SPS
-> +setting from the table above.
-> +
-> +The ADS1000/ADS1100 dts-node:
-> +
-> +  Required properties:
-> +   - compatible : must be "ti,ads1000" or "ti,ads1100"
-> +   - reg : I2C bus address of the device
-> +   - #address-cells : must be <1>
-> +   - #size-cells : must be <0>
-> +   - vdd-supply : regulator for reference supply voltage (usually fixed)
-> +
-> +  Optional properties:
-> +   - ti,gain : the programmable gain amplifier setting
-> +   - ti,datarate : the converter data rate
+But we have legacy peripherals as well and they are serviced by PDMA
+(which is a native peripheral designed to talk to the given legacy IP).
+We can use either packet or TR mode in UDMAP to talk to PDMAs, it is in
+most cases clear what to use, but for example for audio (McASP) channels
+Linux is using TR channel because we need cyclic DMA while for example
+RTOS is using Packet mode as it fits their needs better.
 
-IIRC, we have standard properties for these.
+Here I need to prefix the udma-mode with linux as the mode is used by
+Linux, but other OS might opt to use different channel mode.
 
-> +   - ti,voltage-divider : <R1 R2> Ohms inbound voltage dividers,
-> +     so dVin = (R1 + R2)/R2 * dVin
-> +
-> +Example:
-> +
-> +vdd_5v0: fixedregulator@0 {
-> +	compatible = "regulator-fixed";
-> +	regulator-name = "vdd-ref";
-> +	regulator-min-microvolt = <5000000>;
-> +	regulator-max-microvolt = <5000000>;
-> +	regulator-always-on;
-> +};
-> +
-> +tiadc: ads1000@48 {
+The reason why this needs to be in the DT is that when the channel is
+requested we need to configure the mode and it can not be swapped
+runtime easily between Packet and TR mode.
 
-adc@48
+>> +
+>> +Configuration node Optional properties:
+>> +--------------------
+>> +- statictr-type:	In case the remote endpoint requires StaticTR
+>> +			configuration:
+>> +			- PSIL_STATIC_TR_XY: XY type of StaticTR
+>> +			- PSIL_STATIC_TR_MCAN: MCAN type of StaticTR
+>> +- ti,channel-tpl:	Channel Throughput level:
+>> +			0 / or not present - normal channel
+>> +			1 - High Throughput channel
+>> +- ti,needs-epib:	If the endpoint require EPIB to be present in the
+>> +			descriptor.
+>> +- ti,psd-size:		Size of the Protocol Specific Data section of the
+>> +			descriptor.
+> 
+> You've got a lot of properties and child nodes here, but not in the 
+> example. Please make the example more complete.
 
-> +	compatible = "ti,ads1000";
-> +	reg = <0x48>;
-> +
-> +	vdd-supply = <&vdd_5v0>;
-> +	ti,gain = <0>;
-> +	ti,voltage-divider = <31600 3600>;
-> +};
-> +
+Sure, I'll extend the example with other peripheral which uses more
+properties.
+
+> 
+>> +
+>> +Example:
+>> +
+>> +main_navss: main_navss {
+>> +	compatible = "simple-bus";
+>> +	#address-cells = <2>;
+>> +	#size-cells = <2>;
+>> +	dma-coherent;
+>> +	dma-ranges;
+>> +	ranges;
+>> +
+>> +	ti,sci = <&dmsc>;
+>> +	ti,sci-dev-id = <118>;
+>> +
+>> +	main_udmap: udmap@31150000 {
+> 
+> dma-controller@...
+
+OK
+
+>> +		compatible = "ti,am654-navss-main-udmap";
+>> +		reg =	<0x0 0x31150000 0x0 0x100>,
+>> +			<0x0 0x34000000 0x0 0x100000>,
+>> +			<0x0 0x35000000 0x0 0x100000>;
+>> +		reg-names = "gcfg", "rchanrt", "tchanrt";
+>> +		#dma-cells = <3>;
+>> +
+>> +		ti,ringacc = <&ringacc>;
+>> +		ti,psil-base = <0x1000>;
+>> +
+>> +		interrupt-parent = <&main_udmass_inta>;
+>> +
+>> +		ti,sci = <&dmsc>;
+>> +		ti,sci-dev-id = <188>;
+>> +
+>> +		ti,sci-rm-range-tchan = <0x6 0x1>, /* TX_HCHAN */
+>> +					<0x6 0x2>; /* TX_CHAN */
+>> +		ti,sci-rm-range-rchan = <0x6 0x4>, /* RX_HCHAN */
+>> +					<0x6 0x5>; /* RX_CHAN */
+>> +		ti,sci-rm-range-rflow = <0x6 0x6>; /* GP RFLOW */
+>> +	};
+>> +};
+>> +
+>> +pdma0: pdma@2a41000 {
+>> +	compatible = "ti,am654-pdma";
+>> +	reg = <0x0 0x02A41000 0x0 0x400>;
+>> +	reg-names = "eccaggr_cfg";
+>> +
+>> +	ti,psil-base = <0x4400>;
+>> +
+>> +	/* ti,psil-config0-2 */
+>> +	UDMA_PDMA_TR_XY(0);
+> 
+> What is this? Don't abuse defines with stuff like this. Generally only 
+> defines of single values should be used.
+
+The reason I have used define to build the psil-config sections is that
+we have some PDMAs with 22 threads and it makes the DT explode when
+writing out all of the thread configurations.
+
+Within one PDMA we can have a mix of different modes, so I can not say
+that all of the threads in the PDMA is the same.
+
+> 
+>> +	UDMA_PDMA_TR_XY(1);
+>> +	UDMA_PDMA_TR_XY(2);
+>> +};
+>> +
+>> +mcasp0: mcasp@02B00000 {
+>> +...
+>> +	/* tx: pdma0-0, rx: pdma0-0 */
+>> +	dmas = <&main_udmap &pdma0 0 UDMA_DIR_TX>,
+>> +	       <&main_udmap &pdma0 0 UDMA_DIR_RX>;
+>> +	dma-names = "tx", "rx";
+>> +...
+>> +};
+>> -- 
+
+Thanks,
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
