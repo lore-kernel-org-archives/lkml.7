@@ -2,102 +2,105 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE48C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 266D5C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F194206BB
+	by mail.kernel.org (Postfix) with ESMTP id F397A2082C
 	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:26:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UOJA6IDR"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Ok5DOoG/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbfFMP0c (ORCPT
+        id S1729212AbfFMP0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:26:32 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:8638 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729165AbfFMLnm (ORCPT
+        Thu, 13 Jun 2019 11:26:34 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39574 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729159AbfFMLmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 07:43:42 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0236ed0000>; Thu, 13 Jun 2019 04:43:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 13 Jun 2019 04:43:41 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 13 Jun 2019 04:43:41 -0700
-Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Jun
- 2019 11:43:37 +0000
-Subject: Re: [PATCH V5 6/7] i2c: tegra: fix PIO rx/tx residual transfer check
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
-        "Dmitry Osipenko" <digetx@gmail.com>,
-        Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1560250274-18499-1-git-send-email-bbiswas@nvidia.com>
- <1560250274-18499-6-git-send-email-bbiswas@nvidia.com>
- <20190612102458.liieiohnprfyyvs6@ninjato>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <2157c7f9-fe83-2fd6-745e-4a4283a2293f@nvidia.com>
-Date:   Thu, 13 Jun 2019 04:43:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 07:42:45 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z23so9764401wma.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 04:42:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Tw+9nr0k/SQ4+6C+T7NQWdtgxVemIU5O6qgx24DY8vo=;
+        b=Ok5DOoG/v42T5p/NULeH/QnUtOj3y3bgwt/tHoF5P/QfLizFjo2FteTJhShh/SJZlr
+         Nmlqr3KRJRhMsWo6pVvAXVbul1OayENODZ5gcGgO5C7JDGHK9U+PzWdA/jg93WjfgrBX
+         3aPLgeJJNFVLG2B/rgjiiSmhS+VPDiaQJtZu9Yj5qNZsnJJwZOWKrk3hKiDrwVwOJa46
+         DJ8yGbCY355E06ytD2Ad5rB+zWuOJWxU5VFLulOd9U0WSoao+makMDcH1cw103nSXVwm
+         WvwvNjZS5YfcP6dgfELXmWKxdmNFba7TWuBCTXVwsvhillQ7D9Jrl3egEbQtgmyPgiVH
+         5Z9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Tw+9nr0k/SQ4+6C+T7NQWdtgxVemIU5O6qgx24DY8vo=;
+        b=QvON5aJee1EBQbql1umAudiqtmPRf2E+xTrWL2WA7+Q/5NbneBPLm9TOu2rPvG272O
+         SQR0wXN+VKTQiD9URbB4fWE5fPEvkf9K9P2CrkSWPjLcMBghTtnUZ1oZ50CskFq4YvaM
+         m1wTi/o05xqPtrP3wvA7w68czUe7lAgtRJh40uaE81kwZyiZg2qy6DO5t/ljB/RCLm/R
+         1Yzswq0KeWqfGgKzTSXtvLs3A/0IWqmaCqbsIgilRoYc6L5+pjh2+tNHXy7a0JwN/EtB
+         sMOFuNXGn6qE1lMx9xk3O9OLPfvLOUvZsz2ugZme8GB75WclwX0rGc7o+RHSXG5EI/2y
+         d9aA==
+X-Gm-Message-State: APjAAAVfs2+NbCXS3ulTxgZwas3idI37OKnaQBLzMckEEm3gykw1hZ5T
+        ZERPI33zg3Z3PXyVbEUsC7e+BcE4uQE=
+X-Google-Smtp-Source: APXvYqzEpIcfbKY9VmOQOlh4gHR44pyPiRNjVhiHDFIUMTdcrq2NBX4iOv+SXfr3SjTejuF07/m1hA==
+X-Received: by 2002:a1c:9cd1:: with SMTP id f200mr3280189wme.157.1560426163056;
+        Thu, 13 Jun 2019 04:42:43 -0700 (PDT)
+Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id b5sm2598490wru.69.2019.06.13.04.42.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 04:42:42 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH 4/4] ASoC: meson: axg-tdm: consistently use SND_SOC_DAIFMT defines
+Date:   Thu, 13 Jun 2019 13:42:33 +0200
+Message-Id: <20190613114233.21130-5-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190613114233.21130-1-jbrunet@baylibre.com>
+References: <20190613114233.21130-1-jbrunet@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20190612102458.liieiohnprfyyvs6@ninjato>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560426221; bh=OTRRal3/SqNWKvrRP4mxKVhuOpOkfAWN1luMPgJFCbs=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=UOJA6IDRtWFI9H69sNPaAuTN/acWQ0Njt5onyc0RtodwSJxDqqxHde2JIhCU0bxx/
-         R6KdysrodVxr1qSNnttlsUgv+kOdsoSIuq9ZtG3gwQPlrW6bsahI5jgY7PFGPWXrV1
-         UTZBFQMa5FvlDDpwEJQ0ryf9QYQCvam6EyiKdR8YLHvB5TJGbAGuhQEwa8Cf4VXIgs
-         pcvkZHSU3gYKy2xfXpqddYOxKPpDmTpan9gJZPt1hrcgXKmuzU8rC901FE8fUtsRwu
-         o5efMpAJn+wM44xF5m/fNEuFuSNl6EkeWk4VAyLBB2p49C4rx7AT5dww0RTcxsEqBL
-         57yk4Lpwb46Mw==
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There a mix of SND_SOC_DAIFMT_ and SND_SOC_DAI_FORMAT_ in
+axg-tdm-interface.c. Even, if this is currently the same thing, lets use
+the same group consistently.
 
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ sound/soc/meson/axg-tdm-interface.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 6/12/19 3:24 AM, Wolfram Sang wrote:
-> On Tue, Jun 11, 2019 at 03:51:13AM -0700, Bitan Biswas wrote:
->> Fix expression for residual bytes(less than word) transfer
->> in I2C PIO mode RX/TX.
->>
->> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
-> 
-> I applied patches 1-5 to my for-next tree now. No need to resend them
-> anymore, you can focus on the remaining patches now.
-> 
-> Question: The nominal maintainer for this driver is
-> 
->          Laxman Dewangan <ldewangan@nvidia.com> (supporter:TEGRA I2C DRIVER)
-> 
-> I wonder if he is still around and interested?
-> 
-> That aside, thanks a lot Dmitry for the review of this series!
-> 
-Thanks Wolfram. I shall work on remaining patches.
-
-
+diff --git a/sound/soc/meson/axg-tdm-interface.c b/sound/soc/meson/axg-tdm-interface.c
+index 585ce030b79b..d51f3344be7c 100644
+--- a/sound/soc/meson/axg-tdm-interface.c
++++ b/sound/soc/meson/axg-tdm-interface.c
+@@ -306,8 +306,8 @@ static int axg_tdm_iface_hw_params(struct snd_pcm_substream *substream,
+ 		}
+ 		break;
+ 
+-	case SND_SOC_DAI_FORMAT_DSP_A:
+-	case SND_SOC_DAI_FORMAT_DSP_B:
++	case SND_SOC_DAIFMT_DSP_A:
++	case SND_SOC_DAIFMT_DSP_B:
+ 		break;
+ 
+ 	default:
+-- 
+2.20.1
 
