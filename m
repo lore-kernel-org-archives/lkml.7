@@ -2,130 +2,261 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10152C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 004E7C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D870B2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:17:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="TFX6C5Y4"
+	by mail.kernel.org (Postfix) with ESMTP id BA2C62054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560439063;
+	bh=tiOM6s1e3Yxb9Buj5nqBgGoEmTjuEMI0MPr9x1nrxwg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yh7mrTl4+N+Ry3Al63gx1pqHDa3cNJ3b9BqskGpz7Q0919qqYpGGgzPWt4NyVd1sQ
+	 5w2JKeLLqvljfuKRijkW3W7sOHWYwYFOvbnHXJ77qHLsKgCZPD4D61bHwNp+WluucK
+	 n8g3Lb5KpIQ/EpCg4OIhtcrS822d4KAdTYpD0W44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733026AbfFMPRg (ORCPT
+        id S2388729AbfFMPRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:17:36 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:35551 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732185AbfFMNWi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:22:38 -0400
-Received: by mail-yb1-f195.google.com with SMTP id v17so7821257ybm.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 06:22:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=heTVmTA1VC7+Lv8ssRiXzCfaW/u+s8AFPCxrnLoG20c=;
-        b=TFX6C5Y4JreIdr5ZV52Pg4p+F418M647OuPDyzeXbDSVvH+R/5Zoee93Sla1Lbup67
-         qYBcxQCxAoz75kNfrbjm0/gm+TxtkkLbeHpFdOfnEUJvqkn41wKMKN57rJ1abwxwd0W5
-         14J9HQSzXRuEFr9RLx8R0j7X7OcO9bbPnoTysdrOpY5WFLIKh1UoypwO+7yFa3628eyS
-         ra5v07Dnlg9G5UyLWIHo783FIGtJolo3QERz2/FXUBpleUnBA7dpPEW61OMWl45KlaBP
-         3fZ4nxGd6/3E6pCI0rtaVh16owpZTDRzYE2kKtxOjBDQSnTgiUdIH6SXvhGgrcdoWB8K
-         FOOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=heTVmTA1VC7+Lv8ssRiXzCfaW/u+s8AFPCxrnLoG20c=;
-        b=fdnYowD12VG+hN3LI8uRtAY+0ppbPysXj3FbAYaDGMYfVekQkPV0yIwKTaiIs99P2K
-         pqi4Al31Z8oyIt8UhOSqqQhWwgvWC8UA5P9fs+n4DrRa4g8iaarSlw22oX7MzrBdy8Vm
-         rwB51qQLVXaXyLVfigw93jOal8LQM+ocECG1J61cGfSuxrqWKsYSQ+0Y2MQMUwF1vEba
-         AoKPFwaoh5axufJril+ZWCYgyEl4CtAoFh0WmrVmONkAYkMOxmhEd1EJVxKNsyuuq3MV
-         J8ofLaIbUL+YMx7TMPRURmpyWYOXAQ8oKNinmGWK85iXMaQjRR6JpSOIFY7JPMyFLIXZ
-         v19w==
-X-Gm-Message-State: APjAAAVEWLZ1ejMKOa/eyOLGpZ/8ocbhgkGOpT/0PSL7neFuv5RCjnmx
-        IQF/4ZX0Bza6p4yL5VYM8sCLAw==
-X-Google-Smtp-Source: APXvYqyuV0U+ZNI/ZQHhffAIzXID47tvMONU2SVXHb7+Z4fbsGfcAyNC9oPmga8HohImAuiCY+oKtw==
-X-Received: by 2002:a25:6089:: with SMTP id u131mr12942461ybb.14.1560432157816;
-        Thu, 13 Jun 2019 06:22:37 -0700 (PDT)
-Received: from kudzu.us (76-230-155-4.lightspeed.rlghnc.sbcglobal.net. [76.230.155.4])
-        by smtp.gmail.com with ESMTPSA id f206sm759183ywf.77.2019.06.13.06.22.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 06:22:37 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 09:22:35 -0400
-From:   Jon Mason <jdmason@kudzu.us>
-To:     Kelvin Cao <kelvin.cao@microchip.com>
-Cc:     kurt.schwemmer@microsemi.com, logang@deltatee.com,
-        dave.jiang@intel.com, allenbh@gmail.com, linux-pci@vger.kernel.org,
-        linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org,
-        kelvincao@outlook.com
-Subject: Re: [PATCH 0/3] Redundant steps removal and bug fix of
- ntb_hw_switchtec
-Message-ID: <20190613132234.GA1572@kudzu.us>
-References: <1559804984-24698-1-git-send-email-kelvin.cao@microchip.com>
+        Thu, 13 Jun 2019 11:17:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732179AbfFMNTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 09:19:51 -0400
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A31EE217D7;
+        Thu, 13 Jun 2019 13:19:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560431989;
+        bh=tiOM6s1e3Yxb9Buj5nqBgGoEmTjuEMI0MPr9x1nrxwg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KSVrU877UOAyC6Zkr+pIM6BK1VRggfQ++RYMYuGtj8JbaIYyQOIBRZk/+/i42W6p4
+         kE1k0xgZ5EY2fiXXUP0XZViozP+qTwhDmIn3YHBViqS30J37Qx3IwRNCUqOgn8PAGs
+         D5dzPOyuTcUrzm5l3WmGukhzsH6KF44Cd/BpM3KE=
+Received: by mail-qk1-f170.google.com with SMTP id g18so12708195qkl.3;
+        Thu, 13 Jun 2019 06:19:49 -0700 (PDT)
+X-Gm-Message-State: APjAAAUmKojIFn7lazvq9P+oDP0XoRJn2evwcT+ZmPW0W005cwaM0oXc
+        NeFv/x+nzZq0TPtsvSurbHQNNohj3vqj/vUV6Q==
+X-Google-Smtp-Source: APXvYqy4HLIEZMTKtHpWWUtJQ72uNV0Rwv6pVblqYItO2sXmSU2d/lB94Van4E7i3A34NFCBlMZMyjmpFcFsMo7Njvw=
+X-Received: by 2002:a37:a6c9:: with SMTP id p192mr73052442qke.184.1560431988769;
+ Thu, 13 Jun 2019 06:19:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559804984-24698-1-git-send-email-kelvin.cao@microchip.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190604003218.241354-1-saravanak@google.com> <095b631b-155d-483e-5ffb-3a04b0db0245@gmail.com>
+In-Reply-To: <095b631b-155d-483e-5ffb-3a04b0db0245@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 13 Jun 2019 07:19:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLFTfAN5UZ8yy+z5fAXBa83JU0FGVDKzpu7pMLi10jvZQ@mail.gmail.com>
+Message-ID: <CAL_JsqLFTfAN5UZ8yy+z5fAXBa83JU0FGVDKzpu7pMLi10jvZQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH v1 0/5] Solve postboot supplier cleanup and
+ optimize probe ordering
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        David Collins <collinsd@codeaurora.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 03:09:41PM +0800, Kelvin Cao wrote:
-> Hi, Everyone,
-> 
-> This patch series remove redundant steps and fix one bug of the 
-> ntb_hw_switchtec module.
-> 
-> When a re-initialization is caused by a link event, the driver will
-> re-setup the shared memory windows. But at that time, the shared memory
-> is still valid, and it's unnecessary to free, reallocate and then
-> initialize it again. Remove these redundant steps.
-> 
-> In case of NTB crosslink topology, the setting of shared memory window
-> in the virtual partition doesn't reset on peer's reboot. So skip the
-> re-setup of shared memory window for that case.
-> 
-> Switchtec does not support setting multiple MWs simultaneously. However,
-> there's a race condition when a re-initialization is caused by a link 
-> event, the driver will re-setup the shared memory window asynchronously
-> and this races with the client setting up its memory windows on the 
-> link up event. Fix this by ensure do the entire initialization in a work
-> queue and signal the client once it's done. 
-> 
-> Regard,
-> Kelvin
-> 
-> --
-> 
-> Changed since v1:
->   - It's a second resend of v1
+On Wed, Jun 12, 2019 at 3:21 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> Adding cc: David Collins
+>
+> Plus my comments below.
+>
+> On 6/3/19 5:32 PM, Saravana Kannan wrote:
+> > Add a generic "depends-on" property that allows specifying mandatory
+> > functional dependencies between devices. Add device-links after the
+> > devices are created (but before they are probed) by looking at this
+> > "depends-on" property.
+> >
+> > This property is used instead of existing DT properties that specify
+> > phandles of other devices (Eg: clocks, pinctrl, regulators, etc). This
+> > is because not all resources referred to by existing DT properties are
+> > mandatory functional dependencies. Some devices/drivers might be able
+> > to operate with reduced functionality when some of the resources
+> > aren't available. For example, a device could operate in polling mode
+> > if no IRQ is available, a device could skip doing power management if
+> > clock or voltage control isn't available and they are left on, etc.
+> >
+> > So, adding mandatory functional dependency links between devices by
+> > looking at referred phandles in DT properties won't work as it would
+> > prevent probing devices that could be probed. By having an explicit
+> > depends-on property, we can handle these cases correctly.
+> >
+> > Having functional dependencies explicitly called out in DT and
+> > automatically added before the devices are probed, provides the
+> > following benefits:
+> >
+> > - Optimizes device probe order and avoids the useless work of
+> >   attempting probes of devices that will not probe successfully
+> >   (because their suppliers aren't present or haven't probed yet).
+> >
+> >   For example, in a commonly available mobile SoC, registering just
+> >   one consumer device's driver at an initcall level earlier than the
+> >   supplier device's driver causes 11 failed probe attempts before the
+> >   consumer device probes successfully. This was with a kernel with all
+> >   the drivers statically compiled in. This problem gets a lot worse if
+> >   all the drivers are loaded as modules without direct symbol
+> >   dependencies.
+> >
+> > - Supplier devices like clock providers, regulators providers, etc
+> >   need to keep the resources they provide active and at a particular
+> >   state(s) during boot up even if their current set of consumers don't
+> >   request the resource to be active. This is because the rest of the
+> >   consumers might not have probed yet and turning off the resource
+> >   before all the consumers have probed could lead to a hang or
+> >   undesired user experience.
+> >
+> >   Some frameworks (Eg: regulator) handle this today by turning off
+> >   "unused" resources at late_initcall_sync and hoping all the devices
+> >   have probed by then. This is not a valid assumption for systems with
+> >   loadable modules. Other frameworks (Eg: clock) just don't handle
+> >   this due to the lack of a clear signal for when they can turn off
+> >   resources. This leads to downstream hacks to handle cases like this
+> >   that can easily be solved in the upstream kernel.
+> >
+> >   By linking devices before they are probed, we give suppliers a clear
+> >   count of the number of dependent consumers. Once all of the
+> >   consumers are active, the suppliers can turn off the unused
+> >   resources without making assumptions about the number of consumers.
+> >
+> > By default we just add device-links to track "driver presence" (probe
+> > succeeded) of the supplier device. If any other functionality provided
+> > by device-links are needed, it is left to the consumer/supplier
+> > devices to change the link when they probe.
+> >
+> >
+> > Saravana Kannan (5):
+> >   of/platform: Speed up of_find_device_by_node()
+> >   driver core: Add device links support for pending links to suppliers
+> >   dt-bindings: Add depends-on property
+> >   of/platform: Add functional dependency link from "depends-on" property
+> >   driver core: Add sync_state driver/bus callback
+> >
+> >  .../devicetree/bindings/depends-on.txt        |  26 +++++
+> >  drivers/base/core.c                           | 106 ++++++++++++++++++
+> >  drivers/of/platform.c                         |  75 ++++++++++++-
+> >  include/linux/device.h                        |  24 ++++
+> >  include/linux/of.h                            |   3 +
+> >  5 files changed, 233 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/depends-on.txt
+> >
+>
+>
+> I don't think the above description adequately describes one key problem
+> that the patch set addresses.
+>
+> David Collins described the problem in an email late in the thread of
+> the first submission of this series.  Instead of providing a link to
+> that email, I am going to fully copy it here:
+>
+> On 5/31/19 4:27 PM, David Collins wrote:
+> > Hello Saravana,
+> >
+> > On 5/23/19 6:01 PM, Saravana Kannan wrote:
+> > ...
+> >> Having functional dependencies explicitly called out in DT and
+> >> automatically added before the devices are probed, provides the
+> >> following benefits:
+> > ...
+> >> - Supplier devices like clock providers, regulators providers, etc
+> >>   need to keep the resources they provide active and at a particular
+> >>   state(s) during boot up even if their current set of consumers don't
+> >>   request the resource to be active. This is because the rest of the
+> >>   consumers might not have probed yet and turning off the resource
+> >>   before all the consumers have probed could lead to a hang or
+> >>   undesired user experience.
+> > This benefit provided by the sync_state() callback function introduced in
+> > this series gives us a mechanism to solve a specific problem encountered
+> > on Qualcomm Technologies, Inc. (QTI) boards when booting with drivers
+> > compiled as modules.  QTI boards have a regulator that powers the PHYs for
+> > display, camera, USB, UFS, and PCIe.  When these boards boot up, the boot
+> > loader enables this regulator along with other resources in order to
+> > display a splash screen image.  The regulator must remain enabled until
+> > the Linux display driver has probed and made a request with the regulator
+> > framework to keep the regulator enabled.  If the regulator is disabled
+> > prematurely, then the screen image is corrupted and the display hardware
+> > enters a bad state.
+> >
+> > We have observed that when the camera driver probes before the display
+> > driver, it performs this sequence: regulator_enable(), camera register IO,
+> > regulator_disable().  Since it is the first consumer of the shared
+> > regulator, the regulator is physically disabled (even though display
+> > hardware still requires it to be enabled).  We have solved this problem
+> > when compiling drivers statically with a downstream regulator
+> > proxy-consumer driver.  This proxy-consumer is able to make an enable
+> > request for the shared regulator before any other consumer.  It then
+> > removes its request at late_initcall_sync.
+> >
+> > Unfortunately, when drivers are compiled as modules instead of compiled
+> > statically into the kernel image, late_initcall_sync is not a meaningful
+> > marker of driver probe completion.  This means that our existing proxy
+> > voting system will not work when drivers are compiled as modules.  The
+> > sync_state() callback resolves this issue by providing a notification that
+> > is guaranteed to arrive only after all consumers of the shared regulator
+> > have probed.
+> >
+> > QTI boards have other cases of shared resources such as bus bandwidth
+> > which must remain at least at a level set by boot loaders in order to
+> > properly support hardware blocks that are enabled before the Linux kernel
+> > starts booting.
+> >
+> > Take care,
+> > David
+> >
+>
+> To paraphrase, the problem is:
+>
+>    - bootloader enables a regulator for display
+>    - during Linux boot camera driver probes:
+>       * enable the regulator also used for display
+>       * disable the regulator
+>          + screen image is corrupted
+>          + display hardware enters bad state
+>    - later during Linux boot display driver probes:
+>       * enable the regulator, but too late
+>
+> So the problem is an ordering dependency between the camera driver probe
+> and the display driver probe.
+>
+> Or alternatively the problem could be seen as: the bootloader has enabled
+> a regulator for a device that the bootloader is aware of, but has not
+> communicated to the Linux regulator framework that the device requires
+> the regulator to remain enabled.
 
-Sorry for the delay.  The series is now in the ntb branch.  We've
-missed window for 5.2, but it will be in the 5.3 pull request.
+The bootloader should have communicated this information via the
+'simple-framebuffer' binding. The problem is I think we don't have any
+mechanism to ensure the simple-fb driver probes before other drivers
+(other than it's dependencies). Well, there are initcall levels, but
+I'd really like to get rid of any reliance on that. Anything that
+relies on initcall level ordering is not going to work as module
+unless userspace also ensures the ordering.
 
-Thanks,
-Jon
+The other case I've heard of is the serial port's clock getting
+disabled and killing the earlycon as we assume the bootloader left
+serial port dependencies configured.
 
-> --
-> 
-> Joey Zhang (2):
->   ntb_hw_switchtec: Remove redundant steps of
->     switchtec_ntb_reinit_peer() function
->   ntb_hw_switchtec: Fix setup MW with failure bug
-> 
-> Wesley Sheng (1):
->   ntb_hw_switchtec: Skip unnecessary re-setup of shared memory window
->     for crosslink case
-> 
->  drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 80 +++++++++++++++++++++-------------
->  1 file changed, 49 insertions(+), 31 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
+> Thinking about the problem this way could lead to an entirely different
+> solution.
+
+I think the ordering issue is orthogonal to using modules. We need
+some way to prioritize probing of some devices. IMO, just prioritizing
+the 'stdout-path' device and 'simple-framebuffer' if present solves
+this. I don't think we need a general solution in this case. The may
+be a few other cases, but I think these are the exception. The state
+from the bootloader (and don't forget about kexec) needs to be well
+defined and minimal.
+
+Rob
