@@ -2,128 +2,140 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A8CC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D068CC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B842C21473
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:18:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lpafWUUx"
+	by mail.kernel.org (Postfix) with ESMTP id AC4DB2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbfFMRSg (ORCPT
+        id S1727727AbfFMRUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:18:36 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43547 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbfFMRSg (ORCPT
+        Thu, 13 Jun 2019 13:20:52 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55188 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726797AbfFMRUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:18:36 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z24so10220172qtj.10
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 10:18:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ECRuDs1AAJXccME5fjhnIagUHhl7wP1zzfkz6zfy+gs=;
-        b=lpafWUUxvoz6cw8t6bvxhkbpKx1MuDJC/6+rsfIk9kELesUHNICDeurjA/f9ZuoaJv
-         lKvrldgcxc6rNvpGlf+9lPT2riW0RE1+HuS2OqxKuK9J/UHHXstRF22tdIYHVfy+KlvT
-         LRXs02nEuzM/Fk4kx+1bbgAFr8bE6dMuPmxEyYZicAywAmS5YuFqquENcwoxV3ALaTJr
-         wrm1jUeHUGOSNU/aAA8xVX35TgozP9YEYH5RVAbReFiyARjThtZ1Rs+sS5w3QP1kXXnb
-         Bg53NxX8LuVo7QxF8lvDT58SoxeM97wjJy7wRjhtAvG+RnkgIyeQxLZquacOghksiJH/
-         /FWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ECRuDs1AAJXccME5fjhnIagUHhl7wP1zzfkz6zfy+gs=;
-        b=oa2RkCdrEoYiJDCo+7BiY4eig5KqwJupoeEXfD2Jyd4NHb7MGPqD32WWDRgXDxAVyd
-         r++r1tm2N8uNUHXBMgTPMlDoXS/ISC8bZy1ebBbJMTdym36z9t3NxkZqH5KHCZ64ZRi0
-         6yr5DitBR5jcBMc9A7sdrWW0Dez0xRXF+dAnMU74DFugVY6xDkYfl8USxDb0X1zLxPuC
-         0rB8GwaHD9AxhtOyGCgmi801QIe6dQaypkQAazsl0qzBUd3gutbyrF3mhC2xE+hW7ZmJ
-         3d8VTU3/nxDyTznmleLRc8988wS9fnZRbZ39dV3MDEMKoCFMq3vapb4RbPTuifwjnBEb
-         oiWA==
-X-Gm-Message-State: APjAAAXa5ktR/fGvFVugDwy4JWXCAXhKhw+d8uONl2fABU7+vIK/fWGZ
-        exs/O4jUFO8zv5l6c8i3gCxMMQ==
-X-Google-Smtp-Source: APXvYqxo9wZDsL+u9xxF1oR9luzN2plR83tNtwXpM5LjZTCeK+hD6TjhoexGVCwTWwyvS0UUHoLRyg==
-X-Received: by 2002:aed:3686:: with SMTP id f6mr53799960qtb.30.1560446315300;
-        Thu, 13 Jun 2019 10:18:35 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id l3sm76969qkd.49.2019.06.13.10.18.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Jun 2019 10:18:34 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hbTMw-000325-3P; Thu, 13 Jun 2019 14:18:34 -0300
-Date:   Thu, 13 Jun 2019 14:18:34 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190613171834.GE22901@ziepe.ca>
-References: <20190612102917.GB14578@quack2.suse.cz>
- <20190612114721.GB3876@ziepe.ca>
- <20190612120907.GC14578@quack2.suse.cz>
- <20190612191421.GM3876@ziepe.ca>
- <20190612221336.GA27080@iweiny-DESK2.sc.intel.com>
- <CAPcyv4gkksnceCV-p70hkxAyEPJWFvpMezJA1rEj6TEhKAJ7qQ@mail.gmail.com>
- <20190612233324.GE14336@iweiny-DESK2.sc.intel.com>
- <CAPcyv4jf19CJbtXTp=ag7Ns=ZQtqeQd3C0XhV9FcFCwd9JCNtQ@mail.gmail.com>
- <20190613151354.GC22901@ziepe.ca>
- <CAPcyv4hZsxd+eUrVCQmm-O8Zcu16O5R1d0reTM+JBBn7oP7Uhw@mail.gmail.com>
+        Thu, 13 Jun 2019 13:20:52 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id E7AB52838FC
+Subject: Re: [PATCH] arm64: dts: rockchip: Update DWC3 modules on RK3399 SoCs
+To:     Robin Murphy <robin.murphy@arm.com>, devicetree@vger.kernel.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        linux-rockchip@lists.infradead.org,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Randy Li <ayaka@soulik.info>, linux-kernel@vger.kernel.org,
+        Vicente Bergas <vicencb@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>
+References: <20190613162745.12195-1-enric.balletbo@collabora.com>
+ <40d2260f-3925-acdc-eb02-8abb972f1056@arm.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <a685fef9-8f45-700c-17d6-59d792fca092@collabora.com>
+Date:   Thu, 13 Jun 2019 19:20:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4hZsxd+eUrVCQmm-O8Zcu16O5R1d0reTM+JBBn7oP7Uhw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <40d2260f-3925-acdc-eb02-8abb972f1056@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 09:25:54AM -0700, Dan Williams wrote:
-> On Thu, Jun 13, 2019 at 8:14 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >
-> > On Wed, Jun 12, 2019 at 06:14:46PM -0700, Dan Williams wrote:
-> > > > Effectively, we would need a way for an admin to close a specific file
-> > > > descriptor (or set of fds) which point to that file.  AFAIK there is no way to
-> > > > do that at all, is there?
-> > >
-> > > Even if there were that gets back to my other question, does RDMA
-> > > teardown happen at close(fd), or at final fput() of the 'struct
-> > > file'?
-> >
-> > AFAIK there is no kernel side driver hook for close(fd).
-> >
-> > rdma uses a normal chardev so it's lifetime is linked to the file_ops
-> > release, which is called on last fput. So all the mmaps, all the dups,
-> > everything must go before it releases its resources.
+Hi Robin,
+
+On 13/6/19 18:56, Robin Murphy wrote:
+> On 13/06/2019 17:27, Enric Balletbo i Serra wrote:
+>> As per binding documentation [1], the DWC3 core should have the "ref",
+>> "bus_early" and "suspend" clocks. As explained in the binding, those
+>> clocks are required for new platforms but not for existing platforms
+>> before commit fe8abf332b8f ("usb: dwc3: support clocks and resets for
+>> DWC3 core").
+>>
+>> However, as those clocks are really treated as required, this ends with
+>> having some annoying messages when the "rockchip,rk3399-dwc3" is used:
+>>
+>> [    1.724107] dwc3 fe800000.dwc3: Failed to get clk 'ref': -2
+>> [    1.731893] dwc3 fe900000.dwc3: Failed to get clk 'ref': -2
+>> [    2.495937] dwc3 fe800000.dwc3: Failed to get clk 'ref': -2
+>> [    2.647239] dwc3 fe900000.dwc3: Failed to get clk 'ref': -2
+>>
+>> In order to remove those annoying messages, update the DWC3 hardware
+>> module node and add all the required clocks. With this change, both, the
+>> glue node and the DWC3 core node, have the clocks defined, but that's
+>> not really a problem and there isn't a side effect on do this. So, we
+>> can get rid of the annoying get clk error messages.
 > 
-> Oh, I must have missed where this conversation started talking about
-> the driver-device fd. 
+> Can we not just move these clocks entirely from the glue layer to the core
+> layer? That didn't seem to break when I tried it, although I'll admit my
+> 'testing' was no more than booting and mounting a USB 3.0 flash drive, no
+> suspend or anything fancy.
+> 
 
-In the first paragraph above where Ira is musing about 'close a
-specific file', he is talking about the driver-device fd.
+AFAICT usb doesn't break, but we won't break backward compability then? (/me
+still doesn't know when backward compability is really important or not)
 
-Ie unilaterally closing /dev/uverbs as a punishment for an application
-that used leases wrong: ie that released its lease with the RDMA is
-still ongoing. 
+> My own attempt to shut up these errors got sidetracked into c0c61471ef86 ("usb:
+> dwc3: of-simple: Convert to bulk clk API"), then apparently stalled :)
+> 
 
-Jason
+There was any off the record discussion and stalled or simply you didn't get
+feedback?
+
+I'll take a look.
+
+Thanks,
+~ Enric
+
+> Robin.
+> 
+>>
+>> [1] Documentation/devicetree/bindings/usb/dwc3.txt
+>>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> ---
+>>
+>>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> index 196ac9b78076..a15348d185ce 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> @@ -414,6 +414,9 @@
+>>               compatible = "snps,dwc3";
+>>               reg = <0x0 0xfe800000 0x0 0x100000>;
+>>               interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH 0>;
+>> +            clocks = <&cru SCLK_USB3OTG0_REF>, <&cru ACLK_USB3OTG0>,
+>> +                 <&cru SCLK_USB3OTG0_SUSPEND>;
+>> +            clock-names = "ref", "bus_early", "suspend";
+>>               dr_mode = "otg";
+>>               phys = <&u2phy0_otg>, <&tcphy0_usb3>;
+>>               phy-names = "usb2-phy", "usb3-phy";
+>> @@ -447,6 +450,9 @@
+>>               compatible = "snps,dwc3";
+>>               reg = <0x0 0xfe900000 0x0 0x100000>;
+>>               interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH 0>;
+>> +            clocks = <&cru SCLK_USB3OTG1_REF>, <&cru ACLK_USB3OTG1>,
+>> +                 <&cru SCLK_USB3OTG1_SUSPEND>;
+>> +            clock-names = "ref", "bus_early", "suspend";
+>>               dr_mode = "otg";
+>>               phys = <&u2phy1_otg>, <&tcphy1_usb3>;
+>>               phy-names = "usb2-phy", "usb3-phy";
+>>
