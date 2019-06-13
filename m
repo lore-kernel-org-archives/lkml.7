@@ -2,68 +2,127 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A5AC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF5AC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBBF820851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6499D20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441920;
-	bh=YRL+3yXsjxbpg+1zG3QoQsx7tN81Q8VQg2j27pXpieQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=ugfS1sIVR5z/CKP2W+w3qdPmmGQ4o1ka36gFz0CdlrSbp7y1MKwHOfLdDVoy5s8R7
-	 aSJsopkBtLtqb7wXk5R2LS1qaCAULEIWf4RrGZPBVqUGt+Th3QJzQ2SFgBpy4ti/hn
-	 r48HB7t/Z+RDDflcUHjUUa+SaQTP5oTJ8KSulb5Q=
+	s=default; t=1560441928;
+	bh=kr4WLHb8ykzlmdHs3+5pe59y2Z1G3RHQQ5ZQEnni65A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LXAbd+7YDt4WMXNf2fVf0nEbdatOEThckwfSlP+LXKEf5yNF5RygotwYeJqdwxG3v
+	 5fgq50ET2wrpTjJ2pIgEoj530jPPRxYXbDiNpPB5C3h+ZbCUFqah8y0VyuRKqAb7r4
+	 q0ct7ytwpKM+8eIZochsLb1ymp2G1nY28DVO0P7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388483AbfFMQFT (ORCPT
+        id S2390976AbfFMQFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:05:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58458 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:05:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732591AbfFMQFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:05:09 -0400
-Subject: Re: [GIT PULL] HID fixes for 5.2-rc
+        id S1731348AbfFMIql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:46:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C63D6215EA;
+        Thu, 13 Jun 2019 08:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560441908;
-        bh=YRL+3yXsjxbpg+1zG3QoQsx7tN81Q8VQg2j27pXpieQ=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=acYjJNVtdGI4LC586P9Xkp0cy6g2N0ExiizGusy12CE27gamsozZENpbuDq//6DGz
-         gK8R/mAIeoMMmkgZSjEPhgktEAS3mki4539nm43GaVPTmtAw3l+W/0JpZg4wbzhCF3
-         TeM4/LUxrMxdgOZrqOMDKvOxZU/dtmbVESTXcN0U=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <nycvar.YFH.7.76.1906131632070.27227@cbobk.fhfr.pm>
-References: <nycvar.YFH.7.76.1906131632070.27227@cbobk.fhfr.pm>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <nycvar.YFH.7.76.1906131632070.27227@cbobk.fhfr.pm>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
-X-PR-Tracked-Commit-Id: 3ed224e273ac5880eeab4c3043a6b06b0478dd56
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c11fb13a117e5a6736481c779cb971249ed96016
-Message-Id: <156044190877.6802.10583406698611497279.pr-tracker-bot@kernel.org>
-Date:   Thu, 13 Jun 2019 16:05:08 +0000
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+        s=default; t=1560415601;
+        bh=kr4WLHb8ykzlmdHs3+5pe59y2Z1G3RHQQ5ZQEnni65A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=chZhQ8rp7iqoRZkyQiDMwD+QQeqlvM6e4d0NSv/VkYwAcYahl4ifOZ+Y85v+5Pi0L
+         YXnf6jncCt1zqnyPCUg6SMhrPw7b0XMMUnIrppHiIGJXpyP4tG1FXXDL+oX1q7khQn
+         x37A42fE+deKTE/sds04Xf7DCfMJ1TWb/7aUbEaE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 059/155] PCI: dwc: Free MSI in dw_pcie_host_init() error path
+Date:   Thu, 13 Jun 2019 10:32:51 +0200
+Message-Id: <20190613075656.383108747@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
+References: <20190613075652.691765927@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 13 Jun 2019 16:37:20 +0200 (CEST):
+[ Upstream commit 9e2b5de5604a6ff2626c51e77014d92c9299722c ]
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
+If we ever did MSI-related initializations, we need to call
+dw_pcie_free_msi() in the error code path.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c11fb13a117e5a6736481c779cb971249ed96016
+Remove the IS_ENABLED(CONFIG_PCI_MSI) check for MSI init because
+pci_msi_enabled() already has a stub for !CONFIG_PCI_MSI.
 
-Thank you!
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-designware-host.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 25087d3c9a82..acd185b4661e 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -439,7 +439,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	if (ret)
+ 		pci->num_viewport = 2;
+ 
+-	if (IS_ENABLED(CONFIG_PCI_MSI) && pci_msi_enabled()) {
++	if (pci_msi_enabled()) {
+ 		/*
+ 		 * If a specific SoC driver needs to change the
+ 		 * default number of vectors, it needs to implement
+@@ -477,7 +477,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	if (pp->ops->host_init) {
+ 		ret = pp->ops->host_init(pp);
+ 		if (ret)
+-			goto error;
++			goto err_free_msi;
+ 	}
+ 
+ 	pp->root_bus_nr = pp->busn->start;
+@@ -491,7 +491,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 
+ 	ret = pci_scan_root_bus_bridge(bridge);
+ 	if (ret)
+-		goto error;
++		goto err_free_msi;
+ 
+ 	bus = bridge->bus;
+ 
+@@ -507,6 +507,9 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	pci_bus_add_devices(bus);
+ 	return 0;
+ 
++err_free_msi:
++	if (pci_msi_enabled() && !pp->ops->msi_host_init)
++		dw_pcie_free_msi(pp);
+ error:
+ 	pci_free_host_bridge(bridge);
+ 	return ret;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.20.1
+
+
+
