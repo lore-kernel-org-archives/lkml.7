@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AA6C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DE0C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C1021744
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD91F21721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443119;
-	bh=WWG29t6l9B1S5X0Ig0x7C6SGZJ4CFaWjnDt4Xe+nbD0=;
+	s=default; t=1560443121;
+	bh=xCttZXSfI1ITlmrih5GsZ+ykIoUW06ewZYuW20Wg2MI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EdJFmufJ3LFlYNMy7hgtzgtBisw92/EC8gCpegvSU4mzs47zDMsy4WPNAqN0I1Zxx
-	 EPvrqGogBsitzT+4eJcxThJq45Yin9tb3kmuTT4W19u0czHGUVSxSytvPTXyDGF+f1
-	 0K8gkjNqUAbg7s3OnFDbwlluycF0g08celrwKPOQ=
+	b=q737Rfw+eW1DESdAfZ8rq9gR7Jllple1SGJcDa3lqWi95/hq4CiQZHp4INkXkCkTR
+	 Z8ixIRTLjZ5Y2Kw6SsPyui2yWARo3tUVkTyTHoln2Bi2tpYmlVxblM+pw6NYHkeVu/
+	 tMujkGv7LJBYRFCNuWxZh1/5EVbK7/8L9BRAUJ28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392199AbfFMQZS (ORCPT
+        id S2392221AbfFMQZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:25:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54192 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:25:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730980AbfFMIgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:36:46 -0400
+        id S1730981AbfFMIgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:36:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 780E620851;
-        Thu, 13 Jun 2019 08:36:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98CF02133D;
+        Thu, 13 Jun 2019 08:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415005;
-        bh=WWG29t6l9B1S5X0Ig0x7C6SGZJ4CFaWjnDt4Xe+nbD0=;
+        s=default; t=1560415009;
+        bh=xCttZXSfI1ITlmrih5GsZ+ykIoUW06ewZYuW20Wg2MI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JQJt3ecmj8nlRyspdoDsiae8ZNl0Crldti3+4+3PGCNdALxLoPoBHMhwGYumJwMdc
-         xacPaiH417SMP29OdkpGNKqZzqANVk0SL/ultIvNR2PpgsqBgJMaYU3Be8kQrE144k
-         7VwJz+WO1E6T8dLzsYUe1OkPre+Tp23My4Dmsh3A=
+        b=GGU9O+OzD6vvy6065mWr67+UCwnP3RA6m7p71PBGqpaE84RjDXQPQqoROWsXXkcW1
+         3QcZS62euw6irBTTGV3rBdhPcgQJpo+MlTOIUgEEQY/EgUJFQfZXVE1zavqlwNSVwI
+         Xd3shUr4kbSsQRhNSjItEtyG+2O8nMOdzahMZPQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -50,9 +50,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Shawn Guo <shawnguo@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 52/81] ARM: dts: imx51: Specify IMX5_CLK_IPG as "ahb" clock to SDMA
-Date:   Thu, 13 Jun 2019 10:33:35 +0200
-Message-Id: <20190613075653.058097260@linuxfoundation.org>
+Subject: [PATCH 4.14 53/81] ARM: dts: imx50: Specify IMX5_CLK_IPG as "ahb" clock to SDMA
+Date:   Thu, 13 Jun 2019 10:33:36 +0200
+Message-Id: <20190613075653.110849078@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -65,7 +65,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 918bbde8085ae147a43dcb491953e0dd8f3e9d6a ]
+[ Upstream commit b7b4fda2636296471e29b78c2aa9535d7bedb7a0 ]
 
 Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
 clock to determine if it needs to configure the IP block as operating
@@ -86,22 +86,22 @@ Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx51.dtsi | 2 +-
+ arch/arm/boot/dts/imx50.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-index 1ee1d542d9ad..29c965126817 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -476,7 +476,7 @@
- 				reg = <0x83fb0000 0x4000>;
+diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
+index 3747d80104f4..63e1d2fe2e19 100644
+--- a/arch/arm/boot/dts/imx50.dtsi
++++ b/arch/arm/boot/dts/imx50.dtsi
+@@ -441,7 +441,7 @@
+ 				reg = <0x63fb0000 0x4000>;
  				interrupts = <6>;
  				clocks = <&clks IMX5_CLK_SDMA_GATE>,
 -					 <&clks IMX5_CLK_SDMA_GATE>;
 +					 <&clks IMX5_CLK_AHB>;
  				clock-names = "ipg", "ahb";
- 				#dma-cells = <3>;
- 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx51.bin";
+ 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx50.bin";
+ 			};
 -- 
 2.20.1
 
