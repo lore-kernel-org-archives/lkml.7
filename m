@@ -2,119 +2,117 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A14C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CD0C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A1621721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C01320B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:52:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AKeuB0I5"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="HuhOeDN4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbfFMSwt (ORCPT
+        id S1729168AbfFMSww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:52:49 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42790 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfFMSws (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:52:48 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x17so6605122wrl.9
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:52:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wF2lkDhjSFApoIX2SzKaCuD9I+vf8Vpj5caLDxf35+o=;
-        b=AKeuB0I58ke460ynxyqX4+mFv2g4TegQbeImOxNCfMfyFsDied0f2UkwWeSUzabyxL
-         XN4/m+xKjVR2ysnHrDJhul5Ezm6ZNBX0sNHXzUcrn8/Om/ayxXPeQKR6C8DzXSUwBOIi
-         BxW28g4p2jpnLM6+DphXrs6V1LAi4d00MesmFGsBroqcJ/yT9HIfIfu9f4WwtVvhsW9p
-         PaSpOCjpMWgWYBtZIR0nSJ8fRPP9cvokb2vDJqm/kHSpejndIsa+O/i9TvnawipNO9q+
-         X51wWbjK5F22t0ic653gOiEOxyVVJAqbV69W0+6xOvnelXd8GxCioB9EAnuHVYp4zLjX
-         d7Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wF2lkDhjSFApoIX2SzKaCuD9I+vf8Vpj5caLDxf35+o=;
-        b=Rj4Qjm5iBSZE6nXvLrxlyANlnOXzev+W+OEJs69nkv2HKK6JdwgMGZTVVZyf8tQrrC
-         ByjsztziWL48o+Qwed79hcd7FMD1ONDCm9PZEYs7kJ1I++Yqh9ZgAN+R7o7hosiuHCZX
-         a5O3zc3ikzks1D44LjC5UC4H+2pnzzQaHDrswka8SxIpHATbbAaOfz5K8Rorrf2mjMZR
-         KP8mmubj/G4nK21pxvS3WZGusivCgz6Mtbe4Pn3dk4B/AFNBXQL0LIlG8KQoyJPiWCN0
-         8IjLYNG/3lvroeZMI4ZI7kRAC2nkoPHW9Sz6lXMSIauVT1fntUgvG/SDnp1K9lDxehQt
-         wfiA==
-X-Gm-Message-State: APjAAAUVr4YrDtXXqW31U2DydquPEW9L507vplf85OChEYAkKO18sB3S
-        rvidmcd7sm+ToSyabUqXOBdxGr2yKJde0+Itk+I=
-X-Google-Smtp-Source: APXvYqz65TzXVExemKM65WYyNEKOoA5AJHrWLhsVDtVW9SOWURsb3zfBCUNgnQbyfrShxmr87zPG9wDFtS2xCWSEGOk=
-X-Received: by 2002:adf:f68f:: with SMTP id v15mr10763850wrp.4.1560451966892;
- Thu, 13 Jun 2019 11:52:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190613023208.GA29690@hari-Inspiron-1545> <CADnq5_PU_jvOskC-=+oRQdvYXZvu_n26ogoWTxLRxnW+ke4wDw@mail.gmail.com>
- <20190613184217.GA2385@ravnborg.org>
-In-Reply-To: <20190613184217.GA2385@ravnborg.org>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 13 Jun 2019 14:52:34 -0400
-Message-ID: <CADnq5_OSjJad7QGOCrWQL+LcjtCHQsCefpJ=K0mYUayFe9bUAA@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: fix compilation error
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Yongqiang Sun <yongqiang.sun@amd.com>,
-        Charlene Liu <charlene.liu@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Gloria Li <geling.li@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Tony Cheng <tony.cheng@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Anthony Koo <Anthony.Koo@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 13 Jun 2019 14:52:52 -0400
+Received: from mail-eopbgr00041.outbound.protection.outlook.com ([40.107.0.41]:6670
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725838AbfFMSwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 14:52:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FNfgWtpWZP+R3zWab6EmeYAQTAYgx2pVR+LpFXyrRss=;
+ b=HuhOeDN4cvQnIPbnkY3/38FWBgnbccW+6aHtR17EeaLBgLlfggbM7Jmgd9HH/svLW/bPsC9MlhNeSNa3bXCOnAHSwbCOCWxV/UJ9cNCAooyjp2IS3RJ6Yyn/362HV2+z6SsrcvE5DkDoUj77xNdUXAVZHIbvMwr5hkc5ZHOX/JM=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5919.eurprd05.prod.outlook.com (20.178.126.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.11; Thu, 13 Jun 2019 18:52:44 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
+ 18:52:44 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 03/22] mm: remove hmm_devmem_add_resource
+Thread-Topic: [PATCH 03/22] mm: remove hmm_devmem_add_resource
+Thread-Index: AQHVIcx8KEghGfMSdEK+G1+HLD+T3KaZ7r+A
+Date:   Thu, 13 Jun 2019 18:52:44 +0000
+Message-ID: <20190613185239.GP22062@mellanox.com>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-4-hch@lst.de>
+In-Reply-To: <20190613094326.24093-4-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR16CA0007.namprd16.prod.outlook.com
+ (2603:10b6:208:134::20) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 88cc1feb-7b67-4d6e-c18f-08d6f03051c6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5919;
+x-ms-traffictypediagnostic: VI1PR05MB5919:
+x-microsoft-antispam-prvs: <VI1PR05MB5919FFFF62953C9A7D5AF300CFEF0@VI1PR05MB5919.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(346002)(376002)(39860400002)(136003)(199004)(189003)(99286004)(229853002)(7416002)(2906002)(53936002)(6486002)(6436002)(86362001)(81166006)(8676002)(186003)(6916009)(26005)(81156014)(102836004)(6116002)(4326008)(3846002)(25786009)(305945005)(7736002)(76176011)(6246003)(68736007)(486006)(316002)(52116002)(476003)(386003)(6506007)(11346002)(2616005)(446003)(1076003)(14454004)(256004)(4744005)(71190400001)(66066001)(33656002)(64756008)(66476007)(66946007)(66556008)(71200400001)(54906003)(36756003)(8936002)(6512007)(73956011)(5660300002)(478600001)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5919;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: iPoetAJzPWZv8VU52oGqZLrf5f3NTUkWPIOsu2E3P9cUOeZ3NwtuyEYz7iS7GJhlnDVMvGysQH81INXAyHGi4fhjs5va1Vo7Rdk93MlIgXRDPGqXx6+KGKEioXBXh61QIBW+HjfcdF9Afc/Uz8IU4w2KDhGZZyhNl/YEDKF9BG8aoozap+p31SfnFwV4kfNk64o6JW56KSiT60BrYrmeCz1XjhbsuaBg6SlAuqng5W2PWwz6FDD5jzrI/s5ZqBSLG+9QaRGa5ztkbj0f21QAbgQ9bDRkhNtDPfY/D24ndwUJPvjpdNIvVA5Nbk22Z1FnYXFRZc91aJgcqQyXDuUFzCT23/IfQophXoBr4oq2jKokb9DjG1mV1f29A7FqlAqhk+lNsM6TLohpGpppFxMbAIkVr/LP6Ao3e2lHBGtj3ng=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <866711CC77D78F4DBA1F59965DF24E41@eurprd05.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88cc1feb-7b67-4d6e-c18f-08d6f03051c6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 18:52:44.2949
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5919
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 2:42 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Alex.
->
-> On Wed, Jun 12, 2019 at 10:35:26PM -0400, Alex Deucher wrote:
-> > On Wed, Jun 12, 2019 at 10:34 PM Hariprasad Kelam
-> > <hariprasad.kelam@gmail.com> wrote:
-> > >
-> > > this patch fixes below compilation error
-> > >
-> > > drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c: =
-In
-> > > function =E2=80=98dcn10_apply_ctx_for_surface=E2=80=99:
-> > > drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c:2=
-378:3:
-> > > error: implicit declaration of function =E2=80=98udelay=E2=80=99
-> > > [-Werror=3Dimplicit-function-declaration]
-> > >    udelay(underflow_check_delay_us);
-> > >
-> > > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
->
-> Am I right in assuming you took this patch?
->
-> I expect that new code using udelay was added to the amd tree,
-> and when merged with drm-misc-next it failed, because drm-misc-next no
-> longer had drmP.h included so no implicit include of delay.h
->
-> The root cause was that my original patchset should have been based
-> on the amd tree, and applied there :-(
+On Thu, Jun 13, 2019 at 11:43:06AM +0200, Christoph Hellwig wrote:
+> This function has never been used since it was first added to the kernel
+> more than a year and a half ago, and if we ever grow a consumer of the
+> MEMORY_DEVICE_PUBLIC infrastructure it can easily use devm_memremap_pages
+> directly now that we've simplified the API for it.
 
-No worries.  I've picked it up.
+nit: Have we simplified the interface for devm_memremap_pages() at
+this point, or are you talking about later patches in this series.
 
-Alex
+I checked this and all the called functions are exported symbols, so
+there is no blocker for a future driver to call devm_memremap_pages(),
+maybe even with all this boiler plate, in future.
+
+If we eventually get many users that need some simplified registration
+then we should add a devm_memremap_pages_simplified() interface and
+factor out that code when we can see the pattern.
+
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+
+Jason
