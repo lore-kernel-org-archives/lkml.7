@@ -2,132 +2,155 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9C1C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A46C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A744520665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF3D20866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560442585;
+	bh=ss0pxPaLLqpqYd7wUmzKeZFRvjvsi0CSNDrkeGQbD4E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2qLnUIKCdWgovAvrzretuo8Oj0/sbOg9VmApIHej8Ik0+Y0K3abKMeGjsOv30f/hg
+	 7Dd8xDSDeZkc+Re3mEpp3ywlpjkUxuZ20GXdmgYm2IhhTGMvqswAjfWx9b+2wm58b8
+	 ipVDcDjHAgZeWisT1Vt8REPKoJw9gtEf7xZjUhb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391910AbfFMQQG (ORCPT
+        id S2391935AbfFMQQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:16:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:44920 "EHLO foss.arm.com"
+        Thu, 13 Jun 2019 12:16:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731160AbfFMQQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:16:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12AAE367;
-        Thu, 13 Jun 2019 09:16:04 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB5643F694;
-        Thu, 13 Jun 2019 09:15:58 -0700 (PDT)
-Subject: Re: [PATCH v17 03/15] arm64: Introduce prctl() options to control the
- tagged user addresses ABI
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-References: <cover.1560339705.git.andreyknvl@google.com>
- <a7a2933bea5fe57e504891b7eec7e9432e5e1c1a.1560339705.git.andreyknvl@google.com>
- <20190613111659.GX28398@e103592.cambridge.arm.com>
- <20190613153505.GU28951@C02TF0J2HF1T.local>
- <99cc257d-5e99-922a-fbe7-3bbaf3621e38@arm.com>
- <20190613155754.GX28951@C02TF0J2HF1T.local>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <e481dbf9-880e-c77e-5200-1dbc35be7a48@arm.com>
-Date:   Thu, 13 Jun 2019 17:15:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1731152AbfFMIlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:41:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5685920851;
+        Thu, 13 Jun 2019 08:41:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560415284;
+        bh=ss0pxPaLLqpqYd7wUmzKeZFRvjvsi0CSNDrkeGQbD4E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=a1YdIDAvY+Pm1p6Fyi2AV9e7hQIoAfMmi29wJ+Au7VsLT7x+dG1EYRTPE74SQOeHX
+         wxeXuNAsicI/0aPzWbxElR8BiMwz4ZnKHXKlA8XsEfL6kHjZJ6NjseELuAUa0/LgIm
+         nxYgS91n6DbkgvKlu4RZ6HcVTWhrQHnARp8b9r5k=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 041/118] f2fs: fix to do checksum even if inode page is uptodate
+Date:   Thu, 13 Jun 2019 10:32:59 +0200
+Message-Id: <20190613075645.972616217@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
+References: <20190613075643.642092651@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190613155754.GX28951@C02TF0J2HF1T.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[ Upstream commit b42b179bda9ff11075a6fc2bac4d9e400513679a ]
 
-On 13/06/2019 16:57, Catalin Marinas wrote:
-> On Thu, Jun 13, 2019 at 04:45:54PM +0100, Vincenzo Frascino wrote:
->> On 13/06/2019 16:35, Catalin Marinas wrote:
->>> On Thu, Jun 13, 2019 at 12:16:59PM +0100, Dave P Martin wrote:
->>>> On Wed, Jun 12, 2019 at 01:43:20PM +0200, Andrey Konovalov wrote:
->>>>> +
->>>>> +/*
->>>>> + * Control the relaxed ABI allowing tagged user addresses into the kernel.
->>>>> + */
->>>>> +static unsigned int tagged_addr_prctl_allowed = 1;
->>>>> +
->>>>> +long set_tagged_addr_ctrl(unsigned long arg)
->>>>> +{
->>>>> +	if (!tagged_addr_prctl_allowed)
->>>>> +		return -EINVAL;
->>>>
->>>> So, tagging can actually be locked on by having a process enable it and
->>>> then some possibly unrelated process clearing tagged_addr_prctl_allowed.
->>>> That feels a bit weird.
->>>
->>> The problem is that if you disable the ABI globally, lots of
->>> applications would crash. This sysctl is meant as a way to disable the
->>> opt-in to the TBI ABI. Another option would be a kernel command line
->>> option (I'm not keen on a Kconfig option).
->>
->> Why you are not keen on a Kconfig option?
-> 
-> Because I don't want to rebuild the kernel/reboot just to be able to
-> test how user space handles the ABI opt-in. I'm ok with a Kconfig option
-> to disable this globally in addition to a run-time option (if actually
-> needed, I'm not sure).
-> 
-There might be scenarios (i.e. embedded) in which this is not needed, hence
-having a config option (maybe Y by default) that removes from the kernel the
-whole feature would be good, obviously in conjunction with the run-time option.
+As Jungyeon reported in bugzilla:
 
-Based on my previous review, if we move out the code from process.c in its own
-independent file when the Kconfig option is turned off we could remove the
-entire object from the kernel (this would remove the sysctl and let still the
-prctl return -EINVAL).
+https://bugzilla.kernel.org/show_bug.cgi?id=203221
 
-These changes though could be done successively with a separate patch set, if
-the Kconfig is meant to be Y by default.
+- Overview
+When mounting the attached crafted image and running program, this error is reported.
 
+The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
+
+- Reproduces
+cc poc_07.c
+mkdir test
+mount -t f2fs tmp.img test
+cp a.out test
+cd test
+sudo ./a.out
+
+- Messages
+ kernel BUG at fs/f2fs/node.c:1279!
+ RIP: 0010:read_node_page+0xcf/0xf0
+ Call Trace:
+  __get_node_page+0x6b/0x2f0
+  f2fs_iget+0x8f/0xdf0
+  f2fs_lookup+0x136/0x320
+  __lookup_slow+0x92/0x140
+  lookup_slow+0x30/0x50
+  walk_component+0x1c1/0x350
+  path_lookupat+0x62/0x200
+  filename_lookup+0xb3/0x1a0
+  do_fchmodat+0x3e/0xa0
+  __x64_sys_chmod+0x12/0x20
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+On below paths, we can have opportunity to readahead inode page
+- gc_node_segment -> f2fs_ra_node_page
+- gc_data_segment -> f2fs_ra_node_page
+- f2fs_fill_dentries -> f2fs_ra_node_page
+
+Unlike synchronized read, on readahead path, we can set page uptodate
+before verifying page's checksum, then read_node_page() will trigger
+kernel panic once it encounters a uptodated page w/ incorrect checksum.
+
+So considering readahead scenario, we have to do checksum each time
+when loading inode page even if it is uptodated.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/f2fs/inode.c | 4 ++--
+ fs/f2fs/node.c  | 7 ++++---
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index fae9570e6860..0f31df01e36c 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -179,8 +179,8 @@ bool f2fs_inode_chksum_verify(struct f2fs_sb_info *sbi, struct page *page)
+ 
+ 	if (provided != calculated)
+ 		f2fs_msg(sbi->sb, KERN_WARNING,
+-			"checksum invalid, ino = %x, %x vs. %x",
+-			ino_of_node(page), provided, calculated);
++			"checksum invalid, nid = %lu, ino_of_node = %x, %x vs. %x",
++			page->index, ino_of_node(page), provided, calculated);
+ 
+ 	return provided == calculated;
+ }
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 34c3f732601c..e2d9edad758c 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -1282,9 +1282,10 @@ static int read_node_page(struct page *page, int op_flags)
+ 	int err;
+ 
+ 	if (PageUptodate(page)) {
+-#ifdef CONFIG_F2FS_CHECK_FS
+-		f2fs_bug_on(sbi, !f2fs_inode_chksum_verify(sbi, page));
+-#endif
++		if (!f2fs_inode_chksum_verify(sbi, page)) {
++			ClearPageUptodate(page);
++			return -EBADMSG;
++		}
+ 		return LOCKED_PAGE;
+ 	}
+ 
 -- 
-Regards,
-Vincenzo
+2.20.1
+
+
+
