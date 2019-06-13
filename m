@@ -7,55 +7,48 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20EBC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E01C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A65C420644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED71D2147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443155;
-	bh=9INB2P2iUkV83KaFw/Gx+3oZz2B6MAhwPwEHjvtXxvk=;
+	s=default; t=1560443161;
+	bh=ziRWNeAPfsFyq7hPX6N+EM0v9ri8dKuOt4apz8TikcU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RHugQIRLrKt+t0xBzDZIcxKVEq6YzPMg+fHcdvivpLi7slYqeUu9YO4EebPNIfp7g
-	 Zls27AMPKhMH5+01p5RpHFXYRYEJh0dXFmN6zAXklLIISdt9h5J69Lh96Pps2ajzmP
-	 Yzn7l/zRpUXq80cTJQzTm2qDKewAd9JC9zhRgZ2I=
+	b=hmS2bRetuCKIuM+whju/H/vUKCAavxvPKKhqvno1D6QIUH0BcTNoVU+UiDzyqvPoO
+	 8/i9MKuATspEL5qyxtIWgphXfiTJU2WbqtIHg2lHMfgrydiGQriQc3OPmybNRnwjJQ
+	 ulsxnVz4gkpRN9zjlEPBs0OAoBAZF+kvZ1/UX4Xc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392275AbfFMQZy (ORCPT
+        id S2392110AbfFMQZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:25:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53956 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:25:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730967AbfFMIg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:36:26 -0400
+        id S1730972AbfFMIgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:36:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8932A2147A;
-        Thu, 13 Jun 2019 08:36:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 691BC21479;
+        Thu, 13 Jun 2019 08:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560414986;
-        bh=9INB2P2iUkV83KaFw/Gx+3oZz2B6MAhwPwEHjvtXxvk=;
+        s=default; t=1560414991;
+        bh=ziRWNeAPfsFyq7hPX6N+EM0v9ri8dKuOt4apz8TikcU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v2wVDZxat0S7CrJxZmRmRoYVWT7tDak3LRuZ1E5gxUVtFomndnwwKBDVxqd3BoCB8
-         xacgMxwQXflitx/SS0exiIjBXPAaEuhyp2eTBSHnfM/Q7z+Ja7uQ/owpy0gYMT/fz4
-         uC0quXkyVpPgfK05sURNS5JRZ98p4JXldudBxNww=
+        b=XFFVEmfV6eLmwSzjGNRQNikKczkhu2+Zp1NaXoAk/3+HKIQgyBXmGYWcfPKnLr8GF
+         AImyacaN8i6rBkpJIw1f7D5RAFxgw56OPl4cMFD49v3ZpTYgAWXGiPkvzkG7MtS/LD
+         x+SDco3F+21gJ1MePgVbDedYZ6+h5V2SDLzhWw2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        James Smart <james.smart@broadcom.com>,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>
-Subject: [PATCH 4.14 37/81] blk-mq: move cancel of requeue_work into blk_mq_release
-Date:   Thu, 13 Jun 2019 10:33:20 +0200
-Message-Id: <20190613075652.080492893@linuxfoundation.org>
+        stable@vger.kernel.org, Enrico Granata <egranata@chromium.org>,
+        Jett Rink <jettrink@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 47/81] platform/chrome: cros_ec_proto: check for NULL transfer function
+Date:   Thu, 13 Jun 2019 10:33:30 +0200
+Message-Id: <20190613075652.740502088@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -68,62 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fbc2a15e3433058582e5635aabe48a3011a644a8 ]
+[ Upstream commit 94d4e7af14a1170e34cf082d92e4c02de9e9fb88 ]
 
-With holding queue's kobject refcount, it is safe for driver
-to schedule requeue. However, blk_mq_kick_requeue_list() may
-be called after blk_sync_queue() is done because of concurrent
-requeue activities, then requeue work may not be completed when
-freeing queue, and kernel oops is triggered.
+As new transfer mechanisms are added to the EC codebase, they may
+not support v2 of the EC protocol.
 
-So moving the cancel of requeue_work into blk_mq_release() for
-avoiding race between requeue and freeing queue.
+If the v3 initial handshake transfer fails, the kernel will try
+and call cmd_xfer as a fallback. If v2 is not supported, cmd_xfer
+will be NULL, and the code will end up causing a kernel panic.
 
-Cc: Dongli Zhang <dongli.zhang@oracle.com>
-Cc: James Smart <james.smart@broadcom.com>
-Cc: Bart Van Assche <bart.vanassche@wdc.com>
-Cc: linux-scsi@vger.kernel.org,
-Cc: Martin K . Petersen <martin.petersen@oracle.com>,
-Cc: Christoph Hellwig <hch@lst.de>,
-Cc: James E . J . Bottomley <jejb@linux.vnet.ibm.com>,
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Tested-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Add a check for NULL before calling the transfer function, along
+with a helpful comment explaining how one might end up in this
+situation.
+
+Signed-off-by: Enrico Granata <egranata@chromium.org>
+Reviewed-by: Jett Rink <jettrink@chromium.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-core.c | 1 -
- block/blk-mq.c   | 2 ++
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/platform/chrome/cros_ec_proto.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 0b14aebfd1a8..4e04c79aa2c2 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -339,7 +339,6 @@ void blk_sync_queue(struct request_queue *q)
- 		struct blk_mq_hw_ctx *hctx;
- 		int i;
+diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+index 2ac4a7178470..dbad14716da4 100644
+--- a/drivers/platform/chrome/cros_ec_proto.c
++++ b/drivers/platform/chrome/cros_ec_proto.c
+@@ -67,6 +67,17 @@ static int send_command(struct cros_ec_device *ec_dev,
+ 	else
+ 		xfer_fxn = ec_dev->cmd_xfer;
  
--		cancel_delayed_work_sync(&q->requeue_work);
- 		queue_for_each_hw_ctx(q, hctx, i)
- 			cancel_delayed_work_sync(&hctx->run_work);
- 	} else {
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index eac444804736..55139d2fca3e 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2294,6 +2294,8 @@ void blk_mq_release(struct request_queue *q)
- 	struct blk_mq_hw_ctx *hctx;
- 	unsigned int i;
- 
-+	cancel_delayed_work_sync(&q->requeue_work);
++	if (!xfer_fxn) {
++		/*
++		 * This error can happen if a communication error happened and
++		 * the EC is trying to use protocol v2, on an underlying
++		 * communication mechanism that does not support v2.
++		 */
++		dev_err_once(ec_dev->dev,
++			     "missing EC transfer API, cannot send command\n");
++		return -EIO;
++	}
 +
- 	/* hctx kobj stays in hctx */
- 	queue_for_each_hw_ctx(q, hctx, i) {
- 		if (!hctx)
+ 	ret = (*xfer_fxn)(ec_dev, msg);
+ 	if (msg->result == EC_RES_IN_PROGRESS) {
+ 		int i;
 -- 
 2.20.1
 
