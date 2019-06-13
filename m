@@ -2,103 +2,115 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B477C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E21EC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4084221473
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C40921473
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:58:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWMgkqUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbfFMV5M (ORCPT
+        id S1728554AbfFMV6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 17:57:12 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:33497 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfFMV5L (ORCPT
+        Thu, 13 Jun 2019 17:58:13 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40477 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfFMV6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 17:57:11 -0400
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id E8A4A240005;
-        Thu, 13 Jun 2019 21:57:06 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 00:06:54 +0200
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Fix PCI_EXP_RTCTL conf register writing
-Message-ID: <20190613220653.GB12859@voidbox.localdomain>
-References: <20190522213351.21366-1-repk@triplefau.lt>
- <20190613161441.GA2247@e121166-lin.cambridge.arm.com>
+        Thu, 13 Jun 2019 17:58:12 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a93so92389pla.7;
+        Thu, 13 Jun 2019 14:58:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UgX/twFRvWeH3GOio6+WgkRLrlXF1WlNpv4jZgJXeN4=;
+        b=iWMgkqUtLROkrabF/g8NyTx6+PxfvDT4al+AvzYnirt8OFYTAHZ7DGd0EL0xU9WUX8
+         niJa2m/EpWdjOaaJMjv1yBARfXIV4tP74lELKvoFddDHa+WYuqNIBksCs8DlSt9WUNkk
+         qGWwp1jJ+0PGO+LkI/RgtBnmy6nD0GEMah/pZRJchpdlC8b8UufXDCj9yc5v/i9dn4AR
+         tfDRByjHm55StncPfXVqphTDPip4aq/AxQlQr/ZAq1IMDvWfXBqitYFgEryQsGlOgCJN
+         hxKejuzc+3dWEeZoIeTEf/vRAAbYSjOaeGL2XZASmxJhphWcOeYnpIsQDLB9Sz3/czFP
+         IR8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UgX/twFRvWeH3GOio6+WgkRLrlXF1WlNpv4jZgJXeN4=;
+        b=qEC39tZqeLAt2KiuTRzubspgO1MiZyhnWYI6tv8fbuNe7Gij8QCblkR/9/vL5+fORD
+         vEQMHpmm721w9LuOTAaW5USmXTk6D5tBIKDtxARYKfRzXiD9kxVoikF2hzIS68ZUV7m1
+         /4Ap+24plkSJkdp14E/VECKg7FMnqt9VVwRA1DLfs+ZiigMol+P6i3byRDct81qLmuo2
+         q1a95LdQbu5qfY2dCRwvTf6Gym4vTURrTUk94s3bTT4ZT56dPU1QsIKxhWCAMdEZd8iM
+         V7yVN8/HMJ0Tw1g7D7A+ybwSiwKD79LCtK0Y0Uw0li/zBblyZp1QyraHfKvK2IcQsTHD
+         wI/A==
+X-Gm-Message-State: APjAAAW7pD1VvceHAd3vhtPkUUMkPvsyPgnCxJidofJO8tZUO1qqWghx
+        HKYuWbdG6D6DkUGy7aIdoac=
+X-Google-Smtp-Source: APXvYqyCot9boqYe3zZh8zf9o7E8QgZclmSm+JdTGJT6yfBNMz2PM0EDuRtr1EmljLaYdC+4MnjyMA==
+X-Received: by 2002:a17:902:830c:: with SMTP id bd12mr12011539plb.237.1560463091883;
+        Thu, 13 Jun 2019 14:58:11 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::2:e034])
+        by smtp.gmail.com with ESMTPSA id j7sm595663pfa.184.2019.06.13.14.58.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 14:58:11 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 14:58:09 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>
+Subject: Re: [PATCH 6/9] x86/bpf: Fix JIT frame pointer usage
+Message-ID: <20190613215807.wjcop6eaadirz5xm@ast-mbp.dhcp.thefacebook.com>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <03ddea21a533b7b0e471c1d73ebff19dacdcf7e3.1560431531.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190613161441.GA2247@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <03ddea21a533b7b0e471c1d73ebff19dacdcf7e3.1560431531.git.jpoimboe@redhat.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 05:14:41PM +0100, Lorenzo Pieralisi wrote:
-> On Wed, May 22, 2019 at 11:33:49PM +0200, Remi Pommarel wrote:
-> > PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
-> > should not modify other interrupts' mask (such as ISR0).
-> > 
-> > Fixes: 6302bf3ef78d ("PCI: Init PCIe feature bits for managed host bridge alloc")
-> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> > ---
-> > Please note that I will unlikely be able to answer any comments from May
-> > 24th to June 10th.
-> > ---
-> >  drivers/pci/controller/pci-aardvark.c | 10 +++++++---
-> >  1 file changed, 7 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > index 134e0306ff00..27102d3b4f9c 100644
-> > --- a/drivers/pci/controller/pci-aardvark.c
-> > +++ b/drivers/pci/controller/pci-aardvark.c
-> > @@ -451,10 +451,14 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
-> >  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
-> >  		break;
-> >  
-> > -	case PCI_EXP_RTCTL:
-> > -		new = (new & PCI_EXP_RTCTL_PMEIE) << 3;
-> > -		advk_writel(pcie, new, PCIE_ISR0_MASK_REG);
-> > +	case PCI_EXP_RTCTL: {
-> > +		/* Only mask/unmask PME interrupt */
-> > +		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
-> > +			~PCIE_MSG_PM_PME_MASK;
-> > +		val |= (new & PCI_EXP_RTCTL_PMEIE) << 3;
+On Thu, Jun 13, 2019 at 08:21:03AM -0500, Josh Poimboeuf wrote:
+> The BPF JIT code clobbers RBP.  This breaks frame pointer convention and
+> thus prevents the FP unwinder from unwinding through JIT generated code.
 > 
-> I know you have not introduced this code but maybe we can
-> take an opportunity to clarify it (that << 3 shift obfuscates
-> a bit):
+> RBP is currently used as the BPF stack frame pointer register.  The
+> actual register used is opaque to the user, as long as it's a
+> callee-saved register.  Change it to use R12 instead.
 > 
-> 	u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
-> 			~PCIE_MSG_PM_PME_MASK;
+> Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+> Reported-by: Song Liu <songliubraving@fb.com>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+>  arch/x86/net/bpf_jit_comp.c | 43 +++++++++++++++++++++----------------
+>  1 file changed, 25 insertions(+), 18 deletions(-)
 > 
-> 	if (new & PCI_EXP_RTCTL_PMEIE)
-> 		val |= PCIE_MSG_PM_PME_MASK;
-> 
-> 	advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
-> 	break;
-> 
-> Or I am not reading the code correctly ?
+> diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+> index e649f977f8e1..bb1968fea50a 100644
+> --- a/arch/x86/net/bpf_jit_comp.c
+> +++ b/arch/x86/net/bpf_jit_comp.c
+> @@ -100,9 +100,8 @@ static int bpf_size_to_x86_bytes(int bpf_size)
+>  /*
+>   * The following table maps BPF registers to x86-64 registers.
+>   *
+> - * x86-64 register R12 is unused, since if used as base address
+> - * register in load/store instructions, it always needs an
+> - * extra byte of encoding and is callee saved.
+> + * RBP isn't used; it needs to be preserved to allow the unwinder to move
+> + * through generated code stacks.
 
-Sure, that clarifies the code at the point where I realize that the
-"<< 3" from the original code was off by one and the mask polarity was
-inverted. So I'll fix all that in the v2.
+Extra register save/restore is kinda annoying just to fix ORC.
+Also every stack access from bpf prog will be encoded via r12 and consume
+extra byte of encoding. I really don't like this approach.
+Can you teach ORC to understand JIT-ed frames instead?
 
-Thanks.
-
--- 
-Remi
