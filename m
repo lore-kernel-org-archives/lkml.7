@@ -2,89 +2,200 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6E6C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 134D6C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C133F20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:29:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560457799;
-	bh=0iLt/Fa8XYhemgapCiYaelKUD8VU0IGkBOAdSVq0T6Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EZaaytF+guj3yulKu41IGMp9/C9bn8eJAJWlY6DdGhtDONj2gp+4loK/930EyUg1C
-	 pv5sk1/y+FA73JINiBIxq29B3oBzPpM24uMob2b5fr+xsz7SG07oLh3Wc9cF7DxGb5
-	 jbbRHtFmBjhTDn7j8uoRR+Ms03fn6A6qSQFsZgQU=
+	by mail.kernel.org (Postfix) with ESMTP id DF32421537
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:32:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mh0Rc495"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbfFMU36 (ORCPT
+        id S1728199AbfFMUco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:29:58 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36871 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbfFMU36 (ORCPT
+        Thu, 13 Jun 2019 16:32:44 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:44441 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfFMUco (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:29:58 -0400
-Received: by mail-qt1-f196.google.com with SMTP id y57so24201211qtk.4;
-        Thu, 13 Jun 2019 13:29:57 -0700 (PDT)
+        Thu, 13 Jun 2019 16:32:44 -0400
+Received: by mail-ua1-f65.google.com with SMTP id 8so48555uaz.11
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 13:32:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XnwdqEB/zxSUoi8AX3TTUKJIQzqvpn/EDnWBDbRAeC0=;
+        b=mh0Rc495xOBUVTnnEmr4AY5NBwVSaqzX7zqV6Dc0pZhAdBBMh97ij8pz/2/iyufp6F
+         ooJ45PQgHYRytRZez//z7awy8/LfcteuyU4iQPzoIaxepq7w2liWukbsUhe7AVsGV2m4
+         cGRVK2X2wHvYVrnO3N3b1vRlOqgAy1SA4v+7JmfMJIywOp9HK3ygvJWCv7tbo6q745j4
+         w7aNSUQU4VPwQ+rzdjFOPSxICgPxP25z9gSYvI9Fr4DHolTZx7l7s1QyHkMnZG2KUxWG
+         2/hwjxPew43xbKjCW3en5tfPSloSM/x9hxBFVQ0j+Y7gNVoK1FrgVaKF+OIkIdmaZH4p
+         Ua2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q2W9IgO+Pe6i1WAFkf2iukORqFWWBYZf6QLHmSp3BkA=;
-        b=Yh8MZWMBpTGKX1iVyTQCpVnfxpAAgQhSODVw1u+pp1MtTd40FwXoi1rSjuxcPcqsr1
-         QVSmj76EbJV7lwis7buHrq7TmQW46PWZNJlaVGmPFR2ugsK1PoX6SttnwO78HLRQUVJ7
-         8Zxn79z4MKzoDOSuGFF6aIlyjShdGlXyhSMKWn+oIz0+isOEEAaNVJWWkLq7kjHo0Dx8
-         pkMf0lOJsGD7vqUVm/EQllKB3Et5DlEHGW+jQZrpV3yQbMCTZ2lhnT6GatOFiZjXp5cw
-         QNfSw04hABk+sXRnO1NdBJTawbGqEugSLCNt2CEd8Ql/riyIrTYb6pKIq6aEAD8KFcmq
-         jkAg==
-X-Gm-Message-State: APjAAAVEopO7eEAgww6dlD+NqeEoswa/Arq5bRiTgpm+/y1qz62r8NCn
-        GMI8324ygjCNekzSyw7rwFWkaPQ=
-X-Google-Smtp-Source: APXvYqwqfWuM/erWRPw6zM7jFj71l0/SCr2QTQZEniQOedhiT/JJF1KSiP+dUIuhqA3/gdNtt+nVfQ==
-X-Received: by 2002:ac8:156:: with SMTP id f22mr58679280qtg.58.1560457797041;
-        Thu, 13 Jun 2019 13:29:57 -0700 (PDT)
-Received: from localhost ([64.188.179.243])
-        by smtp.gmail.com with ESMTPSA id y42sm565705qtc.66.2019.06.13.13.29.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 13:29:56 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 14:29:55 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH] dt-bindings: property-units: Sanitize unit naming
-Message-ID: <20190613202955.GA22441@bogus>
-References: <20190514085024.17587-1-geert+renesas@glider.be>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XnwdqEB/zxSUoi8AX3TTUKJIQzqvpn/EDnWBDbRAeC0=;
+        b=GrlLopzh1nLW/kZjJkdPRR/i0Hu/qzkAaywNsuQpY6wT3Jd6qyu+MWaRbTdy6x+pKU
+         ebLDyGKDxRKrGa3zGnElQnGxpKky6CuCHDxCEW+OcbHP3D91X2wy/V9KOfNKnGCu8lFG
+         Ia+homfY7fKWQU6quu9FWtVhMR70c0PHxzAB3JHMxyg8U9pdmexovYVvaTEcEtywSR5I
+         xxpEzWJyLzrny9PDe7RvVdXsE0hdJGKa1NGFocbpdH4rL+jOOFv39v10+yt+Wub6pMI5
+         pzzfVDaYfFwD1G9NSAsQ8iqrgcuf6yiDO8dRZeX32uMSqQ5Q7VuLVKIwxJu4QUyr7UY5
+         qN7g==
+X-Gm-Message-State: APjAAAXkk5CIz3EX1Wofft1MkxhM/bV52/gMnJdr9UsYmWtowHdaAGiW
+        0m1uBlR6u/FnJEkRgH6INGifuCboMz32Rw4r7VvxZr/zJt7bSQ==
+X-Google-Smtp-Source: APXvYqwYSC5celn0/YY56qS1Ya7QSTRLAhhjVJF5SlLdd0JuZboIS3qB8YqgOjoOCvVdt0mtU6tXdL4lZWb7/Se6XdM=
+X-Received: by 2002:ab0:6619:: with SMTP id r25mr3232042uam.33.1560457962568;
+ Thu, 13 Jun 2019 13:32:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514085024.17587-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <156007465229.3335.10259979070641486905.stgit@buzz>
+ <156007493995.3335.9595044802115356911.stgit@buzz> <20190612231426.GA3639@gmail.com>
+ <f15478b5-098f-e1be-0928-62f46cff77e7@yandex-team.ru>
+In-Reply-To: <f15478b5-098f-e1be-0928-62f46cff77e7@yandex-team.ru>
+From:   Andrei Vagin <avagin@gmail.com>
+Date:   Thu, 13 Jun 2019 13:32:31 -0700
+Message-ID: <CANaxB-xUADVJx7HL6uHNRLDLNC19urcp-NY6RnyrckuH2neaAw@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] proc: use down_read_killable mmap_sem for /proc/pid/map_files
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Roman Gushchin <guro@fb.com>, Dmitry Safonov <dima@arista.com>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 May 2019 10:50:24 +0200, Geert Uytterhoeven wrote:
-> Make the naming of units consistent with common practices:
->   - Do not capitalize the first character of units ("Celsius" is
->     special, as it is not the unit name, but a reference to its
->     proposer),
->   - Do not use plural for units,
->   - Do not abbreviate "ampere",
->   - Concatenate prefixes and units (no spaces or hyphens),
->   - Separate units by spaces not hyphens,
->   - "milli" applies to "degree", not to "Celsius".
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  .../devicetree/bindings/property-units.txt    | 34 +++++++++----------
->  1 file changed, 17 insertions(+), 17 deletions(-)
-> 
+On Thu, Jun 13, 2019 at 1:15 AM Konstantin Khlebnikov
+<khlebnikov@yandex-team.ru> wrote:
+>
+> On 13.06.2019 2:14, Andrei Vagin wrote:
+> > On Sun, Jun 09, 2019 at 01:09:00PM +0300, Konstantin Khlebnikov wrote:
+> >> Do not stuck forever if something wrong.
+> >> Killable lock allows to cleanup stuck tasks and simplifies investigation.
+> >
+> > This patch breaks the CRIU project, because stat() returns EINTR instead
+> > of ENOENT:
+> >
+> > [root@fc24 criu]# stat /proc/self/map_files/0-0
+> > stat: cannot stat '/proc/self/map_files/0-0': Interrupted system call
+>
+> Good catch.
+>
+> It seems CRIU tests has good coverage for darkest corners of kernel API.
+> Kernel CI projects should use it. I suppose you know how to promote this. =)
 
-Applied, thanks.
+I remember Mike was trying to add the CRIU test suite into kernel-ci,
+but it looks like this ended up with nothing.
 
-Rob
+The good thing here is that we have our own kernel-ci:
+https://travis-ci.org/avagin/linux/builds
+
+Travis-CI doesn't allow to replace the kernel, so we use CRIU to
+dump/restore a ssh session and travis doesn't notice when we kexec a
+new kernel.
+
+>
+> >
+> > Here is one inline comment with the fix for this issue.
+> >
+> >>
+> >> It seems ->d_revalidate() could return any error (except ECHILD) to
+> >> abort validation and pass error as result of lookup sequence.
+> >>
+> >> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> >> Reviewed-by: Roman Gushchin <guro@fb.com>
+> >> Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
+> >> Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> >
+> > It was nice to see all four of you in one place :).
+> >
+> >> Acked-by: Michal Hocko <mhocko@suse.com>
+> >> ---
+> >>   fs/proc/base.c |   27 +++++++++++++++++++++------
+> >>   1 file changed, 21 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> >> index 9c8ca6cd3ce4..515ab29c2adf 100644
+> >> --- a/fs/proc/base.c
+> >> +++ b/fs/proc/base.c
+> >> @@ -1962,9 +1962,12 @@ static int map_files_d_revalidate(struct dentry *dentry, unsigned int flags)
+> >>              goto out;
+> >>
+> >>      if (!dname_to_vma_addr(dentry, &vm_start, &vm_end)) {
+> >> -            down_read(&mm->mmap_sem);
+> >> -            exact_vma_exists = !!find_exact_vma(mm, vm_start, vm_end);
+> >> -            up_read(&mm->mmap_sem);
+> >> +            status = down_read_killable(&mm->mmap_sem);
+> >> +            if (!status) {
+> >> +                    exact_vma_exists = !!find_exact_vma(mm, vm_start,
+> >> +                                                        vm_end);
+> >> +                    up_read(&mm->mmap_sem);
+> >> +            }
+> >>      }
+> >>
+> >>      mmput(mm);
+> >> @@ -2010,8 +2013,11 @@ static int map_files_get_link(struct dentry *dentry, struct path *path)
+> >>      if (rc)
+> >>              goto out_mmput;
+> >>
+> >> +    rc = down_read_killable(&mm->mmap_sem);
+> >> +    if (rc)
+> >> +            goto out_mmput;
+> >> +
+> >>      rc = -ENOENT;
+> >> -    down_read(&mm->mmap_sem);
+> >>      vma = find_exact_vma(mm, vm_start, vm_end);
+> >>      if (vma && vma->vm_file) {
+> >>              *path = vma->vm_file->f_path;
+> >> @@ -2107,7 +2113,10 @@ static struct dentry *proc_map_files_lookup(struct inode *dir,
+> >>      if (!mm)
+> >>              goto out_put_task;
+> >>
+> >> -    down_read(&mm->mmap_sem);
+> >> +    result = ERR_PTR(-EINTR);
+> >> +    if (down_read_killable(&mm->mmap_sem))
+> >> +            goto out_put_mm;
+> >> +
+> >
+> >       result = ERR_PTR(-ENOENT);
+> >
+> >>      vma = find_exact_vma(mm, vm_start, vm_end);
+> >>      if (!vma)
+> >>              goto out_no_vma;
+> >> @@ -2118,6 +2127,7 @@ static struct dentry *proc_map_files_lookup(struct inode *dir,
+> >>
+> >>   out_no_vma:
+> >>      up_read(&mm->mmap_sem);
+> >> +out_put_mm:
+> >>      mmput(mm);
+> >>   out_put_task:
+> >>      put_task_struct(task);
+> >> @@ -2160,7 +2170,12 @@ proc_map_files_readdir(struct file *file, struct dir_context *ctx)
+> >>      mm = get_task_mm(task);
+> >>      if (!mm)
+> >>              goto out_put_task;
+> >> -    down_read(&mm->mmap_sem);
+> >> +
+> >> +    ret = down_read_killable(&mm->mmap_sem);
+> >> +    if (ret) {
+> >> +            mmput(mm);
+> >> +            goto out_put_task;
+> >> +    }
+> >>
+> >>      nr_files = 0;
+> >>
