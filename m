@@ -2,89 +2,129 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE60C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7F8C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E777E20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1A920644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:41:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731247AbfFMQl3 (ORCPT
+        id S1731706AbfFMQln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:41:29 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18142 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730544AbfFMGwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 02:52:51 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 752E458E9C515F587F46;
-        Thu, 13 Jun 2019 14:52:45 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 13 Jun
- 2019 14:52:44 +0800
-Subject: Re: [PATCH] f2fs: fix is_idle() check for discard type
-To:     Sahitya Tummala <stummala@codeaurora.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-CC:     <linux-kernel@vger.kernel.org>
-References: <1559813893-23452-1-git-send-email-stummala@codeaurora.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <d3b4b733-78ab-29bb-9441-c6e4e7efaea9@huawei.com>
-Date:   Thu, 13 Jun 2019 14:52:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 13 Jun 2019 12:41:43 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33571 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730534AbfFMGts (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 02:49:48 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k187so9860718pga.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 23:49:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=KIxko3bf1UxU3S7PbsaO+3B/NsEEFkIHtCb9Hfmgcyw=;
+        b=TOYfETX6F5bKw9lboPakeznri0aHVmlDVHWi091PxJAFTpVR78EnbPAMK7GW0rW5ly
+         hmE6NBmsWBMyGoBvEmdNyxqyuiUFXTbC41VO2M+7kGWkmwMsa3WExYTmxu1+Qh7Wbc93
+         QnQGuQOZtM/AtuW4vNm7a6DGd6LC9GzNoIlQfkdfoAVeR/BWGKrdOvfKONhnpf1bu1iF
+         EFXP0Qe7LEIwqS9WxXLXWxFIWVbIozmeLXioDaUIw/JPs2VIEnsbrA5tubfw+eY/c4GK
+         C4Sp7iO/jEhEOwa2flTXzfo2FbzwWMWu1MgICyLvZFCQgG7IQq7n87tWv1o4Zcp6M+Mo
+         HTdA==
+X-Gm-Message-State: APjAAAW3au5/2evQVJicLjqEPJx3SchPENYjnCKUd1HhTB5/OwH1YzWi
+        /ZlJeo2giJXW1TyWaFrIbPggD6GntMR67g==
+X-Google-Smtp-Source: APXvYqzDzOtreUY7YRR9V7tGYNGpISPFRAnUuamjop3Z6f3UD2u43890vOAhKh5V2E1tNXkTB5njdQ==
+X-Received: by 2002:aa7:9203:: with SMTP id 3mr92952769pfo.123.1560408587399;
+        Wed, 12 Jun 2019 23:49:47 -0700 (PDT)
+Received: from htb-2n-eng-dhcp405.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id i3sm1559973pfa.175.2019.06.12.23.49.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 23:49:46 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>
+Subject: [PATCH 9/9] x86/apic: Use non-atomic operations when possible
+Date:   Wed, 12 Jun 2019 23:48:13 -0700
+Message-Id: <20190613064813.8102-10-namit@vmware.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190613064813.8102-1-namit@vmware.com>
+References: <20190613064813.8102-1-namit@vmware.com>
 MIME-Version: 1.0
-In-Reply-To: <1559813893-23452-1-git-send-email-stummala@codeaurora.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/6 17:38, Sahitya Tummala wrote:
-> The discard thread should issue upto dpolicy->max_requests at once
-> and wait for all those discard requests at once it reaches
-> dpolicy->max_requests. It should then sleep for dpolicy->min_interval
-> timeout before issuing the next batch of discard requests. But in the
-> current code of is_idle(), it checks for dcc_info->queued_discard and
-> aborts issuing the discard batch of max_requests. This
-> dcc_info->queued_discard will be true always once one discard command
-> is issued.
-> 
-> It is thus resulting into this type of discard request pattern -
-> 
-> - Issue discard request#1
-> - is_idle() returns false, discard thread waits for request#1 and then
->   sleeps for min_interval 50ms.
-> - Issue discard request#2
-> - is_idle() returns false, discard thread waits for request#2 and then
->   sleeps for min_interval 50ms.
-> - and so on for all other discard requests, assuming f2fs is idle w.r.t
->   other conditions.
-> 
-> With this fix, the pattern will look like this -
-> 
-> - Issue discard request#1
-> - Issue discard request#2
->   and so on upto max_requests of 8
-> - Issue discard request#8
-> - wait for min_interval 50ms.
-> 
+Using __clear_bit() and __cpumask_clear_cpu() is more efficient than
+using their atomic counterparts. Use them when atomicity is not needed,
+such as when manipulating bitmasks that are on the stack.
 
-Fixes: fef4129ec2e6 ("f2fs: fix to be aware discard/preflush/dio command in
-is_idle()")
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+---
+ arch/x86/kernel/apic/apic_flat_64.c   | 4 ++--
+ arch/x86/kernel/apic/x2apic_cluster.c | 2 +-
+ arch/x86/kernel/smp.c                 | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+diff --git a/arch/x86/kernel/apic/apic_flat_64.c b/arch/x86/kernel/apic/apic_flat_64.c
+index bf083c3f1d73..bbdca603f94a 100644
+--- a/arch/x86/kernel/apic/apic_flat_64.c
++++ b/arch/x86/kernel/apic/apic_flat_64.c
+@@ -78,7 +78,7 @@ flat_send_IPI_mask_allbutself(const struct cpumask *cpumask, int vector)
+ 	int cpu = smp_processor_id();
+ 
+ 	if (cpu < BITS_PER_LONG)
+-		clear_bit(cpu, &mask);
++		__clear_bit(cpu, &mask);
+ 
+ 	_flat_send_IPI_mask(mask, vector);
+ }
+@@ -92,7 +92,7 @@ static void flat_send_IPI_allbutself(int vector)
+ 			unsigned long mask = cpumask_bits(cpu_online_mask)[0];
+ 
+ 			if (cpu < BITS_PER_LONG)
+-				clear_bit(cpu, &mask);
++				__clear_bit(cpu, &mask);
+ 
+ 			_flat_send_IPI_mask(mask, vector);
+ 		}
+diff --git a/arch/x86/kernel/apic/x2apic_cluster.c b/arch/x86/kernel/apic/x2apic_cluster.c
+index 7685444a106b..609e499387a1 100644
+--- a/arch/x86/kernel/apic/x2apic_cluster.c
++++ b/arch/x86/kernel/apic/x2apic_cluster.c
+@@ -50,7 +50,7 @@ __x2apic_send_IPI_mask(const struct cpumask *mask, int vector, int apic_dest)
+ 	cpumask_copy(tmpmsk, mask);
+ 	/* If IPI should not be sent to self, clear current CPU */
+ 	if (apic_dest != APIC_DEST_ALLINC)
+-		cpumask_clear_cpu(smp_processor_id(), tmpmsk);
++		__cpumask_clear_cpu(smp_processor_id(), tmpmsk);
+ 
+ 	/* Collapse cpus in a cluster so a single IPI per cluster is sent */
+ 	for_each_cpu(cpu, tmpmsk) {
+diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+index 4693e2f3a03e..96421f97e75c 100644
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -144,7 +144,7 @@ void native_send_call_func_ipi(const struct cpumask *mask)
+ 	}
+ 
+ 	cpumask_copy(allbutself, cpu_online_mask);
+-	cpumask_clear_cpu(smp_processor_id(), allbutself);
++	__cpumask_clear_cpu(smp_processor_id(), allbutself);
+ 
+ 	if (cpumask_equal(mask, allbutself) &&
+ 	    cpumask_equal(cpu_online_mask, cpu_callout_mask))
+-- 
+2.20.1
 
-Ah, thanks for fixing this bug.
-
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-
-Thanks,
