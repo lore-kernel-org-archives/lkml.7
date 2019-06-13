@@ -2,116 +2,81 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD9CC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208FFC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0179207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE641207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:41:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733076AbfFMPlv (ORCPT
+        id S1733254AbfFMPly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:41:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35830 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731871AbfFMJtw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:49:52 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2278030860BC;
-        Thu, 13 Jun 2019 09:49:52 +0000 (UTC)
-Received: from dhcp-4-67.tlv.redhat.com (dhcp-4-67.tlv.redhat.com [10.35.4.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C1F9060BE2;
-        Thu, 13 Jun 2019 09:49:50 +0000 (UTC)
-Message-ID: <e4f39694a809461702f3eaae1c12e89ba35976dc.camel@redhat.com>
-Subject: Re: [PATCH v3 0/4] KVM: LAPIC: Implement Exitless Timer
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?UTF-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Date:   Thu, 13 Jun 2019 12:49:49 +0300
-In-Reply-To: <CANRm+CxTNBAEpay=Gf25vV_aCtzRrtgz1N5CtGEwu_kg=F51+Q@mail.gmail.com>
-References: <1560255429-7105-1-git-send-email-wanpengli@tencent.com>
-         <a078b29ebc0a2323c89b5877bf2ba4005eef3485.camel@redhat.com>
-         <CANRm+CxTNBAEpay=Gf25vV_aCtzRrtgz1N5CtGEwu_kg=F51+Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 13 Jun 2019 09:49:52 +0000 (UTC)
+        Thu, 13 Jun 2019 11:41:54 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:40612 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731870AbfFMJtt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:49:49 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 3723725B7FA;
+        Thu, 13 Jun 2019 19:49:47 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id 3D4E1940483; Thu, 13 Jun 2019 11:49:45 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 11:49:45 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 14/34] misc: tsl2550: simplify getting the adapter of a
+ client
+Message-ID: <20190613094944.g77bympggzmvssii@verge.net.au>
+References: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
+ <20190608105619.593-15-wsa+renesas@sang-engineering.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190608105619.593-15-wsa+renesas@sang-engineering.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-13 at 16:25 +0800, Wanpeng Li wrote:
-> On Thu, 13 Jun 2019 at 15:59, Maxim Levitsky <mlevitsk@redhat.com> wrote:
-> > 
-> > On Tue, 2019-06-11 at 20:17 +0800, Wanpeng Li wrote:
-> > > Dedicated instances are currently disturbed by unnecessary jitter due
-> > > to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
-> > > There is no hardware virtual timer on Intel for guest like ARM. Both
-> > > programming timer in guest and the emulated timer fires incur vmexits.
-> > > This patchset tries to avoid vmexit which is incurred by the emulated
-> > > timer fires in dedicated instance scenario.
-> > > 
-> > > When nohz_full is enabled in dedicated instances scenario, the unpinned
-> > > timer will be moved to the nearest busy housekeepers after commit 444969223c8
-> > > ("sched/nohz: Fix affine unpinned timers mess"). However, KVM always makes
-> > > lapic timer pinned to the pCPU which vCPU residents, the reason is explained
-> > > by commit 61abdbe0 (kvm: x86: make lapic hrtimer pinned). Actually, these
-> > > emulated timers can be offload to the housekeeping cpus since APICv
-> > > is really common in recent years. The guest timer interrupt is injected by
-> > > posted-interrupt which is delivered by housekeeping cpu once the emulated
-> > > timer fires.
-> > > 
-> > > The host admin should fine tuned, e.g. dedicated instances scenario w/
-> > > nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus
-> > > for housekeeping, disable mwait/hlt/pause vmexits to occupy the pCPUs,
-> > > fortunately preemption timer is disabled after mwait is exposed to
-> > > guest which makes emulated timer offload can be possible.
-> > > ~3% redis performance benefit can be observed on Skylake server.
-> > 
-> > I don't yet know the kvm well enough to review this patch series, but overall I really like the idea.
+On Sat, Jun 08, 2019 at 12:55:53PM +0200, Wolfram Sang wrote:
+> We have a dedicated pointer for that, so use it. Much easier to read and
+> less computation involved.
 > 
-> Thank you. :)
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+
+> ---
 > 
-> > I researched this area some time ago, to see what can be done to reduce the number of vmexits,
-> > to an absolute minimum.
-> > 
-> > I have one small question, just out of curiosity.
-> > 
-> > Why do you require mwait in the guest to be enabled?
-> > 
-> > If I understand it correctly, you say
-> > that when mwait in the guest is disabled, then vmx preemption timer will be used,
-> > and thus it will handle the apic timer?
+> Please apply to your subsystem tree.
 > 
-> Actually we don't have this restriction in v3, the patchset
-> description need to update. The lapic timer which guest use can be
-> emulated by software(a hrtimer on host) or VT-x hardware (VMX
-> preemption timer). VMX preemption timer triggers vmexit when the timer
-> fires on the same pCPU which vCPU is running on, so the injection
-> vmexit can't be avoided. The hrtimer on host is used to emulate the
-> lapic timer when VMX preemption timer is disabled. After commit
-> 9642d18eee2cd(nohz: Affine unpinned timers to housekeepers), unpinned
-> timers will be moved to nearest busy housekeepers, which means that we
-> can offload the hrtimer to the housekeeping cpus instead of running on
-> the pCPU which vCPU residents, the timer fires on the housekeeping
-> cpus and be injected by posted-interrupt to the vCPU w/o incur
-> vmexits. In patchset v3, the preemption timer will be disarmed if
-> lapic timer is injected by posted-interrupt. VMX preemption timer stop
-> working in C-states deeper than C2, that's why I utilize mwait expose
-> before. (commit 386c6ddbda1 X86/VMX: Disable VMX preemption timer if
-> MWAIT is not intercepted)
-
-That explains it very well. Thank you!
-
-Best regards,
-	Maxim Levitsky
-
+>  drivers/misc/tsl2550.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/misc/tsl2550.c b/drivers/misc/tsl2550.c
+> index 5b7afd6190fe..09db397df287 100644
+> --- a/drivers/misc/tsl2550.c
+> +++ b/drivers/misc/tsl2550.c
+> @@ -336,7 +336,7 @@ static struct i2c_driver tsl2550_driver;
+>  static int tsl2550_probe(struct i2c_client *client,
+>  				   const struct i2c_device_id *id)
+>  {
+> -	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
+> +	struct i2c_adapter *adapter = client->adapter;
+>  	struct tsl2550_data *data;
+>  	int *opmode, err = 0;
+>  
+> -- 
+> 2.19.1
+> 
