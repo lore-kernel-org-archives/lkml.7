@@ -2,121 +2,140 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD6AC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC53C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 778B120679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE6F620679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441554;
-	bh=RRQxcgXUwrlkOVPgdav87tLtU/bhO27ihR80lUwUJfs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DZdrLoXmqlE5ocrIZrS8EVrmwjvAb8aiRKBlnKJnyF8x5thLCRw13iYHlTIgEIf+D
-	 OfeTHQVos/p+Z/wKj8cMsnYsSAwZsz4zCkhhqjR8eqZJirAzBv+xzv3jUPN2LD4ONP
-	 Yhp9IambqBkjbl62MBg1IFXYKNkTW1J99Y7x3uPM=
+	s=default; t=1560441559;
+	bh=10hhf5jlLd5enhE6mKWF2OZXLM3UBbw9tq0YRKiuK2A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zdKYbsKcKpMFlbZ02INrDxzkrVd4Mv/ydSGgOLFfv2PVKH9evom0iuZsxaOFOC7Ba
+	 sQXZ8U8pBEBp3MVHDOZe98WdH1NWk5jv9dfUnzJlLhbhIrjJgrO9IcOaaxWJRTu+DR
+	 74Xa4appxKg7KjBMlpwlDOIB9IHE6ntAxfFi97YU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387551AbfFMP7M (ORCPT
+        id S2390644AbfFMP7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:59:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52742 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:59:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731464AbfFMP7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:59:10 -0400
+        id S1731488AbfFMIt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:49:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95A0E20679;
-        Thu, 13 Jun 2019 15:59:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21A0B20851;
+        Thu, 13 Jun 2019 08:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560441549;
-        bh=RRQxcgXUwrlkOVPgdav87tLtU/bhO27ihR80lUwUJfs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ey/FNBRLnuJkhNyrtcLH90wayHk3JFGzz8AGMAyrZDdtJSKcGmEk5yEeEcF6MiSiP
-         ZrNCqdAhnO0/R0+icfLLyvfUwex/fahV/Nve4/pJYsG2JDfYObNCA06N8WlRh47n3+
-         kOsjcyfYNs1CYndsxJWG7U88K4bP6uCVfoxwveB8=
-Date:   Thu, 13 Jun 2019 17:59:06 +0200
+        s=default; t=1560415797;
+        bh=10hhf5jlLd5enhE6mKWF2OZXLM3UBbw9tq0YRKiuK2A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oSbzNIMYLpClCeNgorQm5mzzW4WZoTynijndnqZ+DqfgjMcOfJOSBzLIIG+nJFmNv
+         HH7GuH51G8SRckSLikW/FSdom7AesUYGbnDvjxQdsZgmCGyTtWoSEFuMR3Nz6jcYXH
+         YZhfqiD/02YWj4PxWVHhnqq+xz3VSE7QjoCjykOQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jason Baron <jbaron@akamai.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lib: dynamic_debug: no need to check return value of
- debugfs_create functions
-Message-ID: <20190613155906.GB4632@kroah.com>
-References: <20190612153534.GA21141@kroah.com>
- <4936c8d8-9b69-1385-1bbf-9d19ac08d061@akamai.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 101/155] usb: ohci-da8xx: disable the regulator if the overcurrent irq fired
+Date:   Thu, 13 Jun 2019 10:33:33 +0200
+Message-Id: <20190613075658.675810826@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
+References: <20190613075652.691765927@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4936c8d8-9b69-1385-1bbf-9d19ac08d061@akamai.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 10:33:23AM -0400, Jason Baron wrote:
-> On 6/12/19 11:35 AM, Greg Kroah-Hartman wrote:
-> > When calling debugfs functions, there is no need to ever check the
-> > return value.  The function can work or not, but the code logic should
-> > never do something different based on this.
-> > 
-> > Cc: Jason Baron <jbaron@akamai.com>
-> > Cc: linux-kernel@vger.kernel.org
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
-> >  lib/dynamic_debug.c | 12 +++---------
-> >  1 file changed, 3 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-> > index 8a16c2d498e9..c60409138e13 100644
-> > --- a/lib/dynamic_debug.c
-> > +++ b/lib/dynamic_debug.c
-> > @@ -993,20 +993,14 @@ static __initdata int ddebug_init_success;
-> >  
-> >  static int __init dynamic_debug_init_debugfs(void)
-> >  {
-> > -	struct dentry *dir, *file;
-> > +	struct dentry *dir;
-> >  
-> >  	if (!ddebug_init_success)
-> >  		return -ENODEV;
-> >  
-> >  	dir = debugfs_create_dir("dynamic_debug", NULL);
-> > -	if (!dir)
-> > -		return -ENOMEM;
-> > -	file = debugfs_create_file("control", 0644, dir, NULL,
-> > -					&ddebug_proc_fops);
-> > -	if (!file) {
-> > -		debugfs_remove(dir);
-> > -		return -ENOMEM;
-> > -	}
-> > +	debugfs_create_file("control", 0644, dir, NULL, &ddebug_proc_fops);
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > 
-> 
-> Looks like debugfs_create_dir() can return NULL,
+[ Upstream commit d327330185f192411be80563a3c8398f4538cdb2 ]
 
-No it can not.
+Historically the power supply management in this driver has been handled
+in two separate places in parallel. Device-tree users simply defined an
+appropriate regulator, while two boards with no DT support (da830-evm and
+omapl138-hawk) passed functions defined in their respective board files
+over platform data. These functions simply used legacy GPIO calls to
+watch the oc GPIO for interrupts and disable the vbus GPIO when the irq
+fires.
 
-> and in that case if its passed to debugfs_create_file() then the
-> 'control' file ends up in the root of debugfs?
+Commit d193abf1c913 ("usb: ohci-da8xx: add vbus and overcurrent gpios")
+updated these GPIO calls to the modern API and moved them inside the
+driver.
 
-If it could, yes, that is what would happen.
+This however is not the optimal solution for the vbus GPIO which should
+be modeled as a fixed regulator that can be controlled with a GPIO.
 
-> I think its better to just not create the file then have it in the
-> wrong place so maybe the file creation should be guarded by
-> if(IS_ERR_OR_NULL(dir)).
+In order to keep the overcurrent protection available once we move the
+board files to using fixed regulators we need to disable the enable_reg
+regulator when the overcurrent indicator interrupt fires. Since we
+cannot call regulator_disable() from interrupt context, we need to
+switch to using a oneshot threaded interrupt.
 
-As debugfs_create_dir() can not return NULL, you don't have to worry
-about this :)
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/host/ohci-da8xx.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-thanks,
+diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
+index ca8a94f15ac0..113401b7d70d 100644
+--- a/drivers/usb/host/ohci-da8xx.c
++++ b/drivers/usb/host/ohci-da8xx.c
+@@ -206,12 +206,23 @@ static int ohci_da8xx_regulator_event(struct notifier_block *nb,
+ 	return 0;
+ }
+ 
+-static irqreturn_t ohci_da8xx_oc_handler(int irq, void *data)
++static irqreturn_t ohci_da8xx_oc_thread(int irq, void *data)
+ {
+ 	struct da8xx_ohci_hcd *da8xx_ohci = data;
++	struct device *dev = da8xx_ohci->hcd->self.controller;
++	int ret;
+ 
+-	if (gpiod_get_value(da8xx_ohci->oc_gpio))
+-		gpiod_set_value(da8xx_ohci->vbus_gpio, 0);
++	if (gpiod_get_value_cansleep(da8xx_ohci->oc_gpio)) {
++		if (da8xx_ohci->vbus_gpio) {
++			gpiod_set_value_cansleep(da8xx_ohci->vbus_gpio, 0);
++		} else if (da8xx_ohci->vbus_reg) {
++			ret = regulator_disable(da8xx_ohci->vbus_reg);
++			if (ret)
++				dev_err(dev,
++					"Failed to disable regulator: %d\n",
++					ret);
++		}
++	}
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -438,8 +449,9 @@ static int ohci_da8xx_probe(struct platform_device *pdev)
+ 		if (oc_irq < 0)
+ 			goto err;
+ 
+-		error = devm_request_irq(dev, oc_irq, ohci_da8xx_oc_handler,
+-				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
++		error = devm_request_threaded_irq(dev, oc_irq, NULL,
++				ohci_da8xx_oc_thread, IRQF_TRIGGER_RISING |
++				IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+ 				"OHCI over-current indicator", da8xx_ohci);
+ 		if (error)
+ 			goto err;
+-- 
+2.20.1
 
-greg k-h
+
+
