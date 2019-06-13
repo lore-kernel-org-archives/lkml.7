@@ -2,125 +2,105 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FB7C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38B4C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C13C2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:04:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560456254;
-	bh=STyJgmmKr944RjOkqQ8HWC3xeSyqe7HVqnGI2LWRsD8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fGKiR3ZA/H6sYpgzCJAxiR5Trsi3uRzCoVMbPZBT5hzY6C0aUt9ce//f9nGGgoNGg
-	 geP1TRPHZRlCbhGD7Gu9PFTzcy0ER2eOfrWuRPg2UKReJWBU6LBR6PVTYt0k5jstfu
-	 TZYctQxJFA0du0vgcE29HHCWZP5OHsNRrh9G9dfI=
+	by mail.kernel.org (Postfix) with ESMTP id 8F1282133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:04:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Vf0Co9J1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbfFMUEN (ORCPT
+        id S1729403AbfFMUER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:04:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728752AbfFMUEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:04:12 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E84021537;
-        Thu, 13 Jun 2019 20:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560456250;
-        bh=STyJgmmKr944RjOkqQ8HWC3xeSyqe7HVqnGI2LWRsD8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=N2gTptqwNshky9t39zHrhF/tFwNwxgbkrbTJor+tak1vLqX97uKewRk8bUnzrn4Ko
-         U5IaH0MfRPlK77bT7Yc/4PbSrlc3n6J8M0GsjcRBoXIwR5bmuZZez1tgkNHDFM277/
-         c+zGeW7mHjTeucDkGZEHLB7VbopRA5mQ7/vZdAH4=
-Date:   Thu, 13 Jun 2019 13:04:08 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>
-Subject: Re: [PATCH] mm: Generalize and rename notify_page_fault() as
- kprobe_page_fault()
-Message-Id: <20190613130408.3091869d8e50d0524157523f@linux-foundation.org>
-In-Reply-To: <1560420444-25737-1-git-send-email-anshuman.khandual@arm.com>
-References: <1560420444-25737-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 13 Jun 2019 16:04:17 -0400
+Received: from mail-io1-f49.google.com ([209.85.166.49]:36105 "EHLO
+        mail-io1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729260AbfFMUEQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 16:04:16 -0400
+Received: by mail-io1-f49.google.com with SMTP id h6so737969ioh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 13:04:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:references:in-reply-to:mime-version:thread-index:date
+         :message-id:subject:to:cc;
+        bh=DI3nny5EkaaAj92ROhz8+oF1JyVO+F50iFiYFfny5cg=;
+        b=Vf0Co9J1FWQf/mNg9X22WqwFrqk1bWNDchM2WOC0coX4mVxqvFdL4M7qSSiticNd+/
+         +3h8YyGJXb6Dp9fwIq4WsLEKSNJVZR/j3S/HsXXpkjb7r3yKx1VfkTt2fSEW7Upj2InB
+         vpUy4mSkuPaOLlVxWUk8m4jGlNkrR8m+OQY9c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:references:in-reply-to:mime-version
+         :thread-index:date:message-id:subject:to:cc;
+        bh=DI3nny5EkaaAj92ROhz8+oF1JyVO+F50iFiYFfny5cg=;
+        b=FcEbhC1Sm6PwnlffRrBssNhEsQ8WVY1s6ziDr4RODF11Ftf/rF+6R5yweXFCdsY/ht
+         UNs//pUz1q8WGRz1q4Ufo2NK2rAWtVhI34D9CVlbGPgfGdYKRAkaQI48HR9CzFHsbkG7
+         0/i3Febo5c0idVHCVPmbU2ONsknflz8pQnRpBVqVqsMTIUBR6oKhZD+AZZE45SoDcoH1
+         EvCIYVwJIeHqlfNuLt8y8GWO1ia+plN8eLnSyAvbZoBOyrMcnuLGaCmCjMtiSzvKNyH8
+         rHuSfSB744wL/SH0xhLszKh50lG4wkRbhh2CyyoeWW3tgedOtsrF/vVHnDDpfhLVbEfv
+         1uYQ==
+X-Gm-Message-State: APjAAAVCx3BUUyuXeBWv7Myf0CA8kwQ2DvXXgvd2keD1mgncuO1ULpfc
+        EVk4SzHiSJa7bR0yBcZFa17EvgThJjJvH2ZtjKKKlA==
+X-Google-Smtp-Source: APXvYqzt6T4yoFnlQQM4Io9z3VVKv9jXWB1wt4QkxYaqK+pkTNNNf6XRH7RjKzaoumZniM5JtnYN2SZhYMEkCQ+APaM=
+X-Received: by 2002:a5d:9b1a:: with SMTP id y26mr37376851ion.238.1560456255599;
+ Thu, 13 Jun 2019 13:04:15 -0700 (PDT)
+From:   Kashyap Desai <kashyap.desai@broadcom.com>
+References: <20190605190836.32354-1-hch@lst.de> <20190605190836.32354-11-hch@lst.de>
+ <cd713506efb9579d1f69a719d831c28d@mail.gmail.com> <20190613084458.GB13221@lst.de>
+In-Reply-To: <20190613084458.GB13221@lst.de>
+MIME-Version: 1.0
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQNLjZIO2zMn7N+9xPobnDbFSu4o5gI2RJdJAgF+bYgCEzcr9aN60eSw
+Date:   Fri, 14 Jun 2019 01:34:00 +0530
+Message-ID: <d411baa1bdd34f1a1289480d13fe1cef@mail.gmail.com>
+Subject: RE: [PATCH 10/13] megaraid_sas: set virt_boundary_mask in the scsi host
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Sebastian Ott <sebott@linux.ibm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>,
+        PDL-MPT-FUSIONLINUX <mpt-fusionlinux.pdl@broadcom.com>,
+        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019 15:37:24 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-
-> Architectures which support kprobes have very similar boilerplate around
-> calling kprobe_fault_handler(). Use a helper function in kprobes.h to unify
-> them, based on the x86 code.
-> 
-> This changes the behaviour for other architectures when preemption is
-> enabled. Previously, they would have disabled preemption while calling the
-> kprobe handler. However, preemption would be disabled if this fault was
-> due to a kprobe, so we know the fault was not due to a kprobe handler and
-> can simply return failure.
-> 
-> This behaviour was introduced in the commit a980c0ef9f6d ("x86/kprobes:
-> Refactor kprobes_fault() like kprobe_exceptions_notify()")
-> 
-> ...
 >
-> --- a/arch/arm/mm/fault.c
-> +++ b/arch/arm/mm/fault.c
-> @@ -30,28 +30,6 @@
->  
->  #ifdef CONFIG_MMU
->  
-> -#ifdef CONFIG_KPROBES
-> -static inline int notify_page_fault(struct pt_regs *regs, unsigned int fsr)
+> So before I respin this series, can you help with a way to figure out
+for
+> mpt3sas and megaraid if a given controller supports NVMe devices at all,
+so
+> that we don't have to set the virt boundary if not?
 
-Some architectures make this `static inline'.  Others make it
-`nokprobes_inline', others make it `static inline __kprobes'.  The
-latter seems weird - why try to put an inline function into
-.kprobes.text?
 
-So..  what's the best thing to do here?  You chose `static
-nokprobe_inline' - is that the best approach, if so why?  Does
-kprobe_page_fault() actually need to be inlined?
+In MegaRaid we have below enum -        VENTURA_SERIES and AERO_SERIES
+supports NVME
 
-Also, some architectures had notify_page_fault returning int, others
-bool.  You chose bool and that seems appropriate and all callers are OK
-with that.
+enum MR_ADAPTER_TYPE {
+        MFI_SERIES = 1,
+        THUNDERBOLT_SERIES = 2,
+        INVADER_SERIES = 3,
+        VENTURA_SERIES = 4,
+        AERO_SERIES = 5,
+};
+
+In mpt3sas driver we have below method - If IOC FACT reports NVME Device
+support in Protocol Flags, we can consider it as HBA with NVME drive
+support.
+
+ioc->facts.ProtocolFlags & MPI2_IOCFACTS_PROTOCOL_NVME_DEVICES
+
+Kashyap
