@@ -2,143 +2,103 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9C3C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79752C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B53D20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 522AA217F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560445069;
+	bh=8JHFDhli8ydLD7JaFUYsJVhDqU7muNvB8wYx8ebJZjo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=mPCzWK9l3A2aqpjpAylVZtVnNUyAR52qR86Rm9umtSlKH+ePl9340NwRmJmk+YPpi
+	 JqCuLpGtjxXxwsyTGyoiUbGg748PZMcL5RaN9tC6bXy4f+BHzQwRjokhEulTjCkQAo
+	 odXowtqfjpp3eD6GxSbNkeOQsN1F62o2ULP49fHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393234AbfFMQ5o (ORCPT
+        id S2393238AbfFMQ5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:57:44 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:60111 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729738AbfFMA4z (ORCPT
+        Thu, 13 Jun 2019 12:57:47 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:50295 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729920AbfFMA4z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 12 Jun 2019 20:56:55 -0400
-Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 3CE4F105FED4;
-        Thu, 13 Jun 2019 10:56:50 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hbE1w-0004JV-Dn; Thu, 13 Jun 2019 10:55:52 +1000
-Date:   Thu, 13 Jun 2019 10:55:52 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190613005552.GI14363@dread.disaster.area>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
- <20190607110426.GB12765@quack2.suse.cz>
- <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
- <20190608001036.GF14308@dread.disaster.area>
- <20190612123751.GD32656@bombadil.infradead.org>
- <20190612233024.GD14336@iweiny-DESK2.sc.intel.com>
+Received: by mail-it1-f193.google.com with SMTP id j194so14052275ite.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 17:56:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vDoai9FCo61ADmdBZ301WDQL6Wz5//hlF5tMXgOfZE0=;
+        b=X/LiudSWZp9Iz25IabKtdWZDyYAscHnEUIFCfxzHs9cUGv1j9qo6qqxWbJfs/+G08i
+         Sq7r3p3PIqX0Y2Eos/c9kZaZYXo1fBG+uQw9FUSZVtdAt6vpKKOs1yXFsbp/Kcap4dg7
+         eAI0nH2TLtBVVYwfhxxYXwWVepai9QC2cqdBw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vDoai9FCo61ADmdBZ301WDQL6Wz5//hlF5tMXgOfZE0=;
+        b=MthKC0kJ/kCfnitESOWi1XeQuHSms3bLOH2bPO6jcqHdhzDN9i8q3W09Iogi4ktP5X
+         iOuHAvJjCeW3cgGGb72QscthzvEgpYJID4RV3xXtlTHMub4Asun73vzqtEMxRAnPXDMw
+         U/h2PsCgOd9cmdXygbBULjQDI4LawknZyOO/zbcGssq7ewzEZ1nbDr1D52y3weTtab1W
+         q5cY9YbaluQr2bwJGFxQn6rKyYfffX4KwLBo/26W6La2tJFZ7HENLIprRtNEEP91tExo
+         OzlRxLggC6sqeQhYdrU1yCySjQv4HkLchODrGmlSw2ZtsqZH21wmB26YUwybCnK3Ky1D
+         ySZQ==
+X-Gm-Message-State: APjAAAVE/B0+P+9O4BmaI/+hHKVmBG6MM+54d0c9L8TJmZ+376Hy6M6y
+        SR8AyMyzBBj2j8UIO+rsE/x7Fuz8zs8=
+X-Google-Smtp-Source: APXvYqxWUG4rZuOF4BB6tuA67BAXPogoGWe0YzMR4tUPqlrcc1Ht7bmCaKoHBSC2CaY/YVkfC9LRFw==
+X-Received: by 2002:a24:4084:: with SMTP id n126mr1693248ita.16.1560387414768;
+        Wed, 12 Jun 2019 17:56:54 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id c2sm551310iok.53.2019.06.12.17.56.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 17:56:54 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: videodev2.h: Fix shifting signed 32-bit value by 31 bits problem
+Date:   Wed, 12 Jun 2019 18:56:52 -0600
+Message-Id: <20190613005652.7423-1-skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612233024.GD14336@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=S7HuRrsnkTe4mrBiyeoA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 04:30:24PM -0700, Ira Weiny wrote:
-> On Wed, Jun 12, 2019 at 05:37:53AM -0700, Matthew Wilcox wrote:
-> > On Sat, Jun 08, 2019 at 10:10:36AM +1000, Dave Chinner wrote:
-> > > On Fri, Jun 07, 2019 at 11:25:35AM -0700, Ira Weiny wrote:
-> > > > Are you suggesting that we have something like this from user space?
-> > > > 
-> > > > 	fcntl(fd, F_SETLEASE, F_LAYOUT | F_UNBREAKABLE);
-> > > 
-> > > Rather than "unbreakable", perhaps a clearer description of the
-> > > policy it entails is "exclusive"?
-> > > 
-> > > i.e. what we are talking about here is an exclusive lease that
-> > > prevents other processes from changing the layout. i.e. the
-> > > mechanism used to guarantee a lease is exclusive is that the layout
-> > > becomes "unbreakable" at the filesystem level, but the policy we are
-> > > actually presenting to uses is "exclusive access"...
-> > 
-> > That's rather different from the normal meaning of 'exclusive' in the
-> > context of locks, which is "only one user can have access to this at
-> > a time".  As I understand it, this is rather more like a 'shared' or
-> > 'read' lock.  The filesystem would be the one which wants an exclusive
-> > lock, so it can modify the mapping of logical to physical blocks.
-> > 
-> > The complication being that by default the filesystem has an exclusive
-> > lock on the mapping, and what we're trying to add is the ability for
-> > readers to ask the filesystem to give up its exclusive lock.
-> 
-> This is an interesting view...
-> 
-> And after some more thought, exclusive does not seem like a good name for this
-> because technically F_WRLCK _is_ an exclusive lease...
-> 
-> In addition, the user does not need to take the "exclusive" write lease to be
-> notified of (broken by) an unexpected truncate.  A "read" lease is broken by
-> truncate.  (And "write" leases really don't do anything different WRT the
-> interaction of the FS and the user app.  Write leases control "exclusive"
-> access between other file descriptors.)
+Fix v4l2_fourcc define to use "U" cast to avoid shifting signed 32-bit
+value by 31 bits problem. This isn't a problem for kernel builds with
+gcc.
 
-I've been assuming that there is only one type of layout lease -
-there is no use case I've heard of for read/write layout leases, and
-like you say there is zero difference in behaviour at the filesystem
-level - they all have to be broken to allow a non-lease truncate to
-proceed.
+This could be problem since this header is part of public API which
+could be included for builds using compilers that don't handle this
+condition safely resulting in undefined behavior.
 
-IMO, taking a "read lease" to be able to modify and write to the
-underlying mapping of a file makes absolutely no sense at all.
-IOWs, we're talking exaclty about a revokable layout lease vs an
-exclusive layout lease here, and so read/write really doesn't match
-the policy or semantics we are trying to provide.
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+---
+ include/uapi/linux/videodev2.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Another thing to consider is that this patch set _allows_ a truncate/hole punch
-> to proceed _if_ the pages being affected are not actually pinned.  So the
-> unbreakable/exclusive nature of the lease is not absolute.
-
-If you're talking about the process that owns the layout lease
-running the truncate, then that is fine.
-
-However, if you are talking about a process that does not own the
-layout lease being allowed to truncate a file without first breaking
-the layout lease, then that is fundamentally broken.
-
-i.e. If you don't own a layout lease, the layout leases must be
-broken before the truncate can proceed. If it's an exclusive lease,
-then you cannot break the lease and the truncate *must fail before
-it is started*. i.e.  the layout lease state must be correctly
-resolved before we start an operation that may modify a file layout.
-
-Determining if we can actually do the truncate based on page state
-occurs /after/ the lease says the truncate can proceed....
-
-Cheers,
-
-Dave.
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 1050a75fb7ef..9d9705ceda76 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -80,7 +80,7 @@
+ /*  Four-character-code (FOURCC) */
+ #define v4l2_fourcc(a, b, c, d)\
+ 	((__u32)(a) | ((__u32)(b) << 8) | ((__u32)(c) << 16) | ((__u32)(d) << 24))
+-#define v4l2_fourcc_be(a, b, c, d)	(v4l2_fourcc(a, b, c, d) | (1 << 31))
++#define v4l2_fourcc_be(a, b, c, d)	(v4l2_fourcc(a, b, c, d) | (1U << 31))
+ 
+ /*
+  *	E N U M S
 -- 
-Dave Chinner
-david@fromorbit.com
+2.17.1
+
