@@ -2,150 +2,137 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08695C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7A8C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC3EA20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD13A20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392288AbfFMQfN (ORCPT
+        id S2404041AbfFMQfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:35:13 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:37098 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730732AbfFMHpM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 03:45:12 -0400
-X-UUID: 24f7185cfd0b495fabdabdc1f2ca9ce8-20190613
-X-UUID: 24f7185cfd0b495fabdabdc1f2ca9ce8-20190613
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 666765796; Thu, 13 Jun 2019 15:45:04 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 13 Jun 2019 15:45:03 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 13 Jun 2019 15:45:03 +0800
-Message-ID: <1560411902.27582.0.camel@mtksdaap41>
-Subject: Re: [PATCH v3, 09/27] drm/mediatek: add mutex sof register offset
- into ddp private data
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Thu, 13 Jun 2019 15:45:02 +0800
-In-Reply-To: <1559734986-7379-10-git-send-email-yongqiang.niu@mediatek.com>
-References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1559734986-7379-10-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 13 Jun 2019 12:35:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38932 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730730AbfFMHoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 03:44:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 920EBAB91;
+        Thu, 13 Jun 2019 07:44:00 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id B5C631E4328; Thu, 13 Jun 2019 09:43:59 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 09:43:59 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190613074359.GB26505@quack2.suse.cz>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606195114.GA30714@ziepe.ca>
+ <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
+ <20190607103636.GA12765@quack2.suse.cz>
+ <20190607121729.GA14802@ziepe.ca>
+ <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
+ <20190612102917.GB14578@quack2.suse.cz>
+ <CAPcyv4jSyTjC98UsWb3-FnZekV0oyboiSe9n1NYDC2TSKAqiqw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jSyTjC98UsWb3-FnZekV0oyboiSe9n1NYDC2TSKAqiqw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
-
-On Wed, 2019-06-05 at 19:42 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+On Wed 12-06-19 11:49:52, Dan Williams wrote:
+> On Wed, Jun 12, 2019 at 3:29 AM Jan Kara <jack@suse.cz> wrote:
+> >
+> > On Fri 07-06-19 07:52:13, Ira Weiny wrote:
+> > > On Fri, Jun 07, 2019 at 09:17:29AM -0300, Jason Gunthorpe wrote:
+> > > > On Fri, Jun 07, 2019 at 12:36:36PM +0200, Jan Kara wrote:
+> > > >
+> > > > > Because the pins would be invisible to sysadmin from that point on.
+> > > >
+> > > > It is not invisible, it just shows up in a rdma specific kernel
+> > > > interface. You have to use rdma netlink to see the kernel object
+> > > > holding this pin.
+> > > >
+> > > > If this visibility is the main sticking point I suggest just enhancing
+> > > > the existing MR reporting to include the file info for current GUP
+> > > > pins and teaching lsof to collect information from there as well so it
+> > > > is easy to use.
+> > > >
+> > > > If the ownership of the lease transfers to the MR, and we report that
+> > > > ownership to userspace in a way lsof can find, then I think all the
+> > > > concerns that have been raised are met, right?
+> > >
+> > > I was contemplating some new lsof feature yesterday.  But what I don't
+> > > think we want is sysadmins to have multiple tools for multiple
+> > > subsystems.  Or even have to teach lsof something new for every potential
+> > > new subsystem user of GUP pins.
+> >
+> > Agreed.
+> >
+> > > I was thinking more along the lines of reporting files which have GUP
+> > > pins on them directly somewhere (dare I say procfs?) and teaching lsof to
+> > > report that information.  That would cover any subsystem which does a
+> > > longterm pin.
+> >
+> > So lsof already parses /proc/<pid>/maps to learn about files held open by
+> > memory mappings. It could parse some other file as well I guess. The good
+> > thing about that would be that then "longterm pin" structure would just hold
+> > struct file reference. That would avoid any needs of special behavior on
+> > file close (the file reference in the "longterm pin" structure would make
+> > sure struct file and thus the lease stays around, we'd just need to make
+> > explicit lease unlock block until the "longterm pin" structure is freed).
+> > The bad thing is that it requires us to come up with a sane new proc
+> > interface for reporting "longterm pins" and associated struct file. Also we
+> > need to define what this interface shows if the pinned pages are in DRAM
+> > (either page cache or anon) and not on NVDIMM.
 > 
-> mutex sof register offset will be private data of ddp
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index e1a510f..717609d 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -42,12 +42,13 @@
->  #define DISP_REG_CONFIG_DPI_SEL			0x064
->  
->  #define MT2701_DISP_MUTEX0_MOD0			0x2c
-> +#define MT2701_DISP_MUTEX0_SOF0			0x2c
+> The anon vs shared detection case is important because a longterm pin
+> might be blocking a memory-hot-unplug operation if it is pinning
+> ZONE_MOVABLE memory, but I don't think we want DRAM vs NVDIMM to be an
+> explicit concern of the interface. For the anon / cached case I expect
+> it might be useful to put that communication under the memory-blocks
+> sysfs interface. I.e. a list of pids that are pinning that
+> memory-block from being hot-unplugged.
 
-0x30?
+Yes, I was thinking of memory hotplug as well. But I don't think the
+distinction is really shared vs anon - a pinned page cache page can be
+blocking your memory unplug / migration the same way as a pinned anon page.
+So the information for a pin we need to convey is the "location of
+resources" being pinned - that is pfn (both for DRAM and NVDIMM) - but then
+also additional mapping information (which is filename for DAX page, not
+sure about DRAM). Also a separate question is how to expose this
+information so that it is efficiently usable by userspace. For lsof, a file
+in /proc/<pid>/xxx with information would be probably the easiest to use
+plus all the issues with file access permissions and visibility among
+different user namespaces is solved out of the box. And I believe it would
+be reasonably usable for memory hotplug usecase as well. A file in sysfs
+would be OK for memory hotplug I guess, but not really usable for lsof and
+so I'm not sure we really need it when we are going to have one in procfs.
 
-Regards,
-CK
-
->  
->  #define DISP_REG_MUTEX_EN(n)			(0x20 + 0x20 * (n))
->  #define DISP_REG_MUTEX(n)			(0x24 + 0x20 * (n))
->  #define DISP_REG_MUTEX_RST(n)			(0x28 + 0x20 * (n))
->  #define DISP_REG_MUTEX_MOD(mutex_mod_reg, n)	(mutex_mod_reg + 0x20 * (n))
-> -#define DISP_REG_MUTEX_SOF(n)			(0x30 + 0x20 * (n))
-> +#define DISP_REG_MUTEX_SOF(mutex_sof_reg, n)	(mutex_sof_reg + 0x20 * (n))
->  #define DISP_REG_MUTEX_MOD2(n)			(0x34 + 0x20 * (n))
->  
->  #define INT_MUTEX				BIT(1)
-> @@ -164,6 +165,7 @@ struct mtk_ddp_data {
->  	const unsigned int *mutex_mod;
->  	const unsigned int *mutex_sof;
->  	const unsigned int mutex_mod_reg;
-> +	const unsigned int mutex_sof_reg;
->  };
->  
->  struct mtk_ddp {
-> @@ -235,18 +237,21 @@ struct mtk_ddp {
->  	.mutex_mod = mt2701_mutex_mod,
->  	.mutex_sof = mt2712_mutex_sof,
->  	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
-> +	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
->  };
->  
->  static const struct mtk_ddp_data mt2712_ddp_driver_data = {
->  	.mutex_mod = mt2712_mutex_mod,
->  	.mutex_sof = mt2712_mutex_sof,
->  	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
-> +	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
->  };
->  
->  static const struct mtk_ddp_data mt8173_ddp_driver_data = {
->  	.mutex_mod = mt8173_mutex_mod,
->  	.mutex_sof = mt2712_mutex_sof,
->  	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
-> +	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
->  };
->  
->  static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
-> @@ -528,7 +533,8 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
->  	}
->  
->  	writel_relaxed(ddp->data->mutex_sof[sof_id],
-> -		       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
-> +		       ddp->regs +
-> +		       DISP_REG_MUTEX_SOF(ddp->data->mutex_sof_reg, mutex->id));
->  }
->  
->  void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
-> @@ -550,7 +556,8 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
->  	case DDP_COMPONENT_DPI1:
->  		writel_relaxed(MUTEX_SOF_SINGLE_MODE,
->  			       ddp->regs +
-> -			       DISP_REG_MUTEX_SOF(mutex->id));
-> +			       DISP_REG_MUTEX_SOF(ddp->data->mutex_sof_reg,
-> +						  mutex->id));
->  		break;
->  	default:
->  		if (ddp->data->mutex_mod[id] < 32) {
-
-
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
