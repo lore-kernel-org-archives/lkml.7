@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6E7C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B1AC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A68F217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B0E621744
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:54:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="KbHFlaqM"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="obuL5/C4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730169AbfFMSy1 (ORCPT
+        id S1730264AbfFMSyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:54:27 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42317 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbfFMSyZ (ORCPT
+        Thu, 13 Jun 2019 14:54:32 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35529 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730191AbfFMSya (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:54:25 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l19so23771pgh.9
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:54:24 -0700 (PDT)
+        Thu, 13 Jun 2019 14:54:30 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d126so12392329pfd.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:54:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=T/4U16vvQGase4vs4TRs7L3uRB2ytO65pgimZPKYacA=;
-        b=KbHFlaqMD2kqOC6eLMSZ/P/yNXg/rG2kkuDRU+E2oafp+sX5bCe/oyFFZWkokEFdpe
-         KxLjoFo/XZKKnGHd8TH/oXi57kQ8/LCJ5yGIfggd39uHXR5u6PdisOd4M8IFVVS0QZfU
-         0OVEi5vRXM7yY32N6shvO8wFE7A+MLq8ZD3PM=
+        bh=51aUrymmYRWhKwkwNUN7n3u+csGBwL1xctf+8Q7+DLA=;
+        b=obuL5/C42QfViGv2M11cQMRWQiX1z9dY9xUgzGHJ8NeL1sx8uHGlJasRlLYFQ1YskL
+         8eAvCBiXsgXvWRYkP5PhrvbLIdNNx755GmlgY6YtPlRzIgCm6Xdv5D952vrXYOR1+On2
+         2woijmdL+4cAKfID+4iZjOSHRiu1BqYj3E498=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=T/4U16vvQGase4vs4TRs7L3uRB2ytO65pgimZPKYacA=;
-        b=lPqF0GWClzxMAgvR4ZzQGutkFi4CKP6KmUf2As8UsQBLTj8Izlornzee1RwzOZDqTy
-         O3tNthIegxyq3f4KS3LAqIPQWgEZa3EprH3yDn2qQ8ygxGZYZfXVdi+Jp0tTaJ34HzUF
-         QrvgXK5PNyrkXeZTZsub66hJEvTYtVcKt1YIO16cWOsVsI7SZt4R/AG/pyd62SsZlFKc
-         JSSBCU/kbzb39yiLOJAJz2VzWJXcFTMnl1e5HUpDQbFU2VI+TioYmm+QapA0EyWCoEzU
-         hbRPaWvmKPxQd7oIqlbodVgKv+lXuJVwP/g6ON3mo31JIvKuj2+pHFbTnO1GW9xk7fYk
-         uWfQ==
-X-Gm-Message-State: APjAAAW1dfnj/rm7az/xVQVB9JK9UM7KFD2oaWZvQ/8pgo6j976fOfon
-        QwWiBMOSZwdmyg4TYT4WTUWQSQ==
-X-Google-Smtp-Source: APXvYqxT+brkKX51G25d0U8KdaLgp4yzQxdSegwAI+SiWhaPnsQQo4LdoqiNNX1Bt+Ys7OneEcILbw==
-X-Received: by 2002:a63:4d63:: with SMTP id n35mr2616452pgl.43.1560452064500;
-        Thu, 13 Jun 2019 11:54:24 -0700 (PDT)
+        bh=51aUrymmYRWhKwkwNUN7n3u+csGBwL1xctf+8Q7+DLA=;
+        b=ibqyMn5wIgAQykjSXiEgbv2FyduOMr1MhRlep6si2eAWG88Ia3BszDsbLxii+LtwXl
+         btFsAeb6GsNRJzBazgkWR16v+rEA9MC7TKseiASrNvnCm3/ndoeBbgYY3pLYy+svEII0
+         a06LlkNfXsAm+8kwIav9NJpGU4f2EqTx0HQiKXDhfT8TJQ7UQgBWt7nHDzfvqVYhdGwE
+         6npMFp1+cfgtrt0g3uYU2NIjfXdQbc46Lv10YxihmDs+q8U3cQ8UNubneXZztsPce9pw
+         vHWY1Z68K1uEy33hoyVEgDq2/cseBxJ13egfYzCuN3skc9CT9fU0k56WzSWxv33vcBYd
+         W+AQ==
+X-Gm-Message-State: APjAAAX2xejYJv2yhWe6PJ6sCcOlNrhiTBhIox4B0hokbLksVsDuDpKm
+        UBX/3HLvgd8mzsJDtTahxc+9uA==
+X-Google-Smtp-Source: APXvYqxqijGllEM8BePLuPvJoKeIttgVA+/8EZLqrhEKLrYZeUUspp4gxqijr25B/gWI/ezvpiv7Dw==
+X-Received: by 2002:a17:90a:2e87:: with SMTP id r7mr6985533pjd.121.1560452069402;
+        Thu, 13 Jun 2019 11:54:29 -0700 (PDT)
 Received: from localhost.localdomain ([115.97.180.18])
-        by smtp.gmail.com with ESMTPSA id p43sm946314pjp.4.2019.06.13.11.54.20
+        by smtp.gmail.com with ESMTPSA id p43sm946314pjp.4.2019.06.13.11.54.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 11:54:24 -0700 (PDT)
+        Thu, 13 Jun 2019 11:54:29 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         David Airlie <airlied@linux.ie>,
@@ -64,9 +64,9 @@ To:     Maxime Ripard <maxime.ripard@bootlin.com>,
 Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
         linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 8/9] ARM: dts: sun8i: r40: Add MIPI DSI pipeline
-Date:   Fri, 14 Jun 2019 00:22:40 +0530
-Message-Id: <20190613185241.22800-9-jagan@amarulasolutions.com>
+Subject: [DO NOT MERGE] [PATCH 9/9] ARM: dts: sun8i-r40: bananapi-m2-ultra: Enable Bananapi S070WV20-CT16 DSI panel
+Date:   Fri, 14 Jun 2019 00:22:41 +0530
+Message-Id: <20190613185241.22800-10-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20190613185241.22800-1-jagan@amarulasolutions.com>
 References: <20190613185241.22800-1-jagan@amarulasolutions.com>
@@ -77,123 +77,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MIPI DSI pipeline for Allwinner R40.
+This patch add support for Bananapi S070WV20-CT16 DSI panel to
+BPI-M2U board.
 
-Unlike conventional Display pipeline in allwinner, R40 have
-TCON TCOP which would interact various block like muxes,
-tcon lcd, tcon_tv for better pipeline fitting.
-
-For MIPI DSI pipeline, we have to configure the tcon_lcd0
-block which would interact with tcon_top for upper pipeline
-connections and dsi block for lower pipeline connections.
-
-So, this patch created that pipeline by adding new nodes
-for tcon_lcd0, dsi, dphy and connet them to make proper
-pipeline fitting.
+DSI panel connected via board DSI port with,
+- DCDC1 as VCC-DSI supply
+- PH18 gpio for lcd enable pin
+- PD17 gpio for lcd reset pin
+- PD16 gpio for backlight enable pin
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- arch/arm/boot/dts/sun8i-r40.dtsi | 73 ++++++++++++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
+ .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index 12576536df4a..3ea2451151ff 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -623,6 +623,7 @@
+diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+index c488aaacbd68..5f39317b783e 100644
+--- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
++++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+@@ -45,6 +45,7 @@
+ #include "sun8i-r40.dtsi"
  
- 					tcon_top_mixer0_out_tcon_lcd0: endpoint@0 {
- 						reg = <0>;
-+						remote-endpoint = <&tcon_lcd0_in_tcon_top_mixer0>;
- 					};
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pwm/pwm.h>
  
- 					tcon_top_mixer0_out_tcon_lcd1: endpoint@1 {
-@@ -701,6 +702,45 @@
- 			};
- 		};
+ / {
+ 	model = "Banana Pi BPI-M2-Ultra";
+@@ -55,6 +56,14 @@
+ 		serial0 = &uart0;
+ 	};
  
-+		tcon_lcd0: lcd-controller@1c71000 {
-+			compatible = "allwinner,sun8i-r40-tcon-lcd";
-+			reg = <0x01c71000 0x1000>;
-+			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_TCON_LCD0>, <&tcon_top CLK_TCON_TOP_LCD0>;
-+			clock-names = "ahb", "tcon-ch0";
-+			clock-output-names = "tcon-pixel-clock";
-+			resets = <&ccu RST_BUS_TCON_LCD0>, <&ccu RST_BUS_LVDS>;
-+			reset-names = "lcd", "lvds";
-+			status = "disabled";
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
++		brightness-levels = <1 2 4 8 16 32 64 128 255>;
++		default-brightness-level = <8>;
++		enable-gpios = <&pio 7 16 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PH16 */
++	};
 +
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				tcon_lcd0_in: port@0 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <0>;
-+
-+					tcon_lcd0_in_tcon_top_mixer0: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&tcon_top_mixer0_out_tcon_lcd0>;
-+					};
-+				};
-+
-+				tcon_lcd0_out: port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <1>;
-+
-+					tcon_lcd0_out_dsi_out: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&dsi_in_tcon_lcd0_out>;
-+					};
-+				};
-+			};
-+		};
-+
- 		tcon_tv0: lcd-controller@1c73000 {
- 			compatible = "allwinner,sun8i-r40-tcon-tv";
- 			reg = <0x01c73000 0x1000>;
-@@ -798,6 +838,39 @@
- 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 		};
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+@@ -117,6 +126,23 @@
+ 	status = "okay";
+ };
  
-+		dsi: dsi@1ca0000 {
-+			compatible = "allwinner,sun8i-r40-mipi-dsi",
-+				     "allwinner,sun50i-a64-mipi-dsi";
-+			reg = <0x01ca0000 0x1000>;
-+			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_MIPI_DSI>;
-+			clock-names = "bus";
-+			resets = <&ccu RST_BUS_MIPI_DSI>;
-+			phys = <&dphy>;
-+			phy-names = "dphy";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++&dphy {
++	status = "okay";
++};
 +
-+			port {
-+				dsi_in_tcon_lcd0_out: endpoint {
-+					remote-endpoint = <&tcon_lcd0_out_dsi_out>;
-+				};
-+			};
-+		};
++&dsi {
++	vcc-dsi-supply = <&reg_dcdc1>;		/* VCC-DSI */
++	status = "okay";
 +
-+		dphy: d-phy@1ca1000 {
-+			compatible = "allwinner,sun8i-r40-mipi-dphy",
-+				     "allwinner,sun6i-a31-mipi-dphy";
-+			reg = <0x01ca1000 0x1000>;
-+			clocks = <&ccu CLK_BUS_MIPI_DSI>,
-+				 <&ccu CLK_DSI_DPHY>;
-+			clock-names = "bus", "mod";
-+			resets = <&ccu RST_BUS_MIPI_DSI>;
-+			status = "disabled";
-+			#phy-cells = <0>;
-+		};
++	panel@0 {
++		compatible = "bananapi,s070wv20-ct16-icn6211";
++		reg = <0>;
++		enable-gpio = <&pio 7 18 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PH18 */
++		reset-gpios = <&pio 7 17 GPIO_ACTIVE_HIGH>; /* LCD-RST: PH17 */
++		backlight = <&backlight>;
++	};
++};
 +
- 		hdmi: hdmi@1ee0000 {
- 			compatible = "allwinner,sun8i-r40-dw-hdmi",
- 				     "allwinner,sun8i-a83t-dw-hdmi";
+ &ehci1 {
+ 	status = "okay";
+ };
+@@ -203,6 +229,12 @@
+ 	pinctrl-0 = <&clk_out_a_pin>;
+ };
+ 
++&pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm_pins>;
++	status = "okay";
++};
++
+ &reg_aldo2 {
+ 	regulator-always-on;
+ 	regulator-min-microvolt = <2500000>;
+@@ -290,6 +322,10 @@
+ 	regulator-name = "vdd1v2-sata";
+ };
+ 
++&tcon_lcd0 {
++	status = "okay";
++};
++
+ &tcon_tv0 {
+ 	status = "okay";
+ };
 -- 
 2.18.0.321.gffc6fa0e3
 
