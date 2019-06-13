@@ -2,140 +2,191 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D068CC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16939C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4DB2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D215A2080A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:22:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHiDmHhh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbfFMRUw (ORCPT
+        id S1728698AbfFMRWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:20:52 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55188 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbfFMRUw (ORCPT
+        Thu, 13 Jun 2019 13:22:17 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42949 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfFMRWR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:20:52 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id E7AB52838FC
-Subject: Re: [PATCH] arm64: dts: rockchip: Update DWC3 modules on RK3399 SoCs
-To:     Robin Murphy <robin.murphy@arm.com>, devicetree@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        linux-rockchip@lists.infradead.org,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Randy Li <ayaka@soulik.info>, linux-kernel@vger.kernel.org,
-        Vicente Bergas <vicencb@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>
-References: <20190613162745.12195-1-enric.balletbo@collabora.com>
- <40d2260f-3925-acdc-eb02-8abb972f1056@arm.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <a685fef9-8f45-700c-17d6-59d792fca092@collabora.com>
-Date:   Thu, 13 Jun 2019 19:20:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <40d2260f-3925-acdc-eb02-8abb972f1056@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+        Thu, 13 Jun 2019 13:22:17 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x17so6344143wrl.9;
+        Thu, 13 Jun 2019 10:22:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=AQp+KFfeJT0OSBL+CCZ/KccGQKuMHF8GjaLwYUkA7w4=;
+        b=sHiDmHhhDVNB6jBg1CpsijuLuoyb8ZnTgwF8s7AtooTKwHkbT4jRrvhHZd1otUQTNg
+         d0dK9U0nqWviFJwM6rez1MJ9K7folNyvD761obQX7r4+Gb94XE6FGIefM9ccYfdXBBcn
+         MTONy7tYsyn4cfO0O4lVhmIR94/1kBMD+Ju2JEDa79AaxgwOMus/crbX93a0/urTvtfW
+         IJp+10VTdzon6r4Hg1FHtme9NFkBLH+wIgXfSJYLs0LHFzrzNw69UFrdV5GRQ/9q3tq9
+         rB3gX4xe5V7FQfSD7wtSVa32qXs48cp+ytRujz6dybTeRrg9IbZL24Ud75Tv6GrXSVVf
+         ohgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=AQp+KFfeJT0OSBL+CCZ/KccGQKuMHF8GjaLwYUkA7w4=;
+        b=Mj/Ln8okeguL8OqLLsR2dN+2J+aUOON9TT6Sk5RHmNHTl+BHGDlEghly24L35YN6HK
+         SvLMJ3E6G1d4xgRhHeFyiGVGodZwavUFEUTbo1Zo3f+dmj3YwNozSmrIm6RVDqT3drWD
+         TuialyA8gNoSjVf2ZBWE57pos4YrgXCKQAr/p74TZTwTxuZlWAiooNBp2707nnyiESS0
+         9+uUkqNZ/LLpAp1g1sdZ5BnCHe/eBkinloiuPE5b8Vw9Zx8igwhNehB6WCObJ9EouU0C
+         zUHbRAG529Ytqk3wMp6in1rUq4Y1cuSgAojxp9ZViUv2C/OofgHc9emGoJAMRadAISk+
+         C5Eg==
+X-Gm-Message-State: APjAAAWD+f/BI26erw2TeqKdDMUsvKB9v8/L9zNwRXXzhPFVDKmiU7wc
+        ffcJW6vC2HLs5zjllVNK74hQxjB4
+X-Google-Smtp-Source: APXvYqwvlFPZ4u49f9kRdTgPQkkxRQPyaafuWh/FPUVFisw1squkleajFf5dr1Q0eo9nwbd2sJQ7cQ==
+X-Received: by 2002:adf:fc4f:: with SMTP id e15mr17445969wrs.2.1560446534240;
+        Thu, 13 Jun 2019 10:22:14 -0700 (PDT)
+Received: from 640k.localdomain ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id s10sm753538wmf.8.2019.06.13.10.22.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 10:22:13 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     rkrcmar@redhat.com
+Subject: [PATCH v2] KVM: x86: clean up conditions for asynchronous page fault handling
+Date:   Thu, 13 Jun 2019 19:22:12 +0200
+Message-Id: <1560446532-22494-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+Even when asynchronous page fault is disabled, KVM does not want to pause
+the host if a guest triggers a page fault; instead it will put it into
+an artificial HLT state that allows running other host processes while
+allowing interrupt delivery into the guest.
 
-On 13/6/19 18:56, Robin Murphy wrote:
-> On 13/06/2019 17:27, Enric Balletbo i Serra wrote:
->> As per binding documentation [1], the DWC3 core should have the "ref",
->> "bus_early" and "suspend" clocks. As explained in the binding, those
->> clocks are required for new platforms but not for existing platforms
->> before commit fe8abf332b8f ("usb: dwc3: support clocks and resets for
->> DWC3 core").
->>
->> However, as those clocks are really treated as required, this ends with
->> having some annoying messages when the "rockchip,rk3399-dwc3" is used:
->>
->> [    1.724107] dwc3 fe800000.dwc3: Failed to get clk 'ref': -2
->> [    1.731893] dwc3 fe900000.dwc3: Failed to get clk 'ref': -2
->> [    2.495937] dwc3 fe800000.dwc3: Failed to get clk 'ref': -2
->> [    2.647239] dwc3 fe900000.dwc3: Failed to get clk 'ref': -2
->>
->> In order to remove those annoying messages, update the DWC3 hardware
->> module node and add all the required clocks. With this change, both, the
->> glue node and the DWC3 core node, have the clocks defined, but that's
->> not really a problem and there isn't a side effect on do this. So, we
->> can get rid of the annoying get clk error messages.
-> 
-> Can we not just move these clocks entirely from the glue layer to the core
-> layer? That didn't seem to break when I tried it, although I'll admit my
-> 'testing' was no more than booting and mounting a USB 3.0 flash drive, no
-> suspend or anything fancy.
-> 
+However, the way this feature is triggered is a bit confusing.
+First, it is not used for page faults while a nested guest is
+running: but this is not an issue since the artificial halt
+is completely invisible to the guest, either L1 or L2.  Second,
+it is used even if kvm_halt_in_guest() returns true; in this case,
+the guest probably should not pay the additional latency cost of the
+artificial halt, and thus we should handle the page fault in a
+completely synchronous way.
 
-AFAICT usb doesn't break, but we won't break backward compability then? (/me
-still doesn't know when backward compability is really important or not)
+By introducing a new function kvm_can_deliver_async_pf, this patch
+commonizes the code that chooses whether to deliver an async page fault
+(kvm_arch_async_page_not_present) and the code that chooses whether a
+page fault should be handled synchronously (kvm_can_do_async_pf).
 
-> My own attempt to shut up these errors got sidetracked into c0c61471ef86 ("usb:
-> dwc3: of-simple: Convert to bulk clk API"), then apparently stalled :)
-> 
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/mmu.c | 13 -------------
+ arch/x86/kvm/x86.c | 47 ++++++++++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 42 insertions(+), 18 deletions(-)
 
-There was any off the record discussion and stalled or simply you didn't get
-feedback?
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index 3384c539d150..771349e72d2a 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -4040,19 +4040,6 @@ static int kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu, gva_t gva, gfn_t gfn)
+ 	return kvm_setup_async_pf(vcpu, gva, kvm_vcpu_gfn_to_hva(vcpu, gfn), &arch);
+ }
+ 
+-bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
+-{
+-	if (unlikely(!lapic_in_kernel(vcpu) ||
+-		     kvm_event_needs_reinjection(vcpu) ||
+-		     vcpu->arch.exception.pending))
+-		return false;
+-
+-	if (!vcpu->arch.apf.delivery_as_pf_vmexit && is_guest_mode(vcpu))
+-		return false;
+-
+-	return kvm_x86_ops->interrupt_allowed(vcpu);
+-}
+-
+ static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
+ 			 gva_t gva, kvm_pfn_t *pfn, bool write, bool *writable)
+ {
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 6200d5a51f13..279ab4e8dd82 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9775,6 +9775,36 @@ static int apf_get_user(struct kvm_vcpu *vcpu, u32 *val)
+ 				      sizeof(u32));
+ }
+ 
++static bool kvm_can_deliver_async_pf(struct kvm_vcpu *vcpu)
++{
++	if (!vcpu->arch.apf.delivery_as_pf_vmexit && is_guest_mode(vcpu))
++		return false;
++
++	if (!(vcpu->arch.apf.msr_val & KVM_ASYNC_PF_ENABLED) ||
++	    (vcpu->arch.apf.send_user_only &&
++	     kvm_x86_ops->get_cpl(vcpu) == 0))
++		return false;
++
++	return true;
++}
++
++bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
++{
++	if (unlikely(!lapic_in_kernel(vcpu) ||
++		     kvm_event_needs_reinjection(vcpu) ||
++		     vcpu->arch.exception.pending))
++		return false;
++
++	if (kvm_hlt_in_guest(vcpu->kvm) && !kvm_can_deliver_async_pf(vcpu))
++		return false;
++
++	/*
++	 * If interrupts are off we cannot even use an artificial
++	 * halt state.
++	 */
++	return kvm_x86_ops->interrupt_allowed(vcpu);
++}
++
+ void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+ 				     struct kvm_async_pf *work)
+ {
+@@ -9783,11 +9813,8 @@ void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+ 	trace_kvm_async_pf_not_present(work->arch.token, work->gva);
+ 	kvm_add_async_pf_gfn(vcpu, work->arch.gfn);
+ 
+-	if (!(vcpu->arch.apf.msr_val & KVM_ASYNC_PF_ENABLED) ||
+-	    (vcpu->arch.apf.send_user_only &&
+-	     kvm_x86_ops->get_cpl(vcpu) == 0))
+-		kvm_make_request(KVM_REQ_APF_HALT, vcpu);
+-	else if (!apf_put_user(vcpu, KVM_PV_REASON_PAGE_NOT_PRESENT)) {
++	if (kvm_can_deliver_async_pf(vcpu) &&
++	    !apf_put_user(vcpu, KVM_PV_REASON_PAGE_NOT_PRESENT)) {
+ 		fault.vector = PF_VECTOR;
+ 		fault.error_code_valid = true;
+ 		fault.error_code = 0;
+@@ -9795,6 +9822,16 @@ void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+ 		fault.address = work->arch.token;
+ 		fault.async_page_fault = true;
+ 		kvm_inject_page_fault(vcpu, &fault);
++	} else {
++		/*
++		 * It is not possible to deliver a paravirtualized asynchronous
++		 * page fault, but putting the guest in an artificial halt state
++		 * can be beneficial nevertheless: if an interrupt arrives, we
++		 * can deliver it timely and perhaps the guest will schedule
++		 * another process.  When the instruction that triggered a page
++		 * fault is retried, hopefully the page will be ready in the host.
++		 */
++		kvm_make_request(KVM_REQ_APF_HALT, vcpu);
+ 	}
+ }
+ 
+-- 
+1.8.3.1
 
-I'll take a look.
-
-Thanks,
-~ Enric
-
-> Robin.
-> 
->>
->> [1] Documentation/devicetree/bindings/usb/dwc3.txt
->>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> ---
->>
->>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> index 196ac9b78076..a15348d185ce 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> @@ -414,6 +414,9 @@
->>               compatible = "snps,dwc3";
->>               reg = <0x0 0xfe800000 0x0 0x100000>;
->>               interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH 0>;
->> +            clocks = <&cru SCLK_USB3OTG0_REF>, <&cru ACLK_USB3OTG0>,
->> +                 <&cru SCLK_USB3OTG0_SUSPEND>;
->> +            clock-names = "ref", "bus_early", "suspend";
->>               dr_mode = "otg";
->>               phys = <&u2phy0_otg>, <&tcphy0_usb3>;
->>               phy-names = "usb2-phy", "usb3-phy";
->> @@ -447,6 +450,9 @@
->>               compatible = "snps,dwc3";
->>               reg = <0x0 0xfe900000 0x0 0x100000>;
->>               interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH 0>;
->> +            clocks = <&cru SCLK_USB3OTG1_REF>, <&cru ACLK_USB3OTG1>,
->> +                 <&cru SCLK_USB3OTG1_SUSPEND>;
->> +            clock-names = "ref", "bus_early", "suspend";
->>               dr_mode = "otg";
->>               phys = <&u2phy1_otg>, <&tcphy1_usb3>;
->>               phy-names = "usb2-phy", "usb3-phy";
->>
