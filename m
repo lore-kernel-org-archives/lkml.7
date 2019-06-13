@@ -2,88 +2,57 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C848C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91525C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560C1208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:02:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560459748;
-	bh=vOm7ps/WO0CrJcovssXgOSGCYPx5WgEk8nIXiyoJWtI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TP3pRTD79Cclv/lPHlFj0xH7ed082X7XDpFBAB6esHZlN8UUj3rqS8rZW6WsJuBYf
-	 MdsoJ/W0PstnEZ8iz790thZELxYPcpKDT/CLHamSFwhDnwaxCKYlmf834dJFDjFzKg
-	 ApF4EnP9qWEtucJ+118nCAE488eDiJMzZQGQqDU0=
+	by mail.kernel.org (Postfix) with ESMTP id 7062D208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728543AbfFMVC0 (ORCPT
+        id S1730286AbfFMVC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 13 Jun 2019 17:02:26 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39078 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfFMVCZ (ORCPT
+Received: from shards.monkeyblade.net ([23.128.96.9]:60196 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730043AbfFMVCZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Jun 2019 17:02:25 -0400
-Received: by mail-qt1-f193.google.com with SMTP id i34so59056qta.6;
-        Thu, 13 Jun 2019 14:02:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=S4D3K00XMnwOrgjwZ4txSn7Ot39nTRqP9zyoKgXBDU8=;
-        b=sr2GHgj2JaKIofB2P5//4hs9oLdSOV0JCUgQrcVopn8XmZJewxZbZc4f77RPNIeThF
-         qWZ9i6wVw5tl+CoAYZDuK83XiZbSnAXL/aAMfs4Q8PvOtUYa+ZPm81eFU/vc/DrJif3V
-         o0uKbDVG1DOOyzPeLpTFvb1Ro2Qu7ist1z/7y6v9mNVF7esqgre2nDgD94/6QZWMaIpm
-         e4QNnO5VPLJyyWlF/I7qvd3ROYL6q7IQa1Vtq/EMbjFeE7kCq9iAjHZN6NY9EQ8dcL9d
-         +DeglQiEZOd2a/l92BHJoHYWdicaSVOGQnG2NAXxll0a2vSvHRximKOFTC+5PWybi2S4
-         fEdQ==
-X-Gm-Message-State: APjAAAV7qkJQpwkYgtrNQLtL7shiCHJjbK/BxZCNETZb7MajJ8hcJvtU
-        UjssgTomVUihD4IJSinCf2pLONY=
-X-Google-Smtp-Source: APXvYqw3jpkOGC7fTi2PVz55HQGHU7E+aqDfj1jMVMm3+mwsQghkEuDi28fcljJXyO7U9oxR7j/0YA==
-X-Received: by 2002:ac8:431e:: with SMTP id z30mr77044173qtm.291.1560459744579;
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D7779149B35BB;
         Thu, 13 Jun 2019 14:02:24 -0700 (PDT)
-Received: from localhost ([64.188.179.243])
-        by smtp.gmail.com with ESMTPSA id 102sm313401qte.52.2019.06.13.14.02.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 14:02:23 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 15:02:21 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Han Nandor <nandor.han@vaisala.com>
-Cc:     "sre@kernel.org" <sre@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Han Nandor <nandor.han@vaisala.com>
-Subject: Re: [PATCH v4 2/2] dt-bindings: power: reset: add document for NVMEM
-  based reboot-mode
-Message-ID: <20190613210221.GA13947@bogus>
-References: <20190515104658.25535-1-nandor.han@vaisala.com>
- <20190515104658.25535-3-nandor.han@vaisala.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190515104658.25535-3-nandor.han@vaisala.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Date:   Thu, 13 Jun 2019 14:02:24 -0700 (PDT)
+Message-Id: <20190613.140224.1206764737513427353.davem@davemloft.net>
+To:     Jose.Abreu@synopsys.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Joao.Pinto@synopsys.com, peppe.cavallaro@st.com,
+        alexandre.torgue@st.com, linux@armlinux.org.uk, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com
+Subject: Re: [PATCH net-next 0/3] net: stmmac: Convert to phylink
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <cover.1560266175.git.joabreu@synopsys.com>
+References: <cover.1560266175.git.joabreu@synopsys.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 13 Jun 2019 14:02:25 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 May 2019 10:47:15 +0000, Han Nandor wrote:
-> Add the device tree bindings document for the NVMEM based reboot-mode
-> driver.
-> 
-> Signed-off-by: Nandor Han <nandor.han@vaisala.com>
-> ---
->  .../power/reset/nvmem-reboot-mode.txt         | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/nvmem-reboot-mode.txt
-> 
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Date: Tue, 11 Jun 2019 17:18:44 +0200
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> [ Hope this diff looks better (generated with --minimal) ]
+> 
+> This converts stmmac to use phylink. Besides the code redution this will
+> allow to gain more flexibility.
+
+Series applied, thank you.
