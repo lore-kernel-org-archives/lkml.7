@@ -2,110 +2,142 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DB7C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58ED2C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A13120665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:59:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NgHsrlbT"
+	by mail.kernel.org (Postfix) with ESMTP id 388EB20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393108AbfFMQ7Y (ORCPT
+        id S2393148AbfFMQ71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:59:24 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37890 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729830AbfFMA1D (ORCPT
+        Thu, 13 Jun 2019 12:59:27 -0400
+Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:53087 "EHLO
+        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729825AbfFMA0K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 20:27:03 -0400
-Received: by mail-pg1-f194.google.com with SMTP id v11so9829584pgl.5;
-        Wed, 12 Jun 2019 17:27:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EpDSf64rj6PYz78hH+AR6DaK1z0NFm7i5pZaO/Gviic=;
-        b=NgHsrlbTYxNdyGFM1s8L+V3sV0kz7Ptni+sEDiDfDYRSld9CyU4/s2Nrl1vgq1kaxQ
-         iHz98Bime2f4GUVt+n3MTjGkPwBBzUi+mF6CFqbO2Xni/JZBd/chbeKAeR0uAyOqTe2A
-         oqT0A6x5kn8IFvFTmAo6pbnoqAc7wuVy7cNKZQvuAP1RpaNSG7SrYHCe4yWraw5x/VYV
-         5gqkJvkbYEpCDD9i3K4eiwSSTkyb4VPnzjcQsyewU3OyB+JYdMMYaBkejiW+hjijnp32
-         89EFw4U69OczjFytcejubn6E5bIIbOOUji6pSjnW3y+0yAc1Y7U2wMxFbP5xOpJQ26QT
-         HVyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EpDSf64rj6PYz78hH+AR6DaK1z0NFm7i5pZaO/Gviic=;
-        b=R8LL8TDQHiXaoqSACWw4+ipICsfPwpIL8AjwY4FM6t8NK0XahPMjlTTF5nzIc60jyJ
-         AElS5CtB/coIWYnSgKsm2+zhReDLOJ0wUXZdd8Sx4rp4//Eq5rGQt4hs/8XRERMowRFY
-         9yEhc6FfKjXHDeVZ+llbhrv2H6PD7q4vUvC4orWqx8MuZnmV3tQLJug3WPMpyFlzKsJW
-         DcueL9Soyjq04HnlqZB6RYJPawOhTSH/U/D8R16zMUuvSPhhbwbvOTyyNET3StztY5OC
-         Bbf4lDAZk/+dcVAm0PgdvJuLd3pL/MZjZmEvC7ks1prgqkSHRsvRZSPrtO50EM5IQg+m
-         H3yw==
-X-Gm-Message-State: APjAAAWdp7hv10H0wEtYv3hHh7/p2UaQwrXwczgLbi9QWZBVFJT2tmnG
-        2uXCyUkl/Ag5o1f4v3c1BSIMuFBb
-X-Google-Smtp-Source: APXvYqyB7RM/G2k2bMhnEpmalmqGJ/DDx/p41+9AOnqCyFNixMCv6VjnAJb6vS0oBQZx1a5ad97ALQ==
-X-Received: by 2002:a17:90a:7184:: with SMTP id i4mr1883716pjk.49.1560385622887;
-        Wed, 12 Jun 2019 17:27:02 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r7sm686664pfl.134.2019.06.12.17.27.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 17:27:01 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 17:27:00 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Jerry Hoemann <jerry.hoemann@hpe.com>
-Cc:     wim@linux-watchdog.org, mchehab+samsung@kernel.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] docs: watchdog: Fix build error.
-Message-ID: <20190613002700.GA1284@roeck-us.net>
-References: <20190613000237.377-1-jerry.hoemann@hpe.com>
- <20190613000237.377-2-jerry.hoemann@hpe.com>
+        Wed, 12 Jun 2019 20:26:10 -0400
+Received: from [4.30.142.84] (helo=srivatsab-a01.vmware.com)
+        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
+        (Exim 4.82)
+        (envelope-from <srivatsa@csail.mit.edu>)
+        id 1hbDYq-000Xfo-J5; Wed, 12 Jun 2019 20:25:48 -0400
+Subject: Re: [PATCH v4 18/28] docs: convert docs to ReST and rename to *.rst
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-pci@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <cover.1560361364.git.mchehab+samsung@kernel.org>
+ <fac44e1fbab5ea755a93601a4fdfa34fcc57ae9e.1560361364.git.mchehab+samsung@kernel.org>
+From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Message-ID: <7dc94cb4-ebf1-22ab-29c9-fcb2b875a9ac@csail.mit.edu>
+Date:   Wed, 12 Jun 2019 17:25:39 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613000237.377-2-jerry.hoemann@hpe.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <fac44e1fbab5ea755a93601a4fdfa34fcc57ae9e.1560361364.git.mchehab+samsung@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 06:02:37PM -0600, Jerry Hoemann wrote:
-> make htmldocs fails due to missing blank line following header.
+On 6/12/19 10:52 AM, Mauro Carvalho Chehab wrote:
+> Convert the PM documents to ReST, in order to allow them to
+> build with Sphinx.
 > 
-> Signed-off-by: Jerry Hoemann <jerry.hoemann@hpe.com>
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
+> The conversion is actually:
+>   - add blank lines and identation in order to identify paragraphs;
+>   - fix tables markups;
+>   - add some lists markups;
+>   - mark literal blocks;
+>   - adjust title markups.
+> 
+> At its new index.rst, let's add a :orphan: while this is not linked to
+> the main index.rst file, in order to avoid build warnings.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Acked-by: Mark Brown <broonie@kernel.org>
 > ---
->  Documentation/watchdog/watchdog-parameters.rst | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/watchdog/watchdog-parameters.rst b/Documentation/watchdog/watchdog-parameters.rst
-> index 01023382ea73..a3985cc5aeda 100644
-> --- a/Documentation/watchdog/watchdog-parameters.rst
-> +++ b/Documentation/watchdog/watchdog-parameters.rst
-> @@ -12,6 +12,7 @@ providing kernel parameters for builtin drivers versus loadable
->  modules.
+
+[...]
+
+> diff --git a/Documentation/power/suspend-and-cpuhotplug.txt b/Documentation/power/suspend-and-cpuhotplug.rst
+> similarity index 90%
+> rename from Documentation/power/suspend-and-cpuhotplug.txt
+> rename to Documentation/power/suspend-and-cpuhotplug.rst
+> index a8751b8df10e..9df664f5423a 100644
+> --- a/Documentation/power/suspend-and-cpuhotplug.txt
+> +++ b/Documentation/power/suspend-and-cpuhotplug.rst
+> @@ -1,10 +1,15 @@
+> +====================================================================
+>  Interaction of Suspend code (S3) with the CPU hotplug infrastructure
+> +====================================================================
 >  
->  -------------------------------------------------
-> +
->  watchdog core:
->      open_timeout:
->  	Maximum time, in seconds, for which the watchdog framework will take
-> @@ -22,6 +23,7 @@ watchdog core:
->  	fallback logic in the bootloader to try something else.
+> -     (C) 2011 - 2014 Srivatsa S. Bhat <srivatsa.bhat@linux.vnet.ibm.com>
+> +(C) 2011 - 2014 Srivatsa S. Bhat <srivatsa.bhat@linux.vnet.ibm.com>
 >  
->  -------------------------------------------------
+>  
+> -I. How does the regular CPU hotplug code differ from how the Suspend-to-RAM
+> -   infrastructure uses it internally? And where do they share common code?
+> +I. Differences between CPU hotplug and Suspend-to-RAM
+> +======================================================
 > +
->  acquirewdt:
->      wdt_stop:
->  	Acquire WDT 'stop' io port (default 0x43)
-> -- 
-> 2.20.1
-> 
+> +How does the regular CPU hotplug code differ from how the Suspend-to-RAM
+> +infrastructure uses it internally? And where do they share common code?
+>  
+>  Well, a picture is worth a thousand words... So ASCII art follows :-)
+>  
+
+[...]
+
+> @@ -101,7 +108,7 @@ execution during resume):
+>  
+>  It is to be noted here that the system_transition_mutex lock is acquired at the very
+>  beginning, when we are just starting out to suspend, and then released only
+> -after the entire cycle is complete (i.e., suspend + resume).
+> +after the entire cycle is complete (i.e., suspend + resume)::
+>  
+
+I think that should be a period, not a colon, because it is clarifying
+the text above it (as opposed to referring to the example below it).
+
+Other than that, for suspend-and-cpuhotplug.txt:
+
+Acked-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+ 
+Regards,
+Srivatsa
+VMware Photon OS
