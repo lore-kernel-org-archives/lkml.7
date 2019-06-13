@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0013C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2360FC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DAC5206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC309206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eEYlH8zd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g0/oQJsu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbfFMREc (ORCPT
+        id S2393386AbfFMREe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:04:32 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33674 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404674AbfFMREP (ORCPT
+        Thu, 13 Jun 2019 13:04:34 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34918 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732657AbfFMRER (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:04:15 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n9so21633304wru.0;
-        Thu, 13 Jun 2019 10:04:14 -0700 (PDT)
+        Thu, 13 Jun 2019 13:04:17 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c6so10921676wml.0;
+        Thu, 13 Jun 2019 10:04:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=9i5HvQGX2IO7JtOGi96JvfWNChLfBbVzY3tYUVYUuzw=;
-        b=eEYlH8zdjrIFN+Q2lbBrqMxU6LcmMPxNOyQBz5TVuisj/Wcu8vj7vdrdWs8VX1HU97
-         NPjuwdBzu+UtkcojeziernujpMola/w0aLtC+Sgjfv3gjSTfwBxHIp3e6B6+fVdNyxP0
-         L32k0SjM6yW+pphfQsMT9EIqbsAMHwvxNHMLiMVSrU0eisz0M9M4QXFT2glqEYoglwJ4
-         oZCqTObfkO4ZPFoys5/hEi1DbqkGdzqB55tRlf0GF9lOphw1v9ogAP8TtlUnkY84k2Tl
-         4MwzSGI5pkhqYbt7AQvijI4hbEY5SZgv2S3S8EYSoTLl2+eb9OQgtvUaoOlVCpPNRBU4
-         X5yg==
+        bh=w2YvRin0khft70/HQkufh77cwGHzqtMRSykd+mBeVCQ=;
+        b=g0/oQJsu0HiNM3pzjMAX7Ncl32l44dSFd3BKII/9rbhvbMHJFehjI0alIdOutkE9Jj
+         Rv5CauhjQGF6Awnix2AvWfhOSUM3ooJ04fp66s1RhqpK5yhDLvpyaRLJ2tVxpfu7Kelo
+         wrHQRfxkgtUta/XtLwIBnq3ZjZr+i0bfU4G059Sysc/4/0P5bOevglHP7q07S53XeuaB
+         sJugrjBrcuRIcBO26uL0E02IFQBFtv+h15IO6iJziN0+BLYlgrKZMeyAYqVAja+0DqWr
+         LIeg5NWRAgDFrB7pLwbQqk4rHa+se1/jCExE2/OQyqPXgXmycOmtws2ivESGgoNtWJW7
+         ABGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=9i5HvQGX2IO7JtOGi96JvfWNChLfBbVzY3tYUVYUuzw=;
-        b=Ubw6sPR6mMcZO4upih6+EBv74oGMTGlExgP03LQk0MatVDE83dvnnNyv0r+extonVx
-         tp3uk/deRJcBWuajR1rVEg/hkSeJjrrLoqojdzmSMVk1qjTLs7jyWC+Xfp40mQTWaa/R
-         A9kXsVcp4FulKKigVnkv1ej7D72HkPjcsddld6F96RVp1pOPXMO62WOHPtKJtib8ATC9
-         kIeiXnvcJSrt/p0EJBek4BOfuihJh2yykziQqGvs+2PzTUVF1rYOty2ax7q+FBddGybj
-         PnKrT+AxEBawz5bzBHbj9V+x/W+XQzW9BO0j3C3UpZ5MNBBMPsODTASc/7avsIZiJkQ0
-         CbdA==
-X-Gm-Message-State: APjAAAWjPl3JMBSXoGoEG9bR3I3/UNQM5eUjvq2ymDlAYYo4tlmhjxs8
-        G3YUITADec9rBag84ZhiybMqJ6AQ
-X-Google-Smtp-Source: APXvYqxVxk5bQtqpwXUTM0cIhLghSWoz67Y1J38JxnmbmiX72QznBCX0ImcCkyHuZFOKrAm/xMVMGg==
-X-Received: by 2002:a5d:6a90:: with SMTP id s16mr5033698wru.288.1560445453446;
-        Thu, 13 Jun 2019 10:04:13 -0700 (PDT)
+        bh=w2YvRin0khft70/HQkufh77cwGHzqtMRSykd+mBeVCQ=;
+        b=XQgIFMnY7pyNmDuSEq8Nz0larN60ZwkqLcbTgqZm4LjxmYHlJpPwiqva0vThtNkRp+
+         /IFdVsFbEpiW3BXj00E70P2RTfScYm42cAd48EsHF6pSU4VOIUD8KONv8QKr107a3YR+
+         g5z6ssU4d7hUfdUdYlab5/UfIO8se93UKYFk5p6nWn0i10t48IkcLZ5H4Mgn7UL4jBb1
+         rLIm/uGx6ygLRkffB4pGBj0bP0SaWJQGWRgDtSveN2LEjoypMmbVf0vnPShaN/+G1HUC
+         OQ7hqTESrJxG2xlKA+FupOgW2UR7h9tg2eAOfRDP2yfNB9AQlEUrdVpkqyhTh6Wd3rcY
+         WE6A==
+X-Gm-Message-State: APjAAAXXffgMR5otsGrQ2H0GwBhG60P1H+XnUemre+8VX30xXB0CQGQP
+        mBCmC/H5ySM27eqd8H+AFiJN7KC8
+X-Google-Smtp-Source: APXvYqzIoPIJYVmxr0OxCqDzPCOX/Uq5rOqQsi6JQPJTUCi1PcDr0F/NU/r/FIG4Xnm0P66EYC9fYw==
+X-Received: by 2002:a1c:f916:: with SMTP id x22mr4790174wmh.81.1560445455471;
+        Thu, 13 Jun 2019 10:04:15 -0700 (PDT)
 Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.04.12
+        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.04.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 10:04:12 -0700 (PDT)
+        Thu, 13 Jun 2019 10:04:14 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         vkuznets@redhat.com
-Subject: [PATCH 41/43] KVM: VMX: Drop hv_timer_armed from 'struct loaded_vmcs'
-Date:   Thu, 13 Jun 2019 19:03:27 +0200
-Message-Id: <1560445409-17363-42-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 43/43] KVM: nVMX: shadow pin based execution controls
+Date:   Thu, 13 Jun 2019 19:03:29 +0200
+Message-Id: <1560445409-17363-44-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
 References: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
@@ -70,69 +70,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+The VMX_PREEMPTION_TIMER flag may be toggled frequently, though not
+*very* frequently.  Since it does not affect KVM's dirty logic, e.g.
+the preemption timer value is loaded from vmcs12 even if vmcs12 is
+"clean", there is no need to mark vmcs12 dirty when L1 writes pin
+controls, and shadowing the field achieves that.
 
-... now that it is fully redundant with the pin controls shadow.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/nested.c | 1 -
- arch/x86/kvm/vmx/vmcs.h   | 1 -
- arch/x86/kvm/vmx/vmx.c    | 8 ++------
- 3 files changed, 2 insertions(+), 8 deletions(-)
+ arch/x86/kvm/vmx/vmcs_shadow_fields.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 598540ce0f52..33d6598709cb 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -2015,7 +2015,6 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
- 	exec_control |= vmcs12->pin_based_vm_exec_control;
- 	/* Preemption timer setting is computed directly in vmx_vcpu_run.  */
- 	exec_control &= ~PIN_BASED_VMX_PREEMPTION_TIMER;
--	vmx->loaded_vmcs->hv_timer_armed = false;
- 
- 	/* Posted interrupts setting is only taken from vmcs12.  */
- 	if (nested_cpu_has_posted_intr(vmcs12)) {
-diff --git a/arch/x86/kvm/vmx/vmcs.h b/arch/x86/kvm/vmx/vmcs.h
-index 52f12d78e4fa..9a87a2482e3e 100644
---- a/arch/x86/kvm/vmx/vmcs.h
-+++ b/arch/x86/kvm/vmx/vmcs.h
-@@ -61,7 +61,6 @@ struct loaded_vmcs {
- 	int cpu;
- 	bool launched;
- 	bool nmi_known_unmasked;
--	bool hv_timer_armed;
- 	/* Support for vnmi-less CPUs */
- 	int soft_vnmi_blocked;
- 	ktime_t entry_time;
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 6afb2bc3d0ab..86f29ab22dec 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6359,9 +6359,7 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
- static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
- {
- 	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
--	if (!vmx->loaded_vmcs->hv_timer_armed)
--		pin_controls_setbit(vmx, PIN_BASED_VMX_PREEMPTION_TIMER);
--	vmx->loaded_vmcs->hv_timer_armed = true;
-+	pin_controls_setbit(vmx, PIN_BASED_VMX_PREEMPTION_TIMER);
- }
- 
- static void vmx_update_hv_timer(struct kvm_vcpu *vcpu)
-@@ -6388,9 +6386,7 @@ static void vmx_update_hv_timer(struct kvm_vcpu *vcpu)
- 		return;
- 	}
- 
--	if (vmx->loaded_vmcs->hv_timer_armed)
--		pin_controls_clearbit(vmx, PIN_BASED_VMX_PREEMPTION_TIMER);
--	vmx->loaded_vmcs->hv_timer_armed = false;
-+	pin_controls_clearbit(vmx, PIN_BASED_VMX_PREEMPTION_TIMER);
- }
- 
- void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
+diff --git a/arch/x86/kvm/vmx/vmcs_shadow_fields.h b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
+index 4cea018ba285..eb1ecd16fd22 100644
+--- a/arch/x86/kvm/vmx/vmcs_shadow_fields.h
++++ b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
+@@ -47,6 +47,7 @@
+ SHADOW_FIELD_RO(GUEST_CS_AR_BYTES, guest_cs_ar_bytes)
+ SHADOW_FIELD_RO(GUEST_SS_AR_BYTES, guest_ss_ar_bytes)
+ SHADOW_FIELD_RW(CPU_BASED_VM_EXEC_CONTROL, cpu_based_vm_exec_control)
++SHADOW_FIELD_RW(PIN_BASED_VM_EXEC_CONTROL, pin_based_vm_exec_control)
+ SHADOW_FIELD_RW(EXCEPTION_BITMAP, exception_bitmap)
+ SHADOW_FIELD_RW(VM_ENTRY_EXCEPTION_ERROR_CODE, vm_entry_exception_error_code)
+ SHADOW_FIELD_RW(VM_ENTRY_INTR_INFO_FIELD, vm_entry_intr_info_field)
 -- 
 1.8.3.1
-
 
