@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E89C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56873C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D85420449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E6BC20449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443339;
-	bh=3vPlgZNd7nYVW3NeAqRwuF3YuCgseMLE4XA7E4HD1mQ=;
+	s=default; t=1560443342;
+	bh=q0ijF/nYaXsphj7dn5HMBWMoIueBTlYTkoI+gx47HVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KWhTKURzhqiS0dfiPbpjYpwal8Cn/pXAnRW5JdqATSHekxg8vzr4bOg6jM2GjLC3Q
-	 RTpAVHnekuiYOdUXqGAa6zFkICBGat2Kfq3L2jxMerKV83RTi6tCDcEs5DynNZoUCF
-	 EnRatYkTsTCyQwiNNT9k5COAwKjgAX3xVmQK1Ua4=
+	b=GLAyw7gaLoQYGARmDkNqeZd3jjyEZVxbJBT2MriPdROhccDQq55EpieOTcXURb5uA
+	 3J0rFDaCfKrH6LJg+972R7SRu0quMKp+R6hga+mAECnE93Np3DgtgEFZderpb8k0YS
+	 Edk6Mnv9llAmqMMR8AIm+bkNzacLXUaTWizcluS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392473AbfFMQ25 (ORCPT
+        id S2403939AbfFMQ27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:28:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53282 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:28:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730938AbfFMIfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:35:32 -0400
+        id S1730937AbfFMIfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:35:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 836A9206E0;
-        Thu, 13 Jun 2019 08:35:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E05F820851;
+        Thu, 13 Jun 2019 08:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560414932;
-        bh=3vPlgZNd7nYVW3NeAqRwuF3YuCgseMLE4XA7E4HD1mQ=;
+        s=default; t=1560414929;
+        bh=q0ijF/nYaXsphj7dn5HMBWMoIueBTlYTkoI+gx47HVY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LXCXlstGx5n0tK1aNPqYoEyGDq8FP/Qt9kb4KeFZpH4dKAb7FOvoUWMBBPlObYEXZ
-         IvkvWiRlQtKUtmJdzMXuk6nm4KkDiDOxndG7tsRSCYo5t27n7M7J7lB1YVSTapJMyp
-         16Svozn0KY2mnvxtJHYvdER5KID9F+TYslwZP+lc=
+        b=HZE5Q9Rkf3XFnY2CnpMWCAcxmhs6ALiuZuAfyoQ5yqaA2crI85LvZJLLN1lwJ4vjv
+         kbiN9HxiXTWCARMiupqTA19Y3qPU+iuwM1JMhV2bziF1yhvPXDmaXWdFebj1gl1rUH
+         2/4T1OBA0CgX5P1UMy/4bq32gJaKYM357yG7e7Bk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Prarit Bhargava <prarit@redhat.com>,
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 25/81] ntp: Allow TAI-UTC offset to be set to zero
-Date:   Thu, 13 Jun 2019 10:33:08 +0200
-Message-Id: <20190613075650.991287714@linuxfoundation.org>
+Subject: [PATCH 4.14 24/81] pwm: meson: Use the spin-lock only to protect register modifications
+Date:   Thu, 13 Jun 2019 10:33:07 +0200
+Message-Id: <20190613075650.918311631@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -64,44 +64,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fdc6bae940ee9eb869e493990540098b8c0fd6ab ]
+[ Upstream commit f173747fffdf037c791405ab4f1ec0eb392fc48e ]
 
-The ADJ_TAI adjtimex mode sets the TAI-UTC offset of the system clock.
-It is typically set by NTP/PTP implementations and it is automatically
-updated by the kernel on leap seconds. The initial value is zero (which
-applications may interpret as unknown), but this value cannot be set by
-adjtimex. This limitation seems to go back to the original "nanokernel"
-implementation by David Mills.
+Holding the spin-lock for all of the code in meson_pwm_apply() can
+result in a "BUG: scheduling while atomic". This can happen because
+clk_get_rate() (which is called from meson_pwm_calc()) may sleep.
+Only hold the spin-lock when modifying registers to solve this.
 
-Change the ADJ_TAI check to accept zero as a valid TAI-UTC offset in
-order to allow setting it back to the initial value.
+The reason why we need a spin-lock in the driver is because the
+REG_MISC_AB register is shared between the two channels provided by one
+PWM controller. The only functions where REG_MISC_AB is modified are
+meson_pwm_enable() and meson_pwm_disable() so the register reads/writes
+in there need to be protected by the spin-lock.
 
-Fixes: 153b5d054ac2 ("ntp: support for TAI")
-Suggested-by: Ondrej Mosnacek <omosnace@redhat.com>
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Prarit Bhargava <prarit@redhat.com>
-Link: https://lkml.kernel.org/r/20190417084833.7401-1-mlichvar@redhat.com
+The original code also used the spin-lock to protect the values in
+struct meson_pwm_channel. This could be necessary if two consumers can
+use the same PWM channel. However, PWM core doesn't allow this so we
+don't need to protect the values in struct meson_pwm_channel with a
+lock.
+
+Fixes: 211ed630753d2f ("pwm: Add support for Meson PWM Controller")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/ntp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pwm/pwm-meson.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-index 99e03bec68e4..4bb9b66338be 100644
---- a/kernel/time/ntp.c
-+++ b/kernel/time/ntp.c
-@@ -640,7 +640,7 @@ static inline void process_adjtimex_modes(struct timex *txc,
- 		time_constant = max(time_constant, 0l);
+diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+index 3540d00425d0..9b79cbc7a715 100644
+--- a/drivers/pwm/pwm-meson.c
++++ b/drivers/pwm/pwm-meson.c
+@@ -111,6 +111,10 @@ struct meson_pwm {
+ 	const struct meson_pwm_data *data;
+ 	void __iomem *base;
+ 	u8 inverter_mask;
++	/*
++	 * Protects register (write) access to the REG_MISC_AB register
++	 * that is shared between the two PWMs.
++	 */
+ 	spinlock_t lock;
+ };
+ 
+@@ -235,6 +239,7 @@ static void meson_pwm_enable(struct meson_pwm *meson,
+ {
+ 	u32 value, clk_shift, clk_enable, enable;
+ 	unsigned int offset;
++	unsigned long flags;
+ 
+ 	switch (id) {
+ 	case 0:
+@@ -255,6 +260,8 @@ static void meson_pwm_enable(struct meson_pwm *meson,
+ 		return;
  	}
  
--	if (txc->modes & ADJ_TAI && txc->constant > 0)
-+	if (txc->modes & ADJ_TAI && txc->constant >= 0)
- 		*time_tai = txc->constant;
++	spin_lock_irqsave(&meson->lock, flags);
++
+ 	value = readl(meson->base + REG_MISC_AB);
+ 	value &= ~(MISC_CLK_DIV_MASK << clk_shift);
+ 	value |= channel->pre_div << clk_shift;
+@@ -267,11 +274,14 @@ static void meson_pwm_enable(struct meson_pwm *meson,
+ 	value = readl(meson->base + REG_MISC_AB);
+ 	value |= enable;
+ 	writel(value, meson->base + REG_MISC_AB);
++
++	spin_unlock_irqrestore(&meson->lock, flags);
+ }
  
- 	if (txc->modes & ADJ_OFFSET)
+ static void meson_pwm_disable(struct meson_pwm *meson, unsigned int id)
+ {
+ 	u32 value, enable;
++	unsigned long flags;
+ 
+ 	switch (id) {
+ 	case 0:
+@@ -286,9 +296,13 @@ static void meson_pwm_disable(struct meson_pwm *meson, unsigned int id)
+ 		return;
+ 	}
+ 
++	spin_lock_irqsave(&meson->lock, flags);
++
+ 	value = readl(meson->base + REG_MISC_AB);
+ 	value &= ~enable;
+ 	writel(value, meson->base + REG_MISC_AB);
++
++	spin_unlock_irqrestore(&meson->lock, flags);
+ }
+ 
+ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -296,19 +310,16 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ {
+ 	struct meson_pwm_channel *channel = pwm_get_chip_data(pwm);
+ 	struct meson_pwm *meson = to_meson_pwm(chip);
+-	unsigned long flags;
+ 	int err = 0;
+ 
+ 	if (!state)
+ 		return -EINVAL;
+ 
+-	spin_lock_irqsave(&meson->lock, flags);
+-
+ 	if (!state->enabled) {
+ 		meson_pwm_disable(meson, pwm->hwpwm);
+ 		channel->state.enabled = false;
+ 
+-		goto unlock;
++		return 0;
+ 	}
+ 
+ 	if (state->period != channel->state.period ||
+@@ -329,7 +340,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		err = meson_pwm_calc(meson, channel, pwm->hwpwm,
+ 				     state->duty_cycle, state->period);
+ 		if (err < 0)
+-			goto unlock;
++			return err;
+ 
+ 		channel->state.polarity = state->polarity;
+ 		channel->state.period = state->period;
+@@ -341,9 +352,7 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		channel->state.enabled = true;
+ 	}
+ 
+-unlock:
+-	spin_unlock_irqrestore(&meson->lock, flags);
+-	return err;
++	return 0;
+ }
+ 
+ static void meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 -- 
 2.20.1
 
