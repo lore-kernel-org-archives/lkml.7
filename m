@@ -2,119 +2,109 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2B0C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DEEC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4703E2173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073B420B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:43:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="WPGGb8xO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gy6E/NSd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbfFMTms (ORCPT
+        id S1729081AbfFMTnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 15:42:48 -0400
-Received: from mail-eopbgr20075.outbound.protection.outlook.com ([40.107.2.75]:63461
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727975AbfFMTms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:42:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/NiBEz4ijO+lxSyXpK7Yl0ytQfTsISKxzcr0SCPm6JE=;
- b=WPGGb8xOAp+UkRHD5UlkX2A3ttSqfhJeUF/W0UGsNyhrRpFFVUdOEYmRXw91pjffy9YmgsocweUK+R+oi10UC3Ffgy29CtibR3+2FP6J9n5l+eXR96WXyatq7wrBsVkpIZQvAc7UkRhqmai5cH8uqQ9IhBH0PDA+JO4E2vrVrHU=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5006.eurprd05.prod.outlook.com (20.177.52.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.10; Thu, 13 Jun 2019 19:42:43 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
- 19:42:43 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 17/22] mm: remove hmm_devmem_add
-Thread-Topic: [PATCH 17/22] mm: remove hmm_devmem_add
-Thread-Index: AQHVIcyUgj3D92K/UEqq0wbnWDoM1aaZ/LeA
-Date:   Thu, 13 Jun 2019 19:42:43 +0000
-Message-ID: <20190613194239.GX22062@mellanox.com>
-References: <20190613094326.24093-1-hch@lst.de>
- <20190613094326.24093-18-hch@lst.de>
-In-Reply-To: <20190613094326.24093-18-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR01CA0018.prod.exchangelabs.com (2603:10b6:208:10c::31)
- To VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ad0204ab-e9f3-41a8-358f-08d6f0374dad
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5006;
-x-ms-traffictypediagnostic: VI1PR05MB5006:
-x-microsoft-antispam-prvs: <VI1PR05MB5006C2D23554C23B116DFEE3CFEF0@VI1PR05MB5006.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:454;
-x-forefront-prvs: 0067A8BA2A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(136003)(396003)(366004)(39860400002)(199004)(189003)(11346002)(33656002)(52116002)(486006)(99286004)(76176011)(7416002)(386003)(229853002)(2906002)(66066001)(102836004)(6506007)(54906003)(3846002)(6512007)(6916009)(6436002)(6486002)(186003)(26005)(476003)(446003)(2616005)(6116002)(36756003)(305945005)(64756008)(316002)(66446008)(8676002)(66556008)(66476007)(25786009)(68736007)(73956011)(5660300002)(66946007)(4326008)(81166006)(86362001)(7736002)(81156014)(14454004)(4744005)(6246003)(8936002)(71200400001)(53936002)(478600001)(71190400001)(256004)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5006;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: McGaOtbmZWACFWSvsDkXQQIGurm3RW/CW3fPYQ5QlYRTj3VHKVGzTNLVyjFiCL2tpCIQB6qnZzXK2qhRkaRpwHMICQyLJja3HA3B+rDSSEbpyab+P7f70du4JnGTvVMrnLmpV8bI0zX8Jsu7XGfT1rR8/0gToQfFkKP/c6pvA5ErS/Xp+yUb5gKEzSB9O8qNJVrV5MALF6U0uYSxd/1KyDpQPIctlIEUdL41q6/k7FO5Wr6ETTep7tzvy6FQLcwQ0QTcN/6KJhFQ2AoHKLxkiqUB9BlsSbkHDLFnueMjNRv7bvRIxryhT6ENwDcWmvGIhxle3r2U/w/AbnEkVdHPZqk3VFeuT5yawpumwi1hTJcovKSYCz8ZCTNA3PgcqA7ZkgrEyt/m/tMwUJHAIJSvY15//IfkasHvBAvHfJ5DqKs=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <4271DAA2E22D344AB96571BECBECE6B2@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 13 Jun 2019 15:43:32 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43857 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728667AbfFMTnc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 15:43:32 -0400
+Received: by mail-pl1-f194.google.com with SMTP id cl9so8553323plb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 12:43:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i/JBzTlaIRys/4FXlOVowrLaN7Y7ioCSg9apqikje/Y=;
+        b=gy6E/NSdOlgf6LDqxXvrrdZaWN9fZiGtU2p+2qfuTU2RRFBgGSCkswaDXP5lnek7Gt
+         gIVtAu43gayoXBKbFHeReMDQsGHMe0OrC+LStPfMP/aB3BLgPDlqHg6jhTl5BH7TWDvR
+         ALcClNEmwV9FnItsyQwG8b7Eyniz5DLVJMvZ8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i/JBzTlaIRys/4FXlOVowrLaN7Y7ioCSg9apqikje/Y=;
+        b=MDDmNNJqNSgxtS7bQhcZZ33oSO+FfxpF1ZAxWaaCCDVzFJYAWu4Y7ArjUEAQoUj5p9
+         J35VkVTvsLxjJ3qY5aO0/FT/b8DbflilVSJVFQ3FE58q+8Ofo02q1aBM78NdGRG+kzDm
+         jLoqkqSd8G9itUKcvHz9lVyKsg/FrqiqIsVsPo6Bes1NlR6OH922Vu9pQPTyWSXTZGQu
+         yrsrEMhEVnGmxthlZKmDib51qYodjtVoa+rstlZz+QgQe6PZQZyJNHoH9vXA1BVhnSCf
+         rAZ2GzIDyQb7iO1Gk704iV/WM1TsVl3NvI9CJgV5IXHvjyfe+sznMBrPmxilwN6wQ1E4
+         nsbQ==
+X-Gm-Message-State: APjAAAVc8/HwnWnwBhuhkz1Uqdj7Uhc+LT2D/6lbKL+I53aoc4acNolr
+        2jNV8u3TF4jEWLbafwOnkKafGQ==
+X-Google-Smtp-Source: APXvYqy985in01FdAKRYCWFmFh62RofTuNsQ+FVfIK1rCnkbbPytQd81yY4V9MCH3ohqvL1VEyDFfA==
+X-Received: by 2002:a17:902:21:: with SMTP id 30mr88301989pla.302.1560455011492;
+        Thu, 13 Jun 2019 12:43:31 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id f2sm498807pgs.83.2019.06.13.12.43.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 12:43:31 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH 0/4] backlight: Expose brightness curve type through sysfs
+Date:   Thu, 13 Jun 2019 12:43:22 -0700
+Message-Id: <20190613194326.180889-1-mka@chromium.org>
+X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad0204ab-e9f3-41a8-358f-08d6f0374dad
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 19:42:43.8857
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5006
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:43:20AM +0200, Christoph Hellwig wrote:
-> There isn't really much value add in the hmm_devmem_add wrapper.  Just
-> factor out a little helper to find the resource, and otherwise let the
-> driver implement the dev_pagemap_ops directly.
+Backlight brightness curves can have different shapes. The two main
+types are linear and non-linear curves. The human eye doesn't
+perceive linearly increasing/decreasing brightness as linear (see
+also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+linearly to human eye"), hence many backlights use non-linear (often
+logarithmic) brightness curves. The type of curve is currently opaque
+to userspace, so userspace often relies on more or less reliable
+heuristics (like the number of brightness levels) to decide whether
+to treat a backlight device as linear or non-linear.
 
-Was this commit message written when other patches were squashed in
-here? I think the helper this mentions was from an earlier patch
+Export the type of the brightness curve via a new sysfs attribute.
 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  Documentation/vm/hmm.rst |  26 --------
->  include/linux/hmm.h      | 129 ---------------------------------------
->  mm/hmm.c                 | 115 ----------------------------------
->  3 files changed, 270 deletions(-)
+Matthias Kaehlcke (4):
+  MAINTAINERS: Add entry for stable backlight sysfs ABI documentation
+  backlight: Expose brightness curve type through sysfs
+  backlight: pwm_bl: Set scale type for CIE 1931 curves
+  backlight: pwm_bl: Set scale type for brightness curves specified in
+    the DT
 
-I looked for in-flight patches that might be using these APIs and
-found nothing. To be sent patches can use the new API with no loss in
-functionality...
+ .../ABI/testing/sysfs-class-backlight         | 32 +++++++++++++++++++
+ MAINTAINERS                                   |  2 ++
+ drivers/video/backlight/backlight.c           | 22 +++++++++++++
+ drivers/video/backlight/pwm_bl.c              | 30 ++++++++++++++++-
+ include/linux/backlight.h                     | 10 ++++++
+ 5 files changed, 95 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-backlight
 
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+-- 
+2.22.0.rc2.383.gf4fbbf30c2-goog
 
-Jason
