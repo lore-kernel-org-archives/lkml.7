@@ -2,89 +2,170 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB98C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8EEC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9E9E206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:37:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560440270;
-	bh=GVf49hFCmcRRH5IPgZDm+9Q8NkzxgT1kPYT89nbbwgU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1u/JFvvXnGcpL3VTsDy/qHACK/pkr/vWYY2lypyRxqaqTE/Keps21CVyPxaOJESBe
-	 gxBrikyPT7Mt2KMBxtmNwQLPW947rjoloPeRc0qguOzJ1n3LW4FAot9lTu0qpdIi9U
-	 9syAUADLm5kZJSzISyGmW/mXj8YFiF1l7RqJAd5c=
+	by mail.kernel.org (Postfix) with ESMTP id 55B91207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:37:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Opg/Cz53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732006AbfFMPhs (ORCPT
+        id S1733241AbfFMPhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:37:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727135AbfFMPhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:37:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A7E02080A;
-        Thu, 13 Jun 2019 15:37:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560440267;
-        bh=GVf49hFCmcRRH5IPgZDm+9Q8NkzxgT1kPYT89nbbwgU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uDnHm1StBx+nQRq0m1g9H/twrrrfEiVi0hC8aCH1S5N0Zc8HGay21dh98aIyPLML2
-         /cYshCvedsyI7rMoGeegHKKGvkNMmTfLPk39drws9i3soJUgRYhEiwX0QXcxCz8Tno
-         yhzOcoCOvptF3CaDx7C9LVVUTJd8ZQVQ7iEqZcDE=
-Date:   Thu, 13 Jun 2019 17:37:44 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     sashal@kernel.org, Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.14 00/81] 4.14.126-stable review
-Message-ID: <20190613153744.GA15226@kroah.com>
-References: <20190613075649.074682929@linuxfoundation.org>
- <1139f9d4-1a0a-b422-276d-546e7cb1bc85@roeck-us.net>
+        Thu, 13 Jun 2019 11:37:51 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43694 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732619AbfFMPht (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 11:37:49 -0400
+Received: by mail-io1-f66.google.com with SMTP id k20so17874871ios.10;
+        Thu, 13 Jun 2019 08:37:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5i3fllaM3zGVPRCjpemlXnZ90CuYrEwzTiEoElVhFe8=;
+        b=Opg/Cz53GyZCtD8gdSvINfrJq82ClNEH2vJpIYLZbDB0mFJSOBPNRSnMuvc/ETy/u7
+         3YSWspqqmO5FLQQeR1kCnj+/U4ZHiJsRiCJRNMNw1L0SF2wJHkafnoo29cUd6kie8j30
+         5cyuXzzbbW2FEKDfoz7nPqdZ5xYVR8xXomfI9tUNAvmNdPLMvBspKsVE1PSfi4WSUW7m
+         9OGHjF5Ed29skI3yLFbkvr9rhcWepSFeBIx63dE4dhB1orw7jkqAPJhyJ9Lo/9yM96oq
+         B9pdy6+hEleo9Fbds6FkIa+8+xYNaINnWxBFiYG74h+rQS1l1Hkdvg2cnxXoieNejmna
+         j2mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5i3fllaM3zGVPRCjpemlXnZ90CuYrEwzTiEoElVhFe8=;
+        b=AG77fa0gpED2GrZZelJP35nnYpFduYMOQVQ5R6egnc1nfiSlxxsm7oz3evsoGOqSaZ
+         X8fwtvyUzg5x5zuhRdLlLVBg8OifZO2Ytp7y8+yfCmVDorC6pGU9H1o3MRriZ4izObk9
+         oqoi+pYwwWh/G4bExw4NcQgJFbAKcdQJL97SJgpJoWnoVYuLdo9oO0FJr01cmAxJsB8H
+         aVW2p9mA5eMvaI9uo1l0mru/L29ONkA0jCnliSU6KgBAjiVywLdB4pf7lmlV7gA2JePC
+         XGlWHrukOhzO4jrwPqyotGim7FjuMr++nuJkRlEkPLrqSxhuBbo+RiwFVBHHZWaKYGMO
+         MJ9g==
+X-Gm-Message-State: APjAAAUOy5XDJjf4OdwyzATII34LyCQWscjwQ3c+9jpP+G1m4oXigU90
+        sMeHpYFBBk0dAbhfm9niSLYn8QZD7IKIcLB55Uk=
+X-Google-Smtp-Source: APXvYqwfUacV62ukDncawPLzKOEtROrJgrS0BIzPwynxnGl7fBiV1KhINj78l/YVKnvaiUlBeEdXQsYQ2XfmhId0Zac=
+X-Received: by 2002:a02:c50a:: with SMTP id s10mr30311468jam.106.1560440268724;
+ Thu, 13 Jun 2019 08:37:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1139f9d4-1a0a-b422-276d-546e7cb1bc85@roeck-us.net>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190613142157.8674-1-jeffrey.l.hugo@gmail.com>
+ <20190613142239.8779-1-jeffrey.l.hugo@gmail.com> <20190613151209.GB6792@builder>
+ <20190613152430.GC6792@builder>
+In-Reply-To: <20190613152430.GC6792@builder>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Thu, 13 Jun 2019 09:37:38 -0600
+Message-ID: <CAOCk7NpLz-6kM2X=HOh4ZcEw4bzhKcjd=8664HX43w1V+ffeag@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] drivers: regulator: qcom_spmi: Refactor get_mode/set_mode
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 08:11:33AM -0700, Guenter Roeck wrote:
-> On 6/13/19 1:32 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.14.126 release.
-> > There are 81 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sat 15 Jun 2019 07:54:51 AM UTC.
-> > Anything received after that time might be too late.
-> > 
-> 
-> [early feedback]
-> 
-> Building mips:nlm_xlp_defconfig ... failed (and other mips builds)
-> --------------
-> Error log:
-> /opt/buildbot/slave/stable-queue-4.14/build/arch/mips/kernel/prom.c: In function 'early_init_dt_add_memory_arch':
-> /opt/buildbot/slave/stable-queue-4.14/build/arch/mips/kernel/prom.c:44:14: error: 'PHYS_ADDR_MAX' undeclared
-> 
-> The problem affects v4.14.y and all earlier branches.
-> PHYS_ADDR_MAX is indeed undeclared in those branches. It was introduced
-> with commit 1c4bc43ddfd52 ("mm/memblock: introduce PHYS_ADDR_MAX").
+On Thu, Jun 13, 2019 at 9:24 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Thu 13 Jun 08:12 PDT 2019, Bjorn Andersson wrote:
+>
+> > On Thu 13 Jun 07:22 PDT 2019, Jeffrey Hugo wrote:
+> >
+> > > spmi_regulator_common_get_mode and spmi_regulator_common_set_mode use
+> > > multi-level ifs which mirror a switch statement.  Refactor to use a switch
+> > > statement to make the code flow more clear.
+> > >
+> > > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > > ---
+> > >  drivers/regulator/qcom_spmi-regulator.c | 28 ++++++++++++++++---------
+> > >  1 file changed, 18 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
+> > > index fd55438c25d6..1c18fe5969b5 100644
+> > > --- a/drivers/regulator/qcom_spmi-regulator.c
+> > > +++ b/drivers/regulator/qcom_spmi-regulator.c
+> > > @@ -911,13 +911,14 @@ static unsigned int spmi_regulator_common_get_mode(struct regulator_dev *rdev)
+> > >
+> > >     spmi_vreg_read(vreg, SPMI_COMMON_REG_MODE, &reg, 1);
+> > >
+> > > -   if (reg & SPMI_COMMON_MODE_HPM_MASK)
+>
+> Sorry, didn't see the & here. Don't you need to mask out the mode bits
+> before turning this into a switch?
 
-Thanks, I've dropped the mips patch that caused this.  I'll also drop it
-from the 4.4 and 4.9 trees.
+Ah.  Yes.  I read the documentation wrong when doing this.  Will fix.
 
-Sasha, I thought you had builders set up for stuff like this?
-
-greg k-h
+>
+> > > +   switch (reg) {
+> > > +   case SPMI_COMMON_MODE_HPM_MASK:
+> > >             return REGULATOR_MODE_NORMAL;
+> > > -
+> > > -   if (reg & SPMI_COMMON_MODE_AUTO_MASK)
+> > > +   case SPMI_COMMON_MODE_AUTO_MASK:
+> > >             return REGULATOR_MODE_FAST;
+> > > -
+> > > -   return REGULATOR_MODE_IDLE;
+> > > +   default:
+> > > +           return REGULATOR_MODE_IDLE;
+> > > +   }
+> > >  }
+> > >
+> > >  static int
+> > > @@ -925,12 +926,19 @@ spmi_regulator_common_set_mode(struct regulator_dev *rdev, unsigned int mode)
+> > >  {
+> > >     struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+> > >     u8 mask = SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
+> > > -   u8 val = 0;
+> > > +   u8 val;
+> > >
+> > > -   if (mode == REGULATOR_MODE_NORMAL)
+> > > +   switch (mode) {
+> > > +   case REGULATOR_MODE_NORMAL:
+> > >             val = SPMI_COMMON_MODE_HPM_MASK;
+> > > -   else if (mode == REGULATOR_MODE_FAST)
+> > > +           break;
+> > > +   case REGULATOR_MODE_FAST:
+> > >             val = SPMI_COMMON_MODE_AUTO_MASK;
+> > > +           break;
+> > > +   default:
+> > > +           val = 0;
+> > > +           break;
+> > > +   }
+> >
+> > For this part:
+> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > >
+> > >     return spmi_vreg_update_bits(vreg, SPMI_COMMON_REG_MODE, val, mask);
+> > >  }
+> > > @@ -1834,9 +1842,9 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
+> > >                     }
+> > >             }
+> > >
+> > > -           if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_HFS430) {
+> >
+> > Squash this into patch 1.
+> >
+> > Regards,
+> > Bjorn
+> >
+> > > +           if (vreg->set_points->count == 1) {
+> > >                     /* since there is only one range */
+> > > -                   range = spmi_regulator_find_range(vreg);
+> > > +                   range = vreg->set_points->range;
+> > >                     vreg->desc.uV_step = range->step_uV;
+> > >             }
+> > >
+> > > --
+> > > 2.17.1
+> > >
