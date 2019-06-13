@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC53C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F93C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0BD62147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE74C2147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442973;
-	bh=Zr+S9qszYm7Ysbhazh9Fs4RB+XQq43GARdQ5UwlRd6o=;
+	s=default; t=1560442976;
+	bh=JlR8HdzcLiHyScAA35m007DD1WT4CMGpDisD1am2USg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N1bZQat2yskgZ8WvKBuZvABbaFKl8gWqzOiAqPVolEwMlBKKu1UQ3FKnFSMdVzWsY
-	 Fwtd5aKkQjF3ECvRomdbOW7Sa7E9V2HUMC6CTe58PVd0ckI+6oVhHXl3xfqXUT0i6r
-	 F+RbH5c6/tMyCeLJ3kbW028o5Clq6xsF3GR6b790=
+	b=QtxQTliEbMdnaAS6rtSvN2fAxKTSKCk/vNPWHX/eIgvrw1XHHz5z0Oerr6pmEWivM
+	 mXk5G5kh+bZCqXQtb4icetPmqZ92XbxotKax2pMrITdYN81NRHyaOf4zd8aggrxIyv
+	 a8YcNYvhzHQcrsF93+gjaubDLT7otfkZ1EqM1W9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403778AbfFMQWw (ORCPT
+        id S2392055AbfFMQWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:22:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55506 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:22:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731037AbfFMIiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:38:04 -0400
+        id S1731036AbfFMIiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:38:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E513A2146F;
-        Thu, 13 Jun 2019 08:38:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D3CD21473;
+        Thu, 13 Jun 2019 08:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415083;
-        bh=Zr+S9qszYm7Ysbhazh9Fs4RB+XQq43GARdQ5UwlRd6o=;
+        s=default; t=1560415080;
+        bh=JlR8HdzcLiHyScAA35m007DD1WT4CMGpDisD1am2USg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aOhoKlqxGaVWWsK2OexL8hUUE49xfxtuUWHe7OkUp6jwCUMx0EHq/kbzaN42Z8hV7
-         Wm9sFOI4gApIJ93/4Pql1dZ6K6+rjii6WkoIU0ATSI6tdIfXWeRJLJx0tlkbxmZYN7
-         BmGmB9DOumqwigl6qMIMDPwV2Ir1XZCBrnKsgXHQ=
+        b=TqeNK4Fbmu+dNtrRak2/LKkeekDF8RHPYFYhHkTxt7abns7pvlkCbLMtzi1hJqEhj
+         7OTM7x2Jg2TyYjfmh6SqiAmJsU4RxtKclmLA4tBxDMQty1rfBE2+ip0P1cELaysvSi
+         sOgWtkmdn0ab3WXgsJXLieg57N+W5N9x06jWPKI4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Joachim <svenjoac@gmx.de>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dave Airlie <airlied@redhat.com>,
-        Thomas Backlund <tmb@mageia.org>
-Subject: [PATCH 4.14 80/81] Revert "drm/nouveau: add kconfig option to turn off nouveau legacy contexts. (v3)"
-Date:   Thu, 13 Jun 2019 10:34:03 +0200
-Message-Id: <20190613075654.899041011@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Khoruzhick <anarsoul@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jeremy Cline <jeremy@jcline.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>
+Subject: [PATCH 4.14 79/81] Revert "Bluetooth: Align minimum encryption key size for LE and BR/EDR connections"
+Date:   Thu, 13 Jun 2019 10:34:02 +0200
+Message-Id: <20190613075654.815196365@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -63,80 +64,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This reverts commit 140ae656e3b7476719a2b15b96527c73c5acf90b which is
-commit b30a43ac7132cdda833ac4b13dd1ebd35ace14b7 upstream.
+This reverts commit 2fa7a155b25160696cd77cdd995536cf5e172e20 which is
+commit d5bb334a8e171b262e48f378bd2096c0ea458265 upstream.
 
-Sven reports:
-	Commit 1e07d63749 ("drm/nouveau: add kconfig option to turn off nouveau
-	legacy contexts. (v3)") has caused a build failure for me when I
-	actually tried that option (CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n):
+Lots of people have reported issues with this patch, and as there does
+not seem to be a fix going into Linus's kernel tree any time soon,
+revert the commit in the stable trees so as to get people's machines
+working properly again.
 
-	,----
-	| Kernel: arch/x86/boot/bzImage is ready  (#1)
-	|   Building modules, stage 2.
-	|   MODPOST 290 modules
-	| ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
-	| scripts/Makefile.modpost:91: recipe for target '__modpost' failed
-	`----
-
-	Upstream does not have that problem, as commit bed2dd8421 ("drm/ttm:
-	Quick-test mmap offset in ttm_bo_mmap()") has removed the use of
-	drm_legacy_mmap from nouveau_ttm.c.  Unfortunately that commit does not
-	apply in 5.1.9.
-
-The ensuing discussion proposed a number of one-off patches, but no
-solid agreement was made, so just revert the commit for now to get
-people's systems building again.
-
-Reported-by: Sven Joachim <svenjoac@gmx.de>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Dave Airlie <airlied@redhat.com>
-Cc: Thomas Backlund <tmb@mageia.org>
+Reported-by: Vasily Khoruzhick <anarsoul@gmail.com>
+Reported-by: Hans de Goede <hdegoede@redhat.com>
+Cc: Jeremy Cline <jeremy@jcline.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>
+Cc: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/nouveau/Kconfig       |   13 +------------
- drivers/gpu/drm/nouveau/nouveau_drm.c |    7 ++-----
- 2 files changed, 3 insertions(+), 17 deletions(-)
+ include/net/bluetooth/hci_core.h |    3 ---
+ net/bluetooth/hci_conn.c         |    8 --------
+ 2 files changed, 11 deletions(-)
 
---- a/drivers/gpu/drm/nouveau/Kconfig
-+++ b/drivers/gpu/drm/nouveau/Kconfig
-@@ -16,20 +16,9 @@ config DRM_NOUVEAU
- 	select INPUT if ACPI && X86
- 	select THERMAL if ACPI && X86
- 	select ACPI_VIDEO if ACPI && X86
--	help
--	  Choose this option for open-source NVIDIA support.
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -178,9 +178,6 @@ struct adv_info {
+ 
+ #define HCI_MAX_SHORT_NAME_LENGTH	10
+ 
+-/* Min encryption key size to match with SMP */
+-#define HCI_MIN_ENC_KEY_SIZE		7
 -
--config NOUVEAU_LEGACY_CTX_SUPPORT
--	bool "Nouveau legacy context support"
--	depends on DRM_NOUVEAU
- 	select DRM_VM
--	default y
- 	help
--	  There was a version of the nouveau DDX that relied on legacy
--	  ctx ioctls not erroring out. But that was back in time a long
--	  ways, so offer a way to disable it now. For uapi compat with
--	  old nouveau ddx this should be on by default, but modern distros
--	  should consider turning it off.
-+	  Choose this option for open-source NVIDIA support.
+ /* Default LE RPA expiry time, 15 minutes */
+ #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
  
- config NOUVEAU_PLATFORM_DRIVER
- 	bool "Nouveau (NVIDIA) SoC GPUs"
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -967,11 +967,8 @@ nouveau_driver_fops = {
- static struct drm_driver
- driver_stub = {
- 	.driver_features =
--		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER
--#if defined(CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT)
--		| DRIVER_KMS_LEGACY_CONTEXT
--#endif
--		,
-+		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER |
-+		DRIVER_KMS_LEGACY_CONTEXT,
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -1165,14 +1165,6 @@ int hci_conn_check_link_mode(struct hci_
+ 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
+ 		return 0;
  
- 	.load = nouveau_drm_load,
- 	.unload = nouveau_drm_unload,
+-	/* The minimum encryption key size needs to be enforced by the
+-	 * host stack before establishing any L2CAP connections. The
+-	 * specification in theory allows a minimum of 1, but to align
+-	 * BR/EDR and LE transports, a minimum of 7 is chosen.
+-	 */
+-	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
+-		return 0;
+-
+ 	return 1;
+ }
+ 
 
 
