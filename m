@@ -2,108 +2,106 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C7EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812EEC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 297902187F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B4421880
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:28:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qq3Uulg+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oedfKylP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbfFMR2C (ORCPT
+        id S1729313AbfFMR2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:28:02 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:48691 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727230AbfFMR2C (ORCPT
+        Thu, 13 Jun 2019 13:28:21 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34104 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727230AbfFMR2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:28:02 -0400
-Received: by mail-pf1-f202.google.com with SMTP id u21so11809595pfn.15
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 10:28:02 -0700 (PDT)
+        Thu, 13 Jun 2019 13:28:20 -0400
+Received: by mail-qt1-f196.google.com with SMTP id m29so23501359qtu.1;
+        Thu, 13 Jun 2019 10:28:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=YOPSQyByy+sdwJPTHXHLAwPARdzuYkR92/UcWiG15z0=;
-        b=qq3Uulg+GNz9qGof5VZ8h8QdhcjR1EeS0zo/SjjfeovzkY3ZDAWYtLBxpGrSALoW9x
-         YzPJuHqkfuX1ogcyu8AnpJT3bDQEmsxTojWbxsmDcE+HPCNWeSCyI1TkHMMMwv7ZM7B5
-         xoOA8s2uBXemEdGeVyvWVr//eGffvPTa+1URylcVc5w9gIe3CDwV4cV4jX7UN2ZvvGTn
-         kIynhzJdDc5gDcy2e28ddL0gz5sQnmlJYNUlz6m99/a3hJudaV8g0j8WuoAa9A5hWbUN
-         FRrh9Bfj3Rw2zyzEoizIgUfOSz4BVBYFsc9Rzwd8pBcxZ0Hs0luZjMzXnRvBboZixHsR
-         FUhQ==
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=pWffWnnz+ElhG5m21Q51hYVp+tij/VSIEpeJT0zysCo=;
+        b=oedfKylP7XiL91oxgUEhfNz3Oaa6XwtxNRkYrb0ywhdVbK4s9LxWo5pLBQhnXqxVZO
+         mQmpKjRfP0sZ5gjNnC12F6dtaDg5slkw/5ciFU3u4mtMsLQzsH7NMW2N7UmdHFaASSM0
+         cGaq1uX0ej4sv3xkM96UfT/TXHrL46MQn3De1qrKpbYbxzrWCub6xik5bNveeDUfXWF/
+         AvzBwr/tpr0s6ndXcAyU3KDLNISllkEOBGNnx9slxbBQaY+8nEIKOUt4hnI/kf8vQ4E7
+         j2P546W3vp9q1ksff5L+cAFA+Z+Z/TXjVvIOUKg3YWtBH+X1rtszOlcIOQRefn9D4JK4
+         dmmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=YOPSQyByy+sdwJPTHXHLAwPARdzuYkR92/UcWiG15z0=;
-        b=XQXy+yqrjsCMqvc0PkKhpRC9njwxRvd3ESvyB0WqDoD2Rug9V+0xDk44NM6d8O18hq
-         Mjlw0kMlBgqDgG5ywc62WsvHb6MgBcqCxciejtgHT479LZ5BKAl7cDh4MClUlTvAG7Fu
-         ZELnaaIxfj/MEYIY85xGTTTVQisDRBGzaZ5BO2ONVCktqrkv0kfcRYNMTOXL2Y8G6tPA
-         /pKJmcMJTu+YvP5BnERO7s2Hc9NKUT9i7Zeyy+UKhtT03jyoblJ9AD819U9FRX9CDwTQ
-         2vwtP/NsHush69xuYl/IfOKlYyO+1BZbDTCZjDX/sAUUvu7c2CZUJ4czfPkakm/DVxO2
-         R9gg==
-X-Gm-Message-State: APjAAAUkcKmLS68kW25kmpUqmng7n6vD36ist7OqJmF5Q1vBIzHKtT31
-        5JdXuuBWF5HvIi2G2acURFJI16xATg==
-X-Google-Smtp-Source: APXvYqyLxxhPCdTroCrtThxPEGqptQMNlEqmTe4QCMVFCYFfDvC2PYzPkg4R9I7fjg2Z61Mj8vLdfDU/3A==
-X-Received: by 2002:a63:5c15:: with SMTP id q21mr17864740pgb.248.1560446881379;
- Thu, 13 Jun 2019 10:28:01 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 10:27:46 -0700
-Message-Id: <20190613172746.216819-1-nhuck@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-Subject: [PATCH] memory: tegra: Fix -Wunused-const-variable
-From:   Nathan Huckleberry <nhuck@google.com>
-To:     thierry.reding@gmail.com, jonathanh@nvidia.com
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nathan Huckleberry <nhuck@google.com>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=pWffWnnz+ElhG5m21Q51hYVp+tij/VSIEpeJT0zysCo=;
+        b=USvEjfh5qkt7p6fCDUVo66/vnkiIaMlQky1LeGlEsmDA1u3AK2PJCCQizYzqc49yUV
+         s2V9javFkbY3wsg/fE/QWUG4kgSa56vjmSrcE1tiVrPFiNS5W8ksJFoFuxXHZTrw1sgm
+         GjRIqs2mRt1bvc5NdgqxHwHJpSQ0pR2UPdbIr9kgeDzioV79RX7YIaCSGxCJS1r6OQiv
+         RivaQPt1Nwn2OZ7vT8D1mrE4rTaLMljCLpElZn4xnY1MIJUCVeIQPzaGhxG8Qw73d2s4
+         Q4q0n9yUZ7HihJMVMk6phnv7ZejMP0oc5eKrGIc4n9tjsv70XDDR+rFb+sYS+Y4Xb7hn
+         gGHA==
+X-Gm-Message-State: APjAAAXwQXVaUVRE8bzmzaRvuB3UBvTeK4l+5QimzV3roi2nED2ampOb
+        GT0RgypP/TVOSHBQ76cGKvCPrCJ00v0=
+X-Google-Smtp-Source: APXvYqwKFxHoQKwE6Ki+8lrALnBTAGhN8kPBYMCaULDNfD3O3utvkzhcOIHcXWul9rQWJKSU31pIcw==
+X-Received: by 2002:a0c:b0e4:: with SMTP id p33mr4659392qvc.208.1560446899040;
+        Thu, 13 Jun 2019 10:28:19 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id s134sm109461qke.51.2019.06.13.10.28.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 10:28:18 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 13:28:17 -0400
+Message-ID: <20190613132817.GB22277@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, f.fainelli@gmail.com,
+        andrew@lunn.ch
+Subject: Re: [PATCH net-next 0/4] net: dsa: use switchdev attr and obj
+ handlers
+In-Reply-To: <20190611214747.22285-1-vivien.didelot@gmail.com>
+References: <20190611214747.22285-1-vivien.didelot@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang produces the following warning
+Hi David,
 
-drivers/memory/tegra/tegra124.c:36:28: warning: unused variable
-'tegra124_mc_emem_regs' [-Wunused-const-variable]
-static const unsigned long tegra124_mc_emem_regs[] = {
-                           ^
+On Tue, 11 Jun 2019 17:47:43 -0400, Vivien Didelot <vivien.didelot@gmail.com> wrote:
+> This series reduces boilerplate in the handling of switchdev attribute and
+> object operations by using the switchdev_handle_* helpers, which check the
+> targeted devices and recurse into their lower devices.
+> 
+> This also brings back the ability to inspect operations targeting the bridge
+> device itself (where .orig_dev is the bridge device and .dev is the slave),
+> even though that is of no use yet and skipped by this series.
+> 
+> Vivien Didelot (4):
+>   net: dsa: do not check orig_dev in vlan del
+>   net: dsa: make cpu_dp non const
+>   net: dsa: make dsa_slave_dev_check use const
+>   net: dsa: use switchdev handle helpers
+> 
+>  include/net/dsa.h |  2 +-
+>  net/dsa/port.c    |  9 ------
+>  net/dsa/slave.c   | 81 ++++++++++++++++++++---------------------------
+>  3 files changed, 36 insertions(+), 56 deletions(-)
 
-The only usage of this variable is from within an ifdef.
-It seems logical to move the variable into the ifdef as well.
+Please do not merge. The orig_dev != dev test in patch 4 is not correct,
+because it skips the programming of the HOST_MDB object. I'll respin in a few.
 
-Cc: clang-built-linux@googlegroups.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/526
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
----
- drivers/memory/tegra/tegra124.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/memory/tegra/tegra124.c b/drivers/memory/tegra/tegra124.c
-index 8f8487bda642..8f2af5614595 100644
---- a/drivers/memory/tegra/tegra124.c
-+++ b/drivers/memory/tegra/tegra124.c
-@@ -33,6 +33,7 @@
- #define MC_EMEM_ARB_MISC1			0xdc
- #define MC_EMEM_ARB_RING1_THROTTLE		0xe0
- 
-+#ifdef CONFIG_ARCH_TEGRA_124_SOC
- static const unsigned long tegra124_mc_emem_regs[] = {
- 	MC_EMEM_ARB_CFG,
- 	MC_EMEM_ARB_OUTSTANDING_REQ,
-@@ -54,6 +55,7 @@ static const unsigned long tegra124_mc_emem_regs[] = {
- 	MC_EMEM_ARB_MISC1,
- 	MC_EMEM_ARB_RING1_THROTTLE
- };
-+#endif
- 
- static const struct tegra_mc_client tegra124_mc_clients[] = {
- 	{
--- 
-2.22.0.rc2.383.gf4fbbf30c2-goog
-
+Thanks,
+Vivien
