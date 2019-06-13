@@ -2,138 +2,162 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7286C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3B6C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB62C20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42B3F2080A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:59:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vrj0DDbH"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="l8XwoOhr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393147AbfFMQ7u (ORCPT
+        id S2393202AbfFMQ7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:59:50 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49420 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729801AbfFMAKP (ORCPT
+        Thu, 13 Jun 2019 12:59:52 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41553 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729799AbfFMAHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 20:10:15 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5D04qCO126226;
-        Thu, 13 Jun 2019 00:07:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=0OEootoOLq7cPZMlz3xJIkr+9woYMbgUb9aDDD9IL8w=;
- b=vrj0DDbHi/tRfQOTRoPMQeFWT/O3BGw4YZQjeaAiKwYGP8h15rzoTlylbPcU9HJNvW7B
- XkXLh3HaYEU6hDFrEiCojaiq/UGtqooEoFRBtOiNJA/gqUE/mdyNLahbiRXkcORx4ZnG
- CIwAzh43uZ74uw2X7PD7QFNJeL43mkJZzE2uYPPPiZ8dVpPLql3+CvhEosTOoTxSRd68
- CXVyCUDgjh5UyuVvm2TWGna96z3Cv7NQpHXYsgnxLQYdvagt8BA5w3IPTXtj+27rpaBq
- mugUv1s7g47j88+GDaZ8BxPKOC1u+LFtiTu0UPDUNFWYhlNG+fqQ2NUEMTdZhw+iC2kQ 1A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2t04etxgqs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Jun 2019 00:07:59 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5D07svf168338;
-        Thu, 13 Jun 2019 00:07:59 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2t1jpj9jk0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Jun 2019 00:07:59 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5D07qIQ001114;
-        Thu, 13 Jun 2019 00:07:52 GMT
-Received: from [10.132.91.175] (/10.132.91.175)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 12 Jun 2019 17:07:52 -0700
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-To:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        Aaron Lu <aaron.lu@linux.alibaba.com>
-Cc:     Aubrey Li <aubrey.intel@gmail.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <cover.1559129225.git.vpillai@digitalocean.com>
- <CAERHkruDE-7R5K=2yRqCJRCpV87HkHzDYbQA2WQkruVYpG7t7Q@mail.gmail.com>
- <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com>
- <20190531210816.GA24027@sinkpad> <20190606152637.GA5703@sinkpad>
- <20190612163345.GB26997@sinkpad>
-From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Message-ID: <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com>
-Date:   Wed, 12 Jun 2019 17:03:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 12 Jun 2019 20:07:10 -0400
+Received: by mail-oi1-f196.google.com with SMTP id g7so9878537oia.8
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 17:07:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tkriq+76AVHAvWoxrGme0DZvQ0r/bAVgHuOCgkIGtnY=;
+        b=l8XwoOhrF8eV64+8QPkXsyAB77xTxH5+1FeNQoAuo2IunkQvtG1vuCWbxf61GiESpY
+         fQIRFrAiJkW+IrDOfUaKnJbZt9tIC32l6Xy4ybZd5y3ZF5SAN9+oleOeFWzdpXuE5tAV
+         RC4eULNdvWPH93o14WsX9bo0OmW/YIpmbKuQu5yM5Yf06EOJ8i9vnZaZodDO+7FagV71
+         Vn5z9fSnD8ksqLo4LFbc1Dao5jxA7SYmjVUULSHTYmYSmk2sRZLdxHWS6v14AiSxFZzW
+         tg1S2yelMDIEm5tB1fuWa71m73rK7k/ukBJ9OjAtcguxhkgnJ/jKbGZv9vMCqeRRtAHT
+         0UtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tkriq+76AVHAvWoxrGme0DZvQ0r/bAVgHuOCgkIGtnY=;
+        b=sx2OeFHf1ZmgdpXxvqILAwHTgmJVW5xdXSUlFmbCXeYQxkH31CjkjD+SldH3sBcUbj
+         6NMr2+7EEXY7lHNrTzzccFfuFWVG31xHom/cVWPEK3bfNoSImV+t/onDqBu8ROMfd6hU
+         2c3CWq8jz17AAKGf3Qn+yuA/M1kXRCwX4hJSdq38+WjWI57uPhjjdu0I5U/mfRryJqAG
+         ShuVNnLvbYSQCRhOtIz+qvvtRSittFzod6QICdGUHcEI98AoKHhleaxKvbm/X2VZbobw
+         kyGeVc2MpgQaOB+mZVmcKERKElDxQ2mIhLY5hRYRBQlLh86qVf9Y4n6pMf1GURHUkvbw
+         dLsQ==
+X-Gm-Message-State: APjAAAUETOc+CibhMVaj/3mqurbd/3YwjA7rQdSx0x+Xiq+PXRJz9Btr
+        2q1xOzLNBzgKLIo0nHm650Ezhmt/EJZV0Oyr7yyvYA==
+X-Google-Smtp-Source: APXvYqw2VZtovLNG6JskbLITjxABP/AQIL/VRraLlLfxmhWXh1G3n3MX02RIzNA0cPbyuLQPJ9zagbpHOtrvb+hDjn0=
+X-Received: by 2002:aca:ec82:: with SMTP id k124mr1180994oih.73.1560384429638;
+ Wed, 12 Jun 2019 17:07:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190612163345.GB26997@sinkpad>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906120170
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906120170
+References: <1560366952-10660-1-git-send-email-cai@lca.pw> <CAPcyv4hn0Vz24s5EWKr39roXORtBTevZf7dDutH+jwapgV3oSw@mail.gmail.com>
+ <CAPcyv4iuNYXmF0-EMP8GF5aiPsWF+pOFMYKCnr509WoAQ0VNUA@mail.gmail.com> <1560376072.5154.6.camel@lca.pw>
+In-Reply-To: <1560376072.5154.6.camel@lca.pw>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 12 Jun 2019 17:06:57 -0700
+Message-ID: <CAPcyv4hevCNgajrw7STXH4N5_heEOBz_-SzxcSB83DKDNacP9Q@mail.gmail.com>
+Subject: Re: [PATCH -next] mm/hotplug: skip bad PFNs from pfn_to_online_page()
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 6/12/19 9:33 AM, Julien Desfossez wrote:
-> After reading more traces and trying to understand why only untagged
-> tasks are starving when there are cpu-intensive tasks running on the
-> same set of CPUs, we noticed a difference in behavior in ‘pick_task’. In
-> the case where ‘core_cookie’ is 0, we are supposed to only prefer the
-> tagged task if it’s priority is higher, but when the priorities are
-> equal we prefer it as well which causes the starving. ‘pick_task’ is
-> biased toward selecting its first parameter in case of equality which in
-> this case was the ‘class_pick’ instead of ‘max’. Reversing the order of
-> the parameter solves this issue and matches the expected behavior.
+On Wed, Jun 12, 2019 at 2:47 PM Qian Cai <cai@lca.pw> wrote:
 >
-> So we can get rid of this vruntime_boost concept.
+> On Wed, 2019-06-12 at 12:38 -0700, Dan Williams wrote:
+> > On Wed, Jun 12, 2019 at 12:37 PM Dan Williams <dan.j.williams@intel.com>
+> > wrote:
+> > >
+> > > On Wed, Jun 12, 2019 at 12:16 PM Qian Cai <cai@lca.pw> wrote:
+> > > >
+> > > > The linux-next commit "mm/sparsemem: Add helpers track active portions
+> > > > of a section at boot" [1] causes a crash below when the first kmemleak
+> > > > scan kthread kicks in. This is because kmemleak_scan() calls
+> > > > pfn_to_online_page(() which calls pfn_valid_within() instead of
+> > > > pfn_valid() on x86 due to CONFIG_HOLES_IN_ZONE=n.
+> > > >
+> > > > The commit [1] did add an additional check of pfn_section_valid() in
+> > > > pfn_valid(), but forgot to add it in the above code path.
+> > > >
+> > > > page:ffffea0002748000 is uninitialized and poisoned
+> > > > raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
+> > > > raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
+> > > > page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+> > > > ------------[ cut here ]------------
+> > > > kernel BUG at include/linux/mm.h:1084!
+> > > > invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+> > > > CPU: 5 PID: 332 Comm: kmemleak Not tainted 5.2.0-rc4-next-20190612+ #6
+> > > > Hardware name: Lenovo ThinkSystem SR530 -[7X07RCZ000]-/-[7X07RCZ000]-,
+> > > > BIOS -[TEE113T-1.00]- 07/07/2017
+> > > > RIP: 0010:kmemleak_scan+0x6df/0xad0
+> > > > Call Trace:
+> > > >  kmemleak_scan_thread+0x9f/0xc7
+> > > >  kthread+0x1d2/0x1f0
+> > > >  ret_from_fork+0x35/0x4
+> > > >
+> > > > [1] https://patchwork.kernel.org/patch/10977957/
+> > > >
+> > > > Signed-off-by: Qian Cai <cai@lca.pw>
+> > > > ---
+> > > >  include/linux/memory_hotplug.h | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > > > diff --git a/include/linux/memory_hotplug.h
+> > > > b/include/linux/memory_hotplug.h
+> > > > index 0b8a5e5ef2da..f02be86077e3 100644
+> > > > --- a/include/linux/memory_hotplug.h
+> > > > +++ b/include/linux/memory_hotplug.h
+> > > > @@ -28,6 +28,7 @@
+> > > >         unsigned long ___nr = pfn_to_section_nr(___pfn);           \
+> > > >                                                                    \
+> > > >         if (___nr < NR_MEM_SECTIONS && online_section_nr(___nr) && \
+> > > > +           pfn_section_valid(__nr_to_section(___nr), pfn) &&      \
+> > > >             pfn_valid_within(___pfn))                              \
+> > > >                 ___page = pfn_to_page(___pfn);                     \
+> > > >         ___page;                                                   \
+> > >
+> > > Looks ok to me:
+> > >
+> > > Acked-by: Dan Williams <dan.j.williams@intel.com>
+> > >
+> > > ...but why is pfn_to_online_page() a multi-line macro instead of a
+> > > static inline like all the helper routines it invokes?
+> >
+> > I do need to send out a refreshed version of the sub-section patchset,
+> > so I'll fold this in and give you a Reported-by credit.
 >
-> We have tested the fix below and it seems to work well with
-> tagged/untagged tasks.
+> BTW, not sure if your new version will fix those two problem below due to the
+> same commit.
 >
-My 2 DB instance runs with this patch are better with CORESCHED_STALL_FIX
-than NO_CORESCHED_STALL_FIX in terms of performance, std deviation and
-idleness. May be enable it by default?
+> https://patchwork.kernel.org/patch/10977957/
+>
+> 1) offline is busted [1]. It looks like test_pages_in_a_zone() missed the same
+> pfn_section_valid() check.
 
-NO_CORESCHED_STALL_FIX:
+All online memory is to be onlined as a complete section, so I think
+the issue is more related to vmemmap_populated() not establishing the
+mem_map for all pages in a section.
 
-users     %stdev   %gain %idle
-16        25       -42.4 73
-24        32       -26.3 67
-32        0.2      -48.9 62
+I take back my suggestions about pfn_valid_within() that operation
+should always be scoped to a section when validating online memory.
 
+>
+> 2) powerpc booting is generating endless warnings [2]. In vmemmap_populated() at
+> arch/powerpc/mm/init_64.c, I tried to change PAGES_PER_SECTION to
+> PAGES_PER_SUBSECTION, but it alone seems not enough.
 
-CORESCHED_STALL_FIX:
-
-users     %stdev   %gain %idle
-16        6.5      -23 70
-24        0.6      -17 60
-32        1.5      -30.2   52
+On PowerPC PAGES_PER_SECTION == PAGES_PER_SUBSECTION because the
+PowerPC section size was already small. Instead I think the issue is
+that PowerPC is partially populating sections, but still expecting
+pfn_valid() to succeed. I.e. prior to the subsection patches
+pfn_valid() would still work for those holes, but now that it is more
+precise it is failing.
