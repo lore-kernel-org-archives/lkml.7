@@ -8,54 +8,53 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD1BC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD91C468B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7350B20449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A439120449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcwiPxgj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kAXXgwog"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392263AbfFMQ2O (ORCPT
+        id S2392330AbfFMQ1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:28:14 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42105 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388457AbfFMQ1U (ORCPT
+        Thu, 13 Jun 2019 12:27:13 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39970 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731011AbfFMQ1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:27:20 -0400
-Received: by mail-pg1-f195.google.com with SMTP id l19so8641494pgh.9;
-        Thu, 13 Jun 2019 09:27:20 -0700 (PDT)
+        Thu, 13 Jun 2019 12:27:10 -0400
+Received: by mail-pf1-f196.google.com with SMTP id p184so8868333pfp.7;
+        Thu, 13 Jun 2019 09:27:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JsgCC/BMGBMjxmW7o9BryeGGLOEsGyP+ouOS5p6QwrY=;
-        b=JcwiPxgjLgV6N4VCuG8y04JytNqGA3wjUEQKXd/8c9NKoASVZrzY9YqxjRgcnxpj/m
-         xYimd6aF0FM3qGzIYEie1Obu9Fv9hNkPj5fOH/k1Cq8DDcTXGvzHfbdZZhCf2rHYdqoK
-         irX41RQFqAFcvftuCdOl2TIoHJ7GuhiI3Lp4/3pYT1WHUTlWCSo2uZS0xVBoOWxaygH0
-         Qhyde+t2vasIdzZ+OUXv4OvvVQwY7REx9a6hOOv/nwJg0o08wp2sRXgZY/BCBEUe5dt5
-         QSiS7Bi23/N6707zjA7xU7gvDKFjyL8fi7H0FXAHjINXJuoR7QtNv2s6u2JezgqDFeA7
-         CcCQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=v6vzilPAtj2ODZwSW8fHlBGBIGUDcN2J3Si9o5NBA3E=;
+        b=kAXXgwoguPvU4cAuhcaUgbXJuBSrc4pXZ01mFgLMVTiAUcb3NIkvnGdriEvuRYpcS4
+         KCkN0/7AHFbsRxOm8x2szfUod289BCzSUB2ccFOtOVvhKdOyGMzy87Zl4dSeFroG+guL
+         esu84wiMoP6w/H+9AVYLyYbjuEGjHZzfZcq2VaqLVuBVPuF438x9B/V4m6ISqtGWYOQM
+         8j/Kz0duNoACz0A3QT+4bKsgCn6EYE+p503sKJ0P7oLkeyri1jHoyoEfTeT7CCHRCAYz
+         W6zqItpX7twXVXqsYxk+Veh+fw38UvbAkJGCbeVSGbdwoGav2hPr0WylW6UZnDsmRVLn
+         tv3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=JsgCC/BMGBMjxmW7o9BryeGGLOEsGyP+ouOS5p6QwrY=;
-        b=RqnpGk0dvObotJH45D8WUdFWRJYy85aL7kugRIvy44IAvWGemwer3L7RM2dB8rrlE0
-         tko8CdzNR2cFMboy/7hLtduOYmm4gaNBN4w2eLhDi45GMySfT7HsZFY0vUwc/H1F6JTo
-         rpzwmGkQFr2UPiyUtEiPefNDgR4Bg7k+y/s18Zl0e1PwENaowgCznmXlBorDaCY54Cbh
-         a316YXSxFGF70GejjIGqZZ/zHrnj9JHnLhUS7ezcsxzt0MVqwxR/5U4SIIct7XEqHBOy
-         5H4rGR0MwmDScOCF3Np3s5Dlhgqb0MT6A4rREh3JOE8a/BynJrXQsMHUXI1czaZbaNX2
-         iR0A==
-X-Gm-Message-State: APjAAAUkf3w5Uf+iosKSCcmQoJjin78CB/6r2UtJ0QQ//8uN3m1RT7/9
-        M50OynRsi43vRwj+NiVaQ34=
-X-Google-Smtp-Source: APXvYqzz/wBg2hFMk5AN2wVrdkk/+d5jQkSOOjBN2BUU2pkNiSLnjcEV8rg9DLZ1/j1U47rn0NUi1g==
-X-Received: by 2002:a62:1bd1:: with SMTP id b200mr69156992pfb.210.1560443239837;
-        Thu, 13 Jun 2019 09:27:19 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=v6vzilPAtj2ODZwSW8fHlBGBIGUDcN2J3Si9o5NBA3E=;
+        b=V5VfdJ+hsQp4sMWKz4YXl9AaCAZioIlF6glvMh1tN60KWYJ8d71Cw/fy3uTv7opZLd
+         3NRMBe1Mw/hkEC3MnAjz0zhvaxIflKxMbi03bD4omVg29k0swBuyFW1T4vxFte1GvND2
+         FBndOQps1zcFHWZqvbKFMV8Yp8n3L3+3hgfx36QKH0BPKPhe/WoedsACXLJ7W5Vf5GCi
+         V8Wmwap7B3gOrQPRGSUek2dKOxxT7kfbzqXpK2bZTZ0Nxvg3CuG5qEB2fewexrQhb2lY
+         5P5Ha7eyLaUaA3iUrTBNv9axVwadTi9yNfJTF/FTwYb8aI+InKEh+WaFvHqQOsCrexL1
+         DvFQ==
+X-Gm-Message-State: APjAAAVYdx8XN/38i1QfHzVtvoRA0xgYes0bMSE0RiWAkA7BBOKX7Utw
+        YH8sS5jp7V1FbvgIP3URfVI=
+X-Google-Smtp-Source: APXvYqzPxG4x6iJ3bSwjicFDgP/gbJZePtynT5+d9Kai+1QhkL96mw1oCJcSqEHcntuvftQRVXyDCg==
+X-Received: by 2002:a17:90a:db52:: with SMTP id u18mr6471125pjx.107.1560443229896;
+        Thu, 13 Jun 2019 09:27:09 -0700 (PDT)
 Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
-        by smtp.gmail.com with ESMTPSA id l8sm265407pgb.76.2019.06.13.09.27.19
+        by smtp.gmail.com with ESMTPSA id z186sm185768pfz.7.2019.06.13.09.27.08
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Jun 2019 09:27:19 -0700 (PDT)
+        Thu, 13 Jun 2019 09:27:09 -0700 (PDT)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     joro@8bytes.org, m.szyprowski@samsung.com, kgene@kernel.org,
         krzk@kernel.org, will.deacon@arm.com, robin.murphy@arm.com,
@@ -66,12 +65,10 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
         Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 04/10] iommu/qcom: convert to SPDX license tags
-Date:   Thu, 13 Jun 2019 12:26:57 -0400
-Message-Id: <20190613162703.986-4-tiny.windzz@gmail.com>
+Subject: [PATCH 01/10] iommu/exynos: convert to SPDX license tags
+Date:   Thu, 13 Jun 2019 12:26:54 -0400
+Message-Id: <20190613162703.986-1-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.0
-In-Reply-To: <20190613162703.986-1-tiny.windzz@gmail.com>
-References: <20190613162703.986-1-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -81,33 +78,25 @@ Updates license to use SPDX-License-Identifier.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/iommu/qcom_iommu.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+ drivers/iommu/exynos-iommu.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
-index 8cdd3f059513..ad913720d7dd 100644
---- a/drivers/iommu/qcom_iommu.c
-+++ b/drivers/iommu/qcom_iommu.c
-@@ -1,18 +1,7 @@
+diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
+index 05c6bc099d62..938a33d2f89d 100644
+--- a/drivers/iommu/exynos-iommu.c
++++ b/drivers/iommu/exynos-iommu.c
+@@ -1,10 +1,7 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  * IOMMU API for QCOM secure IOMMUs.  Somewhat based on arm-smmu.c
-  *
+  * Copyright (c) 2011,2016 Samsung Electronics Co., Ltd.
+  *		http://www.samsung.com
+- *
 - * This program is free software; you can redistribute it and/or modify
 - * it under the terms of the GNU General Public License version 2 as
 - * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-- *
-  * Copyright (C) 2013 ARM Limited
-  * Copyright (C) 2017 Red Hat
   */
+ 
+ #ifdef CONFIG_EXYNOS_IOMMU_DEBUG
 -- 
 2.17.0
 
