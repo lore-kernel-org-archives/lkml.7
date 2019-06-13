@@ -2,115 +2,94 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C74C0C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20904C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3BC20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:10:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="puGmflYj"
+	by mail.kernel.org (Postfix) with ESMTP id DF00020B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:13:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560467623;
+	bh=oXngK66DWxbvNhTtxksF0G2Vo7TzhoQQpzxC7f77/B8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e6TcCBR58inOrT1dxTtstm4TQQweiVZWHvWPqLOsOuaZVEQ78qzrnBEc12P8LXypu
+	 cdFb+q06mmqkIZQYAcalXHH66cLIKveakGEJSJyIQtJ+QL14hejC2wiIdiFXEF1fFD
+	 iHJ3P7QGXMX9LiCcXyo8e9qouJ41Hh0QVMi1O/IA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbfFMXKw (ORCPT
+        id S1727344AbfFMXNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 19:10:52 -0400
-Received: from mail-eopbgr30074.outbound.protection.outlook.com ([40.107.3.74]:60726
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726603AbfFMXKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 19:10:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=739c5jQXQ0DYsV5q9yGUEJ3j5bapmAiM/he/yV381G8=;
- b=puGmflYjZFCuMlHhWT3QE5twzlouftmMldP/seG3MfaVrk/szmnlBQwflcPwHA5qHBdvpNlr0Ehq1pu9NgbvTfObVG4KcDZE5q2/IUSvXbgRf/4j6Jza9jw82Fn8p9yrYP4L3YI7cXQvUgFCt7/Je5ZOTooBYEI8LKLE7m5GxvY=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5216.eurprd05.prod.outlook.com (20.178.12.93) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.13; Thu, 13 Jun 2019 23:10:45 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
- 23:10:45 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: dev_pagemap related cleanups
-Thread-Topic: dev_pagemap related cleanups
-Thread-Index: AQHVIcx5DdVrUhs/HUiF5V2FmmsvzKaZ58OAgAAlLoCAAAtCgIAAHqKA
-Date:   Thu, 13 Jun 2019 23:10:45 +0000
-Message-ID: <20190613231039.GE22062@mellanox.com>
-References: <20190613094326.24093-1-hch@lst.de>
- <CAPcyv4jBdwYaiVwkhy6kP78OBAs+vJme1UTm47dX4Eq_5=JgSg@mail.gmail.com>
- <20190613204043.GD22062@mellanox.com> <20190613212101.GA27174@lst.de>
-In-Reply-To: <20190613212101.GA27174@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: QB1PR01CA0005.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:2d::18) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6deefc2c-1cfe-42b4-a481-08d6f0545d5a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5216;
-x-ms-traffictypediagnostic: VI1PR05MB5216:
-x-microsoft-antispam-prvs: <VI1PR05MB52161DFBA773BE4F896E6107CFEF0@VI1PR05MB5216.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0067A8BA2A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(39860400002)(346002)(366004)(136003)(199004)(189003)(66446008)(64756008)(66476007)(66946007)(1076003)(7416002)(66556008)(73956011)(5660300002)(2906002)(8936002)(81156014)(26005)(8676002)(71200400001)(71190400001)(102836004)(256004)(6506007)(386003)(76176011)(86362001)(52116002)(486006)(99286004)(11346002)(446003)(4744005)(7116003)(2616005)(476003)(66066001)(6246003)(305945005)(33656002)(14454004)(25786009)(7736002)(6116002)(3846002)(4326008)(478600001)(54906003)(6916009)(36756003)(68736007)(6512007)(186003)(81166006)(6436002)(6486002)(316002)(53936002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5216;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: IxerV2Ues/JSOcb8GLs2M1W5creYR/hSc2Ld7NaDx5lom/4gPQHVuDzz+iegaHaiak68YoBo1qmhTmWqPMNuSkxTUbVDMXKuD+y0MYQ+s148o+lJXY45QaReW0xTCbwj4fTWzHYpaVgpzyOI2uJGjuwe8zltTJyKEO+MbJPVH952uN+EGFGVWkIU0VwBnwdLoi/L7zVf4zyvko2537aRaFOVkWfyl2VO9zl8rGK2luIOihGZ8nCEfxFwMA3a3fs9GSSPfKJWGaMt2M06AQU/jZvaIfQtev7Y7HJI6lt7AVU7FDor+VuW5RzO0wnekKZou8W3toLRY+zBldGHKLLUUoWpjJihE6y4qwY2VvpWwKCfX/0BM5glNwMu0BPr3g1xu7K7ivPeEJiAMRgbFvD52ghJtJEYdA1bBTbY/VbQzx8=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <9DD504E2832E244190B09BBD35CAF05D@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 13 Jun 2019 19:13:41 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:38859 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfFMXNl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 19:13:41 -0400
+Received: by mail-qk1-f196.google.com with SMTP id a27so523145qkk.5;
+        Thu, 13 Jun 2019 16:13:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ycBe9I5qE6I0844UHWF0cICH9VE+GutrjkLafm0KuQ0=;
+        b=jQUhsTd6gbD+KAVYVHdjhg2zUDxs71zM9XNmXVVGzQIWbyRGVSVdgVX0l59RETqoPu
+         9NEgpFIdHHnIllgxHlR41C06YwqYUe0k31LgP1koMGJXSjmu1q8wdChThDlLvVztUOnB
+         hRPnRFJKPluPI+SOBb0jdWg3KB+95llCtwM8VIzbHgFvabZRXzIwJfUJwmLThYMaVj0S
+         IMkuOw57mJILIEX4kfXZMrj7q3GjcjAbO4dXTfHnMMMPtSQzOIGfjL1dLm0WMRLdUffT
+         GsOP/JYhg23W18eXfLUwD5qw1GPkMuoRGK6VDcKboEHVDRv/H4JB6LpYmfwoXEDpat2X
+         VrdQ==
+X-Gm-Message-State: APjAAAXF6u+rTFHBRHMzrQ/I0lEPb4g9pBZqNxSrYru2ZY7l5g+1ONs5
+        t9SGW6l5JwIXdTEYNUlIRw==
+X-Google-Smtp-Source: APXvYqw7wFVMUzPvVknVlsd9YvZvCuNzLEqnuiZQgeVTZnf5WoP8b9G7izEepEdaqiC5EoHKr9M0/g==
+X-Received: by 2002:a05:620a:1206:: with SMTP id u6mr72012736qkj.88.1560467620109;
+        Thu, 13 Jun 2019 16:13:40 -0700 (PDT)
+Received: from localhost ([64.188.179.243])
+        by smtp.gmail.com with ESMTPSA id d26sm599727qkl.97.2019.06.13.16.13.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 16:13:39 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 17:13:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        niklas.cassel@linaro.org, marc.w.gonzalez@free.fr,
+        sibis@codeaurora.org, daniel.lezcano@linaro.org,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/9] Documentation: arm: Link idle-states binding to
+ "enable-method" property
+Message-ID: <20190613231338.GA23667@bogus>
+References: <cover.1558430617.git.amit.kucheria@linaro.org>
+ <9dc4ce06143de48039e841c337fafa7cb9c8d7d2.1558430617.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6deefc2c-1cfe-42b4-a481-08d6f0545d5a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 23:10:45.6882
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5216
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9dc4ce06143de48039e841c337fafa7cb9c8d7d2.1558430617.git.amit.kucheria@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:21:01PM +0200, Christoph Hellwig wrote:
-> On Thu, Jun 13, 2019 at 08:40:46PM +0000, Jason Gunthorpe wrote:
-> > > Perhaps we should pull those out and resend them through hmm.git?
-> >=20
-> > It could be done - but how bad is the conflict resolution?
->=20
-> Trivial.  All but one patch just apply using git-am, and the other one
-> just has a few lines of offsets.
+On Tue, 21 May 2019 15:05:12 +0530, Amit Kucheria wrote:
+> The "enable-method" property for cpu nodes needs to be "psci" for CPU
+> idle management to be setup correctly.
+> 
+> Add a note to the binding documentation to this effect to make it
+> obvious.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  .../devicetree/bindings/arm/idle-states.txt         | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+> 
 
-Okay, NP then, trivial ones are OK to send to Linus..
+Applied, thanks.
 
-If Andrew gets them into -rc5 then I will get rc5 into hmm.git next
-week.
-
-Thanks,
-Jason
+Rob
