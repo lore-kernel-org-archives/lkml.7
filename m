@@ -2,104 +2,137 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C437DC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A5DC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D784206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:27:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="GEPuNeYc"
+	by mail.kernel.org (Postfix) with ESMTP id 85782206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbfFMP1K (ORCPT
+        id S1728402AbfFMP1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:27:10 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:35076 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729075AbfFMLld (ORCPT
+        Thu, 13 Jun 2019 11:27:16 -0400
+Received: from 6.mo2.mail-out.ovh.net ([87.98.165.38]:40663 "EHLO
+        6.mo2.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729054AbfFMLkg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 07:41:33 -0400
-Received: by mail-ua1-f67.google.com with SMTP id r7so7188243ual.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 04:41:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H4VyKD+1E4l8WEL9xPMuwhvlmL4tX+kahUY4NzXzOPg=;
-        b=GEPuNeYcY/7A1PQYuYWpQnvhWJkLDdN+G4zM83miDSvxP35U8hvwvgmHn/DZ0jawal
-         M6EZ+qGxSyPscR3LXUy3gax36GEgVhXh5uNmFOHWDXVTzw5+JQBr7bSXc3k1BRJCp+Yj
-         eAohEXwqZSGCl+pkaevh8cWV8OnN72kHk9QghGe+Ry/zIfeFQhtgnYs9b0ZGXPfIxd1U
-         ivRWDapr3eGWpgcnnypxlaGxd0NuLbWsUg9G7NO573oSG1ILxKvuiBzs9LFESq0KXfP/
-         aja32Rib05Mnat8HtkFr23HtdsduG5Cp5HpirNXqmkLSTSD0Lpgy1ydq/hJVXkZLfLno
-         SipQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H4VyKD+1E4l8WEL9xPMuwhvlmL4tX+kahUY4NzXzOPg=;
-        b=BmNA8V4wK9co15vQlqHZcRHvtLLxQLKQuqoxwrxBj6NJ6eclJnKJr6UHeyOpXtdmXt
-         WGQ7dfCPpaDDQ1/M/k9a55VxBSIZk5KuEbTI7OaxyyTwLA+mhHAzpBC784l8EtuhDYuD
-         H12SX4WAAZ+VWnDE/NUWRwu/jLcd3JZ1YLZ4ae40e+dVc11Vt7cGQw/NYt9XAZOr/nSg
-         HkSXU42bA4M4/7s/NueWOO1vOLGfW1XlkS9RK9uPjmFJjgQMq0BqdABCfLyxVtn65GOS
-         MdBqgtNwYpQK28tm7Z9KVLpnNjaOCFcoEx9nY7/sYB0vX6mPp7D44vVmgaceqBbz55pt
-         HPcA==
-X-Gm-Message-State: APjAAAWHKlTGfGVRyZ1BxD+g7YQXjgA2IRGM1mPIfBOpAr7NgYs2h7nD
-        Zp+iLT31P+fzt+E3bJigtdr5NIvD/Ij6hjwpyOzOog==
-X-Google-Smtp-Source: APXvYqy0vis982DlAQpR8yglXZ8HB3wfAgsUSmQ72Boq9mcMDBp+XhU8TfZYqGzdegC8IM7YJTPUslblgiRFraos2vI=
-X-Received: by 2002:ab0:168a:: with SMTP id e10mr33043256uaf.87.1560426092549;
- Thu, 13 Jun 2019 04:41:32 -0700 (PDT)
+        Thu, 13 Jun 2019 07:40:36 -0400
+Received: from player728.ha.ovh.net (unknown [10.108.35.158])
+        by mo2.mail-out.ovh.net (Postfix) with ESMTP id 897B719F3A8
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 13:34:43 +0200 (CEST)
+Received: from armadeus.com (lfbn-1-7591-179.w90-126.abo.wanadoo.fr [90.126.248.179])
+        (Authenticated sender: sebastien.szymanski@armadeus.com)
+        by player728.ha.ovh.net (Postfix) with ESMTPSA id 7FFDA6B6DE10;
+        Thu, 13 Jun 2019 11:34:32 +0000 (UTC)
+Subject: Re: [PATCH 1/1] ARM: dts: imx6ul: Add PXP node
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>
+References: <20190606164642.11539-1-sebastien.szymanski@armadeus.com>
+ <20190612172103.gat3yrub2iyurai5@pengutronix.de>
+From:   =?UTF-8?Q?S=c3=a9bastien_Szymanski?= 
+        <sebastien.szymanski@armadeus.com>
+Openpgp: preference=signencrypt
+Message-ID: <6802e25d-f12b-28e3-d975-7f21fe002a35@armadeus.com>
+Date:   Thu, 13 Jun 2019 13:34:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190611125904.1013-1-cai@lca.pw> <CAK8P3a1rK79aj38H0i9vnzeycv6YZ0iUhBFz4giAFc7COTnmWQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a1rK79aj38H0i9vnzeycv6YZ0iUhBFz4giAFc7COTnmWQ@mail.gmail.com>
-From:   Bartosz Szczepanek <bsz@semihalf.com>
-Date:   Thu, 13 Jun 2019 13:41:21 +0200
-Message-ID: <CABLO=+kZnpBm8W9MmSkSf=18R5fLMFe65+_YWw1-of46B+B1dA@mail.gmail.com>
-Subject: Re: [PATCH -next] efi/tpm: fix a compilation warning
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Qian Cai <cai@lca.pw>, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Matthew Garrett <mjg59@google.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190612172103.gat3yrub2iyurai5@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 3806386112924832978
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduuddrudehledggedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 10:55 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> - efi.tpm_final_log is a physical address that gets passed into
->   memremap() to return a pointer
-> - tpm2_calc_event_log_size() takes a pointer argument and
->   dereferences it.
+Hi Marco,
 
-Where does it? It's passed with some added offset to
-__calc_tpm2_event_size, which does the remapping part. That's why
-physical address is used here.
+On 6/12/19 7:21 PM, Marco Felsch wrote:
+> Hi Sébastien,
+> 
+> On 19-06-06 18:46, Sébastien Szymanski wrote:
+>> Add PXP node for i.MX6UL/L SoC.
+>>
+>> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+>> ---
+>>  arch/arm/boot/dts/imx6ul.dtsi  | 9 +++++++++
+>>  arch/arm/boot/dts/imx6ull.dtsi | 6 ++++++
+>>  2 files changed, 15 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+>> index f10012de5eb6..a3c005373ae1 100644
+>> --- a/arch/arm/boot/dts/imx6ul.dtsi
+>> +++ b/arch/arm/boot/dts/imx6ul.dtsi
+>> @@ -971,6 +971,15 @@
+>>  				status = "disabled";
+>>  			};
+>>  
+>> +			pxp: pxp@21cc000 {
+>> +				compatible = "fsl,imx6ul-pxp";
+>> +				reg = <0x021cc000 0x4000>;
+>> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+>> +				clocks = <&clks IMX6UL_CLK_PXP>;
+>> +				clock-names = "axi";
+>> +				status = "disabled";
+> 
+> Can you drop the status line because its a platform device and isn't
+> removeable.
 
-> My best guess is that we should pass the output of memremap()
-> here rather than the input:
->
-> --- a/drivers/firmware/efi/tpm.c
-> +++ b/drivers/firmware/efi/tpm.c
-> @@ -75,7 +75,7 @@ int __init efi_tpm_eventlog_init(void)
->                 goto out;
->         }
->
-> -       tbl_size = tpm2_calc_event_log_size(efi.tpm_final_log
-> +       tbl_size = tpm2_calc_event_log_size(final_tbl
->                                             + sizeof(final_tbl->version)
->                                             + sizeof(final_tbl->nr_events),
->                                             final_tbl->nr_events,
->
-> No idea if that is actually what was intended here, but it makes
-> the code look more plausible.
+Ok, done. thanks!
 
-Passing final_tbl will lead to failure, as it will be remapped for
-second time. Cast is needed here. Changing the type from void* to
-unsigned long or phys_addr_t (and casting later) would also do the
-job. I'm fine with both options.
+Regards,
+
+> 
+>> +			};
+>> +
+>>  			qspi: spi@21e0000 {
+>>  				#address-cells = <1>;
+>>  				#size-cells = <0>;
+>> diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
+>> index 22e4a307fa59..b017e925bd87 100644
+>> --- a/arch/arm/boot/dts/imx6ull.dtsi
+>> +++ b/arch/arm/boot/dts/imx6ull.dtsi
+>> @@ -34,6 +34,12 @@
+>>  	compatible = "fsl,imx6ull-ocotp", "syscon";
+>>  };
+>>  
+>> +&pxp {
+>> +	compatible = "fsl,imx6ull-pxp";
+>> +	interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+>> +		     <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+>> +};
+>> +
+>>  &usdhc1 {
+>>  	compatible = "fsl,imx6ull-usdhc", "fsl,imx6sx-usdhc";
+>>  };
+>> -- 
+>> 2.19.2
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
+
+-- 
+Sébastien Szymanski
+Software engineer, Armadeus Systems
+Tel: +33 (0)9 72 29 41 44
+Fax: +33 (0)9 72 28 79 26
