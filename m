@@ -2,156 +2,103 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6B0C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FB9C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4312021743
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B91D2183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:24:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1g9KtaZe"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mw7lqDtH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbfFMPYh (ORCPT
+        id S1727556AbfFMPYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:24:37 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53785 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731684AbfFMMMO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 08:12:14 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x15so9948150wmj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 05:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dxPAopxGigXChNe4VdO4Ubt5YTdhDcINUQzBTzEvzKk=;
-        b=1g9KtaZe/+oTpytYwjZO6yBksvr6Iq1cGRxviJuU4NBlxHLTidBtC8fZ57YYsFdFl+
-         xtC/aJBuwSN8BisYBx12l/oSJCZy7DIfRqBrq+rpXCGdLCHTxhXFvTmCBtsk8MkI0aAH
-         6cChkYFKuHDiK7vinsQXX8B77oajTNHf6lWZJtc6spSEy9LQwmt38ohVGTwWglgjLY4J
-         TI3fiUKEsldOjiU9UYzkJmmmskIlq62uhE+mgxWk7wo5ewSljqAyBDENmsZDwvEarMf1
-         Mm0rEg0jEZtrwu7KfJ3heI5gmwlBnVyzf4HJO+Q7c9n41FDukqeJvEKo0oefEd/bXC1n
-         Yvgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dxPAopxGigXChNe4VdO4Ubt5YTdhDcINUQzBTzEvzKk=;
-        b=a5LfHpdJcmhOT5Tq7alJ99FvHJNt37ClFVrrKySRlRBILi0tr42fhrYY1CMok6Mzsz
-         tcWk2xdELQAr9P3rmJ3txrgc2sVtOQ9trOfwDj+nj7arIYdlWevaqvuqe5fEj/cCbZ6c
-         rOSQfRfk85q593En9VGDfN3PTfcvdXf57bDkCHxiQIQrUW5pNC77UFRQ5aGFvZv6SF47
-         BpR+uux7hVy1j32Q/hasNsoUrXllxZu7NVABqHZOZgjkO+yslDvwmGS7Wd/Qn4M21Xed
-         eSDn5aTLSmxjSLb63BK/KvYo2Bs0iZWsK3BYyxysP9GTBR3pwv27U/F/MlCHSZMbhJ+M
-         fH+A==
-X-Gm-Message-State: APjAAAU/iceTEojtRpZQydy8zkf7nyTdDJsG6oSuJN8oPvkLPctWLYsH
-        XtfWBNZcdwBiFWidPH1jh8BVHQ==
-X-Google-Smtp-Source: APXvYqxnPKLSaS0xc8+5oGeF/I6OTATx59AZvwhfSt3I2nQvb+XqlMcdxs+3C8O2o5Llg/zX03VARw==
-X-Received: by 2002:a7b:c344:: with SMTP id l4mr3450592wmj.25.1560427931387;
-        Thu, 13 Jun 2019 05:12:11 -0700 (PDT)
-Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id f6sm2974532wrw.68.2019.06.13.05.12.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 05:12:10 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm: dw-hdmi-i2s: support more i2s format
-Date:   Thu, 13 Jun 2019 14:12:07 +0200
-Message-Id: <20190613121207.12185-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 13 Jun 2019 11:24:36 -0400
+Received: from mail-eopbgr10059.outbound.protection.outlook.com ([40.107.1.59]:40612
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731692AbfFMMNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 08:13:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Pv69o6ZuYfDc5tqvervHiRSdpbKRGL/jmvkvv1MTHkw=;
+ b=mw7lqDtH/qgnwCtHpwK5UCtmfVfLR9iKe9OE38W8i7nEdELbXd6UbdWGIDtVywdrGSM+F8mRa2o8a2JWiLbn4mJNayJHUw2yk4XH5jkKs3GZbJZ+pWOFSCf7j42YkUIr917NIIgmwr9ST73Uq6fZQYLfIgjVdwL0u1J+Qd0QVCo=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3581.eurprd04.prod.outlook.com (52.134.4.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.11; Thu, 13 Jun 2019 12:13:30 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::ccaf:f4a1:704a:e745%4]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
+ 12:13:30 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 1/4] crypto: talitos - move struct talitos_edesc into
+ talitos.h
+Thread-Topic: [PATCH v2 1/4] crypto: talitos - move struct talitos_edesc into
+ talitos.h
+Thread-Index: AQHVIGOHWjiLuJ/iA0u2rV751i1YWQ==
+Date:   Thu, 13 Jun 2019 12:13:30 +0000
+Message-ID: <VI1PR0402MB3485C0F4CB13F8674B8B5A5598EF0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <cover.1560263641.git.christophe.leroy@c-s.fr>
+ <d9b5fade242f0806a587392d31c272709949479f.1560263641.git.christophe.leroy@c-s.fr>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [78.96.98.22]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7f215663-958c-4a03-700d-08d6eff88c39
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3581;
+x-ms-traffictypediagnostic: VI1PR0402MB3581:
+x-microsoft-antispam-prvs: <VI1PR0402MB3581E0EE7B459D9995FD171998EF0@VI1PR0402MB3581.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(39860400002)(366004)(346002)(199004)(189003)(76116006)(6436002)(66476007)(66066001)(446003)(53936002)(5660300002)(186003)(316002)(26005)(54906003)(6246003)(110136005)(55016002)(99286004)(486006)(71190400001)(64756008)(73956011)(71200400001)(66556008)(66946007)(478600001)(7736002)(66446008)(68736007)(91956017)(229853002)(6506007)(44832011)(8676002)(53546011)(81156014)(81166006)(8936002)(86362001)(256004)(25786009)(33656002)(102836004)(9686003)(4326008)(305945005)(14454004)(3846002)(52536014)(476003)(7696005)(76176011)(2906002)(74316002)(6116002)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3581;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BDUcSMVCA3EhwEB5tA2oqCNhihgKWsKdIw+dxzNg+LRxFERORmViQyRiy+LglFTG5NFlUCxF4XffLWQUkGDnAuhuvfzrTvCI9+4fNew6hP7iY5LGULqGu6QBTOtxw3iX08axOng9WiLhG4L7aOwTKVMz+GQUcnuExFVpL2E4l6/PHW+7Dzu2Q5TXWCxdfvTzEzxBMBZem4DnQDO/KBsP3+y00cf62URdI96w0pOiHeF3rAbKDkdO4gkG4SwrNSniKb8EWbX7TMimGinUpxPsmFyZHLNfIjDoCWx8TXeMtPnibRsy7h68o8DETVwmUYXiyLrYSQuX+BaKrUeShGJ+YE7vbLyUWWzTiQKX0ov9mCuojWsjvMs9qH1HSMTweg8eSF9o8HADUYnCvBmDwP8YN62ezvl9gTy9TqkD3jC0zJQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f215663-958c-4a03-700d-08d6eff88c39
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 12:13:30.2046
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3581
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dw-hdmi-i2s supports more formats than just regular i2s.
-Add support for left justified, right justified and dsp modes
-A and B.
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
-
- Tested on the Amlogic arm64 meson-g12a-sei510 with i2s, left_j, dsp_a
- and dsp_b. right_j is not supported by this platform.
-
- .../drm/bridge/synopsys/dw-hdmi-i2s-audio.c   | 26 ++++++++++++++++---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.h     |  6 +++--
- 2 files changed, 27 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-index 5cbb71a866d5..2b624cff541d 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
-@@ -44,9 +44,8 @@ static int dw_hdmi_i2s_hw_params(struct device *dev, void *data,
- 	u8 inputclkfs = 0;
- 
- 	/* it cares I2S only */
--	if ((fmt->fmt != HDMI_I2S) ||
--	    (fmt->bit_clk_master | fmt->frame_clk_master)) {
--		dev_err(dev, "unsupported format/settings\n");
-+	if (fmt->bit_clk_master | fmt->frame_clk_master) {
-+		dev_err(dev, "unsupported clock settings\n");
- 		return -EINVAL;
- 	}
- 
-@@ -63,6 +62,27 @@ static int dw_hdmi_i2s_hw_params(struct device *dev, void *data,
- 		break;
- 	}
- 
-+	switch (fmt->fmt) {
-+	case HDMI_I2S:
-+		conf1 |= HDMI_AUD_CONF1_MODE_I2S;
-+		break;
-+	case HDMI_RIGHT_J:
-+		conf1 |= HDMI_AUD_CONF1_MODE_RIGHT_J;
-+		break;
-+	case HDMI_LEFT_J:
-+		conf1 |= HDMI_AUD_CONF1_MODE_LEFT_J;
-+		break;
-+	case HDMI_DSP_A:
-+		conf1 |= HDMI_AUD_CONF1_MODE_BURST_1;
-+		break;
-+	case HDMI_DSP_B:
-+		conf1 |= HDMI_AUD_CONF1_MODE_BURST_2;
-+		break;
-+	default:
-+		dev_err(dev, "unsupported format\n");
-+		return -EINVAL;
-+	}
-+
- 	dw_hdmi_set_sample_rate(hdmi, hparms->sample_rate);
- 
- 	hdmi_write(audio, inputclkfs, HDMI_AUD_INPUTCLKFS);
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-index 4e3ec09d3ca4..091d7c28aa17 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-@@ -869,8 +869,10 @@ enum {
- 
- /* AUD_CONF1 field values */
- 	HDMI_AUD_CONF1_MODE_I2S = 0x00,
--	HDMI_AUD_CONF1_MODE_RIGHT_J = 0x02,
--	HDMI_AUD_CONF1_MODE_LEFT_J = 0x04,
-+	HDMI_AUD_CONF1_MODE_RIGHT_J = 0x20,
-+	HDMI_AUD_CONF1_MODE_LEFT_J = 0x40,
-+	HDMI_AUD_CONF1_MODE_BURST_1 = 0x60,
-+	HDMI_AUD_CONF1_MODE_BURST_2 = 0x80,
- 	HDMI_AUD_CONF1_WIDTH_16 = 0x10,
- 	HDMI_AUD_CONF1_WIDTH_24 = 0x18,
- 
--- 
-2.20.1
-
+On 6/11/2019 5:39 PM, Christophe Leroy wrote:=0A=
+> Next patch will require struct talitos_edesc to be defined=0A=
+> earlier in talitos.c=0A=
+> =0A=
+> This patch moves it into talitos.h so that it can be used=0A=
+> from any place in talitos.c=0A=
+> =0A=
+> Fixes: 37b5e8897eb5 ("crypto: talitos - chain in buffered data for ahash =
+on SEC1")=0A=
+> Cc: stable@vger.kernel.org=0A=
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>=0A=
+Again, this patch does not qualify as a fix.=0A=
+=0A=
+Horia=0A=
