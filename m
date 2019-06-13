@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84254C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 351B4C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59ACF20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E6F520644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443069;
-	bh=01JgqLU+q/jditVF0XnE6iIetBdTeaxf7YEBoD9AiAg=;
+	s=default; t=1560443070;
+	bh=tjJItUfK+YXRf+RblGQIRSFQUcMbv+J/pnOQjyHcLnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ggOZBymZkPKzx1h9o7WfoykoO0KU8iqoFNStnWfWD/kSSF5Az0pkjzKVNaBUgzMZv
-	 fbU5Ye4v1o3/AoN7x0wW5LTYP/zjJxa4QpLoqArnc2PmzUD68Tka/OyRJnua6WwdDQ
-	 RaPgEMBlQUpNdIG5m32QoaWDiRPEMuui89yDLTNs=
+	b=FfK4muneURhpYcUVm+oF4E2WcDEcZ5wScQTpWRud3BdDlnXwgpwfKawsIUnUg1Vxk
+	 hEhJAsHf6N+0wief2hBi4wqjUxZfSIaSB3J8oYWx3JOXfoNaYcFw5/5boELei/xAQE
+	 AYRsPeIn5jgrAa+fkvnyRTOLny6nkPdUwnUxetbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391806AbfFMQYZ (ORCPT
+        id S2404013AbfFMQY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:24:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54618 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:24:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730998AbfFMIhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:37:15 -0400
+        id S1730997AbfFMIhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:37:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2A4220851;
-        Thu, 13 Jun 2019 08:37:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62D5A2133D;
+        Thu, 13 Jun 2019 08:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415034;
-        bh=01JgqLU+q/jditVF0XnE6iIetBdTeaxf7YEBoD9AiAg=;
+        s=default; t=1560415031;
+        bh=tjJItUfK+YXRf+RblGQIRSFQUcMbv+J/pnOQjyHcLnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eX4NWguhGPmp13Bg2zpyUchZM2MIOiSwTATH0CP6i6bURb5zN1jQAf3CmJZ/czOtc
-         6o45FiXsUCTY9U/itTs3uQBERr46GN+fWHUWyICYw9QPNJkDQw2nZhsvB4fRUFn14C
-         PN3P8ACUgNtl+BvLtRuhvZz+/KMhWp8abWR5LTTk=
+        b=woAijEGckjjFBavd6wE1eABX9s1LfE06Hc6ESJ4VR/hct8M8cBZk16JlxEDFnYD2U
+         ajpD42SFt9acElRmfIjLNCuV1Eqx08AL/pCcjHligUyhtlvWxXB27sung7ZDS3uJ4l
+         q+vLYBIEaLF3DIWPv8N/ovf/iJK9ZxkaIoYohUtc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 61/81] ALSA: seq: Protect in-kernel ioctl calls with mutex
-Date:   Thu, 13 Jun 2019 10:33:44 +0200
-Message-Id: <20190613075653.581995283@linuxfoundation.org>
+        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 60/81] PCI: rpadlpar: Fix leaked device_node references in add/remove paths
+Date:   Thu, 13 Jun 2019 10:33:43 +0200
+Message-Id: <20190613075653.528371488@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -60,51 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32 ]
+[ Upstream commit fb26228bfc4ce3951544848555c0278e2832e618 ]
 
-ALSA OSS sequencer calls the ioctl function indirectly via
-snd_seq_kernel_client_ctl().  While we already applied the protection
-against races between the normal ioctls and writes via the client's
-ioctl_mutex, this code path was left untouched.  And this seems to be
-the cause of still remaining some rare UAF as spontaneously triggered
-by syzkaller.
+The find_dlpar_node() helper returns a device node with its reference
+incremented.  Both the add and remove paths use this helper for find the
+appropriate node, but fail to release the reference when done.
 
-For the sake of robustness, wrap the ioctl_mutex also for the call via
-snd_seq_kernel_client_ctl(), too.
+Annotate the find_dlpar_node() helper with a comment about the incremented
+reference count and call of_node_put() on the obtained device_node in the
+add and remove paths.  Also, fixup a reference leak in the find_vio_slot()
+helper where we fail to call of_node_put() on the vdevice node after we
+iterate over its children.
 
-Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_clientmgr.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/pci/hotplug/rpadlpar_core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
-index 3bcd7a2f0394..692631bd4a35 100644
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -2348,14 +2348,19 @@ int snd_seq_kernel_client_ctl(int clientid, unsigned int cmd, void *arg)
- {
- 	const struct ioctl_handler *handler;
- 	struct snd_seq_client *client;
-+	int err;
- 
- 	client = clientptr(clientid);
- 	if (client == NULL)
- 		return -ENXIO;
- 
- 	for (handler = ioctl_handlers; handler->cmd > 0; ++handler) {
--		if (handler->cmd == cmd)
--			return handler->func(client, arg);
-+		if (handler->cmd == cmd) {
-+			mutex_lock(&client->ioctl_mutex);
-+			err = handler->func(client, arg);
-+			mutex_unlock(&client->ioctl_mutex);
-+			return err;
-+		}
+diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
+index a3449d717a99..f8f26684c67d 100644
+--- a/drivers/pci/hotplug/rpadlpar_core.c
++++ b/drivers/pci/hotplug/rpadlpar_core.c
+@@ -55,6 +55,7 @@ static struct device_node *find_vio_slot_node(char *drc_name)
+ 		if ((rc == 0) && (!strcmp(drc_name, name)))
+ 			break;
  	}
++	of_node_put(parent);
  
- 	pr_debug("ALSA: seq unknown ioctl() 0x%x (type='%c', number=0x%02x)\n",
+ 	return dn;
+ }
+@@ -78,6 +79,7 @@ static struct device_node *find_php_slot_pci_node(char *drc_name,
+ 	return np;
+ }
+ 
++/* Returns a device_node with its reference count incremented */
+ static struct device_node *find_dlpar_node(char *drc_name, int *node_type)
+ {
+ 	struct device_node *dn;
+@@ -313,6 +315,7 @@ int dlpar_add_slot(char *drc_name)
+ 			rc = dlpar_add_phb(drc_name, dn);
+ 			break;
+ 	}
++	of_node_put(dn);
+ 
+ 	printk(KERN_INFO "%s: slot %s added\n", DLPAR_MODULE_NAME, drc_name);
+ exit:
+@@ -446,6 +449,7 @@ int dlpar_remove_slot(char *drc_name)
+ 			rc = dlpar_remove_pci_slot(drc_name, dn);
+ 			break;
+ 	}
++	of_node_put(dn);
+ 	vm_unmap_aliases();
+ 
+ 	printk(KERN_INFO "%s: slot %s removed\n", DLPAR_MODULE_NAME, drc_name);
 -- 
 2.20.1
 
