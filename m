@@ -2,132 +2,90 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC138C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D84C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFA722133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:28:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560461324;
-	bh=QIgJIxgDf+StTk/diCjDgOb3PnJO/VSTYtOImkUf5A8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bFe4uz9By3XnumPfdpYTuETmbMWgewEvpLMpl/WjmT59PlvbUBTYR07aw7ssqaBQ/
-	 9LQ6jRUjOZ4CkemTLMsy5+7+6XCPt6PJtYqb5Qq82x2aLTVZMa8P+lq+EIovnYx3IV
-	 OPC1bcNHQGTstw+ogPUDEppNSJQYakf8Tspy7OYk=
+	by mail.kernel.org (Postfix) with ESMTP id 54C402133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:30:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfFMV2n (ORCPT
+        id S1727028AbfFMVaj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 17:28:43 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41680 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfFMV2m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 17:28:42 -0400
-Received: by mail-qt1-f195.google.com with SMTP id 33so128387qtr.8;
-        Thu, 13 Jun 2019 14:28:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=br2bl3VJkXVRPZRHNgYzbC/ehG2FQqZ7sIoSvLav/o4=;
-        b=Gszq2/mSLn/dJrsyvk4rRLEyNjZ6QuF9W96OQIGbB4GTZ/MyR24lEoI/65mHiidH91
-         w2WovRpmPzb8v6Z5J9QOoLRBRHmwVXP7actumLpjtiLPy8D9VWHbVNDc+mDO0rO40kWS
-         DESecmCIJ9Y+3iOQmS+Tz9hz4kO+yjsgzLc0ZPi7RtFvY2jxhr8BqK5WhsYWnueR75uU
-         25mIi5sop8UMQC6RcKstZTO6Mod/7/PYp7MY9pSHzsbSgRBBMy5V5Z0yGrk26KPoXWGO
-         HWFZAsX1E42vA5paP0f+UJ0vsHCNGcHgJ0iLG7SaWsimCVwMCr6YEXnlNNt1Ns2FEVG1
-         zhUA==
-X-Gm-Message-State: APjAAAVnNI4CqJnqLmEXgP7FsbjFPz5TNI49iiNXxEK+4o92+/7a6kLy
-        L8D1UCVr2pOvlcgMEOM6Pg==
-X-Google-Smtp-Source: APXvYqzkDDD1eG9eQFojGtBeXwWVDtxmKGm5yq7U6XK2t/sOfUWwfaQAUzl1Zj3zOiSTjCEIb9D6cQ==
-X-Received: by 2002:ac8:685:: with SMTP id f5mr3113629qth.9.1560461321718;
-        Thu, 13 Jun 2019 14:28:41 -0700 (PDT)
-Received: from localhost ([64.188.179.243])
-        by smtp.gmail.com with ESMTPSA id u19sm611563qka.35.2019.06.13.14.28.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 14:28:40 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 15:28:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Keerthy <j-keerthy@ti.com>
-Cc:     lee.jones@linaro.org, broonie@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, t-kristo@ti.com
-Subject: Re: [PATCH v2 1/3] dt-bindings: mfd: lp87565: Add lp87561
- configuration
-Message-ID: <20190613212838.GA21714@bogus>
-References: <20190516043218.8222-1-j-keerthy@ti.com>
- <20190516043218.8222-2-j-keerthy@ti.com>
+        Thu, 13 Jun 2019 17:30:39 -0400
+Received: from mga14.intel.com ([192.55.52.115]:17200 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfFMVaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 17:30:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 14:30:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,370,1557212400"; 
+   d="scan'208";a="184757505"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by fmsmga002.fm.intel.com with ESMTP; 13 Jun 2019 14:30:38 -0700
+Received: from orsmsx154.amr.corp.intel.com (10.22.226.12) by
+ ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 13 Jun 2019 14:30:38 -0700
+Received: from orsmsx104.amr.corp.intel.com ([169.254.4.84]) by
+ ORSMSX154.amr.corp.intel.com ([169.254.11.84]) with mapi id 14.03.0415.000;
+ Thu, 13 Jun 2019 14:30:38 -0700
+From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
+To:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Intel-wired-lan] [PATCH] ixgbevf: fix possible divide by zero
+ in ixgbevf_update_itr
+Thread-Topic: [Intel-wired-lan] [PATCH] ixgbevf: fix possible divide by zero
+ in ixgbevf_update_itr
+Thread-Index: AQHVFf5r7xrgWhY4+UWyPbZJL5Ro+KaaMmgw
+Date:   Thu, 13 Jun 2019 21:30:37 +0000
+Message-ID: <26D9FDECA4FBDD4AADA65D8E2FC68A4A1D3ED68F@ORSMSX104.amr.corp.intel.com>
+References: <1559044682-23446-1-git-send-email-92siuyang@gmail.com>
+In-Reply-To: <1559044682-23446-1-git-send-email-92siuyang@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjFmYjk0MzEtNWY0YS00N2UwLTg5NDQtNDliM2E4NzczM2FhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZkJRSXZEOFBHZTdrczdiXC9NSmZHSHA3ek5CWU1PcmtGcXZ4T1JcL3loZU5xVjBVNk81dmFnNll3WnBNUVozSWN3In0=
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516043218.8222-2-j-keerthy@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 10:02:16AM +0530, Keerthy wrote:
-> lp87561 is a single output 4-phase regulator configuration.
-> Add support for the same.
+> -----Original Message-----
+> From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On
+> Behalf Of Young Xiao
+> Sent: Tuesday, May 28, 2019 4:58 AM
+> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; davem@davemloft.net;
+> intel-wired-lan@lists.osuosl.org; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Cc: Young Xiao <92siuyang@gmail.com>
+> Subject: [Intel-wired-lan] [PATCH] ixgbevf: fix possible divide by zero in
+> ixgbevf_update_itr
 > 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> The next call to ixgbevf_update_itr will continue to dynamically update ITR.
+> 
+> Copy from commit bdbeefe8ea8c ("ixgbe: fix possible divide by zero in
+> ixgbe_update_itr")
+> 
+> Signed-off-by: Young Xiao <92siuyang@gmail.com>
 > ---
->  .../devicetree/bindings/mfd/lp87565.txt       | 36 +++++++++++++++++++
->  1 file changed, 36 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/lp87565.txt b/Documentation/devicetree/bindings/mfd/lp87565.txt
-> index a48df7c08ab0..41671e0dc26b 100644
-> --- a/Documentation/devicetree/bindings/mfd/lp87565.txt
-> +++ b/Documentation/devicetree/bindings/mfd/lp87565.txt
-> @@ -41,3 +41,39 @@ lp87565_pmic: pmic@60 {
->  		};
->  	};
->  };
-> +
-> +TI LP87561 PMIC:
-> +
-> +This is a single output 4-phase regulator configuration
-> +
-> +Required properties:
-> +  - compatible:	"ti,lp87561-q1"
-> +  - reg:		I2C slave address.
-> +  - gpio-controller:	Marks the device node as a GPIO Controller.
-> +  - #gpio-cells:	Should be two.  The first cell is the pin number and
-> +			the second cell is used to specify flags.
-> +			See ../gpio/gpio.txt for more information.
-> +  - xxx-in-supply:	Phandle to parent supply node of each regulator
-> +			populated under regulators node. xxx should match
-> +			the supply_name populated in driver.
+>  drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 3 +++
+>  1 file changed, 3 insertions(+)
 
-This is not something we can validate. You need to enumerate values of 
-'xxx'.
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 
-> +Example:
-> +
-> +lp87561_pmic: pmic@62 {
-> +	compatible = "ti,lp87561-q1";
-> +	reg = <0x62>;
-> +	gpio-controller;
-> +	#gpio-cells = <2>;
-> +
-> +	buck3210-in-supply = <&vsys_3v3>;
-> +
-> +	regulators: regulators {
-> +		buck3210_reg: buck3210 {
-> +			/* VDD_CORE */
-> +			regulator-name = "buck3210";
-> +			regulator-min-microvolt = <800000>;
-> +			regulator-max-microvolt = <800000>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +	};
-> +};
-> -- 
-> 2.17.1
-> 
+
