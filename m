@@ -2,102 +2,100 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30653C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441D0C468B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09ADA208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CSkroNIt"
+	by mail.kernel.org (Postfix) with ESMTP id 1E35A20851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560441742;
+	bh=JqdbKrRMKVHfma50c3wbyfNhbelEP8PfbAH0vsI4tzg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Vrc2MygMLx7YVd1QB/oBKODgn47vmKpvcWb1uz+Dh1mL9AYCGk+EPEPKAwKhcjEpu
+	 fJyNuoOVzRpfFx+pzHU8mCrC8h2I/UueA74RUMHE6jR/G5RR3VmzypKfhrPTPyRtp3
+	 34jUHpY3Ikia1SNnYGLE3S2tzkrSuXNZGUNMKG7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390955AbfFMQCR (ORCPT
+        id S2390177AbfFMQBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:02:17 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46783 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731409AbfFMQCO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:02:14 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n4so21335056wrw.13;
-        Thu, 13 Jun 2019 09:02:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Nd6aCrSjzkm1aMj9lM4ssykkYiRccO6zWy49Uehvbco=;
-        b=CSkroNIttf5ygpwSln0gQNWe5WrdTUnKsWGQygY3KEMqhMwh3P134Gc2auf/eb4mBx
-         LisWgeOU85BPWmvQPgkxLPQFf1rHZtl/OuOJIFDzgNf4DOff+pVvSFehTEd5EaHF92fo
-         tr/YC+MER9kS+oAnHJsy92hT+BeBXsKIY+w1lXfG+V300DwROLHFa8/AF4EcgAFmuldZ
-         6efyDI9zq5ja1+FWDA1zIvC5VHAzEeFBQapVtTHLLAa4+IDEbMSA1/kcoOo3Ldbqeqts
-         Om8CvV5KGB2rbs8My7Vod1OlIkxH8gTecLwfDYIJLspPGjtO0NPQiL/iddPgQfcD37ZN
-         6P3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Nd6aCrSjzkm1aMj9lM4ssykkYiRccO6zWy49Uehvbco=;
-        b=lEHwJ7/MZxdePV/b18QyGSm7qzF/5TKRaLMJd/0fUzysL9+UN3X+ZnaOQjxQqwOqZ2
-         8vGSAe3qzHw2O/23T9fpfB+LNGyazZUoKD9IBH67rI970OoZMIcvRU3E0U4DvWqkcdXN
-         1KxxiyqO/wvcb99wlLeWdG6KVeo7wYiaJ9NqVtsqHpY4XBuR80L/gSPCadBpB7dHAzpH
-         kx8kOc7kS5lLJ6d4u2HM1XjSAWt15gOOE+Ve7texGT4Pqc9pbkeNtupR/njU7+QsUBXn
-         HK0PgnWFaPm2tZAftID3aY2HwuGKNIcb8/ZEtSFUzoOUdyx7vPs5YRx8ZMBL125ye1gF
-         ttLQ==
-X-Gm-Message-State: APjAAAWIUMuJDBjE1nuYgffNmsYxvpEUe7KZE4JnUbWEptD/UB4/A6Lf
-        VDFBMTGUrisymnSWZ4vPUnfCEHoI9d/hb0gYpFgLdZeS+fs=
-X-Google-Smtp-Source: APXvYqxklstUrCVZEl1VUef3v/R6i7njg2hNjeLXXhKtOb8qhxhCjhXDazqTZogY3rUjkKvHqdX1ZOlDh6IiYA968oU=
-X-Received: by 2002:adf:f68f:: with SMTP id v15mr10246252wrp.4.1560441732659;
- Thu, 13 Jun 2019 09:02:12 -0700 (PDT)
+        Thu, 13 Jun 2019 12:01:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731420AbfFMIsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:48:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 931E020851;
+        Thu, 13 Jun 2019 08:48:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560415695;
+        bh=JqdbKrRMKVHfma50c3wbyfNhbelEP8PfbAH0vsI4tzg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yIDlsu8H8g7ffd+nWtvZC27JrRpp8m+MLbojr/iowPoQROFM4hB9BJ+oARS6cbs2r
+         qYxY5tUx3ppXAlSpFdPMeDoPLMWrB26WrOYAsNtQzJLo4VjApgqtpGt1TX0OqzRv40
+         xX3HfBAHwVi6YG8bRxNaOHSY82zAyV1z3R7Ljwfc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Georg Hofmann <georg@hofmannsweb.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 068/155] watchdog: imx2_wdt: Fix set_timeout for big timeout values
+Date:   Thu, 13 Jun 2019 10:33:00 +0200
+Message-Id: <20190613075656.790952493@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
+References: <20190613075652.691765927@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190612170027.13dbb84b@canb.auug.org.au> <9b4f8e15-8f9f-51d9-c355-9c2e453921e3@infradead.org>
-In-Reply-To: <9b4f8e15-8f9f-51d9-c355-9c2e453921e3@infradead.org>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 13 Jun 2019 12:02:00 -0400
-Message-ID: <CADnq5_PRoeCdriQgzV6yKUpFHxpWfHL2Xwd9VW=FRoNYj7H_kQ@mail.gmail.com>
-Subject: Re: linux-next: Tree for Jun 12 (amdgpu: dcn10_hw_sequencer)
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 3:27 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 6/12/19 12:00 AM, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > Changes since 20190611:
-> >
->
-> on x86_64:
->
-> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c: I=
-n function =E2=80=98dcn10_apply_ctx_for_surface=E2=80=99:
-> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c:23=
-78:3: error: implicit declaration of function =E2=80=98udelay=E2=80=99 [-We=
-rror=3Dimplicit-function-declaration]
->    udelay(underflow_check_delay_us);
->    ^
+[ Upstream commit b07e228eee69601addba98b47b1a3850569e5013 ]
 
-Fixed with:
-https://patchwork.freedesktop.org/patch/310016/
+The documentated behavior is: if max_hw_heartbeat_ms is implemented, the
+minimum of the set_timeout argument and max_hw_heartbeat_ms should be used.
+This patch implements this behavior.
+Previously only the first 7bits were used and the input argument was
+returned.
 
->
->
->
-> --
-> ~Randy
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Signed-off-by: Georg Hofmann <georg@hofmannsweb.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/watchdog/imx2_wdt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
+index 2b52514eaa86..7e7bdcbbc741 100644
+--- a/drivers/watchdog/imx2_wdt.c
++++ b/drivers/watchdog/imx2_wdt.c
+@@ -178,8 +178,10 @@ static void __imx2_wdt_set_timeout(struct watchdog_device *wdog,
+ static int imx2_wdt_set_timeout(struct watchdog_device *wdog,
+ 				unsigned int new_timeout)
+ {
+-	__imx2_wdt_set_timeout(wdog, new_timeout);
++	unsigned int actual;
+ 
++	actual = min(new_timeout, wdog->max_hw_heartbeat_ms * 1000);
++	__imx2_wdt_set_timeout(wdog, actual);
+ 	wdog->timeout = new_timeout;
+ 	return 0;
+ }
+-- 
+2.20.1
+
+
+
