@@ -2,176 +2,101 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF313C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA97C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBBE4208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:39:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HN5Dr4rf"
+	by mail.kernel.org (Postfix) with ESMTP id C2BCD2147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560451226;
+	bh=/cSU4CaJ1QDYIqICWLzMrHhb2RfxsFkshYYBY5eJLYo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=am51d3UsjWYAI4gN9C6uzhLr8o4RYzUXU/2k7QQVid72hvGmvfQ5oEtj7Ej3JQbjF
+	 JLJx0r5bfT6a8DVi+urvgtMck3cXd1LrIdrqmVQ1Kg+pxwaAKcp5BCiUovl2vjltWQ
+	 voaSpzbQWFsC9MCmw6Gep4JD2phSop55WPj4c6Rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbfFMSj0 (ORCPT
+        id S1728848AbfFMSkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:39:26 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42999 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbfFMSj0 (ORCPT
+        Thu, 13 Jun 2019 14:40:25 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50618 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbfFMSkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:39:26 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y13so15859007lfh.9
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:39:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zhnffrfz5nZyBtxW2a41/tZfwftWpsUjhwz59SaODwM=;
-        b=HN5Dr4rfiwkuocy9IH0pR3iqpRySJLbDADNeiPg+mqttfLSuaDn/53bA4h0oKBwtMt
-         DYRXn0yQ5hOCxnNmDId7Z82uELL8s+dbY5OlG9tymy1d5NpNZ5dUjKZh7lbpb7g3aiHC
-         ds3PCK0BmhJjDsk2YXlEtQcX0Rm11cRe+6RxwYCBnpKoYGJ1retDOdFN7EsaE2pbcbxN
-         402AynkRh/4U0d3sgec+8sh5WMq3k1TptJt0IjjtooL5lKXSCdShDW1PqHfUAyNdtRW0
-         qoqrT2z6UJiWOSLV9FqgqMGXJ7QzWze3QE2iOKwOzvA4SFlDQHSgGxOp25C6+/SerrwC
-         hy8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zhnffrfz5nZyBtxW2a41/tZfwftWpsUjhwz59SaODwM=;
-        b=FA8BQLiciWfJZyOoSoFL3qgMKwPUXkz/m5zq+4LfqOFvOa7tKmITGK5SbZWZ6KYCJ+
-         gV5BVrUG5lAQ1F/XPwwysXL620Y1JObix6ASq+LX35FppwOVJ/KfV/Q5v2+39DcbKvWH
-         Kndy4oC3KrlTDDL3Z7ia/GUdW6q3hdbv/4465LoZiumyGcVdIddY5T2GOLor6fOxnDnk
-         TrjbmpS6zuFRMNoCrf4yHPOScp7DPTIytPmGDBaqC30v4UwStKBp/wAzmdxWR9cpm8zj
-         tOCBlwK2Fep0oYBNSiylkYyko/pkP2PzbX+psdjahmtPQLmnCHeppx/AnGBkZJvv72e+
-         vbaA==
-X-Gm-Message-State: APjAAAX2ieJ6+FY4uTWFUyuRdDMSgJcGHSiGmGnoMRN3O/a5GRfZZGjP
-        ohtxdhZVs7bp2PHE9GBzZi+9R+w+GK03XNiGqucFmA==
-X-Google-Smtp-Source: APXvYqwB8ibiY25D7G0qqULRnpwIt8vPiRMqv8qmvd6Z14aIpEOYlpUfksjAxOqiNTXnxdmOyydTdiESfikz8uTJycQ=
-X-Received: by 2002:ac2:482d:: with SMTP id 13mr2201932lft.132.1560451163907;
- Thu, 13 Jun 2019 11:39:23 -0700 (PDT)
+        Thu, 13 Jun 2019 14:40:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=t2/Vc/q/GlaihJsCwFZdn2XBcJoMXN52dRYqrNUXbTk=; b=j6aytOY5Yv8Yr3ftg88JL/wah
+        I3f0CBRWklwgpuBqfviXwZS7ohvVt6dZ5LX37vBXYId9R7KutDFvLrU+EIJzHKXtoYHb6tl4Ex8wI
+        jNqecSjMKtmjFiHWGv6Dj5lNGkVlNDWSoPt7eNhDi5b1cNZJz5CAfqECqBCLZug5t0su8=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hbUe6-0005On-0A; Thu, 13 Jun 2019 18:40:22 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 64A31440046; Thu, 13 Jun 2019 19:40:21 +0100 (BST)
+Date:   Thu, 13 Jun 2019 19:40:21 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     lgirdwood@gmail.com, agross@kernel.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, jorge.ramirez-ortiz@linaro.org,
+        niklas.cassel@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/7] drivers: regulator: qcom_spmi: enable linear
+ range info
+Message-ID: <20190613184021.GT5316@sirena.org.uk>
+References: <20190606184842.39484-1-jeffrey.l.hugo@gmail.com>
+ <20190606184923.39537-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
-References: <20190613075652.691765927@linuxfoundation.org>
-In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 14 Jun 2019 00:09:12 +0530
-Message-ID: <CA+G9fYsRq=DyOWhhPq3axyhLVBWLp7-3QZ3p5dSScR06ar5SZg@mail.gmail.com>
-Subject: Re: [PATCH 5.1 000/155] 5.1.10-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tRcR9GoWqjXrt11v"
+Content-Disposition: inline
+In-Reply-To: <20190606184923.39537-1-jeffrey.l.hugo@gmail.com>
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019 at 14:15, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.1.10 release.
-> There are 155 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat 15 Jun 2019 07:54:40 AM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.1.10-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+--tRcR9GoWqjXrt11v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Summary
-------------------------------------------------------------------------
+On Thu, Jun 06, 2019 at 11:49:23AM -0700, Jeffrey Hugo wrote:
+> From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+>=20
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-kernel: 5.1.10-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.1.y
-git commit: b7eabc3862b8717f2bcc47f3f3830ec575423c8c
-git describe: v5.1.9-157-gb7eabc3862b8
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.1-oe/bui=
-ld/v5.1.9-157-gb7eabc3862b8
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
 
-No regressions (compared to build v5.1.8-72-g2df16141a2c4)
+--tRcR9GoWqjXrt11v
+Content-Type: application/pgp-signature; name="signature.asc"
 
-No fixes (compared to build v5.1.8-72-g2df16141a2c4)
+-----BEGIN PGP SIGNATURE-----
 
-Ran 23163 total tests in the following environments and test suites.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0CmJQACgkQJNaLcl1U
+h9Ahywf+PzmqBut8uqKJcwRB5GhEE/ja3bqrcVbbgZGMo9jgh3NlGBd1xhCjnT7B
+C7rWgMGl8IkSs6871omjtoMd+oUUN71u263yIqbB8TlcB4iHMJClXET/2GMK0xZb
+YINX6pN+iKs2M097dGHBFOLEsVnWF6P9Qk286okJE308HdaPHYopjMbpvaxoObR/
+o0Q58ziZ2r9Cz2lIux8y1vfh4aliq+Vdkzv7kkLpLNo4UZ3vOK37ZISo2Ur/pRDE
+t2NxWi3pwdJrCttqy11GJulo6F8Es1p+MQccN2ve2T7DekndPP9fuhX+1XYjgj9G
+ekVpT2ORE+6wnxpps1nVEZS4hP5nvQ==
+=totN
+-----END PGP SIGNATURE-----
 
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* spectre-meltdown-checker-test
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-ipc-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+--tRcR9GoWqjXrt11v--
