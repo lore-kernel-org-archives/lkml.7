@@ -2,106 +2,102 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A02BC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30653C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040B6208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441736;
-	bh=8M7Ht7uR3C8y+ng4cJglq02l4gO9fdwxHm6+doxQks8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TEF9GfZSk3BkbLFw5Ye8y1nW+LpWp4O/aVOXqVO+v70XNy/szKaPGOJbVr7kZKOtq
-	 2meqRQJ/QuxqLcKYV4pcyc0qyUkc7W2rcrKBEO3R+8kOy0U+2mMbSh4TGTIxIe/Ls4
-	 kdHh5FRCUG7nnqw/fgMtYlehuagtMMFWQcitvMqM=
+	by mail.kernel.org (Postfix) with ESMTP id 09ADA208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CSkroNIt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390571AbfFMQB5 (ORCPT
+        id S2390955AbfFMQCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:01:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731419AbfFMIsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:48:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E096321743;
-        Thu, 13 Jun 2019 08:48:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415692;
-        bh=8M7Ht7uR3C8y+ng4cJglq02l4gO9fdwxHm6+doxQks8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xMYmxM+XYY5Ybg1TTGGmCUIyVNjP3/kViE+oEwBEpBbU+vxcCaYWqY5umGmW1dpYj
-         eUV5kYHClaShHcG/+1GRLPJ8S26TEpSkFxPwopHb/cKa3uglyfPeoMT58ChJU+W8ag
-         R3XOLft53yq4nW93Y7i6XWai7rlpwidtPx1Uy2jI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 091/155] net: thunderbolt: Unregister ThunderboltIP protocol handler when suspending
-Date:   Thu, 13 Jun 2019 10:33:23 +0200
-Message-Id: <20190613075658.184288472@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
-References: <20190613075652.691765927@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 13 Jun 2019 12:02:17 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46783 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731409AbfFMQCO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:02:14 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n4so21335056wrw.13;
+        Thu, 13 Jun 2019 09:02:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Nd6aCrSjzkm1aMj9lM4ssykkYiRccO6zWy49Uehvbco=;
+        b=CSkroNIttf5ygpwSln0gQNWe5WrdTUnKsWGQygY3KEMqhMwh3P134Gc2auf/eb4mBx
+         LisWgeOU85BPWmvQPgkxLPQFf1rHZtl/OuOJIFDzgNf4DOff+pVvSFehTEd5EaHF92fo
+         tr/YC+MER9kS+oAnHJsy92hT+BeBXsKIY+w1lXfG+V300DwROLHFa8/AF4EcgAFmuldZ
+         6efyDI9zq5ja1+FWDA1zIvC5VHAzEeFBQapVtTHLLAa4+IDEbMSA1/kcoOo3Ldbqeqts
+         Om8CvV5KGB2rbs8My7Vod1OlIkxH8gTecLwfDYIJLspPGjtO0NPQiL/iddPgQfcD37ZN
+         6P3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Nd6aCrSjzkm1aMj9lM4ssykkYiRccO6zWy49Uehvbco=;
+        b=lEHwJ7/MZxdePV/b18QyGSm7qzF/5TKRaLMJd/0fUzysL9+UN3X+ZnaOQjxQqwOqZ2
+         8vGSAe3qzHw2O/23T9fpfB+LNGyazZUoKD9IBH67rI970OoZMIcvRU3E0U4DvWqkcdXN
+         1KxxiyqO/wvcb99wlLeWdG6KVeo7wYiaJ9NqVtsqHpY4XBuR80L/gSPCadBpB7dHAzpH
+         kx8kOc7kS5lLJ6d4u2HM1XjSAWt15gOOE+Ve7texGT4Pqc9pbkeNtupR/njU7+QsUBXn
+         HK0PgnWFaPm2tZAftID3aY2HwuGKNIcb8/ZEtSFUzoOUdyx7vPs5YRx8ZMBL125ye1gF
+         ttLQ==
+X-Gm-Message-State: APjAAAWIUMuJDBjE1nuYgffNmsYxvpEUe7KZE4JnUbWEptD/UB4/A6Lf
+        VDFBMTGUrisymnSWZ4vPUnfCEHoI9d/hb0gYpFgLdZeS+fs=
+X-Google-Smtp-Source: APXvYqxklstUrCVZEl1VUef3v/R6i7njg2hNjeLXXhKtOb8qhxhCjhXDazqTZogY3rUjkKvHqdX1ZOlDh6IiYA968oU=
+X-Received: by 2002:adf:f68f:: with SMTP id v15mr10246252wrp.4.1560441732659;
+ Thu, 13 Jun 2019 09:02:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190612170027.13dbb84b@canb.auug.org.au> <9b4f8e15-8f9f-51d9-c355-9c2e453921e3@infradead.org>
+In-Reply-To: <9b4f8e15-8f9f-51d9-c355-9c2e453921e3@infradead.org>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 13 Jun 2019 12:02:00 -0400
+Message-ID: <CADnq5_PRoeCdriQgzV6yKUpFHxpWfHL2Xwd9VW=FRoNYj7H_kQ@mail.gmail.com>
+Subject: Re: linux-next: Tree for Jun 12 (amdgpu: dcn10_hw_sequencer)
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9872760eb7b1d4f6066ad8b560714a5d0a728fdb ]
+On Thu, Jun 13, 2019 at 3:27 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 6/12/19 12:00 AM, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > Changes since 20190611:
+> >
+>
+> on x86_64:
+>
+> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c: I=
+n function =E2=80=98dcn10_apply_ctx_for_surface=E2=80=99:
+> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c:23=
+78:3: error: implicit declaration of function =E2=80=98udelay=E2=80=99 [-We=
+rror=3Dimplicit-function-declaration]
+>    udelay(underflow_check_delay_us);
+>    ^
 
-The XDomain protocol messages may start as soon as Thunderbolt control
-channel is started. This means that if the other host starts sending
-ThunderboltIP packets early enough they will be passed to the network
-driver which then gets confused because its resume hook is not called
-yet.
+Fixed with:
+https://patchwork.freedesktop.org/patch/310016/
 
-Fix this by unregistering the ThunderboltIP protocol handler when
-suspending and registering it back on resume.
-
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Acked-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/thunderbolt.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/thunderbolt.c b/drivers/net/thunderbolt.c
-index c48c3a1eb1f8..fcf31335a8b6 100644
---- a/drivers/net/thunderbolt.c
-+++ b/drivers/net/thunderbolt.c
-@@ -1282,6 +1282,7 @@ static int __maybe_unused tbnet_suspend(struct device *dev)
- 		tbnet_tear_down(net, true);
- 	}
- 
-+	tb_unregister_protocol_handler(&net->handler);
- 	return 0;
- }
- 
-@@ -1290,6 +1291,8 @@ static int __maybe_unused tbnet_resume(struct device *dev)
- 	struct tb_service *svc = tb_to_service(dev);
- 	struct tbnet *net = tb_service_get_drvdata(svc);
- 
-+	tb_register_protocol_handler(&net->handler);
-+
- 	netif_carrier_off(net->dev);
- 	if (netif_running(net->dev)) {
- 		netif_device_attach(net->dev);
--- 
-2.20.1
-
-
-
+>
+>
+>
+> --
+> ~Randy
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
