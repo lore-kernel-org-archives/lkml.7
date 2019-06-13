@@ -2,85 +2,101 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D118C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34ABEC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCD8215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A54215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:41:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560444073;
+	bh=C34ebvo6AEFxf3EflJEFb177I+rCto2FjRJcZW9t0Io=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tAkzCH0qIMXAItmiluPW5NHk+qzscRI9QoPDjoenSwQgjMgJAZGFm+xFWpTLVDnO1
+	 4QMiCcjVzMEZ8XrlzucGs/4n8EjUjAISsQqZbYUdNHJof0gy2Um+hYaDuVevB8+SU/
+	 hAisxxHKnYHEO2hJQ6IWOyZ+8Re3r6JSIipnuu7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388990AbfFMQlE (ORCPT
+        id S2392849AbfFMQlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:41:04 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:50050 "EHLO deadmen.hmeau.com"
+        Thu, 13 Jun 2019 12:41:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730569AbfFMG4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 02:56:50 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hbJf4-0006EI-Qa; Thu, 13 Jun 2019 14:56:38 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hbJf0-00055K-Vu; Thu, 13 Jun 2019 14:56:35 +0800
-Date:   Thu, 13 Jun 2019 14:56:34 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Horia Geanta <horia.geanta@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx7ulp: add crypto support
-Message-ID: <20190613065634.alck5wads6toe7uk@gondor.apana.org.au>
-References: <20190606080255.25504-1-horia.geanta@nxp.com>
- <20190612103926.GE11086@dragon>
- <VI1PR0402MB3485A573518D60A573BA55C298EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <20190612130602.GH11086@dragon>
- <VI1PR0402MB348596BF52CE43B5D4CD534798EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <20190612132600.GI11086@dragon>
- <20190612135952.ds6zzh7ppahiuodd@gondor.apana.org.au>
- <20190613004709.GB20747@dragon>
+        id S1726959AbfFMQlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:41:09 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E48E220644;
+        Thu, 13 Jun 2019 16:41:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560444069;
+        bh=C34ebvo6AEFxf3EflJEFb177I+rCto2FjRJcZW9t0Io=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I7fdzUpQNPCk2YfMQVrLWDVqmuu43ACjuslQSremYqJQYV4iZABsStKEgi+mQA5A1
+         ykJh+be+IyEGMtFTcsz0+PwyXSpLqAN/s89hUbH5dSgiwrN87aS2d0L/nI5CRC7g8u
+         8Tdr9FHQ7nY1S7pVnpQiX6aJ+xqIBFhfDsxFi8zk=
+Date:   Thu, 13 Jun 2019 09:41:07 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     David Howells <dhowells@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfs: fsmount: add missing mntget()
+Message-ID: <20190613164107.GA686@sol.localdomain>
+References: <20190610183031.GE63833@gmail.com>
+ <20190612184313.143456-1-ebiggers@kernel.org>
+ <20190613084728.GA32129@miu.piliscsaba.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190613004709.GB20747@dragon>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190613084728.GA32129@miu.piliscsaba.redhat.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 08:47:10AM +0800, Shawn Guo wrote:
-> On Wed, Jun 12, 2019 at 09:59:52PM +0800, Herbert Xu wrote:
-> > On Wed, Jun 12, 2019 at 09:26:02PM +0800, Shawn Guo wrote:
-> > >
-> > > Yes, it happens from time to time depending on maintainer's style. I'm
-> > > fine with the DT changes going through other subsystem tree, if the
-> > > subsystem maintainer wants to and is willing to take the risk of merge
-> > > conflict between his tree and arm-soc tree.
+On Thu, Jun 13, 2019 at 10:47:28AM +0200, Miklos Szeredi wrote:
+> On Wed, Jun 12, 2019 at 11:43:13AM -0700, Eric Biggers wrote:
+> > From: Eric Biggers <ebiggers@google.com>
 > > 
-> > I have no problems with potential merge conflicts.
+> > sys_fsmount() needs to take a reference to the new mount when adding it
+> > to the anonymous mount namespace.  Otherwise the filesystem can be
+> > unmounted while it's still in use, as found by syzkaller.
 > 
-> Then feel free to take it:
-> 
-> Acked-by: Shawn Guo <shawnguo@kernel.org>
+> So it needs one count for the file (which dentry_open() obtains) and one for the
+> attachment into the anonymous namespace.  The latter one is dropped at cleanup
+> time, so your patch appears to be correct at getting that ref.
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Yes.
+
+> 
+> I wonder why such a blatant use-after-free was missed in normal testing.  RCU
+> delayed freeing, I guess?
+
+It's because mount freeing is delayed by task_work_add(), so normally the refcnt
+would be dropped to -1 when the file is closed without problems.  The problems
+only showed up if you took another reference, e.g. by fchdir().
+
+> 
+> How about this additional sanity checking patch?
+
+Seems like a good idea.  Without my fix, the WARNING is triggered by the
+following program (no fchdir() needed):
+
+	int main(void)
+	{
+		int fs;
+
+		fs = syscall(__NR_fsopen, "ramfs", 0);
+		syscall(__NR_fsconfig, fs, 6, 0, 0, 0);
+		syscall(__NR_fsmount, fs, 0, 0);
+	}
+
+Can you send it as a formal patch?
+
+- Eric
