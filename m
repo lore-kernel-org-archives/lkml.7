@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD37C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C219C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85DC620665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A5520665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441748;
-	bh=6AsnjSp4I8XPLFUdtj4253p9jBp5YwDl72Dnx/K14u0=;
+	s=default; t=1560441762;
+	bh=wxsC2Sqqr9JhCsUroZoSPwPTxcPD/QR0oQmnP/rs/0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rcyZRL3ubJ4cbil25xWpm88jNFgcPkitCAgYPbBMMfNIFX8zZgC1aH4k8yP5aUg8C
-	 JDT0yB+ExFLNqkHrbmryGkgwXF/K+whHxOFBYhHPJwXmbzz90dXelypOb5jWe8uoOR
-	 VBRY7yX0YNC8zVrBCFX6nEuuqxVVkrnEh7aCUzyU=
+	b=pMD+Mfpbz9J+PrGyYyTNr8CxCBNGlEceqZu8ytWvms/V3waMfe5ZP5JkL6cpuQTKa
+	 vnNkp+L+aktLwHuYl1TF7Fle+hSTXlRxeHzUKe9dI+2krRnyfRK2QZazB+YAXISb1g
+	 9z66IahKR1WaQeHKWAClcue2wWGyIWNRkR8xnPHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390985AbfFMQC1 (ORCPT
+        id S2390987AbfFMQCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:02:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35966 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:02:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731406AbfFMIrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:47:52 -0400
+        id S1731404AbfFMIru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:47:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9798F20851;
-        Thu, 13 Jun 2019 08:47:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1051206BA;
+        Thu, 13 Jun 2019 08:47:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415672;
-        bh=6AsnjSp4I8XPLFUdtj4253p9jBp5YwDl72Dnx/K14u0=;
+        s=default; t=1560415669;
+        bh=wxsC2Sqqr9JhCsUroZoSPwPTxcPD/QR0oQmnP/rs/0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=10pfZn07hOgHGbiE3LLTnBgAxAr5vUoUeP6WP31MQvq2CQgXd1rSE1FEQ7MTNuRHH
-         Og+CrBpye8N+c/u1/59rEKZ0RDe52UIffbXP2dA5BgwTi+0I1SAYsKdlKb+z0DzeZE
-         mvywfJQ8FQlB2KTe3Yr3fanaDxbdvnJiLSOMr80M=
+        b=2SehRWT9iGGKKVPGG0orH7w5N/aa+HHceM9MuJ0XMAIBg/MyN1+vJkFg5TWlJbM8T
+         sGhOu7RvhrOGMc2SXPklg8kxzWEwlptMIDvyPuYHXrdXt21G4tqvD0ea7QjnD1cx9X
+         oF8lwY/NYjhZPBfg8DkZVaNwML8bzK5mEbKoeQLc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 067/155] netfilter: nf_tables: fix base chain stat rcu_dereference usage
-Date:   Thu, 13 Jun 2019 10:32:59 +0200
-Message-Id: <20190613075656.746734042@linuxfoundation.org>
+Subject: [PATCH 5.1 084/155] nvmem: sunxi_sid: Support SID on A83T and H5
+Date:   Thu, 13 Jun 2019 10:33:16 +0200
+Message-Id: <20190613075657.776381915@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,75 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit edbd82c5fba009f68d20b5db585be1e667c605f6 ]
+[ Upstream commit da75b8909756160b8e785104ba421a20b756c975 ]
 
-Following splat gets triggered when nfnetlink monitor is running while
-xtables-nft selftests are running:
+The device tree binding already lists compatible strings for these two
+SoCs. They don't have the defect as seen on the H3, and the size and
+register layout is the same as the A64. Furthermore, the driver does
+not include nvmem cell definitions.
 
-net/netfilter/nf_tables_api.c:1272 suspicious rcu_dereference_check() usage!
-other info that might help us debug this:
+Add support for these two compatible strings, re-using the config for
+the A64.
 
-1 lock held by xtables-nft-mul/27006:
- #0: 00000000e0f85be9 (&net->nft.commit_mutex){+.+.}, at: nf_tables_valid_genid+0x1a/0x50
-Call Trace:
- nf_tables_fill_chain_info.isra.45+0x6cc/0x6e0
- nf_tables_chain_notify+0xf8/0x1a0
- nf_tables_commit+0x165c/0x1740
-
-nf_tables_fill_chain_info() can be called both from dumps (rcu read locked)
-or from the transaction path if a userspace process subscribed to nftables
-notifications.
-
-In the 'table dump' case, rcu_access_pointer() cannot be used: We do not
-hold transaction mutex so the pointer can be NULLed right after the check.
-Just unconditionally fetch the value, then have the helper return
-immediately if its NULL.
-
-In the notification case we don't hold the rcu read lock, but updates are
-prevented due to transaction mutex. Use rcu_dereference_check() to make lockdep
-aware of this.
-
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/nvmem/sunxi_sid.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 1606eaa5ae0d..aa5e7b00a581 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -1190,6 +1190,9 @@ static int nft_dump_stats(struct sk_buff *skb, struct nft_stats __percpu *stats)
- 	u64 pkts, bytes;
- 	int cpu;
- 
-+	if (!stats)
-+		return 0;
-+
- 	memset(&total, 0, sizeof(total));
- 	for_each_possible_cpu(cpu) {
- 		cpu_stats = per_cpu_ptr(stats, cpu);
-@@ -1247,6 +1250,7 @@ static int nf_tables_fill_chain_info(struct sk_buff *skb, struct net *net,
- 	if (nft_is_base_chain(chain)) {
- 		const struct nft_base_chain *basechain = nft_base_chain(chain);
- 		const struct nf_hook_ops *ops = &basechain->ops;
-+		struct nft_stats __percpu *stats;
- 		struct nlattr *nest;
- 
- 		nest = nla_nest_start(skb, NFTA_CHAIN_HOOK);
-@@ -1268,8 +1272,9 @@ static int nf_tables_fill_chain_info(struct sk_buff *skb, struct net *net,
- 		if (nla_put_string(skb, NFTA_CHAIN_TYPE, basechain->type->name))
- 			goto nla_put_failure;
- 
--		if (rcu_access_pointer(basechain->stats) &&
--		    nft_dump_stats(skb, rcu_dereference(basechain->stats)))
-+		stats = rcu_dereference_check(basechain->stats,
-+					      lockdep_commit_lock_is_held(net));
-+		if (nft_dump_stats(skb, stats))
- 			goto nla_put_failure;
- 	}
- 
+diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
+index 570a2e354f30..ef3d776bb16e 100644
+--- a/drivers/nvmem/sunxi_sid.c
++++ b/drivers/nvmem/sunxi_sid.c
+@@ -222,8 +222,10 @@ static const struct sunxi_sid_cfg sun50i_a64_cfg = {
+ static const struct of_device_id sunxi_sid_of_match[] = {
+ 	{ .compatible = "allwinner,sun4i-a10-sid", .data = &sun4i_a10_cfg },
+ 	{ .compatible = "allwinner,sun7i-a20-sid", .data = &sun7i_a20_cfg },
++	{ .compatible = "allwinner,sun8i-a83t-sid", .data = &sun50i_a64_cfg },
+ 	{ .compatible = "allwinner,sun8i-h3-sid", .data = &sun8i_h3_cfg },
+ 	{ .compatible = "allwinner,sun50i-a64-sid", .data = &sun50i_a64_cfg },
++	{ .compatible = "allwinner,sun50i-h5-sid", .data = &sun50i_a64_cfg },
+ 	{/* sentinel */},
+ };
+ MODULE_DEVICE_TABLE(of, sunxi_sid_of_match);
 -- 
 2.20.1
 
