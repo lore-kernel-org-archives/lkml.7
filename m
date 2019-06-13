@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D033EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE8FC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3CC52063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F541205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:08:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="phL3709W"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iG+jB85I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfFMRIW (ORCPT
+        id S2393362AbfFMRI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:08:22 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36956 "EHLO
+        Thu, 13 Jun 2019 13:08:28 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40924 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393304AbfFMRDy (ORCPT
+        with ESMTP id S1729728AbfFMRDx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:03:54 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 22so10898990wmg.2;
-        Thu, 13 Jun 2019 10:03:53 -0700 (PDT)
+        Thu, 13 Jun 2019 13:03:53 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v19so10887170wmj.5;
+        Thu, 13 Jun 2019 10:03:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=whDprreeVfoXYE9X/DIRq/T6TGZeDGcOo63ZQC7YwS4=;
-        b=phL3709W658YyQp9NuVbHh1NmXl3Jaf8zbxYGivIG9x9e+2FYaRAe9LunVedJvonX0
-         6H7rtFHApAxu7jz6Ak3dL8HAtfqkQ3HHJ5D/q8+EdOGIgvH1mjFi+qjZderoBDyJuslx
-         2X2nfL019CCKT37cL43gLlcyTmvw1v2OHfG1IAuklOvmqHuXy1JoV8PevQR6YAe5k8Vy
-         Uh/b1j2UXWr7EzR482bOu2Q3Bj6km064HA8GbmPKvDMRocHspSWPyLAGiDzVCF1CJ+0k
-         LNxN4r8ZHavc41APsP2vgiydzFQuvWxqvaIRmkY3kSr9kTVNmV/QHYl80g9RCqjwlqdD
-         fGow==
+        bh=ePv84bl3LONQijVs8R1uvqK3iY+gH1mMWEz3/sRHNh4=;
+        b=iG+jB85IqiXtij8iEpdwh2V+oesMsHGhbgK14yUbaqF6wx3NosHX1fOFHGp2IeL0DN
+         It6wkkhKa/eJLYq1dKPQiQGsJO3BzUOvfvNbXGiJWft/TphMxJDtURXseifwmD1cvFdJ
+         8S9wxVRhpdvytylc00Gpm7ywrLpMk+RIH/qtXzbXXgXK/HyLWX5Tbji6a1MkUj+Ryplo
+         8mrkHNGl05s2WZ0+lkbnP8euyIgrEVEJsLVhSQINWFFINhkAURkHRpZPwLCABkeRAvvZ
+         Ome8dtrL/QIN/G7uBG57HIsAujp29FNm2c59Me1fCFmBsrvBp3GksQ7kXq0qBBD+iPN7
+         lzNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=whDprreeVfoXYE9X/DIRq/T6TGZeDGcOo63ZQC7YwS4=;
-        b=O/MZHt2fByRWAssxHHz2iliDah9LZER1imy76jYPWfseFum29K2AaDFrfdlR+7ieqM
-         PijmE8Bdftqb+4/QVC55u4hGxL5ZB9wKm3yqlg0PLJGw/W4lJvw8Pq94NZjllwBowssE
-         Y4Irn1I+N7QK2a3r2UP7RyoM9wh36Yr7H4KBLUTOKESrSDM6rN/8+M/4tSJndCMU2u7a
-         v2LQFel/wGvKs9+NfLI/VO2xyMY8lfbDOOSSMTqsanbZm/Kmz6k0IxB4rPSW3OjORgh/
-         hjY4I7DXdrwVAbkjGtVpUARsED4spkVOGwmGq+XrgWeD/MoZI/bSvE+j1rQwDWz8RAeq
-         LFug==
-X-Gm-Message-State: APjAAAU/gOJTfQhxnwfMpJWFjLZNTdVI0XBqL01DAAVkijlwIsh/EWAX
-        DyI1fv8l7pVANlsIlccBMQkCiz94
-X-Google-Smtp-Source: APXvYqy0r+P0L6dxBXThM/MBlUiH7VMW9XQU8ZaqX0qS4J34O/t4ViWPaS/4tPyhD+AOE5frpphokw==
-X-Received: by 2002:a1c:f20f:: with SMTP id s15mr4395044wmc.33.1560445432474;
-        Thu, 13 Jun 2019 10:03:52 -0700 (PDT)
+        bh=ePv84bl3LONQijVs8R1uvqK3iY+gH1mMWEz3/sRHNh4=;
+        b=SoK7BhPS61aOzBVVL3V6RaTZlRrNoPjMXIQxetAdMACbe+LSEK0oD2ckbslCY/HEqi
+         +QDcFtEzw8kMCjDxszok3CO3wtWhdl5hltSnLQdWYEuH0lyaXJ5WuLewC5FvQqTMk8Yf
+         kGxO6zLDsXehKf/GZ8EMcCY1nag7K1EQ7/Y+siZu59AbnI/Vs3SQ2rvQ6i0LUApkThw7
+         T8WmD9mqfe3TaDu71837a6OiqAdzWxrlR7lrHVoYJdbceyl2Aa3oHMkORMe0sSfWrGEH
+         f8Q5P5LGFDyDxWAZ1peludugTiomEiwtciFGExPmqUItOGmqKvUJiGyDbXZrkwrGkEbD
+         BXpQ==
+X-Gm-Message-State: APjAAAVQpUacbJz9gk47Fa/VVECv94/N7JjdZ8UXwbgYIw20SfvMJwfI
+        4FEAyr0rMuK97jbKHIMHx/jC1VXn
+X-Google-Smtp-Source: APXvYqzqCUPESyKwv5Pnv2qSpaLUg9Xw9KxBR66l9YtqfS5C2p4xhOBYcDDC8jNQ99F14YveLCnEUw==
+X-Received: by 2002:a1c:be0a:: with SMTP id o10mr4530228wmf.91.1560445431583;
+        Thu, 13 Jun 2019 10:03:51 -0700 (PDT)
 Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.03.51
+        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.03.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Thu, 13 Jun 2019 10:03:51 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         vkuznets@redhat.com
-Subject: [PATCH 18/43] KVM: nVMX: Don't rewrite GUEST_PML_INDEX during nested VM-Entry
-Date:   Thu, 13 Jun 2019 19:03:04 +0200
-Message-Id: <1560445409-17363-19-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 17/43] KVM: nVMX: Write ENCLS-exiting bitmap once per vmcs02
+Date:   Thu, 13 Jun 2019 19:03:03 +0200
+Message-Id: <1560445409-17363-18-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
 References: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
@@ -72,57 +72,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Emulation of GUEST_PML_INDEX for a nested VMM is a bit weird.  Because
-L0 flushes the PML on every VM-Exit, the value in vmcs02 at the time of
-VM-Enter is a constant -1, regardless of what L1 thinks/wants.
+KVM doesn't yet support SGX virtualization, i.e. writes a constant value
+to ENCLS_EXITING_BITMAP so that it can intercept ENCLS and inject a #UD.
 
-Fixes: 09abe32002665 ("KVM: nVMX: split pieces of prepare_vmcs02() to prepare_vmcs02_early()")
+Fixes: 0b665d3040281 ("KVM: vmx: Inject #UD for SGX ENCLS instruction in guest")
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/nested.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index fee297a5edda..01275cbd7478 100644
+index f2be64256f15..fee297a5edda 100644
 --- a/arch/x86/kvm/vmx/nested.c
 +++ b/arch/x86/kvm/vmx/nested.c
-@@ -1940,8 +1940,17 @@ static void prepare_vmcs02_constant_state(struct vcpu_vmx *vmx)
- 	if (cpu_has_vmx_msr_bitmap())
- 		vmcs_write64(MSR_BITMAP, __pa(vmx->nested.vmcs02.msr_bitmap));
- 
--	if (enable_pml)
-+	/*
-+	 * The PML address never changes, so it is constant in vmcs02.
-+	 * Conceptually we want to copy the PML index from vmcs01 here,
-+	 * and then back to vmcs01 on nested vmexit.  But since we flush
-+	 * the log and reset GUEST_PML_INDEX on each vmexit, the PML
-+	 * index is also effectively constant in vmcs02.
-+	 */
-+	if (enable_pml) {
+@@ -1943,6 +1943,9 @@ static void prepare_vmcs02_constant_state(struct vcpu_vmx *vmx)
+ 	if (enable_pml)
  		vmcs_write64(PML_ADDRESS, page_to_phys(vmx->pml_pg));
-+		vmcs_write16(GUEST_PML_INDEX, PML_ENTITY_NUM - 1);
-+	}
  
- 	if (cpu_has_vmx_encls_vmexit())
- 		vmcs_write64(ENCLS_EXITING_BITMAP, -1ull);
-@@ -2102,16 +2111,6 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
- 	vm_exit_controls_init(vmx, exec_control);
- 
++	if (cpu_has_vmx_encls_vmexit())
++		vmcs_write64(ENCLS_EXITING_BITMAP, -1ull);
++
  	/*
--	 * Conceptually we want to copy the PML address and index from
--	 * vmcs01 here, and then back to vmcs01 on nested vmexit. But,
--	 * since we always flush the log on each vmexit and never change
--	 * the PML address (once set), this happens to be equivalent to
--	 * simply resetting the index in vmcs02.
--	 */
--	if (enable_pml)
--		vmcs_write16(GUEST_PML_INDEX, PML_ENTITY_NUM - 1);
+ 	 * Set the MSR load/store lists to match L0's settings.  Only the
+ 	 * addresses are constant (for vmcs02), the counts can change based
+@@ -2065,9 +2068,6 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
+ 		if (exec_control & SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES)
+ 			vmcs_write64(APIC_ACCESS_ADDR, -1ull);
+ 
+-		if (exec_control & SECONDARY_EXEC_ENCLS_EXITING)
+-			vmcs_write64(ENCLS_EXITING_BITMAP, -1ull);
 -
--	/*
- 	 * Interrupt/Exception Fields
- 	 */
- 	if (vmx->nested.nested_run_pending) {
+ 		vmcs_write32(SECONDARY_VM_EXEC_CONTROL, exec_control);
+ 	}
+ 
 -- 
 1.8.3.1
 
