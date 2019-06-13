@@ -2,83 +2,112 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B1CC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA998C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E463120665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C8EE20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:04:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560441883;
+	bh=+f5Qo9PDRYZX5uTDxbpOtMvtOK+wPUi0yp778V82wJw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=a9ESSX2n9NruEHFAECojSKo75T4eQwZlKUVTBUsyiL3KQ7kDSPPMIsDv/nwamE4wj
+	 RIfMvtpmaWQSRJ9kVV0z65aOB89ApIz2zjeq/EhuHe7NJdOx01KIgo/WUFiZgO/y+b
+	 9Q7iahlLjSmDX28Hl47qTk5TlaWO7DD93OzGa+HM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391174AbfFMQE3 (ORCPT
+        id S2391179AbfFMQEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:04:29 -0400
-Received: from sauhun.de ([88.99.104.3]:42058 "EHLO pokefinder.org"
+        Thu, 13 Jun 2019 12:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727721AbfFMQE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:04:27 -0400
-Received: from localhost (p5486CF99.dip0.t-ipconnect.de [84.134.207.153])
-        by pokefinder.org (Postfix) with ESMTPSA id EB38D4A127B;
-        Thu, 13 Jun 2019 18:04:25 +0200 (CEST)
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     alsa-devel@alsa-project.org
-Cc:     Wolfram Sang <wsa@the-dreams.de>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: pci: echoaudio: remove variable which is a constant
-Date:   Thu, 13 Jun 2019 18:04:23 +0200
-Message-Id: <20190613160423.17097-1-wsa@the-dreams.de>
-X-Mailer: git-send-email 2.20.1
+        id S1731351AbfFMIqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:46:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6AF12147A;
+        Thu, 13 Jun 2019 08:46:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560415609;
+        bh=+f5Qo9PDRYZX5uTDxbpOtMvtOK+wPUi0yp778V82wJw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wz2OcUWHdx6A+xYl41iqoSx+VYPNaiAZK/Kg+QrOmIEkN0ivF4wecQ0NB744tBOcU
+         QonyYPCTyUMttVjheG7dR13pQ+7uFPPii/8KFi5r4alGJZr9r/l8a6qwmr2gRD9FZ7
+         QUvSPaXQTJJ2sHdDykN9JXD4my7OjwSKS2Zupj0E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Murphy Zhou <jencce.kernel@gmail.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 062/155] ovl: do not generate duplicate fsnotify events for "fake" path
+Date:   Thu, 13 Jun 2019 10:32:54 +0200
+Message-Id: <20190613075656.522287198@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
+References: <20190613075652.691765927@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Checking a variable which is always '1' has no use.
+[ Upstream commit d989903058a83e8536cc7aadf9256a47d5c173fe ]
 
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Overlayfs "fake" path is used for stacked file operations on underlying
+files.  Operations on files with "fake" path must not generate fsnotify
+events with path data, because those events have already been generated at
+overlayfs layer and because the reported event->fd for fanotify marks on
+underlying inode/filesystem will have the wrong path (the overlayfs path).
+
+Link: https://lore.kernel.org/linux-fsdevel/20190423065024.12695-1-jencce.kernel@gmail.com/
+Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
+Fixes: d1d04ef8572b ("ovl: stack file ops")
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ fs/overlayfs/file.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Only build tested. Found by static code analysis of similar patterns.
-
- sound/pci/echoaudio/echoaudio_dsp.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/sound/pci/echoaudio/echoaudio_dsp.c b/sound/pci/echoaudio/echoaudio_dsp.c
-index b181752b8481..50d4a87a6bb3 100644
---- a/sound/pci/echoaudio/echoaudio_dsp.c
-+++ b/sound/pci/echoaudio/echoaudio_dsp.c
-@@ -1058,7 +1058,6 @@ static int allocate_pipes(struct echoaudio *chip, struct audiopipe *pipe,
- {
- 	int i;
- 	u32 channel_mask;
--	char is_cyclic;
+diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
+index 50e4407398d8..7129dcd78b6b 100644
+--- a/fs/overlayfs/file.c
++++ b/fs/overlayfs/file.c
+@@ -29,10 +29,11 @@ static struct file *ovl_open_realfile(const struct file *file,
+ 	struct inode *inode = file_inode(file);
+ 	struct file *realfile;
+ 	const struct cred *old_cred;
++	int flags = file->f_flags | O_NOATIME | FMODE_NONOTIFY;
  
- 	dev_dbg(chip->card->dev,
- 		"allocate_pipes: ch=%d int=%d\n", pipe_index, interleave);
-@@ -1066,8 +1065,6 @@ static int allocate_pipes(struct echoaudio *chip, struct audiopipe *pipe,
- 	if (chip->bad_board)
- 		return -EIO;
+ 	old_cred = ovl_override_creds(inode->i_sb);
+-	realfile = open_with_fake_path(&file->f_path, file->f_flags | O_NOATIME,
+-				       realinode, current_cred());
++	realfile = open_with_fake_path(&file->f_path, flags, realinode,
++				       current_cred());
+ 	revert_creds(old_cred);
  
--	is_cyclic = 1;	/* This driver uses cyclic buffers only */
--
- 	for (channel_mask = i = 0; i < interleave; i++)
- 		channel_mask |= 1 << (pipe_index + i);
- 	if (chip->pipe_alloc_mask & channel_mask) {
-@@ -1078,8 +1075,8 @@ static int allocate_pipes(struct echoaudio *chip, struct audiopipe *pipe,
+ 	pr_debug("open(%p[%pD2/%c], 0%o) -> (%p, 0%o)\n",
+@@ -50,7 +51,7 @@ static int ovl_change_flags(struct file *file, unsigned int flags)
+ 	int err;
  
- 	chip->comm_page->position[pipe_index] = 0;
- 	chip->pipe_alloc_mask |= channel_mask;
--	if (is_cyclic)
--		chip->pipe_cyclic_mask |= channel_mask;
-+	/* This driver uses cyclic buffers only */
-+	chip->pipe_cyclic_mask |= channel_mask;
- 	pipe->index = pipe_index;
- 	pipe->interleave = interleave;
- 	pipe->state = PIPE_STATE_STOPPED;
+ 	/* No atime modificaton on underlying */
+-	flags |= O_NOATIME;
++	flags |= O_NOATIME | FMODE_NONOTIFY;
+ 
+ 	/* If some flag changed that cannot be changed then something's amiss */
+ 	if (WARN_ON((file->f_flags ^ flags) & ~OVL_SETFL_MASK))
 -- 
 2.20.1
+
+
 
