@@ -2,130 +2,190 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AECEC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EE9C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50F6D206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oLxsJPOA"
+	by mail.kernel.org (Postfix) with ESMTP id B9137206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfFMP2V (ORCPT
+        id S1730427AbfFMP23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:28:21 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38228 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727555AbfFMP2T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:28:19 -0400
-Received: by mail-io1-f66.google.com with SMTP id k13so17807416iop.5;
-        Thu, 13 Jun 2019 08:28:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gs6NoMzyTUTgpt3NkLyMgRheVG07G/duNOUEUDS36y4=;
-        b=oLxsJPOAaVS9zcsx7BtVviCTfEK+f2WaSDX0FvUnPZJm8bRUy6g8IKUUYANmdRPx25
-         GlxF9A6wqxJb4BkTGtlliTe53U4GHvRRyGJAmFt2EkUuVV+GnKoUBT1bGxYwDAIWVPw0
-         8ggxG6XAW8qNM1/oDUILaVEQjuiQBthr7i8Z6IlMv8JkY34tN5VH9Yia/yFv17X/LPOp
-         U4QDpkMrUWcCHu7MLe3EDiq5Rp5h6Yhog5ToBSls+odpCG02s0ydNenpzwdzLCRqFWrT
-         SY4uNh3WCAYYHaDpaBT0ftJ5zmEt+nsfxNYafuisDbUqrmlMfoWRJwBA250P3HkPh9sl
-         QYsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gs6NoMzyTUTgpt3NkLyMgRheVG07G/duNOUEUDS36y4=;
-        b=EGhu7zWQ0rEsn/BmTM++xn8xfRU0dx1vuKGEM+jIlpbSmGlY9nYQj1wRQOp+hWEDu8
-         mHq2SLfQCPn3M1hh6EIdqQKy43JotN3r0yTUNSuSeIt7sGwiKagZdmG9wTc68MUYTg6U
-         Z6BN2p3QpVuhbPKzSxGDYEyZVOzoGRjt+z7IOzYgTWWGXekq0YZd5HqJk7tPM1gEwvSx
-         hcHRgmgg4HI6lHZc+qHyC9AkXZ9WyUjop0kb9eO6e5SIthlTr6cb0Msgsb4+xTEZs8rB
-         LdoRdlM/ElspquelbjQzXhGo/Cd3UFU/54tQiRNanCKXdnA1ceJpMYx4P/nyI23SoIqR
-         dnMw==
-X-Gm-Message-State: APjAAAVIpOKWqdJOWXscoJY4lub9bvZ1UVJjYIQBBjDGfX9tP5n67xX3
-        ld9aLGcfzjmNvtMFYb7Gv+zBo2mjR4CKQxWlALI=
-X-Google-Smtp-Source: APXvYqyf6LHpg96PPrivEyxWZaBVyeZfqd9X/N0jd2g0ZnMTEvKkgMdTLq0AsVbn/YwxOs1DD5G3n9mLN0Y6vRenUhk=
-X-Received: by 2002:a02:bca:: with SMTP id 193mr57475365jad.46.1560439698047;
- Thu, 13 Jun 2019 08:28:18 -0700 (PDT)
+        Thu, 13 Jun 2019 11:28:29 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18568 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728944AbfFMLaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 07:30:30 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id F3F6B74A37F2BCD5298E;
+        Thu, 13 Jun 2019 19:30:27 +0800 (CST)
+Received: from [127.0.0.1] (10.184.12.158) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 13 Jun 2019
+ 19:30:19 +0800
+Subject: Re: [PATCH v1 2/5] KVM: arm/arm64: Adjust entry/exit and trap related
+ tracepoints
+To:     James Morse <james.morse@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <christoffer.dall@arm.com>, <marc.zyngier@arm.com>,
+        <acme@redhat.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <ganapatrao.kulkarni@cavium.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <mark.rutland@arm.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <wanghaibin.wang@huawei.com>,
+        <xiexiangyou@huawei.com>, <linuxarm@huawei.com>
+References: <1560330526-15468-1-git-send-email-yuzenghui@huawei.com>
+ <1560330526-15468-3-git-send-email-yuzenghui@huawei.com>
+ <977f8f8c-72b4-0287-4b1c-47a0d6f1fd6e@arm.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <e78a9798-cce3-a360-37c3-0ad359944b85@huawei.com>
+Date:   Thu, 13 Jun 2019 19:28:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
+ Thunderbird/64.0
 MIME-Version: 1.0
-References: <20190613142157.8674-1-jeffrey.l.hugo@gmail.com>
- <20190613142231.8728-1-jeffrey.l.hugo@gmail.com> <20190613151008.GA6792@builder>
-In-Reply-To: <20190613151008.GA6792@builder>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Thu, 13 Jun 2019 09:28:06 -0600
-Message-ID: <CAOCk7NpPkcFLR9HWQmfx+9heHs6KCPCZo9mSa_ibezdMUMXNFg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/7] drivers: regulator: qcom_spmi: enable linear range info
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <977f8f8c-72b4-0287-4b1c-47a0d6f1fd6e@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 9:10 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Thu 13 Jun 07:22 PDT 2019, Jeffrey Hugo wrote:
->
-> > From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> >
-> > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > ---
-> >  drivers/regulator/qcom_spmi-regulator.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> > diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-> > index 53a61fb65642..fd55438c25d6 100644
-> > --- a/drivers/regulator/qcom_spmi-regulator.c
-> > +++ b/drivers/regulator/qcom_spmi-regulator.c
-> > @@ -1744,6 +1744,7 @@ MODULE_DEVICE_TABLE(of, qcom_spmi_regulator_match);
-> >  static int qcom_spmi_regulator_probe(struct platform_device *pdev)
-> >  {
-> >       const struct spmi_regulator_data *reg;
-> > +     const struct spmi_voltage_range *range;
-> >       const struct of_device_id *match;
-> >       struct regulator_config config = { };
-> >       struct regulator_dev *rdev;
-> > @@ -1833,6 +1834,12 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
-> >                       }
-> >               }
-> >
-> > +             if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_HFS430) {
->
-> This doesn't compile, because HFS430 isn't defined until patch 7.
->
-> But in patch 2 you replace this with a check to see if there's just a
-> single range, which is a better solution. So squash the last hunk of
-> patch 2 into this.
+Hi James,
 
-Huh, I did botch that.  The patch 2 hunk was intended to be in patch
-1.  Will fix.
+On 2019/6/12 20:49, James Morse wrote:
+> Hi,
+> 
+> On 12/06/2019 10:08, Zenghui Yu wrote:
+>> Currently, we use trace_kvm_exit() to report exception type (e.g.,
+>> "IRQ", "TRAP") and exception class (ESR_ELx's bit[31:26]) together.
+> 
+> (They both caused an exit!)
+> 
+> 
+>> But hardware only saves the exit class to ESR_ELx on synchronous
+> 
+> EC is the 'Exception Class'. Exit is KVM/Linux's terminology.
+Yes, a stupid mistake ;-)
 
->
-> Regards,
-> Bjorn
->
-> > +                     /* since there is only one range */
-> > +                     range = spmi_regulator_find_range(vreg);
-> > +                     vreg->desc.uV_step = range->step_uV;
-> > +             }
-> > +
-> >               config.dev = dev;
-> >               config.driver_data = vreg;
-> >               config.regmap = regmap;
-> > --
-> > 2.17.1
-> >
+>> exceptions, not on asynchronous exceptions. When the guest exits
+>> due to external interrupts, we will get tracing output like:
+>>
+>> 	"kvm_exit: IRQ: HSR_EC: 0x0000 (UNKNOWN), PC: 0xffff87259e30"
+>>
+>> Obviously, "HSR_EC" here is meaningless.
+> 
+> I assume we do it this way so there is only one guest-exit tracepoint that catches all exits.
+> I don't think its a problem if user-space has to know the EC isn't set for asynchronous
+> exceptions, this is a property of the architecture and anything using these trace-points
+> is already arch specific.
+Actually, *no* problem in current implementation, and I'm OK to still
+keep the EC in trace_kvm_exit().  What I really want to do is adding the
+EC in trace_trap_enter (the new tracepoint), will explain it later.
+
+>> This patch splits "exit" and "trap" events by adding two tracepoints
+>> explicitly in handle_trap_exceptions(). Let trace_kvm_exit() report VM
+>> exit events, and trace_kvm_trap_exit() report VM trap events.
+>>
+>> These tracepoints are adjusted also in preparation for supporting
+>> 'perf kvm stat' on arm64.
+> 
+> Because the existing tracepoints are ABI, I don't think we can change them.
+> 
+> We can add new ones if there is something that a user reasonably needs to trace, and can't
+> be done any other way.
+> 
+> What can't 'perf kvm stat' do with the existing trace points?
+(A good question! I should have made it clear in the commit message,
+  forgive me.)
+
+First, how does 'perf kvm stat' interact with tracepoints?
+
+We have three handlers for a specific event (e.g., "VM-EXIT") --
+"is_begin_event", "is_end_event", "decode_key". The first two handlers
+make use of two existing tracepoints ("kvm:kvm_exit" & "kvm:kvm_entry")
+to check when the VM-EXIT events started/ended, thus the time difference
+stats, event start/end time etc. can be calculated.
+"is_begin_event" handler gets a *key* from the "ret" field (exit_code)
+of "kvm:kvm_exit" payload, and "decode_key" handler makes use of the
+*key* to find out the reason for the VM-EXIT event. Of course we should
+maintain the mapping between exit_code and exit_reason in userspace.
+These are all what *patch #4* had done, #4 is a simple patch to review!
+Oh, we can also set "vcpu_id_str" to achieve per vcpu event record, but
+currently, we only have the "vcpu_pc" field in "kvm:kvm_entry", without
+something like "vcpu_id".
+
+perf people must have a much deeper understanding of this.
+
+
+OK, next comes the more important question - what should/can we do to
+the tracepoints in preparation of 'perf kvm stat' on arm64?
+
+ From the article you've provided, it's clear that we can't remove the EC
+from trace_kvm_exit(). But can we add something like "vcpu_id" into
+(at least) trace_kvm_entry(), just like what this patch has done?
+If not, which means we have to keep the existing tracepoints totally
+unchanged, then 'perf kvm stat' will have no way to record/report per
+vcpu VM-EXIT events (other arch like X86, powerpc, s390 etc. have this
+capability, if I understand it correctly).
+
+As for TRAP events, should we consider adding two new tracepoints --
+"kvm_trap_enter" and "kvm_trap_exit", to keep tracking of the trap
+handling process? We should also record the EC in "kvm_trap_enter", 
+which will be used as *key* in TRAP event's "is_begin_event" handler.
+Patch #5 tells us the whole story, it's simple too.
+
+What do you suggest?
+
+>> diff --git a/arch/arm64/kvm/handle_exit.c b/arch/arm64/kvm/handle_exit.c
+>> index 516aead..af3c732 100644
+>> --- a/arch/arm64/kvm/handle_exit.c
+>> +++ b/arch/arm64/kvm/handle_exit.c
+>> @@ -264,7 +264,10 @@ static int handle_trap_exceptions(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>>   		exit_handle_fn exit_handler;
+>>   
+>>   		exit_handler = kvm_get_exit_handler(vcpu);
+>> +		trace_kvm_trap_enter(vcpu->vcpu_id,
+>> +				     kvm_vcpu_trap_get_class(vcpu));
+>>   		handled = exit_handler(vcpu, run);
+>> +		trace_kvm_trap_exit(vcpu->vcpu_id);
+>>   	}
+> 
+> Why are there two? Are you using this to benchmark the exit_handler()?
+Almostly yes. Let perf know when the TRAP handling event start/end,
+and ...
+
+> As we can't remove the EC from the exit event, I don't think this tells us anything new.
+As explained above, this EC is for 'perf kvm stat'.
+
+>> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+>> index 90cedeb..9f63fd9 100644
+>> --- a/virt/kvm/arm/arm.c
+>> +++ b/virt/kvm/arm/arm.c
+>> @@ -758,7 +758,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>>   		/**************************************************************
+>>   		 * Enter the guest
+>>   		 */
+>> -		trace_kvm_entry(*vcpu_pc(vcpu));
+>> +		trace_kvm_entry(vcpu->vcpu_id, *vcpu_pc(vcpu));
+> 
+> Why do you need the PC? It was exported on exit.
+> (its mostly junk for user-space anyway, you can't infer anything from it)
+(I mainly wanted to add the "vcpu->vcpu_id" here.)
+It seems that we can't just remove the PC, which will cause ABI change?
+
+
+Thanks for your reviewing!
+
+zenghui
+
+
+.
+
