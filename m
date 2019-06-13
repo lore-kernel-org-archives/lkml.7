@@ -2,226 +2,114 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF347C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA29C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2D9421721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:06:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="k7gBpDBH"
+	by mail.kernel.org (Postfix) with ESMTP id 2884120B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:09:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560467351;
+	bh=XiRiFmAJLuQmjyRr/tGx5RyGYvfmlE3XHajllHQvoaU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ztboAYhTS2QRgONdezJr5InC6gZEdj57EPGjg/FgsWbKLtOVPxZ8oj0msxOahxZMG
+	 XweeVIndco8qjLZXKdXsNCr6JzqeSciMg9SCr6FTBMQqwXa3YMt0Of6xQcV3cgRBKS
+	 IWt7oHczP0Gh4Ee28EOZiWvtCx7XfuG3OCssJWes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbfFMXGz (ORCPT
+        id S1727513AbfFMXJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 19:06:55 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:8213 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbfFMXGy (ORCPT
+        Thu, 13 Jun 2019 19:09:10 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39088 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbfFMXJJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 19:06:54 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d02d70d0000>; Thu, 13 Jun 2019 16:06:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 13 Jun 2019 16:06:53 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 13 Jun 2019 16:06:53 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Jun
- 2019 23:06:48 +0000
-Subject: Re: [Nouveau] [PATCH 02/22] mm: remove the struct hmm_device
- infrastructure
-To:     Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-CC:     <linux-nvdimm@lists.01.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>
-References: <20190613094326.24093-1-hch@lst.de>
- <20190613094326.24093-3-hch@lst.de>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <5a11b5a1-cfb2-f9a1-493e-ed153de7f00b@nvidia.com>
-Date:   Thu, 13 Jun 2019 16:06:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 19:09:09 -0400
+Received: by mail-qk1-f194.google.com with SMTP id i125so513544qkd.6;
+        Thu, 13 Jun 2019 16:09:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=p5oxYtHy7Yr2XXQ3aO8PAJU4EwYdDFlGCwAcwBaO/FI=;
+        b=Eya0pyUgy4UTl64vT9rz/i+jwdo5Iu0PrCPtS6fxeI+ORDW2i7/H4pFGxTtXJN7RvO
+         Yb1dCMNrKs73eVPllQkJiig3tf/jg2MSJi/0/sta6TBDHdtfAytcRE4cgwcTlO/GqLv8
+         dyg7cYBj8I9g5zHzthEcSWzDVXcYsriWtf6/nCOODlk/fqgW7Lf8WMCJGriacXF57KSC
+         jnW2liG+Hxm7RGZtHG/Pa9M4GlTqXrGjKo8vktnUtKUKPkPXWkb15GiOzNLH5lAJpoM8
+         m3t9JhL8Hq0l8NkUvDn/Li1xSEOJvv5H9kfxeXArTAddF7bcL/+eJ+OWLyrK7hLmvwLr
+         OR7g==
+X-Gm-Message-State: APjAAAWvTz+/SyXfA807Lx0ti8p4bBM4HvUWMK8yrLlcJKOP0P1uto0W
+        8IbgKCk3VlO7ZIV7Zn8aUg==
+X-Google-Smtp-Source: APXvYqwGtrTXZRGSGbC4LGuyA5Vkav93477zUXLcKvlB+g549ZiRmZB+l2NOPgb9qqkyDxNSzFpsMA==
+X-Received: by 2002:ae9:df07:: with SMTP id t7mr72055835qkf.193.1560467348262;
+        Thu, 13 Jun 2019 16:09:08 -0700 (PDT)
+Received: from localhost ([64.188.179.243])
+        by smtp.gmail.com with ESMTPSA id m4sm395909qka.70.2019.06.13.16.09.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 16:09:07 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 17:09:06 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     angus.ainslie@puri.sm, Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: power: supply: Add documentation for
+ the VINDPM properties
+Message-ID: <20190613230906.GA10492@bogus>
+References: <20190520180712.32405-1-angus@akkea.ca>
+ <20190520180712.32405-3-angus@akkea.ca>
 MIME-Version: 1.0
-In-Reply-To: <20190613094326.24093-3-hch@lst.de>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560467213; bh=cGbQpSJeY7EVdecrn1B4tdD7hDPwyzG0O3MV1AM9XS8=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=k7gBpDBH28H0UPXm/LwiNKu0hTT0acLapve5cjM4dS/oE6ZVNYmwnPX6eZ1IBLBk5
-         FaGoLiYRcnAB14i7X74VljXHrRLRUzcvaMywNiBB41s9wEKQX/tEy3nCG/IGKVGiRl
-         AD/kzl4An8dw76LgLOSTpr6GRU+k7qjNEiiMvVCOWWDxfV2POtjYEN4x4fEQBVkt4s
-         w4fj3ThbmIEucaN47ISk4Wy4FipBObRrSm95UkSAAEnuZHlIoHv4MjV9u+xnt0TGcA
-         yAyoTlbvf9SebsSJFi4g4WQpsjzz4+CxSeUNYwWe+JCM2b7eq3Hz8n8DP45hXh+hWa
-         L//lTcvzR3KxQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520180712.32405-3-angus@akkea.ca>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/19 2:43 AM, Christoph Hellwig wrote:
-> This code is a trivial wrapper around device model helpers, which
-> should have been integrated into the driver device model usage from
-> the start.  Assuming it actually had users, which it never had since
-> the code was added more than 1 1/2 years ago.
+On Mon, May 20, 2019 at 11:07:12AM -0700, Angus Ainslie (Purism) wrote:
+> Add documentation on how to control VINDPM from the devicetree.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 > ---
->  include/linux/hmm.h | 20 ------------
->  mm/hmm.c            | 80 ---------------------------------------------
->  2 files changed, 100 deletions(-)
+>  .../devicetree/bindings/power/supply/bq25890.txt          | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq25890.txt b/Documentation/devicetree/bindings/power/supply/bq25890.txt
+> index dc0568933359..fe8b709dd666 100644
+> --- a/Documentation/devicetree/bindings/power/supply/bq25890.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/bq25890.txt
+> @@ -26,9 +26,15 @@ Optional properties:
+>  - ti,use-ilim-pin: boolean, if present the ILIM resistor will be used and the
+>      input current will be the lower between the resistor setting and the IINLIM
+>      register setting;
+> +- ti,use-vinmin-threshold: boolean, if present the FORCE_VINDPM bit will be set
+> +    and the input voltage limit will be configured based on "ti,vinmin-threshold"
 
-Yes. This code is definitely unnecessary, and it's a good housecleaning here.
+Isn't presence of ti,vinmin-threshold enough to determine whether to set 
+FORCE_VINDPM or not? Just get rid of the default being 4.4V.
 
-(As to the history: I know that there was some early "HMM dummy device" 
-testing when the HMM code was much younger, but such testing has long since
-been superseded by more elaborate testing with real drivers.)
-
-
-Reviewed-by: John Hubbard <jhubbard@nvidia.com> 
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
-> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-> index 0fa8ea34ccef..4867b9da1b6c 100644
-> --- a/include/linux/hmm.h
-> +++ b/include/linux/hmm.h
-> @@ -717,26 +717,6 @@ static inline unsigned long hmm_devmem_page_get_drvdata(const struct page *page)
->  {
->  	return page->hmm_data;
->  }
-> -
-> -
-> -/*
-> - * struct hmm_device - fake device to hang device memory onto
-> - *
-> - * @device: device struct
-> - * @minor: device minor number
-> - */
-> -struct hmm_device {
-> -	struct device		device;
-> -	unsigned int		minor;
-> -};
-> -
-> -/*
-> - * A device driver that wants to handle multiple devices memory through a
-> - * single fake device can use hmm_device to do so. This is purely a helper and
-> - * it is not strictly needed, in order to make use of any HMM functionality.
-> - */
-> -struct hmm_device *hmm_device_new(void *drvdata);
-> -void hmm_device_put(struct hmm_device *hmm_device);
->  #endif /* CONFIG_DEVICE_PRIVATE || CONFIG_DEVICE_PUBLIC */
->  #else /* IS_ENABLED(CONFIG_HMM) */
->  static inline void hmm_mm_destroy(struct mm_struct *mm) {}
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index 886b18695b97..ff2598eb7377 100644
-> --- a/mm/hmm.c
-> +++ b/mm/hmm.c
-> @@ -1499,84 +1499,4 @@ struct hmm_devmem *hmm_devmem_add_resource(const struct hmm_devmem_ops *ops,
->  	return devmem;
->  }
->  EXPORT_SYMBOL_GPL(hmm_devmem_add_resource);
-> -
-> -/*
-> - * A device driver that wants to handle multiple devices memory through a
-> - * single fake device can use hmm_device to do so. This is purely a helper
-> - * and it is not needed to make use of any HMM functionality.
-> - */
-> -#define HMM_DEVICE_MAX 256
-> -
-> -static DECLARE_BITMAP(hmm_device_mask, HMM_DEVICE_MAX);
-> -static DEFINE_SPINLOCK(hmm_device_lock);
-> -static struct class *hmm_device_class;
-> -static dev_t hmm_device_devt;
-> -
-> -static void hmm_device_release(struct device *device)
-> -{
-> -	struct hmm_device *hmm_device;
-> -
-> -	hmm_device = container_of(device, struct hmm_device, device);
-> -	spin_lock(&hmm_device_lock);
-> -	clear_bit(hmm_device->minor, hmm_device_mask);
-> -	spin_unlock(&hmm_device_lock);
-> -
-> -	kfree(hmm_device);
-> -}
-> -
-> -struct hmm_device *hmm_device_new(void *drvdata)
-> -{
-> -	struct hmm_device *hmm_device;
-> -
-> -	hmm_device = kzalloc(sizeof(*hmm_device), GFP_KERNEL);
-> -	if (!hmm_device)
-> -		return ERR_PTR(-ENOMEM);
-> -
-> -	spin_lock(&hmm_device_lock);
-> -	hmm_device->minor = find_first_zero_bit(hmm_device_mask, HMM_DEVICE_MAX);
-> -	if (hmm_device->minor >= HMM_DEVICE_MAX) {
-> -		spin_unlock(&hmm_device_lock);
-> -		kfree(hmm_device);
-> -		return ERR_PTR(-EBUSY);
-> -	}
-> -	set_bit(hmm_device->minor, hmm_device_mask);
-> -	spin_unlock(&hmm_device_lock);
-> -
-> -	dev_set_name(&hmm_device->device, "hmm_device%d", hmm_device->minor);
-> -	hmm_device->device.devt = MKDEV(MAJOR(hmm_device_devt),
-> -					hmm_device->minor);
-> -	hmm_device->device.release = hmm_device_release;
-> -	dev_set_drvdata(&hmm_device->device, drvdata);
-> -	hmm_device->device.class = hmm_device_class;
-> -	device_initialize(&hmm_device->device);
-> -
-> -	return hmm_device;
-> -}
-> -EXPORT_SYMBOL(hmm_device_new);
-> -
-> -void hmm_device_put(struct hmm_device *hmm_device)
-> -{
-> -	put_device(&hmm_device->device);
-> -}
-> -EXPORT_SYMBOL(hmm_device_put);
-> -
-> -static int __init hmm_init(void)
-> -{
-> -	int ret;
-> -
-> -	ret = alloc_chrdev_region(&hmm_device_devt, 0,
-> -				  HMM_DEVICE_MAX,
-> -				  "hmm_device");
-> -	if (ret)
-> -		return ret;
-> -
-> -	hmm_device_class = class_create(THIS_MODULE, "hmm_device");
-> -	if (IS_ERR(hmm_device_class)) {
-> -		unregister_chrdev_region(hmm_device_devt, HMM_DEVICE_MAX);
-> -		return PTR_ERR(hmm_device_class);
-> -	}
-> -	return 0;
-> -}
-> -
-> -device_initcall(hmm_init);
->  #endif /* CONFIG_DEVICE_PRIVATE || CONFIG_DEVICE_PUBLIC */
+>  - ti,thermal-regulation-threshold: integer, temperature above which the charge
+>      current is lowered, to avoid overheating (in degrees Celsius). If omitted,
+>      the default setting will be used (120 degrees);
+> +- ti,vinmin-threshold: integer, lower absolute threshold for VINDPM. If the
+> +    voltage falls below this threshold the charge current is reduced until the
+> +    input voltage rises above the input voltage limit. If omitted, the default
+> +    setting will be used (4.4V);
+>  
+>  Example:
+>  
+> @@ -46,4 +52,6 @@ bq25890 {
+>  
+>          ti,use-ilim-pin;
+>          ti,thermal-regulation-threshold = <120>;
+> +        ti,use-vinmin-threshold;
+> +        ti,vinmin-threshold = <3900000>;
+>  };
+> -- 
+> 2.17.1
 > 
