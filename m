@@ -2,148 +2,122 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5DBC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF4EC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0119B21743
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:11:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eh7V3O2a"
+	by mail.kernel.org (Postfix) with ESMTP id 35E782063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:11:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560445890;
+	bh=zXxn0DZZzDqw7OoZuqRBZa3+NRFbt9j4/8PtEklx0ks=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cN5J+tzD6UIWnV2Lwo/Xhlva+Hg1trVfe3a1A7XgXeK/Tp+I6IfiQvo+jh8dsF/wa
+	 uUkx5/39lDegXBfuXX7V6xeWlTi7H/TgVKYRKxsm1RAY1FWL+VAj30V+41BWJg40OO
+	 y1XsHrjEbBKGxVG+AHJSzH7EWwziYGGFfdTJKNzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbfFMRLP (ORCPT
+        id S1729393AbfFMRL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:11:15 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42425 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729166AbfFMRLL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:11:11 -0400
-Received: by mail-io1-f65.google.com with SMTP id u19so18586237ior.9
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 10:11:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=N3qDAZwZqxC4UyoOIhHYUwzcDbIARMSiLNJ2yGeLMdo=;
-        b=eh7V3O2aS38SAwQ5ws7fCcM7k/UGKK1pP/guCl6amGOoSv8xMO9mPsRkemReTxX0f8
-         xx2EFqshWI2oxUvWtdGYfHdPvA4wmPke6q3t7/A+3I3LDk7zsS9F7tRilD1IE3CCGdv+
-         Lcq6hOJvrpMk5XoUy+dh7WdmHsy5baVaSzp90=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=N3qDAZwZqxC4UyoOIhHYUwzcDbIARMSiLNJ2yGeLMdo=;
-        b=PG2Lju5M9tcjyVX4763jOXl2GZ/rzthdnh1y+fpFzcK9ff+L2aNSspCzWh55FmkDf7
-         LA63wba0B4LrcYFv1oz08QuzQicCEPJzOPiVBUfAuUKE7MMMsxNlqh/ZfKCKQqE/dnor
-         EYynYPgTnMkGcXw6xebuw+DnGAYN62JtGBwzj1oG9i4CWmjEjUTdZ+wD7pNSXueCrdK1
-         dSAd0d1b06lXIIDNW4HPc3SCEeulG3EBGAl6w9HCJrqLVpXZt3xEVzgDmVI/5EQV7Agm
-         xYxwqUaX0mNmV9UMPhJVu8Zd41RsrQW7M/GhdK5ehbIYhcWD73hPz6I92u+QBwXDR5nm
-         ujfA==
-X-Gm-Message-State: APjAAAXFiEZ/v+rYEkIeHZcSaqRhR4caBP9U515oko5urJF/vb61mE6O
-        +Mp2OXGJj+5TmGd45hUF2zkJQK5Aw9Q=
-X-Google-Smtp-Source: APXvYqwKI9JJlHH/Fd6aAVGToPH39afTm2kWuknhrq+yXwOVJD9dCOE3CeAlsc1z99HFNxEg8poLyA==
-X-Received: by 2002:a6b:6012:: with SMTP id r18mr9095233iog.241.1560445870261;
-        Thu, 13 Jun 2019 10:11:10 -0700 (PDT)
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com. [209.85.166.52])
-        by smtp.gmail.com with ESMTPSA id q1sm528722ios.86.2019.06.13.10.11.09
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 10:11:09 -0700 (PDT)
-Received: by mail-io1-f52.google.com with SMTP id m24so18611966ioo.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 10:11:09 -0700 (PDT)
-X-Received: by 2002:a5e:8f08:: with SMTP id c8mr1658529iok.52.1560445869195;
- Thu, 13 Jun 2019 10:11:09 -0700 (PDT)
+        Thu, 13 Jun 2019 13:11:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729166AbfFMRLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 13:11:24 -0400
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3C3C217D9;
+        Thu, 13 Jun 2019 17:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560445883;
+        bh=zXxn0DZZzDqw7OoZuqRBZa3+NRFbt9j4/8PtEklx0ks=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=z6QX77MEL+lVTwICJFn4lx/RYfLqUuktVzenVzi/xypIH3UcvaG4r71l7+wQ0UtEQ
+         77w8cr+DCRXNO+kGefwibUjePyZcggjFxjb/OyjvBNs0qX/ZCCaagbGAGepZh82Fb8
+         78Fi+KGZAlC2CadDDN6Mv/Pcqz8geGb2RALiMIUU=
+Received: by mail-qt1-f169.google.com with SMTP id 33so15260222qtr.8;
+        Thu, 13 Jun 2019 10:11:23 -0700 (PDT)
+X-Gm-Message-State: APjAAAUea2kZ2y2Pe/A/Yq8z9AOb7fC+1WMXG/ZEO/VDzH0I8ocpYILl
+        xoJTY2WsKz+H+srGn/wBhHZNmdWE/pr7QTwUPA==
+X-Google-Smtp-Source: APXvYqxPx+RzHImrfYff7rhrQ4nBX3av55NJRHWJ45TzZYNcBbf30JPqZBJ3v2N/ISXb3erZEUw1S75dSeXuFTMiFz8=
+X-Received: by 2002:aed:3b33:: with SMTP id p48mr69738055qte.143.1560445882940;
+ Thu, 13 Jun 2019 10:11:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <c2e6af51-5676-3715-6666-c3f18df7b992@free.fr> <CAK8P3a1_WvHYW243MR5-NdFm3cSt+cVGM5EJmOM8uiQMQ3vQjQ@mail.gmail.com>
- <a732f522-5e65-3ac4-de04-802ef5455747@free.fr> <CAD=FV=U+Ky1bAuAuuY+eBdTP9U3kbuH0tfwyN0Zs-iw0GNUFyQ@mail.gmail.com>
- <13cb7357-0d10-fe43-bee1-b2142d01684c@free.fr>
-In-Reply-To: <13cb7357-0d10-fe43-bee1-b2142d01684c@free.fr>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 13 Jun 2019 10:10:57 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Xb1kum3z72Gzt1ROMJWNkkscAMgMkcXEFqnovOVbv=5Q@mail.gmail.com>
-Message-ID: <CAD=FV=Xb1kum3z72Gzt1ROMJWNkkscAMgMkcXEFqnovOVbv=5Q@mail.gmail.com>
-Subject: Re: [PATCH v1] iopoll: Tweak readx_poll_timeout sleep range
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <helgaas@kernel.org>
+References: <20190613170011.9647-1-thierry.reding@gmail.com>
+In-Reply-To: <20190613170011.9647-1-thierry.reding@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 13 Jun 2019 11:11:10 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKiFzED-YaBFQ-PBnBBbDaC5yeri+pLG-PX=-wpaFfb=A@mail.gmail.com>
+Message-ID: <CAL_JsqKiFzED-YaBFQ-PBnBBbDaC5yeri+pLG-PX=-wpaFfb=A@mail.gmail.com>
+Subject: Re: [PATCH v2] driver: core: Allow subsystems to continue deferring probe
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-
-On Thu, Jun 13, 2019 at 9:37 AM Marc Gonzalez <marc.w.gonzalez@free.fr> wro=
-te:
+On Thu, Jun 13, 2019 at 11:00 AM Thierry Reding
+<thierry.reding@gmail.com> wrote:
 >
-> On 13/06/2019 18:11, Doug Anderson wrote:
+> From: Thierry Reding <treding@nvidia.com>
 >
-> > On Thu, Jun 13, 2019 at 9:04 AM Marc Gonzalez wrote:
-> >
-> >> Hmmm, I expect the typical use-case to be:
-> >> "HW manual states operation X completes in 100 =C2=B5s.
-> >> Let's call usleep_range(100, foo); before hitting the reg."
-> >>
-> >> And foo needs to be a "reasonable" value: big enough to be able
-> >> to merge several requests, low enough not to wait too long after
-> >> the HW is ready.
-> >>
-> >> In this case, I'd say usleep_range(100, 200); makes sense.
-> >>
-> >> Come to think of it, I'm not sure min=3D26 (or min=3D50) makes sense..=
-.
-> >> Why wait *less* than what the user specified?
-> >
-> > IIRC usleep_range() nearly always tries to sleep for the max.  My
-> > recollection of the design is that you only end up with something less
-> > than the max if the system was going to wake up anyway.  In such a
-> > case it seems like it wouldn't be insane to go and check if the
-> > condition is already true if 25% of the time has passed.  Maybe you'll
-> > get lucky and you can return early.
-> >
-> > Are you actually seeing problems with the / 4, or is this patch just a
-> > result of code inspection?
+> Some subsystems, such as pinctrl, allow continuing to defer probe
+> indefinitely. This is useful for devices that depend on resources
+> provided by devices that are only probed after the init stage.
 >
-> No actual issue. I just ran into a driver calling:
+> One example of this can be seen on Tegra, where the DPAUX hardware
+> contains pinmuxing controls for pins that it shares with an I2C
+> controller. The I2C controller is typically used for communication
+> with a monitor over HDMI (DDC). However, other instances of the I2C
+> controller are used to access system critical components, such as a
+> PMIC. The I2C controller driver will therefore usually be a builtin
+> driver, whereas the DPAUX driver is part of the display driver that
+> is loaded from a module to avoid bloating the kernel image with all
+> of the DRM/KMS subsystem.
 >
->         readl_poll_timeout(status, val, val & mask, 1, 1000);
+> In this particular case the pins used by this I2C/DDC controller
+> become accessible very late in the boot process. However, since the
+> controller is only used in conjunction with display, that's not an
+> issue.
 >
-> and it seemed... unwise(?) to call usleep_range(1, 1);
+> Unfortunately the driver core currently outputs a warning message
+> when a device fails to get the pinctrl before the end of the init
+> stage. That can be confusing for the user because it may sound like
+> an unwanted error occurred, whereas it's really an expected and
+> harmless situation.
 >
-> But if, as you say, usleep_range() aims for the max
+> In order to eliminate this warning, this patch allows callers of the
+> driver_deferred_probe_check_state() helper to specify that they want
+> to continue deferring probe, regardless of whether we're past the
+> init stage or not. All of the callers of that function are updated
+> for the new signature, but only the pinctrl subsystem passes a true
+> value in the new persist parameter if appropriate.
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Changes in v2:
+> - pass persist flag via flags parameter to make the function call easier
+>   to understand
+>
+>  drivers/base/dd.c            | 19 ++++++++++++++-----
+>  drivers/base/power/domain.c  |  2 +-
+>  drivers/iommu/of_iommu.c     |  2 +-
+>  drivers/pinctrl/devicetree.c |  9 +++++----
+>  include/linux/device.h       | 18 +++++++++++++++++-
+>  5 files changed, 38 insertions(+), 12 deletions(-)
 
-It was certainly what we found in:
-
-https://lkml.kernel.org/r/1444265321-16768-6-git-send-email-dianders@chromi=
-um.org
-
-...in fact, at one point in time I had a patch cooked up that would
-change the behavior during boot where (presumably) we'd rather boot
-faster.  ...but after fixing dwc2 it didn't actually have much of an
-impact elsewhere.
-
-
-> then I guess it's
-> not a big deal to issue an early read or 3... Meh
-
-IMO it seems like the driver should be fixed.  It should either specify:
-
-a) the (well defined) 0 for the delay, which means no delay.
-
-b) a more sane delay
-
-
--Doug
+Acked-by: Rob Herring <robh@kernel.org>
