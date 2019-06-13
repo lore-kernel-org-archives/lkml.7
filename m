@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4296C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 334CDC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD33C208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035E8208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441372;
-	bh=JuA+z/E8J/GcS987WlH7req4HxY+VEuIEI+xBM47yDg=;
+	s=default; t=1560441377;
+	bh=egVTssJezJuO5TTf/IN4qmOTXmAMMqK8Ii9LVI6I2sU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tIz5kKB9v/Y/70F9akjLQrraVGnFHOHlf2Sn+Ou6my3XErO299AShHihYNpNCoLj8
-	 QcnMdjfjKagn2WPb2OBDLDiAS0OvHx8jJfv2jOSacqbYjYZ3MCIwTIBD6/AsIfhX2h
-	 KyLrlq9cwvboV9/hs/e41fCFns6Ix2TlFzYu3FpI=
+	b=lb/x7jv3yYsww7RkbvHRtNZ9Hy8XFo7UdEsFDxegosFVuI8yUEIAqU+s9ZWCRJdAV
+	 2aehIEaBFxtf2cMDeSPfN4n0zsh1sM1upbGkT11PpvUyTXtZWeNvJALZMOfCBmiYQp
+	 Af3qVO4o8Q4lWxMjsbrKRfmcVW9PssA4B/qLYYXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389935AbfFMP4L (ORCPT
+        id S2390381AbfFMP4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:56:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38804 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:56:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731529AbfFMIvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:51:20 -0400
+        id S1731523AbfFMIvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:51:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D369A20851;
-        Thu, 13 Jun 2019 08:51:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2250120851;
+        Thu, 13 Jun 2019 08:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415880;
-        bh=JuA+z/E8J/GcS987WlH7req4HxY+VEuIEI+xBM47yDg=;
+        s=default; t=1560415874;
+        bh=egVTssJezJuO5TTf/IN4qmOTXmAMMqK8Ii9LVI6I2sU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qTseQMrNAVhEHbQ4M/oFJP7goWiyUu1E1pOWo+9MaSXHvWKFLxNchHho8UYsLpVUy
-         m9lHZhUr0G0q3gJm0/RwGdDICe0cdWYBJRYG1ojdtcRRAuQTNk2/rN+94hqTXhEydF
-         m6nC3XSTi4KxkU92fQIoWNJwJxR1v/4IxA15hG18=
+        b=JwSiMmYZU0yT7dPqo1RMEWuysB3pn0qqn/Eenre/Rc0xDudMUYsqP8m5+SHjvsh+i
+         e4TKa/JJvETu0J1WNnr4m3J5VVdmy6GWj/P0YljKovx7JqITpYnHx/c/MuhqB7eRUM
+         7eQ8SZFCOXathOk4qiG8D7oHxOiDmDzTI4Gw+qMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Junxiao Chang <junxiao.chang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>,
+        Rob Herring <robh@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 120/155] platform/x86: intel_pmc_ipc: adding error handling
-Date:   Thu, 13 Jun 2019 10:33:52 +0200
-Message-Id: <20190613075659.589229049@linuxfoundation.org>
+Subject: [PATCH 5.1 128/155] Input: goodix - add GT5663 CTP support
+Date:   Thu, 13 Jun 2019 10:34:00 +0200
+Message-Id: <20190613075659.968440813@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,45 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e61985d0550df8c2078310202aaad9b41049c36c ]
+[ Upstream commit a5f50c501321249d67611353dde6d68d48c5b959 ]
 
-If punit or telemetry device initialization fails, pmc driver should
-unregister and return failure.
+GT5663 is capacitive touch controller with customized smart
+wakeup gestures.
 
-This change is to fix a kernel panic when removing kernel module
-intel_pmc_ipc.
+Add support for it by adding compatible and supported chip data.
 
-Fixes: 48c1917088ba ("platform:x86: Add Intel telemetry platform device")
-Signed-off-by: Junxiao Chang <junxiao.chang@intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+The chip data on GT5663 is similar to GT1151, like
+- config data register has 0x8050 address
+- config data register max len is 240
+- config data checksum has 16-bit
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_pmc_ipc.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
+ drivers/input/touchscreen/goodix.c                             | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 7964ba22ef8d..d37cbd1cf58c 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -771,13 +771,17 @@ static int ipc_create_pmc_devices(void)
- 	if (ret) {
- 		dev_err(ipcdev.dev, "Failed to add punit platform device\n");
- 		platform_device_unregister(ipcdev.tco_dev);
-+		return ret;
- 	}
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+index 8cf0b4d38a7e..109cc0cebaa2 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+@@ -3,6 +3,7 @@ Device tree bindings for Goodix GT9xx series touchscreen controller
+ Required properties:
  
- 	if (!ipcdev.telem_res_inval) {
- 		ret = ipc_create_telemetry_device();
--		if (ret)
-+		if (ret) {
- 			dev_warn(ipcdev.dev,
- 				"Failed to add telemetry platform device\n");
-+			platform_device_unregister(ipcdev.punit_dev);
-+			platform_device_unregister(ipcdev.tco_dev);
-+		}
- 	}
+  - compatible		: Should be "goodix,gt1151"
++				 or "goodix,gt5663"
+ 				 or "goodix,gt5688"
+ 				 or "goodix,gt911"
+ 				 or "goodix,gt9110"
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index f57d82220a88..dd029e689903 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -216,6 +216,7 @@ static const struct goodix_chip_data *goodix_get_chip_data(u16 id)
+ {
+ 	switch (id) {
+ 	case 1151:
++	case 5663:
+ 	case 5688:
+ 		return &gt1x_chip_data;
  
- 	return ret;
+@@ -945,6 +946,7 @@ MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
+ #ifdef CONFIG_OF
+ static const struct of_device_id goodix_of_match[] = {
+ 	{ .compatible = "goodix,gt1151" },
++	{ .compatible = "goodix,gt5663" },
+ 	{ .compatible = "goodix,gt5688" },
+ 	{ .compatible = "goodix,gt911" },
+ 	{ .compatible = "goodix,gt9110" },
 -- 
 2.20.1
 
