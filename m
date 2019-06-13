@@ -2,167 +2,193 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22520C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E09F7C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F4620673
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A730920673
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Cde/w2Q/"
+	dkim=pass (2048-bit key) header.d=norrbonn-se.20150623.gappssmtp.com header.i=@norrbonn-se.20150623.gappssmtp.com header.b="R6tQrwn2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392945AbfFMQm6 (ORCPT
+        id S2392829AbfFMQnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:42:58 -0400
-Received: from mail-eopbgr20043.outbound.protection.outlook.com ([40.107.2.43]:40931
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730494AbfFMGrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 02:47:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KvBbFKBXHONrnVYItC+/7DGk+khFnJxUBlWCKnPmSg8=;
- b=Cde/w2Q/TvAyC5cbd9DRBJyH7maB7u5Z5Ipc9NxmCyT5jKYVilFN7dm3oRhI4cxpL2GiXURpL3kY93bVf/mbXMicRWCZTmFl2riy8oaht5RJELX2JigjnWOOOSJ7e+aOdo0CjY0Rm/oMuETwcKz/6D6CIqRWIm6o1QyxGJ99Hds=
-Received: from VI1PR04MB4333.eurprd04.prod.outlook.com (52.134.122.155) by
- VI1PR04MB5440.eurprd04.prod.outlook.com (20.178.121.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Thu, 13 Jun 2019 06:47:04 +0000
-Received: from VI1PR04MB4333.eurprd04.prod.outlook.com
- ([fe80::497a:768:c7b1:34e0]) by VI1PR04MB4333.eurprd04.prod.outlook.com
- ([fe80::497a:768:c7b1:34e0%6]) with mapi id 15.20.1987.010; Thu, 13 Jun 2019
- 06:47:04 +0000
-From:   Andy Tang <andy.tang@nxp.com>
-To:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-CC:     Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4] clk: qoriq: add support for lx2160a
-Thread-Topic: [PATCH v4] clk: qoriq: add support for lx2160a
-Thread-Index: AQHU+/zGE8MPZcMnA0GP8h3OejDbYKZ1N2hwgAOwrbCAIIYIgA==
-Date:   Thu, 13 Jun 2019 06:47:03 +0000
-Message-ID: <VI1PR04MB43335E626999BA8F7A1811EAF3EF0@VI1PR04MB4333.eurprd04.prod.outlook.com>
-References: <1556261624-20504-1-git-send-email-vabhav.sharma@nxp.com>
- <AM6PR04MB4789787C4AB0613B1CF53DBCF3070@AM6PR04MB4789.eurprd04.prod.outlook.com>
- <VI1PR04MB4800AAC6A29E0F1001808CE8F3010@VI1PR04MB4800.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB4800AAC6A29E0F1001808CE8F3010@VI1PR04MB4800.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=andy.tang@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 744f9d66-9d51-4803-403a-08d6efcaf1f2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5440;
-x-ms-traffictypediagnostic: VI1PR04MB5440:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <VI1PR04MB54405B7B28F3106208C35D61F3EF0@VI1PR04MB5440.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:419;
-x-forefront-prvs: 0067A8BA2A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(396003)(136003)(39860400002)(376002)(13464003)(189003)(199004)(66556008)(6306002)(102836004)(478600001)(476003)(53546011)(6436002)(74316002)(11346002)(446003)(52536014)(2906002)(305945005)(55016002)(68736007)(229853002)(5660300002)(8676002)(7696005)(66066001)(486006)(110136005)(44832011)(966005)(86362001)(6116002)(66946007)(3846002)(66476007)(73956011)(76116006)(6506007)(4326008)(76176011)(64756008)(66446008)(14444005)(256004)(8936002)(14454004)(81166006)(71200400001)(25786009)(316002)(9686003)(33656002)(186003)(6246003)(7736002)(71190400001)(99286004)(54906003)(26005)(81156014)(53936002)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5440;H:VI1PR04MB4333.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /W6KR0fGzfoMgSih3T11zBonBoe5ZY2t9oUdDoBTQMmUD+UeEbCIUaxDplq0Z/AqSzb0Gi2+S3sVRq26qFM96uOghET85WpmBJLB2u/sQLwiF4haXyqG3pm3iaRvdfs3SIj7yJ/i8GXQwGK6EkSl+cCDGajnRyZUelQC+ckhLLQDQqJjBZoIEL68L9VcsjCsEPvJZFiMgrhK9p9SyQfmr8dKeuS1RhWgDnbFr0S2aT9VJblvG/r3eZ9JYwgxt6/kd/17JbVWDdWSqjEUICBtzLMGrS0R23VfE2LseFgkmELIxvKB0mkLDqPx7mvXlypyZzLidBNZKGqFvx58RNB5u+Q7FlHPc15jr48/J3OBNS6imDYhXyiMeLuKR8lxrRCXPgp370cSmRhmvJDstbVNghaUN2NQqUNsXl9C++J46N4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 13 Jun 2019 12:43:17 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37776 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730483AbfFMGpF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 02:45:05 -0400
+Received: by mail-lf1-f65.google.com with SMTP id d11so6315261lfb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 23:45:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=norrbonn-se.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=R0IfDsjWsEWniMzX5vTmMT31F8tbMfvwkjStHp8GaZM=;
+        b=R6tQrwn27wzsoGaSC0ymvLUmMKlJ6vAmfG24is72ND3CKt+HIH76CtCnu6I0KqWjCV
+         Ss0YhtPsVWth7G0u6rL7o0ogS0590LNWW8t9DL+wRvCCGf3puRBAAS2CtvuxkkW88gDW
+         QxYgy+qNQmfSgOAcx5i5ZRE2n7ziErO26K9aKTQcmTh2i8U3nQHXFGkmX5dOg+5ssTdE
+         kdetX/PbOsKD4jj1Uj8HtzY5Gm747P18pTLIZZdOhyQu9UGQSL5zNsTIXCRHtS4zt54X
+         ysrCzXOzHB5wz6IFMb4q6r0CRcVblPC5Aaj8AgOWn3IDr0PRQTOGQpJHgzh9QweXHJaS
+         KDhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=R0IfDsjWsEWniMzX5vTmMT31F8tbMfvwkjStHp8GaZM=;
+        b=AHXDgFqmyRSCm4k6N/Ug5DDWBqQMktQBS/hHm0lVNo1ljJ/FSGVKx1HqZP7zO86C/2
+         Nxb/ZAGFWCOYMvgjx3DCAuvP2CgUtTAsNQtGWrCXZb7qkGVp14vQk0IID6ZM0PaawbyK
+         JbZTLkryTb2jdW+T76mwruTkZOSeABkv+fBWjpNVvRt1AGzBakHvnmBjbdrykQUAQLfB
+         morED746UVnt46QEqto32Q4j10s35Z1YeCslswpskSvdVOsRV3qRP7eIs+S3hvlnrBvH
+         sV66vhRNb65iMCULhYkyLqFx/pQVzx9DbiHlNAT+TZ84Y8W4l+staZZzXtCMeUK+aBS7
+         uX6Q==
+X-Gm-Message-State: APjAAAXE41aHz1QPtt6T1P38T2TV3b+2ECM2RdQOLUy9b40XpTrcJox9
+        1mQzl4e5ojKyobIkaQF4QFgldw==
+X-Google-Smtp-Source: APXvYqztOZhRwcKeF8xcSstPvMDXVToTiSXk4SlnqGZYZEe49+EOjfJvYWSCwhTi6GKbaBFR6JqEBQ==
+X-Received: by 2002:ac2:514b:: with SMTP id q11mr10142558lfd.33.1560408302177;
+        Wed, 12 Jun 2019 23:45:02 -0700 (PDT)
+Received: from [192.168.1.169] (h-29-16.A159.priv.bahnhof.se. [79.136.29.16])
+        by smtp.gmail.com with ESMTPSA id r11sm430643ljh.90.2019.06.12.23.45.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 23:45:01 -0700 (PDT)
+Subject: Re: [PATCH 1/1] Address regression in inet6_validate_link_af
+To:     Maxim Mikityanskiy <maximmi@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+References: <20190611100327.16551-1-jonas@norrbonn.se>
+ <58ac6ec1-9255-0e51-981a-195c2b1ac380@mellanox.com>
+From:   Jonas Bonn <jonas@norrbonn.se>
+Message-ID: <833019dc-476f-f604-04a6-d77f9f86a5f4@norrbonn.se>
+Date:   Thu, 13 Jun 2019 08:45:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 744f9d66-9d51-4803-403a-08d6efcaf1f2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 06:47:03.9672
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: andy.tang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5440
+In-Reply-To: <58ac6ec1-9255-0e51-981a-195c2b1ac380@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU3RlcGhlbiwgTXR1cnF1ZXR0ZSwNCg0KV2hvIHdpbGwgYXBwbHkgdGhpcyBwYXRjaD8gaHR0
-cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDkxODQwNy8NCkFsbCB0aGUgY29tbWVu
-dHMgYXJlIGFkZHJlc3NlZCBhbmQgZ290IGFja2VkIGJ5Og0KQWNrZWQtYnk6IFNjb3R0IFdvb2Qg
-PG9zc0BidXNlcnJvci5uZXQ+DQpBY2tlZC1ieTogU3RlcGhlbiBCb3lkIDxzYm95ZEBrZXJuZWwu
-b3JnPg0KQWNrZWQtYnk6IFZpcmVzaCBLdW1hciA8dmlyZXNoLmt1bWFyQGxpbmFyby5vcmc+DQoN
-CkNvdWxkIHlvdSBwbGVhc2UgYXBwbHkgaXQ/DQoNCkJSLA0KQW5keQ0KDQoNCj4gLS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVmFiaGF2IFNoYXJtYQ0KPiBTZW50OiAyMDE55bm0
-NeaciDIz5pelIDIyOjA1DQo+IFRvOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1jbGtAdmdlci5rZXJuZWwub3JnOw0KPiBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsgc2JveWRA
-a2VybmVsLm9yZw0KPiBDYzogbXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb207IHNib3lkQGtlcm5lbC5v
-cmc7IEFuZHkgVGFuZw0KPiA8YW5keS50YW5nQG54cC5jb20+OyBZb2dlc2ggTmFyYXlhbiBHYXVy
-DQo+IDx5b2dlc2huYXJheWFuLmdhdXJAbnhwLmNvbT4NCj4gU3ViamVjdDogUkU6IFtQQVRDSCB2
-NF0gY2xrOiBxb3JpcTogYWRkIHN1cHBvcnQgZm9yIGx4MjE2MGENCj4gDQo+ID4gLS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBWYWJoYXYgU2hhcm1hDQo+ID4gU2VudDogVHVl
-c2RheSwgTWF5IDIxLCAyMDE5IDExOjE0IEFNDQo+ID4gVG86IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7IGxpbnV4LWNsa0B2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gc2JveWRAa2VybmVsLm9y
-Zw0KPiA+IENjOiBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsgQW5keSBUYW5nIDxhbmR5LnRhbmdA
-bnhwLmNvbT47IFlvZ2VzaA0KPiA+IE5hcmF5YW4gR2F1ciA8eW9nZXNobmFyYXlhbi5nYXVyQG54
-cC5jb20+DQo+ID4gU3ViamVjdDogUkU6IFtQQVRDSCB2NF0gY2xrOiBxb3JpcTogYWRkIHN1cHBv
-cnQgZm9yIGx4MjE2MGENCj4gPg0KPiA+IEhlbGxvIFN0ZXBoZW4sDQo+ID4gSSBoYXZlIGluY29y
-cG9yYXRlZCByZXZpZXcgY29tbWVudHMgZnJvbQ0KPiA+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5l
-bC5vcmcvcGF0Y2gvMTA5MTcxNzEvDQo+IEhlbGxvIE1haW50YWluZXJzLA0KPiBBbGwgdGhlIGNv
-bW1lbnRzIGFyZSBhZGRyZXNzZWQsIENhbiB5b3UgcGxlYXNlIHRha2UgdGhlIHBhdGNoPw0KPiBQ
-bGVhc2Ugc2VlIHRoaXMgaXMgZXNzZW50aWFsIGZvciBuZXcgaGFyZHdhcmUgc3VwcG9ydC4NCj4g
-DQo+IFJlZ2FyZHMsDQo+IFZhYmhhdg0KPiA+DQo+ID4gQSBnZW50bGUgcmVtaW5kZXIgdG8gYXBw
-bHkgdGhlIHBhdGNoDQo+ID4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDkx
-ODQwNy8uDQo+ID4NCj4gPiBSZWdhcmRzLA0KPiA+IFZhYmhhdg0KPiA+DQo+ID4gPiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogVmFiaGF2IFNoYXJtYSA8dmFiaGF2LnNo
-YXJtYUBueHAuY29tPg0KPiA+ID4gU2VudDogRnJpZGF5LCBBcHJpbCAyNiwgMjAxOSAxMjoyNCBQ
-TQ0KPiA+ID4gVG86IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWNsa0B2Z2Vy
-Lmtlcm5lbC5vcmcNCj4gPiA+IENjOiBzYm95ZEBrZXJuZWwub3JnOyBtdHVycXVldHRlQGJheWxp
-YnJlLmNvbTsgVmFiaGF2IFNoYXJtYQ0KPiA+ID4gPHZhYmhhdi5zaGFybWFAbnhwLmNvbT47IEFu
-ZHkgVGFuZyA8YW5keS50YW5nQG54cC5jb20+OyBZb2dlc2gNCj4gPiBOYXJheWFuDQo+ID4gPiBH
-YXVyIDx5b2dlc2huYXJheWFuLmdhdXJAbnhwLmNvbT4NCj4gPiA+IFN1YmplY3Q6IFtQQVRDSCB2
-NF0gY2xrOiBxb3JpcTogYWRkIHN1cHBvcnQgZm9yIGx4MjE2MGENCj4gPiA+DQo+ID4gPiBBZGQg
-Y2xvY2tnZW4gc3VwcG9ydCBhbmQgY29uZmlndXJhdGlvbiBmb3IgTlhQIFNvQyBseDIxNjBhIHdp
-dGgNCj4gPiA+IGNvbXBhdGlibGUgcHJvcGVydHkgYXMgImZzbCxseDIxNjBhLWNsb2NrZ2VuIi4N
-Cj4gPiA+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBUYW5nIFl1YW50aWFuIDxhbmR5LnRhbmdAbnhw
-LmNvbT4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IFlvZ2VzaCBHYXVyIDx5b2dlc2huYXJheWFuLmdh
-dXJAbnhwLmNvbT4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IFZhYmhhdiBTaGFybWEgPHZhYmhhdi5z
-aGFybWFAbnhwLmNvbT4NCj4gPiA+IEFja2VkLWJ5OiBTY290dCBXb29kIDxvc3NAYnVzZXJyb3Iu
-bmV0Pg0KPiA+ID4gQWNrZWQtYnk6IFN0ZXBoZW4gQm95ZCA8c2JveWRAa2VybmVsLm9yZz4NCj4g
-PiA+IEFja2VkLWJ5OiBWaXJlc2ggS3VtYXIgPHZpcmVzaC5rdW1hckBsaW5hcm8ub3JnPg0KPiA+
-ID4gLS0tDQo+ID4gPiBDaGFuZ2VzIGZvciB2NDoNCj4gPiA+IC0gSW5jb3Jwb3JhdGVkIHJldmll
-dyBjb21tZW50cyBmcm9tIFN0ZXBoZW4gQm95ZA0KPiA+ID4NCj4gPiA+IENoYW5nZXMgZm9yIHYz
-Og0KPiA+ID4gLSBJbmNvcnBvcmF0ZWQgcmV2aWV3IGNvbW1lbnRzIG9mIFJhZmFlbCBKLiBXeXNv
-Y2tpDQo+ID4gPiAtIFVwZGF0ZWQgY29tbWl0IG1lc3NhZ2UNCj4gPiA+DQo+ID4gPiBDaGFuZ2Vz
-IGZvciB2MjoNCj4gPiA+IC0gU3ViamVjdCBsaW5lIHVwZGF0ZWQNCj4gPiA+DQo+ID4gPiAgZHJp
-dmVycy9jbGsvY2xrLXFvcmlxLmMgfCAxMiArKysrKysrKysrKysNCj4gPiA+ICAxIGZpbGUgY2hh
-bmdlZCwgMTIgaW5zZXJ0aW9ucygrKQ0KPiA+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2Nsay9jbGstcW9yaXEuYyBiL2RyaXZlcnMvY2xrL2Nsay1xb3JpcS5jIGluZGV4DQo+ID4gPiAz
-ZDUxZDdjLi4xYTE1MjAxIDEwMDY0NA0KPiA+ID4gLS0tIGEvZHJpdmVycy9jbGsvY2xrLXFvcmlx
-LmMNCj4gPiA+ICsrKyBiL2RyaXZlcnMvY2xrL2Nsay1xb3JpcS5jDQo+ID4gPiBAQCAtNTcwLDYg
-KzU3MCwxNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGNsb2NrZ2VuX2NoaXBpbmZvIGNoaXBpbmZv
-W10gPQ0KPiB7DQo+ID4gPiAgCQkuZmxhZ3MgPSBDR19WRVIzIHwgQ0dfTElUVExFX0VORElBTiwN
-Cj4gPiA+ICAJfSwNCj4gPiA+ICAJew0KPiA+ID4gKwkJLmNvbXBhdCA9ICJmc2wsbHgyMTYwYS1j
-bG9ja2dlbiIsDQo+ID4gPiArCQkuY211eF9ncm91cHMgPSB7DQo+ID4gPiArCQkJJmNsb2NrZ2Vu
-Ml9jbXV4X2NnYTEyLCAmY2xvY2tnZW4yX2NtdXhfY2diDQo+ID4gPiArCQl9LA0KPiA+ID4gKwkJ
-LmNtdXhfdG9fZ3JvdXAgPSB7DQo+ID4gPiArCQkJMCwgMCwgMCwgMCwgMSwgMSwgMSwgMSwgLTEN
-Cj4gPiA+ICsJCX0sDQo+ID4gPiArCQkucGxsX21hc2sgPSAweDM3LA0KPiA+ID4gKwkJLmZsYWdz
-ID0gQ0dfVkVSMyB8IENHX0xJVFRMRV9FTkRJQU4sDQo+ID4gPiArCX0sDQo+ID4gPiArCXsNCj4g
-PiA+ICAJCS5jb21wYXQgPSAiZnNsLHAyMDQxLWNsb2NrZ2VuIiwNCj4gPiA+ICAJCS5ndXRzX2Nv
-bXBhdCA9ICJmc2wscW9yaXEtZGV2aWNlLWNvbmZpZy0xLjAiLA0KPiA+ID4gIAkJLmluaXRfcGVy
-aXBoID0gcDIwNDFfaW5pdF9wZXJpcGgsIEBAIC0xNDI3LDYgKzE0MzgsNyBAQA0KPiA+ID4gQ0xL
-X09GX0RFQ0xBUkUocW9yaXFfY2xvY2tnZW5fbHMxMDQzYSwNCj4gPiA+ICJmc2wsbHMxMDQzYS1j
-bG9ja2dlbiIsIGNsb2NrZ2VuX2luaXQpOw0KPiA+ID4gQ0xLX09GX0RFQ0xBUkUocW9yaXFfY2xv
-Y2tnZW5fbHMxMDQ2YSwgImZzbCxsczEwNDZhLWNsb2NrZ2VuIiwNCj4gPiA+IGNsb2NrZ2VuX2lu
-aXQpOyAgQ0xLX09GX0RFQ0xBUkUocW9yaXFfY2xvY2tnZW5fbHMxMDg4YSwNCj4gPiA+ICJmc2ws
-bHMxMDg4YS0gY2xvY2tnZW4iLCBjbG9ja2dlbl9pbml0KTsNCj4gPiA+IENMS19PRl9ERUNMQVJF
-KHFvcmlxX2Nsb2NrZ2VuX2xzMjA4MGEsDQo+ID4gPiAiZnNsLGxzMjA4MGEtY2xvY2tnZW4iLCBj
-bG9ja2dlbl9pbml0KTsNCj4gPiA+ICtDTEtfT0ZfREVDTEFSRShxb3JpcV9jbG9ja2dlbl9seDIx
-NjBhLCAiZnNsLGx4MjE2MGEtY2xvY2tnZW4iLA0KPiA+ID4gK2Nsb2NrZ2VuX2luaXQpOw0KPiA+
-ID4gIENMS19PRl9ERUNMQVJFKHFvcmlxX2Nsb2NrZ2VuX3AyMDQxLCAiZnNsLHAyMDQxLWNsb2Nr
-Z2VuIiwNCj4gPiA+IGNsb2NrZ2VuX2luaXQpOyBDTEtfT0ZfREVDTEFSRShxb3JpcV9jbG9ja2dl
-bl9wMzA0MSwNCj4gPiA+ICJmc2wscDMwNDEtY2xvY2tnZW4iLCBjbG9ja2dlbl9pbml0KTsNCj4g
-PiA+IENMS19PRl9ERUNMQVJFKHFvcmlxX2Nsb2NrZ2VuX3A0MDgwLCAiZnNsLHA0MDgwLWNsb2Nr
-Z2VuIiwNCj4gPiA+IGNsb2NrZ2VuX2luaXQpOw0KPiA+ID4gLS0NCj4gPiA+IDIuNy40DQoNCg==
+Hi Max,
+
+On 12/06/2019 12:42, Maxim Mikityanskiy wrote:
+> On 2019-06-11 13:03, Jonas Bonn wrote:
+>> Patch 7dc2bccab0ee37ac28096b8fcdc390a679a15841 introduces a regression
+>> with systemd 241.  In that revision, systemd-networkd fails to pass the
+>> required flags early enough.  This appears to be addressed in later
+>> versions of systemd, but for users of version 241 where systemd-networkd
+>> nonetheless worked with earlier kernels, the strict check introduced by
+>> the patch causes a regression in behaviour.
+>>
+>> This patch converts the failure to supply the required flags from an
+>> error into a warning.
+> The purpose of my patch was to prevent a partial configuration update on
+> invalid input. -EINVAL was returned both before and after my patch, the
+> difference is that before my patch there was a partial update and a warning.
+> 
+> Your patch basically makes mine pointless, because you revert the fix,
+> and now we'll have the same partial update and two warnings.
+
+Unfortunately, yes...
+
+> 
+> One more thing is that after applying your patch on top of mine, the
+> kernel won't return -EINVAL anymore on invalid input. Returning -EINVAL
+> is what happened before my patch, and also after my patch.
+
+Yes, you're right, it would probably be better revert the entire patch 
+because the checks in set_link_af have been dropped on the assumption 
+that validate_link_af catches the badness.
+
+> 
+> Regarding the systemd issue, I don't think we should change the kernel
+> to adapt to bugs in systemd. systemd didn't have this bug from day one,
+> it was a regression introduced in [1]. The kernel has always returned
+> -EINVAL here, but the behavior before my patch was basically a UB, and
+> after the patch it's well-defined. If systemd saw EINVAL and relied on
+> the UB that came with it, it can't be a reason enough to break the kernel.
+> 
+> Moreover, the bug looks fixed in systemd's master, so what you suggest
+> is to insert a kernel-side workaround for an old version of software
+> when there is a fixed one.
+
+I agree, systemd is buggy here.  Probably what happens is:
+
+i)  systemd tries to set the link up
+ii)  it ends up doing a "partial" modification of the link state; 
+critically, though, enough to actually effect the link state changing to UP
+iii)  systemd sees the -EINVAL error and decides it probably failed to 
+bring up the link
+iv)  systemd then gets a notification that the link is up and runs a 
+DHCP client on it
+
+I haven't noticed any "partial modification" warnings in the kernel log 
+but I wasn't looking for them, either...
+
+With the new behaviour in 5.2, step ii) above results in no "partial 
+modification" so the link remains down and systemd is forever unable to 
+bring it up.
+
+Anyway, for the record, the error is:
+
+systemd:  Could not bring up interface... (invalid parameter)
+
+And the solution is:  Linux >= 5.2 requires systemd != v241.
+
+If nobody else notices, that's good enough for me.
+
+> 
+> Please correct me if anything I say is wrong.
+
+Nothing wrong, but it's still a regression.
+
+/Jonas
+
+> 
+> Thanks,
+> Max
+> 
+> [1]:
+> https://github.com/systemd/systemd/commit/0e2fdb83bb5e22047e0c7cc058b415d0e93f02cf
+> 
+>> With this, systemd-networkd version 241 once
+>> again is able to bring up the link, albeit not quite as intended and
+>> thereby with a warning in the kernel log.
+>>
+>> CC: Maxim Mikityanskiy <maximmi@mellanox.com>
+>> CC: David S. Miller <davem@davemloft.net>
+>> CC: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
+>> CC: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+>> Signed-off-by: Jonas Bonn <jonas@norrbonn.se>
+>> ---
+>>    net/ipv6/addrconf.c | 3 ++-
+>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
+>> index 081bb517e40d..e2477bf92e12 100644
+>> --- a/net/ipv6/addrconf.c
+>> +++ b/net/ipv6/addrconf.c
+>> @@ -5696,7 +5696,8 @@ static int inet6_validate_link_af(const struct net_device *dev,
+>>    		return err;
+>>    
+>>    	if (!tb[IFLA_INET6_TOKEN] && !tb[IFLA_INET6_ADDR_GEN_MODE])
+>> -		return -EINVAL;
+>> +		net_warn_ratelimited(
+>> +			"required link flag omitted: TOKEN/ADDR_GEN_MODE\n");
+>>    
+>>    	if (tb[IFLA_INET6_ADDR_GEN_MODE]) {
+>>    		u8 mode = nla_get_u8(tb[IFLA_INET6_ADDR_GEN_MODE]);
+>>
+> 
