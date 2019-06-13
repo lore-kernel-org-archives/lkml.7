@@ -2,206 +2,397 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 995E4C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1375DC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C96F220449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:33:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="lTEEDc27"
+	by mail.kernel.org (Postfix) with ESMTP id D4C2120449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392584AbfFMQd3 (ORCPT
+        id S2392555AbfFMQd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:33:29 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38908 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730819AbfFMIEQ (ORCPT
+        Thu, 13 Jun 2019 12:33:26 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37526 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730821AbfFMIIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:04:16 -0400
-Received: by mail-io1-f65.google.com with SMTP id k13so15252674iop.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 01:04:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=koN+00G7CU0eh11NaVYbCwU6i9zCMJjXz116ZdVU+xU=;
-        b=lTEEDc27WypEUHtSdTgUvnXupW5/VUK3QMCoMTGJX3XVCWkkoxUv9sl4p2XYpfv+Xs
-         hYfL5X/8NXtBbC3/bWgFrTBB0dXM8s71qpMZInzNpqc90yYlOvYCoL84/ErHox3e01cg
-         ACU5CrA5DnCLwUy7BivPu5L8ln3CYfqM38Pjg=
+        Thu, 13 Jun 2019 04:08:11 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v14so19662515wrr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 01:08:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=koN+00G7CU0eh11NaVYbCwU6i9zCMJjXz116ZdVU+xU=;
-        b=QMWbssFMbxfjWoWkM5USnXjTegj10qFebb0nKE/D2qv40muGsC2jIPd5ydAX7mDLnw
-         g/38T5Lz0cy8Bn3iD0vSVU2bdxuNhh70bgC/dL9DO4idPJhW6QReucz4bXv1jUqhI/Qj
-         uopxE+kzkWDJEiJQN02tvQHRtdb971a7BhAdB8qOHZOE3SXLHy/ZaeJQoyMMeTD+0imr
-         qrqhaZ7w5gKE3nkBx89bcW4a2djh4FoFB6upYhBASibbovgC/mevIjfY6IjpXbBLAgf6
-         yrnqdnsDaVOSkjd0jJl03iWxPaQ995U3pRIXA8CI6CvIsTX9FeB/MyFJ+NKg1nV3kqbd
-         kkJA==
-X-Gm-Message-State: APjAAAWHH8knz6jD5C3hPBCNwKmeSNwIBBMXs+RSyvIHTnoNXPMLw06g
-        xdUnAeJ8pzmjZoEY/Jb+3Nx8o5sBa2DgDH3IM/Cs3Q==
-X-Google-Smtp-Source: APXvYqzpYyrAAPRFueEyS+j4+BBscppU+Zr9W00YE1s8AZSWRgXHWdfv0Q00CHduNxq6esClfTmSm5lW1IAFFoTPsuo=
-X-Received: by 2002:a6b:6b14:: with SMTP id g20mr51062517ioc.28.1560413055231;
- Thu, 13 Jun 2019 01:04:15 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6mmmU3zI8AxW3wFFQD2SLEjtu6eLE2vKC+YEbAw3CnQ=;
+        b=CjCv0K3n56yMby86Fc7qPtITkJHWouW+CN4UXuuY/T206fphuD5TKWuBWNI/UgXPbo
+         wjlld59yN1GzbAE/1o3yP923IrN6OQ+/+8iCHdTvK7P6S+YF49fu0IFznH1JmUh/CjMo
+         7zfqtvuVz07ICHyRJuIGW9IIfHiOfJGzlOcRDxRU/zqXod2Bc8l73T3RDywaV0xbPOWO
+         tAVcPPPmoIG6EQ/WuZNl9AVoWdP0XggrRDikIM/zho/2W8WnEjgY+MVxsps8Dqujt6uh
+         HLzjp59YxQ9HPNS+Fys4DwQ6BKmeOwdZQ+2p2exFbXIMDVV/XAw0Pua3WSzZif2FG/zP
+         ee8w==
+X-Gm-Message-State: APjAAAWo3bv+AQaPujbFL/74fPl4Ap5PdGkc9cnbSO7ts7+O1VimpzEx
+        3bC/Y5twx5clAigbvxwUjPb6jw==
+X-Google-Smtp-Source: APXvYqza2VmDM4NG0gHchqgs3E73yYooxW00nF2PCBrG4jStZhSAebIae9RGxY/QmdEjGnqwIfIs/Q==
+X-Received: by 2002:adf:eb43:: with SMTP id u3mr44495779wrn.342.1560413287079;
+        Thu, 13 Jun 2019 01:08:07 -0700 (PDT)
+Received: from t460s.bristot.redhat.com (host204-55-dynamic.171-212-r.retail.telecomitalia.it. [212.171.55.204])
+        by smtp.gmail.com with ESMTPSA id f1sm1932868wml.28.2019.06.13.01.08.04
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 01:08:06 -0700 (PDT)
+Subject: Re: [PATCH V6 0/6] x86/jump_label: Bound IPIs sent when updating a
+ static key
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>,
+        Jason Baron <jbaron@akamai.com>, Scott Wood <swood@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Clark Williams <williams@redhat.com>, x86@kernel.org
+References: <cover.1560325897.git.bristot@redhat.com>
+ <20190612170712.GJ3402@hirez.programming.kicks-ass.net>
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+Message-ID: <556e6104-4979-6557-fb0f-a0c8f919d9b2@redhat.com>
+Date:   Thu, 13 Jun 2019 10:08:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190520090318.27570-1-jagan@amarulasolutions.com>
- <20190520090318.27570-3-jagan@amarulasolutions.com> <20190523203754.2lhi37veeh4rwiy3@flea>
- <CAMty3ZBvJ-7Ndq7NSfNMSFX=8hjYVhYsdA=nfyw5mMxOf6vW1Q@mail.gmail.com> <20190530104242.d6ktwv7lip27vc3x@flea>
-In-Reply-To: <20190530104242.d6ktwv7lip27vc3x@flea>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 13 Jun 2019 13:34:04 +0530
-Message-ID: <CAMty3ZCwS4BS5Lig4O8G3dE3RbJu6m1Ux3-ZS4rT-cPEAjXSFw@mail.gmail.com>
-Subject: Re: [PATCH v10 02/11] drm/sun4i: dsi: Update start value in video
- start delay
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Chen-Yu Tsai <wens@csie.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bhushan Shah <bshah@mykolab.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?UTF-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190612170712.GJ3402@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 12:23 AM Maxime Ripard
-<maxime.ripard@bootlin.com> wrote:
->
-> On Fri, May 24, 2019 at 03:55:42PM +0530, Jagan Teki wrote:
-> > On Fri, May 24, 2019 at 2:07 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > On Mon, May 20, 2019 at 02:33:09PM +0530, Jagan Teki wrote:
-> > > > start value in video start delay computation done in below commit
-> > > > is as per the legacy bsp drivers/video/sunxi/legacy..
-> > > > "drm/sun4i: dsi: Change the start delay calculation"
-> > > > (sha1: da676c6aa6413d59ab0a80c97bbc273025e640b2)
-> > > >
-> > > > This existing start delay computation gives start value of 35,
-> > > > for "bananapi,s070wv20-ct16" panel timings which indeed trigger
-> > > > panel flip_done timed out as:
-> > > >
-> > > >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
-> > > >  [CRTC:46:crtc-0] vblank wait timed out
-> > > >  Modules linked in:
-> > > >  CPU: 0 PID: 31 Comm: kworker/0:1 Tainted: G        W         5.1.0-next-20190514-00025-gf928bc7cc146 #15
-> > > >  Hardware name: Allwinner sun8i Family
-> > > >  Workqueue: events deferred_probe_work_func
-> > > >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
-> > > >  [<c010b76c>] (show_stack) from [<c0688c90>] (dump_stack+0x84/0x98)
-> > > >  [<c0688c90>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
-> > > >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
-> > > >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
-> > > >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
-> > > >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
-> > > >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
-> > > >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
-> > > >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c0411cb0>] (drm_fb_helper_pan_display+0xac/0x1d0)
-> > > >  [<c0411cb0>] (drm_fb_helper_pan_display) from [<c03a4e84>] (fb_pan_display+0xcc/0x134)
-> > > >  [<c03a4e84>] (fb_pan_display) from [<c03b1214>] (bit_update_start+0x14/0x30)
-> > > >  [<c03b1214>] (bit_update_start) from [<c03afe94>] (fbcon_switch+0x3d8/0x4e0)
-> > > >  [<c03afe94>] (fbcon_switch) from [<c03ec930>] (redraw_screen+0x174/0x238)
-> > > >  [<c03ec930>] (redraw_screen) from [<c03aceb4>] (fbcon_prepare_logo+0x3c4/0x400)
-> > > >  [<c03aceb4>] (fbcon_prepare_logo) from [<c03ad2b8>] (fbcon_init+0x3c8/0x5ac)
-> > > >  [<c03ad2b8>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
-> > > >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
-> > > >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
-> > > >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
-> > > >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
-> > > >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
-> > > >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
-> > > >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
-> > > >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
-> > > >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
-> > > >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
-> > > >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
-> > > >  [<c043f060>] (sun4i_drv_bind) from [<c044b5b0>] (try_to_bring_up_master+0x164/0x1a0)
-> > > >  [<c044b5b0>] (try_to_bring_up_master) from [<c044b680>] (__component_add+0x94/0x140)
-> > > >  [<c044b680>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
-> > > >  [<c0445e1c>] (sun6i_dsi_probe) from [<c0452f0c>] (platform_drv_probe+0x48/0x9c)
-> > > >  [<c0452f0c>] (platform_drv_probe) from [<c04512e4>] (really_probe+0x1dc/0x2c8)
-> > > >  [<c04512e4>] (really_probe) from [<c0451530>] (driver_probe_device+0x60/0x160)
-> > > >  [<c0451530>] (driver_probe_device) from [<c044f7bc>] (bus_for_each_drv+0x74/0xb8)
-> > > >  [<c044f7bc>] (bus_for_each_drv) from [<c0451094>] (__device_attach+0xd0/0x13c)
-> > > >  [<c0451094>] (__device_attach) from [<c045048c>] (bus_probe_device+0x84/0x8c)
-> > > >  [<c045048c>] (bus_probe_device) from [<c0450918>] (deferred_probe_work_func+0x64/0x90)
-> > > >  [<c0450918>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
-> > > >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
-> > > >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
-> > > >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-> > > >  Exception stack(0xde539fb0 to 0xde539ff8)
-> > > >  9fa0:                                     00000000 00000000 00000000 00000000
-> > > >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> > > >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > > >  ---[ end trace 755e10f62b83f396 ]---
-> > > >  Console: switching to colour frame buffer device 100x30
-> > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
-> > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
-> > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
-> > > >
-> > > > But the expected start delay value is 1 which is confirmed from
-> > > > new bsp [2].
-> > >
-> > > If you're saying that the "legacy" link (second one) is the new BSP.
-> >
-> > Will update, thanks.
-> >
-> > >
-> > > > The important and unclear note on legacy and new bsp codes [1] [2]
-> > > > is both use similar start computation initially but it later reassign
-> > > > it to 1 in new bsp.
-> > >
-> > > Then start_delay is never reassigned to 1 in that link, and is clamped
-> > > between 8 and 100 as the code that you are removing is doing.
-> >
-> > Please see the link one more please
-> > https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/lowlevel_sun8iw5/de_dsi.c#L807
-> >
-> > >
-> > > > Unfortunately we don't have any evidence or documentation for this
-> > > > reassignment to 1 in new bsp, but it is working with all supported
-> > > > panels in A33, A64.
-> > >
-> > > No, it's not. That was added to fix a panel that is supported today.
-> >
-> > No, I have see this in A33, A64. and these are controller drivers
-> > right, if it panel fix and it should be part of panel driver isn't
-> > it?
->
-> I'm not sure to follow that argument. You're submitting that fix to
-> allow other panels to work, right? So surely, some issues that can be
-> found using a given panel might not be solely fixed in the panel driver.
+On 12/06/2019 19:07, Peter Zijlstra wrote:
+> On Wed, Jun 12, 2019 at 11:57:25AM +0200, Daniel Bristot de Oliveira wrote:
+>> Daniel Bristot de Oliveira (6):
+>>   jump_label: Add a jump_label_can_update() helper
+>>   x86/jump_label: Add a __jump_label_set_jump_code() helper
+>>   jump_label: Sort entries of the same key by the code
+>>   x86/alternative: Batch of patch operations
+>>   jump_label: Batch updates if arch supports it
+>>   x86/jump_label: Batch jump label updates
+>>
+>>  arch/x86/include/asm/jump_label.h    |   2 +
+>>  arch/x86/include/asm/text-patching.h |  15 +++
+>>  arch/x86/kernel/alternative.c        | 154 +++++++++++++++++++++------
+>>  arch/x86/kernel/jump_label.c         | 110 ++++++++++++++++---
+>>  include/linux/jump_label.h           |   3 +
+>>  kernel/jump_label.c                  |  65 +++++++++--
+>>  6 files changed, 290 insertions(+), 59 deletions(-)
+> 
+> OK, so I like these. I did make me some change, but mostly cosmetic
+> (although patch #2 got a bigger shuffle than intended).
+> 
+> I've also done my text_poke_bp() emulation thing on top of this, to make
+> sure it all works properly. Funnily, that shrank the size of
+> text_poke_loc to 24 bytes and thus we now fit 170 locations in the one
+> page.
+> 
+> ---
+> Subject: x86/alternatives: Teach text_poke_bp() to emulate instructions
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Wed Jun 5 10:48:37 CEST 2019
+> 
+> In preparation for static_call support, teach text_poke_bp() to
+> emulate instructions, including CALL.
+> 
+> The current text_poke_bp() takes a @handler argument which is used as
+> a jump target when the temporary INT3 is hit by a different CPU.
+> 
+> When patching CALL instructions, this doesn't work because we'd miss
+> the PUSH of the return address. Instead, teach poke_int3_handler() to
+> emulate an instruction, typically the instruction we're patching in.
+> 
+> This fits almost all text_poke_bp() users, except
+> arch_unoptimize_kprobe() which restores random text, and for that site
+> we have to build an explicit emulate instruction.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/x86/include/asm/text-patching.h |   24 +++++++--
+>  arch/x86/kernel/alternative.c        |   88 +++++++++++++++++++++++++----------
+>  arch/x86/kernel/jump_label.c         |    9 +--
+>  arch/x86/kernel/kprobes/opt.c        |   11 +++-
+>  4 files changed, 93 insertions(+), 39 deletions(-)
+> 
+> --- a/arch/x86/include/asm/text-patching.h
+> +++ b/arch/x86/include/asm/text-patching.h
+> @@ -26,10 +26,11 @@ static inline void apply_paravirt(struct
+>  #define POKE_MAX_OPCODE_SIZE	5
+>  
+>  struct text_poke_loc {
+> -	void *detour;
+>  	void *addr;
+> -	size_t len;
+> -	const char opcode[POKE_MAX_OPCODE_SIZE];
+> +	int len;
+> +	s32 rel32;
+> +	u8 opcode;
+> +	const char text[POKE_MAX_OPCODE_SIZE];
+>  };
+>  
+>  extern void text_poke_early(void *addr, const void *opcode, size_t len);
+> @@ -51,8 +52,10 @@ extern void text_poke_early(void *addr,
+>  extern void *text_poke(void *addr, const void *opcode, size_t len);
+>  extern void *text_poke_kgdb(void *addr, const void *opcode, size_t len);
+>  extern int poke_int3_handler(struct pt_regs *regs);
+> -extern void text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
+> +extern void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate);
+>  extern void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries);
+> +extern void text_poke_loc_init(struct text_poke_loc *tp, void *addr,
+> +			       const void *opcode, size_t len, const void *emulate);
+>  extern int after_bootmem;
+>  extern __ro_after_init struct mm_struct *poking_mm;
+>  extern __ro_after_init unsigned long poking_addr;
+> @@ -63,8 +66,17 @@ static inline void int3_emulate_jmp(stru
+>  	regs->ip = ip;
+>  }
+>  
+> -#define INT3_INSN_SIZE 1
+> -#define CALL_INSN_SIZE 5
+> +#define INT3_INSN_SIZE		1
+> +#define INT3_INSN_OPCODE	0xCC
+> +
+> +#define CALL_INSN_SIZE		5
+> +#define CALL_INSN_OPCODE	0xE9
+> +
+> +#define JMP32_INSN_SIZE		5
+> +#define JMP32_INSN_OPCODE	0xE8
+> +
+> +#define JMP8_INSN_SIZE		2
+> +#define JMP8_INSN_OPCODE	0xEB
+>  
+>  static inline void int3_emulate_push(struct pt_regs *regs, unsigned long val)
+>  {
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -941,16 +941,15 @@ NOKPROBE_SYMBOL(patch_cmp);
+>  int poke_int3_handler(struct pt_regs *regs)
+>  {
+>  	struct text_poke_loc *tp;
+> -	unsigned char int3 = 0xcc;
+>  	void *ip;
+>  
+>  	/*
+>  	 * Having observed our INT3 instruction, we now must observe
+>  	 * bp_patching.nr_entries.
+>  	 *
+> -	 * 	nr_entries != 0			INT3
+> -	 * 	WMB				RMB
+> -	 * 	write INT3			if (nr_entries)
+> +	 *	nr_entries != 0			INT3
+> +	 *	WMB				RMB
+> +	 *	write INT3			if (nr_entries)
+>  	 *
+>  	 * Idem for other elements in bp_patching.
+>  	 */
+> @@ -963,9 +962,9 @@ int poke_int3_handler(struct pt_regs *re
+>  		return 0;
+>  
+>  	/*
+> -	 * Discount the sizeof(int3). See text_poke_bp_batch().
+> +	 * Discount the INT3. See text_poke_bp_batch().
+>  	 */
+> -	ip = (void *) regs->ip - sizeof(int3);
+> +	ip = (void *) regs->ip - INT3_INSN_SIZE;
+>  
+>  	/*
+>  	 * Skip the binary search if there is a single member in the vector.
+> @@ -982,8 +981,22 @@ int poke_int3_handler(struct pt_regs *re
+>  			return 0;
+>  	}
+>  
+> -	/* set up the specified breakpoint detour */
+> -	regs->ip = (unsigned long) tp->detour;
+> +	ip += tp->len;
+> +
+> +	switch (tp->opcode) {
+> +	case CALL_INSN_OPCODE:
+> +		int3_emulate_call(regs, (long)ip + tp->rel32);
+> +		break;
+> +
+> +	case JMP32_INSN_OPCODE:
+> +	case JMP8_INSN_OPCODE:
+> +		int3_emulate_jmp(regs, (long)ip + tp->rel32);
+> +		break;
+> +
+> +	default: /* nop */
+> +		int3_emulate_jmp(regs, (long)ip);
+> +		break;
+> +	}
+>  
+>  	return 1;
+>  }
+> @@ -1012,8 +1025,8 @@ NOKPROBE_SYMBOL(poke_int3_handler);
+>   */
+>  void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries)
+>  {
+> +	unsigned char int3 = INT3_INSN_OPCODE;
+>  	int patched_all_but_first = 0;
+> -	unsigned char int3 = 0xcc;
+>  	unsigned int i;
+>  
+>  	lockdep_assert_held(&text_mutex);
+> @@ -1041,7 +1054,7 @@ void text_poke_bp_batch(struct text_poke
+>  	for (i = 0; i < nr_entries; i++) {
+>  		if (tp[i].len - sizeof(int3) > 0) {
+>  			text_poke((char *)tp[i].addr + sizeof(int3),
+> -				  (const char *)tp[i].opcode + sizeof(int3),
+> +				  (const char *)tp[i].text + sizeof(int3),
+>  				  tp[i].len - sizeof(int3));
+>  			patched_all_but_first++;
+>  		}
+> @@ -1061,7 +1074,7 @@ void text_poke_bp_batch(struct text_poke
+>  	 * replacing opcode.
+>  	 */
+>  	for (i = 0; i < nr_entries; i++)
+> -		text_poke(tp[i].addr, tp[i].opcode, sizeof(int3));
+> +		text_poke(tp[i].addr, tp[i].text, sizeof(int3));
+>  
+>  	on_each_cpu(do_sync_core, NULL, 1);
+>  	/*
+> @@ -1072,6 +1085,43 @@ void text_poke_bp_batch(struct text_poke
+>  	bp_patching.nr_entries = 0;
+>  }
+>  
+> +void text_poke_loc_init(struct text_poke_loc *tp, void *addr,
+> +			const void *opcode, size_t len, const void *emulate)
+> +{
+> +	struct insn insn;
+> +
+> +	if (!opcode)
+> +		opcode = (void *)tp->text;
+> +	else
+> +		memcpy((void *)tp->text, opcode, len);
+> +
+> +	if (!emulate)
+> +		emulate = opcode;
+> +
+> +	kernel_insn_init(&insn, emulate, MAX_INSN_SIZE);
+> +	insn_get_length(&insn);
+> +
+> +	BUG_ON(!insn_complete(&insn));
+> +	BUG_ON(len != insn.length);
+> +
+> +	tp->addr = addr;
+> +	tp->len = len;
+> +	tp->opcode = insn.opcode.bytes[0];
+> +
+> +	switch (tp->opcode) {
+> +	case CALL_INSN_OPCODE:
+> +	case JMP32_INSN_OPCODE:
+> +	case JMP8_INSN_OPCODE:
+> +		tp->rel32 = insn.immediate.value;
+> +		break;
+> +
+> +	default:
+> +		BUG_ON(len != 5);
+> +		BUG_ON(memcmp(emulate, ideal_nops[NOP_ATOMIC5], len));
+> +		break;
+> +	}
+> +}
+> +
+>  /**
+>   * text_poke_bp() -- update instructions on live kernel on SMP
+>   * @addr:	address to patch
+> @@ -1083,20 +1133,10 @@ void text_poke_bp_batch(struct text_poke
+>   * dynamically allocated memory. This function should be used when it is
+>   * not possible to allocate memory.
+>   */
+> -void text_poke_bp(void *addr, const void *opcode, size_t len, void *handler)
+> +void text_poke_bp(void *addr, const void *opcode, size_t len, const void *emulate)
+>  {
+> -	struct text_poke_loc tp = {
+> -		.detour = handler,
+> -		.addr = addr,
+> -		.len = len,
+> -	};
+> -
+> -	if (len > POKE_MAX_OPCODE_SIZE) {
+> -		WARN_ONCE(1, "len is larger than %d\n", POKE_MAX_OPCODE_SIZE);
+> -		return;
+> -	}
+> -
+> -	memcpy((void *)tp.opcode, opcode, len);
+> +	struct text_poke_loc tp;
+>  
+> +	text_poke_loc_init(&tp, addr, opcode, len, emulate);
+>  	text_poke_bp_batch(&tp, 1);
+>  }
+> --- a/arch/x86/kernel/jump_label.c
+> +++ b/arch/x86/kernel/jump_label.c
+> @@ -89,8 +89,7 @@ static void __ref __jump_label_transform
+>  		return;
+>  	}
+>  
+> -	text_poke_bp((void *)jump_entry_code(entry), &code, JUMP_LABEL_NOP_SIZE,
+> -		     (void *)jump_entry_code(entry) + JUMP_LABEL_NOP_SIZE);
+> +	text_poke_bp((void *)jump_entry_code(entry), &code, JUMP_LABEL_NOP_SIZE, NULL);
+>  }
+>  
+>  void arch_jump_label_transform(struct jump_entry *entry,
+> @@ -147,11 +146,9 @@ bool arch_jump_label_transform_queue(str
+>  	}
+>  
+>  	__jump_label_set_jump_code(entry, type,
+> -				   (union jump_code_union *) &tp->opcode, 0);
+> +				   (union jump_code_union *)&tp->text, 0);
+>  
+> -	tp->addr = entry_code;
+> -	tp->detour = entry_code + JUMP_LABEL_NOP_SIZE;
+> -	tp->len = JUMP_LABEL_NOP_SIZE;
+> +	text_poke_loc_init(tp, entry_code, NULL, JUMP_LABEL_NOP_SIZE, NULL);
+>  
+>  	tp_vec_nr++;
+>  
+> --- a/arch/x86/kernel/kprobes/opt.c
+> +++ b/arch/x86/kernel/kprobes/opt.c
+> @@ -437,8 +437,7 @@ void arch_optimize_kprobes(struct list_h
+>  		insn_buff[0] = RELATIVEJUMP_OPCODE;
+>  		*(s32 *)(&insn_buff[1]) = rel;
+>  
+> -		text_poke_bp(op->kp.addr, insn_buff, RELATIVEJUMP_SIZE,
+> -			     op->optinsn.insn);
+> +		text_poke_bp(op->kp.addr, insn_buff, RELATIVEJUMP_SIZE, NULL);
+>  
+>  		list_del_init(&op->list);
+>  	}
+> @@ -448,12 +447,18 @@ void arch_optimize_kprobes(struct list_h
+>  void arch_unoptimize_kprobe(struct optimized_kprobe *op)
+>  {
+>  	u8 insn_buff[RELATIVEJUMP_SIZE];
+> +	u8 emulate_buff[RELATIVEJUMP_SIZE];
+>  
+>  	/* Set int3 to first byte for kprobes */
+>  	insn_buff[0] = BREAKPOINT_INSTRUCTION;
+>  	memcpy(insn_buff + 1, op->optinsn.copied_insn, RELATIVE_ADDR_SIZE);
+> +
+> +	emulate_buff[0] = RELATIVEJUMP_OPCODE;
+> +	*(s32 *)(&emulate_buff[1]) = (s32)((long)op->optinsn.insn -
+> +			((long)op->kp.addr + RELATIVEJUMP_SIZE));
+> +
+>  	text_poke_bp(op->kp.addr, insn_buff, RELATIVEJUMP_SIZE,
+> -		     op->optinsn.insn);
+> +		     emulate_buff);
+>  }
+>  
+>  /*
+> 
 
-I'm not sure I understand this. I have been verifying different panels
-to check across. and this change literally in BSP and the BSP code is
-using this based on the logs confirmation. all the logs and working
-conditions shows that the fix would required in dsi.
+Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
 
->
-> > We can even see the same in pin64 longsleep kernel and others.
-> >
-> > https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/lowlevel_sun8iw5/de_dsi.c#L807
-> > https://github.com/longsleep/linux-pine64/blob/pine64-hacks-1.2/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L730
->
-> Yeah, and both of these have the legacy driver part with the clamping
-> too.
-
-Yes, both legacy has clamping, but not using. they used it in new
-version driver which I'm referring above.
-
->
-> I'll test these patches again some time next week
-
-Any help on the testing.
+Thanks Peter!
+-- Daniel
