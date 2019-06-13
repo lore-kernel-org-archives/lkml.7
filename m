@@ -2,154 +2,163 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0994DC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE768C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C745D20449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B717020449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:17:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="JMQ0l3Nr"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bBNgno4o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388679AbfFMPRU (ORCPT
+        id S2388702AbfFMPRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:17:20 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35752 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732194AbfFMNWz (ORCPT
+        Thu, 13 Jun 2019 11:17:22 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33572 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732187AbfFMNWk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:22:55 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c6so10145312wml.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 06:22:54 -0700 (PDT)
+        Thu, 13 Jun 2019 09:22:40 -0400
+Received: by mail-qk1-f194.google.com with SMTP id r6so12710028qkc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 06:22:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wuAK6EQ80PyDNnpIyEX4qP2XC/coEnhgovta7yfYWxY=;
-        b=JMQ0l3NrX2S5rxk2gqdSAV86GVbkXTUcGPYAfocG6ziyl8sqM3X+SMNxQgaJ7/z2U5
-         HJ4eyfVwdzmcB0Zb1Y1LC+S5FHiMrDv9M1bCkfwvadnhM5bHTiVz3TpWvQc0LwHv14Bg
-         EaXkN7lOTGprcoVn6/xbN8yMBrS2n60nsukmJN/V6yw78xXOI/PjvhfZRKH6E0vgUR91
-         feM1JDdZdSetkpv4okXsDVJL2RxQkpL5Frr7VMsmNVAfI3iJCf5GlflsDSQv+1i5VPXO
-         4SvN2fm0I6lD8JtK5KrWSuUpCZ4R1A0ZwKaMBsKzvg9ZqXYmaPdBL3YqRQwlfvRmO3Sa
-         Q9fQ==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=RvQ7s6KqQFboNBrXACowYJehaEqJCBGaI4+3OVeMERI=;
+        b=bBNgno4o9GAsUM3oGJioC5sI7aRIso2DiB+okxiU8rjGN4HJ0v1gxCNMi7udkAGL6f
+         oky91oVZh7z6knKRvgJl9IikO9fYnZb3jWcg1ZNvsauYAOjk0zxqs7/D+G+mWwOQwvi5
+         XAEFmebepC8uobYYn6F6j3a1ccrCPMqRs6NImFil6YZeSfTI0Yunqha+8AmBT4bPOMrq
+         uta0iARaSykyvjwOQfIWg6pltLH3IEX2UrTqThwQMVGM6Fbs4UncTG6BzJSoXCLm0n7w
+         kk42c1Hsa+EHGKm3zEtga8Aae3Cdyj5QWiVaxE58eV4dWzuC7FmEvF7H7iUOL7yA11ah
+         k7JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wuAK6EQ80PyDNnpIyEX4qP2XC/coEnhgovta7yfYWxY=;
-        b=pvD3715tJiqrmDbp835cFKPS3pn6NGDgNoDUD66Z1RXGX/XuSPVYM2aieB/8bgDIWQ
-         Bh/bxls8GahL3tgVb61G6t+E6W6pCVgdiNwIbGdbY5+VOAboNooGfxZowI68wYpDiq85
-         uVQ6WoTjpZPqg8SmP8WQ1urFpQMLobh+dImi0BOxzJjSwAPn7bPqca2u11vJGE7B+4sw
-         KYOhNSoOmC68yq1ZOBCcJU5M6GsxSRAlctbN4FEabABd/JpV9CEtasxL9feQ2EsDt/K/
-         Uez6bo8z8BLb7XILKS7fOteuz0+xKeuzddfyxUAtjhcR62MK9PDAlJg4vqESrU3rx4D7
-         qWWw==
-X-Gm-Message-State: APjAAAXGCFSX2IKLWV5f2CHv3z3njNNDjukkyioLM9gM4xbhEerHyZy4
-        GPlhd7wPba07gtbAeokffGiQ6w==
-X-Google-Smtp-Source: APXvYqwuKiRsCndV/u776Jp+G0a5brq9AKUHpU7KLSBoUmn9cPWSRkTi7WUGMxVnxHSrjc8P5HbdIg==
-X-Received: by 2002:a1c:f519:: with SMTP id t25mr3944137wmh.58.1560432173272;
-        Thu, 13 Jun 2019 06:22:53 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id f3sm2842924wre.93.2019.06.13.06.22.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 06:22:52 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 15:22:51 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: Re: Regression for MS_MOVE on kernel v5.1
-Message-ID: <20190613132250.u65yawzvf4voifea@brauner.io>
-References: <20190612225431.p753mzqynxpsazb7@brauner.io>
- <CAHk-=wh2Khe1Lj-Pdu3o2cXxumL1hegg_1JZGJXki6cchg_Q2Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh2Khe1Lj-Pdu3o2cXxumL1hegg_1JZGJXki6cchg_Q2Q@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RvQ7s6KqQFboNBrXACowYJehaEqJCBGaI4+3OVeMERI=;
+        b=rYI5+F9aX4ySXLujBl/16zyNfoJ4wgUpbHCgJzHVNVSsROZ+Z6ZyEluYf4T/SW2PVY
+         tNcTBKqpYgSIHdV7YH+hQExVbOxM+WdelEI1gZcI1pzuH6CiNh60Zk4D5QY3+4jXd2zw
+         HDhQyMJ7pocctbWkohapeRnCbWBM6wFfARe4Ncr/DJ9Y9YH2RKITh9eebHi5K/+MPzK2
+         OA+BgDVOtefiuf6wCpZ6d2VuldCR1rQB+vGqqrmJDPJz1G3Hd3umvQYARUR+lTYV5tW3
+         9QaPc9M2zi+oo+NS+XqFZXxkjdr+BtyeK99nTWcfjZr8mm1xNou+wQEJz7cKzPQzXsAA
+         QP0w==
+X-Gm-Message-State: APjAAAXMWd/wPmxlAypdSur0eLirCKkWh0YuGIadhE/Uy69p4KR/P3kY
+        BGmJVBagqxJfkd20K3d2Qg+NAA==
+X-Google-Smtp-Source: APXvYqxBFU+2n7NeM2FTrwHp7MWYv4DOOcIQv0wH6sniaZCois+k70ecIkcp7EZJ319MIspcW/P2rg==
+X-Received: by 2002:a37:9885:: with SMTP id a127mr50858690qke.230.1560432158880;
+        Thu, 13 Jun 2019 06:22:38 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 77sm1564782qkd.59.2019.06.13.06.22.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 06:22:38 -0700 (PDT)
+Message-ID: <1560432156.5154.11.camel@lca.pw>
+Subject: Re: [PATCH -next] arm64/mm: fix a bogus GFP flag in pgd_alloc()
+From:   Qian Cai <cai@lca.pw>
+To:     Mike Rapoport <rppt@linux.ibm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Will Deacon <will.deacon@arm.com>, akpm@linux-foundation.org,
+        Roman Gushchin <guro@fb.com>, catalin.marinas@arm.com,
+        linux-kernel@vger.kernel.org, mhocko@kernel.org,
+        linux-mm@kvack.org, vdavydov.dev@gmail.com, hannes@cmpxchg.org,
+        cgroups@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date:   Thu, 13 Jun 2019 09:22:36 -0400
+In-Reply-To: <20190613121100.GB25164@rapoport-lnx>
+References: <1559656836-24940-1-git-send-email-cai@lca.pw>
+         <20190604142338.GC24467@lakrids.cambridge.arm.com>
+         <20190610114326.GF15979@fuggles.cambridge.arm.com>
+         <1560187575.6132.70.camel@lca.pw>
+         <20190611100348.GB26409@lakrids.cambridge.arm.com>
+         <20190613121100.GB25164@rapoport-lnx>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 06:00:39PM -1000, Linus Torvalds wrote:
-> On Wed, Jun 12, 2019 at 12:54 PM Christian Brauner <christian@brauner.io> wrote:
-> >
-> > The commit changes the internal logic to lock mounts when propagating
-> > mounts (user+)mount namespaces and - I believe - causes do_mount_move()
-> > to fail at:
+On Thu, 2019-06-13 at 15:11 +0300, Mike Rapoport wrote:
+> The log Qian Cai posted at [1] and partially cited below confirms that the
+> failure happens when *user* PGDs are allocated and the addition of
+> __GFP_ACCOUNT to gfp flags used by pgd_alloc() only uncovered another
+> issue.
 > 
-> You mean 'do_move_mount()'.
+> I'm still failing to reproduce it with qemu and I'm not really familiar
+> with slub/memcg code to say anything smart about it. Will keep looking.
 > 
-> > if (old->mnt.mnt_flags & MNT_LOCKED)
-> >         goto out;
-> >
-> > If that's indeed the case we should either revert this commit (reverts
-> > cleanly, just tested it) or find a fix.
+> Note, that as failures start way after efi_virtmap_init() that allocates a
+> PGD for efi_mm, there are no real fixes required for the original series,
+> except that the check for mm == &init_mm I copied for some reason from
+> powerpc is bogus and can be removed.
+
+Yes, there is more places are not happy with __GFP_ACCOUNT other than efi_mm.
+For example,
+
+[  132.786842][ T1501] kobject_add_internal failed for pgd_cache(49:systemd-
+udevd.service) (error: -2 parent: cgroup)
+[  132.795589][ T1889] CPU: 9 PID: 1889 Comm: systemd-udevd Tainted:
+G        W         5.2.0-rc4-next-20190613+ #8
+[  132.807356][ T1889] Hardware name: HPE Apollo
+70             /C01_APACHE_MB         , BIOS L50_5.13_1.0.9 03/01/2019
+[  132.817872][ T1889] Call trace:
+[  132.821017][ T1889]  dump_backtrace+0x0/0x268
+[  132.825372][ T1889]  show_stack+0x20/0x2c
+[  132.829380][ T1889]  dump_stack+0xb4/0x108
+[  132.833475][ T1889]  pgd_alloc+0x34/0x5c
+[  132.837396][ T1889]  mm_init+0x27c/0x32c
+[  132.841315][ T1889]  dup_mm+0x84/0x7b4
+[  132.845061][ T1889]  copy_process+0xf20/0x24cc
+[  132.849500][ T1889]  _do_fork+0xa4/0x66c
+[  132.853420][ T1889]  __arm64_sys_clone+0x114/0x1b4
+[  132.858208][ T1889]  el0_svc_handler+0x198/0x260
+[  132.862821][ T1889]  el0_svc+0x8/0xc
+
 > 
-> Hmm.. I'm not entirely sure of the logic here, and just looking at
-> that commit 3bd045cc9c4b ("separate copying and locking mount tree on
-> cross-userns copies") doesn't make me go "Ahh" either.
+> I surely can add pgd_alloc_kernel() to be used by the EFI code to make sure
+> we won't run into issues with memcg in the future.
 > 
-> Al? My gut feel is that we need to just revert, since this was in 5.1
-> and it's getting reasonably late in 5.2 too. But maybe you go "guys,
-> don't be silly, this is easily fixed with this one-liner".
-
-David and I have been staring at that code today for a while together.
-I think I made some sense of it.
-One thing we weren't absolutely sure is if the old MS_MOVE behavior was
-intentional or a bug. If it is a bug we have a problem since we quite
-heavily rely on this...
-
-So this whole cross-user+mnt namespace propagation mechanism comes with
-a big hammer that Eric indeed did introduce a while back which is
-MNT_LOCKED (cf. [1] for the relevant commit).
-
-Afaict, MNT_LOCKED is (among other cases) supposed to prevent a user+mnt
-namespace pair to get access to a mount that is hidden underneath an
-additional mount. Consider the following scenario:
-
-sudo mount -t tmpfs tmpfs /mnt
-sudo mount --make-rshared /mnt
-sudo mount -t tmpfs tmpfs /mnt
-sudo mount --make-rshared /mnt
-unshare -U -m --map-root --propagation=unchanged
-
-umount /mnt
-# or
-mount --move -mnt /opt
-
-The last umount/MS_MOVE is supposed to fail since the mount is locked
-with MNT_LOCKED since umounting or MS_MOVing the mount would reveal the
-underlying mount which I didn't have access to prior to the creation of
-my user+mnt namespace pair.
-(Whether or not this is a reasonable security mechanism is a separate
-discussion.)
-
-But now consider the case where from the ancestor user+mnt namespace
-pair I do:
-
-# propagate the mount to the user+mount namespace pair                 
-sudo mount -t tmpfs tmpfs /mnt
-# switch to the child user+mnt namespace pair
-umount /mnt
-# or
-mount --move /mnt /opt
-
-That umount/MS_MOVE should work since that mount was propagated to the
-unprivileged task after the user+mnt namespace pair was created.
-Also, because I already had access to the underlying mount in the first
-place and second because this is literally the only way - we know of -
-to inject a mount cross mount namespaces and this is a must have feature
-that quite a lot of users rely on.
-
-Christian
-
-[1]: git show 5ff9d8a65ce80efb509ce4e8051394e9ed2cd942
+> [   82.125966] Freeing unused kernel memory: 28672K
+> [   87.940365] Checked W+X mappings: passed, no W+X pages found
+> [   87.946769] Run /init as init process
+> [   88.040040] systemd[1]: System time before build time, advancing clock.
+> [   88.054593] systemd[1]: Failed to insert module 'autofs4': No such file or
+> directory
+> [   88.374129] modprobe (1726) used greatest stack depth: 28464 bytes left
+> [   88.470108] systemd[1]: systemd 239 running in system mode. (+PAM +AUDIT
+> +SELINUX +IMA -APPARMOR +SMACK +SYSVINIT +UTMP +LIBCRYPTSETUP +GCRYPT
+> +GNUTLS +ACL +XZ +LZ4 +SECCOMP +BLKID +ELFUTILS +KMOD +IDN2 -IDN +PCRE2
+> default-hierarchy=legacy)
+> [   88.498398] systemd[1]: Detected architecture arm64.
+> [   88.506517] systemd[1]: Running in initial RAM disk.
+> [   89.621995] mkdir (1730) used greatest stack depth: 27872 bytes left
+> [   90.222658] random: systemd: uninitialized urandom read (16 bytes read)
+> [   90.230072] systemd[1]: Reached target Swap.
+> [   90.240205] random: systemd: uninitialized urandom read (16 bytes read)
+> [   90.251088] systemd[1]: Reached target Timers.
+> [   90.261303] random: systemd: uninitialized urandom read (16 bytes read)
+> [   90.271209] systemd[1]: Listening on udev Control Socket.
+> [   90.283238] systemd[1]: Reached target Local File Systems.
+> [   90.296232] systemd[1]: Reached target Slices.
+> [   90.307239] systemd[1]: Listening on udev Kernel Socket.
+> [   90.608597] kobject_add_internal failed for pgd_cache(13:init.scope)
+> (error: -2 parent: cgroup)
+> [   90.678007] kobject_add_internal failed for pgd_cache(13:init.scope)(error:
+> -2 parent: cgroup)
+> [   90.713260] kobject_add_internal failed for pgd_cache(21:systemd-tmpfiles-
+> setup.service) (error: -2 parent: cgroup)
+> [   90.820012] systemd-tmpfile (1759) used greatest stack depth: 27184 bytes
+> left
+> [   90.861942] kobject_add_internal failed for pgd_cache(13:init.scope) error:
+> -2 parent: cgroup)
+>  
+> > Thanks,
+> > Mark.
+> > 
+> 
+> [1] https://cailca.github.io/files/dmesg.txt
+> 
