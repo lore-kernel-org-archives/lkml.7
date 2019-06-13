@@ -2,120 +2,87 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF98C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC54C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D346D2147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7542133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbfFMTxN (ORCPT
+        id S1729266AbfFMTyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 15:53:13 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:36248 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727156AbfFMTxM (ORCPT
+        Thu, 13 Jun 2019 15:54:18 -0400
+Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:38048 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfFMTyS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:53:12 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hbVmW-0002Bd-KP; Thu, 13 Jun 2019 21:53:08 +0200
-Date:   Thu, 13 Jun 2019 21:53:07 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-cc:     Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Waiman Long <longman@redhat.com>, X86 ML <x86@kernel.org>
-Subject: Re: infinite loop in read_hpet from ktime_get_boot_fast_ns
-In-Reply-To: <CAHmME9q1ihF617=Gjw9k9BK7OC9Ghnzfnfi6LfvJ8DG+vrQOqA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1906132136280.1791@nanos.tec.linutronix.de>
-References: <CAHmME9qBDtO1vJrA2Ch3SQigsu435wR7Q3vTm_3R=u=BE49S-Q@mail.gmail.com> <alpine.DEB.2.21.1906112257120.2214@nanos.tec.linutronix.de> <20190612090257.GF3436@hirez.programming.kicks-ass.net> <CAHmME9obwzZ5x=p3twDfNYux+kg0h4QAGe0ePAkZ2KqvguBK3g@mail.gmail.com>
- <CAK8P3a15NTV=njOjz-ccYL8=_q_MdEru0A+jeE=f7ufUTOOTgw@mail.gmail.com> <CAHmME9pOWk_ZteUZc_PT19rMn1kfYcXtmLcyAy5sncdV1tNuiQ@mail.gmail.com> <CAK8P3a3DpRvk1Mw_MKs8wAbRJbMUQoY2UTgK1CF8UOiBQg=btw@mail.gmail.com> <CAHmME9pVeYBkUX058EA-W4ZkEch=enPsiPioWnkVLK03djuQ9A@mail.gmail.com>
- <alpine.DEB.2.21.1906131822300.1791@nanos.tec.linutronix.de> <CAHmME9q1ihF617=Gjw9k9BK7OC9Ghnzfnfi6LfvJ8DG+vrQOqA@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 13 Jun 2019 15:54:18 -0400
+Received: from localhost.localdomain ([92.148.209.44])
+        by mwinf5d62 with ME
+        id QKuD2000j0y1A8U03KuEMK; Thu, 13 Jun 2019 21:54:16 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 13 Jun 2019 21:54:16 +0200
+X-ME-IP: 92.148.209.44
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     aviad.krawczyk@huawei.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH net-next] hinic: Use devm_kasprintf instead of hard coding it
+Date:   Thu, 13 Jun 2019 21:54:12 +0200
+Message-Id: <20190613195412.1702-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019, Jason A. Donenfeld wrote:
+'devm_kasprintf' is less verbose than:
+   snprintf(NULL, 0, ...);
+   devm_kzalloc(...);
+   sprintf
+so use it instead.
 
-> On Thu, Jun 13, 2019 at 6:26 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > That does not make sense. The coarse time getters use
-> > tk->tkr_mono.base. base is updated every tick (or if the machine is
-> > completely idle right when the first CPU wakes up again).
-> 
-> Sense or not, it seems to be happening, at least on 5.2-rc4:
-
-Bah. Seems I had paged out all the subtle parts of timekeeping and answered
-from my blurred memory while traveling. Stared at it for a while and of
-course base is only updated every second. The nsec part uses the
-accumulated nsecs (< 1sec) plus the time delta read from the hardware. So
-yes, the ktime_get_coarse* stuff has been broken from day one.
-
-Fix below.
-
-Thanks,
-
-	tglx
-
-8<------------------
-Subject: timekeeping: Repair ktime_get_coarse*() granularity
-From: Thomas Gleixner <tglx@linutronix.de>
-Date: Thu, 13 Jun 2019 21:40:45 +0200
-
-Jason reported that the coarse ktime based time getters advance only once
-per second and not once per tick as advertised.
-
-The code reads only the monotonic base time, which advances once per
-second. The nanoseconds are accumulated on every tick in xtime_nsec up to
-a second and the regular time getters take this nanoseconds offset into
-account, but the ktime_get_coarse*() implementation fails to do so.
-
-Add the accumulated xtime_nsec value to the monotonic base time to get the
-proper per tick advancing coarse tinme.
-
-Fixes: b9ff604cff11 ("timekeeping: Add ktime_get_coarse_with_offset")
-Reported-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- kernel/time/timekeeping.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/huawei/hinic/hinic_rx.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -810,17 +810,18 @@ ktime_t ktime_get_coarse_with_offset(enu
- 	struct timekeeper *tk = &tk_core.timekeeper;
- 	unsigned int seq;
- 	ktime_t base, *offset = offsets[offs];
-+	u64 nsecs;
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_rx.c b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
+index 9b4082557ad5..95b09fd110d3 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_rx.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
+@@ -493,7 +493,7 @@ int hinic_init_rxq(struct hinic_rxq *rxq, struct hinic_rq *rq,
+ 		   struct net_device *netdev)
+ {
+ 	struct hinic_qp *qp = container_of(rq, struct hinic_qp, rq);
+-	int err, pkts, irqname_len;
++	int err, pkts;
  
- 	WARN_ON(timekeeping_suspended);
+ 	rxq->netdev = netdev;
+ 	rxq->rq = rq;
+@@ -502,13 +502,11 @@ int hinic_init_rxq(struct hinic_rxq *rxq, struct hinic_rq *rq,
  
- 	do {
- 		seq = read_seqcount_begin(&tk_core.seq);
- 		base = ktime_add(tk->tkr_mono.base, *offset);
-+		nsecs = tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
+ 	rxq_stats_init(rxq);
  
- 	} while (read_seqcount_retry(&tk_core.seq, seq));
+-	irqname_len = snprintf(NULL, 0, "hinic_rxq%d", qp->q_id) + 1;
+-	rxq->irq_name = devm_kzalloc(&netdev->dev, irqname_len, GFP_KERNEL);
++	rxq->irq_name = devm_kasprintf(&netdev->dev, GFP_KERNEL,
++				       "hinic_rxq%d", qp->q_id);
+ 	if (!rxq->irq_name)
+ 		return -ENOMEM;
  
--	return base;
+-	sprintf(rxq->irq_name, "hinic_rxq%d", qp->q_id);
 -
-+	return base + nsecs;
- }
- EXPORT_SYMBOL_GPL(ktime_get_coarse_with_offset);
- 
+ 	pkts = rx_alloc_pkts(rxq);
+ 	if (!pkts) {
+ 		err = -ENOMEM;
+-- 
+2.20.1
+
