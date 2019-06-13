@@ -2,84 +2,104 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE86FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE5CC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B482521743
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B29332175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:05:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="aGzm61LU"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="oP6ERCa1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732970AbfFMPE7 (ORCPT
+        id S1732616AbfFMPFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:04:59 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:54166 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732464AbfFMORT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:17:19 -0400
-Received: from zn.tnic (p200300EC2F06D500349353021D4CE514.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:d500:3493:5302:1d4c:e514])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9B7251EC0235;
-        Thu, 13 Jun 2019 16:17:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560435438;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=mm3XxwESAph1yISTiwQTaeINydDZWYAofTkk9QcLO78=;
-        b=aGzm61LUpNyURNpdinzoqQoqVmbeK2F0sbWSlFVSKj84jBS6xboqS6Ry3YjSZiK6rkhKb6
-        iC0AUwW1KvTejSf1iJmh1dxFKQcd7q2yo5Bq2/ZHkrY8mR578CdNQR4n+xOjU5iXZR96fM
-        +2mQ1cWqyNXs/G32ppq9G/YjwkSt76s=
-Date:   Thu, 13 Jun 2019 16:17:15 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/8] EDAC/amd64: Support more than two controllers for
- chip selects handling
-Message-ID: <20190613141715.GD11598@zn.tnic>
-References: <20190531234501.32826-1-Yazen.Ghannam@amd.com>
- <20190531234501.32826-3-Yazen.Ghannam@amd.com>
+        Thu, 13 Jun 2019 11:05:02 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46734 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732461AbfFMORK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 10:17:10 -0400
+Received: by mail-qt1-f195.google.com with SMTP id h21so22668784qtn.13
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 07:17:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IdWKzce3sZz9+VK0mMGhceU7W1z4LrhQkC1c9OeYugc=;
+        b=oP6ERCa1F6T8r6pSHlZINu6LknBTF+UPLpwmpRJcH+T6FdeYawjrBm7oQ0iaSVxmjD
+         LZmwbZomBs1w1G2Z2uECjOVu4ctdMmjAbGswoZajXSueNHfNEi2kDdbB0eo5K/L6TPX7
+         gZDgT2bbG1XJxfKdQTmNc/rRjKzTRncWVcJVin9R+eQOLHXhMw81x04KLiHKKskUszQf
+         ZBhBJw5X9u7/w7EZhQAiKlEqEZsI6T8SkRldzr2n/0VkSPQGDovwNcD8pbdF8P8kD9fH
+         yrx5FvRP/YCxnPdJUo/PdMnD9HHxHisaI1pK2EJyShl5GyzSbTt0LN5tNALrEQUHkLxB
+         Gsyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IdWKzce3sZz9+VK0mMGhceU7W1z4LrhQkC1c9OeYugc=;
+        b=X/2g5K2wmsMXUfAWg0sDwKZwkaKO0LrgrrCGH9w0NZCJhO+ZvQW+4DN1jmoDedTrL1
+         YxIrItsUfMt5yzxO+ISgCr3nsux3vIAgptU4QOcm24Evbqgm1eFP78BoYcxQXk71xUxJ
+         KlxFpsVh+k2B8oGnvtN+OQ2zXwivFMMfVHSe0cRghGOWnoCsa8PXj9bJC1hg0dL0bvR5
+         PddPZRTEf/Mxj0HYRnQIyz8IVP3/kD16Ia8YdBEQqXMB6pVWnBb+c/evfOVT+wFFzpJD
+         WN6hwe1waFfAdkSma+jmGP+5ZsCcyd5W8KnjLeSBhVkyOBISt46LSyCyJzmR7G/+HM11
+         SXkA==
+X-Gm-Message-State: APjAAAX4WpGZ1PFc8u8ToKGUaPMBcG+wd2xr+Kh2sURikfPkrfAiCJkQ
+        SBklm/JvnxQ+0J8Ge7roR3b9fQ==
+X-Google-Smtp-Source: APXvYqx5jPsVPa9dGQd9Bui4/XGgLT6BOzvijxJlMoqU0XvFjHiv3oPKH2im4jOl3Wj+44uE9UzG2A==
+X-Received: by 2002:ac8:25dd:: with SMTP id f29mr66160028qtf.144.1560435429256;
+        Thu, 13 Jun 2019 07:17:09 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::9d6b])
+        by smtp.gmail.com with ESMTPSA id 102sm1338356qte.52.2019.06.13.07.17.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 07:17:09 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 10:17:07 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Naohiro Aota <naohiro.aota@wdc.com>
+Cc:     linux-btrfs@vger.kernel.org, David Sterba <dsterba@suse.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
+        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        linux-fsdevel@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Matias =?utf-8?B?QmrDuHJsaW5n?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH 13/19] btrfs: avoid sync IO prioritization on checksum in
+ HMZONED mode
+Message-ID: <20190613141706.tbxc5wufplfybfib@MacBook-Pro-91.local>
+References: <20190607131025.31996-1-naohiro.aota@wdc.com>
+ <20190607131025.31996-14-naohiro.aota@wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190531234501.32826-3-Yazen.Ghannam@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190607131025.31996-14-naohiro.aota@wdc.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 11:45:12PM +0000, Ghannam, Yazen wrote:
-> diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-> index 9fa2f205f05c..dd60cf5a3d96 100644
-> --- a/drivers/edac/amd64_edac.c
-> +++ b/drivers/edac/amd64_edac.c
-> @@ -943,91 +943,101 @@ static void prep_chip_selects(struct amd64_pvt *pvt)
->  		pvt->csels[0].b_cnt = pvt->csels[1].b_cnt = 4;
->  		pvt->csels[0].m_cnt = pvt->csels[1].m_cnt = 2;
->  	} else if (pvt->fam >= 0x17) {
-> -		pvt->csels[0].b_cnt = pvt->csels[1].b_cnt = 4;
-> -		pvt->csels[0].m_cnt = pvt->csels[1].m_cnt = 2;
-> +		int umc;
-> +
-> +		for_each_umc(umc) {
-> +			pvt->csels[umc].b_cnt = 4;
-> +			pvt->csels[umc].m_cnt = 2;
-> +		}
-> +
+On Fri, Jun 07, 2019 at 10:10:19PM +0900, Naohiro Aota wrote:
+> Btrfs prioritize sync I/Os to be handled by async checksum worker earlier.
+> As a result, checksumming sync I/Os to larger logical extent address can
+> finish faster than checksumming non-sync I/Os to smaller logical extent
+> address.
+> 
+> Since we have upper limit of number of checksum worker, it is possible that
+> sync I/Os to wait forever for non-starting checksum of I/Os for smaller
+> address.
+> 
+> This situation can be reproduced by e.g. fstests btrfs/073.
+> 
+> To avoid such disordering, disable sync IO prioritization for now. Note
+> that sync I/Os anyway must wait for I/Os to smaller address to finish. So,
+> actually prioritization have no benefit in HMZONED mode.
+> 
 
-What is the purpose of the previous commit if you're changing it here in
-the next one?
+This stuff is going away once we finish the io.weight work anyway, I wouldn't
+worry about this.  Thanks,
 
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Josef
