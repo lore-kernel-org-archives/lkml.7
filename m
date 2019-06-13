@@ -2,213 +2,260 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16329C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C72C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE11220679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:24:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cwDZbbRi"
+	by mail.kernel.org (Postfix) with ESMTP id 0180920679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:26:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfFMSYf (ORCPT
+        id S1728053AbfFMS0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:24:35 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:19902 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbfFMSYf (ORCPT
+        Thu, 13 Jun 2019 14:26:02 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:36079 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbfFMS0B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:24:35 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0294e00000>; Thu, 13 Jun 2019 11:24:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 13 Jun 2019 11:24:32 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 13 Jun 2019 11:24:32 -0700
-Received: from [10.25.73.66] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Jun
- 2019 18:24:29 +0000
-Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <bhelgaas@google.com>, <Jisheng.Zhang@synaptics.com>,
-        <thierry.reding@gmail.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190502170426.28688-1-vidyas@nvidia.com>
- <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
- <dec5ecb2-863e-a1db-10c9-2d91f860a2c6@nvidia.com>
- <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
- <b560f3c3-b69e-d9b5-2dae-1ede52af0ea6@nvidia.com>
- <011b52b6-9fcd-8930-1313-6b546226c7b9@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
-Date:   Thu, 13 Jun 2019 23:54:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 14:26:01 -0400
+Received: by mail-io1-f70.google.com with SMTP id k21so15672333ioj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:26:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=H8fkKRsajFNvveyMibT6Ym6gwJL9IWybrrDbLE6hjXM=;
+        b=g/dgSw7B2m5N0PZ2STEOkEfm//dBj25RBN63Gz+EnDB3VFdv/9QEsMe0dCrdSvV1VL
+         eac2MtLOCaD8XeJ+p5GI1GJBfg4Xegmd+B7np5r25zNMNgoTpFoZJOLq+GNcmMu0sWZL
+         Eb/dR6gEXHvY1TTevn3I0pWMnLpE9huSXlMkdOzaYEF9ghGMTUbDUPgp9t63hgpHVIuc
+         g1TJ0yC/3vw4FLMmKWuew0Xy5e3f2I50OhVBTTsAquvmOMu1Cj48jX1hL0eLpiat/yB9
+         6Lob6iMwzut3tmklt29JJlc+U8i5PgEp/0KpZC1MBL3PVMro34bRZ8eNfA1DIq16Jine
+         x84g==
+X-Gm-Message-State: APjAAAXQr1YtE8iKwn0aRUMU3JzXUXe1nVazHUDgHPIYzE1Jw0MAGC9x
+        R0ISWkbMJL42dNuupMVtWO5N4D6D1DcSxvhMgJejR1BPf+yg
+X-Google-Smtp-Source: APXvYqzBC1FZKm6BWRsem6orfogvQHSXv8MqMWzwoem5idhuC5D8v+7E99KxjGlqvsPxtqaqrIOr9RdqfLmefvin5NKd9sUHCap2
 MIME-Version: 1.0
-In-Reply-To: <011b52b6-9fcd-8930-1313-6b546226c7b9@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560450272; bh=8e5+YQl3ybd2VIPeXzJDvgsHhnZhXmat1afJBCN4yvU=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=cwDZbbRi4Ch1nMDlv2Y5q0unD5Bly2ehpDzK3x9gpsN3nAIHmarWbUjCAmnXAJCWK
-         ycKLwdS2+Rddp4Jt2pAjAAqzIyFJrWKOcBi6tZ/cEX/E/6Udt9HfshvoOiw1CwzlCT
-         DOztKdXrVjd5hm2NwVcBobvRLakL5rkBJ4NLqGk3A3nqJsK2zqQbWJHHxsgCygAF1K
-         yCjVVKOZlbx0dp+tdpFmnyRz5sR+wSlpcbLhju1h3/bfKl4ETrAwup6StoV1JYZ15Z
-         kEJiVTYCYUt84iQ7rqG6l9xFk6p+/nW9qZSy/IYWqthMDK05XvRFA6qwts/8/4/1Z8
-         aoPlB8MryWxBQ==
+X-Received: by 2002:a02:b90e:: with SMTP id v14mr28704806jan.122.1560450360686;
+ Thu, 13 Jun 2019 11:26:00 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 11:26:00 -0700
+In-Reply-To: <CACT4Y+bAuAiApr9CxSH5CoDnZ5hYmU+K4kJqrSo5yBZLyrzONA@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007042a8058b38a946@google.com>
+Subject: Re: memory leak in vhost_net_ioctl
+From:   syzbot <syzbot+0789f0c7e45efd7bb643@syzkaller.appspotmail.com>
+To:     asias@redhat.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, dvyukov@google.com,
+        hawk@kernel.org, hdanton@sina.com, jakub.kicinski@netronome.com,
+        jasowang@redhat.com, john.fastabend@gmail.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mst@redhat.com,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        virtualization@lists.linux-foundation.org,
+        xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/7/2019 6:43 PM, Vidya Sagar wrote:
-> On 5/27/2019 4:39 PM, Vidya Sagar wrote:
->> On 5/7/2019 12:25 PM, Vidya Sagar wrote:
->>> On 5/7/2019 11:19 AM, Vidya Sagar wrote:
->>>> On 5/3/2019 4:53 PM, Lorenzo Pieralisi wrote:
->>>>> On Thu, May 02, 2019 at 10:34:25PM +0530, Vidya Sagar wrote:
->>>>>> Add an API to group all the tasks to be done to de-initialize host w=
-hich
->>>>>> can then be called by any DesignWare core based driver implementatio=
-ns
->>>>>> while adding .remove() support in their respective drivers.
->>>>>>
->>>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>>>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->>>>>> ---
->>>>>> Changes from v3:
->>>>>> * Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) befo=
-re calling
->>>>>> =C2=A0=C2=A0 dw_pcie_free_msi() API to mimic init path
->>>>>>
->>>>>> Changes from v2:
->>>>>> * Rebased on top of linux-next top of the tree branch
->>>>>>
->>>>>> Changes from v1:
->>>>>> * s/Designware/DesignWare
->>>>>>
->>>>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware-host.c | 8 +++++++=
-+
->>>>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware.h=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 | 5 +++++
->>>>>> =C2=A0 2 files changed, 13 insertions(+)
->>>>>
->>>>> Series doesn't apply to v5.1-rc1, what's based on ? I suspect
->>>>> there is a dependency on pci/keystone, given the tight timeline
->>>>> for the merge window, would you mind postponing it to v5.3 ?
->>>>>
->>>>> I do not think it is urgent, I am happy to create a branch
->>>>> for it as soon as v5.2-rc1 is released.
->>>> I rebased my changes on top of linux-next. I see that they have confli=
-cts
->>>> on top of v5.1-rc1. Do you want me to rebase them on top of v5.1-rc1 i=
-nstead
->>>> of linux-next?
->>>> I'm fine with v5.2-rc1 as well.I forgot to mention that these changes =
-are made on top of Jisheng's patches
->>> FWIW, Jisheng's patches are approved and applied to pci/dwc for v5.2
->>> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1968324.ht=
-ml
->>
->> Hi Lorenzo,
->> Now that v5.2-rc2 is also available, could you please pick up this serie=
-s?
->>
->> Thanks,
->> Vidya Sagar
->>
-> Hi Bjorn / Lorenzo,
-> Can you please pick up these two patches?
->=20
-> Thanks,
-> Vidya Sagar
-Apologies for pinging again. These two patches can be applied directly on t=
-op of
-v5.2-rc4. Please do let me know if there is anything required from my side.
+Hello,
 
-Thanks,
-Vidya Sagar
+syzbot has tested the proposed patch but the reproducer still triggered  
+crash:
+memory leak in vhost_net_ioctl
+
+ANGE): hsr_slave_1: link becomes ready
+2019/06/13 18:24:57 executed programs: 18
+BUG: memory leak
+unreferenced object 0xffff88811cbc6ac0 (size 64):
+   comm "syz-executor.0", pid 7196, jiffies 4294943804 (age 14.770s)
+   hex dump (first 32 bytes):
+     01 00 00 00 81 88 ff ff 00 00 00 00 82 88 ff ff  ................
+     d0 6a bc 1c 81 88 ff ff d0 6a bc 1c 81 88 ff ff  .j.......j......
+   backtrace:
+     [<000000006c752978>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000006c752978>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<000000006c752978>] slab_alloc mm/slab.c:3326 [inline]
+     [<000000006c752978>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+     [<00000000b3825d52>] kmalloc include/linux/slab.h:547 [inline]
+     [<00000000b3825d52>] vhost_net_ubuf_alloc drivers/vhost/net.c:241  
+[inline]
+     [<00000000b3825d52>] vhost_net_set_backend drivers/vhost/net.c:1535  
+[inline]
+     [<00000000b3825d52>] vhost_net_ioctl+0xb43/0xc10  
+drivers/vhost/net.c:1717
+     [<00000000700f02d7>] vfs_ioctl fs/ioctl.c:46 [inline]
+     [<00000000700f02d7>] file_ioctl fs/ioctl.c:509 [inline]
+     [<00000000700f02d7>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
+     [<000000009a0ec0a7>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
+     [<00000000d9416323>] __do_sys_ioctl fs/ioctl.c:720 [inline]
+     [<00000000d9416323>] __se_sys_ioctl fs/ioctl.c:718 [inline]
+     [<00000000d9416323>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
+     [<00000000e4407a23>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<000000008715c149>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88810b1365c0 (size 64):
+   comm "syz-executor.2", pid 7193, jiffies 4294943823 (age 14.580s)
+   hex dump (first 32 bytes):
+     01 00 00 00 81 88 ff ff 00 00 00 00 81 88 ff ff  ................
+     d0 65 13 0b 81 88 ff ff d0 65 13 0b 81 88 ff ff  .e.......e......
+   backtrace:
+     [<000000006c752978>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000006c752978>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<000000006c752978>] slab_alloc mm/slab.c:3326 [inline]
+     [<000000006c752978>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+     [<00000000b3825d52>] kmalloc include/linux/slab.h:547 [inline]
+     [<00000000b3825d52>] vhost_net_ubuf_alloc drivers/vhost/net.c:241  
+[inline]
+     [<00000000b3825d52>] vhost_net_set_backend drivers/vhost/net.c:1535  
+[inline]
+     [<00000000b3825d52>] vhost_net_ioctl+0xb43/0xc10  
+drivers/vhost/net.c:1717
+     [<00000000700f02d7>] vfs_ioctl fs/ioctl.c:46 [inline]
+     [<00000000700f02d7>] file_ioctl fs/ioctl.c:509 [inline]
+     [<00000000700f02d7>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
+     [<000000009a0ec0a7>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
+     [<00000000d9416323>] __do_sys_ioctl fs/ioctl.c:720 [inline]
+     [<00000000d9416323>] __se_sys_ioctl fs/ioctl.c:718 [inline]
+     [<00000000d9416323>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
+     [<00000000e4407a23>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<000000008715c149>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88810be23700 (size 64):
+   comm "syz-executor.3", pid 7194, jiffies 4294943823 (age 14.580s)
+   hex dump (first 32 bytes):
+     01 00 00 00 00 00 00 00 00 00 00 00 00 c9 ff ff  ................
+     10 37 e2 0b 81 88 ff ff 10 37 e2 0b 81 88 ff ff  .7.......7......
+   backtrace:
+     [<000000006c752978>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000006c752978>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<000000006c752978>] slab_alloc mm/slab.c:3326 [inline]
+     [<000000006c752978>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+     [<00000000b3825d52>] kmalloc include/linux/slab.h:547 [inline]
+     [<00000000b3825d52>] vhost_net_ubuf_alloc drivers/vhost/net.c:241  
+[inline]
+     [<00000000b3825d52>] vhost_net_set_backend drivers/vhost/net.c:1535  
+[inline]
+     [<00000000b3825d52>] vhost_net_ioctl+0xb43/0xc10  
+drivers/vhost/net.c:1717
+     [<00000000700f02d7>] vfs_ioctl fs/ioctl.c:46 [inline]
+     [<00000000700f02d7>] file_ioctl fs/ioctl.c:509 [inline]
+     [<00000000700f02d7>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
+     [<000000009a0ec0a7>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
+     [<00000000d9416323>] __do_sys_ioctl fs/ioctl.c:720 [inline]
+     [<00000000d9416323>] __se_sys_ioctl fs/ioctl.c:718 [inline]
+     [<00000000d9416323>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
+     [<00000000e4407a23>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<000000008715c149>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88810b136500 (size 64):
+   comm "syz-executor.6", pid 7228, jiffies 4294943827 (age 14.540s)
+   hex dump (first 32 bytes):
+     01 00 00 00 20 69 6f 63 00 00 00 00 64 65 76 2f  .... ioc....dev/
+     10 65 13 0b 81 88 ff ff 10 65 13 0b 81 88 ff ff  .e.......e......
+   backtrace:
+     [<000000006c752978>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000006c752978>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<000000006c752978>] slab_alloc mm/slab.c:3326 [inline]
+     [<000000006c752978>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+     [<00000000b3825d52>] kmalloc include/linux/slab.h:547 [inline]
+     [<00000000b3825d52>] vhost_net_ubuf_alloc drivers/vhost/net.c:241  
+[inline]
+     [<00000000b3825d52>] vhost_net_set_backend drivers/vhost/net.c:1535  
+[inline]
+     [<00000000b3825d52>] vhost_net_ioctl+0xb43/0xc10  
+drivers/vhost/net.c:1717
+     [<00000000700f02d7>] vfs_ioctl fs/ioctl.c:46 [inline]
+     [<00000000700f02d7>] file_ioctl fs/ioctl.c:509 [inline]
+     [<00000000700f02d7>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
+     [<000000009a0ec0a7>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
+     [<00000000d9416323>] __do_sys_ioctl fs/ioctl.c:720 [inline]
+     [<00000000d9416323>] __se_sys_ioctl fs/ioctl.c:718 [inline]
+     [<00000000d9416323>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
+     [<00000000e4407a23>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<000000008715c149>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88810b9cfec0 (size 64):
+   comm "syz-executor.7", pid 7236, jiffies 4294943829 (age 14.520s)
+   hex dump (first 32 bytes):
+     01 00 00 00 20 69 6f 63 00 00 00 00 64 65 76 2f  .... ioc....dev/
+     d0 fe 9c 0b 81 88 ff ff d0 fe 9c 0b 81 88 ff ff  ................
+   backtrace:
+     [<000000006c752978>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000006c752978>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<000000006c752978>] slab_alloc mm/slab.c:3326 [inline]
+     [<000000006c752978>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+     [<00000000b3825d52>] kmalloc include/linux/slab.h:547 [inline]
+     [<00000000b3825d52>] vhost_net_ubuf_alloc drivers/vhost/net.c:241  
+[inline]
+     [<00000000b3825d52>] vhost_net_set_backend drivers/vhost/net.c:1535  
+[inline]
+     [<00000000b3825d52>] vhost_net_ioctl+0xb43/0xc10  
+drivers/vhost/net.c:1717
+     [<00000000700f02d7>] vfs_ioctl fs/ioctl.c:46 [inline]
+     [<00000000700f02d7>] file_ioctl fs/ioctl.c:509 [inline]
+     [<00000000700f02d7>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
+     [<000000009a0ec0a7>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
+     [<00000000d9416323>] __do_sys_ioctl fs/ioctl.c:720 [inline]
+     [<00000000d9416323>] __se_sys_ioctl fs/ioctl.c:718 [inline]
+     [<00000000d9416323>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
+     [<00000000e4407a23>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<000000008715c149>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88810b9cd380 (size 64):
+   comm "syz-executor.4", pid 7218, jiffies 4294943834 (age 14.470s)
+   hex dump (first 32 bytes):
+     01 00 00 00 81 88 ff ff 00 00 00 00 81 88 ff ff  ................
+     90 d3 9c 0b 81 88 ff ff 90 d3 9c 0b 81 88 ff ff  ................
+   backtrace:
+     [<000000006c752978>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<000000006c752978>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<000000006c752978>] slab_alloc mm/slab.c:3326 [inline]
+     [<000000006c752978>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+     [<00000000b3825d52>] kmalloc include/linux/slab.h:547 [inline]
+     [<00000000b3825d52>] vhost_net_ubuf_alloc drivers/vhost/net.c:241  
+[inline]
+     [<00000000b3825d52>] vhost_net_set_backend drivers/vhost/net.c:1535  
+[inline]
+     [<00000000b3825d52>] vhost_net_ioctl+0xb43/0xc10  
+drivers/vhost/net.c:1717
+     [<00000000700f02d7>] vfs_ioctl fs/ioctl.c:46 [inline]
+     [<00000000700f02d7>] file_ioctl fs/ioctl.c:509 [inline]
+     [<00000000700f02d7>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
+     [<000000009a0ec0a7>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
+     [<00000000d9416323>] __do_sys_ioctl fs/ioctl.c:720 [inline]
+     [<00000000d9416323>] __se_sys_ioctl fs/ioctl.c:718 [inline]
+     [<00000000d9416323>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
+     [<00000000e4407a23>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<000000008715c149>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
 
->=20
->>>
->>>>
->>>>>
->>>>> Thanks,
->>>>> Lorenzo
->>>>>
->>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/dri=
-vers/pci/controller/dwc/pcie-designware-host.c
->>>>>> index 77db32529319..d069e4290180 100644
->>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>> @@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>>>> =C2=A0 }
->>>>>> +void dw_pcie_host_deinit(struct pcie_port *pp)
->>>>>> +{
->>>>>> +=C2=A0=C2=A0=C2=A0 pci_stop_root_bus(pp->root_bus);
->>>>>> +=C2=A0=C2=A0=C2=A0 pci_remove_root_bus(pp->root_bus);
->>>>>> +=C2=A0=C2=A0=C2=A0 if (pci_msi_enabled() && !pp->ops->msi_host_init=
-)
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_free_msi(pp);
->>>>>> +}
->>>>>> +
->>>>>> =C2=A0 static int dw_pcie_access_other_conf(struct pcie_port *pp, st=
-ruct pci_bus *bus,
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 devf=
-n, int where, int size, u32 *val,
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool wri=
-te)
->>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/=
-pci/controller/dwc/pcie-designware.h
->>>>>> index deab426affd3..4f48ec78c7b9 100644
->>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
->>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->>>>>> @@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
->>>>>> =C2=A0 void dw_pcie_free_msi(struct pcie_port *pp);
->>>>>> =C2=A0 void dw_pcie_setup_rc(struct pcie_port *pp);
->>>>>> =C2=A0 int dw_pcie_host_init(struct pcie_port *pp);
->>>>>> +void dw_pcie_host_deinit(struct pcie_port *pp);
->>>>>> =C2=A0 int dw_pcie_allocate_domains(struct pcie_port *pp);
->>>>>> =C2=A0 #else
->>>>>> =C2=A0 static inline irqreturn_t dw_handle_msi_irq(struct pcie_port =
-*pp)
->>>>>> @@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct pcie=
-_port *pp)
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>>>> =C2=A0 }
->>>>>> +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
->>>>>> +{
->>>>>> +}
->>>>>> +
->>>>>> =C2=A0 static inline int dw_pcie_allocate_domains(struct pcie_port *=
-pp)
->>>>>> =C2=A0 {
->>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>>>> --=20
->>>>>> 2.17.1
->>>>>>
->>>>
->>>
->>
->=20
+
+Tested on:
+
+commit:         c11fb13a Merge branch 'for-linus' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11c6b666a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cb38d33cd06d8d48
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=11ff0de1a00000
 
