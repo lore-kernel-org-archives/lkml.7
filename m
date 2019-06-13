@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5A4C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A51EC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 573FD20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635DB20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442717;
-	bh=Pr0OKV+vNmFOWLJsWKtStxn11AlVOWFE4I2lYa1OZyU=;
+	s=default; t=1560442725;
+	bh=xpK+eI+s7i4P2DvAJ57ZpGxDAuf/wGSmZvPLg6y8mUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WVJeVmCeVVi7LjeOTQNmOVHQnx/oVe+1S4smWi8/hEwf5s4QORQpfMsiYw3r2Pbzr
-	 9CT21aLJXyxJ7OHGkAAQgQbD4JZu8/bn8o/ZzzbAG97TJlg1DXgUqHMeno2gDl/y6j
-	 she1l9P0CiR7PV/Dnz/oIE7ONSKv4iUqTovUg6c0=
+	b=RIuOm30+/ZXiWlh64Msq3XD9tjL8pp+JoRwAuOM4p1JkFOar3e7oRaTNf+KiJWjsr
+	 8zhKZY49FWDGHPL5hsrOlSwXV7v8EjBbe1tOMm6Tsych8h/t8Pf+A1c3eFyH8sRrSl
+	 6ybUBPBnv5bBn5t8D7FdjEbTkCUsFY3Nt2T7C0RE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391813AbfFMQS1 (ORCPT
+        id S2388616AbfFMQSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:18:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57838 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:18:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731115AbfFMIkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:40:23 -0400
+        id S1731109AbfFMIkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:40:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A49721473;
-        Thu, 13 Jun 2019 08:40:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4648021473;
+        Thu, 13 Jun 2019 08:40:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415222;
-        bh=Pr0OKV+vNmFOWLJsWKtStxn11AlVOWFE4I2lYa1OZyU=;
+        s=default; t=1560415211;
+        bh=xpK+eI+s7i4P2DvAJ57ZpGxDAuf/wGSmZvPLg6y8mUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZnBQBL8ENIU9bLKKFvPHmG/BIFPVfcZ3ioyM4ZLNx62mDukNjjyVmotVQpyqaob4/
-         w8+NaEMH2uA61qtkqjF5y2XFRTKW2mFwWqUgNG7Z8FFRtP4kb43dmXverFQRoH6WaG
-         +gRjVpfNTQgufa2C9H5xv5U3eVE5b9vMazSCOlKo=
+        b=cJnCTrQj+jCAzTcoq3ZAFbp8Iuojo3xYOw9qTsdLKtAg+wlA6Evq/WVMdXcRGrUYO
+         QYrKJ6vqk7917khZFjX8XlZG+HZJJ/UVwhkRbPPWsh5FeazpqF9zON6QE+8jcaenbK
+         VgvlixDsGr5dvXaJRJ5enOtC3yGAv4uT4CIcWejw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 048/118] mmc: mmci: Prevent polling for busy detection in IRQ context
-Date:   Thu, 13 Jun 2019 10:33:06 +0200
-Message-Id: <20190613075646.591338044@linuxfoundation.org>
+Subject: [PATCH 4.19 036/118] f2fs: fix to do sanity check on free nid
+Date:   Thu, 13 Jun 2019 10:32:54 +0200
+Message-Id: <20190613075645.612830799@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -60,42 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8520ce1e17799b220ff421d4f39438c9c572ade3 ]
+[ Upstream commit 626bcf2b7ce87211dba565f2bfa7842ba5be5c1b ]
 
-The IRQ handler, mmci_irq(), loops until all status bits have been cleared.
-However, the status bit signaling busy in variant->busy_detect_flag, may be
-set even if busy detection isn't monitored for the current request.
+As Jungyeon reported in bugzilla:
 
-This may be the case for the CMD11 when switching the I/O voltage, which
-leads to that mmci_irq() busy loops in IRQ context. Fix this problem, by
-clearing the status bit for busy, before continuing to validate the
-condition for the loop. This is safe, because the busy status detection has
-already been taken care of by mmci_cmd_irq().
+https://bugzilla.kernel.org/show_bug.cgi?id=203225
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+- Overview
+When mounting the attached crafted image and unmounting it, following errors are reported.
+Additionally, it hangs on sync after unmounting.
+
+The image is intentionally fuzzed from a normal f2fs image for testing.
+Compile options for F2FS are as follows.
+CONFIG_F2FS_FS=y
+CONFIG_F2FS_STAT_FS=y
+CONFIG_F2FS_FS_XATTR=y
+CONFIG_F2FS_FS_POSIX_ACL=y
+CONFIG_F2FS_CHECK_FS=y
+
+- Reproduces
+mkdir test
+mount -t f2fs tmp.img test
+touch test/t
+umount test
+sync
+
+- Messages
+ kernel BUG at fs/f2fs/node.c:3073!
+ RIP: 0010:f2fs_destroy_node_manager+0x2f0/0x300
+ Call Trace:
+  f2fs_put_super+0xf4/0x270
+  generic_shutdown_super+0x62/0x110
+  kill_block_super+0x1c/0x50
+  kill_f2fs_super+0xad/0xd0
+  deactivate_locked_super+0x35/0x60
+  cleanup_mnt+0x36/0x70
+  task_work_run+0x75/0x90
+  exit_to_usermode_loop+0x93/0xa0
+  do_syscall_64+0xba/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ RIP: 0010:f2fs_destroy_node_manager+0x2f0/0x300
+
+NAT table is corrupted, so reserved meta/node inode ids were added into
+free list incorrectly, during file creation, since reserved id has cached
+in inode hash, so it fails the creation and preallocated nid can not be
+released later, result in kernel panic.
+
+To fix this issue, let's do nid boundary check during free nid loading.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/mmci.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/f2fs/node.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index 1841d250e9e2..eb1a65cb878f 100644
---- a/drivers/mmc/host/mmci.c
-+++ b/drivers/mmc/host/mmci.c
-@@ -1295,9 +1295,10 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
- 		}
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 807a77518a49..34c3f732601c 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -2079,6 +2079,9 @@ static bool add_free_nid(struct f2fs_sb_info *sbi,
+ 	if (unlikely(nid == 0))
+ 		return false;
  
- 		/*
--		 * Don't poll for busy completion in irq context.
-+		 * Busy detection has been handled by mmci_cmd_irq() above.
-+		 * Clear the status bit to prevent polling in IRQ context.
- 		 */
--		if (host->variant->busy_detect && host->busy_status)
-+		if (host->variant->busy_detect_flag)
- 			status &= ~host->variant->busy_detect_flag;
- 
- 		ret = 1;
++	if (unlikely(f2fs_check_nid_range(sbi, nid)))
++		return false;
++
+ 	i = f2fs_kmem_cache_alloc(free_nid_slab, GFP_NOFS);
+ 	i->nid = nid;
+ 	i->state = FREE_NID;
 -- 
 2.20.1
 
