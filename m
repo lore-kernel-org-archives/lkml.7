@@ -2,99 +2,93 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C84C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E97C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 906DC206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:35:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560440116;
-	bh=yQDo3aG80+76CZc8vNJaHa1q0KrK4cCRgQLyIDojr5M=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=jojPigTHKJllljuGtEZxGCaTEBBBp1snfDPeUIcrUjbbIhnCPM7zvdO/haeDr9kUD
-	 a06Xu5DEddJPIJbYfLYW3w4hRvqCD1VFepXAjPfjVElVVnjtiyTGC5rfh8OncPHVuz
-	 uIosRORIPTa56ynTcHg8vSinuxYEPd140ezzCkNw=
+	by mail.kernel.org (Postfix) with ESMTP id 1A7CF2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:35:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732294AbfFMPfP (ORCPT
+        id S1732338AbfFMPfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:35:15 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36372 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbfFMK3Y (ORCPT
+        Thu, 13 Jun 2019 11:35:21 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43918 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727846AbfFMK25 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 06:29:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=l6eX/LOpY2lKbloYe4ibvvvCroTQzEKMG7QHU9kz2r0=; b=Knqjy4+Nqo87caXZLzc3vAHdL
-        t3AV50Ce06k9sbtYT+1Hy7lHc7R9B8WlT71KU0CrbbPEdmAhPvyvNfgRpCVNgmXC1dWh63eaRWeuW
-        nz5MVAowbfTtwkqOvyq2Z+0QV0IWMmpChU/Pb+hlT1xLZ8BHVurZu/OZD2kw4dbDm8oM68SkQ29Om
-        yfrdbQwmM1c1Ll6e5X/J2rj3xkSe3GGRW86oqoZV6fbXUPtyOoKAgo8V+qIyJHP3714JHNRjsKgHS
-        jpFjLQz2iLy2j75wlPMKiYtWwz8HFklYqMk2lb8ytcTjqVhTgtbMw2N1pJ1Db/TZdoQ23N8JXre3q
-        1REHKG7mw==;
-Received: from 201.86.169.251.dynamic.adsl.gvt.net.br ([201.86.169.251] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbMyx-0007Z4-Hz; Thu, 13 Jun 2019 10:29:23 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hbMyv-0005vt-KN; Thu, 13 Jun 2019 07:29:21 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH] scripts/documentation-file-ref-check: ignore output dir
-Date:   Thu, 13 Jun 2019 07:29:17 -0300
-Message-Id: <093d01459be472a20894c5be6f9b937ff7fd7d47.1560421751.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
+        Thu, 13 Jun 2019 06:28:57 -0400
+Received: from mail-wr1-f70.google.com ([209.85.221.70])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <po-hsu.lin@canonical.com>)
+        id 1hbMyW-0002n3-1k
+        for linux-kernel@vger.kernel.org; Thu, 13 Jun 2019 10:28:56 +0000
+Received: by mail-wr1-f70.google.com with SMTP id q16so8621725wrx.5
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 03:28:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3vJoe4QOYmSpzL3TX3nF/EcZqCXILy8LMNIEV2dPMlw=;
+        b=JhtA3jYZpgQ6M0FdqGTvwHGxguW2moCsmpkCrHaDKa6DIsUrdSZnHZQyhaUsIH5wI5
+         8dIzLAGaxJWMkU8lOstr61fC6gcbgb8a3zR8B0tQT7ga+hvsER/+aAYZSXdMvhh7apBv
+         9hYd+Em2gHHkVBaqEIjkh85Oi/dImXVLwlu3yfm/QeAcfXZvVZRyDmBJk3YwSoOxSjRH
+         ATSirKbcJhOl2MwgUbGi93HrsSRnVWTGdG4hHY7xIGJ+uN3gpK4d1Hdn6Av4+/qpysx5
+         B3gZRWO2worIwPxR3L/GtmZHu6sGdNM9xM5PtR+VFeYAMoGXjJqHvXquNTIr7x5eBYso
+         C0IQ==
+X-Gm-Message-State: APjAAAUAYGdONnCbMFA5Pk5N0iwgexpgVAxvenr033vNd9mcElRL0Tmt
+        0sSTT8wgGT8BnM/YD4K6MQJbs11DeZTAjrLhQydAyWQZrjUVQN3pGQx7dvAczPS/Xdei6RPBMsQ
+        cgR1G4DfuH37TBRH2GItqiJz4H89bgB7dBD4djIVZoXS9A4loe6uYM73Z
+X-Received: by 2002:a7b:c313:: with SMTP id k19mr3050160wmj.2.1560421735777;
+        Thu, 13 Jun 2019 03:28:55 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwgKUzFv9JlTv26cq3GlGgLVgjVoMCkwh6CKsBT7LawKThQzRDyIbi5mMPqn4/bfa1JwGFkSAyBv6iKEvpwYik=
+X-Received: by 2002:a7b:c313:: with SMTP id k19mr3050140wmj.2.1560421735553;
+ Thu, 13 Jun 2019 03:28:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190612064752.6701-1-po-hsu.lin@canonical.com> <20190612.092711.1626983045451710048.davem@davemloft.net>
+In-Reply-To: <20190612.092711.1626983045451710048.davem@davemloft.net>
+From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
+Date:   Thu, 13 Jun 2019 18:28:44 +0800
+Message-ID: <CAMy_GT8YjDhRSHMYBALHeqDhKYhr2Z+--=imZ+T5WV0wCz_v6g@mail.gmail.com>
+Subject: Re: [PATCH] selftests/net: skip psock_tpacket test if KALLSYMS was
+ not enabled
+To:     David Miller <davem@davemloft.net>
+Cc:     shuah <shuah@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When there's no Documentation/output directory, the script will
-complain about those missing references:
+Hello,
 
-	Documentation/doc-guide/sphinx.rst: Documentation/output
-	Documentation/doc-guide/sphinx.rst: Documentation/output
-	Documentation/process/howto.rst: Documentation/output
-	Documentation/translations/it_IT/doc-guide/sphinx.rst: Documentation/output
-	Documentation/translations/it_IT/doc-guide/sphinx.rst: Documentation/output
-	Documentation/translations/it_IT/process/howto.rst: Documentation/output
-	Documentation/translations/ja_JP/howto.rst: Documentation/output
-	Documentation/translations/ko_KR/howto.rst: Documentation/output
+This issue was spotted on Ubuntu linux-kvm kernel, on which the
+CONFIG_KALLSYMS was disabled intentionally.
+I think this extra check could be helpful when running the net test directly.
+$ make -C tools/testing/selftests TARGETS=net run_tests
 
-Those are false positives, so add an ignore rule for them.
+Also, there is an identical check implemented in the ftrace
+kprobe_args_symbol test.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- scripts/documentation-file-ref-check | 3 +++
- 1 file changed, 3 insertions(+)
+I can send V2 along with CONFIG_KALLSYMS appended to the "config" file
+if you agree with this.
 
-diff --git a/scripts/documentation-file-ref-check b/scripts/documentation-file-ref-check
-index a4139a576726..7784c54aa38b 100755
---- a/scripts/documentation-file-ref-check
-+++ b/scripts/documentation-file-ref-check
-@@ -90,6 +90,9 @@ while (<IN>) {
- 	# Skip this script
- 	next if ($f eq $scriptname);
- 
-+	# Ignore the dir where documentation will be built
-+	next if ($ln =~ m,\b(\S*)Documentation/output,);
-+
- 	if ($ln =~ m,\b(\S*)(Documentation/[A-Za-z0-9\_\.\,\~/\*\[\]\?+-]*)(.*),) {
- 		my $prefix = $1;
- 		my $ref = $2;
--- 
-2.21.0
+Thanks
 
+On Thu, Jun 13, 2019 at 12:27 AM David Miller <davem@davemloft.net> wrote:
+>
+> From: Po-Hsu Lin <po-hsu.lin@canonical.com>
+> Date: Wed, 12 Jun 2019 14:47:52 +0800
+>
+> > The psock_tpacket test will need to access /proc/kallsyms, this would
+> > require the kernel config CONFIG_KALLSYMS to be enabled first.
+> >
+> > Check the file existence to determine if we can run this test.
+> >
+> > Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
+>
+> Please just add CONFIG_KALLSYMS to "config".
