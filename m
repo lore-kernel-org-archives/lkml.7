@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1C9C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB6CC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C93D5215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3853C20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442361;
-	bh=kAAQKtoG+USt9cQRx2wt5ixhKJIQMiQ89q4Psb23634=;
+	s=default; t=1560442366;
+	bh=uclTob9GQIPP+edHPJZx/gJnRps5nzkGS7uvws+ioa0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UQABtuCSB9PsUtp/BeY4c3y3LMyXSppZ7zHxVUIFzL7izOcUKbjyKWQx7Bmc6sHge
-	 s8LdDrC2EL9ISt67Bg/eOQThiBQt/Qrwd4BduLXxqjtLQT1+J+Ygrty/CTOm4Yvz9F
-	 nTyP6Ir8NPVydEFBOr2V2WUJZjDm9xguN6HttLGg=
+	b=vL2fi0Rt6X86cucN4Q9Km1UjBJgHzD4PW4u6Pch0B/WrZGLPoGTKbbMVC/5e//vbC
+	 Lye0NS4dOEHmLrGto3Z4l4Lk799mtYOjpU6eF19wXAdwhB6MeX5iuYj1bFL8pJeMxR
+	 1GMbCb5JxzH9C3q/LGmM16KPUTnNwrnA79mmA9Ng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391646AbfFMQMk (ORCPT
+        id S2391685AbfFMQMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:12:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60290 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731221AbfFMInK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:43:10 -0400
+        id S1731217AbfFMInF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:43:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B07B720851;
-        Thu, 13 Jun 2019 08:43:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15CDB2063F;
+        Thu, 13 Jun 2019 08:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415390;
-        bh=kAAQKtoG+USt9cQRx2wt5ixhKJIQMiQ89q4Psb23634=;
+        s=default; t=1560415384;
+        bh=uclTob9GQIPP+edHPJZx/gJnRps5nzkGS7uvws+ioa0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2DABscV9BIpkJaAuAXNFydptirz8yqIEMprVWl4ptUhCBQ5Y2qGtGMv8Qq3xTiJAQ
-         +9B7rVS1YCiDtSKP7PGoF5Hz0pSRbmpkx9nfpBLIBnmvWFncaNYpbn/cr6nZejrM9w
-         mxuJ0fWJIbAk+hFtuzfR/ZjYMdQHzy6zQ6mQ+xWE=
+        b=HAf1hfEGzqwPQ8tFYmxHs4WqxEZJPZbv+7f/vIvH/Em0922koj9SvxMDO39Od+GdH
+         yfccolNKoEWFit7yV497O7D9l/iEA2ZholZNRsy7T3GtCznYqKHxUGuQ+NVaioyP0m
+         g5/xCYmeuRtigy4Y6XPm3Ap1SZkhNdtuJ7UddFfE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Aditya Pakki <pakki001@umn.edu>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Rob Herring <robh@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 100/118] video: imsttfb: fix potential NULL pointer dereferences
-Date:   Thu, 13 Jun 2019 10:33:58 +0200
-Message-Id: <20190613075649.807252255@linuxfoundation.org>
+Subject: [PATCH 4.19 076/118] PCI: keystone: Prevent ARM32 specific code to be compiled for ARM64
+Date:   Thu, 13 Jun 2019 10:33:34 +0200
+Message-Id: <20190613075648.289807017@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -63,39 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1d84353d205a953e2381044953b7fa31c8c9702d ]
+[ Upstream commit f316a2b53cd7f37963ae20ec7072eb27a349a4ce ]
 
-In case ioremap fails, the fix releases resources and returns
--ENOMEM to avoid NULL pointer dereferences.
+hook_fault_code() is an ARM32 specific API for hooking into data abort.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Cc: Aditya Pakki <pakki001@umn.edu>
-Cc: Finn Thain <fthain@telegraphics.com.au>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[b.zolnierkie: minor patch summary fixup]
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+AM65X platforms (that integrate ARM v8 cores and select CONFIG_ARM64 as
+arch) rely on pci-keystone.c but on them the enumeration of a
+non-present BDF does not trigger a bus error, so the fixup exception
+provided by calling hook_fault_code() is not needed and can be guarded
+with CONFIG_ARM.
+
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+[lorenzo.pieralisi@arm.com: commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/imsttfb.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/pci/controller/dwc/pci-keystone.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/video/fbdev/imsttfb.c b/drivers/video/fbdev/imsttfb.c
-index ecdcf358ad5e..ffcf553719a3 100644
---- a/drivers/video/fbdev/imsttfb.c
-+++ b/drivers/video/fbdev/imsttfb.c
-@@ -1516,6 +1516,11 @@ static int imsttfb_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	info->fix.smem_start = addr;
- 	info->screen_base = (__u8 *)ioremap(addr, par->ramdac == IBM ?
- 					    0x400000 : 0x800000);
-+	if (!info->screen_base) {
-+		release_mem_region(addr, size);
-+		framebuffer_release(info);
-+		return -ENOMEM;
-+	}
- 	info->fix.mmio_start = addr + 0x800000;
- 	par->dc_regs = ioremap(addr + 0x800000, 0x1000);
- 	par->cmap_regs_phys = addr + 0x840000;
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index e88bd221fffe..5e199e7d2d4f 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -237,6 +237,7 @@ static void ks_pcie_setup_interrupts(struct keystone_pcie *ks_pcie)
+ 		ks_dw_pcie_enable_error_irq(ks_pcie);
+ }
+ 
++#ifdef CONFIG_ARM
+ /*
+  * When a PCI device does not exist during config cycles, keystone host gets a
+  * bus error instead of returning 0xffffffff. This handler always returns 0
+@@ -256,6 +257,7 @@ static int keystone_pcie_fault(unsigned long addr, unsigned int fsr,
+ 
+ 	return 0;
+ }
++#endif
+ 
+ static int __init ks_pcie_host_init(struct pcie_port *pp)
+ {
+@@ -279,12 +281,14 @@ static int __init ks_pcie_host_init(struct pcie_port *pp)
+ 	val |= BIT(12);
+ 	writel(val, pci->dbi_base + PCIE_CAP_BASE + PCI_EXP_DEVCTL);
+ 
++#ifdef CONFIG_ARM
+ 	/*
+ 	 * PCIe access errors that result into OCP errors are caught by ARM as
+ 	 * "External aborts"
+ 	 */
+ 	hook_fault_code(17, keystone_pcie_fault, SIGBUS, 0,
+ 			"Asynchronous external abort");
++#endif
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
