@@ -7,53 +7,58 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B4DC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B58FC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C01220449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FE882173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443412;
-	bh=U4760CROfIGrP7kVNNhjVj+d+Sn/8lEJniZaqu9pCKc=;
+	s=default; t=1560443415;
+	bh=BNbxu4zfrw+e3UY+/tqBh1L4CBa6pxKcFjnrA7DapY4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mTBjethZqRULde7sf40SPzNp6RUavVuti5Gj71LOUhm9V2NXIv1rpWok7X9IcmgFp
-	 uWEMvioiDtJG95pOU/5bzZgjrypA/1Rresrp02+zXGQ4vGMe3Qq7lBTZac+53pzzU2
-	 bFHUYp9LOxd801CUM7nXUywy+hfgZD3d3MGFhA70=
+	b=ixDBVRO68OTTOy/75fIf/SAISNr9ZoXkpj+M8t1YmslQd4iBhV3OR7Rja7J9G11hC
+	 L8lL60MyFfSUGjsXaSY8vBtaac9Q7QGaoOIk2hMrGDcnZIFO70jpzyRDMRShriqkFA
+	 guzsskXWXdhhzwdb2KKGnKD+910eq2+Kcgd3HUY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392409AbfFMQaK (ORCPT
+        id S2392527AbfFMQaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:30:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52872 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:30:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730919AbfFMIfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:35:07 -0400
+        id S1730917AbfFMIfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:35:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93499206E0;
-        Thu, 13 Jun 2019 08:35:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE96620B7C;
+        Thu, 13 Jun 2019 08:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560414906;
-        bh=U4760CROfIGrP7kVNNhjVj+d+Sn/8lEJniZaqu9pCKc=;
+        s=default; t=1560414903;
+        bh=BNbxu4zfrw+e3UY+/tqBh1L4CBa6pxKcFjnrA7DapY4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lqTm3i63hCKD32/9i16F1LbaAM3HpVHFtVsYDQDry7WhwMK/yXZzJ0WAwt67LBJoL
-         R6uz63nA5vCFET5nc9V/o91rj1rcZqpcy/dB10PtRK6BTDEiyORzjcnHOil82R7Avg
-         uY76j3RHIlD+d7OpxWRNF4DmqjGOuHCWR09r2OBA=
+        b=m+Yj2Kg7n17EuyZyyv+O7Qnlok+lwD6LwyNgAZyyRFGV7AID8Z1x23v0f3jxIA9tS
+         6Mvy8I3kYxDJLbBjj0lT18qPAiGwLEdmyDHK2ixWtPLkaqah3p7tutRkWPHCJIxdVm
+         xh3zHhO2Vm+t9UmetJnK5t2awPMtEWCxOMiQq6Ho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 07/81] hugetlbfs: on restore reserve error path retain subpool reservation
-Date:   Thu, 13 Jun 2019 10:32:50 +0200
-Message-Id: <20190613075649.595507050@linuxfoundation.org>
+Subject: [PATCH 4.14 06/81] mm/hmm: select mmu notifier when selecting HMM
+Date:   Thu, 13 Jun 2019 10:32:49 +0200
+Message-Id: <20190613075649.529301482@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -66,78 +71,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0919e1b69ab459e06df45d3ba6658d281962db80 ]
+[ Upstream commit 734fb89968900b5c5f8edd5038bd4cdeab8c61d2 ]
 
-When a huge page is allocated, PagePrivate() is set if the allocation
-consumed a reservation.  When freeing a huge page, PagePrivate is checked.
-If set, it indicates the reservation should be restored.  PagePrivate
-being set at free huge page time mostly happens on error paths.
+To avoid random config build issue, select mmu notifier when HMM is
+selected.  In any cases when HMM get selected it will be by users that
+will also wants the mmu notifier.
 
-When huge page reservations are created, a check is made to determine if
-the mapping is associated with an explicitly mounted filesystem.  If so,
-pages are also reserved within the filesystem.  The default action when
-freeing a huge page is to decrement the usage count in any associated
-explicitly mounted filesystem.  However, if the reservation is to be
-restored the reservation/use count within the filesystem should not be
-decrementd.  Otherwise, a subsequent page allocation and free for the same
-mapping location will cause the file filesystem usage to go 'negative'.
-
-Filesystem                         Size  Used Avail Use% Mounted on
-nodev                              4.0G -4.0M  4.1G    - /opt/hugepool
-
-To fix, when freeing a huge page do not adjust filesystem usage if
-PagePrivate() is set to indicate the reservation should be restored.
-
-I did not cc stable as the problem has been around since reserves were
-added to hugetlbfs and nobody has noticed.
-
-Link: http://lkml.kernel.org/r/20190328234704.27083-2-mike.kravetz@oracle.com
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Link: http://lkml.kernel.org/r/20190403193318.16478-2-jglisse@redhat.com
+Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+Acked-by: Balbir Singh <bsingharora@gmail.com>
+Cc: Ralph Campbell <rcampbell@nvidia.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Souptick Joarder <jrdr.linux@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/hugetlb.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ mm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 741bdde54954..8ca0075a5464 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1271,12 +1271,23 @@ void free_huge_page(struct page *page)
- 	ClearPagePrivate(page);
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 59efbd3337e0..cc4d633947bf 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -708,12 +708,12 @@ config MIGRATE_VMA_HELPER
  
- 	/*
--	 * A return code of zero implies that the subpool will be under its
--	 * minimum size if the reservation is not restored after page is free.
--	 * Therefore, force restore_reserve operation.
-+	 * If PagePrivate() was set on page, page allocation consumed a
-+	 * reservation.  If the page was associated with a subpool, there
-+	 * would have been a page reserved in the subpool before allocation
-+	 * via hugepage_subpool_get_pages().  Since we are 'restoring' the
-+	 * reservtion, do not call hugepage_subpool_put_pages() as this will
-+	 * remove the reserved page from the subpool.
- 	 */
--	if (hugepage_subpool_put_pages(spool, 1) == 0)
--		restore_reserve = true;
-+	if (!restore_reserve) {
-+		/*
-+		 * A return code of zero implies that the subpool will be
-+		 * under its minimum size if the reservation is not restored
-+		 * after page is free.  Therefore, force restore_reserve
-+		 * operation.
-+		 */
-+		if (hugepage_subpool_put_pages(spool, 1) == 0)
-+			restore_reserve = true;
-+	}
+ config HMM
+ 	bool
++	select MMU_NOTIFIER
+ 	select MIGRATE_VMA_HELPER
  
- 	spin_lock(&hugetlb_lock);
- 	clear_page_huge_active(page);
+ config HMM_MIRROR
+ 	bool "HMM mirror CPU page table into a device page table"
+ 	depends on ARCH_HAS_HMM
+-	select MMU_NOTIFIER
+ 	select HMM
+ 	help
+ 	  Select HMM_MIRROR if you want to mirror range of the CPU page table of a
 -- 
 2.20.1
 
