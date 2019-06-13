@@ -2,120 +2,234 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D30C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E11C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36AD2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:34:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="om1b7q3q"
+	by mail.kernel.org (Postfix) with ESMTP id 8B84E2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731962AbfFMPer (ORCPT
+        id S1728775AbfFMPez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:34:47 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42255 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728083AbfFMKcB (ORCPT
+        Thu, 13 Jun 2019 11:34:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59312 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728346AbfFMKfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 06:32:01 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so11556325pff.9
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 03:32:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=TYugXC8ytxOCfgDh3mg7Chcw/fQ6qx25pA1xGAB2wEo=;
-        b=om1b7q3qqqL3hVwwom76w942uIQ0/B4EPiCLfCuWVjwAg29AoGLw6WXFFUHqXBibE+
-         0j0OKdm3jdlxA1D/O0QRQOpLhNv5Ogrd9JNks1szszwbDlTE8sSL+SuHA47qdtkMVcBK
-         fh0ruIWuUdE46y+O1g9vrHQwJ2XRu4UtkLoRcxKKBfjvZ+D+584zH7JEa39p/I12YLsd
-         c4SCaI0zDdmJTRvb82Hyib1W7COcIB0wpLY7Sh0Zb0Rch/NfitptGgRpcVvVcY2jHp4N
-         Dv9pfi9mVEfWv5k4TDh02gX+UvZQ5e9qjmJ5q90DuaaSymHzayeEBweOhsV/SAvK222W
-         fDOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=TYugXC8ytxOCfgDh3mg7Chcw/fQ6qx25pA1xGAB2wEo=;
-        b=NUoNVUbTxLFtcn5x9GXgDHaNW9G3zz3r76Qs0P57Ohkf2tnQbc9YNG10mHKirNkrWX
-         GFLUkO8R+jqnyLS2pEqc5l3kNgB4MSTtoKaqECcvAvTPdqQuej7MT15HNgbFa5Hytvcp
-         X9S+6WUImQFl7LctFTM6buDre+rJfUxOQE/EIXi6H7Z+JzC2qwNyJIWOBGIJLQwEEk3S
-         Em8hfZ7rqvNWXv6ZXOEKNMoCrtlE+MJXd5eJhAyoSjsD8CtnMTqGm//EdAZPko6joHiJ
-         bqdyv1jURXyaTQ8ODrr2aZuKknGBWztAynoqLixBeNstSr3qPqRPXrxYvWuj/KF9uKMN
-         z8ow==
-X-Gm-Message-State: APjAAAV7Xp4Tn/QLbRz4ZahPzatXpoJz0WIcFeb9j5VDG0XPy/gfsjK7
-        k9sNYo7FxyQV+oqBezrmaZsrIA==
-X-Google-Smtp-Source: APXvYqxmU/pTtNFnVKD+LmruR3Lv1HQKoTORB4xR6IcJsmcwYl4ehUJoxUdXSONGKCUx4lvt1igbXQ==
-X-Received: by 2002:a62:1c92:: with SMTP id c140mr92232910pfc.258.1560421920566;
-        Thu, 13 Jun 2019 03:32:00 -0700 (PDT)
-Received: from localhost.localdomain ([117.196.234.139])
-        by smtp.gmail.com with ESMTPSA id a12sm2265078pgq.0.2019.06.13.03.31.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 13 Jun 2019 03:31:59 -0700 (PDT)
-From:   Sumit Garg <sumit.garg@linaro.org>
-To:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     jens.wiklander@linaro.org, corbet@lwn.net, dhowells@redhat.com,
-        jejb@linux.ibm.com, jarkko.sakkinen@linux.intel.com,
-        zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
-        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tee-dev@lists.linaro.org, Sumit Garg <sumit.garg@linaro.org>
-Subject: [RFC 3/7] tee: add private login method for kernel clients
-Date:   Thu, 13 Jun 2019 16:00:29 +0530
-Message-Id: <1560421833-27414-4-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
-References: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
+        Thu, 13 Jun 2019 06:35:20 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DAS8tN086033
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 06:35:19 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t3mg310dw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 06:35:19 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Thu, 13 Jun 2019 11:35:17 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 13 Jun 2019 11:35:13 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5DAZBxH51052790
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 10:35:12 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD7E5AE04D;
+        Thu, 13 Jun 2019 10:35:11 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 80A0FAE045;
+        Thu, 13 Jun 2019 10:35:11 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Jun 2019 10:35:11 +0000 (GMT)
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCHv2 2/3] s390: improve wait logic of stop_machine
+Date:   Thu, 13 Jun 2019 12:35:09 +0200
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190613103510.60529-1-heiko.carstens@de.ibm.com>
+References: <20190613103510.60529-1-heiko.carstens@de.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19061310-0016-0000-0000-00000288BD35
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061310-0017-0000-0000-000032E5F7D9
+Message-Id: <20190613103510.60529-3-heiko.carstens@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906130082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are use-cases where user-space shouldn't be allowed to communicate
-directly with a TEE device which is dedicated to provide a specific
-service for a kernel client. So add a private login method for kernel
-clients and disallow user-space to open-session using this login method.
+From: Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+The stop_machine loop to advance the state machine and to wait for all
+affected CPUs to check-in calls cpu_relax_yield in a tight loop until
+the last missing CPUs acknowledged the state transition.
+
+On a virtual system where not all logical CPUs are backed by real CPUs
+all the time it can take a while for all CPUs to check-in. With the
+current definition of cpu_relax_yield a diagnose 0x44 is done which
+tells the hypervisor to schedule *some* other CPU. That can be any
+CPU and not necessarily one of the CPUs that need to run in order to
+advance the state machine. This can lead to a pretty bad diagnose 0x44
+storm until the last missing CPU finally checked-in.
+
+Replace the undirected cpu_relax_yield based on diagnose 0x44 with a
+directed yield. Each CPU in the wait loop will pick up the next CPU
+in the cpumask of stop_machine. The diagnose 0x9c is used to tell the
+hypervisor to run this next CPU instead of the current one. If there
+is only a limited number of real CPUs backing the virtual CPUs we
+end up with the real CPUs passed around in a round-robin fashion.
+
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 ---
- drivers/tee/tee_core.c   | 6 ++++++
- include/uapi/linux/tee.h | 2 ++
- 2 files changed, 8 insertions(+)
+ arch/s390/include/asm/processor.h |  3 ++-
+ arch/s390/kernel/processor.c      | 17 ++++++++++++-----
+ arch/s390/kernel/smp.c            |  2 +-
+ include/linux/sched.h             |  2 +-
+ kernel/stop_machine.c             | 14 +++++++++-----
+ 5 files changed, 25 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
-index 0f16d9f..4581bd1 100644
---- a/drivers/tee/tee_core.c
-+++ b/drivers/tee/tee_core.c
-@@ -334,6 +334,12 @@ static int tee_ioctl_open_session(struct tee_context *ctx,
- 			goto out;
- 	}
+diff --git a/arch/s390/include/asm/processor.h b/arch/s390/include/asm/processor.h
+index b0fcbc37b637..445ce9ee4404 100644
+--- a/arch/s390/include/asm/processor.h
++++ b/arch/s390/include/asm/processor.h
+@@ -36,6 +36,7 @@
  
-+	if (arg.clnt_login == TEE_IOCTL_LOGIN_REE_KERNEL) {
-+		pr_err("login method not allowed for user-space client\n");
-+		rc = -EPERM;
-+		goto out;
-+	}
+ #ifndef __ASSEMBLY__
+ 
++#include <linux/cpumask.h>
+ #include <linux/linkage.h>
+ #include <linux/irqflags.h>
+ #include <asm/cpu.h>
+@@ -225,7 +226,7 @@ static __no_kasan_or_inline unsigned short stap(void)
+  * Give up the time slice of the virtual PU.
+  */
+ #define cpu_relax_yield cpu_relax_yield
+-void cpu_relax_yield(void);
++void cpu_relax_yield(const struct cpumask *cpumask);
+ 
+ #define cpu_relax() barrier()
+ 
+diff --git a/arch/s390/kernel/processor.c b/arch/s390/kernel/processor.c
+index 5de13307b703..4cdaefec1b7c 100644
+--- a/arch/s390/kernel/processor.c
++++ b/arch/s390/kernel/processor.c
+@@ -31,6 +31,7 @@ struct cpu_info {
+ };
+ 
+ static DEFINE_PER_CPU(struct cpu_info, cpu_info);
++static DEFINE_PER_CPU(int, cpu_relax_retry);
+ 
+ static bool machine_has_cpu_mhz;
+ 
+@@ -58,13 +59,19 @@ void s390_update_cpu_mhz(void)
+ 		on_each_cpu(update_cpu_mhz, NULL, 0);
+ }
+ 
+-void notrace cpu_relax_yield(void)
++void notrace cpu_relax_yield(const struct cpumask *cpumask)
+ {
+-	if (!smp_cpu_mtid && MACHINE_HAS_DIAG44) {
+-		diag_stat_inc(DIAG_STAT_X044);
+-		asm volatile("diag 0,0,0x44");
++	int cpu, this_cpu;
 +
- 	rc = ctx->teedev->desc->ops->open_session(ctx, &arg, params);
- 	if (rc)
- 		goto out;
-diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
-index 4b9eb06..f33c69c 100644
---- a/include/uapi/linux/tee.h
-+++ b/include/uapi/linux/tee.h
-@@ -172,6 +172,8 @@ struct tee_ioctl_buf_data {
- #define TEE_IOCTL_LOGIN_APPLICATION		4
- #define TEE_IOCTL_LOGIN_USER_APPLICATION	5
- #define TEE_IOCTL_LOGIN_GROUP_APPLICATION	6
-+/* Private login method for REE kernel clients */
-+#define TEE_IOCTL_LOGIN_REE_KERNEL		0x80000000
++	this_cpu = smp_processor_id();
++	if (__this_cpu_inc_return(cpu_relax_retry) >= spin_retry) {
++		__this_cpu_write(cpu_relax_retry, 0);
++		cpu = cpumask_next_wrap(this_cpu, cpumask, this_cpu, false);
++		if (cpu >= nr_cpu_ids)
++			return;
++		if (arch_vcpu_is_preempted(cpu))
++			smp_yield_cpu(cpu);
+ 	}
+-	barrier();
+ }
+ EXPORT_SYMBOL(cpu_relax_yield);
  
- /**
-  * struct tee_ioctl_param - parameter
+diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
+index 35fafa2b91a8..a8eef7b7770a 100644
+--- a/arch/s390/kernel/smp.c
++++ b/arch/s390/kernel/smp.c
+@@ -418,7 +418,7 @@ void smp_yield_cpu(int cpu)
+ 		diag_stat_inc_norecursion(DIAG_STAT_X09C);
+ 		asm volatile("diag %0,0,0x9c"
+ 			     : : "d" (pcpu_devices[cpu].address));
+-	} else if (MACHINE_HAS_DIAG44) {
++	} else if (MACHINE_HAS_DIAG44 && !smp_cpu_mtid) {
+ 		diag_stat_inc_norecursion(DIAG_STAT_X044);
+ 		asm volatile("diag 0,0,0x44");
+ 	}
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 11837410690f..1f9f3160da7e 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1519,7 +1519,7 @@ static inline int set_cpus_allowed_ptr(struct task_struct *p, const struct cpuma
+ #endif
+ 
+ #ifndef cpu_relax_yield
+-#define cpu_relax_yield() cpu_relax()
++#define cpu_relax_yield(cpumask) cpu_relax()
+ #endif
+ 
+ extern int yield_to(struct task_struct *p, bool preempt);
+diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
+index 2b5a6754646f..b8b0c5ff8da9 100644
+--- a/kernel/stop_machine.c
++++ b/kernel/stop_machine.c
+@@ -183,6 +183,7 @@ static int multi_cpu_stop(void *data)
+ 	struct multi_stop_data *msdata = data;
+ 	enum multi_stop_state curstate = MULTI_STOP_NONE;
+ 	int cpu = smp_processor_id(), err = 0;
++	const struct cpumask *cpumask;
+ 	unsigned long flags;
+ 	bool is_active;
+ 
+@@ -192,15 +193,18 @@ static int multi_cpu_stop(void *data)
+ 	 */
+ 	local_save_flags(flags);
+ 
+-	if (!msdata->active_cpus)
+-		is_active = cpu == cpumask_first(cpu_online_mask);
+-	else
+-		is_active = cpumask_test_cpu(cpu, msdata->active_cpus);
++	if (!msdata->active_cpus) {
++		cpumask = cpu_online_mask;
++		is_active = cpu == cpumask_first(cpumask);
++	} else {
++		cpumask = msdata->active_cpus;
++		is_active = cpumask_test_cpu(cpu, cpumask);
++	}
+ 
+ 	/* Simple state machine */
+ 	do {
+ 		/* Chill out and ensure we re-read multi_stop_state. */
+-		cpu_relax_yield();
++		cpu_relax_yield(cpumask);
+ 		if (msdata->state != curstate) {
+ 			curstate = msdata->state;
+ 			switch (curstate) {
 -- 
-2.7.4
+2.17.1
 
