@@ -2,175 +2,168 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A05C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B666DC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E1B2080A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:38:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560440325;
-	bh=7tB+nRJfT6VbD+qZcFdAEwikDakVeejgKwyU7T3Sl2A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=a+NgfhX5rTyp1+mpLubr0SB55ynXcIm5c0O5qWJk4lDlHxhsXMEXAHyN0NPE0fG6Y
-	 BANNQ0k3lJIvQ7JIHrSP6Tpp+UpDX1mWZ9OPAuc5veakW5V2f6VxegG2ghgWjyuAmW
-	 5rViXq8N50kfgYTg1pEbGoTVxiHr+sA5WagxBrgY=
+	by mail.kernel.org (Postfix) with ESMTP id 8F8F42080A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:38:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ybzhhpu+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388329AbfFMPie (ORCPT
+        id S1732256AbfFMPid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:38:34 -0400
-Received: from casper.infradead.org ([85.118.1.10]:33510 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731947AbfFMJ7G (ORCPT
+        Thu, 13 Jun 2019 11:38:33 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:1466 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731949AbfFMJ7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:59:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=X6go1h+qBvd8UqStxDka25oSP1lwn219vXM1njzftqM=; b=st/cCkCW17JvfhPcMMlIiWlWs7
-        IjzbMHLeCgNGoALijV6IG+3mBu2hWh+zDF/ixgeztGRJFvKYWEb/k1hwDtOuJEM+LaN5VPyeL2Nyt
-        pUW3p7YE7JRXzR5AqF9H3+IiwxYWckQCRps/QFoMco8bS1sS+v518UWrrJXO7ml5NcscdFDSXeQVX
-        ZKduv2MoYrDVAMjIkypzrzv1fDu9De18EdqyKnVmVA/jtlt3lbqFtvB/kKq3/UdhRk448WORt2zGk
-        vyVeBQhaltTvjNhKaj4bDz1fJNL7g5eIVBQzyzZatNVk3zR46pfOQJ6fi4X1Ul2gzhVbF7Xgp5Fcx
-        8jdm6Tow==;
-Received: from 201.86.169.251.dynamic.adsl.gvt.net.br ([201.86.169.251] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbMVS-0000iN-9Z; Thu, 13 Jun 2019 09:58:54 +0000
-Date:   Thu, 13 Jun 2019 06:58:43 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-pci@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v4 18/28] docs: convert docs to ReST and rename to *.rst
-Message-ID: <20190613065843.100f72dd@coco.lan>
-In-Reply-To: <7dc94cb4-ebf1-22ab-29c9-fcb2b875a9ac@csail.mit.edu>
-References: <cover.1560361364.git.mchehab+samsung@kernel.org>
-        <fac44e1fbab5ea755a93601a4fdfa34fcc57ae9e.1560361364.git.mchehab+samsung@kernel.org>
-        <7dc94cb4-ebf1-22ab-29c9-fcb2b875a9ac@csail.mit.edu>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 13 Jun 2019 05:59:33 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d021e840000>; Thu, 13 Jun 2019 02:59:32 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 13 Jun 2019 02:59:31 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 13 Jun 2019 02:59:31 -0700
+Received: from [10.19.65.14] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Jun
+ 2019 09:59:28 +0000
+Subject: Re: [PATCH V5 6/7] i2c: tegra: fix PIO rx/tx residual transfer check
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1560250274-18499-1-git-send-email-bbiswas@nvidia.com>
+ <1560250274-18499-6-git-send-email-bbiswas@nvidia.com>
+ <b6b24358-36a0-af98-1b29-9a622baa9600@gmail.com>
+From:   Bitan Biswas <bbiswas@nvidia.com>
+Message-ID: <3899af9b-07b0-8a76-e343-82871d3eb19a@nvidia.com>
+Date:   Thu, 13 Jun 2019 02:59:25 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <b6b24358-36a0-af98-1b29-9a622baa9600@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560419972; bh=bu6PFhdzRuGZwYqZ+hVK3B1DLO4p//ihuWYhcH3V6uw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Ybzhhpu+/qkKOpkhN12f+D5btArqQfhaBZ/NT8YiFVEknM8QPYJzXABGQso5KeMYH
+         0iOwme7ANbGZMFZObYeWEpglsYSRsbeLnumsArQpDkAQ6UXgCb9hF6JKROYa+kFXkb
+         b2UtUbkVF9Ew+1DS3bhv+sVY1LtfoiWOFrH+92QcJ2KLycR2syLOD5egBs8auYtJma
+         i4zFRQJwh4cAfJkKUlzm7epqW0UcvmTkWkwzpLhe08ekTtb0TRJAr/wFlkr4DcZgFK
+         OityH7PHsuV14P0GoLQ/WkH6own9A3xKx8124ro4422HZDGQNcCMFGkFjlXtY8oJtx
+         JemuZbJ1yR9jQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 12 Jun 2019 17:25:39 -0700
-"Srivatsa S. Bhat" <srivatsa@csail.mit.edu> escreveu:
-
-> On 6/12/19 10:52 AM, Mauro Carvalho Chehab wrote:
-> > Convert the PM documents to ReST, in order to allow them to
-> > build with Sphinx.
-> > 
-> > The conversion is actually:
-> >   - add blank lines and identation in order to identify paragraphs;
-> >   - fix tables markups;
-> >   - add some lists markups;
-> >   - mark literal blocks;
-> >   - adjust title markups.
-> > 
-> > At its new index.rst, let's add a :orphan: while this is not linked to
-> > the main index.rst file, in order to avoid build warnings.
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Acked-by: Mark Brown <broonie@kernel.org>
-> > ---  
-> 
-> [...]
-> 
-> > diff --git a/Documentation/power/suspend-and-cpuhotplug.txt b/Documentation/power/suspend-and-cpuhotplug.rst
-> > similarity index 90%
-> > rename from Documentation/power/suspend-and-cpuhotplug.txt
-> > rename to Documentation/power/suspend-and-cpuhotplug.rst
-> > index a8751b8df10e..9df664f5423a 100644
-> > --- a/Documentation/power/suspend-and-cpuhotplug.txt
-> > +++ b/Documentation/power/suspend-and-cpuhotplug.rst
-> > @@ -1,10 +1,15 @@
-> > +====================================================================
-> >  Interaction of Suspend code (S3) with the CPU hotplug infrastructure
-> > +====================================================================
-> >  
-> > -     (C) 2011 - 2014 Srivatsa S. Bhat <srivatsa.bhat@linux.vnet.ibm.com>
-> > +(C) 2011 - 2014 Srivatsa S. Bhat <srivatsa.bhat@linux.vnet.ibm.com>
-> >  
-> >  
-> > -I. How does the regular CPU hotplug code differ from how the Suspend-to-RAM
-> > -   infrastructure uses it internally? And where do they share common code?
-> > +I. Differences between CPU hotplug and Suspend-to-RAM
-> > +======================================================
-> > +
-> > +How does the regular CPU hotplug code differ from how the Suspend-to-RAM
-> > +infrastructure uses it internally? And where do they share common code?
-> >  
-> >  Well, a picture is worth a thousand words... So ASCII art follows :-)
-> >    
-> 
-> [...]
-> 
-> > @@ -101,7 +108,7 @@ execution during resume):
-> >  
-> >  It is to be noted here that the system_transition_mutex lock is acquired at the very
-> >  beginning, when we are just starting out to suspend, and then released only
-> > -after the entire cycle is complete (i.e., suspend + resume).
-> > +after the entire cycle is complete (i.e., suspend + resume)::
-> >    
-> 
-> I think that should be a period, not a colon, because it is clarifying
-> the text above it (as opposed to referring to the example below it).
-> 
-> Other than that, for suspend-and-cpuhotplug.txt:
-> 
-> Acked-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
-
-Ah, ok. I'll change it to:
-
-	after the entire cycle is complete (i.e., suspend + resume).
-
-	::
-
-and add your acked-by.
-
->  
-> Regards,
-> Srivatsa
-> VMware Photon OS
 
 
+On 6/12/19 6:55 AM, Dmitry Osipenko wrote:
+> 11.06.2019 13:51, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> Fix expression for residual bytes(less than word) transfer
+>> in I2C PIO mode RX/TX.
+>>
+>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>> ---
+>>   drivers/i2c/busses/i2c-tegra.c | 11 ++++++-----
+>>   1 file changed, 6 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-teg=
+ra.c
+>> index 4dfb4c1..0596c12 100644
+>> --- a/drivers/i2c/busses/i2c-tegra.c
+>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>> @@ -514,7 +514,8 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_=
+dev *i2c_dev)
+>>   	 * If there is a partial word at the end of buf, handle it manually t=
+o
+>>   	 * prevent overwriting past the end of buf
+>>   	 */
+>> -	if (rx_fifo_avail > 0 && buf_remaining > 0) {
+>> +	if (rx_fifo_avail > 0 &&
+>> +	    (buf_remaining > 0 && buf_remaining < BYTES_PER_FIFO_WORD)) {
+>=20
+> The buf_remaining >=3D BYTES_PER_FIFO_WORD is not possible to happen
+> because there are three possible cases:
+>=20
+> 1) buf_remaining > rx_fifo_avail * 4:
+>=20
+> 	In this case rx_fifo_avail =3D 0
+>=20
+> 2) buf_remaining < rx_fifo_avail * 4;
+>=20
+> 	In this case buf_remaining is always < 4 because
+> 	words_to_transfer is a buf_remaining rounded down to 4
+> 	and then divided by 4. Hence:
+>=20
+> 	buf_remaining -=3D (buf_remaining / 4) * 4 always results
+> 	into buf_remaining < 4.
+>=20
+> 3) buf_remaining =3D=3D rx_fifo_avail * 4:
+>=20
+> 	In this case rx_fifo_avail =3D 0 and buf_remaining =3D 0.
+>=20
+> Case 2 should never happen and means that something gone wrong.
+>=20
+Yes I now agree with you. The first condition "rx_fifo_avail > 0"=20
+failure will take care and prevent need for additional checks.
 
-Thanks,
-Mauro
+>>   		BUG_ON(buf_remaining > 3);
+>>   		val =3D i2c_readl(i2c_dev, I2C_RX_FIFO);
+>>   		val =3D cpu_to_le32(val);
+>> @@ -557,11 +558,10 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c=
+_dev *i2c_dev)
+>>   			words_to_transfer =3D tx_fifo_avail;
+>>  =20
+>>   		/*
+>> -		 * Update state before writing to FIFO.  If this casues us
+>> +		 * Update state before writing to FIFO.  If this causes us
+>>   		 * to finish writing all bytes (AKA buf_remaining goes to 0) we
+>>   		 * have a potential for an interrupt (PACKET_XFER_COMPLETE is
+>> -		 * not maskable).  We need to make sure that the isr sees
+>> -		 * buf_remaining as 0 and doesn't call us back re-entrantly.
+>> +		 * not maskable).
+>>   		 */
+>>   		buf_remaining -=3D words_to_transfer * BYTES_PER_FIFO_WORD;
+>>   		tx_fifo_avail -=3D words_to_transfer;
+>> @@ -580,7 +580,8 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_d=
+ev *i2c_dev)
+>>   	 * prevent reading past the end of buf, which could cross a page
+>>   	 * boundary and fault.
+>>   	 */
+>> -	if (tx_fifo_avail > 0 && buf_remaining > 0) {
+>> +	if (tx_fifo_avail > 0 &&
+>> +	    (buf_remaining > 0 && buf_remaining < BYTES_PER_FIFO_WORD)) {
+>>   		BUG_ON(buf_remaining > 3);
+>>   		memcpy(&val, buf, buf_remaining);
+>>   		val =3D le32_to_cpu(val);
+>>
+>=20
+> Same as for RX.
+>=20
+Yes shall discard this patch from the next update.
+
+-Thanks,
+  Bitan
+
