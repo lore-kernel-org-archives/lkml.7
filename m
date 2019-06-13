@@ -2,81 +2,84 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10459C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE86FC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E1F207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B482521743
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:05:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="aGzm61LU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732869AbfFMPEt (ORCPT
+        id S1732970AbfFMPE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:04:49 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:60065 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732468AbfFMOSo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:18:44 -0400
-Received: from [109.168.11.45] (port=39754 helo=pc-ceresoli.dev.aim)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1hbQYr-0005He-4g; Thu, 13 Jun 2019 16:18:41 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     linux-media@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: [PATCH 2/9] media: docs: v4l2-controls: remove repeated ioctl names
-Date:   Thu, 13 Jun 2019 16:18:19 +0200
-Message-Id: <20190613141826.26775-2-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190613141826.26775-1-luca@lucaceresoli.net>
-References: <20190613141826.26775-1-luca@lucaceresoli.net>
+        Thu, 13 Jun 2019 11:04:59 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:54166 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732464AbfFMORT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 10:17:19 -0400
+Received: from zn.tnic (p200300EC2F06D500349353021D4CE514.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:d500:3493:5302:1d4c:e514])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9B7251EC0235;
+        Thu, 13 Jun 2019 16:17:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560435438;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=mm3XxwESAph1yISTiwQTaeINydDZWYAofTkk9QcLO78=;
+        b=aGzm61LUpNyURNpdinzoqQoqVmbeK2F0sbWSlFVSKj84jBS6xboqS6Ry3YjSZiK6rkhKb6
+        iC0AUwW1KvTejSf1iJmh1dxFKQcd7q2yo5Bq2/ZHkrY8mR578CdNQR4n+xOjU5iXZR96fM
+        +2mQ1cWqyNXs/G32ppq9G/YjwkSt76s=
+Date:   Thu, 13 Jun 2019 16:17:15 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/8] EDAC/amd64: Support more than two controllers for
+ chip selects handling
+Message-ID: <20190613141715.GD11598@zn.tnic>
+References: <20190531234501.32826-1-Yazen.Ghannam@amd.com>
+ <20190531234501.32826-3-Yazen.Ghannam@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190531234501.32826-3-Yazen.Ghannam@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mentioning :ref:`VIDIOC_QUERYCTRL` renders all the three related ioctls.
-Explicitly adding VIDIOC_QUERY_EXT_CTRL and VIDIOC_QUERYMENU will make
-them render twice, so remove them
+On Fri, May 31, 2019 at 11:45:12PM +0000, Ghannam, Yazen wrote:
+> diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+> index 9fa2f205f05c..dd60cf5a3d96 100644
+> --- a/drivers/edac/amd64_edac.c
+> +++ b/drivers/edac/amd64_edac.c
+> @@ -943,91 +943,101 @@ static void prep_chip_selects(struct amd64_pvt *pvt)
+>  		pvt->csels[0].b_cnt = pvt->csels[1].b_cnt = 4;
+>  		pvt->csels[0].m_cnt = pvt->csels[1].m_cnt = 2;
+>  	} else if (pvt->fam >= 0x17) {
+> -		pvt->csels[0].b_cnt = pvt->csels[1].b_cnt = 4;
+> -		pvt->csels[0].m_cnt = pvt->csels[1].m_cnt = 2;
+> +		int umc;
+> +
+> +		for_each_umc(umc) {
+> +			pvt->csels[umc].b_cnt = 4;
+> +			pvt->csels[umc].m_cnt = 2;
+> +		}
+> +
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
----
- Documentation/media/uapi/v4l/extended-controls.rst | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+What is the purpose of the previous commit if you're changing it here in
+the next one?
 
-diff --git a/Documentation/media/uapi/v4l/extended-controls.rst b/Documentation/media/uapi/v4l/extended-controls.rst
-index 0968aa9cd167..802a405aa535 100644
---- a/Documentation/media/uapi/v4l/extended-controls.rst
-+++ b/Documentation/media/uapi/v4l/extended-controls.rst
-@@ -96,9 +96,7 @@ if this control consists of more than one element.
-    #. It is important to realize that due to the flexibility of controls it is
-       necessary to check whether the control you want to set actually is
-       supported in the driver and what the valid range of values is. So use
--      the :ref:`VIDIOC_QUERYCTRL` (or :ref:`VIDIOC_QUERY_EXT_CTRL
--      <VIDIOC_QUERYCTRL>`) and :ref:`VIDIOC_QUERYMENU <VIDIOC_QUERYCTRL>`
--      ioctls to check this.
-+      :ref:`VIDIOC_QUERYCTRL` to check this.
- 
-    #. It is possible that some of the menu indices in a control of
-       type ``V4L2_CTRL_TYPE_MENU`` may not be supported (``VIDIOC_QUERYMENU``
 -- 
-2.21.0
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
