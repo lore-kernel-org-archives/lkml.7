@@ -2,101 +2,120 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F15C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA0AC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B135F2183E
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="MaYeShQX"
+	by mail.kernel.org (Postfix) with ESMTP id BFAB920679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560442180;
+	bh=QIHr5DZea2YBgkl2djW9ZCWCAK7jRohgG63d0kYrtl0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sUhpgTzvPeDJkgCO5P2ci/thaHGWpRAgN/dARMOjGSqxojXJhGvnm4qreUDRbiNDQ
+	 W7/n6xodhepBeTf1pbjaqfL4mb0URJPmRdJydQ7Mod+CDsWLjezvuCHUN7C7xkQU44
+	 dCs8wGOZPs9eBobzVITg11puw7Ne78cJVnRddkgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfFMQJd (ORCPT
+        id S2391348AbfFMQJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:09:33 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:48430 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391372AbfFMQJU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:09:20 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E37D052B;
-        Thu, 13 Jun 2019 18:09:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1560442158;
-        bh=1S2z8/40XlzEcH5YWVP4Pilnjo5IJKQr1Fm7+C3qfLY=;
-        h=Subject:To:Cc:References:From:Reply-To:Date:In-Reply-To:From;
-        b=MaYeShQXACx9Mw/ZEjRmb1d6RLXKmp9fhgZhzn3v8tiK8EnHYRq6VncvBCcJylW9F
-         tviIjYCHXp0lHxd0xtrl9RhP99rUsPH3PcXU4sL3DSCjHT8u54XcBdN0E3wOlqp8Gs
-         qeD04bt17uu7W/DbLWIxUN57qst50e4tKJPQ9AM4=
-Subject: Re: [PATCH 1/4] media: cxd2820r: don't check retval after our own
- assignemt
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-media@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, Antti Palosaari <crope@iki.fi>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20190613155421.16408-1-wsa+renesas@sang-engineering.com>
- <20190613155421.16408-2-wsa+renesas@sang-engineering.com>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Organization: Ideas on Board
-Message-ID: <550e0dbf-1776-000b-27ca-40e40e317da2@ideasonboard.com>
-Date:   Thu, 13 Jun 2019 17:09:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 12:09:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731265AbfFMIoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:44:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D024F20851;
+        Thu, 13 Jun 2019 08:44:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560415472;
+        bh=QIHr5DZea2YBgkl2djW9ZCWCAK7jRohgG63d0kYrtl0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aGKG4G7ZdPvzHFLPxWf2fIBfH0j+zwwc5U+YG+ptXlbFHwiS4eFvjc5xGQwUodhP+
+         iRLJhsSoSwMA1GnYbv6K3ZOggVOoMuZy2i2s2Zs3O7dJL4rw6Pn4cL3hzqSuQRXxVE
+         U+doxolX5AukWcz+pg5ci2M+XXPe4XrQcixJDwdQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Christian Brauner <christian@brauner.io>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 006/155] sysctl: return -EINVAL if val violates minmax
+Date:   Thu, 13 Jun 2019 10:31:58 +0200
+Message-Id: <20190613075653.075900261@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
+References: <20190613075652.691765927@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190613155421.16408-2-wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+[ Upstream commit e260ad01f0aa9e96b5386d5cd7184afd949dc457 ]
+
+Currently when userspace gives us a values that overflow e.g.  file-max
+and other callers of __do_proc_doulongvec_minmax() we simply ignore the
+new value and leave the current value untouched.
+
+This can be problematic as it gives the illusion that the limit has
+indeed be bumped when in fact it failed.  This commit makes sure to
+return EINVAL when an overflow is detected.  Please note that this is a
+userspace facing change.
+
+Link: http://lkml.kernel.org/r/20190210203943.8227-4-christian@brauner.io
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Waiman Long <longman@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/sysctl.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index c9ec050bcf46..387efbaf464a 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -2874,8 +2874,10 @@ static int __do_proc_doulongvec_minmax(void *data, struct ctl_table *table, int
+ 			if (neg)
+ 				continue;
+ 			val = convmul * val / convdiv;
+-			if ((min && val < *min) || (max && val > *max))
+-				continue;
++			if ((min && val < *min) || (max && val > *max)) {
++				err = -EINVAL;
++				break;
++			}
+ 			*i = val;
+ 		} else {
+ 			val = convdiv * (*i) / convmul;
+-- 
+2.20.1
 
 
-In the title/subject:
-
-media: cxd2820r: don't check retval after our own assignemt
-
-s/assignemt/assignment/
-
-
-On 13/06/2019 16:54, Wolfram Sang wrote:
-> No need to check a retval after we assigned a constant to it.
-
-Hrm... Good spots!
-
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  drivers/media/dvb-frontends/cxd2820r_core.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/dvb-frontends/cxd2820r_core.c b/drivers/media/dvb-frontends/cxd2820r_core.c
-> index 1f006f8e8cc2..99a186ddddb2 100644
-> --- a/drivers/media/dvb-frontends/cxd2820r_core.c
-> +++ b/drivers/media/dvb-frontends/cxd2820r_core.c
-> @@ -636,8 +636,7 @@ static int cxd2820r_probe(struct i2c_client *client,
->  	if (!priv->client[1]) {
->  		ret = -ENODEV;
->  		dev_err(&client->dev, "I2C registration failed\n");
-> -		if (ret)
-
-Can't argue with that.
-
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-
-> -			goto err_regmap_0_regmap_exit;
-> +		goto err_regmap_0_regmap_exit;
->  	}
->  
->  	priv->regmap[1] = regmap_init_i2c(priv->client[1], &regmap_config1);
-> 
 
