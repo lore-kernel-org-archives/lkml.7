@@ -2,126 +2,96 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 456B0C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09623C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC8821473
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B1F20896
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:09:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JPlduTHa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mcw0iG8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732394AbfFMPJc (ORCPT
+        id S2387875AbfFMPJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:09:32 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42368 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732357AbfFMN5h (ORCPT
+        Thu, 13 Jun 2019 11:09:43 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49626 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732354AbfFMN5Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:57:37 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x17so5614171wrl.9
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 06:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mF/t8Vc3YmpUfAcfOp8dmky92LVPXpVO+34OWoDYALY=;
-        b=JPlduTHaMif6czcMYjH+iK3zHDfuBg7MK5yig5ap/g7Ag1fTaFELEs+YoZW0y+d87C
-         CU7htdxBFUN1SyhltslOLJT6dQoJReGZO+5fNgwDQI95qKOnCCY/9os6cBZXB/Re8G1u
-         CnHQ2fKTzh8PM+cRx6udFksTDCI7/Bx2Eu8mAKwp9/usIFA8uMSXxtTaE5XcFpmVGg49
-         vQGf6oOAXmZTw/dzqRwarMDvsm57qIcYj59YYrXGQi50dmU/glilhfLvp+dxsbqxM867
-         zGtdcpKV6rNx8TbP0n1cvTETY/aZHlFHXGfq0agJBMWutPMajKINRzxMxQVtrBfQjjoh
-         ovWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mF/t8Vc3YmpUfAcfOp8dmky92LVPXpVO+34OWoDYALY=;
-        b=Xh3S2EGeEL5MHkhqDir2n/ZeSC8aPIOfNV2eWTphERIlh8virXkGcYTwC5diuUOyuH
-         4713BBK6Ul/aqJzV+gB1ox83GjnQA3gba415Lh+7DqJ/93rdcTLy4VjouadZXnMC/52B
-         Q+zEBpFrdXgifvI3DF0rc14C0qe6x4BDOCJcxsTAxmJmSnSBoOQQ/m5j6TlmnUrCiNs0
-         ZxVuzDuQrpkE8TOhbUjeIxFRH/NUKnYU8g3lx7dc2RR0reKaBx5ZLPvyoZvyVduEylSY
-         FTrloWU4EUtEOYf71mM/t6FoFmtloq3KNo99lDd/WO5dIFAh3xpXKR0TFwSAZfJrv7w3
-         cb2w==
-X-Gm-Message-State: APjAAAWnpPW6arMPSfhsKmuqhZKQg8HI6b3TwVs2MRjbYJPBUZvxa22N
-        wIYfZgNRbKF7XAMlNEQ5kYo8wZBRWLi+drqV9PX7z04F
-X-Google-Smtp-Source: APXvYqyGOk8mUWlcXn6d0r8IOUWdlMmLErqfMy6ExuXDc0C9puukqfkBOpVqz/zUvE5BpXaMuiDvB5XAxpVkVRjDQ7Q=
-X-Received: by 2002:adf:f68f:: with SMTP id v15mr9752218wrp.4.1560434256044;
- Thu, 13 Jun 2019 06:57:36 -0700 (PDT)
+        Thu, 13 Jun 2019 09:57:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=lKYQKwrJfQo2MNMZJ5wnSQSzwwx/J9BZ2QpcLaaOhqI=; b=mcw0iG8GhdxCqw5pAZOom7DVDR
+        p7EygH0CPT4iqaGccWVO1PjNrBiEHtZwk+Rprf8oYe2X7dDlihNy6GyRrniNWaxat0UD/+LiPQ9qy
+        hFaRRo6atSoVyN/7t7Kp+EqqXWF0n3ZlasKANvcqr3gMwEj8MzJNNj31bU+Nnkx/HEacCqH9Irmq4
+        J2qCzALgzpz8LKGHjfRkA7djecoVefize4ug9t0DgkKQ8HWfok/0w0GN7pi7K+TIpxD9v+hIrLFFq
+        gUf3D72MVzaC7z+GhSDnlFBipfLoOvKp14De5SKsBq1UDqE/MeHi6sWWEMvWdw+uM04KVQ3QXfqzC
+        JGeEQJfg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbQDy-0004GE-9G; Thu, 13 Jun 2019 13:57:06 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 14D9520435AA7; Thu, 13 Jun 2019 15:57:05 +0200 (CEST)
+Message-Id: <20190613135653.415699001@infradead.org>
+User-Agent: quilt/0.65
+Date:   Thu, 13 Jun 2019 15:54:48 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     torvalds@linux-foundation.org, mingo@kernel.org, bp@alien8.de,
+        tglx@linutronix.de, luto@kernel.org, namit@vmware.com,
+        peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>
+Subject: [PATCH v2 3/5] x86/percpu, x86/irq: Relax {set,get}_irq_regs()
+References: <20190613135445.318096781@infradead.org>
 MIME-Version: 1.0
-References: <20190530000819.GA25416@obi-wan> <20190604202149.GA20116@obi-wan>
-In-Reply-To: <20190604202149.GA20116@obi-wan>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 13 Jun 2019 09:57:24 -0400
-Message-ID: <CADnq5_OqVSz7Vfo0zP88i=wJur=wtz6Jd99ZTiQSbFNBcc3j7w@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/powerplay/smu7_hwmgr: replace blocking delay with non-blocking
-To:     Yrjan Skrimstad <yrjan@skrimstad.net>
-Cc:     Maling list - DRI developers <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Evan Quan <evan.quan@amd.com>, Rex Zhu <rex.zhu@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 4:22 PM Yrjan Skrimstad <yrjan@skrimstad.net> wrote:
->
-> On Thu, May 30, 2019 at 02:08:21AM +0200, Yrjan Skrimstad wrote:
-> > This driver currently contains a repeated 500ms blocking delay call
-> > which causes frequent major buffer underruns in PulseAudio. This patch
-> > fixes this issue by replacing the blocking delay with a non-blocking
-> > sleep call.
->
-> I see that I have not explained this bug well enough, and I hope that is
-> the reason for the lack of replies on this patch. I will here attempt to
-> explain the situation better.
->
-> To start with some hardware description I am here using an AMD R9 380
-> GPU, an AMD Ryzen 7 1700 Eight-Core Processor and an AMD X370 chipset.
-> If any more hardware or software specifications are necessary, please
-> ask.
->
-> The bug is as follows: When playing audio I will regularly have major
-> audio issues, similar to that of a skipping CD. This is reported by
-> PulseAudio as scheduling delays and buffer underruns when running
-> PulseAudio verbosely and these scheduling delays are always just under
-> 500ms, typically around 490ms. This makes listening to any music quite
-> the horrible experience as PulseAudio constantly will attempt to rewind
-> and catch up. It is not a great situation, and seems to me to quite
-> clearly be a case where regular user space behaviour has been broken.
->
-> I want to note that this audio problem was not something I experienced
-> until recently, it is therefore a new bug.
->
-> I have bisected the kernel to find out where the problem originated and
-> found the following commit:
->
-> # first bad commit: [f5742ec36422a39b57f0256e4847f61b3c432f8c] drm/amd/powerplay: correct power reading on fiji
->
-> This commit introduces a blocking delay (mdelay) of 500ms, whereas the
-> old behaviour was a smaller blocking delay of only 1ms. This seems to me
-> to be very curious as the scheduling delays of PulseAudio are always
-> almost 500ms. I have therefore with the previous patch replaced the
-> scheduling delay with a non-blocking sleep (msleep).
->
-> The results of the patch seems promising as I have yet to encounter any
-> of the old <500ms scheduling delays when using it and I have also not
-> encountered any kernel log messages regarding sleeping in an atomic
-> context.
+Nadav reported that since the this_cpu_*() ops got asm-volatile
+constraints on, code generation suffered for do_IRQ(), but since this
+is all with IRQs disabled we can use __this_cpu_*().
 
-The patch is fine and I can apply it (I don't think there are any
-restrictions on sleeping in sysfs), but this code only gets executed
-when you actually read the power status from the card (e.g., via sysfs
-or debugfs).  Presumably you have something in userspace polling one
-of those files on a regular basis?
+smp_x86_platform_ipi                                      234        222   -12,+0
+smp_kvm_posted_intr_ipi                                    74         66   -8,+0
+smp_kvm_posted_intr_wakeup_ipi                             86         78   -8,+0
+smp_apic_timer_interrupt                                  292        284   -8,+0
+smp_kvm_posted_intr_nested_ipi                             74         66   -8,+0
+do_IRQ                                                    195        187   -8,+0
 
-Alex
+Reported-by: Nadav Amit <nadav.amit@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/include/asm/irq_regs.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/arch/x86/include/asm/irq_regs.h
++++ b/arch/x86/include/asm/irq_regs.h
+@@ -16,7 +16,7 @@ DECLARE_PER_CPU(struct pt_regs *, irq_re
+ 
+ static inline struct pt_regs *get_irq_regs(void)
+ {
+-	return this_cpu_read(irq_regs);
++	return __this_cpu_read(irq_regs);
+ }
+ 
+ static inline struct pt_regs *set_irq_regs(struct pt_regs *new_regs)
+@@ -24,7 +24,7 @@ static inline struct pt_regs *set_irq_re
+ 	struct pt_regs *old_regs;
+ 
+ 	old_regs = get_irq_regs();
+-	this_cpu_write(irq_regs, new_regs);
++	__this_cpu_write(irq_regs, new_regs);
+ 
+ 	return old_regs;
+ }
+
+
