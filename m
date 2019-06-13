@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55E0C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C101C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FDAC2147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551B920644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442701;
-	bh=JqdbKrRMKVHfma50c3wbyfNhbelEP8PfbAH0vsI4tzg=;
+	s=default; t=1560442712;
+	bh=IGrnBpsP0i33l3t2cgMK4/7giRbzSp4stV1/BxbUVvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FScuyK+quEv68yabquRWkj1v3DtPh56pSDBWwCW+GcVIDsHV4yurNVHbKrDqruWpr
-	 MwWSzKmNjTt89KUaXi2xfvUY+IK1JAjc7iViPEiFgkQRyf2vNKmmWXDbSUFiVPvVFp
-	 SFeJ3BEuaElRRicUu0VuhjZH/qdkhJwax9FlPKQE=
+	b=XtQgIKu12A4qMOcDgXa3CPSsfsyAONtBsJHnI5b+NGvPbqAPkx1HUSvxbyfXITOhm
+	 I2u+YClUijKzybnjv97at5mg69bMMNPiKZcq6TBOmnEAzwm/+ReMiIQQJKT5d7QIDF
+	 hfTOt7E7tSisJEzssFjHZ5YN28FR6cxbRDXaiAR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730487AbfFMQR6 (ORCPT
+        id S2391862AbfFMQSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:17:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58026 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:18:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731126AbfFMIkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:40:37 -0400
+        id S1731098AbfFMIkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:40:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49B3621479;
-        Thu, 13 Jun 2019 08:40:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 605AA21479;
+        Thu, 13 Jun 2019 08:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415236;
-        bh=JqdbKrRMKVHfma50c3wbyfNhbelEP8PfbAH0vsI4tzg=;
+        s=default; t=1560415219;
+        bh=IGrnBpsP0i33l3t2cgMK4/7giRbzSp4stV1/BxbUVvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mShJkDuNxeTqMlj21SCxFkhIqOyJFitZUnRjjUVqRb2FJaMtunwgK97CpEUV5qgCn
-         waGW8m1k2dt4vt5p3WY/IStKZTQxnKv2/ee7lQWajYRa8/hvZNuP6PTVazj3i1aur3
-         cWPyBz+G6mkvTGAFt830YBJYU93BBaQgV1AjoQfg=
+        b=iuPtQk8XG5JP+Eyv5pTZJ/FscAZcmpxLYzCvPZJbEJ2OWvZ8URqTXsehazsHnzSTX
+         Z1T6QE0k2Qqql2gSWkS90QAqv9FnwIdqUM57sFZtN6YteyfVEypun82u8DsrslAElP
+         03DfgLU4ez6kqN42/TUifNUlTE8RfZVtm+kXISFo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Georg Hofmann <georg@hofmannsweb.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Murphy Zhou <jencce.kernel@gmail.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 053/118] watchdog: imx2_wdt: Fix set_timeout for big timeout values
-Date:   Thu, 13 Jun 2019 10:33:11 +0200
-Message-Id: <20190613075646.814259920@linuxfoundation.org>
+Subject: [PATCH 4.19 047/118] ovl: do not generate duplicate fsnotify events for "fake" path
+Date:   Thu, 13 Jun 2019 10:33:05 +0200
+Message-Id: <20190613075646.551213163@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -61,39 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b07e228eee69601addba98b47b1a3850569e5013 ]
+[ Upstream commit d989903058a83e8536cc7aadf9256a47d5c173fe ]
 
-The documentated behavior is: if max_hw_heartbeat_ms is implemented, the
-minimum of the set_timeout argument and max_hw_heartbeat_ms should be used.
-This patch implements this behavior.
-Previously only the first 7bits were used and the input argument was
-returned.
+Overlayfs "fake" path is used for stacked file operations on underlying
+files.  Operations on files with "fake" path must not generate fsnotify
+events with path data, because those events have already been generated at
+overlayfs layer and because the reported event->fd for fanotify marks on
+underlying inode/filesystem will have the wrong path (the overlayfs path).
 
-Signed-off-by: Georg Hofmann <georg@hofmannsweb.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Link: https://lore.kernel.org/linux-fsdevel/20190423065024.12695-1-jencce.kernel@gmail.com/
+Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
+Fixes: d1d04ef8572b ("ovl: stack file ops")
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/imx2_wdt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/overlayfs/file.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
-index 2b52514eaa86..7e7bdcbbc741 100644
---- a/drivers/watchdog/imx2_wdt.c
-+++ b/drivers/watchdog/imx2_wdt.c
-@@ -178,8 +178,10 @@ static void __imx2_wdt_set_timeout(struct watchdog_device *wdog,
- static int imx2_wdt_set_timeout(struct watchdog_device *wdog,
- 				unsigned int new_timeout)
- {
--	__imx2_wdt_set_timeout(wdog, new_timeout);
-+	unsigned int actual;
+diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
+index 0c810f20f778..2c993937b784 100644
+--- a/fs/overlayfs/file.c
++++ b/fs/overlayfs/file.c
+@@ -29,10 +29,11 @@ static struct file *ovl_open_realfile(const struct file *file,
+ 	struct inode *inode = file_inode(file);
+ 	struct file *realfile;
+ 	const struct cred *old_cred;
++	int flags = file->f_flags | O_NOATIME | FMODE_NONOTIFY;
  
-+	actual = min(new_timeout, wdog->max_hw_heartbeat_ms * 1000);
-+	__imx2_wdt_set_timeout(wdog, actual);
- 	wdog->timeout = new_timeout;
- 	return 0;
- }
+ 	old_cred = ovl_override_creds(inode->i_sb);
+-	realfile = open_with_fake_path(&file->f_path, file->f_flags | O_NOATIME,
+-				       realinode, current_cred());
++	realfile = open_with_fake_path(&file->f_path, flags, realinode,
++				       current_cred());
+ 	revert_creds(old_cred);
+ 
+ 	pr_debug("open(%p[%pD2/%c], 0%o) -> (%p, 0%o)\n",
+@@ -50,7 +51,7 @@ static int ovl_change_flags(struct file *file, unsigned int flags)
+ 	int err;
+ 
+ 	/* No atime modificaton on underlying */
+-	flags |= O_NOATIME;
++	flags |= O_NOATIME | FMODE_NONOTIFY;
+ 
+ 	/* If some flag changed that cannot be changed then something's amiss */
+ 	if (WARN_ON((file->f_flags ^ flags) & ~OVL_SETFL_MASK))
 -- 
 2.20.1
 
