@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617D9C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30003C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 368892147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E1A20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443187;
-	bh=V4eMEYHwbofiKkxkA3V3kHxUOdCXyPa4yfpH7qHKo4M=;
+	s=default; t=1560443191;
+	bh=WBnnoiV2xbfIcvYiH9S//5uTnemkNf6L1oc41kGnPM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uHAem/MAiEzPUE+beP3AiXhSAdNgVvq1Hce/eh04BYgDb9JszAilefmEGzf2H+qa5
-	 N/a8uPTOe+siSa0KIsOUic1xTf7L5xpYQ6KiYgN/BptyKezINV4cFK891SiFilM8rH
-	 1lCfCrrxsfXUNVmUMoA4UJNl2itNack2d8P4Cdo8=
+	b=OVgfeYt+NtftzMi19va3IFUgJlMIblkqFkFPiVGwPckyGmX4N2k6oIOFJ7cvqHSRa
+	 ueVuFtitA3zPYs3YqQzk1XIIMba24k/KCm8FaxHZlkBr5CDvedd4fOLArHrf1CVWqJ
+	 67Cm2eYSv9IBarYA3mMz1vLH3Yil+d8u83oS3U9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392329AbfFMQ0Z (ORCPT
+        id S2392340AbfFMQ03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:26:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53772 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:26:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730960AbfFMIgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:36:13 -0400
+        id S1730958AbfFMIgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:36:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 433622146F;
-        Thu, 13 Jun 2019 08:36:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A91052146F;
+        Thu, 13 Jun 2019 08:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560414972;
-        bh=V4eMEYHwbofiKkxkA3V3kHxUOdCXyPa4yfpH7qHKo4M=;
+        s=default; t=1560414970;
+        bh=WBnnoiV2xbfIcvYiH9S//5uTnemkNf6L1oc41kGnPM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uzwtm1a2W2O9VqLDgrE8nz1QwF06ZCxr3fXAP82lhCI2ER2WERL1S5Y8y83oIQUdT
-         RrJ83c3pTXcqW/R43MVmwhY3eUdJsCT57WPEKJy0Xd0zrs8wCkyNS1N/PO1SqiLVZx
-         hxlXMtbYPxmONIw69NW4Wy5olmop2EUY4kMlX2EQ=
+        b=KJ6DH0zAyYDGHFLcDKGCHv1cJK0snJESQWEKnDCF9ci+dBe9Qm2+97HQK2UVNfH8U
+         xBurJPcHh6TslUmmaEPKK8FSoZJFH0EJMUH5GhpU9A+l1L4Nd1l7IMxImGswut0zX2
+         7kAIoFi/vrmwWJDzsX88YF2GGHETG+sAEOt6O5fw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Javier Martinez Canillas <javier@dowhile0.org>,
-        Daniel Gomez <dagmcr@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 16/81] mfd: tps65912-spi: Add missing of table registration
-Date:   Thu, 13 Jun 2019 10:32:59 +0200
-Message-Id: <20190613075650.266229836@linuxfoundation.org>
+Subject: [PATCH 4.14 15/81] drivers: thermal: tsens: Dont print error message on -EPROBE_DEFER
+Date:   Thu, 13 Jun 2019 10:32:58 +0200
+Message-Id: <20190613075650.191146182@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -62,41 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9e364e87ad7f2c636276c773d718cda29d62b741 ]
+[ Upstream commit fc7d18cf6a923cde7f5e7ba2c1105bb106d3e29a ]
 
-MODULE_DEVICE_TABLE(of, <of_match_table> should be called to complete DT
-OF mathing mechanism and register it.
+We print a calibration failure message on -EPROBE_DEFER from
+nvmem/qfprom as follows:
+[    3.003090] qcom-tsens 4a9000.thermal-sensor: version: 1.4
+[    3.005376] qcom-tsens 4a9000.thermal-sensor: tsens calibration failed
+[    3.113248] qcom-tsens 4a9000.thermal-sensor: version: 1.4
 
-Before this patch:
-modinfo drivers/mfd/tps65912-spi.ko | grep alias
-alias:          spi:tps65912
+This confuses people when, in fact, calibration succeeds later when
+nvmem/qfprom device is available. Don't print this message on a
+-EPROBE_DEFER.
 
-After this patch:
-modinfo drivers/mfd/tps65912-spi.ko | grep alias
-alias:          of:N*T*Cti,tps65912C*
-alias:          of:N*T*Cti,tps65912
-alias:          spi:tps65912
-
-Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
-Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/tps65912-spi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/thermal/qcom/tsens.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/tps65912-spi.c b/drivers/mfd/tps65912-spi.c
-index 3bd75061f777..f78be039e463 100644
---- a/drivers/mfd/tps65912-spi.c
-+++ b/drivers/mfd/tps65912-spi.c
-@@ -27,6 +27,7 @@ static const struct of_device_id tps65912_spi_of_match_table[] = {
- 	{ .compatible = "ti,tps65912", },
- 	{ /* sentinel */ }
- };
-+MODULE_DEVICE_TABLE(of, tps65912_spi_of_match_table);
- 
- static int tps65912_spi_probe(struct spi_device *spi)
- {
+diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+index 3f9fe6aa51cc..ebbe1ec7b9e8 100644
+--- a/drivers/thermal/qcom/tsens.c
++++ b/drivers/thermal/qcom/tsens.c
+@@ -162,7 +162,8 @@ static int tsens_probe(struct platform_device *pdev)
+ 	if (tmdev->ops->calibrate) {
+ 		ret = tmdev->ops->calibrate(tmdev);
+ 		if (ret < 0) {
+-			dev_err(dev, "tsens calibration failed\n");
++			if (ret != -EPROBE_DEFER)
++				dev_err(dev, "tsens calibration failed\n");
+ 			return ret;
+ 		}
+ 	}
 -- 
 2.20.1
 
