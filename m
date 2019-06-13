@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A46C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD1EC31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF3D20866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F39E20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442585;
-	bh=ss0pxPaLLqpqYd7wUmzKeZFRvjvsi0CSNDrkeGQbD4E=;
+	s=default; t=1560442588;
+	bh=bJqNarems1muBoobpDO5RJWgPAJOh5Eures7MOC4XqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2qLnUIKCdWgovAvrzretuo8Oj0/sbOg9VmApIHej8Ik0+Y0K3abKMeGjsOv30f/hg
-	 7Dd8xDSDeZkc+Re3mEpp3ywlpjkUxuZ20GXdmgYm2IhhTGMvqswAjfWx9b+2wm58b8
-	 ipVDcDjHAgZeWisT1Vt8REPKoJw9gtEf7xZjUhb0=
+	b=xcCke5PLxT9+YicE8j02hh9LoNgHaiLTsMHwWPJJovUi8/9nS6kchWubdCblBD8Ca
+	 XLbGn0LME02roUI6M+eWnbKQsqLU7TYpaj8dizPCz3VxExPZbMVkjDfTnGfGN/KCkd
+	 lPb3r8N4TacqQGdbIMJ8S22oo7kWvhlpxDlcOeTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391935AbfFMQQY (ORCPT
+        id S2391962AbfFMQQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:16:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58650 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:16:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731152AbfFMIlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:41:25 -0400
+        id S1731150AbfFMIlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:41:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5685920851;
-        Thu, 13 Jun 2019 08:41:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1FBC20851;
+        Thu, 13 Jun 2019 08:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415284;
-        bh=ss0pxPaLLqpqYd7wUmzKeZFRvjvsi0CSNDrkeGQbD4E=;
+        s=default; t=1560415279;
+        bh=bJqNarems1muBoobpDO5RJWgPAJOh5Eures7MOC4XqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a1YdIDAvY+Pm1p6Fyi2AV9e7hQIoAfMmi29wJ+Au7VsLT7x+dG1EYRTPE74SQOeHX
-         wxeXuNAsicI/0aPzWbxElR8BiMwz4ZnKHXKlA8XsEfL6kHjZJ6NjseELuAUa0/LgIm
-         nxYgS91n6DbkgvKlu4RZ6HcVTWhrQHnARp8b9r5k=
+        b=zq2DaSU74RTae1lDQPC8esYtFi6hu1HbWnB1ZoVnxz5mso0cRP9ZPAXciwPf8uo4y
+         qYvey6RpHddVGUVIZthINNXwQ7eCtzB9z3Njb2VLnnHmPRqKdfivMwgZu4SjNnqJ4y
+         lMgPuoaJRjXfgsf7SWzQnns5ceCi3LyrJFKkCZPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 041/118] f2fs: fix to do checksum even if inode page is uptodate
-Date:   Thu, 13 Jun 2019 10:32:59 +0200
-Message-Id: <20190613075645.972616217@linuxfoundation.org>
+Subject: [PATCH 4.19 039/118] f2fs: fix to use inline space only if inline_xattr is enable
+Date:   Thu, 13 Jun 2019 10:32:57 +0200
+Message-Id: <20190613075645.866575074@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -60,95 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b42b179bda9ff11075a6fc2bac4d9e400513679a ]
+[ Upstream commit 622927f3b8809206f6da54a6a7ed4df1a7770fce ]
 
-As Jungyeon reported in bugzilla:
+With below mkfs and mount option:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203221
+MKFS_OPTIONS  -- -O extra_attr -O project_quota -O inode_checksum -O flexible_inline_xattr -O inode_crtime -f
+MOUNT_OPTIONS -- -o noinline_xattr
 
-- Overview
-When mounting the attached crafted image and running program, this error is reported.
+We may miss xattr data with below testcase:
+- mkdir dir
+- setfattr -n "user.name" -v 0 dir
+- for ((i = 0; i < 190; i++)) do touch dir/$i; done
+- umount
+- mount
+- getfattr -n "user.name" dir
 
-The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
+user.name: No such attribute
 
-- Reproduces
-cc poc_07.c
-mkdir test
-mount -t f2fs tmp.img test
-cp a.out test
-cd test
-sudo ./a.out
+The root cause is that we persist xattr data into reserved inline xattr
+space, even if inline_xattr is not enable in inline directory inode, after
+inline dentry conversion, reserved space no longer exists, so that xattr
+data missed.
 
-- Messages
- kernel BUG at fs/f2fs/node.c:1279!
- RIP: 0010:read_node_page+0xcf/0xf0
- Call Trace:
-  __get_node_page+0x6b/0x2f0
-  f2fs_iget+0x8f/0xdf0
-  f2fs_lookup+0x136/0x320
-  __lookup_slow+0x92/0x140
-  lookup_slow+0x30/0x50
-  walk_component+0x1c1/0x350
-  path_lookupat+0x62/0x200
-  filename_lookup+0xb3/0x1a0
-  do_fchmodat+0x3e/0xa0
-  __x64_sys_chmod+0x12/0x20
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Let's use inline xattr space only if inline_xattr flag is set on inode
+to fix this iusse.
 
-On below paths, we can have opportunity to readahead inode page
-- gc_node_segment -> f2fs_ra_node_page
-- gc_data_segment -> f2fs_ra_node_page
-- f2fs_fill_dentries -> f2fs_ra_node_page
-
-Unlike synchronized read, on readahead path, we can set page uptodate
-before verifying page's checksum, then read_node_page() will trigger
-kernel panic once it encounters a uptodated page w/ incorrect checksum.
-
-So considering readahead scenario, we have to do checksum each time
-when loading inode page even if it is uptodated.
-
+Fixes: 6afc662e68b5 ("f2fs: support flexible inline xattr size")
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/inode.c | 4 ++--
- fs/f2fs/node.c  | 7 ++++---
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ fs/f2fs/f2fs.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index fae9570e6860..0f31df01e36c 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -179,8 +179,8 @@ bool f2fs_inode_chksum_verify(struct f2fs_sb_info *sbi, struct page *page)
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 64f970cca1b4..44ea7ac69ef4 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2497,7 +2497,9 @@ static inline void *inline_xattr_addr(struct inode *inode, struct page *page)
  
- 	if (provided != calculated)
- 		f2fs_msg(sbi->sb, KERN_WARNING,
--			"checksum invalid, ino = %x, %x vs. %x",
--			ino_of_node(page), provided, calculated);
-+			"checksum invalid, nid = %lu, ino_of_node = %x, %x vs. %x",
-+			page->index, ino_of_node(page), provided, calculated);
- 
- 	return provided == calculated;
+ static inline int inline_xattr_size(struct inode *inode)
+ {
+-	return get_inline_xattr_addrs(inode) * sizeof(__le32);
++	if (f2fs_has_inline_xattr(inode))
++		return get_inline_xattr_addrs(inode) * sizeof(__le32);
++	return 0;
  }
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 34c3f732601c..e2d9edad758c 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1282,9 +1282,10 @@ static int read_node_page(struct page *page, int op_flags)
- 	int err;
  
- 	if (PageUptodate(page)) {
--#ifdef CONFIG_F2FS_CHECK_FS
--		f2fs_bug_on(sbi, !f2fs_inode_chksum_verify(sbi, page));
--#endif
-+		if (!f2fs_inode_chksum_verify(sbi, page)) {
-+			ClearPageUptodate(page);
-+			return -EBADMSG;
-+		}
- 		return LOCKED_PAGE;
- 	}
- 
+ static inline int f2fs_has_inline_data(struct inode *inode)
 -- 
 2.20.1
 
