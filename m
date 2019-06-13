@@ -2,106 +2,121 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34808C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D98FAC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C0292147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="KHbKhiCE"
+	by mail.kernel.org (Postfix) with ESMTP id ADEAF20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560443178;
+	bh=qGO+q+JsVVgwAlTKu7uvOt2zufFjhDx4vTWoTvVnsxg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1Q+Qrij9oWCwVFL++JguIVffOBj2lUD03OG9Eex7OBg/ygayIbLW8cO802hooaezM
+	 yQgEz+OoOoIc0RuJ6/6Q0YRNK5U8EtCxQJ7l4pPltKKgJJz+UTmUIYQ7IpQ/H1StGK
+	 Q6aNRfb11ZTRDx7DqWdIKGyZV+ANnlP4yrNiJSig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391958AbfFMQ0H (ORCPT
+        id S2391390AbfFMQ0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:26:07 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43152 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392282AbfFMQ0G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:26:06 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w79so14882215oif.10
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 09:26:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wjBnZv2pCLDEwG4yb+2F3joyqEyCgCcLuoiul4+lDtg=;
-        b=KHbKhiCEqP27YRm90NCLuB4c2IplNhmcOcBL7/TKZlk3SiaZQfwA9S0uY/GsQv03Pr
-         aBL2AWfi8XTIFaky9LKQqE+K/NfNYYNrlmFC/I9jOaxHcs4tAfHfjcUQbqcl3RnXxild
-         Tu3HngJ2BWQbjHKSA518A7LMdZsRAI0y2xoRezHhz45e3uyBcpgMb0voTy98I6u2hRnp
-         NYEu7LcFVoYX1llZ3PhX+HJY3OdLwk1vk8E00NF1S8iWedYKuEKJl7E8AOFKwK6O5TC3
-         f4HIkh3G/dWUfgrFHj9h1Gd+qxz3edzqRbXtlNTkaPme0fjX3JDzh/8PrIf6qw6dZLSg
-         gtaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wjBnZv2pCLDEwG4yb+2F3joyqEyCgCcLuoiul4+lDtg=;
-        b=HSNjEMfYZ05Lx3ShsJzixG78dtsmEF6ZMBDCRPXR3R7NaWLjVw8Mu8LYGAwJZiELEG
-         viZmgBdPkNdFuCOM4GwiNNl3TjvQsenT5ej5Yk+UwnzR2+y5T7Qowp7Ne73HS3ijX7f0
-         IgzlS2/jBUGOH5+cJejwOKwdKDwhTqVp3Hg5vZQAz0JhnEIneq9uEtBUWNdxEDlX1eWA
-         pNkwiM22t92wYTtGo2MTIdTAQXEVZVMIpeOMZpLXnhr8AQ9WkYyPNtRDHs201/nuJGG5
-         5KZAn3gHnCWLljhIOmkxAYX2MAwSjWPjROWmIUQgfLm7wF/9dom3u6Jkevce71xibPOz
-         0QIA==
-X-Gm-Message-State: APjAAAVVmjvzJEKfpdovtSGUKqRDzwCgc8liW4BUeknX3fFxfqOmjXHt
-        rJo3Zc1tmYCaAVD7ZGBgiEhbWso8jd6xJTl3VKjGiw==
-X-Google-Smtp-Source: APXvYqyIpO3hOidIsXLbc4Y7aCrEkKlPPSiQhXNkmA/XJwYbaL526BswBcBQAMtK33IEuzEN5c+1wA+6c6zViqiveWY=
-X-Received: by 2002:aca:7c5:: with SMTP id 188mr3423005oih.70.1560443165189;
- Thu, 13 Jun 2019 09:26:05 -0700 (PDT)
+        Thu, 13 Jun 2019 12:26:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730965AbfFMIgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:36:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3054F20851;
+        Thu, 13 Jun 2019 08:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560414980;
+        bh=qGO+q+JsVVgwAlTKu7uvOt2zufFjhDx4vTWoTvVnsxg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VuD4INgJ/MsgRbikhMK5kz0X+OqvO/91E9qk+fYObuFPpDCoawj8xaYotyj0nw4l4
+         TTQLlhxgbEIWVzQ5767sq3JJqU+5hi17zDUgtFpboiKLsu0m61iOBoyIP3Lkzu9sF2
+         vJB8xdsEoRbwpLGPs8Xq4SYmV2S6nEWY4vm9kn/8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 19/81] mfd: twl6040: Fix device init errors for ACCCTL register
+Date:   Thu, 13 Jun 2019 10:33:02 +0200
+Message-Id: <20190613075650.502042297@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
+References: <20190613075649.074682929@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190607121729.GA14802@ziepe.ca> <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
- <20190612102917.GB14578@quack2.suse.cz> <20190612114721.GB3876@ziepe.ca>
- <20190612120907.GC14578@quack2.suse.cz> <20190612191421.GM3876@ziepe.ca>
- <20190612221336.GA27080@iweiny-DESK2.sc.intel.com> <CAPcyv4gkksnceCV-p70hkxAyEPJWFvpMezJA1rEj6TEhKAJ7qQ@mail.gmail.com>
- <20190612233324.GE14336@iweiny-DESK2.sc.intel.com> <CAPcyv4jf19CJbtXTp=ag7Ns=ZQtqeQd3C0XhV9FcFCwd9JCNtQ@mail.gmail.com>
- <20190613151354.GC22901@ziepe.ca>
-In-Reply-To: <20190613151354.GC22901@ziepe.ca>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 13 Jun 2019 09:25:54 -0700
-Message-ID: <CAPcyv4hZsxd+eUrVCQmm-O8Zcu16O5R1d0reTM+JBBn7oP7Uhw@mail.gmail.com>
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        "Theodore Ts'o" <tytso@mit.edu>, Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 8:14 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Wed, Jun 12, 2019 at 06:14:46PM -0700, Dan Williams wrote:
-> > > Effectively, we would need a way for an admin to close a specific file
-> > > descriptor (or set of fds) which point to that file.  AFAIK there is no way to
-> > > do that at all, is there?
-> >
-> > Even if there were that gets back to my other question, does RDMA
-> > teardown happen at close(fd), or at final fput() of the 'struct
-> > file'?
->
-> AFAIK there is no kernel side driver hook for close(fd).
->
-> rdma uses a normal chardev so it's lifetime is linked to the file_ops
-> release, which is called on last fput. So all the mmaps, all the dups,
-> everything must go before it releases its resources.
+[ Upstream commit 48171d0ea7caccf21c9ee3ae75eb370f2a756062 ]
 
-Oh, I must have missed where this conversation started talking about
-the driver-device fd. I thought we were talking about the close /
-release of the target file that is MAP_SHARED for the memory
-registration. A release of the driver fd is orthogonal to coordinating
-/ signalling actions relative to the leased file.
+I noticed that we can get a -EREMOTEIO errors on at least omap4 duovero:
+
+twl6040 0-004b: Failed to write 2d = 19: -121
+
+And then any following register access will produce errors.
+
+There 2d offset above is register ACCCTL that gets written on twl6040
+powerup. With error checking added to the related regcache_sync() call,
+the -EREMOTEIO error is reproducable on twl6040 powerup at least
+duovero.
+
+To fix the error, we need to wait until twl6040 is accessible after the
+powerup. Based on tests on omap4 duovero, we need to wait over 8ms after
+powerup before register write will complete without failures. Let's also
+make sure we warn about possible errors too.
+
+Note that we have twl6040_patch[] reg_sequence with the ACCCTL register
+configuration and regcache_sync() will write the new value to ACCCTL.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/mfd/twl6040.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
+index dd19f17a1b63..2b8c479dbfa6 100644
+--- a/drivers/mfd/twl6040.c
++++ b/drivers/mfd/twl6040.c
+@@ -322,8 +322,19 @@ int twl6040_power(struct twl6040 *twl6040, int on)
+ 			}
+ 		}
+ 
++		/*
++		 * Register access can produce errors after power-up unless we
++		 * wait at least 8ms based on measurements on duovero.
++		 */
++		usleep_range(10000, 12000);
++
+ 		/* Sync with the HW */
+-		regcache_sync(twl6040->regmap);
++		ret = regcache_sync(twl6040->regmap);
++		if (ret) {
++			dev_err(twl6040->dev, "Failed to sync with the HW: %i\n",
++				ret);
++			goto out;
++		}
+ 
+ 		/* Default PLL configuration after power up */
+ 		twl6040->pll = TWL6040_SYSCLK_SEL_LPPLL;
+-- 
+2.20.1
+
+
+
