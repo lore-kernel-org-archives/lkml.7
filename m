@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210D2C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 512F6C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E446520B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5B72147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442941;
-	bh=HbA5eCN6xurGIQ6BGkFFfMgHr7GRTlSAQnHbchCGmoY=;
+	s=default; t=1560442946;
+	bh=9HICIFiOvwzk4K4V5RjRyHbghDKYRMk255sKfMvQgfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rld8rkx80+M/ekYIYwc6bFxmhA3W97DZ8Q9JpUQhjQgJNRVrvPtSZef1+AGdCvmxK
-	 uGWLqgYsl50t7TAG3PsI7hH9WlAywBP5GHL6Pp8kad3aPGcAljz994y75RGdy5VMnC
-	 rwXb4OoV53zuZHNZrwwSViPiZYQLF2f39pOVVlF0=
+	b=JHdKhR38GHny8CfFbaPPdd7UJ+jogtrUclg/GsAWpXPVRUL31jnGVo/aXhUtt+69W
+	 A6Kp8NmynEf7qS2orWYeGXdezFyUMOz9jNsN6DAQ/nc178YwdCRmw5HH573sZZibvf
+	 ku9J+vzM7rewsbA0GeSWTk4p3KaWSSXLOGRme+4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731798AbfFMQWU (ORCPT
+        id S2391800AbfFMQWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:22:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55896 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:22:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731048AbfFMIi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:38:26 -0400
+        id S1731046AbfFMIiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:38:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A3FC20851;
-        Thu, 13 Jun 2019 08:38:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53E0821473;
+        Thu, 13 Jun 2019 08:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415105;
-        bh=HbA5eCN6xurGIQ6BGkFFfMgHr7GRTlSAQnHbchCGmoY=;
+        s=default; t=1560415102;
+        bh=9HICIFiOvwzk4K4V5RjRyHbghDKYRMk255sKfMvQgfI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qut/aBVCB+5QUB0it8ZxTCkflOaOQ1MEXKUknL6BoerTuHRNKu9l9P6pw0/2WOS5s
-         1Nm4SHA1KSJ0EUUYdgyktLU8zihKaga3N2LDi/eefXj0VYLfniHtxG9EG9W2Tg1ni6
-         bUVXqG6LOTjasKBQXbsa6IZaSdET3fXPRwkwiH9w=
+        b=pjp2VjO9OSSWc1oapVBICWNE9L/1KJ39iAKOYD5rwGQVSof3XPiPtfphRLgqm1cIc
+         xko+zD8g8HxiIsb9Xz2ta+POB88HCX4y4MK8VAi++eAEkPircf9j+yvJDTXcRhp82R
+         JmensP+CjqYmwR2IX4zZztEv60xKBUlDzvOFMDUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Christoph=20Vogtl=C3=A4nder?= 
-        <c.vogtlaender@sigma-surface-science.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 72/81] pwm: tiehrpwm: Update shadow register for disabling PWMs
-Date:   Thu, 13 Jun 2019 10:33:55 +0200
-Message-Id: <20190613075654.232458019@linuxfoundation.org>
+Subject: [PATCH 4.14 71/81] dmaengine: idma64: Use actual device for DMA transfers
+Date:   Thu, 13 Jun 2019 10:33:54 +0200
+Message-Id: <20190613075654.176779377@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -63,41 +61,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b00ef53053191d3025c15e8041699f8c9d132daf ]
+[ Upstream commit 5ba846b1ee0792f5a596b9b0b86d6e8cdebfab06 ]
 
-It must be made sure that immediate mode is not already set, when
-modifying shadow register value in ehrpwm_pwm_disable(). Otherwise
-modifications to the action-qualifier continuous S/W force
-register(AQSFRC) will be done in the active register.
-This may happen when both channels are being disabled. In this case,
-only the first channel state will be recorded as disabled in the shadow
-register. Later, when enabling the first channel again, the second
-channel would be enabled as well. Setting RLDCSF to zero, first, ensures
-that the shadow register is updated as desired.
+Intel IOMMU, when enabled, tries to find the domain of the device,
+assuming it's a PCI one, during DMA operations, such as mapping or
+unmapping. Since we are splitting the actual PCI device to couple of
+children via MFD framework (see drivers/mfd/intel-lpss.c for details),
+the DMA device appears to be a platform one, and thus not an actual one
+that performs DMA. In a such situation IOMMU can't find or allocate
+a proper domain for its operations. As a result, all DMA operations are
+failed.
 
-Fixes: 38dabd91ff0b ("pwm: tiehrpwm: Fix disabling of output of PWMs")
-Signed-off-by: Christoph Vogtländer <c.vogtlaender@sigma-surface-science.com>
-[vigneshr@ti.com: Improve commit message]
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+In order to fix this, supply parent of the platform device
+to the DMA engine framework and fix filter functions accordingly.
+
+We may rely on the fact that parent is a real PCI device, because no
+other configuration is present in the wild.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mark Brown <broonie@kernel.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org> [for tty parts]
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-tiehrpwm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/dma/idma64.c              | 6 ++++--
+ drivers/dma/idma64.h              | 2 ++
+ drivers/spi/spi-pxa2xx.c          | 7 +------
+ drivers/tty/serial/8250/8250_dw.c | 4 ++--
+ 4 files changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-index f7b8a86fa5c5..ad4a40c0f27c 100644
---- a/drivers/pwm/pwm-tiehrpwm.c
-+++ b/drivers/pwm/pwm-tiehrpwm.c
-@@ -382,6 +382,8 @@ static void ehrpwm_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+diff --git a/drivers/dma/idma64.c b/drivers/dma/idma64.c
+index 1953e57505f4..f17a4c7a1781 100644
+--- a/drivers/dma/idma64.c
++++ b/drivers/dma/idma64.c
+@@ -589,7 +589,7 @@ static int idma64_probe(struct idma64_chip *chip)
+ 	idma64->dma.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+ 	idma64->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+ 
+-	idma64->dma.dev = chip->dev;
++	idma64->dma.dev = chip->sysdev;
+ 
+ 	dma_set_max_seg_size(idma64->dma.dev, IDMA64C_CTLH_BLOCK_TS_MASK);
+ 
+@@ -629,6 +629,7 @@ static int idma64_platform_probe(struct platform_device *pdev)
+ {
+ 	struct idma64_chip *chip;
+ 	struct device *dev = &pdev->dev;
++	struct device *sysdev = dev->parent;
+ 	struct resource *mem;
+ 	int ret;
+ 
+@@ -645,11 +646,12 @@ static int idma64_platform_probe(struct platform_device *pdev)
+ 	if (IS_ERR(chip->regs))
+ 		return PTR_ERR(chip->regs);
+ 
+-	ret = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
++	ret = dma_coerce_mask_and_coherent(sysdev, DMA_BIT_MASK(64));
+ 	if (ret)
+ 		return ret;
+ 
+ 	chip->dev = dev;
++	chip->sysdev = sysdev;
+ 
+ 	ret = idma64_probe(chip);
+ 	if (ret)
+diff --git a/drivers/dma/idma64.h b/drivers/dma/idma64.h
+index 6b816878e5e7..baa32e1425de 100644
+--- a/drivers/dma/idma64.h
++++ b/drivers/dma/idma64.h
+@@ -216,12 +216,14 @@ static inline void idma64_writel(struct idma64 *idma64, int offset, u32 value)
+ /**
+  * struct idma64_chip - representation of iDMA 64-bit controller hardware
+  * @dev:		struct device of the DMA controller
++ * @sysdev:		struct device of the physical device that does DMA
+  * @irq:		irq line
+  * @regs:		memory mapped I/O space
+  * @idma64:		struct idma64 that is filed by idma64_probe()
+  */
+ struct idma64_chip {
+ 	struct device	*dev;
++	struct device	*sysdev;
+ 	int		irq;
+ 	void __iomem	*regs;
+ 	struct idma64	*idma64;
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index efdae686a761..9bf3e5f945c7 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1505,12 +1505,7 @@ static const struct pci_device_id pxa2xx_spi_pci_compound_match[] = {
+ 
+ static bool pxa2xx_spi_idma_filter(struct dma_chan *chan, void *param)
+ {
+-	struct device *dev = param;
+-
+-	if (dev != chan->device->dev->parent)
+-		return false;
+-
+-	return true;
++	return param == chan->device->dev;
+ }
+ 
+ static struct pxa2xx_spi_master *
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index 27c5b2b46b8d..4ca46aa64699 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -315,7 +315,7 @@ static bool dw8250_fallback_dma_filter(struct dma_chan *chan, void *param)
+ 
+ static bool dw8250_idma_filter(struct dma_chan *chan, void *param)
+ {
+-	return param == chan->device->dev->parent;
++	return param == chan->device->dev;
+ }
+ 
+ static void dw8250_quirks(struct uart_port *p, struct dw8250_data *data)
+@@ -356,7 +356,7 @@ static void dw8250_quirks(struct uart_port *p, struct dw8250_data *data)
+ 		}
  	}
  
- 	/* Update shadow register first before modifying active register */
-+	ehrpwm_modify(pc->mmio_base, AQSFRC, AQSFRC_RLDCSF_MASK,
-+		      AQSFRC_RLDCSF_ZRO);
- 	ehrpwm_modify(pc->mmio_base, AQCSFRC, aqcsfrc_mask, aqcsfrc_val);
- 	/*
- 	 * Changes to immediate action on Action Qualifier. This puts
+-	/* Platforms with iDMA */
++	/* Platforms with iDMA 64-bit */
+ 	if (platform_get_resource_byname(to_platform_device(p->dev),
+ 					 IORESOURCE_MEM, "lpss_priv")) {
+ 		data->dma.rx_param = p->dev->parent;
 -- 
 2.20.1
 
