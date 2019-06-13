@@ -2,54 +2,53 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D28C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC53C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE3D32147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0BD62147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442968;
-	bh=OwZ0qLFkEiHNIobShGBggg/4oh/hdfHyky43omuQniU=;
+	s=default; t=1560442973;
+	bh=Zr+S9qszYm7Ysbhazh9Fs4RB+XQq43GARdQ5UwlRd6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fqi2WliyubiMXOh9Le7LVjO+fkKUVHj0sV2BiXvTmDl3HXn+yUGWnx67Tjsx9wjqm
-	 YmrG4dNf9kyUvegll0/YvI9PC64Q8b9qIBdfKB8Ag4Edew88yX2c6nYAeTX7+JYB9H
-	 Lkzn4NuwuLw5k+x9b87rPbmnouujb7DCdEEaQJr8=
+	b=N1bZQat2yskgZ8WvKBuZvABbaFKl8gWqzOiAqPVolEwMlBKKu1UQ3FKnFSMdVzWsY
+	 Fwtd5aKkQjF3ECvRomdbOW7Sa7E9V2HUMC6CTe58PVd0ckI+6oVhHXl3xfqXUT0i6r
+	 F+RbH5c6/tMyCeLJ3kbW028o5Clq6xsF3GR6b790=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389592AbfFMQWr (ORCPT
+        id S2403778AbfFMQWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:22:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55580 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:22:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731039AbfFMIiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:38:09 -0400
+        id S1731037AbfFMIiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:38:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 641412146F;
-        Thu, 13 Jun 2019 08:38:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E513A2146F;
+        Thu, 13 Jun 2019 08:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415088;
-        bh=OwZ0qLFkEiHNIobShGBggg/4oh/hdfHyky43omuQniU=;
+        s=default; t=1560415083;
+        bh=Zr+S9qszYm7Ysbhazh9Fs4RB+XQq43GARdQ5UwlRd6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=crWU+xNBkyEZeF0jAVTIS6/5jtRhlwm+l1VYnCcvPFIo0gWnZAN2UTOONuzzgSicy
-         LdyrX6GDeir7iGIz4hEg79tDNGS9EhAKb3FH2s9rBmhTTQq7crL7L0WdxO0XK4GDv3
-         AD5A3yypzroYLBOjHDcKs1Pzwbp5ItBIUnOH1xz4=
+        b=aOhoKlqxGaVWWsK2OexL8hUUE49xfxtuUWHe7OkUp6jwCUMx0EHq/kbzaN42Z8hV7
+         Wm9sFOI4gApIJ93/4Pql1dZ6K6+rjii6WkoIU0ATSI6tdIfXWeRJLJx0tlkbxmZYN7
+         BmGmB9DOumqwigl6qMIMDPwV2Ir1XZCBrnKsgXHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Aditya Pakki <pakki001@umn.edu>,
-        Ferenc Bakonyi <fero@drama.obuda.kando.hu>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 66/81] video: hgafb: fix potential NULL pointer dereference
-Date:   Thu, 13 Jun 2019 10:33:49 +0200
-Message-Id: <20190613075653.864033891@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Joachim <svenjoac@gmx.de>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dave Airlie <airlied@redhat.com>,
+        Thomas Backlund <tmb@mageia.org>
+Subject: [PATCH 4.14 80/81] Revert "drm/nouveau: add kconfig option to turn off nouveau legacy contexts. (v3)"
+Date:   Thu, 13 Jun 2019 10:34:03 +0200
+Message-Id: <20190613075654.899041011@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -62,36 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ec7f6aad57ad29e4e66cc2e18e1e1599ddb02542 ]
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-When ioremap fails, hga_vram should not be dereferenced. The fix
-check the failure to avoid NULL pointer dereference.
+This reverts commit 140ae656e3b7476719a2b15b96527c73c5acf90b which is
+commit b30a43ac7132cdda833ac4b13dd1ebd35ace14b7 upstream.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Cc: Aditya Pakki <pakki001@umn.edu>
-Cc: Ferenc Bakonyi <fero@drama.obuda.kando.hu>
-[b.zolnierkie: minor patch summary fixup]
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Sven reports:
+	Commit 1e07d63749 ("drm/nouveau: add kconfig option to turn off nouveau
+	legacy contexts. (v3)") has caused a build failure for me when I
+	actually tried that option (CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n):
+
+	,----
+	| Kernel: arch/x86/boot/bzImage is ready  (#1)
+	|   Building modules, stage 2.
+	|   MODPOST 290 modules
+	| ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
+	| scripts/Makefile.modpost:91: recipe for target '__modpost' failed
+	`----
+
+	Upstream does not have that problem, as commit bed2dd8421 ("drm/ttm:
+	Quick-test mmap offset in ttm_bo_mmap()") has removed the use of
+	drm_legacy_mmap from nouveau_ttm.c.  Unfortunately that commit does not
+	apply in 5.1.9.
+
+The ensuing discussion proposed a number of one-off patches, but no
+solid agreement was made, so just revert the commit for now to get
+people's systems building again.
+
+Reported-by: Sven Joachim <svenjoac@gmx.de>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Dave Airlie <airlied@redhat.com>
+Cc: Thomas Backlund <tmb@mageia.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/video/fbdev/hgafb.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/nouveau/Kconfig       |   13 +------------
+ drivers/gpu/drm/nouveau/nouveau_drm.c |    7 ++-----
+ 2 files changed, 3 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/video/fbdev/hgafb.c b/drivers/video/fbdev/hgafb.c
-index 463028543173..59e1cae57948 100644
---- a/drivers/video/fbdev/hgafb.c
-+++ b/drivers/video/fbdev/hgafb.c
-@@ -285,6 +285,8 @@ static int hga_card_detect(void)
- 	hga_vram_len  = 0x08000;
+--- a/drivers/gpu/drm/nouveau/Kconfig
++++ b/drivers/gpu/drm/nouveau/Kconfig
+@@ -16,20 +16,9 @@ config DRM_NOUVEAU
+ 	select INPUT if ACPI && X86
+ 	select THERMAL if ACPI && X86
+ 	select ACPI_VIDEO if ACPI && X86
+-	help
+-	  Choose this option for open-source NVIDIA support.
+-
+-config NOUVEAU_LEGACY_CTX_SUPPORT
+-	bool "Nouveau legacy context support"
+-	depends on DRM_NOUVEAU
+ 	select DRM_VM
+-	default y
+ 	help
+-	  There was a version of the nouveau DDX that relied on legacy
+-	  ctx ioctls not erroring out. But that was back in time a long
+-	  ways, so offer a way to disable it now. For uapi compat with
+-	  old nouveau ddx this should be on by default, but modern distros
+-	  should consider turning it off.
++	  Choose this option for open-source NVIDIA support.
  
- 	hga_vram = ioremap(0xb0000, hga_vram_len);
-+	if (!hga_vram)
-+		goto error;
+ config NOUVEAU_PLATFORM_DRIVER
+ 	bool "Nouveau (NVIDIA) SoC GPUs"
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -967,11 +967,8 @@ nouveau_driver_fops = {
+ static struct drm_driver
+ driver_stub = {
+ 	.driver_features =
+-		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER
+-#if defined(CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT)
+-		| DRIVER_KMS_LEGACY_CONTEXT
+-#endif
+-		,
++		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER |
++		DRIVER_KMS_LEGACY_CONTEXT,
  
- 	if (request_region(0x3b0, 12, "hgafb"))
- 		release_io_ports = 1;
--- 
-2.20.1
-
+ 	.load = nouveau_drm_load,
+ 	.unload = nouveau_drm_unload,
 
 
