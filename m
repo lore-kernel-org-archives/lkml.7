@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F9EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEF0C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06AA320644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6764A20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:39:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k/mDm974"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G7FwHj2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730676AbfFMQjc (ORCPT
+        id S2392691AbfFMQjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:39:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39720 "EHLO
+        Thu, 13 Jun 2019 12:39:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39548 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730595AbfFMHJW (ORCPT
+        with ESMTP id S1730594AbfFMHJV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 03:09:22 -0400
+        Thu, 13 Jun 2019 03:09:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=jK/gGLsodzGw/W/Jdp61k5bjN/xChJWEP8DWfDcQEpo=; b=k/mDm974CDIfw6zdcYg4r4OkoA
-        QZMtkH2/phvSd/ZQgjQrjZH0j3zTyVR+DhFCso0frHK/bcY/dw4QlSBxa+l3MLYXgFh4xMLZEUyda
-        TtYR7dJYkF8+w13SM4sTstdH7EOGEN2/urGin/pCgQD20NWvAvL90Qf6cG8R6ZhHBmTW4v6aiaVjO
-        QmcVZBLkfCuslcPzHug5lpFG0Ni1UmxW7sKPfBgvzPI3/8PTuQUDhPxxeXFKnAevwD8+2NI4UVrZJ
-        HlAIOkj21XOYwUh7xMe6z/0CPc/2miJeceQYpMWfcIvq7aXUvl5gEPijIr6NhDz53NJmv/Rl+G/89
-        3RRhGOHQ==;
+        bh=/K0yJ79eNsZTexuMmjUga9vIzUpMCAOhnqGbqeYEWjk=; b=G7FwHj2cYxWT08k9ykM8N40mCq
+        MuOhqlaPuCjaxM3kbRVAqTiCNcrKIF6o69W6/1VOy/6rpxuAtDhgOx5pGYkNW2SeJWeUJS2lGaBTL
+        EbPb6tuiNq9jrlUKM1puh8PzhseljVMYpQPkUr9oVrtJGQOkVBnK1PJxetZkajrL46o5yKFNeIh0u
+        RlWlMqbJhunVlPmiAH6V/K5TguEFepg111i6WZ3ZYKyzfzpDQ1cxZsesnXqe5+P4x1rUhcDT+nWcp
+        vxV7G0ID8hQ/YJ1COW2FAWsoiOmeNDqniBDoD+F4/F740kesngR57vPe+91zK03CtUGjTClYw5bde
+        dtnqoGPA==;
 Received: from mpp-cp1-natpool-1-013.ethz.ch ([82.130.71.13] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbJrH-0004Ax-Gw; Thu, 13 Jun 2019 07:09:16 +0000
+        id 1hbJrA-00049B-Ok; Thu, 13 Jun 2019 07:09:09 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Greg Ungerer <gerg@linux-m68k.org>
 Cc:     Michal Simek <monstr@monstr.eu>,
@@ -47,9 +47,9 @@ Cc:     Michal Simek <monstr@monstr.eu>,
         linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
         linux-kernel@vger.kernel.org,
         Vladimir Murzin <vladimir.murzin@arm.com>
-Subject: [PATCH 03/17] binfmt_flat: provide a default version of flat_get_relocate_addr
-Date:   Thu, 13 Jun 2019 09:08:49 +0200
-Message-Id: <20190613070903.17214-4-hch@lst.de>
+Subject: [PATCH 01/17] binfmt_flat: remove flat_reloc_valid
+Date:   Thu, 13 Jun 2019 09:08:47 +0200
+Message-Id: <20190613070903.17214-2-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190613070903.17214-1-hch@lst.de>
 References: <20190613070903.17214-1-hch@lst.de>
@@ -61,93 +61,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This way only the two architectures that do masking need to provide
-the helper.
+This helper is the same for all architectures, open code it in the only
+caller.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Tested-by: Vladimir Murzin <vladimir.murzin@arm.com>
 Reviewed-by: Vladimir Murzin <vladimir.murzin@arm.com>
 ---
- arch/arm/include/asm/flat.h    | 2 --
- arch/c6x/include/asm/flat.h    | 1 -
- arch/m68k/include/asm/flat.h   | 1 -
- arch/sh/include/asm/flat.h     | 1 -
- arch/xtensa/include/asm/flat.h | 1 -
- fs/binfmt_flat.c               | 4 ++++
- 6 files changed, 4 insertions(+), 6 deletions(-)
+ arch/arm/include/asm/flat.h        | 1 -
+ arch/c6x/include/asm/flat.h        | 1 -
+ arch/h8300/include/asm/flat.h      | 1 -
+ arch/m68k/include/asm/flat.h       | 1 -
+ arch/microblaze/include/asm/flat.h | 1 -
+ arch/sh/include/asm/flat.h         | 1 -
+ arch/xtensa/include/asm/flat.h     | 1 -
+ fs/binfmt_flat.c                   | 2 +-
+ 8 files changed, 1 insertion(+), 8 deletions(-)
 
 diff --git a/arch/arm/include/asm/flat.h b/arch/arm/include/asm/flat.h
-index 576241d74704..a185fe023b60 100644
+index f0c75ddeea23..10cce9ecf151 100644
 --- a/arch/arm/include/asm/flat.h
 +++ b/arch/arm/include/asm/flat.h
-@@ -30,6 +30,4 @@ static inline int flat_put_addr_at_rp(u32 __user *rp, u32 addr, u32 rel)
- #endif
- }
+@@ -10,7 +10,6 @@
  
--#define	flat_get_relocate_addr(rel)		(rel)
--
- #endif /* __ARM_FLAT_H__ */
+ #define	flat_argvp_envp_on_stack()		1
+ #define	flat_old_ram_flag(flags)		(flags)
+-#define	flat_reloc_valid(reloc, size)		((reloc) <= (size))
+ 
+ static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+ 					u32 *addr, u32 *persistent)
 diff --git a/arch/c6x/include/asm/flat.h b/arch/c6x/include/asm/flat.h
-index ac87368efad1..c4d703b454c6 100644
+index 76fd0bb962a3..ecc6aea6606c 100644
 --- a/arch/c6x/include/asm/flat.h
 +++ b/arch/c6x/include/asm/flat.h
-@@ -17,6 +17,5 @@ static inline int flat_put_addr_at_rp(u32 __user *rp, u32 addr, u32 rel)
- 	put_unaligned(addr, (__force u32 *)rp);
- 	return 0;
- }
--#define flat_get_relocate_addr(rel)			(rel)
+@@ -6,7 +6,6 @@
  
- #endif /* __ASM_C6X_FLAT_H */
-diff --git a/arch/m68k/include/asm/flat.h b/arch/m68k/include/asm/flat.h
-index 955617bb937b..217fa89c8e34 100644
---- a/arch/m68k/include/asm/flat.h
-+++ b/arch/m68k/include/asm/flat.h
-@@ -28,7 +28,6 @@ static inline int flat_put_addr_at_rp(u32 __user *rp, u32 addr, u32 rel)
- 	return put_user(addr, rp);
- #endif
- }
--#define	flat_get_relocate_addr(rel)		(rel)
+ #define flat_argvp_envp_on_stack()			0
+ #define flat_old_ram_flag(flags)			(flags)
+-#define flat_reloc_valid(reloc, size)			((reloc) <= (size))
+ static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+ 					u32 *addr, u32 *persistent)
+ {
+diff --git a/arch/h8300/include/asm/flat.h b/arch/h8300/include/asm/flat.h
+index f4cdfcbdd2ba..dcc7775115dd 100644
+--- a/arch/h8300/include/asm/flat.h
++++ b/arch/h8300/include/asm/flat.h
+@@ -10,7 +10,6 @@
  
- #define FLAT_PLAT_INIT(regs) \
- 	do { \
-diff --git a/arch/sh/include/asm/flat.h b/arch/sh/include/asm/flat.h
-index 6f3b18679a98..0d520b4cc5ea 100644
---- a/arch/sh/include/asm/flat.h
-+++ b/arch/sh/include/asm/flat.h
-@@ -24,7 +24,6 @@ static inline int flat_put_addr_at_rp(u32 __user *rp, u32 addr, u32 rel)
- 	put_unaligned(addr, (__force u32 *)rp);
- 	return 0;
- }
--#define	flat_get_relocate_addr(rel)		(rel)
- 
- #define FLAT_PLAT_INIT(_r) \
-   do { _r->regs[0]=0; _r->regs[1]=0; _r->regs[2]=0; _r->regs[3]=0; \
-diff --git a/arch/xtensa/include/asm/flat.h b/arch/xtensa/include/asm/flat.h
-index b1bc0d9a8d4e..a1d88aa3ef8a 100644
---- a/arch/xtensa/include/asm/flat.h
-+++ b/arch/xtensa/include/asm/flat.h
-@@ -17,6 +17,5 @@ static inline int flat_put_addr_at_rp(u32 __user *rp, u32 addr, u32 rel)
- 	put_unaligned(addr, (__force u32 *)rp);
- 	return 0;
- }
--#define flat_get_relocate_addr(rel)			(rel)
- 
- #endif /* __ASM_XTENSA_FLAT_H */
-diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
-index a4c0b245ab1f..c0e4535dc1ec 100644
---- a/fs/binfmt_flat.c
-+++ b/fs/binfmt_flat.c
-@@ -43,6 +43,10 @@
- #include <asm/cacheflush.h>
- #include <asm/page.h>
- 
-+#ifndef flat_get_relocate_addr
-+#define flat_get_relocate_addr(rel)	(rel)
-+#endif
-+
- /****************************************************************************/
+ #define	flat_argvp_envp_on_stack()		1
+ #define	flat_old_ram_flag(flags)		1
+-#define	flat_reloc_valid(reloc, size)		((reloc) <= (size))
+ #define	flat_set_persistent(relval, p)		0
  
  /*
+diff --git a/arch/m68k/include/asm/flat.h b/arch/m68k/include/asm/flat.h
+index 4f1d1e373420..a631caf5e18f 100644
+--- a/arch/m68k/include/asm/flat.h
++++ b/arch/m68k/include/asm/flat.h
+@@ -10,7 +10,6 @@
+ 
+ #define	flat_argvp_envp_on_stack()		1
+ #define	flat_old_ram_flag(flags)		(flags)
+-#define	flat_reloc_valid(reloc, size)		((reloc) <= (size))
+ static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+ 					u32 *addr, u32 *persistent)
+ {
+diff --git a/arch/microblaze/include/asm/flat.h b/arch/microblaze/include/asm/flat.h
+index 3d2747d4c967..34be5ed011be 100644
+--- a/arch/microblaze/include/asm/flat.h
++++ b/arch/microblaze/include/asm/flat.h
+@@ -15,7 +15,6 @@
+ 
+ #define	flat_argvp_envp_on_stack()	0
+ #define	flat_old_ram_flag(flags)	(flags)
+-#define	flat_reloc_valid(reloc, size)	((reloc) <= (size))
+ #define	flat_set_persistent(relval, p)		0
+ 
+ /*
+diff --git a/arch/sh/include/asm/flat.h b/arch/sh/include/asm/flat.h
+index 843d458b8329..8f2929b32f2e 100644
+--- a/arch/sh/include/asm/flat.h
++++ b/arch/sh/include/asm/flat.h
+@@ -13,7 +13,6 @@
+ 
+ #define	flat_argvp_envp_on_stack()		0
+ #define	flat_old_ram_flag(flags)		(flags)
+-#define	flat_reloc_valid(reloc, size)		((reloc) <= (size))
+ static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+ 					u32 *addr, u32 *persistent)
+ {
+diff --git a/arch/xtensa/include/asm/flat.h b/arch/xtensa/include/asm/flat.h
+index b8532d7877b3..6ee5a35eb0ec 100644
+--- a/arch/xtensa/include/asm/flat.h
++++ b/arch/xtensa/include/asm/flat.h
+@@ -6,7 +6,6 @@
+ 
+ #define flat_argvp_envp_on_stack()			0
+ #define flat_old_ram_flag(flags)			(flags)
+-#define flat_reloc_valid(reloc, size)			((reloc) <= (size))
+ static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
+ 					u32 *addr, u32 *persistent)
+ {
+diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
+index 82a48e830018..afddea583999 100644
+--- a/fs/binfmt_flat.c
++++ b/fs/binfmt_flat.c
+@@ -345,7 +345,7 @@ calc_reloc(unsigned long r, struct lib_info *p, int curid, int internalp)
+ 	start_code = p->lib_list[id].start_code;
+ 	text_len = p->lib_list[id].text_len;
+ 
+-	if (!flat_reloc_valid(r, start_brk - start_data + text_len)) {
++	if (r > start_brk - start_data + text_len) {
+ 		pr_err("reloc outside program 0x%lx (0 - 0x%lx/0x%lx)",
+ 		       r, start_brk-start_data+text_len, text_len);
+ 		goto failed;
 -- 
 2.20.1
 
