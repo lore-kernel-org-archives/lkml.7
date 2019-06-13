@@ -2,115 +2,162 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E21EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C56A9C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C40921473
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:58:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWMgkqUt"
+	by mail.kernel.org (Postfix) with ESMTP id A4F2A21473
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbfFMV6N (ORCPT
+        id S1728561AbfFMV7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 17:58:13 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40477 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbfFMV6M (ORCPT
+        Thu, 13 Jun 2019 17:59:49 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:49658 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728025AbfFMV7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 17:58:12 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a93so92389pla.7;
-        Thu, 13 Jun 2019 14:58:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UgX/twFRvWeH3GOio6+WgkRLrlXF1WlNpv4jZgJXeN4=;
-        b=iWMgkqUtLROkrabF/g8NyTx6+PxfvDT4al+AvzYnirt8OFYTAHZ7DGd0EL0xU9WUX8
-         niJa2m/EpWdjOaaJMjv1yBARfXIV4tP74lELKvoFddDHa+WYuqNIBksCs8DlSt9WUNkk
-         qGWwp1jJ+0PGO+LkI/RgtBnmy6nD0GEMah/pZRJchpdlC8b8UufXDCj9yc5v/i9dn4AR
-         tfDRByjHm55StncPfXVqphTDPip4aq/AxQlQr/ZAq1IMDvWfXBqitYFgEryQsGlOgCJN
-         hxKejuzc+3dWEeZoIeTEf/vRAAbYSjOaeGL2XZASmxJhphWcOeYnpIsQDLB9Sz3/czFP
-         IR8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UgX/twFRvWeH3GOio6+WgkRLrlXF1WlNpv4jZgJXeN4=;
-        b=qEC39tZqeLAt2KiuTRzubspgO1MiZyhnWYI6tv8fbuNe7Gij8QCblkR/9/vL5+fORD
-         vEQMHpmm721w9LuOTAaW5USmXTk6D5tBIKDtxARYKfRzXiD9kxVoikF2hzIS68ZUV7m1
-         /4Ap+24plkSJkdp14E/VECKg7FMnqt9VVwRA1DLfs+ZiigMol+P6i3byRDct81qLmuo2
-         q1a95LdQbu5qfY2dCRwvTf6Gym4vTURrTUk94s3bTT4ZT56dPU1QsIKxhWCAMdEZd8iM
-         V7yVN8/HMJ0Tw1g7D7A+ybwSiwKD79LCtK0Y0Uw0li/zBblyZp1QyraHfKvK2IcQsTHD
-         wI/A==
-X-Gm-Message-State: APjAAAW7pD1VvceHAd3vhtPkUUMkPvsyPgnCxJidofJO8tZUO1qqWghx
-        HKYuWbdG6D6DkUGy7aIdoac=
-X-Google-Smtp-Source: APXvYqyCot9boqYe3zZh8zf9o7E8QgZclmSm+JdTGJT6yfBNMz2PM0EDuRtr1EmljLaYdC+4MnjyMA==
-X-Received: by 2002:a17:902:830c:: with SMTP id bd12mr12011539plb.237.1560463091883;
-        Thu, 13 Jun 2019 14:58:11 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::2:e034])
-        by smtp.gmail.com with ESMTPSA id j7sm595663pfa.184.2019.06.13.14.58.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 14:58:11 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 14:58:09 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>
-Subject: Re: [PATCH 6/9] x86/bpf: Fix JIT frame pointer usage
-Message-ID: <20190613215807.wjcop6eaadirz5xm@ast-mbp.dhcp.thefacebook.com>
-References: <cover.1560431531.git.jpoimboe@redhat.com>
- <03ddea21a533b7b0e471c1d73ebff19dacdcf7e3.1560431531.git.jpoimboe@redhat.com>
+        Thu, 13 Jun 2019 17:59:48 -0400
+Received: from 79.184.253.190.ipv4.supernova.orange.pl (79.184.253.190) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id 0423c3e6485434c2; Thu, 13 Jun 2019 23:59:45 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v2] PCI: PM: Skip devices in D0 for suspend-to-idle
+Date:   Thu, 13 Jun 2019 23:59:45 +0200
+Message-ID: <1668247.RaJIPSxJUN@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <03ddea21a533b7b0e471c1d73ebff19dacdcf7e3.1560431531.git.jpoimboe@redhat.com>
-User-Agent: NeoMutt/20180223
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 08:21:03AM -0500, Josh Poimboeuf wrote:
-> The BPF JIT code clobbers RBP.  This breaks frame pointer convention and
-> thus prevents the FP unwinder from unwinding through JIT generated code.
-> 
-> RBP is currently used as the BPF stack frame pointer register.  The
-> actual register used is opaque to the user, as long as it's a
-> callee-saved register.  Change it to use R12 instead.
-> 
-> Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
-> Reported-by: Song Liu <songliubraving@fb.com>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> ---
->  arch/x86/net/bpf_jit_comp.c | 43 +++++++++++++++++++++----------------
->  1 file changed, 25 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-> index e649f977f8e1..bb1968fea50a 100644
-> --- a/arch/x86/net/bpf_jit_comp.c
-> +++ b/arch/x86/net/bpf_jit_comp.c
-> @@ -100,9 +100,8 @@ static int bpf_size_to_x86_bytes(int bpf_size)
->  /*
->   * The following table maps BPF registers to x86-64 registers.
->   *
-> - * x86-64 register R12 is unused, since if used as base address
-> - * register in load/store instructions, it always needs an
-> - * extra byte of encoding and is callee saved.
-> + * RBP isn't used; it needs to be preserved to allow the unwinder to move
-> + * through generated code stacks.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Extra register save/restore is kinda annoying just to fix ORC.
-Also every stack access from bpf prog will be encoded via r12 and consume
-extra byte of encoding. I really don't like this approach.
-Can you teach ORC to understand JIT-ed frames instead?
+Commit d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
+attempted to avoid a problem with devices whose drivers want them to
+stay in D0 over suspend-to-idle and resume, but it did not go as far
+as it should with that.
+
+Namely, first of all, the power state of a PCI bridge with a
+downstream device in D0 must be D0 (based on the PCI PM spec r1.2,
+sec 6, table 6-1, if the bridge is not in D0, there can be no PCI
+transactions on its secondary bus), but that is not actively enforced
+during system-wide PM transitions, so use the skip_bus_pm flag
+introduced by commit d491f2b75237 for that.
+
+Second, the configuration of devices left in D0 (whatever the reason)
+during suspend-to-idle need not be changed and attempting to put them
+into D0 again by force is pointless, so explicitly avoid doing that.
+
+Fixes: d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
+Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/pci/pci-driver.c |   47 +++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 35 insertions(+), 12 deletions(-)
+
+Index: linux-pm/drivers/pci/pci-driver.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci-driver.c
++++ linux-pm/drivers/pci/pci-driver.c
+@@ -524,7 +524,6 @@ static void pci_pm_default_resume_early(
+ 	pci_power_up(pci_dev);
+ 	pci_restore_state(pci_dev);
+ 	pci_pme_restore(pci_dev);
+-	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+ }
+ 
+ /*
+@@ -842,18 +841,16 @@ static int pci_pm_suspend_noirq(struct d
+ 
+ 	if (pci_dev->skip_bus_pm) {
+ 		/*
+-		 * The function is running for the second time in a row without
++		 * Either the device is a bridge with a child in D0 below it, or
++		 * the function is running for the second time in a row without
+ 		 * going through full resume, which is possible only during
+-		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
+-		 * device was originally left in D0, so its power state should
+-		 * not be changed here and the device register values saved
+-		 * originally should be restored on resume again.
++		 * suspend-to-idle in a spurious wakeup case.  The device should
++		 * be in D0 at this point, but if it is a bridge, it may be
++		 * necessary to save its state.
+ 		 */
+-		pci_dev->state_saved = true;
+-	} else if (pci_dev->state_saved) {
+-		if (pci_dev->current_state == PCI_D0)
+-			pci_dev->skip_bus_pm = true;
+-	} else {
++		if (!pci_dev->state_saved)
++			pci_save_state(pci_dev);
++	} else if (!pci_dev->state_saved) {
+ 		pci_save_state(pci_dev);
+ 		if (pci_power_manageable(pci_dev))
+ 			pci_prepare_to_sleep(pci_dev);
+@@ -862,6 +859,22 @@ static int pci_pm_suspend_noirq(struct d
+ 	dev_dbg(dev, "PCI PM: Suspend power state: %s\n",
+ 		pci_power_name(pci_dev->current_state));
+ 
++	if (pci_dev->current_state == PCI_D0) {
++		pci_dev->skip_bus_pm = true;
++		/*
++		 * Per PCI PM r1.2, table 6-1, a bridge must be in D0 if any
++		 * downstream device is in D0, so avoid changing the power state
++		 * of the parent bridge by setting the skip_bus_pm flag for it.
++		 */
++		if (pci_dev->bus->self)
++			pci_dev->bus->self->skip_bus_pm = true;
++	}
++
++	if (pci_dev->skip_bus_pm && !pm_suspend_via_firmware()) {
++		dev_dbg(dev, "PCI PM: Skipped\n");
++		goto Fixup;
++	}
++
+ 	pci_pm_set_unknown_state(pci_dev);
+ 
+ 	/*
+@@ -909,7 +922,16 @@ static int pci_pm_resume_noirq(struct de
+ 	if (dev_pm_smart_suspend_and_suspended(dev))
+ 		pm_runtime_set_active(dev);
+ 
+-	pci_pm_default_resume_early(pci_dev);
++	/*
++	 * In the suspend-to-idle case, devices left in D0 during suspend will
++	 * stay in D0, so it is not necessary to restore or update their
++	 * configuration here and attempting to put them into D0 again may
++	 * confuse some firmware, so avoid doing that.
++	 */
++	if (!pci_dev->skip_bus_pm || pm_suspend_via_firmware())
++		pci_pm_default_resume_early(pci_dev);
++
++	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+ 
+ 	if (pci_has_legacy_pm_support(pci_dev))
+ 		return pci_legacy_resume_early(dev);
+@@ -1200,6 +1222,7 @@ static int pci_pm_restore_noirq(struct d
+ 	}
+ 
+ 	pci_pm_default_resume_early(pci_dev);
++	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+ 
+ 	if (pci_has_legacy_pm_support(pci_dev))
+ 		return pci_legacy_resume_early(dev);
+
+
 
