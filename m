@@ -2,157 +2,98 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B0DC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4965C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD12420644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:38:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HPn7KQdB"
+	by mail.kernel.org (Postfix) with ESMTP id 6DE3620644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:38:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560443912;
+	bh=47OI/WHldkELOJjKlPRNovd4Yofv6MNP01TzR/J0npI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Two2Et1BALxaem8+HnYV+evAtga110C6dbblt3ItzInWeB+mgnQ1MF+v/N4AH8Qn3
+	 xaBvoTgirS9XnfNPLKiDfYDzpW4wTY2jVDDZVzf7J9XHywkzpRxunGU5qaWeh71aEp
+	 rIymgCZVuCes2ulCI8QMwLrgy+7SY9OMpu6QhVz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392679AbfFMQiQ (ORCPT
+        id S2392634AbfFMQia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:38:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41042 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730617AbfFMHJz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 03:09:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=nBM7tmQZVj2ORaPTQ1yS55BgJNLiHOzcR4dn0Cj56kg=; b=HPn7KQdBeZJlFTelCwpMj9PsT/
-        DQ9RhMzI9lO9ta4bvNRJ5282+ZIiTKJ0f+l3umabArIShYQ+IPeKyNr54dnwDNScmwx2KqZo/Ui28
-        A7WHXxooN6adxWrU/gzqRy+nU/NA0eGHbSBpjWD+RR17WkLO9vspQrnrcNXZNGx6iyaAxeGaMtxBN
-        0aR99DnrMuEx2M7IGIMViQyjq3kcOydnuIaItifnB//JecLKgqh+Scuv7NfgAM2/hIrAQ9ShgbLuf
-        GHipZEhj+mLs2mnpzdWgjbhwbrgv/ifHv29zQtBKDY3Y4uiwdCioUUEUCT5KYio+hVROKhtSQ3lGh
-        NLNzU5UA==;
-Received: from mpp-cp1-natpool-1-013.ethz.ch ([82.130.71.13] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbJrp-0004Qx-DZ; Thu, 13 Jun 2019 07:09:50 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Greg Ungerer <gerg@linux-m68k.org>
-Cc:     Michal Simek <monstr@monstr.eu>,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        uclinux-h8-devel@lists.sourceforge.jp,
-        linux-m68k@lists.linux-m68k.org, linux-riscv@lists.infradead.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-kernel@vger.kernel.org,
-        Vladimir Murzin <vladimir.murzin@arm.com>
-Subject: [PATCH 13/17] binfmt_flat: provide an asm-generic/flat.h
-Date:   Thu, 13 Jun 2019 09:08:59 +0200
-Message-Id: <20190613070903.17214-14-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190613070903.17214-1-hch@lst.de>
-References: <20190613070903.17214-1-hch@lst.de>
+        Thu, 13 Jun 2019 12:38:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727146AbfFMQi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:38:28 -0400
+Received: from localhost (unknown [131.107.160.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EBC021721;
+        Thu, 13 Jun 2019 16:38:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560443907;
+        bh=47OI/WHldkELOJjKlPRNovd4Yofv6MNP01TzR/J0npI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lihu3Zlw0OB/9SSzFrAE+wWU36whQ9I/K+rZDmeIeBbDu1A0G2K1owAQrTVl84Qzk
+         irQa+StqXFK8K4GgR/Ijo6LsxPSbAU6HBSU5lWF+QhBnulj+XEMXIb0M/z0IzJ5ckZ
+         17FS/YjkyITACL97QCtopfnoie56W/jMyEy6oDjA=
+Date:   Thu, 13 Jun 2019 12:38:27 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/81] 4.14.126-stable review
+Message-ID: <20190613163827.GJ1513@sasha-vm>
+References: <20190613075649.074682929@linuxfoundation.org>
+ <1139f9d4-1a0a-b422-276d-546e7cb1bc85@roeck-us.net>
+ <20190613153744.GA15226@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190613153744.GA15226@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This file implements the flat get/put reloc helpers for architectures
-that do not need to overload the relocs by simply using get_user/put_user.
+On Thu, Jun 13, 2019 at 05:37:44PM +0200, Greg Kroah-Hartman wrote:
+>On Thu, Jun 13, 2019 at 08:11:33AM -0700, Guenter Roeck wrote:
+>> On 6/13/19 1:32 AM, Greg Kroah-Hartman wrote:
+>> > This is the start of the stable review cycle for the 4.14.126 release.
+>> > There are 81 patches in this series, all will be posted as a response
+>> > to this one.  If anyone has any issues with these being applied, please
+>> > let me know.
+>> >
+>> > Responses should be made by Sat 15 Jun 2019 07:54:51 AM UTC.
+>> > Anything received after that time might be too late.
+>> >
+>>
+>> [early feedback]
+>>
+>> Building mips:nlm_xlp_defconfig ... failed (and other mips builds)
+>> --------------
+>> Error log:
+>> /opt/buildbot/slave/stable-queue-4.14/build/arch/mips/kernel/prom.c: In function 'early_init_dt_add_memory_arch':
+>> /opt/buildbot/slave/stable-queue-4.14/build/arch/mips/kernel/prom.c:44:14: error: 'PHYS_ADDR_MAX' undeclared
+>>
+>> The problem affects v4.14.y and all earlier branches.
+>> PHYS_ADDR_MAX is indeed undeclared in those branches. It was introduced
+>> with commit 1c4bc43ddfd52 ("mm/memblock: introduce PHYS_ADDR_MAX").
+>
+>Thanks, I've dropped the mips patch that caused this.  I'll also drop it
+>from the 4.4 and 4.9 trees.
+>
+>Sasha, I thought you had builders set up for stuff like this?
 
-Note that many nommu architectures currently use {get,put}_unaligned, which
-looks a little bogus and should probably later be switched over to this
-version as well.
+Yes, and apparently I was naive thinking that
+'allmodconfig'/'allyesconfig' would catch these, but that's not the
+case.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Vladimir Murzin <vladimir.murzin@arm.com>
----
- arch/arm/include/asm/Kbuild                   |  1 +
- arch/m68k/include/asm/flat.h                  | 21 +------------------
- .../asm => include/asm-generic}/flat.h        | 12 ++++-------
- 3 files changed, 6 insertions(+), 28 deletions(-)
- rename {arch/arm/include/asm => include/asm-generic}/flat.h (73%)
-
-diff --git a/arch/arm/include/asm/Kbuild b/arch/arm/include/asm/Kbuild
-index a8f149ab45b8..6b2dc15b6dff 100644
---- a/arch/arm/include/asm/Kbuild
-+++ b/arch/arm/include/asm/Kbuild
-@@ -5,6 +5,7 @@ generic-y += early_ioremap.h
- generic-y += emergency-restart.h
- generic-y += exec.h
- generic-y += extable.h
-+generic-y += flat.h
- generic-y += irq_regs.h
- generic-y += kdebug.h
- generic-y += local.h
-diff --git a/arch/m68k/include/asm/flat.h b/arch/m68k/include/asm/flat.h
-index d7102fcd43eb..46379e08cdd6 100644
---- a/arch/m68k/include/asm/flat.h
-+++ b/arch/m68k/include/asm/flat.h
-@@ -6,26 +6,7 @@
- #ifndef __M68KNOMMU_FLAT_H__
- #define __M68KNOMMU_FLAT_H__
- 
--#include <linux/uaccess.h>
--
--static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
--					u32 *addr, u32 *persistent)
--{
--#ifdef CONFIG_CPU_HAS_NO_UNALIGNED
--	return copy_from_user(addr, rp, 4) ? -EFAULT : 0;
--#else
--	return get_user(*addr, rp);
--#endif
--}
--
--static inline int flat_put_addr_at_rp(u32 __user *rp, u32 addr, u32 rel)
--{
--#ifdef CONFIG_CPU_HAS_NO_UNALIGNED
--	return copy_to_user(rp, &addr, 4) ? -EFAULT : 0;
--#else
--	return put_user(addr, rp);
--#endif
--}
-+#include <asm-generic/flat.h>
- 
- #define FLAT_PLAT_INIT(regs) \
- 	do { \
-diff --git a/arch/arm/include/asm/flat.h b/include/asm-generic/flat.h
-similarity index 73%
-rename from arch/arm/include/asm/flat.h
-rename to include/asm-generic/flat.h
-index bbc27901446f..fcd2b45c0735 100644
---- a/arch/arm/include/asm/flat.h
-+++ b/include/asm-generic/flat.h
-@@ -1,15 +1,11 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * arch/arm/include/asm/flat.h -- uClinux flat-format executables
-- */
--
--#ifndef __ARM_FLAT_H__
--#define __ARM_FLAT_H__
-+#ifndef _ASM_GENERIC_FLAT_H
-+#define _ASM_GENERIC_FLAT_H
- 
- #include <linux/uaccess.h>
- 
- static inline int flat_get_addr_from_rp(u32 __user *rp, u32 relval, u32 flags,
--					u32 *addr, u32 *persistent)
-+		u32 *addr, u32 *persistent)
- {
- #ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	return copy_from_user(addr, rp, 4) ? -EFAULT : 0;
-@@ -27,4 +23,4 @@ static inline int flat_put_addr_at_rp(u32 __user *rp, u32 addr, u32 rel)
- #endif
- }
- 
--#endif /* __ARM_FLAT_H__ */
-+#endif /* _ASM_GENERIC_FLAT_H */
--- 
-2.20.1
-
+--
+Thanks,
+Sasha
