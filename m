@@ -2,94 +2,202 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20904C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9A8C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF00020B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:13:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560467623;
-	bh=oXngK66DWxbvNhTtxksF0G2Vo7TzhoQQpzxC7f77/B8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e6TcCBR58inOrT1dxTtstm4TQQweiVZWHvWPqLOsOuaZVEQ78qzrnBEc12P8LXypu
-	 cdFb+q06mmqkIZQYAcalXHH66cLIKveakGEJSJyIQtJ+QL14hejC2wiIdiFXEF1fFD
-	 iHJ3P7QGXMX9LiCcXyo8e9qouJ41Hh0QVMi1O/IA=
+	by mail.kernel.org (Postfix) with ESMTP id 787452053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:17:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=appneta.com header.i=@appneta.com header.b="DZrBSJdr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfFMXNl (ORCPT
+        id S1727089AbfFMXRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 19:13:41 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38859 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfFMXNl (ORCPT
+        Thu, 13 Jun 2019 19:17:21 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33768 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfFMXRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 19:13:41 -0400
-Received: by mail-qk1-f196.google.com with SMTP id a27so523145qkk.5;
-        Thu, 13 Jun 2019 16:13:40 -0700 (PDT)
+        Thu, 13 Jun 2019 19:17:21 -0400
+Received: by mail-pf1-f196.google.com with SMTP id x15so197989pfq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 16:17:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=appneta.com; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CbjQfCCZwiSsYH4YiMUo/AKyv6rSmzSkQV067FGZEME=;
+        b=DZrBSJdrvWPc/Y/e/dn9oz+sWV2pwbNiU3XcW6SB8lhZQB5EyD/kWau5sv67w00nd+
+         ZLDPoUMMNI87xh39oPLSNJb5yvnDfY8rifqHlej7mRggdsVtY7HjLdj5X0KxheMtOISo
+         qMjrTkLBhb4EJFkX9bTqccoPFOt+83sM/KxYo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ycBe9I5qE6I0844UHWF0cICH9VE+GutrjkLafm0KuQ0=;
-        b=jQUhsTd6gbD+KAVYVHdjhg2zUDxs71zM9XNmXVVGzQIWbyRGVSVdgVX0l59RETqoPu
-         9NEgpFIdHHnIllgxHlR41C06YwqYUe0k31LgP1koMGJXSjmu1q8wdChThDlLvVztUOnB
-         hRPnRFJKPluPI+SOBb0jdWg3KB+95llCtwM8VIzbHgFvabZRXzIwJfUJwmLThYMaVj0S
-         IMkuOw57mJILIEX4kfXZMrj7q3GjcjAbO4dXTfHnMMMPtSQzOIGfjL1dLm0WMRLdUffT
-         GsOP/JYhg23W18eXfLUwD5qw1GPkMuoRGK6VDcKboEHVDRv/H4JB6LpYmfwoXEDpat2X
-         VrdQ==
-X-Gm-Message-State: APjAAAXF6u+rTFHBRHMzrQ/I0lEPb4g9pBZqNxSrYru2ZY7l5g+1ONs5
-        t9SGW6l5JwIXdTEYNUlIRw==
-X-Google-Smtp-Source: APXvYqw7wFVMUzPvVknVlsd9YvZvCuNzLEqnuiZQgeVTZnf5WoP8b9G7izEepEdaqiC5EoHKr9M0/g==
-X-Received: by 2002:a05:620a:1206:: with SMTP id u6mr72012736qkj.88.1560467620109;
-        Thu, 13 Jun 2019 16:13:40 -0700 (PDT)
-Received: from localhost ([64.188.179.243])
-        by smtp.gmail.com with ESMTPSA id d26sm599727qkl.97.2019.06.13.16.13.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 16:13:39 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 17:13:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        niklas.cassel@linaro.org, marc.w.gonzalez@free.fr,
-        sibis@codeaurora.org, daniel.lezcano@linaro.org,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/9] Documentation: arm: Link idle-states binding to
- "enable-method" property
-Message-ID: <20190613231338.GA23667@bogus>
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
- <9dc4ce06143de48039e841c337fafa7cb9c8d7d2.1558430617.git.amit.kucheria@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9dc4ce06143de48039e841c337fafa7cb9c8d7d2.1558430617.git.amit.kucheria@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CbjQfCCZwiSsYH4YiMUo/AKyv6rSmzSkQV067FGZEME=;
+        b=sqnSlfJ1xy63pUxvsnleDeTHZoA0cbKbsszLuAAOhy76b9wjKg/m6bUfOPwRmZcXCs
+         Sttl06i/3gTPXVjXnNYyDuVUh/OOze5RDeq7U54++6ho8MLnxIdLGwTOqpnzWZcmK7b/
+         SQpPN0AcU8jVpVyGN9mUooH/+aXhbww1HBjgpMn8WqHMRrnaWEdGt7RKsAmOTeDKTQY4
+         w/rIZ0ZZmzjasY5KhKsIKXInk0xMEFr+Kz6pvQ4Hcoe+Xf7adwdX6azS7gZVQB+hy6SE
+         JfNJArKA/fyzKouew7x5Hna8KnoaIwO0ulixxeSqIQsOJypClYWueuWs3bOKSeVSldjD
+         Qb8g==
+X-Gm-Message-State: APjAAAW4e5AzBdrhVqh8dJjBDhus6epz8veiT2e7cERIw4Wq4H1S3yB/
+        11kv8bqHiPu/CyFNTai7IuFCmQ==
+X-Google-Smtp-Source: APXvYqxcWU2EXfT8Cp45fldnGEUzcDKojfFhGQbZQ+q0cQB8HtayFQNW/2oDwAPvehUKFi6m5msE3A==
+X-Received: by 2002:a17:90a:d3c3:: with SMTP id d3mr8084484pjw.17.1560467839151;
+        Thu, 13 Jun 2019 16:17:19 -0700 (PDT)
+Received: from jltm109.jaalam.net (vancouver-a.appneta.com. [209.139.228.33])
+        by smtp.gmail.com with ESMTPSA id r15sm732562pfc.162.2019.06.13.16.17.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 16:17:17 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH net-next v2 1/3] net/udpgso_bench_tx: options to exercise
+ TX CMSG
+From:   Fred Klassen <fklassen@appneta.com>
+In-Reply-To: <CAF=yD-KcA5NZ2_tp3zaxW5sbf75a17DLX+VR9hyZo7MTcYAxiw@mail.gmail.com>
+Date:   Thu, 13 Jun 2019 16:17:16 -0700
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <361B0BB3-0351-4F97-9BAD-9E37DCCFAE2F@appneta.com>
+References: <20190528184708.16516-1-fklassen@appneta.com>
+ <20190528184708.16516-2-fklassen@appneta.com>
+ <CAF=yD-KcA5NZ2_tp3zaxW5sbf75a17DLX+VR9hyZo7MTcYAxiw@mail.gmail.com>
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019 15:05:12 +0530, Amit Kucheria wrote:
-> The "enable-method" property for cpu nodes needs to be "psci" for CPU
-> idle management to be setup correctly.
-> 
-> Add a note to the binding documentation to this effect to make it
-> obvious.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  .../devicetree/bindings/arm/idle-states.txt         | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
-> 
+> On May 28, 2019, at 2:35 PM, Willem de Bruijn =
+<willemdebruijn.kernel@gmail.com> wrote:
+>> -static void flush_zerocopy(int fd)
+>> +static void flush_cmsg(struct cmsghdr *cmsg)
+>> {
+>> -       struct msghdr msg =3D {0};        /* flush */
+>> +       switch (cmsg->cmsg_level) {
+>> +       case SOL_SOCKET:
+>> +               if (cmsg->cmsg_type =3D=3D SO_TIMESTAMPING) {
+>> +                       int i;
+>> +
+>> +                       i =3D (cfg_tx_ts =3D=3D =
+SOF_TIMESTAMPING_TX_HARDWARE) ? 2 : 0;
+>> +                       struct scm_timestamping *tss;
+>=20
+> Please don't mix declarations and code
 
-Applied, thanks.
+Fixing this as well as other declarations for v3.
 
-Rob
+>> +
+>> +                       tss =3D (struct scm_timestamping =
+*)CMSG_DATA(cmsg);
+>> +                       if (tss->ts[i].tv_sec =3D=3D 0)
+>> +                               stat_tx_ts_errors++;
+>> +               } else {
+>> +                       error(1, 0,
+>> +                             "unknown SOL_SOCKET cmsg type=3D%u =
+level=3D%u\n",
+>> +                             cmsg->cmsg_type, cmsg->cmsg_level);
+>=20
+> Technically, no need to repeat cmsg_level
+
+
+Will fix all 3 similar messages
+
+>> +               }
+>> +               break;
+>> +       case SOL_IP:
+>> +       case SOL_IPV6:
+>> +               switch (cmsg->cmsg_type) {
+>> +               case IP_RECVERR:
+>> +               case IPV6_RECVERR:
+>> +               {
+>> +                       struct sock_extended_err *err;
+>> +
+>> +                       err =3D (struct sock_extended_err =
+*)CMSG_DATA(cmsg);
+>> +                       switch (err->ee_origin) {
+>> +                       case SO_EE_ORIGIN_TIMESTAMPING:
+>> +                               // Got a TX timestamp from error =
+queue
+>> +                               stat_tx_ts++;
+>> +                               break;
+>> +                       case SO_EE_ORIGIN_ICMP:
+>> +                       case SO_EE_ORIGIN_ICMP6:
+>> +                               if (cfg_verbose)
+>> +                                       fprintf(stderr,
+>> +                                               "received ICMP error: =
+type=3D%u, code=3D%u\n",
+>> +                                               err->ee_type, =
+err->ee_code);
+>> +                               break;
+>> +                       case SO_EE_ORIGIN_ZEROCOPY:
+>> +                       {
+>> +                               __u32 lo =3D err->ee_info;
+>> +                               __u32 hi =3D err->ee_data;
+>> +
+>> +                               if (hi =3D=3D lo - 1) {
+>> +                                       // TX was aborted
+>=20
+> where does this come from?
+
+This check can be removed. In sock_zerocopy_callback() this
+check was intended to cover the condition where len =3D=3D 0,
+however it appears that it is impossible.
+
+	/* if !len, there was only 1 call, and it was aborted
+	 * so do not queue a completion notification
+	 */
+
+	if (!uarg->len || sock_flag(sk, SOCK_DEAD))
+		goto release;
+
+	len =3D uarg->len;
+	lo =3D uarg->id;
+	hi =3D uarg->id + len - 1;
+
+
+>=20
+>> +                                       stat_zcopy_errors++;
+>> +                                       if (cfg_verbose)
+>> +                                               fprintf(stderr,
+>> +                                                       "Zerocopy TX =
+aborted: lo=3D%u hi=3D%u\n",
+>> +                                                       lo, hi);
+>> +                               } else if (hi =3D=3D lo) {
+>=20
+> technically, no need to special case
+>=20
+
+Removed
+
+>> +                                       // single ID acknowledged
+>> +                                       stat_zcopies++;
+>> +                               } else {
+>> +                                       // range of IDs acknowledged
+>> +                                       stat_zcopies +=3D hi - lo + =
+1;
+>> +                               }
+>> +                               break;
+>=20
+>> +static void set_tx_timestamping(int fd)
+>> +{
+>> +       int val =3D SOF_TIMESTAMPING_OPT_CMSG | =
+SOF_TIMESTAMPING_OPT_ID;
+>=20
+> Could consider adding SOF_TIMESTAMPING_OPT_TSONLY to not have to deal
+> with a data buffer on recv from errqueue.
+
+Will add and modify code appropriately for v3.
+
