@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AB7C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A38C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CD6121744
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACDB2177E
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:27:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VEgX2ZhF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOYdYWOh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392444AbfFMQ1n (ORCPT
+        id S2392154AbfFMQ1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:27:43 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34148 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392430AbfFMQ1j (ORCPT
+        Thu, 13 Jun 2019 12:27:41 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43150 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731233AbfFMQ1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:27:39 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p10so5393151pgn.1;
-        Thu, 13 Jun 2019 09:27:39 -0700 (PDT)
+        Thu, 13 Jun 2019 12:27:34 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i189so12151341pfg.10;
+        Thu, 13 Jun 2019 09:27:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/p2hCYDhKAJ230l1zBzHnYZFs3VHjVr39XvOIKP4Pys=;
-        b=VEgX2ZhFSzG3BImEi4GH9MUQbh4LnQqPx0JppfXi7XYfJJvmRAB0Db/QKVQQl8qM10
-         SoKlDlc0SaxSrTEDHUtMYjOT11a0Lj5yq8ULKEndaWGWOkhNMNutP6XCaT2Ffliy6EBJ
-         5jQ1g8Pajofj88UF7QvL1nK1FAEH7NLyg8e9QWEleD0lUPmjBavBQJY0q78qlAGQNurb
-         9dqruWp+dSmlVS3sT1CIfM6Oi8H7XanvMOQZ6mbabOL0lGwx8q36/3mrMkLEV/gxHbiY
-         un+NlmZxMI15zJRk9HnXmJzI1lKBdlQNldk07QrTBkVVnjybOiiPxyeHYi4kTRL37lCi
-         W8Fw==
+        bh=Q4z+1lD6L8nleD1j+L3SnZJFelsfjWSFPaZVMarGO8g=;
+        b=fOYdYWOhF3ZyKvMjqvLUfJ0cwxcI5mFQycuQv7JzdfadQaDqxSFq88q2ia+Tnbvmkp
+         6Nh3M7lCMtpSP9bipGQFNCbzwS7L6213Z/3b8crNq9lKGyjnS/r1gcWlg5qW9/WfvPbJ
+         L9BeU+t7EzCCUq2B9wGxOz7SLQdop76XwPlwXbKsg3I9b0dLuxgMn/dPxX4saClyok43
+         T0HQfzWKw8m4CtBi73JACE7kTioBqo4MZCayRF2hMy89yDz8gZkTOIRA5G+cVrhLwLVM
+         pL+v/aWmDUGF2gdG3/Qaezrp3xOQ8+OMTA1nAyrOJxYbgApp67WZDvw4lKGpiPO5k8fR
+         /p7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=/p2hCYDhKAJ230l1zBzHnYZFs3VHjVr39XvOIKP4Pys=;
-        b=NKMOJcaVEUub4AvHrFKYwFxs4FwR0Uh14RexbRah3VpPgD/jjgkt/mL1rid33YZgZO
-         2rbG/5i6PSjCzACUkk8L/GLPKGKWM/HgNVwkuUTL/759bOu6JwMYpJBS1zidvR7bX/VT
-         oaWNk5rsSIVeaXUcDzgGSo2UXptjzZWCQmkhA24r3ER0BJSx1hL7NSBLrb3fNiIPo4VM
-         ylS7wV74UMe1lFd82mxNBCAiRvqzB+hJLQfHeApt/BqKARSdfp24F0dYgOTC7vmWzb2x
-         ipoP9fz14n8Yk+Pfhp/Ay14diHKAYkweZfN6DOVfa5ld8QCZYWoOXcLH4DLtxqHanTv2
-         mixw==
-X-Gm-Message-State: APjAAAWJ3w9+Cu6cHqNy3BuM6MESL0zI/UZKxKovOUVBsn0lpkw50QdP
-        iqarV90mec1XvhhzjfpbM0E=
-X-Google-Smtp-Source: APXvYqwn2Bb5s9dHHXGu4kP/PrmweWqq9r8gaJuQTaAylLqdC9JMoO2D+zXiDQevAsqwN3NWgk6q+A==
-X-Received: by 2002:a65:60d2:: with SMTP id r18mr31309788pgv.217.1560443259298;
-        Thu, 13 Jun 2019 09:27:39 -0700 (PDT)
+        bh=Q4z+1lD6L8nleD1j+L3SnZJFelsfjWSFPaZVMarGO8g=;
+        b=JewR8kRGzmhsdhT6o5lD9v0SxAZmKKCMCmkyt5g16mr9WmKatHyymKovIw+iFkvgkD
+         jrMF604FRp6b7niCcDj1lewh9YEA92nlW68Y0eziV1CDp9OKZoLkj2iIrx977WZSFiw7
+         qyK+PxWuHtYT6+DTG0BX3jTNzcKgACK8FoVD14fbA0DckOg+v9VMKCegd1/E0NsdAOF4
+         MM2YPMnCjNvMvgG6n8smHR5FG9MJo9HW2+6fd5JrouCoBsYhl3fo4tiHnkKdXIyvFHDt
+         euX9/dnnnEdEMQfPab0PA1CrkEdrNZH8hymjX8dMqaFVQNLCgOa2ev/b4hOK87HBQXfn
+         1BMg==
+X-Gm-Message-State: APjAAAUfMz2g1ygMVAuxgerCL2QXCnNYhLGZKX+sjiwOWfsngDPpI2ip
+        X4s5kRQvU00pzU6l00+C2nU=
+X-Google-Smtp-Source: APXvYqxX/RanT51RYSaVZsxeTP+rQPGVZ62n+jf0t5emIHsrys1734E1A4fccZi67O/PQXiUedWBeQ==
+X-Received: by 2002:a65:64d5:: with SMTP id t21mr32140036pgv.310.1560443254129;
+        Thu, 13 Jun 2019 09:27:34 -0700 (PDT)
 Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
-        by smtp.gmail.com with ESMTPSA id j2sm310930pgq.13.2019.06.13.09.27.38
+        by smtp.gmail.com with ESMTPSA id l23sm261906pgh.68.2019.06.13.09.27.33
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Jun 2019 09:27:38 -0700 (PDT)
+        Thu, 13 Jun 2019 09:27:33 -0700 (PDT)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     joro@8bytes.org, m.szyprowski@samsung.com, kgene@kernel.org,
         krzk@kernel.org, will.deacon@arm.com, robin.murphy@arm.com,
@@ -66,9 +66,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
         Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 10/10] iommu/tegra-smmu: convert to SPDX license tags
-Date:   Thu, 13 Jun 2019 12:27:03 -0400
-Message-Id: <20190613162703.986-10-tiny.windzz@gmail.com>
+Subject: [PATCH 08/10] iommu/sysfs: convert to SPDX license tags
+Date:   Thu, 13 Jun 2019 12:27:01 -0400
+Message-Id: <20190613162703.986-8-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.0
 In-Reply-To: <20190613162703.986-1-tiny.windzz@gmail.com>
 References: <20190613162703.986-1-tiny.windzz@gmail.com>
@@ -81,24 +81,27 @@ Updates license to use SPDX-License-Identifier.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/iommu/tegra-smmu.c | 5 +----
+ drivers/iommu/iommu-sysfs.c | 5 +----
  1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index 463ee08f7d3a..9a50ca4ec65c 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -1,9 +1,6 @@
+diff --git a/drivers/iommu/iommu-sysfs.c b/drivers/iommu/iommu-sysfs.c
+index 44127d54e943..a193758c8122 100644
+--- a/drivers/iommu/iommu-sysfs.c
++++ b/drivers/iommu/iommu-sysfs.c
+@@ -1,12 +1,9 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  * Copyright (C) 2011-2014 NVIDIA CORPORATION.  All rights reserved.
+  * IOMMU sysfs class support
+  *
+  * Copyright (C) 2014 Red Hat, Inc.  All rights reserved.
+  *     Author: Alex Williamson <alex.williamson@redhat.com>
 - *
 - * This program is free software; you can redistribute it and/or modify
 - * it under the terms of the GNU General Public License version 2 as
 - * published by the Free Software Foundation.
   */
  
- #include <linux/bitops.h>
+ #include <linux/device.h>
 -- 
 2.17.0
 
