@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67A5C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B613C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCAD20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E81C20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441689;
-	bh=7IybN8Nha+uXU8W7xnlveY2BYrbSDvSR5HmEzqawZPI=;
+	s=default; t=1560441694;
+	bh=qAdD09BxJHr5KfiNLtbxB2ua5fax0u7NJzfQYe0S4Rc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=csQvgsMQRj99IxoY27SeXzoP8NjPV7XUK14ivqSHD5sIGJkJfxWHoY7X9SiuFchM2
-	 kN3fVezWF2xjonwOGrueOxwhzpR0eGpub7u1ChZXPP5AbbSEDvAYRNKOHfKn0ye7U2
-	 yrFXOmgFD06cQ4CIk5lP/XgJh2twFnsF2QziTTdA=
+	b=IJMNLdzVUvULLvEw0QjlGN1m1D+Rh1shb+zIyYUSsaHPIFCpeGAfY/puvImRYFobB
+	 bPoOIFPWaYidjFXg7BTcyZCd5BXsz4e7CcD2/84f69oWXeZGEkk0cSuidf6/15DehL
+	 CtE06t+dJzQ0aLKMXjV9+Nw8Mvvh+sqgLIf4ietk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732004AbfFMQB2 (ORCPT
+        id S2390615AbfFMQBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:01:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36454 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:01:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731440AbfFMIsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:48:33 -0400
+        id S1731434AbfFMIsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:48:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8F06206BA;
-        Thu, 13 Jun 2019 08:48:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 264F5215EA;
+        Thu, 13 Jun 2019 08:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415713;
-        bh=7IybN8Nha+uXU8W7xnlveY2BYrbSDvSR5HmEzqawZPI=;
+        s=default; t=1560415710;
+        bh=qAdD09BxJHr5KfiNLtbxB2ua5fax0u7NJzfQYe0S4Rc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1qD690R6YTM7Zy9J+qzIomdhSaw/Wg5ZBNjMJ7W1f6zdj3mryT9d+I0BpKh3AORs7
-         A4hJinAnR75ZuF27Woujbso7kScSnD01SRcDV4qaYsjpdKe6kNqZhTnoptdng/8xx9
-         7W9l/mQTMdKKZqP9jVPGAi/bgXhg5XeCw+/4h3qc=
+        b=qBsE9tj5o9ed092yuHHrCFhomspzLTBTX8bBGQziKWAF8WWw7fK0hbKU6zA5p22eH
+         FfWiA+ER30ki64DcTpAlhQh1bKRK9CusjJ26ZhyXOGtU6uUzBwr9zAOsXRQp2XMqLJ
+         5p3r7CIVszMiTf5+E7odV3X8652VY66Xnd26DtZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Jankowski <shasta@toxcorp.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 065/155] netfilter: nf_conntrack_h323: restore boundary check correctness
-Date:   Thu, 13 Jun 2019 10:32:57 +0200
-Message-Id: <20190613075656.656317226@linuxfoundation.org>
+Subject: [PATCH 5.1 074/155] PCI: designware-ep: Use aligned ATU window for raising MSI interrupts
+Date:   Thu, 13 Jun 2019 10:33:06 +0200
+Message-Id: <20190613075657.117145562@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,41 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f5e85ce8e733c2547827f6268136b70b802eabdb ]
+[ Upstream commit 6b7330303a8186fb211357e6d379237fe9d2ece1 ]
 
-Since commit bc7d811ace4a ("netfilter: nf_ct_h323: Convert
-CHECK_BOUND macro to function"), NAT traversal for H.323
-doesn't work, failing to parse H323-UserInformation.
-nf_h323_error_boundary() compares contents of the bitstring,
-not the addresses, preventing valid H.323 packets from being
-conntrack'd.
+Certain platforms like K2G reguires the outbound ATU window to be
+aligned. The alignment size is already present in mem->page_size.
+Use the alignment size present in mem->page_size to configure an
+aligned ATU window. In order to raise an interrupt, CPU has to write
+to address offset from the start of the window unlike before where
+writes were always to the beginning of the ATU window.
 
-This looks like an oversight from when CHECK_BOUND macro was
-converted to a function.
-
-To fix it, stop dereferencing bs->cur and bs->end.
-
-Fixes: bc7d811ace4a ("netfilter: nf_ct_h323: Convert CHECK_BOUND macro to function")
-Signed-off-by: Jakub Jankowski <shasta@toxcorp.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_h323_asn1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_h323_asn1.c b/net/netfilter/nf_conntrack_h323_asn1.c
-index 1601275efe2d..4c2ef42e189c 100644
---- a/net/netfilter/nf_conntrack_h323_asn1.c
-+++ b/net/netfilter/nf_conntrack_h323_asn1.c
-@@ -172,7 +172,7 @@ static int nf_h323_error_boundary(struct bitstr *bs, size_t bytes, size_t bits)
- 	if (bits % BITS_PER_BYTE > 0)
- 		bytes++;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 24f5a775ad34..e3cce5d203f3 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -397,6 +397,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	struct pci_epc *epc = ep->epc;
++	unsigned int aligned_offset;
+ 	u16 msg_ctrl, msg_data;
+ 	u32 msg_addr_lower, msg_addr_upper, reg;
+ 	u64 msg_addr;
+@@ -422,13 +423,15 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 		reg = ep->msi_cap + PCI_MSI_DATA_32;
+ 		msg_data = dw_pcie_readw_dbi(pci, reg);
+ 	}
+-	msg_addr = ((u64) msg_addr_upper) << 32 | msg_addr_lower;
++	aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
++	msg_addr = ((u64)msg_addr_upper) << 32 |
++			(msg_addr_lower & ~aligned_offset);
+ 	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, msg_addr,
+ 				  epc->mem->page_size);
+ 	if (ret)
+ 		return ret;
  
--	if (*bs->cur + bytes > *bs->end)
-+	if (bs->cur + bytes > bs->end)
- 		return 1;
+-	writel(msg_data | (interrupt_num - 1), ep->msi_mem);
++	writel(msg_data | (interrupt_num - 1), ep->msi_mem + aligned_offset);
  
- 	return 0;
+ 	dw_pcie_ep_unmap_addr(epc, func_no, ep->msi_mem_phys);
+ 
 -- 
 2.20.1
 
