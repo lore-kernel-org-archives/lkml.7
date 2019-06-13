@@ -2,176 +2,236 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD90FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CD8C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 921F321850
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA83420866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:27:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560446853;
+	bh=zSAnEUOEc1eJaFW5lAw+YV5LsOzalbCTscX9GHcKM+Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=14F/DQulxCzDbxCcwL1I1qK/COhrHlH3SExX0tzW0lFipx7fBuoen5cCKe1MKDR1+
+	 AWwU2nmAbwLSMzdAsJ9n0aXklzZRWSQyulbItf0r57D4j1dnty0NRsJrNzbVf3Fp0c
+	 wrFNnbj+tIE9IGduzKOzNBxZLJGRTS0FY4WGc6t8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfFMR1K (ORCPT
+        id S1727717AbfFMR1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:27:10 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35448 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfFMR1J (ORCPT
+        Thu, 13 Jun 2019 13:27:33 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40890 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727230AbfFMR1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:27:09 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c6so10989158wml.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 10:27:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j4UDJkczRpfkTiJNATKEtxOPGJyA2hruwu9S/Srh2+c=;
-        b=MW19jZkUHuIDuWM0km39QzT/ahTN8HoEYEerz9ffGEHT6gF/O+fdt0/wSsTtfb5BM3
-         ONEXK9IPEqMSOTpSdkDOHFV1krZvAc3IE2gKBM36rp8GDDY7Fk6nvTJOfoXQYiKMm6Om
-         dz/A34Re3AsdjmB8L+HT3lGlXj48NIUxALxdjGMH2+1d7brUMv/TOdGlNSH7gRasS7Gs
-         6xoS14JS7UBR4RpuuDdLVxp5N0HDIS97+6VwUr29ztpM2Qcqvde8C8cvECa2DLDJprSf
-         18/+9M0AAxhDourTDZBqqhFNI7MCK02+zSHVHk3DFu7tpmc/zFaXAqVXxKDPG/NJKJdi
-         ermw==
-X-Gm-Message-State: APjAAAUZlv3H/hJyz2r5edVYbdgI+KTeekCxMNqjhDb36oLHOpjZptVq
-        fT1xf1DvZWi4+PFnSzz0LFnw1Q==
-X-Google-Smtp-Source: APXvYqw9HLVdBz0DQ2hcd/Ip/301GllfLIkAeYyNAZN6n3XsWQVMJppwRq6T8Ht1aVh0vnULKFnIww==
-X-Received: by 2002:a1c:9d86:: with SMTP id g128mr5010783wme.51.1560446826829;
-        Thu, 13 Jun 2019 10:27:06 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:56e1:adff:fed9:caf0? ([2001:b07:6468:f312:56e1:adff:fed9:caf0])
-        by smtp.gmail.com with ESMTPSA id t198sm741299wmt.2.2019.06.13.10.27.05
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 10:27:05 -0700 (PDT)
-Subject: Re: [PATCH] KVM: x86: clean up conditions for asynchronous page fault
- handling
-To:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Wanpeng Li <wanpengli@tencent.com>
-References: <1560423812-51166-1-git-send-email-pbonzini@redhat.com>
- <20190613171220.GA24873@flask>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <309cf0b7-f831-51da-7c2c-3333cd4c4036@redhat.com>
-Date:   Thu, 13 Jun 2019 19:27:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 13 Jun 2019 13:27:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=foBbsyot1UYZJc8L4c750Y/9HxhyLTuGyPZcpL/5QG0=; b=ro1aEHdl24GRW2Nup9lA5OGA5
+        vPTJdcV5mUofmj4ZPrcYhkshO/m/4uvgWDgl5WQqfv2pur53bmRV6/Hb3+qoxmkhPy1eP27CnxK+J
+        9ETF97blm4Kptbhi4gySv3MhHVu36MRWcguuYxRU9KQWX8ki6oXLeFhlcnjick+cF6Jng=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hbTTT-0005KY-HS; Thu, 13 Jun 2019 17:25:19 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id DEC08440046; Thu, 13 Jun 2019 18:25:18 +0100 (BST)
+Date:   Thu, 13 Jun 2019 18:25:18 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Nisha Kumari <nishakumari@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com,
+        david.brown@linaro.org, linux-kernel@vger.kernel.org,
+        kgunda@codeaurora.org, rnayak@codeaurora.org
+Subject: Re: [PATCH 3/4] regulator: Add labibb driver
+Message-ID: <20190613172518.GN5316@sirena.org.uk>
+References: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
+ <1560337252-27193-4-git-send-email-nishakumari@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20190613171220.GA24873@flask>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tpyx7gKuSYt+mjHM"
+Content-Disposition: inline
+In-Reply-To: <1560337252-27193-4-git-send-email-nishakumari@codeaurora.org>
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/06/19 19:12, Radim Krčmář wrote:
-> 2019-06-13 13:03+0200, Paolo Bonzini:
->> Even when asynchronous page fault is disabled, KVM does not want to pause
->> the host if a guest triggers a page fault; instead it will put it into
->> an artificial HLT state that allows running other host processes while
->> allowing interrupt delivery into the guest.
->>
->> However, the way this feature is triggered is a bit confusing.
->> First, it is not used for page faults while a nested guest is
->> running: but this is not an issue since the artificial halt
->> is completely invisible to the guest, either L1 or L2.  Second,
->> it is used even if kvm_halt_in_guest() returns true; in this case,
->> the guest probably should not pay the additional latency cost of the
->> artificial halt, and thus we should handle the page fault in a
->> completely synchronous way.
-> 
-> The same reasoning would apply to kvm_mwait_in_guest(), so I would
-> disable APF with it as well.
 
-True, on the other hand it's not a very sensible condition to have
-kvm_mwait_in_guest but not kvm_halt_in_guest.
+--tpyx7gKuSYt+mjHM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> By introducing a new function kvm_can_deliver_async_pf, this patch
->> commonizes the code that chooses whether to deliver an async page fault
->> (kvm_arch_async_page_not_present) and the code that chooses whether a
->> page fault should be handled synchronously (kvm_can_do_async_pf).
->>
->> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
->> ---
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> @@ -9775,6 +9775,36 @@ static int apf_get_user(struct kvm_vcpu *vcpu, u32 *val)
->> +bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
->> +{
->> +	if (unlikely(!lapic_in_kernel(vcpu) ||
->> +		     kvm_event_needs_reinjection(vcpu) ||
->> +		     vcpu->arch.exception.pending))
->> +		return false;
->> +
->> +	if (kvm_hlt_in_guest(vcpu->kvm) && !kvm_can_deliver_async_pf(vcpu))
->> +		return false;
->> +
->> +	/*
->> +	 * If interrupts are off we cannot even use an artificial
->> +	 * halt state.
-> 
-> Can't we?  The artificial halt state would be canceled by the host page
-> fault handler.
+On Wed, Jun 12, 2019 at 04:30:51PM +0530, Nisha Kumari wrote:
 
-hlt allows interrupts to be injected, which of course is not possible in
-an interrupt-off region.  But, the only difference is that halt_poll is
-not obeyed for synchronous page fault handling; either way, the vCPU
-thread stays in the kernel but it is scheduled out while the page fault
-is being handled.  This is only for lapic_in_kernel so hlt does not
-leave KVM_RUN.
+> +static int qcom_labibb_read(struct qcom_labibb *labibb, u16 address,
+> +			    u8 *val, int count)
+> +{
+> +	int ret;
+> +
+> +	ret =3D regmap_bulk_read(labibb->regmap, address, val, count);
+> +	if (ret < 0)
+> +		dev_err(labibb->dev, "spmi read failed ret=3D%d\n", ret);
+> +
+> +	return ret;
+> +}
 
->> +	 */
->> +	return kvm_x86_ops->interrupt_allowed(vcpu);
->> @@ -9783,19 +9813,26 @@ void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
->>  	trace_kvm_async_pf_not_present(work->arch.token, work->gva);
->>  	kvm_add_async_pf_gfn(vcpu, work->arch.gfn);
->>  
->> -	if (!(vcpu->arch.apf.msr_val & KVM_ASYNC_PF_ENABLED) ||
->> -	    (vcpu->arch.apf.send_user_only &&
->> -	     kvm_x86_ops->get_cpl(vcpu) == 0))
->> +	if (!kvm_can_deliver_async_pf(vcpu) ||
->> +	    apf_put_user(vcpu, KVM_PV_REASON_PAGE_NOT_PRESENT)) {
->> +		/*
->> +		 * It is not possible to deliver a paravirtualized asynchronous
->> +		 * page fault, but putting the guest in an artificial halt state
->> +		 * can be beneficial nevertheless: if an interrupt arrives, we
->> +		 * can deliver it timely and perhaps the guest will schedule
->> +		 * another process.  When the instruction that triggered a page
->> +		 * fault is retried, hopefully the page will be ready in the host.
->> +		 */
->>  		kvm_make_request(KVM_REQ_APF_HALT, vcpu);
-> 
-> A return is missing here, to prevent the delivery of PV APF.
-> (I'd probably keep the if/else.)
+This (and the write function) are utterly trivial wrappers around the
+corresponding regmap functions...
 
-Fixed in v2 (keeping the if/else but swapping the two arms).
+> +static int qcom_labibb_masked_write(struct qcom_labibb *labibb, u16 addr=
+ess,
+> +				    u8 mask, u8 val)
+> +{
+> +	int ret;
+> +
+> +	ret =3D regmap_update_bits(labibb->regmap, address, mask, val);
+> +	if (ret < 0)
+> +		dev_err(labibb->dev, "spmi write failed: ret=3D%d\n", ret);
+> +
+> +	return ret;
+> +}
 
-Paolo
+=2E..as is this but it changes the name for some reason.
 
-> Thanks.
-> 
->> -	else if (!apf_put_user(vcpu, KVM_PV_REASON_PAGE_NOT_PRESENT)) {
->> -		fault.vector = PF_VECTOR;
->> -		fault.error_code_valid = true;
->> -		fault.error_code = 0;
->> -		fault.nested_page_fault = false;
->> -		fault.address = work->arch.token;
->> -		fault.async_page_fault = true;
->> -		kvm_inject_page_fault(vcpu, &fault);
-> 
->>  	}
->> +
->> +	fault.vector = PF_VECTOR;
->> +	fault.error_code_valid = true;
->> +	fault.error_code = 0;
->> +	fault.nested_page_fault = false;
->> +	fault.address = work->arch.token;
->> +	fault.async_page_fault = true;
->> +	kvm_inject_page_fault(vcpu, &fault);
->>  }
->>  
->>  void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
->> -- 
->> 1.8.3.1
->>
+> +static int qcom_enable_ibb(struct qcom_labibb *labibb, bool enable)
+> +{
+> +	int ret;
+> +	u8 val =3D enable ? IBB_CONTROL_ENABLE : 0;
 
+Please write normal conditional statements, it makes things easier to
+read.  Though this function is so trivial it seems better to just inline
+it into the callers.
+
+> +static int qcom_lab_regulator_enable(struct regulator_dev *rdev)
+> +{
+> +	int ret;
+> +	u8 val;
+> +	struct qcom_labibb *labibb  =3D rdev_get_drvdata(rdev);
+> +
+> +	val =3D LAB_ENABLE_CTL_EN;
+> +	ret =3D qcom_labibb_write(labibb,
+> +				labibb->lab_base + REG_LAB_ENABLE_CTL,
+> +				&val, 1);
+
+Why not just use regmap_write()?  It'd be clearer.
+
+> +	labibb->lab_vreg.vreg_enabled =3D 1;
+
+What function does this serve?  It never seems to be read.
+
+> +	ret =3D qcom_labibb_write(labibb,
+> +				labibb->lab_base + REG_LAB_ENABLE_CTL,
+> +				&val, 1);
+> +	if (ret < 0) {
+> +		dev_err(labibb->dev, "Write register failed ret =3D %d\n", ret);
+> +		return ret;
+> +	}
+> +	/* after this delay, lab should get disabled */
+> +	usleep_range(POWER_DELAY, POWER_DELAY + 100);
+> +
+> +	ret =3D qcom_labibb_read(labibb, labibb->lab_base +
+> +			       REG_LAB_STATUS1, &val, 1);
+> +	if (ret < 0) {
+> +		dev_err(labibb->dev, "Read register failed ret =3D %d\n", ret);
+> +		return ret;
+> +	}
+
+I'm not clear that these status checks are actually a good idea, and if
+they are it feels like they should be factored out into the framework -
+these are just regular enable or disable followed by the usual dead
+reckoning delay for completion and then a get_status() call to confirm
+if the operation worked.  That's not at all driver specific so if it's
+useful the core should do it for all regulators with status readback and
+if you didn't do it you could use the standard regmap helpers for these
+operations. =20
+
+> +static int qcom_lab_regulator_is_enabled(struct regulator_dev *rdev)
+> +{
+> +	int ret;
+> +	u8 val;
+> +	struct qcom_labibb *labibb  =3D rdev_get_drvdata(rdev);
+> +
+> +	ret =3D qcom_labibb_read(labibb, labibb->lab_base +
+> +			       REG_LAB_STATUS1, &val, 1);
+> +	if (ret < 0) {
+> +		dev_err(labibb->dev, "Read register failed ret =3D %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return val & LAB_STATUS1_VREG_OK_BIT;
+> +}
+
+Please use the standard helper for this, and this is a get_status()
+operation not an is_enabled() - it checks if the regulator is working,
+not what status was requested.
+
+> +	while (retries--) {
+> +		/* Wait for a small period before reading IBB_STATUS1 */
+> +		usleep_range(POWER_DELAY, POWER_DELAY + 100);
+> +
+> +		ret =3D qcom_labibb_read(labibb, labibb->ibb_base +
+> +				       REG_IBB_STATUS1, &val, 1);
+> +		if (ret < 0) {
+> +			dev_err(labibb->dev,
+> +				"Read register failed ret =3D %d\n", ret);
+> +			return ret;
+> +		}
+> +
+> +		if (val & IBB_STATUS1_VREG_OK_BIT) {
+> +			labibb->ibb_vreg.vreg_enabled =3D 1;
+> +			return 0;
+> +		}
+> +	}
+
+This is doing more than the other regulator was but it's not clear why -
+is it just that the delays are different for the two regulators?
+
+> +static int register_lab_regulator(struct qcom_labibb *labibb,
+> +				  struct device_node *of_node)
+> +{
+> +	int ret =3D 0;
+> +	struct regulator_init_data *init_data;
+> +	struct regulator_config cfg =3D {};
+> +
+> +	cfg.dev =3D labibb->dev;
+> +	cfg.driver_data =3D labibb;
+> +	cfg.of_node =3D of_node;
+> +	init_data =3D
+> +		of_get_regulator_init_data(labibb->dev,
+> +					   of_node, &lab_desc);
+> +	if (!init_data) {
+> +		dev_err(labibb->dev,
+> +			"unable to get init data for LAB\n");
+> +		return -ENOMEM;
+> +	}
+
+The core will parse the DT for you.
+
+--tpyx7gKuSYt+mjHM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0Chv4ACgkQJNaLcl1U
+h9CEqAf/QFvYLRcHvi2D2fwm6tH8HKFCtw/AKOh5X+6AF1YFlXl8kSNv4OrZBGgx
+A6p7x+PAr05eyRsfgVT1F324CG7oGi7dQV1P4ogG6Reg7iuxXxbbmrxb7QZ3biBO
+N+j7fXdFflwtEEexU8uV3oQ2DMB2CGX+E+VCm1OSrVfbLV1rLN2tOJ3f5cW9e4D5
+lCC5kzwTzkmnsjYlFpf1+zFp15Vj+2NTeP90Thuqx2InT1iJxU/ZqDIA8fmHfWK8
+YK60LTjRxn/brpHY9BjiLX5g2On658n8XRz1oP9l5JfhYqS3oBnU9dFQAHGcy1I2
+sI/GreeI0hc5CW0Vltk94O9Y4ZB/IQ==
+=TFUj
+-----END PGP SIGNATURE-----
+
+--tpyx7gKuSYt+mjHM--
