@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF829C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC929C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C10F32147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C59332147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442651;
-	bh=TAqnMvgMqJKjaJd9W6Ij2T3guZh8sir0EK5c3BaNcdA=;
+	s=default; t=1560442655;
+	bh=MMu2sKMseQSw+TUl2Yw6NE1r/e8x0b/7CHCq+cul2ww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKIdeprfG9yUd+jgqdNYWAWQUoLbUmA2w1CaDf8sIudIzznZiGFMJYKeR65JhNR6W
-	 x9itAEXuUiaOk2SmaoWfGxMeNODDHnBdalxShxOAvCz8QgUFucCNkkGzy/cJy6ksF8
-	 UthEnqMYaeAXBkT2cEMI437TiPwGgUJ9d6wAgQLU=
+	b=MWBqciiy2mMKFkhNpVeYFCRSVD1NKnBtHOO5kE3qBG3OMN4iX8V63lpFdbi+v2zaZ
+	 S00/FtgWDmQSyLbEnNlUQ9OcvtH29iJzkGn5lgSrdD8HTEmrstcv3Dl1d+8ZK89nNb
+	 rfNjAo5f+O/MoOBwbMDQrBaCX+gLf42t96pMlZY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388478AbfFMQRF (ORCPT
+        id S2391990AbfFMQRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:17:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58394 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:17:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731142AbfFMIlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:41:06 -0400
+        id S1731146AbfFMIlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:41:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76BFF21473;
-        Thu, 13 Jun 2019 08:41:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6A8121473;
+        Thu, 13 Jun 2019 08:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415266;
-        bh=TAqnMvgMqJKjaJd9W6Ij2T3guZh8sir0EK5c3BaNcdA=;
+        s=default; t=1560415271;
+        bh=MMu2sKMseQSw+TUl2Yw6NE1r/e8x0b/7CHCq+cul2ww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hjj8r1YWfwcQ5bZfOm+8J6aMh5feFqq4VqyFQZPJ5ycmAB06wP4IW15J/XM3tvRLX
-         kWWKrmJqGvjFXocEYOXlaquozrGkm41Vhc5L/VCobEJ5FV97V3hneFS0czwlnBIGqm
-         GygWnjmrjQGN8aL9khJLvYMqG+t6NmaV9qoxFYHg=
+        b=nhwPaCGEQpU5D+kh5cfGJX3j4LJWQbJMppg3Nr8N+l7pj3/Y0MSKdbYe1VyByvl57
+         gOAMNu+n6BWLuztf9lPSekXMJFesqp1/8Hj9nV9cG7IksZNYwcyDzd1XNRWoyqNS2e
+         HPy30EtezZOv4hSlhJ8dARWfORq/jGR3+RYKZkPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liwei Song <liwei.song@windriver.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 063/118] ALSA: hda - Register irq handler after the chip initialization
-Date:   Thu, 13 Jun 2019 10:33:21 +0200
-Message-Id: <20190613075647.522443235@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 038/118] f2fs: fix to avoid panic in dec_valid_block_count()
+Date:   Thu, 13 Jun 2019 10:32:56 +0200
+Message-Id: <20190613075645.712097097@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -59,61 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f495222e28275222ab6fd93813bd3d462e16d340 ]
+[ Upstream commit 5e159cd349bf3a31fb7e35c23a93308eb30f4f71 ]
 
-Currently the IRQ handler in HD-audio controller driver is registered
-before the chip initialization.  That is, we have some window opened
-between the azx_acquire_irq() call and the CORB/RIRB setup.  If an
-interrupt is triggered in this small window, the IRQ handler may
-access to the uninitialized RIRB buffer, which leads to a NULL
-dereference Oops.
+As Jungyeon reported in bugzilla:
 
-This is usually no big problem since most of Intel chips do register
-the IRQ via MSI, and we've already fixed the order of the IRQ
-enablement and the CORB/RIRB setup in the former commit b61749a89f82
-("sound: enable interrupt after dma buffer initialization"), hence the
-IRQ won't be triggered in that room.  However, some platforms use a
-shared IRQ, and this may allow the IRQ trigger by another source.
+https://bugzilla.kernel.org/show_bug.cgi?id=203209
 
-Another possibility is the kdump environment: a stale interrupt might
-be present in there, the IRQ handler can be falsely triggered as well.
+- Overview
+When mounting the attached crafted image and running program, I got this error.
+Additionally, it hangs on sync after the this script.
 
-For covering this small race, let's move the azx_acquire_irq() call
-after hda_intel_init_chip() call.  Although this is a bit radical
-change, it can cover more widely than checking the CORB/RIRB setup
-locally in the callee side.
+The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
 
-Reported-by: Liwei Song <liwei.song@windriver.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+- Reproduces
+cc poc_01.c
+./run.sh f2fs
+sync
+
+ kernel BUG at fs/f2fs/f2fs.h:1788!
+ RIP: 0010:f2fs_truncate_data_blocks_range+0x342/0x350
+ Call Trace:
+  f2fs_truncate_blocks+0x36d/0x3c0
+  f2fs_truncate+0x88/0x110
+  f2fs_setattr+0x3e1/0x460
+  notify_change+0x2da/0x400
+  do_truncate+0x6d/0xb0
+  do_sys_ftruncate+0xf1/0x160
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The reason is dec_valid_block_count() will trigger kernel panic due to
+inconsistent count in between inode.i_blocks and actual block.
+
+To avoid panic, let's just print debug message and set SBI_NEED_FSCK to
+give a hint to fsck for latter repairing.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+[Jaegeuk Kim: fix build warning and add unlikely]
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/f2fs/f2fs.h | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 9bc8a7cb40ea..45bf89ed31de 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1883,9 +1883,6 @@ static int azx_first_init(struct azx *chip)
- 			chip->msi = 0;
- 	}
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index a4b6eacf22ea..64f970cca1b4 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1744,6 +1744,7 @@ enospc:
+ 	return -ENOSPC;
+ }
  
--	if (azx_acquire_irq(chip, 0) < 0)
--		return -EBUSY;
--
- 	pci_set_master(pci);
- 	synchronize_irq(bus->irq);
++void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...);
+ static inline void dec_valid_block_count(struct f2fs_sb_info *sbi,
+ 						struct inode *inode,
+ 						block_t count)
+@@ -1752,13 +1753,21 @@ static inline void dec_valid_block_count(struct f2fs_sb_info *sbi,
  
-@@ -2000,6 +1997,9 @@ static int azx_first_init(struct azx *chip)
- 		return -ENODEV;
- 	}
+ 	spin_lock(&sbi->stat_lock);
+ 	f2fs_bug_on(sbi, sbi->total_valid_block_count < (block_t) count);
+-	f2fs_bug_on(sbi, inode->i_blocks < sectors);
+ 	sbi->total_valid_block_count -= (block_t)count;
+ 	if (sbi->reserved_blocks &&
+ 		sbi->current_reserved_blocks < sbi->reserved_blocks)
+ 		sbi->current_reserved_blocks = min(sbi->reserved_blocks,
+ 					sbi->current_reserved_blocks + count);
+ 	spin_unlock(&sbi->stat_lock);
++	if (unlikely(inode->i_blocks < sectors)) {
++		f2fs_msg(sbi->sb, KERN_WARNING,
++			"Inconsistent i_blocks, ino:%lu, iblocks:%llu, sectors:%llu",
++			inode->i_ino,
++			(unsigned long long)inode->i_blocks,
++			(unsigned long long)sectors);
++		set_sbi_flag(sbi, SBI_NEED_FSCK);
++		return;
++	}
+ 	f2fs_i_blocks_write(inode, count, false, true);
+ }
  
-+	if (azx_acquire_irq(chip, 0) < 0)
-+		return -EBUSY;
-+
- 	strcpy(card->driver, "HDA-Intel");
- 	strlcpy(card->shortname, driver_short_names[chip->driver_type],
- 		sizeof(card->shortname));
+@@ -2727,7 +2736,6 @@ static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi,
+ 
+ bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
+ 					block_t blkaddr, int type);
+-void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...);
+ static inline void verify_blkaddr(struct f2fs_sb_info *sbi,
+ 					block_t blkaddr, int type)
+ {
 -- 
 2.20.1
 
