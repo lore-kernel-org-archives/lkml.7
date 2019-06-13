@@ -7,71 +7,76 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 522F7C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1556DC31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 276FE208CA
+	by mail.kernel.org (Postfix) with ESMTP id E26D320851
 	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:51:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="IUKGD7qi"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="P4HLxHwc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389674AbfFMPvk (ORCPT
+        id S1731848AbfFMPvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:51:40 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:51194 "EHLO pegase1.c-s.fr"
+        Thu, 13 Jun 2019 11:51:37 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:32983 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731664AbfFMJLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:11:55 -0400
+        id S1731661AbfFMJLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:11:54 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45PdKN4JJzzB09Zf;
-        Thu, 13 Jun 2019 11:11:52 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 45PdKL5TQFzB09Zc;
+        Thu, 13 Jun 2019 11:11:50 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=IUKGD7qi; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=P4HLxHwc; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 3RUzFGec82Hn; Thu, 13 Jun 2019 11:11:52 +0200 (CEST)
+        with ESMTP id 2ONhF_4wVYbN; Thu, 13 Jun 2019 11:11:50 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45PdKN327kzB09ZZ;
-        Thu, 13 Jun 2019 11:11:52 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45PdKL4PXKzB09ZZ;
+        Thu, 13 Jun 2019 11:11:50 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1560417112; bh=cUi98ap1JHPgzHUcPuQ+SGqO7xRW7HHyt2QyM8V7Ab8=;
+        t=1560417110; bh=9bGT30RNddz+6s3Fj4Y0toOHWCeSsq4ECvV0JMuzbp0=;
         h=From:Subject:To:Cc:Date:From;
-        b=IUKGD7qiW0+tIV5Tl076uAfx5o59J4G32wQJhvMkR10S8zPGKOqG62aI8WeWyN44b
-         wFyj2WCxfdcednX0RRFE4XXa2bO+7ev5Hv0qaH9v8Ve+6tQs5OKxAiIkFsp1VNWWZp
-         mFjyK+/qKYIHd1BQlzlVSECePreCN6PkmjRk3dhY=
+        b=P4HLxHwcjeetZUgsWp8CxZ5zAKbXDp6cZougJwXqv8LPd5UC654rQi0P0xrYzHoWU
+         Ff12ygM2kNUiyu0P5aiF9inAJN8AdTQkxdyfmEu7XD+uioQo4BGOR+a4cInFTxul+4
+         2O/S6MWGTnUow/jn1HaJpnME1llzHX6ii4MH6iZc=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 75C1E8B8C0;
-        Thu, 13 Jun 2019 11:11:53 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id ACA028B8C0;
+        Thu, 13 Jun 2019 11:11:51 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id AJ27zzXuDbW2; Thu, 13 Jun 2019 11:11:53 +0200 (CEST)
+        with ESMTP id RwJpPaj8w0dh; Thu, 13 Jun 2019 11:11:51 +0200 (CEST)
 Received: from po16838vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3C0898B8B9;
-        Thu, 13 Jun 2019 11:11:53 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6C9878B8B9;
+        Thu, 13 Jun 2019 11:11:51 +0200 (CEST)
 Received: by po16838vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 06C4568B1D; Thu, 13 Jun 2019 09:11:53 +0000 (UTC)
-Message-Id: <1930b7e67ab361e68f356e7fdeba403e32ce3ad0.1560416986.git.christophe.leroy@c-s.fr>
+        id DF7F268B1D; Thu, 13 Jun 2019 09:11:50 +0000 (UTC)
+Message-Id:
+ <35488171038e3d40e7680b8513dfbd52ff7b6ef2.1557487355.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 01/10] powerpc/8xx: move CPM1 related files from sysdev/ to
+Subject: [PATCH 1/2] powerpc/8xx: move CPM1 related files from sysdev/ to
  platforms/8xx
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, oss@buserror.net
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vitaly Bordug <vitb@kernel.crashing.org>,
+        Scott Wood <oss@buserror.net>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 13 Jun 2019 09:11:53 +0000 (UTC)
+Date:   Thu, 13 Jun 2019 09:11:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20190613091150.kvIJj5alayXyFURi-vUYUvMvqZ6KBHy36En3lsE6PUE@z>
 
 Only 8xx selects CPM1 and related CONFIG options are already
 in platforms/8xx/Kconfig
 
-Move the related C files to platforms/8xx/.
+This patch moves the related C files to platforms/8xx/.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
