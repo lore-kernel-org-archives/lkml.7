@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C782EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67A5C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9775C20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FCAD20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441683;
-	bh=hb/yPd0jay9VD9wOzIBZBggrne/PATPTlnErEp2gjZo=;
+	s=default; t=1560441689;
+	bh=7IybN8Nha+uXU8W7xnlveY2BYrbSDvSR5HmEzqawZPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A8HeizJYNZJ5JjA0QG7S+a+lI2cMrQzYx4VruSHh3ACo2xe0drT1Bc/S8WzEk5UkP
-	 LYVNdKqmZwFTCVtpIfli466ASXHB38Be6N20mkgo15urSTPfIkDvG1ONiaJRAefu6P
-	 uIoayFVRz5ArRCNJUj5FXRekAgikDmHRBPg3mdQQ=
+	b=csQvgsMQRj99IxoY27SeXzoP8NjPV7XUK14ivqSHD5sIGJkJfxWHoY7X9SiuFchM2
+	 kN3fVezWF2xjonwOGrueOxwhzpR0eGpub7u1ChZXPP5AbbSEDvAYRNKOHfKn0ye7U2
+	 yrFXOmgFD06cQ4CIk5lP/XgJh2twFnsF2QziTTdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390641AbfFMQBS (ORCPT
+        id S1732004AbfFMQB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:01:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36476 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:01:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731445AbfFMIsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:48:36 -0400
+        id S1731440AbfFMIsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:48:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F5B920851;
-        Thu, 13 Jun 2019 08:48:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8F06206BA;
+        Thu, 13 Jun 2019 08:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415715;
-        bh=hb/yPd0jay9VD9wOzIBZBggrne/PATPTlnErEp2gjZo=;
+        s=default; t=1560415713;
+        bh=7IybN8Nha+uXU8W7xnlveY2BYrbSDvSR5HmEzqawZPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xzMMQcoe32FF/oSzOS0av34IcHqw+Pa2SIp/C9iIxJtH7XABF4lhm7aeUYHcscoBs
-         YU2e2gDlbVdQe4PLbNVVXo9VnASXlVaHnMtZyTGyuuRwh2nyKKTvkWllJsARYEa+SX
-         8TfIbrH9iPhSmQ98D+atBnMKTw79TvQ7t7FdVwf4=
+        b=1qD690R6YTM7Zy9J+qzIomdhSaw/Wg5ZBNjMJ7W1f6zdj3mryT9d+I0BpKh3AORs7
+         A4hJinAnR75ZuF27Woujbso7kScSnD01SRcDV4qaYsjpdKe6kNqZhTnoptdng/8xx9
+         7W9l/mQTMdKKZqP9jVPGAi/bgXhg5XeCw+/4h3qc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Jakub Jankowski <shasta@toxcorp.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 093/155] soc/tegra: pmc: Remove reset sysfs entries on error
-Date:   Thu, 13 Jun 2019 10:33:25 +0200
-Message-Id: <20190613075658.287981807@linuxfoundation.org>
+Subject: [PATCH 5.1 065/155] netfilter: nf_conntrack_h323: restore boundary check correctness
+Date:   Thu, 13 Jun 2019 10:32:57 +0200
+Message-Id: <20190613075656.656317226@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,52 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a46b51cd2a57d52d5047e1d48240536243eeab34 ]
+[ Upstream commit f5e85ce8e733c2547827f6268136b70b802eabdb ]
 
-Commit 5f84bb1a4099 ("soc/tegra: pmc: Add sysfs entries for reset info")
-added sysfs entries for Tegra reset source and level. However, these
-sysfs are not removed on error and so if the registering of PMC device
-is probe deferred, then the next time we attempt to probe the PMC device
-warnings such as the following will be displayed on boot ...
+Since commit bc7d811ace4a ("netfilter: nf_ct_h323: Convert
+CHECK_BOUND macro to function"), NAT traversal for H.323
+doesn't work, failing to parse H323-UserInformation.
+nf_h323_error_boundary() compares contents of the bitstring,
+not the addresses, preventing valid H.323 packets from being
+conntrack'd.
 
-  sysfs: cannot create duplicate filename '/devices/platform/7000e400.pmc/reset_reason'
+This looks like an oversight from when CHECK_BOUND macro was
+converted to a function.
 
-Fix this by calling device_remove_file() for each sysfs entry added on
-failure. Note that we call device_remove_file() unconditionally without
-checking if the sysfs entry was created in the first place, but this
-should be OK because kernfs_remove_by_name_ns() will fail silently.
+To fix it, stop dereferencing bs->cur and bs->end.
 
-Fixes: 5f84bb1a4099 ("soc/tegra: pmc: Add sysfs entries for reset info")
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fixes: bc7d811ace4a ("netfilter: nf_ct_h323: Convert CHECK_BOUND macro to function")
+Signed-off-by: Jakub Jankowski <shasta@toxcorp.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/tegra/pmc.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/netfilter/nf_conntrack_h323_asn1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 0df258518693..2fba8cdbe3bd 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -1999,7 +1999,7 @@ static int tegra_pmc_probe(struct platform_device *pdev)
- 	if (IS_ENABLED(CONFIG_DEBUG_FS)) {
- 		err = tegra_powergate_debugfs_init();
- 		if (err < 0)
--			return err;
-+			goto cleanup_sysfs;
- 	}
+diff --git a/net/netfilter/nf_conntrack_h323_asn1.c b/net/netfilter/nf_conntrack_h323_asn1.c
+index 1601275efe2d..4c2ef42e189c 100644
+--- a/net/netfilter/nf_conntrack_h323_asn1.c
++++ b/net/netfilter/nf_conntrack_h323_asn1.c
+@@ -172,7 +172,7 @@ static int nf_h323_error_boundary(struct bitstr *bs, size_t bytes, size_t bits)
+ 	if (bits % BITS_PER_BYTE > 0)
+ 		bytes++;
  
- 	err = register_restart_handler(&tegra_pmc_restart_handler);
-@@ -2030,6 +2030,9 @@ cleanup_restart_handler:
- 	unregister_restart_handler(&tegra_pmc_restart_handler);
- cleanup_debugfs:
- 	debugfs_remove(pmc->debugfs);
-+cleanup_sysfs:
-+	device_remove_file(&pdev->dev, &dev_attr_reset_reason);
-+	device_remove_file(&pdev->dev, &dev_attr_reset_level);
- 	return err;
- }
+-	if (*bs->cur + bytes > *bs->end)
++	if (bs->cur + bytes > bs->end)
+ 		return 1;
  
+ 	return 0;
 -- 
 2.20.1
 
