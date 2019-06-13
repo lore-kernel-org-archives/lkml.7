@@ -2,114 +2,83 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11001C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A51C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECBBD207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E0142082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:07:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560449258;
+	bh=Sg4URcoFfKoD00j6BQ6rs69foysWMk28J78oyol8SQM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dy1vxpo4xXKqLCdMBaK44l11mWhUdxoY2+fZFJCXPemkXaY64m2kVsr1U6y5ymFSb
+	 Jf3AcXaoVcg5qHGmHktl9ZnSeHuu3mzw7EugH3XYtHc8DK1/WfohwRpuNEzkkic/FM
+	 5w4W93yvaeFGIoxlhZ2XZMcm9dKXYcoNtes/9YqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbfFMSGf (ORCPT
+        id S1728197AbfFMSHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:06:35 -0400
-Received: from mga12.intel.com ([192.55.52.136]:61645 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbfFMSGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:06:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 11:06:34 -0700
-X-ExtLoop1: 1
-Received: from enagarix-mobl.amr.corp.intel.com (HELO [10.251.15.213]) ([10.251.15.213])
-  by orsmga004.jf.intel.com with ESMTP; 13 Jun 2019 11:06:33 -0700
-Subject: Re: [PATCH] x86/mm: Create an SME workarea in the kernel for early
- encryption
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>
-References: <d565e0c8e9867132c75648fe67416c3f51a0efbd.1560346329.git.thomas.lendacky@amd.com>
- <053ded24-eb70-0e88-5e0c-312ea93a6fd0@intel.com>
- <42f8b183-caae-9147-4021-3dee3462c0db@amd.com>
- <a4bdf881-50f2-78eb-066a-816e532af149@intel.com>
- <49a73751-9ede-234e-3432-74cfa62af0e3@amd.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <170db1df-6305-b1dc-9825-3696a1ed065d@intel.com>
-Date:   Thu, 13 Jun 2019 11:06:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 14:07:37 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38873 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbfFMSHg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 14:07:36 -0400
+Received: by mail-qt1-f193.google.com with SMTP id n11so21496702qtl.5;
+        Thu, 13 Jun 2019 11:07:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Oj9KR+T1fOqKQ4FESSVm1jnPwC60Lm44k4F4XEoSR9o=;
+        b=Sul5XNJ8VYOzBBN660uHAjDRKi0A+HhQhyMksgpIYFjnGdNFxkNW96wIBK/q3eCnYn
+         4bJlURsf/gV5mL9gNjoyvCRB1C9Gt/B/Bxcil1hO/s8MgPgpXzGJoExoAwxdPypjv3JH
+         0lWmeflYMJ6nZSha0Namvh6SFeZosihilDkaCmizF+K86sCmXcDyLe5jX6B2a2WTufNw
+         7C64lb+hDe+jPfTfsXFaInLHGdjR60WFS20jel9bgjABbFFPRSHs5dCLyF2pZMqjNMdT
+         SYePBGeyUds1BfTHCd8MyK56gcq6IZExGQWaaky8fL01FFuOhkHNbrsSewuka+rLu9xr
+         sL5Q==
+X-Gm-Message-State: APjAAAVxVVNd5JQ/OTmUszKfqBNJIrsDx4GNFU/VfrGNtpxsU/A3CcFi
+        LfCEgrHcx30Uqsh0Z8yLKkbmdpg=
+X-Google-Smtp-Source: APXvYqyUp5hOsDZfLIs3lS90BPkWO4yBBGNdYOYbR9C7XHV9gSGJlFFkMIKIt+hKrpXob3c5vDNzQQ==
+X-Received: by 2002:a0c:d1f0:: with SMTP id k45mr4787080qvh.69.1560449255707;
+        Thu, 13 Jun 2019 11:07:35 -0700 (PDT)
+Received: from localhost ([64.188.179.243])
+        by smtp.gmail.com with ESMTPSA id x10sm264965qtc.34.2019.06.13.11.07.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 11:07:35 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 12:07:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, leoyang.li@nxp.com, dan.j.williams@intel.com,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Peng Ma <peng.ma@nxp.com>
+Subject: Re: [PATCH 4/4] dt-bindings: fsl-qdma: Add LS1028A qDMA bindings
+Message-ID: <20190613180734.GA3178@bogus>
+References: <20190506090344.37784-1-peng.ma@nxp.com>
+ <20190506090344.37784-4-peng.ma@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <49a73751-9ede-234e-3432-74cfa62af0e3@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506090344.37784-4-peng.ma@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/19 10:59 AM, Lendacky, Thomas wrote:
->> After I say all that...  Why can't you just stick your data in a normal,
->> vanilla __init variable?  Wouldn't that be a lot less subtle?
-> The area needs to be outside of the kernel proper as the kernel is
-> encrypted "in place." So an __init variable won't work here.
+On Mon,  6 May 2019 09:03:44 +0000, Peng Ma wrote:
+> Add LS1028A qDMA controller bindings to fsl-qdma bindings.
+> 
+> Signed-off-by: Peng Ma <peng.ma@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/dma/fsl-qdma.txt |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+> 
 
-Ahh, that makes sense.  Also sounds like good changelog fodder.
-
-FWIW, you *could* use an __init area, but I think you'd have to work
-around it in sme_encrypt_kernel(), right?  Basically in the
-kernel_start/end logic you'd need to skip over it.  That's probably more
-fragile than what you have here, though.
+Reviewed-by: Rob Herring <robh@kernel.org>
