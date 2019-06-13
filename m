@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7CAC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C524DC46477
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE46A2175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9C52147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442165;
-	bh=2j2nNFeEvJfR8A94FGAbKg5WvFeo9GKd8Z1U+EKYuGU=;
+	s=default; t=1560442168;
+	bh=CvVCdshDdxAb8HlNI9DNZSk1xA+E+MUtVLQAzyRkafA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AZZpkGjuBo84vqh24c8CqPpGSX2xAcRku7uQShx9QtGIqpzUoAgxUUM3twUBz2SPD
-	 D3R128+nwFxoYY3CqGeVPtFsElLfbnVAAjPfb1THYgUAdY3n2XEmP1huEyRqj/23HM
-	 kI9tIQTjQF8Wi0tOc1sux4dHNk49lWmmngx/dzr4=
+	b=DWg4dapi1NtwWMWZz7DsUoCRfFDrKQ2qfYe9CbPVIhwaLFqwWsDt+FNHAE3UpqGF7
+	 Qpz+ntfZKcnFI6MiWEPSbBZlmx6AfzYAFGLlnUxbCJpeCHgONeIcXpeIiS9bywouBH
+	 QOg7LXOETUllpyNs6WdkM3RUupIrAkBHG9onJ2DA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfFMQJX (ORCPT
+        id S1731482AbfFMQJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:09:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33400 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:09:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731263AbfFMIoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:44:30 -0400
+        id S1731261AbfFMIoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:44:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49A022147A;
-        Thu, 13 Jun 2019 08:44:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8712A2147A;
+        Thu, 13 Jun 2019 08:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415469;
-        bh=2j2nNFeEvJfR8A94FGAbKg5WvFeo9GKd8Z1U+EKYuGU=;
+        s=default; t=1560415464;
+        bh=CvVCdshDdxAb8HlNI9DNZSk1xA+E+MUtVLQAzyRkafA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AezvutnfAkaziZ01lt+JtO0kPU/JZM1XlMeJn0844ArjMyRNiGO7TgIQdBTfHjF/k
-         /FmVIaQt2bs2ibM4u6X7HdYiNTC+K7/o0AXuHkcAlbATR+S36h3MlweD2Z3ICclVSv
-         qc7CfDsjrV1QA4snRFGu7Ww/0nOK7u19a0hjsNOQ=
+        b=RGQDEeqMMLB+fkeP6ySnQ+bA7S3sOwbxaAX3/OIJ8NgyFdAxL9JLC81BxdW6Yad/K
+         776bcF51jGLF/GvHsFRTVTbVBtqDe5Wj7t4orvup2U0WAmrK8le0CZFYQCIAnr7aCT
+         1l338jJOXx3Y+ZdKs+2NIEprXIPc9rIN8qcE0njs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 005/155] fs/fat/file.c: issue flush after the writeback of FAT
-Date:   Thu, 13 Jun 2019 10:31:57 +0200
-Message-Id: <20190613075653.020809893@linuxfoundation.org>
+Subject: [PATCH 5.1 003/155] media: rockchip/vpu: Add missing dont_use_autosuspend() calls
+Date:   Thu, 13 Jun 2019 10:31:55 +0200
+Message-Id: <20190613075652.897238917@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -63,52 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bd8309de0d60838eef6fb575b0c4c7e95841cf73 ]
+[ Upstream commit 5c5b90f5cbad77dc15d8b5582efdb2e362bcd710 ]
 
-fsync() needs to make sure the data & meta-data of file are persistent
-after the return of fsync(), even when a power-failure occurs later.  In
-the case of fat-fs, the FAT belongs to the meta-data of file, so we need
-to issue a flush after the writeback of FAT instead before.
+Those calls are needed to restore a clean PM state when the probe fails
+or when the driver is unloaded such that future ->probe() calls can
+initialize runtime PM again.
 
-Also bail out early when any stage of fsync fails.
-
-Link: http://lkml.kernel.org/r/20190409030158.136316-1-houtao1@huawei.com
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Acked-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jan Kara <jack@suse.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fat/file.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/fat/file.c b/fs/fat/file.c
-index b3bed32946b1..0e3ed79fcc3f 100644
---- a/fs/fat/file.c
-+++ b/fs/fat/file.c
-@@ -193,12 +193,17 @@ static int fat_file_release(struct inode *inode, struct file *filp)
- int fat_file_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
- {
- 	struct inode *inode = filp->f_mapping->host;
--	int res, err;
-+	int err;
-+
-+	err = __generic_file_fsync(filp, start, end, datasync);
-+	if (err)
-+		return err;
- 
--	res = generic_file_fsync(filp, start, end, datasync);
- 	err = sync_mapping_buffers(MSDOS_SB(inode->i_sb)->fat_inode->i_mapping);
-+	if (err)
-+		return err;
- 
--	return res ? res : err;
-+	return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
+diff --git a/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c b/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
+index 33b556b3f0df..d489b5dd54d7 100644
+--- a/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
++++ b/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
+@@ -492,6 +492,7 @@ err_v4l2_unreg:
+ 	v4l2_device_unregister(&vpu->v4l2_dev);
+ err_clk_unprepare:
+ 	clk_bulk_unprepare(vpu->variant->num_clocks, vpu->clocks);
++	pm_runtime_dont_use_autosuspend(vpu->dev);
+ 	pm_runtime_disable(vpu->dev);
+ 	return ret;
  }
- 
- 
+@@ -512,6 +513,7 @@ static int rockchip_vpu_remove(struct platform_device *pdev)
+ 	v4l2_m2m_release(vpu->m2m_dev);
+ 	v4l2_device_unregister(&vpu->v4l2_dev);
+ 	clk_bulk_unprepare(vpu->variant->num_clocks, vpu->clocks);
++	pm_runtime_dont_use_autosuspend(vpu->dev);
+ 	pm_runtime_disable(vpu->dev);
+ 	return 0;
+ }
 -- 
 2.20.1
 
