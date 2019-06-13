@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3188FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDE4C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EEB20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACAF21744
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442644;
-	bh=2Tcx6BWg/k+OG1W2ZXwS6fr8VVdUDGUa6XHdSmUb8vc=;
+	s=default; t=1560442648;
+	bh=iRyyCRgD0EqQOFZg309FXaKqmjtdUMN+89A4I51NnUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vlNH/z2B4B+GVG9DNQbb8ybHb9sBuje7nfMhge4IEWZlEw/XeJwM5ZQT8IUuuZ7TC
-	 uciey3shRAq3fdp0OUbTgw7hp4nIicpi1n7+KwzrBzySNCx6cbNn1/IFPOdJlvUBqD
-	 mntCo3l2MWuBroFhDDD8j7rspNl5cjGP3M42DkdA=
+	b=uCNDOXFv+JVtW9MQyHCAPrF1oJx1ZFq6Eg0XXRBnA+c3TAxiw1p+gJrAzvWArE98a
+	 gsVbAVUGyzmJy1gjikDZkdPDafAGWxB7TNsldrS/gb8tmA2yhhgktx18gxM3qQgXzw
+	 jF1KNYeI7z1mWowuO2uyYhx5E33A4w8SuIxBW55w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388800AbfFMQRK (ORCPT
+        id S2403776AbfFMQRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:17:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58298 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:17:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731137AbfFMIk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:40:58 -0400
+        id S1731141AbfFMIlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:41:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 716272147A;
-        Thu, 13 Jun 2019 08:40:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF12B2147A;
+        Thu, 13 Jun 2019 08:41:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415257;
-        bh=2Tcx6BWg/k+OG1W2ZXwS6fr8VVdUDGUa6XHdSmUb8vc=;
+        s=default; t=1560415263;
+        bh=iRyyCRgD0EqQOFZg309FXaKqmjtdUMN+89A4I51NnUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JY9wQLTxjjHOVVjkb8T41RT9/ku6xS06cbu6/1xhxxH1TnSpYlbJVTQVfQYoxZ19d
-         sOwTDf2tzGWOD2I00qwYvuAOWvjeISfZLy38bblDLuKHMXFm9jTObVPr/dd0VMIeWh
-         kkCOsLQnDnsmKlCdKp3YUxm9J9PP/scvtppE0Wi0=
+        b=YyB6elRtbVxwFxY6QfbZ9ZZWtiu1Ojlq9DPF9SBG6XSgLc3LzwuajvtOplMHcHkny
+         mcLV1qv8V75Q5ssAoeWd/fUDGBwN3JFfYAYzh1jlrYGXA6FLYi8L/iKYTA3+LSHR6Q
+         t5s6mpiWcyaZO1xeG6JQc+9qb+nzZ44DP7c3lQyI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 060/118] nvme-pci: shutdown on timeout during deletion
-Date:   Thu, 13 Jun 2019 10:33:18 +0200
-Message-Id: <20190613075647.341186537@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 062/118] netfilter: nf_flow_table: fix netdev refcnt leak
+Date:   Thu, 13 Jun 2019 10:33:20 +0200
+Message-Id: <20190613075647.462575090@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -60,48 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9dc1a38ef1925d23c2933c5867df816386d92ff8 ]
+[ Upstream commit 26a302afbe328ecb7507cae2035d938e6635131b ]
 
-We do not restart a controller in a deleting state for timeout errors.
-When in this state, unblock potential request dispatchers with failed
-completions by shutting down the controller on timeout detection.
+flow_offload_alloc() calls nf_route() to get a dst_entry. Internally,
+nf_route() calls ip_route_output_key() that allocates a dst_entry and
+holds it. So, a dst_entry should be released by dst_release() if
+nf_route() is successful.
 
-Reported-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Keith Busch <keith.busch@intel.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Otherwise, netns exit routine cannot be finished and the following
+message is printed:
+
+[  257.490952] unregister_netdevice: waiting for lo to become free. Usage count = 1
+
+Fixes: ac2a66665e23 ("netfilter: add generic flow table infrastructure")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/netfilter/nft_flow_offload.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 377f6fff420d..c8eeecc58115 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -1132,6 +1132,7 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
- 	struct nvme_dev *dev = nvmeq->dev;
- 	struct request *abort_req;
- 	struct nvme_command cmd;
-+	bool shutdown = false;
- 	u32 csts = readl(dev->bar + NVME_REG_CSTS);
+diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
+index 436cc14cfc59..7f85af4c40ff 100644
+--- a/net/netfilter/nft_flow_offload.c
++++ b/net/netfilter/nft_flow_offload.c
+@@ -113,6 +113,7 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
+ 	if (ret < 0)
+ 		goto err_flow_add;
  
- 	/* If PCI error recovery process is happening, we cannot reset or
-@@ -1168,12 +1169,14 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
- 	 * shutdown, so we return BLK_EH_DONE.
- 	 */
- 	switch (dev->ctrl.state) {
-+	case NVME_CTRL_DELETING:
-+		shutdown = true;
- 	case NVME_CTRL_CONNECTING:
- 	case NVME_CTRL_RESETTING:
- 		dev_warn_ratelimited(dev->ctrl.device,
- 			 "I/O %d QID %d timeout, disable controller\n",
- 			 req->tag, nvmeq->qid);
--		nvme_dev_disable(dev, false);
-+		nvme_dev_disable(dev, shutdown);
- 		nvme_req(req)->flags |= NVME_REQ_CANCELLED;
- 		return BLK_EH_DONE;
- 	default:
++	dst_release(route.tuple[!dir].dst);
+ 	return;
+ 
+ err_flow_add:
 -- 
 2.20.1
 
