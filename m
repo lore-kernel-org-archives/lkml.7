@@ -2,100 +2,87 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD84C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5E9C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA76206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:47:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SVS9YERr"
+	by mail.kernel.org (Postfix) with ESMTP id 8DD92206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:47:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389464AbfFMPrA (ORCPT
+        id S2389507AbfFMPrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 13 Jun 2019 11:47:04 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:55788 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389461AbfFMPrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Jun 2019 11:47:00 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48466 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731771AbfFMJd4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:33:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lH95QDBu3WX8kdNvVLm8TNXGj4gft8us1GpfjIszCYo=; b=SVS9YERrgSCIMXtUf8Jwx8ivf
-        9OumC65a7EXEOXw4g2YElyLy8o5qvIzHQCBxTZ5FrcUvx+Zvt4aGfQCPAlgBg0LlUrITOytrN3C9y
-        UkBkMaCiJ3K4qVp9MIEspB17yKrKTkAsstsWacvKcUq4PA3tdnL5vfWitdN0EdtG4kxnp3Tfd9Jtz
-        +KhWVA9Pkau7MQNr0vyCFqk4yA3J8pkcSuMe3taNerIYuw8nlXthCootn3EV3A9GTftMkQVN53gIE
-        TwK9TTrsA0FKbsPtfBw5QPKmIHaSMmulBeb0fB8gw+JCm+O/QxX0SDWpFxJVCIbGzqseo6QiBcI5i
-        15fgUMBpA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbM78-00015h-DW; Thu, 13 Jun 2019 09:33:46 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 372B5209C844F; Thu, 13 Jun 2019 11:33:45 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 11:33:45 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Willem de Bruijn <willemb@google.com>
-Subject: Re: [PATCH] locking/static_key: always define
- static_branch_deferred_inc
-Message-ID: <20190613093345.GQ3402@hirez.programming.kicks-ass.net>
-References: <20190612194409.197461-1-willemdebruijn.kernel@gmail.com>
- <20190612125911.509d79f2@cakuba.netronome.com>
- <CAF=yD-JAZfEG5JoNEQn60gnucJB1gsrFeT38DieG12NQb9DFnQ@mail.gmail.com>
- <20190612135627.5eac995d@cakuba.netronome.com>
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hbRwA-0008JX-LL; Thu, 13 Jun 2019 09:46:51 -0600
+To:     Jon Mason <jdmason@kudzu.us>
+Cc:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kselftest@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Eric Pilmore <epilmore@gigaio.com>
+References: <20190523223100.5526-1-logang@deltatee.com>
+ <20190613133014.GE1572@kudzu.us>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <985a41a9-80c2-7b60-da98-4ea92085319b@deltatee.com>
+Date:   Thu, 13 Jun 2019 09:46:44 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612135627.5eac995d@cakuba.netronome.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190613133014.GE1572@kudzu.us>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: epilmore@gigaio.com, fancer.lancer@gmail.com, dave.jiang@intel.com, allenbh@gmail.com, bhelgaas@google.com, joro@8bytes.org, linux-kselftest@vger.kernel.org, iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org, jdmason@kudzu.us
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v5 00/10] Support using MSI interrupts in ntb_transport
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 01:56:27PM -0700, Jakub Kicinski wrote:
-> On Wed, 12 Jun 2019 16:25:16 -0400, Willem de Bruijn wrote:
-> > On Wed, Jun 12, 2019 at 3:59 PM Jakub Kicinski
-> > <jakub.kicinski@netronome.com> wrote:
-> > >
-> > > On Wed, 12 Jun 2019 15:44:09 -0400, Willem de Bruijn wrote:  
-> > > > From: Willem de Bruijn <willemb@google.com>
-> > > >
-> > > > This interface is currently only defined if CONFIG_JUMP_LABEL. Make it
-> > > > available also when jump labels are disabled.
-> > > >
-> > > > Fixes: ad282a8117d50 ("locking/static_key: Add support for deferred static branches")
-> > > > Signed-off-by: Willem de Bruijn <willemb@google.com>
-> > > >
-> > > > ---
-> > > >
-> > > > The original patch went into 5.2-rc1, but this interface is not yet
-> > > > used, so this could target either 5.2 or 5.3.  
-> > >
-> > > Can we drop the Fixes tag?  It's an ugly omission but not a bug fix.
-> > >
-> > > Are you planning to switch clean_acked_data_enable() to the helper once
-> > > merged?  
-> > 
-> > Definitely, can do.
-> > 
-> > Perhaps it's easiest to send both as a single patch set through net-next, then?
+
+
+On 2019-06-13 7:30 a.m., Jon Mason wrote:
+> On Thu, May 23, 2019 at 04:30:50PM -0600, Logan Gunthorpe wrote:
+>> This is another resend as there has been no feedback since v4.
+>> Seems Jon has been MIA this past cycle so hopefully he appears on the
+>> list soon.
+>>
+>> I've addressed the feedback so far and rebased on the latest kernel
+>> and would like this to be considered for merging this cycle.
+>>
+>> The only outstanding issue I know of is that it still will not work
+>> with IDT hardware, but ntb_transport doesn't work with IDT hardware
+>> and there is still no sensible common infrastructure to support
+>> ntb_peer_mw_set_trans(). Thus, I decline to consider that complication
+>> in this patchset. However, I'll be happy to review work that adds this
+>> feature in the future.
+>>
+>> Also, as the port number and resource index stuff is a bit complicated,
+>> I made a quick out of tree test fixture to ensure it's correct[1]. As
+>> an excerise I also wrote some test code[2] using the upcomming KUnit
+>> feature.
 > 
-> I'd think so too, perhaps we can get a blessing from Peter for that :)
+> Sorry for the delay.  The patch is now in the ntb-next branch.  We've
+> missed window for 5.2, but it will be in the 5.3 pull request (barring
+> last minute comments).
 
-Sure that works, I don't think there's anything else pending for this
-file to conflict with.
+Thanks Jon!
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Logan
