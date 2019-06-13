@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2360FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B322FC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC309206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87758206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g0/oQJsu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZM8dRqd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393386AbfFMREe (ORCPT
+        id S2404779AbfFMREa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:04:34 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34918 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732657AbfFMRER (ORCPT
+        Thu, 13 Jun 2019 13:04:30 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46192 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404666AbfFMREO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:04:17 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c6so10921676wml.0;
-        Thu, 13 Jun 2019 10:04:16 -0700 (PDT)
+        Thu, 13 Jun 2019 13:04:14 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n4so21537613wrw.13;
+        Thu, 13 Jun 2019 10:04:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=w2YvRin0khft70/HQkufh77cwGHzqtMRSykd+mBeVCQ=;
-        b=g0/oQJsu0HiNM3pzjMAX7Ncl32l44dSFd3BKII/9rbhvbMHJFehjI0alIdOutkE9Jj
-         Rv5CauhjQGF6Awnix2AvWfhOSUM3ooJ04fp66s1RhqpK5yhDLvpyaRLJ2tVxpfu7Kelo
-         wrHQRfxkgtUta/XtLwIBnq3ZjZr+i0bfU4G059Sysc/4/0P5bOevglHP7q07S53XeuaB
-         sJugrjBrcuRIcBO26uL0E02IFQBFtv+h15IO6iJziN0+BLYlgrKZMeyAYqVAja+0DqWr
-         LIeg5NWRAgDFrB7pLwbQqk4rHa+se1/jCExE2/OQyqPXgXmycOmtws2ivESGgoNtWJW7
-         ABGA==
+        bh=falAqpBCvs4GQzGRRi3ubvRYt1F+L9WaFtV97+WAQU0=;
+        b=HZM8dRqdW1ZqtCd0d9Ya6Vh8MNY1VhCT37XqG7om/qn+W0qdjOr66vSsTakEqpl+p8
+         CPUQf6+YERIqy+5gTJFaQnWCFq3au/lvCPAKHbNvRlgFMpnlQIbKjaPPQSjoNYTqNoqm
+         AVsWiOPKLBhoHowNyhKazNC+Nbby3J49SBOgBoZgD+Ht3FV5RHMUZoog8DEfILp/vbvv
+         7IaJJnhyusNU4KbNQ5VcAUozgzw/FCmF8SlPlV7TN+NfZBg+2DDZUZVPYkEHtlGM2l4S
+         dnTGSyfv4hBBcL3zW82hnpVL9hCmiPnPln1hvrXIjZUbrJtrl12tGNi3/ZXFvjmcTDtr
+         BxHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=w2YvRin0khft70/HQkufh77cwGHzqtMRSykd+mBeVCQ=;
-        b=XQgIFMnY7pyNmDuSEq8Nz0larN60ZwkqLcbTgqZm4LjxmYHlJpPwiqva0vThtNkRp+
-         /IFdVsFbEpiW3BXj00E70P2RTfScYm42cAd48EsHF6pSU4VOIUD8KONv8QKr107a3YR+
-         g5z6ssU4d7hUfdUdYlab5/UfIO8se93UKYFk5p6nWn0i10t48IkcLZ5H4Mgn7UL4jBb1
-         rLIm/uGx6ygLRkffB4pGBj0bP0SaWJQGWRgDtSveN2LEjoypMmbVf0vnPShaN/+G1HUC
-         OQ7hqTESrJxG2xlKA+FupOgW2UR7h9tg2eAOfRDP2yfNB9AQlEUrdVpkqyhTh6Wd3rcY
-         WE6A==
-X-Gm-Message-State: APjAAAXXffgMR5otsGrQ2H0GwBhG60P1H+XnUemre+8VX30xXB0CQGQP
-        mBCmC/H5ySM27eqd8H+AFiJN7KC8
-X-Google-Smtp-Source: APXvYqzIoPIJYVmxr0OxCqDzPCOX/Uq5rOqQsi6JQPJTUCi1PcDr0F/NU/r/FIG4Xnm0P66EYC9fYw==
-X-Received: by 2002:a1c:f916:: with SMTP id x22mr4790174wmh.81.1560445455471;
-        Thu, 13 Jun 2019 10:04:15 -0700 (PDT)
+        bh=falAqpBCvs4GQzGRRi3ubvRYt1F+L9WaFtV97+WAQU0=;
+        b=KiXDU7/ow9dk8DP5o8E77kXXL/QTWv4b5lEJGxHfY72v9XpZ0Q+j1O7idPlCnNkqXX
+         RLph+K4RoJCtXQY0HQuPkl+hWmKwBUy3eod6aC+1qZdAttOfycduqHmm4ogT8BfFI7ms
+         87AJpYH3/GpjZ/Kye9Jqp7k1Z2c0iPmV3uTlRmILlf6MATemTsOZFtX7hr4pQ3zVX2/b
+         UH2KAOkoMFugQBLyBgT3OsFwe1LbCp4KUrjLTa0IohJnLu+DDD8ApcyY2AyVrJj1pGWM
+         3azRY2S/RedmqfW9kzMYzF0+ovcwz3RpBnWYv8CZLvFfsxX9Ftc4sy5PwvrgYTNnrqWq
+         iIYg==
+X-Gm-Message-State: APjAAAWnCM0EP4sSRjLoGaChqXfGsC8Oei+bQfS2O9RGG31jqAa8u0Nh
+        bu+MOqukV0zPPrAOcXNzjWuB/lRz
+X-Google-Smtp-Source: APXvYqwL8ZuL81zRw5ZJKMOA3ZlAsnbWgm5x85Wj5w81JRdtsllO0LHL7CD+GBnli1GxuKaekFyAvQ==
+X-Received: by 2002:adf:ce03:: with SMTP id p3mr33869433wrn.94.1560445452682;
+        Thu, 13 Jun 2019 10:04:12 -0700 (PDT)
 Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.04.14
+        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.04.11
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 10:04:14 -0700 (PDT)
+        Thu, 13 Jun 2019 10:04:12 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         vkuznets@redhat.com
-Subject: [PATCH 43/43] KVM: nVMX: shadow pin based execution controls
-Date:   Thu, 13 Jun 2019 19:03:29 +0200
-Message-Id: <1560445409-17363-44-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 40/43] KVM: nVMX: Preset *DT exiting in vmcs02 when emulating UMIP
+Date:   Thu, 13 Jun 2019 19:03:26 +0200
+Message-Id: <1560445409-17363-41-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
 References: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
@@ -70,29 +70,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VMX_PREEMPTION_TIMER flag may be toggled frequently, though not
-*very* frequently.  Since it does not affect KVM's dirty logic, e.g.
-the preemption timer value is loaded from vmcs12 even if vmcs12 is
-"clean", there is no need to mark vmcs12 dirty when L1 writes pin
-controls, and shadowing the field achieves that.
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
+KVM dynamically toggles SECONDARY_EXEC_DESC to intercept (a subset of)
+instructions that are subject to User-Mode Instruction Prevention, i.e.
+VMCS.SECONDARY_EXEC_DESC == CR4.UMIP when emulating UMIP.  Preset the
+VMCS control when preparing vmcs02 to avoid unnecessarily VMWRITEs,
+e.g. KVM will clear VMCS.SECONDARY_EXEC_DESC in prepare_vmcs02_early()
+and then set it in vmx_set_cr4().
+
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/vmcs_shadow_fields.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/vmx/nested.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/kvm/vmx/vmcs_shadow_fields.h b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
-index 4cea018ba285..eb1ecd16fd22 100644
---- a/arch/x86/kvm/vmx/vmcs_shadow_fields.h
-+++ b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
-@@ -47,6 +47,7 @@
- SHADOW_FIELD_RO(GUEST_CS_AR_BYTES, guest_cs_ar_bytes)
- SHADOW_FIELD_RO(GUEST_SS_AR_BYTES, guest_ss_ar_bytes)
- SHADOW_FIELD_RW(CPU_BASED_VM_EXEC_CONTROL, cpu_based_vm_exec_control)
-+SHADOW_FIELD_RW(PIN_BASED_VM_EXEC_CONTROL, pin_based_vm_exec_control)
- SHADOW_FIELD_RW(EXCEPTION_BITMAP, exception_bitmap)
- SHADOW_FIELD_RW(VM_ENTRY_EXCEPTION_ERROR_CODE, vm_entry_exception_error_code)
- SHADOW_FIELD_RW(VM_ENTRY_INTR_INFO_FIELD, vm_entry_intr_info_field)
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 14a8cfade50f..598540ce0f52 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -2085,6 +2085,14 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
+ 		/* VMCS shadowing for L2 is emulated for now */
+ 		exec_control &= ~SECONDARY_EXEC_SHADOW_VMCS;
+ 
++		/*
++		 * Preset *DT exiting when emulating UMIP, so that vmx_set_cr4()
++		 * will not have to rewrite the controls just for this bit.
++		 */
++		if (!boot_cpu_has(X86_FEATURE_UMIP) && vmx_umip_emulated() &&
++		    (vmcs12->guest_cr4 & X86_CR4_UMIP))
++			exec_control |= SECONDARY_EXEC_DESC;
++
+ 		if (exec_control & SECONDARY_EXEC_VIRTUAL_INTR_DELIVERY)
+ 			vmcs_write16(GUEST_INTR_STATUS,
+ 				vmcs12->guest_intr_status);
 -- 
 1.8.3.1
+
 
