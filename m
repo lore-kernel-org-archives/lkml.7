@@ -2,144 +2,135 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B5BC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3CBC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFB2208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441315;
-	bh=GS7QM8uUKY06BkWq879HDS/Fiak3u2XFHTsSLPi6USA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=y1+uVqVW3SCAyfOcXfuVwThmD/Zt/GiLl2W4/FmD7M69vUdOm1zFJOL1xVMbkq37L
-	 TyPzW47zhhIssiXEgN0x1sRoqRtYOvlAQMqrq6fWfDVFkyKNctV1oBgTo9gH38+2tl
-	 FDuXiNBpsqGXCarDPrs55KGItoAmZ0VVqp3eJYiM=
+	by mail.kernel.org (Postfix) with ESMTP id E4A1D208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aThNGW7+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390174AbfFMPzN (ORCPT
+        id S2390045AbfFMPzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:55:13 -0400
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:40395 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731561AbfFMIxL (ORCPT
+        Thu, 13 Jun 2019 11:55:19 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35327 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731553AbfFMIw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:53:11 -0400
-Received: by mail-ot1-f44.google.com with SMTP id x24so18192548otp.7;
-        Thu, 13 Jun 2019 01:53:11 -0700 (PDT)
+        Thu, 13 Jun 2019 04:52:58 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c6so9233557wml.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 01:52:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Lcs2ag+JWd9LLpjNoidl6yxCYy5aNsRikxLQuGKzVzU=;
+        b=aThNGW7+I2PxRdhTNPV1LIhF0/5UJHVr6LSBQpWYfs9mymFpbdG0+eLwcuD+s8sSB5
+         CHOJAEAIZTXTkJqs/TqV6VH1/6I6+rikSUTduZJCk79S8Hk9UfkJ1XfHzjMkHtKZs0tK
+         ZlBBsvvs+mVji5Lwc21wIDSZNvTHmP3HB49j6W+heCALno3MD9xs+WEpPpN3zFjxXiOW
+         O7iuKmnGS4AljVYDGrYPvT2Yi9OBB+FCXpttSSbyOBt8OTsYQ0IUGeJVZnFrz6QJFn6Q
+         s8LeaL9BzwtyyXFLkJGfTsRJTTnS+kmZHtYyXuE97oWxfqxjy0Dx5PgKSMOvcQF8yleU
+         B1qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FxA2TuQ76TdBmK7s0p6DMBbnrU5zVRKKjjHLZHr3Nrw=;
-        b=Yxz1PrfEwG+xwQfQrX5q9OYleNmlcuAsJPTmLfQ7gVKEvAR+96Fjki1WJPeX8bRYQl
-         HuR4VQZkg7hv4n6r23V00pi6LnVo5kXHsecCxBP5tGF79PKKtJ+fXOELR7U9Xt4GRTcn
-         9CibEfBsWSxilq23lhLLpqkO/T/ruOYn0f5G8II2BuQmEbATtOJRLLYf/F3ffTRGHZ3+
-         gEw4dPeWEqb5pqH2RXLQrDSD+JsZVYpGJfwbV+UDkfo69J3moMWNSLxkrqg0Q69sAM0Q
-         kSLwi60ID8UTSnBe7YcyTgv6x11TvRIeUGBcEvFsTOyq2cknIxdlMJhByhe54Hz5xD7r
-         Zk4Q==
-X-Gm-Message-State: APjAAAUi4EVEc8cS8f5ENKqe7SrlOIXGcr+dWSzNLyj01OZXWkDFETFk
-        1V3VZUet3YydJfMKSltr+DlIrJWwrHJHi+RAnHjviQ==
-X-Google-Smtp-Source: APXvYqyI1lj+Z+cGNfdobQgfAVNEbIpL2r7FCl8K1bHleKh5pVvYkSHmP3FF0kCptnpXUK5RHTkVoifYko+1nXHyn24=
-X-Received: by 2002:a9d:5f05:: with SMTP id f5mr36455415oti.167.1560415990521;
- Thu, 13 Jun 2019 01:53:10 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Lcs2ag+JWd9LLpjNoidl6yxCYy5aNsRikxLQuGKzVzU=;
+        b=Ayl+orcfbAqfGMjiC6QuelrJDnjZSuNgMEyaP8XW044Lw/Msj3R5Uh9Fq9IDv6NPP7
+         O27jPcJqhYmO0KLKL55LS3DhLg21JEmjkGj/wT4HctWORmmuliJCgSbwLzg1daPSg2p6
+         UkS5dm0A2xXU/YX6kA6fg2Rblzkf0HtbhZMITDNkMPQSGPRI8yJo4kQZUgQjksLoL5Rb
+         Epqzd2tROrWFYmG36XnlkkfLZukH8T7+qW7dBdUij6Sd49WfKJ+Q97gfqG5IyFSlJgpT
+         tmSXEOCFOIjzEqKoH5Zz1rc2w2twDLdNMgG636NDK0KOsg3EDmhZoar1mJVzmW1FJfK7
+         KAIA==
+X-Gm-Message-State: APjAAAXv1l/8Wtt1xMy4ry275xwQTf9MLJsfXwRpf8TVFlXY/CqD2iLz
+        mjmGWeUPeHgyMIMhRDg3LkLaOA==
+X-Google-Smtp-Source: APXvYqybK0Nj/fHviz/pGDZHrRpbNts9oH2DSs1lQLgmXDT7aDSFDqouW7z3b4vqEk65dYuSlWyFoA==
+X-Received: by 2002:a7b:c776:: with SMTP id x22mr2668542wmk.55.1560415976540;
+        Thu, 13 Jun 2019 01:52:56 -0700 (PDT)
+Received: from dell ([2.27.35.243])
+        by smtp.gmail.com with ESMTPSA id c5sm1837184wma.19.2019.06.13.01.52.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Jun 2019 01:52:56 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 09:52:54 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     alokc@codeaurora.org, andy.gross@linaro.org,
+        david.brown@linaro.org, wsa+renesas@sang-engineering.com,
+        bjorn.andersson@linaro.org, linus.walleij@linaro.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org,
+        ard.biesheuvel@linaro.org, jlhugo@gmail.com,
+        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/8] i2c: i2c-qcom-geni: Provide support for ACPI
+Message-ID: <20190613085254.GA16364@dell>
+References: <20190610084213.1052-1-lee.jones@linaro.org>
+ <20190612103453.ccet2pneairnlpcc@ninjato>
+ <20190612104011.GA4660@dell>
+ <20190612104459.gvji3qxym5s4odfq@ninjato>
+ <20190613085204.GF4660@dell>
 MIME-Version: 1.0
-References: <20190609111732.GA2885@amd> <007701d520c7$c397bda0$4ac738e0$@net>
- <CAJZ5v0j2pb2WxSA+S44Mr-6bpOx-P9A_T2-sDG3CiWSqLMg3sA@mail.gmail.com> <008f01d52178$07b3be70$171b3b50$@net>
-In-Reply-To: <008f01d52178$07b3be70$171b3b50$@net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 13 Jun 2019 10:52:57 +0200
-Message-ID: <CAJZ5v0gRaDe6Fajdx3wqaLz9LQr6Z6iD+2yrrZeXJV+3HiAOZg@mail.gmail.com>
-Subject: Re: 5.2-rc2: low framerate in flightgear, cpu not running at full
- speed, thermal related?
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Zhang, Rui" <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190613085204.GF4660@dell>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 1:40 AM Doug Smythies <dsmythies@telus.net> wrote:
->
-> On 2019.06.12 14:25 Rafael J. Wysocki wrote:
-> > On Wed, Jun 12, 2019 at 4:45 AM Doug Smythies <dsmythies@telus.net> wrote:
-> >>
-> >> So, currently there seems to be 3 issues in this thread
-> >> (and I am guessing a little, without definitive data):
-> >>
-> >> 1.) On your system Kernel 5.4-rc2 (or 4) defaults to the intel_pstate CPU frequency
-> >> scaling driver and the powersave governor, but kernel 4.6 defaults to the
-> >> acpi-cpufreq CPU frequency scaling driver and the ondemand governor.
-> >
-> > Which means that intel_pstate works in the active mode by default and
-> > so it uses its internal governor.
->
-> Note sure what you mean by "internal governor"?
-> If you meant HWP (Hardware P-state), Pavel's processor doesn't have it.
-> If you meant the active powersave governor code within the driver, then agreed.
+On Thu, 13 Jun 2019, Lee Jones wrote:
 
-That's what I mean.
+> On Wed, 12 Jun 2019, Wolfram Sang wrote:
+> 
+> > 
+> > > There are no cross-subsystem build dependencies on any of these
+> > > patches.  The only reason they are bundled together in the same
+> > > patch-set is for cross-subsystem visibility and understanding.
+> > > 
+> > > There is wide interest in these devices.
+> > 
+> > I see. That would have been a great cover-letter, Lee ;) Thanks for the
+> > heads up!
+> 
+> :)
+> 
+> > > > Also, the current maintainer entry for this driver looks like:
+> > > > 
+> > > > drivers/i2c/busses/i2c-qcom-geni.c:
+> > > >         Andy Gross <agross@kernel.org> (maintainer:ARM/QUALCOMM SUPPORT)
+> > > >         David Brown <david.brown@linaro.org> (maintainer:ARM/QUALCOMM SUPPORT)
+> > > >         Alok Chauhan <alokc@codeaurora.org> (supporter:QUALCOMM GENERIC INTERFACE I2C DRIVER)
+> > > > 
+> > > > I didn't hear from those people yet, would be great to have their acks.
+> > > 
+> > > I will see if I can rouse them from their slumber.
+> > 
+> > Please do. If they are not to reach, we probably need to update the
+> > entry...
+> 
+> I contacted both of them.
+> 
+>  Andy doesn't touch anything that isn't QUP based (8994 and older).
+> 
+>  David doesn't deal with MSM platforms if Andy is available. 
+> 
+> So I guess the decision is yours.  Seeing at this patch is pretty
+> trivial and has our ACPI expert's Ack, the decision shouldn't be a
+> difficult one.
 
-> > That governor is more performance-oriented than ondemand and it very
-> > well may cause more power to be allocated for the processor - at the
-> > expense of the GPU.
->
-> O.K. I mainly use servers and so have no experience with possible GPU
-> verses CPU tradeoffs.
->
-> However, I did re-do my tests measuring energy instead of CPU frequency
-> and found very little difference between the acpi-cpufreq/ondemand verses
-> intel_pstate/powersave as a function of single threaded load. Actually,
-> I did the test twice, one at 20 hertz work/sleep frequency and also
-> at 67 hertz work/sleep frequency. (Of course, Pavel's processor might
-> well have a different curve, but it is a similar vintage to mine
-> i5-2520M verses i7-2600K.) The worst difference was approximately
-> 1.1 extra processor package watts (an extra 5.5%) in the 80% to 85%
-> single threaded load range at 67 hertz work/sleep frequency for
-> the intel-pstate/powersave driver/governor.
+BTW, v4 has collected Acks and a cover-letter. :)
 
-I see.  Then this shouldn't matter.
-
-> What am I saying? For a fixed amount of work to do per work/sleep cycle
-> (i.e. maybe per video frame related type work) while the CPU frequency Verses load
-> curves might differ, the resulting processor energy curve differs much less.
-> (i.e. the extra power for higher CPU frequency is for less time because it gets
-> the job done faster.) So, myself, I don't yet understand why only the one method
-> would have hit thermal throttling, but not the other (if indeed it doesn't).
-> Other differences between kernel 4.6 and 5.2-rc? might explain it.
-
-Right.
-
-I personally doubt that any thermal throttling is involved here.
-
-> I did all my tests on kernel 5.2-rc3, except that one example from kernel 4.4 on my
-> earlier reply, so that were not other variables than CPU scaling driver and
-> governor changes.
->
-> > The lower-than-expected frame rate may result from that, in principle.
->
-> > One way to mitigate that might be to use intel_pstate in the passive
-> > mode (pass intel_pstate=passive to the kernel in the command line)
-> > along with either ondemand or schedutil as the governor.
->
-> The CPU frequency verses load curves for this those two governors are very similar
-> for both the acpi_cpufreq and intel_cpufreq (which is the intel_pstate driver
-> in passive mode) drivers.
-
-That's what I would expect.
-
-Cheers!
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
