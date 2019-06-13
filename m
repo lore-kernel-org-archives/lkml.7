@@ -2,132 +2,150 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B708C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A02C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E59A20449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0284820449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389159AbfFMQdJ (ORCPT
+        id S2392521AbfFMQdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:33:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:35930 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730837AbfFMIMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:12:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43A7C367;
-        Thu, 13 Jun 2019 01:12:35 -0700 (PDT)
-Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.40.191])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A42093F557;
-        Thu, 13 Jun 2019 01:12:31 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Roman Penyaev <rpenyaev@suse.de>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH] mm/vmalloc: Check absolute error return from vmap_[p4d|pud|pmd|pte]_range()
-Date:   Thu, 13 Jun 2019 13:42:31 +0530
-Message-Id: <1560413551-17460-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 13 Jun 2019 12:33:12 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:42736 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730836AbfFMIMC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:12:02 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 8539480343; Thu, 13 Jun 2019 10:11:48 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 10:11:58 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "'Rafael J. Wysocki'" <rafael@kernel.org>,
+        'kernel list' <linux-kernel@vger.kernel.org>,
+        'ACPI Devel Maling List' <linux-acpi@vger.kernel.org>,
+        "'Zhang, Rui'" <rui.zhang@intel.com>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        'Viresh Kumar' <viresh.kumar@linaro.org>,
+        'Linux PM' <linux-pm@vger.kernel.org>,
+        'Thomas Gleixner' <tglx@linutronix.de>,
+        'Ingo Molnar' <mingo@redhat.com>,
+        'Borislav Petkov' <bp@alien8.de>,
+        "'H. Peter Anvin'" <hpa@zytor.com>,
+        'the arch/x86 maintainers' <x86@kernel.org>
+Subject: Re: 5.2-rc2: low framerate in flightgear, cpu not running at full
+ speed, thermal related?
+Message-ID: <20190613081158.GA6853@amd>
+References: <20190609111732.GA2885@amd>
+ <007701d520c7$c397bda0$4ac738e0$@net>
+ <CAJZ5v0j2pb2WxSA+S44Mr-6bpOx-P9A_T2-sDG3CiWSqLMg3sA@mail.gmail.com>
+ <008f01d52178$07b3be70$171b3b50$@net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
+Content-Disposition: inline
+In-Reply-To: <008f01d52178$07b3be70$171b3b50$@net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vmap_pte_range() returns an -EBUSY when it encounters a non-empty PTE. But
-currently vmap_pmd_range() unifies both -EBUSY and -ENOMEM return code as
--ENOMEM and send it up the call chain which is wrong. Interestingly enough
-vmap_page_range_noflush() tests for the absolute error return value from
-vmap_p4d_range() but it does not help because -EBUSY has been merged with
--ENOMEM. So all it can return is -ENOMEM. Fix this by testing for absolute
-error return from vmap_pmd_range() all the way up to vmap_p4d_range().
 
-Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Roman Penyaev <rpenyaev@suse.de>
-Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
+--PNTmBPCT7hxwcZjr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- mm/vmalloc.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+Hi!
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 7350a124524b..6c7dd8df23c3 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -165,14 +165,16 @@ static int vmap_pmd_range(pud_t *pud, unsigned long addr,
- {
- 	pmd_t *pmd;
- 	unsigned long next;
-+	int err = 0;
- 
- 	pmd = pmd_alloc(&init_mm, pud, addr);
- 	if (!pmd)
- 		return -ENOMEM;
- 	do {
- 		next = pmd_addr_end(addr, end);
--		if (vmap_pte_range(pmd, addr, next, prot, pages, nr))
--			return -ENOMEM;
-+		err = vmap_pte_range(pmd, addr, next, prot, pages, nr);
-+		if (err)
-+			return err;
- 	} while (pmd++, addr = next, addr != end);
- 	return 0;
- }
-@@ -182,14 +184,16 @@ static int vmap_pud_range(p4d_t *p4d, unsigned long addr,
- {
- 	pud_t *pud;
- 	unsigned long next;
-+	int err = 0;
- 
- 	pud = pud_alloc(&init_mm, p4d, addr);
- 	if (!pud)
- 		return -ENOMEM;
- 	do {
- 		next = pud_addr_end(addr, end);
--		if (vmap_pmd_range(pud, addr, next, prot, pages, nr))
--			return -ENOMEM;
-+		err = vmap_pmd_range(pud, addr, next, prot, pages, nr);
-+		if (err)
-+			return err;
- 	} while (pud++, addr = next, addr != end);
- 	return 0;
- }
-@@ -199,14 +203,16 @@ static int vmap_p4d_range(pgd_t *pgd, unsigned long addr,
- {
- 	p4d_t *p4d;
- 	unsigned long next;
-+	int err = 0;
- 
- 	p4d = p4d_alloc(&init_mm, pgd, addr);
- 	if (!p4d)
- 		return -ENOMEM;
- 	do {
- 		next = p4d_addr_end(addr, end);
--		if (vmap_pud_range(p4d, addr, next, prot, pages, nr))
--			return -ENOMEM;
-+		err = vmap_pud_range(p4d, addr, next, prot, pages, nr);
-+		if (err)
-+			return err;
- 	} while (p4d++, addr = next, addr != end);
- 	return 0;
- }
--- 
-2.20.1
+> On 2019.06.12 14:25 Rafael J. Wysocki wrote:
+> > On Wed, Jun 12, 2019 at 4:45 AM Doug Smythies <dsmythies@telus.net> wro=
+te:
+> >>
+> >> So, currently there seems to be 3 issues in this thread
+> >> (and I am guessing a little, without definitive data):
+> >>
+> >> 1.) On your system Kernel 5.4-rc2 (or 4) defaults to the intel_pstate =
+CPU frequency
+> >> scaling driver and the powersave governor, but kernel 4.6 defaults to =
+the
+> >> acpi-cpufreq CPU frequency scaling driver and the ondemand governor.
+> >
+> > Which means that intel_pstate works in the active mode by default and
+> > so it uses its internal governor.
+>=20
+> Note sure what you mean by "internal governor"?
+> If you meant HWP (Hardware P-state), Pavel's processor doesn't have it.
+> If you meant the active powersave governor code within the driver, then a=
+greed.
+>=20
+> > That governor is more performance-oriented than ondemand and it very
+> > well may cause more power to be allocated for the processor - at the
+> > expense of the GPU.
+>=20
+> O.K. I mainly use servers and so have no experience with possible GPU
+> verses CPU tradeoffs.
+>=20
+> However, I did re-do my tests measuring energy instead of CPU frequency
+> and found very little difference between the acpi-cpufreq/ondemand verses
+> intel_pstate/powersave as a function of single threaded load. Actually,
+> I did the test twice, one at 20 hertz work/sleep frequency and also
+> at 67 hertz work/sleep frequency. (Of course, Pavel's processor might
+> well have a different curve, but it is a similar vintage to mine
+> i5-2520M verses i7-2600K.) The worst difference was approximately
+> 1.1 extra processor package watts (an extra 5.5%) in the 80% to 85%
+> single threaded load range at 67 hertz work/sleep frequency for
+> the intel-pstate/powersave driver/governor.=20
+>=20
+> What am I saying? For a fixed amount of work to do per work/sleep cycle
+> (i.e. maybe per video frame related type work) while the CPU frequency Ve=
+rses load
+> curves might differ, the resulting processor energy curve differs much le=
+ss.
+> (i.e. the extra power for higher CPU frequency is for less time because i=
+t gets
+> the job done faster.) So, myself, I don't yet understand why only the one=
+ method
+> would have hit thermal throttling, but not the other (if indeed it
+> doesn't).
 
+It seems there are serious differences in reporting :-(. How do I
+determine which frequency CPU really runs at, in 4.6 kernel?
+
+But it seems that your assumptions are incorrect for my workload.
+
+flightgear is single-threaded, and in my configuration saturates the
+CPU, because it would like to achieve higher framerate than my system
+is capable of.
+
+> Just for information: CPU frequency verses single threaded load curves
+> for the conservative governor is quite different between the two drivers.
+> (tests done in February, perhaps I should re-do and also look at energy
+> at the same time, or instead of CPU frequency.)
+
+So this might be my problem?
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--PNTmBPCT7hxwcZjr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0CBU4ACgkQMOfwapXb+vIA2ACgosp1TsX5OkrWOaRWttdwzNPP
+S8EAoI+okCL2bRqt3AKPFbSPngilmwwC
+=fxjZ
+-----END PGP SIGNATURE-----
+
+--PNTmBPCT7hxwcZjr--
