@@ -2,113 +2,68 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7ECC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10531C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 689BF215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F05215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qsu+Z8BV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392637AbfFMQhH (ORCPT
+        id S2392621AbfFMQhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:37:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35270 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730526AbfFMHRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 03:17:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 45815AF05;
-        Thu, 13 Jun 2019 07:17:50 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 051E71E4328; Thu, 13 Jun 2019 09:17:47 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 09:17:47 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Ira Weiny <ira.weiny@intel.com>, Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190613071746.GA26505@quack2.suse.cz>
-References: <20190606104203.GF7433@quack2.suse.cz>
- <20190606195114.GA30714@ziepe.ca>
- <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
- <20190607103636.GA12765@quack2.suse.cz>
- <20190607121729.GA14802@ziepe.ca>
- <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
- <20190612102917.GB14578@quack2.suse.cz>
- <20190612114721.GB3876@ziepe.ca>
- <20190612120907.GC14578@quack2.suse.cz>
- <CAPcyv4ikn219XUgHwsPdYp06vBNAJB9Rk-hjZA-fYT4GB3gi+w@mail.gmail.com>
+        Thu, 13 Jun 2019 12:37:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54446 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbfFMHZT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 03:25:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=atee/ZdPPEd8Kc7wql5pRPCT+Wff4w6HVGQI7aAWhwM=; b=qsu+Z8BVRHTJPWnoQY613CKD9
+        eXGYx43YzeHeljEWLiZAPgkgkg5CDvxnmswUg91Nb9UnuKcoRJP8KGc1I/OO2f3Bvv7tCdlOlTPVk
+        LucWW/pLJ7+y/h0GG/s+8o0U2lwsM2u+gW7jlOey5g4g8CXzpf99NgthmTK35fALCUVL4aNsZBN3T
+        OPWv7XDcORpWWKSc5EbIoZXYyE1H3OwogopkyBS2pIdv6X8QJANu1eQo4jTmBCe1c/lw7UxYk4tl1
+        9nsmwdbN793S+2O4AZSg/ZAGrz2Jsid0Gy0S2JCwMyEtPJMhZGnmIs1/QgMCN19+7vYXRrHO+HoVL
+        j7j0/d6gw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbK6o-0001uE-Re; Thu, 13 Jun 2019 07:25:18 +0000
+Date:   Thu, 13 Jun 2019 00:25:18 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        palmer@sifive.com
+Subject: Re: [PATCH] MAINTAINERS: change the arch/riscv git tree to the new
+ shared tree
+Message-ID: <20190613072518.GA1327@infradead.org>
+References: <20190613070721.8341-1-paul.walmsley@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4ikn219XUgHwsPdYp06vBNAJB9Rk-hjZA-fYT4GB3gi+w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190613070721.8341-1-paul.walmsley@sifive.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 12-06-19 11:41:53, Dan Williams wrote:
-> On Wed, Jun 12, 2019 at 5:09 AM Jan Kara <jack@suse.cz> wrote:
-> >
-> > On Wed 12-06-19 08:47:21, Jason Gunthorpe wrote:
-> > > On Wed, Jun 12, 2019 at 12:29:17PM +0200, Jan Kara wrote:
-> > >
-> > > > > > The main objection to the current ODP & DAX solution is that very
-> > > > > > little HW can actually implement it, having the alternative still
-> > > > > > require HW support doesn't seem like progress.
-> > > > > >
-> > > > > > I think we will eventually start seein some HW be able to do this
-> > > > > > invalidation, but it won't be universal, and I'd rather leave it
-> > > > > > optional, for recovery from truely catastrophic errors (ie my DAX is
-> > > > > > on fire, I need to unplug it).
-> > > > >
-> > > > > Agreed.  I think software wise there is not much some of the devices can do
-> > > > > with such an "invalidate".
-> > > >
-> > > > So out of curiosity: What does RDMA driver do when userspace just closes
-> > > > the file pointing to RDMA object? It has to handle that somehow by aborting
-> > > > everything that's going on... And I wanted similar behavior here.
-> > >
-> > > It aborts *everything* connected to that file descriptor. Destroying
-> > > everything avoids creating inconsistencies that destroying a subset
-> > > would create.
-> > >
-> > > What has been talked about for lease break is not destroying anything
-> > > but very selectively saying that one memory region linked to the GUP
-> > > is no longer functional.
-> >
-> > OK, so what I had in mind was that if RDMA app doesn't play by the rules
-> > and closes the file with existing pins (and thus layout lease) we would
-> > force it to abort everything. Yes, it is disruptive but then the app didn't
-> > obey the rule that it has to maintain file lease while holding pins. Thus
-> > such situation should never happen unless the app is malicious / buggy.
+On Thu, Jun 13, 2019 at 12:07:21AM -0700, Paul Walmsley wrote:
+> Palmer, with Konstantin's gracious help, set up a shared kernel.org
+> git tree for arch/riscv patches going forward.  Change the MAINTAINERS
+> file accordingly.
 > 
-> When you say 'close' do you mean the final release of the fd? The vma
-> keeps a reference to a 'struct file' live even after the fd is closed.
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
 
-When I say 'close', I mean a call to ->release file operation which happens
-when the last reference to struct file is dropped. I.e., when all file
-descriptors and vmas (and possibly other places holding struct file
-reference) are gone.
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Should you be added to the maintainers?  Is Albert still around, as
+I see a lot of people Ccing him, but never getting an answer?
