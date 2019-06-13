@@ -2,109 +2,100 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D2DC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5AEC31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750DB206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C146E206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560440394;
-	bh=SdYvcvpIuDk/s3wACj+cbm+YTXw5nIkTLv69krDYaXI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ap4ZMpyflYoV9Umzj/urk0zrN/C4OdjHVpQ+VskdZAMt9XSKo8+VoSYOZhr0ppUOQ
-	 ZgtfYlBH1isc31OmxlZCGKjj8pT5AsytbOX0amZBZK65gWhp+9sqdPhrfI1yi8SbYu
-	 fWLiNWqw9TIuZfR1mF2czNBygWTfG6uI2E6tGhfA=
+	s=default; t=1560440404;
+	bh=3ceyPHgqycnCTWdzbHjsrsnc1YNyzied3A0TUm/Et98=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PWvfGuP/Tj0fvnki3RPcozV5OBBT4VDKaLYdHX1jc5l9iZomI5tynOd8SIQrewYHi
+	 pjaGPQp4YL+iCHMKnJlxbj9OXNRzX4TiPJAfZ++xo5/2FYxz2l2hm042Yg22UYCoeu
+	 Po8/wq2oLgHXe3MTr5EFvbSjh6ZuFDRQ6plQ8Ecg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388628AbfFMPjw (ORCPT
+        id S1733039AbfFMPkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:39:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387794AbfFMPjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:39:47 -0400
-Received: from localhost (unknown [131.107.160.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6198206BB;
-        Thu, 13 Jun 2019 15:39:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560440386;
-        bh=SdYvcvpIuDk/s3wACj+cbm+YTXw5nIkTLv69krDYaXI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2n72pz+sLhZE7niX4Y8ETQpvE5PXK7IK+1WxN/bH1xg6F8HTXfM27lUR/1P0obGyt
-         YDsSttnAymHBVaW20g5sGzM3TKwRiv8bMG9YTMlyg7sA/eVPHTwR0Q3K/VMaO73y9d
-         /X8unpBrVDXNfQzOT7xIUbw8lFTA+TyXGHMpYptU=
-Date:   Thu, 13 Jun 2019 11:39:46 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
-Subject: Re: [PATCH 4.14 61/81] ALSA: seq: Protect in-kernel ioctl calls with
- mutex
-Message-ID: <20190613153946.GG1513@sasha-vm>
-References: <20190613075649.074682929@linuxfoundation.org>
- <20190613075653.581995283@linuxfoundation.org>
- <s5hzhmlluwx.wl-tiwai@suse.de>
- <20190613091122.GA31122@kroah.com>
- <s5hv9x9luek.wl-tiwai@suse.de>
+        Thu, 13 Jun 2019 11:40:02 -0400
+Received: from casper.infradead.org ([85.118.1.10]:33140 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731908AbfFMJyH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:54:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=0DKB9zhJLJWz7Ucy0xQYpQuP0DMygUsU5rmkGh0Xz9E=; b=ehpVYDyXjcKXf+A96uUPmbjpJw
+        nAODNWeyWF4cwmRynkTd63OL7t7JI5IAb9pmMl5PPxjq2usrYufnmCuay8ibdyx2CTK9xoqZcpwGX
+        ptBhbzPyIMmjdKwyrYqrZlFqfl4VEZabWhbkq8WcLeTegGHV/+J/KAHOq9A1V4KN6Rj15FVXiS9eZ
+        4rzhFvA0E3mC/Mh9lfKGAVH0PDhDNvw22bYK5NXSJVPH/b5qQtkbrj6gSHg71IYR4v0ivmcY6Udc1
+        pfb2pUAga32uwLVccsS61CjTTTf6z8GEtPr5L1wIt0fnzLwKk17+Xg8mQJHGZEgP2zVL3d3AvTUaL
+        elPt7f0w==;
+Received: from 201.86.169.251.dynamic.adsl.gvt.net.br ([201.86.169.251] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbMQg-0000Y8-Ew; Thu, 13 Jun 2019 09:53:59 +0000
+Date:   Thu, 13 Jun 2019 06:53:55 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jerry Hoemann <jerry.hoemann@hpe.com>
+Cc:     linux@roeck-us.net, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] docs: watchdog: Fix build error.
+Message-ID: <20190613065355.117df659@coco.lan>
+In-Reply-To: <20190613000237.377-2-jerry.hoemann@hpe.com>
+References: <20190613000237.377-1-jerry.hoemann@hpe.com>
+        <20190613000237.377-2-jerry.hoemann@hpe.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <s5hv9x9luek.wl-tiwai@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:13:55AM +0200, Takashi Iwai wrote:
->On Thu, 13 Jun 2019 11:11:22 +0200,
->Greg Kroah-Hartman wrote:
->>
->> On Thu, Jun 13, 2019 at 11:02:54AM +0200, Takashi Iwai wrote:
->> > On Thu, 13 Jun 2019 10:33:44 +0200,
->> > Greg Kroah-Hartman wrote:
->> > >
->> > > [ Upstream commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32 ]
->> > >
->> > > ALSA OSS sequencer calls the ioctl function indirectly via
->> > > snd_seq_kernel_client_ctl().  While we already applied the protection
->> > > against races between the normal ioctls and writes via the client's
->> > > ioctl_mutex, this code path was left untouched.  And this seems to be
->> > > the cause of still remaining some rare UAF as spontaneously triggered
->> > > by syzkaller.
->> > >
->> > > For the sake of robustness, wrap the ioctl_mutex also for the call via
->> > > snd_seq_kernel_client_ctl(), too.
->> > >
->> > > Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
->> > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
->> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
->> >
->> > This commit is reverted later by commit f0654ba94e33.
->> > So please drop this.  The proper fix is done later by commit
->> > 7c32ae35fbf9 ("ALSA: seq: Cover unsubscribe_port() in list_mutex")
->> >
->> > Ditto for 4.19.y and 5.1.y.
->>
->> Now dropped everywhere, and I added 7c32ae35fbf9 ("ALSA: seq: Cover
->> unsubscribe_port() in list_mutex") everywhere instead.
->
->Thanks!
->
->BTW, do we have a systematic check whether the selected stable commit
->is reverted in a later commit?  At least, you can track it as long as
->Fixes tag is properly set.
+Em Wed, 12 Jun 2019 18:02:37 -0600
+Jerry Hoemann <jerry.hoemann@hpe.com> escreveu:
 
-I have that scripting in place, and I usually check it once before I
-send the initial reviews and then once Greg does the -rc release.
+> make htmldocs fails due to missing blank line following header.
+> 
+> Signed-off-by: Jerry Hoemann <jerry.hoemann@hpe.com>
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
---
+> ---
+>  Documentation/watchdog/watchdog-parameters.rst | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/watchdog/watchdog-parameters.rst b/Documentation/watchdog/watchdog-parameters.rst
+> index 01023382ea73..a3985cc5aeda 100644
+> --- a/Documentation/watchdog/watchdog-parameters.rst
+> +++ b/Documentation/watchdog/watchdog-parameters.rst
+> @@ -12,6 +12,7 @@ providing kernel parameters for builtin drivers versus loadable
+>  modules.
+>  
+>  -------------------------------------------------
+> +
+>  watchdog core:
+>      open_timeout:
+>  	Maximum time, in seconds, for which the watchdog framework will take
+> @@ -22,6 +23,7 @@ watchdog core:
+>  	fallback logic in the bootloader to try something else.
+>  
+>  -------------------------------------------------
+> +
+>  acquirewdt:
+>      wdt_stop:
+>  	Acquire WDT 'stop' io port (default 0x43)
+
+
+
 Thanks,
-Sasha
+Mauro
