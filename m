@@ -2,97 +2,122 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD8CC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D65C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F7220679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441961;
-	bh=P1wkxTZGOpT5BCcrFmtqkjjbqGKiBUwFhsHjv9bjMJU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SJV+1P2Xlw9BAsGHh0f7sp/FSRUAmqDXaSOFYJt9vp25f4dzUpz/7XB03qV88/8Xj
-	 QFbIRJRs9HhpMcYwyKIgE1oH4VDmT/sEnh1TlKMDP/C2fESLqcnfVRbgn+ELZGrPAx
-	 SpSpohpbZsvkAo3gg5v7Encmvh+O+ilnhQfNJ6Yk=
+	by mail.kernel.org (Postfix) with ESMTP id EBAB620679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=globallogic.com header.i=@globallogic.com header.b="OhQ1gd9h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391268AbfFMQGA (ORCPT
+        id S2391256AbfFMQF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:06:00 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45168 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391139AbfFMQF4 (ORCPT
+        Thu, 13 Jun 2019 12:05:57 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36000 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391035AbfFMQFw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:05:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=k1BfP3/B157lk2y6ylx2EwJnrgPJxO1VUkk949sZ92E=; b=jkH3TRu+zstcpIvrdgfMif11J
-        zlZP1iF/JvPfRZohZ8QyAuP9FkTT6xsvv6hAwpQ7+0yLNjuWtgUNiAGsRaBIRF0sU3jKF1K1ddtOA
-        F6/ClT0UpEbyRRtrhCP1rQy+AuWXaYWmYnl0pmw7zHN4LBiwz3aPvk6clz9aoymb5ATw4=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hbSEY-0005Hv-Ow; Thu, 13 Jun 2019 16:05:50 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 2F1AD440046; Thu, 13 Jun 2019 17:05:50 +0100 (BST)
-Date:   Thu, 13 Jun 2019 17:05:50 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Nisha Kumari <nishakumari@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com,
-        david.brown@linaro.org, linux-kernel@vger.kernel.org,
-        kgunda@codeaurora.org, rnayak@codeaurora.org
-Subject: Re: [PATCH 1/4] dt-bindings: regulator: Add labibb regulator
-Message-ID: <20190613160550.GM5316@sirena.org.uk>
-References: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
- <1560337252-27193-2-git-send-email-nishakumari@codeaurora.org>
+        Thu, 13 Jun 2019 12:05:52 -0400
+Received: by mail-ed1-f66.google.com with SMTP id k21so28615271edq.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 09:05:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=globallogic.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mLABAOBxUi7apPgtRPROSyumsCPedDiB3eVS3aen4Uc=;
+        b=OhQ1gd9hI7gUmtNiW/OqjsHiQzwW6iZW8IGNtHnPK8zug5HhC3kYfdVVJXheeoRaC6
+         tbmDhYFOS083pJUz6jcfjmqIHLpaa597AhPSvEEAQBLMcwwRZdZ9O7lGn8Jrx1FkCvdA
+         RfoNRWL1Q1taE5K1YXiR/zwm5WR9EoJjDgXouRhoyKnyxhNXGKOCVqG682PKrplC0mP1
+         Qpfiw8SI/tUrfiIzQe/qG1BF+PWPkB7bpYVgOpQ13Zx0Rbd4MCnxbKjoLNKRwofxot0+
+         wUn9KJjxcqacAAr3a+vEKvbp/n79eMo2Fiugl2fTd1aDgFw1RPt3MF66M1s1hvXWy13C
+         7JuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mLABAOBxUi7apPgtRPROSyumsCPedDiB3eVS3aen4Uc=;
+        b=s0e/Ci0MhSoV4RmEyZfb8bFmJ7Y0LBWOGtVMXOoyYc7WDk1vD7oCtJmjNGh8zoXccb
+         0hQptiPw8zXvi8scIZTKI+jHysEuO08xVbD93p0EbBWzAeSEfIBOMq5GsJJkHdYzuRZC
+         bBjMo0KIuDpUpUuzH2fE7U+nL1B9iIO0BKNgZaDb+dgInxzPHSfqUowJEH63TJ2W14Dz
+         4lcwdCdT0MVIytAiO+MW9JAbN+Axl+yC1lFtUoQaTgM0fSf7CLwAhQOSxMfUcgXe5uxN
+         E5xDrWQtFqPhIkW7W9EfIFZXC0mgpZFifufWg+a3BXnEaexuHmyNIcFnLv+h2SpMr2x/
+         829w==
+X-Gm-Message-State: APjAAAWXipI0K31XCKTuSOl+tBLJLWbL3+ZTmcXTWlAm3blSiEd18fjs
+        8DXMxlETTkumuIA5wWwLHOAQAOpC5WNiQySwKP06GQ==
+X-Google-Smtp-Source: APXvYqw9eTL1smFdgM5CBMWe55qQwq7Ixm6mxLmSKQlk/U+TTmtbbBQA33hoHb3lK2Sjp3Q8KGTRfudgroyIOzz5krs=
+X-Received: by 2002:a50:9918:: with SMTP id k24mr47972367edb.173.1560441949919;
+ Thu, 13 Jun 2019 09:05:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1rguoi8KZGYj2k4L"
-Content-Disposition: inline
-In-Reply-To: <1560337252-27193-2-git-send-email-nishakumari@codeaurora.org>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190612163144.18486-1-roman.stratiienko@globallogic.com>
+ <20190612163144.18486-2-roman.stratiienko@globallogic.com>
+ <20190613135241.aghcrrz7rg2au3bw@MacBook-Pro-91.local> <CAODwZ7v=RSsmVj5GjcvGn2dn+ejLRBHZ79x-+S9DrX4GoXuVaQ@mail.gmail.com>
+ <adc59944-7654-ea38-8dfc-f91361a80987@redhat.com>
+In-Reply-To: <adc59944-7654-ea38-8dfc-f91361a80987@redhat.com>
+From:   Roman Stratiienko <roman.stratiienko@globallogic.com>
+Date:   Thu, 13 Jun 2019 19:05:38 +0300
+Message-ID: <CAODwZ7u+f9vco8h1ZAwwoCefB6kM9gi4L_Mc7muLXYkwHRVc8Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] nbd: add support for nbd as root device
+To:     Eric Blake <eblake@redhat.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>, linux-kernel@vger.kernel.org,
+        nbd@other.debian.org,
+        Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>,
+        linux-block@vger.kernel.org, axboe@kernel.dkn.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 13, 2019 at 6:14 PM Eric Blake <eblake@redhat.com> wrote:
+>
+> On 6/13/19 9:45 AM, Roman Stratiienko wrote:
+>
+> >>
+> >> Just throw nbd-client in your initramfs.  Every nbd server has it's own
+> >> handshake protocol, embedding one particular servers handshake protocol into the
+> >> kernel isn't the answer here.  Thanks,
+>
+> The handshake protocol is well-specified:
+> https://github.com/NetworkBlockDevice/nbd/blob/cdb0bc57f3faefd7a5562d57ad57cd990781c415/doc/proto.md
+>
+> All servers implement various subsets of that document for the handshake.
+>
+> > Also, as far as I know mainline nbd-server daemon have only 2
+> > handshake protocols. So called OLD-STYLE and NEW-STYLE. And OLD-STYLE
+> > is no longer supported. So it should not be a problem, or please fix
+> > me if I'm wrong.
+>
+> You are correct that oldstyle is no longer recommended. However, the
+> current NBD specification states that newstyle has two different
+> flavors, NBD_OPT_EXPORT_NAME (which you used, but is also old) and
+> NBD_OPT_GO (which is newer, but is more likely to encounter differences
+> where not all servers support it).
+>
+> The NBD specification includes a compatibility baseline:
+> https://github.com/NetworkBlockDevice/nbd/blob/cdb0bc57f3faefd7a5562d57ad57cd990781c415/doc/proto.md#compatibility-and-interoperability
+>
+> and right now, NBD_OPT_GO (and _not_ NBD_OPT_EXPORT_NAME) is the
+> preferred way forward.  As long as your handshake implementation
+> complies with the baseline documented there, you'll have maximum
+> portability to the largest number of servers that also support the
+> baseline - but not all servers are up to that baseline yet.
+>
+> So, this becomes a question of how much are you reinventing baseline
+> portability handshake concerns in the kernel, vs. in initramfs.
+>
+> --
+> Eric Blake, Principal Software Engineer
+> Red Hat, Inc.           +1-919-301-3226
+> Virtualization:  qemu.org | libvirt.org
+>
 
---1rguoi8KZGYj2k4L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you for the review comments, I will address them in v2.
 
-On Wed, Jun 12, 2019 at 04:30:49PM +0530, Nisha Kumari wrote:
-
-> +- reg:				Specifies the SPMI address and size for this peripheral.
-> +- regulator-name:		A string used to describe the regulator.
-
-Why specifically list regulator-name here?  This is just one of the many
-generic regulator properties that could be applied.
-
---1rguoi8KZGYj2k4L
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0CdF0ACgkQJNaLcl1U
-h9Chrgf/X5b1ow0UwfKQUAoQ7UmNNaW+VQnSWNn1sjJedj/BegsNd1myeOJCje7k
-2ED26OFMqxwVb41tReWNbjdPpToF8AOicHj1O71JXgTogMs2nbiE3n9EMlpIolMZ
-Y2wJMwYOSjorIALXWPqN3Af+YS2tL4Qsn736zF+0N8VukEReuCDZCC9MsNL28MkK
-UV45QsVBB1ZOgEGXQUuS9a6/f+XM3PjFDXiOMLdIV1INBh1feoxZPLQs/pKXD58A
-EVbSe9/AZWIZufMbNDbSxm8lRleSjlhueHPz0eD5zS2Zz1xEHkvNgOGDUsuOWclo
-jGPIFi4yXjnaFzot+CMTsJW8I63e9g==
-=oJNP
------END PGP SIGNATURE-----
-
---1rguoi8KZGYj2k4L--
+--
+Regards,
+Roman
