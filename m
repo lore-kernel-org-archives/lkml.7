@@ -2,103 +2,159 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CA4C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE43BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 817852133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:58:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="VvRUdVRn"
+	by mail.kernel.org (Postfix) with ESMTP id 860182133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:59:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560455947;
+	bh=dXbU2N6u2O6/521NTZLyOncgS6McSj2lgWl0Kb5bGtY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p7jJlq+G4VW3T8/ZvaUmY/4Rt6fpeEQ+nF/nrWliKk+mOg2j9cUFNshebo48cMClt
+	 gBYSsr2wYWDnAg+xTWXicKlRSFPm3eW9bLah48HsqafPDqUn8Excuz0L9nyJlQJ8cL
+	 ErrjWl/FESJGczOhDokbeaE8L+i1aL3yYk+kZ77E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbfFMT6v (ORCPT
+        id S1729732AbfFMT7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 15:58:51 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40262 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729559AbfFMT6u (ORCPT
+        Thu, 13 Jun 2019 15:59:06 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34713 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728981AbfFMT7G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:58:50 -0400
-Received: by mail-io1-f66.google.com with SMTP id n5so609335ioc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 12:58:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:references:in-reply-to:mime-version:thread-index:date
-         :message-id:subject:to:cc;
-        bh=0g3LShZij9OvLky32ww/mm8nsliTsm7gD3njRd6NCQk=;
-        b=VvRUdVRnyB4TuhZ+9+/oPM6pb8vxTclPrmvRFZ9PzavJCtkYfSYgjGNiCUQTux1nUl
-         9VjOQatdu+aPOowyvOuIY8hKioFj1wntgGyBXavSkEATXrC/5DcyjhYCe5Ag1uW/q8zp
-         fQGdKjxC19RzzJyIAL/Mw4avblUSP65mKGcmY=
+        Thu, 13 Jun 2019 15:59:06 -0400
+Received: by mail-qt1-f193.google.com with SMTP id m29so24066803qtu.1;
+        Thu, 13 Jun 2019 12:59:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:references:in-reply-to:mime-version
-         :thread-index:date:message-id:subject:to:cc;
-        bh=0g3LShZij9OvLky32ww/mm8nsliTsm7gD3njRd6NCQk=;
-        b=uR6oYkpElEWoVH2oLtPunWZzcoqVSn7IGsQzKOan/KlsHkWHZQ4xip4k7MqSXPKHUV
-         /QLdaZOWLCnqIERII/c2oeYC3PMHFABoIXmZrSUma3wo6ZE04F1o3dOMjDxAKRkt/ixH
-         Ka0j4OFHr6VK78N0WCZpOaw4vWjqLeIhvtfLE8PAvLSSmGDUquL8XX76QuXkWVXPwSaO
-         sT/LsejNJ6LxBC7YHAEyblg74PknImugNYIMlFMfyKQ2hwHGkKHmMtx6lARW91BNwl0j
-         byEoHTV1UCWCTABWPshfv0GwC2z1Fr788HFFxUGTdI4U3TD6qhg5I0fGnEaUz4ZGtcPx
-         Yv3A==
-X-Gm-Message-State: APjAAAXFI/Cq96CKxTtS++N3/KNnM9kYSHJRCS4B3AO8VGBXV0GRDHta
-        wM4E/o3RXsWf93fXgz5b+MvTiHQg6Q3k4Z/lMyogAA==
-X-Google-Smtp-Source: APXvYqxdGc8NyPROiaW5qZ3CjU9Mi5BWb0Y5+Ghq0hcByTKiBd2ar5O9a3Vi002QTGCiPnE/Sx2A/4naPXD8YwkquS4=
-X-Received: by 2002:a6b:f910:: with SMTP id j16mr7292522iog.256.1560455929090;
- Thu, 13 Jun 2019 12:58:49 -0700 (PDT)
-From:   Kashyap Desai <kashyap.desai@broadcom.com>
-References: <20190605190836.32354-1-hch@lst.de> <20190605190836.32354-11-hch@lst.de>
- <cd713506efb9579d1f69a719d831c28d@mail.gmail.com> <20190608081400.GA19573@lst.de>
-In-Reply-To: <20190608081400.GA19573@lst.de>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mABGHTQ4GLxORx7oxP2Dku+ogME6hgTlBgqCUM3jgVM=;
+        b=gZrMvojA/ZEydTjdebiAKmAvpVcdkr/28s5E5+ZvBsZM8oZ9S3iUnBG/xGzBYO1A46
+         uvvGPFaSwk5Iq6TtdLADyURX0nYfrSZGJDzSGQhsVUPk4Yv8UVk89o8T0cTASz4JtYFW
+         matpzJSqhDH+w7csmZTA5VWGYsbLQRLYfxXfqaQMI6Gp5N8OeAau5/6mkeAYwDMvgwwt
+         liCxhsslAwipidCKga2K5cZaNj54Bcj15yDCqWc/4fs8hx/dyWCMWYaQFfZVMWjyV6Fm
+         Pjg2lKo5ild9cKNxLnNl6SWhICfieKV/HNriQ/lQozHk2fVUSAilhQmcyeZnKoAFGY+S
+         u3nQ==
+X-Gm-Message-State: APjAAAWLcFzxMxLxlxIH5V7Yd4hkZ5Jzm8WaZUVVGREWTlhPPm6tDRMi
+        g3WNhw+t69XVcvzLTLlzzg==
+X-Google-Smtp-Source: APXvYqwyWBDaFVyAkanoZ+1z164tB8nWMUvp9oZM0IcqpT3ialpFjN8XMhTphktzom9B4B87tNVOng==
+X-Received: by 2002:aed:218b:: with SMTP id l11mr57399228qtc.66.1560455944697;
+        Thu, 13 Jun 2019 12:59:04 -0700 (PDT)
+Received: from localhost ([64.188.179.243])
+        by smtp.gmail.com with ESMTPSA id f20sm233551qkh.15.2019.06.13.12.59.03
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 12:59:04 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 13:59:03 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     allen <allen.chen@ite.com.tw>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>,
+        Johan Hovold <johan@kernel.org>,
+        Nickey Yang <nickey.yang@rock-chips.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ben Whitten <ben.whitten@gmail.com>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Add binding for IT6505.
+Message-ID: <20190613195903.GA23650@bogus>
+References: <1557307985-21228-1-git-send-email-allen.chen@ite.com.tw>
+ <1557307985-21228-2-git-send-email-allen.chen@ite.com.tw>
 MIME-Version: 1.0
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQNLjZIO2zMn7N+9xPobnDbFSu4o5gI2RJdJAgF+bYgBfxw4kaN/cE8Q
-Date:   Fri, 14 Jun 2019 01:28:47 +0530
-Message-ID: <98f6557ae91a7cdfe8069fcf7d788c88@mail.gmail.com>
-Subject: RE: [PATCH 10/13] megaraid_sas: set virt_boundary_mask in the scsi host
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Sebastian Ott <sebott@linux.ibm.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>,
-        PDL-MPT-FUSIONLINUX <mpt-fusionlinux.pdl@broadcom.com>,
-        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557307985-21228-2-git-send-email-allen.chen@ite.com.tw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> On Thu, Jun 06, 2019 at 09:07:27PM +0530, Kashyap Desai wrote:
-> > Hi Christoph, Changes for <megaraid_sas> and <mpt3sas> looks good. We
-> > want to confirm few sanity before ACK. BTW, what benefit we will see
-> > moving virt_boundry setting to SCSI mid layer ? Is it just modular
-> > approach OR any functional fix ?
->
-> The big difference is that virt_boundary now also changes the
-> max_segment_size, and this ensures that this limit is also communicated
-to
-> the DMA mapping layer.
-Is there any changes in API  blk_queue_virt_boundary? I could not find
-relevant code which account for this. Can you help ?
-Which git repo shall I use for testing ? That way I can confirm, I didn't
-miss relevant changes.
+On Wed, May 08, 2019 at 05:31:56PM +0800, allen wrote:
+> From: Allen Chen <allen.chen@ite.com.tw>
+> 
+> Add a DT binding documentation for IT6505.
+> 
+> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+> 
+> ---
+>  .../bindings/display/bridge/ite,it6505.txt         | 30 ++++++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  2 files changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
+> new file mode 100644
+> index 0000000..c3506ac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
+> @@ -0,0 +1,30 @@
+> +iTE it6505 DP bridge bindings
+> +
+> +Required properties:
+> +        - compatible: "ite,it6505"
+> +        - reg: i2c address of the bridge
+> +        - ovdd-supply: I/O voltage
+> +        - pwr18-supply: Core voltage
+> +        - interrupts: interrupt specifier of INT pin
+> +        - reset-gpios: gpio specifier of RESET pin
+> +
+> +Example:
+> +	it6505dptx: it6505dptx@5c {
+> +                compatible = "ite,it6505";
+> +                status = "okay";
+> +                interrupt-parent = <&pio>;
+> +                interrupts = <152 IRQ_TYPE_EDGE_RISING 152 0>;
+> +                reg = <0x5c>;
+> +                pinctrl-names = "default";
+> +                pinctrl-0 = <&it6505_pins>;
+> +                ovdd-supply = <&mt6358_vsim1_reg>;
+> +                pwr18-supply = <&it6505_pp18_reg>;
+> +                reset-gpios = <&pio 179 1>;
+> +                hpd-gpios = <&pio 9 0>;
 
-From your above explanation, it means (after this patch) max segment size
-of the MR controller will be set to 4K.
-Earlier it is possible to receive single SGE of 64K datalength (Since max
-seg size was 64K), but now the same buffer will reach the driver having 16
-SGEs (Each SGE will contain 4K length).
-Right ?
+HPD would be part of the connector, not this bridge chip if a GPIO is 
+used.
 
-Kashyap
+> +                extcon = <&usbc_extcon>;
+
+This should use the usb-connector binding if this is a Type C connector. 
+Or it should have a dp-connector node connection if just a DP connector.
+
+
+> +                port {
+> +                        it6505_in: endpoint {
+> +                                remote-endpoint = <&dpi_out>;
+> +                        };
+> +                };
+> +        };
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 2c3fc51..c088646 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -184,6 +184,7 @@ iom	Iomega Corporation
+>  isee	ISEE 2007 S.L.
+>  isil	Intersil
+>  issi	Integrated Silicon Solutions Inc.
+> +ite	iTE Tech. Inc.
+
+This file is a schema now, so you'll have to update this.
+
+>  itead	ITEAD Intelligent Systems Co.Ltd
+>  iwave  iWave Systems Technologies Pvt. Ltd.
+>  jdi	Japan Display Inc.
+> -- 
+> 1.9.1
+> 
