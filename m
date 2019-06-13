@@ -2,175 +2,100 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774ADC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B495BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7B02147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BB702147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:49:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="chmHWZKa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfFMStR (ORCPT
+        id S1728977AbfFMStx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:49:17 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:53714 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbfFMStQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:49:16 -0400
-Received: from 79.184.253.190.ipv4.supernova.orange.pl (79.184.253.190) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 53b4723736121aee; Thu, 13 Jun 2019 20:49:12 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [PATCH] PCI: PM: Skip devices in D0 for suspend-to-idle
-Date:   Thu, 13 Jun 2019 20:49:12 +0200
-Message-ID: <2649673.xutNDJ3zlI@kreacher>
-In-Reply-To: <2513600.jR9RdVMSR0@kreacher>
-References: <2513600.jR9RdVMSR0@kreacher>
+        Thu, 13 Jun 2019 14:49:53 -0400
+Received: from mail-eopbgr770055.outbound.protection.outlook.com ([40.107.77.55]:21977
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726626AbfFMStw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 14:49:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1OU9lSJh/MxSCvU+b6GGHMrg9xf+VVbINT732NyM6cw=;
+ b=chmHWZKa4pBSsNbHBGClGU0dpXxYwij/A97inb2cLY+48SrROPn5zPuqIbD6JnU57hqZhoo+cybb3NKZutB07kfqeLV68Ma1ia8vp+BEl1p4Abt0ik2rNCPdZ2o6LgTGFXPnic9LenJS3mLlu4Jt6WMh53ZRjYsxg3AOoPSUQZ4=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB5334.namprd05.prod.outlook.com (20.177.127.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.10; Thu, 13 Jun 2019 18:49:49 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::134:af66:bedb:ead9]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::134:af66:bedb:ead9%3]) with mapi id 15.20.1987.008; Thu, 13 Jun 2019
+ 18:49:49 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/5] x86/percpu semantics and fixes
+Thread-Topic: [PATCH v2 0/5] x86/percpu semantics and fixes
+Thread-Index: AQHVIe/qgqliRoqpQ0u4SMIVKzs9OKaZ7awA
+Date:   Thu, 13 Jun 2019 18:49:49 +0000
+Message-ID: <ED22D686-D425-43B9-A3FB-ED4A54B1C4DF@vmware.com>
+References: <20190613135445.318096781@infradead.org>
+In-Reply-To: <20190613135445.318096781@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4adc7644-03f6-4e98-be3f-08d6f02fe9d0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB5334;
+x-ms-traffictypediagnostic: BYAPR05MB5334:
+x-microsoft-antispam-prvs: <BYAPR05MB5334A8288A9A9018136BFEE1D0EF0@BYAPR05MB5334.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(39860400002)(136003)(366004)(53754006)(189003)(199004)(4326008)(99286004)(11346002)(446003)(71200400001)(5660300002)(54906003)(53546011)(71190400001)(6506007)(2616005)(6116002)(36756003)(316002)(3846002)(76176011)(476003)(66946007)(102836004)(6916009)(6246003)(478600001)(81156014)(81166006)(66476007)(64756008)(66556008)(66066001)(14454004)(14444005)(26005)(86362001)(76116006)(6436002)(305945005)(8936002)(486006)(66446008)(256004)(8676002)(53936002)(6486002)(2906002)(6512007)(33656002)(25786009)(68736007)(186003)(7736002)(229853002)(73956011)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5334;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: X9xbAM8TY2YqRluYEplpgpS8aa8oPKUdUOGSDcR0yHi0B6Tv0v4PLG8XYZMe0e6q3jgXW1897mPF5tn0aswCXAJGeIlB5qguyo7zB7ZxkWDk7+hifAE8rDLfrciCEi/o/iePbq80qiEg23kVaIrz7tncEYYizXGkHEoiA8DzHtnXEYKT2bzg911+PWw0nxg5dpKqipWIH65baVu/uH3ttPNFe5aVt3AAglb2xZ/f9RVekbHtEmsdr4zfGNtNLWm5uK9DKiQ3+9VqjVG4RV+RytHU6cNzt2oXL/oFWSQkiBaTAle3ej7he+5NxYJJ2OhN+//htCoI+M2ON+GdP2lLw3uEqrqIbXMf+09hOOXSTtxbFUV2B4OC/ia/daQQP2Pq4OXKQOTyxBGw05QDs/PotG9Pf5NlAL1Zo0DoUzdA4OY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2F8BE0D0342E97449AD54323C5522FB9@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4adc7644-03f6-4e98-be3f-08d6f02fe9d0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 18:49:49.5105
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5334
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, June 13, 2019 12:14:02 AM CEST Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Commit d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-> attempted to avoid a problem with devices whose drivers want them to
-> stay in D0 over suspend-to-idle and resume, but it did not go as far
-> as it should with that.
-> 
-> Namely, first of all, it is questionable to change the power state
-> of a PCI bridge with a device in D0 under it, but that is not
-> actively prevented from happening during system-wide PM transitions,
-> so use the skip_bus_pm flag introduced by commit d491f2b75237 for
-> that.
-> 
-> Second, the configuration of devices left in D0 (whatever the reason)
-> during suspend-to-idle need not be changed and attempting to put them
-> into D0 again by force may confuse some firmware, so explicitly avoid
-> doing that.
-> 
-> Fixes: d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> 
-> Tested on Dell XPS13 9360 with no issues.
-> 
-> ---
->  drivers/pci/pci-driver.c |   47 +++++++++++++++++++++++++++++++++++------------
->  1 file changed, 35 insertions(+), 12 deletions(-)
-> 
-> Index: linux-pm/drivers/pci/pci-driver.c
-> ===================================================================
-> --- linux-pm.orig/drivers/pci/pci-driver.c
-> +++ linux-pm/drivers/pci/pci-driver.c
-> @@ -524,7 +524,6 @@ static void pci_pm_default_resume_early(
->  	pci_power_up(pci_dev);
->  	pci_restore_state(pci_dev);
->  	pci_pme_restore(pci_dev);
-> -	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->  }
->  
->  /*
-> @@ -842,18 +841,16 @@ static int pci_pm_suspend_noirq(struct d
->  
->  	if (pci_dev->skip_bus_pm) {
->  		/*
-> -		 * The function is running for the second time in a row without
-> +		 * Either the device is a bridge with a child in D0 below it, or
-> +		 * the function is running for the second time in a row without
->  		 * going through full resume, which is possible only during
-> -		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
-> -		 * device was originally left in D0, so its power state should
-> -		 * not be changed here and the device register values saved
-> -		 * originally should be restored on resume again.
-> +		 * suspend-to-idle in a spurious wakeup case.  The device should
-> +		 * be in D0 at this point, but if it is a bridge, it may be
-> +		 * necessary to save its state.
->  		 */
-> -		pci_dev->state_saved = true;
-> -	} else if (pci_dev->state_saved) {
-> -		if (pci_dev->current_state == PCI_D0)
-> -			pci_dev->skip_bus_pm = true;
-> -	} else {
-> +		if (!pci_dev->state_saved)
-> +			pci_save_state(pci_dev);
-> +	} else if (!pci_dev->state_saved) {
->  		pci_save_state(pci_dev);
->  		if (pci_power_manageable(pci_dev))
->  			pci_prepare_to_sleep(pci_dev);
-> @@ -862,6 +859,22 @@ static int pci_pm_suspend_noirq(struct d
->  	dev_dbg(dev, "PCI PM: Suspend power state: %s\n",
->  		pci_power_name(pci_dev->current_state));
->  
-> +	if (pci_dev->current_state == PCI_D0) {
-> +		pci_dev->skip_bus_pm = true;
-> +		/*
-> +		 * Changing the power state of a PCI bridge with a device in D0
-> +		 * below it is questionable, so avoid doing that by setting the
-> +		 * skip_bus_pm flag for the parent bridge.
-> +		 */
-> +		if (pci_dev->bus->self)
-> +			pci_dev->bus->self->skip_bus_pm = true;
-> +	}
-> +
-> +	if (pci_dev->skip_bus_pm && !pm_suspend_via_firmware()) {
-> +		dev_dbg(dev, "PCI PM: Skipped\n");
-> +		goto Fixup;
-> +	}
-> +
->  	pci_pm_set_unknown_state(pci_dev);
->  
->  	/*
-> @@ -909,7 +922,16 @@ static int pci_pm_resume_noirq(struct de
->  	if (dev_pm_smart_suspend_and_suspended(dev))
->  		pm_runtime_set_active(dev);
->  
-> -	pci_pm_default_resume_early(pci_dev);
-> +	/*
-> +	 * In the suspend-to-idle case, devices left in D0 during suspend will
-> +	 * stay in D0, so it is not necessary to restore or update their
-> +	 * configuration here and attempting to put them into D0 again may
-> +	 * confuse some firmware, so avoid doing that.
-> +	 */
-> +	if (!pci_dev->skip_bus_pm || pm_suspend_via_firmware())
-> +		pci_pm_default_resume_early(pci_dev);
-> +
-> +	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->  
->  	if (pci_has_legacy_pm_support(pci_dev))
->  		return pci_legacy_resume_early(dev);
-> @@ -1200,6 +1222,7 @@ static int pci_pm_restore_noirq(struct d
->  	}
->  
->  	pci_pm_default_resume_early(pci_dev);
-> +	pci_fixup_device(pci_fixup_resume_early, pci_dev);
->  
->  	if (pci_has_legacy_pm_support(pci_dev))
->  		return pci_legacy_resume_early(dev);
-> 
-
-Bjorn, please let me know if you have any reservations here.
-
-Since this has been confirmed to fix a reported issue, I'm about to queue it up for 5.2-rc6.
-
-Cheers,
-Rafael
-
-
-
+PiBPbiBKdW4gMTMsIDIwMTksIGF0IDY6NTQgQU0sIFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5m
+cmFkZWFkLm9yZz4gd3JvdGU6DQo+IA0KPiBIaSBhbGwsDQo+IA0KPiBJIHN0aWxsIGhhdmUgdGhl
+c2UgcGF0Y2hlcyBzaXR0aW5nIGluIG15IHF1ZXVlIGFuZCBmaWd1cmVkIEknZCByZXBvc3QgdGhl
+bS4NCj4gDQo+IExhc3QgdGltZSBMaW51cyBwcm9wb3NlZCBhICIrbSIgYWx0ZXJuYXRpdmUgYXBw
+cm9hY2gsIGJ1dCB0aGF0IGdlbmVyYXRlcyBmYXINCj4gZmFyIHdvcnNlIGNvZGUgKEkndmUgbG9z
+dCB0aGUgcGF0Y2ggYW5kIG5vdCByZS1yYW4gdGhvc2UgbnVtYmVycywgYnV0IEkgc3VwcG9zZQ0K
+PiBJIGNhbiByZWRvIGlmIGZvdW5kIGltcG9ydGFudCkuDQoNCkkgcmVtZW1iZXIgSSB0cmllZCBp
+dCBhcyB3ZWxsIGFuZCBnb3QgdGhlIHNhbWUgcmVzdWx0cy4NCg0KPiBUaGVzZSBwYXRjaGVzIGhh
+dmUgYmVlbiB0aHJvdWdoIDBkYXkgZm9yIGEgd2hpbGUuDQoNCkZpbmFsbHksIEkgd291bGQgbm90
+IG5lZWQgdG8gY2FjaGUgc21wX3Byb2Nlc3Nvcl9pZCgpIG9uIHRoZSBzdGFjayB3aGVuIGl0DQpp
+cyB1c2VkIG11bHRpcGxlIHRpbWVz4oCm
