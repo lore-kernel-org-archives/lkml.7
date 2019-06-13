@@ -2,73 +2,87 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AB7C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336CDC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB2320896
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A4F221721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:11:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfFMTLN (ORCPT
+        id S1728071AbfFMTLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 15:11:13 -0400
-Received: from namei.org ([65.99.196.166]:38978 "EHLO namei.org"
+        Thu, 13 Jun 2019 15:11:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53962 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfFMTLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:11:12 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x5DJAmSG022560;
-        Thu, 13 Jun 2019 19:10:48 GMT
-Date:   Fri, 14 Jun 2019 05:10:48 +1000 (AEST)
-From:   James Morris <jmorris@namei.org>
-To:     Prakhar Srivastava <prsriva02@gmail.com>
-cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zohar@linux.ibm.com,
-        roberto.sassu@huawei.com, vgoyal@redhat.com
-Subject: Re: [PATCH V8 1/3] Define a new IMA hook to measure the boot command
- line arguments
-In-Reply-To: <20190612221549.28399-2-prsriva02@gmail.com>
-Message-ID: <alpine.LRH.2.21.1906140501300.14107@namei.org>
-References: <20190612221549.28399-1-prsriva02@gmail.com> <20190612221549.28399-2-prsriva02@gmail.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S1725842AbfFMTLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 15:11:25 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DA9A3307D866;
+        Thu, 13 Jun 2019 19:11:16 +0000 (UTC)
+Received: from treble (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8EC1719C67;
+        Thu, 13 Jun 2019 19:11:14 +0000 (UTC)
+Date:   Thu, 13 Jun 2019 14:11:12 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kairui Song <kasong@redhat.com>
+Subject: Re: [PATCH 8/9] x86/bpf: Convert asm comments to AT&T syntax
+Message-ID: <20190613191112.hinquqrdzl7u2lrt@treble>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <77fe02f7d575091b06f68f8eed256da94aee653f.1560431531.git.jpoimboe@redhat.com>
+ <E8372F56-269A-48A4-B80B-14FA664F8D41@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <E8372F56-269A-48A4-B80B-14FA664F8D41@fb.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 13 Jun 2019 19:11:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Jun 2019, Prakhar Srivastava wrote:
-
-> This patch adds support in ima to measure kexec cmdline args
-> during soft reboot(kexec_file_load).
+On Thu, Jun 13, 2019 at 06:52:24PM +0000, Song Liu wrote:
+> > @@ -403,11 +403,11 @@ static void emit_mov_imm64(u8 **pprog, u32 dst_reg,
+> > 		 * For emitting plain u32, where sign bit must not be
+> > 		 * propagated LLVM tends to load imm64 over mov32
+> > 		 * directly, so save couple of bytes by just doing
+> > -		 * 'mov %eax, imm32' instead.
+> > +		 * 'mov imm32, %eax' instead.
+> > 		 */
+> > 		emit_mov_imm32(&prog, false, dst_reg, imm32_lo);
+> > 	} else {
+> > -		/* movabsq %rax, imm64 */
+> > +		/* movabs imm64, %rax */
 > 
-> - A new ima hook ima_kexec_cmdline is defined to be called by the
-> kexec code.
-> - A new function process_buffer_measurement is defined to measure
-> the buffer hash into the ima log.
-> - A new func policy KEXEC_CMDLINE is defined to control the
->  measurement.[Suggested by Mimi]
-> 
-> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
+> 		^^^^^ Should this be moveabsq? 
 
-> +	struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
-> +	struct ima_event_data event_data = {.iint = iint };
+Not for AT&T syntax:
 
-Minor nit: looks like this could be simplified to:
+~ $ cat test.S
+movabs $0x1111111111111111, %rax
+~ $ as test.S
+~ $ objdump -d a.out
 
-	struct integrity_iint_cache iint = {};
-	struct ima_event_data event_data = {.iint = &iint };
+a.out:     file format elf64-x86-64
 
-which also saves the later memset. 'hash' can also be initialized with '= 
-{}'.
 
+Disassembly of section .text:
+
+0000000000000000 <.text>:
+   0:	48 b8 11 11 11 11 11 	movabs $0x1111111111111111,%rax
+   7:	11 11 11
 
 -- 
-James Morris
-<jmorris@namei.org>
-
+Josh
