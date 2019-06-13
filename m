@@ -2,115 +2,109 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36647C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1C1C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD63206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:34:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I8WZqaHu"
+	by mail.kernel.org (Postfix) with ESMTP id 3BF38206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730583AbfFMPeW (ORCPT
+        id S1727506AbfFMPe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:34:22 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41697 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728197AbfFMKc0 (ORCPT
+        Thu, 13 Jun 2019 11:34:26 -0400
+Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:43990 "EHLO
+        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727200AbfFMPeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 06:32:26 -0400
-Received: by mail-pf1-f195.google.com with SMTP id m30so11056624pff.8
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 03:32:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=zAP35FMwIaJoHRTsWTgqlS+4eqrXf3lXTLZsbBgKALU=;
-        b=I8WZqaHuq/yhoMfw5I5pMLLVxm8cNFa61hNwQ8JLEMlCB8EUyJDcawmklBfvxhPYCl
-         5QfsPIYKqAlH9CKbXYD8qGVKPqgYgYNL5qFGx11M2gg4jknzMJ2je5vQxiIEo2GWD5G/
-         RxhSDlH9Q9RQ/EG0N/XQAWCefLd9GHdFP0Ho9vndyKfvJW/F0y6GH3rSRSR/oA8ric1P
-         KaJ5iam2I3ar+sVxc5p9E9Bfv94xReZjTfPJhJnUezS8g8jb+A8kp0qWVI4luHG7wWWh
-         PrG1F5qZGOs5QlF8Jcng3xBuK+0z2rvPRMRUkxRXs3sbtmIRmZNB6mWw8sVkKHcVmOb8
-         uK1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=zAP35FMwIaJoHRTsWTgqlS+4eqrXf3lXTLZsbBgKALU=;
-        b=lNZH9B09WWvuKNAgVCyVk+Xiys5O+I7GZe0oNIkewNUWFp9STItt8d8VeN0NecczEf
-         Dufvukn8D25B/GvQfDhCPHhZLf1z9LOXfmIqWyzvGARLaauBOfnOvFo/TTwLdOanieid
-         x1f9FEKtLK5na4zwGIP2M5i5YACXcyqgAv7fMLR6lMFufJC3Vx4Kk8sT4+Dnpswi6OEz
-         U2LGsF4R7R3GFJIsYBWMf6yXW0aHO9u8OSBrFUM9ITKoU4H/NLFoe+f2Vx2hBR0k5WCB
-         XdysATJXc1IpemO9TdwZSDfb9uMliyhNW4KpTpFXScrnAhTB5xNQfwyILe34gAkHg8BL
-         0Jog==
-X-Gm-Message-State: APjAAAV2SOOWiXxqNnB7vxWSoCUH5RxbX3HjtCeo6L242LPkPcQ7Bo79
-        VToP4XmdQ+Zqye2z2dOntKoEKA==
-X-Google-Smtp-Source: APXvYqy9ZWJWVG2HSV4XCNQ97i8SPNUISZ00sFzqKzjXi5CJzuVmgDH7W765D0LXzkPhO24L9HPVDA==
-X-Received: by 2002:a17:90a:2525:: with SMTP id j34mr383810pje.11.1560421945985;
-        Thu, 13 Jun 2019 03:32:25 -0700 (PDT)
-Received: from localhost.localdomain ([117.196.234.139])
-        by smtp.gmail.com with ESMTPSA id a12sm2265078pgq.0.2019.06.13.03.32.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 13 Jun 2019 03:32:25 -0700 (PDT)
-From:   Sumit Garg <sumit.garg@linaro.org>
-To:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     jens.wiklander@linaro.org, corbet@lwn.net, dhowells@redhat.com,
-        jejb@linux.ibm.com, jarkko.sakkinen@linux.intel.com,
-        zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
-        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tee-dev@lists.linaro.org, Sumit Garg <sumit.garg@linaro.org>
-Subject: [RFC 5/7] KEYS: encrypted: Allow TEE based trusted master keys
-Date:   Thu, 13 Jun 2019 16:00:31 +0530
-Message-Id: <1560421833-27414-6-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
-References: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
+        Thu, 13 Jun 2019 11:34:23 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 279A73F7C1;
+        Thu, 13 Jun 2019 17:34:16 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id xRpvJaXI_Z3q; Thu, 13 Jun 2019 17:34:15 +0200 (CEST)
+Received: from localhost (h-41-252.A163.priv.bahnhof.se [46.59.41.252])
+        (Authenticated sender: mb547485)
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 07A5E3F70B;
+        Thu, 13 Jun 2019 17:34:14 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 17:34:14 +0200
+From:   Fredrik Noring <noring@nocrew.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     laurentiu.tudor@nxp.com, hch@lst.de, stern@rowland.harvard.edu,
+        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        marex@denx.de, leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
+        robin.murphy@arm.com, JuergenUrban@gmx.de
+Subject: Re: [PATCH v7 3/5] usb: host: ohci-sm501: init genalloc for local
+ memory
+Message-ID: <20190613153414.GA909@sx9>
+References: <20190529102843.13174-1-laurentiu.tudor@nxp.com>
+ <20190529102843.13174-4-laurentiu.tudor@nxp.com>
+ <20190605214622.GA22254@roeck-us.net>
+ <20190611133223.GA30054@roeck-us.net>
+ <20190611172654.GA2602@sx9>
+ <20190611190343.GA18459@roeck-us.net>
+ <20190613134033.GA2489@sx9>
+ <bdfd2178-9e3c-dc15-6aa1-ec1f1fbcb191@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <bdfd2178-9e3c-dc15-6aa1-ec1f1fbcb191@roeck-us.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow search for TEE based trusted keys to act as master keys in case
-TPM device is not present.
+Hi Guenter,
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
- security/keys/encrypted-keys/masterkey_trusted.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+> Thanks for the confirmation. Do you see the problem only with the
+> ohci-sm501 driver or also with others ?
 
-diff --git a/security/keys/encrypted-keys/masterkey_trusted.c b/security/keys/encrypted-keys/masterkey_trusted.c
-index c68528a..cfac27f 100644
---- a/security/keys/encrypted-keys/masterkey_trusted.c
-+++ b/security/keys/encrypted-keys/masterkey_trusted.c
-@@ -23,6 +23,9 @@
-  * Trusted keys are sealed to PCRs and other metadata. Although userspace
-  * manages both trusted/encrypted key-types, like the encrypted key type
-  * data, trusted key type data is not visible decrypted from userspace.
-+ *
-+ * Also, check for alternate trusted keys provided via TEE in case there
-+ * is no TPM available.
-  */
- struct key *request_trusted_key(const char *trusted_desc,
- 				const u8 **master_key, size_t *master_keylen)
-@@ -31,8 +34,11 @@ struct key *request_trusted_key(const char *trusted_desc,
- 	struct key *tkey;
+All are likely affected, but it depends, because I believe the problem is
+that the USB subsystem runs out of memory. Please try the attached patch!
+
+The pool assumed 4096 byte page alignment for every allocation, which is
+excessive given that many requests are for 16 and 32 bytes. In the patch
+below, I have turned down the order to 5, which is good enough for the ED
+and TD structures of the OHCI, but not enough for the HCCA that needs 256
+byte alignment. With some luck, the WARN_ON_ONCE will not trigger in your
+test, though. If it does, you may try to increase the order from 5 to 8.
+
+I have observed strange things happen when the USB subsystem runs out of
+memory. The mass storage drivers often seem to busy-wait on -ENOMEM,
+consuming a lot of processor resources. It would be much more efficient
+to sleep waiting for memory to become available.
+
+In your case I suspect that allocation failures are not correctly
+attributed. Certain kinds of temporary freezes may also occur, as the
+various devices are reset due to host memory allocation errors.
+
+Fredrik
+
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -3011,7 +3011,7 @@ int usb_hcd_setup_local_mem(struct usb_hcd *hcd, phys_addr_t phys_addr,
+ 	int err;
+ 	void __iomem *local_mem;
  
- 	tkey = request_key(&key_type_trusted, trusted_desc, NULL);
--	if (IS_ERR(tkey))
--		goto error;
-+	if (IS_ERR(tkey)) {
-+		tkey = request_key(&key_type_tee_trusted, trusted_desc, NULL);
-+		if (IS_ERR(tkey))
-+			goto error;
-+	}
+-	hcd->localmem_pool = devm_gen_pool_create(hcd->self.sysdev, PAGE_SHIFT,
++	hcd->localmem_pool = devm_gen_pool_create(hcd->self.sysdev, 5,
+ 						  dev_to_node(hcd->self.sysdev),
+ 						  dev_name(hcd->self.sysdev));
+ 	if (IS_ERR(hcd->localmem_pool))
+diff --git a/drivers/usb/host/ohci-hcd.c b/drivers/usb/host/ohci-hcd.c
+--- a/drivers/usb/host/ohci-hcd.c
++++ b/drivers/usb/host/ohci-hcd.c
+@@ -517,6 +517,7 @@ static int ohci_init (struct ohci_hcd *ohci)
+ 						GFP_KERNEL);
+ 	if (!ohci->hcca)
+ 		return -ENOMEM;
++	WARN_ON_ONCE(ohci->hcca_dma & 0xff);
  
- 	down_read(&tkey->sem);
- 	tpayload = tkey->payload.data[0];
--- 
-2.7.4
-
+ 	if ((ret = ohci_mem_init (ohci)) < 0)
+ 		ohci_stop (hcd);
