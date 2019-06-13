@@ -2,105 +2,82 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADABC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06143C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8FAF208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:38:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560451112;
-	bh=id0qK7c8Ve63mJGL0Gtppn1ALeT8wPFATZFmSx4PY7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XdHmghhnE42PpPzjn9w8yYtf9uBncRCzGU6/zoykslGAv2RRIbRZv5SDssNeov6cM
-	 8UwbIm7mUR+WtzjG5Ke/IktN9u8fTEfXZa/aInwzi/DhxjZy02jkzm2Amm+jr3ejxS
-	 Jl/epFTbjTYQL+74a6vcOfVZ1DMhEmjCO6lcmfdo=
+	by mail.kernel.org (Postfix) with ESMTP id D48D8208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:38:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UUDhyaYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbfFMSib (ORCPT
+        id S1728878AbfFMSiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:38:31 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47416 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfFMSia (ORCPT
+        Thu, 13 Jun 2019 14:38:50 -0400
+Received: from mail-qt1-f170.google.com ([209.85.160.170]:37339 "EHLO
+        mail-qt1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbfFMSiu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:38:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=N5gjGcYoQZZl5JqrcxsUv1o4lauQ728+0lZMR0CyIYo=; b=KVerzfWIuvgOGWj2T9+4xZwpz
-        SPEygCiZ+IwCDwxWi17byi9WoJLv220Lg9VWaSRDHpxJj35cTBKSsOHyrT8B5/wBxWgYb7B4XC+A6
-        JDIpMtJIdmhAVNRQpM/uq6kXhytOSAYEaafiQJFdlJOVWY5vQIiZ4q2DPgcrBqy5aNDb4=;
-Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hbUcB-0005Oc-Il; Thu, 13 Jun 2019 18:38:23 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 0726D440046; Thu, 13 Jun 2019 19:38:22 +0100 (BST)
-Date:   Thu, 13 Jun 2019 19:38:22 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "lorenzo.bianconi83@gmail.com" <lorenzo.bianconi83@gmail.com>
-Subject: Re: [PATCH v2 0/3] Add ST lsm6dso i3c support
-Message-ID: <20190613183822.GS5316@sirena.org.uk>
-References: <cover.1559831663.git.vitor.soares@synopsys.com>
- <13D59CF9CEBAF94592A12E8AE55501350AABEAF3@DE02WEMBXB.internal.synopsys.com>
+        Thu, 13 Jun 2019 14:38:50 -0400
+Received: by mail-qt1-f170.google.com with SMTP id y57so23789632qtk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:38:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=XUEHXUSNmyMi32vrOhUKl+mDbcbWi1zRqECCE0hmxew=;
+        b=UUDhyaYYhO2gE0wGK71phcvyB3iZnqs2ztAyH6sWrxETKIAY8hYDjjaGTVYRPYg3eh
+         kS67yzT2cNBhw+GUtQjPLGOJRN7aDI3t3fKJ3WB4epbxQ64O6DmH1p2B9Nd/icQiItEC
+         Pw4VrCprrvQbaEyJyWwex5OFP852Kw1Y120HTFQvN5wVgFDEwWf298Vo9YhWJ5gxpmq9
+         5vLmcjuyQ5MB/tIsY6NIt3C+Y3teYuOcA3pBbgVhizrR08mLUp+uAr7z/p3qjXhKYh4V
+         EaFHuVbY4ZHk65qpLk7pyDpKusOvx3ai/3sUaOXLYHljWrH7R99qN9ES5sNrkVs3DyvO
+         HAQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=XUEHXUSNmyMi32vrOhUKl+mDbcbWi1zRqECCE0hmxew=;
+        b=idAGp+hiM+sDUJ0CT3XxKXeuWdEVrVyCyL44J5Junu/DP+aAAL/kovZSoSQflKvK69
+         hbmRa7F9GGUXvBwzw6icQgLKmtvpFTdrYYMhDnSdHHMzc3ieW+pLOnnYM7876QFdTvG8
+         SD+LapCnE5iz3crFlPlz84aCG+FMZTLR/V1ZAXwmoYVlKI4H3uoyUuIJV8rPRH7/QuL5
+         bxN+hhZMXXSU1EYPVT98p7xtGPSO4guv6Lm7oXXoGen+ypMz+YLAewO7sotfdBFGEE9O
+         YqxkXBsVeDzs0PGnkBaQd+gQU9axnC/HV1aBa5/L7E+g3E/Ax3nIhL6cm3XC3IVAFLEf
+         zGdg==
+X-Gm-Message-State: APjAAAU2UZJs1TqkhcbbdDif5EJ1WUJgbUaX4yrvdEo6K2LESjxGOYTA
+        7uJJGg/7fRgPjBBWAW9JV5yI8twQYDh2jvhBVeKdTQ==
+X-Google-Smtp-Source: APXvYqxaEnkAxv8FL6q2bCba4yHlGp0pIrIe0vfEwYtoOcNefWuszN34Y2cCx+IxMc/v6LrmKqsQiveMw5hlD7isnAs=
+X-Received: by 2002:ac8:3037:: with SMTP id f52mr77218114qte.364.1560451129073;
+ Thu, 13 Jun 2019 11:38:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1Sa0i77dkqaUxqYg"
-Content-Disposition: inline
-In-Reply-To: <13D59CF9CEBAF94592A12E8AE55501350AABEAF3@DE02WEMBXB.internal.synopsys.com>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Nathan Huckleberry <nhuck@google.com>
+Date:   Thu, 13 Jun 2019 11:38:38 -0700
+Message-ID: <CAJkfWY4nKwyPDh=MuCURst2SZceceeR2v3qrT9UY=VbvLnEmFg@mail.gmail.com>
+Subject: Cleanup of -Wunused-const-variable in drivers/usb/host/xhci-tegra.c
+To:     treding@nvidia.com, mathias.nyman@intel.com,
+        gregkh@linuxfoundation.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com
+Cc:     linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hey all,
 
---1Sa0i77dkqaUxqYg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm looking into cleaning up ignored warnings in the kernel so we can
+remove compiler flags to ignore warnings.
 
-On Tue, Jun 11, 2019 at 11:42:50AM +0000, Vitor Soares wrote:
+There's an unused variable ('mbox_cmd_name') in xhci-tegra.c. Looks
+like it was intended for logging or debugging, but never used. Just
+wanted to reach out to ask the best steps for cleaning this up.
 
-> Since the regmap-i3c.c was already applied in:
->   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git=20
-> tags/regmap-i3c
+If the variable is no longer needed I'd like to send a patch to remove it.
 
-> I wonder what is clean way to submit this patch set?
+https://github.com/ClangBuiltLinux/linux/issues/533
 
-Just mention in the cover letter that it depends on that tag, the point
-with the tag is to allow other trees to pull it in if they need it.
-
---1Sa0i77dkqaUxqYg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0CmB4ACgkQJNaLcl1U
-h9DdLAf6A5rVHIcRFaF0D/uW7cFQ1G2BO4pg7pNoyrzr8oOHuBBi48aBuLG2UETF
-9QXMIPL3tXBf1d+zYcAadqM1mmZJ1Rhqb9KmRSMVrHj14gmHJ0t/9WOiwA3kCpdJ
-ka0ybLtuSwRilY6jyol7h6sMsaIhn32Ua4tWwBBpiPvsIxGYwZE0sdvmG0racV5p
-rjEVIJhfPrRIfH4+C9g9W3EwzhfAiyolf+8+r7SgoQCrAiNTCQjc8Kyg8iGLObbj
-ORZwz4GDHk0FJq0ntnYhN317EQflHz3NXyqPkNpEzVtYTvNmnLkk1TZpvPvPbAQD
-fP8ERKAe0E5wwy+9AKHTlB+iWfqLVQ==
-=DRFp
------END PGP SIGNATURE-----
-
---1Sa0i77dkqaUxqYg--
+Thanks,
+Nathan Huckleberry
