@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41138C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CF3C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1081620679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E12D20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442265;
-	bh=GXSsHoONhYs3v9VvIDnNur0FcJCX48oYI69FzwVuKns=;
+	s=default; t=1560442269;
+	bh=Y1WnJruasGRm3U9AQ0OHPrzS3NNHvnFoLXqzcfF6xUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G6PgF6PrwqfS4/8z+12aLUTP9ogZfXJczealLA1FVqZZDiZMHKmmAKERz7zJjarRN
-	 VdJaRHKSQ0NeNGpRjfaMWFAUb1n3D+hUb2BiqPbtQcBjDqAUPOKfmyQlJWn8upnz7Z
-	 gB8aDwynMHUzT/vdwJuEpGvYw5E7PPADWqcjjVz4=
+	b=c/R7ByAMpP3rUBCGdDwgt1IetYz5HH7xtCvk/ma7nhSXVE6cL2ljn+ooI7+xweiWR
+	 Gj1obR8LEz5n1B+Broo7FABZmn7XmMkZZyq3wPiYT44zGcObwWDyzHCBBRCbHF2HbR
+	 RSDoYbVp5uYnunO2SQiA63svb4boB7NdDq05l2zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391140AbfFMQLD (ORCPT
+        id S2391516AbfFMQLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:11:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60850 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:11:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731244AbfFMInj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:43:39 -0400
+        id S1731243AbfFMIng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:43:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A07A21744;
-        Thu, 13 Jun 2019 08:43:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3034321743;
+        Thu, 13 Jun 2019 08:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415418;
-        bh=GXSsHoONhYs3v9VvIDnNur0FcJCX48oYI69FzwVuKns=;
+        s=default; t=1560415415;
+        bh=Y1WnJruasGRm3U9AQ0OHPrzS3NNHvnFoLXqzcfF6xUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HoUEyvLYLpZZx2Hwo83WtNdmH+nCH+t0cZxLoomLadsbTPzWvOWdirDD3sP17t/Wy
-         3FqrKC9RVRpzwVfTHLflJ/2Mfn9840t963jC3JxZfHWOnab+6yo42ZCUYTs9w0HlIU
-         F+gFnp55uKHFRXTuj0dTBLDH3eufWJAqcs3ZmO1w=
+        b=qkjH+IubBh9ctBlt0I9eYgoUO5stz5jKwN9idzd6n9JkOJn+xca6P+u+OOs4y8PlY
+         VIvEWQ6g/XcEgoHFhajD+8AajwI8aHH7IB9W5IQpJCWptgkVhf1JBj+2us0T9vJIiV
+         EE7110csV9G40ye2jgtSrvn9VIi3a0SEDds+Iz6Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH 4.19 118/118] drm/vc4: fix fb references in async update
-Date:   Thu, 13 Jun 2019 10:34:16 +0200
-Message-Id: <20190613075651.218844366@linuxfoundation.org>
+        stable@vger.kernel.org, Eddie Horng <eddiehorng.tw@gmail.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.19 117/118] ovl: support stacked SEEK_HOLE/SEEK_DATA
+Date:   Thu, 13 Jun 2019 10:34:15 +0200
+Message-Id: <20190613075651.140948053@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -60,39 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helen Koike <helen.koike@collabora.com>
+From: Amir Goldstein <amir73il@gmail.com>
 
-commit c16b85559dcfb5a348cc085a7b4c75ed49b05e2c upstream.
+commit 9e46b840c7053b5f7a245e98cd239b60d189a96c upstream.
 
-Async update callbacks are expected to set the old_fb in the new_state
-so prepare/cleanup framebuffers are balanced.
+Overlay file f_pos is the master copy that is preserved
+through copy up and modified on read/write, but only real
+fs knows how to SEEK_HOLE/SEEK_DATA and real fs may impose
+limitations that are more strict than ->s_maxbytes for specific
+files, so we use the real file to perform seeks.
 
-Calling drm_atomic_set_fb_for_plane() (which gets a reference of the new
-fb and put the old fb) is not required, as it's taken care by
-drm_mode_cursor_universal() when calling drm_atomic_helper_update_plane().
+We do not call real fs for SEEK_CUR:0 query and for SEEK_SET:0
+requests.
 
-Cc: <stable@vger.kernel.org> # v4.19+
-Fixes: 539c320bfa97 ("drm/vc4: update cursors asynchronously through atomic")
-Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190603165610.24614-5-helen.koike@collabora.com
+Fixes: d1d04ef8572b ("ovl: stack file ops")
+Reported-by: Eddie Horng <eddiehorng.tw@gmail.com>
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/vc4/vc4_plane.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/overlayfs/file.c |   44 ++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 40 insertions(+), 4 deletions(-)
 
---- a/drivers/gpu/drm/vc4/vc4_plane.c
-+++ b/drivers/gpu/drm/vc4/vc4_plane.c
-@@ -818,6 +818,7 @@ static void vc4_plane_atomic_async_updat
- 		drm_atomic_set_fb_for_plane(plane->state, state->fb);
- 	}
+--- a/fs/overlayfs/file.c
++++ b/fs/overlayfs/file.c
+@@ -146,11 +146,47 @@ static int ovl_release(struct inode *ino
  
-+	swap(plane->state->fb, state->fb);
- 	/* Set the cursor's position on the screen.  This is the
- 	 * expected change from the drm_mode_cursor_universal()
- 	 * helper.
+ static loff_t ovl_llseek(struct file *file, loff_t offset, int whence)
+ {
+-	struct inode *realinode = ovl_inode_real(file_inode(file));
++	struct inode *inode = file_inode(file);
++	struct fd real;
++	const struct cred *old_cred;
++	ssize_t ret;
+ 
+-	return generic_file_llseek_size(file, offset, whence,
+-					realinode->i_sb->s_maxbytes,
+-					i_size_read(realinode));
++	/*
++	 * The two special cases below do not need to involve real fs,
++	 * so we can optimizing concurrent callers.
++	 */
++	if (offset == 0) {
++		if (whence == SEEK_CUR)
++			return file->f_pos;
++
++		if (whence == SEEK_SET)
++			return vfs_setpos(file, 0, 0);
++	}
++
++	ret = ovl_real_fdget(file, &real);
++	if (ret)
++		return ret;
++
++	/*
++	 * Overlay file f_pos is the master copy that is preserved
++	 * through copy up and modified on read/write, but only real
++	 * fs knows how to SEEK_HOLE/SEEK_DATA and real fs may impose
++	 * limitations that are more strict than ->s_maxbytes for specific
++	 * files, so we use the real file to perform seeks.
++	 */
++	inode_lock(inode);
++	real.file->f_pos = file->f_pos;
++
++	old_cred = ovl_override_creds(inode->i_sb);
++	ret = vfs_llseek(real.file, offset, whence);
++	revert_creds(old_cred);
++
++	file->f_pos = real.file->f_pos;
++	inode_unlock(inode);
++
++	fdput(real);
++
++	return ret;
+ }
+ 
+ static void ovl_file_accessed(struct file *file)
 
 
