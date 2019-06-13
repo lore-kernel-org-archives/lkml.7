@@ -2,105 +2,88 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6451C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53064C31E4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E4C2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36AEF2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:22:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388763AbfFMPWJ (ORCPT
+        id S2388899AbfFMPWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:22:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56618 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731989AbfFMMoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 08:44:09 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B5DF330860AE;
-        Thu, 13 Jun 2019 12:43:54 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 3080C1001B1A;
-        Thu, 13 Jun 2019 12:43:49 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 13 Jun 2019 14:43:54 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 14:43:48 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
-        'Andrew Morton' <akpm@linux-foundation.org>,
-        'Deepa Dinamani' <deepa.kernel@gmail.com>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "'arnd@arndb.de'" <arnd@arndb.de>,
-        "'dbueso@suse.de'" <dbueso@suse.de>,
-        "'axboe@kernel.dk'" <axboe@kernel.dk>,
-        "'dave@stgolabs.net'" <dave@stgolabs.net>,
-        "'e@80x24.org'" <e@80x24.org>,
-        "'jbaron@akamai.com'" <jbaron@akamai.com>,
-        "'linux-fsdevel@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>,
-        "'linux-aio@kvack.org'" <linux-aio@kvack.org>,
-        "'omar.kilani@gmail.com'" <omar.kilani@gmail.com>,
-        "'tglx@linutronix.de'" <tglx@linutronix.de>,
-        'Al Viro' <viro@ZenIV.linux.org.uk>,
-        'Linus Torvalds' <torvalds@linux-foundation.org>,
-        "'linux-arch@vger.kernel.org'" <linux-arch@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
-Message-ID: <20190613124347.GB12506@redhat.com>
-References: <87k1dxaxcl.fsf_-_@xmission.com>
- <87ef45axa4.fsf_-_@xmission.com>
- <20190610162244.GB8127@redhat.com>
- <87lfy96sta.fsf@xmission.com>
- <9199239a450d4ea397783ccf98742220@AcuMS.aculab.com>
- <20190612134558.GB3276@redhat.com>
- <6f748b26bef748208e2a74174c0c0bfc@AcuMS.aculab.com>
- <6e9b964b08d84c99980b1707e5fe3d1d@AcuMS.aculab.com>
- <20190613094324.GA12506@redhat.com>
- <66311ce9762849f7988c16bc752ea5a9@AcuMS.aculab.com>
+        Thu, 13 Jun 2019 11:22:13 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34414 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731987AbfFMMnP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 08:43:15 -0400
+Received: by mail-qk1-f195.google.com with SMTP id t8so8914930qkt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 05:43:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M1sFURB9VOBy4jtZMrXEnFN+uXQmeakOQ9D7hQoU5Oo=;
+        b=T9EmV9kjsYqJ39gPZnIKbdvSuAT+EM3cAcG+cMogn6tPIRJFL3I5TUiZp3KOCvE76P
+         +M1XJ/JvC+P77QYrdXQBoEgqs8Cpv0Fkr+1F3eYK+IGXcEwfD8Mh36soHovgSGZyFXyM
+         NfVlG4daqbegTiBwC0B9MesxCBNuQLVVwEzq1DQ6aB1ZlMp5e6jDCasatrX3jrrII9x8
+         v7QZsjIL80EJHNjXtUB2PmoBx4iqvoYmcoHm4gXvYnlv4M1Ta7bsijabv1ThSRxw6u0B
+         UXBiYNEotxbaJ83Gbq+pO6jfxQcVtOicxAH9+U2Cpd8Ocm7dLOQjOCCz1kv+yCt9kKqy
+         Sc2g==
+X-Gm-Message-State: APjAAAUOcs/UEmcBiMKbSR17b+tzH52MHE7r8hpgHLdWlb/2HKtW6TDL
+        hSr0PeZLUufLdeFl9uFpJ56LR1e7dqYzJv2JhcY=
+X-Google-Smtp-Source: APXvYqx0GATfAKDHQiQUDbUvb9OL9pOZqSyQ28f3QUXB75XM3Ltr+LckmYh3837y9Za7XbZ5exY75L49164V4buSJ0g=
+X-Received: by 2002:a05:620a:16c1:: with SMTP id a1mr27974065qkn.269.1560429794286;
+ Thu, 13 Jun 2019 05:43:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <66311ce9762849f7988c16bc752ea5a9@AcuMS.aculab.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 13 Jun 2019 12:44:09 +0000 (UTC)
+References: <c2e6af51-5676-3715-6666-c3f18df7b992@free.fr>
+In-Reply-To: <c2e6af51-5676-3715-6666-c3f18df7b992@free.fr>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 13 Jun 2019 14:42:57 +0200
+Message-ID: <CAK8P3a1_WvHYW243MR5-NdFm3cSt+cVGM5EJmOM8uiQMQ3vQjQ@mail.gmail.com>
+Subject: Re: [PATCH v1] iopoll: Tweak readx_poll_timeout sleep range
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Matt Wagantall <mattw@codeaurora.org>,
+        Mitchel Humpherys <mitchelh@codeaurora.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/13, David Laight wrote:
+On Thu, Jun 13, 2019 at 2:16 PM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
 >
-> > And you interpret this as if a pending signal should be delivered in any case,
-> > even if pselect succeeds. Again, perhaps you are right, but to me this is simply
-> > undocumented.
+> Chopping max delay in 4 seems excessive. Let's just cut it in half.
 >
-> This text (from http://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html) is moderately clear:
->     ... if all threads within the process block delivery of the signal, the signal shall
->     remain pending on the process until a thread calls a sigwait() function selecting that
->     signal, a thread unblocks delivery of the signal, or the action associated with the signal
->     is set to ignore the signal.
->
-> So when pselect() 'replaces the signal mask' any pending signals should be delivered.
+> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> ---
+> When max_us=100, old_min was 26 us; new_min would be 50 us
+> Was there a good reason for the 1/4th?
+> Is new_min=0 a problem? (for max=1)
 
-I fail to understand this logic.
+You normally want a large enough range between min and max. I don't
+see anything wrong with a factor of four.
 
+> @@ -47,7 +47,7 @@
+>                         break; \
+>                 } \
+>                 if (__sleep_us) \
+> -                       usleep_range((__sleep_us >> 2) + 1, __sleep_us); \
+> +                       usleep_range(__sleep_us / 2, __sleep_us); \
+>         } \
 
-> > However, linux never did this. Until the commit 854a6ed56839 ("signal: Add
-> > restore_user_sigmask()"). This commit caused regression. We had to revert it.
->
-> That change wasn't expected to change the behaviour...
+You are also missing the '+1' now, so this breaks with __sleep_us=1.
 
-Yes.
-
-And the changed behaviour matched your understanding of standard. We had to
-change it back.
-
-So what do you want from me? ;)
-
-Oleg.
-
+        Arnd
