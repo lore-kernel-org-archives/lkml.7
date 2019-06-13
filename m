@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B613C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63334C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E81C20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A5020679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441694;
-	bh=qAdD09BxJHr5KfiNLtbxB2ua5fax0u7NJzfQYe0S4Rc=;
+	s=default; t=1560441698;
+	bh=IqCO23bLOxZGkinFkV7sw2ebEJzfNo2BWSXEsk/kzfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IJMNLdzVUvULLvEw0QjlGN1m1D+Rh1shb+zIyYUSsaHPIFCpeGAfY/puvImRYFobB
-	 bPoOIFPWaYidjFXg7BTcyZCd5BXsz4e7CcD2/84f69oWXeZGEkk0cSuidf6/15DehL
-	 CtE06t+dJzQ0aLKMXjV9+Nw8Mvvh+sqgLIf4ietk=
+	b=WcyGNeEm+dWbZ18Y7Gd6Bp4ZR9EPd7/I75d6vyPRTSOpavgVEx7edfV+PZFcuhxVt
+	 ETC+sW6o33fdfNtcjaVy5WKRk4UP9eNKDjQvfCk3iVirncQ4fBGS2+8ofb82m5sJ+S
+	 HNUiY/oomN9L7boXi9T+JsgvNweWTbr71WVFxLjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390615AbfFMQBd (ORCPT
+        id S2390815AbfFMQBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:01:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36420 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:01:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731434AbfFMIsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:48:31 -0400
+        id S1731427AbfFMIsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:48:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 264F5215EA;
-        Thu, 13 Jun 2019 08:48:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C07B421473;
+        Thu, 13 Jun 2019 08:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415710;
-        bh=qAdD09BxJHr5KfiNLtbxB2ua5fax0u7NJzfQYe0S4Rc=;
+        s=default; t=1560415705;
+        bh=IqCO23bLOxZGkinFkV7sw2ebEJzfNo2BWSXEsk/kzfY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qBsE9tj5o9ed092yuHHrCFhomspzLTBTX8bBGQziKWAF8WWw7fK0hbKU6zA5p22eH
-         FfWiA+ER30ki64DcTpAlhQh1bKRK9CusjJ26ZhyXOGtU6uUzBwr9zAOsXRQp2XMqLJ
-         5p3r7CIVszMiTf5+E7odV3X8652VY66Xnd26DtZY=
+        b=WtPsvqCRYcVIgDgcbejsIa3FtdoMnaEAXRpNk/bzYr0KJvfLWH6x1zynwaxj4iHiP
+         eFXFCHLGAm3TEB3XOSlF2JOdiHqRcsBcSdLk2qQEf3Iaed46cXoy+A+0mrioEN7Cmv
+         YJvyhBQYX1Tc2CpRhuB+QaONahy612YdvwzjEneE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 074/155] PCI: designware-ep: Use aligned ATU window for raising MSI interrupts
-Date:   Thu, 13 Jun 2019 10:33:06 +0200
-Message-Id: <20190613075657.117145562@linuxfoundation.org>
+Subject: [PATCH 5.1 072/155] vfio-pci/nvlink2: Fix potential VMA leak
+Date:   Thu, 13 Jun 2019 10:33:04 +0200
+Message-Id: <20190613075657.001361799@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,52 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6b7330303a8186fb211357e6d379237fe9d2ece1 ]
+[ Upstream commit 2c85f2bd519457073444ec28bbb4743a4e4237a7 ]
 
-Certain platforms like K2G reguires the outbound ATU window to be
-aligned. The alignment size is already present in mem->page_size.
-Use the alignment size present in mem->page_size to configure an
-aligned ATU window. In order to raise an interrupt, CPU has to write
-to address offset from the start of the window unlike before where
-writes were always to the beginning of the ATU window.
+If vfio_pci_register_dev_region() fails then we should rollback
+previous changes, ie. unmap the ATSD registers.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Fixes: 7f92891778df ("vfio_pci: Add NVIDIA GV100GL [Tesla V100 SXM2] subdriver")
+Signed-off-by: Greg Kurz <groug@kaod.org>
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-ep.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/vfio/pci/vfio_pci_nvlink2.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 24f5a775ad34..e3cce5d203f3 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -397,6 +397,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 	struct pci_epc *epc = ep->epc;
-+	unsigned int aligned_offset;
- 	u16 msg_ctrl, msg_data;
- 	u32 msg_addr_lower, msg_addr_upper, reg;
- 	u64 msg_addr;
-@@ -422,13 +423,15 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
- 		reg = ep->msi_cap + PCI_MSI_DATA_32;
- 		msg_data = dw_pcie_readw_dbi(pci, reg);
- 	}
--	msg_addr = ((u64) msg_addr_upper) << 32 | msg_addr_lower;
-+	aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
-+	msg_addr = ((u64)msg_addr_upper) << 32 |
-+			(msg_addr_lower & ~aligned_offset);
- 	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, msg_addr,
- 				  epc->mem->page_size);
- 	if (ret)
- 		return ret;
+diff --git a/drivers/vfio/pci/vfio_pci_nvlink2.c b/drivers/vfio/pci/vfio_pci_nvlink2.c
+index 32f695ffe128..50fe3c4f7feb 100644
+--- a/drivers/vfio/pci/vfio_pci_nvlink2.c
++++ b/drivers/vfio/pci/vfio_pci_nvlink2.c
+@@ -472,6 +472,8 @@ int vfio_pci_ibm_npu2_init(struct vfio_pci_device *vdev)
+ 	return 0;
  
--	writel(msg_data | (interrupt_num - 1), ep->msi_mem);
-+	writel(msg_data | (interrupt_num - 1), ep->msi_mem + aligned_offset);
+ free_exit:
++	if (data->base)
++		memunmap(data->base);
+ 	kfree(data);
  
- 	dw_pcie_ep_unmap_addr(epc, func_no, ep->msi_mem_phys);
- 
+ 	return ret;
 -- 
 2.20.1
 
