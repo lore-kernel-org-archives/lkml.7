@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5308AC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C44FC46477
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 255402147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A46208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442430;
-	bh=WI+wQeSlWgm+sIqtYh7MzNnh3+D0L4d/GBVI/9yq3+M=;
+	s=default; t=1560442432;
+	bh=Kw+HJr+R42y6/vvn4jURGVl/5vkrzlwKS9vwDuY+uEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SoMkX1i5rt/UjcXTDWTfiLlgzoIhUb0F4vFJF3LID5zApby9bUUmNTlFLchD2244K
-	 MuMQzD/igXS+GPMHhRn0lKUwycqWHyBHWgGl8kZ9/dxgXKJNUPbcncTpkGzG3cF6yH
-	 S/faZRSTUOVlUppjsa+B08cFw1dtvTS6cGkcbAsU=
+	b=wKjqSWIcskLi3OkcJROOdN4opRDWGbd4/ltPwYyGdyx4FaZGpUCnvugopfwDdCzGH
+	 +YfKLxLVlBwfZuL4UJhzbKnWCWNvi7zwO/yHp+JBme2LzG9fwhSrBi+nsSoHwx5TKh
+	 yaa5maiZOkL+Pmrl4cekMkCmzK0NdRGZFvQg7zVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391492AbfFMQNs (ORCPT
+        id S2391745AbfFMQNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:13:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59856 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:13:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731203AbfFMImm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:42:42 -0400
+        id S1731202AbfFMImj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:42:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B19021479;
-        Thu, 13 Jun 2019 08:42:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9038C215EA;
+        Thu, 13 Jun 2019 08:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415361;
-        bh=WI+wQeSlWgm+sIqtYh7MzNnh3+D0L4d/GBVI/9yq3+M=;
+        s=default; t=1560415358;
+        bh=Kw+HJr+R42y6/vvn4jURGVl/5vkrzlwKS9vwDuY+uEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gY5z68PpVs1s4S1w5lL/F2nXJzQ1dtBBImBp8+QOjndAiZUo5vWi0NjRQVpijak6g
-         Het1uooyHWRc+Z0QOGG6dm2+srSPWvhEs5YzEQQ9Xhi7bPVuT9LHBF5wZvOsSMzjny
-         dxwqm3li/En4YDXeZ+cSbie6/0KpEMzDXhPz0gtI=
+        b=tBCXVh63ZIz8N+WCZGCpcyiY2UdPwwIPZxiGRG48jCV25kMA9z15QF+7aJl+zXYWV
+         TkKPC6ZqbtV/GbsSOHZ0DNjnUST/+hD50yx9O4AE9S+mhj5kuqVKbA+p6zYkTz3iUG
+         ggAXQXQZDof6nIXsuPAlseiFH802WDYCgUKRSWqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ulrich Hecht <uli+renesas@fpond.eu>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 070/118] iommu/arm-smmu-v3: Dont disable SMMU in kdump kernel
-Date:   Thu, 13 Jun 2019 10:33:28 +0200
-Message-Id: <20190613075647.892923884@linuxfoundation.org>
+Subject: [PATCH 4.19 096/118] PCI: rcar: Fix a potential NULL pointer dereference
+Date:   Thu, 13 Jun 2019 10:33:54 +0200
+Message-Id: <20190613075649.511604563@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -62,57 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3f54c447df34ff9efac7809a4a80fd3208efc619 ]
+[ Upstream commit f0d14edd2ba43b995bef4dd5da5ffe0ae19321a1 ]
 
-Disabling the SMMU when probing from within a kdump kernel so that all
-incoming transactions are terminated can prevent the core of the crashed
-kernel from being transferred off the machine if all I/O devices are
-behind the SMMU.
+In case __get_free_pages() fails and returns NULL, fix the return
+value to -ENOMEM and release resources to avoid dereferencing a
+NULL pointer.
 
-Instead, continue to probe the SMMU after it is disabled so that we can
-reinitialise it entirely and re-attach the DMA masters as they are reset.
-Since the kdump kernel may not have drivers for all of the active DMA
-masters, we suppress fault reporting to avoid spamming the console and
-swamping the IRQ threads.
-
-Reported-by: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Tested-by: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/pci/controller/pcie-rcar.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 9ae3678844eb..40fbf20d69e5 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -2414,13 +2414,9 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
- 	/* Clear CR0 and sync (disables SMMU and queue processing) */
- 	reg = readl_relaxed(smmu->base + ARM_SMMU_CR0);
- 	if (reg & CR0_SMMUEN) {
--		if (is_kdump_kernel()) {
--			arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
--			arm_smmu_device_disable(smmu);
--			return -EBUSY;
--		}
--
- 		dev_warn(smmu->dev, "SMMU currently enabled! Resetting...\n");
-+		WARN_ON(is_kdump_kernel() && !disable_bypass);
-+		arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
- 	}
+diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
+index 6a4e435bd35f..765c39911c0c 100644
+--- a/drivers/pci/controller/pcie-rcar.c
++++ b/drivers/pci/controller/pcie-rcar.c
+@@ -931,6 +931,10 @@ static int rcar_pcie_enable_msi(struct rcar_pcie *pcie)
  
- 	ret = arm_smmu_device_disable(smmu);
-@@ -2513,6 +2509,8 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
- 		return ret;
- 	}
+ 	/* setup MSI data target */
+ 	msi->pages = __get_free_pages(GFP_KERNEL, 0);
++	if (!msi->pages) {
++		err = -ENOMEM;
++		goto err;
++	}
+ 	base = virt_to_phys((void *)msi->pages);
  
-+	if (is_kdump_kernel())
-+		enables &= ~(CR0_EVTQEN | CR0_PRIQEN);
- 
- 	/* Enable the SMMU interface, or ensure bypass */
- 	if (!bypass || disable_bypass) {
+ 	rcar_pci_write_reg(pcie, base | MSIFE, PCIEMSIALR);
 -- 
 2.20.1
 
