@@ -2,108 +2,100 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7786C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD84C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0940206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DA76206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VaQNczpK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SVS9YERr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389451AbfFMPq5 (ORCPT
+        id S2389464AbfFMPrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:46:57 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43639 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731772AbfFMJe0 (ORCPT
+        Thu, 13 Jun 2019 11:47:00 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48466 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731771AbfFMJd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:34:26 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j29so14511915lfk.10;
-        Thu, 13 Jun 2019 02:34:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=D4VkNejS3l89DpjptrqgXwGcwS4Wano2U0wz4lwUEa0=;
-        b=VaQNczpK/3BmxeL4sv5hN1gRqsuOe4NI9bIsuhefGirRwQ2Ep+xA5p2rvPlmUUSHTw
-         L+zsLfwVahm75pjugCW/QTbAGRpG8Lph5iydCA61rPHz1MosqOauTJnQPwpX33GyhLo1
-         DDVkaUOAsiiHv4uOVnw2cVbzGsru5vICGLbGYhUMGbZiqm2It8Hn7r7V0MuuJr1DiTOD
-         qm1rZB9Prw9Luxid/u5KHBvpPi2bYdTC5BG7XIa2SG11ijMYz29+oS9u40Ytdtqr4hup
-         XCXEGHScUttgcoLhm0jdTyOvq+vqlCUDr8cuj9LNcof3A97bkmtITZGdp7WiKBgxW9OJ
-         uh7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=D4VkNejS3l89DpjptrqgXwGcwS4Wano2U0wz4lwUEa0=;
-        b=MqisVzaiR4RZUeQguk0h+zHQy4RHJtFufT5nZvANGlIzXCCQjH9cxqZojS/lOEgfZa
-         dSOd9dV4ZC7NO7OgfewSOYbh2VpnsDhKfqkkRVmPO7Mx59jG6zYR5M9n2q1637oG33Hf
-         LBY7CB4HnR/rsmLDTJk5bre1ToOUkUcJFmZsqvyB7mMCb7NqpGyqw7HMlt8nEZJx/niv
-         tQPigY8gvZS+QbH9IJw/d/wJsqZ9i5aUYxQluW0Xf9YAKAhiStRo8niYXOmyxF1YZEae
-         3ps2ClDyPlsGdF/GEeF8D41GHSWrEE1dArjK4yCUWhHdKjqToKUHQ4N+jG/ZjCZh+0nw
-         hywg==
-X-Gm-Message-State: APjAAAVy/ijPsy6T4VhdY9S6pd/+OeDss1Wv+dZf18RkO4CdoyJaACXN
-        j4R9RblEk4RP+Hex10SDw2SdyzXsHfw=
-X-Google-Smtp-Source: APXvYqyfZ4+dBY9GGiHtRnUXuqpxEoChE5mHTzoE5aKczii6KVRstIKjFeEE1l2WGWN4DtxQPyYKng==
-X-Received: by 2002:a05:6512:4c5:: with SMTP id w5mr5128674lfq.171.1560418464220;
-        Thu, 13 Jun 2019 02:34:24 -0700 (PDT)
-Received: from ub1 (h-160-100.A251.priv.bahnhof.se. [37.123.160.100])
-        by smtp.gmail.com with ESMTPSA id s20sm485172lfb.95.2019.06.13.02.34.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Jun 2019 02:34:23 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 11:34:33 +0200
-From:   Jonas Stenvall <jonas.stenvall.umea@gmail.com>
-To:     balbi@kernel.org
-Cc:     gregkh@linuxfoundation.org, erosca@de.adit-jv.com,
-        vladimir_zapolskiy@mentor.com, joshua_frkuska@mentor.com,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: gadget: u_audio: Fixed variable declaration coding
- style issue
-Message-ID: <20190613093433.GA3878@ub1>
+        Thu, 13 Jun 2019 05:33:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lH95QDBu3WX8kdNvVLm8TNXGj4gft8us1GpfjIszCYo=; b=SVS9YERrgSCIMXtUf8Jwx8ivf
+        9OumC65a7EXEOXw4g2YElyLy8o5qvIzHQCBxTZ5FrcUvx+Zvt4aGfQCPAlgBg0LlUrITOytrN3C9y
+        UkBkMaCiJ3K4qVp9MIEspB17yKrKTkAsstsWacvKcUq4PA3tdnL5vfWitdN0EdtG4kxnp3Tfd9Jtz
+        +KhWVA9Pkau7MQNr0vyCFqk4yA3J8pkcSuMe3taNerIYuw8nlXthCootn3EV3A9GTftMkQVN53gIE
+        TwK9TTrsA0FKbsPtfBw5QPKmIHaSMmulBeb0fB8gw+JCm+O/QxX0SDWpFxJVCIbGzqseo6QiBcI5i
+        15fgUMBpA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbM78-00015h-DW; Thu, 13 Jun 2019 09:33:46 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 372B5209C844F; Thu, 13 Jun 2019 11:33:45 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 11:33:45 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Willem de Bruijn <willemb@google.com>
+Subject: Re: [PATCH] locking/static_key: always define
+ static_branch_deferred_inc
+Message-ID: <20190613093345.GQ3402@hirez.programming.kicks-ass.net>
+References: <20190612194409.197461-1-willemdebruijn.kernel@gmail.com>
+ <20190612125911.509d79f2@cakuba.netronome.com>
+ <CAF=yD-JAZfEG5JoNEQn60gnucJB1gsrFeT38DieG12NQb9DFnQ@mail.gmail.com>
+ <20190612135627.5eac995d@cakuba.netronome.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190612135627.5eac995d@cakuba.netronome.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed a coding style issue, replacing unsigned with unsigned int.
+On Wed, Jun 12, 2019 at 01:56:27PM -0700, Jakub Kicinski wrote:
+> On Wed, 12 Jun 2019 16:25:16 -0400, Willem de Bruijn wrote:
+> > On Wed, Jun 12, 2019 at 3:59 PM Jakub Kicinski
+> > <jakub.kicinski@netronome.com> wrote:
+> > >
+> > > On Wed, 12 Jun 2019 15:44:09 -0400, Willem de Bruijn wrote:  
+> > > > From: Willem de Bruijn <willemb@google.com>
+> > > >
+> > > > This interface is currently only defined if CONFIG_JUMP_LABEL. Make it
+> > > > available also when jump labels are disabled.
+> > > >
+> > > > Fixes: ad282a8117d50 ("locking/static_key: Add support for deferred static branches")
+> > > > Signed-off-by: Willem de Bruijn <willemb@google.com>
+> > > >
+> > > > ---
+> > > >
+> > > > The original patch went into 5.2-rc1, but this interface is not yet
+> > > > used, so this could target either 5.2 or 5.3.  
+> > >
+> > > Can we drop the Fixes tag?  It's an ugly omission but not a bug fix.
+> > >
+> > > Are you planning to switch clean_acked_data_enable() to the helper once
+> > > merged?  
+> > 
+> > Definitely, can do.
+> > 
+> > Perhaps it's easiest to send both as a single patch set through net-next, then?
+> 
+> I'd think so too, perhaps we can get a blessing from Peter for that :)
 
-Signed-off-by: Jonas Stenvall <jonas.stenvall.umea@gmail.com>
----
- drivers/usb/gadget/function/u_audio.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Sure that works, I don't think there's anything else pending for this
+file to conflict with.
 
-diff --git a/drivers/usb/gadget/function/u_audio.c b/drivers/usb/gadget/function/u_audio.c
-index fb5ed97572e5..56906d15fb55 100644
---- a/drivers/usb/gadget/function/u_audio.c
-+++ b/drivers/usb/gadget/function/u_audio.c
-@@ -40,7 +40,7 @@ struct uac_rtd_params {
- 
- 	void *rbuf;
- 
--	unsigned max_psize;	/* MaxPacketSize of endpoint */
-+	unsigned int max_psize;	/* MaxPacketSize of endpoint */
- 	struct uac_req *ureq;
- 
- 	spinlock_t lock;
-@@ -78,7 +78,7 @@ static const struct snd_pcm_hardware uac_pcm_hardware = {
- 
- static void u_audio_iso_complete(struct usb_ep *ep, struct usb_request *req)
- {
--	unsigned pending;
-+	unsigned int pending;
- 	unsigned long flags, flags2;
- 	unsigned int hw_ptr;
- 	int status = req->status;
--- 
-2.17.1
-
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
