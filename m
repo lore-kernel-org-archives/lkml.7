@@ -2,52 +2,64 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F036C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCD0C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5487F20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2221020644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442695;
-	bh=7IybN8Nha+uXU8W7xnlveY2BYrbSDvSR5HmEzqawZPI=;
+	s=default; t=1560442697;
+	bh=C6d/i0uXdJ8+nqPibNnQK8H7JqpkEK6lAr0XOumabc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k1VXIizoAGa4MRnIy1o5NjFM7yAl87KM+CaKMdO1Srae7zIcHiKnZ7QlXm8+cnmKp
-	 snbmcsUEk0yn+s49L+4fxUaA7mMbpG6s1qgHVYDEsP2MjCnx7c8NPIEV/UpS/iWEad
-	 yml8CWyx7PlMIrl+t05IQMv/bWHBiy82OyzkppnM=
+	b=MyyIIyAkhXQ2DhF7LDnE0qChAP2o7ZbisAxYSjbbw1GlBiDpDu1e45DpjNg9NOBbA
+	 D5/RnMCixhvVWaSEyxGLg1B6+hFzKHzGYy1dUS1PxH3/gLo+FRRHwCDbbm0lwzwrZy
+	 ebd2x+zHQbzPzHAgD3FO1aI3evNAkKyYJFuxkBPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390352AbfFMQSF (ORCPT
+        id S2391825AbfFMQSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:18:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57902 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:18:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731118AbfFMIk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:40:28 -0400
+        id S1731120AbfFMIkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:40:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77B7021473;
-        Thu, 13 Jun 2019 08:40:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78C152147A;
+        Thu, 13 Jun 2019 08:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415228;
-        bh=7IybN8Nha+uXU8W7xnlveY2BYrbSDvSR5HmEzqawZPI=;
+        s=default; t=1560415231;
+        bh=C6d/i0uXdJ8+nqPibNnQK8H7JqpkEK6lAr0XOumabc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OxVHTLbb6OpkhB6jy0icvbSlV+dhNUjQKo2HfgYuv+1fC67GrILtIBE8zuVgK2MyP
-         eFHlcZzySCc8Hz7bjU5SCy/4VioggYFdrIpzFzMJA/w7ncSFfgFnT++gXIHMyTbwRE
-         lIW+zbX1RMjp5EE4/sI+UhGtuqMUmDbpH/oRbZhY=
+        b=RkDmfAiQl2zvdOmbvh+fFQeAqNGbvXuW2k3TlpTqwvJKZDxmUSPt4bqysjDAULqcr
+         S7J0Cnf/dRL7QMv/C9uJm2zl5nZuE41rd7WUJj7KvpeudkpguZ8xBpcjJ22HX9G71W
+         /LFB/JvvZRUf2KNDJHTI8e0ocBqizgk8ZpifhZ0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Jankowski <shasta@toxcorp.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 050/118] netfilter: nf_conntrack_h323: restore boundary check correctness
-Date:   Thu, 13 Jun 2019 10:33:08 +0200
-Message-Id: <20190613075646.674221934@linuxfoundation.org>
+        stable@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 051/118] mips: Make sure dt memory regions are valid
+Date:   Thu, 13 Jun 2019 10:33:09 +0200
+Message-Id: <20190613075646.719848269@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -60,41 +72,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f5e85ce8e733c2547827f6268136b70b802eabdb ]
+[ Upstream commit 93fa5b280761a4dbb14c5330f260380385ab2b49 ]
 
-Since commit bc7d811ace4a ("netfilter: nf_ct_h323: Convert
-CHECK_BOUND macro to function"), NAT traversal for H.323
-doesn't work, failing to parse H323-UserInformation.
-nf_h323_error_boundary() compares contents of the bitstring,
-not the addresses, preventing valid H.323 packets from being
-conntrack'd.
+There are situations when memory regions coming from dts may be
+too big for the platform physical address space. This especially
+concerns XPA-capable systems. Bootloader may determine more than 4GB
+memory available and pass it to the kernel over dts memory node, while
+kernel is built without XPA/64BIT support. In this case the region
+may either simply be truncated by add_memory_region() method
+or by u64->phys_addr_t type casting. But in worst case the method
+can even drop the memory region if it exceeds PHYS_ADDR_MAX size.
+So lets make sure the retrieved from dts memory regions are valid,
+and if some of them aren't, just manually truncate them with a warning
+printed out.
 
-This looks like an oversight from when CHECK_BOUND macro was
-converted to a function.
-
-To fix it, stop dereferencing bs->cur and bs->end.
-
-Fixes: bc7d811ace4a ("netfilter: nf_ct_h323: Convert CHECK_BOUND macro to function")
-Signed-off-by: Jakub Jankowski <shasta@toxcorp.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc: Huacai Chen <chenhc@lemote.com>
+Cc: Stefan Agner <stefan@agner.ch>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Serge Semin <Sergey.Semin@t-platforms.ru>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_h323_asn1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/kernel/prom.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_conntrack_h323_asn1.c b/net/netfilter/nf_conntrack_h323_asn1.c
-index 1601275efe2d..4c2ef42e189c 100644
---- a/net/netfilter/nf_conntrack_h323_asn1.c
-+++ b/net/netfilter/nf_conntrack_h323_asn1.c
-@@ -172,7 +172,7 @@ static int nf_h323_error_boundary(struct bitstr *bs, size_t bytes, size_t bits)
- 	if (bits % BITS_PER_BYTE > 0)
- 		bytes++;
+diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
+index 89950b7bf536..bdaf3536241a 100644
+--- a/arch/mips/kernel/prom.c
++++ b/arch/mips/kernel/prom.c
+@@ -41,7 +41,19 @@ char *mips_get_machine_name(void)
+ #ifdef CONFIG_USE_OF
+ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+ {
+-	return add_memory_region(base, size, BOOT_MEM_RAM);
++	if (base >= PHYS_ADDR_MAX) {
++		pr_warn("Trying to add an invalid memory region, skipped\n");
++		return;
++	}
++
++	/* Truncate the passed memory region instead of type casting */
++	if (base + size - 1 >= PHYS_ADDR_MAX || base + size < base) {
++		pr_warn("Truncate memory region %llx @ %llx to size %llx\n",
++			size, base, PHYS_ADDR_MAX - base);
++		size = PHYS_ADDR_MAX - base;
++	}
++
++	add_memory_region(base, size, BOOT_MEM_RAM);
+ }
  
--	if (*bs->cur + bytes > *bs->end)
-+	if (bs->cur + bytes > bs->end)
- 		return 1;
- 
- 	return 0;
+ int __init early_init_dt_reserve_memory_arch(phys_addr_t base,
 -- 
 2.20.1
 
