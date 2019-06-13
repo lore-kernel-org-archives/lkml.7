@@ -2,121 +2,148 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27913C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C71C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED81120851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05EDF20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xrc+XlYP"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="WkxZ0ZaY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391012AbfFMQCw (ORCPT
+        id S1731556AbfFMQDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:02:52 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40180 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731396AbfFMIrl (ORCPT
+        Thu, 13 Jun 2019 12:03:08 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38924 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731392AbfFMIrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:47:41 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p11so19817477wre.7;
-        Thu, 13 Jun 2019 01:47:39 -0700 (PDT)
+        Thu, 13 Jun 2019 04:47:39 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x4so17157091wrt.6
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 01:47:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=szeredi.hu; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=wXnFbw2PnvR/3sq9KGlaSJyBR1d6hKrCN6HutVmQhHo=;
-        b=Xrc+XlYPouXlKqyLZADHlMsX4sJPL+nk1A5YiLSgf1IeAJ4uOp5GvZDKCYogM4W2jD
-         bHUq17sfziazSYJPcdPUPWl2bOV+4w2esMkk1cUJhuRfAGYsArKTpHg0T1K/Z1xL2DcN
-         1I7+yJmbMY3j3t62QlaAqlXE3EBmV4cqS+FEB7lUehQ7MkxbsPOMzmQXIc2pbuK+a4fI
-         Q7lVgeRNI+Ev0QsXDE/r+SRsaZVHh/oE1JyI+bHivqw1flFeF1aYyaK9ZU8ClYNI+xad
-         ZNuieNY3F/jQdjuOe/qQiWBRKBAvK70sq0SEITpFvagUCC2TwaXSoSWcwW+VOywtK5SE
-         pQNQ==
+        bh=v6PLdyQOzI0tG2cZQ2qQYi4K1VGuuUo6oAxFYdZjwNY=;
+        b=WkxZ0ZaYt/UxgaO0AGRtXeVfV8vQftxoFqoFblsq3fXVJa5lyDJ3lsrYxFr7sULIua
+         YpIWXsQ5rwhxeRkpgCujNzHng+MyOoF9WlBdSS5plsIn1a5nsD07hT3DUFt42YMe4Hz6
+         nq+bHgOZbAlNCEv4qryu1jup+dv7NFBzv8UG8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wXnFbw2PnvR/3sq9KGlaSJyBR1d6hKrCN6HutVmQhHo=;
-        b=Y6zYBUZkU+1wAHoNnJ4XJHxgINvKrL8xeansXXw36tvedhPyq1PQI61+3NKk9Ey2sq
-         lVtVmCc+buqwzY7RVJJa0ElS5O+3EXHV4jv+FWNbm6XIVj0h/MxIwKmxlQW4Z4yArSuG
-         1GboxLQ678ilNazHb7d3uTEme3o6xKGkItk4V4wilT9f5wleG1gUziSvEWMn+8m7J8Oy
-         BKH1UjoNEayWWYeRDWoO3uIYMX5i2WdTGvfV+ZrvozM24Il2790wDFbLb+0aSsxaNx4y
-         pvWs9yYqQ3kAH8DofGhyo7jVWMdTufNnQD6KnxFmroKswQ/vz8zpVBzL1/O+vdh1iDH4
-         QaYg==
-X-Gm-Message-State: APjAAAWLpu9QahnsdP7WT6ZQIi/zPTYSIv76tv3YqthEazZ+rvnN5TwL
-        fvcjUsHjOl2YkyHK0xaAYzoX8m+w
-X-Google-Smtp-Source: APXvYqyieJMlQh1zYJusV9EMt5J3/JRv0A5KW6y2qJVYv7L+DGJAqn0xNHCGTaZ9cMqPUmEL2IM6TQ==
-X-Received: by 2002:adf:f7d0:: with SMTP id a16mr11798887wrq.246.1560415658589;
-        Thu, 13 Jun 2019 01:47:38 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id l12sm1882585wmj.22.2019.06.13.01.47.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        bh=v6PLdyQOzI0tG2cZQ2qQYi4K1VGuuUo6oAxFYdZjwNY=;
+        b=SxM0mCQDYJuCpo+czVyZq0rGkSenYL0jVQqi3vTFbezs2eXohkAF1I8IiNhn7gVCMo
+         KQqrhlnEcsUsqd6LWMFFKKAhrmLNmbBmIAvFkL0hYTduFEl0wpbrIzGk07Y9yAi/phIb
+         0vJagVpH64x6qC8S0zjHzZaW2g2bQ5ESj1DAXGuPJhRxRckIsk+NEVtdfIX2UfaAEXJS
+         EHq8mbOxgqiqvakpOBof0pPVRkPd7BbMPlXy3aY9ihpWaPDogayv2H/oxsExp6erKSOF
+         5J3vmOxcRTVqiRhLfP65KHjM3eieacKgsgs/V1/3e/4ltLlfBtKIVFAA7kvg/r2fTBj8
+         f1XQ==
+X-Gm-Message-State: APjAAAW3vrjhJVc20iPf9u7vc0OsQCxk++zSgGQUzn2Bl5G7wR1SLRKt
+        pe6R0S7QhVRzwEbsH+fzqANr3g==
+X-Google-Smtp-Source: APXvYqxKS8gUln6fvs1SbyW8pE5NsMpr3bzbKlLKlBr0EAEthBfXY+0ShPDuQUi4SaVl+Mr1RTCvhw==
+X-Received: by 2002:adf:f683:: with SMTP id v3mr1049914wrp.258.1560415657694;
         Thu, 13 Jun 2019 01:47:37 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 10:47:36 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Cc:     linus.walleij@linaro.org, jonathanh@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        pdeschrijver@nvidia.com, josephl@nvidia.com, smangipudi@nvidia.com,
-        ldewangan@nvidia.com, vidyas@nvidia.com
-Subject: Re: [PATCH V3 4/4] soc/tegra: select pinctrl for Tegra194
-Message-ID: <20190613084736.GA30664@ulmo>
-References: <1558007594-14824-1-git-send-email-kyarlagadda@nvidia.com>
- <1558007594-14824-4-git-send-email-kyarlagadda@nvidia.com>
+Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
+        by smtp.gmail.com with ESMTPSA id w67sm4993557wma.24.2019.06.13.01.47.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 01:47:36 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 10:47:28 +0200
+From:   Miklos Szeredi <miklos@szeredi.hu>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfs: fsmount: add missing mntget()
+Message-ID: <20190613084728.GA32129@miu.piliscsaba.redhat.com>
+References: <20190610183031.GE63833@gmail.com>
+ <20190612184313.143456-1-ebiggers@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1558007594-14824-4-git-send-email-kyarlagadda@nvidia.com>
+In-Reply-To: <20190612184313.143456-1-ebiggers@kernel.org>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 12, 2019 at 11:43:13AM -0700, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> sys_fsmount() needs to take a reference to the new mount when adding it
+> to the anonymous mount namespace.  Otherwise the filesystem can be
+> unmounted while it's still in use, as found by syzkaller.
 
---SLDf9lqlvOQaIe6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So it needs one count for the file (which dentry_open() obtains) and one for the
+attachment into the anonymous namespace.  The latter one is dropped at cleanup
+time, so your patch appears to be correct at getting that ref.
 
-On Thu, May 16, 2019 at 05:23:14PM +0530, Krishna Yarlagadda wrote:
-> Select PINCTRL_TEGRA194 by default for Tegra194 SOC needed
-> for dynamically controlling PCIe pins
->=20
-> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> ---
->  drivers/soc/tegra/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+I wonder why such a blatant use-after-free was missed in normal testing.  RCU
+delayed freeing, I guess?
 
-Applied to for-5.3/soc, thanks.
+How about this additional sanity checking patch?
 
-Thierry
+Thanks,
+Miklos
 
---SLDf9lqlvOQaIe6s
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0CDaUACgkQ3SOs138+
-s6Gw+Q/9GEMCAGe1/osKqqMZNuojtuyy3aCNb+QVhJWlJVtLn/VtdBx0AqAuAf63
-2HPt17CnmoqKcToQFlPHma+uC0BEiNuPx7E0dPLCddNI9JrNxqNuU7JaPN81WsXi
-Spydy5O5ioyDK42BTkWtljUAVHT8KwUDuLDMlvoINV8pWGCRKmU6CuN4+7XraC5R
-kZRutq0uc0bILzcVxVbzbe449ZF3y2aZyHdayaEYwPWmpN0JXWkmFIr093TWK7li
-NE+KSHUQBxujoct5IkKzgDTHAHLn3edNlzxXDLM1aM3QVN1BIo0ADnybyyFBj69y
-bhiOeczT5iI74h8cuNGf5BwCsgk2CgeQX4M3DpQMXHfdkZchqC/xTbSuafI9BiAS
-X9sip1PaNzHJyPMrfefXtx2uZJFz8IU6LGUqKsOfomFS4JkvJ/DKJtBaTMU8C+yq
-U2FCfMJfm79zUe1Gii2dHK2BCjj2Op8LRW3vKOP9B+qL+EIdBk75VxwbJABAI2ly
-C7B2Rkjl4JZ/Q0Co8+vHQ6DSxjNPJB7xnaM0S4oF0TFz++ykcLrnEVZP5QsevWrk
-Hjdysh9Od2rXOKhr3NlFHlarY8ZcvQGg2KTLiKpa4IOrC8MAKabs2AmKlsCjxA24
-FgzBW5XkLVHGKkUy5SmJSgE2B2Xlb/k9denLDi1UotFiEAMBhZ8=
-=7+8+
------END PGP SIGNATURE-----
-
---SLDf9lqlvOQaIe6s--
+diff --git a/fs/namespace.c b/fs/namespace.c
+index b26778bdc236..c638f220805a 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -153,10 +153,10 @@ static inline void mnt_add_count(struct mount *mnt, int n)
+ /*
+  * vfsmount lock must be held for write
+  */
+-unsigned int mnt_get_count(struct mount *mnt)
++int mnt_get_count(struct mount *mnt)
+ {
+ #ifdef CONFIG_SMP
+-	unsigned int count = 0;
++	int count = 0;
+ 	int cpu;
+ 
+ 	for_each_possible_cpu(cpu) {
+@@ -1140,6 +1140,8 @@ static DECLARE_DELAYED_WORK(delayed_mntput_work, delayed_mntput);
+ 
+ static void mntput_no_expire(struct mount *mnt)
+ {
++	int count;
++
+ 	rcu_read_lock();
+ 	if (likely(READ_ONCE(mnt->mnt_ns))) {
+ 		/*
+@@ -1162,11 +1164,13 @@ static void mntput_no_expire(struct mount *mnt)
+ 	 */
+ 	smp_mb();
+ 	mnt_add_count(mnt, -1);
+-	if (mnt_get_count(mnt)) {
++	count = mnt_get_count(mnt);
++	if (count > 0) {
+ 		rcu_read_unlock();
+ 		unlock_mount_hash();
+ 		return;
+ 	}
++	WARN_ON(count < 0);
+ 	if (unlikely(mnt->mnt.mnt_flags & MNT_DOOMED)) {
+ 		rcu_read_unlock();
+ 		unlock_mount_hash();
+diff --git a/fs/pnode.h b/fs/pnode.h
+index 49a058c73e4c..26f74e092bd9 100644
+--- a/fs/pnode.h
++++ b/fs/pnode.h
+@@ -44,7 +44,7 @@ int propagate_mount_busy(struct mount *, int);
+ void propagate_mount_unlock(struct mount *);
+ void mnt_release_group_id(struct mount *);
+ int get_dominating_id(struct mount *mnt, const struct path *root);
+-unsigned int mnt_get_count(struct mount *mnt);
++int mnt_get_count(struct mount *mnt);
+ void mnt_set_mountpoint(struct mount *, struct mountpoint *,
+ 			struct mount *);
+ void mnt_change_mountpoint(struct mount *parent, struct mountpoint *mp,
