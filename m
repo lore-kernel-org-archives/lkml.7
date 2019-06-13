@@ -2,163 +2,284 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48597C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278FFC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15C2E2173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79CC21721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:42:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LxynRClH"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K8AKe6go"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfFMXmK (ORCPT
+        id S1727747AbfFMXmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 19:42:10 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39317 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfFMXmJ (ORCPT
+        Thu, 13 Jun 2019 19:42:17 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:14959 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbfFMXmL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 19:42:09 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b7so180744pls.6
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 16:42:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qJQX+GLD4fwd+GCBrIWjKsA+IAvGAyQwTSeSX2BSMJY=;
-        b=LxynRClHhe6x/JL/spDHqC1iBz5ugcvqw4xyZsmxiWuMKvrTOMnUdqDKFM09vDQEXk
-         g8D28Mk39C+APeBjMzbC1os4SM6ZMn7qrCbrNb3T3fGmWaX7RMSCe+s43sy4YLrsZYAK
-         USjKgfZYVdMtiNjE5ywU7CUZvHRcPUBbocn+o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qJQX+GLD4fwd+GCBrIWjKsA+IAvGAyQwTSeSX2BSMJY=;
-        b=dMd66jn0uUEQzMdznxkarQQFP7gjAbg+5zprPYesIpG0DfvNdnWLH11L4TbgIW5z8M
-         JANaeKqE4qWTcw4OWcyCIiTX9406TmtXaxIzckWsurIvB1QrZBaj9dgbPjljJ+4Zu2P9
-         RC3lC5Jcaeh0ssIhbtivBrvPb+jRXlsrxHv/bKjrYo7zmWxHFcQqyjPxSU0jCow2VmXb
-         FJWISOyFWsap0Cs8tQXp+wRMxkR4AP2nREvzVusFaej7s4hY9tBX8MQzsgTNcEvbx9SI
-         efZnV2wXKUjZnmEKCUb7b8U5Rt98lTcGpLN4w6sNXXh3SxcKeIN26uLaTJMaUbUhl2qw
-         E0Rw==
-X-Gm-Message-State: APjAAAWD6ql32U8H2c4zV3+7ap/db5gzBZHAVc5MHZIwJhbgjy9kgkpx
-        BXeDAOW5zDeeEMQbzFLJq4vzLA==
-X-Google-Smtp-Source: APXvYqyHvmG/55d6riqeb8uT5XjZFjeg3M6IzV8m9M1TGxU2K10/XPwKK4EKmj4io0cDJZmrlM1FDg==
-X-Received: by 2002:a17:902:2a26:: with SMTP id i35mr51358780plb.315.1560469328377;
-        Thu, 13 Jun 2019 16:42:08 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id p7sm781088pfp.131.2019.06.13.16.42.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 16:42:07 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>
-Cc:     brcm80211-dev-list.pdl@broadcom.com,
-        linux-rockchip@lists.infradead.org,
-        Double Lo <double.lo@cypress.com>, briannorris@chromium.org,
-        linux-wireless@vger.kernel.org,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        Madhan Mohan R <madhanmohan.r@cypress.com>, mka@chromium.org,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        netdev@vger.kernel.org, brcm80211-dev-list@cypress.com,
-        Douglas Anderson <dianders@chromium.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Ondrej Jirman <megous@megous.com>,
-        Jiong Wu <lohengrin1024@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Madhan Mohan R <MadhanMohan.R@cypress.com>,
-        Avri Altman <avri.altman@wdc.com>
-Subject: [PATCH v4 0/5] brcmfmac: sdio: Deal better w/ transmission errors related to idle
-Date:   Thu, 13 Jun 2019 16:41:48 -0700
-Message-Id: <20190613234153.59309-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
+        Thu, 13 Jun 2019 19:42:11 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d02df510000>; Thu, 13 Jun 2019 16:42:09 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 13 Jun 2019 16:42:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 13 Jun 2019 16:42:08 -0700
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Jun
+ 2019 23:42:07 +0000
+Subject: Re: [PATCH 10/22] memremap: add a migrate callback to struct
+ dev_pagemap_ops
+To:     Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+CC:     <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-nvdimm@lists.01.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-11-hch@lst.de>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <d6916d71-c17e-74df-58f2-c28ff8044b96@nvidia.com>
+Date:   Thu, 13 Jun 2019 16:42:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190613094326.24093-11-hch@lst.de>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560469329; bh=wLsE+X+8pitibNp+2XhoFt2Wacvnxu1fblPm1H5d/6Q=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=K8AKe6gofAssIF+PWoIuTwl4fCkUwuiOvHNEsvPI3F+q8VQ4+xJWpP84RWIp2f3Mv
+         vM/f8XrfvgL48kTe0DZDz8uLahwVWJVbReUsFLpkhihuCalW2d/Eak3R/rD5QepCm4
+         eAT3qIqhtKZ2iV0oC5E3+YcnsBUSSuqGl8OksAsK+CDDOD/NG+NwGm+eY+JOt6cn/K
+         1DJbYLIbG5TYSbhI0/IpkyhPXQDxOnDF3mu4S/a9zHc+FirnrIJnjHhjESGPnAKzt5
+         I3iL8In6P9r99xdo7wZmjVCtpSHnz1ZXoerU/wDDEdlFepU5Wsr2g9IVOwPBRrjw/t
+         DyeF5Z2L4YXLg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series attempts to deal better with the expected transmission
-errors related to the idle states (handled by the Always-On-Subsystem
-or AOS) on the SDIO-based WiFi on rk3288-veyron-minnie,
-rk3288-veyron-speedy, and rk3288-veyron-mickey.
 
-Some details about those errors can be found in
-<https://crbug.com/960222>, but to summarize it here: if we try to
-send the wakeup command to the WiFi card at the same time it has
-decided to wake up itself then it will behave badly on the SDIO bus.
-This can cause timeouts or CRC errors.
+On 6/13/19 2:43 AM, Christoph Hellwig wrote:
+> This replaces the hacky ->fault callback, which is currently directly
+> called from common code through a hmm specific data structure as an
+> exercise in layering violations.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   include/linux/hmm.h      |  6 ------
+>   include/linux/memremap.h |  6 ++++++
+>   include/linux/swapops.h  | 15 ---------------
+>   kernel/memremap.c        | 31 -------------------------------
+>   mm/hmm.c                 | 13 +++++--------
+>   mm/memory.c              |  9 ++-------
+>   6 files changed, 13 insertions(+), 67 deletions(-)
+> 
+> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+> index 5761a39221a6..3c9a59dbfdb8 100644
+> --- a/include/linux/hmm.h
+> +++ b/include/linux/hmm.h
+> @@ -658,11 +658,6 @@ struct hmm_devmem_ops {
+>    * chunk, as an optimization. It must, however, prioritize the faulting address
+>    * over all the others.
+>    */
+> -typedef vm_fault_t (*dev_page_fault_t)(struct vm_area_struct *vma,
+> -				unsigned long addr,
+> -				const struct page *page,
+> -				unsigned int flags,
+> -				pmd_t *pmdp);
+>   
+>   struct hmm_devmem {
+>   	struct completion		completion;
+> @@ -673,7 +668,6 @@ struct hmm_devmem {
+>   	struct dev_pagemap		pagemap;
+>   	const struct hmm_devmem_ops	*ops;
+>   	struct percpu_ref		ref;
+> -	dev_page_fault_t		page_fault;
+>   };
+>   
+>   /*
+> diff --git a/include/linux/memremap.h b/include/linux/memremap.h
+> index 96a3a6d564ad..03a4099be701 100644
+> --- a/include/linux/memremap.h
+> +++ b/include/linux/memremap.h
+> @@ -75,6 +75,12 @@ struct dev_pagemap_ops {
+>   	 * Transition the percpu_ref in struct dev_pagemap to the dead state.
+>   	 */
+>   	void (*kill)(struct dev_pagemap *pgmap);
+> +
+> +	/*
+> +	 * Used for private (un-addressable) device memory only.  Must migrate
+> +	 * the page back to a CPU accessible page.
+> +	 */
+> +	vm_fault_t (*migrate)(struct vm_fault *vmf);
+>   };
+>   
+>   /**
+> diff --git a/include/linux/swapops.h b/include/linux/swapops.h
+> index 4d961668e5fc..15bdb6fe71e5 100644
+> --- a/include/linux/swapops.h
+> +++ b/include/linux/swapops.h
+> @@ -129,12 +129,6 @@ static inline struct page *device_private_entry_to_page(swp_entry_t entry)
+>   {
+>   	return pfn_to_page(swp_offset(entry));
+>   }
+> -
+> -vm_fault_t device_private_entry_fault(struct vm_area_struct *vma,
+> -		       unsigned long addr,
+> -		       swp_entry_t entry,
+> -		       unsigned int flags,
+> -		       pmd_t *pmdp);
+>   #else /* CONFIG_DEVICE_PRIVATE */
+>   static inline swp_entry_t make_device_private_entry(struct page *page, bool write)
+>   {
+> @@ -164,15 +158,6 @@ static inline struct page *device_private_entry_to_page(swp_entry_t entry)
+>   {
+>   	return NULL;
+>   }
+> -
+> -static inline vm_fault_t device_private_entry_fault(struct vm_area_struct *vma,
+> -				     unsigned long addr,
+> -				     swp_entry_t entry,
+> -				     unsigned int flags,
+> -				     pmd_t *pmdp)
+> -{
+> -	return VM_FAULT_SIGBUS;
+> -}
+>   #endif /* CONFIG_DEVICE_PRIVATE */
+>   
+>   #ifdef CONFIG_MIGRATION
+> diff --git a/kernel/memremap.c b/kernel/memremap.c
+> index 6a3183cac764..7167e717647d 100644
+> --- a/kernel/memremap.c
+> +++ b/kernel/memremap.c
+> @@ -11,7 +11,6 @@
+>   #include <linux/types.h>
+>   #include <linux/wait_bit.h>
+>   #include <linux/xarray.h>
+> -#include <linux/hmm.h>
+>   
+>   static DEFINE_XARRAY(pgmap_array);
+>   #define SECTION_MASK ~((1UL << PA_SECTION_SHIFT) - 1)
+> @@ -48,36 +47,6 @@ static inline int dev_pagemap_enable(struct device *dev)
+>   }
+>   #endif /* CONFIG_DEV_PAGEMAP_OPS */
+>   
+> -#if IS_ENABLED(CONFIG_DEVICE_PRIVATE)
+> -vm_fault_t device_private_entry_fault(struct vm_area_struct *vma,
+> -		       unsigned long addr,
+> -		       swp_entry_t entry,
+> -		       unsigned int flags,
+> -		       pmd_t *pmdp)
+> -{
+> -	struct page *page = device_private_entry_to_page(entry);
+> -	struct hmm_devmem *devmem;
+> -
+> -	devmem = container_of(page->pgmap, typeof(*devmem), pagemap);
+> -
+> -	/*
+> -	 * The page_fault() callback must migrate page back to system memory
+> -	 * so that CPU can access it. This might fail for various reasons
+> -	 * (device issue, device was unsafely unplugged, ...). When such
+> -	 * error conditions happen, the callback must return VM_FAULT_SIGBUS.
+> -	 *
+> -	 * Note that because memory cgroup charges are accounted to the device
+> -	 * memory, this should never fail because of memory restrictions (but
+> -	 * allocation of regular system page might still fail because we are
+> -	 * out of memory).
+> -	 *
+> -	 * There is a more in-depth description of what that callback can and
+> -	 * cannot do, in include/linux/memremap.h
+> -	 */
+> -	return devmem->page_fault(vma, addr, page, flags, pmdp);
+> -}
+> -#endif /* CONFIG_DEVICE_PRIVATE */
+> -
+>   static void pgmap_array_delete(struct resource *res)
+>   {
+>   	xa_store_range(&pgmap_array, PHYS_PFN(res->start), PHYS_PFN(res->end),
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index 6dc769feb2e1..aab799677c7d 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -1330,15 +1330,12 @@ static void hmm_devmem_ref_kill(struct dev_pagemap *pgmap)
+>   	percpu_ref_kill(pgmap->ref);
+>   }
+>   
+> -static vm_fault_t hmm_devmem_fault(struct vm_area_struct *vma,
+> -			    unsigned long addr,
+> -			    const struct page *page,
+> -			    unsigned int flags,
+> -			    pmd_t *pmdp)
+> +static vm_fault_t hmm_devmem_migrate(struct vm_fault *vmf)
+>   {
+> -	struct hmm_devmem *devmem = page->pgmap->data;
+> +	struct hmm_devmem *devmem = vmf->page->pgmap->data;
+>   
+> -	return devmem->ops->fault(devmem, vma, addr, page, flags, pmdp);
+> +	return devmem->ops->fault(devmem, vmf->vma, vmf->address, vmf->page,
+> +			vmf->flags, vmf->pmd);
+>   }
+>   
+>   static void hmm_devmem_free(struct page *page, void *data)
+> @@ -1351,6 +1348,7 @@ static void hmm_devmem_free(struct page *page, void *data)
+>   static const struct dev_pagemap_ops hmm_pagemap_ops = {
+>   	.page_free		= hmm_devmem_free,
+>   	.kill			= hmm_devmem_ref_kill,
+> +	.migrate		= hmm_devmem_migrate,
+>   };
+>   
+>   /*
+> @@ -1405,7 +1403,6 @@ struct hmm_devmem *hmm_devmem_add(const struct hmm_devmem_ops *ops,
+>   	devmem->pfn_first = devmem->resource->start >> PAGE_SHIFT;
+>   	devmem->pfn_last = devmem->pfn_first +
+>   			   (resource_size(devmem->resource) >> PAGE_SHIFT);
+> -	devmem->page_fault = hmm_devmem_fault;
+>   
+>   	devmem->pagemap.type = MEMORY_DEVICE_PRIVATE;
+>   	devmem->pagemap.res = *devmem->resource;
+> diff --git a/mm/memory.c b/mm/memory.c
+> index ddf20bd0c317..cbf3cb598436 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -2782,13 +2782,8 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>   			migration_entry_wait(vma->vm_mm, vmf->pmd,
+>   					     vmf->address);
+>   		} else if (is_device_private_entry(entry)) {
+> -			/*
+> -			 * For un-addressable device memory we call the pgmap
+> -			 * fault handler callback. The callback must migrate
+> -			 * the page back to some CPU accessible page.
+> -			 */
+> -			ret = device_private_entry_fault(vma, vmf->address, entry,
+> -						 vmf->flags, vmf->pmd);
+> +			vmf->page = device_private_entry_to_page(entry);
+> +			ret = page->pgmap->ops->migrate(vmf);
 
-When I tested on 4.19 and 4.20 these CRC errors can be seen to cause
-re-tuning.  Since I am currently developing on 4.19 this was the
-original problem I attempted to solve.
+This needs to either initialize "page" or be changed to "vmf->page".
+Otherwise, it is a NULL pointer dereference.
 
-On mainline it turns out that you don't see the retuning errors but
-you see tons of spam about timeouts trying to wakeup from sleep.  I
-tracked down the commit that was causing that and have partially
-reverted it here.  I have no real knowledge about Broadcom WiFi, but
-the commit that was causing problems sounds (from the descriptioin) to
-be a hack commit penalizing all Broadcom WiFi users because of a bug
-in a Cypress SD controller.  I will let others comment if this is
-truly the case and, if so, what the right solution should be.
+>   		} else if (is_hwpoison_entry(entry)) {
+>   			ret = VM_FAULT_HWPOISON;
+>   		} else {
+> 
 
-For v3 of this series I have added 2 patches to the end of the series
-to address errors that would show up on systems with these same SDIO
-WiFi cards when used on controllers that do periodic retuning.  These
-systems need an extra fix to prevent the retuning from happening when
-the card is asleep.
-
-Changes in v4:
-- Moved to SDIO API only (Adrian, Ulf).
-- Renamed to make it less generic, now retune_crc_disable (Ulf).
-- Function header makes it clear host must be claimed (Ulf).
-- No more WARN_ON (Ulf).
-- Adjust to API rename (Adrian, Ulf).
-- Moved retune hold/release to SDIO API (Adrian).
-- Adjust to API rename (Adrian).
-
-Changes in v3:
-- Took out the spinlock since I believe this is all in one context.
-- Expect errors for all of brcmf_sdio_kso_control() (Adrian).
-- ("mmc: core: Export mmc_retune_hold_now() mmc_retune_release()") new for v3.
-- ("brcmfmac: sdio: Don't tune while the card is off") new for v3.
-
-Changes in v2:
-- A full revert, not just a partial one (Arend).  ...with explicit Cc.
-- Updated commit message to clarify based on discussion of v1.
-
-Douglas Anderson (5):
-  Revert "brcmfmac: disable command decode in sdio_aos"
-  mmc: core: API to temporarily disable retuning for SDIO CRC errors
-  brcmfmac: sdio: Disable auto-tuning around commands expected to fail
-  mmc: core: Add sdio_retune_hold_now() and sdio_retune_release()
-  brcmfmac: sdio: Don't tune while the card is off
-
- drivers/mmc/core/core.c                       |  5 +-
- drivers/mmc/core/sdio_io.c                    | 76 +++++++++++++++++++
- .../broadcom/brcm80211/brcmfmac/sdio.c        | 17 +++--
- include/linux/mmc/core.h                      |  2 +
- include/linux/mmc/host.h                      |  1 +
- include/linux/mmc/sdio_func.h                 |  6 ++
- 6 files changed, 100 insertions(+), 7 deletions(-)
-
--- 
-2.22.0.rc2.383.gf4fbbf30c2-goog
-
+You can add:
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
