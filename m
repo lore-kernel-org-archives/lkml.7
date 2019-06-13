@@ -2,95 +2,101 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E5DC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F036C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 296ED20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="bCpFEBnr"
+	by mail.kernel.org (Postfix) with ESMTP id 5487F20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560442695;
+	bh=7IybN8Nha+uXU8W7xnlveY2BYrbSDvSR5HmEzqawZPI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=k1VXIizoAGa4MRnIy1o5NjFM7yAl87KM+CaKMdO1Srae7zIcHiKnZ7QlXm8+cnmKp
+	 snbmcsUEk0yn+s49L+4fxUaA7mMbpG6s1qgHVYDEsP2MjCnx7c8NPIEV/UpS/iWEad
+	 yml8CWyx7PlMIrl+t05IQMv/bWHBiy82OyzkppnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732646AbfFMQSI (ORCPT
+        id S2390352AbfFMQSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:18:08 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:53807 "EHLO frisell.zx2c4.com"
+        Thu, 13 Jun 2019 12:18:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731118AbfFMQSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:18:06 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 0c2c6c51
-        for <linux-kernel@vger.kernel.org>;
-        Thu, 13 Jun 2019 15:45:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=ZtKcLIe9xSGOyWd+OOk7fGBXeNU=; b=bCpFEB
-        nrXKDiy8HwyxBJCTvQgIfnU+sHwPPWr1dWmCcU+JVdlZgjAyQucuQnBupJchfC4O
-        PeSRwHd4VkzQNhPKdTxX+dlCqyK+wT2+2x6ZqoZw1fu4fLYbiy3xSz76RAjPTlQ/
-        UPS8DCBMOEjbFLU84FSYgonE1/IoE+oLCuhktuOrTmOgbho517TMbh5GhZN2k4MB
-        VFEQ+dJgPf8KIPlgSoRj3KpVCAY68yoqIOgBg9M2ZTFrQuOWequ2rXUpGMG7uHPB
-        GPIhgK10bOUMoBjOJomWe3D0Kf+zJ11/SEEFz5FKWxoQ3L3S0Wx/bQHgI14CEM81
-        kdHyfMic7IZKGdig==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id c2ec9c6f (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO)
-        for <linux-kernel@vger.kernel.org>;
-        Thu, 13 Jun 2019 15:45:40 +0000 (UTC)
-Received: by mail-ot1-f42.google.com with SMTP id r6so15235805oti.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 09:18:04 -0700 (PDT)
-X-Gm-Message-State: APjAAAWtEtugNpB9WyfKNcfG3Pfqs3ggL97C0/6hS3cukTqdwDua/kAB
-        cuH/LmjwDRhiSDpCBwqGZ7I7Thwcs9TcrIRN1/4=
-X-Google-Smtp-Source: APXvYqwUgln7TE6c+9UQAQp4xqQDgMD0g+/7+3FdAzVlYUyYUygDyqZxn5HHn1NcJhw91s6BCv8fynZ7MX3taRPvWIs=
-X-Received: by 2002:a9d:7a82:: with SMTP id l2mr8403770otn.120.1560442683162;
- Thu, 13 Jun 2019 09:18:03 -0700 (PDT)
+        id S1731118AbfFMIk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:40:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77B7021473;
+        Thu, 13 Jun 2019 08:40:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560415228;
+        bh=7IybN8Nha+uXU8W7xnlveY2BYrbSDvSR5HmEzqawZPI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OxVHTLbb6OpkhB6jy0icvbSlV+dhNUjQKo2HfgYuv+1fC67GrILtIBE8zuVgK2MyP
+         eFHlcZzySCc8Hz7bjU5SCy/4VioggYFdrIpzFzMJA/w7ncSFfgFnT++gXIHMyTbwRE
+         lIW+zbX1RMjp5EE4/sI+UhGtuqMUmDbpH/oRbZhY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jakub Jankowski <shasta@toxcorp.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 050/118] netfilter: nf_conntrack_h323: restore boundary check correctness
+Date:   Thu, 13 Jun 2019 10:33:08 +0200
+Message-Id: <20190613075646.674221934@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
+References: <20190613075643.642092651@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <CAHmME9qBDtO1vJrA2Ch3SQigsu435wR7Q3vTm_3R=u=BE49S-Q@mail.gmail.com>
- <alpine.DEB.2.21.1906112257120.2214@nanos.tec.linutronix.de>
- <20190612090257.GF3436@hirez.programming.kicks-ass.net> <CAHmME9obwzZ5x=p3twDfNYux+kg0h4QAGe0ePAkZ2KqvguBK3g@mail.gmail.com>
- <CAK8P3a15NTV=njOjz-ccYL8=_q_MdEru0A+jeE=f7ufUTOOTgw@mail.gmail.com>
- <CAHmME9pOWk_ZteUZc_PT19rMn1kfYcXtmLcyAy5sncdV1tNuiQ@mail.gmail.com> <CAK8P3a3DpRvk1Mw_MKs8wAbRJbMUQoY2UTgK1CF8UOiBQg=btw@mail.gmail.com>
-In-Reply-To: <CAK8P3a3DpRvk1Mw_MKs8wAbRJbMUQoY2UTgK1CF8UOiBQg=btw@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Thu, 13 Jun 2019 18:17:50 +0200
-X-Gmail-Original-Message-ID: <CAHmME9pVeYBkUX058EA-W4ZkEch=enPsiPioWnkVLK03djuQ9A@mail.gmail.com>
-Message-ID: <CAHmME9pVeYBkUX058EA-W4ZkEch=enPsiPioWnkVLK03djuQ9A@mail.gmail.com>
-Subject: Re: infinite loop in read_hpet from ktime_get_boot_fast_ns
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Waiman Long <longman@redhat.com>, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Arnd,
+[ Upstream commit f5e85ce8e733c2547827f6268136b70b802eabdb ]
 
-On Thu, Jun 13, 2019 at 5:40 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> A seqlock is a very cheap synchronization primitive, I would actually
-> guess that this is faster than most implementations of sched_clock()
-> that access a hardware register for reading the time.
+Since commit bc7d811ace4a ("netfilter: nf_ct_h323: Convert
+CHECK_BOUND macro to function"), NAT traversal for H.323
+doesn't work, failing to parse H323-UserInformation.
+nf_h323_error_boundary() compares contents of the bitstring,
+not the addresses, preventing valid H.323 packets from being
+conntrack'd.
 
-It appears to me that ktime_get_coarse_boottime() has a granularity of
-a whole second, which is a lot worse than jiffies. Looking at the
-source, you assign base but don't then add ns like the other
-functions. At first I thought this was an intentional quirk to avoid
-hitting the slow hardware paths. But noticing this poor granularity
-now and observing that there's actually a blank line (\n\n) where the
-nanosecond addition normally would be, I wonder if something was lost
-in cut-and-paste?
+This looks like an oversight from when CHECK_BOUND macro was
+converted to a function.
 
-I'm still poking around trying to see what's up. As a quick test,
-running this on every packet during a high speed test shows the left
-incrementing many times per second, whereas the right increments once
-per second:
+To fix it, stop dereferencing bs->cur and bs->end.
 
-static int x = 0;
-if (!(x++ % 30000))
-     pr_err("%llu %llu\n", local_clock(), ktime_get_coarse_boottime());
+Fixes: bc7d811ace4a ("netfilter: nf_ct_h323: Convert CHECK_BOUND macro to function")
+Signed-off-by: Jakub Jankowski <shasta@toxcorp.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/netfilter/nf_conntrack_h323_asn1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Jason
+diff --git a/net/netfilter/nf_conntrack_h323_asn1.c b/net/netfilter/nf_conntrack_h323_asn1.c
+index 1601275efe2d..4c2ef42e189c 100644
+--- a/net/netfilter/nf_conntrack_h323_asn1.c
++++ b/net/netfilter/nf_conntrack_h323_asn1.c
+@@ -172,7 +172,7 @@ static int nf_h323_error_boundary(struct bitstr *bs, size_t bytes, size_t bits)
+ 	if (bits % BITS_PER_BYTE > 0)
+ 		bytes++;
+ 
+-	if (*bs->cur + bytes > *bs->end)
++	if (bs->cur + bytes > bs->end)
+ 		return 1;
+ 
+ 	return 0;
+-- 
+2.20.1
+
+
+
