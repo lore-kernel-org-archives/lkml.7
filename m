@@ -2,31 +2,31 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815F1C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 312F1C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 631B720449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1027520449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388357AbfFMPQS (ORCPT
+        id S1732990AbfFMPQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:16:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:8369 "EHLO mx1.redhat.com"
+        Thu, 13 Jun 2019 11:16:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35834 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732207AbfFMNXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:23:51 -0400
+        id S1732208AbfFMNXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 09:23:52 -0400
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 433E3301BE65;
-        Thu, 13 Jun 2019 13:23:51 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id E21E130F1BA3;
+        Thu, 13 Jun 2019 13:23:46 +0000 (UTC)
 Received: from treble.redhat.com (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1C4B954216;
-        Thu, 13 Jun 2019 13:23:50 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B95F6541F8;
+        Thu, 13 Jun 2019 13:23:45 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
@@ -34,87 +34,145 @@ Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
         bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
         Song Liu <songliubraving@fb.com>,
         Kairui Song <kasong@redhat.com>
-Subject: [PATCH 7/9] x86/unwind/orc: Fall back to using frame pointers for generated code
-Date:   Thu, 13 Jun 2019 08:21:04 -0500
-Message-Id: <4f536ec4facda97406273a22a4c2677f7cb22148.1560431531.git.jpoimboe@redhat.com>
+Subject: [PATCH 5/9] x86/bpf: Support SIB byte generation
+Date:   Thu, 13 Jun 2019 08:21:02 -0500
+Message-Id: <30e798c2a5b5d89908e6beea03bf2938eaf2a1ca.1560431531.git.jpoimboe@redhat.com>
 In-Reply-To: <cover.1560431531.git.jpoimboe@redhat.com>
 References: <cover.1560431531.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 13 Jun 2019 13:23:51 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 13 Jun 2019 13:23:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ORC unwinder can't unwind through BPF JIT generated code because
-there are no ORC entries associated with the code.
+In preparation for using R12 indexing instructions in BPF JIT code, add
+support for generating the x86 SIB byte.
 
-If an ORC entry isn't available, try to fall back to frame pointers.  If
-BPF and other generated code always do frame pointer setup (even with
-CONFIG_FRAME_POINTERS=n) then this will allow ORC to unwind through most
-generated code despite there being no corresponding ORC entries.
-
-Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
-Reported-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- arch/x86/kernel/unwind_orc.c | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+ arch/x86/net/bpf_jit_comp.c | 69 +++++++++++++++++++++++++++++--------
+ 1 file changed, 54 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 33b66b5c5aec..72b997eaa1fc 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -82,9 +82,9 @@ static struct orc_entry *orc_find(unsigned long ip);
-  * But they are copies of the ftrace entries that are static and
-  * defined in ftrace_*.S, which do have orc entries.
-  *
-- * If the undwinder comes across a ftrace trampoline, then find the
-+ * If the unwinder comes across a ftrace trampoline, then find the
-  * ftrace function that was used to create it, and use that ftrace
-- * function's orc entrie, as the placement of the return code in
-+ * function's orc entry, as the placement of the return code in
-  * the stack will be identical.
-  */
- static struct orc_entry *orc_ftrace_find(unsigned long ip)
-@@ -128,6 +128,16 @@ static struct orc_entry null_orc_entry = {
- 	.type = ORC_TYPE_CALL
- };
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index 485692d4b163..e649f977f8e1 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -143,6 +143,12 @@ static bool is_axreg(u32 reg)
+ 	return reg == BPF_REG_0;
+ }
  
-+/* Fake frame pointer entry -- used as a fallback for generated code */
-+static struct orc_entry orc_fp_entry = {
-+	.type		= ORC_TYPE_CALL,
-+	.sp_reg		= ORC_REG_BP,
-+	.sp_offset	= 16,
-+	.bp_reg		= ORC_REG_PREV_SP,
-+	.bp_offset	= -16,
-+	.end		= 0,
-+};
++static bool is_sib_reg(u32 reg)
++{
++	/* R12 isn't used yet */
++	false;
++}
 +
- static struct orc_entry *orc_find(unsigned long ip)
+ /* Add modifiers if 'reg' maps to x86-64 registers R8..R15 */
+ static u8 add_1mod(u8 byte, u32 reg)
  {
- 	static struct orc_entry *orc;
-@@ -392,8 +402,16 @@ bool unwind_next_frame(struct unwind_state *state)
- 	 * calls and calls to noreturn functions.
- 	 */
- 	orc = orc_find(state->signal ? state->ip : state->ip - 1);
--	if (!orc)
--		goto err;
-+	if (!orc) {
-+		/*
-+		 * As a fallback, try to assume this code uses a frame pointer.
-+		 * This is useful for generated code, like BPF, which ORC
-+		 * doesn't know about.  This is just a guess, so the rest of
-+		 * the unwind is no longer considered reliable.
-+		 */
-+		orc = &orc_fp_entry;
-+		state->error = true;
-+	}
+@@ -779,10 +785,19 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
+ 		case BPF_ST | BPF_MEM | BPF_DW:
+ 			EMIT2(add_1mod(0x48, dst_reg), 0xC7);
  
- 	/* End-of-stack check for kernel threads: */
- 	if (orc->sp_reg == ORC_REG_UNDEFINED) {
+-st:			if (is_imm8(insn->off))
+-				EMIT2(add_1reg(0x40, dst_reg), insn->off);
++st:
++			if (is_imm8(insn->off))
++				EMIT1(add_1reg(0x40, dst_reg));
++			else
++				EMIT1(add_1reg(0x80, dst_reg));
++
++			if (is_sib_reg(dst_reg))
++				EMIT1(add_1reg(0x20, dst_reg));
++
++			if (is_imm8(insn->off))
++				EMIT1(insn->off);
+ 			else
+-				EMIT1_off32(add_1reg(0x80, dst_reg), insn->off);
++				EMIT(insn->off, 4);
+ 
+ 			EMIT(imm32, bpf_size_to_x86_bytes(BPF_SIZE(insn->code)));
+ 			break;
+@@ -811,11 +826,19 @@ st:			if (is_imm8(insn->off))
+ 			goto stx;
+ 		case BPF_STX | BPF_MEM | BPF_DW:
+ 			EMIT2(add_2mod(0x48, dst_reg, src_reg), 0x89);
+-stx:			if (is_imm8(insn->off))
+-				EMIT2(add_2reg(0x40, dst_reg, src_reg), insn->off);
++stx:
++			if (is_imm8(insn->off))
++				EMIT1(add_2reg(0x40, dst_reg, src_reg));
+ 			else
+-				EMIT1_off32(add_2reg(0x80, dst_reg, src_reg),
+-					    insn->off);
++				EMIT1(add_2reg(0x80, dst_reg, src_reg));
++
++			if (is_sib_reg(dst_reg))
++				EMIT1(add_1reg(0x20, dst_reg));
++
++			if (is_imm8(insn->off))
++				EMIT1(insn->off);
++			else
++				EMIT(insn->off, 4);
+ 			break;
+ 
+ 			/* LDX: dst_reg = *(u8*)(src_reg + off) */
+@@ -837,16 +860,24 @@ stx:			if (is_imm8(insn->off))
+ 		case BPF_LDX | BPF_MEM | BPF_DW:
+ 			/* Emit 'mov rax, qword ptr [rax+0x14]' */
+ 			EMIT2(add_2mod(0x48, src_reg, dst_reg), 0x8B);
+-ldx:			/*
++ldx:
++			/*
+ 			 * If insn->off == 0 we can save one extra byte, but
+ 			 * special case of x86 R13 which always needs an offset
+ 			 * is not worth the hassle
+ 			 */
+ 			if (is_imm8(insn->off))
+-				EMIT2(add_2reg(0x40, src_reg, dst_reg), insn->off);
++				EMIT1(add_2reg(0x40, src_reg, dst_reg));
++			else
++				EMIT1(add_2reg(0x80, src_reg, dst_reg));
++
++			if (is_sib_reg(src_reg))
++				EMIT1(add_1reg(0x20, src_reg));
++
++			if (is_imm8(insn->off))
++				EMIT1(insn->off);
+ 			else
+-				EMIT1_off32(add_2reg(0x80, src_reg, dst_reg),
+-					    insn->off);
++				EMIT(insn->off, 4);
+ 			break;
+ 
+ 			/* STX XADD: lock *(u32*)(dst_reg + off) += src_reg */
+@@ -859,11 +890,19 @@ stx:			if (is_imm8(insn->off))
+ 			goto xadd;
+ 		case BPF_STX | BPF_XADD | BPF_DW:
+ 			EMIT3(0xF0, add_2mod(0x48, dst_reg, src_reg), 0x01);
+-xadd:			if (is_imm8(insn->off))
+-				EMIT2(add_2reg(0x40, dst_reg, src_reg), insn->off);
++xadd:
++			if (is_imm8(insn->off))
++				EMIT1(add_2reg(0x40, dst_reg, src_reg));
++			else
++				EMIT1(add_2reg(0x80, dst_reg, src_reg));
++
++			if (is_sib_reg(dst_reg))
++				EMIT1(add_1reg(0x20, dst_reg));
++
++			if (is_imm8(insn->off))
++				EMIT1(insn->off);
+ 			else
+-				EMIT1_off32(add_2reg(0x80, dst_reg, src_reg),
+-					    insn->off);
++				EMIT(insn->off, 4);
+ 			break;
+ 
+ 			/* call */
 -- 
 2.20.1
 
