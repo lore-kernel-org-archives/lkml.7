@@ -2,82 +2,105 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8483C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A0FC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC41206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B91C206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:27:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="TbGt75o/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729644AbfFMP1r (ORCPT
+        id S1729902AbfFMP1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:27:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35152 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729011AbfFMLfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 07:35:06 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 32CB26EB81;
-        Thu, 13 Jun 2019 11:35:06 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.43.2.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0EBAC60FAB;
-        Thu, 13 Jun 2019 11:35:04 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH] KVM: nVMX: use correct clean fields when copying from eVMCS
-Date:   Thu, 13 Jun 2019 13:35:02 +0200
-Message-Id: <20190613113502.9535-1-vkuznets@redhat.com>
+        Thu, 13 Jun 2019 11:27:51 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37798 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728990AbfFMLc7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 07:32:59 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v14so20368646wrr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 04:32:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AF1205N89OZNViaP6acWXh6mHKPDql5m0Yi3tu1T8h8=;
+        b=TbGt75o/WSp1OSUJTHNYCciigYJKAYY6solbnb+OPu7egwRHpZFyTp57t0BC1acpgS
+         TAPKFVoWfjLIyWlG5lM6ccnEx04BY1qZTdskF0iD/gBFok1EC4Jb4k98qIWfHxkzKXFg
+         UCMZerFSt04ZfSvT63r76NMFvJdbfCUTVST3Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AF1205N89OZNViaP6acWXh6mHKPDql5m0Yi3tu1T8h8=;
+        b=ZQI7oA+bIQ9cJMuJqgRYU5xqlmoAOhwhCTiQt0NJey/ktFB99uj5kA+NfhT9Q777v/
+         21g5ql12z1vYxkCiSTbc40rpS5e2zNPX6vjJpgcyDk0trXraTY2jyw2B72QY/fYMbL4h
+         7TqJV+opDBoaGb9E4t02Gh0plbrnRejpmJKtmTvUHtKTqpuWG+EcGMdg0FQblMJCgVeS
+         gNRlPPg+Gtu2PvqdXHP0A0+lv6oP5wS0FEBYo4VtQbrAo3x1GS84rGU2mQ/e7mgTpn2D
+         9QtiAbg2rVmuh+GDVymw570dVXNfZKAMcsN7O1ObJvGt2tBsz9maQLGCBAP+PhdVAOBA
+         n6zg==
+X-Gm-Message-State: APjAAAUDWFQ7f/BpdWqU2KKGRhQ1OORt+k/5timQHVBfuwnYT6EkU6np
+        kmt/yt2O4x0KPGCW0Mo/hjGGtw==
+X-Google-Smtp-Source: APXvYqyrdLnXSnjStU6hbkGo3KfeeAceiBKHAZw2YLa7AT/MAbzkQIg0WRzmMIvQXvl4kd3Mo2rHUA==
+X-Received: by 2002:a05:6000:128f:: with SMTP id f15mr5748511wrx.196.1560425577814;
+        Thu, 13 Jun 2019 04:32:57 -0700 (PDT)
+Received: from localhost.localdomain ([147.12.216.9])
+        by smtp.gmail.com with ESMTPSA id f2sm2646740wmc.34.2019.06.13.04.32.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 04:32:57 -0700 (PDT)
+From:   Arthur Fabre <afabre@cloudflare.com>
+To:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Arthur Fabre <afabre@cloudflare.com>
+Subject: [PATCH] bpf: selftests: Fix warning in flow_dissector
+Date:   Thu, 13 Jun 2019 12:27:09 +0100
+Message-Id: <20190613112709.7215-1-afabre@cloudflare.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 13 Jun 2019 11:35:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unfortunately, a couple of mistakes were made while implementing
-Enlightened VMCS support, in particular, wrong clean fields were
-used in copy_enlightened_to_vmcs12():
-- exception_bitmap is covered by CONTROL_EXCPN;
-- vm_exit_controls/pin_based_vm_exec_control/secondary_vm_exec_control
-  are covered by CONTROL_GRP1.
+Building the userspace part of the flow_dissector resulted in:
 
-Fixes: 945679e301ea0 ("KVM: nVMX: add enlightened VMCS state")
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+prog_tests/flow_dissector.c: In function ‘tx_tap’:
+prog_tests/flow_dissector.c:176:9: warning: implicit declaration
+of function ‘writev’; did you mean ‘write’? [-Wimplicit-function-declaration]
+  return writev(fd, iov, ARRAY_SIZE(iov));
+         ^~~~~~
+         write
+
+Include <sys/uio.h> to fix this.
+
+Signed-off-by: Arthur Fabre <afabre@cloudflare.com>
 ---
- arch/x86/kvm/vmx/nested.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/bpf/prog_tests/flow_dissector.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 1032f068f0b9..d3940da3d435 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -1397,7 +1397,7 @@ static int copy_enlightened_to_vmcs12(struct vcpu_vmx *vmx)
- 	}
+diff --git a/tools/testing/selftests/bpf/prog_tests/flow_dissector.c b/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
+index fbd1d88a6095..c938283ac232 100644
+--- a/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
++++ b/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
+@@ -3,6 +3,7 @@
+ #include <error.h>
+ #include <linux/if.h>
+ #include <linux/if_tun.h>
++#include <sys/uio.h>
  
- 	if (unlikely(!(evmcs->hv_clean_fields &
--		       HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_PROC))) {
-+		       HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_EXCPN))) {
- 		vmcs12->exception_bitmap = evmcs->exception_bitmap;
- 	}
- 
-@@ -1437,7 +1437,7 @@ static int copy_enlightened_to_vmcs12(struct vcpu_vmx *vmx)
- 	}
- 
- 	if (unlikely(!(evmcs->hv_clean_fields &
--		       HV_VMX_ENLIGHTENED_CLEAN_FIELD_HOST_GRP1))) {
-+		       HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_GRP1))) {
- 		vmcs12->pin_based_vm_exec_control =
- 			evmcs->pin_based_vm_exec_control;
- 		vmcs12->vm_exit_controls = evmcs->vm_exit_controls;
+ #define CHECK_FLOW_KEYS(desc, got, expected)				\
+ 	CHECK_ATTR(memcmp(&got, &expected, sizeof(got)) != 0,		\
 -- 
 2.20.1
 
