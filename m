@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B8FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7B3C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0B7C20896
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3965621743
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:11:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JiOGmKzo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oqCGas35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733096AbfFMPLH (ORCPT
+        id S1733269AbfFMPLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:11:07 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49580 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732303AbfFMNvV (ORCPT
+        Thu, 13 Jun 2019 11:11:09 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54344 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732302AbfFMNvQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:51:21 -0400
+        Thu, 13 Jun 2019 09:51:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=HRF/3AX8o8Cht6q46ZJt/8caFnGvzQXVBegIDPyawvg=; b=JiOGmKzoZYrFvFX2yZnHmwoEOg
-        TxOlMehL5LWbqXnXEG79sqHkBay/tCwJdA83i38WaxXRexPGL0aLnJxnatA5Q4Vh+4C4NVz2jI/FD
-        v92gWbhKBu2bN+Dhp8HyNQYrJokQzcjcI5Ai4Pugeezw38cCMJweDcB3SVk6j3NrFnlCbjm1w6NZi
-        lyrA2xIexfr8TJLIzbCP5Gvphv75QMD84j/+NyKTvVMdCSXI09GakWywLoEooOywKgje8Bzf6kyTa
-        zRzdJ385piS+5XkMWL8ruVeG+gpargHi97aM/sAwTJEozKDhk/blNxgySp3k1kxh9xfwgpoOYZDte
-        JlPYSqeQ==;
+        bh=e/95LaWQsIjh/CQjR8ISIdEucc0o3duu6IK91Iv8lFA=; b=oqCGas35MVTnFD9x8QE56vHl0U
+        VUV+nd1h1RwWCVWXNE0R9Rd2psoES5L3wRRUDmbc6/EYjD7n6LwmUTNmjcLpjr7Fl/4GTX8Z9Mbq9
+        Ei6ResJ3Sr1TnzNm5W8WYfFMpho8j246zEGUtXZsfS3+Fo4YKV9ZDEukfN/u06NibgXUY/cBlcvqa
+        NT57jkIzuZUIwziqiN/MrU3agq8Wpvx7rKubZ12SvjzQXjXiNEYq3rnxb3Sw24bzIBc90Y+47jM6e
+        NR122gvgbWVf1vSRSIvv0mNtRVWPfssIujkUFt6cDl6NJU6YuxjbKNg5hayNxGVoTFNf0alezuxyD
+        LdMBa8Fg==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbQ7z-0004Bm-KI; Thu, 13 Jun 2019 13:50:55 +0000
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbQ80-0001Gc-2x; Thu, 13 Jun 2019 13:50:56 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 0EDC220435AA9; Thu, 13 Jun 2019 15:50:54 +0200 (CEST)
-Message-Id: <20190613134933.141230706@infradead.org>
+        id F36F3202C9D74; Thu, 13 Jun 2019 15:50:53 +0200 (CEST)
+Message-Id: <20190613134932.853419066@infradead.org>
 User-Agent: quilt/0.65
-Date:   Thu, 13 Jun 2019 15:43:21 +0200
+Date:   Thu, 13 Jun 2019 15:43:18 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     stern@rowland.harvard.edu, akiyks@gmail.com,
         andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
@@ -49,7 +49,7 @@ To:     stern@rowland.harvard.edu, akiyks@gmail.com,
         luc.maranget@inria.fr, npiggin@gmail.com, paulmck@linux.ibm.com,
         peterz@infradead.org, will.deacon@arm.com, paul.burton@mips.com
 Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
-Subject: [PATCH v2 4/4] x86/atomic: Fix smp_mb__{before,after}_atomic()
+Subject: [PATCH v2 1/4] mips/atomic: Fix cmpxchg64 barriers
 References: <20190613134317.734881240@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,147 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recent probing at the Linux Kernel Memory Model uncovered a
-'surprise'. Strongly ordered architectures where the atomic RmW
-primitive implies full memory ordering and
-smp_mb__{before,after}_atomic() are a simple barrier() (such as x86)
-fail for:
+There were no memory barriers on the 32bit implementation of
+cmpxchg64(). Fix this.
 
-	*x = 1;
-	atomic_inc(u);
-	smp_mb__after_atomic();
-	r0 = *y;
-
-Because, while the atomic_inc() implies memory order, it
-(surprisingly) does not provide a compiler barrier. This then allows
-the compiler to re-order like so:
-
-	atomic_inc(u);
-	*x = 1;
-	smp_mb__after_atomic();
-	r0 = *y;
-
-Which the CPU is then allowed to re-order (under TSO rules) like:
-
-	atomic_inc(u);
-	r0 = *y;
-	*x = 1;
-
-And this very much was not intended. Therefore strengthen the atomic
-RmW ops to include a compiler barrier.
-
-NOTE: atomic_{or,and,xor} and the bitops already had the compiler
-barrier.
-
-Reported-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc: Paul Burton <paul.burton@mips.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- Documentation/atomic_t.txt         |    3 +++
- arch/x86/include/asm/atomic.h      |    8 ++++----
- arch/x86/include/asm/atomic64_64.h |    8 ++++----
- arch/x86/include/asm/barrier.h     |    4 ++--
- 4 files changed, 13 insertions(+), 10 deletions(-)
+ arch/mips/include/asm/cmpxchg.h |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/Documentation/atomic_t.txt
-+++ b/Documentation/atomic_t.txt
-@@ -194,6 +194,9 @@ These helper barriers exist because arch
- ordering on their SMP atomic primitives. For example our TSO architectures
- provide full ordered atomics and these barriers are no-ops.
- 
-+NOTE: when the atomic RmW ops are fully ordered, they should also imply a
-+compiler barrier.
-+
- Thus:
- 
-   atomic_fetch_add();
---- a/arch/x86/include/asm/atomic.h
-+++ b/arch/x86/include/asm/atomic.h
-@@ -54,7 +54,7 @@ static __always_inline void arch_atomic_
- {
- 	asm volatile(LOCK_PREFIX "addl %1,%0"
- 		     : "+m" (v->counter)
--		     : "ir" (i));
-+		     : "ir" (i) : "memory");
- }
- 
- /**
-@@ -68,7 +68,7 @@ static __always_inline void arch_atomic_
- {
- 	asm volatile(LOCK_PREFIX "subl %1,%0"
- 		     : "+m" (v->counter)
--		     : "ir" (i));
-+		     : "ir" (i) : "memory");
- }
- 
- /**
-@@ -95,7 +95,7 @@ static __always_inline bool arch_atomic_
- static __always_inline void arch_atomic_inc(atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "incl %0"
--		     : "+m" (v->counter));
-+		     : "+m" (v->counter) :: "memory");
- }
- #define arch_atomic_inc arch_atomic_inc
- 
-@@ -108,7 +108,7 @@ static __always_inline void arch_atomic_
- static __always_inline void arch_atomic_dec(atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "decl %0"
--		     : "+m" (v->counter));
-+		     : "+m" (v->counter) :: "memory");
- }
- #define arch_atomic_dec arch_atomic_dec
- 
---- a/arch/x86/include/asm/atomic64_64.h
-+++ b/arch/x86/include/asm/atomic64_64.h
-@@ -45,7 +45,7 @@ static __always_inline void arch_atomic6
- {
- 	asm volatile(LOCK_PREFIX "addq %1,%0"
- 		     : "=m" (v->counter)
--		     : "er" (i), "m" (v->counter));
-+		     : "er" (i), "m" (v->counter) : "memory");
- }
- 
- /**
-@@ -59,7 +59,7 @@ static inline void arch_atomic64_sub(lon
- {
- 	asm volatile(LOCK_PREFIX "subq %1,%0"
- 		     : "=m" (v->counter)
--		     : "er" (i), "m" (v->counter));
-+		     : "er" (i), "m" (v->counter) : "memory");
- }
- 
- /**
-@@ -87,7 +87,7 @@ static __always_inline void arch_atomic6
- {
- 	asm volatile(LOCK_PREFIX "incq %0"
- 		     : "=m" (v->counter)
--		     : "m" (v->counter));
-+		     : "m" (v->counter) : "memory");
- }
- #define arch_atomic64_inc arch_atomic64_inc
- 
-@@ -101,7 +101,7 @@ static __always_inline void arch_atomic6
- {
- 	asm volatile(LOCK_PREFIX "decq %0"
- 		     : "=m" (v->counter)
--		     : "m" (v->counter));
-+		     : "m" (v->counter) : "memory");
- }
- #define arch_atomic64_dec arch_atomic64_dec
- 
---- a/arch/x86/include/asm/barrier.h
-+++ b/arch/x86/include/asm/barrier.h
-@@ -80,8 +80,8 @@ do {									\
+--- a/arch/mips/include/asm/cmpxchg.h
++++ b/arch/mips/include/asm/cmpxchg.h
+@@ -290,10 +290,13 @@ static inline unsigned long __cmpxchg64(
+ 	 * will cause a build error unless cpu_has_64bits is a		\
+ 	 * compile-time constant 1.					\
+ 	 */								\
+-	if (cpu_has_64bits && kernel_uses_llsc)				\
++	if (cpu_has_64bits && kernel_uses_llsc) {			\
++		smp_mb__before_llsc();					\
+ 		__res = __cmpxchg64((ptr), __old, __new);		\
+-	else								\
++		smp_llsc_mb();						\
++	} else {							\
+ 		__res = __cmpxchg64_unsupported();			\
++	}								\
+ 									\
+ 	__res;								\
  })
- 
- /* Atomic operations are already serializing on x86 */
--#define __smp_mb__before_atomic()	barrier()
--#define __smp_mb__after_atomic()	barrier()
-+#define __smp_mb__before_atomic()	do { } while (0)
-+#define __smp_mb__after_atomic()	do { } while (0)
- 
- #include <asm-generic/barrier.h>
- 
 
 
