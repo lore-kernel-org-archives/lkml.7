@@ -2,148 +2,159 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63319C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B878C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3776C21773
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443125;
-	bh=g/FRRJPPCNqhXyggHd8GDOI6ndoEMD1BnIkosWh3KZw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Od6f6dqJtKFjngzyULfh0LUOe2c7JtVaqG9juNBJiXRN4z1RkffXhXo/CQbaPEZPD
-	 V7C0uW7vNJP52Zm3aEUi+mMFtrfIm0GUzx6jByRGuad7EVtHouH/DiBUbIudcSVcWi
-	 mtrCMRdUqgdawzK5AK4CzazFeMN8pCqaCkKO3xok=
+	by mail.kernel.org (Postfix) with ESMTP id 7AEC720644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392231AbfFMQZY (ORCPT
+        id S2392255AbfFMQZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:25:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730977AbfFMIgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:36:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9D6E21479;
-        Thu, 13 Jun 2019 08:36:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415000;
-        bh=g/FRRJPPCNqhXyggHd8GDOI6ndoEMD1BnIkosWh3KZw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bCAQDbFOJrpozP/cEjtEOWo7EuGy8ACrOI6u8TsYA1lzNI2zlDr+LOapo7b+Arvsb
-         M1mQQpQoonyzalBeQLUlUJ1wTjfSHAP5g1xy7q/aonXVKbKEu9/3H51rUb06Zk9RWm
-         bIlwrtymmWoK0Mm54zhmx7KbggdS6rDhXQvnazEk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 50/81] clk: rockchip: Turn on "aclk_dmac1" for suspend on rk3288
-Date:   Thu, 13 Jun 2019 10:33:33 +0200
-Message-Id: <20190613075652.945603002@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
-References: <20190613075649.074682929@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 13 Jun 2019 12:25:32 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18563 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730975AbfFMIgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:36:38 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 127CF796C4587A3FE713;
+        Thu, 13 Jun 2019 16:36:36 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 13 Jun
+ 2019 16:36:25 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Chao Yu <yuchao0@huawei.com>, <devel@driverdev.osuosl.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>, <stable@vger.kernel.org>
+Subject: [PATCH v3 1/2] staging: erofs: add requirements field in superblock
+Date:   Thu, 13 Jun 2019 16:35:41 +0800
+Message-ID: <20190613083541.67091-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190611024220.86121-1-gaoxiang25@huawei.com>
+References: <20190611024220.86121-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 57a20248ef3e429dc822f0774bc4e00136c46c83 ]
+There are some backward incompatible features pending
+for months, mainly due to on-disk format expensions.
 
-Experimentally it can be seen that going into deep sleep (specifically
-setting PMU_CLR_DMA and PMU_CLR_BUS in RK3288_PMU_PWRMODE_CON1)
-appears to fail unless "aclk_dmac1" is on.  The failure is that the
-system never signals that it made it into suspend on the GLOBAL_PWROFF
-pin and it just hangs.
+However, we should ensure that it cannot be mounted with
+old kernels. Otherwise, it will causes unexpected behaviors.
 
-NOTE that it's confirmed that it's the actual suspend that fails, not
-one of the earlier calls to read/write registers.  Specifically if you
-comment out the "PMU_GLOBAL_INT_DISABLE" setting in
-rk3288_slp_mode_set() and then comment out the "cpu_do_idle()" call in
-rockchip_lpmode_enter() then you can exercise the whole suspend path
-without any crashing.
-
-This is currently not a problem with suspend upstream because there is
-no current way to exercise the deep suspend code.  However, anyone
-trying to make it work will run into this issue.
-
-This was not a problem on shipping rk3288-based Chromebooks because
-those devices all ran on an old kernel based on 3.14.  On that kernel
-"aclk_dmac1" appears to be left on all the time.
-
-There are several ways to skin this problem.
-
-A) We could add "aclk_dmac1" to the list of critical clocks and that
-apperas to work, but presumably that wastes power.
-
-B) We could keep a list of "struct clk" objects to enable at suspend
-time in clk-rk3288.c and use the standard clock APIs.
-
-C) We could make the rk3288-pmu driver keep a list of clocks to enable
-at suspend time.  Presumably this would require a dts and bindings
-change.
-
-D) We could just whack the clock on in the existing syscore suspend
-function where we whack a bunch of other clocks.  This is particularly
-easy because we know for sure that the clock's only parent
-("aclk_cpu") is a critical clock so we don't need to do anything more
-than ungate it.
-
-In this case I have chosen D) because it seemed like the least work,
-but any of the other options would presumably also work fine.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Elaine Zhang <zhangqing@rock-chips.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: ba2b77a82022 ("staging: erofs: add super block operations")
+Cc: <stable@vger.kernel.org> # 4.19+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- drivers/clk/rockchip/clk-rk3288.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+change log v3:
+ - record requirements in erofs_sb_info for runtime use as well;
 
-diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-index 64191694ff6e..9cfdbea493bb 100644
---- a/drivers/clk/rockchip/clk-rk3288.c
-+++ b/drivers/clk/rockchip/clk-rk3288.c
-@@ -835,6 +835,9 @@ static const int rk3288_saved_cru_reg_ids[] = {
- 	RK3288_CLKSEL_CON(10),
- 	RK3288_CLKSEL_CON(33),
- 	RK3288_CLKSEL_CON(37),
-+
-+	/* We turn aclk_dmac1 on for suspend; this will restore it */
-+	RK3288_CLKGATE_CON(10),
- };
+change log v2:
+ - update printed message
+
+ drivers/staging/erofs/erofs_fs.h | 13 ++++++++++---
+ drivers/staging/erofs/internal.h |  2 ++
+ drivers/staging/erofs/super.c    | 19 +++++++++++++++++++
+ 3 files changed, 31 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/erofs/erofs_fs.h b/drivers/staging/erofs/erofs_fs.h
+index fa52898df006..8ddb2b3e7d39 100644
+--- a/drivers/staging/erofs/erofs_fs.h
++++ b/drivers/staging/erofs/erofs_fs.h
+@@ -17,10 +17,16 @@
+ #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
+ #define EROFS_SUPER_OFFSET      1024
  
- static u32 rk3288_saved_cru_regs[ARRAY_SIZE(rk3288_saved_cru_reg_ids)];
-@@ -850,6 +853,14 @@ static int rk3288_clk_suspend(void)
- 				readl_relaxed(rk3288_cru_base + reg_id);
++/*
++ * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
++ * incompatible with this kernel version.
++ */
++#define EROFS_ALL_REQUIREMENTS  0
++
+ struct erofs_super_block {
+ /*  0 */__le32 magic;           /* in the little endian */
+ /*  4 */__le32 checksum;        /* crc32c(super_block) */
+-/*  8 */__le32 features;
++/*  8 */__le32 features;        /* (aka. feature_compat) */
+ /* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
+ /* 13 */__u8 reserved;
+ 
+@@ -34,9 +40,10 @@ struct erofs_super_block {
+ /* 44 */__le32 xattr_blkaddr;
+ /* 48 */__u8 uuid[16];          /* 128-bit uuid for volume */
+ /* 64 */__u8 volume_name[16];   /* volume name */
++/* 80 */__le32 requirements;    /* (aka. feature_incompat) */
+ 
+-/* 80 */__u8 reserved2[48];     /* 128 bytes */
+-} __packed;
++/* 84 */__u8 reserved2[44];
++} __packed;                     /* 128 bytes */
+ 
+ /*
+  * erofs inode data mapping:
+diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
+index 911333cdeef4..fc732c86ecd8 100644
+--- a/drivers/staging/erofs/internal.h
++++ b/drivers/staging/erofs/internal.h
+@@ -115,6 +115,8 @@ struct erofs_sb_info {
+ 
+ 	u8 uuid[16];                    /* 128-bit uuid for volume */
+ 	u8 volume_name[16];             /* volume name */
++	u32 requirements;
++
+ 	char *dev_name;
+ 
+ 	unsigned int mount_opt;
+diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
+index f580d4ef77a1..cadbcc11702a 100644
+--- a/drivers/staging/erofs/super.c
++++ b/drivers/staging/erofs/super.c
+@@ -71,6 +71,22 @@ static void free_inode(struct inode *inode)
+ 	kmem_cache_free(erofs_inode_cachep, vi);
+ }
+ 
++static bool check_layout_compatibility(struct super_block *sb,
++				       struct erofs_super_block *layout)
++{
++	const unsigned int requirements = le32_to_cpu(layout->requirements);
++
++	EROFS_SB(sb)->requirements = requirements;
++
++	/* check if current kernel meets all mandatory requirements */
++	if (requirements & (~EROFS_ALL_REQUIREMENTS)) {
++		errln("unidentified requirements %x, please upgrade kernel version",
++		      requirements & ~EROFS_ALL_REQUIREMENTS);
++		return false;
++	}
++	return true;
++}
++
+ static int superblock_read(struct super_block *sb)
+ {
+ 	struct erofs_sb_info *sbi;
+@@ -104,6 +120,9 @@ static int superblock_read(struct super_block *sb)
+ 		goto out;
  	}
  
-+	/*
-+	 * Going into deep sleep (specifically setting PMU_CLR_DMA in
-+	 * RK3288_PMU_PWRMODE_CON1) appears to fail unless
-+	 * "aclk_dmac1" is on.
-+	 */
-+	writel_relaxed(1 << (12 + 16),
-+		       rk3288_cru_base + RK3288_CLKGATE_CON(10));
++	if (!check_layout_compatibility(sb, layout))
++		goto out;
 +
- 	/*
- 	 * Switch PLLs other than DPLL (for SDRAM) to slow mode to
- 	 * avoid crashes on resume. The Mask ROM on the system will
+ 	sbi->blocks = le32_to_cpu(layout->blocks);
+ 	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
+ #ifdef CONFIG_EROFS_FS_XATTR
 -- 
-2.20.1
-
-
+2.17.1
 
