@@ -2,112 +2,104 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E89EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096A2C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146F020851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D34FA20851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:54:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bF0VHOhi"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="fXL4Bw5K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389552AbfFMPxu (ORCPT
+        id S2388055AbfFMPyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:53:50 -0400
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:39147 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731595AbfFMI52 (ORCPT
+        Thu, 13 Jun 2019 11:54:01 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:36302 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731591AbfFMI5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:57:28 -0400
-Received: by mail-wm1-f47.google.com with SMTP id z23so9215603wma.4;
-        Thu, 13 Jun 2019 01:57:27 -0700 (PDT)
+        Thu, 13 Jun 2019 04:57:07 -0400
+Received: by mail-yb1-f194.google.com with SMTP id b22so5982166yba.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 01:57:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iTc7pkQE7oYIi5Tpm8V4ZpSzYMCgq4jwm9PdqCuT8KQ=;
-        b=bF0VHOhiXklHX7toUG8Z6iKgvhfsMkGA7P/ETJzRztQ/j4qWN3iWThkhFG/qeJ0EPI
-         oEYadE5A+YmD7M54wbT98jsXnhiyWer7EsFpP2IhyFEz64p97i0QisADuCWABntzcmcB
-         tiX5bWPPtxkAqboy5hoNYCQyuo8MYW59KS+ij4As20TJtQoLKXPxGaeG6fwawMG3a0sQ
-         7wbkdG70X/OUpSctSZVfWGYA64YquU3pJTw6IYCB9aYWzGl33ug5V9CpHebckq4T7SLV
-         erV7TGs6pQl9qb8Hlj44CORUO35HHLbqroxTr0s249qYEruEH96rGmiyYIYOlXnY+KSi
-         Zrvw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5rpwm+WXYqpS5Yt4a3EFiaLIxY1PzE0lEAcH6B/6h0A=;
+        b=fXL4Bw5Kwl/mMKIWGa1cdKDK4KAo0XR2yGRH64ZJ/I1MVExg0wWUUDX3vBHTYZkjOF
+         vYFKvyecLJNLSA/E7m7sTD8zh55AOz/agx/OfhCByMjAe9qffdMIJXqrpeOoxi+v3NkU
+         sXmf687D6xOZ2qyVaV0Av3gvkn68lJwqr/d2PEpnz/YSD7pg1u3UtvyzLDx4Mi3w75OR
+         HJJI+g/bVt6L2m1CG0hBdOwJes2EebjVxjs/giB7QyWUieZGe5ei2HyxPmHI0pV+dWgb
+         1hEim2OLo6wzfu6Jcv47M0Q4ZvWL5BNXddHdsTUs3Eu/hfMQJY2po5LVVP9PbG0vjMfb
+         rW5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iTc7pkQE7oYIi5Tpm8V4ZpSzYMCgq4jwm9PdqCuT8KQ=;
-        b=WDd9hkvHcX89H1Boumx6P2AcY72mC3ne4R4gyBeZIak+/cTy6vyA2AQ9plMoG5dqwW
-         Y1jK/dAjclNTmZgoRcgEeiY5RRAJLJvM/bH7YtrepKaGhOD3ZxK6pJBgdYr5Wh6kJiPc
-         6xW4N3+kNS1/w7V51nRBzlTU7mjEbh6kqHuLQSZbdr1z5qLpt2x4ceuvYAomQxe4EBGR
-         hnbqXJbDF51r5TOHldvX8k8xjNLjz4oojtuLX1rxCKtRu3blqXYY+VRFcIb0g+Hpwn8F
-         9SU7R1Y3qWNIac+v8gY2srz40wu+u8qT1b4MCvI44JpRvQ2oXh0GLeJRSXZ+VUj5N82v
-         1eqg==
-X-Gm-Message-State: APjAAAWFArgJg71qeZXyFy4we6HN7ur4bkaSzUEK1wGkcEaCNFtdZztb
-        fessBUFLysCAXtnscIhhom4=
-X-Google-Smtp-Source: APXvYqxfKZPFzSQgRbvPc2K4axpRnhCZmruX7sKl8YaXA22qKpUpYCZQPxVeOfMECWNTuV9EPe/+Og==
-X-Received: by 2002:a1c:448b:: with SMTP id r133mr2854522wma.114.1560416246274;
-        Thu, 13 Jun 2019 01:57:26 -0700 (PDT)
-Received: from gmail.com (net-37-119-6-250.cust.vodafonedsl.it. [37.119.6.250])
-        by smtp.gmail.com with ESMTPSA id x129sm2689276wmg.44.2019.06.13.01.57.25
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5rpwm+WXYqpS5Yt4a3EFiaLIxY1PzE0lEAcH6B/6h0A=;
+        b=YLqQydzPztMzYlVTAx9Nnq5kxAgv+i4myIXMxUz9a0moZufVG/BySNzrlYis7pL5L0
+         1Aq2zgvoVy5jkjVCPrKABOucEhX3fDOoHq1zknroIxzxmHOrScbIWgcCgVdr7ZX6os9n
+         1MZjer9tlIte63wDbmxKdn+N0jVgoa5aG2sqLBtdKl3bNUnFuKd/gfPtl88NMah8L7JB
+         5rTj+E2h0XHOkrr1goY8e3rewE+8FRRGvqFSJZ/M6YQbgw7PTqKkDaaehfJ/nm6Ybjpk
+         xV5sdR3S7auPrHG7EF0Gl7J3pvrQhimT6GBDMoOz9BdBtRwnq6bm2EgEY0MoIOpHk4zJ
+         zHQg==
+X-Gm-Message-State: APjAAAUmAz08tez9AKtGX46zaGu57NELvetlIC0IGJqax/Cg2OsOJ6In
+        l1zg4JfZmMACrtnY9Iu1rGVoyQ==
+X-Google-Smtp-Source: APXvYqw1zJomCCuCV1QnOnfqSwphH8qY2fZ84XDZGajBAG2kedoKa5gZ+d1vm3seCvUptjeuiel9rQ==
+X-Received: by 2002:a5b:b8b:: with SMTP id l11mr40277348ybq.165.1560416227034;
+        Thu, 13 Jun 2019 01:57:07 -0700 (PDT)
+Received: from [172.20.10.3] (mobile-166-172-57-221.mycingular.net. [166.172.57.221])
+        by smtp.gmail.com with ESMTPSA id i199sm607899ywe.89.2019.06.13.01.57.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 01:57:25 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 10:57:25 +0200
-From:   Paolo Pisati <p.pisati@gmail.com>
-To:     Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     Paolo Pisati <p.pisati@gmail.com>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: msm8996: qcom-qmp: apq8096-db820c fails to boot, reset back to
- fastboot and locks up
-Message-ID: <20190613085725.GA11403@harukaze>
-References: <20190610134401.GA12964@harukaze>
- <20190611171225.GA21992@centauri.ideon.se>
- <20190612131735.GB11167@centauri>
- <20190612140911.GA16863@harukaze>
- <20190612162048.GA30551@centauri>
+        Thu, 13 Jun 2019 01:57:06 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: fix SQPOLL cpu check
+To:     Stephen Bates <sbates@raithlin.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shhuiw@foxmail.com" <shhuiw@foxmail.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <5D2859FE-DB39-48F5-BBB5-6EDD3791B6C3@raithlin.com>
+ <20190612092403.GA38578@lakrids.cambridge.arm.com>
+ <DCE71F95-F72A-414C-8A02-98CC81237F40@raithlin.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <b3c9138e-bf3b-0851-a63e-f52f926d5ed8@kernel.dk>
+Date:   Thu, 13 Jun 2019 02:54:45 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612162048.GA30551@centauri>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <DCE71F95-F72A-414C-8A02-98CC81237F40@raithlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 06:20:48PM +0200, Niklas Cassel wrote:
+On 6/12/19 3:47 AM, Stephen  Bates wrote:
+>> Aargh. My original patch [1] handled that correctly, and this case was
+>> explicitly called out in the commit message, which was retained even
+>> when the patch was "simplified". That's rather disappointing. :/
+>    
+> It looks like Jens did a fix for this (44a9bd18a0f06bba
+> " io_uring: fix failure to verify SQ_AFF cpu") which is in the 5.2-rc series
+> but which hasn’t been applied to the stable series yet. I am not sure how
+> I missed that but it makes my patch redundant.
 > 
-> Can you still reproduce the reboot?
+> Jens, will 44a9bd18a0f06bba be applied to stable kernels?
 
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -447,12 +447,12 @@
-                        };
- 
-                        pcie@608000 {
--                               status = "okay";
-+                               status = "disabled";
-                                perst-gpio = <&msmgpio 130 GPIO_ACTIVE_LOW>;
-                        };
- 
-                        pcie@610000 {
--                               status = "okay";
-+                               status = "disabled";
-                                perst-gpio = <&msmgpio 114 GPIO_ACTIVE_LOW>;
-                        };
-                };
+Yes, we can get it flagged for stable. Greg, can you pull in the above
+commit for 5.1 stable?
 
-disabling the two other pci controllers (and leaving your previous patch
-applied), made the issue more frequent: i was never able to boot to user space
-three times in a row without experiencing a crash, previously it was more
-sporadic.
 
-On the other hand, now i can reproduce the issue more easily this way.
 -- 
-bye,
-p.
+Jens Axboe
+
