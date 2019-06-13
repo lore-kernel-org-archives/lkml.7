@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A2AC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB297C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0127E20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FDA820679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442322;
-	bh=0HMVUAE47VpSgxlNl7X88UEuX8X30qFoWHMuEMSiDW8=;
+	s=default; t=1560442326;
+	bh=YcPP3GW6ki+ofOFSGkrJYTj4rzrYY6fRsX/Cb1uk9J4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CJ34+APJ6fxeEdk1ZjbasW1wb0/xYksuAwcDk0AbIwO4MajAKeL0gn69ZZxVjk3R5
-	 mO40rWIVCEp3W9TxeYDReeCb25xzx4a0eh/8g8bN09Cnn74NzA6lPF13yXxVnJ2CEJ
-	 uuKF67tANVA/sO5KTd2BaMPLv+LglhNx7dF5ysoo=
+	b=r+CL6hNDBzk7HuYBnw9EUa2cziKBmIwfAB9rJNfBNKohsyLiyUHD5Let4htcG59tR
+	 JSY0azU9k49qei5fmWo9L4A2zOXTz6kZlomO32IHUz43NDboPZbSWpgmB+erMKlwOG
+	 1M96gfPZyvqVqslf7oh3WE5qsAMM05rIKJCLYUp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391605AbfFMQMA (ORCPT
+        id S2391200AbfFMQMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:12:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60548 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:12:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731227AbfFMInW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:43:22 -0400
+        id S1731223AbfFMInN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:43:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6FC921479;
-        Thu, 13 Jun 2019 08:43:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 772782063F;
+        Thu, 13 Jun 2019 08:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415401;
-        bh=0HMVUAE47VpSgxlNl7X88UEuX8X30qFoWHMuEMSiDW8=;
+        s=default; t=1560415393;
+        bh=YcPP3GW6ki+ofOFSGkrJYTj4rzrYY6fRsX/Cb1uk9J4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B8Adj9Rjj0gKOev/vcK6J2qgxx2GIdVOSCAUGHA68Vd/tkL7iNoG56lMrosJtIT4w
-         zwpkdkFbVhIboyq24KyrlSeTR5bCBOIiDDFo68T0Qpmrmu38yX+xfJoOaZjxOUfrnl
-         OAR3zfWZSLzNiEcQ7FImIsuj6C1xpWHOeW2OPH3Q=
+        b=UTd9A3KsmjRTHg8oKonM/VS/nRFCXFeAcGdJJyEZkYNzByn6WWNMfW3QIJzUHQpJl
+         HbRfxxcaaLr3VmCGp5rI9J3jphYSJO6ftpYy9bW8j6/+XIcAQEJkPwyyzI/XDOe6Xo
+         EF7raRXBTyK0addH6PZk33tLlrjiAN3rqskS3p3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-imx@nxp.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 112/118] gpio: vf610: Do not share irq_chip
-Date:   Thu, 13 Jun 2019 10:34:10 +0200
-Message-Id: <20190613075650.784121106@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 109/118] ARM: exynos: Fix undefined instruction during Exynos5422 resume
+Date:   Thu, 13 Jun 2019 10:34:07 +0200
+Message-Id: <20190613075650.453787449@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -64,104 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 338aa10750ba24d04beeaf5dc5efc032e5cf343f ]
+[ Upstream commit 4d8e3e951a856777720272ce27f2c738a3eeef8c ]
 
-Fix the warning produced by gpiochip_set_irq_hooks() by allocating a
-dedicated IRQ chip per GPIO chip/port.
+During early system resume on Exynos5422 with performance counters enabled
+the following kernel oops happens:
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-imx@nxp.com
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+    Internal error: Oops - undefined instruction: 0 [#1] PREEMPT SMP ARM
+    Modules linked in:
+    CPU: 0 PID: 1433 Comm: bash Tainted: G        W         5.0.0-rc5-next-20190208-00023-gd5fb5a8a13e6-dirty #5480
+    Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
+    ...
+    Flags: nZCv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment none
+    Control: 10c5387d  Table: 4451006a  DAC: 00000051
+    Process bash (pid: 1433, stack limit = 0xb7e0e22f)
+    ...
+    (reset_ctrl_regs) from [<c0112ad0>] (dbg_cpu_pm_notify+0x1c/0x24)
+    (dbg_cpu_pm_notify) from [<c014c840>] (notifier_call_chain+0x44/0x84)
+    (notifier_call_chain) from [<c014cbc0>] (__atomic_notifier_call_chain+0x7c/0x128)
+    (__atomic_notifier_call_chain) from [<c01ffaac>] (cpu_pm_notify+0x30/0x54)
+    (cpu_pm_notify) from [<c055116c>] (syscore_resume+0x98/0x3f4)
+    (syscore_resume) from [<c0189350>] (suspend_devices_and_enter+0x97c/0xe74)
+    (suspend_devices_and_enter) from [<c0189fb8>] (pm_suspend+0x770/0xc04)
+    (pm_suspend) from [<c0187740>] (state_store+0x6c/0xcc)
+    (state_store) from [<c09fa698>] (kobj_attr_store+0x14/0x20)
+    (kobj_attr_store) from [<c030159c>] (sysfs_kf_write+0x4c/0x50)
+    (sysfs_kf_write) from [<c0300620>] (kernfs_fop_write+0xfc/0x1e0)
+    (kernfs_fop_write) from [<c0282be8>] (__vfs_write+0x2c/0x160)
+    (__vfs_write) from [<c0282ea4>] (vfs_write+0xa4/0x16c)
+    (vfs_write) from [<c0283080>] (ksys_write+0x40/0x8c)
+    (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+
+Undefined instruction is triggered during CP14 reset, because bits: #16
+(Secure privileged invasive debug disabled) and #17 (Secure privileged
+noninvasive debug disable) are set in DSCR. Those bits depend on SPNIDEN
+and SPIDEN lines, which are provided by Secure JTAG hardware block. That
+block in turn is powered from cluster 0 (big/Eagle), but the Exynos5422
+boots on cluster 1 (LITTLE/KFC).
+
+To fix this issue it is enough to turn on the power on the cluster 0 for
+a while. This lets the Secure JTAG block to propagate the needed signals
+to LITTLE/KFC cores and change their DSCR.
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-vf610.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+ arch/arm/mach-exynos/suspend.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-index 7e09ce75ffb2..a9cb5571de54 100644
---- a/drivers/gpio/gpio-vf610.c
-+++ b/drivers/gpio/gpio-vf610.c
-@@ -37,6 +37,7 @@ struct fsl_gpio_soc_data {
+diff --git a/arch/arm/mach-exynos/suspend.c b/arch/arm/mach-exynos/suspend.c
+index b1fe53e8b460..088c34e99b02 100644
+--- a/arch/arm/mach-exynos/suspend.c
++++ b/arch/arm/mach-exynos/suspend.c
+@@ -434,8 +434,27 @@ early_wakeup:
  
- struct vf610_gpio_port {
- 	struct gpio_chip gc;
-+	struct irq_chip ic;
- 	void __iomem *base;
- 	void __iomem *gpio_base;
- 	const struct fsl_gpio_soc_data *sdata;
-@@ -66,8 +67,6 @@ struct vf610_gpio_port {
- #define PORT_INT_EITHER_EDGE	0xb
- #define PORT_INT_LOGIC_ONE	0xc
- 
--static struct irq_chip vf610_gpio_irq_chip;
--
- static const struct fsl_gpio_soc_data imx_data = {
- 	.have_paddr = true,
- };
-@@ -243,15 +242,6 @@ static int vf610_gpio_irq_set_wake(struct irq_data *d, u32 enable)
- 	return 0;
+ static void exynos5420_prepare_pm_resume(void)
+ {
++	unsigned int mpidr, cluster;
++
++	mpidr = read_cpuid_mpidr();
++	cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
++
+ 	if (IS_ENABLED(CONFIG_EXYNOS5420_MCPM))
+ 		WARN_ON(mcpm_cpu_powered_up());
++
++	if (IS_ENABLED(CONFIG_HW_PERF_EVENTS) && cluster != 0) {
++		/*
++		 * When system is resumed on the LITTLE/KFC core (cluster 1),
++		 * the DSCR is not properly updated until the power is turned
++		 * on also for the cluster 0. Enable it for a while to
++		 * propagate the SPNIDEN and SPIDEN signals from Secure JTAG
++		 * block and avoid undefined instruction issue on CP14 reset.
++		 */
++		pmu_raw_writel(S5P_CORE_LOCAL_PWR_EN,
++				EXYNOS_COMMON_CONFIGURATION(0));
++		pmu_raw_writel(0,
++				EXYNOS_COMMON_CONFIGURATION(0));
++	}
  }
  
--static struct irq_chip vf610_gpio_irq_chip = {
--	.name		= "gpio-vf610",
--	.irq_ack	= vf610_gpio_irq_ack,
--	.irq_mask	= vf610_gpio_irq_mask,
--	.irq_unmask	= vf610_gpio_irq_unmask,
--	.irq_set_type	= vf610_gpio_irq_set_type,
--	.irq_set_wake	= vf610_gpio_irq_set_wake,
--};
--
- static int vf610_gpio_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -259,6 +249,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
- 	struct vf610_gpio_port *port;
- 	struct resource *iores;
- 	struct gpio_chip *gc;
-+	struct irq_chip *ic;
- 	int i;
- 	int ret;
- 
-@@ -295,6 +286,14 @@ static int vf610_gpio_probe(struct platform_device *pdev)
- 	gc->direction_output = vf610_gpio_direction_output;
- 	gc->set = vf610_gpio_set;
- 
-+	ic = &port->ic;
-+	ic->name = "gpio-vf610";
-+	ic->irq_ack = vf610_gpio_irq_ack;
-+	ic->irq_mask = vf610_gpio_irq_mask;
-+	ic->irq_unmask = vf610_gpio_irq_unmask;
-+	ic->irq_set_type = vf610_gpio_irq_set_type;
-+	ic->irq_set_wake = vf610_gpio_irq_set_wake;
-+
- 	ret = gpiochip_add_data(gc, port);
- 	if (ret < 0)
- 		return ret;
-@@ -306,14 +305,13 @@ static int vf610_gpio_probe(struct platform_device *pdev)
- 	/* Clear the interrupt status register for all GPIO's */
- 	vf610_gpio_writel(~0, port->base + PORT_ISFR);
- 
--	ret = gpiochip_irqchip_add(gc, &vf610_gpio_irq_chip, 0,
--				   handle_edge_irq, IRQ_TYPE_NONE);
-+	ret = gpiochip_irqchip_add(gc, ic, 0, handle_edge_irq, IRQ_TYPE_NONE);
- 	if (ret) {
- 		dev_err(dev, "failed to add irqchip\n");
- 		gpiochip_remove(gc);
- 		return ret;
- 	}
--	gpiochip_set_chained_irqchip(gc, &vf610_gpio_irq_chip, port->irq,
-+	gpiochip_set_chained_irqchip(gc, ic, port->irq,
- 				     vf610_gpio_irq_handler);
- 
- 	return 0;
+ static void exynos5420_pm_resume(void)
 -- 
 2.20.1
 
