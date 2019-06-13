@@ -2,85 +2,145 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A04F0C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F6FC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7970620665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD6362147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560442780;
+	bh=Ry5kG4LSs4ruJ5FzBDwBjnPwQQIugtZ+8jpOlOMdvQs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=suzKiTjkDbjR1z5sr3ZaqJCWNViE6tWKJhISIQ2ndzvOb2Cn4pjxCWqYvugLwkkJb
+	 XqKGtvpqjNaCsZbftqCMVnoiZ4995l7i+51ta8X4bYaCNIRPKwxS6RUH76sykALfjs
+	 5bMbZd1t3fwBz1sRvxyYD9GfjCn07wbmxyrC0BGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391852AbfFMQT1 (ORCPT
+        id S2392078AbfFMQTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:19:27 -0400
-Received: from sauhun.de ([88.99.104.3]:42288 "EHLO pokefinder.org"
+        Thu, 13 Jun 2019 12:19:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731137AbfFMQTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:19:24 -0400
-Received: from localhost (p5486CF99.dip0.t-ipconnect.de [84.134.207.153])
-        by pokefinder.org (Postfix) with ESMTPSA id B46C24A127B;
-        Thu, 13 Jun 2019 18:19:22 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 18:19:22 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Antti Palosaari <crope@iki.fi>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] media: cxd2820r: don't check retval after our own
- assignemt
-Message-ID: <20190613161922.GA5015@kunai>
-References: <20190613155421.16408-1-wsa+renesas@sang-engineering.com>
- <20190613155421.16408-2-wsa+renesas@sang-engineering.com>
- <550e0dbf-1776-000b-27ca-40e40e317da2@ideasonboard.com>
+        id S1731091AbfFMIjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:39:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8512A215EA;
+        Thu, 13 Jun 2019 08:39:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560415188;
+        bh=Ry5kG4LSs4ruJ5FzBDwBjnPwQQIugtZ+8jpOlOMdvQs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KUxaPnMm9DkmT6BK7/BN0XiQKzJxYToYyYDVSerjWjUoK/egtD3aRcwNLO0eoSeMp
+         1NDqYYwElO4mIBioPtoRFINBrb9efZgVujK6vjvleprEeNxeyDWxTssUjTYk7Fgxok
+         NaXfyYVnfIDoTZEvjJ6zW0gNROUBczf1h4kwuMp4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 034/118] f2fs: fix to avoid panic in f2fs_inplace_write_data()
+Date:   Thu, 13 Jun 2019 10:32:52 +0200
+Message-Id: <20190613075645.482628218@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
+References: <20190613075643.642092651@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
-Content-Disposition: inline
-In-Reply-To: <550e0dbf-1776-000b-27ca-40e40e317da2@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[ Upstream commit 05573d6ccf702df549a7bdeabef31e4753df1a90 ]
 
---MGYHOYXEY6WxJCY8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+As Jungyeon reported in bugzilla:
+
+https://bugzilla.kernel.org/show_bug.cgi?id=203239
+
+- Overview
+When mounting the attached crafted image and running program, following errors are reported.
+Additionally, it hangs on sync after running program.
+
+The image is intentionally fuzzed from a normal f2fs image for testing.
+Compile options for F2FS are as follows.
+CONFIG_F2FS_FS=y
+CONFIG_F2FS_STAT_FS=y
+CONFIG_F2FS_FS_XATTR=y
+CONFIG_F2FS_FS_POSIX_ACL=y
+CONFIG_F2FS_CHECK_FS=y
+
+- Reproduces
+cc poc_15.c
+./run.sh f2fs
+sync
+
+- Kernel messages
+ ------------[ cut here ]------------
+ kernel BUG at fs/f2fs/segment.c:3162!
+ RIP: 0010:f2fs_inplace_write_data+0x12d/0x160
+ Call Trace:
+  f2fs_do_write_data_page+0x3c1/0x820
+  __write_data_page+0x156/0x720
+  f2fs_write_cache_pages+0x20d/0x460
+  f2fs_write_data_pages+0x1b4/0x300
+  do_writepages+0x15/0x60
+  __filemap_fdatawrite_range+0x7c/0xb0
+  file_write_and_wait_range+0x2c/0x80
+  f2fs_do_sync_file+0x102/0x810
+  do_fsync+0x33/0x60
+  __x64_sys_fsync+0xb/0x10
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The reason is f2fs_inplace_write_data() will trigger kernel panic due
+to data block locates in node type segment.
+
+To avoid panic, let's just return error code and set SBI_NEED_FSCK to
+give a hint to fsck for latter repairing.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/f2fs/segment.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 03fa2c4d3d79..8fc3edb6760c 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3069,13 +3069,18 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
+ {
+ 	int err;
+ 	struct f2fs_sb_info *sbi = fio->sbi;
++	unsigned int segno;
+ 
+ 	fio->new_blkaddr = fio->old_blkaddr;
+ 	/* i/o temperature is needed for passing down write hints */
+ 	__get_segment_type(fio);
+ 
+-	f2fs_bug_on(sbi, !IS_DATASEG(get_seg_entry(sbi,
+-			GET_SEGNO(sbi, fio->new_blkaddr))->type));
++	segno = GET_SEGNO(sbi, fio->new_blkaddr);
++
++	if (!IS_DATASEG(get_seg_entry(sbi, segno)->type)) {
++		set_sbi_flag(sbi, SBI_NEED_FSCK);
++		return -EFAULT;
++	}
+ 
+ 	stat_inc_inplace_blocks(fio->sbi);
+ 
+-- 
+2.20.1
 
 
-> In the title/subject:
->=20
-> media: cxd2820r: don't check retval after our own assignemt
->=20
-> s/assignemt/assignment/
 
-Eeeks, in deed :( Shall I resend? Sorry for the noise.
-
-
---MGYHOYXEY6WxJCY8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0Cd4YACgkQFA3kzBSg
-KbZgow//aNxohRzQcF1sIHDVxMCgP1WbXbfoU0g5CY4c8lZ+/ythaFlCOQ7pa5OF
-3CYujuPha//WElGBiD1DME/qXmdwNAAH2U2QqxuER/14vXW0jpHEoX7TIf2zuoxV
-72dW5Mt9XvBKX4rXpxQO0qucIR+F4Us2ayN3UrhkuG2gPrvtV+hHnp6zKxVam21S
-uqiodFXng2fRMympaV8LYaV/oUj8qWCsWbp5q1hOkT2iKjEyCkMjwVMLFn/onpaA
-eAEQ9MlGKA+hJfDjqMF9gcqoFGn0FYtL2KsptwrPAy8KLgldVuma4eIFIDTp9iwb
-UZMUqHIs1Xpf3xQEs/FVwvols+rDPSIAg1515+heM66WbHU3mLq+fc79v4ZHBdii
-JjvoJFN4EgAzqy6FL57GLYIZEezfwJ5sC55Rp7mL/dUrDg7oqrOOZJiQRFxXfMeF
-T1ZIkeAsFglARaXwFUopVUD4hw8vxMqe/EKhLau6jyp8Pw60j0LBwREAFCmPCqN3
-F6zTeLvwJfuzmPlBbVkxH2AeTStxPDvOlZ2O2YBh8FyizNCEzMabds2wqbif5IF9
-xju81GoMANuzx9G/Rb/W873e8s0KBTunTEw8coznK/XPcrZtKxUnyaHsF7PdXWD6
-ckAffB5GgNDqA+8sp3E0i+atD/Ajf/nFPLfCnrNP/FlNtwd7I5A=
-=iAmu
------END PGP SIGNATURE-----
-
---MGYHOYXEY6WxJCY8--
