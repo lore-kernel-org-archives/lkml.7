@@ -2,152 +2,88 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D5DC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A69C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E80220851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441216;
-	bh=1g6oB3FULST6i6OE9lv24uix8T01HnnhiJ/rKeyqDw4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BmN5YGjwle6Qr5LWDjWZ0CYEbhls9SNArbveaIkJi1Tv1/rEKdgXax7DiR0p8S6bJ
-	 A35uXrqn6Nr1mDQBmjUr0+lVOOcbfAKeLiXom6u5Xgj1Oh1FHXovuhWyxUbK3hgAY2
-	 lPhCgZtCLyhOz8lbNfNiORc0XYtJleTPbiQ9dQeM=
+	by mail.kernel.org (Postfix) with ESMTP id C962C208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:53:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="n6tXgtU9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbfFMPxe (ORCPT
+        id S1732233AbfFMPxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:53:34 -0400
-Received: from mail-oi1-f180.google.com ([209.85.167.180]:39192 "EHLO
-        mail-oi1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731609AbfFMJAn (ORCPT
+        Thu, 13 Jun 2019 11:53:42 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:37646 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731599AbfFMI7z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:00:43 -0400
-Received: by mail-oi1-f180.google.com with SMTP id m202so13860644oig.6;
-        Thu, 13 Jun 2019 02:00:42 -0700 (PDT)
+        Thu, 13 Jun 2019 04:59:55 -0400
+Received: by mail-yw1-f66.google.com with SMTP id 186so8033922ywo.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 01:59:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2+9AWuuxtYq5kDObExhhjKauucpmi9PpKTbQpENwdxw=;
+        b=n6tXgtU9jyCYIoEnopcXb3kvdH3pJPnNaZUgr1h0kYuBqfuVkDfZdhDI0C+M0DShsJ
+         mtpEej7Q7tu2iYouCZdzXTxI9G/6f7S/D8RS8ub9Y5Fyp2eQGzED8xB15X7TvNMjjUTW
+         2WGPWrOH5drqi1Z2nq9jnoeSfhd24IPTN8FDU+Uf4oEDF8jDbTxUAr6k2/pklQYA/cgJ
+         Wo718mB+1Nr1bhMm4baOFs4Ehv107XvmCkzvWQjVfsUwC0xLmmNsTroDwDjM11k8XWe0
+         orlt9dkGJM1m0c/rfBdcQ4mRYIWRKdFar+ydaHnVVN+wHBJVJj+UaZCVtw109orLDmEP
+         MYAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1g6oB3FULST6i6OE9lv24uix8T01HnnhiJ/rKeyqDw4=;
-        b=c6A6D8X3PMh8IxprqCW0CkGwtxs1K/wqF1AZx1c6CDuOi00Fyqq+lrTSL6ahFLE69Z
-         aaNAEiqV2NQW7MP63JUxmx/5FtnN85tzcHnpGby1/EOe8PUHQX6ObqWpDUnae/uQX+Rj
-         MvmxngPtP7kHRT5SsDKq4be6kk35N7kfWNzIOESeMwllNt3cuh9eS7AQdI8w+86lduOG
-         zlv5CdZHfP13VY5+PZQ+pdd3QAUWZF3D3r7qD+Dh/YK3NAFDLxi2qx88IjJ4khm9Z4mS
-         3tHiREHXFAsS84l/vfYTMfrNq+u04Zn0pIcgDMdoHzm4VbJ/iIHmtj1sJhnFOHk0Vtam
-         ehnQ==
-X-Gm-Message-State: APjAAAVVCvaAbuRGqCGPJIHaqP4miXjDGczdjfrnxN//3QtFAdi3VG7V
-        RkR2f6EP56bKjLVgLHLwbVN9cIwq7hWhjghCWfA=
-X-Google-Smtp-Source: APXvYqzUOVNefo05/6irTTuw25aSVSyX0O6xqozipCR+QGw6ry2zj1WSBXumDuH2gMpis392X9eCnNq+bP+JjLS7oG8=
-X-Received: by 2002:aca:3256:: with SMTP id y83mr2397576oiy.110.1560416442321;
- Thu, 13 Jun 2019 02:00:42 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2+9AWuuxtYq5kDObExhhjKauucpmi9PpKTbQpENwdxw=;
+        b=QYuVacUMCsYmpg8zzBx4U1R+IJCBN277ju0hweVi7jmXuyoj7ouHR8d8GYyH7njmDv
+         LDwNHzk6Byhy+Q3vadEipylS/whRHRkritO+8sXr74+JMQSDVgbiMWwKBB7U9ZDiKHNg
+         o/Ty7X53t+Jdn4guxkSzMK5AdeeAIt2bQzxjnxm2q8PIdCqO5jEEl39b2TbAV91rLbQ9
+         SUWzOciQKF8SqbigJLXSrTiL2xfoLIaJ25OV1IPw1VwCY4x1Na2NBQ1eMJPh8gLDiJS+
+         0momDEewcBslAU7qMxu6hG8Z6y3sfVehZm33Ee58xjRnbqU5zFuHv79vc+5pCUye5IyP
+         JInQ==
+X-Gm-Message-State: APjAAAX0+XshHRlFVdK4/LnRWsxn8oUcJLp9qLMZ73GyIL0JVpC5WLO2
+        zWPYtyQ45CapzcZosjcGerQs7A==
+X-Google-Smtp-Source: APXvYqxCEx653iUhqyan6kGQNPIR/w4+osLNDQGaSLrv8KI2gz87AEfJHMcrWUO3XewvyXWR1KK79g==
+X-Received: by 2002:a81:3494:: with SMTP id b142mr19026909ywa.79.1560416394346;
+        Thu, 13 Jun 2019 01:59:54 -0700 (PDT)
+Received: from [172.20.10.3] (mobile-166-172-57-221.mycingular.net. [166.172.57.221])
+        by smtp.gmail.com with ESMTPSA id l5sm574202ywf.11.2019.06.13.01.59.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 01:59:53 -0700 (PDT)
+Subject: Re: [PATCH] block/switching-sched.txt: Update to blk-mq schedulers
+To:     Andreas Herrmann <aherrmann@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org
+References: <20190612065009.GA11361@suselix>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a781a669-85ec-6df1-a18d-6d329b2f5ff6@kernel.dk>
+Date:   Thu, 13 Jun 2019 02:59:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190609111732.GA2885@amd> <007701d520c7$c397bda0$4ac738e0$@net>
- <CAJZ5v0j2pb2WxSA+S44Mr-6bpOx-P9A_T2-sDG3CiWSqLMg3sA@mail.gmail.com>
- <008f01d52178$07b3be70$171b3b50$@net> <20190613081158.GA6853@amd>
-In-Reply-To: <20190613081158.GA6853@amd>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 13 Jun 2019 11:00:29 +0200
-Message-ID: <CAJZ5v0hLPWsVzgRUT3_tZ6day6GzaxW2HWrK7RMaXLfpjwraOA@mail.gmail.com>
-Subject: Re: 5.2-rc2: low framerate in flightgear, cpu not running at full
- speed, thermal related?
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Doug Smythies <dsmythies@telus.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Zhang, Rui" <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190612065009.GA11361@suselix>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 10:12 AM Pavel Machek <pavel@ucw.cz> wrote:
->
-> Hi!
->
-> > On 2019.06.12 14:25 Rafael J. Wysocki wrote:
-> > > On Wed, Jun 12, 2019 at 4:45 AM Doug Smythies <dsmythies@telus.net> wrote:
-> > >>
-> > >> So, currently there seems to be 3 issues in this thread
-> > >> (and I am guessing a little, without definitive data):
-> > >>
-> > >> 1.) On your system Kernel 5.4-rc2 (or 4) defaults to the intel_pstate CPU frequency
-> > >> scaling driver and the powersave governor, but kernel 4.6 defaults to the
-> > >> acpi-cpufreq CPU frequency scaling driver and the ondemand governor.
-> > >
-> > > Which means that intel_pstate works in the active mode by default and
-> > > so it uses its internal governor.
-> >
-> > Note sure what you mean by "internal governor"?
-> > If you meant HWP (Hardware P-state), Pavel's processor doesn't have it.
-> > If you meant the active powersave governor code within the driver, then agreed.
-> >
-> > > That governor is more performance-oriented than ondemand and it very
-> > > well may cause more power to be allocated for the processor - at the
-> > > expense of the GPU.
-> >
-> > O.K. I mainly use servers and so have no experience with possible GPU
-> > verses CPU tradeoffs.
-> >
-> > However, I did re-do my tests measuring energy instead of CPU frequency
-> > and found very little difference between the acpi-cpufreq/ondemand verses
-> > intel_pstate/powersave as a function of single threaded load. Actually,
-> > I did the test twice, one at 20 hertz work/sleep frequency and also
-> > at 67 hertz work/sleep frequency. (Of course, Pavel's processor might
-> > well have a different curve, but it is a similar vintage to mine
-> > i5-2520M verses i7-2600K.) The worst difference was approximately
-> > 1.1 extra processor package watts (an extra 5.5%) in the 80% to 85%
-> > single threaded load range at 67 hertz work/sleep frequency for
-> > the intel-pstate/powersave driver/governor.
-> >
-> > What am I saying? For a fixed amount of work to do per work/sleep cycle
-> > (i.e. maybe per video frame related type work) while the CPU frequency Verses load
-> > curves might differ, the resulting processor energy curve differs much less.
-> > (i.e. the extra power for higher CPU frequency is for less time because it gets
-> > the job done faster.) So, myself, I don't yet understand why only the one method
-> > would have hit thermal throttling, but not the other (if indeed it
-> > doesn't).
->
-> It seems there are serious differences in reporting :-(. How do I
-> determine which frequency CPU really runs at, in 4.6 kernel?
+On 6/12/19 12:50 AM, Andreas Herrmann wrote:
+> 
+> Remove references to CFQ and legacy block layer which are gone.
+> Update example with what's available under blk-mq.
 
-With that kernel (and the acpi-cpufreq driver) the only way is to run
-your workload under turbostat.
+Applied, thanks.
 
-> But it seems that your assumptions are incorrect for my workload.
->
-> flightgear is single-threaded, and in my configuration saturates the
-> CPU, because it would like to achieve higher framerate than my system
-> is capable of.
->
-> > Just for information: CPU frequency verses single threaded load curves
-> > for the conservative governor is quite different between the two drivers.
-> > (tests done in February, perhaps I should re-do and also look at energy
-> > at the same time, or instead of CPU frequency.)
->
-> So this might be my problem?
+-- 
+Jens Axboe
 
-Not really, because you don't use the conservative governor. :-)
-
-Generally, I agree with Doug that CPU performance scaling is unlikely
-to be the source of the symptom that you are observing.
-
-Anyway, if you did what I had said previously (ie. run intel_pstate in
-the passive mode and use ondemand as the governor) and still see
-reduced frame rate (with respect to 4.6), that would basically rule
-CPU performance scaling out.
-
-Cheers!
