@@ -2,129 +2,170 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 788ADC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A469C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA6F20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466DE20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:00:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=globallogic.com header.i=@globallogic.com header.b="jWjpQvqF"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eO8vvTb2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732903AbfFMPAa (ORCPT
+        id S1732924AbfFMPAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:00:30 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43296 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732582AbfFMOp0 (ORCPT
+        Thu, 13 Jun 2019 11:00:40 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:4724 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732578AbfFMOnS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:45:26 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w33so31578633edb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 07:45:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=globallogic.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uvmsidGoJnOuVrNH93gzDhxt94b4IkyqxQH7sIQgBJY=;
-        b=jWjpQvqFJpy3JZ8v3eJX/wY/JM7UzO7PqMYyaXZ3zvjJxFfOHON2tSICAV3Md/FBuR
-         Y4oPZ1USj/EWpQnKcOs7XBvas6TOzv2l5znmvTTKTFx3uKVRdProUC4XDiCaAWgM/rGc
-         Kk4IdyKh8ubR8hhiNJoQU8VlFscolUuaDwjyQc/O7ksT6ViPYNrMM34FNuw5ExZO7Mcu
-         Erv24mDt50rY0r4Gd/JvyvqmL0Qm/Bd3QNiZXD9mjX3hTflwIfnOR/JGqFMUCA4Qb20+
-         npVhj+/bkWt/M+IngqB4do4HipI95akb14e9EpKZcAxnnz7WxF0eVp4EpyGGC9XYZN4a
-         YiYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uvmsidGoJnOuVrNH93gzDhxt94b4IkyqxQH7sIQgBJY=;
-        b=ZMcG7/c4m6kLKd1qxtPlLw0PrEe+HPy2CYztJdfYOnQIUQs/4N8fBt7T9OJ6LCyYYh
-         BVjAKHpRhJBZs29gJdyFiR/VRi0IbEQaHc9FRQzdE+eHcR2U8XKlq5CwrOa66LXsT5bu
-         otXU9ZRdC52zyKQTYq7XYytzLbN56EejAqNYXXiQJzuX5/h4NbqKC7b2spKfYDYOPAiW
-         TuAN3bKaD/ejrl+eMDTGA296siT6/N8OH36w/B+9coQRypprgOoli/dXSpujnz4LINtE
-         5MfPZP1ARLQamJrMcpmWcipWpUFICzLnvaJPb6xd1u/Yqvzk2HIapwHEugzY9PStmA9r
-         jVng==
-X-Gm-Message-State: APjAAAWV3RN5KdIcWbx1zyv+XGvSBdYdGmJrBkfOMaML1IiCcfH0KSkz
-        fSS7CBUSJEB53GmTNoDrePGFrnqWU10C9vC+BNjdAA==
-X-Google-Smtp-Source: APXvYqz/zNSaR5+4fJBic3BvwE8nvJYsPFgWJWIxdv0FXnRWV5GHARWaC/J29mUuifA2I9vWNxUsSCX69SK23Ui//Ww=
-X-Received: by 2002:a17:906:3d69:: with SMTP id r9mr34377374ejf.28.1560437124696;
- Thu, 13 Jun 2019 07:45:24 -0700 (PDT)
+        Thu, 13 Jun 2019 10:43:18 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0261040001>; Thu, 13 Jun 2019 07:43:16 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 13 Jun 2019 07:43:16 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 13 Jun 2019 07:43:16 -0700
+Received: from [10.25.72.199] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Jun
+ 2019 14:43:14 +0000
+Subject: Re: [PATCH v5 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
+To:     Jon Hunter <jonathanh@nvidia.com>, <thierry.reding@gmail.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <mkumard@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1560422477-11242-1-git-send-email-spujar@nvidia.com>
+ <3f1ebc62-1498-f26c-9044-8634242fc61e@nvidia.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <9c5dbfc5-122b-2049-fdad-7ffeab6a9ec9@nvidia.com>
+Date:   Thu, 13 Jun 2019 20:13:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190612163144.18486-1-roman.stratiienko@globallogic.com>
- <20190612163144.18486-2-roman.stratiienko@globallogic.com> <20190613135241.aghcrrz7rg2au3bw@MacBook-Pro-91.local>
-In-Reply-To: <20190613135241.aghcrrz7rg2au3bw@MacBook-Pro-91.local>
-From:   Roman Stratiienko <roman.stratiienko@globallogic.com>
-Date:   Thu, 13 Jun 2019 17:45:13 +0300
-Message-ID: <CAODwZ7v=RSsmVj5GjcvGn2dn+ejLRBHZ79x-+S9DrX4GoXuVaQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] nbd: add support for nbd as root device
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     linux-kernel@vger.kernel.org, nbd@other.debian.org,
-        Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>,
-        linux-block@vger.kernel.org, axboe@kernel.dkn.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3f1ebc62-1498-f26c-9044-8634242fc61e@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560436996; bh=hNIQsfMLZu+COVCghcSuyQtUpapt6Btw4JX8rvc61l4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=eO8vvTb2YqRtiYn5g3Obv4jO+rdW+4EAkDouo95TxtH2os2CC9scIOm4UR4jrUAw0
+         DTqVojSxjkbs/DO6FuVah0rCotb6MOkqqffayirBLxbbKLsaxFToIwiHj8DgY+IWwj
+         YuIRQVLRmaVVSbIMr29WiAx9q6+aQ9Qz2rr68cZ9RjUQvBnuWlTnR2RoGeCs9jE8Ne
+         I9mmRjHq4eoEiROIDcuFQ66aHjncXhVoLdGgxhKm+NZXIqi1cKsw+kWQ1ZGEnHR4P+
+         GzAtuksOHcVdA8Bu4SxZIWvyA4Nw/gPY1kdnht2n4heZTgSIXMwGvzltoWjBtmZr4x
+         xJhfqfhSZfZJA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 4:52 PM Josef Bacik <josef@toxicpanda.com> wrote:
+
+On 6/13/2019 7:39 PM, Jon Hunter wrote:
+> On 13/06/2019 11:41, Sameer Pujar wrote:
+>> Add DT nodes for following devices on Tegra186 and Tegra194
+>>   * ACONNECT
+>>   * ADMA
+>>   * AGIC
+>>
+>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+>> ---
+>>   changes from previous revision
+>>    * fixed size value for ranges property in aconnect
+>>
+>>   arch/arm64/boot/dts/nvidia/tegra186.dtsi | 67 ++++++++++++++++++++++++=
+++++++++
+>>   arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67 ++++++++++++++++++++++++=
+++++++++
+>>   2 files changed, 134 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/=
+dts/nvidia/tegra186.dtsi
+>> index 426ac0b..5e9fe7e 100644
+>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+>> @@ -1295,4 +1295,71 @@
+>>   				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+>>   		interrupt-parent =3D <&gic>;
+>>   	};
+>> +
+>> +	aconnect {
+>> +		compatible =3D "nvidia,tegra210-aconnect";
+>> +		clocks =3D <&bpmp TEGRA186_CLK_APE>,
+>> +			 <&bpmp TEGRA186_CLK_APB2APE>;
+>> +		clock-names =3D "ape", "apb2ape";
+>> +		power-domains =3D <&bpmp TEGRA186_POWER_DOMAIN_AUD>;
+>> +		#address-cells =3D <1>;
+>> +		#size-cells =3D <1>;
+>> +		ranges =3D <0x02900000 0x0 0x02900000 0x200000>;
+>> +		status =3D "disabled";
+>> +
+>> +		dma-controller@2930000 {
+>> +			compatible =3D "nvidia,tegra186-adma";
+>> +			reg =3D <0x02930000 0x50000>;
+> Sorry but I have been double checking these register addresses and I
+> wonder if this should be a length of 0x10000. The 0x50000 includes all
+> the ranges where the registers are paged, so I don't think that this is
+> correct including these.
+Is it because we don't have virtualization support yet?
+and isn't the range 0x10000 covers only global register space, don't we
+want to include page1 ADMA channel registers. In that case it would be
+0x20000.
 >
-> On Wed, Jun 12, 2019 at 07:31:44PM +0300, roman.stratiienko@globallogic.com wrote:
-> > From: Roman Stratiienko <roman.stratiienko@globallogic.com>
-> >
-> > Adding support to nbd to use it as a root device. This code essentially
-> > provides a minimal nbd-client implementation within the kernel. It opens
-> > a socket and makes the negotiation with the server. Afterwards it passes
-> > the socket to the normal nbd-code to handle the connection.
-> >
-> > The arguments for the server are passed via kernel command line.
-> > The kernel command line has the format
-> > 'nbdroot=[<SERVER_IP>:]<SERVER_PORT>/<EXPORT_NAME>'.
-> > SERVER_IP is optional. If it is not available it will use the
-> > root_server_addr transmitted through DHCP.
-> >
-> > Based on those arguments, the connection to the server is established
-> > and is connected to the nbd0 device. The rootdevice therefore is
-> > root=/dev/nbd0.
-> >
-> > Patch was initialy posted by Markus Pargmann <mpa@pengutronix.de>
-> > and can be found at https://lore.kernel.org/patchwork/patch/532556/
-> >
-> > Change-Id: I78f7313918bf31b9dc01a74a42f0f068bede312c
-> > Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
-> > Reviewed-by: Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>
+>> +			interrupt-parent =3D <&agic>;
+>> +			interrupts =3D  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
+>> +				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+>> +			#dma-cells =3D <1>;
+>> +			clocks =3D <&bpmp TEGRA186_CLK_AHUB>;
+>> +			clock-names =3D "d_audio";
+>> +			status =3D "disabled";
+>> +		};
+>> +
+>> +		agic: interrupt-controller@2a41000 {
+> I think that this should be 2a40000 but otherwise looks correct.
+ =C2=A0done.
+> Sorry but you are too quick for me to keep up!
 >
-> Just throw nbd-client in your initramfs.  Every nbd server has it's own
-> handshake protocol, embedding one particular servers handshake protocol into the
-> kernel isn't the answer here.  Thanks,
+> Cheers
+> Jon
 >
-> Josef
-
-Hello Josef,
-
-Let me share some of my thoughts that was the motivation for providing
-this solution::
-
-We choose NBD as a tool to run CI tests on our platforms.
-We have a wide range of different BSP's with different kind of images
-where using NFSROOT is hard or even impossible.
-Most of these BSPs are not using initramfs and some of them are Android-based.
-
-Taking all this into account we have to put significant efforts to
-implement and test custom initramfs and it will not cover all our
-needs.
-
-Much easier way is to embed small client into the kernel and just
-enable configuration when needed.
-
-I believe such solution will be very useful for wide range of kernel users.
-
-Also, as far as I know mainline nbd-server daemon have only 2
-handshake protocols. So called OLD-STYLE and NEW-STYLE. And OLD-STYLE
-is no longer supported. So it should not be a problem, or please fix
-me if I'm wrong.
-
-Regards,
-Roman
