@@ -2,140 +2,118 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 684C6C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DFFC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 429D420851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 517BF20851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:30:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="om8CHXpu"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="monCWH28"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbfFMS2J (ORCPT
+        id S1727666AbfFMSac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:28:09 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41410 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727179AbfFMS2J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:28:09 -0400
-Received: by mail-pf1-f194.google.com with SMTP id m30so11834513pff.8
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:28:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FemmaFQaRuutEOaISPpOpqicA0l7Z+VaG2En8NxAbN8=;
-        b=om8CHXpui7NO/n4e0fAe/88mp2X04gjpzNTg0RhpC2P/3kC8OznZOg5t8HOFo+axq+
-         9EtdPAdhP1fwLKFOlb0ozVWzxlbTlMttuMpAm7drb9bLM7LmR4Ui8RCsYJDzuYTkHaut
-         oqMpurM7cd4UOxLlZ54GCkYlRHaCerc1SIOKXfte06yeQ1BpmnuUtNPMsLHbpz0j8oiG
-         GV7YDiYts/dIVzk5ezT75fSCFLQ9cYVzhOTBXA6kjQW8d5h9uSjg28VaKaRWmMZtwOFw
-         k5pGcFw3I2uOwmmrklCaIv+kLeXKcvkhfdBPOxmUulvSnPf11EOZC6Vn21Vlk+mKY0ST
-         xafQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FemmaFQaRuutEOaISPpOpqicA0l7Z+VaG2En8NxAbN8=;
-        b=sibnITR2RYwWSZFAzK8O3tb9TDbck2oYMCvuATTg5/2o7xdQ37K6/1bJffyTuVvhjP
-         BdxU1Fp1eP2SDHf6cxTS7HcL9RUSR+Hhy8nmp6aPnDRkkQvyviVbkNXnWJ8IsXQ3ExCf
-         c97VeQ/rxzn/Cxf4Gjhn8AuN1jaedamArsmVJhuE7xUYsZANKyzK7fvhsnSmt5s/mPZV
-         kVHzgyariehPwebSddsxuLF4EWDqGWU1uk+WZ23+f8om7mF6gDawPtbZ1ai5K58drZho
-         YxkpLNSlzvJ8TcFYAehvdMpZitlmD/WJeD5guqDGeGUgo1E3SEBJQQZwzV5LEka0VwuG
-         Syng==
-X-Gm-Message-State: APjAAAX3Un9jBge8S1vZwiuisVU4++as5A38ANRiblnWCetVl9qsA7lw
-        9Y+IVCawEPf+jKUUhQaw/vk6YmKyaSCO78tuaJ3jbA==
-X-Google-Smtp-Source: APXvYqzEyXLM+Bi9kJiuud+sdXFaTtb19Ij33j9D+8uEzxfp4dA+FBSnDMPfcYwuWtzPB/pWhm7FVISawXRV/tfZlU8=
-X-Received: by 2002:a62:2ec4:: with SMTP id u187mr93063583pfu.84.1560450488136;
- Thu, 13 Jun 2019 11:28:08 -0700 (PDT)
+        Thu, 13 Jun 2019 14:30:32 -0400
+Received: from mail-eopbgr50078.outbound.protection.outlook.com ([40.107.5.78]:51074
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727058AbfFMSac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 14:30:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r0d+YLFD8dGkAwiCYZAtPwS2G6Ds7zR/M3jKY4RPVuk=;
+ b=monCWH28lJ8KutFgYrbunH4n71O0rCyBxc5YAFfMijiC+36DWBjgRugr2jES4xlF5XZW4obgenyjgDDc9/IxSVr5yzCoI5cH1QauGF4qKClZYCrLY15EznN0ic2/4wRlPBtniXJKWIQFSIlRR23+0rxITpaOtgBm7uBPIcTdrA8=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5584.eurprd05.prod.outlook.com (20.177.203.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.11; Thu, 13 Jun 2019 18:30:28 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
+ 18:30:28 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/22] mm: remove the unused ARCH_HAS_HMM_DEVICE Kconfig
+ option
+Thread-Topic: [PATCH 01/22] mm: remove the unused ARCH_HAS_HMM_DEVICE Kconfig
+ option
+Thread-Index: AQHVIcx6m7GApB2g2EOjqyqCTmZIFaaZ6IgA
+Date:   Thu, 13 Jun 2019 18:30:28 +0000
+Message-ID: <20190613183024.GN22062@mellanox.com>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-2-hch@lst.de>
+In-Reply-To: <20190613094326.24093-2-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR02CA0032.namprd02.prod.outlook.com
+ (2603:10b6:208:fc::45) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c1ee3c6a-1509-419a-74b4-08d6f02d35ac
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5584;
+x-ms-traffictypediagnostic: VI1PR05MB5584:
+x-microsoft-antispam-prvs: <VI1PR05MB558425A8B5EAF3873BF93F5BCFEF0@VI1PR05MB5584.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:923;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(396003)(346002)(376002)(366004)(189003)(199004)(11346002)(26005)(4326008)(8676002)(2906002)(446003)(73956011)(81166006)(81156014)(68736007)(316002)(8936002)(229853002)(66446008)(6512007)(6436002)(64756008)(25786009)(66946007)(66556008)(6486002)(66476007)(2616005)(476003)(7736002)(305945005)(186003)(53936002)(256004)(3846002)(1076003)(6116002)(6506007)(6246003)(33656002)(66066001)(386003)(14454004)(102836004)(4744005)(71190400001)(54906003)(86362001)(6916009)(71200400001)(36756003)(478600001)(486006)(5660300002)(99286004)(76176011)(7416002)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5584;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eb3KNKd+VDg3aMK8Xechk52gl84tRX+UWpHdsOLNOQzeiT28ESmFj2R4yKBmX+NPNaW6nZgyRfR3xgOTcaQ1b4lRWF6pQAbCHEkPttsEIW1r8cu28CXaD45UV36dQZIooipJbaFiZTzELlXICo9wDON3UG7aNvg+R+cWUXcYJie9pdMNgKX5v3lkEcBent4N1kyPRMafc480EDdxGF4aAAmP5ip0yM9nDnluL/fQCgq8GXOGX7b3kOgug3OKimrxKxX837QgZlGE2fpggJ/ZDicu4ctD5be9CWPG3TpqcjUCqzn1BV4UmOojvh+hKxZkl1v7Z0lpZ+RXvTN9QxS06jX1iWzwcH93SIz/BXEzE46Prkw1Id4bz6tQ0K79DZqnttQrzX5GmktcE0O6ji7z3ox0jb5Tt89CDTzrmvMVFN0=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <1C3FD7879859344FA6C6020F72EC479A@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CAKwvOdn930hhHcnCA9arJ5=9SsT-6BfFC_1punmUZX2xWM-Hnw@mail.gmail.com>
- <20190613182610.238801-1-nhuck@google.com>
-In-Reply-To: <20190613182610.238801-1-nhuck@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 13 Jun 2019 11:27:57 -0700
-Message-ID: <CAKwvOdnDw4X4odqiwqWze78BjOn04zatnU9WgOcv9Jw3RXLaPA@mail.gmail.com>
-Subject: Re: [PATCH v2] memory: tegra: Fix -Wunused-const-variable
-To:     Nathan Huckleberry <nhuck@google.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, jonathanh@nvidia.com,
-        linux-tegra@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1ee3c6a-1509-419a-74b4-08d6f02d35ac
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 18:30:28.7061
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5584
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:26 AM 'Nathan Huckleberry' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
-> Changes from v1 -> v2:
-> * Moved definition of tegra124_mc_emem_regs into existing ifdef
+On Thu, Jun 13, 2019 at 11:43:04AM +0200, Christoph Hellwig wrote:
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  mm/Kconfig | 10 ----------
+>  1 file changed, 10 deletions(-)
 
-Thanks for sending the v2, LGTM.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+So long as we are willing to run a hmm.git we can merge only complete
+features going forward.
 
-> --- a/drivers/memory/tegra/tegra124.c
-> +++ b/drivers/memory/tegra/tegra124.c
-> @@ -33,28 +33,6 @@
->  #define MC_EMEM_ARB_MISC1                      0xdc
->  #define MC_EMEM_ARB_RING1_THROTTLE             0xe0
->
-> -static const unsigned long tegra124_mc_emem_regs[] = {
-> -       MC_EMEM_ARB_CFG,
-> -       MC_EMEM_ARB_OUTSTANDING_REQ,
-> -       MC_EMEM_ARB_TIMING_RCD,
-> -       MC_EMEM_ARB_TIMING_RP,
-> -       MC_EMEM_ARB_TIMING_RC,
-> -       MC_EMEM_ARB_TIMING_RAS,
-> -       MC_EMEM_ARB_TIMING_FAW,
-> -       MC_EMEM_ARB_TIMING_RRD,
-> -       MC_EMEM_ARB_TIMING_RAP2PRE,
-> -       MC_EMEM_ARB_TIMING_WAP2PRE,
-> -       MC_EMEM_ARB_TIMING_R2R,
-> -       MC_EMEM_ARB_TIMING_W2W,
-> -       MC_EMEM_ARB_TIMING_R2W,
-> -       MC_EMEM_ARB_TIMING_W2R,
-> -       MC_EMEM_ARB_DA_TURNS,
-> -       MC_EMEM_ARB_DA_COVERS,
-> -       MC_EMEM_ARB_MISC0,
-> -       MC_EMEM_ARB_MISC1,
-> -       MC_EMEM_ARB_RING1_THROTTLE
-> -};
-> -
->  static const struct tegra_mc_client tegra124_mc_clients[] = {
->         {
->                 .id = 0x00,
-> @@ -1049,6 +1027,28 @@ static const struct tegra_mc_reset tegra124_mc_resets[] = {
->  };
->
->  #ifdef CONFIG_ARCH_TEGRA_124_SOC
-> +static const unsigned long tegra124_mc_emem_regs[] = {
-> +       MC_EMEM_ARB_CFG,
-> +       MC_EMEM_ARB_OUTSTANDING_REQ,
-> +       MC_EMEM_ARB_TIMING_RCD,
-> +       MC_EMEM_ARB_TIMING_RP,
-> +       MC_EMEM_ARB_TIMING_RC,
-> +       MC_EMEM_ARB_TIMING_RAS,
-> +       MC_EMEM_ARB_TIMING_FAW,
-> +       MC_EMEM_ARB_TIMING_RRD,
-> +       MC_EMEM_ARB_TIMING_RAP2PRE,
-> +       MC_EMEM_ARB_TIMING_WAP2PRE,
-> +       MC_EMEM_ARB_TIMING_R2R,
-> +       MC_EMEM_ARB_TIMING_W2W,
-> +       MC_EMEM_ARB_TIMING_R2W,
-> +       MC_EMEM_ARB_TIMING_W2R,
-> +       MC_EMEM_ARB_DA_TURNS,
-> +       MC_EMEM_ARB_DA_COVERS,
-> +       MC_EMEM_ARB_MISC0,
-> +       MC_EMEM_ARB_MISC1,
-> +       MC_EMEM_ARB_RING1_THROTTLE
-> +};
-> +
+Thus we don't need the crazy process described in the commit message
+that (deliberately) introduced this unused kconfig.
 
--- 
-Thanks,
-~Nick Desaulniers
+I also tried to find something in-flight for 5.3 that would need this
+and found nothing
+
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+
+Jason
