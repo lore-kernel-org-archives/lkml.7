@@ -7,54 +7,56 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B22EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2986C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA8D720644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFCC520B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442919;
-	bh=UYJHN5eL3F/xYsJ1AHNxzRAwdLyzkyjHar/AmDJKRgo=;
+	s=default; t=1560442921;
+	bh=HTx1fHVj5uezsO/DXs83fYpWV86qC1ZT8ZkQv5D7U4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UFrzqkmLa8hEfbKttewkZr45JmtBn6WCOzILEGA3mbKUz6Vhi/f6MobL3eXhWawy7
-	 eZDTNqGviw+faa+kzUGT8S3tbMK0HEINsaDXdQk0VvIo60bGCI+3+v5vuNWdGAiWLJ
-	 izEtBNTUoSxZQLEPHjutPxT3eNQQKwI87MVoV7jw=
+	b=kY3OgDjAy1KlbIAnak9udzWoOjvH0fLQG95PmNIM7GSfyaTFTcgi6rFGs2cws2mWp
+	 zPK5sDYuzLaZ5uOQ7xOqrNOkGuKkCWv/TH30mhlKGJUbYq9W4K6e3sWwkpCj+ssW9G
+	 Ksa7Etjn3tg1bitvKAZXRLqDSIpqx+fXLh6XFC9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403908AbfFMQV5 (ORCPT
+        id S2391893AbfFMQWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:21:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55976 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:22:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731051AbfFMIic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:38:32 -0400
+        id S1731052AbfFMIie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:38:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D5AF21473;
-        Thu, 13 Jun 2019 08:38:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B32482147A;
+        Thu, 13 Jun 2019 08:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415111;
-        bh=UYJHN5eL3F/xYsJ1AHNxzRAwdLyzkyjHar/AmDJKRgo=;
+        s=default; t=1560415114;
+        bh=HTx1fHVj5uezsO/DXs83fYpWV86qC1ZT8ZkQv5D7U4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=erwQwCJM+qKtyA0IIprBXsYNmVmM/7Qzjnxz1w8Nva+OGlXbm3lFz7bn8946DdD6J
-         rgx824fVP6wfp194+j5M+p8GHgDfCMk9ktgxn1dgJ79sR1Dl+CaMeZYTbYCHgwpKD8
-         cchrWXB2pgcIYMbv5WgN828bkS8ioPO2Zx9mLGt4=
+        b=RtFcGM4ViSvrgMEx9zoWFeRvvRn5aP2UXfXO3tnN7PxxbeP3Y2xeHnibbp0N4boLj
+         NqxUQQMGWv0LOuTeMXwa3A2UCkGXLqUptgtIpYrxi+eRVEcRQFfEZKXLYeaq+M027Q
+         i6ry6pnfh7ISWbJE73DtNCBsY7ZXdjmWBV72D0eg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 64/81] PCI: rcar: Fix a potential NULL pointer dereference
-Date:   Thu, 13 Jun 2019 10:33:47 +0200
-Message-Id: <20190613075653.740223919@linuxfoundation.org>
+Subject: [PATCH 4.19 001/118] rapidio: fix a NULL pointer dereference when create_workqueue() fails
+Date:   Thu, 13 Jun 2019 10:32:19 +0200
+Message-Id: <20190613075643.733402894@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
-References: <20190613075649.074682929@linuxfoundation.org>
+In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
+References: <20190613075643.642092651@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,37 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f0d14edd2ba43b995bef4dd5da5ffe0ae19321a1 ]
+[ Upstream commit 23015b22e47c5409620b1726a677d69e5cd032ba ]
 
-In case __get_free_pages() fails and returns NULL, fix the return
-value to -ENOMEM and release resources to avoid dereferencing a
-NULL pointer.
+In case create_workqueue fails, the fix releases resources and returns
+-ENOMEM to avoid NULL pointer dereference.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Acked-by: Alexandre Bounine <alex.bou9@gmail.com>
+Cc: Matt Porter <mporter@kernel.crashing.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/pcie-rcar.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/rapidio/rio_cm.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
-index 41edce16a07c..fad57d068db3 100644
---- a/drivers/pci/host/pcie-rcar.c
-+++ b/drivers/pci/host/pcie-rcar.c
-@@ -888,6 +888,10 @@ static int rcar_pcie_enable_msi(struct rcar_pcie *pcie)
- 
- 	/* setup MSI data target */
- 	msi->pages = __get_free_pages(GFP_KERNEL, 0);
-+	if (!msi->pages) {
-+		err = -ENOMEM;
-+		goto err;
+diff --git a/drivers/rapidio/rio_cm.c b/drivers/rapidio/rio_cm.c
+index bad0e0ea4f30..ef989a15aefc 100644
+--- a/drivers/rapidio/rio_cm.c
++++ b/drivers/rapidio/rio_cm.c
+@@ -2145,6 +2145,14 @@ static int riocm_add_mport(struct device *dev,
+ 	mutex_init(&cm->rx_lock);
+ 	riocm_rx_fill(cm, RIOCM_RX_RING_SIZE);
+ 	cm->rx_wq = create_workqueue(DRV_NAME "/rxq");
++	if (!cm->rx_wq) {
++		riocm_error("failed to allocate IBMBOX_%d on %s",
++			    cmbox, mport->name);
++		rio_release_outb_mbox(mport, cmbox);
++		kfree(cm);
++		return -ENOMEM;
 +	}
- 	base = virt_to_phys((void *)msi->pages);
++
+ 	INIT_WORK(&cm->rx_work, rio_ibmsg_handler);
  
- 	rcar_pci_write_reg(pcie, base | MSIFE, PCIEMSIALR);
+ 	cm->tx_slot = 0;
 -- 
 2.20.1
 
