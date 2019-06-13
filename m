@@ -2,115 +2,108 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F006C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3FCC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3871D20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442292;
-	bh=Jtd82B/gjKxxyd8BiqQEllgN1weJvNWJX22zjDTggB8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=brlISAMfFJN7iuNoQ2EMgZiEWYQFsWhhQ8lIEpdqDc46BvnmpTiEVHSXsvxC+wOIo
-	 mVIaRPOrjQzGINyfTNsnf+QvqbbcO+jSBaHSnrzjhAdhbiCPyusWiRMRloQ4CnDW5V
-	 FZJBbqoAAbjnZzY4WC2WWgKgzbjIfCYwxF+CVCUM=
+	by mail.kernel.org (Postfix) with ESMTP id 074C820679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="R9RMC0+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391586AbfFMQLa (ORCPT
+        id S2391260AbfFMQLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:11:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731233AbfFMIn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:43:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0F1220851;
-        Thu, 13 Jun 2019 08:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415407;
-        bh=Jtd82B/gjKxxyd8BiqQEllgN1weJvNWJX22zjDTggB8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eJCDMBaARSTgJ6MlKTWp/IebGjjaSQdYxkilCGnYtATeFC7gZlXcpCuABCCHb7y0j
-         U3qvLm/w4SZf03Bk7rcwneFmeTk8NQwmCWnzZxmhZi44VU4w5zsncpa+puRS3Owqx9
-         t0BDuyFAtEWTf+AGJ40FI0WP6DvKmN7du2onm2/I=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Khoruzhick <anarsoul@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jeremy Cline <jeremy@jcline.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Subject: [PATCH 4.19 114/118] Revert "Bluetooth: Align minimum encryption key size for LE and BR/EDR connections"
-Date:   Thu, 13 Jun 2019 10:34:12 +0200
-Message-Id: <20190613075650.929154855@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
-References: <20190613075643.642092651@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 13 Jun 2019 12:11:34 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:48460 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391587AbfFMQLb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:11:31 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AA45452B;
+        Thu, 13 Jun 2019 18:11:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1560442290;
+        bh=MaF7TDloZgBgF7rWBELeUNc1VaEnB2RDm5tUeyg06EE=;
+        h=Subject:To:Cc:References:From:Reply-To:Date:In-Reply-To:From;
+        b=R9RMC0+/8VswNPTW7Ozc26K3zG813e59Y876RK3lY+HbNNLyKs1sDQqPDgrCo/rtB
+         tTHTz/laKJPEFPwHOyioaK2hZQtxN6PH9FjxKPVzKVJMSZUcOotZwqLBu2VTfZ03Ed
+         pXsiv/3RqzaBBr5D0MKdUf7K808QkN+zt0nBO0bQ=
+Subject: Re: [PATCH 2/4] media: mn88472: don't check retval after our own
+ assignemt
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-media@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org, Antti Palosaari <crope@iki.fi>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20190613155421.16408-1-wsa+renesas@sang-engineering.com>
+ <20190613155421.16408-3-wsa+renesas@sang-engineering.com>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Organization: Ideas on Board
+Message-ID: <55afdf32-68a8-c754-152a-2e80a686bde4@ideasonboard.com>
+Date:   Thu, 13 Jun 2019 17:11:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190613155421.16408-3-wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Hi Wolfram,
 
-This reverts commit 38f092c41cebaff589e88cc22686b289a6840559 which is
-commit d5bb334a8e171b262e48f378bd2096c0ea458265 upstream.
+Same comment in title (on all 4 patches in fact)
+	s/assignemt/assignment/
 
-Lots of people have reported issues with this patch, and as there does
-not seem to be a fix going into Linus's kernel tree any time soon,
-revert the commit in the stable trees so as to get people's machines
-working properly again.
 
-Reported-by: Vasily Khoruzhick <anarsoul@gmail.com>
-Reported-by: Hans de Goede <hdegoede@redhat.com>
-Cc: Jeremy Cline <jeremy@jcline.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>
-Cc: Johan Hedberg <johan.hedberg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/bluetooth/hci_core.h |    3 ---
- net/bluetooth/hci_conn.c         |    8 --------
- 2 files changed, 11 deletions(-)
+On 13/06/2019 16:54, Wolfram Sang wrote:
+> No need to check a retval after we assigned a constant to it.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  drivers/media/dvb-frontends/mn88472.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/dvb-frontends/mn88472.c b/drivers/media/dvb-frontends/mn88472.c
+> index 731b44b9b74c..0a4d0d5fb4b6 100644
+> --- a/drivers/media/dvb-frontends/mn88472.c
+> +++ b/drivers/media/dvb-frontends/mn88472.c
+> @@ -616,8 +616,7 @@ static int mn88472_probe(struct i2c_client *client,
+>  	if (!dev->client[1]) {
+>  		ret = -ENODEV;
+>  		dev_err(&client->dev, "I2C registration failed\n");
+> -		if (ret)
+> -			goto err_regmap_0_regmap_exit;
+> +		goto err_regmap_0_regmap_exit;
 
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -182,9 +182,6 @@ struct adv_info {
- 
- #define HCI_MAX_SHORT_NAME_LENGTH	10
- 
--/* Min encryption key size to match with SMP */
--#define HCI_MIN_ENC_KEY_SIZE		7
--
- /* Default LE RPA expiry time, 15 minutes */
- #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
- 
---- a/net/bluetooth/hci_conn.c
-+++ b/net/bluetooth/hci_conn.c
-@@ -1276,14 +1276,6 @@ int hci_conn_check_link_mode(struct hci_
- 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
- 		return 0;
- 
--	/* The minimum encryption key size needs to be enforced by the
--	 * host stack before establishing any L2CAP connections. The
--	 * specification in theory allows a minimum of 1, but to align
--	 * BR/EDR and LE transports, a minimum of 7 is chosen.
--	 */
--	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
--		return 0;
--
- 	return 1;
- }
- 
+Ack
 
+>  	}
+>  	dev->regmap[1] = regmap_init_i2c(dev->client[1], &regmap_config);
+>  	if (IS_ERR(dev->regmap[1])) {
+> @@ -630,8 +629,7 @@ static int mn88472_probe(struct i2c_client *client,
+>  	if (!dev->client[2]) {
+>  		ret = -ENODEV;
+>  		dev_err(&client->dev, "2nd I2C registration failed\n");
+> -		if (ret)
+> -			goto err_regmap_1_regmap_exit;
+> +		goto err_regmap_1_regmap_exit;
+
+Ack.
+
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+>  	}
+>  	dev->regmap[2] = regmap_init_i2c(dev->client[2], &regmap_config);
+>  	if (IS_ERR(dev->regmap[2])) {
+> 
 
