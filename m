@@ -2,193 +2,81 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF74C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC4DC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 914A2208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442568;
-	bh=18wzUWk6vtXWeMXaSdeph3KAvIGdLqp7KsjidCRJrq4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vo3Q4sopEthJ7fSF4bYuw4Eqky4rb19yB3lTUOlrVvYpdeBAKQPZqagRx3Ra2Ruqo
-	 7EvZjGZf+aiczQLzhRmq1Jniq4zdZFlAJS4Oxb5Dy+0iiEgGCyhomETrfl/yzD1T+I
-	 LpDiVMBohuDHmRuJ1fjoExTyn2WEL82k7Wof/uH4=
+	by mail.kernel.org (Postfix) with ESMTP id 9DF3C2147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391918AbfFMQQH (ORCPT
+        id S2391928AbfFMQQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:16:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58720 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:16:10 -0400
+Received: from mga14.intel.com ([192.55.52.115]:34431 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731157AbfFMIlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:41:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25E5E20851;
-        Thu, 13 Jun 2019 08:41:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415290;
-        bh=18wzUWk6vtXWeMXaSdeph3KAvIGdLqp7KsjidCRJrq4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tz9hlzQbuzeyLrJ2wYfcRLLEYcp+7kIM+W0IyEVujm/EqeHxDTpx4D1BJoPeKtv52
-         j6wkePLO7qZ3N2/3pjgRYqjXTpYXNZ6n5TM1BpF8072GMOtdfeLWxg0l+wHKCaq8xp
-         vy8Sfcum+yGAG06jCNBcHkUKYOT4aC54ssvEZGmE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 043/118] configfs: fix possible use-after-free in configfs_register_group
-Date:   Thu, 13 Jun 2019 10:33:01 +0200
-Message-Id: <20190613075646.249722929@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
-References: <20190613075643.642092651@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1731158AbfFMIlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:41:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 01:41:31 -0700
+X-ExtLoop1: 1
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by fmsmga006.fm.intel.com with ESMTP; 13 Jun 2019 01:41:28 -0700
+Subject: Re: [PATCH 2/3] mmc: sdhci: sdhci-pci-o2micro: Check if controller
+ supports 8-bit width
+To:     Raul Rangel <rrangel@chromium.org>
+Cc:     linux-mmc@vger.kernel.org, ernest.zhang@bayhubtech.com,
+        djkurtz@chromium.org, linux-kernel@vger.kernel.org,
+        Ulf Hansson <ulf.hansson@linaro.org>
+References: <20190610185354.35310-1-rrangel@chromium.org>
+ <20190610185354.35310-2-rrangel@chromium.org>
+ <d4939761-317c-ee78-b1e5-c2cdd86a12b4@intel.com>
+ <20190612150832.GB27989@google.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <94fa2a5e-e96d-acb3-46c2-5f6b1dea6711@intel.com>
+Date:   Thu, 13 Jun 2019 11:40:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612150832.GB27989@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 35399f87e271f7cf3048eab00a421a6519ac8441 ]
+On 12/06/19 6:08 PM, Raul Rangel wrote:
+> On Wed, Jun 12, 2019 at 04:09:47PM +0300, Adrian Hunter wrote:
+>> On 10/06/19 9:53 PM, Raul E Rangel wrote:
+>>> The O2 controller supports 8-bit EMMC access. mmc_select_bus_width()
+>>> will be used to determine if the MMC supports 8-bit or 4-bit access.
+>>
+>> The problem is that the bit indicates a host controller capability, not how
+>> many data lines there actually are on the board.  Will this break something
+>> that does not have 8 lines?
+> 
+> So I asked the controller vendor about that:
+>> The capability shows the host controller can support 1,4,and 8 bit bus
+>> data transfer but it also depends on if HW can support it. Driver or FW
+>> should implement the bus testing procedure that is defined in A.6.3.a
+>> in JESD84-B51 spec to decide the real bus width that is supported in HW.
+> 
+> This seems to be what `mmc_select_bus_width()` is doing.
 
-In configfs_register_group(), if create_default_group() failed, we
-forget to unlink the group. It will left a invalid item in the parent list,
-which may trigger the use-after-free issue seen below:
+Good point.  Can you add this information to the commit message and add a
+comment in the code.
 
-BUG: KASAN: use-after-free in __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
-Read of size 8 at addr ffff8881ef61ae20 by task syz-executor.0/5996
-
-CPU: 1 PID: 5996 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xa9/0x10e lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
- __list_add include/linux/list.h:60 [inline]
- list_add_tail include/linux/list.h:93 [inline]
- link_obj+0xb0/0x190 fs/configfs/dir.c:759
- link_group+0x1c/0x130 fs/configfs/dir.c:784
- configfs_register_group+0x56/0x1e0 fs/configfs/dir.c:1751
- configfs_register_default_group+0x72/0xc0 fs/configfs/dir.c:1834
- ? 0xffffffffc1be0000
- iio_sw_trigger_init+0x23/0x1000 [industrialio_sw_trigger]
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f494ecbcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
-RBP: 00007f494ecbcc70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f494ecbd6bc
-R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
-
-Allocated by task 5987:
- set_track mm/kasan/common.c:87 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:497
- kmalloc include/linux/slab.h:545 [inline]
- kzalloc include/linux/slab.h:740 [inline]
- configfs_register_default_group+0x4c/0xc0 fs/configfs/dir.c:1829
- 0xffffffffc1bd0023
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 5987:
- set_track mm/kasan/common.c:87 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
- slab_free_hook mm/slub.c:1429 [inline]
- slab_free_freelist_hook mm/slub.c:1456 [inline]
- slab_free mm/slub.c:3003 [inline]
- kfree+0xe1/0x270 mm/slub.c:3955
- configfs_register_default_group+0x9a/0xc0 fs/configfs/dir.c:1836
- 0xffffffffc1bd0023
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881ef61ae00
- which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 32 bytes inside of
- 192-byte region [ffff8881ef61ae00, ffff8881ef61aec0)
-The buggy address belongs to the page:
-page:ffffea0007bd8680 count:1 mapcount:0 mapping:ffff8881f6c03000 index:0xffff8881ef61a700
-flags: 0x2fffc0000000200(slab)
-raw: 02fffc0000000200 ffffea0007ca4740 0000000500000005 ffff8881f6c03000
-raw: ffff8881ef61a700 000000008010000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881ef61ad00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8881ef61ad80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
->ffff8881ef61ae00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                               ^
- ffff8881ef61ae80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff8881ef61af00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-Fixes: 5cf6a51e6062 ("configfs: allow dynamic group creation")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/configfs/dir.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
-index 39843fa7e11b..920d350df37b 100644
---- a/fs/configfs/dir.c
-+++ b/fs/configfs/dir.c
-@@ -1755,12 +1755,19 @@ int configfs_register_group(struct config_group *parent_group,
- 
- 	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
- 	ret = create_default_group(parent_group, group);
--	if (!ret) {
--		spin_lock(&configfs_dirent_lock);
--		configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
--		spin_unlock(&configfs_dirent_lock);
--	}
-+	if (ret)
-+		goto err_out;
-+
-+	spin_lock(&configfs_dirent_lock);
-+	configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
-+	spin_unlock(&configfs_dirent_lock);
-+	inode_unlock(d_inode(parent));
-+	return 0;
-+err_out:
- 	inode_unlock(d_inode(parent));
-+	mutex_lock(&subsys->su_mutex);
-+	unlink_group(group);
-+	mutex_unlock(&subsys->su_mutex);
- 	return ret;
- }
- EXPORT_SYMBOL(configfs_register_group);
--- 
-2.20.1
-
-
+> 
+> I don't actually have any 4-bit hardware to test with though.
+> 
+> Thanks for the review!
+> 
 
