@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDC4C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1950AC31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E715820866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6AE720665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442542;
-	bh=g/FRRJPPCNqhXyggHd8GDOI6ndoEMD1BnIkosWh3KZw=;
+	s=default; t=1560442544;
+	bh=rraj97k7zDYe9z8zD/fcg57TdIgNelm35EhWc+8XDKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zzoW8a+OgdMR9nNy8eJW5ILwW70TX2dTSNQSpiH54UyokYhjucueLbHJJQRqRU8SV
-	 zdlZjxLekhMUy+l3nfCemtcGPneB4htxfk+LTgD2+Al9gknV/z2RuMcn5Nb5XkICKq
-	 co7I9h0C8UKRL/28IioC7INHrCNneyLfPY/6h0Cc=
+	b=DRwPXAQPirE0GrCVicVfG1TzEKievzMuAgkJP9K0kgYR8Hv9txlTrA1eztSFw92a4
+	 /jeAlK5g95hWZLGSSEbAAs7UguZvxilEUTCXo6rbbufP/eyRjBW92Vg+4v/MNbxnIy
+	 2qXgGb1V4253VnXNbMRtUYz2s+L/1HvuaEKGg420=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391880AbfFMQPk (ORCPT
+        id S2391874AbfFMQPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:15:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58912 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:15:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731170AbfFMIlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:41:45 -0400
+        id S1731171AbfFMIls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:41:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66C3C2147A;
-        Thu, 13 Jun 2019 08:41:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16E9421479;
+        Thu, 13 Jun 2019 08:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415304;
-        bh=g/FRRJPPCNqhXyggHd8GDOI6ndoEMD1BnIkosWh3KZw=;
+        s=default; t=1560415307;
+        bh=rraj97k7zDYe9z8zD/fcg57TdIgNelm35EhWc+8XDKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UEt8imuZqXlDBrhJiaDC/AtsuVWKf6VG/Fe8NzZDGtRtoNGUhof2O5h0bv9Ne7sYS
-         uPseoQZwRHl6OR5JkADVc7FNMOUzuCTRsbfEvi93pTfW7YhKLepBPTeNO0wAgZyNqG
-         j7U446UfCr2x15e0KoGOBNeUIYlCDsqXedYhWUUs=
+        b=ZLwWWc6rDDl+la4+iLbm3gXcMsZ2FwKRqU97XYKFqMCKaQUpkfy2h3gR9ghz4v/S3
+         ujJBb6NClCccZ5LQYou4UsGiI5FVAy67ZMDNqRLM8MxtQjunPRPxlCbqfpSLK/hTKK
+         tpijoD5NRd3edp6jbYHj7GAqqUiFVe2DcIO+TXQM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
         Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 078/118] clk: rockchip: Turn on "aclk_dmac1" for suspend on rk3288
-Date:   Thu, 13 Jun 2019 10:33:36 +0200
-Message-Id: <20190613075648.370224714@linuxfoundation.org>
+Subject: [PATCH 4.19 079/118] soc: rockchip: Set the proper PWM for rk3288
+Date:   Thu, 13 Jun 2019 10:33:37 +0200
+Message-Id: <20190613075648.414597062@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -61,87 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 57a20248ef3e429dc822f0774bc4e00136c46c83 ]
+[ Upstream commit bbdc00a7de24cc90315b1775fb74841373fe12f7 ]
 
-Experimentally it can be seen that going into deep sleep (specifically
-setting PMU_CLR_DMA and PMU_CLR_BUS in RK3288_PMU_PWRMODE_CON1)
-appears to fail unless "aclk_dmac1" is on.  The failure is that the
-system never signals that it made it into suspend on the GLOBAL_PWROFF
-pin and it just hangs.
+The rk3288 SoC has two PWM implementations available, the "old"
+implementation and the "new" one.  You can switch between the two of
+them by flipping a bit in the grf.
 
-NOTE that it's confirmed that it's the actual suspend that fails, not
-one of the earlier calls to read/write registers.  Specifically if you
-comment out the "PMU_GLOBAL_INT_DISABLE" setting in
-rk3288_slp_mode_set() and then comment out the "cpu_do_idle()" call in
-rockchip_lpmode_enter() then you can exercise the whole suspend path
-without any crashing.
+The "old" implementation is the default at chip power up but isn't the
+one that's officially supposed to be used.  ...and, in fact, the
+driver that gets selected in Linux using the rk3288 device tree only
+supports the "new" implementation.
 
-This is currently not a problem with suspend upstream because there is
-no current way to exercise the deep suspend code.  However, anyone
-trying to make it work will run into this issue.
+Long ago I tried to get a switch to the right IP block landed in the
+PWM driver (search for "rk3288: Switch to use the proper PWM IP") but
+that got rejected.  In the mean time the grf has grown a full-fledged
+driver that already sets other random bits like this.  That means we
+can now get the fix landed.
 
-This was not a problem on shipping rk3288-based Chromebooks because
-those devices all ran on an old kernel based on 3.14.  On that kernel
-"aclk_dmac1" appears to be left on all the time.
+For those wondering how things could have possibly worked for the last
+4.5 years, folks have mostly been relying on the bootloader to set
+this bit.  ...but occasionally folks have pointed back to my old patch
+series [1] in downstream kernels.
 
-There are several ways to skin this problem.
-
-A) We could add "aclk_dmac1" to the list of critical clocks and that
-apperas to work, but presumably that wastes power.
-
-B) We could keep a list of "struct clk" objects to enable at suspend
-time in clk-rk3288.c and use the standard clock APIs.
-
-C) We could make the rk3288-pmu driver keep a list of clocks to enable
-at suspend time.  Presumably this would require a dts and bindings
-change.
-
-D) We could just whack the clock on in the existing syscore suspend
-function where we whack a bunch of other clocks.  This is particularly
-easy because we know for sure that the clock's only parent
-("aclk_cpu") is a critical clock so we don't need to do anything more
-than ungate it.
-
-In this case I have chosen D) because it seemed like the least work,
-but any of the other options would presumably also work fine.
+[1] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1391597.html
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Elaine Zhang <zhangqing@rock-chips.com>
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/rockchip/clk-rk3288.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/soc/rockchip/grf.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-index 64191694ff6e..9cfdbea493bb 100644
---- a/drivers/clk/rockchip/clk-rk3288.c
-+++ b/drivers/clk/rockchip/clk-rk3288.c
-@@ -835,6 +835,9 @@ static const int rk3288_saved_cru_reg_ids[] = {
- 	RK3288_CLKSEL_CON(10),
- 	RK3288_CLKSEL_CON(33),
- 	RK3288_CLKSEL_CON(37),
-+
-+	/* We turn aclk_dmac1 on for suspend; this will restore it */
-+	RK3288_CLKGATE_CON(10),
+diff --git a/drivers/soc/rockchip/grf.c b/drivers/soc/rockchip/grf.c
+index 96882ffde67e..3b81e1d75a97 100644
+--- a/drivers/soc/rockchip/grf.c
++++ b/drivers/soc/rockchip/grf.c
+@@ -66,9 +66,11 @@ static const struct rockchip_grf_info rk3228_grf __initconst = {
  };
  
- static u32 rk3288_saved_cru_regs[ARRAY_SIZE(rk3288_saved_cru_reg_ids)];
-@@ -850,6 +853,14 @@ static int rk3288_clk_suspend(void)
- 				readl_relaxed(rk3288_cru_base + reg_id);
- 	}
+ #define RK3288_GRF_SOC_CON0		0x244
++#define RK3288_GRF_SOC_CON2		0x24c
  
-+	/*
-+	 * Going into deep sleep (specifically setting PMU_CLR_DMA in
-+	 * RK3288_PMU_PWRMODE_CON1) appears to fail unless
-+	 * "aclk_dmac1" is on.
-+	 */
-+	writel_relaxed(1 << (12 + 16),
-+		       rk3288_cru_base + RK3288_CLKGATE_CON(10));
-+
- 	/*
- 	 * Switch PLLs other than DPLL (for SDRAM) to slow mode to
- 	 * avoid crashes on resume. The Mask ROM on the system will
+ static const struct rockchip_grf_value rk3288_defaults[] __initconst = {
+ 	{ "jtag switching", RK3288_GRF_SOC_CON0, HIWORD_UPDATE(0, 1, 12) },
++	{ "pwm select", RK3288_GRF_SOC_CON2, HIWORD_UPDATE(1, 1, 0) },
+ };
+ 
+ static const struct rockchip_grf_info rk3288_grf __initconst = {
 -- 
 2.20.1
 
