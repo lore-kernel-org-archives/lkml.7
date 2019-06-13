@@ -2,113 +2,111 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C17C31E4C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51535C31E4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D963D206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C03206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:38:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388433AbfFMPif (ORCPT
+        id S2388545AbfFMPii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:38:35 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:41128 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731946AbfFMJ6k (ORCPT
+        Thu, 13 Jun 2019 11:38:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57996 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388373AbfFMPig (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:58:40 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 4697725B7FA;
-        Thu, 13 Jun 2019 19:58:38 +1000 (AEST)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id 45C56940483; Thu, 13 Jun 2019 11:58:36 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 11:58:36 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-renesas-soc@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] irqchip: Enable compile-testing for Renesas drivers
-Message-ID: <20190613095835.p3hjztlesr4pqwvj@verge.net.au>
-References: <20190607095036.9466-1-geert+renesas@glider.be>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607095036.9466-1-geert+renesas@glider.be>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Thu, 13 Jun 2019 11:38:36 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DFWCoh056186
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:38:35 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t3s620eqr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:38:34 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 13 Jun 2019 16:38:32 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 13 Jun 2019 16:38:29 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5DFcS8A38273254
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 15:38:28 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6688A4051;
+        Thu, 13 Jun 2019 15:38:28 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D6DF4A405B;
+        Thu, 13 Jun 2019 15:38:27 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.81.91])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Jun 2019 15:38:27 +0000 (GMT)
+Subject: Re: [PATCH -next] ima: Make arch_policy_entry static
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     YueHaibing <yuehaibing@huawei.com>, dmitry.kasatkin@gmail.com,
+        jmorris@namei.org, serge@hallyn.com
+Cc:     linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Date:   Thu, 13 Jun 2019 11:38:17 -0400
+In-Reply-To: <20190611134032.14656-1-yuehaibing@huawei.com>
+References: <20190611134032.14656-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061315-0012-0000-0000-00000328DFF3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061315-0013-0000-0000-00002161ECE4
+Message-Id: <1560440297.4805.23.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906130116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 11:50:36AM +0200, Geert Uytterhoeven wrote:
-> Enable compile-testing for all Renesas interrupt controller drivers,
-> except for RENESAS_H8300H_INTC.  The latter relies on a function
-> (ctrl_bclr()) that is not available on other architectures.
+On Tue, 2019-06-11 at 21:40 +0800, YueHaibing wrote:
+> Fix sparse warning:
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> security/integrity/ima/ima_policy.c:202:23: warning:
+>  symbol 'arch_policy_entry' was not declared. Should it be static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Thanks, this patch has been queued to be upstreamed.
+
+Mimi
 
 > ---
->  drivers/irqchip/Kconfig | 20 ++++++++++++++++----
->  1 file changed, 16 insertions(+), 4 deletions(-)
+>  security/integrity/ima/ima_policy.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index 2d3b5a27cc988ab6..fe509b88f99a8f10 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -217,17 +217,26 @@ config RDA_INTC
->  	select IRQ_DOMAIN
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 1cc822a..cd1b728 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -199,7 +199,7 @@ static struct ima_rule_entry secure_boot_rules[] __ro_after_init = {
+>  };
 >  
->  config RENESAS_INTC_IRQPIN
-> -	bool
-> +	bool "Renesas INTC External IRQ Pin Support" if COMPILE_TEST
->  	select IRQ_DOMAIN
-> +	help
-> +	  Enable support for the Renesas Interrupt Controller for external
-> +	  interrupt pins, as found on SH/R-Mobile and R-Car Gen1 SoCs.
+>  /* An array of architecture specific rules */
+> -struct ima_rule_entry *arch_policy_entry __ro_after_init;
+> +static struct ima_rule_entry *arch_policy_entry __ro_after_init;
 >  
->  config RENESAS_IRQC
-> -	bool
-> +	bool "Renesas R-Mobile APE6 and R-Car IRQC support" if COMPILE_TEST
->  	select GENERIC_IRQ_CHIP
->  	select IRQ_DOMAIN
-> +	help
-> +	  Enable support for the Renesas Interrupt Controller for external
-> +	  devices, as found on R-Mobile APE6, R-Car Gen2, and R-Car Gen3 SoCs.
->  
->  config RENESAS_RZA1_IRQC
-> -	bool
-> +	bool "Renesas RZ/A1 IRQC support" if COMPILE_TEST
->  	select IRQ_DOMAIN_HIERARCHY
-> +	help
-> +	  Enable support for the Renesas RZ/A1 Interrupt Controller, to use up
-> +	  to 8 external interrupts with configurable sense select.
->  
->  config ST_IRQCHIP
->  	bool
-> @@ -303,8 +312,11 @@ config RENESAS_H8300H_INTC
->  	select IRQ_DOMAIN
->  
->  config RENESAS_H8S_INTC
-> -        bool
-> +	bool "Renesas H8S Interrupt Controller Support" if COMPILE_TEST
->  	select IRQ_DOMAIN
-> +	help
-> +	  Enable support for the Renesas H8/300 Interrupt Controller, as found
-> +	  on Renesas H8S SoCs.
->  
->  config IMX_GPCV2
->  	bool
-> -- 
-> 2.17.1
-> 
+>  static LIST_HEAD(ima_default_rules);
+>  static LIST_HEAD(ima_policy_rules);
+
