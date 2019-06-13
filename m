@@ -2,126 +2,135 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72566C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B698C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4825820B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zoB+I1qM"
+	by mail.kernel.org (Postfix) with ESMTP id 3B01020B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389593AbfFMPsx (ORCPT
+        id S2389624AbfFMPsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:48:53 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33570 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731718AbfFMJQq (ORCPT
+        Thu, 13 Jun 2019 11:48:55 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52428 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731710AbfFMJPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:16:46 -0400
-Received: by mail-wm1-f65.google.com with SMTP id h19so6142403wme.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 02:16:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=P4N1UtPKJVcelijw7QBQ1XLSRt7ridPaKRyOBmFmp0w=;
-        b=zoB+I1qMrXW5msQjRKnTgAM/Hh9auE47o+cxvqiEVcyurJ9wsx1RAYtZBDnCaKqDof
-         m1Ka4fuQ842iFh57kWp7h+yZO+dKcLrZpYRtQolBfQ39M/3DG3mCMDtqhEsHLr6dNRla
-         y/Uc11TrqvR08utOekpguuKCeTIWNQmbKCYf+sSd2FAqk+FEFwpdJVTvb+qSjd7GAa/s
-         kBpbAdqYwmGMqkkI3YhCUFXD8oa+rDgIdLyeq5ym0FbmIKsEItDizEy0cX6vyncJePWp
-         BZ7zlU7oGjUbfvuB7MiLU354VdrVer90caAiU3wh9nfbR3emhxaBGhOhkrpW/MC3+Qus
-         KRYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=P4N1UtPKJVcelijw7QBQ1XLSRt7ridPaKRyOBmFmp0w=;
-        b=hkCEBQVErU7oreVrhhfuYUZ7yIP9K4zjvcdzYqlzJ0LZsew70Jh+Q7DYgVuXzPF+bT
-         +/oS+RdDJTsUzbWagyla9MyylGt6BfaGV56rZu5kWLzDeERsM5KB+FtF4FHJcHEvPGC4
-         9ZY/MAkHVT/AuuL26RP0TFx6P//kvOfe++FvUm/PuqtbRjKWefNXXclvwRoLB4BGcxk3
-         SWV1s0NuVkiG38D3qTdI9TeabWgA+mzTc3fp7r+zSq4Y1+n++Le7t3xO83WHv1MQOuh7
-         ZvSn7D5iOYk4TvqQIklmXRnMbOdq6vuK4hYqzha7fb2YxCNVE39PcyCFYBTW3O1pDOMx
-         8LSg==
-X-Gm-Message-State: APjAAAUr9YNeYhCvpkUz6cqejzJh9pzBMdlYIgqYOmvG/ixQi2w5G3Fn
-        sRqgA03+B8ejjIkUS4ftHRms3R9Q8yimSmwEG7uXmg==
-X-Google-Smtp-Source: APXvYqya9k5qn89YYNprL6zry6x5KHz6UoRI9nvUtHBgDzPVPTHE/ALR4XfG2GiQ1hwNRfaH+VxDHQlRLeGVdjjdK7k=
-X-Received: by 2002:a1c:700b:: with SMTP id l11mr2827093wmc.106.1560417403085;
- Thu, 13 Jun 2019 02:16:43 -0700 (PDT)
+        Thu, 13 Jun 2019 05:15:03 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 73D26260CB2
+Subject: Re: [PATCH] backlight: pwm_bl: Fix heuristic to determine number of
+ brightness levels
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+References: <20190612180003.161966-1-mka@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <fd554750-7ec6-73e1-be3a-5bac0749fa0b@collabora.com>
+Date:   Thu, 13 Jun 2019 11:14:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190612170027.13dbb84b@canb.auug.org.au> <c526a510-a08f-8b99-a396-4274590e904f@infradead.org>
-In-Reply-To: <c526a510-a08f-8b99-a396-4274590e904f@infradead.org>
-From:   Maxime Jourdan <mjourdan@baylibre.com>
-Date:   Thu, 13 Jun 2019 11:16:31 +0200
-Message-ID: <CAMO6nazLss_4cfAJZZLA+Ydrx0wPCxMYrZM2NQKDw1AmvSj_0Q@mail.gmail.com>
-Subject: Re: linux-next: Tree for Jun 12 (staging/media/meson/)
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        linux-amlogic@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190612180003.161966-1-mka@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
-On Wed, Jun 12, 2019 at 11:50 PM Randy Dunlap <rdunlap@infradead.org> wrote=
-:
->
-> On 6/12/19 12:00 AM, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > Changes since 20190611:
-> >
->
->
-> on i386:
->
-> ../drivers/staging/media/meson/vdec/vdec.c: In function =E2=80=98vdec_rec=
-ycle_thread=E2=80=99:
-> ../drivers/staging/media/meson/vdec/vdec.c:59:2: error: implicit declarat=
-ion of function =E2=80=98kthread_should_stop=E2=80=99 [-Werror=3Dimplicit-f=
-unction-declaration]
->   while (!kthread_should_stop()) {
->   ^
-> ../drivers/staging/media/meson/vdec/vdec.c: In function =E2=80=98vdec_sta=
-rt_streaming=E2=80=99:
-> ../drivers/staging/media/meson/vdec/vdec.c:324:3: error: implicit declara=
-tion of function =E2=80=98kthread_run=E2=80=99 [-Werror=3Dimplicit-function=
--declaration]
->    sess->recycle_thread =3D kthread_run(vdec_recycle_thread, sess,
->    ^
-> ../drivers/staging/media/meson/vdec/vdec.c:324:24: warning: assignment ma=
-kes pointer from integer without a cast [enabled by default]
->    sess->recycle_thread =3D kthread_run(vdec_recycle_thread, sess,
->                         ^
-> ../drivers/staging/media/meson/vdec/vdec.c: In function =E2=80=98vdec_sto=
-p_streaming=E2=80=99:
-> ../drivers/staging/media/meson/vdec/vdec.c:389:4: error: implicit declara=
-tion of function =E2=80=98kthread_stop=E2=80=99 [-Werror=3Dimplicit-functio=
-n-declaration]
->     kthread_stop(sess->recycle_thread);
->     ^
->
-> Full randconfig file is attached.
->
+Hi Matthias,
 
-This is fixed with "media: meson: vdec: Add missing kthread.h" from
-Yue Haibing [0]. The patch is sitting in media_tree/master.
+On 12/6/19 20:00, Matthias Kaehlcke wrote:
+> With commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of
+> LED linearly to human eye") the number of set bits (aka hweight())
+> in the PWM period is used in the heuristic to determine the number
+> of brightness levels, when the brightness table isn't specified in
+> the DT. The number of set bits doesn't provide a reliable clue about
+> the length of the period, instead change the heuristic to:
+> 
+>  nlevels = period / fls(period)
+> 
+> Also limit the maximum number of brightness levels to 4096 to avoid
+> excessively large tables.
+> 
+> With this the number of levels increases monotonically with the PWM
+> period, until the maximum of 4096 levels is reached:
+> 
+> period (ns)    # levels
+> 
+> 100    	       16
+> 500	       62
+> 1000	       111
+> 5000	       416
+> 10000	       769
+> 50000	       3333
+> 100000	       4096
+> 
+> Fixes: 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED linearly to human eye")
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 
-[0] https://patchwork.kernel.org/patch/10989333/
+Tested on Samsung Chromebook Plus (16-bit pwm)
 
-Regards,
-Maxime
+Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
->
-> --
-> ~Randy
->
+
+> ---
+>  drivers/video/backlight/pwm_bl.c | 24 ++++++------------------
+>  1 file changed, 6 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> index fb45f866b923..0b7152fa24f7 100644
+> --- a/drivers/video/backlight/pwm_bl.c
+> +++ b/drivers/video/backlight/pwm_bl.c
+> @@ -194,29 +194,17 @@ int pwm_backlight_brightness_default(struct device *dev,
+>  				     struct platform_pwm_backlight_data *data,
+>  				     unsigned int period)
+>  {
+> -	unsigned int counter = 0;
+> -	unsigned int i, n;
+> +	unsigned int i;
+>  	u64 retval;
+>  
+>  	/*
+> -	 * Count the number of bits needed to represent the period number. The
+> -	 * number of bits is used to calculate the number of levels used for the
+> -	 * brightness-levels table, the purpose of this calculation is have a
+> -	 * pre-computed table with enough levels to get linear brightness
+> -	 * perception. The period is divided by the number of bits so for a
+> -	 * 8-bit PWM we have 255 / 8 = 32 brightness levels or for a 16-bit PWM
+> -	 * we have 65535 / 16 = 4096 brightness levels.
+> -	 *
+> -	 * Note that this method is based on empirical testing on different
+> -	 * devices with PWM of 8 and 16 bits of resolution.
+> +	 * Once we have 4096 levels there's little point going much higher...
+> +	 * neither interactive sliders nor animation benefits from having
+> +	 * more values in the table.
+>  	 */
+> -	n = period;
+> -	while (n) {
+> -		counter += n % 2;
+> -		n >>= 1;
+> -	}
+> +	data->max_brightness =
+> +		min((int)DIV_ROUND_UP(period, fls(period)), 4096);
+>  
+> -	data->max_brightness = DIV_ROUND_UP(period, counter);
+>  	data->levels = devm_kcalloc(dev, data->max_brightness,
+>  				    sizeof(*data->levels), GFP_KERNEL);
+>  	if (!data->levels)
+> 
