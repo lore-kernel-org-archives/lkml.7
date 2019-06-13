@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFA9C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAABC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8C1E20866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034EA20866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:10:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442216;
-	bh=OwZ0qLFkEiHNIobShGBggg/4oh/hdfHyky43omuQniU=;
+	s=default; t=1560442223;
+	bh=HbA5eCN6xurGIQ6BGkFFfMgHr7GRTlSAQnHbchCGmoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pd/AM9+/3CEcc9Mkd2Sx+1MDM6ryM65g205CJ9HILwTBnFNRm8xcheHGlBdGHQIFA
-	 yLzOufPSZsMa7jhoxbVMM2G2UXbbVdtWnUFbP7HIrYXTU+SfgxQHy2OIMfR5+Xn47Z
-	 ma3/FY2Wjfm9EiCJVJ9RxPsn1vdBzft3rXGSS9pw=
+	b=UFMZAIkfGSz+CqsBMval/y5jYQUtv20ikYLIaUUufocogMoEZgQgEqW7wUB+eN1R2
+	 e1zBMoZiOPDIySiptR9Jp51XxwIpIRd/lYsBo8efUON3rxNHmEKf7ol7Vdis9duXJg
+	 xvtr5zg81hyfmHUCt+F8cPcDf83QNP9rbAYXRsj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391339AbfFMQKD (ORCPT
+        id S2391033AbfFMQKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:10:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33078 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:10:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731256AbfFMIoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:44:10 -0400
+        id S1731252AbfFMIn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:43:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0050721479;
-        Thu, 13 Jun 2019 08:44:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68F352063F;
+        Thu, 13 Jun 2019 08:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415449;
-        bh=OwZ0qLFkEiHNIobShGBggg/4oh/hdfHyky43omuQniU=;
+        s=default; t=1560415435;
+        bh=HbA5eCN6xurGIQ6BGkFFfMgHr7GRTlSAQnHbchCGmoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VOBU6KFcn9RoPisi1FcpuSBwiGK18aFFOkFJfze+n33//TdassBAWJprGxXul5IzO
-         AFJOdhCDDwaUAcURKfACVe5etDJQfCmI2MuN5OlOcuzIgQfC4vPMKsg9nsVvhMi7ro
-         eCD2BAW3l60Rm01NhSsy1QZXGQTlAx/xIcgnf5Cc=
+        b=PPYIolrnUYjZmwgb7kBHVnE1dG/pcendQd/6jQ8CUzbhknlmvNNVpgz0vZmyT7Z3a
+         28OWpqN7o/HABv5f4rgdVslK6iEA68itV+oqVL+Zcbefbx7J9GBLKJAnCmjxeUvpps
+         hv3rWJhFOvJwlx0epghKvxwqmlgygcIVIVdYCsdw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Aditya Pakki <pakki001@umn.edu>,
-        Ferenc Bakonyi <fero@drama.obuda.kando.hu>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christoph=20Vogtl=C3=A4nder?= 
+        <c.vogtlaender@sigma-surface-science.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 099/118] video: hgafb: fix potential NULL pointer dereference
-Date:   Thu, 13 Jun 2019 10:33:57 +0200
-Message-Id: <20190613075649.723453822@linuxfoundation.org>
+Subject: [PATCH 4.19 106/118] pwm: tiehrpwm: Update shadow register for disabling PWMs
+Date:   Thu, 13 Jun 2019 10:34:04 +0200
+Message-Id: <20190613075650.237590427@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -62,34 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ec7f6aad57ad29e4e66cc2e18e1e1599ddb02542 ]
+[ Upstream commit b00ef53053191d3025c15e8041699f8c9d132daf ]
 
-When ioremap fails, hga_vram should not be dereferenced. The fix
-check the failure to avoid NULL pointer dereference.
+It must be made sure that immediate mode is not already set, when
+modifying shadow register value in ehrpwm_pwm_disable(). Otherwise
+modifications to the action-qualifier continuous S/W force
+register(AQSFRC) will be done in the active register.
+This may happen when both channels are being disabled. In this case,
+only the first channel state will be recorded as disabled in the shadow
+register. Later, when enabling the first channel again, the second
+channel would be enabled as well. Setting RLDCSF to zero, first, ensures
+that the shadow register is updated as desired.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Cc: Aditya Pakki <pakki001@umn.edu>
-Cc: Ferenc Bakonyi <fero@drama.obuda.kando.hu>
-[b.zolnierkie: minor patch summary fixup]
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Fixes: 38dabd91ff0b ("pwm: tiehrpwm: Fix disabling of output of PWMs")
+Signed-off-by: Christoph Vogtländer <c.vogtlaender@sigma-surface-science.com>
+[vigneshr@ti.com: Improve commit message]
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/hgafb.c | 2 ++
+ drivers/pwm/pwm-tiehrpwm.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/video/fbdev/hgafb.c b/drivers/video/fbdev/hgafb.c
-index 463028543173..59e1cae57948 100644
---- a/drivers/video/fbdev/hgafb.c
-+++ b/drivers/video/fbdev/hgafb.c
-@@ -285,6 +285,8 @@ static int hga_card_detect(void)
- 	hga_vram_len  = 0x08000;
+diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+index f7b8a86fa5c5..ad4a40c0f27c 100644
+--- a/drivers/pwm/pwm-tiehrpwm.c
++++ b/drivers/pwm/pwm-tiehrpwm.c
+@@ -382,6 +382,8 @@ static void ehrpwm_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	}
  
- 	hga_vram = ioremap(0xb0000, hga_vram_len);
-+	if (!hga_vram)
-+		goto error;
- 
- 	if (request_region(0x3b0, 12, "hgafb"))
- 		release_io_ports = 1;
+ 	/* Update shadow register first before modifying active register */
++	ehrpwm_modify(pc->mmio_base, AQSFRC, AQSFRC_RLDCSF_MASK,
++		      AQSFRC_RLDCSF_ZRO);
+ 	ehrpwm_modify(pc->mmio_base, AQCSFRC, aqcsfrc_mask, aqcsfrc_val);
+ 	/*
+ 	 * Changes to immediate action on Action Qualifier. This puts
 -- 
 2.20.1
 
