@@ -2,206 +2,293 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD685C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26B2C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC5A20673
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B03D2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:47:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392882AbfFMQrJ (ORCPT
+        id S1731941AbfFMQr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:47:09 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:53141 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730266AbfFMFEL (ORCPT
+        Thu, 13 Jun 2019 12:47:27 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36589 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730263AbfFME72 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 01:04:11 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 81A992001E;
-        Thu, 13 Jun 2019 07:04:05 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 07:04:03 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Drop use of DRM_WAIT_ON() [Was: drm/drm_vblank: Change EINVAL by the
- correct errno]
-Message-ID: <20190613050403.GA21502@ravnborg.org>
-References: <20190613021054.cdewdb3azy6zuoyw@smtp.gmail.com>
+        Thu, 13 Jun 2019 00:59:28 -0400
+Received: by mail-pl1-f195.google.com with SMTP id d21so7568613plr.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 21:59:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=h0KDBfDB37l8E729U6HPxYoMiRVAhHq+dt2xwEVXrE0=;
+        b=Ni+355mJqMvKQGOnmbJQzu3m4PJ9CA624fAMrccya+HI2DGDihIowjEzYxwzO0MEpA
+         dQri3wzNKWyIBjDyj/1XP/c0kqCdrVJl4fl6pwT3e5vhuXGAt3NFqM0DPw0FIYzAuqvw
+         NR6Gq8WrBXSIiTvMDZUJPF190uTp4i0s+h+H2vbyXCReT/L6XruAZCET3b4sILbYOyFV
+         +hKqHyuQVAh4PWb7KZ1vQgSRAV9VDK0OLzrU+ilUXlkruA9XAFc9kFP3WHCY3SFkmOmp
+         W1IjMbCMoNgpRmi5ACr5/okpFhPSxobbUNbM/C84hr6atoxFHCZk6y5/pcpFDgm+P+8Y
+         9oMQ==
+X-Gm-Message-State: APjAAAUExdahMHQF2CCeBrf8pcPEhlfS62sHbYKKL3gqXbalFMDkWXi2
+        YjHNKPkVI4FU4FCahjMZjmLn0m/qEmw=
+X-Google-Smtp-Source: APXvYqxCl1a5suJ3MnTqqHdFeNLn+c5SeHAoTPTmnzXIxBvsnXonhgqCq6bEhWAzZzIHrIUoeWF5+w==
+X-Received: by 2002:a17:902:2983:: with SMTP id h3mr41707291plb.45.1560401967290;
+        Wed, 12 Jun 2019 21:59:27 -0700 (PDT)
+Received: from htb-2n-eng-dhcp405.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id o66sm1215327pfb.86.2019.06.12.21.59.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 21:59:26 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Nadav Amit <namit@vmware.com>, Borislav Petkov <bp@suse.de>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 3/3] resource: Introduce resource cache
+Date:   Wed, 12 Jun 2019 21:59:03 -0700
+Message-Id: <20190613045903.4922-4-namit@vmware.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190613045903.4922-1-namit@vmware.com>
+References: <20190613045903.4922-1-namit@vmware.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190613021054.cdewdb3azy6zuoyw@smtp.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=IkcTkHD0fZMA:10 a=pGLkceISAAAA:8
-        a=e5mUnYsNAAAA:8 a=7gkXJVJtAAAA:8 a=QyXUC8HyAAAA:8 a=P-IC7800AAAA:8
-        a=Jn-_o28iN5fng-a6wa4A:9 a=QEXdDO2ut3YA:10 a=Vxmtnl_E_bksehYqCbjh:22
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=d3PnA9EDa4IxuAV0gXij:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rodrigo.
+For efficient search of resources, as needed to determine the memory
+type for dax page-faults, introduce a cache of the most recently used
+top-level resource. Caching the top-level should be safe as ranges in
+that level do not overlap (unlike those of lower levels).
 
-On Wed, Jun 12, 2019 at 11:10:54PM -0300, Rodrigo Siqueira wrote:
-> For historical reason, the function drm_wait_vblank_ioctl always return
-> -EINVAL if something gets wrong. This scenario limits the flexibility
-> for the userspace make detailed verification of the problem and take
-> some action. In particular, the validation of “if (!dev->irq_enabled)”
-> in the drm_wait_vblank_ioctl is responsible for checking if the driver
-> support vblank or not. If the driver does not support VBlank, the
-> function drm_wait_vblank_ioctl returns EINVAL which does not represent
-> the real issue; this patch changes this behavior by return EOPNOTSUPP.
-> Additionally, some operations are unsupported by this function, and
-> returns EINVAL; this patch also changes the return value to EOPNOTSUPP
-> in this case. Lastly, the function drm_wait_vblank_ioctl is invoked by
-> libdrm, which is used by many compositors; because of this, it is
-> important to check if this change breaks any compositor. In this sense,
-> the following projects were examined:
-> 
-> * Drm-hwcomposer
-> * Kwin
-> * Sway
-> * Wlroots
-> * Wayland-core
-> * Weston
-> * Xorg (67 different drivers)
-> 
-> For each repository the verification happened in three steps:
-> 
-> * Update the main branch
-> * Look for any occurrence "drmWaitVBlank" with the command:
->   git grep -n "drmWaitVBlank"
-> * Look in the git history of the project with the command:
->   git log -SdrmWaitVBlank
-> 
-> Finally, none of the above projects validate the use of EINVAL which
-> make safe, at least for these projects, to change the return values.
-> 
-> Change since V2:
->  Daniel Vetter and Chris Wilson
->  - Replace ENOTTY by EOPNOTSUPP
->  - Return EINVAL if the parameters are wrong
-> 
-> Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> ---
-> Update:
->   Now IGT has a way to validate if a driver has vblank support or not.
->   See: https://gitlab.freedesktop.org/drm/igt-gpu-tools/commit/2d244aed69165753f3adbbd6468db073dc1acf9A
-> 
->  drivers/gpu/drm/drm_vblank.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-> index 0d704bddb1a6..d76a783a7d4b 100644
-> --- a/drivers/gpu/drm/drm_vblank.c
-> +++ b/drivers/gpu/drm/drm_vblank.c
-> @@ -1578,10 +1578,10 @@ int drm_wait_vblank_ioctl(struct drm_device *dev, void *data,
->  	unsigned int flags, pipe, high_pipe;
->  
->  	if (!dev->irq_enabled)
-> -		return -EINVAL;
-> +		return -EOPNOTSUPP;
->  
->  	if (vblwait->request.type & _DRM_VBLANK_SIGNAL)
-> -		return -EINVAL;
-> +		return -EOPNOTSUPP;
->  
->  	if (vblwait->request.type &
->  	    ~(_DRM_VBLANK_TYPES_MASK | _DRM_VBLANK_FLAGS_MASK |
+Keep the cache per-cpu to avoid possible contention. Whenever a resource
+is added, removed or changed, invalidate all the resources. The
+invalidation takes place when the resource_lock is taken for write,
+preventing possible races.
 
-When touching this function, could I ask you to take a look at
-eliminating the use of DRM_WAIT_ON()?
-It comes from the deprecated drm_os_linux.h header, and it is only of
-the few remaining users of DRM_WAIT_ON().
+This patch provides relatively small performance improvements over the
+previous patch (~0.5% on sysbench), but can benefit systems with many
+resources.
 
-Below you can find my untested first try - where I did an attempt not to
-change behaviour.
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Toshi Kani <toshi.kani@hpe.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+---
+ kernel/resource.c | 51 +++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 49 insertions(+), 2 deletions(-)
 
-	Sam
-
-commit 17b119b02467356198b57bca9949b146082bcaa1
-Author: Sam Ravnborg <sam@ravnborg.org>
-Date:   Thu May 30 09:38:47 2019 +0200
-
-    drm/vblank: drop use of DRM_WAIT_ON()
-    
-    DRM_WAIT_ON() is from the deprecated drm_os_linux header and
-    the modern replacement is the wait_event_*.
-    
-    The return values differ, so a conversion is needed to
-    keep the original interface towards userspace.
-    Introduced a switch/case to make code obvious and to allow
-    different debug prints depending on the result.
-    
-    The timeout value of 3 * HZ was translated to 30 msec
-    
-    Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-    Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-    Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-    Cc: Sean Paul <sean@poorly.run>
-    Cc: David Airlie <airlied@linux.ie>
-    Cc: Daniel Vetter <daniel@ffwll.ch>
-
-diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-index 0d704bddb1a6..51fc6b106333 100644
---- a/drivers/gpu/drm/drm_vblank.c
-+++ b/drivers/gpu/drm/drm_vblank.c
-@@ -31,7 +31,6 @@
- #include <drm/drm_drv.h>
- #include <drm/drm_framebuffer.h>
- #include <drm/drm_print.h>
--#include <drm/drm_os_linux.h>
- #include <drm/drm_vblank.h>
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 51c3bf6d9b98..ab659d0eb52a 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -53,6 +53,12 @@ struct resource_constraint {
  
- #include "drm_internal.h"
-@@ -1668,18 +1667,27 @@ int drm_wait_vblank_ioctl(struct drm_device *dev, void *data,
- 	if (req_seq != seq) {
- 		DRM_DEBUG("waiting on vblank count %llu, crtc %u\n",
- 			  req_seq, pipe);
--		DRM_WAIT_ON(ret, vblank->queue, 3 * HZ,
--			    vblank_passed(drm_vblank_count(dev, pipe),
--					  req_seq) ||
--			    !READ_ONCE(vblank->enabled));
-+		ret = wait_event_interruptible_timeout(vblank->queue,
-+			vblank_passed(drm_vblank_count(dev, pipe), req_seq) ||
-+				      !READ_ONCE(vblank->enabled),
-+			msecs_to_jiffies(30));
+ static DEFINE_RWLOCK(resource_lock);
+ 
++/*
++ * Cache of the top-level resource that was most recently use by
++ * find_next_iomem_res().
++ */
++static DEFINE_PER_CPU(struct resource *, resource_cache);
++
+ /*
+  * For memory hotplug, there is no way to free resource entries allocated
+  * by boot mem after the system is up. So for reusing the resource entry
+@@ -262,9 +268,20 @@ static void __release_child_resources(struct resource *r)
+ 	}
+ }
+ 
++static void invalidate_resource_cache(void)
++{
++	int cpu;
++
++	lockdep_assert_held_exclusive(&resource_lock);
++
++	for_each_possible_cpu(cpu)
++		per_cpu(resource_cache, cpu) = NULL;
++}
++
+ void release_child_resources(struct resource *r)
+ {
+ 	write_lock(&resource_lock);
++	invalidate_resource_cache();
+ 	__release_child_resources(r);
+ 	write_unlock(&resource_lock);
+ }
+@@ -281,6 +298,7 @@ struct resource *request_resource_conflict(struct resource *root, struct resourc
+ 	struct resource *conflict;
+ 
+ 	write_lock(&resource_lock);
++	invalidate_resource_cache();
+ 	conflict = __request_resource(root, new);
+ 	write_unlock(&resource_lock);
+ 	return conflict;
+@@ -312,6 +330,7 @@ int release_resource(struct resource *old)
+ 	int retval;
+ 
+ 	write_lock(&resource_lock);
++	invalidate_resource_cache();
+ 	retval = __release_resource(old, true);
+ 	write_unlock(&resource_lock);
+ 	return retval;
+@@ -343,7 +362,7 @@ static int find_next_iomem_res(resource_size_t start, resource_size_t end,
+ 			       bool first_lvl, struct resource *res)
+ {
+ 	bool siblings_only = true;
+-	struct resource *p;
++	struct resource *p, *res_first_lvl;
+ 
+ 	if (!res)
+ 		return -EINVAL;
+@@ -353,7 +372,15 @@ static int find_next_iomem_res(resource_size_t start, resource_size_t end,
+ 
+ 	read_lock(&resource_lock);
+ 
+-	for (p = iomem_resource.child; p; p = next_resource(p, siblings_only)) {
++	/*
++	 * If our cached entry preceded or matches the range that we are looking
++	 * for, start with it. Otherwise, start from the beginning.
++	 */
++	p = res_first_lvl = this_cpu_read(resource_cache);
++	if (!p || start < p->start)
++		p = iomem_resource.child;
++
++	for (; p; p = next_resource(p, siblings_only)) {
+ 		/* If we passed the resource we are looking for, stop */
+ 		if (p->start > end) {
+ 			p = NULL;
+@@ -364,6 +391,10 @@ static int find_next_iomem_res(resource_size_t start, resource_size_t end,
+ 		if (p->end < start)
+ 			continue;
+ 
++		/* We only cache the first level for correctness */
++		if (p->parent == &iomem_resource)
++			res_first_lvl = p;
++
+ 		/*
+ 		 * Now that we found a range that matches what we look for,
+ 		 * check the flags and the descriptor. If we were not asked to
+@@ -386,6 +417,9 @@ static int find_next_iomem_res(resource_size_t start, resource_size_t end,
+ 		res->end = min(end, p->end);
+ 		res->flags = p->flags;
+ 		res->desc = p->desc;
++
++		/* Update the cache */
++		this_cpu_write(resource_cache, res_first_lvl);
  	}
  
--	if (ret != -EINTR) {
-+	switch (ret) {
-+	case 1:
-+		ret = 0;
- 		drm_wait_vblank_reply(dev, pipe, &vblwait->reply);
--
- 		DRM_DEBUG("crtc %d returning %u to client\n",
- 			  pipe, vblwait->reply.sequence);
--	} else {
-+		break;
-+	case 0:
-+		ret = -EBUSY;
-+		drm_wait_vblank_reply(dev, pipe, &vblwait->reply);
-+		DRM_DEBUG("timeout waiting for vblank. crtc %d returning %u to client\n",
-+			  pipe, vblwait->reply.sequence);
-+		break;
-+	default:
-+		ret = -EINTR;
- 		DRM_DEBUG("crtc %d vblank wait interrupted by signal\n", pipe);
+ 	read_unlock(&resource_lock);
+@@ -674,6 +708,7 @@ static int reallocate_resource(struct resource *root, struct resource *old,
+ 	struct resource *conflict;
+ 
+ 	write_lock(&resource_lock);
++	invalidate_resource_cache();
+ 
+ 	if ((err = __find_resource(root, old, &new, newsize, constraint)))
+ 		goto out;
+@@ -744,6 +779,7 @@ int allocate_resource(struct resource *root, struct resource *new,
  	}
  
+ 	write_lock(&resource_lock);
++	invalidate_resource_cache();
+ 	err = find_resource(root, new, size, &constraint);
+ 	if (err >= 0 && __request_resource(root, new))
+ 		err = -EBUSY;
+@@ -848,6 +884,7 @@ struct resource *insert_resource_conflict(struct resource *parent, struct resour
+ 	struct resource *conflict;
+ 
+ 	write_lock(&resource_lock);
++	invalidate_resource_cache();
+ 	conflict = __insert_resource(parent, new);
+ 	write_unlock(&resource_lock);
+ 	return conflict;
+@@ -886,6 +923,7 @@ void insert_resource_expand_to_fit(struct resource *root, struct resource *new)
+ 		return;
+ 
+ 	write_lock(&resource_lock);
++	invalidate_resource_cache();
+ 	for (;;) {
+ 		struct resource *conflict;
+ 
+@@ -926,6 +964,7 @@ int remove_resource(struct resource *old)
+ 	int retval;
+ 
+ 	write_lock(&resource_lock);
++	invalidate_resource_cache();
+ 	retval = __release_resource(old, false);
+ 	write_unlock(&resource_lock);
+ 	return retval;
+@@ -985,6 +1024,7 @@ int adjust_resource(struct resource *res, resource_size_t start,
+ 	int result;
+ 
+ 	write_lock(&resource_lock);
++	invalidate_resource_cache();
+ 	result = __adjust_resource(res, start, size);
+ 	write_unlock(&resource_lock);
+ 	return result;
+@@ -1059,6 +1099,8 @@ reserve_region_with_split(struct resource *root, resource_size_t start,
+ 	int abort = 0;
+ 
+ 	write_lock(&resource_lock);
++	invalidate_resource_cache();
++
+ 	if (root->start > start || root->end < end) {
+ 		pr_err("requested range [0x%llx-0x%llx] not in root %pr\n",
+ 		       (unsigned long long)start, (unsigned long long)end,
+@@ -1135,6 +1177,7 @@ struct resource * __request_region(struct resource *parent,
+ 	res->end = start + n - 1;
+ 
+ 	write_lock(&resource_lock);
++	invalidate_resource_cache();
+ 
+ 	for (;;) {
+ 		struct resource *conflict;
+@@ -1168,6 +1211,7 @@ struct resource * __request_region(struct resource *parent,
+ 			schedule();
+ 			remove_wait_queue(&muxed_resource_wait, &wait);
+ 			write_lock(&resource_lock);
++			invalidate_resource_cache();
+ 			continue;
+ 		}
+ 		/* Uhhuh, that didn't work out.. */
+@@ -1198,6 +1242,7 @@ void __release_region(struct resource *parent, resource_size_t start,
+ 	end = start + n - 1;
+ 
+ 	write_lock(&resource_lock);
++	invalidate_resource_cache();
+ 
+ 	for (;;) {
+ 		struct resource *res = *p;
+@@ -1211,6 +1256,7 @@ void __release_region(struct resource *parent, resource_size_t start,
+ 			}
+ 			if (res->start != start || res->end != end)
+ 				break;
++
+ 			*p = res->sibling;
+ 			write_unlock(&resource_lock);
+ 			if (res->flags & IORESOURCE_MUXED)
+@@ -1268,6 +1314,7 @@ int release_mem_region_adjustable(struct resource *parent,
+ 
+ 	p = &parent->child;
+ 	write_lock(&resource_lock);
++	invalidate_resource_cache();
+ 
+ 	while ((res = *p)) {
+ 		if (res->start >= end)
+-- 
+2.20.1
+
