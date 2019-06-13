@@ -2,81 +2,98 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD12C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 142BCC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 853D2208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B1220851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:43:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="trz7K9US"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731896AbfFMPns (ORCPT
+        id S1732332AbfFMPnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:43:48 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:40438 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731832AbfFMJp5 (ORCPT
+        Thu, 13 Jun 2019 11:43:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33660 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731831AbfFMJog (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:45:57 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 6274225B7FA;
-        Thu, 13 Jun 2019 19:45:55 +1000 (AEST)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id 5CE8B940483; Thu, 13 Jun 2019 11:45:53 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 11:45:53 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/34] clk: clk-cdce706: simplify getting the adapter of
- a client
-Message-ID: <20190613094553.k7shy2w32cdkkfrb@verge.net.au>
-References: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
- <20190608105619.593-2-wsa+renesas@sang-engineering.com>
+        Thu, 13 Jun 2019 05:44:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=0sAfzDlcAsndHKBt75dqqx/GnOCOQqtRdathOjahJzQ=; b=trz7K9USBFzK+xAnepin47AmRr
+        Ru/Ufe0ArOAav00lGoPPzRUVxrswp05DRpD2d5fXaeZItnlHIGrtF1O1z/B5eK/v1ypkuEUV33AoE
+        O6sWXD/9uMVmrJLXNRSSRwxNiWV3okj38PS6HOorCIE1095zMfIxNPliWKgHj+KFNGQYjRJfvAAE9
+        OZPPi7DMhfjs+Ay9FbxkmMkIi0kMa6qSNkzN8TL3yorsUR6y30VoiV0rQhnhlXUczuR6wnoc3Tr3D
+        5CrUdFq3rR6UxwQZviB1fSzfyE69t0fvrojVXmSEKwbbynKreccgHDzaxSTGmzkzt23o/mQnE0h+e
+        YEeclslA==;
+Received: from mpp-cp1-natpool-1-198.ethz.ch ([82.130.71.198] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbMHY-0001yQ-Rm; Thu, 13 Jun 2019 09:44:33 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 22/22] mm: don't select MIGRATE_VMA_HELPER from HMM_MIRROR
+Date:   Thu, 13 Jun 2019 11:43:25 +0200
+Message-Id: <20190613094326.24093-23-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190613094326.24093-1-hch@lst.de>
+References: <20190613094326.24093-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190608105619.593-2-wsa+renesas@sang-engineering.com>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 12:55:40PM +0200, Wolfram Sang wrote:
-> We have a dedicated pointer for that, so use it. Much easier to read and
-> less computation involved.
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+The migrate_vma helper is only used by noveau to migrate device private
+pages around.  Other HMM_MIRROR users like amdgpu or infiniband don't
+need it.
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/gpu/drm/nouveau/Kconfig | 1 +
+ mm/Kconfig                      | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-> ---
-> 
-> Please apply to your subsystem tree.
-> 
->  drivers/clk/clk-cdce706.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/clk-cdce706.c b/drivers/clk/clk-cdce706.c
-> index f21d9092564f..476d29c013e5 100644
-> --- a/drivers/clk/clk-cdce706.c
-> +++ b/drivers/clk/clk-cdce706.c
-> @@ -633,7 +633,7 @@ of_clk_cdce_get(struct of_phandle_args *clkspec, void *data)
->  static int cdce706_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *id)
->  {
-> -	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
-> +	struct i2c_adapter *adapter = client->adapter;
->  	struct cdce706_dev_data *cdce;
->  	int ret;
->  
-> -- 
-> 2.19.1
-> 
+diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
+index 66c839d8e9d1..96b9814e6d06 100644
+--- a/drivers/gpu/drm/nouveau/Kconfig
++++ b/drivers/gpu/drm/nouveau/Kconfig
+@@ -88,6 +88,7 @@ config DRM_NOUVEAU_SVM
+ 	depends on DRM_NOUVEAU
+ 	depends on HMM_MIRROR
+ 	depends on STAGING
++	select MIGRATE_VMA_HELPER
+ 	default n
+ 	help
+ 	  Say Y here if you want to enable experimental support for
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 73676cb4693f..eca88679b624 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -679,7 +679,6 @@ config HMM_MIRROR
+ 	bool "HMM mirror CPU page table into a device page table"
+ 	depends on MMU
+ 	select MMU_NOTIFIER
+-	select MIGRATE_VMA_HELPER
+ 	help
+ 	  Select HMM_MIRROR if you want to mirror range of the CPU page table of a
+ 	  process into a device page table. Here, mirror means "keep synchronized".
+-- 
+2.20.1
+
