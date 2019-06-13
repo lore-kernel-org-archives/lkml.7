@@ -2,120 +2,144 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3ECC31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B5BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1218D208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DFB2208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560441315;
+	bh=GS7QM8uUKY06BkWq879HDS/Fiak3u2XFHTsSLPi6USA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=y1+uVqVW3SCAyfOcXfuVwThmD/Zt/GiLl2W4/FmD7M69vUdOm1zFJOL1xVMbkq37L
+	 TyPzW47zhhIssiXEgN0x1sRoqRtYOvlAQMqrq6fWfDVFkyKNctV1oBgTo9gH38+2tl
+	 FDuXiNBpsqGXCarDPrs55KGItoAmZ0VVqp3eJYiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389971AbfFMPy6 (ORCPT
+        id S2390174AbfFMPzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:54:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:44042 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732092AbfFMPyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:54:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E882367;
-        Thu, 13 Jun 2019 08:54:54 -0700 (PDT)
-Received: from C02TF0J2HF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 81AD83F246;
-        Thu, 13 Jun 2019 08:54:50 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 16:54:35 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Masayoshi Mizuma <msys.mizuma@gmail.com>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org,
-        Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>,
-        Zhang Lei <zhang.lei@jp.fujitsu.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 1/2] arm64/mm: check cpu cache line size with
- non-coherent device
-Message-ID: <20190613155434.GW28951@C02TF0J2HF1T.local>
-References: <20190611151731.6135-1-msys.mizuma@gmail.com>
- <20190611151731.6135-2-msys.mizuma@gmail.com>
- <20190611180007.him7md7gdcjs5cg6@mbp>
- <20190611220246.lyhcqahsxyxuhqjk@gabell>
+        Thu, 13 Jun 2019 11:55:13 -0400
+Received: from mail-ot1-f44.google.com ([209.85.210.44]:40395 "EHLO
+        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731561AbfFMIxL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:53:11 -0400
+Received: by mail-ot1-f44.google.com with SMTP id x24so18192548otp.7;
+        Thu, 13 Jun 2019 01:53:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FxA2TuQ76TdBmK7s0p6DMBbnrU5zVRKKjjHLZHr3Nrw=;
+        b=Yxz1PrfEwG+xwQfQrX5q9OYleNmlcuAsJPTmLfQ7gVKEvAR+96Fjki1WJPeX8bRYQl
+         HuR4VQZkg7hv4n6r23V00pi6LnVo5kXHsecCxBP5tGF79PKKtJ+fXOELR7U9Xt4GRTcn
+         9CibEfBsWSxilq23lhLLpqkO/T/ruOYn0f5G8II2BuQmEbATtOJRLLYf/F3ffTRGHZ3+
+         gEw4dPeWEqb5pqH2RXLQrDSD+JsZVYpGJfwbV+UDkfo69J3moMWNSLxkrqg0Q69sAM0Q
+         kSLwi60ID8UTSnBe7YcyTgv6x11TvRIeUGBcEvFsTOyq2cknIxdlMJhByhe54Hz5xD7r
+         Zk4Q==
+X-Gm-Message-State: APjAAAUi4EVEc8cS8f5ENKqe7SrlOIXGcr+dWSzNLyj01OZXWkDFETFk
+        1V3VZUet3YydJfMKSltr+DlIrJWwrHJHi+RAnHjviQ==
+X-Google-Smtp-Source: APXvYqyI1lj+Z+cGNfdobQgfAVNEbIpL2r7FCl8K1bHleKh5pVvYkSHmP3FF0kCptnpXUK5RHTkVoifYko+1nXHyn24=
+X-Received: by 2002:a9d:5f05:: with SMTP id f5mr36455415oti.167.1560415990521;
+ Thu, 13 Jun 2019 01:53:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611220246.lyhcqahsxyxuhqjk@gabell>
-User-Agent: Mutt/1.11.2 (2019-01-07)
+References: <20190609111732.GA2885@amd> <007701d520c7$c397bda0$4ac738e0$@net>
+ <CAJZ5v0j2pb2WxSA+S44Mr-6bpOx-P9A_T2-sDG3CiWSqLMg3sA@mail.gmail.com> <008f01d52178$07b3be70$171b3b50$@net>
+In-Reply-To: <008f01d52178$07b3be70$171b3b50$@net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 13 Jun 2019 10:52:57 +0200
+Message-ID: <CAJZ5v0gRaDe6Fajdx3wqaLz9LQr6Z6iD+2yrrZeXJV+3HiAOZg@mail.gmail.com>
+Subject: Re: 5.2-rc2: low framerate in flightgear, cpu not running at full
+ speed, thermal related?
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Zhang, Rui" <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 06:02:47PM -0400, Masayoshi Mizuma wrote:
-> On Tue, Jun 11, 2019 at 07:00:07PM +0100, Catalin Marinas wrote:
-> > On Tue, Jun 11, 2019 at 11:17:30AM -0400, Masayoshi Mizuma wrote:
-> > > --- a/arch/arm64/mm/dma-mapping.c
-> > > +++ b/arch/arm64/mm/dma-mapping.c
-> > > @@ -91,10 +91,6 @@ static int __swiotlb_mmap_pfn(struct vm_area_struct *vma,
-> > >  
-> > >  static int __init arm64_dma_init(void)
-> > >  {
-> > > -	WARN_TAINT(ARCH_DMA_MINALIGN < cache_line_size(),
-> > > -		   TAINT_CPU_OUT_OF_SPEC,
-> > > -		   "ARCH_DMA_MINALIGN smaller than CTR_EL0.CWG (%d < %d)",
-> > > -		   ARCH_DMA_MINALIGN, cache_line_size());
-> > >  	return dma_atomic_pool_init(GFP_DMA32, __pgprot(PROT_NORMAL_NC));
-> > >  }
-> > >  arch_initcall(arm64_dma_init);
-> > > @@ -473,6 +469,11 @@ void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
-> > >  			const struct iommu_ops *iommu, bool coherent)
-> > >  {
-> > >  	dev->dma_coherent = coherent;
-> > > +
-> > > +	if (!coherent && (cache_line_size() > ARCH_DMA_MINALIGN))
-> > > +		dev_WARN(dev, "ARCH_DMA_MINALIGN smaller than CTR_EL0.CWG (%d < %d)",
-> > > +				ARCH_DMA_MINALIGN, cache_line_size());
-> > 
-> > I'm ok in principle with this patch, with the minor issue that since
-> > commit 7b8c87b297a7 ("arm64: cacheinfo: Update cache_line_size detected
-> > from DT or PPTT") queued for 5.3 cache_line_size() gets the information
-> > from DT or ACPI. The reason for this change is that the information is
-> > used for performance tuning rather than DMA coherency.
-> > 
-> > You can go for a direct cache_type_cwg() check in here, unless Robin
-> > (cc'ed) has a better idea.
-> 
-> Got it, thanks.
-> I believe coherency_max_size is zero in case of coherent is false,
-> so I'll modify the patch as following. Does it make sense?
+On Thu, Jun 13, 2019 at 1:40 AM Doug Smythies <dsmythies@telus.net> wrote:
+>
+> On 2019.06.12 14:25 Rafael J. Wysocki wrote:
+> > On Wed, Jun 12, 2019 at 4:45 AM Doug Smythies <dsmythies@telus.net> wrote:
+> >>
+> >> So, currently there seems to be 3 issues in this thread
+> >> (and I am guessing a little, without definitive data):
+> >>
+> >> 1.) On your system Kernel 5.4-rc2 (or 4) defaults to the intel_pstate CPU frequency
+> >> scaling driver and the powersave governor, but kernel 4.6 defaults to the
+> >> acpi-cpufreq CPU frequency scaling driver and the ondemand governor.
+> >
+> > Which means that intel_pstate works in the active mode by default and
+> > so it uses its internal governor.
+>
+> Note sure what you mean by "internal governor"?
+> If you meant HWP (Hardware P-state), Pavel's processor doesn't have it.
+> If you meant the active powersave governor code within the driver, then agreed.
 
-The coherency_max_size gives you the largest cache line in the system,
-independent of whether a device is coherent or not. You may have a
-device that does not snoop L1/L2 but there is a transparent L3 (system
-cache) with a larger cache line that the device may be able to snoop.
-The coherency_max_size and therefore cache_line_size() would give you
-this L3 value but the device would work fine since CWG <=
-ARCH_DMA_MINALIGN.
+That's what I mean.
 
-> 
-> @@ -57,6 +53,11 @@ void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
->                         const struct iommu_ops *iommu, bool coherent)
->  {
->         dev->dma_coherent = coherent;
-> +
-> +       if (!coherent && (cache_line_size() > ARCH_DMA_MINALIGN))
-> +               dev_WARN(dev, "ARCH_DMA_MINALIGN smaller than CTR_EL0.CWG (%d < %d)",
-> +                               ARCH_DMA_MINALIGN, (4 << cache_type_cwg()));
-> +
->         if (iommu)
->                 iommu_setup_dma_ops(dev, dma_base, size);
+> > That governor is more performance-oriented than ondemand and it very
+> > well may cause more power to be allocated for the processor - at the
+> > expense of the GPU.
+>
+> O.K. I mainly use servers and so have no experience with possible GPU
+> verses CPU tradeoffs.
+>
+> However, I did re-do my tests measuring energy instead of CPU frequency
+> and found very little difference between the acpi-cpufreq/ondemand verses
+> intel_pstate/powersave as a function of single threaded load. Actually,
+> I did the test twice, one at 20 hertz work/sleep frequency and also
+> at 67 hertz work/sleep frequency. (Of course, Pavel's processor might
+> well have a different curve, but it is a similar vintage to mine
+> i5-2520M verses i7-2600K.) The worst difference was approximately
+> 1.1 extra processor package watts (an extra 5.5%) in the 80% to 85%
+> single threaded load range at 67 hertz work/sleep frequency for
+> the intel-pstate/powersave driver/governor.
 
-I think the easiest here is to add a local variable:
+I see.  Then this shouldn't matter.
 
-	int cls = 4 << cache_type_cwg();
+> What am I saying? For a fixed amount of work to do per work/sleep cycle
+> (i.e. maybe per video frame related type work) while the CPU frequency Verses load
+> curves might differ, the resulting processor energy curve differs much less.
+> (i.e. the extra power for higher CPU frequency is for less time because it gets
+> the job done faster.) So, myself, I don't yet understand why only the one method
+> would have hit thermal throttling, but not the other (if indeed it doesn't).
+> Other differences between kernel 4.6 and 5.2-rc? might explain it.
 
-and check it against ARCH_DMA_MINALIGN.
+Right.
 
--- 
-Catalin
+I personally doubt that any thermal throttling is involved here.
+
+> I did all my tests on kernel 5.2-rc3, except that one example from kernel 4.4 on my
+> earlier reply, so that were not other variables than CPU scaling driver and
+> governor changes.
+>
+> > The lower-than-expected frame rate may result from that, in principle.
+>
+> > One way to mitigate that might be to use intel_pstate in the passive
+> > mode (pass intel_pstate=passive to the kernel in the command line)
+> > along with either ondemand or schedutil as the governor.
+>
+> The CPU frequency verses load curves for this those two governors are very similar
+> for both the acpi_cpufreq and intel_cpufreq (which is the intel_pstate driver
+> in passive mode) drivers.
+
+That's what I would expect.
+
+Cheers!
