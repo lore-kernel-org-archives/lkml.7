@@ -3,86 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5E9C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77740C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD92206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3B2206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389507AbfFMPrE (ORCPT
+        id S1732703AbfFMPrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:47:04 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:55788 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389461AbfFMPrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:47:00 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hbRwA-0008JX-LL; Thu, 13 Jun 2019 09:46:51 -0600
-To:     Jon Mason <jdmason@kudzu.us>
-Cc:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kselftest@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Eric Pilmore <epilmore@gigaio.com>
-References: <20190523223100.5526-1-logang@deltatee.com>
- <20190613133014.GE1572@kudzu.us>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <985a41a9-80c2-7b60-da98-4ea92085319b@deltatee.com>
-Date:   Thu, 13 Jun 2019 09:46:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 11:47:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32858 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726603AbfFMJdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:33:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3ECB3AF22;
+        Thu, 13 Jun 2019 09:33:03 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20190613133014.GE1572@kudzu.us>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: epilmore@gigaio.com, fancer.lancer@gmail.com, dave.jiang@intel.com, allenbh@gmail.com, bhelgaas@google.com, joro@8bytes.org, linux-kselftest@vger.kernel.org, iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org, jdmason@kudzu.us
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v5 00/10] Support using MSI interrupts in ntb_transport
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Date:   Thu, 13 Jun 2019 11:33:02 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] mm/vmalloc: Check absolute error return from
+ vmap_[p4d|pud|pmd|pte]_range()
+In-Reply-To: <1560413551-17460-1-git-send-email-anshuman.khandual@arm.com>
+References: <1560413551-17460-1-git-send-email-anshuman.khandual@arm.com>
+Message-ID: <7cc6a46c50c2008bfb968c5e48af5a49@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-06-13 10:12, Anshuman Khandual wrote:
+> vmap_pte_range() returns an -EBUSY when it encounters a non-empty PTE. 
+> But
+> currently vmap_pmd_range() unifies both -EBUSY and -ENOMEM return code 
+> as
+> -ENOMEM and send it up the call chain which is wrong. Interestingly 
+> enough
+> vmap_page_range_noflush() tests for the absolute error return value 
+> from
+> vmap_p4d_range() but it does not help because -EBUSY has been merged 
+> with
+> -ENOMEM. So all it can return is -ENOMEM. Fix this by testing for 
+> absolute
+> error return from vmap_pmd_range() all the way up to vmap_p4d_range().
 
+I could not find any real external caller of vmap API who really cares
+about the errno, and frankly why they should?  This is allocation path,
+allocation failed - game over.  When you step on -EBUSY case something
+has gone completely wrong in your kernel, you get a big warning in
+your dmesg and it is already does not matter what errno you get.
 
-On 2019-06-13 7:30 a.m., Jon Mason wrote:
-> On Thu, May 23, 2019 at 04:30:50PM -0600, Logan Gunthorpe wrote:
->> This is another resend as there has been no feedback since v4.
->> Seems Jon has been MIA this past cycle so hopefully he appears on the
->> list soon.
->>
->> I've addressed the feedback so far and rebased on the latest kernel
->> and would like this to be considered for merging this cycle.
->>
->> The only outstanding issue I know of is that it still will not work
->> with IDT hardware, but ntb_transport doesn't work with IDT hardware
->> and there is still no sensible common infrastructure to support
->> ntb_peer_mw_set_trans(). Thus, I decline to consider that complication
->> in this patchset. However, I'll be happy to review work that adds this
->> feature in the future.
->>
->> Also, as the port number and resource index stuff is a bit complicated,
->> I made a quick out of tree test fixture to ensure it's correct[1]. As
->> an excerise I also wrote some test code[2] using the upcomming KUnit
->> feature.
-> 
-> Sorry for the delay.  The patch is now in the ntb-next branch.  We've
-> missed window for 5.2, but it will be in the 5.3 pull request (barring
-> last minute comments).
+--
+Roman
 
-Thanks Jon!
-
-Logan
