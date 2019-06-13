@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD904C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C970C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7B02147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 227BF20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442406;
-	bh=ZpGp6tbJ2PcTb+EL7CwaGJgp/iaU3PuVxwARLpJdHd8=;
+	s=default; t=1560442410;
+	bh=76D3vaAouJvHGGAHeFdnU7ReK0evbpdCzSUXWh05FYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FArYSmZdydWvVoj4N1JE5I/MKZaPggpVxKCZ7FiZRwB+2SsOPHTw83PXWOcvT4PcD
-	 EdEWDVdpmcf7eqQ5euVKLUJOPomaR2mAN9mKTxi97iVwGgxnbBIn9hs4MCBp6YFbnd
-	 CdwJ6KzyvI7oxHtRk8pZoK1HEQ8okI9ZTqPvGp9o=
+	b=SQ20s5bhYlFO5NL8Ma++MtP5K97S96Y2ecucRYi3vq43Puxi1NYWYiINSxF3mePNQ
+	 YlSS7sWqxJVIrnetZWakeI9Qj2M58lITNr6OlnYsCNewtcwY3K1rPGSC1DWkGIlBN1
+	 6q04XQNpSvHXDL4jj8DwrmqhGTxSR9uSk8hJLMQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391700AbfFMQNR (ORCPT
+        id S2391550AbfFMQNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:13:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60138 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:13:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731215AbfFMIm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:42:59 -0400
+        id S1731208AbfFMIm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:42:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B4D920851;
-        Thu, 13 Jun 2019 08:42:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 381CF21479;
+        Thu, 13 Jun 2019 08:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415378;
-        bh=ZpGp6tbJ2PcTb+EL7CwaGJgp/iaU3PuVxwARLpJdHd8=;
+        s=default; t=1560415375;
+        bh=76D3vaAouJvHGGAHeFdnU7ReK0evbpdCzSUXWh05FYc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FUbMywbeSwI5ron/WTjwEgD1+i74A8BEOmikm2swSpE6aEEvV85JjpWBS0NSfPiVV
-         P1I2CtcAyrTu2dIZqt2sV+g/N0H8UDyNOareLGFxC3pDcbgCZXT0xfayR9A6/iDmQk
-         lnPs93wUrpnRFj3dnw9DmwWjMEGkyH44KeqsmMwA=
+        b=S+6tyKq8t6sL85UHSUgBcsUYGb+CgxBz7owFx+wQYGiEv+D2JdL145/VfcW4XQhbX
+         aJOJpgMkAE7pjOHSJFf/T2m5jSCmKXDcdf9DUzamU6tlLbntVlQpTzvCuv5wysQL8Q
+         Yu82e29Bev0tVQKVPnMyNN/A20gsWTda2TbJYVPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Adam Ludkiewicz <adam.ludkiewicz@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 074/118] i40e: Queues are reserved despite "Invalid argument" error
-Date:   Thu, 13 Jun 2019 10:33:32 +0200
-Message-Id: <20190613075648.196535481@linuxfoundation.org>
+Subject: [PATCH 4.19 073/118] x86/PCI: Fix PCI IRQ routing table memory leak
+Date:   Thu, 13 Jun 2019 10:33:31 +0200
+Message-Id: <20190613075648.152331358@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -62,48 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3e957b377bf4262aec2dd424f28ece94e36814d4 ]
+[ Upstream commit ea094d53580f40c2124cef3d072b73b2425e7bfd ]
 
-Added a new local variable in the i40e_setup_tc function named
-old_queue_pairs so num_queue_pairs can be restored to the correct
-value in case configuring queue channels fails. Additionally, moved
-the exit label in the i40e_setup_tc function so the if (need_reset)
-block can be executed.
-Also, fixed data packing in the i40e_setup_tc function.
+In pcibios_irq_init(), the PCI IRQ routing table 'pirq_table' is first
+found through pirq_find_routing_table().  If the table is not found and
+CONFIG_PCI_BIOS is defined, the table is then allocated in
+pcibios_get_irq_routing_table() using kmalloc().  Later, if the I/O APIC is
+used, this table is actually not used.  In that case, the allocated table
+is not freed, which is a memory leak.
 
-Signed-off-by: Adam Ludkiewicz <adam.ludkiewicz@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Free the allocated table if it is not used.
+
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+[bhelgaas: added Ingo's reviewed-by, since the only change since v1 was to
+use the irq_routing_table local variable name he suggested]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/pci/irq.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index df8808cd7e11..4e04985fb430 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -6758,10 +6758,12 @@ static int i40e_setup_tc(struct net_device *netdev, void *type_data)
- 	struct i40e_pf *pf = vsi->back;
- 	u8 enabled_tc = 0, num_tc, hw;
- 	bool need_reset = false;
-+	int old_queue_pairs;
- 	int ret = -EINVAL;
- 	u16 mode;
- 	int i;
+diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
+index 52e55108404e..d3a73f9335e1 100644
+--- a/arch/x86/pci/irq.c
++++ b/arch/x86/pci/irq.c
+@@ -1119,6 +1119,8 @@ static const struct dmi_system_id pciirq_dmi_table[] __initconst = {
  
-+	old_queue_pairs = vsi->num_queue_pairs;
- 	num_tc = mqprio_qopt->qopt.num_tc;
- 	hw = mqprio_qopt->qopt.hw;
- 	mode = mqprio_qopt->mode;
-@@ -6862,6 +6864,7 @@ config_tc:
- 		}
- 		ret = i40e_configure_queue_channels(vsi);
- 		if (ret) {
-+			vsi->num_queue_pairs = old_queue_pairs;
- 			netdev_info(netdev,
- 				    "Failed configuring queue channels\n");
- 			need_reset = true;
+ void __init pcibios_irq_init(void)
+ {
++	struct irq_routing_table *rtable = NULL;
++
+ 	DBG(KERN_DEBUG "PCI: IRQ init\n");
+ 
+ 	if (raw_pci_ops == NULL)
+@@ -1129,8 +1131,10 @@ void __init pcibios_irq_init(void)
+ 	pirq_table = pirq_find_routing_table();
+ 
+ #ifdef CONFIG_PCI_BIOS
+-	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN))
++	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN)) {
+ 		pirq_table = pcibios_get_irq_routing_table();
++		rtable = pirq_table;
++	}
+ #endif
+ 	if (pirq_table) {
+ 		pirq_peer_trick();
+@@ -1145,8 +1149,10 @@ void __init pcibios_irq_init(void)
+ 		 * If we're using the I/O APIC, avoid using the PCI IRQ
+ 		 * routing table
+ 		 */
+-		if (io_apic_assign_pci_irqs)
++		if (io_apic_assign_pci_irqs) {
++			kfree(rtable);
+ 			pirq_table = NULL;
++		}
+ 	}
+ 
+ 	x86_init.pci.fixup_irqs();
 -- 
 2.20.1
 
