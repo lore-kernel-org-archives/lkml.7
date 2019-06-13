@@ -2,131 +2,157 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AB7C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4766AC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2214A2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FA352082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404310AbfFMQtN (ORCPT
+        id S2404294AbfFMQtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:49:13 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:47152 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727666AbfFMEhV (ORCPT
+        Thu, 13 Jun 2019 12:49:11 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:41045 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727662AbfFMEhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 00:37:21 -0400
-Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-01.mgc.mentorg.com)
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hbHU5-0001Yz-Ai from Harish_Kandiga@mentor.com ; Wed, 12 Jun 2019 21:37:09 -0700
-Received: from [10.0.3.15] (137.202.0.90) by svr-ies-mbx-01.mgc.mentorg.com
- (139.181.222.1) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Thu, 13 Jun
- 2019 05:37:01 +0100
-Subject: Re: [PATCH] wlcore/wl18xx: Add invert-irq OF property for physically
- inverted IRQ
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Marc Zyngier <marc.zyngier@arm.com>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kalle Valo <kvalo@codeaurora.org>, Eyal Reizer <eyalr@ti.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
-        Joshua Frkuska <joshua_frkuska@mentor.com>,
-        "George G . Davis" <george_davis@mentor.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>
-References: <20190607172958.20745-1-erosca@de.adit-jv.com>
- <87tvcxncuq.fsf@codeaurora.org> <20190610083012.GV5447@atomide.com>
- <CAMuHMdUOc17ocqmt=oNmyN1UT_K7_y=af1pwjwr5PTgQL2o2OQ@mail.gmail.com>
- <08bc4755-5f47-d792-8b5a-927b5fbe7619@arm.com>
- <20190612094538.GA16575@vmlxhi-102.adit-jv.com>
- <86d0jjglax.wl-marc.zyngier@arm.com>
- <20190612150644.GA22002@vmlxhi-102.adit-jv.com>
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-Message-ID: <e878bb37-3228-0055-bf6e-69be7f7a09df@mentor.com>
-Date:   Thu, 13 Jun 2019 10:06:45 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 00:37:55 -0400
+Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id BEAB014A744;
+        Thu, 13 Jun 2019 14:37:47 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hbHTl-0005bp-W0; Thu, 13 Jun 2019 14:36:49 +1000
+Date:   Thu, 13 Jun 2019 14:36:49 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190613043649.GJ14363@dread.disaster.area>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
+ <20190607110426.GB12765@quack2.suse.cz>
+ <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
+ <20190608001036.GF14308@dread.disaster.area>
+ <20190612123751.GD32656@bombadil.infradead.org>
+ <20190613002555.GH14363@dread.disaster.area>
+ <20190613032320.GG32656@bombadil.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20190612150644.GA22002@vmlxhi-102.adit-jv.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-04.mgc.mentorg.com (139.181.222.4) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613032320.GG32656@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
+        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
+        a=7-415B0cAAAA:8 a=VVmKscACqtQWyMykWwEA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 12, 2019 at 08:23:20PM -0700, Matthew Wilcox wrote:
+> On Thu, Jun 13, 2019 at 10:25:55AM +1000, Dave Chinner wrote:
+> > On Wed, Jun 12, 2019 at 05:37:53AM -0700, Matthew Wilcox wrote:
+> > > That's rather different from the normal meaning of 'exclusive' in the
+> > > context of locks, which is "only one user can have access to this at
+> > > a time".
+> > 
+> > Layout leases are not locks, they are a user access policy object.
+> > It is the process/fd which holds the lease and it's the process/fd
+> > that is granted exclusive access.  This is exactly the same semantic
+> > as O_EXCL provides for granting exclusive access to a block device
+> > via open(), yes?
+> 
+> This isn't my understanding of how RDMA wants this to work, so we should
+> probably clear that up before we get too far down deciding what name to
+> give it.
+> 
+> For the RDMA usage case, it is entirely possible that both process A
+> and process B which don't know about each other want to perform RDMA to
+> file F.  So there will be two layout leases active on this file at the
+> same time.  It's fine for IOs to simultaneously be active to both leases.
 
-On 12/06/19 8:36 PM, Eugeniu Rosca wrote:
-> Hi Marc,
->
-> Thanks for your comment.
->
-> On Wed, Jun 12, 2019 at 11:17:10AM +0100, Marc Zyngier wrote:
->> Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
->>> On Tue, Jun 11, 2019 at 10:00:41AM +0100, Marc Zyngier wrote:
-> [..]
->>>> We already have plenty of that in the tree, the canonical example
->>>> probably being drivers/irqchip/irq-mtk-sysirq.c. It should be pretty
->>>> easy to turn this driver into something more generic.
->>> I don't think drivers/irqchip/irq-mtk-sysirq.c can serve the
->>> use-case/purpose of this patch. The MTK driver seems to be dealing with
->>> the polarity inversion of on-SoC interrupts which are routed to GiC,
->>> whereas in this patch we are talking about an off-chip interrupt
->>> wired to R-Car GPIO controller.
->> And how different is that? The location of the interrupt source is
->> pretty irrelevant here.
-> The main difference which I sense is that a driver like irq-mtk-sysirq
-> mostly (if not exclusively) deals with internal kernel implementation
-> detail (tuned via DT) whilst adding an inverter for GPIO IRQs raises
-> a whole bunch of new questions (e.g. how to arbitrate between
-> kernel-space and user-space IRQ polarity configuration?).
->
->> The point is that there is already a general
->> scheme to deal with these "signal altering widgets", and that we
->> should try to reuse at least the concept, if not the code.
-> Since Harish Jenny K N might be working on a new driver doing GPIO IRQ
-> inversion, I have CC-ed him as well to avoid any overlapping work.
+Yes, it is.
 
+> But if the filesystem wants to move blocks around, it has to break
+> both leases.
 
-Sorry I am not completely aware of the background discussion.
+No, the _lease layer_ needs to break both leases when the filesystem
+calls break_layout().
 
-But here is the link to my proposal for new consumer driver to provide a new virtual
-gpio controller to configure the polarity of the gpio pins used by the userspace.
+The filesystem is /completely unaware/ of whether a lease is held,
+how many leases are held, what is involved in revoking leases or
+whether they are exclusive or not. The filesystem only knows that it
+is about to perform an operation that may require a layout lease to
+be broken, so it's _asking permission_ from the layout lease layer
+whether it is OK to go ahead with the operation.
 
-https://www.spinics.net/lists/linux-gpio/msg39681.html
+See what I mean about the layout lease being an /access arbitration/
+layer? It's the layer that decides whether a modification can be
+made or not, not the filesystem. The layout lease layer tells the
+filesystem what it should do, the filesystem just has to ensure it
+adds layout breaking callouts in places that can block safely and
+are serialised to ensure operations from new layouts can't race with
+the operation that broke the existing layouts.
 
+> If Process C tries to do a write to file F without a lease, there's no
+> problem, unless a side-effect of the write would be to change the block
+> mapping,
 
->
->>> It looks to me that the nice DTS sketch shared by Linus Walleij in [5]
->>> might come closer to the concept proposed by Geert? FWIW, the
->>> infrastructure/implementation to make this possible is still not
->>> ready.
->> Which looks like what I'm suggesting.
-> Then we are on the same page. Thanks.
->
->> 	M.
->>
->> -- 
->> Jazz is not dead, it just smells funny.
+That's a side effect we cannot predict ahead of time. But it's
+also _completely irrelevant_ to the layout lease layer API and
+implementation.(*)
 
+> in which case either the leases must break first, or the write
+> must be denied.
+
+Which is exactly how I'm saying layout leases already interact with
+the filesystem: that if the lease cannot be broken, break_layout()
+returns -ETXTBSY to the filesystem, and the filesystem returns that
+to the application having made no changes at all. Layout leases are
+the policy engine, the filesystem just has to implement the
+break_layout() callouts such that layout breaking is consistent,
+correct, and robust....
+
+Cheers,
+
+Dave.
+
+(*) In the case of XFS, we don't know if a layout change will be
+necessary until we are deep inside the actual IO path and hold inode
+metadata locks. We can't block here to break the layout because IO
+completion and metadata commits need to occur to allow the
+application to release it's lease and IO completion requires that
+same inode metadata lock. i.e. if we block once we know a layout
+change needs to occur, we will deadlock the filesystem on the inode
+metadata lock.
+
+Hence the filesystem implementation dictates when the filesystem
+issues layout lease break notifications. However, these filesystem
+implementation issues do not dictate how applications interact with
+layout leases, how layout leases are managed, whether concurrent
+leases are allowed, whether leases can be broken, etc.  That's all
+managed by the layout lease layer and that's where the go/no go
+decision is made and communicated to the filesystem as the return
+value from the break_layout() call.
+
+-- 
+Dave Chinner
+david@fromorbit.com
