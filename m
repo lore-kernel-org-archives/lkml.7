@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8ADC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335CFC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5DA620B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0904B20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:11:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fYhEwkIE"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="U5yjCulr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733127AbfFMPLb (ORCPT
+        id S2387483AbfFMPLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:11:31 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:61405 "EHLO
+        Thu, 13 Jun 2019 11:11:50 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:21676 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732295AbfFMNug (ORCPT
+        by vger.kernel.org with ESMTP id S1732293AbfFMNuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:50:36 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DDkNre026654;
-        Thu, 13 Jun 2019 15:50:21 +0200
+        Thu, 13 Jun 2019 09:50:35 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DDlOWe027710;
+        Thu, 13 Jun 2019 15:50:20 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=hllslad0ZWm7rs4WEeAUG4PuD0rX/7NjtO8beDQ9F3E=;
- b=fYhEwkIEGFECFS7WVam7esMnqdrz2I2VUQOSNaXI3cmIxqL6OPGlOgpWHl0Q6xwlv3NJ
- 7nCkm0nLiQwCmbnhmIaTjmHihFkaN7f41PfIm153YWEm6UPdZ1z6wMALnOOhGmPB67tb
- MOLGhmdgm460oLT7lYmiV6GE+sBu2jni6DkLmosOrrFao6hhmlNWF9IxkDf5kNLX090B
- ICm/u69nUisJbZU+5Gdk7V8pvvrM+Q+u0Wp95VJKpeJp2RgRgrKXo8YQPqTWzDltuHtm
- yJHE+6th1ZjQLb4T+cUSaThEI9aHm206rFdgJSmngBpgkgXJvLriAGrTY1N5cn5kNTge Fg== 
+ bh=mYJnSWfIFR4+WLkww3slp9IvUAAakD/AdP/cHIRY5Pw=;
+ b=U5yjCulr8ekVyZY428PPhpiVoWBPhkteY9OmW2ZaJ6bt1RZ3VfHgFp+idF77FC/NszNY
+ W385oaNRcracm1+t/fPyfpYaq93ssuu/LfJIdZErxOQAg5lmOQQy+nqna+coLPPrhcZI
+ qiLqSxhLRnlN2ksiQi6jZma89hCDPEN9hD5fdmt5YRUKoF0YwbL/wB/g/JMcEY1aHPm/
+ TipvqCl09jXeKmLihy0Lf34PBG+m8CJl+9+Q3CmnhWb4CHcPV+W3hDi6RykP9PYwSzq/
+ ytEIad46R2/TQXBLQFgiIh9UCwZB4IAgovjyP+dhrfbmS3vPAvVmY2zHoSUrEFc0nvN/ Sw== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2t2k3cb6e8-1
+        by mx07-00178001.pphosted.com with ESMTP id 2t2f8c49ar-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 13 Jun 2019 15:50:21 +0200
+        Thu, 13 Jun 2019 15:50:20 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8188441;
-        Thu, 13 Jun 2019 13:50:18 +0000 (GMT)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C454446;
+        Thu, 13 Jun 2019 13:50:19 +0000 (GMT)
 Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CD94C2BDD;
-        Thu, 13 Jun 2019 13:50:17 +0000 (GMT)
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A30C32BC2;
+        Thu, 13 Jun 2019 13:50:19 +0000 (GMT)
 Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
  (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 13 Jun
- 2019 15:50:17 +0200
+ 2019 15:50:19 +0200
 Received: from localhost (10.201.23.31) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 13 Jun 2019 15:50:16
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 13 Jun 2019 15:50:19
  +0200
 From:   Erwan Le Ray <erwan.leray@st.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -65,9 +65,9 @@ CC:     <linux-serial@vger.kernel.org>,
         Erwan Le Ray <erwan.leray@st.com>,
         "Fabrice Gasnier" <fabrice.gasnier@st.com>,
         Bich Hemon <bich.hemon@st.com>
-Subject: [PATCH v3 04/10] serial: stm32: add pm_runtime support
-Date:   Thu, 13 Jun 2019 15:49:54 +0200
-Message-ID: <1560433800-12255-5-git-send-email-erwan.leray@st.com>
+Subject: [PATCH v3 06/10] serial: stm32: add support for no_console_suspend
+Date:   Thu, 13 Jun 2019 15:49:56 +0200
+Message-ID: <1560433800-12255-7-git-send-email-erwan.leray@st.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1560433800-12255-1-git-send-email-erwan.leray@st.com>
 References: <1560433800-12255-1-git-send-email-erwan.leray@st.com>
@@ -81,97 +81,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use pm_runtime for clock management.
+In order to display console messages in low power mode, console pins
+must be kept active after suspend call.
 
 Signed-off-by: Bich Hemon <bich.hemon@st.com>
 Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
 
+Conflicts:
+	drivers/tty/serial/stm32-usart.c
+
 diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index a8f20ba..41898c4 100644
+index b0fb420..00e4d7a 100644
 --- a/drivers/tty/serial/stm32-usart.c
 +++ b/drivers/tty/serial/stm32-usart.c
-@@ -810,13 +810,13 @@ static void stm32_pm(struct uart_port *port, unsigned int state,
+@@ -25,6 +25,7 @@
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+ #include <linux/pinctrl/consumer.h>
++#include <linux/pinctrl/devinfo.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/pm_wakeirq.h>
+@@ -847,6 +848,7 @@ static int stm32_init_port(struct stm32_port *stm32port,
+ {
+ 	struct uart_port *port = &stm32port->port;
+ 	struct resource *res;
++	struct pinctrl *uart_pinctrl;
+ 	int ret;
  
- 	switch (state) {
- 	case UART_PM_STATE_ON:
--		clk_prepare_enable(stm32port->clk);
-+		pm_runtime_get_sync(port->dev);
- 		break;
- 	case UART_PM_STATE_OFF:
- 		spin_lock_irqsave(&port->lock, flags);
- 		stm32_clr_bits(port, ofs->cr1, BIT(cfg->uart_enable_bit));
- 		spin_unlock_irqrestore(&port->lock, flags);
--		clk_disable_unprepare(stm32port->clk);
-+		pm_runtime_put_sync(port->dev);
- 		break;
- 	}
- }
-@@ -1111,6 +1111,11 @@ static int stm32_serial_probe(struct platform_device *pdev)
+ 	port->iotype	= UPIO_MEM;
+@@ -880,6 +882,24 @@ static int stm32_init_port(struct stm32_port *stm32port,
  
- 	platform_set_drvdata(pdev, &stm32port->port);
+ 	stm32port->fifoen = stm32port->info->cfg.has_fifo;
  
-+	pm_runtime_get_noresume(&pdev->dev);
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+	pm_runtime_put_sync(&pdev->dev);
++	uart_pinctrl = devm_pinctrl_get(&pdev->dev);
++	if (IS_ERR(uart_pinctrl)) {
++		ret = PTR_ERR(uart_pinctrl);
++		if (ret != -ENODEV) {
++			dev_err(&pdev->dev, "Can't get pinctrl, error %d\n",
++				ret);
++			return ret;
++		}
++		stm32port->console_pins = ERR_PTR(-ENODEV);
++	} else {
++		stm32port->console_pins = pinctrl_lookup_state
++			(uart_pinctrl, "no_console_suspend");
++	}
 +
++	if (IS_ERR(stm32port->console_pins) && PTR_ERR(stm32port->console_pins)
++	    != -ENODEV)
++		return PTR_ERR(stm32port->console_pins);
++
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	port->membase = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(port->membase))
+@@ -1304,6 +1324,7 @@ static void __maybe_unused stm32_serial_enable_wakeup(struct uart_port *port,
+ static int __maybe_unused stm32_serial_suspend(struct device *dev)
+ {
+ 	struct uart_port *port = dev_get_drvdata(dev);
++	struct stm32_port *stm32_port = to_stm32_port(port);
+ 
+ 	uart_suspend_port(&stm32_usart_driver, port);
+ 
+@@ -1312,7 +1333,19 @@ static int __maybe_unused stm32_serial_suspend(struct device *dev)
+ 	else
+ 		stm32_serial_enable_wakeup(port, false);
+ 
+-	pinctrl_pm_select_sleep_state(dev);
++	if (uart_console(port) && !console_suspend_enabled) {
++		if (IS_ERR(stm32_port->console_pins)) {
++			dev_err(dev, "no_console_suspend pinctrl not found\n");
++			return PTR_ERR(stm32_port->console_pins);
++		}
++
++		pinctrl_select_state(dev->pins->p, stm32_port->console_pins);
++	} else {
++		if (device_may_wakeup(dev))
++			pinctrl_pm_select_idle_state(dev);
++		else
++			pinctrl_pm_select_sleep_state(dev);
++	}
+ 
  	return 0;
- 
- err_wirq:
-@@ -1132,6 +1137,9 @@ static int stm32_serial_remove(struct platform_device *pdev)
- 	struct uart_port *port = platform_get_drvdata(pdev);
- 	struct stm32_port *stm32_port = to_stm32_port(port);
- 	struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
-+	int err;
-+
-+	pm_runtime_get_sync(&pdev->dev);
- 
- 	stm32_clr_bits(port, ofs->cr3, USART_CR3_DMAR);
- 
-@@ -1160,7 +1168,12 @@ static int stm32_serial_remove(struct platform_device *pdev)
- 
- 	clk_disable_unprepare(stm32_port->clk);
- 
--	return uart_remove_one_port(&stm32_usart_driver, port);
-+	err = uart_remove_one_port(&stm32_usart_driver, port);
-+
-+	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_put_noidle(&pdev->dev);
-+
-+	return err;
  }
- 
- 
-@@ -1317,7 +1330,29 @@ static int stm32_serial_resume(struct device *dev)
- }
- #endif /* CONFIG_PM_SLEEP */
- 
-+static int __maybe_unused stm32_serial_runtime_suspend(struct device *dev)
-+{
-+	struct uart_port *port = dev_get_drvdata(dev);
-+	struct stm32_port *stm32port = container_of(port,
-+			struct stm32_port, port);
-+
-+	clk_disable_unprepare(stm32port->clk);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused stm32_serial_runtime_resume(struct device *dev)
-+{
-+	struct uart_port *port = dev_get_drvdata(dev);
-+	struct stm32_port *stm32port = container_of(port,
-+			struct stm32_port, port);
-+
-+	return clk_prepare_enable(stm32port->clk);
-+}
-+
- static const struct dev_pm_ops stm32_serial_pm_ops = {
-+	SET_RUNTIME_PM_OPS(stm32_serial_runtime_suspend,
-+			   stm32_serial_runtime_resume, NULL)
- 	SET_SYSTEM_SLEEP_PM_OPS(stm32_serial_suspend, stm32_serial_resume)
+diff --git a/drivers/tty/serial/stm32-usart.h b/drivers/tty/serial/stm32-usart.h
+index 30d2433..050fe04 100644
+--- a/drivers/tty/serial/stm32-usart.h
++++ b/drivers/tty/serial/stm32-usart.h
+@@ -255,6 +255,7 @@ struct stm32_port {
+ 	bool fifoen;
+ 	int wakeirq;
+ 	int rdr_mask;		/* receive data register mask */
++	struct pinctrl_state *console_pins;
  };
  
+ static struct stm32_port stm32_ports[STM32_MAX_PORTS];
 -- 
 1.9.1
 
