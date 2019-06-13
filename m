@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3528C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE22C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 849E320851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40CAD20866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442023;
-	bh=YQUflJc2V7Jfp6P/IYbSYenUtJTG5Ea+WwpWolfry0Q=;
+	s=default; t=1560442036;
+	bh=DOgLhY7Ndb490Cu9eMS6Sn6ICuXyTtW1a/l7jx7auDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qq0huBa+YxKY4wlcy3Giv//XaIa69/7/bxhelbloCJGFZSknTM7Dw/MNtZApKzaoV
-	 BMTFt9p07gu0VW5DHpHipi345pnsnAARV6iZziil22fgkPq71MkZlsOylJWF9p6f0h
-	 n6uiBex9LAD4bZAhcMoRYRYko68QEtL1gegTEU2M=
+	b=KxymhmAtr+qbkj01b7AzN+6GwA5llFyuV8qcG5bF7lfkggdiIROG1ozmBj5wuri0R
+	 BhRE+7WTyj8D2eEUvBKVem+VD4NsgUHhozogu0xYVeZU1IBhFOA+DaOhmPl1/mZeeE
+	 YHQfwLsRrHrelk2ro2AZJVfUJIdNJbB+5btvcZ4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390869AbfFMQG2 (ORCPT
+        id S2390999AbfFMQHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:06:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34768 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:07:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731324AbfFMIqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:46:09 -0400
+        id S1731305AbfFMIpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:45:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 626C121743;
-        Thu, 13 Jun 2019 08:46:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3597E2173C;
+        Thu, 13 Jun 2019 08:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415567;
-        bh=YQUflJc2V7Jfp6P/IYbSYenUtJTG5Ea+WwpWolfry0Q=;
+        s=default; t=1560415535;
+        bh=DOgLhY7Ndb490Cu9eMS6Sn6ICuXyTtW1a/l7jx7auDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=acq09hVI5kdi3PiswDqJnX3pxxji9lBws3wnFjqPdrI4dawImRIqokJ1qRxaJHOuV
-         ocoatuQ116mz2umevpV53bJyMOHMQULtcUzVunfuZnDOxSNyUHNlqS4BnjAID8WwVI
-         qICf9uBFAAiYhXFfoX01gQaxbZdESIp9J1LGEGRU=
+        b=SPOCI251K3vX23EU++BOzlaX488YxQJgPsCb9OU85gc/9hPyZaJQaNxx/rqLM5Y6f
+         rut7eTunA9umPzcQOQ1iHLrH0Xmk/gA2Bi90RSrk0MidJOrYizny3r71EqTHqz1ONQ
+         nDCrn5ywhUJDYzkY9UO/IPpOyvpcT3nKhoaAW7F0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 048/155] f2fs: fix to avoid panic in dec_valid_block_count()
-Date:   Thu, 13 Jun 2019 10:32:40 +0200
-Message-Id: <20190613075655.817813091@linuxfoundation.org>
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 035/155] objtool: Dont use ignore flag for fake jumps
+Date:   Thu, 13 Jun 2019 10:32:27 +0200
+Message-Id: <20190613075655.022431009@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,92 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5e159cd349bf3a31fb7e35c23a93308eb30f4f71 ]
+[ Upstream commit e6da9567959e164f82bc81967e0d5b10dee870b4 ]
 
-As Jungyeon reported in bugzilla:
+The ignore flag is set on fake jumps in order to keep
+add_jump_destinations() from setting their jump_dest, since it already
+got set when the fake jump was created.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203209
+But using the ignore flag is a bit of a hack.  It's normally used to
+skip validation of an instruction, which doesn't really make sense for
+fake jumps.
 
-- Overview
-When mounting the attached crafted image and running program, I got this error.
-Additionally, it hangs on sync after the this script.
+Also, after the next patch, using the ignore flag for fake jumps can
+trigger a false "why am I validating an ignored function?" warning.
 
-The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
+Instead just add an explicit check in add_jump_destinations() to skip
+fake jumps.
 
-- Reproduces
-cc poc_01.c
-./run.sh f2fs
-sync
-
- kernel BUG at fs/f2fs/f2fs.h:1788!
- RIP: 0010:f2fs_truncate_data_blocks_range+0x342/0x350
- Call Trace:
-  f2fs_truncate_blocks+0x36d/0x3c0
-  f2fs_truncate+0x88/0x110
-  f2fs_setattr+0x3e1/0x460
-  notify_change+0x2da/0x400
-  do_truncate+0x6d/0xb0
-  do_sys_ftruncate+0xf1/0x160
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The reason is dec_valid_block_count() will trigger kernel panic due to
-inconsistent count in between inode.i_blocks and actual block.
-
-To avoid panic, let's just print debug message and set SBI_NEED_FSCK to
-give a hint to fsck for latter repairing.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-[Jaegeuk Kim: fix build warning and add unlikely]
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/71abc072ff48b2feccc197723a9c52859476c068.1557766718.git.jpoimboe@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ tools/objtool/check.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 7bea1bc6589f..74f06f12110f 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1789,6 +1789,7 @@ enospc:
- 	return -ENOSPC;
- }
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 2cd57730381b..ecf5fc77f50b 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -28,6 +28,8 @@
+ #include <linux/hashtable.h>
+ #include <linux/kernel.h>
  
-+void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...);
- static inline void dec_valid_block_count(struct f2fs_sb_info *sbi,
- 						struct inode *inode,
- 						block_t count)
-@@ -1797,13 +1798,21 @@ static inline void dec_valid_block_count(struct f2fs_sb_info *sbi,
++#define FAKE_JUMP_OFFSET -1
++
+ struct alternative {
+ 	struct list_head list;
+ 	struct instruction *insn;
+@@ -501,7 +503,7 @@ static int add_jump_destinations(struct objtool_file *file)
+ 		    insn->type != INSN_JUMP_UNCONDITIONAL)
+ 			continue;
  
- 	spin_lock(&sbi->stat_lock);
- 	f2fs_bug_on(sbi, sbi->total_valid_block_count < (block_t) count);
--	f2fs_bug_on(sbi, inode->i_blocks < sectors);
- 	sbi->total_valid_block_count -= (block_t)count;
- 	if (sbi->reserved_blocks &&
- 		sbi->current_reserved_blocks < sbi->reserved_blocks)
- 		sbi->current_reserved_blocks = min(sbi->reserved_blocks,
- 					sbi->current_reserved_blocks + count);
- 	spin_unlock(&sbi->stat_lock);
-+	if (unlikely(inode->i_blocks < sectors)) {
-+		f2fs_msg(sbi->sb, KERN_WARNING,
-+			"Inconsistent i_blocks, ino:%lu, iblocks:%llu, sectors:%llu",
-+			inode->i_ino,
-+			(unsigned long long)inode->i_blocks,
-+			(unsigned long long)sectors);
-+		set_sbi_flag(sbi, SBI_NEED_FSCK);
-+		return;
-+	}
- 	f2fs_i_blocks_write(inode, count, false, true);
- }
+-		if (insn->ignore)
++		if (insn->ignore || insn->offset == FAKE_JUMP_OFFSET)
+ 			continue;
  
-@@ -2817,7 +2826,6 @@ static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi,
+ 		rela = find_rela_by_dest_range(insn->sec, insn->offset,
+@@ -670,10 +672,10 @@ static int handle_group_alt(struct objtool_file *file,
+ 		clear_insn_state(&fake_jump->state);
  
- bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
- 					block_t blkaddr, int type);
--void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...);
- static inline void verify_blkaddr(struct f2fs_sb_info *sbi,
- 					block_t blkaddr, int type)
- {
+ 		fake_jump->sec = special_alt->new_sec;
+-		fake_jump->offset = -1;
++		fake_jump->offset = FAKE_JUMP_OFFSET;
+ 		fake_jump->type = INSN_JUMP_UNCONDITIONAL;
+ 		fake_jump->jump_dest = list_next_entry(last_orig_insn, list);
+-		fake_jump->ignore = true;
++		fake_jump->func = orig_insn->func;
+ 	}
+ 
+ 	if (!special_alt->new_len) {
 -- 
 2.20.1
 
