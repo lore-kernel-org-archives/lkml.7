@@ -2,195 +2,69 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9B8C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5FAC31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F8020644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7349215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:39:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CZadsBz6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="frwbTaE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392712AbfFMQjl (ORCPT
+        id S2392631AbfFMQjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:39:41 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:44220 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392609AbfFMQjd (ORCPT
+        Thu, 13 Jun 2019 12:39:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39484 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726581AbfFMHJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:39:33 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5DGd8ns038871;
-        Thu, 13 Jun 2019 11:39:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560443948;
-        bh=oAxd7WsqqxVifhcKmMTYcuvBXH5GAfbEq6A7S7y01t4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=CZadsBz6yW6A12cVWwuWQ8fd4z6F8QjnHIBMKdvs/T3a7WcevNTwMybpYoHQ+gGtB
-         eC+dAIp+qMlCEhaeq6BWlNwb51tH5CUKzIJB1ePSyXV1elfUtEvx3H0KKb0aqsk0Cp
-         xNa5RMpgq62tJz990OtcijyQjsdod/99wmTKRVuI=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5DGd8CM108463
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 13 Jun 2019 11:39:08 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 13
- Jun 2019 11:39:08 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 13 Jun 2019 11:39:08 -0500
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5DGd8wc055409;
-        Thu, 13 Jun 2019 11:39:08 -0500
-Subject: Re: [PATCH 03/10] iommu/omap: convert to SPDX license tags
-To:     Yangtao Li <tiny.windzz@gmail.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "kgene@kernel.org" <kgene@kernel.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "agross@kernel.org" <agross@kernel.org>,
-        "david.brown@linaro.org" <david.brown@linaro.org>,
-        "robdclark@gmail.com" <robdclark@gmail.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>
-CC:     "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190613162703.986-1-tiny.windzz@gmail.com>
- <20190613162703.986-3-tiny.windzz@gmail.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <ac67e363-70cf-af64-d634-c3b0b6d408fa@ti.com>
-Date:   Thu, 13 Jun 2019 11:39:08 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 13 Jun 2019 03:09:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=MzWuvFZ+lpFRWxyb8Xqi32aPdYJB0lJW3Q3yHOMsMHI=; b=frwbTaE/RTeW2oLPedYgORYSw
+        ZeiXllpoUuj9f1okPCW97TOmCGkq42ZsRmf/frpvMTXZJVnUsTuQ3i2CpQAOEzTm3kQr3EhW8jgH4
+        UZr6JOD3GpATRzVNfaTY0CbwKibMTIEG1TSesIkEB5ZQ7b6O+Xg18Nq13PEv0cBZeRjJUvq7SObqj
+        aZFok3gZFSfCj6QTERa3GZrUb9GA6yRKM6P6yUmHdzu1CWxvr3j1ykjjOlnkVIp191JAt8/u7lnRv
+        VTvOi0+kJqunvDJ6HHjN1ITkEOcG6jLU2zBBo6viw96QnY/0RWBRfGn6s7ydui1E8nqhvK3SG4eO9
+        V5eBGcAKw==;
+Received: from mpp-cp1-natpool-1-013.ethz.ch ([82.130.71.13] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbJr8-000494-05; Thu, 13 Jun 2019 07:09:06 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Greg Ungerer <gerg@linux-m68k.org>
+Cc:     Michal Simek <monstr@monstr.eu>,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        linux-m68k@lists.linux-m68k.org, linux-riscv@lists.infradead.org,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-kernel@vger.kernel.org
+Subject: binfmt_flat cleanups and RISC-V support v2
+Date:   Thu, 13 Jun 2019 09:08:46 +0200
+Message-Id: <20190613070903.17214-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190613162703.986-3-tiny.windzz@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yangtao,
+Hi Greg,
 
-On 6/13/19 11:26 AM, Yangtao Li wrote:
-> Updates license to use SPDX-License-Identifier.
-> 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+below is a larger stash of cleanups for the binfmt_misc code,
+preparing for the last patch that now trivially adds RISC-V
+support, which will be used for the RISC-V nommu series I am
+about to post.
 
-Thanks for the patch. Can you also update another related file
-while at this. Will leave it to Joerg if he prefers it as a separate
-patch, or folded into this patch.
-
-include/linux/platform_data/iommu-omap.h
-
-Acked-by: Suman Anna <s-anna@ti.com>
-
-regards
-Suman
-
-> ---
->  drivers/iommu/omap-iommu-debug.c | 5 +----
->  drivers/iommu/omap-iommu.c       | 5 +----
->  drivers/iommu/omap-iommu.h       | 5 +----
->  drivers/iommu/omap-iopgtable.h   | 5 +----
->  4 files changed, 4 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/iommu/omap-iommu-debug.c b/drivers/iommu/omap-iommu-debug.c
-> index 4abc0ef522a8..55ec67a45101 100644
-> --- a/drivers/iommu/omap-iommu-debug.c
-> +++ b/drivers/iommu/omap-iommu-debug.c
-> @@ -1,13 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
->  /*
->   * omap iommu: debugfs interface
->   *
->   * Copyright (C) 2008-2009 Nokia Corporation
->   *
->   * Written by Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License version 2 as
-> - * published by the Free Software Foundation.
->   */
->  
->  #include <linux/err.h>
-> diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
-> index d2fb347aa4ff..e6442876913f 100644
-> --- a/drivers/iommu/omap-iommu.c
-> +++ b/drivers/iommu/omap-iommu.c
-> @@ -1,3 +1,4 @@
-> +// SPDX-License-Identifier: GPL-2.0
->  /*
->   * omap iommu: tlb and pagetable primitives
->   *
-> @@ -6,10 +7,6 @@
->   *
->   * Written by Hiroshi DOYU <Hiroshi.DOYU@nokia.com>,
->   *		Paul Mundt and Toshihiro Kobayashi
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License version 2 as
-> - * published by the Free Software Foundation.
->   */
->  
->  #include <linux/dma-mapping.h>
-> diff --git a/drivers/iommu/omap-iommu.h b/drivers/iommu/omap-iommu.h
-> index 1703159ef5af..5256e17d86a7 100644
-> --- a/drivers/iommu/omap-iommu.h
-> +++ b/drivers/iommu/omap-iommu.h
-> @@ -1,13 +1,10 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * omap iommu: main structures
->   *
->   * Copyright (C) 2008-2009 Nokia Corporation
->   *
->   * Written by Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License version 2 as
-> - * published by the Free Software Foundation.
->   */
->  
->  #ifndef _OMAP_IOMMU_H
-> diff --git a/drivers/iommu/omap-iopgtable.h b/drivers/iommu/omap-iopgtable.h
-> index 01a315227bf0..871c2a38f453 100644
-> --- a/drivers/iommu/omap-iopgtable.h
-> +++ b/drivers/iommu/omap-iopgtable.h
-> @@ -1,13 +1,10 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * omap iommu: pagetable definitions
->   *
->   * Copyright (C) 2008-2010 Nokia Corporation
->   *
->   * Written by Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License version 2 as
-> - * published by the Free Software Foundation.
->   */
->  
->  #ifndef _OMAP_IOPGTABLE_H
-> 
-
+Changes since v2:
+ - fix the handling of old format flags
+ - don't pass arguments on stack for RISC-V
+ - small cleanups for flat_v2_reloc_t
