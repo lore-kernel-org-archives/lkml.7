@@ -2,193 +2,167 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCF6C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C42D3C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6740520665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 965C52173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560457998;
+	bh=4ORjBm9h1PVzfT1T37ZB0z9YsICQkKnBW1Bwmyrjpzs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xVHx79THizVQIJVCbzUxqVl7qXTyT/g7TKIjGWSe4jnehxSyQ/H4VcdaDA+vwj1df
+	 p3XRhkkVf7JnHMkbrpdFqbRFKHaGgzAgRL0kxovIJk2chtwxYvpIQ6r0kZEvVRkugC
+	 E8yDsh2XE+a7y6lGfV9CmA5s+cyrf6EpR1GwKgzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729991AbfFMUcx (ORCPT
+        id S1730029AbfFMUdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:32:53 -0400
-Received: from mga01.intel.com ([192.55.52.88]:54105 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfFMUcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:32:46 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 13:32:46 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 Jun 2019 13:32:45 -0700
-Date:   Thu, 13 Jun 2019 13:34:06 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190613203406.GB32404@iweiny-DESK2.sc.intel.com>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
- <20190607110426.GB12765@quack2.suse.cz>
- <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
- <20190608001036.GF14308@dread.disaster.area>
- <20190612123751.GD32656@bombadil.infradead.org>
- <20190612233024.GD14336@iweiny-DESK2.sc.intel.com>
- <20190613005552.GI14363@dread.disaster.area>
+        Thu, 13 Jun 2019 16:33:17 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36268 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfFMUdQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 16:33:16 -0400
+Received: by mail-qt1-f194.google.com with SMTP id p15so4792006qtl.3;
+        Thu, 13 Jun 2019 13:33:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R2FstjYRqQg59DXy+7LjAPTotoewKiLMGMYZxUsswDg=;
+        b=slXjkj1j5Jm7zPn/DBlhDdXtqvGdl5k2k1Vc9O+nBLlxdfjSRYODAuHyOVgKkFYzxh
+         vp7TBDYBmQV/SF7e4gpa52WkRlEqvCtkxyzPBnLYNNHCQc5ISp7MrCHqhKlQySTkRS+D
+         cK+xlSOasWhT+qWKPcUHD3lDddzb0JLK7QIAlVwSrNyGxHbE8wdNHXL1zcfR/mPZ6hVe
+         SyV+fPQBNAiWSmIEocUb8DSLtvEu7n3wbVBIEpTIUjWym1LHsDXWjcz1+XKyLTdM2kUL
+         iVZxl70Ah7J1S1g8YonLd1bwB2t7p/O725vgTxX2DJ42kLwjAF30ualKT/NyVDqyQyOk
+         Z4qg==
+X-Gm-Message-State: APjAAAXdy2T2hFZC0+J4w2mc3Ls4aE1x7WIyvxeyj1oq1DsA05PQax3Y
+        vDaF/ADNTLo2Kwb2QwmlVw==
+X-Google-Smtp-Source: APXvYqz/AjvzkvNZlLu61SiHZDfFw95Oeihx85WNdMpZRhlJlbJo2We6Ewob7bP6MREJhRmhkvqgzQ==
+X-Received: by 2002:a0c:887c:: with SMTP id 57mr4994570qvm.192.1560457995500;
+        Thu, 13 Jun 2019 13:33:15 -0700 (PDT)
+Received: from localhost ([64.188.179.243])
+        by smtp.gmail.com with ESMTPSA id l88sm423749qte.33.2019.06.13.13.33.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 13:33:14 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 14:33:13 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: hwmon: Add DT bindings for TI
+ ads1000/ads1100 ADCs
+Message-ID: <20190613203313.GA23102@bogus>
+References: <20190514225810.12591-1-fancer.lancer@gmail.com>
+ <20190514225810.12591-2-fancer.lancer@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190613005552.GI14363@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20190514225810.12591-2-fancer.lancer@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 10:55:52AM +1000, Dave Chinner wrote:
-> On Wed, Jun 12, 2019 at 04:30:24PM -0700, Ira Weiny wrote:
-> > On Wed, Jun 12, 2019 at 05:37:53AM -0700, Matthew Wilcox wrote:
-> > > On Sat, Jun 08, 2019 at 10:10:36AM +1000, Dave Chinner wrote:
-> > > > On Fri, Jun 07, 2019 at 11:25:35AM -0700, Ira Weiny wrote:
-> > > > > Are you suggesting that we have something like this from user space?
-> > > > > 
-> > > > > 	fcntl(fd, F_SETLEASE, F_LAYOUT | F_UNBREAKABLE);
-> > > > 
-> > > > Rather than "unbreakable", perhaps a clearer description of the
-> > > > policy it entails is "exclusive"?
-> > > > 
-> > > > i.e. what we are talking about here is an exclusive lease that
-> > > > prevents other processes from changing the layout. i.e. the
-> > > > mechanism used to guarantee a lease is exclusive is that the layout
-> > > > becomes "unbreakable" at the filesystem level, but the policy we are
-> > > > actually presenting to uses is "exclusive access"...
-> > > 
-> > > That's rather different from the normal meaning of 'exclusive' in the
-> > > context of locks, which is "only one user can have access to this at
-> > > a time".  As I understand it, this is rather more like a 'shared' or
-> > > 'read' lock.  The filesystem would be the one which wants an exclusive
-> > > lock, so it can modify the mapping of logical to physical blocks.
-> > > 
-> > > The complication being that by default the filesystem has an exclusive
-> > > lock on the mapping, and what we're trying to add is the ability for
-> > > readers to ask the filesystem to give up its exclusive lock.
-> > 
-> > This is an interesting view...
-> > 
-> > And after some more thought, exclusive does not seem like a good name for this
-> > because technically F_WRLCK _is_ an exclusive lease...
-> > 
-> > In addition, the user does not need to take the "exclusive" write lease to be
-> > notified of (broken by) an unexpected truncate.  A "read" lease is broken by
-> > truncate.  (And "write" leases really don't do anything different WRT the
-> > interaction of the FS and the user app.  Write leases control "exclusive"
-> > access between other file descriptors.)
+On Wed, May 15, 2019 at 01:58:08AM +0300, Serge Semin wrote:
+> Add dt-binding documentation for the Texas Instruments ads1000/ads1100 ADCs
+> driver.
 > 
-> I've been assuming that there is only one type of layout lease -
-> there is no use case I've heard of for read/write layout leases, and
-> like you say there is zero difference in behaviour at the filesystem
-> level - they all have to be broken to allow a non-lease truncate to
-> proceed.
+> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> ---
+>  .../devicetree/bindings/hwmon/ads1000.txt     | 61 ++++++++++++++++
+
+Bindings should be separate patch.
+
+>  Documentation/hwmon/ads1000.rst               | 72 +++++++++++++++++++
+>  2 files changed, 133 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/ads1000.txt
+>  create mode 100644 Documentation/hwmon/ads1000.rst
 > 
-> IMO, taking a "read lease" to be able to modify and write to the
-> underlying mapping of a file makes absolutely no sense at all.
-> IOWs, we're talking exaclty about a revokable layout lease vs an
-> exclusive layout lease here, and so read/write really doesn't match
-> the policy or semantics we are trying to provide.
+> diff --git a/Documentation/devicetree/bindings/hwmon/ads1000.txt b/Documentation/devicetree/bindings/hwmon/ads1000.txt
+> new file mode 100644
+> index 000000000000..3907b7da9b33
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/ads1000.txt
+> @@ -0,0 +1,61 @@
+> +ADS1000/ADS1100 (I2C)
+> +
+> +This device is a 12-16 bit A-D converter with 1 input.
 
-I humbly disagree, at least depending on how you look at it...  :-D
+ADC's should be in bindings/iio/adc/
 
-The patches as they stand expect the user to take a "read" layout lease which
-indicates they are currently using "reading" the layout as is.  They are not
-changing ("writing" to) the layout.  They then pin pages which locks parts of
-the layout and therefore they expect no "writers" to change the layout.
+> +
+> +The inputs can be used either as a differential pair of Vin+ Vin- or as a single
+> +ended sensor for Vin+ GND. The inputs mode is platform-dependent and isn't
+> +configured by software in any case.
+> +
+> +Device A-D converter sensitivity can be configured using two parameters:
+> + - pga is the programmable gain amplifier
+> +    0: x1 (default) 
+> +    1: x2
+> +    2: x4
+> +    3: x8
+> + - data_rate in samples per second also affecting the output code accuracy
+> +    0: 128SPS - +/- Vdd*0.488mV (default, ads1000 accepts this rate only)
+> +    1: 32SPS  - +/- Vdd*0.122mV
+> +    2: 16SPS  - +/- Vdd*0.061mV
+> +    3: 8SPS   - +/- Vdd*0.030mV
+> +   Since this parameter also affects the output accuracy, be aware the greater
+> +   SPS the worse accuracy.
+> +
+> +As a result the output value is calculated by the next formulae:
+> +dVin = Cod * Vdd / (PGA * max(|Cod|)), where
+> +max(|Cod|) - maximum possible value of the output code, which depends on the SPS
+> +setting from the table above.
+> +
+> +The ADS1000/ADS1100 dts-node:
+> +
+> +  Required properties:
+> +   - compatible : must be "ti,ads1000" or "ti,ads1100"
+> +   - reg : I2C bus address of the device
+> +   - #address-cells : must be <1>
+> +   - #size-cells : must be <0>
+> +   - vdd-supply : regulator for reference supply voltage (usually fixed)
+> +
+> +  Optional properties:
+> +   - ti,gain : the programmable gain amplifier setting
+> +   - ti,datarate : the converter data rate
 
-The "write" layout lease breaks the "read" layout lease indicating that the
-layout is being written to.  Should the layout be pinned in such a way that the
-layout can't be changed the "layout writer" (truncate) fails.
+IIRC, we have standard properties for these.
 
-In fact, this is what NFS does right now.  The lease it puts on the file is of
-"read" type.
+> +   - ti,voltage-divider : <R1 R2> Ohms inbound voltage dividers,
+> +     so dVin = (R1 + R2)/R2 * dVin
+> +
+> +Example:
+> +
+> +vdd_5v0: fixedregulator@0 {
+> +	compatible = "regulator-fixed";
+> +	regulator-name = "vdd-ref";
+> +	regulator-min-microvolt = <5000000>;
+> +	regulator-max-microvolt = <5000000>;
+> +	regulator-always-on;
+> +};
+> +
+> +tiadc: ads1000@48 {
 
-nfs4layouts.c:
-static int
-nfsd4_layout_setlease(struct nfs4_layout_stateid *ls)
-{
-...
-        fl->fl_flags = FL_LAYOUT;
-        fl->fl_type = F_RDLCK;
-...
-}
+adc@48
 
-I was not changing that much from the NFS patter which meant the break lease
-code worked.
-
-Jans proposal is solid but it means that there is no breaking of the lease.  I
-tried to add an "exclusive" flag to the "write" lease but the __break_lease()
-code gets weird.  I'm not saying it is not possible.  Just that I have not
-seen a good way to do it.
-
-> 
-> > Another thing to consider is that this patch set _allows_ a truncate/hole punch
-> > to proceed _if_ the pages being affected are not actually pinned.  So the
-> > unbreakable/exclusive nature of the lease is not absolute.
-> 
-> If you're talking about the process that owns the layout lease
-> running the truncate, then that is fine.
-> 
-> However, if you are talking about a process that does not own the
-> layout lease being allowed to truncate a file without first breaking
-> the layout lease, then that is fundamentally broken.
-
-In both cases (local or remote process) the lease is broken prior to the
-attempt to truncate.
-
-> 
-> i.e. If you don't own a layout lease, the layout leases must be
-> broken before the truncate can proceed.
-
-Agreed.
-
->
-> If it's an exclusive lease,
-> then you cannot break the lease and the truncate *must fail before
-> it is started*. i.e.  the layout lease state must be correctly
-> resolved before we start an operation that may modify a file layout.
-> 
-> Determining if we can actually do the truncate based on page state
-> occurs /after/ the lease says the truncate can proceed....
-
-That makes a lot of sense and that is the way the patch currently works.
-
-I need to think on this some more.  Keeping the lease may not be critical.  As
-discussed with Jan; dealing with close() is best dealt with by tracking the
-actual pins on the file.  If that works then we could potentially keep the
-lease semantics closer to what you and I are talking about here.
-
-Ira
-
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
-> 
+> +	compatible = "ti,ads1000";
+> +	reg = <0x48>;
+> +
+> +	vdd-supply = <&vdd_5v0>;
+> +	ti,gain = <0>;
+> +	ti,voltage-divider = <31600 3600>;
+> +};
+> +
