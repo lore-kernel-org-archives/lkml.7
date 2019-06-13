@@ -2,125 +2,89 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FE7C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E23C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA7D21537
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57E121473
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbfFMVJb (ORCPT
+        id S1730221AbfFMVMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 17:09:31 -0400
-Received: from mga06.intel.com ([134.134.136.31]:4042 "EHLO mga06.intel.com"
+        Thu, 13 Jun 2019 17:12:02 -0400
+Received: from mga02.intel.com ([134.134.136.20]:28008 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfFMVJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 17:09:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1725747AbfFMVMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 17:12:01 -0400
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 14:09:29 -0700
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 14:12:01 -0700
 X-ExtLoop1: 1
-Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
-  by fmsmga004.fm.intel.com with ESMTP; 13 Jun 2019 14:09:28 -0700
-Received: from orsmsx116.amr.corp.intel.com ([169.254.7.166]) by
- ORSMSX108.amr.corp.intel.com ([169.254.2.211]) with mapi id 14.03.0415.000;
- Thu, 13 Jun 2019 14:09:28 -0700
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "Stephen Smalley" <sds@tycho.nsa.gov>
-CC:     "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "serge@hallyn.com" <serge@hallyn.com>,
-        "paul@paul-moore.com" <paul@paul-moore.com>,
-        "eparis@parisplace.org" <eparis@parisplace.org>,
-        "jethro@fortanix.com" <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "pmccallum@redhat.com" <pmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        "Tricca, Philip B" <philip.b.tricca@intel.com>
-Subject: RE: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
- SELinux
-Thread-Topic: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks
- in SELinux
-Thread-Index: AQHVH1ilvNGS2ZisK0eWTCWidam/YaaW7RmA///+7GCAA25ngIAAHjKA//+fg4A=
-Date:   Thu, 13 Jun 2019 21:09:27 +0000
-Message-ID: <960B34DE67B9E140824F1DCDEC400C0F65503E13@ORSMSX116.amr.corp.intel.com>
-References: <cover.1560131039.git.cedric.xing@intel.com>
- <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
- <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
- <960B34DE67B9E140824F1DCDEC400C0F65502A85@ORSMSX116.amr.corp.intel.com>
- <b7f3decf-b1d2-01b1-6294-ccf9ba2d5df4@tycho.nsa.gov>
- <20190613194833.GB18385@linux.intel.com>
-In-Reply-To: <20190613194833.GB18385@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOGUwZGZjY2YtYTUwNi00ODI2LTg0ZjMtYTBhM2YwY2UwYmM5IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiMVNLeVlodVhoQXZPXC9kZmxOb3dydVFtWmZYYm5McWZEeGxXRHByM1dBOWlaS3Nwa1FJMHNHdmgxZmxtMUE5akoifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga006.jf.intel.com with ESMTP; 13 Jun 2019 14:12:00 -0700
+Date:   Thu, 13 Jun 2019 14:13:21 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190613211321.GC32404@iweiny-DESK2.sc.intel.com>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
+ <20190607110426.GB12765@quack2.suse.cz>
+ <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
+ <20190608001036.GF14308@dread.disaster.area>
+ <20190612123751.GD32656@bombadil.infradead.org>
+ <20190613002555.GH14363@dread.disaster.area>
+ <20190613152755.GI32656@bombadil.infradead.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613152755.GI32656@bombadil.infradead.org>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBDaHJpc3RvcGhlcnNvbiwgU2VhbiBKDQo+IFNlbnQ6IFRodXJzZGF5LCBKdW5lIDEz
-LCAyMDE5IDEyOjQ5IFBNDQo+IA0KPiA+ID5CeSAiU0dYIiwgZGlkIHlvdSBtZWFuIHRoZSBTR1gg
-c3Vic3lzdGVtIGJlaW5nIHVwc3RyZWFtZWQ/IEl0IGRvZXNu4oCZdA0KPiA+ID50cmFjayB0aGF0
-IHN0YXRlLiBJbiBwcmFjdGljZSwgdGhlcmUncyBubyB3YXkgZm9yIFNHWCB0byB0cmFjayBpdA0K
-PiA+ID5iZWNhdXNlIHRoZXJlJ3Mgbm8gdm1fb3BzLT5tYXlfbXByb3RlY3QoKSBjYWxsYmFjay4g
-SXQgZG9lc24ndCBmb2xsb3cNCj4gPiA+dGhlIHBoaWxvc29waHkgb2YgTGludXggZWl0aGVyLCBh
-cyBtcHJvdGVjdCgpIGRvZXNuJ3QgdHJhY2sgaXQgZm9yDQo+ID4gPnJlZ3VsYXIgbWVtb3J5LiBB
-bmQgaXQgZG9lc24ndCBoYXZlIGEgdXNlIHdpdGhvdXQgTFNNLCBzbyBJIGJlbGlldmUNCj4gPiA+
-aXQgbWFrZXMgbW9yZSBzZW5zZSB0byB0cmFjayBpdCBpbnNpZGUgTFNNLg0KPiA+DQo+ID4gWWVz
-LCB0aGUgU0dYIGRyaXZlci9zdWJzeXN0ZW0uICBJIGhhZCB0aGUgaW1wcmVzc2lvbiBmcm9tIFNl
-YW4gdGhhdCBpdA0KPiA+IGRvZXMgdHJhY2sgdGhpcyBraW5kIG9mIHBlci1wYWdlIHN0YXRlIGFs
-cmVhZHkgaW4gc29tZSBtYW5uZXIsIGJ1dA0KPiA+IHBvc3NpYmx5IGhlIG1lYW5zIGl0IGRvZXMg
-dW5kZXIgYSBnaXZlbiBwcm9wb3NhbCBhbmQgbm90IGluIHRoZQ0KPiBjdXJyZW50IGRyaXZlci4N
-Cj4gDQo+IFllYWgsIHVuZGVyIGEgZ2l2ZW4gcHJvcG9zYWwuICBTR1ggaGFzIHBlci1wYWdlIHRy
-YWNraW5nLCBhZGRpbmcgbmV3DQo+IGZsYWdzIGlzIGZhaXJseSBlYXN5LiAgUGhpbG9zb3BoaWNh
-bCBvYmplY3Rpb25zIGFzaWRlLA0KPiBhZGRpbmcgLm1heV9tcHJvdGVjdCgpIGlzIHRyaXZpYWwu
-DQoNCkFzIEkgcG9pbnRlZCBvdXQgaW4gYW4gZWFybGllciBlbWFpbCwgcHJvdGVjdGlvbiBmbGFn
-cyBhcmUgYXNzb2NpYXRlZCB3aXRoIHJhbmdlcy4gVGhleSBjb3VsZCBvZiBjb3Vyc2UgYmUgZHVw
-bGljYXRlZCB0byBldmVyeSBwYWdlIGJ1dCB0aGF0IHdpbGwgaHVydCBwZXJmb3JtYW5jZSBiZWNh
-dXNlIGV2ZXJ5IHBhZ2Ugd2l0aGluIHRoZSByYW5nZSB3b3VsZCBoYXZlIHRvIGJlIHRlc3RlZCBp
-bmRpdmlkdWFsbHkuDQoNCkZ1cnRoZXJtb3JlLCB0aG91Z2ggLm1heV9wcm90ZWN0KClpcyBhYmxl
-IHRvIG1ha2UgdGhlIGRlY2lzaW9uLCBJIGRvbid0IHRoaW5rIGl0IGNhbiBkbyB0aGUgYXVkaXQg
-bG9nIGFzIHdlbGwsIHVubGVzcyBpdCBpcyBjb2RlZCBpbiBhbiBTRUxpbnV4IHNwZWNpZmljIHdh
-eS4gVGhlbiBJIHdvbmRlciBob3cgaXQgY291bGQgd29yayB3aXRoIExTTSBtb2R1bGVzIG90aGVy
-IHRoYW4gU0VMaW51eC4NCg0KPiANCj4gPiBFdmVuIHRoZSAjYiByZW1lbWJlcmluZyBtaWdodCBl
-bmQgdXAgYmVpbmcgU0VMaW51eC1zcGVjaWZpYyBpZiB3ZSBhbHNvDQo+ID4gaGF2ZSB0byByZW1l
-bWJlciB0aGUgb3JpZ2luYWwgaW5wdXRzIHVzZWQgdG8gY29tcHV0ZSB0aGUgYW5zd2VyIHNvDQo+
-ID4gdGhhdCB3ZSBjYW4gYXVkaXQgdGhhdCBpbmZvcm1hdGlvbiB3aGVuIGFjY2VzcyBpcyBkZW5p
-ZWQgbGF0ZXIgdXBvbg0KPiA+IG1wcm90ZWN0KCkuICBBdCB0aGUgbGVhc3Qgd2UnZCBuZWVkIGl0
-IHRvIHNhdmUgc29tZSBvcGFxdWUgZGF0YSBhbmQNCj4gPiBwYXNzIGl0IHRvIGEgY2FsbGJhY2sg
-aW50byBTRUxpbnV4IHRvIHBlcmZvcm0gdGhhdCBhdWRpdGluZy4NCg==
+On Thu, Jun 13, 2019 at 08:27:55AM -0700, Matthew Wilcox wrote:
+> On Thu, Jun 13, 2019 at 10:25:55AM +1000, Dave Chinner wrote:
+> > e.g. Process A has an exclusive layout lease on file F. It does an
+> > IO to file F. The filesystem IO path checks that Process A owns the
+> > lease on the file and so skips straight through layout breaking
+> > because it owns the lease and is allowed to modify the layout. It
+> > then takes the inode metadata locks to allocate new space and write
+> > new data.
+> > 
+> > Process B now tries to write to file F. The FS checks whether
+> > Process B owns a layout lease on file F. It doesn't, so then it
+> > tries to break the layout lease so the IO can proceed. The layout
+> > breaking code sees that process A has an exclusive layout lease
+> > granted, and so returns -ETXTBSY to process B - it is not allowed to
+> > break the lease and so the IO fails with -ETXTBSY.
+> 
+> This description doesn't match the behaviour that RDMA wants either.
+> Even if Process A has a lease on the file, an IO from Process A which
+> results in blocks being freed from the file is going to result in the
+> RDMA device being able to write to blocks which are now freed (and
+> potentially reallocated to another file).
+
+I don't understand why this would not work for RDMA?  As long as the layout
+does not change the page pins can remain in place.
+
+Ira
+
