@@ -2,198 +2,138 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0900AC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE203C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D58FD2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:31:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbPmIijf"
+	by mail.kernel.org (Postfix) with ESMTP id 8E44A206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732450AbfFMPbW (ORCPT
+        id S1732646AbfFMPb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:31:22 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35827 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728625AbfFMLDh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 07:03:37 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c6so9672731wml.0;
-        Thu, 13 Jun 2019 04:03:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=AAokdGbMPUTql2roL80hHEWTvMypuX8aD+4nP0eZhJg=;
-        b=CbPmIijfPXDoXV/6fdU9wdARXOaTCWwYTRdbNMPEmpkRZ8maFC/ZdmRxxGlMTQ/3hz
-         vUXJyE0vWGq3gDdSIM6WkaglYKFKaE419iDXt3fCi3zXgPf29om3qzrsNr92kK2jSsQ2
-         BltsDxjefMJJ+nrbROi8RUd4lB7Iwv7DZFvFaYg5NeTpQUd+9FOhwYyEuFNf5l1mnfJ9
-         Y+Z41fwXHawT+PMi33vBe4vP5SBDL9vYSVxgs49WI2WwtWgYCvyfIwad4xc2HdeKVoml
-         1Rv2+r97sz7/Xw/G23U2yGnckqm/7+spNmLhqzhrudiVYTHaGfI19r6vgEb8sY9w32tb
-         3m5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=AAokdGbMPUTql2roL80hHEWTvMypuX8aD+4nP0eZhJg=;
-        b=SJ3KaZIBpFybJBUXyU+rN0OHJsWahGZ+R2eQji7WdGq85ahtcZfSMJE4h2HKPIDFC0
-         B/KUxAjEVL6smdIpBYtsWu7q9i9+G9k7cr4X51kWmDsY0Wh7Yx9BszNL58vMpOphBPla
-         m4SwaKV3MSXD6v4kwoY/nwLQSex4w1eW9P6hkwLuN4/CHcytoZIMNXeFltZJezcZtfmT
-         WUaiG9O9EJteNL2P8Ba04ejZhjHDDCr1duRoC+k6r7GgfGDIOyvG1TF8VJeOomfjcBn4
-         NnZKdPUJl3XotIEUu20PL39cJtEq/VdAZnTAazb0m+IZSRBOnb6elwq9PuuHXCA77ji2
-         OoIg==
-X-Gm-Message-State: APjAAAVNHvYrbk8MoNNp1KvBWwLyDtbhAaQUpz+Wt1+wx+qTUThqxLKN
-        8oJs8HOH/Es4DjRCcwL8MvAh18vo
-X-Google-Smtp-Source: APXvYqxKn6FTCHsgUKeM+24rUe23nKUqGI6M4rYLebz+9Ii33fcE0iibfJ+k2hx4q/8/b5f3Bul8zw==
-X-Received: by 2002:a05:600c:228f:: with SMTP id 15mr3447006wmf.31.1560423813983;
-        Thu, 13 Jun 2019 04:03:33 -0700 (PDT)
-Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id f21sm2596606wmb.2.2019.06.13.04.03.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 04:03:33 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Wanpeng Li <wanpengli@tencent.com>
-Subject: [PATCH] KVM: x86: clean up conditions for asynchronous page fault handling
-Date:   Thu, 13 Jun 2019 13:03:32 +0200
-Message-Id: <1560423812-51166-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 13 Jun 2019 11:31:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:37938 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728612AbfFMLCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 07:02:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C4927367;
+        Thu, 13 Jun 2019 04:02:24 -0700 (PDT)
+Received: from [10.1.196.120] (e121650-lin.cambridge.arm.com [10.1.196.120])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0326E3F694;
+        Thu, 13 Jun 2019 04:04:06 -0700 (PDT)
+Subject: Re: [PATCH 3/7] perf: arm64: Use rseq to test userspace access to pmu
+ counters
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+References: <20190611125315.18736-1-raphael.gault@arm.com>
+ <20190611125315.18736-4-raphael.gault@arm.com>
+ <20190611143346.GB28689@kernel.org>
+ <20190611165755.GG29008@lakrids.cambridge.arm.com>
+ <1620360283.42036.1560281622707.JavaMail.zimbra@efficios.com>
+From:   Raphael Gault <raphael.gault@arm.com>
+Message-ID: <b3a5c6d6-5827-36e1-f9ef-9602eaa5741d@arm.com>
+Date:   Thu, 13 Jun 2019 12:02:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1620360283.42036.1560281622707.JavaMail.zimbra@efficios.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even when asynchronous page fault is disabled, KVM does not want to pause
-the host if a guest triggers a page fault; instead it will put it into
-an artificial HLT state that allows running other host processes while
-allowing interrupt delivery into the guest.
+Hi Mathieu, Mark,
 
-However, the way this feature is triggered is a bit confusing.
-First, it is not used for page faults while a nested guest is
-running: but this is not an issue since the artificial halt
-is completely invisible to the guest, either L1 or L2.  Second,
-it is used even if kvm_halt_in_guest() returns true; in this case,
-the guest probably should not pay the additional latency cost of the
-artificial halt, and thus we should handle the page fault in a
-completely synchronous way.
+On 6/11/19 8:33 PM, Mathieu Desnoyers wrote:
+> ----- On Jun 11, 2019, at 6:57 PM, Mark Rutland mark.rutland@arm.com wrote:
+> 
+>> Hi Arnaldo,
+>>
+>> On Tue, Jun 11, 2019 at 11:33:46AM -0300, Arnaldo Carvalho de Melo wrote:
+>>> Em Tue, Jun 11, 2019 at 01:53:11PM +0100, Raphael Gault escreveu:
+>>>> Add an extra test to check userspace access to pmu hardware counters.
+>>>> This test doesn't rely on the seqlock as a synchronisation mechanism but
+>>>> instead uses the restartable sequences to make sure that the thread is
+>>>> not interrupted when reading the index of the counter and the associated
+>>>> pmu register.
+>>>>
+>>>> In addition to reading the pmu counters, this test is run several time
+>>>> in order to measure the ratio of failures:
+>>>> I ran this test on the Juno development platform, which is big.LITTLE
+>>>> with 4 Cortex A53 and 2 Cortex A57. The results vary quite a lot
+>>>> (running it with 100 tests is not so long and I did it several times).
+>>>> I ran it once with 10000 iterations:
+>>>> `runs: 10000, abort: 62.53%, zero: 34.93%, success: 2.54%`
+>>>>
+>>>> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+>>>> ---
+>>>>   tools/perf/arch/arm64/include/arch-tests.h    |   5 +-
+>>>>   tools/perf/arch/arm64/include/rseq-arm64.h    | 220 ++++++++++++++++++
+>>>
+>>> So, I applied the first patch in this series, but could you please break
+>>> this patch into at least two, one introducing the facility
+>>> (include/rseq*) and the second adding the test?
+>>>
+>>> We try to enforce this kind of granularity as down the line we may want
+>>> to revert one part while the other already has other uses and thus
+>>> wouldn't allow a straight revert.
+>>>
+>>> Also, can this go to tools/arch/ instead? Is this really perf specific?
+>>> Isn't there any arch/arm64/include files for the kernel that we could
+>>> mirror and have it checked for drift in tools/perf/check-headers.sh?
+>>
+>> The rseq bits aren't strictly perf specific, and I think the existing
+>> bits under tools/testing/selftests/rseq/ could be factored out to common
+>> locations under tools/include/ and tools/arch/*/include/.
+> 
+> Hi Mark,
+> 
+> Thanks for CCing me!
+> 
+> Or into a stand-alone librseq project:
+> 
+> https://github.com/compudj/librseq (currently a development branch in
+> my own github)
+> 
+> I don't see why this user-space code should sit in the kernel tree.
+> It is not tooling-specific.
+> 
 
-By introducing a new function kvm_can_deliver_async_pf, this patch
-commonizes the code that chooses whether to deliver an async page fault
-(kvm_arch_async_page_not_present) and the code that chooses whether a
-page fault should be handled synchronously (kvm_can_do_async_pf).
+I understand your point but I have to admit that I don't really see how 
+to make it work together with the test which require those definitions.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/mmu.c | 13 ------------
- arch/x86/kvm/x86.c | 59 ++++++++++++++++++++++++++++++++++++++++++++----------
- 2 files changed, 48 insertions(+), 24 deletions(-)
+>>
+>>  From a scan, those already duplicate barriers and other helpers which
+>> already have definitions under tools/, which seems unfortunate. :/
+>>
 
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 3384c539d150..771349e72d2a 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -4040,19 +4040,6 @@ static int kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu, gva_t gva, gfn_t gfn)
- 	return kvm_setup_async_pf(vcpu, gva, kvm_vcpu_gfn_to_hva(vcpu, gfn), &arch);
- }
- 
--bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
--{
--	if (unlikely(!lapic_in_kernel(vcpu) ||
--		     kvm_event_needs_reinjection(vcpu) ||
--		     vcpu->arch.exception.pending))
--		return false;
--
--	if (!vcpu->arch.apf.delivery_as_pf_vmexit && is_guest_mode(vcpu))
--		return false;
--
--	return kvm_x86_ops->interrupt_allowed(vcpu);
--}
--
- static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
- 			 gva_t gva, kvm_pfn_t *pfn, bool write, bool *writable)
- {
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 6200d5a51f13..2fe53b931b72 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9775,6 +9775,36 @@ static int apf_get_user(struct kvm_vcpu *vcpu, u32 *val)
- 				      sizeof(u32));
- }
- 
-+static bool kvm_can_deliver_async_pf(struct kvm_vcpu *vcpu)
-+{
-+	if (!vcpu->arch.apf.delivery_as_pf_vmexit && is_guest_mode(vcpu))
-+		return false;
-+
-+	if (!(vcpu->arch.apf.msr_val & KVM_ASYNC_PF_ENABLED) ||
-+	    (vcpu->arch.apf.send_user_only &&
-+	     kvm_x86_ops->get_cpl(vcpu) == 0))
-+		return false;
-+
-+	return true;
-+}
-+
-+bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
-+{
-+	if (unlikely(!lapic_in_kernel(vcpu) ||
-+		     kvm_event_needs_reinjection(vcpu) ||
-+		     vcpu->arch.exception.pending))
-+		return false;
-+
-+	if (kvm_hlt_in_guest(vcpu->kvm) && !kvm_can_deliver_async_pf(vcpu))
-+		return false;
-+
-+	/*
-+	 * If interrupts are off we cannot even use an artificial
-+	 * halt state.
-+	 */
-+	return kvm_x86_ops->interrupt_allowed(vcpu);
-+}
-+
- void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
- 				     struct kvm_async_pf *work)
- {
-@@ -9783,19 +9813,26 @@ void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
- 	trace_kvm_async_pf_not_present(work->arch.token, work->gva);
- 	kvm_add_async_pf_gfn(vcpu, work->arch.gfn);
- 
--	if (!(vcpu->arch.apf.msr_val & KVM_ASYNC_PF_ENABLED) ||
--	    (vcpu->arch.apf.send_user_only &&
--	     kvm_x86_ops->get_cpl(vcpu) == 0))
-+	if (!kvm_can_deliver_async_pf(vcpu) ||
-+	    apf_put_user(vcpu, KVM_PV_REASON_PAGE_NOT_PRESENT)) {
-+		/*
-+		 * It is not possible to deliver a paravirtualized asynchronous
-+		 * page fault, but putting the guest in an artificial halt state
-+		 * can be beneficial nevertheless: if an interrupt arrives, we
-+		 * can deliver it timely and perhaps the guest will schedule
-+		 * another process.  When the instruction that triggered a page
-+		 * fault is retried, hopefully the page will be ready in the host.
-+		 */
- 		kvm_make_request(KVM_REQ_APF_HALT, vcpu);
--	else if (!apf_put_user(vcpu, KVM_PV_REASON_PAGE_NOT_PRESENT)) {
--		fault.vector = PF_VECTOR;
--		fault.error_code_valid = true;
--		fault.error_code = 0;
--		fault.nested_page_fault = false;
--		fault.address = work->arch.token;
--		fault.async_page_fault = true;
--		kvm_inject_page_fault(vcpu, &fault);
- 	}
-+
-+	fault.vector = PF_VECTOR;
-+	fault.error_code_valid = true;
-+	fault.error_code = 0;
-+	fault.nested_page_fault = false;
-+	fault.address = work->arch.token;
-+	fault.async_page_fault = true;
-+	kvm_inject_page_fault(vcpu, &fault);
- }
- 
- void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
+Also I realize that there is a duplicate with definitions introduced in 
+the selftests but I kind of simplified the macros I'm using to get rid 
+of what wasn't useful to me at the moment. (mainly the loop labels and 
+parameter injections in the asm statement)
+I understand what both Mark and Arnaldo are saying about moving it out 
+of perf so that it is not duplicated but my question is whether it is a 
+good thing to do as is since it is not exactly the same content as 
+what's in the selftests.
+
+I hope you can understand my concerns and I'd like to hear your opinions 
+on that matter.
+
+Thanks,
+
 -- 
-1.8.3.1
-
+Raphael Gault
