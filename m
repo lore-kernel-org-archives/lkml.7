@@ -2,91 +2,77 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC2CC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B03C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 846CD21773
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tHlQpyqz"
+	by mail.kernel.org (Postfix) with ESMTP id 72AF7206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730167AbfFMP2D (ORCPT
+        id S1730375AbfFMP2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:28:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52048 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbfFMP17 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:27:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vn04L/39CxGmnFvWZbLFG3AukuBPlzgMR3HJ4g3XYMs=; b=tHlQpyqzo7ZQBVB5wRrQJI46t
-        aGvrn7sclf7JSvki0K76DhAQ9grt++rr3RsyMukb0ZOE6ao5QkZuVltTGW0kSmf01kovvUtAmSiMC
-        FRCnkWcmo+pTrNeUZtpZy52SEQbCrGAv6HRyCq081N6v+J6AluX52Ap/rjGwfAbZNww9f9q25CrJ4
-        2/28x8clrMHc5fH8S/5jQZoozJIYzfzvecMqlkikJzXv1MdjRaDtLgMF0+C/+TZhLxUqIdCboLufF
-        QARq/0WKMHCQBh07+I4aQgQBCb/hzuiZZD053C7PNwE5NpsajGwqxDMtci1Q9lcRzIGXjOlZwRRQS
-        8bRUD+XPw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbRdr-0002TD-Ht; Thu, 13 Jun 2019 15:27:55 +0000
-Date:   Thu, 13 Jun 2019 08:27:55 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190613152755.GI32656@bombadil.infradead.org>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
- <20190607110426.GB12765@quack2.suse.cz>
- <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
- <20190608001036.GF14308@dread.disaster.area>
- <20190612123751.GD32656@bombadil.infradead.org>
- <20190613002555.GH14363@dread.disaster.area>
+        Thu, 13 Jun 2019 11:28:09 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:60940 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728966AbfFMLcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 07:32:09 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 322AA20A7E;
+        Thu, 13 Jun 2019 13:32:08 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 1A28220514;
+        Thu, 13 Jun 2019 13:32:08 +0200 (CEST)
+To:     Kishon Vijay Abraham <kishon@ti.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: [PATCH v1] phy: qcom-qmp: Raise qcom_qmp_phy_enable() polling delay
+Message-ID: <92d97c68-d226-6290-37d6-f46f42ea604b@free.fr>
+Date:   Thu, 13 Jun 2019 13:32:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613002555.GH14363@dread.disaster.area>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Jun 13 13:32:08 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 10:25:55AM +1000, Dave Chinner wrote:
-> e.g. Process A has an exclusive layout lease on file F. It does an
-> IO to file F. The filesystem IO path checks that Process A owns the
-> lease on the file and so skips straight through layout breaking
-> because it owns the lease and is allowed to modify the layout. It
-> then takes the inode metadata locks to allocate new space and write
-> new data.
-> 
-> Process B now tries to write to file F. The FS checks whether
-> Process B owns a layout lease on file F. It doesn't, so then it
-> tries to break the layout lease so the IO can proceed. The layout
-> breaking code sees that process A has an exclusive layout lease
-> granted, and so returns -ETXTBSY to process B - it is not allowed to
-> break the lease and so the IO fails with -ETXTBSY.
+readl_poll_timeout() calls usleep_range() to sleep between reads.
+usleep_range() doesn't work efficiently for tiny values.
 
-This description doesn't match the behaviour that RDMA wants either.
-Even if Process A has a lease on the file, an IO from Process A which
-results in blocks being freed from the file is going to result in the
-RDMA device being able to write to blocks which are now freed (and
-potentially reallocated to another file).
+Raise the polling delay in qcom_qmp_phy_enable() to bring it in line
+with the delay in qcom_qmp_phy_com_init().
+
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+---
+Vivek, do you remember why you didn't use the same delay value in
+qcom_qmp_phy_enable) and qcom_qmp_phy_com_init() ?
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index bb522b915fa9..34ff6434da8f 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -1548,7 +1548,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+ 	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
+ 	mask = cfg->mask_pcs_ready;
+ 
+-	ret = readl_poll_timeout(status, val, val & mask, 1,
++	ret = readl_poll_timeout(status, val, val & mask, 10,
+ 				 PHY_INIT_COMPLETE_TIMEOUT);
+ 	if (ret) {
+ 		dev_err(qmp->dev, "phy initialization timed-out\n");
+-- 
+2.17.1
