@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC43C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A727C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE0720679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53A9320679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441946;
-	bh=JHD8uJsrs9qSSu80/LOyMdWaKoSA5Gpaojx5hYUmXng=;
+	s=default; t=1560441950;
+	bh=qxTOZIw1tpF62jIJR/3nSkXVALiku3MwWLds57pjwzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OlMwdQLtg5njrj47cJH4LvpyRfCqZtQZHmrfvJw4+oWYQkbiuproQaE//tb0vJHC1
-	 b9Q/8qYei1P8/Ru+r5KKtVGUoXtcRrVa+Y6SK+kWCxoJRHSx10hMmAjLTNgSCA1pu0
-	 RDcsRfVunv/UH2DgBSnaCBbljT6f7Jgm1zrOk0Dg=
+	b=rnMo43LMkgOFwIymQZAmgVjN1Wt+lOHEUdiu/DMb6XnCeHJiaAy6cdZ52IQ63iOcD
+	 QgH93OCtzFvY3vpG463+nF6H2dzE9FUPHFZzunQ45S93sYSHf4hjuKB+AcsrV4h5nn
+	 WnuVxZr/06XJeG6PojHGIRGxFyJ6/23QlH81/Cbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390801AbfFMQFp (ORCPT
+        id S2390946AbfFMQFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:05:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34916 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:05:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731333AbfFMIqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:46:22 -0400
+        id S1731335AbfFMIqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:46:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 822262147A;
-        Thu, 13 Jun 2019 08:46:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 940E620851;
+        Thu, 13 Jun 2019 08:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415581;
-        bh=JHD8uJsrs9qSSu80/LOyMdWaKoSA5Gpaojx5hYUmXng=;
+        s=default; t=1560415584;
+        bh=qxTOZIw1tpF62jIJR/3nSkXVALiku3MwWLds57pjwzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RnjuxKMZxlTg4w7q1DFrqXjOqqRxymMCtQmW4KTm0QS5KBIFYvY6OJpqiYa74qTz6
-         cvWJpskLHqK83HRLaF2ISs806+MFkloJy8ThFumoWhPw3XdXq5+reDjK2l1JpR/88+
-         D1hY5UhsSOe44aZDZ9pOD5c7v1klipk4LhI748fU=
+        b=nmntnetUB23TytaLWd/a9jayBXpZfYkLDQ9tDnHi6SCpkJc8pvsyGZSXUNYM1Pa0V
+         9XzIzGcMiW3I/KMs3s6CEXT++aDkdvDNSt+kcVEsW+syPwcrgjH1E8/G/VcE90Ddgo
+         AyI2J7CAOaRUT8tdOpsiChZ6BsjIJycHP2+K04S4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 053/155] f2fs: fix to retrieve inline xattr space
-Date:   Thu, 13 Jun 2019 10:32:45 +0200
-Message-Id: <20190613075656.096163738@linuxfoundation.org>
+Subject: [PATCH 5.1 054/155] f2fs: fix to do checksum even if inode page is uptodate
+Date:   Thu, 13 Jun 2019 10:32:46 +0200
+Message-Id: <20190613075656.145122103@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,73 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 45a746881576977f85504c21a75547f10c5c0a8e ]
+[ Upstream commit b42b179bda9ff11075a6fc2bac4d9e400513679a ]
 
-With below mkfs and mount option, generic/339 of fstest will report that
-scratch image becomes corrupted.
+As Jungyeon reported in bugzilla:
 
-MKFS_OPTIONS  -- -O extra_attr -O project_quota -O inode_checksum -O flexible_inline_xattr -O inode_crtime -f /dev/zram1
-MOUNT_OPTIONS -- -o acl,user_xattr -o discard,noinline_xattr /dev/zram1 /mnt/scratch_f2fs
+https://bugzilla.kernel.org/show_bug.cgi?id=203221
 
-[ASSERT] (f2fs_check_dirent_position:1315)  --> Wrong position of dirent pino:1970, name: (...)
-level:8, dir_level:0, pgofs:951, correct range:[900, 901]
+- Overview
+When mounting the attached crafted image and running program, this error is reported.
 
-In old kernel, inline data and directory always reserved 200 bytes in
-inode layout, even if inline_xattr is disabled, then new kernel tries
-to retrieve that space for non-inline xattr inode, but for inline dentry,
-its layout size should be fixed, so we just keep that reserved space.
+The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
 
-But the problem here is that, after inline dentry conversion, inline
-dentry layout no longer exists, if we still reserve inline xattr space,
-after dents updates, there will be a hole in inline xattr space, which
-can break hierarchy hash directory structure.
+- Reproduces
+cc poc_07.c
+mkdir test
+mount -t f2fs tmp.img test
+cp a.out test
+cd test
+sudo ./a.out
 
-This patch fixes this issue by retrieving inline xattr space after
-inline dentry conversion.
+- Messages
+ kernel BUG at fs/f2fs/node.c:1279!
+ RIP: 0010:read_node_page+0xcf/0xf0
+ Call Trace:
+  __get_node_page+0x6b/0x2f0
+  f2fs_iget+0x8f/0xdf0
+  f2fs_lookup+0x136/0x320
+  __lookup_slow+0x92/0x140
+  lookup_slow+0x30/0x50
+  walk_component+0x1c1/0x350
+  path_lookupat+0x62/0x200
+  filename_lookup+0xb3/0x1a0
+  do_fchmodat+0x3e/0xa0
+  __x64_sys_chmod+0x12/0x20
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Fixes: 6afc662e68b5 ("f2fs: support flexible inline xattr size")
+On below paths, we can have opportunity to readahead inode page
+- gc_node_segment -> f2fs_ra_node_page
+- gc_data_segment -> f2fs_ra_node_page
+- f2fs_fill_dentries -> f2fs_ra_node_page
+
+Unlike synchronized read, on readahead path, we can set page uptodate
+before verifying page's checksum, then read_node_page() will trigger
+kernel panic once it encounters a uptodated page w/ incorrect checksum.
+
+So considering readahead scenario, we have to do checksum each time
+when loading inode page even if it is uptodated.
+
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/inline.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ fs/f2fs/inode.c | 4 ++--
+ fs/f2fs/node.c  | 7 ++++---
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
-index bb6a152310ef..404d2462a0fe 100644
---- a/fs/f2fs/inline.c
-+++ b/fs/f2fs/inline.c
-@@ -420,6 +420,14 @@ static int f2fs_move_inline_dirents(struct inode *dir, struct page *ipage,
- 	stat_dec_inline_dir(dir);
- 	clear_inode_flag(dir, FI_INLINE_DENTRY);
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index 4edd6f2bb491..b53952a15ffa 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -177,8 +177,8 @@ bool f2fs_inode_chksum_verify(struct f2fs_sb_info *sbi, struct page *page)
  
-+	/*
-+	 * should retrieve reserved space which was used to keep
-+	 * inline_dentry's structure for backward compatibility.
-+	 */
-+	if (!f2fs_sb_has_flexible_inline_xattr(F2FS_I_SB(dir)) &&
-+			!f2fs_has_inline_xattr(dir))
-+		F2FS_I(dir)->i_inline_xattr_size = 0;
-+
- 	f2fs_i_depth_write(dir, 1);
- 	if (i_size_read(dir) < PAGE_SIZE)
- 		f2fs_i_size_write(dir, PAGE_SIZE);
-@@ -501,6 +509,15 @@ static int f2fs_move_rehashed_dirents(struct inode *dir, struct page *ipage,
+ 	if (provided != calculated)
+ 		f2fs_msg(sbi->sb, KERN_WARNING,
+-			"checksum invalid, ino = %x, %x vs. %x",
+-			ino_of_node(page), provided, calculated);
++			"checksum invalid, nid = %lu, ino_of_node = %x, %x vs. %x",
++			page->index, ino_of_node(page), provided, calculated);
  
- 	stat_dec_inline_dir(dir);
- 	clear_inode_flag(dir, FI_INLINE_DENTRY);
-+
-+	/*
-+	 * should retrieve reserved space which was used to keep
-+	 * inline_dentry's structure for backward compatibility.
-+	 */
-+	if (!f2fs_sb_has_flexible_inline_xattr(F2FS_I_SB(dir)) &&
-+			!f2fs_has_inline_xattr(dir))
-+		F2FS_I(dir)->i_inline_xattr_size = 0;
-+
- 	kvfree(backup_dentry);
- 	return 0;
- recover:
+ 	return provided == calculated;
+ }
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 63bb6134d39a..e29d5f6735ae 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -1281,9 +1281,10 @@ static int read_node_page(struct page *page, int op_flags)
+ 	int err;
+ 
+ 	if (PageUptodate(page)) {
+-#ifdef CONFIG_F2FS_CHECK_FS
+-		f2fs_bug_on(sbi, !f2fs_inode_chksum_verify(sbi, page));
+-#endif
++		if (!f2fs_inode_chksum_verify(sbi, page)) {
++			ClearPageUptodate(page);
++			return -EBADMSG;
++		}
+ 		return LOCKED_PAGE;
+ 	}
+ 
 -- 
 2.20.1
 
