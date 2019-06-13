@@ -2,186 +2,199 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5893C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EEDC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8947A21537
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7959A2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729874AbfFMUYq (ORCPT
+        id S1729896AbfFMUZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:24:46 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:41953 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbfFMUYp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:24:45 -0400
-Received: from 79.184.253.190.ipv4.supernova.orange.pl (79.184.253.190) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id a46fe18529be701e; Thu, 13 Jun 2019 22:24:42 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Furquan Shaikh <furquan@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rajatja@google.com
-Subject: Re: [PATCH] ACPI: PM: Clear wake-up device GPEs before enabling
-Date:   Thu, 13 Jun 2019 22:24:41 +0200
-Message-ID: <13361760.nMXA0SR1Mq@kreacher>
-In-Reply-To: <20190516193616.252788-1-furquan@google.com>
-References: <20190516193616.252788-1-furquan@google.com>
+        Thu, 13 Jun 2019 16:25:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52358 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726344AbfFMUZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 16:25:23 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D4E9D37F43;
+        Thu, 13 Jun 2019 20:25:22 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-63.rdu2.redhat.com [10.10.112.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B476600C1;
+        Thu, 13 Jun 2019 20:25:21 +0000 (UTC)
+Message-ID: <6e586118ad154204ad2e2cf2c1391b916cb4ee54.camel@redhat.com>
+Subject: Re: [PATCH v2] RDMA/cma: Make CM response timeout and # CM retries
+ configurable
+From:   Doug Ledford <dledford@redhat.com>
+To:     =?ISO-8859-1?Q?H=E5kon?= Bugge <haakon.bugge@oracle.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Parav Pandit <parav@mellanox.com>,
+        Steve Wise <swise@opengridcomputing.com>,
+        OFED mailing list <linux-rdma@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 13 Jun 2019 16:25:15 -0400
+In-Reply-To: <67B4F337-4C3A-4193-B1EF-42FD4765CBB7@oracle.com>
+References: <20190226075722.1692315-1-haakon.bugge@oracle.com>
+         <174ccd37a9ffa05d0c7c03fe80ff7170a9270824.camel@redhat.com>
+         <67B4F337-4C3A-4193-B1EF-42FD4765CBB7@oracle.com>
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-+O8VTt/oRz42SjEM1nOO"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 13 Jun 2019 20:25:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, May 16, 2019 9:36:16 PM CEST Furquan Shaikh wrote:
-> This change clears GPE status for wake-up devices before enabling that
-> GPE. This is required to ensure that stale GPE status does
-> not result in pre-mature wake on enabling GPE for wake-up devices.
-> 
-> Without this change, here is the sequence of events that is causing
-> suspend aborts on recent chrome books:
-> 
-> 1. System decides to enter sleep.
-> 2. All devices in the system are put into low power mode.
-> 3. This results in acpi_dev_suspend being called for each ACPI
-> device.
-> 4. If the device is wake capable, then acpi_dev_suspend calls
-> acpi_device_wakeup_enable to enable GPE for the device.
-> 5. If GPE status is already set, enabling GPE for the wakeup device
-> results in generating a SCI which is handled by acpi_ev_detect_gpe
-> ultimately calling wakeup_source_activate that increments wakeup
-> events, and thus aborting the suspend attempt.
-> 
-> Signed-off-by: Furquan Shaikh <furquan@google.com>
-> ---
->  drivers/acpi/device_pm.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-> index b859d75eaf9f6..e05ee3ff45683 100644
-> --- a/drivers/acpi/device_pm.c
-> +++ b/drivers/acpi/device_pm.c
-> @@ -721,6 +721,8 @@ static int __acpi_device_wakeup_enable(struct acpi_device *adev,
->  	if (error)
->  		goto out;
->  
-> +	acpi_clear_gpe(wakeup->gpe_device, wakeup->gpe_number);
-> +
->  	status = acpi_enable_gpe(wakeup->gpe_device, wakeup->gpe_number);
->  	if (ACPI_FAILURE(status)) {
->  		acpi_disable_wakeup_device_power(adev);
-> 
 
-This patch may cause events to be missed if the GPE.  I guess what you reall mean is
-something like the patch below.
+--=-+O8VTt/oRz42SjEM1nOO
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This should allow the kernel to see the events generated before the GPEs are
-implicitly enabled, but it should clear them for the explicit users of acpi_enable_gpe().
+On Thu, 2019-06-13 at 18:58 +0200, H=C3=A5kon Bugge wrote:
+> > On 13 Jun 2019, at 16:25, Doug Ledford <dledford@redhat.com> wrote:
+> >=20
+> > On Tue, 2019-02-26 at 08:57 +0100, H=C3=A5kon Bugge wrote:
+> > > During certain workloads, the default CM response timeout is too
+> > > short, leading to excessive retries. Hence, make it configurable
+> > > through sysctl. While at it, also make number of CM retries
+> > > configurable.
+> > >=20
+> > > The defaults are not changed.
+> > >=20
+> > > Signed-off-by: H=C3=A5kon Bugge <haakon.bugge@oracle.com>
+> > > ---
+> > > v1 -> v2:
+> > >   * Added unregister_net_sysctl_table() in cma_cleanup()
+> > > ---
+> > > drivers/infiniband/core/cma.c | 52
+> > > ++++++++++++++++++++++++++++++---
+> > > --
+> > > 1 file changed, 45 insertions(+), 7 deletions(-)
+> >=20
+> > This has been sitting on patchworks since forever.  Presumably
+> > because
+> > Jason and I neither one felt like we really wanted it, but also
+> > couldn't justify flat refusing it.
+>=20
+> I thought the agreement was to use NL and iproute2. But I haven't had
+> the capacity.
 
-Mika, what do you think?
+To be fair, the email thread was gone from my linux-rdma folder.  So, I
+just had to review the entry in patchworks, and there was no captured
+discussion there.  So, if the agreement was made, it must have been
+face to face some time and if I was involed, I had certainly forgotten
+by now.  But I still needed to clean up patchworks, hence my email ;-).
 
----
- drivers/acpi/acpica/acevents.h |    3 ++-
- drivers/acpi/acpica/evgpe.c    |    8 +++++++-
- drivers/acpi/acpica/evgpeblk.c |    2 +-
- drivers/acpi/acpica/evxface.c  |    2 +-
- drivers/acpi/acpica/evxfgpe.c  |    2 +-
- 5 files changed, 12 insertions(+), 5 deletions(-)
+> >  Well, I've made up my mind, so
+> > unless Jason wants to argue the other side, I'm rejecting this
+> > patch.=20
+> > Here's why.  The whole concept of a timeout is to help recovery in
+> > a
+> > situation that overloads one end of the connection.  There is a
+> > relationship between the max queue backlog on the one host and the
+> > timeout on the other host. =20
+>=20
+> If you refer to the backlog parameter in rdma_listen(), I cannot see
+> it being used at all for IB.
 
-Index: linux-pm/drivers/acpi/acpica/acevents.h
-===================================================================
---- linux-pm.orig/drivers/acpi/acpica/acevents.h
-+++ linux-pm/drivers/acpi/acpica/acevents.h
-@@ -69,7 +69,8 @@ acpi_status
- acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked);
- 
- acpi_status
--acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info);
-+acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info,
-+			  u8 clear_on_enable);
- 
- acpi_status
- acpi_ev_remove_gpe_reference(struct acpi_gpe_event_info *gpe_event_info);
-Index: linux-pm/drivers/acpi/acpica/evgpe.c
-===================================================================
---- linux-pm.orig/drivers/acpi/acpica/evgpe.c
-+++ linux-pm/drivers/acpi/acpica/evgpe.c
-@@ -146,6 +146,7 @@ acpi_ev_mask_gpe(struct acpi_gpe_event_i
-  * FUNCTION:    acpi_ev_add_gpe_reference
-  *
-  * PARAMETERS:  gpe_event_info          - Add a reference to this GPE
-+ *              clear_on_enable         - Clear GPE status before enabling it
-  *
-  * RETURN:      Status
-  *
-@@ -155,7 +156,8 @@ acpi_ev_mask_gpe(struct acpi_gpe_event_i
-  ******************************************************************************/
- 
- acpi_status
--acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info)
-+acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info,
-+			  u8 clear_on_enable)
- {
- 	acpi_status status = AE_OK;
- 
-@@ -170,6 +172,10 @@ acpi_ev_add_gpe_reference(struct acpi_gp
- 
- 		/* Enable on first reference */
- 
-+		if (clear_on_enable) {
-+			(void)acpi_hw_clear_gpe(gpe_event_info);
-+		}
-+
- 		status = acpi_ev_update_gpe_enable_mask(gpe_event_info);
- 		if (ACPI_SUCCESS(status)) {
- 			status = acpi_ev_enable_gpe(gpe_event_info);
-Index: linux-pm/drivers/acpi/acpica/evgpeblk.c
-===================================================================
---- linux-pm.orig/drivers/acpi/acpica/evgpeblk.c
-+++ linux-pm/drivers/acpi/acpica/evgpeblk.c
-@@ -453,7 +453,7 @@ acpi_ev_initialize_gpe_block(struct acpi
- 				continue;
- 			}
- 
--			status = acpi_ev_add_gpe_reference(gpe_event_info);
-+			status = acpi_ev_add_gpe_reference(gpe_event_info, FALSE);
- 			if (ACPI_FAILURE(status)) {
- 				ACPI_EXCEPTION((AE_INFO, status,
- 					"Could not enable GPE 0x%02X",
-Index: linux-pm/drivers/acpi/acpica/evxface.c
-===================================================================
---- linux-pm.orig/drivers/acpi/acpica/evxface.c
-+++ linux-pm/drivers/acpi/acpica/evxface.c
-@@ -971,7 +971,7 @@ acpi_remove_gpe_handler(acpi_handle gpe_
- 	      ACPI_GPE_DISPATCH_METHOD) ||
- 	     (ACPI_GPE_DISPATCH_TYPE(handler->original_flags) ==
- 	      ACPI_GPE_DISPATCH_NOTIFY)) && handler->originally_enabled) {
--		(void)acpi_ev_add_gpe_reference(gpe_event_info);
-+		(void)acpi_ev_add_gpe_reference(gpe_event_info, FALSE);
- 		if (ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
- 
- 			/* Poll edge triggered GPEs to handle existing events */
-Index: linux-pm/drivers/acpi/acpica/evxfgpe.c
-===================================================================
---- linux-pm.orig/drivers/acpi/acpica/evxfgpe.c
-+++ linux-pm/drivers/acpi/acpica/evxfgpe.c
-@@ -108,7 +108,7 @@ acpi_status acpi_enable_gpe(acpi_handle
- 	if (gpe_event_info) {
- 		if (ACPI_GPE_DISPATCH_TYPE(gpe_event_info->flags) !=
- 		    ACPI_GPE_DISPATCH_NONE) {
--			status = acpi_ev_add_gpe_reference(gpe_event_info);
-+			status = acpi_ev_add_gpe_reference(gpe_event_info, TRUE);
- 			if (ACPI_SUCCESS(status) &&
- 			    ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
- 
+No, not exactly.  I was more referring to heavy load causing an
+overflow in the mad packet receive processing.  We have
+IB_MAD_QP_RECV_SIZE set to 512 by default, but it can be changed at
+module load time of the ib_core module and that represents the maximum
+number of backlogged mad packets we can have waiting to be processed
+before we just drop them on the floor.  There can be other places to
+drop them too, but this is the one I was referring to.
 
+> For CX-3, which is paravirtualized wrt. MAD packets, it is the proxy
+> UD receive queue length for the PF driver that can be construed as a
+> backlog. Remember that any MAD packet being sent from a VF or the PF
+> itself, is sent to a proxy UD QP in the PF. Those packets are then
+> multiplexed out on the real QP0/1. Incoming MAD packets are
+> demultiplexed and sent once more to the proxy QP in the VF.
+>=20
+> > Generally, in order for a request to get
+> > dropped and us to need to retransmit, the queue must already have a
+> > full backlog.  So, how long does it take a heavily loaded system to
+> > process a full backlog?  That, plus a fuzz for a margin of error,
+> > should be our timeout.  We shouldn't be asking users to configure
+> > it.
+>=20
+> Customer configures #VMs and different workload may lead to way
+> different number of CM connections. The proxying of MAD packet
+> through the PF driver has a finite packet rate. With 64 VMs, 10.000
+> QPs on each, all going down due to a switch failing or similar, you
+> have 640.000 DREQs to be sent, and with the finite packet rate of MA
+> packets through the PF, this takes more than the current CM timeout.
+> And then you re-transmit and increase the burden of the PF proxying.
+>=20
+> So, we can change the default to cope with this. But, a MAD packet is
+> unreliable, we may have transient loss. In this case, we want a short
+> timeout.
+>=20
+> > However, if users change the default backlog queue on their
+> > systems,
+> > *then* it would make sense to have the users also change the
+> > timeout
+> > here, but I think guidance would be helpful.
+> >=20
+> > So, to revive this patch, what I'd like to see is some attempt to
+> > actually quantify a reasonable timeout for the default backlog
+> > depth,
+> > then the patch should actually change the default to that
+> > reasonable
+> > timeout, and then put in the ability to adjust the timeout with
+> > some
+> > sort of doc guidance on how to calculate a reasonable timeout based
+> > on
+> > configured backlog depth.
+>=20
+> I can agree to this :-)
+>=20
+>=20
+> Thxs, H=C3=A5kon
+>=20
+> > --=20
+> > Doug Ledford <dledford@redhat.com>
+> >    GPG KeyID: B826A3330E572FDD
+> >    Key fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57
+> > 2FDD
 
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Key fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57
+2FDD
+
+--=-+O8VTt/oRz42SjEM1nOO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl0CsSsACgkQuCajMw5X
+L93Qnw//XiMtlCbAK0cVmGzfaTsPIhjBTzMbZp1TJB7HxlKPGgxvIkHXmZhDdqXG
+Gtm9ttKv7bmHAf0All8L9F/ZStpG4vAE3OrG0xY6c6Ru+5O9bSLIs6gMrUcj5aFH
+uKRYaIS75kvPsWD4hITaWws+mIxW/0mkn90Jz4b+aNzMfu9CrDXhASzcZtJj6UGQ
+IzHabjAzxSqqLuXwPPYyams8dBceOj8e3rmgD+k1DHV9NTlPT3wKB7oJjfvLJHRh
+2OPKBuf3u3d36s/P6dOCh6Tqg+EYrlZIP+mAR0dKXiV9xUwwQmqYINmLTMdpKny9
+j8VM8QUPWm01g60BLAB4BZszlBOW1Oi1FwN90JjfDxMB1TBlLANkX0TOz3KaCtLS
+BfUEeXzfufsN7plPHko+wHmrkmLdcwc5/9RYTJt0e+8okw8mW2VllINuHixow5Iz
+l74f+aKDsnqBqjwNgXSf+f1E35KYzz58/MJfOSeRZojGCYMXjWD61NlbN8+KsCvY
+Gp06TuAwzSUijm1NxfyQ7pDf+jZq6P+10k5I0nNCD7XiKIopbqpN5voFvZwRtPXo
+8ilP89CQ7jIKtlVcXXVS7gE3AmdzobyDPh6EAZpXXXn0OqqLCPOpMiinhD8ZFJlM
+IQdJgNUeG1PZi2ZE6y18wzghvL9RbP7Pi/1/8OgbxnAdThz3xKU=
+=clAS
+-----END PGP SIGNATURE-----
+
+--=-+O8VTt/oRz42SjEM1nOO--
 
