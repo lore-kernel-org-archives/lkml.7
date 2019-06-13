@@ -2,53 +2,52 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAC2C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7D0C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A06CC20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DE220665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442451;
-	bh=/IMbikxRv8tv9hKiJzmRlZz3kER9v/NyBLeLBn/W8KI=;
+	s=default; t=1560442461;
+	bh=EBdM+xYkn1wZU7C8dtQzzjr5qG+cyR7BfkJ6Nr4mO6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xPyURhv8gZWyiKHarE6lVSHhdHaQN5oSgsIrEhVLjpD2jiqKZw6CAls+07ZNH2BAJ
-	 BShq3dBOkkN/vG3ezb7cZN5ntgbptqJpOFIwb5OumR6afUXPNpoquv+RRMWK9ESRV6
-	 sxrEzw2Qmi64xrSHaX00X0hgKm3CuE9kwOsd8uag=
+	b=Ggz/aL0R5SYJ8zA483I0PXssjo4CyxhA/D2mlLUdbmcOpEPpO1annwbTr3kX48RyE
+	 tLBTA0aCIjk4vqDyWuDbaGDnHxC0bbVdgagT0kxvLuGWicEdIoiiH88M5njGxxbaHp
+	 piwBfwcWuF+qf782G2VEMrsaMHQeiSN9tLjwqO3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391756AbfFMQOA (ORCPT
+        id S2391655AbfFMQOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:14:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59744 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:14:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731200AbfFMImh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:42:37 -0400
+        id S1731193AbfFMIm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:42:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3CA52147A;
-        Thu, 13 Jun 2019 08:42:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EACA72063F;
+        Thu, 13 Jun 2019 08:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415356;
-        bh=/IMbikxRv8tv9hKiJzmRlZz3kER9v/NyBLeLBn/W8KI=;
+        s=default; t=1560415347;
+        bh=EBdM+xYkn1wZU7C8dtQzzjr5qG+cyR7BfkJ6Nr4mO6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g528rEXwFvTKqc2iMrOPLxKPJsF05zteK5ZGMlgff/xZ8yW2skDcv5C+QYO8thl67
-         u1jirAvgR7fPeMbzAdli3tAqB8R9todlom9d8FpUZjEdTsOmwV8sOx8/KeiMx3tYXP
-         BwieR2Lta8Zhnb7EzaYAmgRRIS3+ptdudHKKnB7g=
+        b=u+GXWYH9ZujW0J7ZNiFqpj392HhDW09bqCPlGBcdwMnTyEb0zspZLwsFWwsCDFkYC
+         n5RiioCRqdVFRovbR/Q/AbeJzZdMnTo2BBx6/muVm/6C+0yVTsrnA0IEvOaUa0zu+Y
+         mPzkWK9LX0dJ9C7UpwoV9RW290H0No5lZ8n7GM0k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Kabir Sahane <x0153567@ti.com>,
+        "Andrew F. Davis" <afd@ti.com>, Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 095/118] net: hns3: return 0 and print warning when hit duplicate MAC
-Date:   Thu, 13 Jun 2019 10:33:53 +0200
-Message-Id: <20190613075649.440852957@linuxfoundation.org>
+Subject: [PATCH 4.19 092/118] ARM: OMAP2+: pm33xx-core: Do not Turn OFF CEFUSE as PPA may be using it
+Date:   Thu, 13 Jun 2019 10:33:50 +0200
+Message-Id: <20190613075649.240969830@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -61,42 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 72110b567479f0282489a9b3747e76d8c67d75f5 ]
+[ Upstream commit 72aff4ecf1cb85a3c6e6b42ccbda0bc631b090b3 ]
 
-When set 2 same MAC to different function of one port, IMP
-will return error as the later one may modify the origin one.
-This will cause bond fail for 2 VFs of one port.
+This area is used to store keys by HSPPA in case of AM438x SOC. Leave it
+active.
 
-Driver just print warning and return 0 with this patch, so
-if set same MAC address, it will return 0 but do not really
-configure HW.
-
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Kabir Sahane <x0153567@ti.com>
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm/mach-omap2/pm33xx-core.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 340baf6a470c..4648c6a9d9e8 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -4300,8 +4300,11 @@ int hclge_add_uc_addr_common(struct hclge_vport *vport,
- 		return hclge_add_mac_vlan_tbl(vport, &req, NULL);
+diff --git a/arch/arm/mach-omap2/pm33xx-core.c b/arch/arm/mach-omap2/pm33xx-core.c
+index f4971e4a86b2..ca7026958d42 100644
+--- a/arch/arm/mach-omap2/pm33xx-core.c
++++ b/arch/arm/mach-omap2/pm33xx-core.c
+@@ -51,10 +51,12 @@ static int amx3_common_init(void)
  
- 	/* check if we just hit the duplicate */
--	if (!ret)
--		ret = -EINVAL;
-+	if (!ret) {
-+		dev_warn(&hdev->pdev->dev, "VF %d mac(%pM) exists\n",
-+			 vport->vport_id, addr);
-+		return 0;
-+	}
+ 	/* CEFUSE domain can be turned off post bootup */
+ 	cefuse_pwrdm = pwrdm_lookup("cefuse_pwrdm");
+-	if (cefuse_pwrdm)
+-		omap_set_pwrdm_state(cefuse_pwrdm, PWRDM_POWER_OFF);
+-	else
++	if (!cefuse_pwrdm)
+ 		pr_err("PM: Failed to get cefuse_pwrdm\n");
++	else if (omap_type() != OMAP2_DEVICE_TYPE_GP)
++		pr_info("PM: Leaving EFUSE power domain active\n");
++	else
++		omap_set_pwrdm_state(cefuse_pwrdm, PWRDM_POWER_OFF);
  
- 	dev_err(&hdev->pdev->dev,
- 		"PF failed to add unicast entry(%pM) in the MAC table\n",
+ 	return 0;
+ }
 -- 
 2.20.1
 
