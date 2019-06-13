@@ -2,125 +2,106 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F873C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A3AC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25BF3218B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:41:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560447678;
-	bh=eCHij1l5AX4pQCoCcrvD/pt7Q4lbspMkAxslGpd6v+k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Kv18/9DNeB8XzRrkRkra+SQfrA1rjfsmB8x2lm/zOahIK9WczzpRIGX8mz5oCZxy0
-	 7d4puquS833TYkNgT4EBq3ecQHBSx7yqc4mkpAjdM79vv5lQhxK/5grA/bj7LInjTj
-	 OitRdVrSEu2Q6vdjcX6QGhGOx98IwNt3Mb8d3Tp4=
+	by mail.kernel.org (Postfix) with ESMTP id 6AAE7217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:43:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XElxIcOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfFMRlR (ORCPT
+        id S1725616AbfFMRn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:41:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbfFMRlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:41:16 -0400
-Received: from localhost (unknown [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B93B218B6;
-        Thu, 13 Jun 2019 17:41:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560447676;
-        bh=eCHij1l5AX4pQCoCcrvD/pt7Q4lbspMkAxslGpd6v+k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pN+P0V9ImX9sqo6q6FqIFcRJe9rp+238GbRmTIO0SfAtEQBQtzUaGkdwrkkaJfu26
-         ea2HdN/r/hnMoF6TG/9QR8f37IiZJpuj3ClBg9xhcHG/4gvXclFQ88fdo5FlpApFom
-         zZhr7z7oILAkwruJRXEAe1CiIZoffkHgqhsrrNAE=
-Date:   Thu, 13 Jun 2019 19:41:05 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jason Baron <jbaron@akamai.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lib: dynamic_debug: no need to check return value of
- debugfs_create functions
-Message-ID: <20190613174105.GA9415@kroah.com>
-References: <20190612153534.GA21141@kroah.com>
- <4936c8d8-9b69-1385-1bbf-9d19ac08d061@akamai.com>
- <20190613155906.GB4632@kroah.com>
- <e28815b3-6c14-6ede-de69-096093260150@akamai.com>
+        Thu, 13 Jun 2019 13:43:26 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39385 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726519AbfFMRnZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 13:43:25 -0400
+Received: by mail-ed1-f65.google.com with SMTP id m10so32386470edv.6
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 10:43:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KbVzXUK1NN9/sw3hoYhD1GHtUrylzXfXjiAM/J+Brog=;
+        b=XElxIcOXlFiOTxVzejT8v77VQGmn+wziJUEUa7uBdTmVPB3GQlqrq/i+WZ+W0yfxMJ
+         AGWTCUBjBFVbjgKFTlcQbGcOsdU6UlVBEIbkhv2PqCPR0QTVNlQH3HGOWsft/lF9avoJ
+         yVjk3wpVIuCOyimIPxq8XjoUi73mZirgNIWY4GkTsEiN98x+RF+PCqlqPZts5nG+ZY0Z
+         Lidzym2SV0+4oYyVAGoEBGYstsP1m/t55omoaXEsvzTQx8WJN3mGHuWytvioC4Ht008N
+         vPv9yQ4yP4re4lDf999mFYZKd8UbkkzdBZGvJsm59K4MByM2HkTud5FoYxkBWog03a8/
+         H3yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KbVzXUK1NN9/sw3hoYhD1GHtUrylzXfXjiAM/J+Brog=;
+        b=Ty9C+zVeNNMcLg3Npgn1r5y03JDQb5rmJGCvByGuK1Sdx3plMa/pkLRQzzlDhmtGdy
+         yeZdv9q8e5BDhjO2hbWVeYzZqc8MCiNdbzwLSdQJ2z9w/hSrfJkZdrLgRn280JScPw5H
+         PiM6Sg6VdI1AQZRbT9eYiRAfD9T7b5un55N0Da+8mVuq6iMe/DeKEJcJDf2hVApdqyaW
+         /D9Pu7QnE6wkcwqLDZyG3ccT+uI783kVlEPlDf6c4O8TuRsqeHSDAxYYXmeWqwIw89R4
+         thxQ2XABU4p+EmCY64wL0Oe40oke201c17XragphTddmW/x5X/Id5P7/ooZpvo4D3snY
+         M9NA==
+X-Gm-Message-State: APjAAAX13/5KNyAFsTDdal9jmEoYqRAaIbBZb8YVn1BdZKP3+eQVmAFB
+        aLbBvKrCCIVNsl9aiztqEMq1ttoQaoHDuBvkBZXDFw==
+X-Google-Smtp-Source: APXvYqyRkSAfTZEud2sjuEwtrMVjDlLXDnzhlBc4qjCpsFxZK+M8/SJe5pp8MJlhR6sctwLybD1Hs3XKTXr+1omkhdU=
+X-Received: by 2002:a17:906:9705:: with SMTP id k5mr43469018ejx.5.1560447803686;
+ Thu, 13 Jun 2019 10:43:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e28815b3-6c14-6ede-de69-096093260150@akamai.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com>
+ <5CEC9667.30100@intel.com> <CAOyeoRWhfyuuYdguE6Wrzd7GOdow9qRE4MZ4OKkMc5cdhDT53g@mail.gmail.com>
+ <5CEE3AC4.3020904@intel.com> <CAOyeoRW85jV=TW_xwSj0ZYwPj_L+G9wu+QPGEF3nBmPbWGX4_g@mail.gmail.com>
+ <5CF07D37.9090805@intel.com> <CAOyeoRXWQaVYZSVL_LTTdAwJOEr+eCzhp1=_JcOX3i6_CJiD_g@mail.gmail.com>
+ <5CF2599B.3030001@intel.com> <CAOyeoRWuHyhoy6NB=O+ekQMhBFngozKoanWzArxgBk4DH2hdtg@mail.gmail.com>
+ <5CF5F6AE.90706@intel.com> <CAOyeoRW5wx0F=9B24h29KkhUrbaORXVSoJufb4d-XzKiAsz+NQ@mail.gmail.com>
+ <CAEU=KTHsVmrAHXUKdHu_OwcrZoy-hgV7pk4UymtchGE5bGdUGA@mail.gmail.com>
+ <CAOyeoRXFAQNNWRiHNtK3n17V0owBVNyKdv75xjt08Q_pC+XOXg@mail.gmail.com> <5CF8C272.7050808@intel.com>
+In-Reply-To: <5CF8C272.7050808@intel.com>
+From:   Eric Hankland <ehankland@google.com>
+Date:   Thu, 13 Jun 2019 10:43:12 -0700
+Message-ID: <CAOyeoRXPFgzthfO-Yz7L7ShO=jdYdsD7_UFPOrRFBtdA5jpf6A@mail.gmail.com>
+Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
+To:     Wei Wang <wei.w.wang@intel.com>
+Cc:     Cfir Cohen <cfir@google.com>, Paolo Bonzini <pbonzini@redhat.com>,
+        rkrcmar@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 12:09:00PM -0400, Jason Baron wrote:
-> 
-> 
-> On 6/13/19 11:59 AM, Greg Kroah-Hartman wrote:
-> > On Thu, Jun 13, 2019 at 10:33:23AM -0400, Jason Baron wrote:
-> >> On 6/12/19 11:35 AM, Greg Kroah-Hartman wrote:
-> >>> When calling debugfs functions, there is no need to ever check the
-> >>> return value.  The function can work or not, but the code logic should
-> >>> never do something different based on this.
-> >>>
-> >>> Cc: Jason Baron <jbaron@akamai.com>
-> >>> Cc: linux-kernel@vger.kernel.org
-> >>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >>> ---
-> >>>  lib/dynamic_debug.c | 12 +++---------
-> >>>  1 file changed, 3 insertions(+), 9 deletions(-)
-> >>>
-> >>> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-> >>> index 8a16c2d498e9..c60409138e13 100644
-> >>> --- a/lib/dynamic_debug.c
-> >>> +++ b/lib/dynamic_debug.c
-> >>> @@ -993,20 +993,14 @@ static __initdata int ddebug_init_success;
-> >>>  
-> >>>  static int __init dynamic_debug_init_debugfs(void)
-> >>>  {
-> >>> -	struct dentry *dir, *file;
-> >>> +	struct dentry *dir;
-> >>>  
-> >>>  	if (!ddebug_init_success)
-> >>>  		return -ENODEV;
-> >>>  
-> >>>  	dir = debugfs_create_dir("dynamic_debug", NULL);
-> >>> -	if (!dir)
-> >>> -		return -ENOMEM;
-> >>> -	file = debugfs_create_file("control", 0644, dir, NULL,
-> >>> -					&ddebug_proc_fops);
-> >>> -	if (!file) {
-> >>> -		debugfs_remove(dir);
-> >>> -		return -ENOMEM;
-> >>> -	}
-> >>> +	debugfs_create_file("control", 0644, dir, NULL, &ddebug_proc_fops);
-> >>> +
-> >>>  	return 0;
-> >>>  }
-> >>>  
-> >>>
-> >>
-> >> Looks like debugfs_create_dir() can return NULL,
-> > 
-> > No it can not.
+Since we aren't using QEMU, I don't have those patches ready yet, but
+I can work on them if you want to review them at the same time as this
+patch. The architectural events (minus the LLC events) are probably a
+reasonable starting point for the whitelist.
+
+Eric
+
+
+On Thu, Jun 6, 2019 at 12:31 AM Wei Wang <wei.w.wang@intel.com> wrote:
+>
+> On 06/06/2019 05:35 AM, Eric Hankland wrote:
+> >>> Right - I'm aware there are other ways of detecting this - it's still
+> >>> a class of events that some people don't want to surface. I'll ask if
+> >>> there are any better examples.
+> > I asked and it sounds like we are treating all events as potentially
+> > insecure until they've been reviewed. If Intel were to publish
+> > official (reasonably substantiated) guidance stating that the PMU is
+> > secure, then I think we'd be happy without such a safeguard in place,
+> > but short of that I think we want to err on the side of caution.
 > >
-> 
-> Ok, I looked at the wrong definition for failed_creating() :(
-
-Yeah, tracefs should also probably change, it makes users of their api
-easier...
-
-> In that case:
-> 
-> Acked-by: Jason Baron <jbaron@akamai.com>
-
-Wonderful, thanks for the review.
-
-greg k-h
+>
+> I'm not aware of any vendors who'd published statements like that.
+>
+> Anyway, are you ready to share your QEMU patches or the events you want
+> to be on the whitelists?
+>
+>
+> Best,
+> Wei
