@@ -2,97 +2,119 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDE9C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A14C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 159462147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A1621721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:52:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QciANm+R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AKeuB0I5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729135AbfFMSvq (ORCPT
+        id S1728910AbfFMSwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:51:46 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46761 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfFMSvp (ORCPT
+        Thu, 13 Jun 2019 14:52:49 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42790 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbfFMSws (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:51:45 -0400
-Received: by mail-oi1-f195.google.com with SMTP id 65so92282oid.13
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:51:45 -0700 (PDT)
+        Thu, 13 Jun 2019 14:52:48 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x17so6605122wrl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:52:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/UPxWSlC5sa2bqOyrgAL69/GdR1/OE8Ch9dSPjw4HAw=;
-        b=QciANm+ReKrJ0szbSi1fGnbMist6Yz1rN7pI3bws0+TWRIzZdQkCmN6AUFv2/KsdzD
-         IN9IgdWsxE98VftCdxsxJmKPuG6hJUUmFifIuIokGVUuk+viIemj86pXrJbpvLP3UDV4
-         d03z93Bc+SwF6rBiezP5ABz+B6NXLmfzQ1LPyoYl4aqi8NdQQbwu5Z1Y+UccvWvKVGgL
-         UBdowE/ZPsjVfKaoCbhIJshixaflZXTTpw4XJIZLJOgFtPz8lk7Tb9SX4zwI7rAfWt/B
-         ju4Uw/3/rppXw6skGIETJAeoOPlzBvLXtKIa9JiHtWVoZa6xoP5p4ViZoDoPLc/HaxY7
-         yuEQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=wF2lkDhjSFApoIX2SzKaCuD9I+vf8Vpj5caLDxf35+o=;
+        b=AKeuB0I58ke460ynxyqX4+mFv2g4TegQbeImOxNCfMfyFsDied0f2UkwWeSUzabyxL
+         XN4/m+xKjVR2ysnHrDJhul5Ezm6ZNBX0sNHXzUcrn8/Om/ayxXPeQKR6C8DzXSUwBOIi
+         BxW28g4p2jpnLM6+DphXrs6V1LAi4d00MesmFGsBroqcJ/yT9HIfIfu9f4WwtVvhsW9p
+         PaSpOCjpMWgWYBtZIR0nSJ8fRPP9cvokb2vDJqm/kHSpejndIsa+O/i9TvnawipNO9q+
+         X51wWbjK5F22t0ic653gOiEOxyVVJAqbV69W0+6xOvnelXd8GxCioB9EAnuHVYp4zLjX
+         d7Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/UPxWSlC5sa2bqOyrgAL69/GdR1/OE8Ch9dSPjw4HAw=;
-        b=gV8zObdPBFb8BOJMJ8pv4mkN5bkUYGyBeVM87KHSB5t427XRgrmXiTCPEVZPcrYGTG
-         JNChTKpSaiVdEQVhgaK2NYKMkvaL+rxl4HrYSiEvCuY2dL6YeqnkmogLOitOxdtObblb
-         fzzWMZvXzlm0Ju0RSy043WdS96VoF1PTd9vyZiFXwpa+Rlca7P2ofloGpLk+fPYELib3
-         NeqhqMUPpe4XEnHtDg+pqNoj/t6iLdf7OPWByyCPQAQ3swklWLAI/WabT6RwUmOFz18K
-         0Xxgs4zgqOJ7tuXuF3R6rdGYpVRgIN6ST4+vrDDhcqRoM8DMFgo5p+xrnBMb/ynhJUzU
-         Yq/w==
-X-Gm-Message-State: APjAAAVujHPMUt4wr1cbpg+7NN2YcYbYxn6YEg5bcvLAUpZLOlf676Pa
-        lMH0uDmXH3gTa1rNX6G/4ituLx9G
-X-Google-Smtp-Source: APXvYqxN7mmhXH/KLQY6oeLzDB+2IeuUjevbypQYE7vAYi0s8uy3XJkg3sdKQjMN7GdBPQGLpYJmJA==
-X-Received: by 2002:aca:80f:: with SMTP id 15mr3802774oii.118.1560451904574;
-        Thu, 13 Jun 2019 11:51:44 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id l65sm186063oif.20.2019.06.13.11.51.42
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 11:51:43 -0700 (PDT)
-Subject: Re: [PATCH] powerpc: enable a 30-bit ZONE_DMA for 32-bit pmac
-To:     Christoph Hellwig <hch@lst.de>, benh@kernel.crashing.org,
-        paulus@samba.org, mpe@ellerman.id.au
-Cc:     aaro.koskinen@iki.fi, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20190613082446.18685-1-hch@lst.de>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <334280df-9002-c92f-d381-9fd79e2a9036@lwfinger.net>
-Date:   Thu, 13 Jun 2019 13:51:41 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=wF2lkDhjSFApoIX2SzKaCuD9I+vf8Vpj5caLDxf35+o=;
+        b=Rj4Qjm5iBSZE6nXvLrxlyANlnOXzev+W+OEJs69nkv2HKK6JdwgMGZTVVZyf8tQrrC
+         ByjsztziWL48o+Qwed79hcd7FMD1ONDCm9PZEYs7kJ1I++Yqh9ZgAN+R7o7hosiuHCZX
+         a5O3zc3ikzks1D44LjC5UC4H+2pnzzQaHDrswka8SxIpHATbbAaOfz5K8Rorrf2mjMZR
+         KP8mmubj/G4nK21pxvS3WZGusivCgz6Mtbe4Pn3dk4B/AFNBXQL0LIlG8KQoyJPiWCN0
+         8IjLYNG/3lvroeZMI4ZI7kRAC2nkoPHW9Sz6lXMSIauVT1fntUgvG/SDnp1K9lDxehQt
+         wfiA==
+X-Gm-Message-State: APjAAAUVr4YrDtXXqW31U2DydquPEW9L507vplf85OChEYAkKO18sB3S
+        rvidmcd7sm+ToSyabUqXOBdxGr2yKJde0+Itk+I=
+X-Google-Smtp-Source: APXvYqz65TzXVExemKM65WYyNEKOoA5AJHrWLhsVDtVW9SOWURsb3zfBCUNgnQbyfrShxmr87zPG9wDFtS2xCWSEGOk=
+X-Received: by 2002:adf:f68f:: with SMTP id v15mr10763850wrp.4.1560451966892;
+ Thu, 13 Jun 2019 11:52:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190613082446.18685-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190613023208.GA29690@hari-Inspiron-1545> <CADnq5_PU_jvOskC-=+oRQdvYXZvu_n26ogoWTxLRxnW+ke4wDw@mail.gmail.com>
+ <20190613184217.GA2385@ravnborg.org>
+In-Reply-To: <20190613184217.GA2385@ravnborg.org>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 13 Jun 2019 14:52:34 -0400
+Message-ID: <CADnq5_OSjJad7QGOCrWQL+LcjtCHQsCefpJ=K0mYUayFe9bUAA@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: fix compilation error
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Yongqiang Sun <yongqiang.sun@amd.com>,
+        Charlene Liu <charlene.liu@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Gloria Li <geling.li@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Tony Cheng <tony.cheng@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/19 3:24 AM, Christoph Hellwig wrote:
-> With the strict dma mask checking introduced with the switch to
-> the generic DMA direct code common wifi chips on 32-bit powerbooks
-> stopped working.  Add a 30-bit ZONE_DMA to the 32-bit pmac builds
-> to allow them to reliably allocate dma coherent memory.
-> 
-> Fixes: 65a21b71f948 ("powerpc/dma: remove dma_nommu_dma_supported")
-> Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Thu, Jun 13, 2019 at 2:42 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Alex.
+>
+> On Wed, Jun 12, 2019 at 10:35:26PM -0400, Alex Deucher wrote:
+> > On Wed, Jun 12, 2019 at 10:34 PM Hariprasad Kelam
+> > <hariprasad.kelam@gmail.com> wrote:
+> > >
+> > > this patch fixes below compilation error
+> > >
+> > > drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c: =
+In
+> > > function =E2=80=98dcn10_apply_ctx_for_surface=E2=80=99:
+> > > drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c:2=
+378:3:
+> > > error: implicit declaration of function =E2=80=98udelay=E2=80=99
+> > > [-Werror=3Dimplicit-function-declaration]
+> > >    udelay(underflow_check_delay_us);
+> > >
+> > > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+>
+> Am I right in assuming you took this patch?
+>
+> I expect that new code using udelay was added to the amd tree,
+> and when merged with drm-misc-next it failed, because drm-misc-next no
+> longer had drmP.h included so no implicit include of delay.h
+>
+> The root cause was that my original patchset should have been based
+> on the amd tree, and applied there :-(
 
-As expected, it works. The patch needs
-Cc: Stable <stable*vger.kernel.org> # v5.1+
+No worries.  I've picked it up.
 
-Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
-
-Thanks for the help, and the patience with my debugging problems with u64 variables.
-
-Larry
+Alex
