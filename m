@@ -2,145 +2,84 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6AAC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A91C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD6020B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4D321537
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:28:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560457722;
+	bh=6LG9in7pja8a5w1GN/a+95PAyWjDutHkN561WT7tMjo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qIKmB9AHXNECH6MPBYRszJDZQwYv+sKTvMfj4rfWLcxPjRrecnvFHFZ/kPDL3a147
+	 Y5Q13B7nkEliOrYF1MLIKxuaEqT0k1a3FCwzQZq66AYHUCV5KEcfGb2AysVJOZ5VLh
+	 CrpQV2el0DsYM6GBDdS9GOOJ+qzJn/GDe3TzrZcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbfFMU2N (ORCPT
+        id S1729885AbfFMU2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:28:13 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:60351 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbfFMU2M (ORCPT
+        Thu, 13 Jun 2019 16:28:42 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34799 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbfFMU2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:28:12 -0400
-Received: from 79.184.253.190.ipv4.supernova.orange.pl (79.184.253.190) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id c5908a95db0f861a; Thu, 13 Jun 2019 22:28:09 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v5 00/16] Software fwnode references
-Date:   Thu, 13 Jun 2019 22:28:08 +0200
-Message-ID: <3636687.Nc99FdWIM2@kreacher>
-In-Reply-To: <20190531141547.22728-1-heikki.krogerus@linux.intel.com>
-References: <20190531141547.22728-1-heikki.krogerus@linux.intel.com>
+        Thu, 13 Jun 2019 16:28:41 -0400
+Received: by mail-qt1-f193.google.com with SMTP id m29so24176030qtu.1;
+        Thu, 13 Jun 2019 13:28:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aEXZ9ovG0nQIpd8Z74pAm7FU5KWUqGz2YDsBOtBFjmI=;
+        b=nqolfzDb7nBOEec3gi2fqxt9lTBXK72M8yfwqaLze7r4xDZXFNJaL5RlWQYnsBrqEw
+         UVUYA9gJfo2TIjI4szTcw8boETANuUMKuvVh5S4Vn3BNxhAY8xulFGvdt/d6pwO9VMme
+         3zm6hMeoEb25kEzJXcKwgIdJCKAq6rI7xyDZyt4tcXt6f5mWyxhG1BOBMTMcdrVgVK8b
+         JJDvg0g7IkNdhYtr7SQ9clWB3pwUUDoUwtJx1YqgTRVTZSI+QMiJVorXls+ecpcHaQTE
+         zml0qlrv94UCjWX4ES885xn0gpxlvaDBLNReXzR+AdcTdQn7SeFbJelYpJOdqm5SJVQ7
+         bLQg==
+X-Gm-Message-State: APjAAAWhuMQHn1rZhp19KP5ic4DC+w2xPLza9SPtkZyDF7g6e59TV7FC
+        Ny7Ukcg+sD/Ar48kGPGQ5w==
+X-Google-Smtp-Source: APXvYqx/GGQsQaZAE82OHRCzaZxHMgbVOY4Azf/9Ea8dY74XXg53tRU0GwGVV778oTBgcmL/ZE+rbQ==
+X-Received: by 2002:ac8:689a:: with SMTP id m26mr34806510qtq.192.1560457720530;
+        Thu, 13 Jun 2019 13:28:40 -0700 (PDT)
+Received: from localhost ([64.188.179.243])
+        by smtp.gmail.com with ESMTPSA id o38sm453562qto.96.2019.06.13.13.28.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 13:28:39 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 14:28:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Fabien Parent <fparent@baylibre.com>
+Cc:     dmitry.torokhov@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, matthias.bgg@gmail.com,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Fabien Parent <fparent@baylibre.com>
+Subject: Re: [PATCH 1/2] dt-bindings: input: mtk-pmic-keys: add MT6392
+ binding definition
+Message-ID: <20190613202838.GA20410@bogus>
+References: <20190513142120.6527-1-fparent@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513142120.6527-1-fparent@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, May 31, 2019 4:15:31 PM CEST Heikki Krogerus wrote:
-> Hi,
+On Mon, 13 May 2019 16:21:19 +0200, Fabien Parent wrote:
+> Add the binding documentation of the mtk-pmic-keys for the MT6392 PMICs.
 > 
-> This is the fourth, and hopefully the final version, of my proposal to
-> make it possible to use fwnode_property_get_reference_args() also with
-> software nodes. The two issues reported by Hans in v4 are now fixed,
-> which were a typo in a comment, and the fwnode->secondary->secondary
-> of max17074 needs to have value ERR_PTR(-ENODEV).
-> 
-> v4 cover letter:
-> 
-> I'm not splitting this series in two after all. After thinking about
-> this for some time, I decided to add support for static software
-> nodes. I did not want to support them because I don't want to make it
-> easy to maintain board files, but in end they make the use of the
-> software nodes so much more easier compared to if we always had to
-> dynamically allocate them that it's a no-brainer. The references can
-> now be also described statically. Actually, those can now only be
-> described statically.
-> 
-> Hans! I applied (hopefully) all of the fixes you proposed in v3. I
-> hope you have time to test these.
-> 
-> v3 cover letter:
-> 
-> This is the third version of my proposal to add reference handling to
-> the software node code. In this version I renamed ACPI_NAME_SIZE to
-> ACPI_NAMESEG_SIZE in 6/13, and slit patch 9/13 in two separate patches
-> (9/13 and 10/13) as suggested by Andy. Patch 9/13 will now only move
-> the registration of max17047 out of probe, and 10/13 will introduce
-> the software nodes.
-> 
-> v2 cover letter:
-> 
-> This is the second version of this series. In this version I'm
-> introducing a new helper device_find_child_by_name() as proposed
-> by Andy. Andy requested also another helper that could be used for
-> chaining the fwnodes, but I decided not to add that now. I would like
-> to still think about how we should handle exceptions like if there
-> already is a secondary node assigned for a node.
-> 
-> v1 cover letter:
-> 
-> This series adds support for software fwnode reference handling. In
-> practice it means making fwnode_property_get_reference_args() function
-> usable in the drivers also with software nodes. I send the series
-> originally as RFC [1].
-> 
-> As the first user for the software node references, I'm converting
-> intel_cht_int33fe.c to use them as part of the series.
-> 
-> [1] https://lkml.org/lkml/2019/3/15/457
-> 
-> thanks,
-> 
-> Heikki Krogerus (16):
->   software node: Allow node creation without properties
->   software node: Simplify software_node_release() function
->   software node: Add support for static node descriptors
->   software node: Use kobject name when finding child nodes by name
->   software node: Add software_node_get_reference_args()
->   driver core: Add helper device_find_child_by_name()
->   ACPI / property: Don't limit named child node matching to data nodes
->   device property: Introduce fwnode_find_reference()
->   device connection: Find connections also by checking the references
->   usb: typec: Registering real device entries for the muxes
->   platform/x86: intel_cht_int33fe: Register max17047 in its own function
->   platform/x86: intel_cht_int33fe: Remove unused fusb302 device property
->   platform/x86: intel_cht_int33fe: Provide software nodes for the
->     devices
->   platform/x86: intel_cht_int33fe: Provide fwnode for the USB connector
->   platform/x86: intel_cht_int33fe: Supply fwnodes for the external
->     dependencies
->   platform/x86: intel_cht_int33fe: Replacing the old connections with
->     references
-> 
->  drivers/acpi/property.c                  |  26 +-
->  drivers/base/core.c                      |  28 ++
->  drivers/base/devcon.c                    |  26 ++
->  drivers/base/property.c                  |  24 ++
->  drivers/base/swnode.c                    | 324 +++++++++++++++++------
->  drivers/platform/x86/intel_cht_int33fe.c | 291 ++++++++++++++++----
->  drivers/usb/roles/class.c                |   2 +-
->  drivers/usb/typec/bus.h                  |  15 ++
->  drivers/usb/typec/class.c                |  17 +-
->  drivers/usb/typec/mux.c                  | 238 ++++++++++++-----
->  drivers/usb/typec/mux/pi3usb30532.c      |  46 ++--
->  include/linux/device.h                   |   2 +
->  include/linux/property.h                 |  51 ++++
->  include/linux/usb/typec_mux.h            |  62 ++---
->  14 files changed, 903 insertions(+), 249 deletions(-)
-> 
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+> ---
+>  .../devicetree/bindings/input/mtk-pmic-keys.txt       | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
 > 
 
-All applied (but you know that already).
-
-Thanks!
-
-
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
