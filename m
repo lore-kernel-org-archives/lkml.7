@@ -2,162 +2,147 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B22BC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7570EC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 149EC207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B2E7207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="etfGOLWV"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SjLLkrxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733125AbfFMPB6 (ORCPT
+        id S1733137AbfFMPCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:01:58 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:57327 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732525AbfFMOdK (ORCPT
+        Thu, 13 Jun 2019 11:02:02 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:6732 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733035AbfFMPCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:33:10 -0400
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,369,1557212400"; 
-   d="scan'208";a="35701288"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Jun 2019 07:33:10 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.87.152) by
- chn-vm-ex04.mchp-main.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 13 Jun 2019 07:33:08 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 13 Jun 2019 07:33:07 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RpMElIIPeAmVZNSUsuGG2pRHWS3F1XUZRafJUVk6erE=;
- b=etfGOLWVVsZ3MpwS3nBPn1jNeJJxmOhbKxCCVoXDpKH298KilQDH3Fn8ISuyACHakZvI9VVt+bo9DL4ViSxhfMPXzhHfXkPhAlEG0JfzdoV39yZdU8lpXPykYwZBKcOriO7THJXML/qGSxDzBVgQnxYLazVfwBSc1QvmuMojRRw=
-Received: from BN6PR11MB1842.namprd11.prod.outlook.com (10.175.98.146) by
- BN6PR11MB1970.namprd11.prod.outlook.com (10.175.98.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.11; Thu, 13 Jun 2019 14:33:06 +0000
-Received: from BN6PR11MB1842.namprd11.prod.outlook.com
- ([fe80::e581:f807:acdc:cb36]) by BN6PR11MB1842.namprd11.prod.outlook.com
- ([fe80::e581:f807:acdc:cb36%9]) with mapi id 15.20.1965.017; Thu, 13 Jun 2019
- 14:33:06 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <robimarko@gmail.com>
-CC:     <bbrezillon@kernel.org>, <richard@nod.at>,
-        <linux-kernel@vger.kernel.org>, <marek.vasut@gmail.com>,
-        <linux-mtd@lists.infradead.org>, <computersforpeace@gmail.com>,
-        <dwmw2@infradead.org>, <vigneshr@ti.com>
-Subject: Re: [PATCH] mtd: spi-nor: Add Winbond w25q16jv support
-Thread-Topic: [PATCH] mtd: spi-nor: Add Winbond w25q16jv support
-Thread-Index: AQHUxKf5P1ZBDcn1LEmHy4bSCo3uraXpLIAAgAGaqYCAr5lSgA==
-Date:   Thu, 13 Jun 2019 14:33:06 +0000
-Message-ID: <113ffb44-b5a4-be63-d75e-0c5819f65604@microchip.com>
-References: <20190214205723.9011-1-robimarko@gmail.com>
- <97e48e85-9700-53e3-0f7a-eeac6f93f721@microchip.com>
- <CAOX2RU5MsnNLseBRqcp1KqbmQ+5_KzRyTQ_rGQB2DsrW_v-3iA@mail.gmail.com>
-In-Reply-To: <CAOX2RU5MsnNLseBRqcp1KqbmQ+5_KzRyTQ_rGQB2DsrW_v-3iA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR09CA0066.eurprd09.prod.outlook.com
- (2603:10a6:802:28::34) To BN6PR11MB1842.namprd11.prod.outlook.com
- (2603:10b6:404:101::18)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 18026400-8710-4c4c-b415-08d6f00c0c5b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR11MB1970;
-x-ms-traffictypediagnostic: BN6PR11MB1970:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <BN6PR11MB1970AA8A67625BC596E3F6AEF0EF0@BN6PR11MB1970.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0067A8BA2A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(396003)(39860400002)(136003)(366004)(189003)(199004)(6246003)(8936002)(52116002)(76176011)(1411001)(14444005)(66066001)(54906003)(11346002)(81166006)(305945005)(446003)(256004)(316002)(81156014)(8676002)(5660300002)(99286004)(86362001)(66946007)(73956011)(2616005)(66446008)(7736002)(66476007)(476003)(71190400001)(31686004)(36756003)(71200400001)(6916009)(72206003)(31696002)(6306002)(2906002)(966005)(229853002)(64756008)(6436002)(14454004)(68736007)(6116002)(53936002)(26005)(4326008)(186003)(6486002)(25786009)(386003)(6506007)(53546011)(102836004)(3846002)(486006)(66556008)(478600001)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR11MB1970;H:BN6PR11MB1842.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: pr+drSv8UncacVA4VVPmY5qs3vtwWca05DC8BCGfVSU/3Gqb1S43Un6bqvljLpjLAYquYbm50dig3LbuSJZZT1MlFKGjE5fzcqPggNyKkMS2GsOKXix6rJxikclqY2zOp2jTMedJRvd1pK45wSJGlPf4WgN6/PRqr8kvde1/RG8MxVmv7PY6lqIF5J+DB7WkPeyiGxSVF11XSVbjOPqXY24ZEqJKWU0al2s/fKwluvztsfNQlAD588XW0z8RcNIR6vYGwWWSoy8Qs++ZlmowQVkNmOIZRxxlMhsZqhbqWYyNKd7TC5uRUNgR2JUlf2TziV+b6KPkN+KunRgLTB04ygqzb/gO09gbkyfkUzx1XWJFXBSQMBpYxeiH0hfG6vFRaLIGbI84fn/MehBjGZ2pSXQ0KTU+XCbKWU/UiWhiKXU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DEE4C4B6D51A4D44B8AF53A23A4484FF@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 13 Jun 2019 11:02:00 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0265670002>; Thu, 13 Jun 2019 08:01:59 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 13 Jun 2019 08:01:59 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 13 Jun 2019 08:01:59 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Jun
+ 2019 15:01:57 +0000
+Subject: Re: [PATCH v5 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
+To:     Sameer Pujar <spujar@nvidia.com>, <thierry.reding@gmail.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <mkumard@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1560422477-11242-1-git-send-email-spujar@nvidia.com>
+ <3f1ebc62-1498-f26c-9044-8634242fc61e@nvidia.com>
+ <9c5dbfc5-122b-2049-fdad-7ffeab6a9ec9@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <97303572-48d5-3da6-6e60-51056c82b7fd@nvidia.com>
+Date:   Thu, 13 Jun 2019 16:01:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18026400-8710-4c4c-b415-08d6f00c0c5b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 14:33:06.0957
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tudor.ambarus@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1970
+In-Reply-To: <9c5dbfc5-122b-2049-fdad-7ffeab6a9ec9@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560438119; bh=gAeYNrokAD9Q2kca+yWScB3sbyQIxjUJco5GbiuobI8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=SjLLkrxl12fk5dLATa9X7QQSsJB3mKzVLXzocYLZAsRb8Ujbfjn/O4TUsCommW+Kx
+         0YUlZl0V+wMcHqzns4QKM7Iq138xtW0mMSSNcpkv208Ar6pPe38/av3wWkNPr0WEAn
+         n1MYFRryF3pRteSTg2InXvl7Kh5VGLDdEKdTx0RYDrfRxlI89kdh1RxkxipItU0xHY
+         Cl1zvUWTOpp3Yn212zxZbVEiaK84V2oiciohoeLcQ5MbgjxKPqQAT1Mvw2S2Lp0OEG
+         dfMe6sGJ4dpo/6uJtrqt3GGEsxDMM6JWdaiXqNc1/YmeS4hxFuk+By6vz45gQuzhWI
+         OletykY5rHcIQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFJvYmVydCwNCg0KT24gMDIvMjEvMjAxOSAxMDo1OCBQTSwgUm9iZXJ0IE1hcmtvIHdyb3Rl
-Og0KPiBPbiBXZWQsIDIwIEZlYiAyMDE5IGF0IDIxOjI5LCA8VHVkb3IuQW1iYXJ1c0BtaWNyb2No
-aXAuY29tPiB3cm90ZTo+Pg0KPiBIaSwgUm9iZXJ0LD4+IE9uIDAyLzE0LzIwMTkgMTA6NTcgUE0s
-IFJvYmVydCBNYXJrbyB3cm90ZTo+ID4NCj4gRGF0YXNoZWV0OiBodHRwczovL3d3dy53aW5ib25k
-LmNvbS9yZXNvdXJjZS1maWxlcy93MjVxMTZqdiUyMHNwaSUyMHJldmclMjAwMzIyMjAxOCUyMHBs
-dXMucGRmPg0KPj4+PiBUZXN0aW5nIGRvbmUgb24gTWlrcm90aWsgUm91dGVyYm9hcmQgUkI0NTBH
-eDQgYm9hcmQgdW5kZXIgNC4xOS4xOQ0KPiBrZXJuZWwuPj4gSXQgaXMgcHJlZmVyYWJsZSB0byBk
-byB0aGUgdGVzdCBvbiBzcGktbm9yL25leHRVbmZvcnR1bmF0ZWx5DQo+IEkgY2FudCBkbyB0aGF0
-IGFzIE9wZW5XcnQgaGFzIGEgY29uc2lkZXJhYmxlIGFtb3VudCBvZiBwYXRjaGVzIHRoYXQNCj4g
-d291bGQgbmVlZCB0byBiZSBwb3J0ZWQgYW5kIHdlIGFyZSBvbmx5IG1vdmluZyBmcm9tIExUUyB0
-byBMVFMgdmVyc2lvbg0KPiBhbmQgd2UgYXJlIGN1cnJlbnRseSBvbiA0LjE5Lg0KPj4+DQo+Pj4g
-VGVzdCBib2FyZCBkb2VzIG5vdCBzdXBwb3J0IER1YWwgb3IgUXVhZCBtb2Rlcy4NCj4+Pg0KPj4+
-IFNpZ25lZC1vZmYtYnk6IFJvYmVydCBNYXJrbyA8cm9iaW1hcmtvQGdtYWlsLmNvbT4NCj4+PiAt
-LS0NCj4+PiAgZHJpdmVycy9tdGQvc3BpLW5vci9zcGktbm9yLmMgfCA1ICsrKysrDQo+Pj4gIDEg
-ZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykNCj4+Pg0KPj4+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL210ZC9zcGktbm9yL3NwaS1ub3IuYyBiL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5j
-DQo+Pj4gaW5kZXggNmUxM2JiZDFhYWE1Li4wZTk1OGY0OGRiMWIgMTAwNjQ0DQo+Pj4gLS0tIGEv
-ZHJpdmVycy9tdGQvc3BpLW5vci9zcGktbm9yLmMNCj4+PiArKysgYi9kcml2ZXJzL210ZC9zcGkt
-bm9yL3NwaS1ub3IuYw0KPj4+IEBAIC0xOTc1LDYgKzE5NzUsMTEgQEAgc3RhdGljIGNvbnN0IHN0
-cnVjdCBmbGFzaF9pbmZvIHNwaV9ub3JfaWRzW10gPSB7DQo+Pj4gICAgICAgICAgICAgICAgICAg
-ICAgIFNFQ1RfNEsgfCBTUElfTk9SX0RVQUxfUkVBRCB8IFNQSV9OT1JfUVVBRF9SRUFEIHwNCj4+
-PiAgICAgICAgICAgICAgICAgICAgICAgU1BJX05PUl9IQVNfTE9DSyB8IFNQSV9OT1JfSEFTX1RC
-KQ0KPj4+ICAgICAgIH0sDQo+Pj4gKyAgICAgew0KPj4+ICsgICAgICAgICAgICAgIncyNXExNmp2
-IiwgSU5GTygweGVmNzAxNSwgMCwgNjQgKiAxMDI0LCAgMzIsDQo+Pj4gKyAgICAgICAgICAgICAg
-ICAgICAgIFNFQ1RfNEsgfCBTUElfTk9SX0RVQUxfUkVBRCB8IFNQSV9OT1JfUVVBRF9SRUFEIHwN
-Cj4+PiArICAgICAgICAgICAgICAgICAgICAgU1BJX05PUl9IQVNfTE9DSyB8IFNQSV9OT1JfSEFT
-X1RCKQ0KPj4NCj4+IFlvdSdsbCBuZWVkIGEgd2F5IHRvIGRpZmZlcmVudGlhdGUgYmV0d2VlbiBX
-MjVRMTZKVi1JUS9KUSBhbmQgVzI1UTE2SlYtSU0vSk0uDQo+IEhtLCBmcm9tIHdoYXQgSSB1bmRl
-cnN0b29kIEpWIGlzIHRoZSBzZXJpZXMgYW5kIHN1ZmZpeCBvbmx5IGluZGljdGVzDQo+IHRoZSBw
-YWNrYWdlLg0KPiBUaGV5IHNob3VsZCBhbGwgaGF2ZSB0aGUgc2FtZSBKRURFQyBJRCBhbmQgZmVh
-dHVyZXMuDQo+Pg0KDQpXMjVRMTZKVi1JUS9KUSBhbmQgVzI1UTE2SlYtSU0vSk0gaGF2ZSBkaWZm
-ZXJlbnQgamVkZWMgaWRzLCBzZWUgdGFibGUgIjkuMS4xDQpNYW51ZmFjdHVyZXIgYW5kIERldmlj
-ZSBJZGVudGlmaWNhdGlvbiIgZnJvbSB0aGUgZGF0YXNoZWV0IHRoYXQgeW91IGluZGljYXRlZCBp
-bg0KdGhlIGNvbW1pdCBtZXNzYWdlLg0KDQpMb29raW5nIGF0ICIxMi4gT1JERVJJTkcgSU5GT1JN
-QVRJT04iLCBJIHNlZSB0aGF0Og0KLSBRIHZlcnNpb24gaGFzIFFFID0gMSAoZml4ZWQpIGFuZCBp
-dCdzIGJhY2t3YXJkIGNvbXBhdGlibGUgdG8gRlYgZmFtaWx5DQotIE0gdmVyc2lvbiBoYXMgUUUg
-PSAwIChwcm9ncmFtbWFibGUpIGFuZCBoYXMgYSBuZXcgZGV2aWNlIElEDQpUaGUgc2FtZSBpcyBk
-ZXNjcmliZWQgaW4gIjguIFFVQUQgRU5BQkxFIChRRSkg4oCTIFZvbGF0aWxlL05vbi1Wb2xhdGls
-ZSBXcml0YWJsZSIuDQoNCkkgd291bGQgc3VnZ2VzdCB0byBuYW1lIHRoZSBmbGFzaCAidzI1cTE2
-anYtaW0vam0iLg0KDQpXaGF0IGRvIHlvdSB0aGluaz8NCnRhDQo=
+
+On 13/06/2019 15:43, Sameer Pujar wrote:
+>=20
+> On 6/13/2019 7:39 PM, Jon Hunter wrote:
+>> On 13/06/2019 11:41, Sameer Pujar wrote:
+>>> Add DT nodes for following devices on Tegra186 and Tegra194
+>>> =C2=A0 * ACONNECT
+>>> =C2=A0 * ADMA
+>>> =C2=A0 * AGIC
+>>>
+>>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+>>> ---
+>>> =C2=A0 changes from previous revision
+>>> =C2=A0=C2=A0 * fixed size value for ranges property in aconnect
+>>>
+>>> =C2=A0 arch/arm64/boot/dts/nvidia/tegra186.dtsi | 67
+>>> ++++++++++++++++++++++++++++++++
+>>> =C2=A0 arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67
+>>> ++++++++++++++++++++++++++++++++
+>>> =C2=A0 2 files changed, 134 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+>>> b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+>>> index 426ac0b..5e9fe7e 100644
+>>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+>>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+>>> @@ -1295,4 +1295,71 @@
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_=
+LOW)>;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupt-parent=
+ =3D <&gic>;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 aconnect {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "nvidia,tegr=
+a210-aconnect";
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clocks =3D <&bpmp TEGRA186_=
+CLK_APE>,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 <&bpmp TEGRA186_CLK_APB2APE>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clock-names =3D "ape", "apb=
+2ape";
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 power-domains =3D <&bpmp TE=
+GRA186_POWER_DOMAIN_AUD>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #address-cells =3D <1>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #size-cells =3D <1>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ranges =3D <0x02900000 0x0 =
+0x02900000 0x200000>;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 status =3D "disabled";
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dma-controller@2930000 {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 com=
+patible =3D "nvidia,tegra186-adma";
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg=
+ =3D <0x02930000 0x50000>;
+>> Sorry but I have been double checking these register addresses and I
+>> wonder if this should be a length of 0x10000. The 0x50000 includes all
+>> the ranges where the registers are paged, so I don't think that this is
+>> correct including these.
+> Is it because we don't have virtualization support yet?
+
+Yes those are for virtulisation, but I don't believe we need them here.
+
+> and isn't the range 0x10000 covers only global register space, don't we
+> want to include page1 ADMA channel registers. In that case it would be
+> 0x20000.
+
+Yes, 0x20000 is correct indeed
+
+Cheers
+Jon
+
+--=20
+nvpublic
