@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC524C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52316C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B599B20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD9721743
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441532;
-	bh=ZPH16qG/Ca5t+j0juJTeNqQ9wDqZdh+nyOxINpzAyb4=;
+	s=default; t=1560441540;
+	bh=76D3vaAouJvHGGAHeFdnU7ReK0evbpdCzSUXWh05FYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MmhMjRQzl8Ge4bjSSt/4Y2zovpxko9wToSPwFWcUGhzMHcAzJBvETxpK+0f1dHjWV
-	 GcLgDnicFMJkXe9NZIhpDCLkKkUpwNOb1Tadl07pnYwOKKT9IhKcBxOfROe20t/+sf
-	 Mycem6c4x88AFfSaJ1ox7EWfctRA7YmHMIAOqFgs=
+	b=M0puMoFumapaLbHvWYSWmBgnRZPY3/ufPXtKjtES+zfqzQo0stpelu0DF4VgSvN0V
+	 Osa9P7saWggBoSQVunGvOKj2ETf6tdFwAsB2lZSSeLZhUcMNpZPGZRNpFXC5EZWvRW
+	 WpBHZyKOqOiJpjqnE8uSE2pKnEvMsr8u0nolI3kM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390636AbfFMP6v (ORCPT
+        id S2390395AbfFMP67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:58:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37682 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:58:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731490AbfFMIuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:50:03 -0400
+        id S1731489AbfFMIuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:50:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 918E3206BA;
-        Thu, 13 Jun 2019 08:50:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0FAA20851;
+        Thu, 13 Jun 2019 08:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415803;
-        bh=ZPH16qG/Ca5t+j0juJTeNqQ9wDqZdh+nyOxINpzAyb4=;
+        s=default; t=1560415800;
+        bh=76D3vaAouJvHGGAHeFdnU7ReK0evbpdCzSUXWh05FYc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mpLuf2e9Gy74WOJUI6CVpfzXIsHjUOE26ypSv/R6Z/bKzs3rrjwRU3ahOK7bcfHV+
-         Dw035WfQqrmSrw85U83Dfh71HiOFNeYQTo8YvVpOmPChEbXn/OmqwYYJ8n7Nn15PhJ
-         YIAWAsIYwQuSE1r+gwm9xfynR4IwZM0hNY3Gtgic=
+        b=Ed9x4pwJzF9lSzdTHbJ3Li2XuCibqMiJna+QyI25fcY7IooGi/3fv+aUx09r+AZOj
+         hBmO6DGNu70DWyarUC21v6RGRJiRWatg1VgpVSQd8ittNpSHxXVQvG5Yw04r2bD9c0
+         E0rFHVkrK7YjZS/NoGkKvU3I3WoWPPl/iclEYB7c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Kurz <akurz@blala.de>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 121/155] power: supply: max14656: fix potential use-before-alloc
-Date:   Thu, 13 Jun 2019 10:33:53 +0200
-Message-Id: <20190613075659.634549717@linuxfoundation.org>
+Subject: [PATCH 5.1 092/155] x86/PCI: Fix PCI IRQ routing table memory leak
+Date:   Thu, 13 Jun 2019 10:33:24 +0200
+Message-Id: <20190613075658.239152949@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -61,61 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0cd0e49711556d2331a06b1117b68dd786cb54d2 ]
+[ Upstream commit ea094d53580f40c2124cef3d072b73b2425e7bfd ]
 
-Call order on probe():
-- max14656_hw_init() enables interrupts on the chip
-- devm_request_irq() starts processing interrupts, isr
-  could be called immediately
--    isr: schedules delayed work (irq_work)
--    irq_work: calls power_supply_changed()
-- devm_power_supply_register() registers the power supply
+In pcibios_irq_init(), the PCI IRQ routing table 'pirq_table' is first
+found through pirq_find_routing_table().  If the table is not found and
+CONFIG_PCI_BIOS is defined, the table is then allocated in
+pcibios_get_irq_routing_table() using kmalloc().  Later, if the I/O APIC is
+used, this table is actually not used.  In that case, the allocated table
+is not freed, which is a memory leak.
 
-Depending on timing, it's possible that power_supply_changed()
-is called on an unregistered power supply structure.
+Free the allocated table if it is not used.
 
-Fix by registering the power supply before requesting the irq.
-
-Cc: Alexander Kurz <akurz@blala.de>
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+[bhelgaas: added Ingo's reviewed-by, since the only change since v1 was to
+use the irq_routing_table local variable name he suggested]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/max14656_charger_detector.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/x86/pci/irq.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/supply/max14656_charger_detector.c b/drivers/power/supply/max14656_charger_detector.c
-index b91b1d2999dc..d19307f791c6 100644
---- a/drivers/power/supply/max14656_charger_detector.c
-+++ b/drivers/power/supply/max14656_charger_detector.c
-@@ -280,6 +280,13 @@ static int max14656_probe(struct i2c_client *client,
+diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
+index 52e55108404e..d3a73f9335e1 100644
+--- a/arch/x86/pci/irq.c
++++ b/arch/x86/pci/irq.c
+@@ -1119,6 +1119,8 @@ static const struct dmi_system_id pciirq_dmi_table[] __initconst = {
  
- 	INIT_DELAYED_WORK(&chip->irq_work, max14656_irq_worker);
- 
-+	chip->detect_psy = devm_power_supply_register(dev,
-+		       &chip->psy_desc, &psy_cfg);
-+	if (IS_ERR(chip->detect_psy)) {
-+		dev_err(dev, "power_supply_register failed\n");
-+		return -EINVAL;
-+	}
+ void __init pcibios_irq_init(void)
+ {
++	struct irq_routing_table *rtable = NULL;
 +
- 	ret = devm_request_irq(dev, chip->irq, max14656_irq,
- 			       IRQF_TRIGGER_FALLING,
- 			       MAX14656_NAME, chip);
-@@ -289,13 +296,6 @@ static int max14656_probe(struct i2c_client *client,
+ 	DBG(KERN_DEBUG "PCI: IRQ init\n");
+ 
+ 	if (raw_pci_ops == NULL)
+@@ -1129,8 +1131,10 @@ void __init pcibios_irq_init(void)
+ 	pirq_table = pirq_find_routing_table();
+ 
+ #ifdef CONFIG_PCI_BIOS
+-	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN))
++	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN)) {
+ 		pirq_table = pcibios_get_irq_routing_table();
++		rtable = pirq_table;
++	}
+ #endif
+ 	if (pirq_table) {
+ 		pirq_peer_trick();
+@@ -1145,8 +1149,10 @@ void __init pcibios_irq_init(void)
+ 		 * If we're using the I/O APIC, avoid using the PCI IRQ
+ 		 * routing table
+ 		 */
+-		if (io_apic_assign_pci_irqs)
++		if (io_apic_assign_pci_irqs) {
++			kfree(rtable);
+ 			pirq_table = NULL;
++		}
  	}
- 	enable_irq_wake(chip->irq);
  
--	chip->detect_psy = devm_power_supply_register(dev,
--		       &chip->psy_desc, &psy_cfg);
--	if (IS_ERR(chip->detect_psy)) {
--		dev_err(dev, "power_supply_register failed\n");
--		return -EINVAL;
--	}
--
- 	schedule_delayed_work(&chip->irq_work, msecs_to_jiffies(2000));
- 
- 	return 0;
+ 	x86_init.pci.fixup_irqs();
 -- 
 2.20.1
 
