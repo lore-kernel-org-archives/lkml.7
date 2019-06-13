@@ -2,260 +2,180 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C72C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82412C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0180920679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6639D20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbfFMS0C (ORCPT
+        id S1728195AbfFMS0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:26:02 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:36079 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbfFMS0B (ORCPT
+        Thu, 13 Jun 2019 14:26:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36852 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727314AbfFMS0j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:26:01 -0400
-Received: by mail-io1-f70.google.com with SMTP id k21so15672333ioj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:26:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=H8fkKRsajFNvveyMibT6Ym6gwJL9IWybrrDbLE6hjXM=;
-        b=g/dgSw7B2m5N0PZ2STEOkEfm//dBj25RBN63Gz+EnDB3VFdv/9QEsMe0dCrdSvV1VL
-         eac2MtLOCaD8XeJ+p5GI1GJBfg4Xegmd+B7np5r25zNMNgoTpFoZJOLq+GNcmMu0sWZL
-         Eb/dR6gEXHvY1TTevn3I0pWMnLpE9huSXlMkdOzaYEF9ghGMTUbDUPgp9t63hgpHVIuc
-         g1TJ0yC/3vw4FLMmKWuew0Xy5e3f2I50OhVBTTsAquvmOMu1Cj48jX1hL0eLpiat/yB9
-         6Lob6iMwzut3tmklt29JJlc+U8i5PgEp/0KpZC1MBL3PVMro34bRZ8eNfA1DIq16Jine
-         x84g==
-X-Gm-Message-State: APjAAAXQr1YtE8iKwn0aRUMU3JzXUXe1nVazHUDgHPIYzE1Jw0MAGC9x
-        R0ISWkbMJL42dNuupMVtWO5N4D6D1DcSxvhMgJejR1BPf+yg
-X-Google-Smtp-Source: APXvYqzBC1FZKm6BWRsem6orfogvQHSXv8MqMWzwoem5idhuC5D8v+7E99KxjGlqvsPxtqaqrIOr9RdqfLmefvin5NKd9sUHCap2
+        Thu, 13 Jun 2019 14:26:39 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DIHFP6118168;
+        Thu, 13 Jun 2019 14:26:16 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t3ufr0pha-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jun 2019 14:26:16 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5DI9IQD019216;
+        Thu, 13 Jun 2019 18:10:09 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma01dal.us.ibm.com with ESMTP id 2t1x6t00yc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jun 2019 18:10:09 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5DIQEjo7733510
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 18:26:14 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3E0CF112065;
+        Thu, 13 Jun 2019 18:26:14 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4164B112061;
+        Thu, 13 Jun 2019 18:26:13 +0000 (GMT)
+Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.170])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Jun 2019 18:26:13 +0000 (GMT)
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] Replaces long number representation by BIT() macro
+Date:   Thu, 13 Jun 2019 15:02:27 -0300
+Message-Id: <20190613180227.29558-1-leonardo@linux.ibm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Received: by 2002:a02:b90e:: with SMTP id v14mr28704806jan.122.1560450360686;
- Thu, 13 Jun 2019 11:26:00 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 11:26:00 -0700
-In-Reply-To: <CACT4Y+bAuAiApr9CxSH5CoDnZ5hYmU+K4kJqrSo5yBZLyrzONA@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007042a8058b38a946@google.com>
-Subject: Re: memory leak in vhost_net_ioctl
-From:   syzbot <syzbot+0789f0c7e45efd7bb643@syzkaller.appspotmail.com>
-To:     asias@redhat.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, dvyukov@google.com,
-        hawk@kernel.org, hdanton@sina.com, jakub.kicinski@netronome.com,
-        jasowang@redhat.com, john.fastabend@gmail.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mst@redhat.com,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        virtualization@lists.linux-foundation.org,
-        xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906130134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The main reason of this change is to make these bitmasks more readable.
 
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-memory leak in vhost_net_ioctl
+The macro ASM_CONST() just appends an UL to it's parameter, so it can be
+easily replaced by BIT_MASK, that already uses a UL representation.
 
-ANGE): hsr_slave_1: link becomes ready
-2019/06/13 18:24:57 executed programs: 18
-BUG: memory leak
-unreferenced object 0xffff88811cbc6ac0 (size 64):
-   comm "syz-executor.0", pid 7196, jiffies 4294943804 (age 14.770s)
-   hex dump (first 32 bytes):
-     01 00 00 00 81 88 ff ff 00 00 00 00 82 88 ff ff  ................
-     d0 6a bc 1c 81 88 ff ff d0 6a bc 1c 81 88 ff ff  .j.......j......
-   backtrace:
-     [<000000006c752978>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<000000006c752978>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000006c752978>] slab_alloc mm/slab.c:3326 [inline]
-     [<000000006c752978>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<00000000b3825d52>] kmalloc include/linux/slab.h:547 [inline]
-     [<00000000b3825d52>] vhost_net_ubuf_alloc drivers/vhost/net.c:241  
-[inline]
-     [<00000000b3825d52>] vhost_net_set_backend drivers/vhost/net.c:1535  
-[inline]
-     [<00000000b3825d52>] vhost_net_ioctl+0xb43/0xc10  
-drivers/vhost/net.c:1717
-     [<00000000700f02d7>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<00000000700f02d7>] file_ioctl fs/ioctl.c:509 [inline]
-     [<00000000700f02d7>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<000000009a0ec0a7>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000d9416323>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000d9416323>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000d9416323>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<00000000e4407a23>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000008715c149>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ASM_CONST() in this file may behave different if __ASSEMBLY__ is defined,
+as it is used on .S files, just leaving the parameter as is.
 
-BUG: memory leak
-unreferenced object 0xffff88810b1365c0 (size 64):
-   comm "syz-executor.2", pid 7193, jiffies 4294943823 (age 14.580s)
-   hex dump (first 32 bytes):
-     01 00 00 00 81 88 ff ff 00 00 00 00 81 88 ff ff  ................
-     d0 65 13 0b 81 88 ff ff d0 65 13 0b 81 88 ff ff  .e.......e......
-   backtrace:
-     [<000000006c752978>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<000000006c752978>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000006c752978>] slab_alloc mm/slab.c:3326 [inline]
-     [<000000006c752978>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<00000000b3825d52>] kmalloc include/linux/slab.h:547 [inline]
-     [<00000000b3825d52>] vhost_net_ubuf_alloc drivers/vhost/net.c:241  
-[inline]
-     [<00000000b3825d52>] vhost_net_set_backend drivers/vhost/net.c:1535  
-[inline]
-     [<00000000b3825d52>] vhost_net_ioctl+0xb43/0xc10  
-drivers/vhost/net.c:1717
-     [<00000000700f02d7>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<00000000700f02d7>] file_ioctl fs/ioctl.c:509 [inline]
-     [<00000000700f02d7>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<000000009a0ec0a7>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000d9416323>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000d9416323>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000d9416323>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<00000000e4407a23>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000008715c149>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+However, I have noticed no difference in the generated binary after this
+change.
 
-BUG: memory leak
-unreferenced object 0xffff88810be23700 (size 64):
-   comm "syz-executor.3", pid 7194, jiffies 4294943823 (age 14.580s)
-   hex dump (first 32 bytes):
-     01 00 00 00 00 00 00 00 00 00 00 00 00 c9 ff ff  ................
-     10 37 e2 0b 81 88 ff ff 10 37 e2 0b 81 88 ff ff  .7.......7......
-   backtrace:
-     [<000000006c752978>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<000000006c752978>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000006c752978>] slab_alloc mm/slab.c:3326 [inline]
-     [<000000006c752978>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<00000000b3825d52>] kmalloc include/linux/slab.h:547 [inline]
-     [<00000000b3825d52>] vhost_net_ubuf_alloc drivers/vhost/net.c:241  
-[inline]
-     [<00000000b3825d52>] vhost_net_set_backend drivers/vhost/net.c:1535  
-[inline]
-     [<00000000b3825d52>] vhost_net_ioctl+0xb43/0xc10  
-drivers/vhost/net.c:1717
-     [<00000000700f02d7>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<00000000700f02d7>] file_ioctl fs/ioctl.c:509 [inline]
-     [<00000000700f02d7>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<000000009a0ec0a7>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000d9416323>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000d9416323>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000d9416323>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<00000000e4407a23>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000008715c149>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+---
+ arch/powerpc/include/asm/firmware.h | 75 ++++++++++++++---------------
+ 1 file changed, 37 insertions(+), 38 deletions(-)
 
-BUG: memory leak
-unreferenced object 0xffff88810b136500 (size 64):
-   comm "syz-executor.6", pid 7228, jiffies 4294943827 (age 14.540s)
-   hex dump (first 32 bytes):
-     01 00 00 00 20 69 6f 63 00 00 00 00 64 65 76 2f  .... ioc....dev/
-     10 65 13 0b 81 88 ff ff 10 65 13 0b 81 88 ff ff  .e.......e......
-   backtrace:
-     [<000000006c752978>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<000000006c752978>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000006c752978>] slab_alloc mm/slab.c:3326 [inline]
-     [<000000006c752978>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<00000000b3825d52>] kmalloc include/linux/slab.h:547 [inline]
-     [<00000000b3825d52>] vhost_net_ubuf_alloc drivers/vhost/net.c:241  
-[inline]
-     [<00000000b3825d52>] vhost_net_set_backend drivers/vhost/net.c:1535  
-[inline]
-     [<00000000b3825d52>] vhost_net_ioctl+0xb43/0xc10  
-drivers/vhost/net.c:1717
-     [<00000000700f02d7>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<00000000700f02d7>] file_ioctl fs/ioctl.c:509 [inline]
-     [<00000000700f02d7>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<000000009a0ec0a7>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000d9416323>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000d9416323>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000d9416323>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<00000000e4407a23>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000008715c149>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88810b9cfec0 (size 64):
-   comm "syz-executor.7", pid 7236, jiffies 4294943829 (age 14.520s)
-   hex dump (first 32 bytes):
-     01 00 00 00 20 69 6f 63 00 00 00 00 64 65 76 2f  .... ioc....dev/
-     d0 fe 9c 0b 81 88 ff ff d0 fe 9c 0b 81 88 ff ff  ................
-   backtrace:
-     [<000000006c752978>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<000000006c752978>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000006c752978>] slab_alloc mm/slab.c:3326 [inline]
-     [<000000006c752978>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<00000000b3825d52>] kmalloc include/linux/slab.h:547 [inline]
-     [<00000000b3825d52>] vhost_net_ubuf_alloc drivers/vhost/net.c:241  
-[inline]
-     [<00000000b3825d52>] vhost_net_set_backend drivers/vhost/net.c:1535  
-[inline]
-     [<00000000b3825d52>] vhost_net_ioctl+0xb43/0xc10  
-drivers/vhost/net.c:1717
-     [<00000000700f02d7>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<00000000700f02d7>] file_ioctl fs/ioctl.c:509 [inline]
-     [<00000000700f02d7>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<000000009a0ec0a7>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000d9416323>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000d9416323>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000d9416323>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<00000000e4407a23>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000008715c149>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88810b9cd380 (size 64):
-   comm "syz-executor.4", pid 7218, jiffies 4294943834 (age 14.470s)
-   hex dump (first 32 bytes):
-     01 00 00 00 81 88 ff ff 00 00 00 00 81 88 ff ff  ................
-     90 d3 9c 0b 81 88 ff ff 90 d3 9c 0b 81 88 ff ff  ................
-   backtrace:
-     [<000000006c752978>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<000000006c752978>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000006c752978>] slab_alloc mm/slab.c:3326 [inline]
-     [<000000006c752978>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<00000000b3825d52>] kmalloc include/linux/slab.h:547 [inline]
-     [<00000000b3825d52>] vhost_net_ubuf_alloc drivers/vhost/net.c:241  
-[inline]
-     [<00000000b3825d52>] vhost_net_set_backend drivers/vhost/net.c:1535  
-[inline]
-     [<00000000b3825d52>] vhost_net_ioctl+0xb43/0xc10  
-drivers/vhost/net.c:1717
-     [<00000000700f02d7>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<00000000700f02d7>] file_ioctl fs/ioctl.c:509 [inline]
-     [<00000000700f02d7>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<000000009a0ec0a7>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000d9416323>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000d9416323>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000d9416323>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<00000000e4407a23>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000008715c149>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
-Tested on:
-
-commit:         c11fb13a Merge branch 'for-linus' of git://git.kernel.org/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11c6b666a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cb38d33cd06d8d48
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=11ff0de1a00000
+diff --git a/arch/powerpc/include/asm/firmware.h b/arch/powerpc/include/asm/firmware.h
+index 00bc42d95679..7a5b0cc0bc85 100644
+--- a/arch/powerpc/include/asm/firmware.h
++++ b/arch/powerpc/include/asm/firmware.h
+@@ -14,46 +14,45 @@
+ 
+ #ifdef __KERNEL__
+ 
+-#include <asm/asm-const.h>
+-
++#include <linux/bits.h>
+ /* firmware feature bitmask values */
+ 
+-#define FW_FEATURE_PFT		ASM_CONST(0x0000000000000001)
+-#define FW_FEATURE_TCE		ASM_CONST(0x0000000000000002)
+-#define FW_FEATURE_SPRG0	ASM_CONST(0x0000000000000004)
+-#define FW_FEATURE_DABR		ASM_CONST(0x0000000000000008)
+-#define FW_FEATURE_COPY		ASM_CONST(0x0000000000000010)
+-#define FW_FEATURE_ASR		ASM_CONST(0x0000000000000020)
+-#define FW_FEATURE_DEBUG	ASM_CONST(0x0000000000000040)
+-#define FW_FEATURE_TERM		ASM_CONST(0x0000000000000080)
+-#define FW_FEATURE_PERF		ASM_CONST(0x0000000000000100)
+-#define FW_FEATURE_DUMP		ASM_CONST(0x0000000000000200)
+-#define FW_FEATURE_INTERRUPT	ASM_CONST(0x0000000000000400)
+-#define FW_FEATURE_MIGRATE	ASM_CONST(0x0000000000000800)
+-#define FW_FEATURE_PERFMON	ASM_CONST(0x0000000000001000)
+-#define FW_FEATURE_CRQ		ASM_CONST(0x0000000000002000)
+-#define FW_FEATURE_VIO		ASM_CONST(0x0000000000004000)
+-#define FW_FEATURE_RDMA		ASM_CONST(0x0000000000008000)
+-#define FW_FEATURE_LLAN		ASM_CONST(0x0000000000010000)
+-#define FW_FEATURE_BULK_REMOVE	ASM_CONST(0x0000000000020000)
+-#define FW_FEATURE_XDABR	ASM_CONST(0x0000000000040000)
+-#define FW_FEATURE_MULTITCE	ASM_CONST(0x0000000000080000)
+-#define FW_FEATURE_SPLPAR	ASM_CONST(0x0000000000100000)
+-#define FW_FEATURE_LPAR		ASM_CONST(0x0000000000400000)
+-#define FW_FEATURE_PS3_LV1	ASM_CONST(0x0000000000800000)
+-#define FW_FEATURE_HPT_RESIZE	ASM_CONST(0x0000000001000000)
+-#define FW_FEATURE_CMO		ASM_CONST(0x0000000002000000)
+-#define FW_FEATURE_VPHN		ASM_CONST(0x0000000004000000)
+-#define FW_FEATURE_XCMO		ASM_CONST(0x0000000008000000)
+-#define FW_FEATURE_OPAL		ASM_CONST(0x0000000010000000)
+-#define FW_FEATURE_SET_MODE	ASM_CONST(0x0000000040000000)
+-#define FW_FEATURE_BEST_ENERGY	ASM_CONST(0x0000000080000000)
+-#define FW_FEATURE_TYPE1_AFFINITY ASM_CONST(0x0000000100000000)
+-#define FW_FEATURE_PRRN		ASM_CONST(0x0000000200000000)
+-#define FW_FEATURE_DRMEM_V2	ASM_CONST(0x0000000400000000)
+-#define FW_FEATURE_DRC_INFO	ASM_CONST(0x0000000800000000)
+-#define FW_FEATURE_BLOCK_REMOVE ASM_CONST(0x0000001000000000)
+-#define FW_FEATURE_PAPR_SCM 	ASM_CONST(0x0000002000000000)
++#define FW_FEATURE_PFT		BIT(0)
++#define FW_FEATURE_TCE		BIT(1)
++#define FW_FEATURE_SPRG0		BIT(2)
++#define FW_FEATURE_DABR		BIT(3)
++#define FW_FEATURE_COPY		BIT(4)
++#define FW_FEATURE_ASR		BIT(5)
++#define FW_FEATURE_DEBUG		BIT(6)
++#define FW_FEATURE_TERM		BIT(7)
++#define FW_FEATURE_PERF		BIT(8)
++#define FW_FEATURE_DUMP		BIT(9)
++#define FW_FEATURE_INTERRUPT	BIT(10)
++#define FW_FEATURE_MIGRATE	BIT(11)
++#define FW_FEATURE_PERFMON	BIT(12)
++#define FW_FEATURE_CRQ		BIT(13)
++#define FW_FEATURE_VIO		BIT(14)
++#define FW_FEATURE_RDMA		BIT(15)
++#define FW_FEATURE_LLAN		BIT(16)
++#define FW_FEATURE_BULK_REMOVE	BIT(17)
++#define FW_FEATURE_XDABR		BIT(18)
++#define FW_FEATURE_MULTITCE	BIT(19)
++#define FW_FEATURE_SPLPAR	BIT(20)
++#define FW_FEATURE_LPAR		BIT(22)
++#define FW_FEATURE_PS3_LV1	BIT(23)
++#define FW_FEATURE_HPT_RESIZE	BIT(24)
++#define FW_FEATURE_CMO		BIT(25)
++#define FW_FEATURE_VPHN		BIT(26)
++#define FW_FEATURE_XCMO		BIT(27)
++#define FW_FEATURE_OPAL		BIT(28)
++#define FW_FEATURE_SET_MODE	BIT(30)
++#define FW_FEATURE_BEST_ENERGY	BIT(31)
++#define FW_FEATURE_TYPE1_AFFINITY BIT(32)
++#define FW_FEATURE_PRRN		BIT(33)
++#define FW_FEATURE_DRMEM_V2	BIT(34)
++#define FW_FEATURE_DRC_INFO	BIT(35)
++#define FW_FEATURE_BLOCK_REMOVE	BIT(36)
++#define FW_FEATURE_PAPR_SCM	BIT(37)
+ 
+ #ifndef __ASSEMBLY__
+ 
+-- 
+2.17.1
 
