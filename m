@@ -2,262 +2,145 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1603C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F12C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B910207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F80A207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:03:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="HB8OPOL/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lara8QnM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733227AbfFMPDK (ORCPT
+        id S1732719AbfFMPDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:03:10 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43124 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732499AbfFMOYM (ORCPT
+        Thu, 13 Jun 2019 11:03:31 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35978 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732492AbfFMOWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:24:12 -0400
-Received: by mail-qk1-f193.google.com with SMTP id m14so12842853qka.10
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 07:24:11 -0700 (PDT)
+        Thu, 13 Jun 2019 10:22:43 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r7so6070210pfl.3;
+        Thu, 13 Jun 2019 07:22:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8qDvqM2GUVe0Bp/JZny67bgQgfoSmGEovigFpwQP//c=;
-        b=HB8OPOL/WvPwqHDl2eYxS6syerahFtAspxoibofrZcQcf7QOvufT6iB4Sd3jez8tJG
-         pUmGjRjzeKQnLG/T5ErSc2j8oWTcC1W1uueLQjpD604phcVGRT/glCi/mgHMGGiP/f4V
-         cd0tAw2hzbWuoOYVvC3hIQm7Lg2irgI1qj7/Nv7/VzIYXJfIuwwnOzKyHVovagfv1Sng
-         ZkzxgpOSIXATFY7an1X03hoSAzOgaDtDBS6im5xDx8oftM6RWVJDGeLw7OMQ1iEIbF/P
-         AIFGyr0GWbMK3PnjyNaey0w0JnaJSVn5B9tu+zZ4eOwC6jDdPEJVTDWzSq6DRFmyBDre
-         FHoQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=TDt7h/v0kd9jyNnEaaG9yodaGNQqPQNCl5xz0t2eFwA=;
+        b=lara8QnMVA+uvkYQAjUHNPycuaPixmWSSUOrW2RfNquJT7wx6ESCJSBxHydyCWXqmk
+         KjH18C9kGstJNkz02E76+bKW7xLjszt80uha+HxElqf5EUtyOrY8ZrnExB+568RPs/tt
+         46P4cB0EXh8JBQoZ2h0mDoq96cQQRX4e+xy02pM8BlDsj2WyxbAGYeU9oWsmPAEQj/Xp
+         WfznG9023EXnYQ+vNC7g7AGmwMOiNpHMvsu8bsR015qBRH8MjDzQYZ+gVAjqh3qM9yCc
+         KqV2awRSK8RpZMmcLyoCRElMThewrh3X6Tm2Vb77iDg1Hjc3yqTH6Hl4mcVKEw8ABypH
+         eTKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8qDvqM2GUVe0Bp/JZny67bgQgfoSmGEovigFpwQP//c=;
-        b=UZLt6dMyhT3K73FNrpws8hav5KuBK5ZhnCdWAbNj9N5Yr8gIlRMpk+JJGxlW74i4y1
-         HplHsErE9BXxjZXTRXjDT1oKUwy9ieVAU7ZRBjWLq/1+RnSHUwXSek7uuhhVWJMnOPDl
-         lAVo68jxBUR3wNYPSF1uvCf7KyKZfTeBg+uz/Bh+NT+nK6mA9mxOZvLejXS62ipM4QXX
-         Qo5MtGUUzl3S+pP5mZkwauZgr2rBneLgRCve9O3y8EHqjbVfBqjfhySCym27QZwXtr1F
-         pwO+scJcCOMl0teYdzlNy9X1W/tWwPS2i2yriLSKkzgoI8oarOQOI4vQ0AB+fkjz5vK9
-         Tw6g==
-X-Gm-Message-State: APjAAAWsSf9+p0EX8I/rMHznsq/Cs7i9H8a7i4/YfV9y7dimdwn2iHSh
-        1wu3qqgDFfh1OEGtWnUODVDrlQ==
-X-Google-Smtp-Source: APXvYqxGE0ZYsyK3nVI/b9flMV6ouxTsNZIBKq6tl5RD2bgPpCoybjKSs/KC5OMu1+Ywi1Wh3n186A==
-X-Received: by 2002:a37:9481:: with SMTP id w123mr52587980qkd.319.1560435851467;
-        Thu, 13 Jun 2019 07:24:11 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::9d6b])
-        by smtp.gmail.com with ESMTPSA id 2sm2066304qtz.73.2019.06.13.07.24.10
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=TDt7h/v0kd9jyNnEaaG9yodaGNQqPQNCl5xz0t2eFwA=;
+        b=a00hPT/YBq0AYC7rsZDHhduU61HoRwiPs6nWLPK64VAKLvvpMgcSAPv8aRKpdEZU1r
+         2ENbGpKuQAGxqx2rSsgg/jtZJU/Oy1qdD0EAtbSLFlPu27OciVlRPQxWpfq/O2jHOiEm
+         lkr7jovQxDQXu6iK/6QTTY2HBayObRjR2MDFg4WFfVYpqVIcTpZj/AOvGJrwPhtfpfcU
+         GgAezZ/GtfJH6M2/QxYmg+/AMNyrd9rJPSNFBgBAkC+Hx3ACwyCXg5PdcGpzmDP3wMIA
+         6BkkCloD9P2kMuTrcYxmZfYyNM3O6VCmQ5eq4Q/G672ADNvrzS8Sradlmk4p6D8lWWiq
+         mIeg==
+X-Gm-Message-State: APjAAAWjJmr5AwGe+3/soCuOzQmoOKI38bAhxgxSKpGWjHbWMHsFXDyR
+        jpmMhRnRL3iajtagfVzymrM=
+X-Google-Smtp-Source: APXvYqzR8Dc3CiAAnp7oe1eiS5T1WmvMMVJq/GpKHqj1HZ1hnIZYChyVV+MbnQ1ITOzFHSefY91uVg==
+X-Received: by 2002:a62:187:: with SMTP id 129mr6952569pfb.128.1560435762703;
+        Thu, 13 Jun 2019 07:22:42 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id s12sm3178667pfe.143.2019.06.13.07.22.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 07:24:10 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 10:24:09 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Naohiro Aota <naohiro.aota@wdc.com>
-Cc:     linux-btrfs@vger.kernel.org, David Sterba <dsterba@suse.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
-        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
-        linux-fsdevel@vger.kernel.org,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Matias =?utf-8?B?QmrDuHJsaW5n?= <mb@lightnvm.io>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH 14/19] btrfs: redirty released extent buffers in
- sequential BGs
-Message-ID: <20190613142408.p3ra5urczrzgqr2q@MacBook-Pro-91.local>
-References: <20190607131025.31996-1-naohiro.aota@wdc.com>
- <20190607131025.31996-15-naohiro.aota@wdc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607131025.31996-15-naohiro.aota@wdc.com>
-User-Agent: NeoMutt/20180716
+        Thu, 13 Jun 2019 07:22:42 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v3 2/7] drivers: regulator: qcom_spmi: Refactor get_mode/set_mode
+Date:   Thu, 13 Jun 2019 07:22:39 -0700
+Message-Id: <20190613142239.8779-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190613142157.8674-1-jeffrey.l.hugo@gmail.com>
+References: <20190613142157.8674-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 10:10:20PM +0900, Naohiro Aota wrote:
-> Tree manipulating operations like merging nodes often release
-> once-allocated tree nodes. Btrfs cleans such nodes so that pages in the
-> node are not uselessly written out. On HMZONED drives, however, such
-> optimization blocks the following IOs as the cancellation of the write out
-> of the freed blocks breaks the sequential write sequence expected by the
-> device.
-> 
-> This patch introduces a list of clean extent buffers that have been
-> released in a transaction. Btrfs consult the list before writing out and
-> waiting for the IOs, and it redirties a buffer if 1) it's in sequential BG,
-> 2) it's in un-submit range, and 3) it's not under IO. Thus, such buffers
-> are marked for IO in btrfs_write_and_wait_transaction() to send proper bios
-> to the disk.
-> 
-> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
-> ---
->  fs/btrfs/disk-io.c     | 27 ++++++++++++++++++++++++---
->  fs/btrfs/extent_io.c   |  1 +
->  fs/btrfs/extent_io.h   |  2 ++
->  fs/btrfs/transaction.c | 35 +++++++++++++++++++++++++++++++++++
->  fs/btrfs/transaction.h |  3 +++
->  5 files changed, 65 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-> index 6651986da470..c6147fce648f 100644
-> --- a/fs/btrfs/disk-io.c
-> +++ b/fs/btrfs/disk-io.c
-> @@ -535,7 +535,9 @@ static int csum_dirty_buffer(struct btrfs_fs_info *fs_info, struct page *page)
->  	if (csum_tree_block(eb, result))
->  		return -EINVAL;
->  
-> -	if (btrfs_header_level(eb))
-> +	if (test_bit(EXTENT_BUFFER_NO_CHECK, &eb->bflags))
-> +		ret = 0;
-> +	else if (btrfs_header_level(eb))
->  		ret = btrfs_check_node(eb);
->  	else
->  		ret = btrfs_check_leaf_full(eb);
-> @@ -1115,10 +1117,20 @@ struct extent_buffer *read_tree_block(struct btrfs_fs_info *fs_info, u64 bytenr,
->  void btrfs_clean_tree_block(struct extent_buffer *buf)
->  {
->  	struct btrfs_fs_info *fs_info = buf->fs_info;
-> -	if (btrfs_header_generation(buf) ==
-> -	    fs_info->running_transaction->transid) {
-> +	struct btrfs_transaction *cur_trans = fs_info->running_transaction;
-> +
-> +	if (btrfs_header_generation(buf) == cur_trans->transid) {
->  		btrfs_assert_tree_locked(buf);
->  
-> +		if (btrfs_fs_incompat(fs_info, HMZONED) &&
-> +		    list_empty(&buf->release_list)) {
-> +			atomic_inc(&buf->refs);
-> +			spin_lock(&cur_trans->releasing_ebs_lock);
-> +			list_add_tail(&buf->release_list,
-> +				      &cur_trans->releasing_ebs);
-> +			spin_unlock(&cur_trans->releasing_ebs_lock);
-> +		}
-> +
->  		if (test_and_clear_bit(EXTENT_BUFFER_DIRTY, &buf->bflags)) {
->  			percpu_counter_add_batch(&fs_info->dirty_metadata_bytes,
->  						 -buf->len,
-> @@ -4533,6 +4545,15 @@ void btrfs_cleanup_one_transaction(struct btrfs_transaction *cur_trans,
->  	btrfs_destroy_pinned_extent(fs_info,
->  				    fs_info->pinned_extents);
->  
-> +	while (!list_empty(&cur_trans->releasing_ebs)) {
-> +		struct extent_buffer *eb;
-> +
-> +		eb = list_first_entry(&cur_trans->releasing_ebs,
-> +				      struct extent_buffer, release_list);
-> +		list_del_init(&eb->release_list);
-> +		free_extent_buffer(eb);
-> +	}
-> +
->  	cur_trans->state =TRANS_STATE_COMPLETED;
->  	wake_up(&cur_trans->commit_wait);
->  }
-> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-> index 13fca7bfc1f2..c73c69e2bef4 100644
-> --- a/fs/btrfs/extent_io.c
-> +++ b/fs/btrfs/extent_io.c
-> @@ -4816,6 +4816,7 @@ __alloc_extent_buffer(struct btrfs_fs_info *fs_info, u64 start,
->  	init_waitqueue_head(&eb->read_lock_wq);
->  
->  	btrfs_leak_debug_add(&eb->leak_list, &buffers);
-> +	INIT_LIST_HEAD(&eb->release_list);
->  
->  	spin_lock_init(&eb->refs_lock);
->  	atomic_set(&eb->refs, 1);
-> diff --git a/fs/btrfs/extent_io.h b/fs/btrfs/extent_io.h
-> index aa18a16a6ed7..2987a01f84f9 100644
-> --- a/fs/btrfs/extent_io.h
-> +++ b/fs/btrfs/extent_io.h
-> @@ -58,6 +58,7 @@ enum {
->  	EXTENT_BUFFER_IN_TREE,
->  	/* write IO error */
->  	EXTENT_BUFFER_WRITE_ERR,
-> +	EXTENT_BUFFER_NO_CHECK,
->  };
->  
->  /* these are flags for __process_pages_contig */
-> @@ -186,6 +187,7 @@ struct extent_buffer {
->  	 */
->  	wait_queue_head_t read_lock_wq;
->  	struct page *pages[INLINE_EXTENT_BUFFER_PAGES];
-> +	struct list_head release_list;
->  #ifdef CONFIG_BTRFS_DEBUG
->  	atomic_t spinning_writers;
->  	atomic_t spinning_readers;
-> diff --git a/fs/btrfs/transaction.c b/fs/btrfs/transaction.c
-> index 3f6811cdf803..ded40ad75419 100644
-> --- a/fs/btrfs/transaction.c
-> +++ b/fs/btrfs/transaction.c
-> @@ -236,6 +236,8 @@ static noinline int join_transaction(struct btrfs_fs_info *fs_info,
->  	spin_lock_init(&cur_trans->dirty_bgs_lock);
->  	INIT_LIST_HEAD(&cur_trans->deleted_bgs);
->  	spin_lock_init(&cur_trans->dropped_roots_lock);
-> +	INIT_LIST_HEAD(&cur_trans->releasing_ebs);
-> +	spin_lock_init(&cur_trans->releasing_ebs_lock);
->  	list_add_tail(&cur_trans->list, &fs_info->trans_list);
->  	extent_io_tree_init(fs_info, &cur_trans->dirty_pages,
->  			IO_TREE_TRANS_DIRTY_PAGES, fs_info->btree_inode);
-> @@ -2219,7 +2221,31 @@ int btrfs_commit_transaction(struct btrfs_trans_handle *trans)
->  
->  	wake_up(&fs_info->transaction_wait);
->  
-> +	if (btrfs_fs_incompat(fs_info, HMZONED)) {
-> +		struct extent_buffer *eb;
-> +
-> +		list_for_each_entry(eb, &cur_trans->releasing_ebs,
-> +				    release_list) {
-> +			struct btrfs_block_group_cache *cache;
-> +
-> +			cache = btrfs_lookup_block_group(fs_info, eb->start);
-> +			if (!cache)
-> +				continue;
-> +			mutex_lock(&cache->submit_lock);
-> +			if (cache->alloc_type == BTRFS_ALLOC_SEQ &&
-> +			    cache->submit_offset <= eb->start &&
-> +			    !extent_buffer_under_io(eb)) {
-> +				set_extent_buffer_dirty(eb);
-> +				cache->space_info->bytes_readonly += eb->len;
+spmi_regulator_common_get_mode and spmi_regulator_common_set_mode use
+multi-level ifs which mirror a switch statement.  Refactor to use a switch
+statement to make the code flow more clear.
 
-Huh?
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/regulator/qcom_spmi-regulator.c | 28 ++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
-> +				set_bit(EXTENT_BUFFER_NO_CHECK, &eb->bflags);
-> +			}
-> +			mutex_unlock(&cache->submit_lock);
-> +			btrfs_put_block_group(cache);
-> +		}
-> +	}
-> +
+diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
+index fd55438c25d6..1c18fe5969b5 100644
+--- a/drivers/regulator/qcom_spmi-regulator.c
++++ b/drivers/regulator/qcom_spmi-regulator.c
+@@ -911,13 +911,14 @@ static unsigned int spmi_regulator_common_get_mode(struct regulator_dev *rdev)
+ 
+ 	spmi_vreg_read(vreg, SPMI_COMMON_REG_MODE, &reg, 1);
+ 
+-	if (reg & SPMI_COMMON_MODE_HPM_MASK)
++	switch (reg) {
++	case SPMI_COMMON_MODE_HPM_MASK:
+ 		return REGULATOR_MODE_NORMAL;
+-
+-	if (reg & SPMI_COMMON_MODE_AUTO_MASK)
++	case SPMI_COMMON_MODE_AUTO_MASK:
+ 		return REGULATOR_MODE_FAST;
+-
+-	return REGULATOR_MODE_IDLE;
++	default:
++		return REGULATOR_MODE_IDLE;
++	}
+ }
+ 
+ static int
+@@ -925,12 +926,19 @@ spmi_regulator_common_set_mode(struct regulator_dev *rdev, unsigned int mode)
+ {
+ 	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+ 	u8 mask = SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
+-	u8 val = 0;
++	u8 val;
+ 
+-	if (mode == REGULATOR_MODE_NORMAL)
++	switch (mode) {
++	case REGULATOR_MODE_NORMAL:
+ 		val = SPMI_COMMON_MODE_HPM_MASK;
+-	else if (mode == REGULATOR_MODE_FAST)
++		break;
++	case REGULATOR_MODE_FAST:
+ 		val = SPMI_COMMON_MODE_AUTO_MASK;
++		break;
++	default:
++		val = 0;
++		break;
++	}
+ 
+ 	return spmi_vreg_update_bits(vreg, SPMI_COMMON_REG_MODE, val, mask);
+ }
+@@ -1834,9 +1842,9 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
+ 			}
+ 		}
+ 
+-		if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_HFS430) {
++		if (vreg->set_points->count == 1) {
+ 			/* since there is only one range */
+-			range = spmi_regulator_find_range(vreg);
++			range = vreg->set_points->range;
+ 			vreg->desc.uV_step = range->step_uV;
+ 		}
+ 
+-- 
+2.17.1
 
-Helper here please.
->  	ret = btrfs_write_and_wait_transaction(trans);
-> +
->  	if (ret) {
->  		btrfs_handle_fs_error(fs_info, ret,
->  				      "Error while writing out transaction");
-> @@ -2227,6 +2253,15 @@ int btrfs_commit_transaction(struct btrfs_trans_handle *trans)
->  		goto scrub_continue;
->  	}
->  
-> +	while (!list_empty(&cur_trans->releasing_ebs)) {
-> +		struct extent_buffer *eb;
-> +
-> +		eb = list_first_entry(&cur_trans->releasing_ebs,
-> +				      struct extent_buffer, release_list);
-> +		list_del_init(&eb->release_list);
-> +		free_extent_buffer(eb);
-> +	}
-> +
-
-Another helper, and also can't we release eb's above that we didn't need to
-re-mark dirty?  Thanks,
-
-Josef
