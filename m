@@ -5,52 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2D8C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D28C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C8820644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3D32147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442962;
-	bh=hB0qPcv1bOLL0EP6nUoOqmHaJ0lna32eXvP9pNC7aNM=;
+	s=default; t=1560442968;
+	bh=OwZ0qLFkEiHNIobShGBggg/4oh/hdfHyky43omuQniU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s7nFYdCOREgvaN3fK+SBAGA+asAbHbMybEEFPjq7SCCR5fzkW4NK5f3U8Njswty19
-	 G9Dorz4wlNYvjsLvOffr2fBThqWJ5mnGypvSdcy++GriMRo3z7lPS62nKpGm8by+eX
-	 r2qhS+flBX9gOHTASr/JA0jsfZfE2EBhjTGlWkNs=
+	b=fqi2WliyubiMXOh9Le7LVjO+fkKUVHj0sV2BiXvTmDl3HXn+yUGWnx67Tjsx9wjqm
+	 YmrG4dNf9kyUvegll0/YvI9PC64Q8b9qIBdfKB8Ag4Edew88yX2c6nYAeTX7+JYB9H
+	 Lkzn4NuwuLw5k+x9b87rPbmnouujb7DCdEEaQJr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388916AbfFMQWh (ORCPT
+        id S2389592AbfFMQWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:22:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55668 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:22:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731042AbfFMIiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:38:15 -0400
+        id S1731039AbfFMIiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:38:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19F092064A;
-        Thu, 13 Jun 2019 08:38:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 641412146F;
+        Thu, 13 Jun 2019 08:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415094;
-        bh=hB0qPcv1bOLL0EP6nUoOqmHaJ0lna32eXvP9pNC7aNM=;
+        s=default; t=1560415088;
+        bh=OwZ0qLFkEiHNIobShGBggg/4oh/hdfHyky43omuQniU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WSX0BaLBnPvb1BiVOxljiLtLedSFQxCkhpJpfKMLVBCycNjRlsTb49pRvJLpKJa9o
-         yyYpaeiIyM4Y39iC3pv87k86BxFVVMuLK8ApmF8rQ5CCVuahsX+lv+q7mBSwyOvWGs
-         SMK4O9WTu4RI7dGikr7CTahlpX+FD1q5c1oTHO3A=
+        b=crWU+xNBkyEZeF0jAVTIS6/5jtRhlwm+l1VYnCcvPFIo0gWnZAN2UTOONuzzgSicy
+         LdyrX6GDeir7iGIz4hEg79tDNGS9EhAKb3FH2s9rBmhTTQq7crL7L0WdxO0XK4GDv3
+         AD5A3yypzroYLBOjHDcKs1Pzwbp5ItBIUnOH1xz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Holger=20Hoffst=C3=A4tte?= 
-        <holger@applied-asynchrony.com>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 68/81] block, bfq: increase idling for weight-raised queues
-Date:   Thu, 13 Jun 2019 10:33:51 +0200
-Message-Id: <20190613075653.988319178@linuxfoundation.org>
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Aditya Pakki <pakki001@umn.edu>,
+        Ferenc Bakonyi <fero@drama.obuda.kando.hu>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 66/81] video: hgafb: fix potential NULL pointer dereference
+Date:   Thu, 13 Jun 2019 10:33:49 +0200
+Message-Id: <20190613075653.864033891@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -63,61 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 778c02a236a8728bb992de10ed1f12c0be5b7b0e ]
+[ Upstream commit ec7f6aad57ad29e4e66cc2e18e1e1599ddb02542 ]
 
-If a sync bfq_queue has a higher weight than some other queue, and
-remains temporarily empty while in service, then, to preserve the
-bandwidth share of the queue, it is necessary to plug I/O dispatching
-until a new request arrives for the queue. In addition, a timeout
-needs to be set, to avoid waiting for ever if the process associated
-with the queue has actually finished its I/O.
+When ioremap fails, hga_vram should not be dereferenced. The fix
+check the failure to avoid NULL pointer dereference.
 
-Even with the above timeout, the device is however not fed with new
-I/O for a while, if the process has finished its I/O. If this happens
-often, then throughput drops and latencies grow. For this reason, the
-timeout is kept rather low: 8 ms is the current default.
-
-Unfortunately, such a low value may cause, on the opposite end, a
-violation of bandwidth guarantees for a process that happens to issue
-new I/O too late. The higher the system load, the higher the
-probability that this happens to some process. This is a problem in
-scenarios where service guarantees matter more than throughput. One
-important case are weight-raised queues, which need to be granted a
-very high fraction of the bandwidth.
-
-To address this issue, this commit lower-bounds the plugging timeout
-for weight-raised queues to 20 ms. This simple change provides
-relevant benefits. For example, on a PLEXTOR PX-256M5S, with which
-gnome-terminal starts in 0.6 seconds if there is no other I/O in
-progress, the same applications starts in
-- 0.8 seconds, instead of 1.2 seconds, if ten files are being read
-  sequentially in parallel
-- 1 second, instead of 2 seconds, if, in parallel, five files are
-  being read sequentially, and five more files are being written
-  sequentially
-
-Tested-by: Holger Hoffstätte <holger@applied-asynchrony.com>
-Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Cc: Aditya Pakki <pakki001@umn.edu>
+Cc: Ferenc Bakonyi <fero@drama.obuda.kando.hu>
+[b.zolnierkie: minor patch summary fixup]
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 2 ++
+ drivers/video/fbdev/hgafb.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 3b44bd28fc45..7d45ac451745 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2282,6 +2282,8 @@ static void bfq_arm_slice_timer(struct bfq_data *bfqd)
- 	if (BFQQ_SEEKY(bfqq) && bfqq->wr_coeff == 1 &&
- 	    bfq_symmetric_scenario(bfqd))
- 		sl = min_t(u64, sl, BFQ_MIN_TT);
-+	else if (bfqq->wr_coeff > 1)
-+		sl = max_t(u32, sl, 20ULL * NSEC_PER_MSEC);
+diff --git a/drivers/video/fbdev/hgafb.c b/drivers/video/fbdev/hgafb.c
+index 463028543173..59e1cae57948 100644
+--- a/drivers/video/fbdev/hgafb.c
++++ b/drivers/video/fbdev/hgafb.c
+@@ -285,6 +285,8 @@ static int hga_card_detect(void)
+ 	hga_vram_len  = 0x08000;
  
- 	bfqd->last_idling_start = ktime_get();
- 	hrtimer_start(&bfqd->idle_slice_timer, ns_to_ktime(sl),
+ 	hga_vram = ioremap(0xb0000, hga_vram_len);
++	if (!hga_vram)
++		goto error;
+ 
+ 	if (request_region(0x3b0, 12, "hgafb"))
+ 		release_io_ports = 1;
 -- 
 2.20.1
 
