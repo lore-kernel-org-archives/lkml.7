@@ -2,140 +2,114 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E762EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCE6C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC9720B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8712B20449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:14:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eEpipQxF"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="SfHInPm3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388370AbfFMPNs (ORCPT
+        id S1732635AbfFMPN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:13:48 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39275 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388326AbfFMPNh (ORCPT
+        Thu, 13 Jun 2019 11:13:58 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46259 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732315AbfFMPN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:13:37 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v18so18904832ljh.6
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 08:13:36 -0700 (PDT)
+        Thu, 13 Jun 2019 11:13:56 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h21so22918081qtn.13
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 08:13:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3sc3DlT2aHgDUBPzbdNbG/lF95Cth+rPWMq4ZM26quY=;
-        b=eEpipQxFUi5JXVuC+9r5W5Dtcce8K9zV/fB94gGq3bd6eQw119DSEiWZNKIRc9Ggbg
-         9YkACR96hRoi/t4EMMWKn59rKmzvTqlvEGtS/hoKOX4346Z8QFShpMQOGKLF15Qym6vi
-         RFbjxmk+c7eGQa9IcwTKduCmZe3IZ0+aZ+Y0ucR3sVrEoZFQEHBsVHN0wSo34QRnnFJz
-         XPar90/oJgWgoN3g3Bspp5lDSu3Sojz64UcSqw+lp8UtjB7cgP2b/Su4IlxjwHfzCDGz
-         S4ndeRvLm8bl9KXUvsw6o/S0aqWezgDQzusmXWAbrmR6lWHEQzLMayKxfh/zMR2HyjuP
-         +EtA==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KkKhR2elMbqIQhtMNyRPKfFVISR0bn0T2g34f2r/Vr8=;
+        b=SfHInPm3DzZYLPoEmUVQqUjB5LScF9DsUpJ4xj+NyGtlotEBCDOd7k0OAiLknLgpy1
+         UwRMpQmGSzJF0gJD/kcFMjRmesoOZkKPKtk3EWMStIXtk1BSmgVZYNk1p6EKmXc4imPv
+         1V1hEuNESlphnwH9Ffq42vPqvIo/88Zh85Tr1f4Tsa8YuL7Uls35977s64dpr/1WcL8J
+         ZbYx/FYbcjhIEQbbmhQgdZInCU3g7QIDiBsNO/6qOPrD5yA2TBMRXmDe20WR5bhjdxVZ
+         hMtmCv3lKFvdGH4OgmFjKOdFtkKSEmGywoQe1a2KSSYQTb19JMjkAlD66sOEA23ZLtm9
+         d4ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3sc3DlT2aHgDUBPzbdNbG/lF95Cth+rPWMq4ZM26quY=;
-        b=X00Vl/Lx26KH89JrlvQv/tUOh3qZ6WHzLIZB3UsMSBnKckEmv1azrsLsuYnMS6/I3I
-         irwfaluyByL3OMW2yYEOGdUagBAd+wDnzulLZuGDSf36g19pDxH3K/4ewcbS0Zm4MeRo
-         0d4pE1LlBwv/m/ntW4NJes63WdorRpnfltb52LFJ2KMqZ77Vzed0E5N3mEycQnBH4+5O
-         oc/xAkzXka6Y237vOBBS65z4dxCWMGuEC6DyERXT/tW+EpnrWcbQx6e8cAMddk2bwTbb
-         rRe6Tf+1Z0EfnVoHpVbsrVP66+G1gedXg2ZjVgEGRMPGP0AE0n+TpJau3VXy43qopDUr
-         w6mQ==
-X-Gm-Message-State: APjAAAW+b7uFWXkf7CbSnNLNtQBzgn+GMLYe5GViSUhIn9UCMRXp1r3p
-        lQoe0Ig1KEKI96i1zi4A/LlceA==
-X-Google-Smtp-Source: APXvYqzusDCujmFK4AzstrHu0895D+ENcdhXdXlWYYdL7SR9aGRx+EF4RNcKjHie1X+EbB9DngrWRQ==
-X-Received: by 2002:a2e:5b5b:: with SMTP id p88mr38323127ljb.192.1560438815349;
-        Thu, 13 Jun 2019 08:13:35 -0700 (PDT)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id k4sm42923ljj.41.2019.06.13.08.13.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 13 Jun 2019 08:13:34 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org,
-        georgi.djakov@linaro.org
-Cc:     vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v4 5/5] arm64: dts: qcs404: Add interconnect provider DT nodes
-Date:   Thu, 13 Jun 2019 18:13:23 +0300
-Message-Id: <20190613151323.10850-6-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190613151323.10850-1-georgi.djakov@linaro.org>
-References: <20190613151323.10850-1-georgi.djakov@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KkKhR2elMbqIQhtMNyRPKfFVISR0bn0T2g34f2r/Vr8=;
+        b=i3om2b77zIPV2HscCy9lSflJqbofEkR4IBTL8Kg40c1F8JkKE2SV6OsT/JdG0qq/l/
+         ohAZMIrFOD9PsHQ11uxaMrePV4vZQbcPwBK4kh1vrANtm6kQSvm+/lJK9HriphT+BC8N
+         YA4chEt1W3qbLu7eg7EvMhMxyL176bgU+qyZUE8bn66JGR1i7+n8T3cLHisaiRt4HTJ1
+         vG2FoR8CamP+4XJzynW3DUFiUBU9vrpzFKmAxPWvsdLmi4AhjiUaSUmOOy8+2Rc9x5Fh
+         wJlj4jh0Wv+RpluOD4K4JVeFEyWitCQsqOzTFwJDI0GGOQ13h1sZGpaulfjobOWq3SPW
+         t2ng==
+X-Gm-Message-State: APjAAAWKMVvWMhUDI8YMyfMkwhhYXgbSkDiEUt98fFjjAF4DrS3mp5jT
+        T6QLQWpT8rsiysdeVLyU2Rv2jA==
+X-Google-Smtp-Source: APXvYqxrIgS7SEgThFO4xWkROTtAeKu9gS/7k/Y8mWYSTA6O8BjyUZUk4XGZHPcLg6c7oSu9BznGCA==
+X-Received: by 2002:ac8:2f90:: with SMTP id l16mr60699198qta.12.1560438835818;
+        Thu, 13 Jun 2019 08:13:55 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id c18sm1546907qkk.73.2019.06.13.08.13.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Jun 2019 08:13:55 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hbRQI-0001rX-U0; Thu, 13 Jun 2019 12:13:54 -0300
+Date:   Thu, 13 Jun 2019 12:13:54 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190613151354.GC22901@ziepe.ca>
+References: <20190607121729.GA14802@ziepe.ca>
+ <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
+ <20190612102917.GB14578@quack2.suse.cz>
+ <20190612114721.GB3876@ziepe.ca>
+ <20190612120907.GC14578@quack2.suse.cz>
+ <20190612191421.GM3876@ziepe.ca>
+ <20190612221336.GA27080@iweiny-DESK2.sc.intel.com>
+ <CAPcyv4gkksnceCV-p70hkxAyEPJWFvpMezJA1rEj6TEhKAJ7qQ@mail.gmail.com>
+ <20190612233324.GE14336@iweiny-DESK2.sc.intel.com>
+ <CAPcyv4jf19CJbtXTp=ag7Ns=ZQtqeQd3C0XhV9FcFCwd9JCNtQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jf19CJbtXTp=ag7Ns=ZQtqeQd3C0XhV9FcFCwd9JCNtQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the DT nodes for the network-on-chip interconnect buses found
-on qcs404-based platforms.
+On Wed, Jun 12, 2019 at 06:14:46PM -0700, Dan Williams wrote:
+> > Effectively, we would need a way for an admin to close a specific file
+> > descriptor (or set of fds) which point to that file.  AFAIK there is no way to
+> > do that at all, is there?
+> 
+> Even if there were that gets back to my other question, does RDMA
+> teardown happen at close(fd), or at final fput() of the 'struct
+> file'?
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
+AFAIK there is no kernel side driver hook for close(fd). 
 
-v4:
-- Insert the NoC DT nodes after rng@ to keep the nodes sorted by address.
-- Pick Bjorn's r-b.
+rdma uses a normal chardev so it's lifetime is linked to the file_ops
+release, which is called on last fput. So all the mmaps, all the dups,
+everything must go before it releases its resources.
 
-v3:
-- Update according to the new binding: add reg property and moved under the
-  "soc" node.
-
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index ffedf9640af7..da1dbf515bd9 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2018, Linaro Limited
- 
-+#include <dt-bindings/interconnect/qcom,qcs404.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-qcs404.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
-@@ -266,6 +267,33 @@
- 			clock-names = "core";
- 		};
- 
-+		bimc: interconnect@400000 {
-+			reg = <0x00400000 0x80000>;
-+			compatible = "qcom,qcs404-bimc";
-+			#interconnect-cells = <1>;
-+			clock-names = "bus_clk", "bus_a_clk";
-+			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
-+				<&rpmcc RPM_SMD_BIMC_A_CLK>;
-+		};
-+
-+		pcnoc: interconnect@500000 {
-+			reg = <0x00500000 0x15080>;
-+			compatible = "qcom,qcs404-pcnoc";
-+			#interconnect-cells = <1>;
-+			clock-names = "bus_clk", "bus_a_clk";
-+			clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
-+				<&rpmcc RPM_SMD_PNOC_A_CLK>;
-+		};
-+
-+		snoc: interconnect@580000 {
-+			reg = <0x00580000 0x23080>;
-+			compatible = "qcom,qcs404-snoc";
-+			#interconnect-cells = <1>;
-+			clock-names = "bus_clk", "bus_a_clk";
-+			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
-+				<&rpmcc RPM_SMD_SNOC_A_CLK>;
-+		};
-+
- 		tlmm: pinctrl@1000000 {
- 			compatible = "qcom,qcs404-pinctrl";
- 			reg = <0x01000000 0x200000>,
+Jason
