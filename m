@@ -2,126 +2,114 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB80C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F530C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14C7A20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441502;
-	bh=W/kGKgRpybLetFv0lIpRTCSho1IytiYJm76EEIPEbW8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BL1rnxWlunnkXUMgFf6SLc7r8QXoPhG2nlZe1MXO99mMbg2rvJ7nULbUemzlfMQIE
-	 3/sH19PyS0WjL0kXCycYIANWLI6FgYYKcoulzWln/R2Jq5GUGRlPntu68QfFu26gmg
-	 jZmoTNNsv/Cg4vYnOVPqFp7AcuEY9kWHBRSLfOaI=
+	by mail.kernel.org (Postfix) with ESMTP id 4BC8D20851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390336AbfFMP6U (ORCPT
+        id S2390623AbfFMP61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:58:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37790 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:58:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:44214 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731494AbfFMIuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:50:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 861C620851;
-        Thu, 13 Jun 2019 08:50:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415812;
-        bh=W/kGKgRpybLetFv0lIpRTCSho1IytiYJm76EEIPEbW8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jsGiQN3VfgCJz7KSjmJCcs3vvI/DUFyzN4vJiXDjEo7g3fbYbFy06PET4je01EFbZ
-         DKfl992DggaMjH7Ptu3+wNFmH8yzI6Qj4LJfcp8ikscSHURx0AxC4l6Pa1qDAm5wNc
-         00drT06xXiKU60PlBwOOaKclvXVrNZXeWi5R33OE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Steven Price <steven.price@arm.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 132/155] PCI: xilinx: Check for __get_free_pages() failure
-Date:   Thu, 13 Jun 2019 10:34:04 +0200
-Message-Id: <20190613075700.153103099@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
-References: <20190613075652.691765927@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2390594AbfFMP6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 11:58:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D2C10367;
+        Thu, 13 Jun 2019 08:58:22 -0700 (PDT)
+Received: from C02TF0J2HF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 825ED3F246;
+        Thu, 13 Jun 2019 08:58:02 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 16:57:55 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH v17 03/15] arm64: Introduce prctl() options to control
+ the tagged user addresses ABI
+Message-ID: <20190613155754.GX28951@C02TF0J2HF1T.local>
+References: <cover.1560339705.git.andreyknvl@google.com>
+ <a7a2933bea5fe57e504891b7eec7e9432e5e1c1a.1560339705.git.andreyknvl@google.com>
+ <20190613111659.GX28398@e103592.cambridge.arm.com>
+ <20190613153505.GU28951@C02TF0J2HF1T.local>
+ <99cc257d-5e99-922a-fbe7-3bbaf3621e38@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <99cc257d-5e99-922a-fbe7-3bbaf3621e38@arm.com>
+User-Agent: Mutt/1.11.2 (2019-01-07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 699ca30162686bf305cdf94861be02eb0cf9bda2 ]
+On Thu, Jun 13, 2019 at 04:45:54PM +0100, Vincenzo Frascino wrote:
+> On 13/06/2019 16:35, Catalin Marinas wrote:
+> > On Thu, Jun 13, 2019 at 12:16:59PM +0100, Dave P Martin wrote:
+> >> On Wed, Jun 12, 2019 at 01:43:20PM +0200, Andrey Konovalov wrote:
+> >>> +
+> >>> +/*
+> >>> + * Control the relaxed ABI allowing tagged user addresses into the kernel.
+> >>> + */
+> >>> +static unsigned int tagged_addr_prctl_allowed = 1;
+> >>> +
+> >>> +long set_tagged_addr_ctrl(unsigned long arg)
+> >>> +{
+> >>> +	if (!tagged_addr_prctl_allowed)
+> >>> +		return -EINVAL;
+> >>
+> >> So, tagging can actually be locked on by having a process enable it and
+> >> then some possibly unrelated process clearing tagged_addr_prctl_allowed.
+> >> That feels a bit weird.
+> > 
+> > The problem is that if you disable the ABI globally, lots of
+> > applications would crash. This sysctl is meant as a way to disable the
+> > opt-in to the TBI ABI. Another option would be a kernel command line
+> > option (I'm not keen on a Kconfig option).
+> 
+> Why you are not keen on a Kconfig option?
 
-If __get_free_pages() fails, return -ENOMEM to avoid a NULL pointer
-dereference.
+Because I don't want to rebuild the kernel/reboot just to be able to
+test how user space handles the ABI opt-in. I'm ok with a Kconfig option
+to disable this globally in addition to a run-time option (if actually
+needed, I'm not sure).
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Steven Price <steven.price@arm.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/controller/pcie-xilinx.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
-index 9bd1a35cd5d8..5bf3af3b28e6 100644
---- a/drivers/pci/controller/pcie-xilinx.c
-+++ b/drivers/pci/controller/pcie-xilinx.c
-@@ -336,14 +336,19 @@ static const struct irq_domain_ops msi_domain_ops = {
-  * xilinx_pcie_enable_msi - Enable MSI support
-  * @port: PCIe port information
-  */
--static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
-+static int xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
- {
- 	phys_addr_t msg_addr;
- 
- 	port->msi_pages = __get_free_pages(GFP_KERNEL, 0);
-+	if (!port->msi_pages)
-+		return -ENOMEM;
-+
- 	msg_addr = virt_to_phys((void *)port->msi_pages);
- 	pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
- 	pcie_write(port, msg_addr, XILINX_PCIE_REG_MSIBASE2);
-+
-+	return 0;
- }
- 
- /* INTx Functions */
-@@ -498,6 +503,7 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
- 	struct device *dev = port->dev;
- 	struct device_node *node = dev->of_node;
- 	struct device_node *pcie_intc_node;
-+	int ret;
- 
- 	/* Setup INTx */
- 	pcie_intc_node = of_get_next_child(node, NULL);
-@@ -526,7 +532,9 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
- 			return -ENODEV;
- 		}
- 
--		xilinx_pcie_enable_msi(port);
-+		ret = xilinx_pcie_enable_msi(port);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	return 0;
 -- 
-2.20.1
-
-
-
+Catalin
