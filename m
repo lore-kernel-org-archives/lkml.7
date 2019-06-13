@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A8DC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05B8C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA77921721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A908F21721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442992;
-	bh=2xjiYB/e+EzRLdI8JLHeoc8atthWl3UVao5ghJ+IbcI=;
+	s=default; t=1560442994;
+	bh=oYqC04aPf7VZNvrzfJCBtCgxiTAbso4bcLVHXA6xQRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TjXQBnNlEgILovRqhJcqYbfK7CP9M0zYVVctdfM79ZsITX1p3gXmaB+vqeYKXTxCn
-	 +nZxV9a75J0wTcNlXafpvLsbV8sgaSgzvaXK1xrFh09EzYTOLhyEo6Mx6Cojp+uvjS
-	 uog5d1vap4yLx2T2EJmsO1NayPRcTD4td9oF/Y5E=
+	b=lZJB+6O56gJfCr9cmi9aKRj4ecILCa5JxFq0ENFJIPZcj0IH5PQc2W0IZRi+kxo6H
+	 pk+dZDOvLsgPMisKgyA3ZwxtBg12exGJTLTlfjqaR5+vhnlV0nQ/3znJR5e3lMt24g
+	 wpbORrKtu/JhHgwXRNOeerlFWPzL9aSQxIAxWZhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403951AbfFMQXL (ORCPT
+        id S2403967AbfFMQXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:23:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55220 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731030AbfFMIht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:37:49 -0400
+        id S1731027AbfFMIhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:37:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 104D020851;
-        Thu, 13 Jun 2019 08:37:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 881B82064A;
+        Thu, 13 Jun 2019 08:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415067;
-        bh=2xjiYB/e+EzRLdI8JLHeoc8atthWl3UVao5ghJ+IbcI=;
+        s=default; t=1560415065;
+        bh=oYqC04aPf7VZNvrzfJCBtCgxiTAbso4bcLVHXA6xQRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AARpMjaEtyklm8fqdYgcF/utjlTojv68dPRXjdVR28o0u7LWEGAoEQGyEUo1yVXLm
-         imJoes/OGolXCKVgzfDmcRyY5KYbNu3ZW+beXVX7btProJTxxyJU9/hL5uKqqw4Pfy
-         nJvbzCd+PKoanw5wjixdRqCXI3zcc6E3dma3bLOE=
+        b=XCgDxRBUJ9eQy1/pzWM6tfGP8v7heiquWbgwsivFo8ZOk4eSuvguSMJe3j4Mgwu+y
+         QlvoOnkwF7GZ1+kan0ps3oPa6PyUcNVb9KlSWgeRx+QE8t00zzfCshH88tmLqEraHp
+         R2IG3+CE4BvDxRVDBDsYda4Xh3fOcBgWxoy68/J4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phong Hoang <phong.hoang.wz@renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Hoan Nguyen An <na-hoan@jinso.co.jp>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        stable@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Simon Horman <horms+renesas@verge.net.au>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 74/81] pwm: Fix deadlock warning when removing PWM device
-Date:   Thu, 13 Jun 2019 10:33:57 +0200
-Message-Id: <20190613075654.380280289@linuxfoundation.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        linux-renesas-soc@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 65/81] PCI: rcar: Fix 64bit MSI message address handling
+Date:   Thu, 13 Jun 2019 10:33:48 +0200
+Message-Id: <20190613075653.797782757@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -66,270 +65,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 347ab9480313737c0f1aaa08e8f2e1a791235535 ]
+[ Upstream commit 954b4b752a4c4e963b017ed8cef4c453c5ed308d ]
 
-This patch fixes deadlock warning if removing PWM device
-when CONFIG_PROVE_LOCKING is enabled.
+The MSI message address in the RC address space can be 64 bit. The
+R-Car PCIe RC supports such a 64bit MSI message address as well.
+The code currently uses virt_to_phys(__get_free_pages()) to obtain
+a reserved page for the MSI message address, and the return value
+of which can be a 64 bit physical address on 64 bit system.
 
-This issue can be reproceduced by the following steps on
-the R-Car H3 Salvator-X board if the backlight is disabled:
+However, the driver only programs PCIEMSIALR register with the bottom
+32 bits of the virt_to_phys(__get_free_pages()) return value and does
+not program the top 32 bits into PCIEMSIAUR, but rather programs the
+PCIEMSIAUR register with 0x0. This worked fine on older 32 bit R-Car
+SoCs, however may fail on new 64 bit R-Car SoCs.
 
- # cd /sys/class/pwm/pwmchip0
- # echo 0 > export
- # ls
- device  export  npwm  power  pwm0  subsystem  uevent  unexport
- # cd device/driver
- # ls
- bind  e6e31000.pwm  uevent  unbind
- # echo e6e31000.pwm > unbind
+Since from a PCIe controller perspective, an inbound MSI is a memory
+write to a special address (in case of this controller, defined by
+the value in PCIEMSIAUR:PCIEMSIALR), which triggers an interrupt, but
+never hits the DRAM _and_ because allocation of an MSI by a PCIe card
+driver obtains the MSI message address by reading PCIEMSIAUR:PCIEMSIALR
+in rcar_msi_setup_irqs(), incorrectly programmed PCIEMSIAUR cannot
+cause memory corruption or other issues.
 
-[   87.659974] ======================================================
-[   87.666149] WARNING: possible circular locking dependency detected
-[   87.672327] 5.0.0 #7 Not tainted
-[   87.675549] ------------------------------------------------------
-[   87.681723] bash/2986 is trying to acquire lock:
-[   87.686337] 000000005ea0e178 (kn->count#58){++++}, at: kernfs_remove_by_name_ns+0x50/0xa0
-[   87.694528]
-[   87.694528] but task is already holding lock:
-[   87.700353] 000000006313b17c (pwm_lock){+.+.}, at: pwmchip_remove+0x28/0x13c
-[   87.707405]
-[   87.707405] which lock already depends on the new lock.
-[   87.707405]
-[   87.715574]
-[   87.715574] the existing dependency chain (in reverse order) is:
-[   87.723048]
-[   87.723048] -> #1 (pwm_lock){+.+.}:
-[   87.728017]        __mutex_lock+0x70/0x7e4
-[   87.732108]        mutex_lock_nested+0x1c/0x24
-[   87.736547]        pwm_request_from_chip.part.6+0x34/0x74
-[   87.741940]        pwm_request_from_chip+0x20/0x40
-[   87.746725]        export_store+0x6c/0x1f4
-[   87.750820]        dev_attr_store+0x18/0x28
-[   87.754998]        sysfs_kf_write+0x54/0x64
-[   87.759175]        kernfs_fop_write+0xe4/0x1e8
-[   87.763615]        __vfs_write+0x40/0x184
-[   87.767619]        vfs_write+0xa8/0x19c
-[   87.771448]        ksys_write+0x58/0xbc
-[   87.775278]        __arm64_sys_write+0x18/0x20
-[   87.779721]        el0_svc_common+0xd0/0x124
-[   87.783986]        el0_svc_compat_handler+0x1c/0x24
-[   87.788858]        el0_svc_compat+0x8/0x18
-[   87.792947]
-[   87.792947] -> #0 (kn->count#58){++++}:
-[   87.798260]        lock_acquire+0xc4/0x22c
-[   87.802353]        __kernfs_remove+0x258/0x2c4
-[   87.806790]        kernfs_remove_by_name_ns+0x50/0xa0
-[   87.811836]        remove_files.isra.1+0x38/0x78
-[   87.816447]        sysfs_remove_group+0x48/0x98
-[   87.820971]        sysfs_remove_groups+0x34/0x4c
-[   87.825583]        device_remove_attrs+0x6c/0x7c
-[   87.830197]        device_del+0x11c/0x33c
-[   87.834201]        device_unregister+0x14/0x2c
-[   87.838638]        pwmchip_sysfs_unexport+0x40/0x4c
-[   87.843509]        pwmchip_remove+0xf4/0x13c
-[   87.847773]        rcar_pwm_remove+0x28/0x34
-[   87.852039]        platform_drv_remove+0x24/0x64
-[   87.856651]        device_release_driver_internal+0x18c/0x21c
-[   87.862391]        device_release_driver+0x14/0x1c
-[   87.867175]        unbind_store+0xe0/0x124
-[   87.871265]        drv_attr_store+0x20/0x30
-[   87.875442]        sysfs_kf_write+0x54/0x64
-[   87.879618]        kernfs_fop_write+0xe4/0x1e8
-[   87.884055]        __vfs_write+0x40/0x184
-[   87.888057]        vfs_write+0xa8/0x19c
-[   87.891887]        ksys_write+0x58/0xbc
-[   87.895716]        __arm64_sys_write+0x18/0x20
-[   87.900154]        el0_svc_common+0xd0/0x124
-[   87.904417]        el0_svc_compat_handler+0x1c/0x24
-[   87.909289]        el0_svc_compat+0x8/0x18
-[   87.913378]
-[   87.913378] other info that might help us debug this:
-[   87.913378]
-[   87.921374]  Possible unsafe locking scenario:
-[   87.921374]
-[   87.927286]        CPU0                    CPU1
-[   87.931808]        ----                    ----
-[   87.936331]   lock(pwm_lock);
-[   87.939293]                                lock(kn->count#58);
-[   87.945120]                                lock(pwm_lock);
-[   87.950599]   lock(kn->count#58);
-[   87.953908]
-[   87.953908]  *** DEADLOCK ***
-[   87.953908]
-[   87.959821] 4 locks held by bash/2986:
-[   87.963563]  #0: 00000000ace7bc30 (sb_writers#6){.+.+}, at: vfs_write+0x188/0x19c
-[   87.971044]  #1: 00000000287991b2 (&of->mutex){+.+.}, at: kernfs_fop_write+0xb4/0x1e8
-[   87.978872]  #2: 00000000f739d016 (&dev->mutex){....}, at: device_release_driver_internal+0x40/0x21c
-[   87.988001]  #3: 000000006313b17c (pwm_lock){+.+.}, at: pwmchip_remove+0x28/0x13c
-[   87.995481]
-[   87.995481] stack backtrace:
-[   87.999836] CPU: 0 PID: 2986 Comm: bash Not tainted 5.0.0 #7
-[   88.005489] Hardware name: Renesas Salvator-X board based on r8a7795 ES1.x (DT)
-[   88.012791] Call trace:
-[   88.015235]  dump_backtrace+0x0/0x190
-[   88.018891]  show_stack+0x14/0x1c
-[   88.022204]  dump_stack+0xb0/0xec
-[   88.025514]  print_circular_bug.isra.32+0x1d0/0x2e0
-[   88.030385]  __lock_acquire+0x1318/0x1864
-[   88.034388]  lock_acquire+0xc4/0x22c
-[   88.037958]  __kernfs_remove+0x258/0x2c4
-[   88.041874]  kernfs_remove_by_name_ns+0x50/0xa0
-[   88.046398]  remove_files.isra.1+0x38/0x78
-[   88.050487]  sysfs_remove_group+0x48/0x98
-[   88.054490]  sysfs_remove_groups+0x34/0x4c
-[   88.058580]  device_remove_attrs+0x6c/0x7c
-[   88.062671]  device_del+0x11c/0x33c
-[   88.066154]  device_unregister+0x14/0x2c
-[   88.070070]  pwmchip_sysfs_unexport+0x40/0x4c
-[   88.074421]  pwmchip_remove+0xf4/0x13c
-[   88.078163]  rcar_pwm_remove+0x28/0x34
-[   88.081906]  platform_drv_remove+0x24/0x64
-[   88.085996]  device_release_driver_internal+0x18c/0x21c
-[   88.091215]  device_release_driver+0x14/0x1c
-[   88.095478]  unbind_store+0xe0/0x124
-[   88.099048]  drv_attr_store+0x20/0x30
-[   88.102704]  sysfs_kf_write+0x54/0x64
-[   88.106359]  kernfs_fop_write+0xe4/0x1e8
-[   88.110275]  __vfs_write+0x40/0x184
-[   88.113757]  vfs_write+0xa8/0x19c
-[   88.117065]  ksys_write+0x58/0xbc
-[   88.120374]  __arm64_sys_write+0x18/0x20
-[   88.124291]  el0_svc_common+0xd0/0x124
-[   88.128034]  el0_svc_compat_handler+0x1c/0x24
-[   88.132384]  el0_svc_compat+0x8/0x18
+There is however the possibility that if virt_to_phys(__get_free_pages())
+returned address above the 32bit boundary _and_ PCIEMSIAUR was programmed
+to 0x0 _and_ if the system had physical RAM at the address matching the
+value of PCIEMSIALR, a PCIe card driver could allocate a buffer with a
+physical address matching the value of PCIEMSIALR and a remote write to
+such a buffer by a PCIe card would trigger a spurious MSI.
 
-The sysfs unexport in pwmchip_remove() is completely asymmetric
-to what we do in pwmchip_add_with_polarity() and commit 0733424c9ba9
-("pwm: Unexport children before chip removal") is a strong indication
-that this was wrong to begin with. We should just move
-pwmchip_sysfs_unexport() where it belongs, which is right after
-pwmchip_sysfs_unexport_children(). In that case, we do not need
-separate functions anymore either.
-
-We also really want to remove sysfs irrespective of whether or not
-the chip will be removed as a result of pwmchip_remove(). We can only
-assume that the driver will be gone after that, so we shouldn't leave
-any dangling sysfs files around.
-
-This warning disappears if we move pwmchip_sysfs_unexport() to
-the top of pwmchip_remove(), pwmchip_sysfs_unexport_children().
-That way it is also outside of the pwm_lock section, which indeed
-doesn't seem to be needed.
-
-Moving the pwmchip_sysfs_export() call outside of that section also
-seems fine and it'd be perfectly symmetric with pwmchip_remove() again.
-
-So, this patch fixes them.
-
-Signed-off-by: Phong Hoang <phong.hoang.wz@renesas.com>
-[shimoda: revise the commit log and code]
-Fixes: 76abbdde2d95 ("pwm: Add sysfs interface")
-Fixes: 0733424c9ba9 ("pwm: Unexport children before chip removal")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Tested-by: Hoan Nguyen An <na-hoan@jinso.co.jp>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: e015f88c368d ("PCI: rcar: Add support for R-Car H3 to pcie-rcar")
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>
+Cc: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-renesas-soc@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/core.c  | 10 +++++-----
- drivers/pwm/sysfs.c | 14 +-------------
- include/linux/pwm.h |  5 -----
- 3 files changed, 6 insertions(+), 23 deletions(-)
+ drivers/pci/host/pcie-rcar.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 1581f6ab1b1f..c45e5719ba17 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -311,10 +311,12 @@ int pwmchip_add_with_polarity(struct pwm_chip *chip,
- 	if (IS_ENABLED(CONFIG_OF))
- 		of_pwmchip_add(chip);
- 
--	pwmchip_sysfs_export(chip);
--
- out:
- 	mutex_unlock(&pwm_lock);
-+
-+	if (!ret)
-+		pwmchip_sysfs_export(chip);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(pwmchip_add_with_polarity);
-@@ -348,7 +350,7 @@ int pwmchip_remove(struct pwm_chip *chip)
- 	unsigned int i;
- 	int ret = 0;
- 
--	pwmchip_sysfs_unexport_children(chip);
-+	pwmchip_sysfs_unexport(chip);
- 
- 	mutex_lock(&pwm_lock);
- 
-@@ -368,8 +370,6 @@ int pwmchip_remove(struct pwm_chip *chip)
- 
- 	free_pwms(chip);
- 
--	pwmchip_sysfs_unexport(chip);
--
- out:
- 	mutex_unlock(&pwm_lock);
- 	return ret;
-diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-index a813239300c3..0850b11dfd83 100644
---- a/drivers/pwm/sysfs.c
-+++ b/drivers/pwm/sysfs.c
-@@ -397,19 +397,6 @@ void pwmchip_sysfs_export(struct pwm_chip *chip)
- }
- 
- void pwmchip_sysfs_unexport(struct pwm_chip *chip)
--{
--	struct device *parent;
--
--	parent = class_find_device(&pwm_class, NULL, chip,
--				   pwmchip_sysfs_match);
--	if (parent) {
--		/* for class_find_device() */
--		put_device(parent);
--		device_unregister(parent);
--	}
--}
--
--void pwmchip_sysfs_unexport_children(struct pwm_chip *chip)
+diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
+index fad57d068db3..2b0a1f3b8265 100644
+--- a/drivers/pci/host/pcie-rcar.c
++++ b/drivers/pci/host/pcie-rcar.c
+@@ -849,7 +849,7 @@ static int rcar_pcie_enable_msi(struct rcar_pcie *pcie)
  {
- 	struct device *parent;
- 	unsigned int i;
-@@ -427,6 +414,7 @@ void pwmchip_sysfs_unexport_children(struct pwm_chip *chip)
+ 	struct device *dev = pcie->dev;
+ 	struct rcar_msi *msi = &pcie->msi;
+-	unsigned long base;
++	phys_addr_t base;
+ 	int err, i;
+ 
+ 	mutex_init(&msi->lock);
+@@ -894,8 +894,8 @@ static int rcar_pcie_enable_msi(struct rcar_pcie *pcie)
  	}
+ 	base = virt_to_phys((void *)msi->pages);
  
- 	put_device(parent);
-+	device_unregister(parent);
- }
+-	rcar_pci_write_reg(pcie, base | MSIFE, PCIEMSIALR);
+-	rcar_pci_write_reg(pcie, 0, PCIEMSIAUR);
++	rcar_pci_write_reg(pcie, lower_32_bits(base) | MSIFE, PCIEMSIALR);
++	rcar_pci_write_reg(pcie, upper_32_bits(base), PCIEMSIAUR);
  
- static int __init pwm_sysfs_init(void)
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 56518adc31dd..bd7d611d63e9 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -639,7 +639,6 @@ static inline void pwm_remove_table(struct pwm_lookup *table, size_t num)
- #ifdef CONFIG_PWM_SYSFS
- void pwmchip_sysfs_export(struct pwm_chip *chip);
- void pwmchip_sysfs_unexport(struct pwm_chip *chip);
--void pwmchip_sysfs_unexport_children(struct pwm_chip *chip);
- #else
- static inline void pwmchip_sysfs_export(struct pwm_chip *chip)
- {
-@@ -648,10 +647,6 @@ static inline void pwmchip_sysfs_export(struct pwm_chip *chip)
- static inline void pwmchip_sysfs_unexport(struct pwm_chip *chip)
- {
- }
--
--static inline void pwmchip_sysfs_unexport_children(struct pwm_chip *chip)
--{
--}
- #endif /* CONFIG_PWM_SYSFS */
- 
- #endif /* __LINUX_PWM_H */
+ 	/* enable all MSI interrupts */
+ 	rcar_pci_write_reg(pcie, 0xffffffff, PCIEMSIIER);
 -- 
 2.20.1
 
