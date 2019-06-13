@@ -2,63 +2,112 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5D1C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DD8C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1426820644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22B3215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:36:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EPdR4Uv2"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VE7dlWqv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392606AbfFMQgl (ORCPT
+        id S1730732AbfFMQgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:36:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54954 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730674AbfFMH2m (ORCPT
+        Thu, 13 Jun 2019 12:36:50 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:43469 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727867AbfFMH1L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 03:28:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RWs47MlEw6q4mhAqwnkkTjDMHRGkSPNW49ybL3tYviI=; b=EPdR4Uv2CiGNsnqefLIJy0soy
-        LuZo/5qJ+nSAnqBeloRkXbnC8QkRnvDaOnLLGlEyPfjV7rKDb+2IsSDnGpPPwR5YN+JsJZvE6Nzih
-        h4bh6Hhrspi61r0s/Hu4diTce8cxLQZOlmsN8GF3gvQLewUG5UZZnnds/KRNZrSzpBBd2tlrz/+8z
-        ZaOWCIT5Vq3o9xcR44US4mqjTGAzEYvXYCQMxeOJQ1RDU8UxVl8E9B0/2tTmgBOs4Vl4f4Kg35qtg
-        BBXzZrj3MYp5SLkYoyyZ/9b1hHXnW1olZVdW8mjqDD1Jt3ArD9oGoZJO0zuuD4ObY35lWyRjv42XX
-        Kkuaol0Ug==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbKA5-0002CN-VA; Thu, 13 Jun 2019 07:28:41 +0000
-Date:   Thu, 13 Jun 2019 00:28:41 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Kent Overstreet <kent.overstreet@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-bcache@vger.kernel.org
-Subject: Re: [PATCH 10/12] bcache: move closures to lib/
-Message-ID: <20190613072841.GA7996@infradead.org>
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <20190610191420.27007-11-kent.overstreet@gmail.com>
+        Thu, 13 Jun 2019 03:27:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1560410830; x=1591946830;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=Laetec4ccSCBOw8YMZruaBJ+PWt1iLta0CpWlGDAXuM=;
+  b=VE7dlWqvkizytsOoyQdjqbF18715cizu2shKsjdMRQzNmJ1v+kEmlcu/
+   EeSpgTGxzQFrPBwtqCRIcLQeLGQaW/5fU9ByzJzCP7nAyCzVNMrlWEoO5
+   5mgf1aYdBaVzD8lMsiD8acc4pu/Q2oaZxZSqWKHKCijwxlIqeJDVdw7AI
+   c=;
+X-IronPort-AV: E=Sophos;i="5.62,368,1554768000"; 
+   d="scan'208";a="679674698"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 13 Jun 2019 07:27:07 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (Postfix) with ESMTPS id 66CC3A24B7;
+        Thu, 13 Jun 2019 07:27:05 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 13 Jun 2019 07:27:04 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.160.177) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 13 Jun 2019 07:27:02 +0000
+Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM
+ secrets
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Marius Hillenbrand <mhillenb@amazon.de>, <kvm@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <kernel-hardening@lists.openwall.com>, <linux-mm@kvack.org>,
+        Alexander Graf <graf@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20190612170834.14855-1-mhillenb@amazon.de>
+ <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <54a4d14c-b19b-339e-5a15-adb10297cb30@amazon.com>
+Date:   Thu, 13 Jun 2019 09:27:00 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190610191420.27007-11-kent.overstreet@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.43.160.177]
+X-ClientProxiedBy: EX13D01UWA003.ant.amazon.com (10.43.160.107) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 03:14:18PM -0400, Kent Overstreet wrote:
-> Prep work for bcachefs - being a fork of bcache it also uses closures
 
-NAK.  This obsfucation needs to go away from bcache and not actually be
-spread further, especially not as an API with multiple users which will
-make it even harder to get rid of it.
+On 12.06.19 21:55, Dave Hansen wrote:
+> On 6/12/19 10:08 AM, Marius Hillenbrand wrote:
+>> This patch series proposes to introduce a region for what we call
+>> process-local memory into the kernel's virtual address space.
+> It might be fun to cc some x86 folks on this series.  They might have
+> some relevant opinions. ;)
+>
+> A few high-level questions:
+>
+> Why go to all this trouble to hide guest state like registers if all the
+> guest data itself is still mapped?
+
+
+(jumping in for Marius, he's offline today)
+
+Glad you asked :). I hope this cover letter explains well how to achieve 
+guest data not being mapped:
+
+https://lkml.org/lkml/2019/1/31/933
+
+
+> Where's the context-switching code?  Did I just miss it?
+
+
+I'm not sure I understand the question. With this mechanism, the global 
+linear map pages are just not present anymore, so there is no context 
+switching needed. For the process local memory, the page table is 
+already mm local, so we don't need to do anything special during context 
+switch, no?
+
+
+Alex
+
