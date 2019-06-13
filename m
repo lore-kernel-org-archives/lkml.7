@@ -2,99 +2,124 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B29EC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4844AC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23B7206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B8C3206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:33:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732885AbfFMPdo (ORCPT
+        id S1728333AbfFMPd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:33:44 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:40766 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728361AbfFMKfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 06:35:52 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BFD9B1A0113;
-        Thu, 13 Jun 2019 12:35:49 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C74081A038B;
-        Thu, 13 Jun 2019 12:35:46 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C6079402A0;
-        Thu, 13 Jun 2019 18:35:42 +0800 (SGT)
-From:   Peng Ma <peng.ma@nxp.com>
-To:     dan.j.williams@intel.com, vkoul@kernel.org, leoyang.li@nxp.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peng Ma <peng.ma@nxp.com>
-Subject: [V2] dmaengine: fsl-edma: support little endian for edma driver
-Date:   Thu, 13 Jun 2019 10:27:08 +0000
-Message-Id: <20190613102708.21606-1-peng.ma@nxp.com>
-X-Mailer: git-send-email 2.14.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 13 Jun 2019 11:33:57 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33328 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728321AbfFMKfT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 06:35:19 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DAShhM028054
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 06:35:18 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t3k7rmt60-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 06:35:18 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Thu, 13 Jun 2019 11:35:15 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 13 Jun 2019 11:35:13 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5DAZB6v51052784
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 10:35:11 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 71782AE04D;
+        Thu, 13 Jun 2019 10:35:11 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0A382AE045;
+        Thu, 13 Jun 2019 10:35:11 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Jun 2019 10:35:10 +0000 (GMT)
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCHv2 1/3] processor: remove spin_cpu_yield
+Date:   Thu, 13 Jun 2019 12:35:08 +0200
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190613103510.60529-1-heiko.carstens@de.ibm.com>
+References: <20190613103510.60529-1-heiko.carstens@de.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19061310-0008-0000-0000-000002F36B1E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061310-0009-0000-0000-00002260707C
+Message-Id: <20190613103510.60529-2-heiko.carstens@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=596 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906130082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Our platforms with below registers(CHCFG0 - CHCFG15) of eDMA
-*-----------------------------------------------------------*
-|     Offset   | Big endian Register| Little endian Register|
-|--------------|--------------------|-----------------------|
-|     0x0      |        CHCFG0      |           CHCFG3      |
-|--------------|--------------------|-----------------------|
-|     0x1      |        CHCFG1      |           CHCFG2      |
-|--------------|--------------------|-----------------------|
-|     0x2      |        CHCFG2      |           CHCFG1      |
-|--------------|--------------------|-----------------------|
-|     0x3      |        CHCFG3      |           CHCFG0      |
-|--------------|--------------------|-----------------------|
-|     ...      |        ......      |           ......      |
-|--------------|--------------------|-----------------------|
-|     0xC      |        CHCFG12     |           CHCFG15     |
-|--------------|--------------------|-----------------------|
-|     0xD      |        CHCFG13     |           CHCFG14     |
-|--------------|--------------------|-----------------------|
-|     0xE      |        CHCFG14     |           CHCFG13     |
-|--------------|--------------------|-----------------------|
-|     0xF      |        CHCFG15     |           CHCFG12     |
-*-----------------------------------------------------------*
+spin_cpu_yield is unused, therefore remove it.
 
-Current eDMA driver does not support Little endian, so this
-patch is to improve edma driver to support little endian.
-
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 ---
-Changed fo v2:
-	- Add details fo comments.
+ arch/powerpc/include/asm/processor.h | 2 --
+ include/linux/processor.h            | 9 ---------
+ 2 files changed, 11 deletions(-)
 
- drivers/dma/fsl-edma-common.c |    5 +++++
- 1 files changed, 5 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index 680b2a0..6bf238e 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -83,9 +83,14 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 	u32 ch = fsl_chan->vchan.chan.chan_id;
- 	void __iomem *muxaddr;
- 	unsigned int chans_per_mux, ch_off;
-+	int endian_diff[4] = {3, 1, -1, -3};
+diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+index ef573fe9873e..a9993e7a443b 100644
+--- a/arch/powerpc/include/asm/processor.h
++++ b/arch/powerpc/include/asm/processor.h
+@@ -346,8 +346,6 @@ static inline unsigned long __pack_fe01(unsigned int fpmode)
  
- 	chans_per_mux = fsl_chan->edma->n_chans / DMAMUX_NR;
- 	ch_off = fsl_chan->vchan.chan.chan_id % chans_per_mux;
-+
-+	if (!fsl_chan->edma->big_endian)
-+		ch_off += endian_diff[ch_off % 4];
-+
- 	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
- 	slot = EDMAMUX_CHCFG_SOURCE(slot);
+ #define spin_cpu_relax()	barrier()
  
+-#define spin_cpu_yield()	spin_cpu_relax()
+-
+ #define spin_end()	HMT_medium()
+ 
+ #define spin_until_cond(cond)					\
+diff --git a/include/linux/processor.h b/include/linux/processor.h
+index dbc952eec869..dc78bdc7079a 100644
+--- a/include/linux/processor.h
++++ b/include/linux/processor.h
+@@ -32,15 +32,6 @@
+ #define spin_cpu_relax() cpu_relax()
+ #endif
+ 
+-/*
+- * spin_cpu_yield may be called to yield (undirected) to the hypervisor if
+- * necessary. This should be used if the wait is expected to take longer
+- * than context switch overhead, but we can't sleep or do a directed yield.
+- */
+-#ifndef spin_cpu_yield
+-#define spin_cpu_yield() cpu_relax_yield()
+-#endif
+-
+ #ifndef spin_end
+ #define spin_end()
+ #endif
 -- 
-1.7.1
+2.17.1
 
