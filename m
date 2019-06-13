@@ -2,195 +2,104 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8233DC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE08CC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48342208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:45:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hN3Tg/pf"
+	by mail.kernel.org (Postfix) with ESMTP id B0E5320851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389325AbfFMPpr (ORCPT
+        id S2389208AbfFMPpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:45:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33266 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731798AbfFMJnj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:43:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=EySscp3yKN+jDnjqTeB/vXgNBmJu+8rQ8w0cniT2gLU=; b=hN3Tg/pfc+DF3o2cE7RN16eAtU
-        DSJVtP39I0bEcArETT1vSti3Crp6Qi6ZMUwozDmHcDkQP6AOPVOaSSisOOKmzApBa5KRd3Fc1dp2r
-        g2XyhbubQhZWdnpR3yZQ12YlHZkEEwfLnzPENVeG2YNLsIJ43CAeQQvZPRB+G30UAOvUcGpwczkNe
-        mnogyEbipMza1tYUKcfQqaQG3/M5pHI887fdLfo7flgv0cPauHj9XEiy7UM73W0JlaNeb622kfoPX
-        R8Nu1l/kCfDiGUY+PLUbgk+PMfKovQLWD4DYNK3g20GKfH1m6doMiSXTnDatQF7W8R9hsse0hbDbU
-        TtnGqz2Q==;
-Received: from mpp-cp1-natpool-1-198.ethz.ch ([82.130.71.198] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbMGd-0001kC-6s; Thu, 13 Jun 2019 09:43:35 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/22] mm: remove the struct hmm_device infrastructure
-Date:   Thu, 13 Jun 2019 11:43:05 +0200
-Message-Id: <20190613094326.24093-3-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190613094326.24093-1-hch@lst.de>
-References: <20190613094326.24093-1-hch@lst.de>
+        Thu, 13 Jun 2019 11:45:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34172 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731801AbfFMJno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:43:44 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D4F32C04AC69;
+        Thu, 13 Jun 2019 09:43:36 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 2B8F35F9B0;
+        Thu, 13 Jun 2019 09:43:26 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 13 Jun 2019 11:43:36 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 11:43:25 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
+        'Andrew Morton' <akpm@linux-foundation.org>,
+        'Deepa Dinamani' <deepa.kernel@gmail.com>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "'arnd@arndb.de'" <arnd@arndb.de>,
+        "'dbueso@suse.de'" <dbueso@suse.de>,
+        "'axboe@kernel.dk'" <axboe@kernel.dk>,
+        "'dave@stgolabs.net'" <dave@stgolabs.net>,
+        "'e@80x24.org'" <e@80x24.org>,
+        "'jbaron@akamai.com'" <jbaron@akamai.com>,
+        "'linux-fsdevel@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>,
+        "'linux-aio@kvack.org'" <linux-aio@kvack.org>,
+        "'omar.kilani@gmail.com'" <omar.kilani@gmail.com>,
+        "'tglx@linutronix.de'" <tglx@linutronix.de>,
+        'Al Viro' <viro@ZenIV.linux.org.uk>,
+        'Linus Torvalds' <torvalds@linux-foundation.org>,
+        "'linux-arch@vger.kernel.org'" <linux-arch@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
+Message-ID: <20190613094324.GA12506@redhat.com>
+References: <20190604134117.GA29963@redhat.com>
+ <20190606140814.GA13440@redhat.com>
+ <87k1dxaxcl.fsf_-_@xmission.com>
+ <87ef45axa4.fsf_-_@xmission.com>
+ <20190610162244.GB8127@redhat.com>
+ <87lfy96sta.fsf@xmission.com>
+ <9199239a450d4ea397783ccf98742220@AcuMS.aculab.com>
+ <20190612134558.GB3276@redhat.com>
+ <6f748b26bef748208e2a74174c0c0bfc@AcuMS.aculab.com>
+ <6e9b964b08d84c99980b1707e5fe3d1d@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6e9b964b08d84c99980b1707e5fe3d1d@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 13 Jun 2019 09:43:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code is a trivial wrapper around device model helpers, which
-should have been integrated into the driver device model usage from
-the start.  Assuming it actually had users, which it never had since
-the code was added more than 1 1/2 years ago.
+On 06/13, David Laight wrote:
+>
+> I tested NetBSD last night.
+> pselect() always calls the signal handlers even when an fd is ready.
+> I'm beginning to suspect that this is the 'standards conforming' behaviour.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/hmm.h | 20 ------------
- mm/hmm.c            | 80 ---------------------------------------------
- 2 files changed, 100 deletions(-)
+May be. May be not. I have no idea.
 
-diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index 0fa8ea34ccef..4867b9da1b6c 100644
---- a/include/linux/hmm.h
-+++ b/include/linux/hmm.h
-@@ -717,26 +717,6 @@ static inline unsigned long hmm_devmem_page_get_drvdata(const struct page *page)
- {
- 	return page->hmm_data;
- }
--
--
--/*
-- * struct hmm_device - fake device to hang device memory onto
-- *
-- * @device: device struct
-- * @minor: device minor number
-- */
--struct hmm_device {
--	struct device		device;
--	unsigned int		minor;
--};
--
--/*
-- * A device driver that wants to handle multiple devices memory through a
-- * single fake device can use hmm_device to do so. This is purely a helper and
-- * it is not strictly needed, in order to make use of any HMM functionality.
-- */
--struct hmm_device *hmm_device_new(void *drvdata);
--void hmm_device_put(struct hmm_device *hmm_device);
- #endif /* CONFIG_DEVICE_PRIVATE || CONFIG_DEVICE_PUBLIC */
- #else /* IS_ENABLED(CONFIG_HMM) */
- static inline void hmm_mm_destroy(struct mm_struct *mm) {}
-diff --git a/mm/hmm.c b/mm/hmm.c
-index 886b18695b97..ff2598eb7377 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -1499,84 +1499,4 @@ struct hmm_devmem *hmm_devmem_add_resource(const struct hmm_devmem_ops *ops,
- 	return devmem;
- }
- EXPORT_SYMBOL_GPL(hmm_devmem_add_resource);
--
--/*
-- * A device driver that wants to handle multiple devices memory through a
-- * single fake device can use hmm_device to do so. This is purely a helper
-- * and it is not needed to make use of any HMM functionality.
-- */
--#define HMM_DEVICE_MAX 256
--
--static DECLARE_BITMAP(hmm_device_mask, HMM_DEVICE_MAX);
--static DEFINE_SPINLOCK(hmm_device_lock);
--static struct class *hmm_device_class;
--static dev_t hmm_device_devt;
--
--static void hmm_device_release(struct device *device)
--{
--	struct hmm_device *hmm_device;
--
--	hmm_device = container_of(device, struct hmm_device, device);
--	spin_lock(&hmm_device_lock);
--	clear_bit(hmm_device->minor, hmm_device_mask);
--	spin_unlock(&hmm_device_lock);
--
--	kfree(hmm_device);
--}
--
--struct hmm_device *hmm_device_new(void *drvdata)
--{
--	struct hmm_device *hmm_device;
--
--	hmm_device = kzalloc(sizeof(*hmm_device), GFP_KERNEL);
--	if (!hmm_device)
--		return ERR_PTR(-ENOMEM);
--
--	spin_lock(&hmm_device_lock);
--	hmm_device->minor = find_first_zero_bit(hmm_device_mask, HMM_DEVICE_MAX);
--	if (hmm_device->minor >= HMM_DEVICE_MAX) {
--		spin_unlock(&hmm_device_lock);
--		kfree(hmm_device);
--		return ERR_PTR(-EBUSY);
--	}
--	set_bit(hmm_device->minor, hmm_device_mask);
--	spin_unlock(&hmm_device_lock);
--
--	dev_set_name(&hmm_device->device, "hmm_device%d", hmm_device->minor);
--	hmm_device->device.devt = MKDEV(MAJOR(hmm_device_devt),
--					hmm_device->minor);
--	hmm_device->device.release = hmm_device_release;
--	dev_set_drvdata(&hmm_device->device, drvdata);
--	hmm_device->device.class = hmm_device_class;
--	device_initialize(&hmm_device->device);
--
--	return hmm_device;
--}
--EXPORT_SYMBOL(hmm_device_new);
--
--void hmm_device_put(struct hmm_device *hmm_device)
--{
--	put_device(&hmm_device->device);
--}
--EXPORT_SYMBOL(hmm_device_put);
--
--static int __init hmm_init(void)
--{
--	int ret;
--
--	ret = alloc_chrdev_region(&hmm_device_devt, 0,
--				  HMM_DEVICE_MAX,
--				  "hmm_device");
--	if (ret)
--		return ret;
--
--	hmm_device_class = class_create(THIS_MODULE, "hmm_device");
--	if (IS_ERR(hmm_device_class)) {
--		unregister_chrdev_region(hmm_device_devt, HMM_DEVICE_MAX);
--		return PTR_ERR(hmm_device_class);
--	}
--	return 0;
--}
--
--device_initcall(hmm_init);
- #endif /* CONFIG_DEVICE_PRIVATE || CONFIG_DEVICE_PUBLIC */
--- 
-2.20.1
+> > The ToG page for pselect() http://pubs.opengroup.org/onlinepubs/9699919799/functions/pselect.html
+> > says:
+> >     "If sigmask is not a null pointer, then the pselect() function shall replace
+> >     the signal mask of the caller by the set of signals pointed to by sigmask
+> >     before examining the descriptors, and shall restore the signal mask of the
+> >     calling thread before returning."
+
+> > Note that it says 'before examining the descriptors' not 'before blocking'.
+
+And you interpret this as if a pending signal should be delivered in any case,
+even if pselect succeeds. Again, perhaps you are right, but to me this is simply
+undocumented.
+
+However, linux never did this. Until the commit 854a6ed56839 ("signal: Add
+restore_user_sigmask()"). This commit caused regression. We had to revert it.
+
+> > If nothing else the man pages need a note about the standards and portability.
+
+Agreed.
+
+Oleg.
 
