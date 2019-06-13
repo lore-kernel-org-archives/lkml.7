@@ -2,176 +2,110 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B71A3C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 843E2C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9080C20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B0420851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:54:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560441262;
+	bh=id9fzv7nyH1zGmy4h3HEUh/wcEv+8VdU11in07z9XYI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lXgD/40w4AwsVgkC/+NJhJxdRs4UOlGgR47sslTqKDJRrDbL6bIKP81Zy65QdqSoL
+	 Nm3MP4hoBt6oLqVluXHZ7xSrYqiyIbuaIY56oWp8FRQV2oSodlW2Mi9v4UXwyj6CQI
+	 Hg1ag/qBJDkFRBB+f6EFW1YrxqhRUtXRuewBw0Jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388323AbfFMPyO (ORCPT
+        id S1733014AbfFMPyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:54:14 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36430 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731581AbfFMIzq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:55:46 -0400
-Received: by mail-qk1-f194.google.com with SMTP id g18so12232100qkl.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 01:55:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EbsOELQCvto0Fo9I2AuJ/Y7svHsBZcOWHg1RzxD+F5w=;
-        b=AXlKPXoP+VK+0SjC1pLuioglmpzO5bK+M+fWl1ql22GSw0Zmk4Oy6/RI7jsI3Il+g0
-         XZwI3CKIssk/aoWjsC2r9/PkFrEa3dGHbIPIDBCjFRtkhMG55zWf2dPphtQlKiJlyYMu
-         lBTKPFTwz5vUFRmuakLMuKPyrC80jaIKa1kpDuR0ZE1RH9jkuHj6sKR0k5r8DRbgqSKS
-         EVijP+ia0TqkmK0mY8xGlx3/IqYCzRfSoPNKBbwjdjeqKTuBdDVU1Edkxex5M6jpYGBd
-         NUAL5kLw9jhHpOqFQia546oZOCkbx6syLb21ZfId2KK2XOBHOXx1VlVH3ffUIrIylodt
-         oVqQ==
-X-Gm-Message-State: APjAAAUMbGUwxsTSYZ3mQsODaA4faEe7/ckzbkXuRTQ9Q6DR5LwXPAft
-        cxX08g7OVu4NPXqsJkNFTTtd/esoWVzzvX7MdNozLw==
-X-Google-Smtp-Source: APXvYqzj78vh0ZV37F1d7+jB5lITaJMY5BUoqTd1zQhUK7GP/qiI4GL+OEOfawaB6HDtVc7YSfEfR01C+IbSyXcwyV4=
-X-Received: by 2002:a37:ea16:: with SMTP id t22mr70882953qkj.337.1560416144985;
- Thu, 13 Jun 2019 01:55:44 -0700 (PDT)
+        Thu, 13 Jun 2019 11:54:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731569AbfFMIx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:53:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EC5D215EA;
+        Thu, 13 Jun 2019 08:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560416008;
+        bh=id9fzv7nyH1zGmy4h3HEUh/wcEv+8VdU11in07z9XYI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=W605ZCzfzg5X2UVloHAskRMdeqLYvM86aLzb7QNZYXkePZuGqf2AkhGJugu2MNPJr
+         jWUUnLvqm/qFA7JgfoSKDbTQQ6Gtb5BgYDDesZd6/lhZqSfa8AC3y9QjrDs6hP31cn
+         IPbRKaoJPsqSOPESmvJlqDJuAGXHeFB1mW8yAMKg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "Kuo, Hsuan-Chi" <hckuo2@illinois.edu>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 069/155] watchdog: fix compile time error of pretimeout governors
+Date:   Thu, 13 Jun 2019 10:33:01 +0200
+Message-Id: <20190613075656.842528232@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
+References: <20190613075652.691765927@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
- <20190612212721.32195-1-jeffrey.l.hugo@gmail.com> <20190612214636.GA40779@dtor-ws>
- <84e7d83f-e133-0281-612a-94d8c4319040@codeaurora.org>
-In-Reply-To: <84e7d83f-e133-0281-612a-94d8c4319040@codeaurora.org>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Thu, 13 Jun 2019 10:55:31 +0200
-Message-ID: <CAO-hwJJUivfzFj-Downqt8nY3iTwF8-oq_iBqs1Dxyx92HdYPw@mail.gmail.com>
-Subject: Re: Re: [PATCH v6 2/5] HID: quirks: Refactor ELAN 400 and 401 handling
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 12:20 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
->
-> On 6/12/2019 3:46 PM, Dmitry Torokhov wrote:
-> > On Wed, Jun 12, 2019 at 02:27:21PM -0700, Jeffrey Hugo wrote:
-> >> There needs to be coordination between hid-quirks and the elan_i2c driver
-> >> about which devices are handled by what drivers.  Currently, both use
-> >> whitelists, which results in valid devices being unhandled by default,
-> >> when they should not be rejected by hid-quirks.  This is quickly becoming
-> >> an issue.
-> >>
-> >> Since elan_i2c has a maintained whitelist of what devices it will handle,
-> >> which is now in a header file that hid-quirks can access, use that to
-> >> implement a blacklist in hid-quirks so that only the devices that need to
-> >> be handled by elan_i2c get rejected by hid-quirks, and everything else is
-> >> handled by default.
-> >>
-> >> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> >> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> >> ---
-> >>   drivers/hid/hid-quirks.c | 27 ++++++++++++++++-----------
-> >>   1 file changed, 16 insertions(+), 11 deletions(-)
-> >>
-> >> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-> >> index e5ca6fe2ca57..bd81bb090222 100644
-> >> --- a/drivers/hid/hid-quirks.c
-> >> +++ b/drivers/hid/hid-quirks.c
-> >> @@ -16,6 +16,7 @@
-> >>   #include <linux/export.h>
-> >>   #include <linux/slab.h>
-> >>   #include <linux/mutex.h>
-> >> +#include <linux/input/elan-i2c-ids.h>
-> >>
-> >>   #include "hid-ids.h"
-> >>
-> >> @@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
-> >>
-> >>   bool hid_ignore(struct hid_device *hdev)
-> >>   {
-> >> +    int i;
-> >> +
-> >>      if (hdev->quirks & HID_QUIRK_NO_IGNORE)
-> >>              return false;
-> >>      if (hdev->quirks & HID_QUIRK_IGNORE)
-> >> @@ -978,18 +981,20 @@ bool hid_ignore(struct hid_device *hdev)
-> >>              break;
-> >>      case USB_VENDOR_ID_ELAN:
-> >>              /*
-> >> -             * Many Elan devices have a product id of 0x0401 and are handled
-> >> -             * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
-> >> -             * is not (and cannot be) handled by that driver ->
-> >> -             * Ignore all 0x0401 devs except for the ELAN0800 dev.
-> >> +             * Blacklist of everything that gets handled by the elan_i2c
-> >> +             * input driver.  This avoids disabling valid touchpads and
-> >> +             * other ELAN devices.
-> >>               */
-> >> -            if (hdev->product == 0x0401 &&
-> >> -                strncmp(hdev->name, "ELAN0800", 8) != 0)
-> >> -                    return true;
-> >> -            /* Same with product id 0x0400 */
-> >> -            if (hdev->product == 0x0400 &&
-> >> -                strncmp(hdev->name, "QTEC0001", 8) != 0)
-> >> -                    return true;
-> >> +            if ((hdev->product == 0x0401 || hdev->product == 0x0400)) {
-> >> +                    for (i = 0; strlen(elan_acpi_id[i].id); ++i)
-> >> +                            if (!strncmp(hdev->name, elan_acpi_id[i].id,
-> >> +                                         strlen(elan_acpi_id[i].id)))
-> >> +                                    return true;
-> >> +                    for (i = 0; strlen(elan_of_match[i].name); ++i)
-> >> +                            if (!strncmp(hdev->name, elan_of_match[i].name,
-> >> +                                         strlen(elan_of_match[i].name)))
-> >> +                                    return true;
-> >
-> > Do we really need to blacklist the OF case here? I thought that in ACPI
-> > case we have clashes as HID gets matched by elan_i2c and CID is matched
-> > by i2c-hid, but I do not believe we'll run into the same situation on OF
-> > systems.
->
-> I think its the safer approach.
->
-> On an OF system, such as patch 3 in the series, the "hid-over-i2c" will
-> end up running through this (kind of the whole reason why this series
-> exists).  The vendor and product ids will still match, so we'll end up
-> going through the lists to see if the hdev->name (the compatible string)
-> will match the blacklist.  "hid-over-i2c" won't match the blacklist, but
-> if there is a more specific compatible, it might.
->
-> In that case, not matching OF would work, however how it could break
-> today is if both "hid-over-i2c" and "elan,ekth3000" were listed for the
-> same device, and elan_i2c was not compiled.  In that case, if we skip
-> the OF part of the black list, hid-quirks will not reject the device,
-> and you'll probably have some odd behavior instead of the obvious "the
-> device doesn't work because the correct driver isn't present" behavior.
->
-> While that scenario might be far fetched since having both
-> "hid-over-i2c" and "elan,ekth3000" probably violates the OF bindings,
-> its still safer to include the OF case in the blacklist against future
-> scenarios.
->
->
+[ Upstream commit a223770bfa7b6647f3a70983257bd89f9cafce46 ]
 
-Dmitry, if you are happy with Jeffrey's answer, feel free to take this
-through your tree and add:
-Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+CONFIG_WATCHDOG_PRETIMEOUT_GOV build symbol adds watchdog_pretimeout.o
+object to watchdog.o, the latter is compiled only if CONFIG_WATCHDOG_CORE
+is selected, so it rightfully makes sense to add it as a dependency.
 
-I don't expect any major conflicts given on where the code is located.
+The change fixes the next compilation errors, if CONFIG_WATCHDOG_CORE=n
+and CONFIG_WATCHDOG_PRETIMEOUT_GOV=y are selected:
 
-Cheers,
-Benjamin
+  drivers/watchdog/pretimeout_noop.o: In function `watchdog_gov_noop_register':
+  drivers/watchdog/pretimeout_noop.c:35: undefined reference to `watchdog_register_governor'
+  drivers/watchdog/pretimeout_noop.o: In function `watchdog_gov_noop_unregister':
+  drivers/watchdog/pretimeout_noop.c:40: undefined reference to `watchdog_unregister_governor'
+
+  drivers/watchdog/pretimeout_panic.o: In function `watchdog_gov_panic_register':
+  drivers/watchdog/pretimeout_panic.c:35: undefined reference to `watchdog_register_governor'
+  drivers/watchdog/pretimeout_panic.o: In function `watchdog_gov_panic_unregister':
+  drivers/watchdog/pretimeout_panic.c:40: undefined reference to `watchdog_unregister_governor'
+
+Reported-by: Kuo, Hsuan-Chi <hckuo2@illinois.edu>
+Fixes: ff84136cb6a4 ("watchdog: add watchdog pretimeout governor framework")
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/watchdog/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 1d3b4bfbbc4d..d4d6c5b2bef3 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -2028,6 +2028,7 @@ comment "Watchdog Pretimeout Governors"
+ 
+ config WATCHDOG_PRETIMEOUT_GOV
+ 	bool "Enable watchdog pretimeout governors"
++	depends on WATCHDOG_CORE
+ 	help
+ 	  The option allows to select watchdog pretimeout governors.
+ 
+-- 
+2.20.1
+
+
+
