@@ -2,123 +2,68 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2D1C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A5AC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0346620851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBBF820851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441918;
-	bh=jEd49Y0EF33OVMoZCwSWixaVI9LfQ5+lkZaujtTC+K8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pVshLJPjvTCTPcn5ipcDUH4VuYqwMlcAl15kkDjJRcG0pYSpW6O7W5nhGhrlT/5d1
-	 vlvZJtduh4WAj9rWGsflCUB2hnILgbwUiP75a1cncQlscCWSJKpdHF/4aHfF/TTX2i
-	 fllrW2tEtlIT/lTKaXS6P9E3Q+k1lN+7DLjG+4S8=
+	s=default; t=1560441920;
+	bh=YRL+3yXsjxbpg+1zG3QoQsx7tN81Q8VQg2j27pXpieQ=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=ugfS1sIVR5z/CKP2W+w3qdPmmGQ4o1ka36gFz0CdlrSbp7y1MKwHOfLdDVoy5s8R7
+	 aSJsopkBtLtqb7wXk5R2LS1qaCAULEIWf4RrGZPBVqUGt+Th3QJzQ2SFgBpy4ti/hn
+	 r48HB7t/Z+RDDflcUHjUUa+SaQTP5oTJ8KSulb5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391230AbfFMQFQ (ORCPT
+        id S2388483AbfFMQFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:05:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35060 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:05:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731342AbfFMIqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:46:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AD9020851;
-        Thu, 13 Jun 2019 08:46:34 +0000 (UTC)
+        id S1732591AbfFMQFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:05:09 -0400
+Subject: Re: [GIT PULL] HID fixes for 5.2-rc
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415595;
-        bh=jEd49Y0EF33OVMoZCwSWixaVI9LfQ5+lkZaujtTC+K8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NsdihqMOl1kqvyPn/kSoUTeQ1hIkj5DRlz4En3y9mX5FvM435x9cXymc2+CoZKo42
-         PtZN++AW98RZWu7rdL7no24Pjy0vip/WRghUn1u2LAUArBIIr7yTQisZSvVNMT+k3Z
-         LPTKLp9Ghl4erilSZEkBec4gGmsQE8rRHQGqC8OI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 040/155] mailbox: stm32-ipcc: check invalid irq
-Date:   Thu, 13 Jun 2019 10:32:32 +0200
-Message-Id: <20190613075655.342720138@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
-References: <20190613075652.691765927@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        s=default; t=1560441908;
+        bh=YRL+3yXsjxbpg+1zG3QoQsx7tN81Q8VQg2j27pXpieQ=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=acYjJNVtdGI4LC586P9Xkp0cy6g2N0ExiizGusy12CE27gamsozZENpbuDq//6DGz
+         gK8R/mAIeoMMmkgZSjEPhgktEAS3mki4539nm43GaVPTmtAw3l+W/0JpZg4wbzhCF3
+         TeM4/LUxrMxdgOZrqOMDKvOxZU/dtmbVESTXcN0U=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <nycvar.YFH.7.76.1906131632070.27227@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1906131632070.27227@cbobk.fhfr.pm>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <nycvar.YFH.7.76.1906131632070.27227@cbobk.fhfr.pm>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
+X-PR-Tracked-Commit-Id: 3ed224e273ac5880eeab4c3043a6b06b0478dd56
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c11fb13a117e5a6736481c779cb971249ed96016
+Message-Id: <156044190877.6802.10583406698611497279.pr-tracker-bot@kernel.org>
+Date:   Thu, 13 Jun 2019 16:05:08 +0000
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 68a1c8485cf83734d4da9d81cd3b5d2ae7c0339b ]
+The pull request you sent on Thu, 13 Jun 2019 16:37:20 +0200 (CEST):
 
-On failure of_irq_get() returns a negative value or zero, which is
-not handled as an error in the existing implementation.
-Instead of using this API, use platform_get_irq() that returns
-exclusively a negative value on failure.
-Also, do not output an error log in case of defer probe error.
+> git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/mailbox/stm32-ipcc.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c11fb13a117e5a6736481c779cb971249ed96016
 
-diff --git a/drivers/mailbox/stm32-ipcc.c b/drivers/mailbox/stm32-ipcc.c
-index 210fe504f5ae..f91dfb1327c7 100644
---- a/drivers/mailbox/stm32-ipcc.c
-+++ b/drivers/mailbox/stm32-ipcc.c
-@@ -8,9 +8,9 @@
- #include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/interrupt.h>
-+#include <linux/io.h>
- #include <linux/mailbox_controller.h>
- #include <linux/module.h>
--#include <linux/of_irq.h>
- #include <linux/platform_device.h>
- #include <linux/pm_wakeirq.h>
- 
-@@ -240,9 +240,11 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
- 
- 	/* irq */
- 	for (i = 0; i < IPCC_IRQ_NUM; i++) {
--		ipcc->irqs[i] = of_irq_get_byname(dev->of_node, irq_name[i]);
-+		ipcc->irqs[i] = platform_get_irq_byname(pdev, irq_name[i]);
- 		if (ipcc->irqs[i] < 0) {
--			dev_err(dev, "no IRQ specified %s\n", irq_name[i]);
-+			if (ipcc->irqs[i] != -EPROBE_DEFER)
-+				dev_err(dev, "no IRQ specified %s\n",
-+					irq_name[i]);
- 			ret = ipcc->irqs[i];
- 			goto err_clk;
- 		}
-@@ -263,9 +265,10 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
- 
- 	/* wakeup */
- 	if (of_property_read_bool(np, "wakeup-source")) {
--		ipcc->wkp = of_irq_get_byname(dev->of_node, "wakeup");
-+		ipcc->wkp = platform_get_irq_byname(pdev, "wakeup");
- 		if (ipcc->wkp < 0) {
--			dev_err(dev, "could not get wakeup IRQ\n");
-+			if (ipcc->wkp != -EPROBE_DEFER)
-+				dev_err(dev, "could not get wakeup IRQ\n");
- 			ret = ipcc->wkp;
- 			goto err_clk;
- 		}
+Thank you!
+
 -- 
-2.20.1
-
-
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
