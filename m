@@ -2,224 +2,223 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC590C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F0BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9662721537
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:33:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fMe8BuJP"
+	by mail.kernel.org (Postfix) with ESMTP id 2CF8C20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730066AbfFMUdY (ORCPT
+        id S1727605AbfFMUeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:33:24 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:42444 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfFMUdX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:33:23 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5DKX9mU095248;
-        Thu, 13 Jun 2019 15:33:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560457989;
-        bh=Iw66ZlMG9g4IKHXricwFmXq3+LquUzDHIWFykeidiDU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fMe8BuJPRnWf59pXtSPpXfH1rrGsEQFEuhYqEI6j8x9PtLxDwvrF+03GmkkBhRKzq
-         UKLqYX8TZ/xO726R6wAJymbubg4NOj3KWikf6wfcR9hS9VPCa8qlEO9E7OJG0EPgsT
-         tLyB5Tc3cVsP7kfvIG/gtc/+qHjOGTFpPAKriSnU=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5DKX9lv093210
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 13 Jun 2019 15:33:09 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 13
- Jun 2019 15:33:09 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 13 Jun 2019 15:33:09 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5DKX5AS026254;
-        Thu, 13 Jun 2019 15:33:06 -0500
-Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
-To:     Rob Herring <robh@kernel.org>
-CC:     <vkoul@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>
-References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
- <20190506123456.6777-10-peter.ujfalusi@ti.com> <20190613181626.GA7039@bogus>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
-Date:   Thu, 13 Jun 2019 23:33:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 16:34:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57492 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbfFMUeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 16:34:22 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 655A5356DB;
+        Thu, 13 Jun 2019 20:34:21 +0000 (UTC)
+Received: from sandy.ghostprotocols.net (ovpn-112-33.phx2.redhat.com [10.3.112.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 59377600C0;
+        Thu, 13 Jun 2019 20:34:20 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id EF9F4115; Thu, 13 Jun 2019 17:34:16 -0300 (BRT)
+Date:   Thu, 13 Jun 2019 17:34:16 -0300
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     Laura Abbott <labbott@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: perf build failure with newer glibc headers
+Message-ID: <20190613203416.GD2834@redhat.com>
+References: <4c0a4264-7142-2e6d-540d-aa354700e0bb@redhat.com>
+ <20190612205611.GA2149@redhat.com>
+ <20190613151925.GA2834@redhat.com>
+ <a3ac5f0b-9255-155c-5151-d234890f4562@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190613181626.GA7039@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <a3ac5f0b-9255-155c-5151-d234890f4562@redhat.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 13 Jun 2019 20:34:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob,
-
-On 13/06/2019 21.16, Rob Herring wrote:
->> +Remote PSI-L endpoint
->> +
->> +Required properties:
->> +--------------------
->> +- ti,psil-base:		PSI-L thread ID base of the endpoint
->> +
->> +Within the PSI-L endpoint node thread configuration subnodes must present with:
->> +ti,psil-configX naming convention, where X is the thread ID offset.
+Em Thu, Jun 13, 2019 at 03:24:41PM -0400, Laura Abbott escreveu:
+> On 6/13/19 11:19 AM, Arnaldo Carvalho de Melo wrote:
+> >Em Wed, Jun 12, 2019 at 05:56:11PM -0300, Arnaldo Carvalho de Melo escreveu:
+> >>So, we'll have to have a feature test, that defines some HAVE_GETTID
+> >>that then ifdefs out our inline copy, working on it.
+> >
+> >This should take care of it, please check, perhaps providing a
+> >Tested-by: to add to this,
+> >
 > 
-> Don't use vendor prefixes on node names.
-
-OK.
-
->> +
->> +Configuration node Required properties:
->> +--------------------
->> +- linux,udma-mode:	Channel mode, can be:
->> +			- UDMA_PKT_MODE: for Packet mode channels (peripherals)
->> +			- UDMA_TR_MODE: for Third-Party mode
+> built okay on the tree that previously failed
 > 
-> This is hardly a common linux thing. What determines the value here.
+> Tested-by: Laura Abbott <labbott@redhat.com>
 
-Unfortunately it is.
-Each channel can be configured to Packet or TR mode. For some
-peripherals it is true that they only support packet mode, these are the
-newer PSI-L native peripherals.
-For these channels a udma-mode property would be correct.
+Thanks for checking!
 
-But we have legacy peripherals as well and they are serviced by PDMA
-(which is a native peripheral designed to talk to the given legacy IP).
-We can use either packet or TR mode in UDMAP to talk to PDMAs, it is in
-most cases clear what to use, but for example for audio (McASP) channels
-Linux is using TR channel because we need cyclic DMA while for example
-RTOS is using Packet mode as it fits their needs better.
-
-Here I need to prefix the udma-mode with linux as the mode is used by
-Linux, but other OS might opt to use different channel mode.
-
-The reason why this needs to be in the DT is that when the channel is
-requested we need to configure the mode and it can not be swapped
-runtime easily between Packet and TR mode.
-
->> +
->> +Configuration node Optional properties:
->> +--------------------
->> +- statictr-type:	In case the remote endpoint requires StaticTR
->> +			configuration:
->> +			- PSIL_STATIC_TR_XY: XY type of StaticTR
->> +			- PSIL_STATIC_TR_MCAN: MCAN type of StaticTR
->> +- ti,channel-tpl:	Channel Throughput level:
->> +			0 / or not present - normal channel
->> +			1 - High Throughput channel
->> +- ti,needs-epib:	If the endpoint require EPIB to be present in the
->> +			descriptor.
->> +- ti,psd-size:		Size of the Protocol Specific Data section of the
->> +			descriptor.
+- Arnaldo
+ 
+> >Thanks,
+> >
+> >- Arnaldo
+> >
+> >commit a04ef2eb0a66d9479e75e536d919c8c9cd618ee3
+> >Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >Date:   Thu Jun 13 12:04:19 2019 -0300
+> >
+> >     tools build: Check if gettid() is available before providing helper
+> >     Laura reported that the perf build failed in fedora when we got a glibc
+> >     that provides gettid(), which I reproduced using fedora rawhide with the
+> >     glibc-devel-2.29.9000-26.fc31.x86_64 package.
+> >     Add a feature check to avoid providing a gettid() helper in such
+> >     systems.
+> >     On a fedora rawhide system with this patch applied we now get:
+> >       [root@7a5f55352234 perf]# grep gettid /tmp/build/perf/FEATURE-DUMP
+> >       feature-gettid=1
+> >       [root@7a5f55352234 perf]# cat /tmp/build/perf/feature/test-gettid.make.output
+> >       [root@7a5f55352234 perf]# ldd /tmp/build/perf/feature/test-gettid.bin
+> >               linux-vdso.so.1 (0x00007ffc6b1f6000)
+> >               libc.so.6 => /lib64/libc.so.6 (0x00007f04e0a74000)
+> >               /lib64/ld-linux-x86-64.so.2 (0x00007f04e0c47000)
+> >       [root@7a5f55352234 perf]# nm /tmp/build/perf/feature/test-gettid.bin | grep -w gettid
+> >                        U gettid@@GLIBC_2.30
+> >       [root@7a5f55352234 perf]#
+> >     While on a fedora:29 system:
+> >       [acme@quaco perf]$ grep gettid /tmp/build/perf/FEATURE-DUMP
+> >       feature-gettid=0
+> >       [acme@quaco perf]$ cat /tmp/build/perf/feature/test-gettid.make.output
+> >       test-gettid.c: In function ‘main’:
+> >       test-gettid.c:8:9: error: implicit declaration of function ‘gettid’; did you mean ‘getgid’? [-Werror=implicit-function-declaration]
+> >         return gettid();
+> >                ^~~~~~
+> >                getgid
+> >       cc1: all warnings being treated as errors
+> >       [acme@quaco perf]$
+> >     Reported-by: Laura Abbott <labbott@redhat.com>
+> >     Cc: Adrian Hunter <adrian.hunter@intel.com>
+> >     Cc: Florian Weimer <fweimer@redhat.com>
+> >     Cc: Jiri Olsa <jolsa@kernel.org>
+> >     Cc: Namhyung Kim <namhyung@kernel.org>
+> >     Cc: Stephane Eranian <eranian@google.com>
+> >     Link: https://lkml.kernel.org/n/tip-yfy3ch53agmklwu9o7rlgf9c@git.kernel.org
+> >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >
+> >diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> >index 3b24231c58a2..50377cc2f5f9 100644
+> >--- a/tools/build/Makefile.feature
+> >+++ b/tools/build/Makefile.feature
+> >@@ -36,6 +36,7 @@ FEATURE_TESTS_BASIC :=                  \
+> >          fortify-source                  \
+> >          sync-compare-and-swap           \
+> >          get_current_dir_name            \
+> >+        gettid				\
+> >          glibc                           \
+> >          gtk2                            \
+> >          gtk2-infobar                    \
+> >diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> >index 4b8244ee65ce..523ee42db0c8 100644
+> >--- a/tools/build/feature/Makefile
+> >+++ b/tools/build/feature/Makefile
+> >@@ -54,6 +54,7 @@ FILES=                                          \
+> >           test-get_cpuid.bin                     \
+> >           test-sdt.bin                           \
+> >           test-cxx.bin                           \
+> >+         test-gettid.bin			\
+> >           test-jvmti.bin				\
+> >           test-jvmti-cmlr.bin			\
+> >           test-sched_getcpu.bin			\
+> >@@ -267,6 +268,9 @@ $(OUTPUT)test-sdt.bin:
+> >  $(OUTPUT)test-cxx.bin:
+> >  	$(BUILDXX) -std=gnu++11
+> >+$(OUTPUT)test-gettid.bin:
+> >+	$(BUILD)
+> >+
+> >  $(OUTPUT)test-jvmti.bin:
+> >  	$(BUILD)
+> >diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+> >index a59c53705093..3b3d5d72124a 100644
+> >--- a/tools/build/feature/test-all.c
+> >+++ b/tools/build/feature/test-all.c
+> >@@ -38,6 +38,10 @@
+> >  # include "test-get_current_dir_name.c"
+> >  #undef main
+> >+#define main main_test_gettid
+> >+# include "test-gettid.c"
+> >+#undef main
+> >+
+> >  #define main main_test_glibc
+> >  # include "test-glibc.c"
+> >  #undef main
+> >@@ -195,6 +199,7 @@ int main(int argc, char *argv[])
+> >  	main_test_libelf();
+> >  	main_test_libelf_mmap();
+> >  	main_test_get_current_dir_name();
+> >+	main_test_gettid();
+> >  	main_test_glibc();
+> >  	main_test_dwarf();
+> >  	main_test_dwarf_getlocations();
+> >diff --git a/tools/build/feature/test-gettid.c b/tools/build/feature/test-gettid.c
+> >new file mode 100644
+> >index 000000000000..ef24e42d3f1b
+> >--- /dev/null
+> >+++ b/tools/build/feature/test-gettid.c
+> >@@ -0,0 +1,11 @@
+> >+// SPDX-License-Identifier: GPL-2.0
+> >+// Copyright (C) 2019, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
+> >+#define _GNU_SOURCE
+> >+#include <unistd.h>
+> >+
+> >+int main(void)
+> >+{
+> >+	return gettid();
+> >+}
+> >+
+> >+#undef _GNU_SOURCE
+> >diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> >index 51dd00f65709..5f16a20cae86 100644
+> >--- a/tools/perf/Makefile.config
+> >+++ b/tools/perf/Makefile.config
+> >@@ -332,6 +332,10 @@ ifeq ($(feature-get_current_dir_name), 1)
+> >    CFLAGS += -DHAVE_GET_CURRENT_DIR_NAME
+> >  endif
+> >+ifeq ($(feature-gettid), 1)
+> >+  CFLAGS += -DHAVE_GETTID
+> >+endif
+> >+
+> >  ifdef NO_LIBELF
+> >    NO_DWARF := 1
+> >    NO_DEMANGLE := 1
+> >diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
+> >index f7eb63cbbc65..88108598d6e9 100644
+> >--- a/tools/perf/jvmti/jvmti_agent.c
+> >+++ b/tools/perf/jvmti/jvmti_agent.c
+> >@@ -45,10 +45,12 @@
+> >  static char jit_path[PATH_MAX];
+> >  static void *marker_addr;
+> >+#ifndef HAVE_GETTID
+> >  static inline pid_t gettid(void)
+> >  {
+> >  	return (pid_t)syscall(__NR_gettid);
+> >  }
+> >+#endif
+> >  static int get_e_machine(struct jitheader *hdr)
+> >  {
+> >
 > 
-> You've got a lot of properties and child nodes here, but not in the 
-> example. Please make the example more complete.
-
-Sure, I'll extend the example with other peripheral which uses more
-properties.
-
-> 
->> +
->> +Example:
->> +
->> +main_navss: main_navss {
->> +	compatible = "simple-bus";
->> +	#address-cells = <2>;
->> +	#size-cells = <2>;
->> +	dma-coherent;
->> +	dma-ranges;
->> +	ranges;
->> +
->> +	ti,sci = <&dmsc>;
->> +	ti,sci-dev-id = <118>;
->> +
->> +	main_udmap: udmap@31150000 {
-> 
-> dma-controller@...
-
-OK
-
->> +		compatible = "ti,am654-navss-main-udmap";
->> +		reg =	<0x0 0x31150000 0x0 0x100>,
->> +			<0x0 0x34000000 0x0 0x100000>,
->> +			<0x0 0x35000000 0x0 0x100000>;
->> +		reg-names = "gcfg", "rchanrt", "tchanrt";
->> +		#dma-cells = <3>;
->> +
->> +		ti,ringacc = <&ringacc>;
->> +		ti,psil-base = <0x1000>;
->> +
->> +		interrupt-parent = <&main_udmass_inta>;
->> +
->> +		ti,sci = <&dmsc>;
->> +		ti,sci-dev-id = <188>;
->> +
->> +		ti,sci-rm-range-tchan = <0x6 0x1>, /* TX_HCHAN */
->> +					<0x6 0x2>; /* TX_CHAN */
->> +		ti,sci-rm-range-rchan = <0x6 0x4>, /* RX_HCHAN */
->> +					<0x6 0x5>; /* RX_CHAN */
->> +		ti,sci-rm-range-rflow = <0x6 0x6>; /* GP RFLOW */
->> +	};
->> +};
->> +
->> +pdma0: pdma@2a41000 {
->> +	compatible = "ti,am654-pdma";
->> +	reg = <0x0 0x02A41000 0x0 0x400>;
->> +	reg-names = "eccaggr_cfg";
->> +
->> +	ti,psil-base = <0x4400>;
->> +
->> +	/* ti,psil-config0-2 */
->> +	UDMA_PDMA_TR_XY(0);
-> 
-> What is this? Don't abuse defines with stuff like this. Generally only 
-> defines of single values should be used.
-
-The reason I have used define to build the psil-config sections is that
-we have some PDMAs with 22 threads and it makes the DT explode when
-writing out all of the thread configurations.
-
-Within one PDMA we can have a mix of different modes, so I can not say
-that all of the threads in the PDMA is the same.
-
-> 
->> +	UDMA_PDMA_TR_XY(1);
->> +	UDMA_PDMA_TR_XY(2);
->> +};
->> +
->> +mcasp0: mcasp@02B00000 {
->> +...
->> +	/* tx: pdma0-0, rx: pdma0-0 */
->> +	dmas = <&main_udmap &pdma0 0 UDMA_DIR_TX>,
->> +	       <&main_udmap &pdma0 0 UDMA_DIR_RX>;
->> +	dma-names = "tx", "rx";
->> +...
->> +};
->> -- 
-
-Thanks,
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
