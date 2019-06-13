@@ -2,159 +2,105 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B878C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E81DC31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AEC720644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1778720644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560443137;
+	bh=C7tErvoAFiAYsNdkVYn7ouGMWrn3z9QR0m0KZOCj8tM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MNueG2RTor5Ec9kpe658ybk7RjqzjykPDUNQAKom+a3W5c3s6sK+OAEjn2Eqkf/mH
+	 +cSn+k+sPhFcXRDFXaQESD4BIJ3nYjTYoLI+iG60AOHog1eEd81j3LGFv4b8tK4s8R
+	 Wq1cYTkdjQk3ZDVjPEiWmhbeLmCQQBUwkUBA2+6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392255AbfFMQZc (ORCPT
+        id S2392024AbfFMQZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:25:32 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18563 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730975AbfFMIgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:25:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730974AbfFMIgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Jun 2019 04:36:38 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 127CF796C4587A3FE713;
-        Thu, 13 Jun 2019 16:36:36 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 13 Jun
- 2019 16:36:25 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chao Yu <yuchao0@huawei.com>, <devel@driverdev.osuosl.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, "Chao Yu" <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>, <stable@vger.kernel.org>
-Subject: [PATCH v3 1/2] staging: erofs: add requirements field in superblock
-Date:   Thu, 13 Jun 2019 16:35:41 +0800
-Message-ID: <20190613083541.67091-1-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190611024220.86121-1-gaoxiang25@huawei.com>
-References: <20190611024220.86121-1-gaoxiang25@huawei.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3801E20851;
+        Thu, 13 Jun 2019 08:36:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560414997;
+        bh=C7tErvoAFiAYsNdkVYn7ouGMWrn3z9QR0m0KZOCj8tM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WLeWXc2SbGnO5TOWCi3DLGFH5M0lPiSTG4ebnmA0RQrzkI3ml3fYXhO86GWVgooUA
+         GkMEBTbRyWLeVS2xfNNz5MldDR6YMz4oqUS6f2YA3Ajej5uJQc0Yeo2aJWq9XqAGj7
+         E0VW6DXFFTXOeuFgRar9cIGE004ZsrzFUyW5YA6w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 49/81] soc: mediatek: pwrap: Zero initialize rdata in pwrap_init_cipher
+Date:   Thu, 13 Jun 2019 10:33:32 +0200
+Message-Id: <20190613075652.875493360@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
+References: <20190613075649.074682929@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some backward incompatible features pending
-for months, mainly due to on-disk format expensions.
+[ Upstream commit 89e28da82836530f1ac7a3a32fecc31f22d79b3e ]
 
-However, we should ensure that it cannot be mounted with
-old kernels. Otherwise, it will causes unexpected behaviors.
+When building with -Wsometimes-uninitialized, Clang warns:
 
-Fixes: ba2b77a82022 ("staging: erofs: add super block operations")
-Cc: <stable@vger.kernel.org> # 4.19+
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+drivers/soc/mediatek/mtk-pmic-wrap.c:1358:6: error: variable 'rdata' is
+used uninitialized whenever '||' condition is true
+[-Werror,-Wsometimes-uninitialized]
+
+If pwrap_write returns non-zero, pwrap_read will not be called to
+initialize rdata, meaning that we will use some random uninitialized
+stack value in our print statement. Zero initialize rdata in case this
+happens.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/401
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-change log v3:
- - record requirements in erofs_sb_info for runtime use as well;
+ drivers/soc/mediatek/mtk-pmic-wrap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-change log v2:
- - update printed message
-
- drivers/staging/erofs/erofs_fs.h | 13 ++++++++++---
- drivers/staging/erofs/internal.h |  2 ++
- drivers/staging/erofs/super.c    | 19 +++++++++++++++++++
- 3 files changed, 31 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/staging/erofs/erofs_fs.h b/drivers/staging/erofs/erofs_fs.h
-index fa52898df006..8ddb2b3e7d39 100644
---- a/drivers/staging/erofs/erofs_fs.h
-+++ b/drivers/staging/erofs/erofs_fs.h
-@@ -17,10 +17,16 @@
- #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
- #define EROFS_SUPER_OFFSET      1024
- 
-+/*
-+ * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
-+ * incompatible with this kernel version.
-+ */
-+#define EROFS_ALL_REQUIREMENTS  0
-+
- struct erofs_super_block {
- /*  0 */__le32 magic;           /* in the little endian */
- /*  4 */__le32 checksum;        /* crc32c(super_block) */
--/*  8 */__le32 features;
-+/*  8 */__le32 features;        /* (aka. feature_compat) */
- /* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
- /* 13 */__u8 reserved;
- 
-@@ -34,9 +40,10 @@ struct erofs_super_block {
- /* 44 */__le32 xattr_blkaddr;
- /* 48 */__u8 uuid[16];          /* 128-bit uuid for volume */
- /* 64 */__u8 volume_name[16];   /* volume name */
-+/* 80 */__le32 requirements;    /* (aka. feature_incompat) */
- 
--/* 80 */__u8 reserved2[48];     /* 128 bytes */
--} __packed;
-+/* 84 */__u8 reserved2[44];
-+} __packed;                     /* 128 bytes */
- 
- /*
-  * erofs inode data mapping:
-diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
-index 911333cdeef4..fc732c86ecd8 100644
---- a/drivers/staging/erofs/internal.h
-+++ b/drivers/staging/erofs/internal.h
-@@ -115,6 +115,8 @@ struct erofs_sb_info {
- 
- 	u8 uuid[16];                    /* 128-bit uuid for volume */
- 	u8 volume_name[16];             /* volume name */
-+	u32 requirements;
-+
- 	char *dev_name;
- 
- 	unsigned int mount_opt;
-diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
-index f580d4ef77a1..cadbcc11702a 100644
---- a/drivers/staging/erofs/super.c
-+++ b/drivers/staging/erofs/super.c
-@@ -71,6 +71,22 @@ static void free_inode(struct inode *inode)
- 	kmem_cache_free(erofs_inode_cachep, vi);
- }
- 
-+static bool check_layout_compatibility(struct super_block *sb,
-+				       struct erofs_super_block *layout)
-+{
-+	const unsigned int requirements = le32_to_cpu(layout->requirements);
-+
-+	EROFS_SB(sb)->requirements = requirements;
-+
-+	/* check if current kernel meets all mandatory requirements */
-+	if (requirements & (~EROFS_ALL_REQUIREMENTS)) {
-+		errln("unidentified requirements %x, please upgrade kernel version",
-+		      requirements & ~EROFS_ALL_REQUIREMENTS);
-+		return false;
-+	}
-+	return true;
-+}
-+
- static int superblock_read(struct super_block *sb)
+diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+index e3df1e96b141..d7a31bf3c9d6 100644
+--- a/drivers/soc/mediatek/mtk-pmic-wrap.c
++++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+@@ -778,7 +778,7 @@ static bool pwrap_is_pmic_cipher_ready(struct pmic_wrapper *wrp)
+ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
  {
- 	struct erofs_sb_info *sbi;
-@@ -104,6 +120,9 @@ static int superblock_read(struct super_block *sb)
- 		goto out;
- 	}
+ 	int ret;
+-	u32 rdata;
++	u32 rdata = 0;
  
-+	if (!check_layout_compatibility(sb, layout))
-+		goto out;
-+
- 	sbi->blocks = le32_to_cpu(layout->blocks);
- 	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
- #ifdef CONFIG_EROFS_FS_XATTR
+ 	pwrap_writel(wrp, 0x1, PWRAP_CIPHER_SWRST);
+ 	pwrap_writel(wrp, 0x0, PWRAP_CIPHER_SWRST);
 -- 
-2.17.1
+2.20.1
+
+
 
