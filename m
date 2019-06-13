@@ -2,96 +2,116 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC59C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF22C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2160E2147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B812B21743
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:04:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uo7LFr+J"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="tDnFxoEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbfFMUDL (ORCPT
+        id S1727730AbfFMUEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:03:11 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39642 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbfFMUDL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:03:11 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 196so122298pgc.6;
-        Thu, 13 Jun 2019 13:03:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BuYlplQ4FbZtdPzQ9jho0PBZ//QfyRL330wA6Uj+cqQ=;
-        b=uo7LFr+JMBCZA8SLGkPGKDigZ8bT/0wcx021t7dGz5xxWq+swV5eexBfQpSvF9Vpt9
-         hodWofbY/wfpVfkcMRSH+MmHy1TUglZHvwvbUz1l3grgGf3xWF3X7+VOPM0xrzJNooKg
-         nQmo6hquPMpeNyZqvqo/gixw8iFvRT4lOEIayTj8OqTUEnfR0y3HgMUlNUEXs2aRRjmP
-         zGeF7RNAhzTm5JTQbIq2kXmVEtfEWCwDoKIONiw3KddNQjSmujNGWFb1kyKCpp6BjOcG
-         ACgnmlGodGfB58oLtFd52UKXLHTXsSPv7nulrNd5lCs2mVNEi2epyku1SxVj5HJFDt7z
-         Id6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BuYlplQ4FbZtdPzQ9jho0PBZ//QfyRL330wA6Uj+cqQ=;
-        b=PkNqnASOx/JpTkB+ZogyQC7i+V/BNsbzJm1mmOmNPDMc9AbiadSdNTwaWfhGMSSh3y
-         LrsNfahhpNzO4KeJAY328XSMkKM0I5yqHHun9+ue8UtQGYOps7s6HAHnaQlNdOKPwuQ1
-         SjKGTGp8nszWrQFvR9xeq6blJX79pRtfvrmJo8Z/2jfwFoEnhyntxlrv2m4/UL59AMDn
-         wPvf8kiJp5EEH/iSow1nasTUOG/t22DpaP95eSm0afMY5hOynHt14/9yNiZhDPIXEhEI
-         gI6qVmqIafMsqbMMcAgreNShWVhk2eVxrHWDRZnjgTJoMxThhCw4jo/gMLopGvC9jywx
-         4alA==
-X-Gm-Message-State: APjAAAUjKbXOVHwOMNcrD5rYHWKdKq3H9Icfe/awMXsoccggECgDb4Kw
-        cn2TEPyFakPDQ6Bu+5hwJq3ExzQc
-X-Google-Smtp-Source: APXvYqwVUNBcLuKbK5vUOaPwB/klTr51gU1+/l1UZIf1802rj2NZZOufWreffgswA9YNAiiELDbcdQ==
-X-Received: by 2002:aa7:8dd1:: with SMTP id j17mr4882093pfr.52.1560456190201;
-        Thu, 13 Jun 2019 13:03:10 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e127sm491153pfe.98.2019.06.13.13.03.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 13:03:09 -0700 (PDT)
-Subject: Re: [PATCH 5.1 000/155] 5.1.10-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20190613075652.691765927@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <1526e84e-a087-452c-7f00-ff7f70de0cf4@roeck-us.net>
-Date:   Thu, 13 Jun 2019 13:03:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 13 Jun 2019 16:04:08 -0400
+Received: from mail-eopbgr150089.outbound.protection.outlook.com ([40.107.15.89]:13654
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726164AbfFMUEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 16:04:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YnyCRHhq6our3JahOP7YUJnCatYmzhQnh3SEMqGi3dI=;
+ b=tDnFxoEoVdJBSN3ifgsVF1zVBJV+F7fIQFERH6l2SFzpul7cbtTkMS4MxC6YxRlST4jOSZUB3kCC8MnSqhwbNgP97LvBIHKqZn3DwjpIUiqGNULbal9I3/wQPE+1k7Qa4APNV7lQY7PyLFlmnfI34vV38Sl/Z5PjU8dXF8PeMCk=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB4381.eurprd05.prod.outlook.com (52.133.13.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.13; Thu, 13 Jun 2019 20:04:03 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
+ 20:04:03 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 22/22] mm: don't select MIGRATE_VMA_HELPER from HMM_MIRROR
+Thread-Topic: [PATCH 22/22] mm: don't select MIGRATE_VMA_HELPER from
+ HMM_MIRROR
+Thread-Index: AQHVIcyc3r2YZSS3CUapXwnP1XJouKaaAquA
+Date:   Thu, 13 Jun 2019 20:04:03 +0000
+Message-ID: <20190613200357.GC22062@mellanox.com>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-23-hch@lst.de>
+In-Reply-To: <20190613094326.24093-23-hch@lst.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQXPR01CA0086.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:41::15) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a348214a-681a-493b-a591-08d6f03a4842
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4381;
+x-ms-traffictypediagnostic: VI1PR05MB4381:
+x-microsoft-antispam-prvs: <VI1PR05MB43813927D62479F9D88EF8ABCFEF0@VI1PR05MB4381.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:765;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(39860400002)(376002)(136003)(396003)(199004)(189003)(446003)(476003)(14454004)(8936002)(6512007)(186003)(2616005)(11346002)(7736002)(3846002)(386003)(6116002)(76176011)(6506007)(316002)(7416002)(8676002)(4744005)(256004)(66946007)(66476007)(25786009)(73956011)(478600001)(14444005)(4326008)(64756008)(66446008)(66556008)(305945005)(486006)(66066001)(81166006)(36756003)(81156014)(68736007)(53936002)(52116002)(71190400001)(26005)(71200400001)(6246003)(2906002)(6486002)(99286004)(86362001)(229853002)(6916009)(33656002)(54906003)(5660300002)(1076003)(102836004)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4381;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: wHlkn2ZfV9rDati83SasESQC5vPO5aAUc6haeZsc3mf5YMTqR0rvPOwQ/jmHjydNylEIBAbQSsIpA4xlWwWWmXVcbjuSbBG89xPpjgnzFAY9/pNQ0MevcNaLFvKVwmaofHBRX3U80+m+n/XNiTHFh4Dkr1Y8xUBqXH3Bm7kLAGqZNIa80R9+gfK1I/ojwlmseAk+31Z3tJJsHWoHjogYiG/BUrdnA2YRRv//z4Yoth+w2fzdP6j9E9OO8whiiJCjw7AHM2LJhRP1YU7SSXS5ASCcA0Aa7Ja/kHzVKJHzFIDfaLy7RBoiCbsIbgGKzVoRMwiljvO9aMLS2+LOzhiT2/5Ldlmi0pcEr629xNZ/eEkITnDNP+wcG4JcSreBI0wnIMLHZJIO86ajMA/D9QjQnb+9FjlgsHFbbVB1Rjgz34U=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <DC6C94E2B8591541A7B0CC844A612312@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a348214a-681a-493b-a591-08d6f03a4842
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 20:04:03.4038
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4381
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/19 1:31 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.1.10 release.
-> There are 155 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 15 Jun 2019 07:54:40 AM UTC.
-> Anything received after that time might be too late.
-> 
+On Thu, Jun 13, 2019 at 11:43:25AM +0200, Christoph Hellwig wrote:
+> The migrate_vma helper is only used by noveau to migrate device private
+> pages around.  Other HMM_MIRROR users like amdgpu or infiniband don't
+> need it.
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/gpu/drm/nouveau/Kconfig | 1 +
+>  mm/Kconfig                      | 1 -
+>  2 files changed, 1 insertion(+), 1 deletion(-)
 
-Build results:
-	total: 159 pass: 159 fail: 0
-Qemu test results:
-	total: 354 pass: 354 fail: 0
+Yes, the thing that calls migrate_vma() should be the thing that has
+the kconfig stuff.
 
-Guenter
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+
+Jason
