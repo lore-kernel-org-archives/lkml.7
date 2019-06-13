@@ -2,124 +2,158 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E7DC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7AFC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E882D20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C35F620B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:08:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560456499;
+	bh=Eotn74x1zRC/0EseWUhBVg+AzUh3VCeG9bTL7CvwUP0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WV23hsM05wJJI7EG/ZdvalVZQNRStFaAM5eyenxMUPGs2SXditZ0KfI9nPFNiBzLY
+	 mJkzqlAovwylHtEJYOQJsO+nab5XubRoyaztApTCjA1tg0ESlZH6xYlM0hWaR0D3G8
+	 3JCoaKpVtu3xxTTSPMs5zHVLG+pgE0ZFbtNhD8pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbfFMUH5 (ORCPT
+        id S1729271AbfFMUIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:07:57 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55326 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728267AbfFMUHz (ORCPT
+        Thu, 13 Jun 2019 16:08:18 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39199 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbfFMUIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:07:55 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DK1aHp099901
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 16:07:54 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t3td0pwy4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 16:07:54 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 13 Jun 2019 21:07:52 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 13 Jun 2019 21:07:48 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5DK7lEX47513814
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Jun 2019 20:07:48 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D1CC552057;
-        Thu, 13 Jun 2019 20:07:47 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.81.91])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B673A5204F;
-        Thu, 13 Jun 2019 20:07:46 +0000 (GMT)
-Subject: Re: [PATCH V8 3/3] Call ima_kexec_cmdline to measure the cmdline
- args
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, roberto.sassu@huawei.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>, vgoyal@redhat.com,
-        kexec <kexec@lists.infradead.org>
-Date:   Thu, 13 Jun 2019 16:07:36 -0400
-In-Reply-To: <20190613082627.GA30288@dhcp-128-65.nay.redhat.com>
-References: <20190612221549.28399-1-prsriva02@gmail.com>
-         <20190612221549.28399-4-prsriva02@gmail.com>
-         <1560378703.4578.91.camel@linux.ibm.com>
-         <20190613082627.GA30288@dhcp-128-65.nay.redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061320-0020-0000-0000-00000349E67B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061320-0021-0000-0000-0000219D1F3E
-Message-Id: <1560456456.4805.61.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906130150
+        Thu, 13 Jun 2019 16:08:18 -0400
+Received: by mail-qt1-f196.google.com with SMTP id i34so24069632qta.6;
+        Thu, 13 Jun 2019 13:08:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UwChhjSzjeOfvvnEfR7YJU7oQ/qodwbm5JIdXsqXlRo=;
+        b=civSKFH0kxQmDhv/mbgH20UxiBrqbBEeP5oyYx2nz3ka23nYb7o0rXiZZYu35rzCg/
+         2cMBLKTD7v+aHYHJBd52+l8X9jONcCSYxcPQ843bmwPPZZQwcY0/VJvCCiTVVpH0Yfc3
+         2rIOsAGvaKNvePV06dPtI8mk7trY2Qm8ZYR173HxqLQNCI2h8YKfLkimog9dXbAVrp8h
+         53tzJR3mpcsnHFUr2uimJVosqFykVeSHE1/sh3iYdbBZeaxIBWeRc7nWsem6cCReXlAe
+         1Aa70YB1Jb88KtgEPersUsfGQxszsE/WHy+1ZwzIoPIQOdpPHxmarrSLCHjy40YcTzbp
+         Rw3A==
+X-Gm-Message-State: APjAAAUY4HwsSdHDYJc/+8JDzUQ0BDbzT0fPBd866+icqiLdHlvR6VhQ
+        ooWFsXXcDgAbWEysuCj5zw==
+X-Google-Smtp-Source: APXvYqxlMoVZh97RRGXb4sVgHdetYuU+vA47kS1FGVMnu6eGCEIfvRk5fRpKmQ3WZnBR9tg5KwicmA==
+X-Received: by 2002:a0c:d91b:: with SMTP id p27mr5042508qvj.236.1560456496941;
+        Thu, 13 Jun 2019 13:08:16 -0700 (PDT)
+Received: from localhost ([64.188.179.243])
+        by smtp.gmail.com with ESMTPSA id j62sm248574qte.89.2019.06.13.13.08.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 13:08:16 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 14:08:13 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Wen He <wen.he_1@nxp.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>
+Subject: Re: [v1 1/4] dt-bindings: display: Add DT bindings for LS1028A
+ HDP-TX PHY.
+Message-ID: <20190613200813.GA895@bogus>
+References: <20190508103703.40885-1-wen.he_1@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508103703.40885-1-wen.he_1@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-13 at 16:26 +0800, Dave Young wrote:
-> On 06/12/19 at 06:31pm, Mimi Zohar wrote:
-> > [Cc: kexec mailing list]
-> > 
-> > Hi Eric, Dave,
-> > 
-> > On Wed, 2019-06-12 at 15:15 -0700, Prakhar Srivastava wrote:
-> > > During soft reboot(kexec_file_load) boot cmdline args
-> > > are not measured.Thus the new kernel on load boots with
-> > > an assumption of cold reboot.
-> > > 
-> > > This patch makes a call to the ima hook ima_kexec_cmdline,
-> > > added in "Define a new IMA hook to measure the boot command
-> > > line arguments"
-> > > to measure the boot cmdline args into the ima log.
-> > > 
-> > > - call ima_kexec_cmdline from kexec_file_load.
-> > > - move the call ima_add_kexec_buffer after the cmdline
-> > > args have been measured.
-> > > 
-> > > Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
-> > Cc: Eric W. Biederman <ebiederm@xmission.com>
-> > Cc: Dave Young <dyoung@redhat.com>
-> > 
-> > Any chance we could get some Acks?
+On Wed, May 08, 2019 at 10:35:25AM +0000, Wen He wrote:
+> Add DT bindings documentmation for the HDP-TX PHY controller. The describes
+> which could be found on NXP Layerscape ls1028a platform.
+
+Drop the hard stop (.) from the subject.
+
 > 
-> The ima_* is blackbox functions to me, looks like this patch is trying
-> to measure kexec cmdline buffer and save in some ima logs and then add all the
-> measure results including those for kernel/initrd to a kexec_buf and pass to 2nd
-
-Right, including the new boot command line measurement.
-
-> kernel.
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> ---
+>  .../devicetree/bindings/display/fsl,hdp.txt   | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/fsl,hdp.txt
 > 
-> It should be good and only take effect when IMA enabled. If all the
-> assumptions are right:
+> diff --git a/Documentation/devicetree/bindings/display/fsl,hdp.txt b/Documentation/devicetree/bindings/display/fsl,hdp.txt
+> new file mode 100644
+> index 000000000000..36b5687a1261
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/fsl,hdp.txt
+> @@ -0,0 +1,56 @@
+> +NXP Layerscpae ls1028a HDP-TX PHY Controller
+> +============================================
+> +
+> +The following bindings describe the Cadence HDP TX PHY on ls1028a that
+> +offer multi-protocol support of standars such as eDP and Displayport,
+> +supports for 25-600MHz pixel clock and up to 4k2k at 60MHz resolution.
+> +The HDP transmitter is a Cadence HDP TX controller IP with a companion
+> +PHY IP.
+
+I'm confused. This binding covers both blocks or is just one of them?
+
+> +
+> +Required properties:
+> +  - compatible:   Should be "fsl,ls1028a-dp" for ls1028a.
+> +  - reg:          Physical base address and size of the block of registers used
+> +  by the processor.
+> +  - interrupts:   HDP hotplug in/out detect interrupt number
+> +  - clocks:       A list of phandle + clock-specifier pairs, one for each entry
+> +  in 'clock-names'
+> +  - clock-names:  A list of clock names. It should contain:
+> +      - "clk_ipg": inter-Integrated circuit clock
+> +      - "clk_core": for the Main Display TX controller clock
+> +      - "clk_pxl": for the pixel clock feeding the output PLL of the processor
+> +      - "clk_pxl_mux": for the high PerfPLL bypass clock
+> +      - "clk_pxl_link": for the link rate pixel clock
+> +      - "clk_apb": for the APB interface clock
+> +      - "clk_vif": for the Video pixel clock
+
+The 'clk_' part is redundant.
+
+> +
+> +Required sub-nodes:
+> +  - port: The HDP connection to an encoder output port. The connection
+> +    is modelled using the OF graph bindings specified in
+> +    Documentation/devicetree/bindings/graph.txt
+> +
+> +
+> +Example:
+> +
+> +/ {
+> +        ...
+> +
+> +	hdp: display@f200000 {
+> +                compatible = "fsl,ls1028a-dp";
+> +		reg = <0x0 0xf1f0000 0x0 0xffff>,
+> +		    <0x0 0xf200000 0x0 0xfffff>;
+> +                interrupts = <0 221 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&sysclk>, <&hdpclk>, <&dpclk>,
+> +                         <&dpclk>, <&dpclk>, <&pclk>, <&dpclk>;
+> +		clock-names = "clk_ipg", "clk_core", "clk_pxl",
+> +                              "clk_pxl_mux", "clk_pxl_link", "clk_apb",
+> +                              "clk_vif";
+> +
+> +		port {
+> +			dp1_output: endpoint {
+> +				remote-endpoint = <&dp0_input>;
+> +			};
+> +		};
+> +        };
+> +
+> +        ...
+> +};
+> -- 
+> 2.17.1
 > 
-> Acked-by: Dave Young <dyoung@redhat.com>
-
-Thanks, Dave.
-
