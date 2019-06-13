@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6BFC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E23C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EFA62082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80FB82082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:26:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="t8gsBpvV"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ARq6OKiJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbfFMP0m (ORCPT
+        id S1728429AbfFMP0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:26:42 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52260 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729094AbfFMLmm (ORCPT
+        Thu, 13 Jun 2019 11:26:40 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36922 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729135AbfFMLmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 07:42:42 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s3so9857487wms.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 04:42:40 -0700 (PDT)
+        Thu, 13 Jun 2019 07:42:43 -0400
+Received: by mail-wr1-f66.google.com with SMTP id v14so20401198wrr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 04:42:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ct4dk4GNCZZpVBLlWG9IpyH3sVkXJaOUvUrsuvrJN7k=;
-        b=t8gsBpvVYiQYc5Cn+QwlQpiY7tEcHBk2PiEx7Mm99YPiqUHhaR1qhC0wYPkrGD4SHH
-         AeMv6d+++LORjfxG0hocO0hAVvVWjfgFXU7DUebAhDowZP5pxIZyokfKWuCJzU8ptVhs
-         QTgFlBriQSaGZrLhOrDLhAUzOUWa2IZ20zuUZUL7kLXsMMqv8CincQItL92lCi5QYDLp
-         yO8rK8tCPUVh0fCCcPIWZsvG5XWSoviGFdcRgDhPtSwdgQT738Uv3cgVBbCBZVsW2SCz
-         ENsPDyh/zm4wAkf0I4yvwFPYHgBcqLTLWSYk/hhtUFHz1WUfsbUpGdYYMdpUXFx89UY4
-         6JIQ==
+        bh=TExrEtVR1Qp+m2eA960X7wRJwZP76vaDnZqCemHrZMo=;
+        b=ARq6OKiJiNJ8rcawe7B7CKa+kO25GegV4OLzlT2aC16bZB7ZbGOeh4KfbetAfkiOk3
+         YmtzX9XOJh2s/leNI5KQNSwKtxxkdQjzpdv8KAotEvXsQ7oqgwqaUX6IhwnhwJULiEzw
+         HQINex/o0ZH99njmn2fOFSgGPlL6gLGHjJxPe1kpQMtpPZAoo0d79nsOVRjthp0VlL/6
+         exoH2sc5NANWn1mm4wVjEwCcQknz0R7B57hFUlVQDaYC8nALkbz73efD7CqPRVL9NhQ1
+         XRALVm86xKQJFghDjinxQgkadLhBSdqqAw2EQXBtQw/hKgK7S1lvbkzlqzbIo6KxT59B
+         aS9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ct4dk4GNCZZpVBLlWG9IpyH3sVkXJaOUvUrsuvrJN7k=;
-        b=bpYycQxj4yCuexdmzOKvSgwW74KHoQakFeJBJKu/SHwSg0yM86sA110+KwtJF0lgB+
-         Yj1sWVkeZa/3ZZ3zepJVaG7n/Ku1CgPex9NPdsrQjG3NMWz66s8VImsSd3Ka+kn5R0Ir
-         4aZ/gFgr2rBA03OAYjfROpTPVNvz8xrLMff8DTMYRwsrPa7OvoFsLn6lJvkQAhC9lzrS
-         t/SPIwISkh7VMvXgewoTSWIgMGM1g+y3Mimvxcq1JbunvO7ChspbzX0Yg/fVSTkUktVW
-         fVsGMl5aVo8r/Obt5HIwsXipF6sqVhdfcmrGu0pb6qhgmijpvYaDtDJgM2bCBb6Y5qdc
-         DcAg==
-X-Gm-Message-State: APjAAAXiFh2KIoWOgbUb+PHkywoQcVlUWdIBIg1Cfu29T+RH/MR8nHYr
-        WS5yaVKUYXtG/2p7dM4pRgzk7Q==
-X-Google-Smtp-Source: APXvYqwqh3apCFq8wjX/n7GQ82ee2GciU3Q+2n5x2zCfXMbElFvgw/Kli69Hg3m7WsELb0p2+ZsBpA==
-X-Received: by 2002:a05:600c:254b:: with SMTP id e11mr3135082wma.171.1560426159921;
-        Thu, 13 Jun 2019 04:42:39 -0700 (PDT)
+        bh=TExrEtVR1Qp+m2eA960X7wRJwZP76vaDnZqCemHrZMo=;
+        b=hF1KiKwQMKjX6lMBMtpkYMnfcJfcHyUCUhe42CW6y/cgsfkosDu+uLrzDI+bVgrIuo
+         1mk1EqjOkenR+71bkWzSGldeWlnA/RyyTz/lHiXjhx3jcb2FJWAlnsxeXgSCcCdP9KqG
+         SVS+U9P4OjRvf8nEMRRzxz5Xg6knj5gFgHmHLH5f7UJw/9Xxxcg9m9y1bvDxt51bVMdW
+         1bcaKqTvv5Mmi+3Pk3eR1OqSpLK/Uvd7tJvuyh6j+Jq8XDRAN62FO/evkt77UvhhWjdT
+         z7l/FZr8sGMrB3WQ/FUoAJTdzfJ47u7zOeplm/fyWG5EfKSDdoBCvFfT7BBX/0fcr8SU
+         70kw==
+X-Gm-Message-State: APjAAAWB2oxN1/am2MKKIHGyb/kiQhCmoinsblTy0tJ7XW/RAk+n+c7r
+        t1zh3B1woqU2uI9o8B33cBPpDQ==
+X-Google-Smtp-Source: APXvYqz/BTbpTahJKuFfHLaXnGe/ye7zKjSH9AReM7p3t9Gmxi21Yj4MpRdaVoBmNQqviV7TOcVAMQ==
+X-Received: by 2002:adf:eb09:: with SMTP id s9mr57922277wrn.127.1560426162128;
+        Thu, 13 Jun 2019 04:42:42 -0700 (PDT)
 Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id b5sm2598490wru.69.2019.06.13.04.42.39
+        by smtp.googlemail.com with ESMTPSA id b5sm2598490wru.69.2019.06.13.04.42.41
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 04:42:39 -0700 (PDT)
+        Thu, 13 Jun 2019 04:42:41 -0700 (PDT)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -63,9 +63,9 @@ To:     Mark Brown <broonie@kernel.org>,
 Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-amlogic@lists.infradead.org
-Subject: [PATCH 1/4] ASoC: meson: axg-tdmin: right_j is not supported
-Date:   Thu, 13 Jun 2019 13:42:30 +0200
-Message-Id: <20190613114233.21130-2-jbrunet@baylibre.com>
+Subject: [PATCH 3/4] ASoC: meson: axg-tdm: fix sample clock inversion
+Date:   Thu, 13 Jun 2019 13:42:32 +0200
+Message-Id: <20190613114233.21130-4-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190613114233.21130-1-jbrunet@baylibre.com>
 References: <20190613114233.21130-1-jbrunet@baylibre.com>
@@ -77,26 +77,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right justified format is actually not supported by the amlogic tdm input
-decoder.
+The content of SND_SOC_DAIFMT_FORMAT_MASK is a number, not a bitfield,
+so the test to check if the format is i2s is wrong. Because of this the
+clock setting may be wrong. For example, the sample clock gets inverted
+in DSP B mode, when it should not.
 
-Fixes: 13a22e6a98f8 ("ASoC: meson: add tdm input driver")
+Fix the lrclk invert helper function
+
+Fixes: 1a11d88f499c ("ASoC: meson: add tdm formatter base driver")
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- sound/soc/meson/axg-tdmin.c | 1 -
- 1 file changed, 1 deletion(-)
+ sound/soc/meson/axg-tdm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/meson/axg-tdmin.c b/sound/soc/meson/axg-tdmin.c
-index a790f925a4ef..cb87f17f3e95 100644
---- a/sound/soc/meson/axg-tdmin.c
-+++ b/sound/soc/meson/axg-tdmin.c
-@@ -121,7 +121,6 @@ static int axg_tdmin_prepare(struct regmap *map,
- 		break;
+diff --git a/sound/soc/meson/axg-tdm.h b/sound/soc/meson/axg-tdm.h
+index e578b6f40a07..5774ce0916d4 100644
+--- a/sound/soc/meson/axg-tdm.h
++++ b/sound/soc/meson/axg-tdm.h
+@@ -40,7 +40,7 @@ struct axg_tdm_iface {
  
- 	case SND_SOC_DAIFMT_LEFT_J:
--	case SND_SOC_DAIFMT_RIGHT_J:
- 	case SND_SOC_DAIFMT_DSP_B:
- 		break;
+ static inline bool axg_tdm_lrclk_invert(unsigned int fmt)
+ {
+-	return (fmt & SND_SOC_DAIFMT_I2S) ^
++	return ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) == SND_SOC_DAIFMT_I2S) ^
+ 		!!(fmt & (SND_SOC_DAIFMT_IB_IF | SND_SOC_DAIFMT_NB_IF));
+ }
  
 -- 
 2.20.1
