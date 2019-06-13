@@ -2,158 +2,185 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE51C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCA2C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BAD92054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF62F2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:18:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732146AbfFMPSz (ORCPT
+        id S2388865AbfFMPS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:18:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54626 "EHLO mx1.redhat.com"
+        Thu, 13 Jun 2019 11:18:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44317 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732144AbfFMNDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:03:01 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        id S1732145AbfFMNDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 09:03:25 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3B21DCA36F;
-        Thu, 13 Jun 2019 13:03:00 +0000 (UTC)
-Received: from [10.3.116.85] (ovpn-116-85.phx2.redhat.com [10.3.116.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D484E541F2;
-        Thu, 13 Jun 2019 13:02:57 +0000 (UTC)
-Subject: Re: [PATCH 2/2] nbd: add support for nbd as root device
-To:     roman.stratiienko@globallogic.com, linux-kernel@vger.kernel.org,
-        josef@toxicpanda.com, nbd@other.debian.org,
-        A.Bulyshchenko@globallogic.com, linux-block@vger.kernel.org,
-        axboe@kernel.dkn.org, "Richard W.M. Jones" <rjones@redhat.com>
-References: <20190612163144.18486-1-roman.stratiienko@globallogic.com>
- <20190612163144.18486-2-roman.stratiienko@globallogic.com>
-From:   Eric Blake <eblake@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=eblake@redhat.com; keydata=
- xsBNBEvHyWwBCACw7DwsQIh0kAbUXyqhfiKAKOTVu6OiMGffw2w90Ggrp4bdVKmCaEXlrVLU
- xphBM8mb+wsFkU+pq9YR621WXo9REYVIl0FxKeQo9dyQBZ/XvmUMka4NOmHtFg74nvkpJFCD
- TUNzmqfcjdKhfFV0d7P/ixKQeZr2WP1xMcjmAQY5YvQ2lUoHP43m8TtpB1LkjyYBCodd+LkV
- GmCx2Bop1LSblbvbrOm2bKpZdBPjncRNob73eTpIXEutvEaHH72LzpzksfcKM+M18cyRH+nP
- sAd98xIbVjm3Jm4k4d5oQyE2HwOur+trk2EcxTgdp17QapuWPwMfhaNq3runaX7x34zhABEB
- AAHNHkVyaWMgQmxha2UgPGVibGFrZUByZWRoYXQuY29tPsLAegQTAQgAJAIbAwULCQgHAwUV
- CgkICwUWAgMBAAIeAQIXgAUCS8fL9QIZAQAKCRCnoWtKJSdDahBHCACbl/5FGkUqJ89GAjeX
- RjpAeJtdKhujir0iS4CMSIng7fCiGZ0fNJCpL5RpViSo03Q7l37ss+No+dJI8KtAp6ID+PMz
- wTJe5Egtv/KGUKSDvOLYJ9WIIbftEObekP+GBpWP2+KbpADsc7EsNd70sYxExD3liwVJYqLc
- Rw7so1PEIFp+Ni9A1DrBR5NaJBnno2PHzHPTS9nmZVYm/4I32qkLXOcdX0XElO8VPDoVobG6
- gELf4v/vIImdmxLh/w5WctUpBhWWIfQDvSOW2VZDOihm7pzhQodr3QP/GDLfpK6wI7exeu3P
- pfPtqwa06s1pae3ad13mZGzkBdNKs1HEm8x6zsBNBEvHyWwBCADGkMFzFjmmyqAEn5D+Mt4P
- zPdO8NatsDw8Qit3Rmzu+kUygxyYbz52ZO40WUu7EgQ5kDTOeRPnTOd7awWDQcl1gGBXgrkR
- pAlQ0l0ReO57Q0eglFydLMi5bkwYhfY+TwDPMh3aOP5qBXkm4qIYSsxb8A+i00P72AqFb9Q7
- 3weG/flxSPApLYQE5qWGSXjOkXJv42NGS6o6gd4RmD6Ap5e8ACo1lSMPfTpGzXlt4aRkBfvb
- NCfNsQikLZzFYDLbQgKBA33BDeV6vNJ9Cj0SgEGOkYyed4I6AbU0kIy1hHAm1r6+sAnEdIKj
- cHi3xWH/UPrZW5flM8Kqo14OTDkI9EtlABEBAAHCwF8EGAEIAAkFAkvHyWwCGwwACgkQp6Fr
- SiUnQ2q03wgAmRFGDeXzc58NX0NrDijUu0zx3Lns/qZ9VrkSWbNZBFjpWKaeL1fdVeE4TDGm
- I5mRRIsStjQzc2R9b+2VBUhlAqY1nAiBDv0Qnt+9cLiuEICeUwlyl42YdwpmY0ELcy5+u6wz
- mK/jxrYOpzXKDwLq5k4X+hmGuSNWWAN3gHiJqmJZPkhFPUIozZUCeEc76pS/IUN72NfprZmF
- Dp6/QDjDFtfS39bHSWXKVZUbqaMPqlj/z6Ugk027/3GUjHHr8WkeL1ezWepYDY7WSoXwfoAL
- 2UXYsMAr/uUncSKlfjvArhsej0S4zbqim2ZY6S8aRWw94J3bSvJR+Nwbs34GPTD4Pg==
-Organization: Red Hat, Inc.
-Message-ID: <b988f702-f394-6f2e-43ea-61298c0f2b03@redhat.com>
-Date:   Thu, 13 Jun 2019 08:02:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mx1.redhat.com (Postfix) with ESMTPS id 939C730C75A2;
+        Thu, 13 Jun 2019 13:03:16 +0000 (UTC)
+Received: from localhost (ovpn-12-28.pek2.redhat.com [10.72.12.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9BEC11001DD2;
+        Thu, 13 Jun 2019 13:03:09 +0000 (UTC)
+Date:   Thu, 13 Jun 2019 21:03:01 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Lianbo Jiang <lijiang@redhat.com>
+Subject: Re: [PATCH] x86/mm: Create an SME workarea in the kernel for early
+ encryption
+Message-ID: <20190613130301.GB17103@MiWiFi-R3L-srv>
+References: <d565e0c8e9867132c75648fe67416c3f51a0efbd.1560346329.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20190612163144.18486-2-roman.stratiienko@globallogic.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="9Icx9ItsU53ORwiANl09EUUC5IOzpGhUD"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 13 Jun 2019 13:03:01 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d565e0c8e9867132c75648fe67416c3f51a0efbd.1560346329.git.thomas.lendacky@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 13 Jun 2019 13:03:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---9Icx9ItsU53ORwiANl09EUUC5IOzpGhUD
-Content-Type: multipart/mixed; boundary="GcPkFI5vKHhM5L3R0laXCr11kPXSMamS8";
- protected-headers="v1"
-From: Eric Blake <eblake@redhat.com>
-To: roman.stratiienko@globallogic.com, linux-kernel@vger.kernel.org,
- josef@toxicpanda.com, nbd@other.debian.org, A.Bulyshchenko@globallogic.com,
- linux-block@vger.kernel.org, axboe@kernel.dkn.org,
- "Richard W.M. Jones" <rjones@redhat.com>
-Message-ID: <b988f702-f394-6f2e-43ea-61298c0f2b03@redhat.com>
-Subject: Re: [PATCH 2/2] nbd: add support for nbd as root device
-References: <20190612163144.18486-1-roman.stratiienko@globallogic.com>
- <20190612163144.18486-2-roman.stratiienko@globallogic.com>
-In-Reply-To: <20190612163144.18486-2-roman.stratiienko@globallogic.com>
+On 06/12/19 at 01:32pm, Lendacky, Thomas wrote:
+> The SME workarea used during early encryption of the kernel during boot
+> is situated on a 2MB boundary after the end of the kernel text, data,
+> etc. sections (_end).  This works well during initial boot of a compressed
+> kernel because of the relocation used for decompression of the kernel.
+> But when performing a kexec boot, there's a chance that the SME workarea
+> may not be mapped by the kexec pagetables or that some of the other data
+> used by kexec could exist in this range.
+> 
+> Create a section for SME in the vmlinux.lds.S.  Position it after "_end"
+> so that the memory will be reclaimed during boot and, since it is all
+> zeroes, it compresses well.  Since this new section will be part of the
+> kernel, kexec will account for it in pagetable mappings and placement of
+> data after the kernel.
+> 
+> Here's an example of a kernel size without and with the SME section:
+> 	without:
+> 		vmlinux:	36,501,616
+> 		bzImage:	 6,497,344
+> 
+> 		100000000-47f37ffff : System RAM
+> 		  1e4000000-1e47677d4 : Kernel code	(0x7677d4)
+> 		  1e47677d5-1e4e2e0bf : Kernel data	(0x6c68ea)
+> 		  1e5074000-1e5372fff : Kernel bss	(0x2fefff)
+> 
+> 	with:
+> 		vmlinux:	44,419,408
+> 		bzImage:	 6,503,136
+> 
+> 		880000000-c7ff7ffff : System RAM
+> 		  8cf000000-8cf7677d4 : Kernel code	(0x7677d4)
+> 		  8cf7677d5-8cfe2e0bf : Kernel data	(0x6c68ea)
+> 		  8d0074000-8d0372fff : Kernel bss	(0x2fefff)
+> 
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Lianbo Jiang <lijiang@redhat.com>
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+>  arch/x86/kernel/vmlinux.lds.S      | 16 ++++++++++++++++
+>  arch/x86/mm/mem_encrypt_identity.c | 22 ++++++++++++++++++++--
+>  2 files changed, 36 insertions(+), 2 deletions(-)
 
---GcPkFI5vKHhM5L3R0laXCr11kPXSMamS8
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+This patch looks good to me. 
 
-On 6/12/19 11:31 AM, roman.stratiienko@globallogic.com wrote:
-> From: Roman Stratiienko <roman.stratiienko@globallogic.com>
->=20
-> Adding support to nbd to use it as a root device. This code essentially=
+It fixes an issue which breaks kexec/kdump kernel booting. And it can be
+reproduced always when 'nokaslr' is added into kexec/kdump kernel
+cmdline. Usually we suggest users to add 'nokaslr' to kdump kernel
+cmdline, since KASLR functionality doesn't make any sense for kdump
+kernel, and it can simplify to avoid unnecessary checking if kdump
+kerenl malfunctions. So it's an important fix for sme supporting on
+kexec/kdump.
 
-> provides a minimal nbd-client implementation within the kernel. It open=
-s
-> a socket and makes the negotiation with the server. Afterwards it passe=
-s
-> the socket to the normal nbd-code to handle the connection.
->=20
-> The arguments for the server are passed via kernel command line.
-> The kernel command line has the format
-> 'nbdroot=3D[<SERVER_IP>:]<SERVER_PORT>/<EXPORT_NAME>'.
+Thanks for quick response and making this patch, Tom.
 
-Did you intend for nbdroot=3D1234 to connect to port 1234 or to server
-1234 port 10809?  Is an export name mandatory even when it is the empty
-string, in which case, is the / character mandatory?  Maybe this would
-be better written as:
+Reviewed-by: Baoquan He <bhe@redhat.com>
 
- [<SERVER_IP>[:<SERVER_PORT]][/<EXPORT_NAME]
+Thanks
+Baoquan
 
-although that would allow nbdroot=3D using all defaults (will that still
-do the right thing?).
-
-Should we support nbdroot=3DURI, and tie this in to Rich's proposal [1] o=
-n
-standardizing the set of URIs that refer to an NBD export?  It seems
-like you are still limited to a TCP socket (not Unix) with no
-encryption, so this would be equivalent to the URI:
-
-nbd://[server[:port]][/export]
-
-[1] https://lists.debian.org/nbd/2019/06/msg00011.html
-
---=20
-Eric Blake, Principal Software Engineer
-Red Hat, Inc.           +1-919-301-3226
-Virtualization:  qemu.org | libvirt.org
-
-
---GcPkFI5vKHhM5L3R0laXCr11kPXSMamS8--
-
---9Icx9ItsU53ORwiANl09EUUC5IOzpGhUD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEccLMIrHEYCkn0vOqp6FrSiUnQ2oFAl0CSYAACgkQp6FrSiUn
-Q2rmfAf8ChmatMRfkJIY+wjmA8EpvunLFeeBfqMUiCnyHNvBwC4gnGLM+bicQbaH
-daIi5U8i80IsZZ3su8d8eaBxBaFF9iy+CoRjczdUZnE1XdkDoJyA+0csp1+LiggC
-0SmwnYAF9o8XRSJrhkg0xeVHwBljDbKsd1bwWzDVD6YDFERJPuGjVPYFM6sX//Qh
-6fj1jDb2Y3jVg/6eiEOOzofmP5aO9aN4IGOWs5LgI7SFrk7r3gg33qlMrNk2e0sH
-9d/D+8fBkuDFaoCGBk/1uBoBcLN9lkzB3MopCSMIilvavvv5+Wb1c84f+TE/0Fnm
-xb7WMLpghXn8h/JLGjX503VhNmx7dw==
-=Uh/K
------END PGP SIGNATURE-----
-
---9Icx9ItsU53ORwiANl09EUUC5IOzpGhUD--
+> 
+> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+> index 0850b5149345..8c4377983e54 100644
+> --- a/arch/x86/kernel/vmlinux.lds.S
+> +++ b/arch/x86/kernel/vmlinux.lds.S
+> @@ -379,6 +379,22 @@ SECTIONS
+>  	. = ALIGN(PAGE_SIZE);		/* keep VO_INIT_SIZE page aligned */
+>  	_end = .;
+>  
+> +#ifdef CONFIG_AMD_MEM_ENCRYPT
+> +	/*
+> +	 * SME workarea section: Lives outside of the kernel proper
+> +	 * (_text - _end) for performing in-place encryption. Resides
+> +	 * on a 2MB boundary to simplify the pagetable setup used for
+> +	 * the encryption.
+> +	 */
+> +	. = ALIGN(HPAGE_SIZE);
+> +	.sme : AT(ADDR(.sme) - LOAD_OFFSET) {
+> +		__sme_begin = .;
+> +		*(.sme)
+> +		. = ALIGN(HPAGE_SIZE);
+> +		__sme_end = .;
+> +	}
+> +#endif
+> +
+>  	STABS_DEBUG
+>  	DWARF_DEBUG
+>  
+> diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
+> index 4aa9b1480866..c55c2ec8fb12 100644
+> --- a/arch/x86/mm/mem_encrypt_identity.c
+> +++ b/arch/x86/mm/mem_encrypt_identity.c
+> @@ -73,6 +73,19 @@ struct sme_populate_pgd_data {
+>  	unsigned long vaddr_end;
+>  };
+>  
+> +/*
+> + * This work area lives in the .sme section, which lives outside of
+> + * the kernel proper. It is sized to hold the intermediate copy buffer
+> + * and more than enough pagetable pages.
+> + *
+> + * By using this section, the kernel can be encrypted in place and we
+> + * avoid any possibility of boot parameters or initramfs images being
+> + * placed such that the in-place encryption logic overwrites them.  This
+> + * section is 2MB aligned to allow for simple pagetable setup using only
+> + * PMD entries (see vmlinux.lds.S).
+> + */
+> +static char sme_workarea[2 * PMD_PAGE_SIZE] __section(.sme);
+> +
+>  static char sme_cmdline_arg[] __initdata = "mem_encrypt";
+>  static char sme_cmdline_on[]  __initdata = "on";
+>  static char sme_cmdline_off[] __initdata = "off";
+> @@ -314,8 +327,13 @@ void __init sme_encrypt_kernel(struct boot_params *bp)
+>  	}
+>  #endif
+>  
+> -	/* Set the encryption workarea to be immediately after the kernel */
+> -	workarea_start = kernel_end;
+> +	/*
+> +	 * We're running identity mapped, so we must obtain the address to the
+> +	 * SME encryption workarea using rip-relative addressing.
+> +	 */
+> +	asm ("lea sme_workarea(%%rip), %0"
+> +	     : "=r" (workarea_start)
+> +	     : "p" (sme_workarea));
+>  
+>  	/*
+>  	 * Calculate required number of workarea bytes needed:
+> -- 
+> 2.17.1
+> 
