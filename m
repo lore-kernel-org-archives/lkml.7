@@ -2,113 +2,135 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A5EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78E3C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13CC921537
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B1420896
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:36:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PRF9P8So"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfFMXc2 (ORCPT
+        id S1727136AbfFMXgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 19:32:28 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34656 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726992AbfFMXc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 19:32:27 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DNDPRN078815
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 19:32:26 -0400
-Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t3y0qt8c8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 19:32:26 -0400
-Received: from localhost
-        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <leonardo@linux.ibm.com>;
-        Fri, 14 Jun 2019 00:32:25 +0100
-Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
-        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 14 Jun 2019 00:32:23 +0100
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5DNWMKT35389762
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Jun 2019 23:32:22 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2A8CFBE04F;
-        Thu, 13 Jun 2019 23:32:22 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2F4D9BE051;
-        Thu, 13 Jun 2019 23:32:21 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.170])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Jun 2019 23:32:20 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     linux-block@vger.kernel.org
-Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 1/1] block/cfq : Include check to avoid NULL Pointer Dereferencing
-Date:   Thu, 13 Jun 2019 20:31:59 -0300
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190613233159.26687-1-leonardo@linux.ibm.com>
-References: <20190613233159.26687-1-leonardo@linux.ibm.com>
+        Thu, 13 Jun 2019 19:36:02 -0400
+Received: from mail-eopbgr1300123.outbound.protection.outlook.com ([40.107.130.123]:37321
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726283AbfFMXgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 19:36:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=tdIKXBL6dSOw2YEXeeucdsA+RL/KHX6S3k0ZQxXwA5lC5d6TZBXMqaVn3O9jKDLqjYIQvISoAMyBXW/0Z0LVSk2Foe2UWaSMWhPlZJapcFeJ9WyOsC/58KG613KJhr6euvYkcCu1ZFwQyUf5Vxb8ChnJLO3epwK9QeT7a4fRnDQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FSjTmiYEtto6t8rXpcplD6OVdR1LgDnRMNjgGnLbQHg=;
+ b=LuyWBzen1kclnKR1Q3zi6oR/xNVMFO/4kdiN8lZx5YeBSmz2NYqVpWgY/4clN6rGFkeLMWIXXS+TUJTXUSGw4xqC1ZQ5G3dXormnNoKbgmD3D0EoZE2W0wafxhimp8ksEcHD64wLQY/sN1Kop3NGpAXZ77SMetb86kcjt5ljBTY=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FSjTmiYEtto6t8rXpcplD6OVdR1LgDnRMNjgGnLbQHg=;
+ b=PRF9P8SozpFXRunWQtel7/DzrMD3d+JeCFFUH4Dp7q5Ijw0B1/sz+Ap6D8LXNIgaeVCVfCtBa2IQkFRk05pW/DsubpuUfP5v1o8N2Gw3CaItjV5OiJmZSMzTGvsZO6ahKKmMh+cdrOagDakVWBRVfTVgH8spIvBXeQztfKwCGHU=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0107.APCP153.PROD.OUTLOOK.COM (10.170.188.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.0; Thu, 13 Jun 2019 23:35:54 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d896:4219:e493:b04]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d896:4219:e493:b04%4]) with mapi id 15.20.2008.007; Thu, 13 Jun 2019
+ 23:35:54 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net] hvsock: fix epollout hang from race condition
+Thread-Topic: [PATCH net] hvsock: fix epollout hang from race condition
+Thread-Index: AdUhY/kd1+XRZykcRS6vcxcYhC9DaQA3F6qQ
+Date:   Thu, 13 Jun 2019 23:35:53 +0000
+Message-ID: <PU1P153MB016994A9A0C4C3D1306B8FE4BFEF0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <MW2PR2101MB11164C6EEAA5C511B395EF3AC0EC0@MW2PR2101MB1116.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB11164C6EEAA5C511B395EF3AC0EC0@MW2PR2101MB1116.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-13T23:35:51.8575032Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=50c95844-09f0-4178-8ae3-887c91853fa5;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:a:51e0:dd5e:82b6:a386]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e44b62cc-a6de-48bb-0d54-08d6f057e0bf
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0107;
+x-ms-traffictypediagnostic: PU1P153MB0107:
+x-microsoft-antispam-prvs: <PU1P153MB0107F5C7074A7A064C0484FBBFEF0@PU1P153MB0107.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(39860400002)(136003)(346002)(396003)(189003)(199004)(51914003)(4326008)(55016002)(8676002)(186003)(46003)(74316002)(7736002)(8936002)(5660300002)(81156014)(486006)(76176011)(25786009)(66556008)(81166006)(66476007)(2906002)(64756008)(66946007)(6636002)(478600001)(10290500003)(52536014)(446003)(11346002)(14454004)(73956011)(305945005)(33656002)(71200400001)(1511001)(316002)(6506007)(476003)(66446008)(22452003)(86362001)(4744005)(10090500001)(76116006)(54906003)(9686003)(14444005)(256004)(6436002)(110136005)(6116002)(68736007)(6246003)(53936002)(102836004)(8990500004)(229853002)(99286004)(7696005)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0107;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: vZBc9eSyhLatgwvFhnmHyXcCVWvpCnMlUFNwXxB74JEV6jgO0AadUugLD9D+H86yys/WTgZTQsVuUlzjSjMgnRH1+98QzR4AgzN+oTpDlhiGgBmZlDaYDhs6bDFOzjO+/y34bQOdVQ0f271xQkqohA0MxW944b1SgPID6hLrx4Idw0rBMTVcJUfhzSYP1SeDMG2YRBQ9NPX8y/bQWGZ3rjc+n+o3u4FIpGiXSWGS3Tv1TgdGXHVmLl8OAX+Il3o566jHpq36QDQfYxVnNBz2YI8JUDaVbdlYe7AnqXNHo/hhRKbMpwExDwO2YtBBqii276JWFzK0enkK17DxjQYa8zKxM4FzW4AthAdFq7TC6umb9aBcwMTXpAYbiO9YwmIwLwrFuFOHjF2Ina7P1M64QPDryCbKwe9676SksYu5Cx0=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061323-0004-0000-0000-0000151BFBD0
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011257; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01217587; UDB=6.00640288; IPR=6.00998699;
- MB=3.00027300; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-13 23:32:24
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061323-0005-0000-0000-00008C143C90
-Message-Id: <20190613233159.26687-2-leonardo@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906130176
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e44b62cc-a6de-48bb-0d54-08d6f057e0bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 23:35:53.8994
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Checks if cfqg is a valid pointer before dereferencing.
+> From: Sunil Muthuswamy <sunilmut@microsoft.com>
+> Sent: Wednesday, June 12, 2019 2:19 PM
+>  ...
+> The fix is to set the pending size to the default size and never change i=
+t.
+> This way the host will always notify the guest whenever the writable spac=
+e
+> is bigger than the pending size. The host is already optimized to *only*
+> notify the guest when the pending size threshold boundary is crossed and
+> not everytime.
+>=20
+> This change also reduces the cpu usage somewhat since
+> hv_stream_has_space()
+> is in the hotpath of send:
+> vsock_stream_sendmsg()->hv_stream_has_space()
+> Earlier hv_stream_has_space was setting/clearing the pending size on ever=
+y
+> call.
+>=20
+> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
 
-There is a explicit chance for cfqg = cfq_get_next_cfqg() to return NULL,
-so 'cfqg->saved_wl_slice' would be a Null dereferencing.
+Hi Sunil, thanks for the fix! It looks good.
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
----
- block/cfq-iosched.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/block/cfq-iosched.c b/block/cfq-iosched.c
-index 2eb87444b157..2c5dd5a295ee 100644
---- a/block/cfq-iosched.c
-+++ b/block/cfq-iosched.c
-@@ -3210,9 +3210,13 @@ static struct cfq_group *cfq_get_next_cfqg(struct cfq_data *cfqd)
- 
- static void cfq_choose_cfqg(struct cfq_data *cfqd)
- {
--	struct cfq_group *cfqg = cfq_get_next_cfqg(cfqd);
-+	struct cfq_group *cfqg;
- 	u64 now = ktime_get_ns();
- 
-+	cfqg = cfq_get_next_cfqg(cfqd);
-+	if (unlikely(!cfqg))
-+		return;
-+
- 	cfqd->serving_group = cfqg;
- 
- 	/* Restore the workload type data */
--- 
-2.20.1
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
 
