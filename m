@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E975C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98634C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57A7C20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 640B9208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441421;
-	bh=qWriVbloNqpjaoIBSmi48/5nQKmhAXdDB9WNrSZVj5g=;
+	s=default; t=1560441429;
+	bh=k2Fm8O7MpK7iMc2x5aUh4fkrU9CEDJUXv7diw1dPJ4U=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=1VwP0CrUtrSCf2ao4mQNj87sS3Nbm0D8p9syvEuKn2NSzL/q+JM2aHCzqtrafl9lJ
-	 gjMQv/9iNZrOKdWxJWf7+Rs3c1G214p4tcp+hznIv0mUOqzWqljUO753wXkGPulxiK
-	 DL9PgqpZojPC5WleYatL+ZHhW1ZhdW/zPO/4U+BQ=
+	b=FmSNDlGYTNRK82ArgKVPgBYEWNPWT80VjIIBMyvD0ZkQvOr05o5v6b+NfKh/xFoTm
+	 096TS72hVzvoSR2+tw7q4vnVUq8XUt0bLoPtxVMeBtUnYixpDRns0Hez1zfY9tiUOx
+	 n4GGyc0Xny/ikGc6ezpjJstJ42/+VNnC5mNlFFvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390430AbfFMP5A (ORCPT
+        id S2390108AbfFMP5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:57:00 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58320 "EHLO
+        Thu, 13 Jun 2019 11:57:07 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58202 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731602AbfFMP44 (ORCPT
+        with ESMTP id S2390390AbfFMP4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:56:56 -0400
+        Thu, 13 Jun 2019 11:56:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=rdQRuigh4pPeCL+DVbRSo6mhbiJGsrIQYlQjApHWDv0=; b=oQqdv9lbFaap
-        lqFl0w8uGa3mtUNuoyJ3dzjNNPSg2zlLw9FZv2WJqiSQQCSXU260B+0O8NCq136s/Fkv+HMl6+M6x
-        eNCrhjKTPfhFzTFar4/Q6xf5qoL5vo7cllUKDv18o27TQ+EanPRjjjRtvRnnYklr+8JDBo7gaXhGe
-        nTicM=;
+        List-Archive; bh=XLqrwinvOXCmZNr3g6KRL6b7QVnkHmhZzUuw0O8ojyg=; b=SaxSvMD/lzXK
+        u0MH8GdScn9rjHBQ4uQl+cJ12vzEMW48eiwYteFfVGmgyKtYcsZdZv/cdjnBVfKayHFeVwMDwIZUF
+        s+gp54h4XX+BXtdS/kEBfjYx+6+HMuN2BeI2ksYTP/6FRk10OfLAzvfd4AQevijcOfzD9xZ4uGmKh
+        Pv3Zw=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hbS5t-0005HU-Rk; Thu, 13 Jun 2019 15:56:53 +0000
+        id 1hbS5m-0005HL-Gm; Thu, 13 Jun 2019 15:56:46 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 66A20440046; Thu, 13 Jun 2019 16:56:53 +0100 (BST)
+        id 0AF3C440046; Thu, 13 Jun 2019 16:56:46 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, broonie@kernel.org,
-        david.brown@linaro.org, jorge.ramirez-ortiz@linaro.org,
-        khasim.mohammed@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: qup: fix PIO/DMA transfers." to the spi tree
-In-Reply-To: <20190610072243.19710-1-jorge.ramirez-ortiz@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Applied "regulator: max8952: Convert to use GPIO descriptors" to the regulator tree
+In-Reply-To: <20190609114812.28375-1-linus.walleij@linaro.org>
 X-Patchwork-Hint: ignore
-Message-Id: <20190613155653.66A20440046@finisterre.sirena.org.uk>
-Date:   Thu, 13 Jun 2019 16:56:53 +0100 (BST)
+Message-Id: <20190613155646.0AF3C440046@finisterre.sirena.org.uk>
+Date:   Thu, 13 Jun 2019 16:56:45 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: qup: fix PIO/DMA transfers.
+   regulator: max8952: Convert to use GPIO descriptors
 
-has been applied to the spi tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,137 +89,171 @@ to this mail.
 Thanks,
 Mark
 
-From a75e91bad717fea43358e7f743de5f93c4e5978f Mon Sep 17 00:00:00 2001
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Date: Mon, 10 Jun 2019 09:22:43 +0200
-Subject: [PATCH] spi: qup: fix PIO/DMA transfers.
+From fd742eaab827b47c5f2de6c1811a17075608da60 Mon Sep 17 00:00:00 2001
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sun, 9 Jun 2019 13:48:12 +0200
+Subject: [PATCH] regulator: max8952: Convert to use GPIO descriptors
 
-- DMA/PIO:
-  If an error IRQ occurred during PIO or DMA mode make sure to log it so
-on completion the transfer can be marked as an error.
+This finalizes the descriptor conversion of the MAX8952 driver
+by letting the VID0 and VID1 GPIOs be fetched from descriptors.
 
-- PIO:
-  Do not complete a transaction until all data has been transferred or
-an error IRQ was flagged.
+Both VID0 and VID1 must be supplied for the VID selection to work,
+I add some code to preserve the semantics that if only one of
+the two VID gpios is supplied, it will be initialized to low.
+This might be a bit overzealous, but I want to preserve any
+implicit semantics.
 
-1) If there was no error IRQ, ignore the done flag IRQ
-(QUP_OP_MAX_INPUT_DONE_FLAG) until all data for the transfer has been
-processed: not doing so risks completing the transfer returning
-uninitialized data in the buffers.
+This is currently only used by device tree in-kernel but it is
+still also possible to supply the same GPIOs using a machine
+descriptor table if a board file is used.
 
-2) Under stress testing we have identified the need to
-protect read/write operations against spurious IN/OUT service events.
+Ideally this should be phased over to using gpio-regulator.c
+that does the same thing, but it might require some refactoring
+and needs testing on real hardware.
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc: Tomasz Figa <tfiga@chromium.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-qup.c | 51 ++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 45 insertions(+), 6 deletions(-)
+ drivers/regulator/max8952.c       | 62 ++++++++++++++-----------------
+ include/linux/regulator/max8952.h |  3 --
+ 2 files changed, 28 insertions(+), 37 deletions(-)
 
-diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-index 974a8ce58b68..0a2ffd2f968a 100644
---- a/drivers/spi/spi-qup.c
-+++ b/drivers/spi/spi-qup.c
-@@ -281,6 +281,9 @@ static void spi_qup_read(struct spi_qup *controller, u32 *opflags)
- 		writel_relaxed(QUP_OP_IN_SERVICE_FLAG,
- 			       controller->base + QUP_OPERATIONAL);
+diff --git a/drivers/regulator/max8952.c b/drivers/regulator/max8952.c
+index 451237efb359..8f0e4dc810f0 100644
+--- a/drivers/regulator/max8952.c
++++ b/drivers/regulator/max8952.c
+@@ -26,11 +26,9 @@
+ #include <linux/platform_device.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/max8952.h>
+-#include <linux/gpio.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
+-#include <linux/of_gpio.h>
+ #include <linux/regulator/of_regulator.h>
+ #include <linux/slab.h>
  
-+		if (!remainder)
-+			goto exit;
-+
- 		if (is_block_mode) {
- 			num_words = (remainder > words_per_block) ?
- 					words_per_block : remainder;
-@@ -310,11 +313,13 @@ static void spi_qup_read(struct spi_qup *controller, u32 *opflags)
- 	 * to refresh opflags value because MAX_INPUT_DONE_FLAG may now be
- 	 * present and this is used to determine if transaction is complete
- 	 */
--	*opflags = readl_relaxed(controller->base + QUP_OPERATIONAL);
--	if (is_block_mode && *opflags & QUP_OP_MAX_INPUT_DONE_FLAG)
--		writel_relaxed(QUP_OP_IN_SERVICE_FLAG,
--			       controller->base + QUP_OPERATIONAL);
+@@ -50,7 +48,8 @@ enum {
+ struct max8952_data {
+ 	struct i2c_client	*client;
+ 	struct max8952_platform_data *pdata;
 -
-+exit:
-+	if (!remainder) {
-+		*opflags = readl_relaxed(controller->base + QUP_OPERATIONAL);
-+		if (is_block_mode && *opflags & QUP_OP_MAX_INPUT_DONE_FLAG)
-+			writel_relaxed(QUP_OP_IN_SERVICE_FLAG,
-+				       controller->base + QUP_OPERATIONAL);
-+	}
- }
++	struct gpio_desc *vid0_gpiod;
++	struct gpio_desc *vid1_gpiod;
+ 	bool vid0;
+ 	bool vid1;
+ };
+@@ -100,16 +99,15 @@ static int max8952_set_voltage_sel(struct regulator_dev *rdev,
+ {
+ 	struct max8952_data *max8952 = rdev_get_drvdata(rdev);
  
- static void spi_qup_write_to_fifo(struct spi_qup *controller, u32 num_words)
-@@ -362,6 +367,10 @@ static void spi_qup_write(struct spi_qup *controller)
- 		writel_relaxed(QUP_OP_OUT_SERVICE_FLAG,
- 			       controller->base + QUP_OPERATIONAL);
+-	if (!gpio_is_valid(max8952->pdata->gpio_vid0) ||
+-			!gpio_is_valid(max8952->pdata->gpio_vid1)) {
++	if (!max8952->vid0_gpiod || !max8952->vid1_gpiod) {
+ 		/* DVS not supported */
+ 		return -EPERM;
+ 	}
  
-+		/* make sure the interrupt is valid */
-+		if (!remainder)
-+			return;
-+
- 		if (is_block_mode) {
- 			num_words = (remainder > words_per_block) ?
- 				words_per_block : remainder;
-@@ -575,10 +584,24 @@ static int spi_qup_do_pio(struct spi_device *spi, struct spi_transfer *xfer,
+ 	max8952->vid0 = selector & 0x1;
+ 	max8952->vid1 = (selector >> 1) & 0x1;
+-	gpio_set_value(max8952->pdata->gpio_vid0, max8952->vid0);
+-	gpio_set_value(max8952->pdata->gpio_vid1, max8952->vid1);
++	gpiod_set_value(max8952->vid0_gpiod, max8952->vid0);
++	gpiod_set_value(max8952->vid1_gpiod, max8952->vid1);
+ 
  	return 0;
  }
+@@ -147,9 +145,6 @@ static struct max8952_platform_data *max8952_parse_dt(struct device *dev)
+ 	if (!pd)
+ 		return NULL;
  
-+static bool spi_qup_data_pending(struct spi_qup *controller)
-+{
-+	unsigned int remainder_tx, remainder_rx;
-+
-+	remainder_tx = DIV_ROUND_UP(spi_qup_len(controller) -
-+				    controller->tx_bytes, controller->w_size);
-+
-+	remainder_rx = DIV_ROUND_UP(spi_qup_len(controller) -
-+				    controller->rx_bytes, controller->w_size);
-+
-+	return remainder_tx || remainder_rx;
-+}
-+
- static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
- {
- 	struct spi_qup *controller = dev_id;
- 	u32 opflags, qup_err, spi_err;
-+	unsigned long flags;
- 	int error = 0;
+-	pd->gpio_vid0 = of_get_named_gpio(np, "max8952,vid-gpios", 0);
+-	pd->gpio_vid1 = of_get_named_gpio(np, "max8952,vid-gpios", 1);
+-
+ 	if (of_property_read_u32(np, "max8952,default-mode", &pd->default_mode))
+ 		dev_warn(dev, "Default mode not specified, assuming 0\n");
  
- 	qup_err = readl_relaxed(controller->base + QUP_ERROR_FLAGS);
-@@ -610,6 +633,11 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
- 		error = -EIO;
- 	}
+@@ -200,7 +195,7 @@ static int max8952_pmic_probe(struct i2c_client *client,
+ 	struct gpio_desc *gpiod;
+ 	enum gpiod_flags gflags;
  
-+	spin_lock_irqsave(&controller->lock, flags);
-+	if (!controller->error)
-+		controller->error = error;
-+	spin_unlock_irqrestore(&controller->lock, flags);
+-	int ret = 0, err = 0;
++	int ret = 0;
+ 
+ 	if (client->dev.of_node)
+ 		pdata = max8952_parse_dt(&client->dev);
+@@ -253,32 +248,31 @@ static int max8952_pmic_probe(struct i2c_client *client,
+ 	max8952->vid0 = pdata->default_mode & 0x1;
+ 	max8952->vid1 = (pdata->default_mode >> 1) & 0x1;
+ 
+-	if (gpio_is_valid(pdata->gpio_vid0) &&
+-			gpio_is_valid(pdata->gpio_vid1)) {
+-		unsigned long gpio_flags;
+-
+-		gpio_flags = max8952->vid0 ?
+-			     GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW;
+-		if (devm_gpio_request_one(&client->dev, pdata->gpio_vid0,
+-					  gpio_flags, "MAX8952 VID0"))
+-			err = 1;
+-
+-		gpio_flags = max8952->vid1 ?
+-			     GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW;
+-		if (devm_gpio_request_one(&client->dev, pdata->gpio_vid1,
+-					  gpio_flags, "MAX8952 VID1"))
+-			err = 2;
+-	} else
+-		err = 3;
+-
+-	if (err) {
++	/* Fetch vid0 and vid1 GPIOs if available */
++	gflags = max8952->vid0 ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
++	max8952->vid0_gpiod = devm_gpiod_get_index_optional(&client->dev,
++							    "max8952,vid",
++							    0, gflags);
++	if (IS_ERR(max8952->vid0_gpiod))
++		return PTR_ERR(max8952->vid0_gpiod);
++	gflags = max8952->vid1 ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
++	max8952->vid1_gpiod = devm_gpiod_get_index_optional(&client->dev,
++							    "max8952,vid",
++							    1, gflags);
++	if (IS_ERR(max8952->vid1_gpiod))
++		return PTR_ERR(max8952->vid1_gpiod);
 +
- 	if (spi_qup_is_dma_xfer(controller->mode)) {
- 		writel_relaxed(opflags, controller->base + QUP_OPERATIONAL);
- 	} else {
-@@ -618,11 +646,22 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
++	/* If either VID GPIO is missing just disable this */
++	if (!max8952->vid0_gpiod || !max8952->vid1_gpiod) {
+ 		dev_warn(&client->dev, "VID0/1 gpio invalid: "
+-				"DVS not available.\n");
++			 "DVS not available.\n");
+ 		max8952->vid0 = 0;
+ 		max8952->vid1 = 0;
+-		/* Mark invalid */
+-		pdata->gpio_vid0 = -1;
+-		pdata->gpio_vid1 = -1;
++		/* Make sure if we have any descriptors they get set to low */
++		if (max8952->vid0_gpiod)
++			gpiod_set_value(max8952->vid0_gpiod, 0);
++		if (max8952->vid1_gpiod)
++			gpiod_set_value(max8952->vid1_gpiod, 0);
  
- 		if (opflags & QUP_OP_OUT_SERVICE_FLAG)
- 			spi_qup_write(controller);
-+
-+		if (!spi_qup_data_pending(controller))
-+			complete(&controller->done);
- 	}
+ 		/* Disable Pulldown of EN only */
+ 		max8952_write_reg(max8952, MAX8952_REG_CONTROL, 0x60);
+diff --git a/include/linux/regulator/max8952.h b/include/linux/regulator/max8952.h
+index 686c42c041b5..33b6e2c09c05 100644
+--- a/include/linux/regulator/max8952.h
++++ b/include/linux/regulator/max8952.h
+@@ -118,9 +118,6 @@ enum {
+ #define MAX8952_NUM_DVS_MODE	4
  
--	if ((opflags & QUP_OP_MAX_INPUT_DONE_FLAG) || error)
-+	if (error)
- 		complete(&controller->done);
- 
-+	if (opflags & QUP_OP_MAX_INPUT_DONE_FLAG) {
-+		if (!spi_qup_is_dma_xfer(controller->mode)) {
-+			if (spi_qup_data_pending(controller))
-+				return IRQ_HANDLED;
-+		}
-+		complete(&controller->done);
-+	}
-+
- 	return IRQ_HANDLED;
- }
+ struct max8952_platform_data {
+-	int gpio_vid0;
+-	int gpio_vid1;
+-
+ 	u32 default_mode;
+ 	u32 dvs_mode[MAX8952_NUM_DVS_MODE]; /* MAX8952_DVS_MODEx_XXXXmV */
  
 -- 
 2.20.1
