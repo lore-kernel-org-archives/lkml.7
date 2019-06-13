@@ -2,177 +2,134 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63942C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB7BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2C32054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1DF021473
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:21:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NyjBpczB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a62uOnV1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732160AbfFMPU7 (ORCPT
+        id S1732554AbfFMPVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:20:59 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:58650 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732005AbfFMMuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 08:50:44 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45Pk9r1GVwz9v00L;
-        Thu, 13 Jun 2019 14:50:40 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=NyjBpczB; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id SVtYa9beBncy; Thu, 13 Jun 2019 14:50:40 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45Pk9q752Dz9v00J;
-        Thu, 13 Jun 2019 14:50:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1560430240; bh=pTwwRiZdJKJ6tY+T10JSotQr5almlLpVgBNMt/5ukTg=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=NyjBpczBJ59J8xTZ+BnVahuln2IIek0w4aqoEqv560r/EO4MxtGOWUsT9o+Upsl27
-         S3/kNEon/ZpKRC46mLcrQkDYcIvTU/J+KPfcZ2hGGZ9EwkDbzeM4USNrgYZ2ERNqjB
-         ae8pW/yDaqCZ8T19xIwbZ7ztlX0jd8tF5GzYN7zA=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EF4688B8B9;
-        Thu, 13 Jun 2019 14:50:40 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id z2IbEDTJueAY; Thu, 13 Jun 2019 14:50:40 +0200 (CEST)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C94EA8B8E4;
-        Thu, 13 Jun 2019 14:50:39 +0200 (CEST)
-Subject: Re: [PATCH v3 1/4] crypto: talitos - move struct talitos_edesc into
- talitos.h
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, horia.geanta@nxp.com
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-References: <cover.1560429844.git.christophe.leroy@c-s.fr>
- <0ada8523d5765391ddc6899815e0e1eb511bcb7d.1560429844.git.christophe.leroy@c-s.fr>
-Message-ID: <eb4463ff-04aa-fc47-e126-c15f39062686@c-s.fr>
-Date:   Thu, 13 Jun 2019 14:50:39 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 11:21:04 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44486 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732095AbfFMPU6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 11:20:58 -0400
+Received: by mail-io1-f65.google.com with SMTP id s7so17749540iob.11
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 08:20:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+TErb3CYHjqgMEM+qQuKdZ7BSMjcTmOtVmFNFo81SDk=;
+        b=a62uOnV1z+blRGCTaI2EKn0Hx0F2gnrv/5aQImnAPlBOPHV2SiuF9FursKNDDBTr3/
+         nJcZDrusUGjAIzGIj2fO6uA11hZkfN3Gcqlua8GpYafI/C9tI34BuiOaNuJIYU5tihTe
+         hW8CgHNrdUHnaeU7V4ONwP3YN1rzmP29eF8Jo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+TErb3CYHjqgMEM+qQuKdZ7BSMjcTmOtVmFNFo81SDk=;
+        b=SatyJONR5zF07pZoJIVsx31qUzw39Ive01bncgjLyhx36ks8mNJJDClRPn8VzDz2QV
+         D6MN77+uwhDPbMvr3h+Mi3qGSoKrAL7YgWGFWaaGW7m8319rCb1WURNOcEdu8VMyoTh6
+         /eB6TEtMrk1rVhbXiGtB1mYq7lOpuhIRlIYixJd4Tez4fwyDdQkeLlFf0xTROCYqrece
+         YItb5b9iIjFPUaL4Gg2umx0rVuiB0Cwxb54BBbv9048SVYyoX79jRhINZauvKFRXk18x
+         AMUavgu4953Yec5JUnFf5ePZcKHoulUlL74mFa9UqW6f128/ZlaxAc/58AYKmEXSckCF
+         bjvw==
+X-Gm-Message-State: APjAAAVQ3fFU5AVZPFVyhiqOyff77EbhxAF4o1lcJASMCCLkap6kO9Xg
+        IRiaBfxE1m+JbzCMs/mp/kVkCu9K3X4=
+X-Google-Smtp-Source: APXvYqwQxWcF94nPCAxW8ENqglZCMc/b4+rOaPKHwzH9GEKbhieE4AX2+dFpBsDdeWhBIJMxNau6DA==
+X-Received: by 2002:a02:394c:: with SMTP id w12mr11124980jae.126.1560439257104;
+        Thu, 13 Jun 2019 08:20:57 -0700 (PDT)
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com. [209.85.166.53])
+        by smtp.gmail.com with ESMTPSA id l11sm363030ioj.32.2019.06.13.08.20.54
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 08:20:54 -0700 (PDT)
+Received: by mail-io1-f53.google.com with SMTP id k20so17736808ios.10
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 08:20:54 -0700 (PDT)
+X-Received: by 2002:a5e:c241:: with SMTP id w1mr1990359iop.58.1560439253994;
+ Thu, 13 Jun 2019 08:20:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <0ada8523d5765391ddc6899815e0e1eb511bcb7d.1560429844.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20190610220118.5530-1-dianders@chromium.org> <20190612191618.GC3378@linux.intel.com>
+ <20190613135858.GB12791@linux.intel.com>
+In-Reply-To: <20190613135858.GB12791@linux.intel.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 13 Jun 2019 08:20:41 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UoSV9LKOTMuXKRfgFir+7_qPkuhSLN6XJEKPiRPuJJwg@mail.gmail.com>
+Message-ID: <CAD=FV=UoSV9LKOTMuXKRfgFir+7_qPkuhSLN6XJEKPiRPuJJwg@mail.gmail.com>
+Subject: Re: [PATCH] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM operations
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Guenter Roeck <groeck@chromium.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        apronin@chromium.org, Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org,
+        Luigi Semenzato <semenzato@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+
+On Thu, Jun 13, 2019 at 6:59 AM Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Wed, Jun 12, 2019 at 10:16:18PM +0300, Jarkko Sakkinen wrote:
+> > On Mon, Jun 10, 2019 at 03:01:18PM -0700, Douglas Anderson wrote:
+> > > From: Vadim Sukhomlinov <sukhomlinov@google.com>
+> > >
+> > > TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
+> > > future TPM operations. TPM 1.2 behavior was different, future TPM
+> > > operations weren't disabled, causing rare issues. This patch ensures
+> > > that future TPM operations are disabled.
+> > >
+> > > Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
+> > > [dianders: resolved merge conflicts with mainline]
+> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> >
+> > Nice catch. Thank you.
+> >
+> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>
+> Applied to my master branch. I also added a fixes tag.
+>
+> Can you check that it looks legit to you?
+
+Found the patch in your tree at
+<http://git.infradead.org/users/jjs/linux-tpmdd.git/commit/41f15a4f02092d531fb34b42a06e9a1603a7df27>.
+I'm decidedly a non-expert here, mostly just wrangling a patch that
+someone else came up with.  :-)  ...but let's see...
+
+I think you're asking if the "Fixes" looks sane.  I guess it depends
+on what you're trying to accomplish.  Certainly what you've tagged in
+"Fixes" marks the point where it would be easiest to backport this fix
+to.  ...but I think the problem is much older than that patch.
+
+As I understand it, this problem has existed for much longer.  I
+believe that ${SUBJECT} patch evolved from an investigation that Luigi
+Semenzato did back in 2013 when we got back some Chromebooks whose
+TPMs claimed that they had been "attacked".  Said another way, I
+believe it is an evolution of the patch <https://crrev.com/c/57988>
+("CHROMIUM: workaround for Infineon TPM broken defensive timeout").
+
+...so technically someone ought to want this on all old kernels.
+Maybe keep the "Cc: stable" but remove the "Fixes"?
 
 
-Le 13/06/2019 à 14:48, Christophe Leroy a écrit :
-> Moves it into talitos.h so that it can be used
-> from any place in talitos.c
-> 
-> This will be required for next
-> patch ("crypto: talitos - fix hash on SEC1")
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
-Cc: stable@vger.kernel.org
-
-> ---
->   drivers/crypto/talitos.c | 30 ------------------------------
->   drivers/crypto/talitos.h | 30 ++++++++++++++++++++++++++++++
->   2 files changed, 30 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
-> index 3b3e99f1cddb..5b401aec6c84 100644
-> --- a/drivers/crypto/talitos.c
-> +++ b/drivers/crypto/talitos.c
-> @@ -951,36 +951,6 @@ static int aead_des3_setkey(struct crypto_aead *authenc,
->   	goto out;
->   }
->   
-> -/*
-> - * talitos_edesc - s/w-extended descriptor
-> - * @src_nents: number of segments in input scatterlist
-> - * @dst_nents: number of segments in output scatterlist
-> - * @icv_ool: whether ICV is out-of-line
-> - * @iv_dma: dma address of iv for checking continuity and link table
-> - * @dma_len: length of dma mapped link_tbl space
-> - * @dma_link_tbl: bus physical address of link_tbl/buf
-> - * @desc: h/w descriptor
-> - * @link_tbl: input and output h/w link tables (if {src,dst}_nents > 1) (SEC2)
-> - * @buf: input and output buffeur (if {src,dst}_nents > 1) (SEC1)
-> - *
-> - * if decrypting (with authcheck), or either one of src_nents or dst_nents
-> - * is greater than 1, an integrity check value is concatenated to the end
-> - * of link_tbl data
-> - */
-> -struct talitos_edesc {
-> -	int src_nents;
-> -	int dst_nents;
-> -	bool icv_ool;
-> -	dma_addr_t iv_dma;
-> -	int dma_len;
-> -	dma_addr_t dma_link_tbl;
-> -	struct talitos_desc desc;
-> -	union {
-> -		struct talitos_ptr link_tbl[0];
-> -		u8 buf[0];
-> -	};
-> -};
-> -
->   static void talitos_sg_unmap(struct device *dev,
->   			     struct talitos_edesc *edesc,
->   			     struct scatterlist *src,
-> diff --git a/drivers/crypto/talitos.h b/drivers/crypto/talitos.h
-> index 32ad4fc679ed..95f78c6d9206 100644
-> --- a/drivers/crypto/talitos.h
-> +++ b/drivers/crypto/talitos.h
-> @@ -42,6 +42,36 @@ struct talitos_desc {
->   
->   #define TALITOS_DESC_SIZE	(sizeof(struct talitos_desc) - sizeof(__be32))
->   
-> +/*
-> + * talitos_edesc - s/w-extended descriptor
-> + * @src_nents: number of segments in input scatterlist
-> + * @dst_nents: number of segments in output scatterlist
-> + * @icv_ool: whether ICV is out-of-line
-> + * @iv_dma: dma address of iv for checking continuity and link table
-> + * @dma_len: length of dma mapped link_tbl space
-> + * @dma_link_tbl: bus physical address of link_tbl/buf
-> + * @desc: h/w descriptor
-> + * @link_tbl: input and output h/w link tables (if {src,dst}_nents > 1) (SEC2)
-> + * @buf: input and output buffeur (if {src,dst}_nents > 1) (SEC1)
-> + *
-> + * if decrypting (with authcheck), or either one of src_nents or dst_nents
-> + * is greater than 1, an integrity check value is concatenated to the end
-> + * of link_tbl data
-> + */
-> +struct talitos_edesc {
-> +	int src_nents;
-> +	int dst_nents;
-> +	bool icv_ool;
-> +	dma_addr_t iv_dma;
-> +	int dma_len;
-> +	dma_addr_t dma_link_tbl;
-> +	struct talitos_desc desc;
-> +	union {
-> +		struct talitos_ptr link_tbl[0];
-> +		u8 buf[0];
-> +	};
-> +};
-> +
->   /**
->    * talitos_request - descriptor submission request
->    * @desc: descriptor pointer (kernel virtual)
-> 
+-Doug
