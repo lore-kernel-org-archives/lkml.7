@@ -4,93 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFFAC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F13B6C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 905C52080A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C14F32080A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560466278;
-	bh=7v+UpNjtYcyMBqUon/23MgAyqyeNM1Eb920xzu6Xevc=;
+	s=default; t=1560466310;
+	bh=n2JPnpMFvVz/zObPrcIQ6tVi3WhDItg6vVe8mpvVQs8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BrPMLY75ewD8qA6GRNw9bsFZHAji/p/q/A3xQnPM+Es16qODbCgJRqdUwC2Zc7jL6
-	 T/bLcjo5ry3BEM2dn4z/PdsmqhogRLaPyH4V6PbXwxpq2YCfm6LEzRbvz3j6PdSnGj
-	 1I7Nf3EacWXDcIiJW+VDonUurAjMjLzXt+sr3Kuw=
+	b=Pzw+lRSEt6Y0t+0RV3gM7Uj4C4fJMR24OYd18i8l476VWHsjPbVDzeV5TJFC4SrX7
+	 WE/kEx6U/+qhDso/zCzVLGPl/B2THbTMGMkfXAyPCNy6U5uG9k2cpj0SW077uyOSr5
+	 0DW9qHOZyWLN2cFRqG1V/ZbEGBTuM9wNYyI4qpTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfFMWvR (ORCPT
+        id S1727289AbfFMWvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 18:51:17 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40045 "EHLO
+        Thu, 13 Jun 2019 18:51:49 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37907 "EHLO
         mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbfFMWvQ (ORCPT
+        with ESMTP id S1725809AbfFMWvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 18:51:16 -0400
-Received: by mail-qt1-f196.google.com with SMTP id a15so349092qtn.7;
-        Thu, 13 Jun 2019 15:51:16 -0700 (PDT)
+        Thu, 13 Jun 2019 18:51:48 -0400
+Received: by mail-qt1-f196.google.com with SMTP id n11so361842qtl.5;
+        Thu, 13 Jun 2019 15:51:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cv40RcWOMVy1JZtFpd3gJTvQihsNZLPm+qc6d4re47Q=;
-        b=M2lOgqiWtCviKLghJXWvHZ5liLTVVea03ffggYN8yipes+R5cf00bYA//BhTKxGOaY
-         DPgl1CtZ5ydcUz0IaIOtusTfRraVM7VNBI8Q4yk2MOhUgy3CGIL5acCtCIDweMH1k3P4
-         b/hU951sC0wrhYebApSRXrol575ioNJhRO0PDHdvi+n05jhpONxg3EWjW+kiUiIqPy2b
-         SQVz5TJ50w0+CDvlJTrrT/Gh2gKw9lU2d64umNxDp/cA7LSYsaSOcdvTK5sOMeIIVIdW
-         AGHPfkIDnhzOCOIT0h0jvybU0duCGypcC6iQCx3H0reddt4aQ/8oWEEpx57rQsuDbN/5
-         4k6Q==
-X-Gm-Message-State: APjAAAUTU+BtppkaA1Jbl+kg4a8faCbPMBPaEM001x2PAcyzCGqfRwH4
-        rnJ2VvSnW8d1qp4/Ppa2EyaPBEE=
-X-Google-Smtp-Source: APXvYqzyrbusjb6nMpbIGijvU32NhrU/T6DUb/Ee8K0MWe1C4b1O2CixCC2mnFnW35EKNJT+hN11+g==
-X-Received: by 2002:a0c:aecd:: with SMTP id n13mr5670753qvd.182.1560466275579;
-        Thu, 13 Jun 2019 15:51:15 -0700 (PDT)
+        bh=H1jLdvJZozzrqHX1esdeObu7Bz6wiJlvCPsfxGMitgE=;
+        b=Y25+fIIais/Ok5j4xJJggmm5FxRAcpzdRx2EPpShOXZfTD/bg+Dl3KvcgDOWBPBt3v
+         LZWOpdvouTzYjJAmFhjMAGPgUQQ9rr6naEFGyVZyz2bJarUZFLq6ypShWpTyVPmh9343
+         BHG/SijEsic9bwdVim6O5mwybc3pfesu3wCMU9D7dKPfOsCThPVXLE2MKD9FxuJVTJk8
+         YuGf6CWTUDqU9IqdTQPXR+2GgSGJ98gdubghmL26LJ7HB20+gpwAl9qdzUQFnB00YWCz
+         QEG7/3/+YTUSH5vLN+pd/GjMCCND3qX4qp/2dbkTHRs3HlB03E1ZcnZjJcXY12eDRLH9
+         t9Ng==
+X-Gm-Message-State: APjAAAW1cbap0FJIkQHxjFAxo73pFs8IWd90+Y1Z4J1rahv+3vtoSnlK
+        ExCHX6kFj/8g0woz80Or8g==
+X-Google-Smtp-Source: APXvYqzem4zi3kuCmkw6IRou/aoStUJUuSg911SowZ5Ya3+lMo/6NDr6HMK6vxTNwt20ngySVoIIkw==
+X-Received: by 2002:ac8:3345:: with SMTP id u5mr79299891qta.219.1560466307557;
+        Thu, 13 Jun 2019 15:51:47 -0700 (PDT)
 Received: from localhost ([64.188.179.243])
-        by smtp.gmail.com with ESMTPSA id p23sm402566qkm.55.2019.06.13.15.51.14
+        by smtp.gmail.com with ESMTPSA id g53sm548681qtk.65.2019.06.13.15.51.46
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 15:51:15 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 16:51:14 -0600
+        Thu, 13 Jun 2019 15:51:47 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 16:51:46 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Evan Green <evgreen@chromium.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [RFC/PATCH 1/5] reserved_mem: Add a devm_memremap_reserved_mem()
- API
-Message-ID: <20190613225114.GA16158@bogus>
-References: <20190517164746.110786-1-swboyd@chromium.org>
- <20190517164746.110786-2-swboyd@chromium.org>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>
+Cc:     linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: mtd: brcmnand: Make nand-ecc-strength
+ and nand-ecc-step-size optional
+Message-ID: <20190613225146.GA17725@bogus>
+References: <1558117914-35807-1-git-send-email-kdasu.kdev@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190517164746.110786-2-swboyd@chromium.org>
+In-Reply-To: <1558117914-35807-1-git-send-email-kdasu.kdev@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 May 2019 09:47:42 -0700, Stephen Boyd wrote:
-> We have a few drivers that need to get a reserved memory region, request
-> the region, and map the reserved memory with memremap(). Add an API to
-> do this all in one function call.
+On Fri, 17 May 2019 14:29:54 -0400, Kamal Dasu wrote:
+> nand-ecc-strength and nand-ecc-step-size can be made optional as
+> brcmanand driver can support using the nand_base driver detected
+> values.
 > 
-> Cc: Evan Green <evgreen@chromium.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 > ---
->  drivers/of/of_reserved_mem.c    | 45 +++++++++++++++++++++++++++++++++
->  include/linux/of_reserved_mem.h |  6 +++++
->  2 files changed, 51 insertions(+)
+>  Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
