@@ -2,120 +2,137 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F9FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995C7C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3775820B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E1521721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:44:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Ed2cJ/+Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbfFMTnz (ORCPT
+        id S1729749AbfFMToi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 15:43:55 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:41062 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729099AbfFMTnf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:43:35 -0400
-Received: from mr6.cc.vt.edu (mr6.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x5DJhXTF026366
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 15:43:33 -0400
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x5DJhS14016559
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 15:43:33 -0400
-Received: by mail-qt1-f197.google.com with SMTP id r57so56660qtj.21
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 12:43:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=X52JplcHmEO24WIh6SWrgs4nyWiRwpwGk4gdSxuZXbE=;
-        b=qvAzPvVOBBxzmKVxf3XjHyKM2/2BAXSIqjooqPgA86SYC/j9vu+BGbeiHHbWPwaT2M
-         8MjvJpb5kSiAn6wLtI0mDfOMeFhYDZBrtUQiIR+1D6YSYoYX4JGfckMbyvP/ZOpBcBVo
-         aptgPhC70b3RLWNhjjt2qaJhI7qYf1V90HYeCmWXAmVnYN7v6MyW3PrJC5mjcFkmEQ0Y
-         YpdbuCLaNGwJ6NqYYMrkOx5sym0KKqxIybambkvnPuq6E4Z6I7kJdDbhd0QBbXxDcu1N
-         0Y3mJkWWd78x+Quh+ehQ9lEo61KdtxNSt3pOYYF4ZGlLzOsPDhm6qJ9VlR6WEMtYFxRC
-         NeIw==
-X-Gm-Message-State: APjAAAViEEAXd76OGm5nJ42EOv/eLcN2ojcvMFkhViRMuBvu5si2gr6e
-        vSTIZHQavI2ME7utez4zqggcRF3KcEC/QqLUQP9bZAMo7+pNNYsTox0LL9KAJ3o11ktlF9EILd3
-        JCYvyNsDcOkLOY1/nMTgWIZjdIeIyurIEiE0=
-X-Received: by 2002:a37:9904:: with SMTP id b4mr69899933qke.159.1560455008498;
-        Thu, 13 Jun 2019 12:43:28 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqw/GJE2V91Zh0MxHybXn2y5+GO1Jea75666JvUr6PlEA6YbxgoAIKT/lUM59yF2MsveYuo8fg==
-X-Received: by 2002:a37:9904:: with SMTP id b4mr69899921qke.159.1560455008211;
-        Thu, 13 Jun 2019 12:43:28 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::359])
-        by smtp.gmail.com with ESMTPSA id g10sm255967qkk.91.2019.06.13.12.43.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 12:43:26 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Shyam Saini <mayhs11saini@gmail.com>
-Cc:     Pintu Agarwal <pintu.ping@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>, pedro@palves.net,
-        Kernelnewbies <kernelnewbies@kernelnewbies.org>
-Subject: Re: Pause a process execution from external program
-In-Reply-To: <CAOfkYf7BZ1Ttrm7iVioq4mxZcJy7V44gNmusavPzgi=59=TY6g@mail.gmail.com>
-References: <CAOuPNLifSHQmi+jCMzRGYz3kzct+NB_vyv-yiwL91adRZPkTrQ@mail.gmail.com>
- <CAOfkYf7BZ1Ttrm7iVioq4mxZcJy7V44gNmusavPzgi=59=TY6g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1560455005_1690P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 13 Jun 2019 15:43:25 -0400
-Message-ID: <13999.1560455005@turing-police>
+        Thu, 13 Jun 2019 15:44:38 -0400
+Received: from mail-eopbgr20080.outbound.protection.outlook.com ([40.107.2.80]:44263
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727357AbfFMToh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 15:44:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OvLGFdjYPSk5owAJMGCDMH03XFP7/53cVwVq6hBPuFo=;
+ b=Ed2cJ/+YMNQ3gMgiL3hYsSLPcHfBcQYG5pSN5f6NxLHXfl3Kshr/DJnditakIoT/ustedGYwn3//KKVkqICj+Pd0TRdwHct9MtBrzsWRsbfQawdAu8Kyy5FT+mgxeiSwElMrMLFDN0jKOqHS050xEntjV2cZiWJtmqmx4VPiS6s=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5006.eurprd05.prod.outlook.com (20.177.52.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.10; Thu, 13 Jun 2019 19:44:34 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
+ 19:44:34 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 18/22] mm: mark DEVICE_PUBLIC as broken
+Thread-Topic: [PATCH 18/22] mm: mark DEVICE_PUBLIC as broken
+Thread-Index: AQHVIcyVeqgMzBs0VkumwilsEzSkhqaZ/TwA
+Date:   Thu, 13 Jun 2019 19:44:34 +0000
+Message-ID: <20190613194430.GY22062@mellanox.com>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-19-hch@lst.de>
+In-Reply-To: <20190613094326.24093-19-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR01CA0013.prod.exchangelabs.com (2603:10b6:208:10c::26)
+ To VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7181fa22-98f5-48dc-e792-08d6f0378f5e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5006;
+x-ms-traffictypediagnostic: VI1PR05MB5006:
+x-microsoft-antispam-prvs: <VI1PR05MB500620CDF68041957CED00D4CFEF0@VI1PR05MB5006.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(136003)(396003)(366004)(39860400002)(199004)(189003)(11346002)(33656002)(52116002)(486006)(99286004)(76176011)(7416002)(386003)(229853002)(2906002)(66066001)(102836004)(6506007)(54906003)(3846002)(6512007)(6916009)(6436002)(6486002)(186003)(26005)(476003)(446003)(2616005)(6116002)(36756003)(305945005)(64756008)(316002)(66446008)(8676002)(66556008)(66476007)(25786009)(68736007)(73956011)(5660300002)(66946007)(4326008)(81166006)(86362001)(7736002)(81156014)(14454004)(6246003)(8936002)(71200400001)(53936002)(478600001)(71190400001)(256004)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5006;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8o9AX6DKSupLoEBQPmNIAeDs0XsDzxWMu1ammaJCRZ4m0UtQkAp+mB9y3YXFw/KeMRqnlGJbmEkNS4Y1L55k+k28Axlvfg0OrC4JK371fZPUrZryDeShbLSLDLA7Oc5N8TWLi5lVvi120e+sDYIcCAPG+nMAqZ6OU0JcG6hpi4WpHdKfyZGHr2AMLp6V4ujTgRGRdotEDx/rdKJ3YC3pPwR6003PEgwgxKGyhVRsc3am/dDh/AO1Sy9weZniqKAdm+jfIU1lCdDFZdZyt1n75f1xwPd0uxiB335X0DZ7IcVL5VXGr2wPd12e/cGHxrRzso9KQMQs5neAeUu0/EdtT471kVIGagmjFgO/zeNLmx4RLbLPtKJEniKqapVzgxA16XfDryJb8ZhUt+0n7Lz7IV9KbJik/jVSlbJOjAPSopg=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <D44695B53F740940B0050C945B58AD6F@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7181fa22-98f5-48dc-e792-08d6f0378f5e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 19:44:34.1111
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5006
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1560455005_1690P
-Content-Type: text/plain; charset=us-ascii
+On Thu, Jun 13, 2019 at 11:43:21AM +0200, Christoph Hellwig wrote:
+> The code hasn't been used since it was added to the tree, and doesn't
+> appear to actually be usable.  Mark it as BROKEN until either a user
+> comes along or we finally give up on it.
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>  mm/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index 0d2ba7e1f43e..406fa45e9ecc 100644
+> +++ b/mm/Kconfig
+> @@ -721,6 +721,7 @@ config DEVICE_PRIVATE
+>  config DEVICE_PUBLIC
+>  	bool "Addressable device memory (like GPU memory)"
+>  	depends on ARCH_HAS_HMM
+> +	depends on BROKEN
+>  	select HMM
+>  	select DEV_PAGEMAP_OPS
 
-On Thu, 13 Jun 2019 13:22:12 +0530, Shyam Saini said:
+This seems a bit harsh, we do have another kconfig that selects this
+one today:
 
-> from command line we use ctrl-z to stop execution of a foreground
-> process but you can program
-> SIGTSTP signal handler in your application code to do the same.
+config DRM_NOUVEAU_SVM
+        bool "(EXPERIMENTAL) Enable SVM (Shared Virtual Memory) support"
+        depends on ARCH_HAS_HMM
+        depends on DRM_NOUVEAU
+        depends on STAGING
+        select HMM_MIRROR
+        select DEVICE_PRIVATE
+        default n
+        help
+          Say Y here if you want to enable experimental support for
+          Shared Virtual Memory (SVM).
 
-Note that if you simply fail to include a signal handler for SIGSTOP and
-SIGCONT, it will Do The Right Thing.  The only programs that need worry about
-SIGTSTP are ones like 'vi' that may want to do something (like restore the
-terminal state from raw to cooked mode, etc) before they stop.  That's why you
-can control-z /bin/cat without it having to include a signal handler for it.
+Maybe it should be depends on STAGING not broken?
 
-% kill -STOP `pidof process-to-stop`   # stop it
-% kill -CONT `pidof process-to-stop`  # and make it run again.
+or maybe nouveau_svm doesn't actually need DEVICE_PRIVATE?
 
-No source code modifications needed.  No source needed.
-
-Now, if you want to make it stop at a *specific point*, then you're into
-ptrace territory, and source will be helpful.
-
-
---==_Exmh_1560455005_1690P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXQKnXAdmEQWDXROgAQIeDw//Vd5MvV/dpjk/37ifTcCOaMbGdI+3J42H
-ezpQoqoCZcJWasZ9KT9C/UajS7SSbxkCBWvVxo0DfD74QoKkCKQggwEqSBzfXxL/
-JgdbtjIJobc2uR164Qw5H9olFEp2gXKRe1CudT0EhNr6c0Rg78+LQcDocOylsSNl
-4zo/SptYmpVPZsgPhnmNPI+y8A0kYYNDSUkVSyh6rgmbrebeXvL3XW/fvwTuSOow
-ZRaJrp04pwjPKb3YgV+TSySwoMyj7l84NS/RLaLrjXLj34t8dCgLJWOdfv+liskL
-u+ByCt0w6sAr/tCfx05d+PH1elW1RC4lRYwUbfMIpXopQYBlRp0tO+A1nug/dnBA
-04PbD0mBz7ECETJsgmY9JY5g7yEdjRUDBuiQabyyA4sbcLMH4Cr8ANflwbLB14Lj
-WRfYcsYRHQdOeK4MeKwPnY3zqDqQ5m5OuKrNKUz6plM/fvrhhkDTwSnV6UkIfqXH
-3gy2xlFARWN+vIcRHs6ZPmo7ocffqilbsk8WMVO9HOsE0NgX8VFgvWqkTD72e6/q
-i39rfP0iWaugJMN4+ZO9VK2NYvUCQS8/8n4+NdtVwl96OEyHGmSK51E901EL4f+b
-EBPhFAk/EXqm/DIK3i7uPmte3lWHXXgGKcwkdWMfd8KUp73agSHN41VPXQIl5CRj
-bklUeXvuZKs=
-=hF6e
------END PGP SIGNATURE-----
-
---==_Exmh_1560455005_1690P--
+Jason
