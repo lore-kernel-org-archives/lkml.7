@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CACCC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB03C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7AFF2147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7932120644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442794;
-	bh=1PMS6hWWvz97HOrPx6qSXzxl5RAi/lk5B02P33A59Ms=;
+	s=default; t=1560442800;
+	bh=jI199WNTKiHrZNIkqpov24oygH7JLcTpsl/LaT297MA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ATX3aw75Hw/+/KgimooEcsWhT+hFEAdxqOYKWhRTXMgpaqItYwK4KNbJn1NWtkrbQ
-	 cV9jci53nNP0qcytbNqzDGmSpnCoy1FYmu7kRVujrBnW7+GiGtc+k0xCQKhZ8NSifn
-	 rbonqdywOI0uzLxPQydr9SrmS6AeLpjTo37NkUr4=
+	b=mGd3uQEgc+P3JL3N5Y45Hv+L+y/Hye9wKnD41AqaSSRhwQ7t6ftZrGUfnQlD53q6d
+	 vfuNP4nrg9uldzpuUtPWTGMGfE3jVB/XHAMumwS7oKQp7q8+ui4nWNHafDlCPyOcQA
+	 mwfiKo3U2Xifeu+m5OE3DBhlf5zAuQoCpvRacdVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391805AbfFMQTt (ORCPT
+        id S2392099AbfFMQT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:19:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57224 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:19:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731090AbfFMIjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:39:46 -0400
+        id S1731088AbfFMIjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:39:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC13621479;
-        Thu, 13 Jun 2019 08:39:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 556AE21479;
+        Thu, 13 Jun 2019 08:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415185;
-        bh=1PMS6hWWvz97HOrPx6qSXzxl5RAi/lk5B02P33A59Ms=;
+        s=default; t=1560415179;
+        bh=jI199WNTKiHrZNIkqpov24oygH7JLcTpsl/LaT297MA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZZZiuinkxq8NEwTgJBtbmm/5qs1wTCQ8P1zAxTzX7HWSB2MNEInoDwmqfOSXwWjxh
-         rhsOCgipkwvW4CZSLRqHV/b+3gaZ20etQOzy/ITfMWnxn3/C7WnPuDttiR87AVtfws
-         Jct6+k0BFYL9c9NyTQy3dDIocQShWnbIw1i2ikPw=
+        b=tRZ4P8WjNulYLRP6M5PnMO/HY6FM8p1Xdz/kUnWR4wgpMXS0quz8AuFTWhzQyJeRp
+         j3HZCpj0TFCJ0BouYPOJFeltd0tWb7aFeEB0boKHvhCp/7CmeprvkLmp+VLjQ3S/PI
+         dwZY/hfbVk21o2KL2IUpHpzHeDCZ2p/nRWnDyGM4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 033/118] f2fs: fix to avoid panic in do_recover_data()
-Date:   Thu, 13 Jun 2019 10:32:51 +0200
-Message-Id: <20190613075645.411184691@linuxfoundation.org>
+Subject: [PATCH 4.19 031/118] mailbox: stm32-ipcc: check invalid irq
+Date:   Thu, 13 Jun 2019 10:32:49 +0200
+Message-Id: <20190613075645.302463179@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -60,76 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 22d61e286e2d9097dae36f75ed48801056b77cac ]
+[ Upstream commit 68a1c8485cf83734d4da9d81cd3b5d2ae7c0339b ]
 
-As Jungyeon reported in bugzilla:
+On failure of_irq_get() returns a negative value or zero, which is
+not handled as an error in the existing implementation.
+Instead of using this API, use platform_get_irq() that returns
+exclusively a negative value on failure.
+Also, do not output an error log in case of defer probe error.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203227
-
-- Overview
-When mounting the attached crafted image, following errors are reported.
-Additionally, it hangs on sync after trying to mount it.
-
-The image is intentionally fuzzed from a normal f2fs image for testing.
-Compile options for F2FS are as follows.
-CONFIG_F2FS_FS=y
-CONFIG_F2FS_STAT_FS=y
-CONFIG_F2FS_FS_XATTR=y
-CONFIG_F2FS_FS_POSIX_ACL=y
-CONFIG_F2FS_CHECK_FS=y
-
-- Reproduces
-mkdir test
-mount -t f2fs tmp.img test
-sync
-
-- Messages
- kernel BUG at fs/f2fs/recovery.c:549!
- RIP: 0010:recover_data+0x167a/0x1780
- Call Trace:
-  f2fs_recover_fsync_data+0x613/0x710
-  f2fs_fill_super+0x1043/0x1aa0
-  mount_bdev+0x16d/0x1a0
-  mount_fs+0x4a/0x170
-  vfs_kern_mount+0x5d/0x100
-  do_mount+0x200/0xcf0
-  ksys_mount+0x79/0xc0
-  __x64_sys_mount+0x1c/0x20
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-During recovery, if ofs_of_node is inconsistent in between recovered
-node page and original checkpointed node page, let's just fail recovery
-instead of making kernel panic.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/recovery.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/mailbox/stm32-ipcc.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index ae0e5f2e67b4..bf5c5f4fa77e 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -485,7 +485,15 @@ retry_dn:
- 		goto err;
+diff --git a/drivers/mailbox/stm32-ipcc.c b/drivers/mailbox/stm32-ipcc.c
+index 533b0da5235d..ca1f993c0de3 100644
+--- a/drivers/mailbox/stm32-ipcc.c
++++ b/drivers/mailbox/stm32-ipcc.c
+@@ -8,9 +8,9 @@
+ #include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/interrupt.h>
++#include <linux/io.h>
+ #include <linux/mailbox_controller.h>
+ #include <linux/module.h>
+-#include <linux/of_irq.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_wakeirq.h>
  
- 	f2fs_bug_on(sbi, ni.ino != ino_of_node(page));
--	f2fs_bug_on(sbi, ofs_of_node(dn.node_page) != ofs_of_node(page));
-+
-+	if (ofs_of_node(dn.node_page) != ofs_of_node(page)) {
-+		f2fs_msg(sbi->sb, KERN_WARNING,
-+			"Inconsistent ofs_of_node, ino:%lu, ofs:%u, %u",
-+			inode->i_ino, ofs_of_node(dn.node_page),
-+			ofs_of_node(page));
-+		err = -EFAULT;
-+		goto err;
-+	}
+@@ -240,9 +240,11 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
  
- 	for (; start < end; start++, dn.ofs_in_node++) {
- 		block_t src, dest;
+ 	/* irq */
+ 	for (i = 0; i < IPCC_IRQ_NUM; i++) {
+-		ipcc->irqs[i] = of_irq_get_byname(dev->of_node, irq_name[i]);
++		ipcc->irqs[i] = platform_get_irq_byname(pdev, irq_name[i]);
+ 		if (ipcc->irqs[i] < 0) {
+-			dev_err(dev, "no IRQ specified %s\n", irq_name[i]);
++			if (ipcc->irqs[i] != -EPROBE_DEFER)
++				dev_err(dev, "no IRQ specified %s\n",
++					irq_name[i]);
+ 			ret = ipcc->irqs[i];
+ 			goto err_clk;
+ 		}
+@@ -263,9 +265,10 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
+ 
+ 	/* wakeup */
+ 	if (of_property_read_bool(np, "wakeup-source")) {
+-		ipcc->wkp = of_irq_get_byname(dev->of_node, "wakeup");
++		ipcc->wkp = platform_get_irq_byname(pdev, "wakeup");
+ 		if (ipcc->wkp < 0) {
+-			dev_err(dev, "could not get wakeup IRQ\n");
++			if (ipcc->wkp != -EPROBE_DEFER)
++				dev_err(dev, "could not get wakeup IRQ\n");
+ 			ret = ipcc->wkp;
+ 			goto err_clk;
+ 		}
 -- 
 2.20.1
 
