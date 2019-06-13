@@ -2,79 +2,102 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD52CC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37359C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C13AB207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF86207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:00:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SvRYAM6V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732798AbfFMPAD (ORCPT
+        id S1732870AbfFMPAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:00:03 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:35413 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732598AbfFMOul (ORCPT
+        Thu, 13 Jun 2019 11:00:23 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49828 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732590AbfFMOt6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:50:41 -0400
-Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hbR3m-0002Ty-4J; Thu, 13 Jun 2019 16:50:38 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 3/6] workqueue: Don't assume that the callback has interrupts disabled
-Date:   Thu, 13 Jun 2019 16:50:24 +0200
-Message-Id: <20190613145027.27753-4-bigeasy@linutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190613145027.27753-1-bigeasy@linutronix.de>
-References: <20190613145027.27753-1-bigeasy@linutronix.de>
+        Thu, 13 Jun 2019 10:49:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=WMyyxODgsxZ/XkDr48HWA7aTA4P32ySnPu90ZE1usUA=; b=SvRYAM6V25RdXhhsF2XFD/myCy
+        xb90MjFff+RemiPe/zmVRTwQhoIo5cqAF2taZi8MUOejdLT1cBDi4MzIr/OkvNaoWh9WPy78Y9iGa
+        km6RgOwE7MG8qQFY13YKdOYFyn6V6JWac8/2o05TV/mDxP5THfZdU34j/GMH7AaMmOqeVG5aDRGck
+        dbH6tYpypSW4SkNfYadSbfEYCHgblPGISG5mOtez1Wu92EQCQWKUOcaDGfrR2/Ic2uOjlu72PANeR
+        IrYhaIbx5gzo/xLXBtkiC/5kXhTzhv1AERPNvZZ0goFmnYWMrfD555r42SloB+Sv1bvNB2b5jQhg3
+        MQHwsJRQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbR35-0004ea-Lj; Thu, 13 Jun 2019 14:49:55 +0000
+Subject: Re: [PATCH 02/13] uapi: General notification ring definitions [ver
+ #4]
+To:     David Howells <dhowells@redhat.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        viro@zeniv.linux.org.uk, raven@themaw.net,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <6b6f5bb0-1426-239b-ac9f-281e31ddcd04@infradead.org>
+ <20190607151228.GA1872258@magnolia>
+ <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk>
+ <155991706083.15579.16359443779582362339.stgit@warthog.procyon.org.uk>
+ <29222.1559922719@warthog.procyon.org.uk>
+ <30226.1560432885@warthog.procyon.org.uk>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <575fa290-961f-8dcd-3b76-4608daa5ee0e@infradead.org>
+Date:   Thu, 13 Jun 2019 07:49:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <30226.1560432885@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Due to the TIMER_IRQSAFE flag, the timer callback is invoked with
-disabled interrupts. On -RT the callback is invoked in softirq context
-with enabled interrupts. Since the interrupts are threaded, there are
-are no in_irq() users. The local_bh_disable() around the threaded
-handler ensures that there is either a timer or a threaded handler
-active on the CPU.
+On 6/13/19 6:34 AM, David Howells wrote:
+> Randy Dunlap <rdunlap@infradead.org> wrote:
+> 
+>> What is the problem with inline functions in UAPI headers?
+> 
+> It makes compiler problems more likely; it increases the potential for name
+> collisions with userspace; it makes for more potential problems if the headers
+> are imported into some other language; and it's not easy to fix a bug in one
+> if userspace uses it, just in case fixing the bug breaks userspace.
+> 
+> Further, in this case, the first of Darrick's functions (calculating the
+> length) is probably reasonable, but the second is not.  It should crank the
+> tail pointer and then use that, but that requires 
+> 
+>>>> Also, weird multiline comment style.
+>>>
+>>> Not really.
+>>
+>> Yes really.
+> 
+> No.  It's not weird.  If anything, the default style is less good for several
+> reasons.  I'm going to deal with this separately as I need to generate some
+> stats first.
+> 
+> David
+> 
 
-Disable interrupts before __queue_work() is invoked from the timer
-callback.
+OK, maybe you are objecting to the word "weird."  So the multi-line comment style
+that you used is not the preferred Linux kernel multi-line comment style
+(except in networking code) [Documentation/process/coding-style.rst] that has been
+in effect for 20+ years AFAIK.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- kernel/workqueue.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 601d61150b65d..a3c2959e5c4f0 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -1611,9 +1611,11 @@ EXPORT_SYMBOL_GPL(queue_work_node);
- void delayed_work_timer_fn(struct timer_list *t)
- {
- 	struct delayed_work *dwork = from_timer(dwork, t, timer);
-+	unsigned long flags;
- 
--	/* should have been called from irqsafe timer with irq already off */
-+	local_irq_save(flags);
- 	__queue_work(dwork->cpu, dwork->wq, &dwork->work);
-+	local_irq_restore(flags);
- }
- EXPORT_SYMBOL(delayed_work_timer_fn);
- 
 -- 
-2.20.1
-
+~Randy
