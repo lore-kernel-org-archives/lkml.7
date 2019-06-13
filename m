@@ -2,131 +2,86 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FBDC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEA4C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E542054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 771D121743
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:15:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560453306;
+	bh=Oa0h+VkM+jYwz1CDfagH3gFgn0xbgAhOJQVjNVroz4s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=J+9woiT+w4O1Tz/NIQ88QY40vNSG7exRN3dsDnoaQJ/PKuWM60QwcnFNsfE5xqXcT
+	 ifFfv15McApwEBFTwg7h9LO0VJbXuBU9jkIVqF5K5X0GMdngViHWZHsn2jtRTwWDCL
+	 lElOjWTIIPbnHRGjgaNA49tclbjv1S8VudZoEOu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbfFMTNO (ORCPT
+        id S1727783AbfFMTPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 15:13:14 -0400
-Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:36676 "EHLO
-        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725842AbfFMTNN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:13:13 -0400
-Received: from [4.30.142.84] (helo=srivatsab-a01.vmware.com)
-        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <srivatsa@csail.mit.edu>)
-        id 1hbV9n-0009Ya-TR; Thu, 13 Jun 2019 15:13:08 -0400
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
- <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
- <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
- <686D6469-9DE7-4738-B92A-002144C3E63E@linaro.org>
- <01d55216-5718-767a-e1e6-aadc67b632f4@csail.mit.edu>
- <CA8A23E2-6F22-4444-9A20-E052A94CAA9B@linaro.org>
- <cc148388-3c82-d7c0-f9ff-8c31bb5dc77d@csail.mit.edu>
- <6FE0A98F-1E3D-4EF6-8B38-2C85741924A4@linaro.org>
- <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
- <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
- <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
- <5b71028c-72f0-73dd-0cd5-f28ff298a0a3@csail.mit.edu>
- <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
- <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
- <7B74A790-BD98-412B-ADAB-3B513FB1944E@linaro.org>
- <6a6f4aa4-fc95-f132-55b2-224ff52bd2d8@csail.mit.edu>
- <7c5e9d11-4a3d-7df4-c1e6-7c95919522ab@csail.mit.edu>
- <43486E4F-2237-4E40-BDFE-07CFCCFFFA25@linaro.org>
-From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Message-ID: <72856150-d678-42bd-0377-82dbee6513ba@csail.mit.edu>
-Date:   Thu, 13 Jun 2019 12:13:05 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Thu, 13 Jun 2019 15:15:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726893AbfFMTPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 15:15:04 -0400
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A32F521743
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 19:15:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560453303;
+        bh=Oa0h+VkM+jYwz1CDfagH3gFgn0xbgAhOJQVjNVroz4s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=y0ztSVbqiejhheHcChycJTSyM4/b7Dt0oiJWM+A6VsyqBm2RxLwvOBg/09wnR9y5x
+         62giVDer9tx24qEsHhEvFUfn7VUHwb2/c6v0Qde3TObUoZ6TNPl+WV8HuOfjMv0Y8q
+         7/YFm2bwGyR+Vj9jjypEuxJpgDQYLmic+igSRqgs=
+Received: by mail-wr1-f50.google.com with SMTP id m3so2988041wrv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 12:15:03 -0700 (PDT)
+X-Gm-Message-State: APjAAAW+OyrcLYOUuZTt6mRr3ZXFUjG412W6vBrQnGLoUrGK2DII6pK+
+        a26e00Aju+/P0C4ymLHqjjoh11xNz84x5Xg/eDTydA==
+X-Google-Smtp-Source: APXvYqy+WvOHJFOQlD8iR/jd81NhKk+vz0wZOKgbBUOzHS4PAhfNiAjt+elP2EqMtMeviXbLy2diLOLO4OyVUlf2Sxk=
+X-Received: by 2002:a5d:6207:: with SMTP id y7mr40594967wru.265.1560453302165;
+ Thu, 13 Jun 2019 12:15:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <43486E4F-2237-4E40-BDFE-07CFCCFFFA25@linaro.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1560198181.git.luto@kernel.org> <25fd7036cefca16c68ecd990e05e05a8ad8fe8b2.1560198181.git.luto@kernel.org>
+ <201906101344.018BE4C5C1@keescook>
+In-Reply-To: <201906101344.018BE4C5C1@keescook>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 13 Jun 2019 12:14:50 -0700
+X-Gmail-Original-Message-ID: <CALCETrUYNavL8pu4jQqJjoT=PdeRyjeoLDn=0r7h=2XsHDMezQ@mail.gmail.com>
+Message-ID: <CALCETrUYNavL8pu4jQqJjoT=PdeRyjeoLDn=0r7h=2XsHDMezQ@mail.gmail.com>
+Subject: Re: [PATCH 5/5] x86/vsyscall: Change the default vsyscall mode to xonly
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/19 10:46 PM, Paolo Valente wrote:
-> 
->> Il giorno 12 giu 2019, alle ore 00:34, Srivatsa S. Bhat <srivatsa@csail.mit.edu> ha scritto:
->>
-[...]
->>
->> Hi Paolo,
->>
-> 
-> Hi
-> 
->> Hope you are doing great!
->>
-> 
-> Sort of, thanks :)
-> 
->> I was wondering if you got a chance to post these patches to LKML for
->> review and inclusion... (No hurry, of course!)
->>
-> 
-> 
-> I'm having troubles testing these new patches on 5.2-rc4.  As it
-> happened with the first release candidates for 5.1, the CPU of my test
-> machine (Intel Core i7-2760QM@2.40GHz) is so slowed down that results
-> are heavily distorted with every I/O scheduler.
-> 
-
-Oh, that's unfortunate!
-
-> Unfortunately, I'm not competent enough to spot the cause of this
-> regression in a feasible amount of time.  I hope it'll go away with
-> next release candidates, or I'll test on 5.1.
-> 
-
-Sounds good to me!
-
->> Also, since your fixes address the performance issues in BFQ, do you
->> have any thoughts on whether they can be adapted to CFQ as well, to
->> benefit the older stable kernels that still support CFQ?
->>
-> 
-> I have implanted my fixes on the existing throughput-boosting
-> infrastructure of BFQ.  CFQ doesn't have such an infrastructure.
-> 
-> If you need I/O control with older kernels, you may want to check my
-> version of BFQ for legacy block, named bfq-sq and available in this
-> repo:
-> https://github.com/Algodev-github/bfq-mq/
+On Mon, Jun 10, 2019 at 1:44 PM Kees Cook <keescook@chromium.org> wrote:
 >
+> On Mon, Jun 10, 2019 at 01:25:31PM -0700, Andy Lutomirski wrote:
+> > The use case for full emulation over xonly is very esoteric.  Let's
+> > change the default to the safer xonly mode.
+>
+> Perhaps describe the esoteric cases here (and maybe in the Kconfig help
+> text)? That should a user determine if they actually need it. (What
+> would the failure under xonly look like for someone needing emulate?)
 
-Great! Thank you for sharing this!
- 
-> I'm willing to provide you with any information or help if needed.
-> 
-Thank you!
+I added it to the Kconfig text.
 
-Regards,
-Srivatsa
-VMware Photon OS
+Right now, the failure will just be a segfault.  I could add some
+logic so that it would log "invalid read to vsyscall page -- fix your
+userspace or boot with vsyscall=emulate".  Do you think that's
+important?
+
+--Andy
