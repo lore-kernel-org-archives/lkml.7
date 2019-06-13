@@ -2,61 +2,78 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E80B0C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B8CC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC8321473
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7709C20449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:13:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388257AbfFMPNE (ORCPT
+        id S1732846AbfFMPNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:13:04 -0400
-Received: from mga02.intel.com ([134.134.136.20]:6651 "EHLO mga02.intel.com"
+        Thu, 13 Jun 2019 11:13:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39916 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732613AbfFMPND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:13:03 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 08:13:02 -0700
-X-ExtLoop1: 1
-Received: from bbouchn-mobl.ger.corp.intel.com (HELO localhost) ([10.252.35.22])
-  by orsmga006.jf.intel.com with ESMTP; 13 Jun 2019 08:12:58 -0700
-Date:   Thu, 13 Jun 2019 18:12:57 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, jens.wiklander@linaro.org,
-        corbet@lwn.net, dhowells@redhat.com, jejb@linux.ibm.com,
-        zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
-        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tee-dev@lists.linaro.org
-Subject: Re: [RFC 1/7] tee: optee: allow kernel pages to register as shm
-Message-ID: <20190613151257.GA18488@linux.intel.com>
-References: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
- <1560421833-27414-2-git-send-email-sumit.garg@linaro.org>
+        id S1732268AbfFMNfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 09:35:01 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C97C330C7E65;
+        Thu, 13 Jun 2019 13:34:52 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-109.rdu2.redhat.com [10.10.120.109])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B8B695C3F8;
+        Thu, 13 Jun 2019 13:34:50 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <6b6f5bb0-1426-239b-ac9f-281e31ddcd04@infradead.org>
+References: <6b6f5bb0-1426-239b-ac9f-281e31ddcd04@infradead.org> <20190607151228.GA1872258@magnolia> <155991702981.15579.6007568669839441045.stgit@warthog.procyon.org.uk> <155991706083.15579.16359443779582362339.stgit@warthog.procyon.org.uk> <29222.1559922719@warthog.procyon.org.uk>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     dhowells@redhat.com, "Darrick J. Wong" <darrick.wong@oracle.com>,
+        viro@zeniv.linux.org.uk, raven@themaw.net,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/13] uapi: General notification ring definitions [ver #4]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560421833-27414-2-git-send-email-sumit.garg@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <30225.1560432885.1@warthog.procyon.org.uk>
+Date:   Thu, 13 Jun 2019 14:34:45 +0100
+Message-ID: <30226.1560432885@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 13 Jun 2019 13:35:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 04:00:27PM +0530, Sumit Garg wrote:
-> Kernel pages are marked as normal type memory only so allow kernel pages
-> to be registered as shared memory with OP-TEE.
+Randy Dunlap <rdunlap@infradead.org> wrote:
+
+> What is the problem with inline functions in UAPI headers?
+
+It makes compiler problems more likely; it increases the potential for name
+collisions with userspace; it makes for more potential problems if the headers
+are imported into some other language; and it's not easy to fix a bug in one
+if userspace uses it, just in case fixing the bug breaks userspace.
+
+Further, in this case, the first of Darrick's functions (calculating the
+length) is probably reasonable, but the second is not.  It should crank the
+tail pointer and then use that, but that requires 
+
+> >> Also, weird multiline comment style.
+> > 
+> > Not really.
 > 
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> Yes really.
 
-Just out of pure interest why this was not allowed before?
+No.  It's not weird.  If anything, the default style is less good for several
+reasons.  I'm going to deal with this separately as I need to generate some
+stats first.
 
-/Jarkko
+David
