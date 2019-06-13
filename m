@@ -2,88 +2,122 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C60FC31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC61C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC7520665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560444992;
-	bh=E3BVSamBEJXWxz5OabhY2ueDy3SNwdh0BFD9+FBsprM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cYQRa55ERiz8vXSOJaQ+b6EZTSNtjSetFALCqx5fG3DvSGWXnhWdkSheeyrkmZ77u
-	 kTy44NStfB2+RkRT1SBhxgLZswCtPjeo+sdWoZwn05abhXTDr1IkPBe1LC7Ne71Foi
-	 ZRnomN9vvdRkERwQd2ZJrGTtMsxjnbyc0YXDzHX4=
+	by mail.kernel.org (Postfix) with ESMTP id A02D020665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731545AbfFMQ4Z (ORCPT
+        id S2391075AbfFMQ4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:56:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42376 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729970AbfFMBjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 21:39:09 -0400
-Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59E1520B7C;
-        Thu, 13 Jun 2019 01:39:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560389948;
-        bh=E3BVSamBEJXWxz5OabhY2ueDy3SNwdh0BFD9+FBsprM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rxQ1w6A2RQZRn7b7ecknRx0Tz6fy2EaASij1/HQZci8yLHrzeuqzCkPKS2yn9QJEN
-         nK8YNrAuZ2hBU4KK+VbD874D5qOGlu97wBEGAwClolQhR8FDBmoSBTZWEWX4arbYZ2
-         +Y/MTKIdfKPfrpKHr7UTrB2d2B5BCjattasT3JrQ=
-Date:   Thu, 13 Jun 2019 09:38:32 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Oliver Graute <oliver.graute@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, narmstrong@baylibre.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 0/2] Variscite DART-6UL SoM support
-Message-ID: <20190613013830.GC20747@dragon>
-References: <1559839624-12286-1-git-send-email-oliver.graute@gmail.com>
+        Thu, 13 Jun 2019 12:56:39 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53446 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729963AbfFMB1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 21:27:08 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4BA17D24DE5DE46CF656;
+        Thu, 13 Jun 2019 09:27:05 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 13 Jun 2019
+ 09:27:01 +0800
+Subject: Re: [PATCH] media: ttpci: Fix build error without RC_CORE
+To:     Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+References: <20190612034310.4640-1-yuehaibing@huawei.com>
+ <20190612074254.eky2xo7bajorkhfy@gofer.mess.org>
+ <20190612063708.64498b44@coco.lan>
+ <20190612175629.srfw7ybr256se5rt@gofer.mess.org>
+CC:     <tglx@linutronix.de>, <corbet@lwn.net>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <78f4a71f-8311-7c1b-c1a4-69624a92add4@huawei.com>
+Date:   Thu, 13 Jun 2019 09:27:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1559839624-12286-1-git-send-email-oliver.graute@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190612175629.srfw7ybr256se5rt@gofer.mess.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 06:47:00PM +0200, Oliver Graute wrote:
-> Need feedback to the following patches which adds support for a DART-6UL Board
-> 
-> Product Page: https://www.variscite.com/product/evaluation-kits/dart-6ul-kits
-> 
-> Oliver Graute (2):
->   ARM: dts: imx6ul: Add Variscite DART-6UL SoM support
->   ARM: dts: Add support for i.MX6 UltraLite DART Variscite Customboard
 
-It's already v3?  I did not find previous versions.  What's changed
-since previous versions?
+On 2019/6/13 1:56, Sean Young wrote:
+> On Wed, Jun 12, 2019 at 06:37:08AM -0300, Mauro Carvalho Chehab wrote:
+>> Em Wed, 12 Jun 2019 08:42:55 +0100
+>> Sean Young <sean@mess.org> escreveu:
+>>
+>>> On Wed, Jun 12, 2019 at 11:43:10AM +0800, YueHaibing wrote:
+>>>> If RC_CORE is not set, building fails:
+>>>>
+>>>> drivers/media/pci/ttpci/av7110_ir.o: In function `av7110_ir_init':
+>>>> av7110_ir.c:(.text+0x1b0): undefined reference to `rc_allocate_device'
+>>>> av7110_ir.c:(.text+0x2c1): undefined reference to `rc_register_device'
+>>>> av7110_ir.c:(.text+0x2dc): undefined reference to `rc_free_device'
+>>>>
+>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>>> Fixes: 71f49a8bf5c5 ("media: ttpci: use rc-core for the IR receiver")
+>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>  
+>>>
+>>> Thank you for spotting this and writing a patch.
+>>>
+>>>> ---
+>>>>  drivers/media/pci/ttpci/Kconfig | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/media/pci/ttpci/Kconfig b/drivers/media/pci/ttpci/Kconfig
+>>>> index d96d4fa..b705631 100644
+>>>> --- a/drivers/media/pci/ttpci/Kconfig
+>>>> +++ b/drivers/media/pci/ttpci/Kconfig
+>>>> @@ -7,7 +7,7 @@ config DVB_AV7110
+>>>>  	depends on DVB_CORE && PCI && I2C
+>>>>  	select TTPCI_EEPROM
+>>>>  	select VIDEO_SAA7146_VV
+>>>> -	select DVB_AV7110_IR if INPUT_EVDEV=y || INPUT_EVDEV=DVB_AV7110  
+>>>
+>>> This says if
+>>>  - select DVB_AV7110_IR if INPUT_EVDEV and DVB_AV7110 are both y or m
+>>>  - select DVB_AV7110_IR if INPUT_EVDEV=y
+>>>    This exists for the case when INPUT_EVDEV=y and DVB_AV7110=m, which is fine
+>>>
+>>>> +	select DVB_AV7110_IR if RC_CORE=DVB_AV7110 && (INPUT_EVDEV=y || INPUT_EVDEV=DVB_AV7110)  
+>>>
+>>> That's not exactly the same. For one thing it should not longer depend on
+>>> INPUT_EVDEV=y.
+>>>
+>>> Now if DVB_AV7110=m and RC_CORE=y is not allowed which should be (this is
+>>> the case in Fedora default kernel config for example).
+>>
+>> My suggestion here is to stop using select here, using, instead
+>> a depends on for DVB_AV7110_IR, e. g. something like (untested):
+>>
+>> config DVB_AV7110_IR
+>> 	bool
+>> 	depends on RC_CORE && DVB_AV7110
+>> 	default DVB_AV7110
+> 
+> Build will fail if RC_CORE=m && DVB_AV7110=y. So it should be
+> 
+>         depends on RC_CORE=y || RC_CORE = DVB_AV7110
 
-Shawn
+Thanks, will test and send v2 as your suggestion.
 
 > 
->  arch/arm/boot/dts/Makefile                         |   1 +
->  .../boot/dts/imx6ul-imx6ull-var-dart-common.dtsi   | 458 +++++++++++++++++++++
->  arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts    | 209 ++++++++++
->  3 files changed, 668 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi
->  create mode 100644 arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
 > 
-> -- 
-> 2.7.4
+> Thanks,
 > 
+> Sean
+> 
+> .
+> 
+
