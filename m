@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C809C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C484C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45FF320866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6576120866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442633;
-	bh=+fBCc4T2sa2o2oZwGHz5Caw3GFcd0By+aiDsHNq+esM=;
+	s=default; t=1560442635;
+	bh=9+K28LnKTwYa0w8yt+lZqtuvr4ImY52KYUY9YD709j0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RegcwDZrzLfPauTW1aqfZJEzKR6uVd5/dG+SZ388fZN6EeYC++UiCVIzOm8Kam8QP
-	 B0LZpoOt4wn4h2hV083i4Vp5AkqL46AHg6iDpLF+pMjyZbuqjspMszPYLpFzGJI3Pb
-	 QI54Ppe57U9dEPIyLWoyTIw+a+t3qq8I8GD2j0MY=
+	b=XERjm13uViFjLI6XpxC4T5zopdB4rWkDS/Xy2P4Q5yQglmYjzwc8d7JBHDMiJff0A
+	 8pjABC88ZSFpqGh9NJmSU+oMKrEwsmmI3Yy41lMsu2sc19EREf1w5ol5IhxLehhDkb
+	 qSEzU/4KvBFneOKHl6FuDsw1GDXCj67zLYFVTEGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391765AbfFMQRM (ORCPT
+        id S2392011AbfFMQRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:17:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58266 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:17:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731136AbfFMIkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:40:55 -0400
+        id S1731135AbfFMIkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:40:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6B7821479;
-        Thu, 13 Jun 2019 08:40:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24BE7215EA;
+        Thu, 13 Jun 2019 08:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415255;
-        bh=+fBCc4T2sa2o2oZwGHz5Caw3GFcd0By+aiDsHNq+esM=;
+        s=default; t=1560415252;
+        bh=9+K28LnKTwYa0w8yt+lZqtuvr4ImY52KYUY9YD709j0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tybY7xmXlPALpNWuyF7RR9JClj3CF7VQ8ww05CRy+SH53aHksU5YxBLPdN1TeMmfU
-         8TJzQbebd4q2WANZ+kWO9U0KveXGzt9dbyPCRX4YkEVLogr6gI+G4nVSKLutTIojh8
-         8Sm/zsvxc8P7Jlkj84Mj5UOfo968lJlwD/g48itI=
+        b=J/USIiRoUZj7gpWX4X2HF/1AAMAiXo5A61yEQMM7NIF7FMP8NnaIRHKevrs4p3sbP
+         RIfMJGI9lHicuq2GbocUAv8sXuRVxCb0snLPurAJPzILlPsUrbHjaszr5KjD7ltp0k
+         2j42sYdmUDdB0RG7v7H8UpmBW7n+8vIX5GpGpgyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 059/118] nvme-pci: unquiesce admin queue on shutdown
-Date:   Thu, 13 Jun 2019 10:33:17 +0200
-Message-Id: <20190613075647.242796357@linuxfoundation.org>
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 058/118] PCI: designware-ep: Use aligned ATU window for raising MSI interrupts
+Date:   Thu, 13 Jun 2019 10:33:16 +0200
+Message-Id: <20190613075647.132827503@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -60,36 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c8e9e9b7646ebe1c5066ddc420d7630876277eb4 ]
+[ Upstream commit 6b7330303a8186fb211357e6d379237fe9d2ece1 ]
 
-Just like IO queues, the admin queue also will not be restarted after a
-controller shutdown. Unquiesce this queue so that we do not block
-request dispatch on a permanently disabled controller.
+Certain platforms like K2G reguires the outbound ATU window to be
+aligned. The alignment size is already present in mem->page_size.
+Use the alignment size present in mem->page_size to configure an
+aligned ATU window. In order to raise an interrupt, CPU has to write
+to address offset from the start of the window unlike before where
+writes were always to the beginning of the ATU window.
 
-Reported-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Keith Busch <keith.busch@intel.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 7b9ef8e734e7..377f6fff420d 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2187,8 +2187,11 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
- 	 * must flush all entered requests to their failed completion to avoid
- 	 * deadlocking blk-mq hot-cpu notifier.
- 	 */
--	if (shutdown)
-+	if (shutdown) {
- 		nvme_start_queues(&dev->ctrl);
-+		if (dev->ctrl.admin_q && !blk_queue_dying(dev->ctrl.admin_q))
-+			blk_mq_unquiesce_queue(dev->ctrl.admin_q);
-+	}
- 	mutex_unlock(&dev->shutdown_lock);
- }
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index de8635af4cde..739d97080d3b 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -385,6 +385,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	struct pci_epc *epc = ep->epc;
++	unsigned int aligned_offset;
+ 	u16 msg_ctrl, msg_data;
+ 	u32 msg_addr_lower, msg_addr_upper, reg;
+ 	u64 msg_addr;
+@@ -410,13 +411,15 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 		reg = ep->msi_cap + PCI_MSI_DATA_32;
+ 		msg_data = dw_pcie_readw_dbi(pci, reg);
+ 	}
+-	msg_addr = ((u64) msg_addr_upper) << 32 | msg_addr_lower;
++	aligned_offset = msg_addr_lower & (epc->mem->page_size - 1);
++	msg_addr = ((u64)msg_addr_upper) << 32 |
++			(msg_addr_lower & ~aligned_offset);
+ 	ret = dw_pcie_ep_map_addr(epc, func_no, ep->msi_mem_phys, msg_addr,
+ 				  epc->mem->page_size);
+ 	if (ret)
+ 		return ret;
+ 
+-	writel(msg_data | (interrupt_num - 1), ep->msi_mem);
++	writel(msg_data | (interrupt_num - 1), ep->msi_mem + aligned_offset);
+ 
+ 	dw_pcie_ep_unmap_addr(epc, func_no, ep->msi_mem_phys);
  
 -- 
 2.20.1
