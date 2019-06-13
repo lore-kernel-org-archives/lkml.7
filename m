@@ -5,56 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C4FC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB892C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03B220665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A817F2147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442783;
-	bh=Oj9lC4E4fNDIiLHZLgNIyB1OHsCLkEcjAQZIg2Zh/UM=;
+	s=default; t=1560442786;
+	bh=PuYNLRFYktJBwpfgdZA3wjG/njTMVcgHDj7Fu63EghY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t7+ViZ0zG02+UuCU5tUz+DyILFvFN32pQLgjMNK71pT/k+8TkQhUrLn717tn/KEo1
-	 UI6z8/jqtImsIoQ64pXnrRjlSz0uMRATmhYibNPri6FzVOMxNa/uR7ddCxqhKiEEbR
-	 ZPhtwwDiDc/SN0QBffixwMkZ0fak7qxvnBc7zvLA=
+	b=bDPsH4h31cv0o3fky+Pr+Yg29DpY6ICUFLAfnVhcBb1fmku6xukCrEXoKiWBxWi/O
+	 WGW/LGgo/twzi/VQQujmaXhZrCFz9jooQbVvwHbEJa6UL8BZd2MVwG2OK8Bh+juolz
+	 apj3FDUrN+sBfKimmiS3XENWVKYiZ35hO7BmkP5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391576AbfFMQTi (ORCPT
+        id S2391924AbfFMQTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:19:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57300 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:19:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731092AbfFMIjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:39:51 -0400
+        id S1731094AbfFMIjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:39:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90FB520851;
-        Thu, 13 Jun 2019 08:39:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1081821479;
+        Thu, 13 Jun 2019 08:39:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415191;
-        bh=Oj9lC4E4fNDIiLHZLgNIyB1OHsCLkEcjAQZIg2Zh/UM=;
+        s=default; t=1560415193;
+        bh=PuYNLRFYktJBwpfgdZA3wjG/njTMVcgHDj7Fu63EghY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PSvk08vYCjY+X83ni7p+IHZs53C7tmmJK/kXb1kLOJKrMqt0pPrQUkJfv8FnTcrdc
-         KNQIhB2e5YtE74a0erjZNUyttLe5k1fJvonchxvldgdfOqvMMucOHdPuGbnQoe+SdW
-         yNFqFCzyr9rIcKbc1T5D7oZQrVBW9i5G97uim3R0=
+        b=O2/oBkQms5RjQsbtIknObR49qRykjgUeYghBovCp3f5TagiU3hvxLp3J+aHyVCYUw
+         V7VlV+UtfnueDg6N8PvO1t63TG4Mj1j9iGCxbMGhu9phB3qjIhE030/2MpGWlFq2L7
+         FGNFBbkYN4rlGWnrsDISGerrJSEOdW0WzlDoCy3o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linxu Fang <fanglinxu@huawei.com>,
-        Taku Izumi <izumi.taku@jp.fujitsu.com>,
-        Xishi Qiu <qiuxishi@huawei.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Oscar Salvador <osalvador@suse.de>,
+        stable@vger.kernel.org, Yue Hu <huyue2@yulong.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 009/118] mem-hotplug: fix node spanned pages when we have a node with only ZONE_MOVABLE
-Date:   Thu, 13 Jun 2019 10:32:27 +0200
-Message-Id: <20190613075644.223755562@linuxfoundation.org>
+Subject: [PATCH 4.19 010/118] mm/cma.c: fix crash on CMA allocation if bitmap allocation fails
+Date:   Thu, 13 Jun 2019 10:32:28 +0200
+Message-Id: <20190613075644.271087701@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -67,109 +66,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 299c83dce9ea3a79bb4b5511d2cb996b6b8e5111 ]
+[ Upstream commit 1df3a339074e31db95c4790ea9236874b13ccd87 ]
 
-342332e6a925 ("mm/page_alloc.c: introduce kernelcore=mirror option") and
-later patches rewrote the calculation of node spanned pages.
+f022d8cb7ec7 ("mm: cma: Don't crash on allocation if CMA area can't be
+activated") fixes the crash issue when activation fails via setting
+cma->count as 0, same logic exists if bitmap allocation fails.
 
-e506b99696a2 ("mem-hotplug: fix node spanned pages when we have a movable
-node"), but the current code still has problems,
-
-When we have a node with only zone_movable and the node id is not zero,
-the size of node spanned pages is double added.
-
-That's because we have an empty normal zone, and zone_start_pfn or
-zone_end_pfn is not between arch_zone_lowest_possible_pfn and
-arch_zone_highest_possible_pfn, so we need to use clamp to constrain the
-range just like the commit <96e907d13602> (bootmem: Reimplement
-__absent_pages_in_range() using for_each_mem_pfn_range()).
-
-e.g.
-Zone ranges:
-  DMA      [mem 0x0000000000001000-0x0000000000ffffff]
-  DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
-  Normal   [mem 0x0000000100000000-0x000000023fffffff]
-Movable zone start for each node
-  Node 0: 0x0000000100000000
-  Node 1: 0x0000000140000000
-Early memory node ranges
-  node   0: [mem 0x0000000000001000-0x000000000009efff]
-  node   0: [mem 0x0000000000100000-0x00000000bffdffff]
-  node   0: [mem 0x0000000100000000-0x000000013fffffff]
-  node   1: [mem 0x0000000140000000-0x000000023fffffff]
-
-node 0 DMA	spanned:0xfff   present:0xf9e   absent:0x61
-node 0 DMA32	spanned:0xff000 present:0xbefe0	absent:0x40020
-node 0 Normal	spanned:0	present:0	absent:0
-node 0 Movable	spanned:0x40000 present:0x40000 absent:0
-On node 0 totalpages(node_present_pages): 1048446
-node_spanned_pages:1310719
-node 1 DMA	spanned:0	    present:0		absent:0
-node 1 DMA32	spanned:0	    present:0		absent:0
-node 1 Normal	spanned:0x100000    present:0x100000	absent:0
-node 1 Movable	spanned:0x100000    present:0x100000	absent:0
-On node 1 totalpages(node_present_pages): 2097152
-node_spanned_pages:2097152
-Memory: 6967796K/12582392K available (16388K kernel code, 3686K rwdata,
-4468K rodata, 2160K init, 10444K bss, 5614596K reserved, 0K
-cma-reserved)
-
-It shows that the current memory of node 1 is double added.
-After this patch, the problem is fixed.
-
-node 0 DMA	spanned:0xfff   present:0xf9e   absent:0x61
-node 0 DMA32	spanned:0xff000 present:0xbefe0	absent:0x40020
-node 0 Normal	spanned:0	present:0	absent:0
-node 0 Movable	spanned:0x40000 present:0x40000 absent:0
-On node 0 totalpages(node_present_pages): 1048446
-node_spanned_pages:1310719
-node 1 DMA	spanned:0	    present:0		absent:0
-node 1 DMA32	spanned:0	    present:0		absent:0
-node 1 Normal	spanned:0	    present:0		absent:0
-node 1 Movable	spanned:0x100000    present:0x100000	absent:0
-On node 1 totalpages(node_present_pages): 1048576
-node_spanned_pages:1048576
-memory: 6967796K/8388088K available (16388K kernel code, 3686K rwdata,
-4468K rodata, 2160K init, 10444K bss, 1420292K reserved, 0K
-cma-reserved)
-
-Link: http://lkml.kernel.org/r/1554178276-10372-1-git-send-email-fanglinxu@huawei.com
-Signed-off-by: Linxu Fang <fanglinxu@huawei.com>
-Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
-Cc: Xishi Qiu <qiuxishi@huawei.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
-Cc: Oscar Salvador <osalvador@suse.de>
+Link: http://lkml.kernel.org/r/20190325081309.6004-1-zbestahu@gmail.com
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page_alloc.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ mm/cma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 8e6932a140b8..2d04bd2e1ced 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5937,13 +5937,15 @@ static unsigned long __meminit zone_spanned_pages_in_node(int nid,
- 					unsigned long *zone_end_pfn,
- 					unsigned long *ignored)
- {
-+	unsigned long zone_low = arch_zone_lowest_possible_pfn[zone_type];
-+	unsigned long zone_high = arch_zone_highest_possible_pfn[zone_type];
- 	/* When hotadd a new node from cpu_up(), the node should be empty */
- 	if (!node_start_pfn && !node_end_pfn)
- 		return 0;
+diff --git a/mm/cma.c b/mm/cma.c
+index bfe9f5397165..6ce6e22f82d9 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -106,8 +106,10 @@ static int __init cma_activate_area(struct cma *cma)
  
- 	/* Get the start and end of the zone */
--	*zone_start_pfn = arch_zone_lowest_possible_pfn[zone_type];
--	*zone_end_pfn = arch_zone_highest_possible_pfn[zone_type];
-+	*zone_start_pfn = clamp(node_start_pfn, zone_low, zone_high);
-+	*zone_end_pfn = clamp(node_end_pfn, zone_low, zone_high);
- 	adjust_zone_range_for_zone_movable(nid, zone_type,
- 				node_start_pfn, node_end_pfn,
- 				zone_start_pfn, zone_end_pfn);
+ 	cma->bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+ 
+-	if (!cma->bitmap)
++	if (!cma->bitmap) {
++		cma->count = 0;
+ 		return -ENOMEM;
++	}
+ 
+ 	WARN_ON_ONCE(!pfn_valid(pfn));
+ 	zone = page_zone(pfn_to_page(pfn));
 -- 
 2.20.1
 
