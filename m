@@ -2,83 +2,110 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B682C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED63C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB63F20896
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DinTrsuf"
+	by mail.kernel.org (Postfix) with ESMTP id 4FD8920896
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733215AbfFMPMV (ORCPT
+        id S1732433AbfFMPMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:12:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50584 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732286AbfFMNtM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:49:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=K3KSbmQVJmhgaolOXqN5jC7ueDvgBWUaym2beuTKQRM=; b=DinTrsufwYtZHErmCGkaFeASA
-        aVkny4bZYVbium2ZfOuKEEE8OUINrp31PJgKc09WyfN5syWyQ4Qzkqoc+9Di1xO0MTtqT7I2bdpHb
-        ZKg1Xg5iQ4S9MAWHCVzYTlQSMheCPUDg3SXhw3EjhdpMJdzvON1dcduU4J+tvwFlFzsqBPs1TGcYR
-        bHxcRRlD7nZR3eSlt2t7jUyYXhnLsY3Q1Fpjm+CayodVN3GTNDdWoMha9z/WwcjcdUgx2DXscNCKP
-        yMkr41g4hi9aHKTWebr9a0O6qr2afDMgiqKJYGFmOkSJ3gg6Rx5N1fKcs5ocDBIt5Hz4zTUPlZFzX
-        9Wg4OiTCw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbQ68-0007xY-J5; Thu, 13 Jun 2019 13:49:00 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D892420316592; Thu, 13 Jun 2019 15:48:58 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 15:48:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCHv2 0/3] improve wait logic of stop_machine
-Message-ID: <20190613134858.GL3436@hirez.programming.kicks-ass.net>
-References: <20190613103510.60529-1-heiko.carstens@de.ibm.com>
+        Thu, 13 Jun 2019 11:12:23 -0400
+Received: from mga09.intel.com ([134.134.136.24]:61276 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732284AbfFMNsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 09:48:11 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 06:48:09 -0700
+X-ExtLoop1: 1
+Received: from bbouchn-mobl.ger.corp.intel.com (HELO localhost) ([10.252.35.22])
+  by orsmga006.jf.intel.com with ESMTP; 13 Jun 2019 06:48:01 -0700
+Date:   Thu, 13 Jun 2019 16:48:00 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH 2/9] x86/sgx: Do not naturally align MAP_FIXED address
+Message-ID: <20190613134800.GA12791@linux.intel.com>
+References: <20190531233159.30992-1-sean.j.christopherson@intel.com>
+ <20190531233159.30992-3-sean.j.christopherson@intel.com>
+ <20190604114951.GC30594@linux.intel.com>
+ <CALCETrVe0jhAWAFmx+NFEjJcijSJv2LDVC7cUXi0w99kNKjh_g@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654EDBDE@ORSMSX116.amr.corp.intel.com>
+ <20190605151653.GK11331@linux.intel.com>
+ <5A85C1D7-A159-437E-B42A-3F4254E07305@amacapital.net>
+ <20190606153710.GB25112@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190613103510.60529-1-heiko.carstens@de.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190606153710.GB25112@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 12:35:07PM +0200, Heiko Carstens wrote:
-> Heiko Carstens (2):
->   processor: remove spin_cpu_yield
->   processor: get rid of cpu_relax_yield
-> 
-> Martin Schwidefsky (1):
->   s390: improve wait logic of stop_machine
-> 
->  arch/powerpc/include/asm/processor.h |  2 --
->  arch/s390/include/asm/processor.h    |  7 +------
->  arch/s390/kernel/processor.c         | 19 +++++++++++++------
->  arch/s390/kernel/smp.c               |  2 +-
->  include/linux/processor.h            |  9 ---------
->  include/linux/sched.h                |  4 ----
->  include/linux/stop_machine.h         |  1 +
->  kernel/stop_machine.c                | 19 ++++++++++++++-----
->  8 files changed, 30 insertions(+), 33 deletions(-)
+On Thu, Jun 06, 2019 at 06:37:10PM +0300, Jarkko Sakkinen wrote:
+> On Wed, Jun 05, 2019 at 01:14:04PM -0700, Andy Lutomirski wrote:
+> > 
+> > 
+> > > On Jun 5, 2019, at 8:17 AM, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+> > > 
+> > >> On Tue, Jun 04, 2019 at 10:10:22PM +0000, Xing, Cedric wrote:
+> > >> A bit off topic here. This mmap()/mprotect() discussion reminds me a
+> > >> question (guess for Jarkko): Now that vma->vm_file->private_data keeps
+> > >> a pointer to the enclave, why do we store it again in vma->vm_private?
+> > >> It isn't a big deal but non-NULL vm_private does prevent mprotect()
+> > >> from merging adjacent VMAs. 
+> > > 
+> > > Same semantics as with a regular mmap i.e. you can close the file and
+> > > still use the mapping.
+> > > 
+> > > 
+> > 
+> > The file should be properly refcounted — vm_file should not go away while it’s mapped.
 
-Seems sensible to me.
+mm already takes care of that so vm_file does not go away. Still
+we need an internal refcount for enclaves to synchronize with the
+swapper. In summary nothing needs to be done.
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Right, makes sense. It is easy one to change essentially just removing
+> internal refcount from sgx_encl and using file for the same. I'll update
+> this to my tree along with the changes to remove LKM/ACPI bits ASAP.
+
+/Jarkko
