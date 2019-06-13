@@ -2,195 +2,84 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634BDC31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5892C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1182080A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:55:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DkY1vevy"
+	by mail.kernel.org (Postfix) with ESMTP id 9076A2080A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560444962;
+	bh=GXivTwKQk8Y+X5xE03CN8fthnLjjz3AlLtUYgE6QieY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xsMZQ+YYODIsgKV0ixnvM8d97fZroc0wUQ+/dJldbqkHGSsmzMgocqSFOQ8izdHUI
+	 a780542NXf+PkpJ4736pVBhdtMTQv9xtb+DqwUf2immypZ2CpoThIhot+Ql6FCg79T
+	 rYqGaHZ0PpntY7AD32L9qiqT8jka5+6u0weWxpV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731657AbfFMQzu (ORCPT
+        id S2393087AbfFMQ4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:55:50 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:39796 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729987AbfFMB4D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 21:56:03 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x5D1tauk028457;
-        Thu, 13 Jun 2019 10:55:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x5D1tauk028457
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1560390936;
-        bh=pt+Nr64T0NPrCAcdTorRfTpUgTXiQs3U70zfvyWcj80=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DkY1vevyYgmJYUcdyPap7f3JBGtDDwKAZ/T9Kk1KM2D9m6+7n8+c6hcASnD9UK+XP
-         sPpOkhJtm9MH8GURhyTKynRJk8cSIYauztgvWH+JXtGCkAhnxxg8k/os/Lylq2sNcj
-         SgdL5sH05qqOLg3jJUrZMNTCg0JxWNOgYO89jQ+p2R4WwJkXD4rtBNDKMOFtAGnedn
-         KCSlPL58ZHNT0xp3Gomz2mB1kn3F7Ym+pQDjaqJ2vpaG3jW6ekz1SoGg+Scz2uW2H8
-         QvxaunFuhiBaceGmlfa5WuvwawWn0dZ6Gqb/fqdEFN5UDCjX9E1eXLOTB1lEaBy+YD
-         At7SpFraePWMA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] pinctrl: remove unneeded #ifdef around declarations
-Date:   Thu, 13 Jun 2019 10:55:31 +0900
-Message-Id: <20190613015532.19685-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 13 Jun 2019 12:56:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729985AbfFMByv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 21:54:51 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A68BF208CA;
+        Thu, 13 Jun 2019 01:54:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560390891;
+        bh=GXivTwKQk8Y+X5xE03CN8fthnLjjz3AlLtUYgE6QieY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=r8JdgWt24mLYxAVnydiRtAdlx+xRwCOlsBeGXcMQy1oJV3B/cDxN+OnDejmpSyIV6
+         RcIibyipNA+YGPuxHDsGF+U/AKFps7DbsQDuq1Fpc/BUfIrexokv2IP71eCmwXk283
+         fI0rscTQw/skUc8NwPguKxlABRXZDgasoljgBWxA=
+Date:   Wed, 12 Jun 2019 18:54:50 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        catalin.marinas@arm.com, will.deacon@arm.com,
+        ard.biesheuvel@arm.com, osalvador@suse.de, mhocko@suse.com,
+        mark.rutland@arm.com
+Subject: Re: [PATCH V5 - Rebased] mm/hotplug: Reorder
+ memblock_[free|remove]() calls in try_remove_memory()
+Message-Id: <20190612185450.73841b9f5af3a4189de6f910@linux-foundation.org>
+In-Reply-To: <67f5c5ad-d753-77d8-8746-96cf4746b3e0@redhat.com>
+References: <36e0126f-e2d1-239c-71f3-91125a49e019@redhat.com>
+        <1560252373-3230-1-git-send-email-anshuman.khandual@arm.com>
+        <20190611151908.cdd6b73fd17fda09b1b3b65b@linux-foundation.org>
+        <5b4f1f19-2f8d-9b8f-4240-7b728952b6fe@arm.com>
+        <67f5c5ad-d753-77d8-8746-96cf4746b3e0@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-What is the point in surrounding the whole of declarations with
-ifdef like this?
+On Wed, 12 Jun 2019 08:53:33 +0200 David Hildenbrand <david@redhat.com> wrote:
 
-  #ifdef CONFIG_FOO
-  int foo(void);
-  #endif
+> >>> ...
+> >>>
+> >>>
+> >>> - Rebased on linux-next (next-20190611)
+> >>
+> >> Yet the patch you've prepared is designed for 5.3.  Was that
+> >> deliberate, or should we be targeting earlier kernels?
+> > 
+> > It was deliberate for 5.3 as a preparation for upcoming reworked arm64 hot-remove.
+> > 
+> 
+> We should probably add to the patch description something like "This is
+> a preparation for arm64 memory hotremove. The described issue is not
+> relevant on other architectures."
 
-If CONFIG_FOO is not defined, all callers of foo() will fail
-with implicit declaration errors since the top Makefile adds
--Werror-implicit-function-declaration to KBUILD_CFLAGS.
-
-This breaks the build earlier when you are doing something wrong.
-That's it.
-
-Anyway, it will fail to link since the definition of foo() is not
-compiled.
-
-In summary, these ifdef are unneeded.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- include/linux/pinctrl/pinconf-generic.h | 20 ++++++--------------
- include/linux/pinctrl/pinconf.h         |  4 ----
- include/linux/pinctrl/pinctrl.h         |  4 ----
- include/linux/pinctrl/pinmux.h          |  4 ----
- 4 files changed, 6 insertions(+), 26 deletions(-)
-
-diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
-index 6f260c1d3467..b55231993d24 100644
---- a/include/linux/pinctrl/pinconf-generic.h
-+++ b/include/linux/pinctrl/pinconf-generic.h
-@@ -11,6 +11,12 @@
- #ifndef __LINUX_PINCTRL_PINCONF_GENERIC_H
- #define __LINUX_PINCTRL_PINCONF_GENERIC_H
- 
-+#include <linux/device.h>
-+#include <linux/pinctrl/machine.h>
-+
-+struct pinctrl_dev;
-+struct pinctrl_map;
-+
- /**
-  * enum pin_config_param - possible pin configuration parameters
-  * @PIN_CONFIG_BIAS_BUS_HOLD: the pin will be set to weakly latch so that it
-@@ -155,9 +161,6 @@ static inline unsigned long pinconf_to_config_packed(enum pin_config_param param
- 	return PIN_CONF_PACKED(param, argument);
- }
- 
--#ifdef CONFIG_GENERIC_PINCONF
--
--#ifdef CONFIG_DEBUG_FS
- #define PCONFDUMP(a, b, c, d) {					\
- 	.param = a, .display = b, .format = c, .has_arg = d	\
- 	}
-@@ -168,14 +171,6 @@ struct pin_config_item {
- 	const char * const format;
- 	bool has_arg;
- };
--#endif /* CONFIG_DEBUG_FS */
--
--#ifdef CONFIG_OF
--
--#include <linux/device.h>
--#include <linux/pinctrl/machine.h>
--struct pinctrl_dev;
--struct pinctrl_map;
- 
- struct pinconf_generic_params {
- 	const char * const property;
-@@ -220,8 +215,5 @@ static inline int pinconf_generic_dt_node_to_map_all(
- 	return pinconf_generic_dt_node_to_map(pctldev, np_config, map, num_maps,
- 			PIN_MAP_TYPE_INVALID);
- }
--#endif
--
--#endif /* CONFIG_GENERIC_PINCONF */
- 
- #endif /* __LINUX_PINCTRL_PINCONF_GENERIC_H */
-diff --git a/include/linux/pinctrl/pinconf.h b/include/linux/pinctrl/pinconf.h
-index 514414a5ad01..eb16a1e0bcfa 100644
---- a/include/linux/pinctrl/pinconf.h
-+++ b/include/linux/pinctrl/pinconf.h
-@@ -11,8 +11,6 @@
- #ifndef __LINUX_PINCTRL_PINCONF_H
- #define __LINUX_PINCTRL_PINCONF_H
- 
--#ifdef CONFIG_PINCONF
--
- struct pinctrl_dev;
- struct seq_file;
- 
-@@ -64,6 +62,4 @@ struct pinconf_ops {
- 					    unsigned long config);
- };
- 
--#endif
--
- #endif /* __LINUX_PINCTRL_PINCONF_H */
-diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
-index 34b10d112be6..c6159f041f4e 100644
---- a/include/linux/pinctrl/pinctrl.h
-+++ b/include/linux/pinctrl/pinctrl.h
-@@ -11,8 +11,6 @@
- #ifndef __LINUX_PINCTRL_PINCTRL_H
- #define __LINUX_PINCTRL_PINCTRL_H
- 
--#ifdef CONFIG_PINCTRL
--
- #include <linux/radix-tree.h>
- #include <linux/list.h>
- #include <linux/seq_file.h>
-@@ -197,6 +195,4 @@ extern const char *pinctrl_dev_get_name(struct pinctrl_dev *pctldev);
- extern const char *pinctrl_dev_get_devname(struct pinctrl_dev *pctldev);
- extern void *pinctrl_dev_get_drvdata(struct pinctrl_dev *pctldev);
- 
--#endif /* !CONFIG_PINCTRL */
--
- #endif /* __LINUX_PINCTRL_PINCTRL_H */
-diff --git a/include/linux/pinctrl/pinmux.h b/include/linux/pinctrl/pinmux.h
-index e873ed97d79e..9a647fa5c8f1 100644
---- a/include/linux/pinctrl/pinmux.h
-+++ b/include/linux/pinctrl/pinmux.h
-@@ -15,8 +15,6 @@
- #include <linux/seq_file.h>
- #include <linux/pinctrl/pinctrl.h>
- 
--#ifdef CONFIG_PINMUX
--
- struct pinctrl_dev;
- 
- /**
-@@ -84,6 +82,4 @@ struct pinmux_ops {
- 	bool strict;
- };
- 
--#endif /* CONFIG_PINMUX */
--
- #endif /* __LINUX_PINCTRL_PINMUX_H */
--- 
-2.17.1
-
+Please.  And is there any reason to merge it separately?  Can it be
+[patch 1/3] in the "arm64/mm: Enable memory hot remove" series?
