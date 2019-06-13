@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B36EEC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 407E2C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 741122063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BFFD2063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:05:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hA3frNtm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xd0Iof4/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393062AbfFMRFl (ORCPT
+        id S2404595AbfFMRFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:05:41 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50196 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404621AbfFMREJ (ORCPT
+        Thu, 13 Jun 2019 13:05:47 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46182 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731895AbfFMREH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:04:09 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c66so10986656wmf.0;
-        Thu, 13 Jun 2019 10:04:08 -0700 (PDT)
+        Thu, 13 Jun 2019 13:04:07 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n4so21537235wrw.13;
+        Thu, 13 Jun 2019 10:04:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=5+InJnraTXrzge2F0K4aBFVDGbA/DhMyQq5KvIa9oCw=;
-        b=hA3frNtmPTHYBQNEhEuinfL48hsLuiEnBwWy9uePnElpdp9YbPokdAizg0HhPxISY+
-         7N65op+JdV0V05bzMcGqIuUSAEAtHvJFEidD1taWnLL1rDcDRJcRUHkF6nwjVkeWTuYb
-         yYAfs08TcIR+yMohBQSqeoEVfUtlG4hn0LZSjASU0GWswbx+24SCArcDKg2JWiEauokL
-         gDvJ7eZ4WqpoUNtK94IuGLfi1nnAGlWRK0xlPWFEMskj+vGyge4FCeATXm+Xvl4aC/N8
-         rvRH0Uqa+A4OZIq+CVwOf2UiDP7WJyRT92NEtvNqijsIjDJRDbVsua2BfZb69MbiDzoW
-         9B+g==
+        bh=h/ch4oiulZtlDeR1eBUPOfagcxgYvlYrQowAhXtcCUY=;
+        b=Xd0Iof4/FKGVv1Tij28DY+YsaBAWDwCPIgrb6HCUVu00kHOpGLG2BagPtN/6mGfZJ8
+         Ti1LqdakP0RGZ0LJkhauzL1LMMv/xJYTtwp6urVu8G8zwcirC4N4yxbrQKbWFDA1Bytw
+         PYiukYRMICNv0nhVHiUtZCg09hZX/oezlvOYFuj+HU/gQHUs/Z6EL46KXf8dGrttXIoA
+         rTl2sqLw2ZQD3fWEqb24I1Oe99gtDR3RVgxIKyS6HLQp9s6o3ZxcG72/HiK6GIoqNm0a
+         CbXNKEZ95ZYCZdIX+aX3wZ2s6ySgerJBeM6b/VWYPU8tRxNnaCwg6COOYLhha5VgK3SH
+         8MZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=5+InJnraTXrzge2F0K4aBFVDGbA/DhMyQq5KvIa9oCw=;
-        b=VEWpXRcfFPsNObq3Mz40tOC5pEy/cBdVb9Q4yXmT95VR77Me1KHMiSNte9kcS0P0dy
-         4ULSDJxWw9TcPumDmhE/33f6Sp/0fQ1U6nZ+u1NihT7F+g+Z/TC36DmldgOw813gp249
-         PjFcxYHd50z2XF2K+MA1dQuWHfzLqhGrMTvC/lU4IN0muZfK48XVStBUj++eFicKsnkD
-         xAwWxghx0uSzWN9rvlI4mBIONYHOcywG3CPt7hHmEqBPsDysNNeINXzQBaIdRRH1cY8a
-         28Qxende30Xcz8ae/Hx6EM2FC9KnTPM0CpfVu1kuxoGpPbuFyaQaUnNjidmCAC9BGzit
-         g9ow==
-X-Gm-Message-State: APjAAAVTYDsbS4ZM5Ben65IJjgVQuQX9hU5Aj9ow8kvuQukh+P7H6SVc
-        B/4E9FlLVymdsK2qSjTOznFrO2GD
-X-Google-Smtp-Source: APXvYqx+jFavY98aEfi6o4XKYuvEWa1V29OkzxHopOJH2wnQF5aP2gs4iyxrBiZwUMOhomN2S/qaAw==
-X-Received: by 2002:a1c:448b:: with SMTP id r133mr4760954wma.114.1560445447536;
-        Thu, 13 Jun 2019 10:04:07 -0700 (PDT)
+        bh=h/ch4oiulZtlDeR1eBUPOfagcxgYvlYrQowAhXtcCUY=;
+        b=bkIS3exNSqGr6LhhNM1BjiMB0CpB/35bhgO6jmI6cfU6qDX6vI8+r4P8bTWfdRgyJ3
+         Q6Uo7CG1wDZyOqtCnau2x+CgbmjXPFuoxlKJeiAi5hvLOOv4YR2zG/nVGeKkz5fyHzFw
+         CbonZVgzVc+hcIuVtQro52xQqa69jrqUK4PvFcJq7/b5JhzDVD6uZaTB+5eIyUuIH9F7
+         Dy1CLh4Y4lxzS77Ox5umF7LjopjOjBp7aBHRHoxTK6Vgrc1CI9nhnlFHzE1onvMMndR2
+         2jCUlX6EyE/n1Z1Dw7A+Z+R94NcepGhcVmoPLWoMQaJigw3RA5yvQqKxT0iQdcVF5/wp
+         l7Fg==
+X-Gm-Message-State: APjAAAVMW3YBLtfAeNqmqxCgNQi2X8mqFH9UXiLic1HPaKIhrHkmtT4v
+        OnRQonyQauMx1pTl3PTuokl3wg5w
+X-Google-Smtp-Source: APXvYqw2Lr3ERjkkChj33ZFK9lLjn4Zoouhr1lXy9W648XwjYQI7FdcWG8sdj9lG+Bg4YOd5QC+7mQ==
+X-Received: by 2002:adf:f946:: with SMTP id q6mr8634649wrr.109.1560445445771;
+        Thu, 13 Jun 2019 10:04:05 -0700 (PDT)
 Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.04.06
+        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.04.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 10:04:06 -0700 (PDT)
+        Thu, 13 Jun 2019 10:04:05 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         vkuznets@redhat.com
-Subject: [PATCH 35/43] KVM: VMX: Shadow VMCS secondary execution controls
-Date:   Thu, 13 Jun 2019 19:03:21 +0200
-Message-Id: <1560445409-17363-36-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 33/43] KVM: VMX: Shadow VMCS pin controls
+Date:   Thu, 13 Jun 2019 19:03:19 +0200
+Message-Id: <1560445409-17363-34-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
 References: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
@@ -76,225 +76,97 @@ Prepare to shadow all major control fields on a per-VMCS basis, which
 allows KVM to avoid costly VMWRITEs when switching between vmcs01 and
 vmcs02.
 
+Shadowing pin controls also allows a future patch to remove the per-VMCS
+'hv_timer_armed' flag, as the shadow copy is a superset of said flag.
+
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/nested.c | 12 ++++++------
- arch/x86/kvm/vmx/vmx.c    | 40 ++++++++++++++++++++--------------------
+ arch/x86/kvm/vmx/nested.c |  3 ++-
+ arch/x86/kvm/vmx/vmx.c    | 10 ++++------
  arch/x86/kvm/vmx/vmx.h    |  2 ++
- 3 files changed, 28 insertions(+), 26 deletions(-)
+ 3 files changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index a754a2ed6295..9703fcf19837 100644
+index f5612b475393..0179ac083dd1 100644
 --- a/arch/x86/kvm/vmx/nested.c
 +++ b/arch/x86/kvm/vmx/nested.c
-@@ -192,7 +192,7 @@ static void nested_vmx_abort(struct kvm_vcpu *vcpu, u32 indicator)
+@@ -285,6 +285,7 @@ static void vmx_switch_vmcs(struct kvm_vcpu *vcpu, struct loaded_vmcs *vmcs)
  
- static void vmx_disable_shadow_vmcs(struct vcpu_vmx *vmx)
- {
--	vmcs_clear_bits(SECONDARY_VM_EXEC_CONTROL, SECONDARY_EXEC_SHADOW_VMCS);
-+	secondary_exec_controls_clearbit(vmx, SECONDARY_EXEC_SHADOW_VMCS);
- 	vmcs_write64(VMCS_LINK_POINTER, -1ull);
- }
- 
-@@ -287,6 +287,7 @@ static void vmx_switch_vmcs(struct kvm_vcpu *vcpu, struct loaded_vmcs *vmcs)
+ 	vm_entry_controls_reset_shadow(vmx);
  	vm_exit_controls_reset_shadow(vmx);
- 	pin_controls_reset_shadow(vmx);
- 	exec_controls_reset_shadow(vmx);
-+	secondary_exec_controls_reset_shadow(vmx);
++	pin_controls_reset_shadow(vmx);
  	vmx_segment_cache_clear(vmx);
  }
  
-@@ -2083,7 +2084,7 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
- 			vmcs_write16(GUEST_INTR_STATUS,
- 				vmcs12->guest_intr_status);
- 
--		vmcs_write32(SECONDARY_VM_EXEC_CONTROL, exec_control);
-+		secondary_exec_controls_init(vmx, exec_control);
+@@ -2026,7 +2027,7 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
+ 	} else {
+ 		exec_control &= ~PIN_BASED_POSTED_INTR;
  	}
+-	vmcs_write32(PIN_BASED_VM_EXEC_CONTROL, exec_control);
++	pin_controls_init(vmx, exec_control);
  
  	/*
-@@ -2853,8 +2854,8 @@ static void nested_get_vmcs12_pages(struct kvm_vcpu *vcpu)
- 			hpa = page_to_phys(vmx->nested.apic_access_page);
- 			vmcs_write64(APIC_ACCESS_ADDR, hpa);
- 		} else {
--			vmcs_clear_bits(SECONDARY_VM_EXEC_CONTROL,
--					SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES);
-+			secondary_exec_controls_clearbit(vmx,
-+				SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES);
- 		}
- 	}
- 
-@@ -4667,8 +4668,7 @@ static void set_current_vmptr(struct vcpu_vmx *vmx, gpa_t vmptr)
- {
- 	vmx->nested.current_vmptr = vmptr;
- 	if (enable_shadow_vmcs) {
--		vmcs_set_bits(SECONDARY_VM_EXEC_CONTROL,
--			      SECONDARY_EXEC_SHADOW_VMCS);
-+		secondary_exec_controls_setbit(vmx, SECONDARY_EXEC_SHADOW_VMCS);
- 		vmcs_write64(VMCS_LINK_POINTER,
- 			     __pa(vmx->vmcs01.shadow_vmcs));
- 		vmx->nested.need_vmcs12_to_shadow_sync = true;
+ 	 * EXEC CONTROLS
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index fcb1a80270bc..1104f52d281c 100644
+index 91e43c03144d..6eb4063d98fc 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2909,6 +2909,7 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
- 
- int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+@@ -3844,7 +3844,7 @@ static void vmx_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu)
  {
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	/*
- 	 * Pass through host's Machine Check Enable value to hw_cr4, which
- 	 * is in force while we are in guest mode.  Do not let guests control
-@@ -2919,20 +2920,19 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- 	hw_cr4 = (cr4_read_shadow() & X86_CR4_MCE) | (cr4 & ~X86_CR4_MCE);
- 	if (enable_unrestricted_guest)
- 		hw_cr4 |= KVM_VM_CR4_ALWAYS_ON_UNRESTRICTED_GUEST;
--	else if (to_vmx(vcpu)->rmode.vm86_active)
-+	else if (vmx->rmode.vm86_active)
- 		hw_cr4 |= KVM_RMODE_VM_CR4_ALWAYS_ON;
- 	else
- 		hw_cr4 |= KVM_PMODE_VM_CR4_ALWAYS_ON;
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
  
- 	if (!boot_cpu_has(X86_FEATURE_UMIP) && vmx_umip_emulated()) {
- 		if (cr4 & X86_CR4_UMIP) {
--			vmcs_set_bits(SECONDARY_VM_EXEC_CONTROL,
--				SECONDARY_EXEC_DESC);
-+			secondary_exec_controls_setbit(vmx, SECONDARY_EXEC_DESC);
- 			hw_cr4 &= ~X86_CR4_UMIP;
- 		} else if (!is_guest_mode(vcpu) ||
--			!nested_cpu_has2(get_vmcs12(vcpu), SECONDARY_EXEC_DESC))
--			vmcs_clear_bits(SECONDARY_VM_EXEC_CONTROL,
--					SECONDARY_EXEC_DESC);
-+			!nested_cpu_has2(get_vmcs12(vcpu), SECONDARY_EXEC_DESC)) {
-+			secondary_exec_controls_clearbit(vmx, SECONDARY_EXEC_DESC);
-+		}
- 	}
- 
- 	if (cr4 & X86_CR4_VMXE) {
-@@ -2947,7 +2947,7 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- 			return 1;
- 	}
- 
--	if (to_vmx(vcpu)->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
-+	if (vmx->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
- 		return 1;
- 
- 	vcpu->arch.cr4 = cr4;
-@@ -3565,7 +3565,7 @@ static u8 vmx_msr_bitmap_mode(struct kvm_vcpu *vcpu)
- 	u8 mode = 0;
- 
- 	if (cpu_has_secondary_exec_ctrls() &&
--	    (vmcs_read32(SECONDARY_VM_EXEC_CONTROL) &
-+	    (secondary_exec_controls_get(to_vmx(vcpu)) &
- 	     SECONDARY_EXEC_VIRTUALIZE_X2APIC_MODE)) {
- 		mode |= MSR_BITMAP_MODE_X2APIC;
- 		if (enable_apicv && kvm_vcpu_apicv_active(vcpu))
-@@ -3845,11 +3845,11 @@ static void vmx_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu)
- 	pin_controls_set(vmx, vmx_pin_based_exec_ctrl(vmx));
+-	vmcs_write32(PIN_BASED_VM_EXEC_CONTROL, vmx_pin_based_exec_ctrl(vmx));
++	pin_controls_set(vmx, vmx_pin_based_exec_ctrl(vmx));
  	if (cpu_has_secondary_exec_ctrls()) {
  		if (kvm_vcpu_apicv_active(vcpu))
--			vmcs_set_bits(SECONDARY_VM_EXEC_CONTROL,
-+			secondary_exec_controls_setbit(vmx,
- 				      SECONDARY_EXEC_APIC_REGISTER_VIRT |
- 				      SECONDARY_EXEC_VIRTUAL_INTR_DELIVERY);
- 		else
--			vmcs_clear_bits(SECONDARY_VM_EXEC_CONTROL,
-+			secondary_exec_controls_clearbit(vmx,
- 					SECONDARY_EXEC_APIC_REGISTER_VIRT |
- 					SECONDARY_EXEC_VIRTUAL_INTR_DELIVERY);
- 	}
-@@ -4047,8 +4047,7 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
+ 			vmcs_set_bits(SECONDARY_VM_EXEC_CONTROL,
+@@ -4042,7 +4042,7 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
+ 	vmcs_write64(VMCS_LINK_POINTER, -1ull); /* 22.3.1.5 */
  
- 	if (cpu_has_secondary_exec_ctrls()) {
- 		vmx_compute_secondary_exec_control(vmx);
--		vmcs_write32(SECONDARY_VM_EXEC_CONTROL,
--			     vmx->secondary_exec_control);
-+		secondary_exec_controls_init(vmx, vmx->secondary_exec_control);
- 	}
+ 	/* Control */
+-	vmcs_write32(PIN_BASED_VM_EXEC_CONTROL, vmx_pin_based_exec_ctrl(vmx));
++	pin_controls_init(vmx, vmx_pin_based_exec_ctrl(vmx));
+ 	vmx->hv_deadline_tsc = -1;
  
- 	if (kvm_vcpu_apicv_active(&vmx->vcpu)) {
-@@ -5969,6 +5968,7 @@ static void update_cr8_intercept(struct kvm_vcpu *vcpu, int tpr, int irr)
- 
- void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu)
+ 	vmcs_write32(CPU_BASED_VM_EXEC_CONTROL, vmx_exec_control(vmx));
+@@ -6366,8 +6366,7 @@ static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
  {
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	u32 sec_exec_control;
- 
- 	if (!lapic_in_kernel(vcpu))
-@@ -5980,11 +5980,11 @@ void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu)
- 
- 	/* Postpone execution until vmcs01 is the current VMCS. */
- 	if (is_guest_mode(vcpu)) {
--		to_vmx(vcpu)->nested.change_vmcs01_virtual_apic_mode = true;
-+		vmx->nested.change_vmcs01_virtual_apic_mode = true;
- 		return;
- 	}
- 
--	sec_exec_control = vmcs_read32(SECONDARY_VM_EXEC_CONTROL);
-+	sec_exec_control = secondary_exec_controls_get(vmx);
- 	sec_exec_control &= ~(SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES |
- 			      SECONDARY_EXEC_VIRTUALIZE_X2APIC_MODE);
- 
-@@ -6006,7 +6006,7 @@ void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu)
- 				SECONDARY_EXEC_VIRTUALIZE_X2APIC_MODE;
- 		break;
- 	}
--	vmcs_write32(SECONDARY_VM_EXEC_CONTROL, sec_exec_control);
-+	secondary_exec_controls_set(vmx, sec_exec_control);
- 
- 	vmx_update_msr_bitmap(vcpu);
- }
-@@ -6827,7 +6827,7 @@ static int vmx_get_lpage_level(void)
- 		return PT_PDPE_LEVEL;
+ 	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
+ 	if (!vmx->loaded_vmcs->hv_timer_armed)
+-		vmcs_set_bits(PIN_BASED_VM_EXEC_CONTROL,
+-			      PIN_BASED_VMX_PREEMPTION_TIMER);
++		pin_controls_setbit(vmx, PIN_BASED_VMX_PREEMPTION_TIMER);
+ 	vmx->loaded_vmcs->hv_timer_armed = true;
  }
  
--static void vmcs_set_secondary_exec_control(u32 new_ctl)
-+static void vmcs_set_secondary_exec_control(struct vcpu_vmx *vmx)
- {
- 	/*
- 	 * These bits in the secondary execution controls field
-@@ -6841,10 +6841,10 @@ static void vmcs_set_secondary_exec_control(u32 new_ctl)
- 		SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES |
- 		SECONDARY_EXEC_DESC;
- 
--	u32 cur_ctl = vmcs_read32(SECONDARY_VM_EXEC_CONTROL);
-+	u32 new_ctl = vmx->secondary_exec_control;
-+	u32 cur_ctl = secondary_exec_controls_get(vmx);
- 
--	vmcs_write32(SECONDARY_VM_EXEC_CONTROL,
--		     (new_ctl & ~mask) | (cur_ctl & mask));
-+	secondary_exec_controls_set(vmx, (new_ctl & ~mask) | (cur_ctl & mask));
- }
- 
- /*
-@@ -6982,7 +6982,7 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
- 
- 	if (cpu_has_secondary_exec_ctrls()) {
- 		vmx_compute_secondary_exec_control(vmx);
--		vmcs_set_secondary_exec_control(vmx->secondary_exec_control);
-+		vmcs_set_secondary_exec_control(vmx);
+@@ -6396,8 +6395,7 @@ static void vmx_update_hv_timer(struct kvm_vcpu *vcpu)
  	}
  
- 	if (nested_vmx_allowed(vcpu))
+ 	if (vmx->loaded_vmcs->hv_timer_armed)
+-		vmcs_clear_bits(PIN_BASED_VM_EXEC_CONTROL,
+-				PIN_BASED_VMX_PREEMPTION_TIMER);
++		pin_controls_clearbit(vmx, PIN_BASED_VMX_PREEMPTION_TIMER);
+ 	vmx->loaded_vmcs->hv_timer_armed = false;
+ }
+ 
 diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 0bb0f75ebcb9..b4d5684b0be9 100644
+index 0a1b37d69f13..3c0a8b01f1f0 100644
 --- a/arch/x86/kvm/vmx/vmx.h
 +++ b/arch/x86/kvm/vmx/vmx.h
-@@ -90,6 +90,7 @@ struct vmx_controls_shadow {
+@@ -88,6 +88,7 @@ struct pt_desc {
+ struct vmx_controls_shadow {
+ 	u32 vm_entry;
  	u32 vm_exit;
- 	u32 pin;
- 	u32 exec;
-+	u32 secondary_exec;
++	u32 pin;
  };
  
  /*
-@@ -427,6 +428,7 @@ static inline u8 vmx_get_rvi(void)
+@@ -423,6 +424,7 @@ static inline u8 vmx_get_rvi(void)
+ }
+ BUILD_CONTROLS_SHADOW(vm_entry, VM_ENTRY_CONTROLS)
  BUILD_CONTROLS_SHADOW(vm_exit, VM_EXIT_CONTROLS)
- BUILD_CONTROLS_SHADOW(pin, PIN_BASED_VM_EXEC_CONTROL)
- BUILD_CONTROLS_SHADOW(exec, CPU_BASED_VM_EXEC_CONTROL)
-+BUILD_CONTROLS_SHADOW(secondary_exec, SECONDARY_VM_EXEC_CONTROL)
++BUILD_CONTROLS_SHADOW(pin, PIN_BASED_VM_EXEC_CONTROL)
  
  static inline void vmx_segment_cache_clear(struct vcpu_vmx *vmx)
  {
