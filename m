@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DB9C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D7BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C699C20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B8E20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442201;
-	bh=r9PVd2oBi+l5mmfgbA2673gCPPqo7CsSezjV9vr1aHE=;
+	s=default; t=1560442205;
+	bh=28eVHXLvJ8YeIuBOVzAghHz7wISlWUKU1fbPZPzZv2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Aw0xG7ZXVL1SI1t38EDH0lB2iDCgaZAmmyZ6vpVPrDTHiCwKcTqy8WAHFXEy05y2o
-	 vQw2CVPN+/jxHksGu25aouxmY4yzJB4wMyaIuDOsYX4Z9XB0GmCeYgTYh3rPMnR+7p
-	 Y5epCDUuFWS/RqB7lbX66OgUqi7+7Gy5Un0+Ixg4=
+	b=JKY+6UfjTjHNooPHwSTmhO74TUYjEx8Fggwd4Ud/uzirR1wIiHuomfxkTciqdvKCE
+	 PXpIvuIusQxZYTEEqF2bSPboBC4rK94maxtuEaFxZEl3u5z48tOdDTyzY6FMecruCr
+	 h7BNV7ZgsiolRT5vwuYK7aegZBESx/qxFRfzVBt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390593AbfFMQKA (ORCPT
+        id S2391413AbfFMQKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:10:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33102 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731257AbfFMIoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:44:13 -0400
+        id S1731254AbfFMIn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:43:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ADAA2147A;
-        Thu, 13 Jun 2019 08:44:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A52F20851;
+        Thu, 13 Jun 2019 08:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415452;
-        bh=r9PVd2oBi+l5mmfgbA2673gCPPqo7CsSezjV9vr1aHE=;
+        s=default; t=1560415438;
+        bh=28eVHXLvJ8YeIuBOVzAghHz7wISlWUKU1fbPZPzZv2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N+T1BDjRxrjulRcaKhwTKtA+IFiPk0DQwYmBEWK2Kgcqjdxs9qbdYMIq/fvCW17nC
-         /+8ZweSZko1sxllSVOS0m6RsL5w6EHa+AKG1+k8pMDlauOWUFZhzgpOFO90Y6vGpi+
-         G7tpf61UiNT7xJTh7z7CzuGXv8Sm5M1UIBz3M9tA=
+        b=lwhHDJjDGQEV1lD7QxP5sLExxw3g0qiwqQs2M23nyicq6ooQKEaHOEm/HncgvI4wt
+         lk11o/qUrOsfwdf+nceI5aXAULXEAWM7Mm3bLFrWtQIeb6435qggtx6SaN0nj3knRO
+         5RsNyCybMF+FD8N3yXAP7ZSLcRTkbaCaNavuqvfU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Airlie <airlied@redhat.com>,
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 001/155] Revert "drm: allow render capable master with DRM_AUTH ioctls"
-Date:   Thu, 13 Jun 2019 10:31:53 +0200
-Message-Id: <20190613075652.777739182@linuxfoundation.org>
+Subject: [PATCH 4.19 107/118] ARM: dts: exynos: Always enable necessary APIO_1V8 and ABB_1V8 regulators on Arndale Octa
+Date:   Thu, 13 Jun 2019 10:34:05 +0200
+Message-Id: <20190613075650.299243446@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
-References: <20190613075652.691765927@linuxfoundation.org>
+In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
+References: <20190613075643.642092651@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,65 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dbb92471674a48892f5e50779425e03388073ab9 ]
+[ Upstream commit 5ab99cf7d5e96e3b727c30e7a8524c976bd3723d ]
 
-This reverts commit 8059add0478e29cb641936011a8fcc9ce9fd80be.
+The PVDD_APIO_1V8 (LDO2) and PVDD_ABB_1V8 (LDO8) regulators were turned
+off by Linux kernel as unused.  However they supply critical parts of
+SoC so they should be always on:
 
-This commit while seemingly a good idea, breaks a radv check,
-for a node being master because something succeeds where it failed
-before now.
+1. PVDD_APIO_1V8 supplies SYS pins (gpx[0-3], PSHOLD), HDMI level shift,
+   RTC, VDD1_12 (DRAM internal 1.8 V logic), pull-up for PMIC interrupt
+   lines, TTL/UARTR level shift, reset pins and SW-TACT1 button.
+   It also supplies unused blocks like VDDQ_SRAM (for SROM controller) and
+   VDDQ_GPIO (gpm7, gpy7).
+   The LDO2 cannot be turned off (S2MPS11 keeps it on anyway) so
+   marking it "always-on" only reflects its real status.
 
-Apply the Linus rule, revert early and try again, we don't break
-userspace.
+2. PVDD_ABB_1V8 supplies Adaptive Body Bias Generator for ARM cores,
+   memory and Mali (G3D).
 
-Signed-off-by: Dave Airlie <airlied@redhat.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_ioctl.c | 20 ++++----------------
- 1 file changed, 4 insertions(+), 16 deletions(-)
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_ioctl.c b/drivers/gpu/drm/drm_ioctl.c
-index 687943df58e1..ab5692104ea0 100644
---- a/drivers/gpu/drm/drm_ioctl.c
-+++ b/drivers/gpu/drm/drm_ioctl.c
-@@ -508,13 +508,6 @@ int drm_version(struct drm_device *dev, void *data,
- 	return err;
- }
+diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+index cdda614e417e..a370857beac0 100644
+--- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
++++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+@@ -106,6 +106,7 @@
+ 				regulator-name = "PVDD_APIO_1V8";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 			};
  
--static inline bool
--drm_render_driver_and_ioctl(const struct drm_device *dev, u32 flags)
--{
--	return drm_core_check_feature(dev, DRIVER_RENDER) &&
--		(flags & DRM_RENDER_ALLOW);
--}
--
- /**
-  * drm_ioctl_permit - Check ioctl permissions against caller
-  *
-@@ -529,19 +522,14 @@ drm_render_driver_and_ioctl(const struct drm_device *dev, u32 flags)
-  */
- int drm_ioctl_permit(u32 flags, struct drm_file *file_priv)
- {
--	const struct drm_device *dev = file_priv->minor->dev;
--
- 	/* ROOT_ONLY is only for CAP_SYS_ADMIN */
- 	if (unlikely((flags & DRM_ROOT_ONLY) && !capable(CAP_SYS_ADMIN)))
- 		return -EACCES;
+ 			ldo3_reg: LDO3 {
+@@ -144,6 +145,7 @@
+ 				regulator-name = "PVDD_ABB_1V8";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 			};
  
--	/* AUTH is only for master ... */
--	if (unlikely((flags & DRM_AUTH) && drm_is_primary_client(file_priv))) {
--		/* authenticated ones, or render capable on DRM_RENDER_ALLOW. */
--		if (!file_priv->authenticated &&
--		    !drm_render_driver_and_ioctl(dev, flags))
--			return -EACCES;
--	}
-+	/* AUTH is only for authenticated or render client */
-+	if (unlikely((flags & DRM_AUTH) && !drm_is_render_client(file_priv) &&
-+		     !file_priv->authenticated))
-+		return -EACCES;
- 
- 	/* MASTER is only for master or control clients */
- 	if (unlikely((flags & DRM_MASTER) &&
+ 			ldo9_reg: LDO9 {
 -- 
 2.20.1
 
