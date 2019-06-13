@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D1BC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FCAC31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAFB220665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E8F20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441836;
-	bh=vwBCA/RMQG6LIebGglkzXim1j1W+F/5GA0rzavP5IsI=;
+	s=default; t=1560441838;
+	bh=EFuefgkk3y0ZXHnkLQX7Tj/A14qq9Kx55hAdXvkexwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tgEjlJsw915OvE6LiGKjiIzTYji6bx23wUGvtNAdwLZa3I4i1KmqFD+z0OSUS0Bzi
-	 FyDHe8fxSJ06SBAy6W9XKismjbkFRBERwxUnYtl/cvADo21YiChGPYMyIV/SqzsC5X
-	 bpfa7P/BDlL1V8VuBzJdCAarRZm01/YS530I7RO8=
+	b=HO/l8kOXkP2vreKzx3NfkhkLHE8xdF8ESRSbs4BYcqcDWJyvw3iezWfa5IqZuI84b
+	 TfHatIRNlwSRPQzYmlA4wuFt97IWTBa97usIoaXWXyvXYqSulw4Fk97k02YuYix63C
+	 67NgQMrGwwJvTmb3aMbfx5BIjrVv6pKgSwgeocqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389663AbfFMQDz (ORCPT
+        id S1730328AbfFMQD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:03:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35512 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:03:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731374AbfFMIrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:47:16 -0400
+        id S1731373AbfFMIrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:47:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 101DB20851;
-        Thu, 13 Jun 2019 08:47:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F410B2147A;
+        Thu, 13 Jun 2019 08:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415635;
-        bh=vwBCA/RMQG6LIebGglkzXim1j1W+F/5GA0rzavP5IsI=;
+        s=default; t=1560415632;
+        bh=EFuefgkk3y0ZXHnkLQX7Tj/A14qq9Kx55hAdXvkexwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0w3oHXbeOUIFgr3I1kQLMIU8NUpse8dYYTj53kqcyZ2TDZ8Yj3hC0olbxlKzAiOXd
-         /70oq4epoHoMWPb2bRA+4ekgq1jpo88k/XQXfgUXLLTL2e8HmK+KEqXF0zvh6/vLmM
-         iE1jmvHKLIwBIdEbW7hc5wtYhybIezW8Jl9qamF0=
+        b=WrqwzYiXzwTjKJfJ1lEazqKEs/RInDtTe3A0aTFYpBLbLY5OYgcfSp2LmaoFe0ifs
+         M7NrkgKW9icNtkexP+xAqum0ceLin1jXebMH8ODcmcg7YMwniz1FUXN2h6NPqXtJQ+
+         0kFuVVAIyTPcWHwxN09adMfMWWeiz3NLtf0qQvG8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 047/155] f2fs: fix to clear dirty inode in error path of f2fs_iget()
-Date:   Thu, 13 Jun 2019 10:32:39 +0200
-Message-Id: <20190613075655.744498594@linuxfoundation.org>
+Subject: [PATCH 5.1 046/155] f2fs: fix to do sanity check on free nid
+Date:   Thu, 13 Jun 2019 10:32:38 +0200
+Message-Id: <20190613075655.696316634@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,67 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 546d22f070d64a7b96f57c93333772085d3a5e6d ]
+[ Upstream commit 626bcf2b7ce87211dba565f2bfa7842ba5be5c1b ]
 
 As Jungyeon reported in bugzilla:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203217
+https://bugzilla.kernel.org/show_bug.cgi?id=203225
 
 - Overview
-When mounting the attached crafted image and running program, I got this error.
-Additionally, it hangs on sync after running the program.
+When mounting the attached crafted image and unmounting it, following errors are reported.
+Additionally, it hangs on sync after unmounting.
 
-The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
+The image is intentionally fuzzed from a normal f2fs image for testing.
+Compile options for F2FS are as follows.
+CONFIG_F2FS_FS=y
+CONFIG_F2FS_STAT_FS=y
+CONFIG_F2FS_FS_XATTR=y
+CONFIG_F2FS_FS_POSIX_ACL=y
+CONFIG_F2FS_CHECK_FS=y
 
 - Reproduces
-cc poc_test_05.c
 mkdir test
 mount -t f2fs tmp.img test
-sudo ./a.out
+touch test/t
+umount test
 sync
 
 - Messages
- kernel BUG at fs/f2fs/inode.c:707!
- RIP: 0010:f2fs_evict_inode+0x33f/0x3a0
+ kernel BUG at fs/f2fs/node.c:3073!
+ RIP: 0010:f2fs_destroy_node_manager+0x2f0/0x300
  Call Trace:
-  evict+0xba/0x180
-  f2fs_iget+0x598/0xdf0
-  f2fs_lookup+0x136/0x320
-  __lookup_slow+0x92/0x140
-  lookup_slow+0x30/0x50
-  walk_component+0x1c1/0x350
-  path_lookupat+0x62/0x200
-  filename_lookup+0xb3/0x1a0
-  do_readlinkat+0x56/0x110
-  __x64_sys_readlink+0x16/0x20
-  do_syscall_64+0x43/0xf0
+  f2fs_put_super+0xf4/0x270
+  generic_shutdown_super+0x62/0x110
+  kill_block_super+0x1c/0x50
+  kill_f2fs_super+0xad/0xd0
+  deactivate_locked_super+0x35/0x60
+  cleanup_mnt+0x36/0x70
+  task_work_run+0x75/0x90
+  exit_to_usermode_loop+0x93/0xa0
+  do_syscall_64+0xba/0xf0
   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ RIP: 0010:f2fs_destroy_node_manager+0x2f0/0x300
 
-During inode loading, __recover_inline_status() can recovery inode status
-and set inode dirty, once we failed in following process, it will fail
-the check in f2fs_evict_inode, result in trigger BUG_ON().
+NAT table is corrupted, so reserved meta/node inode ids were added into
+free list incorrectly, during file creation, since reserved id has cached
+in inode hash, so it fails the creation and preallocated nid can not be
+released later, result in kernel panic.
 
-Let's clear dirty inode in error path of f2fs_iget() to avoid panic.
+To fix this issue, let's do nid boundary check during free nid loading.
 
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/inode.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/f2fs/node.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index e7f2e8759315..4edd6f2bb491 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -488,6 +488,7 @@ make_now:
- 	return inode;
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index d45ecef75116..63bb6134d39a 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -2082,6 +2082,9 @@ static bool add_free_nid(struct f2fs_sb_info *sbi,
+ 	if (unlikely(nid == 0))
+ 		return false;
  
- bad_inode:
-+	f2fs_inode_synced(inode);
- 	iget_failed(inode);
- 	trace_f2fs_iget_exit(inode, ret);
- 	return ERR_PTR(ret);
++	if (unlikely(f2fs_check_nid_range(sbi, nid)))
++		return false;
++
+ 	i = f2fs_kmem_cache_alloc(free_nid_slab, GFP_NOFS);
+ 	i->nid = nid;
+ 	i->state = FREE_NID;
 -- 
 2.20.1
 
