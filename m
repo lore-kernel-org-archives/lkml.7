@@ -2,107 +2,101 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A92AC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6CCC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1BD20866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E9B20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:12:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="tH2xvhXj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391387AbfFMQMR (ORCPT
+        id S2391253AbfFMQMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:12:17 -0400
-Received: from smtp5-g21.free.fr ([212.27.42.5]:32442 "EHLO smtp5-g21.free.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391625AbfFMQMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:12:14 -0400
-Received: from heffalump.sk2.org (unknown [88.186.243.14])
-        by smtp5-g21.free.fr (Postfix) with ESMTPS id 4DB325FFB9;
-        Thu, 13 Jun 2019 18:12:12 +0200 (CEST)
-Received: from steve by heffalump.sk2.org with local (Exim 4.89)
-        (envelope-from <steve@sk2.org>)
-        id 1hbSKh-0004Qa-LM; Thu, 13 Jun 2019 18:12:11 +0200
-From:   Stephen Kitt <steve@sk2.org>
-To:     x86@kernel.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH] Drop unused isa_page_to_bus
-Date:   Thu, 13 Jun 2019 18:11:55 +0200
-Message-Id: <20190613161155.16946-1-steve@sk2.org>
-X-Mailer: git-send-email 2.11.0
+        Thu, 13 Jun 2019 12:12:21 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:48476 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390977AbfFMQMQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:12:16 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6DAE552B;
+        Thu, 13 Jun 2019 18:12:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1560442334;
+        bh=MDH6/vK3lmQEB1yXnrBhx9bgNlNkvKRT+GvpqLMcQf0=;
+        h=Subject:To:Cc:References:Reply-To:From:Date:In-Reply-To:From;
+        b=tH2xvhXjuEMzf4zdBEwlAvfY2JBdUFSH44OnRgHh8Q8RMgmlPbakCco5RzRNqi/GD
+         +aX/JGtbTi9sHrxEbXYsrsGhyrHAKasUQrQ6uHItZkpjVjLwG5x4tloXKZaVgiy9BB
+         qT6QzQGT0F927yg19zhqDFzwpLcW+4nlaHjWPz5Q=
+Subject: Re: [PATCH 3/4] media: mn88473: don't check retval after our own
+ assignemt
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-media@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org, Antti Palosaari <crope@iki.fi>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20190613155421.16408-1-wsa+renesas@sang-engineering.com>
+ <20190613155421.16408-4-wsa+renesas@sang-engineering.com>
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <d4440370-3927-931c-9202-c32eeddf405f@ideasonboard.com>
+Date:   Thu, 13 Jun 2019 17:12:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190613155421.16408-4-wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-isa_page_to_bus is deprecated and no longer used anywhere, this patch
-removes it entirely.
+Hi Wolfram,
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- arch/alpha/include/asm/io.h | 5 -----
- arch/arm/include/asm/io.h   | 1 -
- arch/mips/include/asm/io.h  | 2 --
- arch/x86/include/asm/io.h   | 1 -
- 4 files changed, 9 deletions(-)
+On 13/06/2019 16:54, Wolfram Sang wrote:
+> No need to check a retval after we assigned a constant to it.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
-index ccf9d65166bb..af2c0063dc75 100644
---- a/arch/alpha/include/asm/io.h
-+++ b/arch/alpha/include/asm/io.h
-@@ -93,11 +93,6 @@ static inline void * phys_to_virt(unsigned long address)
- 
- #define page_to_phys(page)	page_to_pa(page)
- 
--static inline dma_addr_t __deprecated isa_page_to_bus(struct page *page)
--{
--	return page_to_phys(page);
--}
--
- /* Maximum PIO space address supported?  */
- #define IO_SPACE_LIMIT 0xffff
- 
-diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
-index 7e22c81398c4..f96ec93679b7 100644
---- a/arch/arm/include/asm/io.h
-+++ b/arch/arm/include/asm/io.h
-@@ -33,7 +33,6 @@
-  * ISA I/O bus memory addresses are 1:1 with the physical address.
-  */
- #define isa_virt_to_bus virt_to_phys
--#define isa_page_to_bus page_to_phys
- #define isa_bus_to_virt phys_to_virt
- 
- /*
-diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-index 29997e42480e..1790274c27eb 100644
---- a/arch/mips/include/asm/io.h
-+++ b/arch/mips/include/asm/io.h
-@@ -149,8 +149,6 @@ static inline void *isa_bus_to_virt(unsigned long address)
- 	return phys_to_virt(address);
- }
- 
--#define isa_page_to_bus page_to_phys
--
- /*
-  * However PCI ones are not necessarily 1:1 and therefore these interfaces
-  * are forbidden in portable PCI drivers.
-diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-index a06a9f8294ea..6bed97ff6db2 100644
---- a/arch/x86/include/asm/io.h
-+++ b/arch/x86/include/asm/io.h
-@@ -165,7 +165,6 @@ static inline unsigned int isa_virt_to_bus(volatile void *address)
- {
- 	return (unsigned int)virt_to_phys(address);
- }
--#define isa_page_to_bus(page)	((unsigned int)page_to_phys(page))
- #define isa_bus_to_virt		phys_to_virt
- 
- /*
--- 
-2.11.0
+With title fixed.
+
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+> ---
+>  drivers/media/dvb-frontends/mn88473.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/dvb-frontends/mn88473.c b/drivers/media/dvb-frontends/mn88473.c
+> index 08118b38533b..d1b11909825c 100644
+> --- a/drivers/media/dvb-frontends/mn88473.c
+> +++ b/drivers/media/dvb-frontends/mn88473.c
+> @@ -661,8 +661,7 @@ static int mn88473_probe(struct i2c_client *client,
+>  	if (dev->client[1] == NULL) {
+>  		ret = -ENODEV;
+>  		dev_err(&client->dev, "I2C registration failed\n");
+> -		if (ret)
+> -			goto err_regmap_0_regmap_exit;
+> +		goto err_regmap_0_regmap_exit;
+>  	}
+>  	dev->regmap[1] = regmap_init_i2c(dev->client[1], &regmap_config);
+>  	if (IS_ERR(dev->regmap[1])) {
+> @@ -675,8 +674,7 @@ static int mn88473_probe(struct i2c_client *client,
+>  	if (dev->client[2] == NULL) {
+>  		ret = -ENODEV;
+>  		dev_err(&client->dev, "2nd I2C registration failed\n");
+> -		if (ret)
+> -			goto err_regmap_1_regmap_exit;
+> +		goto err_regmap_1_regmap_exit;
+>  	}
+>  	dev->regmap[2] = regmap_init_i2c(dev->client[2], &regmap_config);
+>  	if (IS_ERR(dev->regmap[2])) {
+> 
 
