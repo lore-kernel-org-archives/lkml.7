@@ -2,438 +2,111 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B853C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBABDC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC1F20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC15220851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfFMPuN (ORCPT
+        id S1732442AbfFMPu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:50:13 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18149 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731693AbfFMJOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:14:18 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4BBF0C634AE669F01C9C;
-        Thu, 13 Jun 2019 17:14:14 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 13 Jun 2019 17:14:06 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
-        Weihang Li <liweihang@hisilicon.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 01/12] net: hns3: delay setting of reset level for hw errors until slot_reset is called
-Date:   Thu, 13 Jun 2019 17:12:21 +0800
-Message-ID: <1560417152-53050-2-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560417152-53050-1-git-send-email-tanhuazhong@huawei.com>
-References: <1560417152-53050-1-git-send-email-tanhuazhong@huawei.com>
+        Thu, 13 Jun 2019 11:50:28 -0400
+Received: from relay.sw.ru ([185.231.240.75]:52142 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726870AbfFMPu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 11:50:26 -0400
+Received: from [172.16.25.12]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1hbRzR-0002en-B5; Thu, 13 Jun 2019 18:50:13 +0300
+Subject: Re: [PATCH v3] kasan: add memory corruption identification for
+ software tag-based mode
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Walter Wu <walter-zh.wu@mediatek.com>,
+        Alexander Potapenko <glider@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>
+References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
+ <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
+ <CACT4Y+ZGEmGE2LFmRfPGgtUGwBqyL+s_CSp5DCpWGanTJCRcXw@mail.gmail.com>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <278bd641-7d74-b9ac-1549-1e630ef3d38c@virtuozzo.com>
+Date:   Thu, 13 Jun 2019 18:50:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+In-Reply-To: <CACT4Y+ZGEmGE2LFmRfPGgtUGwBqyL+s_CSp5DCpWGanTJCRcXw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shiju Jose <shiju.jose@huawei.com>
 
-Presently the error handling code sets the reset level required
-for the recovery of the hw errors to the reset framework in the
-error_detected AER callback. However the rest_event would be
-called later from the slot_reset callback. This can cause issue
-of using the wrong reset_level if a high priority reset request
-occur before the slot_reset is called.
 
-This patch delays setting of the reset level, required
-for the hw errors, to the reset framework until the
-slot_reset is called.
+On 6/13/19 4:05 PM, Dmitry Vyukov wrote:
+> On Thu, Jun 13, 2019 at 2:27 PM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
+>> On 6/13/19 11:13 AM, Walter Wu wrote:
+>>> This patch adds memory corruption identification at bug report for
+>>> software tag-based mode, the report show whether it is "use-after-free"
+>>> or "out-of-bound" error instead of "invalid-access" error.This will make
+>>> it easier for programmers to see the memory corruption problem.
+>>>
+>>> Now we extend the quarantine to support both generic and tag-based kasan.
+>>> For tag-based kasan, the quarantine stores only freed object information
+>>> to check if an object is freed recently. When tag-based kasan reports an
+>>> error, we can check if the tagged addr is in the quarantine and make a
+>>> good guess if the object is more like "use-after-free" or "out-of-bound".
+>>>
+>>
+>>
+>> We already have all the information and don't need the quarantine to make such guess.
+>> Basically if shadow of the first byte of object has the same tag as tag in pointer than it's out-of-bounds,
+>> otherwise it's use-after-free.
+>>
+>> In pseudo-code it's something like this:
+>>
+>> u8 object_tag = *(u8 *)kasan_mem_to_shadow(nearest_object(cacche, page, access_addr));
+>>
+>> if (access_addr_tag == object_tag && object_tag != KASAN_TAG_INVALID)
+>>         // out-of-bounds
+>> else
+>>         // use-after-free
+> 
+> But we don't have redzones in tag mode (intentionally), so unless I am
+> missing something we don't have the necessary info. Both cases look
+> the same -- we hit a different tag.
 
-Reported-by: Salil Mehta <salil.mehta@huawei.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  3 ++
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 15 ++++--
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 61 ++++++++++------------
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 14 +++--
- 4 files changed, 51 insertions(+), 42 deletions(-)
+We always have some redzone. We need a place to store 'struct kasan_alloc_meta',
+and sometimes also kasan_free_meta plus alignment to the next object.
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index 63cdc18..79044b5 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -214,6 +214,7 @@ struct hnae3_ae_dev {
- 	struct list_head node;
- 	u32 flag;
- 	u8 override_pci_need_reset; /* fix to stop multiple reset happening */
-+	unsigned long hw_err_reset_req;
- 	enum hnae3_reset_type reset_type;
- 	void *priv;
- };
-@@ -459,6 +460,8 @@ struct hnae3_ae_ops {
- 				  u16 vlan, u8 qos, __be16 proto);
- 	int (*enable_hw_strip_rxvtag)(struct hnae3_handle *handle, bool enable);
- 	void (*reset_event)(struct pci_dev *pdev, struct hnae3_handle *handle);
-+	enum hnae3_reset_type (*get_reset_level)(struct hnae3_ae_dev *ae_dev,
-+						 unsigned long *addr);
- 	void (*set_default_reset_request)(struct hnae3_ae_dev *ae_dev,
- 					  enum hnae3_reset_type rst_type);
- 	void (*get_channels)(struct hnae3_handle *handle,
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index fe2c2c5..66d733b 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1930,17 +1930,22 @@ static pci_ers_result_t hns3_error_detected(struct pci_dev *pdev,
- static pci_ers_result_t hns3_slot_reset(struct pci_dev *pdev)
- {
- 	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(pdev);
-+	const struct hnae3_ae_ops *ops = ae_dev->ops;
-+	enum hnae3_reset_type reset_type;
- 	struct device *dev = &pdev->dev;
- 
--	dev_info(dev, "requesting reset due to PCI error\n");
--
- 	if (!ae_dev || !ae_dev->ops)
- 		return PCI_ERS_RESULT_NONE;
- 
- 	/* request the reset */
--	if (ae_dev->ops->reset_event) {
--		if (!ae_dev->override_pci_need_reset)
--			ae_dev->ops->reset_event(pdev, NULL);
-+	if (ops->reset_event) {
-+		if (!ae_dev->override_pci_need_reset) {
-+			reset_type = ops->get_reset_level(ae_dev,
-+						&ae_dev->hw_err_reset_req);
-+			ops->set_default_reset_request(ae_dev, reset_type);
-+			dev_info(dev, "requesting reset due to PCI error\n");
-+			ops->reset_event(pdev, NULL);
-+		}
- 
- 		return PCI_ERS_RESULT_RECOVERED;
- 	}
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-index 4126287..1a2ea1b 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-@@ -1069,13 +1069,6 @@ static int hclge_config_ssu_hw_err_int(struct hclge_dev *hdev, bool en)
- 	return ret;
- }
- 
--#define HCLGE_SET_DEFAULT_RESET_REQUEST(reset_type) \
--	do { \
--		if (ae_dev->ops->set_default_reset_request) \
--			ae_dev->ops->set_default_reset_request(ae_dev, \
--							       reset_type); \
--	} while (0)
--
- /* hclge_handle_mpf_ras_error: handle all main PF RAS errors
-  * @hdev: pointer to struct hclge_dev
-  * @desc: descriptor for describing the command
-@@ -1110,7 +1103,7 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 		reset_level = hclge_log_error(dev, "IMP_TCM_ECC_INT_STS",
- 					      &hclge_imp_tcm_ecc_int[0],
- 					      status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	status = le32_to_cpu(desc[0].data[1]);
-@@ -1118,20 +1111,18 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 		reset_level = hclge_log_error(dev, "CMDQ_MEM_ECC_INT_STS",
- 					      &hclge_cmdq_nic_mem_ecc_int[0],
- 					      status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
--	if ((le32_to_cpu(desc[0].data[2])) & BIT(0)) {
-+	if ((le32_to_cpu(desc[0].data[2])) & BIT(0))
- 		dev_warn(dev, "imp_rd_data_poison_err found\n");
--		HCLGE_SET_DEFAULT_RESET_REQUEST(HNAE3_NONE_RESET);
--	}
- 
- 	status = le32_to_cpu(desc[0].data[3]);
- 	if (status) {
- 		reset_level = hclge_log_error(dev, "TQP_INT_ECC_INT_STS",
- 					      &hclge_tqp_int_ecc_int[0],
- 					      status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	status = le32_to_cpu(desc[0].data[4]);
-@@ -1139,7 +1130,7 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 		reset_level = hclge_log_error(dev, "MSIX_ECC_INT_STS",
- 					      &hclge_msix_sram_ecc_int[0],
- 					      status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	/* log SSU(Storage Switch Unit) errors */
-@@ -1149,14 +1140,14 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 		reset_level = hclge_log_error(dev, "SSU_ECC_MULTI_BIT_INT_0",
- 					      &hclge_ssu_mem_ecc_err_int[0],
- 					      status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	status = le32_to_cpu(*(desc_data + 3)) & BIT(0);
- 	if (status) {
- 		dev_warn(dev, "SSU_ECC_MULTI_BIT_INT_1 ssu_mem32_ecc_mbit_err found [error status=0x%x]\n",
- 			 status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(HNAE3_GLOBAL_RESET);
-+		set_bit(HNAE3_GLOBAL_RESET, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	status = le32_to_cpu(*(desc_data + 4)) & HCLGE_SSU_COMMON_ERR_INT_MASK;
-@@ -1164,7 +1155,7 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 		reset_level = hclge_log_error(dev, "SSU_COMMON_ERR_INT",
- 					      &hclge_ssu_com_err_int[0],
- 					      status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	/* log IGU(Ingress Unit) errors */
-@@ -1173,7 +1164,7 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 	if (status) {
- 		reset_level = hclge_log_error(dev, "IGU_INT_STS",
- 					      &hclge_igu_int[0], status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	/* log PPP(Programmable Packet Process) errors */
-@@ -1184,7 +1175,7 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 			hclge_log_error(dev, "PPP_MPF_ABNORMAL_INT_ST1",
- 					&hclge_ppp_mpf_abnormal_int_st1[0],
- 					status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	status = le32_to_cpu(*(desc_data + 3)) & HCLGE_PPP_MPF_INT_ST3_MASK;
-@@ -1193,7 +1184,7 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 			hclge_log_error(dev, "PPP_MPF_ABNORMAL_INT_ST3",
- 					&hclge_ppp_mpf_abnormal_int_st3[0],
- 					status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	/* log PPU(RCB) errors */
-@@ -1202,7 +1193,7 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 	if (status) {
- 		dev_warn(dev, "PPU_MPF_ABNORMAL_INT_ST1 %s found\n",
- 			 "rpu_rx_pkt_ecc_mbit_err");
--		HCLGE_SET_DEFAULT_RESET_REQUEST(HNAE3_GLOBAL_RESET);
-+		set_bit(HNAE3_GLOBAL_RESET, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	status = le32_to_cpu(*(desc_data + 2));
-@@ -1211,7 +1202,7 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 			hclge_log_error(dev, "PPU_MPF_ABNORMAL_INT_ST2",
- 					&hclge_ppu_mpf_abnormal_int_st2[0],
- 					status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	status = le32_to_cpu(*(desc_data + 3)) & HCLGE_PPU_MPF_INT_ST3_MASK;
-@@ -1220,7 +1211,7 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 			hclge_log_error(dev, "PPU_MPF_ABNORMAL_INT_ST3",
- 					&hclge_ppu_mpf_abnormal_int_st3[0],
- 					status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	/* log TM(Traffic Manager) errors */
-@@ -1229,7 +1220,7 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 	if (status) {
- 		reset_level = hclge_log_error(dev, "TM_SCH_RINT",
- 					      &hclge_tm_sch_rint[0], status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	/* log QCN(Quantized Congestion Control) errors */
-@@ -1238,7 +1229,7 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 	if (status) {
- 		reset_level = hclge_log_error(dev, "QCN_FIFO_RINT",
- 					      &hclge_qcn_fifo_rint[0], status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	status = le32_to_cpu(*(desc_data + 1)) & HCLGE_QCN_ECC_INT_MASK;
-@@ -1246,7 +1237,7 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 		reset_level = hclge_log_error(dev, "QCN_ECC_RINT",
- 					      &hclge_qcn_ecc_rint[0],
- 					      status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	/* log NCSI errors */
-@@ -1255,7 +1246,7 @@ static int hclge_handle_mpf_ras_error(struct hclge_dev *hdev,
- 	if (status) {
- 		reset_level = hclge_log_error(dev, "NCSI_ECC_INT_RPT",
- 					      &hclge_ncsi_err_int[0], status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	/* clear all main PF RAS errors */
-@@ -1301,7 +1292,7 @@ static int hclge_handle_pf_ras_error(struct hclge_dev *hdev,
- 		reset_level = hclge_log_error(dev, "SSU_PORT_BASED_ERR_INT",
- 					      &hclge_ssu_port_based_err_int[0],
- 					      status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	status = le32_to_cpu(desc[0].data[1]);
-@@ -1309,7 +1300,7 @@ static int hclge_handle_pf_ras_error(struct hclge_dev *hdev,
- 		reset_level = hclge_log_error(dev, "SSU_FIFO_OVERFLOW_INT",
- 					      &hclge_ssu_fifo_overflow_int[0],
- 					      status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	status = le32_to_cpu(desc[0].data[2]);
-@@ -1317,7 +1308,7 @@ static int hclge_handle_pf_ras_error(struct hclge_dev *hdev,
- 		reset_level = hclge_log_error(dev, "SSU_ETS_TCG_INT",
- 					      &hclge_ssu_ets_tcg_int[0],
- 					      status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	/* log IGU(Ingress Unit) EGU(Egress Unit) TNL errors */
-@@ -1327,7 +1318,7 @@ static int hclge_handle_pf_ras_error(struct hclge_dev *hdev,
- 		reset_level = hclge_log_error(dev, "IGU_EGU_TNL_INT_STS",
- 					      &hclge_igu_egu_tnl_int[0],
- 					      status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	/* log PPU(RCB) errors */
-@@ -1337,7 +1328,7 @@ static int hclge_handle_pf_ras_error(struct hclge_dev *hdev,
- 		reset_level = hclge_log_error(dev, "PPU_PF_ABNORMAL_INT_ST0",
- 					      &hclge_ppu_pf_abnormal_int[0],
- 					      status);
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_level);
-+		set_bit(reset_level, &ae_dev->hw_err_reset_req);
- 	}
- 
- 	/* clear all PF RAS errors */
-@@ -1597,7 +1588,7 @@ static void hclge_handle_rocee_ras_error(struct hnae3_ae_dev *ae_dev)
- 
- 	reset_type = hclge_log_and_clear_rocee_ras_error(hdev);
- 	if (reset_type != HNAE3_NONE_RESET)
--		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_type);
-+		set_bit(reset_type, &ae_dev->hw_err_reset_req);
- }
- 
- static const struct hclge_hw_blk hw_blk[] = {
-@@ -1657,6 +1648,10 @@ pci_ers_result_t hclge_handle_hw_ras_error(struct hnae3_ae_dev *ae_dev)
- 
- 	status = hclge_read_dev(&hdev->hw, HCLGE_RAS_PF_OTHER_INT_STS_REG);
- 
-+	if (status & HCLGE_RAS_REG_NFE_MASK ||
-+	    status & HCLGE_RAS_REG_ROCEE_ERR_MASK)
-+		ae_dev->hw_err_reset_req = 0;
-+
- 	/* Handling Non-fatal HNS RAS errors */
- 	if (status & HCLGE_RAS_REG_NFE_MASK) {
- 		dev_warn(dev,
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index b7ba893..f3e9030 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -41,6 +41,8 @@ static int hclge_set_umv_space(struct hclge_dev *hdev, u16 space_size,
- 			       u16 *allocated_size, bool is_alloc);
- static void hclge_rfs_filter_expire(struct hclge_dev *hdev);
- static void hclge_clear_arfs_rules(struct hnae3_handle *handle);
-+static enum hnae3_reset_type hclge_get_reset_level(struct hnae3_ae_dev *ae_dev,
-+						   unsigned long *addr);
- 
- static struct hnae3_ae_algo ae_algo;
- 
-@@ -3066,10 +3068,11 @@ static void hclge_do_reset(struct hclge_dev *hdev)
- 	}
- }
- 
--static enum hnae3_reset_type hclge_get_reset_level(struct hclge_dev *hdev,
-+static enum hnae3_reset_type hclge_get_reset_level(struct hnae3_ae_dev *ae_dev,
- 						   unsigned long *addr)
- {
- 	enum hnae3_reset_type rst_level = HNAE3_NONE_RESET;
-+	struct hclge_dev *hdev = ae_dev->priv;
- 
- 	/* first, resolve any unknown reset type to the known type(s) */
- 	if (test_bit(HNAE3_UNKNOWN_RESET, addr)) {
-@@ -3398,7 +3401,7 @@ static void hclge_reset_event(struct pci_dev *pdev, struct hnae3_handle *handle)
- 		return;
- 	else if (hdev->default_reset_request)
- 		hdev->reset_level =
--			hclge_get_reset_level(hdev,
-+			hclge_get_reset_level(ae_dev,
- 					      &hdev->default_reset_request);
- 	else if (time_after(jiffies, (hdev->last_reset_time + 4 * 5 * HZ)))
- 		hdev->reset_level = HNAE3_FUNC_RESET;
-@@ -3434,6 +3437,8 @@ static void hclge_reset_timer(struct timer_list *t)
- 
- static void hclge_reset_subtask(struct hclge_dev *hdev)
- {
-+	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(hdev->pdev);
-+
- 	/* check if there is any ongoing reset in the hardware. This status can
- 	 * be checked from reset_pending. If there is then, we need to wait for
- 	 * hardware to complete reset.
-@@ -3444,12 +3449,12 @@ static void hclge_reset_subtask(struct hclge_dev *hdev)
- 	 *       now.
- 	 */
- 	hdev->last_reset_time = jiffies;
--	hdev->reset_type = hclge_get_reset_level(hdev, &hdev->reset_pending);
-+	hdev->reset_type = hclge_get_reset_level(ae_dev, &hdev->reset_pending);
- 	if (hdev->reset_type != HNAE3_NONE_RESET)
- 		hclge_reset(hdev);
- 
- 	/* check if we got any *new* reset requests to be honored */
--	hdev->reset_type = hclge_get_reset_level(hdev, &hdev->reset_request);
-+	hdev->reset_type = hclge_get_reset_level(ae_dev, &hdev->reset_request);
- 	if (hdev->reset_type != HNAE3_NONE_RESET)
- 		hclge_do_reset(hdev);
- 
-@@ -9231,6 +9236,7 @@ static const struct hnae3_ae_ops hclge_ops = {
- 	.set_vf_vlan_filter = hclge_set_vf_vlan_filter,
- 	.enable_hw_strip_rxvtag = hclge_en_hw_strip_rxvtag,
- 	.reset_event = hclge_reset_event,
-+	.get_reset_level = hclge_get_reset_level,
- 	.set_default_reset_request = hclge_set_def_reset_request,
- 	.get_tqps_and_rss_info = hclge_get_tqps_and_rss_info,
- 	.set_channels = hclge_set_channels,
--- 
-2.7.4
 
+> There may only be a small trailer for kmalloc-allocated objects that
+> is painted with a different tag. I don't remember if we actually use a
+> different tag for the trailer. Since tag mode granularity is 16 bytes,
+> for smaller objects the trailer is impossible at all.
+> 
+
+Smaller that 16-bytes objects have 16 bytes of kasan_alloc_meta.
+Redzones and freed objects always painted with KASAN_TAG_INVALID.
