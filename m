@@ -5,52 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3201CC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E36C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B2420644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA40720644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442730;
-	bh=j5w28E3klWyw4CPlY2bADWeTaIatMocL/9pnRrsXdJo=;
+	s=default; t=1560442741;
+	bh=9KyvKUWZnBx1g14YIg5S+FWNtGtXZCZOK0xXgOx15PE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uTzIL4ZwHrqtsgdPf31n/hunW743ZarHhutsDyI6ILUR7cLtxaTwn5HXauY73yHxF
-	 K/ck9lyVptq73oYpTzWGAWrBQ13fKn+5H93gVyXZFzUOosvgjRvTbBAoZu5rzXYjWF
-	 OzJ4eMk2+T8iTLsZQ0TKzBcJUhFbCPm/uRtTzZzA=
+	b=SFgV71jRziU/wUfZC29ooDIdFudcbqa3mrX6DdTFUppyaWhJib1P/5Sp+cryVu9C0
+	 mDZ4EkFVBDieA7qx251Xt3Ex2luP5v2Dwf6ne/cdxs8an5GmOaGlshJ1SW4+MxUGyM
+	 tr62gId6/t9Lw87XNMa7tGWXNVoqiZd7VLbxxRyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391925AbfFMQSl (ORCPT
+        id S2391845AbfFMQTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:18:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57718 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:19:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731113AbfFMIkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:40:15 -0400
+        id S1731103AbfFMIkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:40:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E947620851;
-        Thu, 13 Jun 2019 08:40:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CE0021479;
+        Thu, 13 Jun 2019 08:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415214;
-        bh=j5w28E3klWyw4CPlY2bADWeTaIatMocL/9pnRrsXdJo=;
+        s=default; t=1560415206;
+        bh=9KyvKUWZnBx1g14YIg5S+FWNtGtXZCZOK0xXgOx15PE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kVS+itW3LQf+lBcPQ/7WIxbnLYkMCkPcOu9jGw39hSNoocK5VFllaO1QzzdAgsGr/
-         7pDDJg1YBaEojsdK9bu8Tir5Rht4sdrrOMX73FVy0UQukgJww7MrOtWlQ7S7zkiEV5
-         rH0fpokJnGD9ARzmfOJhxL3jogj1o+ljaJd1g5JY=
+        b=Z125h0k6fpVO5rnuwkPo297j/MBP9okdd+nb2ec5ysA5EJOt/0BhWbh58UHmHfLYQ
+         sXATPWgHUVPSRWxgVfzxNOgFldFulBsuD8yOpPcHZKL2Ho3OJav6rBVDtbb8UhLg7p
+         ioGXp/E/7wGdnKWT7Mc9k3aoVqHU1B8I+snpCxw4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 045/118] PCI: dwc: Free MSI in dw_pcie_host_init() error path
-Date:   Thu, 13 Jun 2019 10:33:03 +0200
-Message-Id: <20190613075646.368348067@linuxfoundation.org>
+Subject: [PATCH 4.19 015/118] mm/slab.c: fix an infinite loop in leaks_show()
+Date:   Thu, 13 Jun 2019 10:32:33 +0200
+Message-Id: <20190613075644.535772360@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -63,64 +66,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9e2b5de5604a6ff2626c51e77014d92c9299722c ]
+[ Upstream commit 745e10146c31b1c6ed3326286704ae251b17f663 ]
 
-If we ever did MSI-related initializations, we need to call
-dw_pcie_free_msi() in the error code path.
+"cat /proc/slab_allocators" could hang forever on SMP machines with
+kmemleak or object debugging enabled due to other CPUs running do_drain()
+will keep making kmemleak_object or debug_objects_cache dirty and unable
+to escape the first loop in leaks_show(),
 
-Remove the IS_ENABLED(CONFIG_PCI_MSI) check for MSI init because
-pci_msi_enabled() already has a stub for !CONFIG_PCI_MSI.
+do {
+	set_store_user_clean(cachep);
+	drain_cpu_caches(cachep);
+	...
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+} while (!is_store_user_clean(cachep));
+
+For example,
+
+do_drain
+  slabs_destroy
+    slab_destroy
+      kmem_cache_free
+        __cache_free
+          ___cache_free
+            kmemleak_free_recursive
+              delete_object_full
+                __delete_object
+                  put_object
+                    free_object_rcu
+                      kmem_cache_free
+                        cache_free_debugcheck --> dirty kmemleak_object
+
+One approach is to check cachep->name and skip both kmemleak_object and
+debug_objects_cache in leaks_show().  The other is to set store_user_clean
+after drain_cpu_caches() which leaves a small window between
+drain_cpu_caches() and set_store_user_clean() where per-CPU caches could
+be dirty again lead to slightly wrong information has been stored but
+could also speed up things significantly which sounds like a good
+compromise.  For example,
+
+ # cat /proc/slab_allocators
+ 0m42.778s # 1st approach
+ 0m0.737s  # 2nd approach
+
+[akpm@linux-foundation.org: tweak comment]
+Link: http://lkml.kernel.org/r/20190411032635.10325-1-cai@lca.pw
+Fixes: d31676dfde25 ("mm/slab: alternative implementation for DEBUG_SLAB_LEAK")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ mm/slab.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index b56e22262a77..4eedb2c54ab3 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -439,7 +439,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (ret)
- 		pci->num_viewport = 2;
+diff --git a/mm/slab.c b/mm/slab.c
+index 018d32496e8d..46f21e73db2f 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -4326,8 +4326,12 @@ static int leaks_show(struct seq_file *m, void *p)
+ 	 * whole processing.
+ 	 */
+ 	do {
+-		set_store_user_clean(cachep);
+ 		drain_cpu_caches(cachep);
++		/*
++		 * drain_cpu_caches() could make kmemleak_object and
++		 * debug_objects_cache dirty, so reset afterwards.
++		 */
++		set_store_user_clean(cachep);
  
--	if (IS_ENABLED(CONFIG_PCI_MSI) && pci_msi_enabled()) {
-+	if (pci_msi_enabled()) {
- 		/*
- 		 * If a specific SoC driver needs to change the
- 		 * default number of vectors, it needs to implement
-@@ -477,7 +477,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (pp->ops->host_init) {
- 		ret = pp->ops->host_init(pp);
- 		if (ret)
--			goto error;
-+			goto err_free_msi;
- 	}
+ 		x[1] = 0;
  
- 	pp->root_bus_nr = pp->busn->start;
-@@ -491,7 +491,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 
- 	ret = pci_scan_root_bus_bridge(bridge);
- 	if (ret)
--		goto error;
-+		goto err_free_msi;
- 
- 	bus = bridge->bus;
- 
-@@ -507,6 +507,9 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	pci_bus_add_devices(bus);
- 	return 0;
- 
-+err_free_msi:
-+	if (pci_msi_enabled() && !pp->ops->msi_host_init)
-+		dw_pcie_free_msi(pp);
- error:
- 	pci_free_host_bridge(bridge);
- 	return ret;
 -- 
 2.20.1
 
