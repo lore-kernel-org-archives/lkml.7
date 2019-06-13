@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB331C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86666C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFFD220866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E59B208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442087;
-	bh=VqG4FZRI+dVo9MMkJCdyJAXeK5IqGqDxWPwenGrh/9E=;
+	s=default; t=1560442096;
+	bh=geU8Noc3OKP6QPHS3c2vzNUSMaOjch3D55wecvpIVKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CPIWocJApBoCuIuCwQbOqeupziVlXt9vKR6zb+n/wTU+gMelX3E2stMwuPNvJpsLd
-	 lyNZq35ZFFi+5Aqrd2OBMWLmJRviEyv2N2oETw0ncGwoa78OFLfjebJDWDUimEq3PS
-	 BKoXXupByldZ17AvCnV2PXllU3rjedn2dyr278iI=
+	b=l9rDaBYpuUJ9RFgLsa3A3tRHAe8EkAcED13EXM6rMqEM4xQw41VGechBwf3/bo9Wn
+	 ObQupPHipF+A8EeQWjvDxfU+MBdVmHyiHJ1Usmck/F7sgctuUebjAHOKhkDvgYyzvu
+	 FAT6k3xfwDSAOhNjpDn1HSv7ltnBVYthKur38JcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390479AbfFMQIA (ORCPT
+        id S2390939AbfFMQIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:08:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34078 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:08:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731299AbfFMIpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:45:22 -0400
+        id S1731290AbfFMIpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:45:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0C472173C;
-        Thu, 13 Jun 2019 08:45:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EDCA20851;
+        Thu, 13 Jun 2019 08:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415521;
-        bh=VqG4FZRI+dVo9MMkJCdyJAXeK5IqGqDxWPwenGrh/9E=;
+        s=default; t=1560415513;
+        bh=geU8Noc3OKP6QPHS3c2vzNUSMaOjch3D55wecvpIVKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E3fQhppnXBZ2KayTmwp5VIFfUDKlKLWpbY6V/qlL8F5NkKT8FpUJQE6s99Wp/MFtN
-         FCaNt8mEVhYfX62r2TyALUM994/2vVgYE2S+wmTS7492q9tqfzgBaFUEyj/5WjubLs
-         r5B3lcyh/uIprMAYzuvv1O/JZgRsyy1Pw5BNVP3A=
+        b=IQfsbjCsAujRHg54ytrrcYm7w6Y+7um5nKFvPgPI8OwyD22VFTe/yAmw72PxGn8H2
+         lTNy2Q1kUmo+wEQ4n7CnFD81LEvlvKAkgQmuf7VwpTQehQov3J3o8zMtyPQ7jChTex
+         Rzw0qN/xEHVU3+nbJcHE6PXBFDzW9ifMFGVoJ1/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, jolsa@redhat.com,
-        kan.liang@intel.com, vincent.weaver@maine.edu,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 031/155] perf/x86/intel: Allow PEBS multi-entry in watermark mode
-Date:   Thu, 13 Jun 2019 10:32:23 +0200
-Message-Id: <20190613075654.710782552@linuxfoundation.org>
+        stable@vger.kernel.org, Binbin Wu <binbin.wu@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 028/155] mfd: intel-lpss: Set the device in reset state when init
+Date:   Thu, 13 Jun 2019 10:32:20 +0200
+Message-Id: <20190613075654.455713449@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -63,45 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c7a286577d7592720c2f179aadfb325a1ff48c95 ]
+[ Upstream commit dad06532292d77f37fbe831a02948a593500f682 ]
 
-This patch fixes a restriction/bug introduced by:
+In virtualized setup, when system reboots due to warm
+reset interrupt storm is seen.
 
-   583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
+Call Trace:
+<IRQ>
+dump_stack+0x70/0xa5
+__report_bad_irq+0x2e/0xc0
+note_interrupt+0x248/0x290
+? add_interrupt_randomness+0x30/0x220
+handle_irq_event_percpu+0x54/0x80
+handle_irq_event+0x39/0x60
+handle_fasteoi_irq+0x91/0x150
+handle_irq+0x108/0x180
+do_IRQ+0x52/0xf0
+common_interrupt+0xf/0xf
+</IRQ>
+RIP: 0033:0x76fc2cfabc1d
+Code: 24 28 bf 03 00 00 00 31 c0 48 8d 35 63 77 0e 00 48 8d 15 2e
+94 0e 00 4c 89 f9 49 89 d9 4c 89 d3 e8 b8 e2 01 00 48 8b 54 24 18
+<48> 89 ef 48 89 de 4c 89 e1 e8 d5 97 01 00 84 c0 74 2d 48 8b 04
+24
+RSP: 002b:00007ffd247c1fc0 EFLAGS: 00000293 ORIG_RAX: ffffffffffffffda
+RAX: 0000000000000000 RBX: 00007ffd247c1ff0 RCX: 000000000003d3ce
+RDX: 0000000000000000 RSI: 00007ffd247c1ff0 RDI: 000076fc2cbb6010
+RBP: 000076fc2cded010 R08: 00007ffd247c2210 R09: 00007ffd247c22a0
+R10: 000076fc29465470 R11: 0000000000000000 R12: 00007ffd247c1fc0
+R13: 000076fc2ce8e470 R14: 000076fc27ec9960 R15: 0000000000000414
+handlers:
+[<000000000d3fa913>] idma64_irq
+Disabling IRQ #27
 
-The original patch prevented using multi-entry PEBS when wakeup_events != 0.
-However given that wakeup_events is part of a union with wakeup_watermark, it
-means that in watermark mode, PEBS multi-entry is also disabled which is not the
-intent. This patch fixes this by checking is watermark mode is enabled.
+To avoid interrupt storm, set the device in reset state
+before bringing out the device from reset state.
 
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: jolsa@redhat.com
-Cc: kan.liang@intel.com
-Cc: vincent.weaver@maine.edu
-Fixes: 583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
-Link: http://lkml.kernel.org/r/20190514003400.224340-1-eranian@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Changelog v2:
+- correct the subject line by adding "mfd: "
+
+Signed-off-by: Binbin Wu <binbin.wu@intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/intel-lpss.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index d35f4775d5f1..82dad001d1ea 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3189,7 +3189,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 		return ret;
+diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
+index 50bffc3382d7..ff3fba16e735 100644
+--- a/drivers/mfd/intel-lpss.c
++++ b/drivers/mfd/intel-lpss.c
+@@ -273,6 +273,9 @@ static void intel_lpss_init_dev(const struct intel_lpss *lpss)
+ {
+ 	u32 value = LPSS_PRIV_SSP_REG_DIS_DMA_FIN;
  
- 	if (event->attr.precise_ip) {
--		if (!(event->attr.freq || event->attr.wakeup_events)) {
-+		if (!(event->attr.freq || (event->attr.wakeup_events && !event->attr.watermark))) {
- 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
- 			if (!(event->attr.sample_type &
- 			      ~intel_pmu_large_pebs_flags(event)))
++	/* Set the device in reset state */
++	writel(0, lpss->priv + LPSS_PRIV_RESETS);
++
+ 	intel_lpss_deassert_reset(lpss);
+ 
+ 	intel_lpss_set_remap_addr(lpss);
 -- 
 2.20.1
 
