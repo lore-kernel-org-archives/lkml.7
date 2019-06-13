@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A418C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF7AC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C8120644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D1320644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443149;
-	bh=Tzu9nVnELtW6QYt8Pc2RvRISPk+UT9MpiyAky8zDLVU=;
+	s=default; t=1560443152;
+	bh=xvVqEAfwWGDdhKqM/GDR0cBONz4WcVgKfelHCundFQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eSRfFGOVxa09a0aURt6fygVaVemQlBss6k3p4pHWhWVeEsDQT6jpKIQRxTHcPI2Bc
-	 b/2OeUJJ54UgMbE76t7bv1oDAXl4rhMaKLdjNupqm3r8LgxGzfqnzpNCfe3SoHh29E
-	 IeJBVcGSPQ7HuRq6MXGpdnc2B80oGxRMWHZC55Ps=
+	b=vJmOhUkt2cSy7noIugE/GKaxqVUwQha/vVG+YhVnmriJYoAvwzNuT2OOMQgJRTNu2
+	 qJ0170WF5auz8HTgkCmRb6qxxzW+z9PE9mO8PEsWvYqjzckD4QbS0DBlb8H+Hnt4PC
+	 /d43XI5r/SEI3ulUvZmXvx8lgW1h8ZIcohJCUde0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391600AbfFMQZr (ORCPT
+        id S2392266AbfFMQZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:25:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54064 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:25:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730973AbfFMIgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:36:35 -0400
+        id S1730969AbfFMIg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:36:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 134042133D;
-        Thu, 13 Jun 2019 08:36:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A42C20851;
+        Thu, 13 Jun 2019 08:36:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560414994;
-        bh=Tzu9nVnELtW6QYt8Pc2RvRISPk+UT9MpiyAky8zDLVU=;
+        s=default; t=1560414988;
+        bh=xvVqEAfwWGDdhKqM/GDR0cBONz4WcVgKfelHCundFQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0NZiCbHXfz98BCZD+/SZfXS0u/3lQfRhwmx+NiJQ3LS3vXRaJ0nb0opee+3m1SYBH
-         nWWg3MuOZAIafl62kqTMF9o72am5SbsmxlkH/azxO2aY42rXR8lLHEEgti8qbU5NRb
-         AN6vD4YSKhQe7/UTgTRP7fUCBMyBunG0QXvZjhX8=
+        b=Occ+thp4OTBqlzFMjp/VZ36ZTc7EpdTMXzZT0o0OjNR7O/T7az4/gHumjlQkjqmED
+         GXla3hgSoN7n16Z2Idr9IY2SjIAyeLf6gItQ0EL51uo6JxMboeOXe9qNVW8sQJuYcR
+         +CvZWP2sfkH5dkT4caDxezIM1mLB4H+feO8pX+Yw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 48/81] PCI: keystone: Prevent ARM32 specific code to be compiled for ARM64
-Date:   Thu, 13 Jun 2019 10:33:31 +0200
-Message-Id: <20190613075652.808493848@linuxfoundation.org>
+Subject: [PATCH 4.14 46/81] x86/PCI: Fix PCI IRQ routing table memory leak
+Date:   Thu, 13 Jun 2019 10:33:29 +0200
+Message-Id: <20190613075652.667501039@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -60,59 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f316a2b53cd7f37963ae20ec7072eb27a349a4ce ]
+[ Upstream commit ea094d53580f40c2124cef3d072b73b2425e7bfd ]
 
-hook_fault_code() is an ARM32 specific API for hooking into data abort.
+In pcibios_irq_init(), the PCI IRQ routing table 'pirq_table' is first
+found through pirq_find_routing_table().  If the table is not found and
+CONFIG_PCI_BIOS is defined, the table is then allocated in
+pcibios_get_irq_routing_table() using kmalloc().  Later, if the I/O APIC is
+used, this table is actually not used.  In that case, the allocated table
+is not freed, which is a memory leak.
 
-AM65X platforms (that integrate ARM v8 cores and select CONFIG_ARM64 as
-arch) rely on pci-keystone.c but on them the enumeration of a
-non-present BDF does not trigger a bus error, so the fixup exception
-provided by calling hook_fault_code() is not needed and can be guarded
-with CONFIG_ARM.
+Free the allocated table if it is not used.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-[lorenzo.pieralisi@arm.com: commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+[bhelgaas: added Ingo's reviewed-by, since the only change since v1 was to
+use the irq_routing_table local variable name he suggested]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/dwc/pci-keystone.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/pci/irq.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/dwc/pci-keystone.c b/drivers/pci/dwc/pci-keystone.c
-index 39405598b22d..9bc52e4cf52a 100644
---- a/drivers/pci/dwc/pci-keystone.c
-+++ b/drivers/pci/dwc/pci-keystone.c
-@@ -240,6 +240,7 @@ static void ks_pcie_setup_interrupts(struct keystone_pcie *ks_pcie)
- 		ks_dw_pcie_enable_error_irq(ks_pcie);
- }
+diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
+index 0452629148be..c77f565a04f2 100644
+--- a/arch/x86/pci/irq.c
++++ b/arch/x86/pci/irq.c
+@@ -1118,6 +1118,8 @@ static const struct dmi_system_id pciirq_dmi_table[] __initconst = {
  
-+#ifdef CONFIG_ARM
- /*
-  * When a PCI device does not exist during config cycles, keystone host gets a
-  * bus error instead of returning 0xffffffff. This handler always returns 0
-@@ -259,6 +260,7 @@ static int keystone_pcie_fault(unsigned long addr, unsigned int fsr,
- 
- 	return 0;
- }
-+#endif
- 
- static int __init ks_pcie_host_init(struct pcie_port *pp)
+ void __init pcibios_irq_init(void)
  {
-@@ -282,12 +284,14 @@ static int __init ks_pcie_host_init(struct pcie_port *pp)
- 	val |= BIT(12);
- 	writel(val, pci->dbi_base + PCIE_CAP_BASE + PCI_EXP_DEVCTL);
++	struct irq_routing_table *rtable = NULL;
++
+ 	DBG(KERN_DEBUG "PCI: IRQ init\n");
  
-+#ifdef CONFIG_ARM
- 	/*
- 	 * PCIe access errors that result into OCP errors are caught by ARM as
- 	 * "External aborts"
- 	 */
- 	hook_fault_code(17, keystone_pcie_fault, SIGBUS, 0,
- 			"Asynchronous external abort");
-+#endif
+ 	if (raw_pci_ops == NULL)
+@@ -1128,8 +1130,10 @@ void __init pcibios_irq_init(void)
+ 	pirq_table = pirq_find_routing_table();
  
- 	return 0;
- }
+ #ifdef CONFIG_PCI_BIOS
+-	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN))
++	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN)) {
+ 		pirq_table = pcibios_get_irq_routing_table();
++		rtable = pirq_table;
++	}
+ #endif
+ 	if (pirq_table) {
+ 		pirq_peer_trick();
+@@ -1144,8 +1148,10 @@ void __init pcibios_irq_init(void)
+ 		 * If we're using the I/O APIC, avoid using the PCI IRQ
+ 		 * routing table
+ 		 */
+-		if (io_apic_assign_pci_irqs)
++		if (io_apic_assign_pci_irqs) {
++			kfree(rtable);
+ 			pirq_table = NULL;
++		}
+ 	}
+ 
+ 	x86_init.pci.fixup_irqs();
 -- 
 2.20.1
 
