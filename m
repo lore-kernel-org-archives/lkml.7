@@ -5,49 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2F2C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A78CC31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E10E20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E47E20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441825;
-	bh=kc0rt5Nlbt+IARvsXc6rgoBG+u6fhH5XIqKm+HRwN0Y=;
+	s=default; t=1560441833;
+	bh=Ancavv+BoF7Os5qUutPzpjyzltErOSbXPflF11dU5gA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hc3194daoDbgIqa9VoDh8xG6xnZ5jSFA/BzomlVRi+Qo76cSR++PPdDsSyRz+Ofsk
-	 lRiwNa5HjxRjqrdr11jTpjbkHslwDsdbit8kCmAH/CweNWLGnf2QQj0qh93OXmhxxQ
-	 Kv1S8rFaQQPeO9mM8b4B6yT14dCnoDSYRJedoXwA=
+	b=DCCQMUO+29LrLPeYS5WUOyvYLgeMgdCWRgiY22yuMvM8/qbPEkdWI7VgcgDvdMLZm
+	 e40fiheIjqqmMKoh5y05Z+R9CIlAjRIvmHN/kRCWoQKaLJP0tVn2hF2fjAmOwfddjn
+	 ZD1fP1jqYp5fW+2dln9TMWcWlaavbLnBNzhIjpgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391078AbfFMQDV (ORCPT
+        id S1732184AbfFMQDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:03:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35756 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:03:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731386AbfFMIrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:47:33 -0400
+        id S1731378AbfFMIrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:47:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F4AB206BA;
-        Thu, 13 Jun 2019 08:47:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D0122147A;
+        Thu, 13 Jun 2019 08:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415652;
-        bh=kc0rt5Nlbt+IARvsXc6rgoBG+u6fhH5XIqKm+HRwN0Y=;
+        s=default; t=1560415638;
+        bh=Ancavv+BoF7Os5qUutPzpjyzltErOSbXPflF11dU5gA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OOJjd9LasFpmQjIyDHvj0p1FnZE/wusLEBHIMbSOMzD5fRxKQ7FsAIpvmSui226Xv
-         pTLUML+bpByPDY0hXxsDhMFX/BGTKHSyou1jf+VMbO2tW/Fx21+Alc7Ho1qccAFLFA
-         MkIiUTzo0G3Til6PBlnxPEiTakBOpPTS5Q7C/xek=
+        b=qeHwDMeWpLBVpUJrG2TegAA4PTSdVcqddb7r9g6Ma+UJmin4vt1zZyfLLrO8fDSd7
+         Ee8Od5JqaLH8PVUGV6dJC2YTUpFaX1biKSxv+8u7bAqImZ3k3o4oUcZHvpbC/UEngC
+         obgzvko3AGzdZIAxHga59RFuFKYPphqNB7PazPRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 078/155] netfilter: nf_flow_table: fix netdev refcnt leak
-Date:   Thu, 13 Jun 2019 10:33:10 +0200
-Message-Id: <20190613075657.383627722@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Borislav Petkov <bp@suse.de>,
+        Johannes Thumshirn <jth@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>, linuxppc-dev@ozlabs.org,
+        morbidrsa@gmail.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 038/155] EDAC/mpc85xx: Prevent building as a module
+Date:   Thu, 13 Jun 2019 10:32:30 +0200
+Message-Id: <20190613075655.219567146@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,38 +64,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 26a302afbe328ecb7507cae2035d938e6635131b ]
+[ Upstream commit 2b8358a951b1e2a534a54924cd8245e58a1c5fb8 ]
 
-flow_offload_alloc() calls nf_route() to get a dst_entry. Internally,
-nf_route() calls ip_route_output_key() that allocates a dst_entry and
-holds it. So, a dst_entry should be released by dst_release() if
-nf_route() is successful.
+The mpc85xx EDAC driver can be configured as a module but then fails to
+build because it uses two unexported symbols:
 
-Otherwise, netns exit routine cannot be finished and the following
-message is printed:
+  ERROR: ".pci_find_hose_for_OF_device" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
+  ERROR: ".early_find_capability" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
 
-[  257.490952] unregister_netdevice: waiting for lo to become free. Usage count = 1
+We don't want to export those symbols just for this driver, so make the
+driver only configurable as a built-in.
 
-Fixes: ac2a66665e23 ("netfilter: add generic flow table infrastructure")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+This seems to have been broken since at least
+
+  c92132f59806 ("edac/85xx: Add PCIe error interrupt edac support")
+
+(Nov 2013).
+
+ [ bp: make it depend on EDAC=y so that the EDAC core doesn't get built
+   as a module. ]
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Johannes Thumshirn <jth@kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: linuxppc-dev@ozlabs.org
+Cc: morbidrsa@gmail.com
+Link: https://lkml.kernel.org/r/20190502141941.12927-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_flow_offload.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/edac/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
-index 6e6b9adf7d38..ff50bc1b144f 100644
---- a/net/netfilter/nft_flow_offload.c
-+++ b/net/netfilter/nft_flow_offload.c
-@@ -113,6 +113,7 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
- 	if (ret < 0)
- 		goto err_flow_add;
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 47eb4d13ed5f..5e2e0348d460 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -263,8 +263,8 @@ config EDAC_PND2
+ 	  micro-server but may appear on others in the future.
  
-+	dst_release(route.tuple[!dir].dst);
- 	return;
- 
- err_flow_add:
+ config EDAC_MPC85XX
+-	tristate "Freescale MPC83xx / MPC85xx"
+-	depends on FSL_SOC
++	bool "Freescale MPC83xx / MPC85xx"
++	depends on FSL_SOC && EDAC=y
+ 	help
+ 	  Support for error detection and correction on the Freescale
+ 	  MPC8349, MPC8560, MPC8540, MPC8548, T4240
 -- 
 2.20.1
 
