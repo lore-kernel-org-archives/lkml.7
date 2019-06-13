@@ -2,188 +2,293 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74468C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF054C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45952207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97C7C21743
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="QTCbjZMi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="i3Cb/pxt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733154AbfFMPCR (ORCPT
+        id S1733158AbfFMPCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:02:17 -0400
-Received: from mail-eopbgr10053.outbound.protection.outlook.com ([40.107.1.53]:47938
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732517AbfFMO1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:27:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YtBIuhBXRVlxxD+ll8fmCwqj4wgCi6dpMg6N1Cr03BE=;
- b=QTCbjZMiiY06q08WZDr9b5a8MLgaod64YaRTLmJrYtD1h5jjmBadtbL5UrOS+lUEiDBQOI4aMCx+Z/QTHff/RPyQrnfw6OD4l8H5ImYVZOYWQfqBKsIugg55bxXklA8RJYZYDMvuLjyqdoHSwEeQ5QBf2DD6NUcN/PEoFOTelZA=
-Received: from AM0PR08MB4226.eurprd08.prod.outlook.com (20.179.36.17) by
- AM0PR08MB5393.eurprd08.prod.outlook.com (52.132.213.77) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Thu, 13 Jun 2019 14:27:41 +0000
-Received: from AM0PR08MB4226.eurprd08.prod.outlook.com
- ([fe80::bc0c:5148:629e:1a31]) by AM0PR08MB4226.eurprd08.prod.outlook.com
- ([fe80::bc0c:5148:629e:1a31%6]) with mapi id 15.20.1987.010; Thu, 13 Jun 2019
- 14:27:41 +0000
-From:   Ayan Halder <Ayan.Halder@arm.com>
-To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        Brian Starkey <Brian.Starkey@arm.com>,
+        Thu, 13 Jun 2019 11:02:19 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45230 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732518AbfFMOaO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 10:30:14 -0400
+Received: by mail-ed1-f66.google.com with SMTP id a14so29650639edv.12
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 07:30:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=oVRvqGAJLCqtggjxP8ZfAYvArrXiZbY8dJkI7Luwcsc=;
+        b=i3Cb/pxtaFuJB59OOds7nZfbeZKTr03wdxZIiBVwGz7ICL9yEAP7mnHGW1iBJ4KQ3N
+         fr0f6RNoe5b9dXHTySrlYpYQfCwpSiwD6eUhZQRlqzq0EJGjtssgL/E1VOg8usGtXPKm
+         AiEZxfzO/JzzksLBIKfaLTkriITluSuxwFnWo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=oVRvqGAJLCqtggjxP8ZfAYvArrXiZbY8dJkI7Luwcsc=;
+        b=nx82rgOiSQK4JlHRGMnQ4E6w9NfKDw0c1n9Y+ZfWh6HKFSlQ/hgXtnZ0wfpFshhQ2t
+         XWxCZqs/LmulYE0QxF3l1UCQgG29VkCB4TQbKm+nmaGiJASLITSeK4v8mCAoqssnRGbU
+         7fXrMa9v4sjwHIB1HY78mHDliauseGWISspdd+Vl8SId+XeIE64mJ27ghXGjMs8gzdms
+         FxQc+N9h2vTrDvDPcS+hXF1kPp2AegFMAoryu8+Vp64igULCNvKheaqnA15NMzfY1xOJ
+         i48FFRWAyueMMRBYFG+dM++4KYDkfc4uwkw3AK/njSnB/kBf488Y7D+AnVN0anOjY0hE
+         BMhg==
+X-Gm-Message-State: APjAAAUFaKpIfxx4RZL3tFY4V0YPTlPco+k95WZnEP1R4AhKUDCkFOZL
+        BwuhGW/i98fmODnM5f7bxCw4oQ==
+X-Google-Smtp-Source: APXvYqzeg08unydG54M7oLjG/tREPQWls5h88JGmR4VVB+vdqul/l6H6z/yW9pFV0W4BENDfwJhfzA==
+X-Received: by 2002:a17:906:9149:: with SMTP id y9mr16298345ejw.98.1560436211357;
+        Thu, 13 Jun 2019 07:30:11 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id v6sm923205eds.23.2019.06.13.07.30.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 07:30:10 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 16:30:08 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>
+Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
         "airlied@linux.ie" <airlied@linux.ie>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
         nd <nd@arm.com>
-Subject: Re: [PATCH] drm/komeda: Enable/Disable vblank interrupts
-Thread-Topic: [PATCH] drm/komeda: Enable/Disable vblank interrupts
-Thread-Index: AQHVHUIw9rNeEORvRUuKBGT248hnN6aQgGsAgAktYAA=
-Date:   Thu, 13 Jun 2019 14:27:41 +0000
-Message-ID: <20190613142740.GA32394@arm.com>
-References: <20190607150323.20395-1-ayan.halder@arm.com>
- <20190607181856.GK21222@phenom.ffwll.local>
-In-Reply-To: <20190607181856.GK21222@phenom.ffwll.local>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LNXP265CA0007.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:5e::19) To AM0PR08MB4226.eurprd08.prod.outlook.com
- (2603:10a6:208:147::17)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Ayan.Halder@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [217.140.106.51]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ff2ace66-3059-4dee-b6fa-08d6f00b4b0e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR08MB5393;
-x-ms-traffictypediagnostic: AM0PR08MB5393:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <AM0PR08MB5393E97FC979225C44697FC6E4EF0@AM0PR08MB5393.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0067A8BA2A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(39860400002)(396003)(136003)(366004)(40434004)(189003)(199004)(476003)(2616005)(44832011)(8676002)(81156014)(11346002)(2501003)(446003)(6486002)(8936002)(486006)(81166006)(6436002)(72206003)(966005)(14454004)(478600001)(6306002)(53936002)(6512007)(305945005)(7736002)(68736007)(86362001)(2201001)(229853002)(2906002)(6116002)(3846002)(5660300002)(66446008)(64756008)(66556008)(66476007)(73956011)(110136005)(6636002)(53386004)(6246003)(25786009)(66066001)(66946007)(587094005)(99286004)(71190400001)(71200400001)(386003)(6506007)(102836004)(26005)(186003)(1076003)(52116002)(76176011)(14444005)(5024004)(33656002)(36756003)(256004)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB5393;H:AM0PR08MB4226.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1oX8Cwi+vN+Wo3865LYNyyo0lRKJUGBLx7d3A2Gf3bXWHDuHtKByDtpt4dWD3tNWSReyCiEPjl4mMrbYR5siUTRMc/wa4V1M7X8rxI/QCiOMFyCtU+pJYWz/6e3QSUGqCI58EE0qm8IsFEKjGTyjdyHiW4oeHdmkHIK8ZgP5Ek5F6Jdau+OsyiwM2yoxxtThAYwTyE/12OxPq1HhuYhTjzE04AsdvaTwL2dzlCQbNl/iBTD/8ydkUbebspPcBCelioMHhi03OAP/V459dpyLdqp6uEzgGdfQl14fQ7EwGwxxt1awJET9/e0gQ4NKO78lexyEUeYPswlWZtTzeUjPQ3mmozhCHZVH7jChAxfw6Tfshbo8ptQV0YLXRz7E5zaclnUdN9Ru12j0Nt4sUXfAZlwyH/yT8F0bAVaPs9BYDrw=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <DBCC2575CF0E6F489A9EC8C188EF6B4F@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/2] drm/komeda: Adds komeda_kms_drop_master
+Message-ID: <20190613143008.GO23020@phenom.ffwll.local>
+Mail-Followup-To: Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        nd <nd@arm.com>
+References: <1560251589-31827-1-git-send-email-lowry.li@arm.com>
+ <1560251589-31827-3-git-send-email-lowry.li@arm.com>
+ <20190611123038.GC2458@phenom.ffwll.local>
+ <20190612022617.GA8595@james-ThinkStation-P300>
+ <20190613081727.GE23020@phenom.ffwll.local>
+ <20190613082813.GM4173@e110455-lin.cambridge.arm.com>
+ <20190613090814.GJ23020@phenom.ffwll.local>
+ <20190613132436.GN4173@e110455-lin.cambridge.arm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff2ace66-3059-4dee-b6fa-08d6f00b4b0e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 14:27:41.7793
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ayan.Halder@arm.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5393
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190613132436.GN4173@e110455-lin.cambridge.arm.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 08:18:56PM +0200, Daniel Vetter wrote:
+On Thu, Jun 13, 2019 at 02:24:37PM +0100, Liviu Dudau wrote:
+> On Thu, Jun 13, 2019 at 11:08:14AM +0200, Daniel Vetter wrote:
+> > On Thu, Jun 13, 2019 at 09:28:13AM +0100, Liviu Dudau wrote:
+> > > On Thu, Jun 13, 2019 at 10:17:27AM +0200, Daniel Vetter wrote:
+> > > > On Wed, Jun 12, 2019 at 02:26:24AM +0000, james qian wang (Arm Technology China) wrote:
+> > > > > On Tue, Jun 11, 2019 at 02:30:38PM +0200, Daniel Vetter wrote:
+> > > > > > On Tue, Jun 11, 2019 at 11:13:45AM +0000, Lowry Li (Arm Technology China) wrote:
+> > > > > > > From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+> > > > > > >
+> > > > > > > The komeda internal resources (pipelines) are shared between crtcs,
+> > > > > > > and resources release by disable_crtc. This commit is working for once
+> > > > > > > user forgot disabling crtc like app quit abnomally, and then the
+> > > > > > > resources can not be used by another crtc. Adds drop_master to
+> > > > > > > shutdown the device and make sure all the komeda resources have been
+> > > > > > > released and can be used for the next usage.
+> > > > > > >
+> > > > > > > Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> > > > > > > ---
+> > > > > > >  drivers/gpu/drm/arm/display/komeda/komeda_kms.c | 13 +++++++++++++
+> > > > > > >  1 file changed, 13 insertions(+)
+> > > > > > >
+> > > > > > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > > > > > > index 8543860..647bce5 100644
+> > > > > > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > > > > > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > > > > > > @@ -54,11 +54,24 @@ static irqreturn_t komeda_kms_irq_handler(int irq, void *data)
+> > > > > > >  return status;
+> > > > > > >  }
+> > > > > > >
+> > > > > > > +/* Komeda internal resources (pipelines) are shared between crtcs, and resources
+> > > > > > > + * are released by disable_crtc. But if user forget disabling crtc like app quit
+> > > > > > > + * abnormally, the resources can not be used by another crtc.
+> > > > > > > + * Use drop_master to shutdown the device and make sure all the komeda resources
+> > > > > > > + * have been released, and can be used for the next usage.
+> > > > > > > + */
+> > > > > >
+> > > > > > No. If we want this, we need to implement this across drivers, not with
+> > > > > > per-vendor hacks.
+> > > > > >
+> > > > > > The kerneldoc should have been a solid hint: "Only used by vmwgfx."
+> > > > > > -Daniel
+> > > > > 
+> > > > > Hi Daniel:
+> > > > > This drop_master is really what we want, can we update the doc and
+> > > > > add komeda as a user of this hacks like "used by vmwfgx and komeda",
+> > > > > or maybe directly promote this per-vendor hacks as an optional chip
+> > > > > function ?
+> > > > 
+> > > > Still no, because it would mean different behaviour for arm/komeda
+> > > > compared to everyone else. And we really don't want this, because this
+> > > > would completely break flicker-less vt-switching.
+> > > > 
+> > > > Currently the only fallback for this case is the lastclose handler, which
+> > > > atm just restores fbcon/fbdev. If you want to change/extend that to work
+> > > > without fbdev, then that's the place to do the change. And across _all_
+> > > > drm kms drivers, so that we have consistent behaviour.
+> > > 
+> > > Slightly unrelated, just thinking of a solution and wanted confirmation/double
+> > > checking: can a CRTC be instantiated without any planes (or without a primary
+> > > plane)?
+> > 
+> > Without a primary plane maybe not so recommended, because it would break
+> > all the legacy userspace. Might even result in some oopses, not sure we
+> > check for crtc->primary != NULL.
+> > 
+> > I'm not sure what you mean about instantiating it without any plane at
+> > all. That would be rather useless.
+> 
+> Agree, and I think I have one way of solving the scenario Lowry and James are
+> trying to cover. Basically, komeda has 2 pipelines that are exposed as 2 crtcs.
+> However, layers (planes in DRM) can be associated with any of the pipelines and
+> it is possible to have a DRM master open up crtc0 and enable all possible planes,
+> which would leave crtc1 with no available layer to use (but technically still visible to
+> userspace, as it has been drm_crtc_init-ed. James and Lowry are trying to give
+> another master a chance of enabling crtc1 if previous master drops the
+> ownership of crtc0 without disabling it. So one solution I'm thinking of is to
+> tie one of the layers/planes to crtc1 regardless if that pipeline is enabled or
+> not.
+> 
+> Alternatively, we need a more generic solution for re-allocating resources
+> between CRTCs that might be enabled at different times. Ideas on how userspace
+> should handle it first are welcome as well.
 
-Hi Daniel,
+Uh, you can't have more than one active master. And that other master
+needs to clean up the mess left behind by the previous one. Generally that
+means disabling all the planes, like e.g. fbdev emulation does (but
+there's a lot more we should probably clean up, current code is kinda just
+good enough).
 
-> On Fri, Jun 07, 2019 at 03:03:39PM +0000, Ayan Halder wrote:
-> > One needs to set "(struct drm_device *)->irq_enabled =3D true" to signa=
-l drm core
-> > to enable vblank interrupts after the hardware has been initialized.
-> > Correspondingly, one needs to disable vblank interrupts by setting
-> > "(struct drm_device *)->irq_enabled =3D false" at the beginning of the
-> > de-initializing routine.
->
-> Only if you don't use the drm_irq_install helper. Quoting the kerneldoc i=
-n
-> full:
->
-> /**
->  * @irq_enabled:
->  *
->  * Indicates that interrupt handling is enabled, specifically vblank
->  * handling. Drivers which don't use drm_irq_install() need to set this
->  * to true manually.
->  */
-> bool irq_enabled;
->
-> Not entirely sure where you've found your quote, but it's not complete.
->
-> Cheers, Daniel
+If you want multiple concurrent masters on the same hw, then you need drm
+leases, and there you can limit the leases to however many planes you
+think they need.
+-Daniel
 
-Thanks for your review.
+> 
+> Best regards,
+> Liviu
+> 
+> > -Daniel
+> > 
+> > > 
+> > > Best regards,
+> > > Liviu
+> > > 
+> > > > 
+> > > > kms is a cross-vendor api, vendor hacks are very, very much not cool.
+> > > > -Daniel
+> > > > 
+> > > > > 
+> > > > > James
+> > > > > 
+> > > > > > > +static void komeda_kms_drop_master(struct drm_device *dev,
+> > > > > > > +   struct drm_file *file_priv)
+> > > > > > > +{
+> > > > > > > +drm_atomic_helper_shutdown(dev);
+> > > > > > > +}
+> > > > > > > +
+> > > > > > >  static struct drm_driver komeda_kms_driver = {
+> > > > > > >  .driver_features = DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC |
+> > > > > > >     DRIVER_PRIME | DRIVER_HAVE_IRQ,
+> > > > > > >  .lastclose= drm_fb_helper_lastclose,
+> > > > > > >  .irq_handler= komeda_kms_irq_handler,
+> > > > > > > +.master_drop= komeda_kms_drop_master,
+> > > > > > >  .gem_free_object_unlocked= drm_gem_cma_free_object,
+> > > > > > >  .gem_vm_ops= &drm_gem_cma_vm_ops,
+> > > > > > >  .dumb_create= komeda_gem_cma_dumb_create,
+> > > > > > > --
+> > > > > > > 1.9.1
+> > > > > > >
+> > > > > > > _______________________________________________
+> > > > > > > dri-devel mailing list
+> > > > > > > dri-devel@lists.freedesktop.org
+> > > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > > > >
+> > > > > > --
+> > > > > > Daniel Vetter
+> > > > > > Software Engineer, Intel Corporation
+> > > > > > http://blog.ffwll.ch
+> > > > > IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
+> > > > > _______________________________________________
+> > > > > dri-devel mailing list
+> > > > > dri-devel@lists.freedesktop.org
+> > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > > 
+> > > > -- 
+> > > > Daniel Vetter
+> > > > Software Engineer, Intel Corporation
+> > > > http://blog.ffwll.ch
+> > > 
+> > > -- 
+> > > ====================
+> > > | I would like to |
+> > > | fix the world,  |
+> > > | but they're not |
+> > > | giving me the   |
+> > >  \ source code!  /
+> > >   ---------------
+> > >     ¯\_(ツ)_/¯
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > 
+> > -- 
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+> 
+> -- 
+> ====================
+> | I would like to |
+> | fix the world,  |
+> | but they're not |
+> | giving me the   |
+>  \ source code!  /
+>   ---------------
+>     ¯\_(ツ)_/¯
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-That was my quote which reflects my half-baked understanding of the
-issue :(. I had missed reading the header files.
-
-That said, I will squash my previous patch "drm/komeda: Avoid using
-DRIVER_IRQ_SHARED" into this one as the current patch is a consequence
-of the changes made in the previous patch.
-
-Regards,
-Ayan Kumar Halder
->
-> >
-> > Signed-off-by: Ayan Kumar halder <ayan.halder@arm.com>
-> > ---
-> >  drivers/gpu/drm/arm/display/komeda/komeda_kms.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/=
-gpu/drm/arm/display/komeda/komeda_kms.c
-> > index 7b5cde14e3ba..b4fd8ee0d05f 100644
-> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> > @@ -204,6 +204,8 @@ struct komeda_kms_dev *komeda_kms_attach(struct kom=
-eda_dev *mdev)
-> >  if (err)
-> >  goto uninstall_irq;
-> >
-> > +drm->irq_enabled =3D true;
-> > +
-> >  err =3D drm_dev_register(drm, 0);
-> >  if (err)
-> >  goto uninstall_irq;
-> > @@ -211,6 +213,7 @@ struct komeda_kms_dev *komeda_kms_attach(struct kom=
-eda_dev *mdev)
-> >  return kms;
-> >
-> >  uninstall_irq:
-> > +drm->irq_enabled =3D false;
-> >  drm_irq_uninstall(drm);
-> >  cleanup_mode_config:
-> >  drm_mode_config_cleanup(drm);
-> > @@ -225,6 +228,7 @@ void komeda_kms_detach(struct komeda_kms_dev *kms)
-> >  struct drm_device *drm =3D &kms->base;
-> >  struct komeda_dev *mdev =3D drm->dev_private;
-> >
-> > +drm->irq_enabled =3D false;
-> >  mdev->funcs->disable_irq(mdev);
-> >  drm_dev_unregister(drm);
-> >  drm_irq_uninstall(drm);
-> > --
-> > 2.21.0
-> >
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
-IMPORTANT NOTICE: The contents of this email and any attachments are confid=
-ential and may also be privileged. If you are not the intended recipient, p=
-lease notify the sender immediately and do not disclose the contents to any=
- other person, use it for any purpose, or store or copy the information in =
-any medium. Thank you.
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
