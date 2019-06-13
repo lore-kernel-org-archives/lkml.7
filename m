@@ -2,84 +2,93 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3620C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC9AC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 722E120665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C52CB20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:58:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0H+KKpK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393054AbfFMQ6R (ORCPT
+        id S2393126AbfFMQ60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:58:17 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:60482 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S2393126AbfFMQ6M (ORCPT
+        Thu, 13 Jun 2019 12:58:26 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40626 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729893AbfFMAvc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:58:12 -0400
-Received: (qmail 4098 invoked by uid 2102); 13 Jun 2019 12:58:11 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 13 Jun 2019 12:58:11 -0400
-Date:   Thu, 13 Jun 2019 12:58:11 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     David Howells <dhowells@redhat.com>
-cc:     Peter Zijlstra <peterz@infradead.org>, <akiyks@gmail.com>,
-        <andrea.parri@amarulasolutions.com>, <boqun.feng@gmail.com>,
-        <dlustig@nvidia.com>, <j.alglave@ucl.ac.uk>,
-        <luc.maranget@inria.fr>, <npiggin@gmail.com>,
-        <paulmck@linux.ibm.com>, <will.deacon@arm.com>,
-        <paul.burton@mips.com>, <linux-kernel@vger.kernel.org>,
-        <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 0/4] atomic: Fixes to smp_mb__{before,after}_atomic()
- and mips.
-In-Reply-To: <1674.1560435952@warthog.procyon.org.uk>
-Message-ID: <Pine.LNX.4.44L0.1906131253230.1307-100000@iolanthe.rowland.org>
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        Wed, 12 Jun 2019 20:51:32 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a93so7332096pla.7;
+        Wed, 12 Jun 2019 17:51:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=oSJgfj17bUgTuk9GPBLNPBjjdz6lYPFQFv19Hz3KzW0=;
+        b=T0H+KKpK2Tsl4GmvFCodkR9pZgTF1E/sMmaYZs1ijGT6XrTgNZ8STm8ug0teibLo+k
+         wdfjEldf2UMhaLrcjrAfsK22rsC6YxcsymWjXA5MIGhgyTTQiFeF7v6bHzL6ZtHvgQmC
+         GTrUZs/8DLd9xPTDqengFkLODL5cmuuVNWrqtbKqgIgsIafXoFnJ1tGg08FCAwG+PL6v
+         QQvDnZrfuj7GOb1+1QZJPXxwLJHFEpg0Tf8mSHRjgnvUHCjyah6Z3kvQkUq6rBsK/zyZ
+         bDd09cCpkQF4QnQTu/pS0/lmlyN3c5Q+RmwAqYeImgeGgcP3Aatw6Ph4To4qJ+GaUKZi
+         NeKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=oSJgfj17bUgTuk9GPBLNPBjjdz6lYPFQFv19Hz3KzW0=;
+        b=Cyvp77OUAK5hXbx7/FkJoISgMrHztdBsuC+B7VCtneGB0ROJUonYIQpPzxbUNav9K+
+         u0ssp71hGj7XdWjwLKqFSRo3iJjEjCFOejNmvx19/svhQwVT9F3eFCZBLfpcWxUGL01a
+         5IFp9w3uiEjU3p/jEoSJctdI5lwkRhBv6IPuUWPfYE0eqIobHce6tlY/5WhkHGsIZiIa
+         qyvYW4gLYdwP7wcQqYH83LnGEmcrRHgyA+dbnEMMxIGxpzTyUOt+GxC7mDBZ0aG8PwWe
+         PE1uClDxL2bSTwiom37RnNIki9mUSF8G2ddPXosYfUKKMt3xsM6gaQQOm8ELur8KobM3
+         oKjQ==
+X-Gm-Message-State: APjAAAV3cCO6WGRrwxVTwTMZaUaJWxkLjU9jl/fb6dOsy2pFtfQnRzMt
+        mE//0aHtJxX5tukJlUCicb46JIM0
+X-Google-Smtp-Source: APXvYqwkqsAfPkLV50CyaPZ3uDtTzILJWDK3zcO7Hf2JXf6UL9/XLvZStg8UJ6EYavfuJfoBMVO3gA==
+X-Received: by 2002:a17:902:e312:: with SMTP id cg18mr17539006plb.212.1560387090754;
+        Wed, 12 Jun 2019 17:51:30 -0700 (PDT)
+Received: from localhost.localdomain ([2604:3d09:b080:d00:7990:5eb3:9633:9569])
+        by smtp.gmail.com with ESMTPSA id y68sm690214pfy.164.2019.06.12.17.51.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 17:51:29 -0700 (PDT)
+From:   jassisinghbrar@gmail.com
+To:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        orito.takao@socionext.com, masami.hiramatsu@linaro.org,
+        kasai.kazuhiro@socionext.com,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: [PATCH 0/2] Add support for AHB DMA controller on Milbeaut series
+Date:   Wed, 12 Jun 2019 19:51:09 -0500
+Message-Id: <20190613005109.1867-1-jassisinghbrar@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019, David Howells wrote:
+From: Jassi Brar <jaswinder.singh@linaro.org>
 
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > Basically we fail for:
-> > 
-> > 	*x = 1;
-> > 	atomic_inc(u);
-> > 	smp_mb__after_atomic();
-> > 	r0 = *y;
-> > 
-> > Because, while the atomic_inc() implies memory order, it
-> > (surprisingly) does not provide a compiler barrier. This then allows
-> > the compiler to re-order like so:
-> 
-> To quote memory-barriers.txt:
-> 
->  (*) smp_mb__before_atomic();
->  (*) smp_mb__after_atomic();
-> 
->      These are for use with atomic (such as add, subtract, increment and
->      decrement) functions that don't return a value, especially when used for
->      reference counting.  These functions do not imply memory barriers.
-> 
-> so it's entirely to be expected?
+The following series adds AHB DMA (HDMAC) controller support on Milbeaut series.
+This controller is capable of Mem<->MEM and DEV<->MEM transfer. But only DEV<->MEM
+is currently supported.
 
-The text is perhaps ambiguous.  It means that the atomic functions
-which don't return values -- like atomic_inc() -- do not imply memory
-barriers.  It doesn't mean that smp_mb__before_atomic() and
-smp_mb__after_atomic() do not imply memory barriers.
+Jassi Brar (2):
+  dt-bindings: milbeaut-hdmac: Add Socionext Milbeaut HDMAC bindings
+  dmaengine: milbeaut-hdmac: Add HDMAC driver for Milbeaut platforms
 
-The behavior Peter described is not to be expected.  The expectation is 
-that the smp_mb__after_atomic() in the example should force the "*x = 
-1" store to execute before the "r0 = *y" load.  But on current x86 it 
-doesn't force this, for the reason explained in the description.
+ .../bindings/dma/milbeaut-m10v-hdmac.txt           |  54 ++
+ drivers/dma/Kconfig                           |  10 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/milbeaut-hdmac.c                  | 572 ++++++++++++++++++
+ 4 files changed, 637 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+ create mode 100644 drivers/dma/milbeaut-hdmac.c
 
-Alan
+-- 
+2.17.1
 
