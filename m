@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E364EC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFD9C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFCD020B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5079021721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbfFMTkF (ORCPT
+        id S1729187AbfFMTkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 15:40:05 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39154 "EHLO
+        Thu, 13 Jun 2019 15:40:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40988 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725809AbfFMTkF (ORCPT
+        by vger.kernel.org with ESMTP id S1729047AbfFMTkK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:40:05 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DJb333108477
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 15:40:02 -0400
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t3tj6wm5n-1
+        Thu, 13 Jun 2019 15:40:10 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DJabGD014422
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 15:40:09 -0400
+Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t3v8g1fp9-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 15:40:02 -0400
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 15:40:09 -0400
 Received: from localhost
-        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Thu, 13 Jun 2019 20:40:00 +0100
-Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
-        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Thu, 13 Jun 2019 20:40:08 +0100
+Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
+        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 13 Jun 2019 20:39:57 +0100
+        Thu, 13 Jun 2019 20:40:04 +0100
 Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5DJdrsM36307454
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5DJe0TI37093818
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Jun 2019 19:39:53 GMT
+        Thu, 13 Jun 2019 19:40:00 GMT
 Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B93126E050;
-        Thu, 13 Jun 2019 19:39:53 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 7EF846E050;
+        Thu, 13 Jun 2019 19:40:00 +0000 (GMT)
 Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A09D56E04C;
-        Thu, 13 Jun 2019 19:39:51 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 7F3306E04E;
+        Thu, 13 Jun 2019 19:39:58 +0000 (GMT)
 Received: from akrowiak-ThinkPad-P50.ibm.com (unknown [9.85.158.129])
         by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu, 13 Jun 2019 19:39:51 +0000 (GMT)
+        Thu, 13 Jun 2019 19:39:58 +0000 (GMT)
 From:   Tony Krowiak <akrowiak@linux.ibm.com>
 To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
@@ -57,20 +57,20 @@ Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
         pmorel@linux.ibm.com, pasic@linux.ibm.com,
         alex.williamson@redhat.com, kwankhede@nvidia.com,
         Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH v4 1/7] s390: vfio-ap: Refactor vfio_ap driver probe and remove callbacks
-Date:   Thu, 13 Jun 2019 15:39:34 -0400
+Subject: [PATCH v4 4/7] s390: vfio-ap: implement in-use callback for vfio_ap driver
+Date:   Thu, 13 Jun 2019 15:39:37 -0400
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
 References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19061319-0016-0000-0000-000009C23B95
+x-cbid: 19061319-8235-0000-0000-00000EA7837F
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00011256; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01217510; UDB=6.00640242; IPR=6.00998621;
- MB=3.00027298; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-13 19:40:00
+ PH=3.00000004; SC=3.00000286; SDB=6.01217510; UDB=6.00640241; IPR=6.00998621;
+ MB=3.00027298; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-13 19:40:07
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061319-0017-0000-0000-000043A442E7
-Message-Id: <1560454780-20359-2-git-send-email-akrowiak@linux.ibm.com>
+x-cbparentid: 19061319-8236-0000-0000-000046025177
+Message-Id: <1560454780-20359-5-git-send-email-akrowiak@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_12:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -83,130 +83,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to limit the number of private mdev functions called from the
-vfio_ap device driver as well as to provide a landing spot for dynamic
-configuration code related to binding/unbinding AP queue devices to/from
-the vfio_ap driver, the following changes are being introduced:
+Let's implement the callback to indicate when an APQN
+is in use by the vfio_ap device driver. The callback is
+invoked whenever a change to the apmask or aqmask may
+result in one or APQNs being removed from the driver. The
+vfio_ap device driver will indicate a resource is in use
+if any of the removed APQNs are assigned to any of the matrix
+mdev devices.
 
-* Move code from the vfio_ap driver's probe callback into a function
-  defined in the mdev private operations file.
+To ensure that the AP bus apmask/aqmask interfaces are used to control
+which AP queues get manually bound to or unbound from the
+vfio_ap device driver, the bind/unbind sysfs interfaces will
+be disabled for the vfio_ap device driver. The reasons for this are:
 
-* Move code from the vfio_ap driver's remove callback into a function
-  defined in the mdev private operations file.
+* To prevent unbinding an AP queue device from the vfio_ap device
+  driver representing a queue that is assigned to an mdev device.
+
+* To enforce the policy that the the AP resources must first be
+  unassigned from the mdev device - which will hot unplug them from a
+  guest using the mdev device - before changing ownership of APQNs
+  from the vfio_ap driver to a zcrypt driver. This ensures that private
+  crypto data intended for the guest will never be accessible from the
+  host.
+
+* It takes advantage of the AP architecture to prevent dynamic changes
+  to the LPAR configuration using the SE or SCLP commands from
+  compromising the guest crypto devices. For example:
+
+  * Even if an adapter is configured off, if and when it is configured
+    back on, the queue devices associated with the adapter will be bound
+    back to the vfio_ap driver and the queues will automatically be
+    available to a guest using the mdev to which the APQN of the queue
+    device is assigned.
+
+  * If adapters or domains are dynamically unassigned from the LPAR
+    in which the linux guest is running, effective masking will
+    prevent access to the AP resources by a guest using them.
 
 Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 ---
- drivers/s390/crypto/vfio_ap_drv.c     | 27 ++++++++++-----------------
- drivers/s390/crypto/vfio_ap_ops.c     | 28 ++++++++++++++++++++++++++++
- drivers/s390/crypto/vfio_ap_private.h |  6 +++---
- 3 files changed, 41 insertions(+), 20 deletions(-)
+ drivers/s390/crypto/vfio_ap_drv.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
-index 003662aa8060..3c60df70891b 100644
+index 3c60df70891b..7b52393007c6 100644
 --- a/drivers/s390/crypto/vfio_ap_drv.c
 +++ b/drivers/s390/crypto/vfio_ap_drv.c
-@@ -49,15 +49,15 @@ MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
-  */
- static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
- {
--	struct vfio_ap_queue *q;
--
--	q = kzalloc(sizeof(*q), GFP_KERNEL);
--	if (!q)
--		return -ENOMEM;
--	dev_set_drvdata(&apdev->device, q);
--	q->apqn = to_ap_queue(&apdev->device)->qid;
--	q->saved_isc = VFIO_AP_ISC_INVALID;
-+	int ret;
-+	struct ap_queue *queue = to_ap_queue(&apdev->device);
-+
-+	ret = vfio_ap_mdev_probe_queue(queue);
-+	if (ret)
-+		return ret;
-+
- 	return 0;
-+
+@@ -164,6 +164,28 @@ static void vfio_ap_matrix_dev_destroy(void)
+ 	root_device_unregister(root_device);
  }
  
- /**
-@@ -68,17 +68,10 @@ static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
-  */
- static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
- {
--	struct vfio_ap_queue *q;
--	int apid, apqi;
-+	struct ap_queue *queue = to_ap_queue(&apdev->device);
- 
- 	mutex_lock(&matrix_dev->lock);
--	q = dev_get_drvdata(&apdev->device);
--	dev_set_drvdata(&apdev->device, NULL);
--	apid = AP_QID_CARD(q->apqn);
--	apqi = AP_QID_QUEUE(q->apqn);
--	vfio_ap_mdev_reset_queue(apid, apqi, 1);
--	vfio_ap_irq_disable(q);
--	kfree(q);
-+	vfio_ap_mdev_remove_queue(queue);
- 	mutex_unlock(&matrix_dev->lock);
- }
- 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 015174ff6f0a..bf2ab02b9a0b 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -1302,3 +1302,31 @@ void vfio_ap_mdev_unregister(void)
- {
- 	mdev_unregister_device(&matrix_dev->device);
- }
-+
-+int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
++static bool vfio_ap_resource_in_use(unsigned long *apm, unsigned long *aqm)
 +{
-+	struct vfio_ap_queue *q;
++	bool in_use = false;
++	struct ap_matrix_mdev *matrix_mdev;
 +
-+	q = kzalloc(sizeof(*q), GFP_KERNEL);
-+	if (!q)
-+		return -ENOMEM;
-+	dev_set_drvdata(&queue->ap_dev.device, q);
-+	q->apqn = queue->qid;
-+	q->saved_isc = VFIO_AP_ISC_INVALID;
++	mutex_lock(&matrix_dev->lock);
 +
-+	return 0;
++	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
++		if (bitmap_intersects(matrix_mdev->matrix.apm,
++				      apm, AP_DEVICES) &&
++		    bitmap_intersects(matrix_mdev->matrix.aqm,
++				      aqm, AP_DOMAINS)) {
++			in_use = true;
++			break;
++		}
++	}
++
++	mutex_unlock(&matrix_dev->lock);
++
++	return in_use;
 +}
 +
-+void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
-+{
-+	struct vfio_ap_queue *q;
-+	int apid, apqi;
-+
-+	q = dev_get_drvdata(&queue->ap_dev.device);
-+	dev_set_drvdata(&queue->ap_dev.device, NULL);
-+	apid = AP_QID_CARD(q->apqn);
-+	apqi = AP_QID_QUEUE(q->apqn);
-+	vfio_ap_mdev_reset_queue(apid, apqi, 1);
-+	vfio_ap_irq_disable(q);
-+	kfree(q);
-+}
-diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-index f46dde56b464..5cc3c2ebf151 100644
---- a/drivers/s390/crypto/vfio_ap_private.h
-+++ b/drivers/s390/crypto/vfio_ap_private.h
-@@ -90,8 +90,6 @@ struct ap_matrix_mdev {
+ static int __init vfio_ap_init(void)
+ {
+ 	int ret;
+@@ -179,7 +201,9 @@ static int __init vfio_ap_init(void)
+ 	memset(&vfio_ap_drv, 0, sizeof(vfio_ap_drv));
+ 	vfio_ap_drv.probe = vfio_ap_queue_dev_probe;
+ 	vfio_ap_drv.remove = vfio_ap_queue_dev_remove;
++	vfio_ap_drv.in_use = vfio_ap_resource_in_use;
+ 	vfio_ap_drv.ids = ap_queue_ids;
++	vfio_ap_drv.driver.suppress_bind_attrs = true;
  
- extern int vfio_ap_mdev_register(void);
- extern void vfio_ap_mdev_unregister(void);
--int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
--			     unsigned int retry);
- 
- struct vfio_ap_queue {
- 	struct ap_matrix_mdev *matrix_mdev;
-@@ -100,5 +98,7 @@ struct vfio_ap_queue {
- #define VFIO_AP_ISC_INVALID 0xff
- 	unsigned char saved_isc;
- };
--struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q);
-+int vfio_ap_mdev_probe_queue(struct ap_queue *queue);
-+void vfio_ap_mdev_remove_queue(struct ap_queue *queue);
-+
- #endif /* _VFIO_AP_PRIVATE_H_ */
+ 	ret = ap_driver_register(&vfio_ap_drv, THIS_MODULE, VFIO_AP_DRV_NAME);
+ 	if (ret) {
 -- 
 2.7.4
 
