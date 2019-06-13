@@ -2,135 +2,87 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B698C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B385C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B01020B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1732120B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:49:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560440940;
+	bh=YHsBlYY6tsrVcysOLrS4tUMHlZFvYKYdWz8QfYHbYF0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=voAGqbsk2Gh2YlGCWHKASEkH4IP6bEfAf5eKsGphjV4GoFng7RGb0wWSGQKzXPp62
+	 m0rOUY5hfkVxU5kxd299wNHNe1e2WDGehM0RLKjXOgyT1ficmo+IH1BWTFAHoyrqa+
+	 gpPySgUXgtvCEVOiqTeuekFtVECbAt6J3+8uY00k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389624AbfFMPsz (ORCPT
+        id S2389629AbfFMPs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:48:55 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:52428 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731710AbfFMJPD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:15:03 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 73D26260CB2
-Subject: Re: [PATCH] backlight: pwm_bl: Fix heuristic to determine number of
- brightness levels
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-References: <20190612180003.161966-1-mka@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <fd554750-7ec6-73e1-be3a-5bac0749fa0b@collabora.com>
-Date:   Thu, 13 Jun 2019 11:14:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 11:48:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731709AbfFMJOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:14:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EF0D2133D;
+        Thu, 13 Jun 2019 09:14:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560417272;
+        bh=YHsBlYY6tsrVcysOLrS4tUMHlZFvYKYdWz8QfYHbYF0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aWKMs2qselRXwjVuccRgFuwYdWSJG9elv1+wDvNoy3snAq8CN1VPvkgRhEyAHNx7R
+         /grEVBUAKWwzzK+buGMkQHcXsHuJriEn2gbOqTolAQKs/XCDEF4K11idIYljbvfHnp
+         T9sRFlavEToI0bbB0gO8Ddn2fWDn1ExlbSmjQcEA=
+Date:   Thu, 13 Jun 2019 11:14:30 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Stephen Bates <sbates@raithlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shhuiw@foxmail.com" <shhuiw@foxmail.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH] io_uring: fix SQPOLL cpu check
+Message-ID: <20190613091430.GA28704@kroah.com>
+References: <5D2859FE-DB39-48F5-BBB5-6EDD3791B6C3@raithlin.com>
+ <20190612092403.GA38578@lakrids.cambridge.arm.com>
+ <DCE71F95-F72A-414C-8A02-98CC81237F40@raithlin.com>
+ <b3c9138e-bf3b-0851-a63e-f52f926d5ed8@kernel.dk>
 MIME-Version: 1.0
-In-Reply-To: <20190612180003.161966-1-mka@chromium.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b3c9138e-bf3b-0851-a63e-f52f926d5ed8@kernel.dk>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+On Thu, Jun 13, 2019 at 02:54:45AM -0600, Jens Axboe wrote:
+> On 6/12/19 3:47 AM, Stephen  Bates wrote:
+> >> Aargh. My original patch [1] handled that correctly, and this case was
+> >> explicitly called out in the commit message, which was retained even
+> >> when the patch was "simplified". That's rather disappointing. :/
+> >    
+> > It looks like Jens did a fix for this (44a9bd18a0f06bba
+> > " io_uring: fix failure to verify SQ_AFF cpu") which is in the 5.2-rc series
+> > but which hasn’t been applied to the stable series yet. I am not sure how
+> > I missed that but it makes my patch redundant.
+> > 
+> > Jens, will 44a9bd18a0f06bba be applied to stable kernels?
+> 
+> Yes, we can get it flagged for stable. Greg, can you pull in the above
+> commit for 5.1 stable?
 
-On 12/6/19 20:00, Matthias Kaehlcke wrote:
-> With commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of
-> LED linearly to human eye") the number of set bits (aka hweight())
-> in the PWM period is used in the heuristic to determine the number
-> of brightness levels, when the brightness table isn't specified in
-> the DT. The number of set bits doesn't provide a reliable clue about
-> the length of the period, instead change the heuristic to:
-> 
->  nlevels = period / fls(period)
-> 
-> Also limit the maximum number of brightness levels to 4096 to avoid
-> excessively large tables.
-> 
-> With this the number of levels increases monotonically with the PWM
-> period, until the maximum of 4096 levels is reached:
-> 
-> period (ns)    # levels
-> 
-> 100    	       16
-> 500	       62
-> 1000	       111
-> 5000	       416
-> 10000	       769
-> 50000	       3333
-> 100000	       4096
-> 
-> Fixes: 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED linearly to human eye")
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Now snuck in for the next 5.1.y release, thanks.
 
-Tested on Samsung Chromebook Plus (16-bit pwm)
-
-Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-
-> ---
->  drivers/video/backlight/pwm_bl.c | 24 ++++++------------------
->  1 file changed, 6 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> index fb45f866b923..0b7152fa24f7 100644
-> --- a/drivers/video/backlight/pwm_bl.c
-> +++ b/drivers/video/backlight/pwm_bl.c
-> @@ -194,29 +194,17 @@ int pwm_backlight_brightness_default(struct device *dev,
->  				     struct platform_pwm_backlight_data *data,
->  				     unsigned int period)
->  {
-> -	unsigned int counter = 0;
-> -	unsigned int i, n;
-> +	unsigned int i;
->  	u64 retval;
->  
->  	/*
-> -	 * Count the number of bits needed to represent the period number. The
-> -	 * number of bits is used to calculate the number of levels used for the
-> -	 * brightness-levels table, the purpose of this calculation is have a
-> -	 * pre-computed table with enough levels to get linear brightness
-> -	 * perception. The period is divided by the number of bits so for a
-> -	 * 8-bit PWM we have 255 / 8 = 32 brightness levels or for a 16-bit PWM
-> -	 * we have 65535 / 16 = 4096 brightness levels.
-> -	 *
-> -	 * Note that this method is based on empirical testing on different
-> -	 * devices with PWM of 8 and 16 bits of resolution.
-> +	 * Once we have 4096 levels there's little point going much higher...
-> +	 * neither interactive sliders nor animation benefits from having
-> +	 * more values in the table.
->  	 */
-> -	n = period;
-> -	while (n) {
-> -		counter += n % 2;
-> -		n >>= 1;
-> -	}
-> +	data->max_brightness =
-> +		min((int)DIV_ROUND_UP(period, fls(period)), 4096);
->  
-> -	data->max_brightness = DIV_ROUND_UP(period, counter);
->  	data->levels = devm_kcalloc(dev, data->max_brightness,
->  				    sizeof(*data->levels), GFP_KERNEL);
->  	if (!data->levels)
-> 
+greg k-h
