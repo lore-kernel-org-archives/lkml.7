@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD749C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 14:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E2DC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 14:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1823207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 14:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7896D207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 14:59:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732743AbfFMO7o (ORCPT
+        id S1732768AbfFMO7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 10:59:44 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:35419 "EHLO
+        Thu, 13 Jun 2019 10:59:47 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:35417 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732600AbfFMOun (ORCPT
+        with ESMTP id S1732599AbfFMOum (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:50:43 -0400
+        Thu, 13 Jun 2019 10:50:42 -0400
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1hbR3n-0002Ty-FI; Thu, 13 Jun 2019 16:50:39 +0200
+        id 1hbR3m-0002Ty-OH; Thu, 13 Jun 2019 16:50:39 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 5/6] workqueue: Use swait for wq_manager_wait
-Date:   Thu, 13 Jun 2019 16:50:26 +0200
-Message-Id: <20190613145027.27753-6-bigeasy@linutronix.de>
+Subject: [PATCH 4/6] sched/swait: Add swait_event_lock_irq()
+Date:   Thu, 13 Jun 2019 16:50:25 +0200
+Message-Id: <20190613145027.27753-5-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190613145027.27753-1-bigeasy@linutronix.de>
 References: <20190613145027.27753-1-bigeasy@linutronix.de>
@@ -43,57 +43,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order for the workqueue code use raw_spinlock_t typed locking there
-must not be a spinlock_t typed lock be acquired. A wait_queue_head uses
-a spinlock_t lock for its list protection.
-
-Use a swait based queue head to avoid raw_spinlock_t -> spinlock_t
-locking.
+The swait_event_lock_irq() is inspired by wait_event_lock_irq(). This is
+required by the workqueue code once it switches to swait.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- kernel/workqueue.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/linux/swait.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index a3c2959e5c4f0..f27a57fce5079 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -50,6 +50,7 @@
- #include <linux/uaccess.h>
- #include <linux/sched/isolation.h>
- #include <linux/nmi.h>
-+#include <linux/swait.h>
+diff --git a/include/linux/swait.h b/include/linux/swait.h
+index 73e06e9986d4b..12612823c2cb1 100644
+--- a/include/linux/swait.h
++++ b/include/linux/swait.h
+@@ -297,4 +297,18 @@ do {									\
+ 	__ret;								\
+ })
  
- #include "workqueue_internal.h"
- 
-@@ -301,7 +302,7 @@ static struct workqueue_attrs *wq_update_unbound_numa_attrs_buf;
- static DEFINE_MUTEX(wq_pool_mutex);	/* protects pools and workqueues list */
- static DEFINE_MUTEX(wq_pool_attach_mutex); /* protects worker attach/detach */
- static DEFINE_SPINLOCK(wq_mayday_lock);	/* protects wq->maydays list */
--static DECLARE_WAIT_QUEUE_HEAD(wq_manager_wait); /* wait for manager to go away */
-+static DECLARE_SWAIT_QUEUE_HEAD(wq_manager_wait); /* wait for manager to go away */
- 
- static LIST_HEAD(workqueues);		/* PR: list of all workqueues */
- static bool workqueue_freezing;		/* PL: have wqs started freezing? */
-@@ -2143,7 +2144,7 @@ static bool manage_workers(struct worker *worker)
- 
- 	pool->manager = NULL;
- 	pool->flags &= ~POOL_MANAGER_ACTIVE;
--	wake_up(&wq_manager_wait);
-+	swake_up_one(&wq_manager_wait);
- 	return true;
- }
- 
-@@ -3538,7 +3539,7 @@ static void put_unbound_pool(struct worker_pool *pool)
- 	 * manager and @pool gets freed with the flag set.
- 	 */
- 	spin_lock_irq(&pool->lock);
--	wait_event_lock_irq(wq_manager_wait,
-+	swait_event_lock_irq(wq_manager_wait,
- 			    !(pool->flags & POOL_MANAGER_ACTIVE), pool->lock);
- 	pool->flags |= POOL_MANAGER_ACTIVE;
- 
++#define __swait_event_lock_irq(wq, condition, lock, cmd)		\
++	___swait_event(wq, condition, TASK_UNINTERRUPTIBLE, 0,		\
++		       raw_spin_unlock_irq(&lock);			\
++		       cmd;						\
++		       schedule();					\
++		       raw_spin_lock_irq(&lock))
++
++#define swait_event_lock_irq(wq_head, condition, lock)			\
++	do {								\
++		if (condition)						\
++			break;						\
++		__swait_event_lock_irq(wq_head, condition, lock, );	\
++	} while (0)
++
+ #endif /* _LINUX_SWAIT_H */
 -- 
 2.20.1
 
