@@ -2,96 +2,64 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09623C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDD1C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B1F20896
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D56320896
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:09:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mcw0iG8G"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sJaw5Jvm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387875AbfFMPJn (ORCPT
+        id S2387846AbfFMPJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:09:43 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49626 "EHLO
+        Thu, 13 Jun 2019 11:09:41 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49624 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732354AbfFMN5Q (ORCPT
+        with ESMTP id S1732353AbfFMN5Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Jun 2019 09:57:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        d=infradead.org; s=merlin.20170209; h=Subject:Cc:To:From:Date:Message-Id:
+        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lKYQKwrJfQo2MNMZJ5wnSQSzwwx/J9BZ2QpcLaaOhqI=; b=mcw0iG8GhdxCqw5pAZOom7DVDR
-        p7EygH0CPT4iqaGccWVO1PjNrBiEHtZwk+Rprf8oYe2X7dDlihNy6GyRrniNWaxat0UD/+LiPQ9qy
-        hFaRRo6atSoVyN/7t7Kp+EqqXWF0n3ZlasKANvcqr3gMwEj8MzJNNj31bU+Nnkx/HEacCqH9Irmq4
-        J2qCzALgzpz8LKGHjfRkA7djecoVefize4ug9t0DgkKQ8HWfok/0w0GN7pi7K+TIpxD9v+hIrLFFq
-        gUf3D72MVzaC7z+GhSDnlFBipfLoOvKp14De5SKsBq1UDqE/MeHi6sWWEMvWdw+uM04KVQ3QXfqzC
-        JGeEQJfg==;
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=EfkBDDJMAt8xHDi7ZXze+FifO3HHeyNpCl8Ua4IB4Hw=; b=sJaw5Jvm/53ODTnP+j7SLhgVw
+        uwOx8DIEUh/dq09/tZ/MYU0fn9HKlghiyako+Bm7U1uhJlNaGaqj+4T9n06SOri9YAsdvTzeRhR9L
+        hIQL+s4VFH9fLFYpo+xs/c8LtyT1BrbAB0awMcEbrLYigGKn7yH3ZcMQovkPXlKyMBqHpe12uPgkR
+        tstzCs2YS4vpXCa5kJTCGCdJgvztTxSeqN4vY+cajCasaKF924GBX1Qw85sBQznWR6jJcOVeDFHI/
+        /ZaCPUcCYMgypt5VsamGB+j8LGrv2dXj9XbqMVYG4bVXLZM3DsrccxP8Ofb9aqB0d+4buTMN2i8SZ
+        UVhFC5sxg==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbQDy-0004GE-9G; Thu, 13 Jun 2019 13:57:06 +0000
+        id 1hbQDy-0004GC-7a; Thu, 13 Jun 2019 13:57:06 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 14D9520435AA7; Thu, 13 Jun 2019 15:57:05 +0200 (CEST)
-Message-Id: <20190613135653.415699001@infradead.org>
+        id 01D8120316592; Thu, 13 Jun 2019 15:57:04 +0200 (CEST)
+Message-Id: <20190613135445.318096781@infradead.org>
 User-Agent: quilt/0.65
-Date:   Thu, 13 Jun 2019 15:54:48 +0200
+Date:   Thu, 13 Jun 2019 15:54:45 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, mingo@kernel.org, bp@alien8.de,
         tglx@linutronix.de, luto@kernel.org, namit@vmware.com,
         peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>
-Subject: [PATCH v2 3/5] x86/percpu, x86/irq: Relax {set,get}_irq_regs()
-References: <20190613135445.318096781@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] x86/percpu semantics and fixes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nadav reported that since the this_cpu_*() ops got asm-volatile
-constraints on, code generation suffered for do_IRQ(), but since this
-is all with IRQs disabled we can use __this_cpu_*().
+Hi all,
 
-smp_x86_platform_ipi                                      234        222   -12,+0
-smp_kvm_posted_intr_ipi                                    74         66   -8,+0
-smp_kvm_posted_intr_wakeup_ipi                             86         78   -8,+0
-smp_apic_timer_interrupt                                  292        284   -8,+0
-smp_kvm_posted_intr_nested_ipi                             74         66   -8,+0
-do_IRQ                                                    195        187   -8,+0
+I still have these patches sitting in my queue and figured I'd repost them.
 
-Reported-by: Nadav Amit <nadav.amit@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/include/asm/irq_regs.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Last time Linus proposed a "+m" alternative approach, but that generates far
+far worse code (I've lost the patch and not re-ran those numbers, but I suppose
+I can redo if found important).
 
---- a/arch/x86/include/asm/irq_regs.h
-+++ b/arch/x86/include/asm/irq_regs.h
-@@ -16,7 +16,7 @@ DECLARE_PER_CPU(struct pt_regs *, irq_re
- 
- static inline struct pt_regs *get_irq_regs(void)
- {
--	return this_cpu_read(irq_regs);
-+	return __this_cpu_read(irq_regs);
- }
- 
- static inline struct pt_regs *set_irq_regs(struct pt_regs *new_regs)
-@@ -24,7 +24,7 @@ static inline struct pt_regs *set_irq_re
- 	struct pt_regs *old_regs;
- 
- 	old_regs = get_irq_regs();
--	this_cpu_write(irq_regs, new_regs);
-+	__this_cpu_write(irq_regs, new_regs);
- 
- 	return old_regs;
- }
-
+These patches have been through 0day for a while.
 
