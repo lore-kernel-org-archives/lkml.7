@@ -2,236 +2,216 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC2AC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9A1C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65170206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03424206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732682AbfFMPgd (ORCPT
+        id S1732997AbfFMPgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:36:33 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18566 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727182AbfFMKRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 06:17:54 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 81ECDD7D7A706F99E1A3;
-        Thu, 13 Jun 2019 18:17:51 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 13 Jun 2019
- 18:17:44 +0800
-Subject: Re: [PATCH v4 2/3] lib: logic_pio: Reject accesses to unregistered
- CPU MMIO regions
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
- <1560262374-67875-3-git-send-email-john.garry@huawei.com>
- <20190613032034.GE13533@google.com>
-CC:     <lorenzo.pieralisi@arm.com>, <arnd@arndb.de>,
-        <linux-pci@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <linux-arm-kernel@lists.infradead.org>, <will.deacon@arm.com>,
-        <wangkefeng.wang@huawei.com>, <linuxarm@huawei.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <catalin.marinas@arm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <2d5e6112-be27-33c2-c1fd-6ab06405fa40@huawei.com>
-Date:   Thu, 13 Jun 2019 11:17:37 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
-MIME-Version: 1.0
-In-Reply-To: <20190613032034.GE13533@google.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+        Thu, 13 Jun 2019 11:36:31 -0400
+Received: from outgoing2.flk.host-h.net ([188.40.0.84]:39967 "EHLO
+        outgoing2.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727157AbfFMKRn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 06:17:43 -0400
+Received: from www31.flk1.host-h.net ([188.40.1.173])
+        by antispam3-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.89)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1hbMnb-0004gv-Eh; Thu, 13 Jun 2019 12:17:40 +0200
+Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
+        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.84_2)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1hbMna-0003Pi-J5; Thu, 13 Jun 2019 12:17:38 +0200
+From:   Justin Swartz <justin.swartz@risingedge.co.za>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: rockchip: add display nodes for rk322x
+Date:   Thu, 13 Jun 2019 10:13:04 +0000
+Message-Id: <20190613101305.30491-1-justin.swartz@risingedge.co.za>
+X-Mailer: git-send-email 2.11.0
+X-Authenticated-Sender: justin.swartz@risingedge.co.za
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25478/Wed Jun 12 10:14:54 2019)
+X-Originating-IP: 188.40.1.173
+X-SpamExperts-Domain: risingedge.co.za
+X-SpamExperts-Username: 
+Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.0014064279395)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0aEcKiGOen0TgGQo14QTNxSpSDasLI4SayDByyq9LIhVm8Lp0RDH9p9e
+ zSXjVPBY3UTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
+ mAX8Bxy/iUu0ThNZg0jxJtcVJProrT987X1VDPOqN+OoDzRTdku7DidYUZdNf38Sp7Of4wP429AA
+ f49baR+f3He7jw4SoVhmTJ/3eP9ORQWVx8ds1M4qmk3/bYr2p8zbg4Paoa3pNVQ0zl7t/+UfQLYB
+ qEPnp1U88kqVD8AM2G81dFO0E3gi+MOI1foZYzDggRXhpvoPtF3cVkniFXU3qJSqpdJudO6+rkiw
+ E5i8Wl78Q18OeOfsy4h7jF1Uv9lnibl3vcBqVmvQB4A18aeE+j/fKO/vV3jpic9houk2mH6eQvWp
+ DWTULXV1jJ5bfceEJeNruLKdflVX7oFNsdHVhnpudkCyIg6Nob+f0OfCg2lBMt3xu9nbye2CdJLN
+ jSo1M+TSg3TNDI3/M5s9/ot3ko3rrae7IifWc6pL546YUVQwaYLh3di89W/ji5iahyCgJgyv93tC
+ 61cbiLYl3RCqADG/Ryndzp4OfbK7c6EqHwlqvaI+zok/BsKQK4gft4+8sY8CNaDDoRMm0CGce/fp
+ WUXurEbGCiZ0ePvZjCuJdbYb9IXfYGRpVS/0hA4Mwkg/wxsjmSXwdCAtc5U5IMGqr3wBwEeX6Ai5
+ 5FPRpzhbYqsuNEW45+y/2kiUpWy9c957+6R4kroQiAThpzOdFqFvbdRuq0FZjQOwDKXnhaC6dkwF
+ 9ybSMhHO+IPM0C985aNe1vwE2plJLdOGZ2rsAWflnmUXwJv1R9bnj+xoJG4VhUotTJ0/e5GmrorL
+ FK/ZMMaOhB24kmiXsKh2uc6NbILRjdK3JtbOY4V5u4SqNrbdxyGLEIoLEuuC4P/fyEEgA3CnflZn
+ bjDB2+RGRgaXth2/9YEbMsGSn6owqJN0kS7MUpAEhFoAxikOdx3ALFboD0vMokt+4lO8Qp33tUy6
+ u+yS6WEpzRkYYh+Rxc/2mS1yCppcnKmI4dLjaezH/hFXJzwJWw42swm4bO6gacpMpzJ5RNWFoIkg
+ vLC7uMZSLKkLPlzqsPnNmrTFfBI+gCHkFgyh9jAE9PwtDurXCCybWAnihjA708Lg3Y2gXyaf+rIt
+ vvthbyiMZOAfvJjwL84MO4Vozqbzv/NmqBexmg1oMlu3UCyNNO7qENlLqkRemjF1A1q3g0ZrubFa
+ n/xi+AGXOIO97ttnHrPmGyC6rR21+9c=
+X-Report-Abuse-To: spam@antispammaster.host-h.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/06/2019 04:20, Bjorn Helgaas wrote:
-> On Tue, Jun 11, 2019 at 10:12:53PM +0800, John Garry wrote:
->> Currently when accessing logical indirect PIO addresses in
->> logic_{in, out}{,s}, we first ensure that the region is registered.
->
+Add display_subsystem, hdmi_phy, vop, and hdmi device nodes plus
+a few hdmi pinctrl entries to allow for HDMI output.
 
-Hi Bjorn,
+Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+---
+ arch/arm/boot/dts/rk322x.dtsi | 83 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 82 insertions(+), 1 deletion(-)
 
-> I think logic_pio is specifically concerned with I/O port space, so
-> it's a little bit unfortunate that we named this "PIO".
->
-> PIO is a general term for "Programmed I/O", which just means the CPU
-> is involved in each transfer, as opposed to DMA.  The transfers can be
-> to either MMIO or I/O port space.
->
-> So this ends up being a little confusing because I think you mean
-> "Port I/O", not "Programmed I/O".
->
-
-Personally I agree that the naming isn't great. But then Arnd does think 
-that "PIO" is appropriate.
-
-There were many different names along the way to this support merged, 
-and I think that the naming became almost irrelevant in the end.
-
->> However, no such check exists for CPU MMIO regions. The CPU MMIO regions
->> would be registered by the PCI host (when PCI_IOBASE is defined) in
->> pci_register_io_range().
->
-> IIUC this "CPU MMIO region" is an MMIO region where a memory load or
-> store from the CPU is converted by a PCI host bridge into an I/O port
-> transaction on PCI.
->
-
-Right
-
-> Again IIUC, logic_pio supports two kinds of I/O port space accesses:
->
->   1) The simple "bridge converts loads/stores to an MMIO region to PCI
->      I/O port transactions" kind, and
->
->   2) The more complicated "somebody supplies logic_pio_host_ops
->      functions that do arbitrary magic to generate I/O port
->      transactions on some bus.
-
-Right
-
->
-> And this patch is making the first kind smarter.  Previously it would
-> perform the memory access whenever "addr < MMIO_UPPER_LIMIT", but
-> after this patch it will only do it if find_io_range() succeeds.
->
-> Right?  Sorry for restating what probably should have been obvious to
-> me.
->
-
-Yes, right. A logical PIO range is registered for a PCI MMIO region in 
-pci_register_io_range(). As such, if no range is registered, we can 
-assume that no PCI MMIO region has been mapped and discard any attempted 
-access.
-
-> I have two observations here:
->
->   1) The simple "bridge converts CPU MMIO space to PCI I/O port space"
->      flavor is essentially identical to what ia64 (and probably other
->      architectures) does.  This should really be combined somehow.
->
-
-Maybe. For ia64, it seems to have some "platform" versions of IO port 
-accessors, and then also accessors need a fence barrier. I'm not sure 
-how well that would fit with logical PIO. It would need further analysis.
-
-IIRC, PPC did have its own custom version of "indirect IO". So we could 
-look to factor that out.
-
->   2) If you made a default set of logic_pio_host_ops that merely did
->      loads/stores and maybe added a couple fields in the struct
->      logic_pio_hwaddr, I bet you could unify the two kinds so
->      logic_inb() would look something like this:
->
-
-Yeah, I did consider this. We do not provide host operators for PCI MMIO 
-ranges. We could simply provide regular versions of inb et al for this. 
-A small obstacle for this is that we redefine inb et al, so would need 
-"direct" versions also. It would be strange.
-
-So I'm not sure on the value of this.
-
->        u8 logic_inb(unsigned long addr)
->        {
->          struct logic_pio_hwaddr *range = find_io_range(addr);
->
-> 	 if (!range)
-> 	   return (u8) ~0;
->
->          return (u8) range->ops->in(range->hostdata, addr, sz);
->        }
->
->> We have seen scenarios when systems which don't have a PCI host, or they
->> do but the PCI host probe fails, certain drivers attempts to still attempt
->> to access PCI IO ports; examples are in [1] and [2].
->>
->> Such is a case on an ARM64 system without a PCI host:
->>
->> root@(none)$ insmod hwmon/f71805f.ko
->>  Unable to handle kernel paging request at virtual address ffff7dfffee0002e
->>  Mem abort info:
->>    ESR = 0x96000046
->>    Exception class = DABT (current EL), IL = 32 bits
->>    SET = 0, FnV = 0
->>    EA = 0, S1PTW = 0
->>  Data abort info:
->>    ISV = 0, ISS = 0x00000046
->>    CM = 0, WnR = 1
->>  swapper pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
->>  [ffff7dfffee0002e] pgd=000000000141c003, pud=000000000141d003, pmd=0000000000000000
->>  Internal error: Oops: 96000046 [#1] PREEMPT SMP
->>  Modules linked in: f71805f(+)
->>  CPU: 20 PID: 2736 Comm: insmod Not tainted 5.1.0-rc1-00003-g6f1bfec2a620-dirty #99
->>  Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
->>  pstate: 80000005 (Nzcv daif -PAN -UAO)
->>  pc : logic_outb+0x54/0xb8
->>  lr : f71805f_find+0x2c/0x1b8 [f71805f]
->>  sp : ffff000025fbba90
->>  x29: ffff000025fbba90 x28: ffff000008b944d0
->>  x27: ffff000025fbbdf0 x26: 0000000000000100
->>  x25: ffff801f8c270580 x24: ffff000011420000
->>  x23: ffff000025fbbb3e x22: ffff000025fbbb40
->>  x21: ffff000008b991b8 x20: 0000000000000087
->>  x19: 000000000000002e x18: ffffffffffffffff
->>  x17: 0000000000000000 x16: 0000000000000000
->>  x15: ffff00001127d6c8 x14: 0000000000000000
->>  x13: 0000000000000000 x12: 0000000000000000
->>  x11: 0000000000010820 x10: 0000841fdac40000
->>  x9 : 0000000000000001 x8 : 0000000040000000
->>  x7 : 0000000000210d00 x6 : 0000000000000000
->>  x5 : ffff801fb6a46040 x4 : ffff841febeaeda0
->>  x3 : 0000000000ffbffe x2 : ffff000025fbbb40
->>  x1 : ffff7dfffee0002e x0 : ffff7dfffee00000
->>  Process insmod (pid: 2736, stack limit = 0x(____ptrval____))
->>  Call trace:
->>   logic_outb+0x54/0xb8
->>   f71805f_find+0x2c/0x1b8 [f71805f]
->>   f71805f_init+0x38/0xe48 [f71805f]
->>   do_one_initcall+0x5c/0x198
->>   do_init_module+0x54/0x1b0
->>   load_module+0x1dc4/0x2158
->>   __se_sys_init_module+0x14c/0x1e8
->>   __arm64_sys_init_module+0x18/0x20
->>   el0_svc_common+0x5c/0x100
->>   el0_svc_handler+0x2c/0x80
->>   el0_svc+0x8/0xc
->>  Code: d2bfdc00 f2cfbfe0 f2ffffe0 8b000021 (39000034)
->>  ---[ end trace 10ea80bde051bbfc ]---
->> root@(none)$
->>
->> Well-behaved drivers call request_{muxed_}region() to grab the IO port
->> region, but success here still doesn't actually mean that there is some IO
->> port mapped in this region.
->>
->> This patch adds a check to ensure that the CPU MMIO region is registered
->> prior to accessing the PCI IO ports.
->>
->> Any failed checks silently return.
->
-> I *think* what you're doing here is making inb/outb/etc work the same
-> as on x86, i.e., if no device responds to an inb(), the caller gets
-> ~0, and if no device claims an outb() the data gets dropped.
->
-
-Correct, but with a caveat: when you say no device responds, this means 
-that - for arm64 case - no PCI MMIO region is mapped.
-
-> That should be explicit in the commit log.
->
->> [1] https://lore.kernel.org/linux-pci/56F209A9.4040304@huawei.com
->> [2] https://lore.kernel.org/linux-arm-kernel/e6995b4a-184a-d8d4-f4d4-9ce75d8f47c0@huawei.com/
->>
-
-Thanks
-
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index da102fff96a2..7eb883eec126 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -143,6 +143,11 @@
+ 		#clock-cells = <0>;
+ 	};
+ 
++	display_subsystem: display-subsystem {
++		compatible = "rockchip,display-subsystem";
++		ports = <&vop_out>;
++	};
++
+ 	i2s1: i2s1@100b0000 {
+ 		compatible = "rockchip,rk3228-i2s", "rockchip,rk3066-i2s";
+ 		reg = <0x100b0000 0x4000>;
+@@ -529,6 +534,17 @@
+ 		status = "disabled";
+ 	};
+ 
++	hdmi_phy: hdmi-phy@12030000 {
++		compatible = "rockchip,rk3228-hdmi-phy";
++		reg = <0x12030000 0x10000>;
++		clocks = <&cru PCLK_HDMI_PHY>, <&xin24m>, <&cru DCLK_HDMI_PHY>;
++		clock-names = "sysclk", "refoclk", "refpclk";
++		#clock-cells = <0>;
++		clock-output-names = "hdmiphy_phy";
++		#phy-cells = <0>;
++		status = "disabled";
++	};
++
+ 	gpu: gpu@20000000 {
+ 		compatible = "rockchip,rk3228-mali", "arm,mali-400";
+ 		reg = <0x20000000 0x10000>;
+@@ -572,6 +588,28 @@
+ 		status = "disabled";
+ 	};
+ 
++	vop: vop@20050000 {
++		compatible = "rockchip,rk3228-vop";
++		reg = <0x20050000 0x1ffc>;
++		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru ACLK_VOP>, <&cru DCLK_VOP>, <&cru HCLK_VOP>;
++		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
++		resets = <&cru SRST_VOP_A>, <&cru SRST_VOP_H>, <&cru SRST_VOP_D>;
++		reset-names = "axi", "ahb", "dclk";
++		iommus = <&vop_mmu>;
++		status = "disabled";
++
++		vop_out: port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			vop_out_hdmi: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&hdmi_in_vop>;
++			};
++		};
++	};
++
+ 	vop_mmu: iommu@20053f00 {
+ 		compatible = "rockchip,iommu";
+ 		reg = <0x20053f00 0x100>;
+@@ -579,7 +617,7 @@
+ 		interrupt-names = "vop_mmu";
+ 		clocks = <&cru ACLK_VOP>, <&cru HCLK_VOP>;
+ 		clock-names = "aclk", "iface";
+-		iommu-cells = <0>;
++		#iommu-cells = <0>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -594,6 +632,34 @@
+ 		status = "disabled";
+ 	};
+ 
++	hdmi: hdmi@200a0000 {
++		compatible = "rockchip,rk3228-dw-hdmi";
++		reg = <0x200a0000 0x20000>;
++		reg-io-width = <4>;
++		interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru SCLK_HDMI_HDCP>, <&cru PCLK_HDMI_CTRL>, <&cru SCLK_HDMI_CEC>;
++		clock-names = "isfr", "iahb", "cec";
++		pinctrl-names = "default";
++		pinctrl-0 = <&hdmii2c_xfer &hdmi_hpd &hdmi_cec>;
++		resets = <&cru SRST_HDMI_P>;
++		reset-names = "hdmi";
++		phys = <&hdmi_phy>;
++		phy-names = "hdmi";
++		rockchip,grf = <&grf>;
++		status = "disabled";
++
++		ports {
++			hdmi_in: port {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				hdmi_in_vop: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&vop_out_hdmi>;
++				};
++			};
++		};
++	};
++
+ 	sdmmc: dwmmc@30000000 {
+ 		compatible = "rockchip,rk3228-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x30000000 0x4000>;
+@@ -922,6 +988,21 @@
+ 			};
+ 		};
+ 
++		hdmi {
++			hdmi_hpd: hdmi-hpd {
++				rockchip,pins = <0 RK_PB7 1 &pcfg_pull_down>;
++			};
++
++			hdmii2c_xfer: hdmii2c-xfer {
++				rockchip,pins = <0 RK_PA6 2 &pcfg_pull_none>,
++						<0 RK_PA7 2 &pcfg_pull_none>;
++			};
++
++			hdmi_cec: hdmi-cec {
++				rockchip,pins = <0 RK_PC4 1 &pcfg_pull_none>;
++			};
++		};
++
+ 		i2c0 {
+ 			i2c0_xfer: i2c0-xfer {
+ 				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_none>,
+-- 
+2.11.0
 
