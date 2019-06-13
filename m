@@ -2,79 +2,79 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F68C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2ADC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C97320449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:36:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KyS1UsvA"
+	by mail.kernel.org (Postfix) with ESMTP id 3514620449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560443776;
+	bh=DNOPj2Yx04AnRxwW50GJD0lO1OKzC99KUz7kFws8Elg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WwIT0FPZTdGxpy6yTAfC8VdNNi++w5v3WVdpw3W2rJTm+7H+4w6K/01GMteXfVywm
+	 7Qta3mEVPzHl9LHMlZSi4yp/fSc/jL6/52xZq4qAyQBrAeSKgJKLLWxfAmn04hrhJH
+	 QB095/6DZi7k4rY4BHgQrIpfCgZzqtDhs0b7hakY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392582AbfFMQgG (ORCPT
+        id S2392595AbfFMQgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:36:06 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:48700 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbfFMQfx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:35:53 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id F0CFE52B;
-        Thu, 13 Jun 2019 18:35:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1560443751;
-        bh=xYJTnR0BQQsX9pSkqK7GIQ6uoOB+X60qJ0Nav0xrwYE=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KyS1UsvAm48Ahvvu+6wlakTthmDnIYVISXTkkNlPky7ERMbQ1PMQXh6v0ldpM28nm
-         aIDWrWBjv/Pd6LtreDBJoFGhYFGnCv4BG852XXxKhNq8AXCGb4X4LpaxjbB8IYr2MB
-         NGeOj4EUmKkSGfBqRLqdpqUCITWZ2pZe2FM1qqug=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH 1/4] media: cxd2820r: don't check retval after our own
- assignemt
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Antti Palosaari <crope@iki.fi>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20190613155421.16408-1-wsa+renesas@sang-engineering.com>
- <20190613155421.16408-2-wsa+renesas@sang-engineering.com>
- <550e0dbf-1776-000b-27ca-40e40e317da2@ideasonboard.com>
- <20190613161922.GA5015@kunai>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <cbf928b6-33d6-d412-87dd-05f1fb5f1b6c@ideasonboard.com>
-Date:   Thu, 13 Jun 2019 17:35:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 12:36:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730693AbfFMHfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 03:35:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8159A20866;
+        Thu, 13 Jun 2019 07:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560411350;
+        bh=DNOPj2Yx04AnRxwW50GJD0lO1OKzC99KUz7kFws8Elg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=izsisZBJPQF0Ow37TFLvzUCps7FILRUBfislpzeHKcSh2hhVOGFiqSMjp4FBk+vju
+         ldUg+bfSXVeMCRV+C0mBPVak5LTc6kSpsbIVMMXhB/LtDkC80UWFzRKENhUYz2z8P5
+         f3u1IYdHXRXgpAjHbJn5NbkMKKKaHgjTpS2YpktM=
+Date:   Thu, 13 Jun 2019 09:35:47 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] Revert "Bluetooth: Align minimum encryption key size for
+ LE and BR/EDR connections"
+Message-ID: <20190613073547.GB16436@kroah.com>
+References: <20190522052002.10411-1-anarsoul@gmail.com>
+ <6BD1D3F7-E2F2-4B2D-9479-06E27049133C@holtmann.org>
+ <7B7F362B-6C8B-4112-8772-FB6BC708ABF5@holtmann.org>
+ <CA+E=qVfopSA90vG2Kkh+XzdYdNn=M-hJN_AptW=R+B5v3HB9eA@mail.gmail.com>
+ <CA+E=qVdLOS9smt-nBxg9Lon0iTZr87kONSp-XPKj9tqB4bvnqw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190613161922.GA5015@kunai>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+E=qVdLOS9smt-nBxg9Lon0iTZr87kONSp-XPKj9tqB4bvnqw@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+On Tue, Jun 11, 2019 at 12:56:02PM -0700, Vasily Khoruzhick wrote:
+> Greg,
+> 
+> Can we get this revert merged into stable branches? Bluetooth HID has
+> been broken for many devices for quite a while now and RFC patch that
+> fixes the breakage hasn't seen any movement for almost a month.
 
-On 13/06/2019 17:19, Wolfram Sang wrote:
-> 
->> In the title/subject:
->>
->> media: cxd2820r: don't check retval after our own assignemt
->>
->> s/assignemt/assignment/
-> 
-> Eeeks, in deed :( Shall I resend? Sorry for the noise.
-> 
+Now reverted as the bluetooth developers seem to be moving pretty slowly
+on this :(
 
-Not necessary for me, so I guess that's up to Mauro/Hans.
-Not sure who will pick these up and apply them.
---
-Kieran
+greg k-h
