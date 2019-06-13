@@ -2,115 +2,126 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A05EEC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA56AC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA5E20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD3DC2080A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393165AbfFMQ4z (ORCPT
+        id S2393171AbfFMQ46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:56:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59558 "EHLO mx1.redhat.com"
+        Thu, 13 Jun 2019 12:56:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:47186 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729955AbfFMBSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 21:18:14 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B6C07307C940;
-        Thu, 13 Jun 2019 01:18:13 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-87.pek2.redhat.com [10.72.12.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 88DD65C298;
-        Thu, 13 Jun 2019 01:18:08 +0000 (UTC)
-Date:   Thu, 13 Jun 2019 09:18:04 +0800
-From:   "dyoung@redhat.com" <dyoung@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Baoquan He <bhe@redhat.com>, lijiang <lijiang@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>
-Subject: Re: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel
- e820 table
-Message-ID: <20190613011804.GA27786@dhcp-128-65.nay.redhat.com>
-References: <20190608035451.GB26148@MiWiFi-R3L-srv>
- <20190608091030.GB32464@zn.tnic>
- <20190608100139.GC26148@MiWiFi-R3L-srv>
- <20190608100623.GA9138@zn.tnic>
- <20190608102659.GA9130@MiWiFi-R3L-srv>
- <20190610113747.GD5488@zn.tnic>
- <20190612015549.GI26148@MiWiFi-R3L-srv>
- <20190612151033.GJ32652@zn.tnic>
- <3dfa5985-008a-20d8-5171-cfe96807c303@amd.com>
- <20190612180724.GP32652@zn.tnic>
+        id S1730001AbfFMQ4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:56:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C32D367;
+        Thu, 13 Jun 2019 09:56:52 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0A1293F694;
+        Thu, 13 Jun 2019 09:56:49 -0700 (PDT)
+Subject: Re: [PATCH] arm64: dts: rockchip: Update DWC3 modules on RK3399 SoCs
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        devicetree@vger.kernel.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        linux-rockchip@lists.infradead.org,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Randy Li <ayaka@soulik.info>, linux-kernel@vger.kernel.org,
+        Vicente Bergas <vicencb@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>
+References: <20190613162745.12195-1-enric.balletbo@collabora.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <40d2260f-3925-acdc-eb02-8abb972f1056@arm.com>
+Date:   Thu, 13 Jun 2019 17:56:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612180724.GP32652@zn.tnic>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 13 Jun 2019 01:18:13 +0000 (UTC)
+In-Reply-To: <20190613162745.12195-1-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/12/19 at 08:07pm, Borislav Petkov wrote:
-> On Wed, Jun 12, 2019 at 04:52:22PM +0000, Lendacky, Thomas wrote:
-> > I think the discussion ended up being that debuginfo wasn't being stripped
-> > from the kernel and initrd (mainly the initrd).  What are the sizes of
-> > the kernel and initrd that you are loading for kdump via kexec?
-> > 
-> > From previous post:
-> >   kexec -s -p /boot/vmlinuz-5.2.0-rc3+ --initrd=/boot/initrd.img-5.2.0-rc3+
+On 13/06/2019 17:27, Enric Balletbo i Serra wrote:
+> As per binding documentation [1], the DWC3 core should have the "ref",
+> "bus_early" and "suspend" clocks. As explained in the binding, those
+> clocks are required for new platforms but not for existing platforms
+> before commit fe8abf332b8f ("usb: dwc3: support clocks and resets for
+> DWC3 core").
 > 
-> You mean those sizes?
+> However, as those clocks are really treated as required, this ends with
+> having some annoying messages when the "rockchip,rk3399-dwc3" is used:
 > 
-> $ ls -lh /boot/vmlinuz-5.2.0-rc3+ /boot/initrd.img-5.2.0-rc3+
-> -rw-r--r-- 1 root root 7.8M Jun 10 12:53 /boot/initrd.img-5.2.0-rc3+
-> -rw-r--r-- 1 root root 6.7M Jun 10 12:53 /boot/vmlinuz-5.2.0-rc3+
+> [    1.724107] dwc3 fe800000.dwc3: Failed to get clk 'ref': -2
+> [    1.731893] dwc3 fe900000.dwc3: Failed to get clk 'ref': -2
+> [    2.495937] dwc3 fe800000.dwc3: Failed to get clk 'ref': -2
+> [    2.647239] dwc3 fe900000.dwc3: Failed to get clk 'ref': -2
 > 
-> That should fit easily in 256M :)
+> In order to remove those annoying messages, update the DWC3 hardware
+> module node and add all the required clocks. With this change, both, the
+> glue node and the DWC3 core node, have the clocks defined, but that's
+> not really a problem and there isn't a side effect on do this. So, we
+> can get rid of the annoying get clk error messages.
 
-The final used size is uncompressed size, for example in my case:
+Can we not just move these clocks entirely from the glue layer to the 
+core layer? That didn't seem to break when I tried it, although I'll 
+admit my 'testing' was no more than booting and mounting a USB 3.0 flash 
+drive, no suspend or anything fancy.
 
-$ ls -lth arch/x86/boot/bzImage 
--rw-rw-r-- 1 dyoung dyoung 6.3M May 24 11:19 arch/x86/boot/bzImage
-$ ls -lth arch/x86/boot/compressed/vmlinux.bin
--rwxrwxr-x 1 dyoung dyoung 25M May 24 11:19 arch/x86/boot/compressed/vmlinux.bin
+My own attempt to shut up these errors got sidetracked into c0c61471ef86 
+("usb: dwc3: of-simple: Convert to bulk clk API"), then apparently 
+stalled :)
 
-The vmlinuz is 6.3M, uncompressed kernel is about 25M, since yours
-bzImage is 7.8M, I would expect the final size is around 29M
-
-for initramfs, you can check it by:
-
-$ ls -lth /boot/initramfs-5.0.9-301.fc30.x86_64kdump.img
--rw------- 1 root root 16M May 28 08:59 /boot/initramfs-5.0.9-301.fc30.x86_64kdump.img
-$ mkdir tmp
-$ cd tmp
-$ sudo lsinitrd --unpack /boot/initramfs-5.0.9-301.fc30.x86_64kdump.img
-$ du -hs .
-46M	.
-
-You can see my kdump initrd is 46M after unpacking.
+Robin.
 
 > 
-> -- 
-> Regards/Gruss,
->     Boris.
+> [1] Documentation/devicetree/bindings/usb/dwc3.txt
 > 
-> Good mailing practices for 400: avoid top-posting and trim the reply.
-
-Thanks
-Dave
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> 
+>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index 196ac9b78076..a15348d185ce 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -414,6 +414,9 @@
+>   			compatible = "snps,dwc3";
+>   			reg = <0x0 0xfe800000 0x0 0x100000>;
+>   			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH 0>;
+> +			clocks = <&cru SCLK_USB3OTG0_REF>, <&cru ACLK_USB3OTG0>,
+> +				 <&cru SCLK_USB3OTG0_SUSPEND>;
+> +			clock-names = "ref", "bus_early", "suspend";
+>   			dr_mode = "otg";
+>   			phys = <&u2phy0_otg>, <&tcphy0_usb3>;
+>   			phy-names = "usb2-phy", "usb3-phy";
+> @@ -447,6 +450,9 @@
+>   			compatible = "snps,dwc3";
+>   			reg = <0x0 0xfe900000 0x0 0x100000>;
+>   			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH 0>;
+> +			clocks = <&cru SCLK_USB3OTG1_REF>, <&cru ACLK_USB3OTG1>,
+> +				 <&cru SCLK_USB3OTG1_SUSPEND>;
+> +			clock-names = "ref", "bus_early", "suspend";
+>   			dr_mode = "otg";
+>   			phys = <&u2phy1_otg>, <&tcphy1_usb3>;
+>   			phy-names = "usb2-phy", "usb3-phy";
+> 
