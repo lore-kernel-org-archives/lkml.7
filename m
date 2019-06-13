@@ -2,180 +2,121 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9494C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D260C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A1A2147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Fx7IJ3Rn"
+	by mail.kernel.org (Postfix) with ESMTP id 26A492147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560443027;
+	bh=JUTwg6JYVMcanXtm5O5FyNtXQi+NRAjPJmKWbUZPEa0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=F0cFy2k1EDlBj1PryyTFR16edcZxTlMVbTI5ybJlD7RKFeFKV6l5DiwL0AhW7ddKf
+	 T+Ie473gBNQFhtq0Ir0PND5QRlMJ8QbQdU0UhKKPKoY4Cf2BAL5ytuG3NIwQYWYCOD
+	 CMYm2FfGV99k4Sd3tBy/c5IGDryBjGv5W/D+yazU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391975AbfFMQXh (ORCPT
+        id S2391235AbfFMQXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:23:37 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:40277 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731018AbfFMIhj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:37:39 -0400
-Received: by mail-yb1-f193.google.com with SMTP id g62so7498609ybg.7
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 01:37:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xQyhQbksvj61RPrZv6HE/27WZ2p7zM6vRmq6wqbq8Qs=;
-        b=Fx7IJ3Rn6+Ui58vZZjWSalUo87E2IkSKQDLMUtkgAPO4CmSr7POvW2xsqzpKzq5uhF
-         0f7g+rHnj3GBTKOCeRKhjRPPjQ4GVn+bwZdVpu+vrj/dOJr4Jj1ZIkTbJ3YLMTlyMxMN
-         dFMsKo5sE6beFBhyxH44nY5lY9n2acrQ4g7CdoyFqTBJVwOr6pTnEnT5NOllmkVF9RP6
-         IgCU7hIvmaN/Y+hE5quNLy9iXnlQ2onRzC1oZrgFYiPOaJytXxn79iHsne5eQcZMRhvR
-         OnUqbsrKe5fbWBuAfzOebwrdLBXouzVannJlsiiYbLyWJKuNqhB0elmrcQ+PNSaiuFsW
-         y3Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xQyhQbksvj61RPrZv6HE/27WZ2p7zM6vRmq6wqbq8Qs=;
-        b=JBoaaHHx6HCB44lRNojzyCH9PB5drB7rodkIAq/R9q3MAVmpXp1ww/3TZihuYHWUEs
-         ASjbgEKZPDcVX/J4QBOO0WeW2msPTJN4VAFyKd9bh8tox6GGi6YsNS53HE8AD2ctmuf2
-         Bk8Ilx09ibYKxvZ0OaokQC+rmQEPYxM49sdYERYRGH64J3AD+49f6xT7v0wurG3GnVuJ
-         OXP9GeKtrgkaTNZlDtw7njyNSVEWHHYroZJdOtA9+wY+gSJp9/TPfAwE4i7KCqUMeM4d
-         RP2azR7DntRJ+9lXzjqx2x0WppHFf7LUtEAudeo3e/ig8elfRhGgTVhoOrn7XdSfokqk
-         0Pig==
-X-Gm-Message-State: APjAAAXxXQIWUoIyNUpb4sjWETpX3d0/xgJ5qhw1IMMAfVwF2ZXm7+kI
-        IV2Cr49SWgMIIOfV7vxGjXtyag==
-X-Google-Smtp-Source: APXvYqyCnK2ALhwLtTPvX0AEYshPEqUIKjRxcqh3pgRhqVo+A2spmhGkm2WC+o0o7oMW27T55jkwSw==
-X-Received: by 2002:a25:7413:: with SMTP id p19mr39487999ybc.310.1560415057147;
-        Thu, 13 Jun 2019 01:37:37 -0700 (PDT)
-Received: from ?IPv6:2600:380:9e2c:9b66:68e0:4c59:dc75:6d4b? ([2600:380:9e2c:9b66:68e0:4c59:dc75:6d4b])
-        by smtp.gmail.com with ESMTPSA id r6sm597826ywd.47.2019.06.13.01.37.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 01:37:36 -0700 (PDT)
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        Jan Kara <jack@suse.cz>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jeff Moyer <jmoyer@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stable <stable@vger.kernel.org>
-References: <6FE0A98F-1E3D-4EF6-8B38-2C85741924A4@linaro.org>
- <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
- <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
- <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
- <5b71028c-72f0-73dd-0cd5-f28ff298a0a3@csail.mit.edu>
- <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
- <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
- <7B74A790-BD98-412B-ADAB-3B513FB1944E@linaro.org>
- <6a6f4aa4-fc95-f132-55b2-224ff52bd2d8@csail.mit.edu>
- <7c5e9d11-4a3d-7df4-c1e6-7c95919522ab@csail.mit.edu>
- <20190612130446.GD14578@quack2.suse.cz>
- <dd32ed59-a543-fc76-9a9a-2462f0119270@csail.mit.edu>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <aca00f05-4d71-7db0-52d6-7aa0932cc5c0@kernel.dk>
-Date:   Thu, 13 Jun 2019 02:37:29 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 12:23:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731011AbfFMIhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:37:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E9CC2064A;
+        Thu, 13 Jun 2019 08:37:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560415054;
+        bh=JUTwg6JYVMcanXtm5O5FyNtXQi+NRAjPJmKWbUZPEa0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WAqL5yGaOPZp4ECIXPbiO/qhy9EPBa/9JGPqjeA1H5k03KyXpy0b7g2T3kMyVnkcO
+         w5fpOjowoJnuvEomB0nPBurAEBxcYvr0OPzhxqmc/iM+XD2GPowSyDBhgWCcFVYAOO
+         eAQFwq9POwPglB70uRjIggZaJINUGB74Lv/tPvCs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kirill Smelkov <kirr@nexedi.com>,
+        Han-Wen Nienhuys <hanwen@google.com>,
+        Jakob Unterwurzacher <jakobunt@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 43/81] fuse: retrieve: cap requested size to negotiated max_write
+Date:   Thu, 13 Jun 2019 10:33:26 +0200
+Message-Id: <20190613075652.485457686@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
+References: <20190613075649.074682929@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <dd32ed59-a543-fc76-9a9a-2462f0119270@csail.mit.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/19 1:36 PM, Srivatsa S. Bhat wrote:
-> 
-> [ Adding Greg to CC ]
-> 
-> On 6/12/19 6:04 AM, Jan Kara wrote:
->> On Tue 11-06-19 15:34:48, Srivatsa S. Bhat wrote:
->>> On 6/2/19 12:04 AM, Srivatsa S. Bhat wrote:
->>>> On 5/30/19 3:45 AM, Paolo Valente wrote:
->>>>>
->>> [...]
->>>>> At any rate, since you pointed out that you are interested in
->>>>> out-of-the-box performance, let me complete the context: in case
->>>>> low_latency is left set, one gets, in return for this 12% loss,
->>>>> a) at least 1000% higher responsiveness, e.g., 1000% lower start-up
->>>>> times of applications under load [1];
->>>>> b) 500-1000% higher throughput in multi-client server workloads, as I
->>>>> already pointed out [2].
->>>>>
->>>>
->>>> I'm very happy that you could solve the problem without having to
->>>> compromise on any of the performance characteristics/features of BFQ!
->>>>
->>>>
->>>>> I'm going to prepare complete patches.  In addition, if ok for you,
->>>>> I'll report these results on the bug you created.  Then I guess we can
->>>>> close it.
->>>>>
->>>>
->>>> Sounds great!
->>>>
->>>
->>> Hi Paolo,
->>>
->>> Hope you are doing great!
->>>
->>> I was wondering if you got a chance to post these patches to LKML for
->>> review and inclusion... (No hurry, of course!)
->>>
->>> Also, since your fixes address the performance issues in BFQ, do you
->>> have any thoughts on whether they can be adapted to CFQ as well, to
->>> benefit the older stable kernels that still support CFQ?
->>
->> Since CFQ doesn't exist in current upstream kernel anymore, I seriously
->> doubt you'll be able to get any performance improvements for it in the
->> stable kernels...
->>
-> 
-> I suspected as much, but that seems unfortunate though. The latest LTS
-> kernel is based on 4.19, which still supports CFQ. It would have been
-> great to have a process to address significant issues on older
-> kernels too.
-> 
-> Greg, do you have any thoughts on this? The context is that both CFQ
-> and BFQ I/O schedulers have issues that cause I/O throughput to suffer
-> upto 10x - 30x on certain workloads and system configurations, as
-> reported in [1].
-> 
-> In this thread, Paolo posted patches to fix BFQ performance on
-> mainline. However CFQ suffers from the same performance collapse, but
-> CFQ was removed from the kernel in v5.0. So obviously the usual stable
-> backporting path won't work here for several reasons:
-> 
->    1. There won't be a mainline commit to backport from, as CFQ no
->       longer exists in mainline.
-> 
->    2. This is not a security/stability fix, and is likely to involve
->       invasive changes.
-> 
-> I was wondering if there was a way to address the performance issues
-> in CFQ in the older stable kernels (including the latest LTS 4.19),
-> despite the above constraints, since the performance drop is much too
-> significant. I guess not, but thought I'd ask :-)
-> 
-> [1]. https://lore.kernel.org/lkml/8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu/
+[ Upstream commit 7640682e67b33cab8628729afec8ca92b851394f ]
 
-This issue has always been there. There will be no specific patches made
-for stable for something that doesn't even exist in the newer kernels.
+FUSE filesystem server and kernel client negotiate during initialization
+phase, what should be the maximum write size the client will ever issue.
+Correspondingly the filesystem server then queues sys_read calls to read
+requests with buffer capacity large enough to carry request header + that
+max_write bytes. A filesystem server is free to set its max_write in
+anywhere in the range between [1*page, fc->max_pages*page]. In particular
+go-fuse[2] sets max_write by default as 64K, wheres default fc->max_pages
+corresponds to 128K. Libfuse also allows users to configure max_write, but
+by default presets it to possible maximum.
 
--- 
-Jens Axboe
+If max_write is < fc->max_pages*page, and in NOTIFY_RETRIEVE handler we
+allow to retrieve more than max_write bytes, corresponding prepared
+NOTIFY_REPLY will be thrown away by fuse_dev_do_read, because the
+filesystem server, in full correspondence with server/client contract, will
+be only queuing sys_read with ~max_write buffer capacity, and
+fuse_dev_do_read throws away requests that cannot fit into server request
+buffer. In turn the filesystem server could get stuck waiting indefinitely
+for NOTIFY_REPLY since NOTIFY_RETRIEVE handler returned OK which is
+understood by clients as that NOTIFY_REPLY was queued and will be sent
+back.
+
+Cap requested size to negotiate max_write to avoid the problem.  This
+aligns with the way NOTIFY_RETRIEVE handler works, which already
+unconditionally caps requested retrieve size to fuse_conn->max_pages.  This
+way it should not hurt NOTIFY_RETRIEVE semantic if we return less data than
+was originally requested.
+
+Please see [1] for context where the problem of stuck filesystem was hit
+for real, how the situation was traced and for more involving patch that
+did not make it into the tree.
+
+[1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
+[2] https://github.com/hanwen/go-fuse
+
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+Cc: Han-Wen Nienhuys <hanwen@google.com>
+Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/fuse/dev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -1678,7 +1678,7 @@ static int fuse_retrieve(struct fuse_con
+ 	offset = outarg->offset & ~PAGE_MASK;
+ 	file_size = i_size_read(inode);
+ 
+-	num = outarg->size;
++	num = min(outarg->size, fc->max_write);
+ 	if (outarg->offset > file_size)
+ 		num = 0;
+ 	else if (outarg->offset + num > file_size)
+
 
