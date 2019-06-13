@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51538C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5D7C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 292002063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C052063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:05:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVb22FBr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Asxq1m/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404605AbfFMREH (ORCPT
+        id S2389782AbfFMRFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:04:07 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53762 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729773AbfFMRD5 (ORCPT
+        Thu, 13 Jun 2019 13:05:53 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36755 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404594AbfFMREH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:03:57 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x15so10994067wmj.3;
-        Thu, 13 Jun 2019 10:03:56 -0700 (PDT)
+        Thu, 13 Jun 2019 13:04:07 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n4so21630778wrs.3;
+        Thu, 13 Jun 2019 10:04:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Fp3D4r+gsXo4pbK4LPWYQ1sxU9VB9jUgzbEAv9Nh0sQ=;
-        b=BVb22FBradebBX7GnCFWEqao4SPsi3CD9AEe+3rWW/S36aiRfroCwMTw8+48CZeF0x
-         UGGcbVe9rwg4TPXFxmUyPgZxBgx/QRUlYCZcAi5qgboVs6I6Tpcfqgy8GvuIT6F+2/Wh
-         ycrWzTczvgz7J07uw1sjzoXmF7QFBz88rR2BDJVM2d9yJhrkrBnVkmCMdK9qv/VAq04k
-         MjDFLlR+CPi277sHdtSPUv9U2aaCoFLopl/HaQw2PlfwH9vXbhorwZJCciaWAsJaEZBv
-         hNZcT3r1XJ54VDceQTLLJ0feM0UYV9zNyUmxuq1VawoYdar33GRNfxkzdLPMYIC1+h6B
-         vYQw==
+        bh=YUvj9CYOkDmPCYkTJKVQccuozOGfPCNMrf6UMmFx91M=;
+        b=Asxq1m/Jg7M2WdPQ6+ZISwVtYxl7Ue1/2w6LH5m8scN0TSukZ94SZahiW9bgHmsQfD
+         nY1he6VeDP9rfIB3BWu1t8f0K5Og1ZjbyZA/EenXhQ/4XJACp7xn0cGqeb+yjd1bUniN
+         tyyODIqsRKTYAALUtc8ppu/AhE/gfZFI9k3xDb1WohNVje+ntpvRiV5F1tFIabNaig+M
+         TMyCsA+HMBFVnfRtv8HqaNNFKEQQoAMDszSTgsizoEuQeIn3AsYUy2Z6fzLuHwhoyFe2
+         yIc65IjWL6qkWmmr+S+WwhUJljUUAQQJ4JYdJo1PKqnEkU+Zv8+Hm6zaP43QRviz0Mi3
+         yX8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=Fp3D4r+gsXo4pbK4LPWYQ1sxU9VB9jUgzbEAv9Nh0sQ=;
-        b=K/ngesYlqLSp4uo4OQJ8N2/gq3fMzrhwyVzgbDjGqky9Cyn3TcFgGPy51Hkfef5QjP
-         4pK+EO9eEcMsiRsupL7RmjDrrSzc6In0FVOk7SVfh8q0DSXimxnXoWnHfQAKzmnWweci
-         VrW3xZFfoat82nsL8fmXjiIt4kRXY5K13ih199E0icxpqC6LvY54RnM7K+nd3stMeIyN
-         MAnfWjcGCtUpZ0jvR7xlaNMXFzpZiGUJeQAN44leLOQCnpqqGoN0lsbc6V9EokHiQsfX
-         gUDuZSa/J4jFZ+RuDbUxbJtkQsX5TK6hNMwKqD/bghXYAxG+qYs/VMYYlwCEaQaJxIjS
-         BuhA==
-X-Gm-Message-State: APjAAAU+GGrqnQvK4JDIcS4m+/Y6J0bdxQCjXDMPKJwvePp9ye+uX1O0
-        +pPSVl4H07LNCu6AqcXI5TdQlmco
-X-Google-Smtp-Source: APXvYqw39NrGlUQmQQ08F4/zyxZNZc9vtJJn//eNfHhkh7MW0UTMvZVP+bCXDttfDQuALDBHI9Ci6A==
-X-Received: by 2002:a1c:e28b:: with SMTP id z133mr4230444wmg.136.1560445435094;
-        Thu, 13 Jun 2019 10:03:55 -0700 (PDT)
+        bh=YUvj9CYOkDmPCYkTJKVQccuozOGfPCNMrf6UMmFx91M=;
+        b=NhmF36jp38ULrubHEVjsV9rfsP5tRi8x4VSJoIVx81ornSe+Ur/S64WdT2Xp/v2JdW
+         ZQKVD+YE/ecbpZu695OnUCDZJc85z/pjl/0YhCicqppe0+c+xGxDeAo07uRLAFHuqicp
+         jgZMmL3FZIKyVubb+z/X7bPpBAmlE4SED7WRxd+S3tA6lFi+Vzh4G5DlSL/SDJ3sJ3JA
+         hMYgypTvVTbDY8+DvqErUt2M312rC1Nydv8fSHZHCWtDFhP/XvGnCS2OkHTDjGYdXA1+
+         HgU6pEln8pwn8bWmbN5tiIfpWpYbBcMXg+kIg0SY8goQ09Co0PlaegDwEkOvBwsiO6t2
+         hTmw==
+X-Gm-Message-State: APjAAAXHw+cs5FIDXdgA+wfkmK+kUI9qyxnMs7f3ALpCMgDEterlAIjt
+        3wxXIgmoXvX4DoZTuFju6qHE/hn/
+X-Google-Smtp-Source: APXvYqyQ4a1FAr0vFk+OIRHID0TdGDXe+aflvsCJTRqqZN7VhChAck6S5ShW1oh7d/y1AOl6i6Bk9g==
+X-Received: by 2002:adf:f582:: with SMTP id f2mr3124786wro.144.1560445444940;
+        Thu, 13 Jun 2019 10:04:04 -0700 (PDT)
 Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.03.54
+        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.04.03
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 10:03:54 -0700 (PDT)
+        Thu, 13 Jun 2019 10:04:04 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         vkuznets@redhat.com
-Subject: [PATCH 21/43] KVM: nVMX: Don't reread VMCS-agnostic state when switching VMCS
-Date:   Thu, 13 Jun 2019 19:03:07 +0200
-Message-Id: <1560445409-17363-22-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 32/43] KVM: VMX: Add builder macros for shadowing controls
+Date:   Thu, 13 Jun 2019 19:03:18 +0200
+Message-Id: <1560445409-17363-33-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
 References: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
@@ -72,85 +72,148 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-When switching between vmcs01 and vmcs02, there is no need to update
-state tracking for values that aren't tied to any particular VMCS as
-the per-vCPU values are already up-to-date (vmx_switch_vmcs() can only
-be called when the vCPU is loaded).
-
-Avoiding the update eliminates a RDMSR, and potentially a RDPKRU and
-posted-interrupt updated (cmpxchg64() and more).
+... to pave the way for shadowing all (five) major VMCS control fields
+without massive amounts of error prone copy+paste+modify.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/nested.c |  2 +-
- arch/x86/kvm/vmx/vmx.c    | 18 +++++++++++++-----
- arch/x86/kvm/vmx/vmx.h    |  1 +
- 3 files changed, 15 insertions(+), 6 deletions(-)
+ arch/x86/kvm/vmx/vmx.h | 100 ++++++++++++++++++-------------------------------
+ 1 file changed, 36 insertions(+), 64 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index f4415756ddd5..9478d8947595 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -279,7 +279,7 @@ static void vmx_switch_vmcs(struct kvm_vcpu *vcpu, struct loaded_vmcs *vmcs)
- 	cpu = get_cpu();
- 	prev = vmx->loaded_vmcs;
- 	vmx->loaded_vmcs = vmcs;
--	vmx_vcpu_load(vcpu, cpu);
-+	vmx_vcpu_load_vmcs(vcpu, cpu);
- 	vmx_sync_vmcs_host_state(vmx, prev);
- 	put_cpu();
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 09632b8239de..7a2d9a4b828c 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1234,11 +1234,7 @@ static void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu)
- 		pi_set_on(pi_desc);
- }
- 
--/*
-- * Switches to specified vcpu, until a matching vcpu_put(), but assumes
-- * vcpu mutex is already taken.
-- */
--void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-+void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	bool already_loaded = vmx->loaded_vmcs->cpu == cpu;
-@@ -1299,8 +1295,20 @@ void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 	if (kvm_has_tsc_control &&
- 	    vmx->current_tsc_ratio != vcpu->arch.tsc_scaling_ratio)
- 		decache_tsc_multiplier(vmx);
-+}
-+
-+/*
-+ * Switches to specified vcpu, until a matching vcpu_put(), but assumes
-+ * vcpu mutex is already taken.
-+ */
-+void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-+{
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+
-+	vmx_vcpu_load_vmcs(vcpu, cpu);
- 
- 	vmx_vcpu_pi_load(vcpu, cpu);
-+
- 	vmx->host_pkru = read_pkru();
- 	vmx->host_debugctlmsr = get_debugctlmsr();
- }
 diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 581f4039b346..36a2056fafd4 100644
+index 136f22f2e797..0a1b37d69f13 100644
 --- a/arch/x86/kvm/vmx/vmx.h
 +++ b/arch/x86/kvm/vmx/vmx.h
-@@ -302,6 +302,7 @@ struct kvm_vmx {
+@@ -85,6 +85,11 @@ struct pt_desc {
+ 	struct pt_ctx guest;
  };
  
- bool nested_vmx_allowed(struct kvm_vcpu *vcpu);
-+void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu);
- void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
- int allocate_vpid(void);
- void free_vpid(int vpid);
++struct vmx_controls_shadow {
++	u32 vm_entry;
++	u32 vm_exit;
++};
++
+ /*
+  * The nested_vmx structure is part of vcpu_vmx, and holds information we need
+  * for correct emulation of VMX (i.e., nested VMX) on this vcpu.
+@@ -200,6 +205,9 @@ struct vcpu_vmx {
+ 	u32                   exit_intr_info;
+ 	u32                   idt_vectoring_info;
+ 	ulong                 rflags;
++
++	struct vmx_controls_shadow	controls_shadow;
++
+ 	struct shared_msr_entry *guest_msrs;
+ 	int                   nmsrs;
+ 	int                   save_nmsrs;
+@@ -211,8 +219,6 @@ struct vcpu_vmx {
+ 
+ 	u64		      spec_ctrl;
+ 
+-	u32 vm_entry_controls_shadow;
+-	u32 vm_exit_controls_shadow;
+ 	u32 secondary_exec_control;
+ 
+ 	/*
+@@ -388,69 +394,35 @@ static inline u8 vmx_get_rvi(void)
+ 	return vmcs_read16(GUEST_INTR_STATUS) & 0xff;
+ }
+ 
+-static inline void vm_entry_controls_reset_shadow(struct vcpu_vmx *vmx)
+-{
+-	vmx->vm_entry_controls_shadow = vmcs_read32(VM_ENTRY_CONTROLS);
+-}
+-
+-static inline void vm_entry_controls_init(struct vcpu_vmx *vmx, u32 val)
+-{
+-	vmcs_write32(VM_ENTRY_CONTROLS, val);
+-	vmx->vm_entry_controls_shadow = val;
+-}
+-
+-static inline void vm_entry_controls_set(struct vcpu_vmx *vmx, u32 val)
+-{
+-	if (vmx->vm_entry_controls_shadow != val)
+-		vm_entry_controls_init(vmx, val);
+-}
+-
+-static inline u32 vm_entry_controls_get(struct vcpu_vmx *vmx)
+-{
+-	return vmx->vm_entry_controls_shadow;
+-}
+-
+-static inline void vm_entry_controls_setbit(struct vcpu_vmx *vmx, u32 val)
+-{
+-	vm_entry_controls_set(vmx, vm_entry_controls_get(vmx) | val);
+-}
+-
+-static inline void vm_entry_controls_clearbit(struct vcpu_vmx *vmx, u32 val)
+-{
+-	vm_entry_controls_set(vmx, vm_entry_controls_get(vmx) & ~val);
+-}
+-
+-static inline void vm_exit_controls_reset_shadow(struct vcpu_vmx *vmx)
+-{
+-	vmx->vm_exit_controls_shadow = vmcs_read32(VM_EXIT_CONTROLS);
+-}
+-
+-static inline void vm_exit_controls_init(struct vcpu_vmx *vmx, u32 val)
+-{
+-	vmcs_write32(VM_EXIT_CONTROLS, val);
+-	vmx->vm_exit_controls_shadow = val;
+-}
+-
+-static inline void vm_exit_controls_set(struct vcpu_vmx *vmx, u32 val)
+-{
+-	if (vmx->vm_exit_controls_shadow != val)
+-		vm_exit_controls_init(vmx, val);
+-}
+-
+-static inline u32 vm_exit_controls_get(struct vcpu_vmx *vmx)
+-{
+-	return vmx->vm_exit_controls_shadow;
+-}
+-
+-static inline void vm_exit_controls_setbit(struct vcpu_vmx *vmx, u32 val)
+-{
+-	vm_exit_controls_set(vmx, vm_exit_controls_get(vmx) | val);
+-}
+-
+-static inline void vm_exit_controls_clearbit(struct vcpu_vmx *vmx, u32 val)
+-{
+-	vm_exit_controls_set(vmx, vm_exit_controls_get(vmx) & ~val);
++#define BUILD_CONTROLS_SHADOW(lname, uname)				    \
++static inline void lname##_controls_reset_shadow(struct vcpu_vmx *vmx)	    \
++{									    \
++	vmx->controls_shadow.lname = vmcs_read32(uname);		    \
++}									    \
++static inline void lname##_controls_init(struct vcpu_vmx *vmx, u32 val)	    \
++{									    \
++	vmcs_write32(uname, val);					    \
++	vmx->controls_shadow.lname = val;				    \
++}									    \
++static inline void lname##_controls_set(struct vcpu_vmx *vmx, u32 val)	    \
++{									    \
++	if (vmx->controls_shadow.lname != val)				    \
++		lname##_controls_init(vmx, val);			    \
++}									    \
++static inline u32 lname##_controls_get(struct vcpu_vmx *vmx)		    \
++{									    \
++	return vmx->controls_shadow.lname;				    \
++}									    \
++static inline void lname##_controls_setbit(struct vcpu_vmx *vmx, u32 val)   \
++{									    \
++	lname##_controls_set(vmx, lname##_controls_get(vmx) | val);	    \
++}									    \
++static inline void lname##_controls_clearbit(struct vcpu_vmx *vmx, u32 val) \
++{									    \
++	lname##_controls_set(vmx, lname##_controls_get(vmx) & ~val);	    \
+ }
++BUILD_CONTROLS_SHADOW(vm_entry, VM_ENTRY_CONTROLS)
++BUILD_CONTROLS_SHADOW(vm_exit, VM_EXIT_CONTROLS)
+ 
+ static inline void vmx_segment_cache_clear(struct vcpu_vmx *vmx)
+ {
 -- 
 1.8.3.1
 
