@@ -2,90 +2,69 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA1DC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F16C4C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 902A92082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB1621721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:52:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560444758;
+	bh=3oMBlDRrBIeV7aZZR/5/H9S3HH+AvOnnKJxido+N9jM=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=LvYFzM/UhxuBgXeTehdyZ/Iv0jp4ENjkfGrGI7ZQwSedWCRsv5AoeJFSGw4YPd/cT
+	 q8eVNeoyzvflpy4aKSlb7RcVjJY5eR8NY3ZRsMqHuokN+HSCbPMRajjnaqFUEHiTXK
+	 asBJgR0CZdc3er9O9KZ8pO5KWS1NX77FjPnOg6Aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393059AbfFMQwe (ORCPT
+        id S2393048AbfFMQwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:52:34 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:56480 "EHLO deadmen.hmeau.com"
+        Thu, 13 Jun 2019 12:52:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730117AbfFMDOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 23:14:00 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hbGBa-0004Tx-6t; Thu, 13 Jun 2019 11:13:58 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hbGBX-0001u2-TG; Thu, 13 Jun 2019 11:13:55 +0800
-Date:   Thu, 13 Jun 2019 11:13:55 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: Re: [PATCH v3 0/4] s390/crypto: Use -ENODEV instead of -EOPNOTSUPP
-Message-ID: <20190613031355.7vya4vwhr3eia5g4@gondor.apana.org.au>
-References: <20190612133306.10231-1-david@redhat.com>
- <20190612150850.GA4038@osiris>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612150850.GA4038@osiris>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        id S1730118AbfFMDPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 23:15:10 -0400
+Subject: Re: [GIT PULL] SELinux fixes for v5.2 (#2)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560395709;
+        bh=3oMBlDRrBIeV7aZZR/5/H9S3HH+AvOnnKJxido+N9jM=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=S7rHAx4A+QXwEhTqiv2M9GU+ligvs1br2kDnnJw0r+NROKSFH/zSnINxo5iro0vvl
+         nv69qfZuvTSW93VWyxwhfCFKlMY+4Sa5FZYX6pbiqISAj7u8aFLA2Ihlfl8SR7rtXx
+         yapvJ6xAQlY0zALPMEfnso8zSWhj0A5ra91DGpwM=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAHC9VhT8tYyUt_gtUR-jD-33LMW2RmzSXwP_OgPrh5ujQSiuUA@mail.gmail.com>
+References: <CAHC9VhT8tYyUt_gtUR-jD-33LMW2RmzSXwP_OgPrh5ujQSiuUA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAHC9VhT8tYyUt_gtUR-jD-33LMW2RmzSXwP_OgPrh5ujQSiuUA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
+ tags/selinux-pr-20190612
+X-PR-Tracked-Commit-Id: fec6375320c6399c708fa9801f8cfbf950fee623
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b076173a309e2ceae84257d1d52cd3cc53b00e39
+Message-Id: <156039570947.24640.14489241728856509537.pr-tracker-bot@kernel.org>
+Date:   Thu, 13 Jun 2019 03:15:09 +0000
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 05:08:50PM +0200, Heiko Carstens wrote:
-> On Wed, Jun 12, 2019 at 03:33:02PM +0200, David Hildenbrand wrote:
-> > s390x crypto is one of the rare modules that returns -EOPNOTSUPP instead of
-> > -ENODEV in case HW support is not available.
-> > 
-> > Convert to -ENODEV, so e.g., systemd's systemd-modules-load.service
-> > ignores this error properly.
-> > 
-> > v2 -> v3:
-> > - "s390/pkey: Use -ENODEV instead of -EOPNOTSUPP"
-> > -- Also convert pkey_clr2protkey() as requested by Harald
-> > - Add r-b's (thanks!)
-> > 
-> > v1 -> v2:
-> > - Include
-> > -- "s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP"
-> > -- "s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP"
-> > -- "s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP"
-> > 
-> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> > Cc: Vasily Gorbik <gor@linux.ibm.com>
-> > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> > Cc: Harald Freudenberger <freude@linux.ibm.com>
-> > Cc: Cornelia Huck <cohuck@redhat.com>
-> > 
-> > David Hildenbrand (4):
-> >   s390/pkey: Use -ENODEV instead of -EOPNOTSUPP
-> >   s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP
-> >   s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP
-> >   s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP
-> 
-> Should I pick these up so they can go upstream via the s390 tree?
+The pull request you sent on Wed, 12 Jun 2019 16:59:05 -0400:
 
-Sure Heiko.  Thanks!
+> git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git tags/selinux-pr-20190612
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b076173a309e2ceae84257d1d52cd3cc53b00e39
+
+Thank you!
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
