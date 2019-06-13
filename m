@@ -2,85 +2,227 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D874C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE48C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E3B2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:42:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k8P9/UKR"
+	by mail.kernel.org (Postfix) with ESMTP id ABBBA2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730084AbfFMUmO (ORCPT
+        id S1729006AbfFMUo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:42:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36684 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbfFMUmO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:42:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kshn4ZcN21VZaUe82Mo3RQdVUWkWj4qocgi4/UQKjOI=; b=k8P9/UKRp4ziFYYHWL66rO2eN
-        D8jDNH/mFy2wOaQEW9uSGv0RfQKD05TV7PtJavRr9wrN7cJkB8wfWt/AmtznMxSq6rTAZGVQ2HVpa
-        XQPIqMpRoUFkbXbQ4fCp5ig4uI3lfPVOeDOAomhyWj22TDlV0SGLb33Lw+7MSUQyU59EXt/TVQ0Ol
-        PwXohXhe1r9HU780A44+R67Iz2UXTClS5VvByZUYqCRZtgUOdaLij2fPG9FK93ToE7aaI5JLN/m8V
-        FJNmOZthc+982RGbAPHJF67z6BMyYCtWU3p0bzCvAy3jrWpLjULS3502EUDYVMpjW8lWvXQJh+9ZZ
-        UffNyk1GA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbWXh-0006Wi-Qw; Thu, 13 Jun 2019 20:41:53 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A4A3720435AA1; Thu, 13 Jun 2019 22:41:51 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 22:41:51 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>
-Subject: Re: [PATCH 0/9] x86/bpf: unwinder fixes
-Message-ID: <20190613204151.GP3436@hirez.programming.kicks-ass.net>
-References: <cover.1560431531.git.jpoimboe@redhat.com>
+        Thu, 13 Jun 2019 16:44:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56112 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfFMUo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 16:44:57 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E5140308A9BE;
+        Thu, 13 Jun 2019 20:44:56 +0000 (UTC)
+Received: from krava (ovpn-204-98.brq.redhat.com [10.40.204.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 40F5D54474;
+        Thu, 13 Jun 2019 20:44:55 +0000 (UTC)
+Date:   Thu, 13 Jun 2019 22:44:54 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Laura Abbott <labbott@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: perf build failure with newer glibc headers
+Message-ID: <20190613204454.GB18963@krava>
+References: <4c0a4264-7142-2e6d-540d-aa354700e0bb@redhat.com>
+ <20190612205611.GA2149@redhat.com>
+ <20190613151925.GA2834@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cover.1560431531.git.jpoimboe@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190613151925.GA2834@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 13 Jun 2019 20:44:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 08:20:57AM -0500, Josh Poimboeuf wrote:
-
-> Josh Poimboeuf (8):
->   objtool: Fix ORC unwinding in non-JIT BPF generated code
->   x86/bpf: Move epilogue generation to a dedicated function
->   x86/bpf: Simplify prologue generation
->   x86/bpf: Support SIB byte generation
->   x86/bpf: Fix JIT frame pointer usage
->   x86/unwind/orc: Fall back to using frame pointers for generated code
->   x86/bpf: Convert asm comments to AT&T syntax
->   x86/bpf: Convert MOV function/macro argument ordering to AT&T syntax
+On Thu, Jun 13, 2019 at 12:19:25PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Jun 12, 2019 at 05:56:11PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > So, we'll have to have a feature test, that defines some HAVE_GETTID
+> > that then ifdefs out our inline copy, working on it.
 > 
-> Song Liu (1):
->   perf/x86: Always store regs->ip in perf_callchain_kernel()
+> This should take care of it, please check, perhaps providing a
+> Tested-by: to add to this,
 > 
->  arch/x86/events/core.c       |  10 +-
->  arch/x86/kernel/unwind_orc.c |  26 ++-
->  arch/x86/net/bpf_jit_comp.c  | 355 ++++++++++++++++++++---------------
->  kernel/bpf/core.c            |   5 +-
->  tools/objtool/check.c        |  16 +-
->  5 files changed, 246 insertions(+), 166 deletions(-)
+> Thanks,
+> 
+> - Arnaldo
+> 
+> commit a04ef2eb0a66d9479e75e536d919c8c9cd618ee3
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date:   Thu Jun 13 12:04:19 2019 -0300
+> 
+>     tools build: Check if gettid() is available before providing helper
+>     
+>     Laura reported that the perf build failed in fedora when we got a glibc
+>     that provides gettid(), which I reproduced using fedora rawhide with the
+>     glibc-devel-2.29.9000-26.fc31.x86_64 package.
+>     
+>     Add a feature check to avoid providing a gettid() helper in such
+>     systems.
+>     
+>     On a fedora rawhide system with this patch applied we now get:
+>     
+>       [root@7a5f55352234 perf]# grep gettid /tmp/build/perf/FEATURE-DUMP
+>       feature-gettid=1
+>       [root@7a5f55352234 perf]# cat /tmp/build/perf/feature/test-gettid.make.output
+>       [root@7a5f55352234 perf]# ldd /tmp/build/perf/feature/test-gettid.bin
+>               linux-vdso.so.1 (0x00007ffc6b1f6000)
+>               libc.so.6 => /lib64/libc.so.6 (0x00007f04e0a74000)
+>               /lib64/ld-linux-x86-64.so.2 (0x00007f04e0c47000)
+>       [root@7a5f55352234 perf]# nm /tmp/build/perf/feature/test-gettid.bin | grep -w gettid
+>                        U gettid@@GLIBC_2.30
+>       [root@7a5f55352234 perf]#
+>     
+>     While on a fedora:29 system:
+>     
+>       [acme@quaco perf]$ grep gettid /tmp/build/perf/FEATURE-DUMP
+>       feature-gettid=0
+>       [acme@quaco perf]$ cat /tmp/build/perf/feature/test-gettid.make.output
+>       test-gettid.c: In function ‘main’:
+>       test-gettid.c:8:9: error: implicit declaration of function ‘gettid’; did you mean ‘getgid’? [-Werror=implicit-function-declaration]
+>         return gettid();
+>                ^~~~~~
+>                getgid
+>       cc1: all warnings being treated as errors
+>       [acme@quaco perf]$
+>     
+>     Reported-by: Laura Abbott <labbott@redhat.com>
+>     Cc: Adrian Hunter <adrian.hunter@intel.com>
+>     Cc: Florian Weimer <fweimer@redhat.com>
+>     Cc: Jiri Olsa <jolsa@kernel.org>
+>     Cc: Namhyung Kim <namhyung@kernel.org>
+>     Cc: Stephane Eranian <eranian@google.com>
+>     Link: https://lkml.kernel.org/n/tip-yfy3ch53agmklwu9o7rlgf9c@git.kernel.org
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+looks good to me, if needed:
+
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+jirka
+
+> 
+> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> index 3b24231c58a2..50377cc2f5f9 100644
+> --- a/tools/build/Makefile.feature
+> +++ b/tools/build/Makefile.feature
+> @@ -36,6 +36,7 @@ FEATURE_TESTS_BASIC :=                  \
+>          fortify-source                  \
+>          sync-compare-and-swap           \
+>          get_current_dir_name            \
+> +        gettid				\
+>          glibc                           \
+>          gtk2                            \
+>          gtk2-infobar                    \
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index 4b8244ee65ce..523ee42db0c8 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -54,6 +54,7 @@ FILES=                                          \
+>           test-get_cpuid.bin                     \
+>           test-sdt.bin                           \
+>           test-cxx.bin                           \
+> +         test-gettid.bin			\
+>           test-jvmti.bin				\
+>           test-jvmti-cmlr.bin			\
+>           test-sched_getcpu.bin			\
+> @@ -267,6 +268,9 @@ $(OUTPUT)test-sdt.bin:
+>  $(OUTPUT)test-cxx.bin:
+>  	$(BUILDXX) -std=gnu++11
+>  
+> +$(OUTPUT)test-gettid.bin:
+> +	$(BUILD)
+> +
+>  $(OUTPUT)test-jvmti.bin:
+>  	$(BUILD)
+>  
+> diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+> index a59c53705093..3b3d5d72124a 100644
+> --- a/tools/build/feature/test-all.c
+> +++ b/tools/build/feature/test-all.c
+> @@ -38,6 +38,10 @@
+>  # include "test-get_current_dir_name.c"
+>  #undef main
+>  
+> +#define main main_test_gettid
+> +# include "test-gettid.c"
+> +#undef main
+> +
+>  #define main main_test_glibc
+>  # include "test-glibc.c"
+>  #undef main
+> @@ -195,6 +199,7 @@ int main(int argc, char *argv[])
+>  	main_test_libelf();
+>  	main_test_libelf_mmap();
+>  	main_test_get_current_dir_name();
+> +	main_test_gettid();
+>  	main_test_glibc();
+>  	main_test_dwarf();
+>  	main_test_dwarf_getlocations();
+> diff --git a/tools/build/feature/test-gettid.c b/tools/build/feature/test-gettid.c
+> new file mode 100644
+> index 000000000000..ef24e42d3f1b
+> --- /dev/null
+> +++ b/tools/build/feature/test-gettid.c
+> @@ -0,0 +1,11 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2019, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
+> +#define _GNU_SOURCE
+> +#include <unistd.h>
+> +
+> +int main(void)
+> +{
+> +	return gettid();
+> +}
+> +
+> +#undef _GNU_SOURCE
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 51dd00f65709..5f16a20cae86 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -332,6 +332,10 @@ ifeq ($(feature-get_current_dir_name), 1)
+>    CFLAGS += -DHAVE_GET_CURRENT_DIR_NAME
+>  endif
+>  
+> +ifeq ($(feature-gettid), 1)
+> +  CFLAGS += -DHAVE_GETTID
+> +endif
+> +
+>  ifdef NO_LIBELF
+>    NO_DWARF := 1
+>    NO_DEMANGLE := 1
+> diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
+> index f7eb63cbbc65..88108598d6e9 100644
+> --- a/tools/perf/jvmti/jvmti_agent.c
+> +++ b/tools/perf/jvmti/jvmti_agent.c
+> @@ -45,10 +45,12 @@
+>  static char jit_path[PATH_MAX];
+>  static void *marker_addr;
+>  
+> +#ifndef HAVE_GETTID
+>  static inline pid_t gettid(void)
+>  {
+>  	return (pid_t)syscall(__NR_gettid);
+>  }
+> +#endif
+>  
+>  static int get_e_machine(struct jitheader *hdr)
+>  {
