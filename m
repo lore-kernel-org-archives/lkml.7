@@ -4,64 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1179C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43469C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF093205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DBA21473
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:09:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pcgr9QMk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dfDBa1LO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732069AbfFMRJR (ORCPT
+        id S2393449AbfFMRJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:09:17 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55097 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389430AbfFMRDp (ORCPT
+        Thu, 13 Jun 2019 13:09:26 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33610 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393292AbfFMRDl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:03:45 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g135so10983409wme.4;
-        Thu, 13 Jun 2019 10:03:43 -0700 (PDT)
+        Thu, 13 Jun 2019 13:03:41 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so21631335wru.0;
+        Thu, 13 Jun 2019 10:03:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=gZcDtbd3b6Y1qrHuqb6ivHsJ9MXA/qlBvU9FIZzx3Xo=;
-        b=Pcgr9QMkR+ay1R92AoMWsC9CPJHybVq4Njzcf/flFw2eFmx/GdnTVianZYBgppGoLu
-         9wxyoWEToWNnuNz2AkkqmvBRIaK/g+UUmziS5+dNg5Q/sKJy88QzxKDyLyrHTOw/yXtc
-         v57eeGywHnJ6QAKvTsyZfx+HjMRnBXtnXm0v2LnL1XVRnbhEVun/Jxp9DDLtEJZrg/Ut
-         GCjYgZX94CeU1c00Ks7dAcPZI1G4CcQmieBUHX9g0SlXpgrMZ2CMoz8GSTBkZbqHPfCs
-         bcT0qOe/faCIMP5BoohXb399ZMqXJzADUEegtSd0e9arodpD5t0EsOvk3jLZvhQs+Vw9
-         u6KA==
+        bh=MGc1+UMVvTK6r3rG0maNLVulGjfwhlashI6eD08I9Jg=;
+        b=dfDBa1LO4SdNR5+tZhpNfnLnRcIwjpXgCDI1yNI272KAI02hY5Fr0napsqg/uMtJDa
+         TDSPeVHqldu1X/WSFBj8fPAYdK/bt2UzDzA4UMPF3ukUDkLBes/NJENP5cXmH9M0LYwL
+         POpmF7dyYQXdQNAYLetGqm+rNzfW/nf48itkjW9n15+UpShg52DtRQGtY7c7DQb0QU4+
+         QIr1GtNYfdwTNJgDwmjftU2vmMkqNOwo5cHmIIHfq+xc99d7zIx0uqMaxIV1vOcdmvX/
+         Wnpr5yFvbN79qthqtGwuDfZLJ2rvOmjxndpAlV+wTX9HZpwOYTj6vKt+26muAfhfXZo6
+         /MsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=gZcDtbd3b6Y1qrHuqb6ivHsJ9MXA/qlBvU9FIZzx3Xo=;
-        b=pcEjNqH3SFpuVb1FsleGsoEcauFfNKn6IAeKsh3hvtAp6Gz7YbEuSCJ3feprTQ/B5Y
-         0cpu1eSEWV74Gd70up57F3SaaJ2qsPBQYukX49Yc1OZbOsegh70fPrH4YCQZT2tl3g1M
-         DWeMjlwrhndDOLG+dqmgiuepmvd95QJFRtVmwgCK7ciNG2G960M5sx20MOhyeWm0pN9p
-         PiEs2fGb4MY/ZAIDaND0/+STrj03Vef0uKSj+t5G/BD1VlUsbf+bsurRQ4G5tdQJROib
-         ikyteoHwOOWRVIM7BRT3vK1nFuKNYMO2VcYR9UbLrVT0MKJmGHFe2u5sSXufC6oh3PlN
-         wCLw==
-X-Gm-Message-State: APjAAAWwDPWx7cCw2HOMWOvIT8TyR9NtOR/kyBttYj2ruDTMZM8cuQx9
-        YTKwAVW0Pid1iR01RZRjb9nwoB36
-X-Google-Smtp-Source: APXvYqyYn798KcJzS5pAjOJEaQBBMaLDr+v/qqaRvFfEiDnNRw7fQKw1KGyO5a0jb7pE8xDISrxG5Q==
-X-Received: by 2002:a1c:448b:: with SMTP id r133mr4759583wma.114.1560445422546;
-        Thu, 13 Jun 2019 10:03:42 -0700 (PDT)
+        bh=MGc1+UMVvTK6r3rG0maNLVulGjfwhlashI6eD08I9Jg=;
+        b=scGsDlaDOo2epfNYbi8YmorJRaNOxV3KjJqaAAYNSOvjlXkhoPWrQECWrG//2WYjYT
+         yiz1tNFqDro0ISyDmNd5uaJWMzUW3AoqYvrreLq52Mj2FGOZ8HC4UwSpwirsr+s+HZvt
+         eC2rAfX9hbV5dbsshJRCOsbmUTpze/rFsiDPgQW+RqDYink0jYHORq6yOPajylJ6d02Z
+         41/yK1YzkepbDvc/I+BMcomePssxa1H9vDO4fhF/2SXK5IqagFnf1SSSpPzxwdSIPzps
+         iBt0ucph4HfZaaRlNemAUM3PIz+PLh3OVRkqtc78vUtGDzo1flK+UuOH86ZvfbMd6KMb
+         bT2w==
+X-Gm-Message-State: APjAAAU1NtIji2rAcqgRiOa6CjwtG6aVaqlxl7qBoJrZCfDcBXw0tukj
+        dacNBBTjxTdgr3CrEJu7yZWxE1uF
+X-Google-Smtp-Source: APXvYqwH79gLcqKgw4BEZmzr9Udn4RG9BfCiSjEYJxqhHbpDU5Px7ZMpTyPRRuCnOqCC7uxsWifUVg==
+X-Received: by 2002:adf:e841:: with SMTP id d1mr61292398wrn.204.1560445418508;
+        Thu, 13 Jun 2019 10:03:38 -0700 (PDT)
 Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.03.41
+        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.03.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 10:03:41 -0700 (PDT)
+        Thu, 13 Jun 2019 10:03:37 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        vkuznets@redhat.com
-Subject: [PATCH 11/43] KVM: nVMX: Use descriptive names for VMCS sync functions and flags
-Date:   Thu, 13 Jun 2019 19:02:57 +0200
-Message-Id: <1560445409-17363-12-git-send-email-pbonzini@redhat.com>
+        vkuznets@redhat.com, Jim Mattson <jmattson@google.com>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: [PATCH 08/43] KVM: nVMX: Intercept VMWRITEs to GUEST_{CS,SS}_AR_BYTES
+Date:   Thu, 13 Jun 2019 19:02:54 +0200
+Message-Id: <1560445409-17363-9-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
 References: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
@@ -72,179 +73,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Nested virtualization involves copying data between many different types
-of VMCSes, e.g. vmcs02, vmcs12, shadow VMCS and eVMCS.  Rename a variety
-of functions and flags to document both the source and destination of
-each sync.
+VMMs frequently read the guest's CS and SS AR bytes to detect 64-bit
+mode and CPL respectively, but effectively never write said fields once
+the VM is initialized.  Intercepting VMWRITEs for the two fields saves
+~55 cycles in copy_shadow_to_vmcs12().
 
+Because some Intel CPUs, e.g. Haswell, drop the reserved bits of the
+guest access rights fields on VMWRITE, exposing the fields to L1 for
+VMREAD but not VMWRITE leads to inconsistent behavior between L1 and L2.
+On hardware that drops the bits, L1 will see the stripped down value due
+to reading the value from hardware, while L2 will see the full original
+value as stored by KVM.  To avoid such an inconsistency, emulate the
+behavior on all CPUS, but only for intercepted VMWRITEs so as to avoid
+introducing pointless latency into copy_shadow_to_vmcs12(), e.g. if the
+emulation were added to vmcs12_write_any().
+
+Since the AR_BYTES emulation is done only for intercepted VMWRITE, if a
+future patch (re)exposed AR_BYTES for both VMWRITE and VMREAD, then KVM
+would end up with incosistent behavior on pre-Haswell hardware, e.g. KVM
+would drop the reserved bits on intercepted VMWRITE, but direct VMWRITE
+to the shadow VMCS would not drop the bits.  Add a WARN in the shadow
+field initialization to detect any attempt to expose an AR_BYTES field
+without updating vmcs12_write_any().
+
+Note, emulation of the AR_BYTES reserved bit behavior is based on a
+patch[1] from Jim Mattson that applied the emulation to all writes to
+vmcs12 so that live migration across different generations of hardware
+would not introduce divergent behavior.  But given that live migration
+of nested state has already been enabled, that ship has sailed (not to
+mention that no sane VMM will be affected by this behavior).
+
+[1] https://patchwork.kernel.org/patch/10483321/
+
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Liran Alon <liran.alon@oracle.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/nested.c | 28 ++++++++++++++--------------
- arch/x86/kvm/vmx/nested.h |  2 +-
- arch/x86/kvm/vmx/vmx.c    |  4 ++--
- arch/x86/kvm/vmx/vmx.h    |  2 +-
- 4 files changed, 18 insertions(+), 18 deletions(-)
+ arch/x86/kvm/vmx/nested.c             | 15 +++++++++++++++
+ arch/x86/kvm/vmx/vmcs_shadow_fields.h |  4 ++--
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index bdaf49d9260f..fc2b8f4cf45f 100644
+index 0dc9505ae9a2..cd51ef68434e 100644
 --- a/arch/x86/kvm/vmx/nested.c
 +++ b/arch/x86/kvm/vmx/nested.c
-@@ -1615,7 +1615,7 @@ static int copy_vmcs12_to_enlightened(struct vcpu_vmx *vmx)
- 	 * evmcs->host_gdtr_base = vmcs12->host_gdtr_base;
- 	 * evmcs->host_idtr_base = vmcs12->host_idtr_base;
- 	 * evmcs->host_rsp = vmcs12->host_rsp;
--	 * sync_vmcs12() doesn't read these:
-+	 * sync_vmcs02_to_vmcs12() doesn't read these:
- 	 * evmcs->io_bitmap_a = vmcs12->io_bitmap_a;
- 	 * evmcs->io_bitmap_b = vmcs12->io_bitmap_b;
- 	 * evmcs->msr_bitmap = vmcs12->msr_bitmap;
-@@ -1839,7 +1839,7 @@ static int nested_vmx_handle_enlightened_vmptrld(struct kvm_vcpu *vcpu,
- 	return 1;
- }
+@@ -91,6 +91,10 @@ static void init_vmcs_shadow_fields(void)
+ 			pr_err("Missing field from shadow_read_write_field %x\n",
+ 			       field + 1);
  
--void nested_sync_from_vmcs12(struct kvm_vcpu *vcpu)
-+void nested_sync_vmcs12_to_shadow(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 
-@@ -1860,7 +1860,7 @@ void nested_sync_from_vmcs12(struct kvm_vcpu *vcpu)
- 		copy_vmcs12_to_shadow(vmx);
- 	}
- 
--	vmx->nested.need_vmcs12_sync = false;
-+	vmx->nested.need_vmcs12_to_shadow_sync = false;
- }
- 
- static enum hrtimer_restart vmx_preemption_timer_fn(struct hrtimer *timer)
-@@ -3042,7 +3042,7 @@ int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, bool from_vmentry)
- 	vmcs12->vm_exit_reason = exit_reason | VMX_EXIT_REASONS_FAILED_VMENTRY;
- 	vmcs12->exit_qualification = exit_qual;
- 	if (enable_shadow_vmcs || vmx->nested.hv_evmcs)
--		vmx->nested.need_vmcs12_sync = true;
-+		vmx->nested.need_vmcs12_to_shadow_sync = true;
- 	return 1;
- }
- 
-@@ -3382,7 +3382,7 @@ static u32 vmx_get_preemption_timer_value(struct kvm_vcpu *vcpu)
-  * VM-entry controls is also updated, since this is really a guest
-  * state bit.)
-  */
--static void sync_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
-+static void sync_vmcs02_to_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
- {
- 	vmcs12->guest_cr0 = vmcs12_guest_cr0(vcpu, vmcs12);
- 	vmcs12->guest_cr4 = vmcs12_guest_cr4(vcpu, vmcs12);
-@@ -3861,14 +3861,14 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
- 		vcpu->arch.tsc_offset -= vmcs12->tsc_offset;
- 
- 	if (likely(!vmx->fail)) {
--		sync_vmcs12(vcpu, vmcs12);
-+		sync_vmcs02_to_vmcs12(vcpu, vmcs12);
- 
- 		if (exit_reason != -1)
- 			prepare_vmcs12(vcpu, vmcs12, exit_reason, exit_intr_info,
- 				       exit_qualification);
- 
++		WARN_ONCE(field >= GUEST_ES_AR_BYTES &&
++			  field <= GUEST_TR_AR_BYTES,
++			  "Update vmcs12_write_any() to expose AR_BYTES RW");
++
  		/*
--		 * Must happen outside of sync_vmcs12() as it will
-+		 * Must happen outside of sync_vmcs02_to_vmcs12() as it will
- 		 * also be used to capture vmcs12 cache as part of
- 		 * capturing nVMX state for snapshot (migration).
- 		 *
-@@ -3924,7 +3924,7 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
- 	kvm_make_request(KVM_REQ_APIC_PAGE_RELOAD, vcpu);
- 
- 	if ((exit_reason != -1) && (enable_shadow_vmcs || vmx->nested.hv_evmcs))
--		vmx->nested.need_vmcs12_sync = true;
-+		vmx->nested.need_vmcs12_to_shadow_sync = true;
- 
- 	/* in case we halted in L2 */
- 	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
-@@ -4284,7 +4284,7 @@ static inline void nested_release_vmcs12(struct kvm_vcpu *vcpu)
- 		/* copy to memory all shadowed fields in case
- 		   they were modified */
- 		copy_shadow_to_vmcs12(vmx);
--		vmx->nested.need_vmcs12_sync = false;
-+		vmx->nested.need_vmcs12_to_shadow_sync = false;
- 		vmx_disable_shadow_vmcs(vmx);
- 	}
- 	vmx->nested.posted_intr_nv = -1;
-@@ -4551,7 +4551,7 @@ static void set_current_vmptr(struct vcpu_vmx *vmx, gpa_t vmptr)
- 			      SECONDARY_EXEC_SHADOW_VMCS);
- 		vmcs_write64(VMCS_LINK_POINTER,
- 			     __pa(vmx->vmcs01.shadow_vmcs));
--		vmx->nested.need_vmcs12_sync = true;
-+		vmx->nested.need_vmcs12_to_shadow_sync = true;
- 	}
- 	vmx->nested.dirty_vmcs12 = true;
- }
-@@ -5303,12 +5303,12 @@ static int vmx_get_nested_state(struct kvm_vcpu *vcpu,
- 	 * When running L2, the authoritative vmcs12 state is in the
- 	 * vmcs02. When running L1, the authoritative vmcs12 state is
- 	 * in the shadow or enlightened vmcs linked to vmcs01, unless
--	 * need_vmcs12_sync is set, in which case, the authoritative
-+	 * need_vmcs12_to_shadow_sync is set, in which case, the authoritative
- 	 * vmcs12 state is in the vmcs12 already.
- 	 */
- 	if (is_guest_mode(vcpu)) {
--		sync_vmcs12(vcpu, vmcs12);
--	} else if (!vmx->nested.need_vmcs12_sync) {
-+		sync_vmcs02_to_vmcs12(vcpu, vmcs12);
-+	} else if (!vmx->nested.need_vmcs12_to_shadow_sync) {
- 		if (vmx->nested.hv_evmcs)
- 			copy_enlightened_to_vmcs12(vmx);
- 		else if (enable_shadow_vmcs)
-@@ -5421,7 +5421,7 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
- 		 * Sync eVMCS upon entry as we may not have
- 		 * HV_X64_MSR_VP_ASSIST_PAGE set up yet.
- 		 */
--		vmx->nested.need_vmcs12_sync = true;
-+		vmx->nested.need_vmcs12_to_shadow_sync = true;
- 	} else {
- 		return -EINVAL;
- 	}
-diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
-index 29d205bb4e4f..187d39bf0bf1 100644
---- a/arch/x86/kvm/vmx/nested.h
-+++ b/arch/x86/kvm/vmx/nested.h
-@@ -17,7 +17,7 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
- bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason);
- void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
- 		       u32 exit_intr_info, unsigned long exit_qualification);
--void nested_sync_from_vmcs12(struct kvm_vcpu *vcpu);
-+void nested_sync_vmcs12_to_shadow(struct kvm_vcpu *vcpu);
- int vmx_set_vmx_msr(struct kvm_vcpu *vcpu, u32 msr_index, u64 data);
- int vmx_get_vmx_msr(struct nested_vmx_msrs *msrs, u32 msr_index, u64 *pdata);
- int get_vmx_mem_address(struct kvm_vcpu *vcpu, unsigned long exit_qualification,
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 2b182f58c126..1a87a91e98dc 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6399,8 +6399,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 		vmcs_write32(PLE_WINDOW, vmx->ple_window);
+ 		 * PML and the preemption timer can be emulated, but the
+ 		 * processor cannot vmwrite to fields that don't exist
+@@ -4477,6 +4481,17 @@ static int handle_vmwrite(struct kvm_vcpu *vcpu)
+ 		vmcs12 = get_shadow_vmcs12(vcpu);
  	}
  
--	if (vmx->nested.need_vmcs12_sync)
--		nested_sync_from_vmcs12(vcpu);
-+	if (vmx->nested.need_vmcs12_to_shadow_sync)
-+		nested_sync_vmcs12_to_shadow(vcpu);
++	/*
++	 * Some Intel CPUs intentionally drop the reserved bits of the AR byte
++	 * fields on VMWRITE.  Emulate this behavior to ensure consistent KVM
++	 * behavior regardless of the underlying hardware, e.g. if an AR_BYTE
++	 * field is intercepted for VMWRITE but not VMREAD (in L1), then VMREAD
++	 * from L1 will return a different value than VMREAD from L2 (L1 sees
++	 * the stripped down value, L2 sees the full value as stored by KVM).
++	 */
++	if (field >= GUEST_ES_AR_BYTES && field <= GUEST_TR_AR_BYTES)
++		field_value &= 0x1f0ff;
++
+ 	if (vmcs12_write_any(vmcs12, field, field_value) < 0)
+ 		return nested_vmx_failValid(vcpu,
+ 			VMXERR_UNSUPPORTED_VMCS_COMPONENT);
+diff --git a/arch/x86/kvm/vmx/vmcs_shadow_fields.h b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
+index 132432f375c2..97dd5295be31 100644
+--- a/arch/x86/kvm/vmx/vmcs_shadow_fields.h
++++ b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
+@@ -40,14 +40,14 @@
+ SHADOW_FIELD_RO(IDT_VECTORING_INFO_FIELD)
+ SHADOW_FIELD_RO(IDT_VECTORING_ERROR_CODE)
+ SHADOW_FIELD_RO(VM_EXIT_INTR_ERROR_CODE)
++SHADOW_FIELD_RO(GUEST_CS_AR_BYTES)
++SHADOW_FIELD_RO(GUEST_SS_AR_BYTES)
+ SHADOW_FIELD_RW(CPU_BASED_VM_EXEC_CONTROL)
+ SHADOW_FIELD_RW(EXCEPTION_BITMAP)
+ SHADOW_FIELD_RW(VM_ENTRY_EXCEPTION_ERROR_CODE)
+ SHADOW_FIELD_RW(VM_ENTRY_INTR_INFO_FIELD)
+ SHADOW_FIELD_RW(VM_ENTRY_INSTRUCTION_LEN)
+ SHADOW_FIELD_RW(TPR_THRESHOLD)
+-SHADOW_FIELD_RW(GUEST_CS_AR_BYTES)
+-SHADOW_FIELD_RW(GUEST_SS_AR_BYTES)
+ SHADOW_FIELD_RW(GUEST_INTERRUPTIBILITY_INFO)
+ SHADOW_FIELD_RW(VMX_PREEMPTION_TIMER_VALUE)
  
- 	if (test_bit(VCPU_REGS_RSP, (unsigned long *)&vcpu->arch.regs_dirty))
- 		vmcs_writel(GUEST_RSP, vcpu->arch.regs[VCPU_REGS_RSP]);
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index decd31055da8..f4448292df0f 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -113,7 +113,7 @@ struct nested_vmx {
- 	 * Indicates if the shadow vmcs or enlightened vmcs must be updated
- 	 * with the data held by struct vmcs12.
- 	 */
--	bool need_vmcs12_sync;
-+	bool need_vmcs12_to_shadow_sync;
- 	bool dirty_vmcs12;
- 
- 	/*
 -- 
 1.8.3.1
 
