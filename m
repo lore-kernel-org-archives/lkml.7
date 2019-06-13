@@ -2,281 +2,321 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B0FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9F8C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174A820B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 512AC20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:57:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sj9JInCj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t92XLV2q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbfFMSzx (ORCPT
+        id S1729055AbfFMS5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:55:53 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:38691 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbfFMSzx (ORCPT
+        Thu, 13 Jun 2019 14:57:25 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35933 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbfFMS5Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:55:53 -0400
-Received: by mail-vs1-f66.google.com with SMTP id k9so132128vso.5;
-        Thu, 13 Jun 2019 11:55:51 -0700 (PDT)
+        Thu, 13 Jun 2019 14:57:24 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d21so8527128plr.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:57:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4OQtg+Kb8n0/7lnmdInZbUHkri3Yl0Dz8LW1LSwlW6I=;
-        b=sj9JInCj7SObNH40j+jPWiWM94RML1vfeC8hDQw1aPWnM+T7z5X2i7RlGRbMfdfHDG
-         z+ywVsIR18hPj/NTc0itgVaAW4niiUcwCtY9hjABeQ+tQ+dwpo+ChX3TtEjRQo4RqqsI
-         tbol77ftvXgyL3FU8FNcv/EGa5thHTPc9a7rEG7Op7lO9YgMPDPMnUhRlWsW57wvIPjf
-         j18Xkwsf6DrbRVk2xC/oKmpHVJ4qV0C+w3sJwiHo3mvw6auz0GozxoNVB/zxXAtXwO89
-         Wqf8jklOJJDuEQLdbzWsoMB3ExAcy6KyLaVw8H7hySkglRDRjyj079LWx3vrH97ws8tZ
-         yW9A==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=P1pdlLdm9KtvlkZGzA4eYZG9saeKJuP3nZzZZhMXVNM=;
+        b=t92XLV2q4blKHfz+WTpefrpKRvYSWqQM/lIkv2+un9gpwGlnPKOOKN6sAKab9cyyrn
+         /pAeTq02tFJJpL+yPNwZZnhuBtZ+c/tUO23nlcildLZqOeq4c12uOUrEImxiq5sjYrHf
+         TXEyo6Wi2O41YcauaBj5mFXZ5vbINxzekf5nGty7p96TWMnWhS8Nom5HOm/jgSBKEXWJ
+         Kh33sqgSjasTlI0jkO95uULAPYmScCDR38GEzOxCHs8MlTfv6SA0skO1x4f1WUMH2tQx
+         QdJoENuP+59IXRoYuYMtO8AK5HiW3Ewvt+kNq/Zw9cEDeSJJMZdjw5frYpCfKQq5LLW1
+         Aw4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4OQtg+Kb8n0/7lnmdInZbUHkri3Yl0Dz8LW1LSwlW6I=;
-        b=mUk/yP1gl4aMPYYZt9SsyZ+4y7mz4J354xOSUTEIm+GCbpjABrQW3seGyLRZkM4rvv
-         jPDsT7+jOU0VYhrhTuk48HDH+7OIRXhFSIIYwUfSuHXGX4q6FwJhjbQUdaYo5Wrlfz5l
-         YKGdP4A6zDSbCT4daXubZ8R1PVL5TX+Ac7de7cmwmDerb+K7OHBNOjME60bmNi+/eS05
-         aaJshVuDsYiVNgtFu56bYBcxJcg61HkZClgujE/JuL+SdPb6aWGMX/9x47LriIpPt0YD
-         qsM6LLLCUOGBMwHmrBBv9qJc5mvP3KCFV8/abr1ST0hmIAEWfv3jlwnz4ZQR2MNvTwp2
-         d3AA==
-X-Gm-Message-State: APjAAAUIO+dYOMa4tNmzNq5Gvt8ubq4AHdZCsj26IdSSRbVyZazTXod6
-        wFD+jG6nFxBXCyaruJ7z62FAHpw/cMDfDTWQm5fXE+MHh/0=
-X-Google-Smtp-Source: APXvYqzT+lMnv6Xnxg0qzHQuRCrr7fpcFtbfilzse/1Obe+a0E60uXzqfzVt0d3RIq235gmNwp+QCGngLGBwj6bezhQ=
-X-Received: by 2002:a67:b14d:: with SMTP id z13mr10977506vsl.190.1560452151309;
- Thu, 13 Jun 2019 11:55:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=P1pdlLdm9KtvlkZGzA4eYZG9saeKJuP3nZzZZhMXVNM=;
+        b=B//wRhm9V4G5qh7Eeb5wxImwQBdrQlzadvCpOIvmfKqvXKL73k1L0gp0H1K6CQie2V
+         wK+vyL4hUbHIZ0YnKbNZkga5DPjpO0fgmeOCRzRPJUAm0iYh+A3h5ACS99GLtNeNkVtd
+         R0uLkQ7FnIybWSyX0vixPW9xry72YcMzV82gzCU/woOqXbGj5QhBGWXwd6VpS/LxalsX
+         gKnmdehfybKeAriIIA0DrdiaB6WXyjJL7KQl6afSmW61Bjz7rW54+erxRuWQOvjUl4Qi
+         QajH9ml92AGJ2ymvo4iWHMVPmZ+dAclbfOow7Y/0GIYqQ28rsWckjSE2681q4lnKc0na
+         y6sQ==
+X-Gm-Message-State: APjAAAWUPPXUlBXkOQ41CeH+7WWR0PGYjmVbFMvJ8OIUKHRihWwyTH32
+        LZu2KP6vFmh78T54HAF9zmmKPNWua1I=
+X-Google-Smtp-Source: APXvYqxtCNW2UWTIT3xtGiV3vuzF4GdlBwjOWdtkpggbmxJ6ifhjBjdjyE4wAAMGRFg22/uI0Vgezw==
+X-Received: by 2002:a17:902:2ae7:: with SMTP id j94mr5149526plb.270.1560452243530;
+        Thu, 13 Jun 2019 11:57:23 -0700 (PDT)
+Received: from ahmlpt0706 ([106.213.193.147])
+        by smtp.gmail.com with ESMTPSA id g5sm498853pfm.54.2019.06.13.11.57.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 11:57:22 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 00:27:05 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     gregkh@linuxfoundation.org, groeck@google.com
+Cc:     linux-kernel@vger.kernel.org, groeck@chromium.org,
+        adurbin@chromium.org, dlaurie@chromium.org
+Subject: [PATCH] gsmi: replace printk with relevant dev_<level>
+Message-ID: <20190613185705.GA16951@ahmlpt0706>
 MIME-Version: 1.0
-References: <20190613021054.cdewdb3azy6zuoyw@smtp.gmail.com> <20190613050403.GA21502@ravnborg.org>
-In-Reply-To: <20190613050403.GA21502@ravnborg.org>
-From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Date:   Thu, 13 Jun 2019 15:55:40 -0300
-Message-ID: <CADKXj+7X2ukpM16OHxenTCNtBPHUaj7Z8eBz3ZpyDYpZ2vGC9g@mail.gmail.com>
-Subject: Re: Drop use of DRM_WAIT_ON() [Was: drm/drm_vblank: Change EINVAL by
- the correct errno]
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Intel GFX ML <intel-gfx@lists.freedesktop.org>,
-        kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+Replace printk() with dev_* macros for logging consistency.
+In process of replacing printk with dev_err, dev_info etc.,
+removed unnecessary "out of memory" debug message.
 
-I tested it by using VKMS and kms_flip, and tests related to =E2=80=9Cvblan=
-k=E2=80=9D
-fails (e.g., basic-flip-vs-wf_vblank, blocking-absolute-wf_vblank,
-flip-vs-absolute-wf_vblank, etc). I tried to dig into this issue, and
-you can see my comments inline:
+This also fixes checkpatch.pl warnings.
 
-On Thu, Jun 13, 2019 at 2:04 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Rodrigo.
->
-> On Wed, Jun 12, 2019 at 11:10:54PM -0300, Rodrigo Siqueira wrote:
-> > For historical reason, the function drm_wait_vblank_ioctl always return
-> > -EINVAL if something gets wrong. This scenario limits the flexibility
-> > for the userspace make detailed verification of the problem and take
-> > some action. In particular, the validation of =E2=80=9Cif (!dev->irq_en=
-abled)=E2=80=9D
-> > in the drm_wait_vblank_ioctl is responsible for checking if the driver
-> > support vblank or not. If the driver does not support VBlank, the
-> > function drm_wait_vblank_ioctl returns EINVAL which does not represent
-> > the real issue; this patch changes this behavior by return EOPNOTSUPP.
-> > Additionally, some operations are unsupported by this function, and
-> > returns EINVAL; this patch also changes the return value to EOPNOTSUPP
-> > in this case. Lastly, the function drm_wait_vblank_ioctl is invoked by
-> > libdrm, which is used by many compositors; because of this, it is
-> > important to check if this change breaks any compositor. In this sense,
-> > the following projects were examined:
-> >
-> > * Drm-hwcomposer
-> > * Kwin
-> > * Sway
-> > * Wlroots
-> > * Wayland-core
-> > * Weston
-> > * Xorg (67 different drivers)
-> >
-> > For each repository the verification happened in three steps:
-> >
-> > * Update the main branch
-> > * Look for any occurrence "drmWaitVBlank" with the command:
-> >   git grep -n "drmWaitVBlank"
-> > * Look in the git history of the project with the command:
-> >   git log -SdrmWaitVBlank
-> >
-> > Finally, none of the above projects validate the use of EINVAL which
-> > make safe, at least for these projects, to change the return values.
-> >
-> > Change since V2:
-> >  Daniel Vetter and Chris Wilson
-> >  - Replace ENOTTY by EOPNOTSUPP
-> >  - Return EINVAL if the parameters are wrong
-> >
-> > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> > ---
-> > Update:
-> >   Now IGT has a way to validate if a driver has vblank support or not.
-> >   See: https://gitlab.freedesktop.org/drm/igt-gpu-tools/commit/2d244aed=
-69165753f3adbbd6468db073dc1acf9A
-> >
-> >  drivers/gpu/drm/drm_vblank.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.=
-c
-> > index 0d704bddb1a6..d76a783a7d4b 100644
-> > --- a/drivers/gpu/drm/drm_vblank.c
-> > +++ b/drivers/gpu/drm/drm_vblank.c
-> > @@ -1578,10 +1578,10 @@ int drm_wait_vblank_ioctl(struct drm_device *de=
-v, void *data,
-> >       unsigned int flags, pipe, high_pipe;
-> >
-> >       if (!dev->irq_enabled)
-> > -             return -EINVAL;
-> > +             return -EOPNOTSUPP;
-> >
-> >       if (vblwait->request.type & _DRM_VBLANK_SIGNAL)
-> > -             return -EINVAL;
-> > +             return -EOPNOTSUPP;
-> >
-> >       if (vblwait->request.type &
-> >           ~(_DRM_VBLANK_TYPES_MASK | _DRM_VBLANK_FLAGS_MASK |
->
-> When touching this function, could I ask you to take a look at
-> eliminating the use of DRM_WAIT_ON()?
-> It comes from the deprecated drm_os_linux.h header, and it is only of
-> the few remaining users of DRM_WAIT_ON().
->
-> Below you can find my untested first try - where I did an attempt not to
-> change behaviour.
->
->         Sam
->
-> commit 17b119b02467356198b57bca9949b146082bcaa1
-> Author: Sam Ravnborg <sam@ravnborg.org>
-> Date:   Thu May 30 09:38:47 2019 +0200
->
->     drm/vblank: drop use of DRM_WAIT_ON()
->
->     DRM_WAIT_ON() is from the deprecated drm_os_linux header and
->     the modern replacement is the wait_event_*.
->
->     The return values differ, so a conversion is needed to
->     keep the original interface towards userspace.
->     Introduced a switch/case to make code obvious and to allow
->     different debug prints depending on the result.
->
->     The timeout value of 3 * HZ was translated to 30 msec
->
->     Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
->     Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
->     Cc: Maxime Ripard <maxime.ripard@bootlin.com>
->     Cc: Sean Paul <sean@poorly.run>
->     Cc: David Airlie <airlied@linux.ie>
->     Cc: Daniel Vetter <daniel@ffwll.ch>
->
-> diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-> index 0d704bddb1a6..51fc6b106333 100644
-> --- a/drivers/gpu/drm/drm_vblank.c
-> +++ b/drivers/gpu/drm/drm_vblank.c
-> @@ -31,7 +31,6 @@
->  #include <drm/drm_drv.h>
->  #include <drm/drm_framebuffer.h>
->  #include <drm/drm_print.h>
-> -#include <drm/drm_os_linux.h>
->  #include <drm/drm_vblank.h>
->
->  #include "drm_internal.h"
-> @@ -1668,18 +1667,27 @@ int drm_wait_vblank_ioctl(struct drm_device *dev,=
- void *data,
->         if (req_seq !=3D seq) {
->                 DRM_DEBUG("waiting on vblank count %llu, crtc %u\n",
->                           req_seq, pipe);
-> -               DRM_WAIT_ON(ret, vblank->queue, 3 * HZ,
-> -                           vblank_passed(drm_vblank_count(dev, pipe),
-> -                                         req_seq) ||
-> -                           !READ_ONCE(vblank->enabled));
-> +               ret =3D wait_event_interruptible_timeout(vblank->queue,
-> +                       vblank_passed(drm_vblank_count(dev, pipe), req_se=
-q) ||
-> +                                     !READ_ONCE(vblank->enabled),
-> +                       msecs_to_jiffies(30));
+Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
+---
+ drivers/firmware/google/gsmi.c | 68 ++++++++++++++++++----------------
+ 1 file changed, 37 insertions(+), 31 deletions(-)
 
-Maybe I=E2=80=99m wrong, but msecs_to_jiffies(30) is much smaller than 3 * =
-HZ. Right?
+diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/google/gsmi.c
+index edaa4e5d84ad..db11fc896c42 100644
+--- a/drivers/firmware/google/gsmi.c
++++ b/drivers/firmware/google/gsmi.c
+@@ -151,7 +151,6 @@ static struct gsmi_buf *gsmi_buf_alloc(void)
+ 
+ 	smibuf = kzalloc(sizeof(*smibuf), GFP_KERNEL);
+ 	if (!smibuf) {
+-		printk(KERN_ERR "gsmi: out of memory\n");
+ 		return NULL;
+ 	}
+ 
+@@ -159,7 +158,7 @@ static struct gsmi_buf *gsmi_buf_alloc(void)
+ 	smibuf->start = dma_pool_alloc(gsmi_dev.dma_pool, GFP_KERNEL,
+ 				       &smibuf->handle);
+ 	if (!smibuf->start) {
+-		printk(KERN_ERR "gsmi: failed to allocate name buffer\n");
++		dev_err(&gsmi_dev.pdev->dev, "failed to allocate name buffer\n");
+ 		kfree(smibuf);
+ 		return NULL;
+ 	}
+@@ -257,34 +256,40 @@ static int gsmi_exec(u8 func, u8 sub)
+ 		rc = 1;
+ 		break;
+ 	case GSMI_INVALID_PARAMETER:
+-		printk(KERN_ERR "gsmi: exec 0x%04x: Invalid parameter\n", cmd);
++		dev_err(&gsmi_dev.pdev->dev,
++			"exec 0x%04x: Invalid parameter\n", cmd);
+ 		rc = -EINVAL;
+ 		break;
+ 	case GSMI_BUFFER_TOO_SMALL:
+-		printk(KERN_ERR "gsmi: exec 0x%04x: Buffer too small\n", cmd);
++		dev_err(&gsmi_dev.pdev->dev,
++			"exec 0x%04x: Buffer too small\n", cmd);
+ 		rc = -ENOMEM;
+ 		break;
+ 	case GSMI_UNSUPPORTED:
+ 	case GSMI_UNSUPPORTED2:
+ 		if (sub != GSMI_CMD_HANDSHAKE_TYPE)
+-			printk(KERN_ERR "gsmi: exec 0x%04x: Not supported\n",
+-			       cmd);
++			dev_err(&gsmi_dev.pdev->dev,
++				"exec 0x%04x: Not supported\n", cmd);
+ 		rc = -ENOSYS;
+ 		break;
+ 	case GSMI_NOT_READY:
+-		printk(KERN_ERR "gsmi: exec 0x%04x: Not ready\n", cmd);
++		dev_err(&gsmi_dev.pdev->dev,
++			"exec 0x%04x: Not ready\n", cmd);
+ 		rc = -EBUSY;
+ 		break;
+ 	case GSMI_DEVICE_ERROR:
+-		printk(KERN_ERR "gsmi: exec 0x%04x: Device error\n", cmd);
++		dev_err(&gsmi_dev.pdev->dev,
++			"exec 0x%04x: Device error\n", cmd);
+ 		rc = -EFAULT;
+ 		break;
+ 	case GSMI_NOT_FOUND:
+-		printk(KERN_ERR "gsmi: exec 0x%04x: Data not found\n", cmd);
++		dev_err(&gsmi_dev.pdev->dev,
++			"exec 0x%04x: Data not found\n", cmd);
+ 		rc = -ENOENT;
+ 		break;
+ 	case GSMI_LOG_FULL:
+-		printk(KERN_ERR "gsmi: exec 0x%04x: Log full\n", cmd);
++		dev_err(&gsmi_dev.pdev->dev,
++			"exec 0x%04x: Log full\n", cmd);
+ 		rc = -ENOSPC;
+ 		break;
+ 	case GSMI_HANDSHAKE_CF:
+@@ -293,8 +298,8 @@ static int gsmi_exec(u8 func, u8 sub)
+ 		rc = result;
+ 		break;
+ 	default:
+-		printk(KERN_ERR "gsmi: exec 0x%04x: Unknown error 0x%04x\n",
+-		       cmd, result);
++		dev_err(&gsmi_dev.pdev->dev,
++			"exec 0x%04x: Unknown error 0x%04x\n", cmd, result);
+ 		rc = -ENXIO;
+ 	}
+ 
+@@ -341,7 +346,7 @@ static efi_status_t gsmi_get_variable(efi_char16_t *name,
+ 
+ 	rc = gsmi_exec(GSMI_CALLBACK, GSMI_CMD_GET_NVRAM_VAR);
+ 	if (rc < 0) {
+-		printk(KERN_ERR "gsmi: Get Variable failed\n");
++		dev_err(&gsmi_dev.pdev->dev, "Get Variable failed\n");
+ 		ret = EFI_LOAD_ERROR;
+ 	} else if (rc == 1) {
+ 		/* variable was not found */
+@@ -403,7 +408,7 @@ static efi_status_t gsmi_get_next_variable(unsigned long *name_size,
+ 
+ 	rc = gsmi_exec(GSMI_CALLBACK, GSMI_CMD_GET_NEXT_VAR);
+ 	if (rc < 0) {
+-		printk(KERN_ERR "gsmi: Get Next Variable Name failed\n");
++		dev_err(&gsmi_dev.pdev->dev, "Get Next Variable Name failed\n");
+ 		ret = EFI_LOAD_ERROR;
+ 	} else if (rc == 1) {
+ 		/* variable not found -- end of list */
+@@ -467,7 +472,7 @@ static efi_status_t gsmi_set_variable(efi_char16_t *name,
+ 
+ 	rc = gsmi_exec(GSMI_CALLBACK, GSMI_CMD_SET_NVRAM_VAR);
+ 	if (rc < 0) {
+-		printk(KERN_ERR "gsmi: Set Variable failed\n");
++		dev_err(&gsmi_dev.pdev->dev, "Set Variable failed\n");
+ 		ret = EFI_INVALID_PARAMETER;
+ 	}
+ 
+@@ -517,7 +522,7 @@ static ssize_t eventlog_write(struct file *filp, struct kobject *kobj,
+ 
+ 	rc = gsmi_exec(GSMI_CALLBACK, GSMI_CMD_SET_EVENT_LOG);
+ 	if (rc < 0)
+-		printk(KERN_ERR "gsmi: Set Event Log failed\n");
++		dev_err(&gsmi_dev.pdev->dev, "Set Event Log failed\n");
+ 
+ 	spin_unlock_irqrestore(&gsmi_dev.lock, flags);
+ 
+@@ -645,10 +650,10 @@ static int gsmi_shutdown_reason(int reason)
+ 	spin_unlock_irqrestore(&gsmi_dev.lock, flags);
+ 
+ 	if (rc < 0)
+-		printk(KERN_ERR "gsmi: Log Shutdown Reason failed\n");
++		dev_err(&gsmi_dev.pdev->dev, "Log Shutdown Reason failed\n");
+ 	else
+-		printk(KERN_EMERG "gsmi: Log Shutdown Reason 0x%02x\n",
+-		       reason);
++		dev_emerg(&gsmi_dev.pdev->dev, "Log Shutdown Reason 0x%02x\n",
++			  reason);
+ 
+ 	return rc;
+ }
+@@ -759,7 +764,7 @@ static __init int gsmi_system_valid(void)
+ 	 * whitewash our board names out of the public driver.
+ 	 */
+ 	if (!strncmp(acpi_gbl_FADT.header.oem_table_id, "FACP", 4)) {
+-		printk(KERN_INFO "gsmi: Board is too old\n");
++		dev_info(&gsmi_dev.pdev->dev, "Board is too old\n");
+ 		return -ENODEV;
+ 	}
+ 
+@@ -879,7 +884,7 @@ static __init int gsmi_init(void)
+ #ifdef CONFIG_PM
+ 	ret = platform_driver_register(&gsmi_driver_info);
+ 	if (unlikely(ret)) {
+-		printk(KERN_ERR "gsmi: unable to register platform driver\n");
++		dev_err(&gsmi_dev.pdev->dev, "unable to register platform driver\n");
+ 		return ret;
+ 	}
+ #endif
+@@ -887,7 +892,7 @@ static __init int gsmi_init(void)
+ 	/* register device */
+ 	gsmi_dev.pdev = platform_device_register_full(&gsmi_dev_info);
+ 	if (IS_ERR(gsmi_dev.pdev)) {
+-		printk(KERN_ERR "gsmi: unable to register platform device\n");
++		dev_err(&gsmi_dev.pdev->dev, "unable to register platform device\n");
+ 		return PTR_ERR(gsmi_dev.pdev);
+ 	}
+ 
+@@ -906,19 +911,19 @@ static __init int gsmi_init(void)
+ 	 */
+ 	gsmi_dev.name_buf = gsmi_buf_alloc();
+ 	if (!gsmi_dev.name_buf) {
+-		printk(KERN_ERR "gsmi: failed to allocate name buffer\n");
++		dev_err(&gsmi_dev.pdev->dev, "failed to allocate name buffer\n");
+ 		goto out_err;
+ 	}
+ 
+ 	gsmi_dev.data_buf = gsmi_buf_alloc();
+ 	if (!gsmi_dev.data_buf) {
+-		printk(KERN_ERR "gsmi: failed to allocate data buffer\n");
++		dev_err(&gsmi_dev.pdev->dev, "failed to allocate data buffer\n");
+ 		goto out_err;
+ 	}
+ 
+ 	gsmi_dev.param_buf = gsmi_buf_alloc();
+ 	if (!gsmi_dev.param_buf) {
+-		printk(KERN_ERR "gsmi: failed to allocate param buffer\n");
++		dev_err(&gsmi_dev.pdev->dev, "failed to allocate param buffer\n");
+ 		goto out_err;
+ 	}
+ 
+@@ -960,7 +965,7 @@ static __init int gsmi_init(void)
+ 
+ 	/* Remove and clean up gsmi if the handshake could not complete. */
+ 	if (gsmi_dev.handshake_type == -ENXIO) {
+-		printk(KERN_INFO "gsmi version " DRIVER_VERSION
++		dev_info(&gsmi_dev.pdev->dev, "gsmi version " DRIVER_VERSION
+ 		       " failed to load\n");
+ 		ret = -ENODEV;
+ 		goto out_err;
+@@ -970,28 +975,28 @@ static __init int gsmi_init(void)
+ 	ret = -ENOMEM;
+ 	gsmi_kobj = kobject_create_and_add("gsmi", firmware_kobj);
+ 	if (!gsmi_kobj) {
+-		printk(KERN_INFO "gsmi: Failed to create firmware kobj\n");
++		dev_info(&gsmi_dev.pdev->dev, "Failed to create firmware kobj\n");
+ 		goto out_err;
+ 	}
+ 
+ 	/* Setup eventlog access */
+ 	ret = sysfs_create_bin_file(gsmi_kobj, &eventlog_bin_attr);
+ 	if (ret) {
+-		printk(KERN_INFO "gsmi: Failed to setup eventlog");
++		dev_info(&gsmi_dev.pdev->dev, "Failed to setup eventlog");
+ 		goto out_err;
+ 	}
+ 
+ 	/* Other attributes */
+ 	ret = sysfs_create_files(gsmi_kobj, gsmi_attrs);
+ 	if (ret) {
+-		printk(KERN_INFO "gsmi: Failed to add attrs");
++		dev_info(&gsmi_dev.pdev->dev, "Failed to add attrs");
+ 		goto out_remove_bin_file;
+ 	}
+ 
+ #ifdef CONFIG_EFI_VARS
+ 	ret = efivars_register(&efivars, &efivar_ops, gsmi_kobj);
+ 	if (ret) {
+-		printk(KERN_INFO "gsmi: Failed to register efivars\n");
++		dev_info(&gsmi_dev.pdev->dev, "Failed to register efivars\n");
+ 		sysfs_remove_files(gsmi_kobj, gsmi_attrs);
+ 		goto out_remove_bin_file;
+ 	}
+@@ -1002,7 +1007,8 @@ static __init int gsmi_init(void)
+ 	atomic_notifier_chain_register(&panic_notifier_list,
+ 				       &gsmi_panic_notifier);
+ 
+-	printk(KERN_INFO "gsmi version " DRIVER_VERSION " loaded\n");
++	dev_info(&gsmi_dev.pdev->dev,
++		 "gsmi version " DRIVER_VERSION " loaded\n");
+ 
+ 	return 0;
+ 
+-- 
+2.20.1
 
->         }
->
-> -       if (ret !=3D -EINTR) {
-> +       switch (ret) {
-> +       case 1:
-> +               ret =3D 0;
->                 drm_wait_vblank_reply(dev, pipe, &vblwait->reply);
-> -
->                 DRM_DEBUG("crtc %d returning %u to client\n",
->                           pipe, vblwait->reply.sequence);
-> -       } else {
-> +               break;
-> +       case 0:
-> +               ret =3D -EBUSY;
-
-After applying your patch, I noticed that drm_wait_vblank_ioctl()
-consistently returns EBUSY, which is the cause of the errors in the
-userspace. After that, I decided to take a look at DRM_WAIT_ON; See
-below the code and my comments:
-
-#define DRM_WAIT_ON( ret, queue, timeout, condition )        \
-do {                                \
-    DECLARE_WAITQUEUE(entry, current);            \
-    unsigned long end =3D jiffies + (timeout);        \
-    add_wait_queue(&(queue), &entry);            \
-                                \
-    for (;;) {                        \
-        __set_current_state(TASK_INTERRUPTIBLE);    \
-        if (condition)                    \
-            break;                    \
-        if (time_after_eq(jiffies, end)) {        \
-            ret =3D -EBUSY;                \
-            break;                    \
-        }                        \
-
-I think that your code does not handle this condition for EBUSY in the
-same way of DRM_WAIT_ON(), or did I miss something?
-
-Best regards
-
-> +               drm_wait_vblank_reply(dev, pipe, &vblwait->reply);
-> +               DRM_DEBUG("timeout waiting for vblank. crtc %d returning =
-%u to client\n",
-> +                         pipe, vblwait->reply.sequence);
-> +               break;
-> +       default:
-> +               ret =3D -EINTR;
->                 DRM_DEBUG("crtc %d vblank wait interrupted by signal\n", =
-pipe);
->         }
->
-
-
---=20
-
-Rodrigo Siqueira
-https://siqueira.tech
