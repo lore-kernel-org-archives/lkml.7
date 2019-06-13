@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFC1C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A679C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B97121473
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53BCA20851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441350;
-	bh=Y1WnJruasGRm3U9AQ0OHPrzS3NNHvnFoLXqzcfF6xUc=;
+	s=default; t=1560441352;
+	bh=PH6dG94hNLWF7W1sTLFFWbqMCAI3bu5OdGA+wHUVEiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EvbzhHLyjqDSHI/ZOzDDAy7nV9O/jybT6za9Jo1ji/1cUjZyTHZbW7tVIgbb3BKag
-	 8I02LU7AlslrTTq9FmLTf2r63YFitwoV8VRReAd5bxP7gSgR47bGxXIoLXmwbfHmUm
-	 xX4Q7JJEhUiQYyaZwFLGFNIW82ahM0jIrzDWvihA=
+	b=Q4Fi/SgPV3QG4jIVy4OvO0YBxaWDr+CMf2VLgBy1Uz3iAaYNFGaWZX6z7ruBFjR/s
+	 YlfPOJS6gbpDkGKsJLibtaHmRAOj4jY0Xxo57uPE/seBwzjeJS4D2vtorwOYLZoCMV
+	 F1jAGDS/QhOaQ8XOF3lwVlFe0t3uip3yMXr7Q6M8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389958AbfFMPzs (ORCPT
+        id S2390222AbfFMPzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:55:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39070 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:55:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731536AbfFMIvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:51:40 -0400
+        id S1731535AbfFMIvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:51:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9686D2173C;
-        Thu, 13 Jun 2019 08:51:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECCD6215EA;
+        Thu, 13 Jun 2019 08:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415900;
-        bh=Y1WnJruasGRm3U9AQ0OHPrzS3NNHvnFoLXqzcfF6xUc=;
+        s=default; t=1560415897;
+        bh=PH6dG94hNLWF7W1sTLFFWbqMCAI3bu5OdGA+wHUVEiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bCjvZ1MYthnhtcslLp5cUd09V9fHFxJ4A/YMW8sVaKmrAZPh4h3+hLg1kpTcgU8MF
-         wbMKN1MGB2hiyudSoCtnvh8+KuNn1P/lO/Z1Gr6nJGXBCVg0Q43LHZK31fTXDczhsq
-         M21/fGu6z8bUc7j4pCWUxiHAxE0qWcz1I/m/4uak=
+        b=wvUrYAFbFHisBrvfWT3JSvvVGdQ7Mp9hiJxbQ872ixM2yVPTYGY31hPa/17/jaLNw
+         3LsdmoA+PtpF0OkLGNxOR5OveKJHuCQmtvVD/AtlKbtxtWuZY/7g0h5r0R8SIWxlFt
+         rGQASZoVPULv/qylrUDyP0rx9gCygNPml8IaPpAA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eddie Horng <eddiehorng.tw@gmail.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.1 155/155] ovl: support stacked SEEK_HOLE/SEEK_DATA
-Date:   Thu, 13 Jun 2019 10:34:27 +0200
-Message-Id: <20190613075701.414067445@linuxfoundation.org>
+        stable@vger.kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Amir Goldstein <amir73il@gmail.com>
+Subject: [PATCH 5.1 154/155] ovl: check the capability before cred overridden
+Date:   Thu, 13 Jun 2019 10:34:26 +0200
+Message-Id: <20190613075701.378918396@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,82 +60,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
 
-commit 9e46b840c7053b5f7a245e98cd239b60d189a96c upstream.
+commit 98487de318a6f33312471ae1e2afa16fbf8361fe upstream.
 
-Overlay file f_pos is the master copy that is preserved
-through copy up and modified on read/write, but only real
-fs knows how to SEEK_HOLE/SEEK_DATA and real fs may impose
-limitations that are more strict than ->s_maxbytes for specific
-files, so we use the real file to perform seeks.
+We found that it return success when we set IMMUTABLE_FL flag to a file in
+docker even though the docker didn't have the capability
+CAP_LINUX_IMMUTABLE.
 
-We do not call real fs for SEEK_CUR:0 query and for SEEK_SET:0
-requests.
+The commit d1d04ef8572b ("ovl: stack file ops") and dab5ca8fd9dd ("ovl: add
+lsattr/chattr support") implemented chattr operations on a regular overlay
+file. ovl_real_ioctl() overridden the current process's subjective
+credentials with ofs->creator_cred which have the capability
+CAP_LINUX_IMMUTABLE so that it will return success in
+vfs_ioctl()->cap_capable().
 
-Fixes: d1d04ef8572b ("ovl: stack file ops")
-Reported-by: Eddie Horng <eddiehorng.tw@gmail.com>
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Fix this by checking the capability before cred overridden. And here we
+only care about APPEND_FL and IMMUTABLE_FL, so get these information from
+inode.
+
+[SzM: move check and call to underlying fs inside inode locked region to
+prevent two such calls from racing with each other]
+
+Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
 Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Cc: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/overlayfs/file.c |   44 ++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 40 insertions(+), 4 deletions(-)
+ fs/overlayfs/file.c |   79 ++++++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 61 insertions(+), 18 deletions(-)
 
 --- a/fs/overlayfs/file.c
 +++ b/fs/overlayfs/file.c
-@@ -146,11 +146,47 @@ static int ovl_release(struct inode *ino
+@@ -11,6 +11,7 @@
+ #include <linux/mount.h>
+ #include <linux/xattr.h>
+ #include <linux/uio.h>
++#include <linux/uaccess.h>
+ #include "overlayfs.h"
  
- static loff_t ovl_llseek(struct file *file, loff_t offset, int whence)
+ static char ovl_whatisit(struct inode *inode, struct inode *realinode)
+@@ -372,10 +373,68 @@ static long ovl_real_ioctl(struct file *
+ 	return ret;
+ }
+ 
+-static long ovl_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
++static unsigned int ovl_get_inode_flags(struct inode *inode)
++{
++	unsigned int flags = READ_ONCE(inode->i_flags);
++	unsigned int ovl_iflags = 0;
++
++	if (flags & S_SYNC)
++		ovl_iflags |= FS_SYNC_FL;
++	if (flags & S_APPEND)
++		ovl_iflags |= FS_APPEND_FL;
++	if (flags & S_IMMUTABLE)
++		ovl_iflags |= FS_IMMUTABLE_FL;
++	if (flags & S_NOATIME)
++		ovl_iflags |= FS_NOATIME_FL;
++
++	return ovl_iflags;
++}
++
++static long ovl_ioctl_set_flags(struct file *file, unsigned long arg)
  {
--	struct inode *realinode = ovl_inode_real(file_inode(file));
-+	struct inode *inode = file_inode(file);
-+	struct fd real;
-+	const struct cred *old_cred;
-+	ssize_t ret;
- 
--	return generic_file_llseek_size(file, offset, whence,
--					realinode->i_sb->s_maxbytes,
--					i_size_read(realinode));
-+	/*
-+	 * The two special cases below do not need to involve real fs,
-+	 * so we can optimizing concurrent callers.
-+	 */
-+	if (offset == 0) {
-+		if (whence == SEEK_CUR)
-+			return file->f_pos;
+ 	long ret;
+ 	struct inode *inode = file_inode(file);
++	unsigned int flags;
++	unsigned int old_flags;
 +
-+		if (whence == SEEK_SET)
-+			return vfs_setpos(file, 0, 0);
-+	}
++	if (!inode_owner_or_capable(inode))
++		return -EACCES;
 +
-+	ret = ovl_real_fdget(file, &real);
++	if (get_user(flags, (int __user *) arg))
++		return -EFAULT;
++
++	ret = mnt_want_write_file(file);
 +	if (ret)
 +		return ret;
 +
-+	/*
-+	 * Overlay file f_pos is the master copy that is preserved
-+	 * through copy up and modified on read/write, but only real
-+	 * fs knows how to SEEK_HOLE/SEEK_DATA and real fs may impose
-+	 * limitations that are more strict than ->s_maxbytes for specific
-+	 * files, so we use the real file to perform seeks.
-+	 */
 +	inode_lock(inode);
-+	real.file->f_pos = file->f_pos;
 +
-+	old_cred = ovl_override_creds(inode->i_sb);
-+	ret = vfs_llseek(real.file, offset, whence);
-+	revert_creds(old_cred);
++	/* Check the capability before cred override */
++	ret = -EPERM;
++	old_flags = ovl_get_inode_flags(inode);
++	if (((flags ^ old_flags) & (FS_APPEND_FL | FS_IMMUTABLE_FL)) &&
++	    !capable(CAP_LINUX_IMMUTABLE))
++		goto unlock;
 +
-+	file->f_pos = real.file->f_pos;
++	ret = ovl_maybe_copy_up(file_dentry(file), O_WRONLY);
++	if (ret)
++		goto unlock;
++
++	ret = ovl_real_ioctl(file, FS_IOC_SETFLAGS, arg);
++
++	ovl_copyflags(ovl_inode_real(inode), inode);
++unlock:
 +	inode_unlock(inode);
 +
-+	fdput(real);
++	mnt_drop_write_file(file);
 +
 +	return ret;
- }
++
++}
++
++static long ovl_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
++{
++	long ret;
  
- static void ovl_file_accessed(struct file *file)
+ 	switch (cmd) {
+ 	case FS_IOC_GETFLAGS:
+@@ -383,23 +442,7 @@ static long ovl_ioctl(struct file *file,
+ 		break;
+ 
+ 	case FS_IOC_SETFLAGS:
+-		if (!inode_owner_or_capable(inode))
+-			return -EACCES;
+-
+-		ret = mnt_want_write_file(file);
+-		if (ret)
+-			return ret;
+-
+-		ret = ovl_maybe_copy_up(file_dentry(file), O_WRONLY);
+-		if (!ret) {
+-			ret = ovl_real_ioctl(file, cmd, arg);
+-
+-			inode_lock(inode);
+-			ovl_copyflags(ovl_inode_real(inode), inode);
+-			inode_unlock(inode);
+-		}
+-
+-		mnt_drop_write_file(file);
++		ret = ovl_ioctl_set_flags(file, arg);
+ 		break;
+ 
+ 	default:
 
 
