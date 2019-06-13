@@ -3,154 +3,141 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FF9C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 099EAC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28AF62173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE27620645
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:59:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ASMcB1iC"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="oeR709O9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfFMR6O (ORCPT
+        id S1727770AbfFMR7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:58:14 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:56120 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728274AbfFMR6N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:58:13 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 0CD24C219B;
-        Thu, 13 Jun 2019 17:58:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1560448693; bh=LJavSY8Csb6IKvT6GApPq2LFdmFwqvpDZcp/Rfd3GmE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
-        b=ASMcB1iCalm/RZa3MaAXMR3twsH8ZyJX6rfqatmxk3+7QCBhu85f5UBmILxUHCbfl
-         uaE0sw7etwQiMKS9V7YJZrEhAHXz66TINoKz78+fISnDKduWEBYv7lRoaFn8scBZQN
-         VnR5njjFVu134X4pAirp28InXohyxznUpt6PClsf/ZGUBvR85M/NdUObLRHuVPx/s6
-         AsnMMHJCWD6SKCrUlSF4srkQSWO2mCgHlmvDKP56rZWx5kEJf6CChlJU1Ik4gWIkvk
-         ihOI5ATSCNUHXOusPC1leckbpnXMxaNDbZMYmb4MGji+oLb6Crx+Zh17SLDN+aiIJM
-         Mp08sJpYv2sig==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id AC3A5A009A;
-        Thu, 13 Jun 2019 17:58:00 +0000 (UTC)
-Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.104) by
- US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 13 Jun 2019 10:58:00 -0700
-Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.105) by
- IN01WEHTCA.internal.synopsys.com (10.144.199.103) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 13 Jun 2019 23:28:11 +0530
-Received: from [10.10.161.35] (10.10.161.35) by
- IN01WEHTCB.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 13 Jun 2019 23:28:10 +0530
-Subject: Re: [PATCH] mm: Generalize and rename notify_page_fault() as
- kprobe_page_fault()
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Michal Hocko <mhocko@suse.com>, <linux-ia64@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        <sparclinux@vger.kernel.org>,
-        "Stephen Rothwell" <sfr@canb.auug.org.au>,
-        <linux-s390@vger.kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michael Ellerman <mpe@ellerman.id.au>, <x86@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>,
-        <linux-snps-arc@lists.infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        Thomas Gleixner <tglx@synopsys.com>,
-        "Masami Hiramatsu" <masami.hiramatsu.pt@hitachi.com>
-Newsgroups: gmane.linux.ports.arm.kernel,gmane.linux.kernel.mm,gmane.linux.kernel,gmane.linux.ports.ia64,gmane.linux.ports.sh.devel,gmane.linux.ports.sparc,gmane.linux.kernel.arc,gmane.linux.ports.mips,gmane.linux.ports.ppc64.devel
-References: <1560420444-25737-1-git-send-email-anshuman.khandual@arm.com>
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vgupta@synopsys.com; keydata=
- mQINBFEffBMBEADIXSn0fEQcM8GPYFZyvBrY8456hGplRnLLFimPi/BBGFA24IR+B/Vh/EFk
- B5LAyKuPEEbR3WSVB1x7TovwEErPWKmhHFbyugdCKDv7qWVj7pOB+vqycTG3i16eixB69row
- lDkZ2RQyy1i/wOtHt8Kr69V9aMOIVIlBNjx5vNOjxfOLux3C0SRl1veA8sdkoSACY3McOqJ8
- zR8q1mZDRHCfz+aNxgmVIVFN2JY29zBNOeCzNL1b6ndjU73whH/1hd9YMx2Sp149T8MBpkuQ
- cFYUPYm8Mn0dQ5PHAide+D3iKCHMupX0ux1Y6g7Ym9jhVtxq3OdUI5I5vsED7NgV9c8++baM
- 7j7ext5v0l8UeulHfj4LglTaJIvwbUrCGgtyS9haKlUHbmey/af1j0sTrGxZs1ky1cTX7yeF
- nSYs12GRiVZkh/Pf3nRLkjV+kH++ZtR1GZLqwamiYZhAHjo1Vzyl50JT9EuX07/XTyq/Bx6E
- dcJWr79ZphJ+mR2HrMdvZo3VSpXEgjROpYlD4GKUApFxW6RrZkvMzuR2bqi48FThXKhFXJBd
- JiTfiO8tpXaHg/yh/V9vNQqdu7KmZIuZ0EdeZHoXe+8lxoNyQPcPSj7LcmE6gONJR8ZqAzyk
- F5voeRIy005ZmJJ3VOH3Gw6Gz49LVy7Kz72yo1IPHZJNpSV5xwARAQABtCpWaW5lZXQgR3Vw
- dGEgKGFsaWFzKSA8dmd1cHRhQHN5bm9wc3lzLmNvbT6JAj4EEwECACgCGwMGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheABQJbBYpwBQkLx0HcAAoJEGnX8d3iisJeChAQAMR2UVbJyydOv3aV
- jmqP47gVFq4Qml1weP5z6czl1I8n37bIhdW0/lV2Zll+yU1YGpMgdDTHiDqnGWi4pJeu4+c5
- xsI/VqkH6WWXpfruhDsbJ3IJQ46//jb79ogjm6VVeGlOOYxx/G/RUUXZ12+CMPQo7Bv+Jb+t
- NJnYXYMND2Dlr2TiRahFeeQo8uFbeEdJGDsSIbkOV0jzrYUAPeBwdN8N0eOB19KUgPqPAC4W
- HCg2LJ/o6/BImN7bhEFDFu7gTT0nqFVZNXlOw4UcGGpM3dq/qu8ZgRE0turY9SsjKsJYKvg4
- djAaOh7H9NJK72JOjUhXY/sMBwW5vnNwFyXCB5t4ZcNxStoxrMtyf35synJVinFy6wCzH3eJ
- XYNfFsv4gjF3l9VYmGEJeI8JG/ljYQVjsQxcrU1lf8lfARuNkleUL8Y3rtxn6eZVtAlJE8q2
- hBgu/RUj79BKnWEPFmxfKsaj8of+5wubTkP0I5tXh0akKZlVwQ3lbDdHxznejcVCwyjXBSny
- d0+qKIXX1eMh0/5sDYM06/B34rQyq9HZVVPRHdvsfwCU0s3G+5Fai02mK68okr8TECOzqZtG
- cuQmkAeegdY70Bpzfbwxo45WWQq8dSRURA7KDeY5LutMphQPIP2syqgIaiEatHgwetyVCOt6
- tf3ClCidHNaGky9KcNSQ
-Message-ID: <e5f45089-c3aa-4d78-2c8d-ed22f863d9ee@synopsys.com>
-Date:   Thu, 13 Jun 2019 10:57:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <1560420444-25737-1-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 13 Jun 2019 13:59:20 -0400
+Received: from mail-eopbgr810077.outbound.protection.outlook.com ([40.107.81.77]:10432
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726967AbfFMR7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 13:59:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/7rv5mAxLEAsMqHUsT3TDIV11CepCUERP702baz12Ec=;
+ b=oeR709O9lEtIjX3/8RUaOIRJ7AYp/IbRNItKPxtIXdstwhl5Dbvc4LYn3w2TI8vbebmiKttPYI08Q2enRxjiGfd76Qsw2auDKLXzYCIQG1qDRu/1VArGPB5aBYwVr+Wd5Rur1NhEc9sj/pjmoiybq/f8fhMhmYajMo5Fy84IsJE=
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
+ DM6PR12MB2956.namprd12.prod.outlook.com (20.179.104.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.11; Thu, 13 Jun 2019 17:59:04 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::bcaf:86d4:677f:9555]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::bcaf:86d4:677f:9555%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
+ 17:59:04 +0000
+From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+To:     Dave Hansen <dave.hansen@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>
+Subject: Re: [PATCH] x86/mm: Create an SME workarea in the kernel for early
+ encryption
+Thread-Topic: [PATCH] x86/mm: Create an SME workarea in the kernel for early
+ encryption
+Thread-Index: AQHVISNEIgHKCEThME+IPHE9yhs80KaYHOiAgAAuPICAAZLcgIAAAxWA
+Date:   Thu, 13 Jun 2019 17:59:03 +0000
+Message-ID: <49a73751-9ede-234e-3432-74cfa62af0e3@amd.com>
+References: <d565e0c8e9867132c75648fe67416c3f51a0efbd.1560346329.git.thomas.lendacky@amd.com>
+ <053ded24-eb70-0e88-5e0c-312ea93a6fd0@intel.com>
+ <42f8b183-caae-9147-4021-3dee3462c0db@amd.com>
+ <a4bdf881-50f2-78eb-066a-816e532af149@intel.com>
+In-Reply-To: <a4bdf881-50f2-78eb-066a-816e532af149@intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.10.161.35]
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN6PR04CA0008.namprd04.prod.outlook.com
+ (2603:10b6:805:3e::21) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:182::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dfc6c619-0f12-4c3a-bd9c-08d6f028d207
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB2956;
+x-ms-traffictypediagnostic: DM6PR12MB2956:
+x-microsoft-antispam-prvs: <DM6PR12MB2956D901E60C8DD8BCFE3B5CECEF0@DM6PR12MB2956.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(376002)(136003)(346002)(396003)(54094003)(199004)(189003)(6512007)(6246003)(2501003)(76176011)(14454004)(8936002)(81166006)(2906002)(68736007)(72206003)(66556008)(66946007)(73956011)(7416002)(6116002)(316002)(71190400001)(186003)(5660300002)(4326008)(53936002)(53546011)(386003)(86362001)(2201001)(71200400001)(102836004)(6506007)(478600001)(31696002)(25786009)(52116002)(6436002)(476003)(99286004)(446003)(305945005)(2616005)(66066001)(110136005)(6486002)(256004)(54906003)(36756003)(31686004)(26005)(3846002)(486006)(7736002)(66476007)(64756008)(8676002)(11346002)(229853002)(66446008)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2956;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: UdwxQW5jiD7xG7A1JGShaQ9xAEmBOIrzML8qiCO75KgbDDmbKT7jlMnueMMRQyVqC6Be9N2RQjMuFdvqSV6tJua9bDgHPRqwLBR+FvABhXH2hVfWb2x3eNKowbA39HxQoVgqNEA0DFrlvEHUK+TKEXIBrorlrLvFpeiRQgE4CXpqG8XysuusSVjaE5bem6CJyEKYFt2hDIKbnsMMS6qWbvwNFFzvFwWvGid96CSTn1jOtPkwyGDeQUzEDRGfNiKi4iuF1MmvCxa1RMpNu2ZuZSpJvcYPXnFBdw211twoPo9v4jUmVi4OjBcLHF02UYY1Y9A1mPKZ7pHUrNDySe8dKPD5999KH3PqhOSJXk9Q74I4FW3w36AyczXiXp6UCWwzzgROZeKfkG2TOp82ifDnRxvyOTzyzxW0OshvmbKa08U=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2C60BC644C706E4099571EB675C81EA9@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dfc6c619-0f12-4c3a-bd9c-08d6f028d207
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 17:59:03.9500
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tlendack@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2956
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+CC Masami San
-
-On 6/13/19 3:07 AM, Anshuman Khandual wrote:
-> Questions:
-> 
-> AFAICT there is no equivalent of erstwhile notify_page_fault() during page
-> fault handling in arc and mips archs which can call this generic function.
-> Please let me know if that is not the case.
-
-For ARC do_page_fault() is entered for MMU exceptions (TLB Miss, access violations
-r/w/x etc). kprobes uses a combination of UNIMP_S and TRAP_S instructions which
-don't funnel into do_page_fault().
-
-UINMP_S leads to
-
-instr_service
-   do_insterror_or_kprobe
-      notify_die(DIE_IERR)
-         kprobe_exceptions_notify
-            arc_kprobe_handler
-
-
-TRAP_S 2 leads to
-
-EV_Trap
-   do_non_swi_trap
-      trap_is_kprobe
-         notify_die(DIE_TRAP)
-            kprobe_exceptions_notify
-               arc_post_kprobe_handler
-
-But indeed we are *not* calling into kprobe_fault_handler() - from eithet of those
-paths and not sure if the existing arc*_kprobe_handler() combination does the
-equivalent in tandem.
-
--Vineet
+T24gNi8xMy8xOSAxMjo0NyBQTSwgRGF2ZSBIYW5zZW4gd3JvdGU6DQo+IE9uIDYvMTIvMTkgMTA6
+NDYgQU0sIExlbmRhY2t5LCBUaG9tYXMgd3JvdGU6DQo+PiBPbiA2LzEyLzE5IDEwOjAwIEFNLCBE
+YXZlIEhhbnNlbiB3cm90ZToNCj4+PiBPbiA2LzEyLzE5IDY6MzIgQU0sIExlbmRhY2t5LCBUaG9t
+YXMgd3JvdGU6DQo+Pj4+IENyZWF0ZSBhIHNlY3Rpb24gZm9yIFNNRSBpbiB0aGUgdm1saW51eC5s
+ZHMuUy4gIFBvc2l0aW9uIGl0IGFmdGVyICJfZW5kIg0KPj4+PiBzbyB0aGF0IHRoZSBtZW1vcnkg
+d2lsbCBiZSByZWNsYWltZWQgZHVyaW5nIGJvb3QgYW5kLCBzaW5jZSBpdCBpcyBhbGwNCj4+Pj4g
+emVyb2VzLCBpdCBjb21wcmVzc2VzIHdlbGwuIA0KPj4+DQo+Pj4gSSBkb24ndCB0aGluayBJIHJl
+YWxpemVkIHRoYXQgdGhpbmdzIGFmdGVyIF9lbmQgZ2V0IHJlY2xhaW1lZC4gIERvIHdlIGRvDQo+
+Pj4gdGhhdCBhdCB0aGUgc2FtZSBzcG90IHRoYXQgd2UgZG8gaW5pdCBkYXRhIG9yIHNvbWV3aGVy
+ZSBlbHNlPw0KPj4NCj4+IEkgd2FzIGxvb2tpbmcgYXQgdGhlIHN0YXJ0IG9mIHNldHVwX2FyY2go
+KSBpbiBhcmNoL3g4Ni9rZXJuZWwvc2V0dXAuYywNCj4+IHdoZXJlIHRoZXJlJ3MgYSBtZW1ibG9j
+a19yZXNlcnZlKCkgZG9uZSBmb3IgdGhlIGtlcm5lbCAoaXQgcmVzZXJ2ZXMgZnJvbQ0KPj4gX3Rl
+eHQgdG8gX19ic3Nfc3RvcCwgbm90IGFsbCB0aGUgd2F5IHRvIF9lbmQsIGFuZCBsYXRlciB0aGUg
+YnJrIGFyZWENCj4+IGlzIHJlc2VydmVkKS4gQXQgdGhhdCBwb2ludCwgbXkgdGFrZSB3YXMgdGhh
+dCB0aGUgbWVtb3J5IG91dHNpZGUgdGhlDQo+PiByZXNlcnZlZCBhcmVhIGlzIG5vdyBhdmFpbGFi
+bGUgKGFuZCB0aGVyZSdzIGEgY29tbWVudCBiZWxvdyB0aGF0IHRvIHRoYXQNCj4+IGVmZmVjdCwg
+YWxzbyksIHNvIHRoZSAuc21lIHNlY3Rpb24gd291bGQgYmFzaWNhbGx5IGJlIGRpc2NhcmRlZCBh
+bmQNCj4+IHJlLWNsYWltZWQgZm9yIGdlbmVyYWwgcGFnZSB1c2FnZS4NCj4gDQo+IFRoaXMgc2Vl
+bXMgYXdmdWxseSBzdWJ0bGUuICBUaGlzIHdvdWxkIGJlIHRoZSBvbmx5IHNlY3Rpb24gdHJlYXRl
+ZCB0aGlzDQo+IHdheSBiZWNhdXNlLCBhcyB5b3Ugbm90ZSwgZXZlbiB0aGUgJy5icmsnIGFyZWEg
+ZW5kcyB1cCBnZXR0aW5nDQo+IG1lbWJsb2NrX3Jlc2VydmUoKSdkLiAgQWxzbywgdGhpcyBvZGQg
+cHJvcGVydHkgaXMgbm90IGNvbW1lbnRlZCBvbiBhdCBhbGwuDQo+IA0KPiBUaGF0J3Mgbm90IHRo
+ZSBlbmQgb2YgdGhlIHdvcmxkLiAgQnV0LCBpZiB3ZSdyZSBnb2luZyB0byBkbyB0aGlzLCBpdA0K
+PiBzZWVtcyBsaWtlIHdlIG5lZWQgdG8gbW92ZSB0aGU6DQo+IA0KPiAJLyogU2VjdGlvbnMgdG8g
+YmUgZGlzY2FyZGVkIC8qDQo+IA0KPiBjb21tZW50IHRvIHVwIGFib3ZlIHlvdXIgbmV3IGFyZWEu
+ICBJdCBhbHNvIHNlZW1zIGxpa2Ugd2UgbmVlZCBzb21ldGhpbmcNCj4gZXhwbGljaXQgaW4gdGhl
+cmUgbmVhciBfX2Jzc19zdG9wIHNheWluZzoNCj4gDQo+IAkvKg0KPiAgICAJICogRXZlcnl0aGlu
+ZyBiZXR3ZWVuIF90ZXh0IGFuZCBoZXJlIGlzIGF1dG9tYXRpY2FsbHkgcmVzZXJ2ZWQNCj4gCSAq
+IGluIHNldHVwX2FyY2goKS4gIEV2ZXJ5dGhpbmcgYWZ0ZXIgaGVyZSBtdXN0IGVpdGhlciBoYXZl
+IGl0cw0KPiAJICogb3duIG1lbWJsb2NrX3Jlc2VydmUoKSwgb3IgaXQgd2lsbCBiZSB0cmVhdGVk
+IGFzIGF2YWlsYWJsZQ0KPiAJICogbWVtb3J5IGFuZCBmcmVlZCBhdCBib290Lg0KPiAJICovDQoN
+ClRoYXQgYWxsIG1ha2VzIHNlbnNlLg0KDQo+IA0KPiBBY3R1YWxseSwgSSB3b25kZXIgaWYgd2Ug
+c2hvdWxkIGFkZCBhIHN5bWJvbCBjYWxsZWQNCj4gJ19fZW5kX29mX2tlcm5lbF9yZXNlcnZlJyBh
+bmQgdXNlICp0aGF0KiBpbnN0ZWFkIG9mIF9fYnNzX3N0b3AgaW4NCj4gc2V0dXBfYXJjaCgpLg0K
+DQpJZiBldmVyeW9uZSB0aGlua3MgdGhhdCdzIGJlc3QsIEkgY2FuIGRvIHRoYXQuIFByb2JhYmx5
+IGJlc3QgYXMgYQ0KcHJlLXBhdGNoIGFuZCBtYWtlIHRoaXMgaW50byBhIDItcGF0Y2ggc2VyaWVz
+LCB0aGVuLg0KDQo+IA0KPiBBZnRlciBJIHNheSBhbGwgdGhhdC4uLiAgV2h5IGNhbid0IHlvdSBq
+dXN0IHN0aWNrIHlvdXIgZGF0YSBpbiBhIG5vcm1hbCwNCj4gdmFuaWxsYSBfX2luaXQgdmFyaWFi
+bGU/ICBXb3VsZG4ndCB0aGF0IGJlIGEgbG90IGxlc3Mgc3VidGxlPw0KDQpUaGUgYXJlYSBuZWVk
+cyB0byBiZSBvdXRzaWRlIG9mIHRoZSBrZXJuZWwgcHJvcGVyIGFzIHRoZSBrZXJuZWwgaXMNCmVu
+Y3J5cHRlZCAiaW4gcGxhY2UuIiBTbyBhbiBfX2luaXQgdmFyaWFibGUgd29uJ3Qgd29yayBoZXJl
+Lg0KDQpUaGFua3MsDQpUb20NCg0KPiANCg==
