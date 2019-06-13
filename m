@@ -2,42 +2,38 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EFFC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C36C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6845620851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8EF20851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389870AbfFMPuQ (ORCPT
+        id S2389834AbfFMPuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:50:16 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18146 "EHLO huawei.com"
+        Thu, 13 Jun 2019 11:50:14 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18148 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731695AbfFMJOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:14:17 -0400
+        id S1731697AbfFMJOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:14:18 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 355D28786EA0F2F2D657;
+        by Forcepoint Email with ESMTP id 2BA4637CEE9BEDF3DC44;
         Thu, 13 Jun 2019 17:14:14 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 13 Jun 2019 17:14:07 +0800
+ 14.3.439.0; Thu, 13 Jun 2019 17:14:06 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Weihang Li <liweihang@hisilicon.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 05/12] net: hns3: some changes of MSI-X bits in PPU(RCB)
-Date:   Thu, 13 Jun 2019 17:12:25 +0800
-Message-ID: <1560417152-53050-6-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 00/12] net: hns3: some code optimizations & cleanups & bugfixes
+Date:   Thu, 13 Jun 2019 17:12:20 +0800
+Message-ID: <1560417152-53050-1-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560417152-53050-1-git-send-email-tanhuazhong@huawei.com>
-References: <1560417152-53050-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.212.132]
@@ -47,51 +43,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weihang Li <liweihang@hisilicon.com>
+This patch-set includes code optimizations, cleanups and bugfixes for
+the HNS3 ethernet controller driver.
 
-This patch modifies print message of rx_q_search_miss from error to dfx to
-prevent misleading users, because this interrupt may occur if we receive
-packets during initialization of HNS3 driver.
-Otherwise, this patch masks 28th bit of PPU_MPF_ABNORMAL_SRC2 which is now
-meaningless.
+[patch 1/12 - 6/12] adds some code optimizations and bugfixes about RAS
+and MSI-X HW error.
 
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 5 ++---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h | 2 +-
- 2 files changed, 3 insertions(+), 4 deletions(-)
+[patch 7/12] fixes a loading issue.
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-index ab9c5d5..3e0d6ee 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-@@ -1780,9 +1780,8 @@ static int hclge_handle_all_hw_msix_error(struct hclge_dev *hdev,
- 	status = le32_to_cpu(*(desc_data + 2)) &
- 			HCLGE_PPU_MPF_INT_ST2_MSIX_MASK;
- 	if (status)
--		hclge_log_error(dev, "PPU_MPF_ABNORMAL_INT_ST2",
--				&hclge_ppu_mpf_abnormal_int_st2[0],
--				status, reset_requests);
-+		dev_warn(dev, "PPU_MPF_ABNORMAL_INT_ST2 rx_q_search_miss found [dfx status=0x%x\n]",
-+			 status);
- 
- 	/* clear all main PF MSIx errors */
- 	ret = hclge_clear_hw_msix_error(hdev, desc, true, mpf_bd_num);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-index d821a76..db318a4 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-@@ -81,7 +81,7 @@
- #define HCLGE_IGU_EGU_TNL_INT_MASK	GENMASK(5, 0)
- #define HCLGE_PPP_MPF_INT_ST3_MASK	GENMASK(5, 0)
- #define HCLGE_PPU_MPF_INT_ST3_MASK	GENMASK(7, 0)
--#define HCLGE_PPU_MPF_INT_ST2_MSIX_MASK	GENMASK(29, 28)
-+#define HCLGE_PPU_MPF_INT_ST2_MSIX_MASK	BIT(29)
- #define HCLGE_PPU_PF_INT_RAS_MASK	0x18
- #define HCLGE_PPU_PF_INT_MSIX_MASK	0x26
- #define HCLGE_PPU_PF_OVER_8BD_ERR_MASK	0x01
+[patch 8/12 - 11/12] adds some bugfixes.
+
+[patch 12/12] adds some cleanups, which does not change the logic of code.
+
+Peng Li (1):
+  net: hns3: clear restting state when initializing HW device
+
+Shiju Jose (4):
+  net: hns3: delay setting of reset level for hw errors until slot_reset
+    is called
+  net: hns3: fix avoid unnecessary resetting for the H/W errors which do
+    not require reset
+  net: hns3: process H/W errors occurred before HNS dev initialization
+  net: hns3: add recovery for the H/W errors occurred before the HNS dev
+    initialization
+
+Weihang Li (3):
+  net: hns3: some changes of MSI-X bits in PPU(RCB)
+  net: hns3: extract handling of mpf/pf msi-x errors into functions
+  net: hns3: some variable modification
+
+Yonglong Liu (1):
+  net: hns3: free irq when exit from abnormal branch
+
+Yunsheng Lin (3):
+  net: hns3: fix for dereferencing before null checking
+  net: hns3: fix for skb leak when doing selftest
+  net: hns3: delay ring buffer clearing during reset
+
+ drivers/net/ethernet/hisilicon/hns3/hnae3.c        |   3 +-
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   8 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c |   5 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    |  47 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    |   2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |   6 +-
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c |  16 +-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 523 ++++++++++++---------
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |   3 +-
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 115 +++--
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  15 +-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c |  20 +-
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_mdio.c    |   8 +-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c  |   2 +-
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |  11 +-
+ 15 files changed, 476 insertions(+), 308 deletions(-)
+
 -- 
 2.7.4
 
