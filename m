@@ -2,105 +2,143 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4A1C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F96C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20599218D0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B094D218D0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:29:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NL9CsUG9"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="bR3K6vBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbfFMR3I (ORCPT
+        id S1729564AbfFMR3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:29:08 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39497 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfFMR3H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:29:07 -0400
-Received: by mail-qk1-f194.google.com with SMTP id i125so13288411qkd.6;
-        Thu, 13 Jun 2019 10:29:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:user-agent;
-        bh=+HhoAIOFBzZF13yTI/CQ3NdpHv8MGgGEKfl3+bPeWz0=;
-        b=NL9CsUG9/kgj3/SNK7q02oUYioIhuzBov6pOfX/aaZ6pU+6sMwRN4AtRlnNzhHaiuC
-         8x0HPVXnavDQUk0kLOpHF+/ydIxXgaY5Wwt7gaLvfCavBjfbzLW9anycfZJxMASpU2ko
-         /KrqqTHnekwV+2xD+EACGPyF27FCGt21hMflIazX/USHzc+XExaCMVREekqc8NmBNN5O
-         d976rqt0WX3JlMMlyqTzOQpZ1SNr4nH1R+sKZ16DGY3pszsKM9/HOLa5TGq5fBYGun9D
-         9pPoPOjwvjn4ZGpNikIpaKaoMFECPFQN58t3KR6gsq6K13widwW0znUOTWl8R4Sy18TO
-         roCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=+HhoAIOFBzZF13yTI/CQ3NdpHv8MGgGEKfl3+bPeWz0=;
-        b=Wku1yvJNLEDAeJcu0q+3PoGp913Bhy2rjCj9PYgFtfpLF3/iKRFUoBmbU5/ofUu0uI
-         kt3r+7QQG2QiApsGSHKKL2BY+sBGUW7SSyHQupJddvo2I2SQ0LJSH1ghaY3ZbZmwqfq4
-         DtdTYIl80GaqWlyGAm4jvVw9lb5uAjE0rHFXaFOAwZfjwcKBv+0WvH62PMCgXPjT9bta
-         rW9QqwekVP/C94AYfbW5hiK9CVCX9nxC2QLvCtfSbasC14yIOkP6n+TC5DBnUW4jCjog
-         huZDjeZJY+nI8tD6RkvMKgHiw3KG5nhPE74xC72HPS6IgjYTm/Rl4jGtRrYOHjZxVJdj
-         K2OA==
-X-Gm-Message-State: APjAAAVg5y9Wsemf5mwbzewntejPsbp7K4Ejg6CYebgLAe+8tn9HIfEZ
-        k6KVm5CZ60h+95d9GXudCeFqejxcmr4=
-X-Google-Smtp-Source: APXvYqzH4zrPPHYCqCJe+XI9RwZBI0wEFhqyMCm7QAeyMqzZzU3HPaAy/HUwQnuyPuG1ZpUFVSAKDA==
-X-Received: by 2002:a37:ea0c:: with SMTP id t12mr3203598qkj.117.1560446946381;
-        Thu, 13 Jun 2019 10:29:06 -0700 (PDT)
-Received: from debie ([2804:431:f704:c7eb:af:a4f9:dcbb:96b3])
-        by smtp.gmail.com with ESMTPSA id d141sm131721qke.3.2019.06.13.10.29.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Jun 2019 10:29:05 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 14:28:41 -0300
-From:   Charles <18oliveira.charles@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rodrigosiqueiramelo@gmail.com
-Subject: [PATCH] net: ipva: fix uninitialized variable warning
-Message-ID: <20190613172841.s4ig3p53wpd2z3nb@debie>
+        Thu, 13 Jun 2019 13:29:16 -0400
+Received: from mail-eopbgr710080.outbound.protection.outlook.com ([40.107.71.80]:26016
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726092AbfFMR3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 13:29:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Hwm1tvsKbGpRo9J2H8Em3256KGsQwcdi/VSqqm65kwU=;
+ b=bR3K6vBaMftvslR+9iLuITBnrdRy8CmpCDsWjrER+a9SfapXiJehwLGGzUZoPSZ81SnWzC3FB4V6bib2rlq3dbJem4bTeEhP4M2u/gxB1jHijQEx6mFpESdd46paEbyl/Ollifv9wYR7G4fToWhXFxDBb50W3mRUX8ppZu7q9pE=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB5606.namprd05.prod.outlook.com (20.177.186.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.10; Thu, 13 Jun 2019 17:29:14 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::134:af66:bedb:ead9]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::134:af66:bedb:ead9%3]) with mapi id 15.20.1987.008; Thu, 13 Jun 2019
+ 17:29:14 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+CC:     Alexander Graf <graf@amazon.com>,
+        Marius Hillenbrand <mhillenb@amazon.de>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux-MM <linux-mm@kvack.org>, Alexander Graf <graf@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM
+ secrets
+Thread-Topic: [RFC 00/10] Process-local memory allocations for hiding KVM
+ secrets
+Thread-Index: AQHVIYeR2j5VBjf3eUa9RwR3XpurVaaZNvCAgACL1YCAAAIdgIAAExeA
+Date:   Thu, 13 Jun 2019 17:29:14 +0000
+Message-ID: <70BEF143-00BA-4E4B-ACD7-41AD2E6250BE@vmware.com>
+References: <20190612170834.14855-1-mhillenb@amazon.de>
+ <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com>
+ <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net>
+ <CALCETrXHbS9VXfZ80kOjiTrreM2EbapYeGp68mvJPbosUtorYA@mail.gmail.com>
+ <459e2273-bc27-f422-601b-2d6cdaf06f84@amazon.com>
+ <CALCETrVRuQb-P7auHCgxzs5L=qA2_qHzVGTtRMAqoMAut0ETFw@mail.gmail.com>
+ <f1dfbfb4-d2d5-bf30-600f-9e756a352860@intel.com>
+In-Reply-To: <f1dfbfb4-d2d5-bf30-600f-9e756a352860@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3138119f-192d-4a66-3623-08d6f024a7b4
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB5606;
+x-ms-traffictypediagnostic: BYAPR05MB5606:
+x-microsoft-antispam-prvs: <BYAPR05MB560608061DABE837F6843E9DD0EF0@BYAPR05MB5606.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(376002)(366004)(39860400002)(189003)(199004)(186003)(54906003)(478600001)(7416002)(73956011)(66066001)(68736007)(66446008)(2906002)(53936002)(66556008)(256004)(6512007)(229853002)(66476007)(102836004)(86362001)(26005)(316002)(110136005)(66946007)(99286004)(76116006)(6436002)(25786009)(14444005)(64756008)(8676002)(6116002)(476003)(81166006)(2616005)(81156014)(3846002)(14454004)(8936002)(71200400001)(71190400001)(6506007)(6486002)(446003)(33656002)(486006)(5660300002)(76176011)(305945005)(7736002)(11346002)(36756003)(4326008)(6246003)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5606;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: tfM+xbizek82UJYpE3G8pFbHDAIfKne8E0piLlxImGYOVsTd/BtZ271EEEBwBUKnQvUnNFfwmQT1AWlkDaI64IcidF58phoH4FFXKV+gGo0vBj3kSsnAaqrPulXuCVHqEFuUF5hDg72K8XxAUVavRX1pXZWXlxr8VZGrNncEExqK7Hs0NTkNgUAknDyN82STOU8RYlsHp+BtEeAJRq409Z6t7EGI3WeaXa/VA5/qyObjcInqbybd8D1Dbxp6ITMC4VECnHQADw6XowyZ6n2d4iF71avLFRAzZjU0Bu/k8WE4sSB9NdS6RLPPiL2wIKWCWpBvcsLPcNHqd3aYwpCLSnGUB3Rbx4iIoqNfkaEgCjGYZakqV5ybKCcrxnN4p2TPL/pgDFyFVeAEhm6GO55EfdS9zjmTn5GBs/NNoh5UfME=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <561CA2F7569D154F92346C3F1D71EDE0@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3138119f-192d-4a66-3623-08d6f024a7b4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 17:29:14.0329
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5606
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid following compiler warning on uninitialized variable
+> On Jun 13, 2019, at 9:20 AM, Dave Hansen <dave.hansen@intel.com> wrote:
+>=20
+> On 6/13/19 9:13 AM, Andy Lutomirski wrote:
+>>> It might make sense to use it for kmap_atomic() for debug purposes, as
+>>> it ensures that other users can no longer access the same mapping
+>>> through the linear map. However, it does come at quite a big cost, as w=
+e
+>>> need to shoot down the TLB of all other threads in the system. So I'm
+>>> not sure it's of general value?
+>> What I meant was that kmap_atomic() could use mm-local memory so that
+>> it doesn't need to do a global shootdown.  But I guess it's not
+>> actually used for real on 64-bit, so this is mostly moot.  Are you
+>> planning to support mm-local on 32-bit?
+>=20
+> Do we *do* global shootdowns on kmap_atomic()s on 32-bit?  I thought we
+> used entirely per-cpu addresses, so a stale entry from another CPU can
+> get loaded in the TLB speculatively but it won't ever actually get used.
+> I think it goes:
+>=20
+> kunmap_atomic() ->
+> __kunmap_atomic() ->
+> kpte_clear_flush() ->
+> __flush_tlb_one_kernel() ->
+> __flush_tlb_one_user() ->
+> __native_flush_tlb_one_user() ->
+> invlpg
+>=20
+> The per-cpu address calculation is visible in kmap_atomic_prot():
+>=20
+>        idx =3D type + KM_TYPE_NR*smp_processor_id();
 
-net/ipv4/fib_semantics.c: In function ‘fib_check_nh_v4_gw’:
-net/ipv4/fib_semantics.c:1023:12: warning: ‘err’ may be used
-uninitialized in this function [-Wmaybe-uninitialized]
-   if (!tbl || err) {
+From a security point-of-view, having such an entry is still not too good,
+since the mapping protection might override the default protection. This
+might lead to potential W+X cases, for example, that might stay for a long
+time if they are speculatively cached in the TLB and not invalidated upon
+kunmap_atomic().
 
-Signed-off-by: Charles Oliveira <18oliveira.charles@gmail.com>
----
- net/ipv4/fib_semantics.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
-index b80410673915..ae47e046695c 100644
---- a/net/ipv4/fib_semantics.c
-+++ b/net/ipv4/fib_semantics.c
-@@ -964,7 +964,7 @@ static int fib_check_nh_v4_gw(struct net *net, struct fib_nh *nh, u32 table,
- {
- 	struct net_device *dev;
- 	struct fib_result res;
--	int err;
-+	int err = -EINVAL;
- 
- 	if (nh->fib_nh_flags & RTNH_F_ONLINK) {
- 		unsigned int addr_type;
--- 
-2.11.0
+Having said that, I am not too excited to deal with this issue. Do people
+still care about x86/32-bit? In addition, if kunmap_atomic() is used when
+IRQs are disabled, sending a TLB shootdown during kunmap_atomic() can cause
+a deadlock.
 
