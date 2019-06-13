@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4728FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD904C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D4120665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7B02147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442404;
-	bh=xuLEzwhyNFJ2HZQLEKuZAx6LJY39JVZkhMurscu71Xo=;
+	s=default; t=1560442406;
+	bh=ZpGp6tbJ2PcTb+EL7CwaGJgp/iaU3PuVxwARLpJdHd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CK8wTC5bQiuLYep6HDiyHm64vPFOpPJLXvMJZzDzqjTrwuEfFMht/4IuzffA/+3xY
-	 BcEJ+9bhw0RHdvTUyNMAdcTpRt4eLADrWB3VgDyXwSrUkR069A/TI7qjQu0aOnKuNS
-	 5WYVwg+vjhf9eJhEsxFgdrs12ffs+9JsWBUX4Znw=
+	b=FArYSmZdydWvVoj4N1JE5I/MKZaPggpVxKCZ7FiZRwB+2SsOPHTw83PXWOcvT4PcD
+	 EdEWDVdpmcf7eqQ5euVKLUJOPomaR2mAN9mKTxi97iVwGgxnbBIn9hs4MCBp6YFbnd
+	 CdwJ6KzyvI7oxHtRk8pZoK1HEQ8okI9ZTqPvGp9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391718AbfFMQNT (ORCPT
+        id S2391700AbfFMQNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:13:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60030 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:13:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731207AbfFMImx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:42:53 -0400
+        id S1731215AbfFMIm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:42:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9470E21479;
-        Thu, 13 Jun 2019 08:42:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B4D920851;
+        Thu, 13 Jun 2019 08:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415373;
-        bh=xuLEzwhyNFJ2HZQLEKuZAx6LJY39JVZkhMurscu71Xo=;
+        s=default; t=1560415378;
+        bh=ZpGp6tbJ2PcTb+EL7CwaGJgp/iaU3PuVxwARLpJdHd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SbQ+yBWXo0MCQQgBRqhyuSJQCwheNZQ5LN2vFbXgxRCytz3iCA7/xwhXhZNa8yuXA
-         9m6FrXfhOgJTd7sPuo90E+YDmMP6m286oZm1uzjivQXzdJPRuwqxmlt/v0NJw9e1M2
-         81fD/xbO/Q3U20yIo6ghnAyzOn48PgwRB03bFAbI=
+        b=FUbMywbeSwI5ron/WTjwEgD1+i74A8BEOmikm2swSpE6aEEvV85JjpWBS0NSfPiVV
+         P1I2CtcAyrTu2dIZqt2sV+g/N0H8UDyNOareLGFxC3pDcbgCZXT0xfayR9A6/iDmQk
+         lnPs93wUrpnRFj3dnw9DmwWjMEGkyH44KeqsmMwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Adam Ludkiewicz <adam.ludkiewicz@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 072/118] net: thunderbolt: Unregister ThunderboltIP protocol handler when suspending
-Date:   Thu, 13 Jun 2019 10:33:30 +0200
-Message-Id: <20190613075648.088056720@linuxfoundation.org>
+Subject: [PATCH 4.19 074/118] i40e: Queues are reserved despite "Invalid argument" error
+Date:   Thu, 13 Jun 2019 10:33:32 +0200
+Message-Id: <20190613075648.196535481@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -61,45 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9872760eb7b1d4f6066ad8b560714a5d0a728fdb ]
+[ Upstream commit 3e957b377bf4262aec2dd424f28ece94e36814d4 ]
 
-The XDomain protocol messages may start as soon as Thunderbolt control
-channel is started. This means that if the other host starts sending
-ThunderboltIP packets early enough they will be passed to the network
-driver which then gets confused because its resume hook is not called
-yet.
+Added a new local variable in the i40e_setup_tc function named
+old_queue_pairs so num_queue_pairs can be restored to the correct
+value in case configuring queue channels fails. Additionally, moved
+the exit label in the i40e_setup_tc function so the if (need_reset)
+block can be executed.
+Also, fixed data packing in the i40e_setup_tc function.
 
-Fix this by unregistering the ThunderboltIP protocol handler when
-suspending and registering it back on resume.
-
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Acked-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Adam Ludkiewicz <adam.ludkiewicz@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/thunderbolt.c | 3 +++
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/thunderbolt.c b/drivers/net/thunderbolt.c
-index e0d6760f3219..4b5af2413970 100644
---- a/drivers/net/thunderbolt.c
-+++ b/drivers/net/thunderbolt.c
-@@ -1285,6 +1285,7 @@ static int __maybe_unused tbnet_suspend(struct device *dev)
- 		tbnet_tear_down(net, true);
- 	}
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index df8808cd7e11..4e04985fb430 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -6758,10 +6758,12 @@ static int i40e_setup_tc(struct net_device *netdev, void *type_data)
+ 	struct i40e_pf *pf = vsi->back;
+ 	u8 enabled_tc = 0, num_tc, hw;
+ 	bool need_reset = false;
++	int old_queue_pairs;
+ 	int ret = -EINVAL;
+ 	u16 mode;
+ 	int i;
  
-+	tb_unregister_protocol_handler(&net->handler);
- 	return 0;
- }
- 
-@@ -1293,6 +1294,8 @@ static int __maybe_unused tbnet_resume(struct device *dev)
- 	struct tb_service *svc = tb_to_service(dev);
- 	struct tbnet *net = tb_service_get_drvdata(svc);
- 
-+	tb_register_protocol_handler(&net->handler);
-+
- 	netif_carrier_off(net->dev);
- 	if (netif_running(net->dev)) {
- 		netif_device_attach(net->dev);
++	old_queue_pairs = vsi->num_queue_pairs;
+ 	num_tc = mqprio_qopt->qopt.num_tc;
+ 	hw = mqprio_qopt->qopt.hw;
+ 	mode = mqprio_qopt->mode;
+@@ -6862,6 +6864,7 @@ config_tc:
+ 		}
+ 		ret = i40e_configure_queue_channels(vsi);
+ 		if (ret) {
++			vsi->num_queue_pairs = old_queue_pairs;
+ 			netdev_info(netdev,
+ 				    "Failed configuring queue channels\n");
+ 			need_reset = true;
 -- 
 2.20.1
 
