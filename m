@@ -2,141 +2,119 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EFDC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B91C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C49120679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442301;
-	bh=A5Xx2Aqh1hWg4dfyiMJoC0wgEqYFNJwUMovmGBOQ3ok=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YXjATIEnmB8Q+SAX3y6X9hfaRsD885BoXOoCbUEVWk5UxUm48TYN/21KjuyUaDFYJ
-	 GsMJJ32jR2ihaCy9sEjxMNoCRTftFNxwFYSkHYzqzsInL5VH8ONykgIF13tgJbW90K
-	 RUgLiMtyM6wm+GSXm/fz647ZSj5Nbi6DfBFVIdFE=
+	by mail.kernel.org (Postfix) with ESMTP id 0570520866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391571AbfFMQL2 (ORCPT
+        id S2391556AbfFMQL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:11:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731234AbfFMInb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:43:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7222821479;
-        Thu, 13 Jun 2019 08:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415410;
-        bh=A5Xx2Aqh1hWg4dfyiMJoC0wgEqYFNJwUMovmGBOQ3ok=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G8Wh0avhjzYaBwiRc27MgGeJuAQwB/VZh2Eu2Y5wQqKTqwAZKc4phYcSRjEfGu/Gm
-         g7RJt3HVDk6tLP8osLwg6BnU7u4k28+B8MGi5RF/MRm7ndDGVMiExW8feQAxfZFxR2
-         MzBYHOlaBLyaxkInSyuqHr4ZFRWQlpLI98zVpkqA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Joachim <svenjoac@gmx.de>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dave Airlie <airlied@redhat.com>,
-        Thomas Backlund <tmb@mageia.org>
-Subject: [PATCH 4.19 115/118] Revert "drm/nouveau: add kconfig option to turn off nouveau legacy contexts. (v3)"
-Date:   Thu, 13 Jun 2019 10:34:13 +0200
-Message-Id: <20190613075651.001437991@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
-References: <20190613075643.642092651@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 13 Jun 2019 12:11:27 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47950 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731237AbfFMInd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:43:33 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B78189A2D36077A28788;
+        Thu, 13 Jun 2019 16:43:30 +0800 (CST)
+Received: from HGHY4L002753561.china.huawei.com (10.133.215.186) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 13 Jun 2019 16:43:23 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v9 4/7] powernv/iommu: add support for IOMMU default DMA mode build options
+Date:   Thu, 13 Jun 2019 16:42:37 +0800
+Message-ID: <20190613084240.16768-5-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.21.0.windows.1
+In-Reply-To: <20190613084240.16768-1-thunder.leizhen@huawei.com>
+References: <20190613084240.16768-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.133.215.186]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The default DMA mode is PASSTHROUGH on powernv, this patch make it can be
+set to STRICT at build time. It can be overridden by boot option.
 
-This reverts commit 610382337557bd2057d9b47f996af0b6ff827a2b which is
-commit b30a43ac7132cdda833ac4b13dd1ebd35ace14b7 upstream.
+There is no functional change.
 
-Sven reports:
-	Commit 1e07d63749 ("drm/nouveau: add kconfig option to turn off nouveau
-	legacy contexts. (v3)") has caused a build failure for me when I
-	actually tried that option (CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n):
-
-	,----
-	| Kernel: arch/x86/boot/bzImage is ready  (#1)
-	|   Building modules, stage 2.
-	|   MODPOST 290 modules
-	| ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
-	| scripts/Makefile.modpost:91: recipe for target '__modpost' failed
-	`----
-
-	Upstream does not have that problem, as commit bed2dd8421 ("drm/ttm:
-	Quick-test mmap offset in ttm_bo_mmap()") has removed the use of
-	drm_legacy_mmap from nouveau_ttm.c.  Unfortunately that commit does not
-	apply in 5.1.9.
-
-The ensuing discussion proposed a number of one-off patches, but no
-solid agreement was made, so just revert the commit for now to get
-people's systems building again.
-
-Reported-by: Sven Joachim <svenjoac@gmx.de>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Dave Airlie <airlied@redhat.com>
-Cc: Thomas Backlund <tmb@mageia.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- drivers/gpu/drm/nouveau/Kconfig       |   13 +------------
- drivers/gpu/drm/nouveau/nouveau_drm.c |    7 ++-----
- 2 files changed, 3 insertions(+), 17 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c | 3 ++-
+ drivers/iommu/Kconfig                     | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/nouveau/Kconfig
-+++ b/drivers/gpu/drm/nouveau/Kconfig
-@@ -16,20 +16,9 @@ config DRM_NOUVEAU
- 	select INPUT if ACPI && X86
- 	select THERMAL if ACPI && X86
- 	select ACPI_VIDEO if ACPI && X86
--	help
--	  Choose this option for open-source NVIDIA support.
--
--config NOUVEAU_LEGACY_CTX_SUPPORT
--	bool "Nouveau legacy context support"
--	depends on DRM_NOUVEAU
- 	select DRM_VM
--	default y
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 10cc42b9e541c46..27e25e8e3a9c637 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -81,7 +81,8 @@ void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
+ 	va_end(args);
+ }
+ 
+-static bool pnv_iommu_bypass_disabled __read_mostly;
++static bool pnv_iommu_bypass_disabled __read_mostly =
++			!IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
+ static bool pci_reset_phbs __read_mostly;
+ 
+ static int __init iommu_setup(char *str)
+diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+index a8dd69d175fb3c6..bfbcaa24e283aad 100644
+--- a/drivers/iommu/Kconfig
++++ b/drivers/iommu/Kconfig
+@@ -78,6 +78,7 @@ config IOMMU_DEBUGFS
+ choice
+ 	prompt "IOMMU default DMA mode"
+ 	depends on IOMMU_API
++	default IOMMU_DEFAULT_PASSTHROUGH if (PPC_POWERNV && PCI)
+ 	default IOMMU_DEFAULT_LAZY if S390_IOMMU
+ 	default IOMMU_DEFAULT_STRICT
  	help
--	  There was a version of the nouveau DDX that relied on legacy
--	  ctx ioctls not erroring out. But that was back in time a long
--	  ways, so offer a way to disable it now. For uapi compat with
--	  old nouveau ddx this should be on by default, but modern distros
--	  should consider turning it off.
-+	  Choose this option for open-source NVIDIA support.
+@@ -98,6 +99,7 @@ config IOMMU_DEFAULT_PASSTHROUGH
  
- config NOUVEAU_PLATFORM_DRIVER
- 	bool "Nouveau (NVIDIA) SoC GPUs"
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -1015,11 +1015,8 @@ nouveau_driver_fops = {
- static struct drm_driver
- driver_stub = {
- 	.driver_features =
--		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER
--#if defined(CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT)
--		| DRIVER_KMS_LEGACY_CONTEXT
--#endif
--		,
-+		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER |
-+		DRIVER_KMS_LEGACY_CONTEXT,
- 
- 	.load = nouveau_drm_load,
- 	.unload = nouveau_drm_unload,
+ config IOMMU_DEFAULT_LAZY
+ 	bool "lazy"
++	depends on !PPC_POWERNV
+ 	help
+ 	  Support lazy mode, where for every IOMMU DMA unmap operation, the
+ 	  flush operation of IOTLB and the free operation of IOVA are deferred.
+-- 
+1.8.3
 
 
