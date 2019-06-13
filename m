@@ -2,80 +2,171 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBD2C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBD8C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773FF20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E4C20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="vIdt/h5+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732711AbfFMPCc (ORCPT
+        id S1733035AbfFMPC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:02:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34896 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732511AbfFMO0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:26:06 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 15A5730C34C5;
-        Thu, 13 Jun 2019 14:25:59 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-109.rdu2.redhat.com [10.10.120.109])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 37E83541F0;
-        Thu, 13 Jun 2019 14:25:53 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-In-Reply-To: <20190613134317.734881240@infradead.org>
-References: <20190613134317.734881240@infradead.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     dhowells@redhat.com, stern@rowland.harvard.edu, akiyks@gmail.com,
-        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
-        dlustig@nvidia.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        npiggin@gmail.com, paulmck@linux.ibm.com, will.deacon@arm.com,
-        paul.burton@mips.com, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org
-Subject: Re: [PATCH v2 0/4] atomic: Fixes to smp_mb__{before,after}_atomic() and mips.
+        Thu, 13 Jun 2019 11:02:29 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34109 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732513AbfFMO1e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 10:27:34 -0400
+Received: by mail-qk1-f194.google.com with SMTP id t8so9172859qkt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 07:27:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Zpqnm/x/AdsYycdl11Nd+V+IfO9WFcP66DZDngrAd9E=;
+        b=vIdt/h5+tPMSzsO2WKNiQQDQMPwbBZbBm9OHyAHyx4n4yPEPu33aL/2jtnT9p70MVL
+         F+qhjp0HOftKSWyWCPGK+P2vNwSwohfNdHX/LcHmc5kAQu0QsNp7he5b4V312LKw+B43
+         y9krIVhmC8HG4q8LZM91gw8AN/Zq2CpBcY8tFJtHMQPB1he2syEi85gzP+vydfgrEXsA
+         o728y38cWbkN6/T0fVNcWbX87K728NKLE4BuAEY8gvdrbrTLI5w5Cx+3W90amkL9VBMV
+         z16Tu4jECWiEGPEow45o7izIqWeGmBToyagWwpaEUaScJjq93T1uyPEdpSWoLV2QKN0D
+         otKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Zpqnm/x/AdsYycdl11Nd+V+IfO9WFcP66DZDngrAd9E=;
+        b=HmVOLdCQCQpJo85Y7pa7pMFcXbXFN6zv1t4QN9VdCGz+FP8yIO3ZXd+yDcwXjdASUA
+         ftgNQFqTj3ioD1oBFgReCWIcuCQDRRmko/r1hCVlydEM4wuWt4qZHQLZHlQu2i/H3s5C
+         5bkvK3Jr4DYCbnyHidDP28TpmDf+gQg2AQaKqPiwEpF1l5+tCgPd7Ft71iUVHBljzPoB
+         YOJnf1t/oqHB+J6bLiTFDaKAZSTpne2cJ8g3OaQf20fakY3FhD7/JczbfFCNQIiems11
+         w9ys/7b2ywxZpluRfHTUEjPw/dVgqv7GqisPJQXYGxw6NH4W9lUan14Ipbof2PrIXQU8
+         5Fkw==
+X-Gm-Message-State: APjAAAWidAnra59UTJeeGYvL1dfXT2YN9h4QyZUbH454l4ETxzEaGZIa
+        8ZNauFKnKQWfQk0uAz//2GTVbg==
+X-Google-Smtp-Source: APXvYqxlxUbFUomnC9jt1Ud6035b35BwuPIkorhnO2Uqejg7ZM5g6I6GS7yNiFHC3c23lchL6G6ZhQ==
+X-Received: by 2002:a05:620a:14a1:: with SMTP id x1mr71416914qkj.164.1560436053376;
+        Thu, 13 Jun 2019 07:27:33 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::9d6b])
+        by smtp.gmail.com with ESMTPSA id x7sm1732042qth.37.2019.06.13.07.27.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 07:27:33 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 10:27:31 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Naohiro Aota <naohiro.aota@wdc.com>
+Cc:     linux-btrfs@vger.kernel.org, David Sterba <dsterba@suse.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
+        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        linux-fsdevel@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Matias =?utf-8?B?QmrDuHJsaW5n?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH 17/19] btrfs: shrink delayed allocation size in HMZONED
+ mode
+Message-ID: <20190613142731.mgitehmuyz2566no@MacBook-Pro-91.local>
+References: <20190607131025.31996-1-naohiro.aota@wdc.com>
+ <20190607131025.31996-18-naohiro.aota@wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1641.1560435920.1@warthog.procyon.org.uk>
-From:   David Howells <dhowells@redhat.com>
-Date:   Thu, 13 Jun 2019 15:25:52 +0100
-Message-ID: <1674.1560435952@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 13 Jun 2019 14:26:06 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607131025.31996-18-naohiro.aota@wdc.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> Basically we fail for:
+On Fri, Jun 07, 2019 at 10:10:23PM +0900, Naohiro Aota wrote:
+> In a write heavy workload, the following scenario can occur:
 > 
-> 	*x = 1;
-> 	atomic_inc(u);
-> 	smp_mb__after_atomic();
-> 	r0 = *y;
+> 1. mark page #0 to page #2 (and their corresponding extent region) as dirty
+>    and candidate for delayed allocation
 > 
-> Because, while the atomic_inc() implies memory order, it
-> (surprisingly) does not provide a compiler barrier. This then allows
-> the compiler to re-order like so:
+> pages    0 1 2 3 4
+> dirty    o o o - -
+> towrite  - - - - -
+> delayed  o o o - -
+> alloc
+> 
+> 2. extent_write_cache_pages() mark dirty pages as TOWRITE
+> 
+> pages    0 1 2 3 4
+> dirty    o o o - -
+> towrite  o o o - -
+> delayed  o o o - -
+> alloc
+> 
+> 3. Meanwhile, another write dirties page #3 and page #4
+> 
+> pages    0 1 2 3 4
+> dirty    o o o o o
+> towrite  o o o - -
+> delayed  o o o o o
+> alloc
+> 
+> 4. find_lock_delalloc_range() decide to allocate a region to write page #0
+>    to page #4
+> 5. but, extent_write_cache_pages() only initiate write to TOWRITE tagged
+>    pages (#0 to #2)
+> 
+> So the above process leaves page #3 and page #4 behind. Usually, the
+> periodic dirty flush kicks write IOs for page #3 and #4. However, if we try
+> to mount a subvolume at this timing, mount process takes s_umount write
+> lock to block the periodic flush to come in.
+> 
+> To deal with the problem, shrink the delayed allocation region to have only
+> expected to be written pages.
+> 
+> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
+> ---
+>  fs/btrfs/extent_io.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> index c73c69e2bef4..ea582ff85c73 100644
+> --- a/fs/btrfs/extent_io.c
+> +++ b/fs/btrfs/extent_io.c
+> @@ -3310,6 +3310,33 @@ static noinline_for_stack int writepage_delalloc(struct inode *inode,
+>  			delalloc_start = delalloc_end + 1;
+>  			continue;
+>  		}
+> +
+> +		if (btrfs_fs_incompat(btrfs_sb(inode->i_sb), HMZONED) &&
+> +		    (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages) &&
+> +		    ((delalloc_start >> PAGE_SHIFT) <
+> +		     (delalloc_end >> PAGE_SHIFT))) {
+> +			unsigned long i;
+> +			unsigned long end_index = delalloc_end >> PAGE_SHIFT;
+> +
+> +			for (i = delalloc_start >> PAGE_SHIFT;
+> +			     i <= end_index; i++)
+> +				if (!xa_get_mark(&inode->i_mapping->i_pages, i,
+> +						 PAGECACHE_TAG_TOWRITE))
+> +					break;
+> +
+> +			if (i <= end_index) {
+> +				u64 unlock_start = (u64)i << PAGE_SHIFT;
+> +
+> +				if (i == delalloc_start >> PAGE_SHIFT)
+> +					unlock_start += PAGE_SIZE;
+> +
+> +				unlock_extent(tree, unlock_start, delalloc_end);
+> +				__unlock_for_delalloc(inode, page, unlock_start,
+> +						      delalloc_end);
+> +				delalloc_end = unlock_start - 1;
+> +			}
+> +		}
+> +
 
-To quote memory-barriers.txt:
+Helper please.  Really for all this hmzoned stuff I want it segregated as much
+as possible so when I'm debugging or cleaning other stuff up I want to easily be
+able to say "oh this is for zoned devices, it doesn't matter."  Thanks,
 
- (*) smp_mb__before_atomic();
- (*) smp_mb__after_atomic();
-
-     These are for use with atomic (such as add, subtract, increment and
-     decrement) functions that don't return a value, especially when used for
-     reference counting.  These functions do not imply memory barriers.
-
-so it's entirely to be expected?
-
-David
+Josef
