@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0F7C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF92C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684442175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2DC320644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442811;
-	bh=LvyG5bBAfS352aiJgA4c+p3Ggc8y4HYfaYNzoQxw4lQ=;
+	s=default; t=1560442825;
+	bh=R/Ve0aXS+h/PtGsHTYEDIi7Q0bXSHxm7sxgGAhNn7tY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cmhC5VimaLoRHy8vCVvAeC2ASDoAcuGtH9dye/wGKl7eRHV1AdVu0ufwoOZX4560n
-	 kyev/t74AePh4kKyZj+Hh+zl6cnljQlsKxZ6/AXBSEAaer88gGQXDpGWptVTzgBtqd
-	 K2MSm99X7f1+zmEZuYC7nbjeZGu6Tn+1Q17bXei0=
+	b=yVYusqMl9DR8EgC/uutm2AQV1zTUoY8nVu+esbSt1V1PbP2KtRCVqDoOK+PKNPUyL
+	 U3uQDkHO1bCr8pzsYwlSmUnRoyD8I1pqjIHHQXWTlU2j4G/w0ANs1jBR1uCM91nyZz
+	 rFAeL9sJrthLsD4MJktTy5Azfz0H55cQGZhguqfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392123AbfFMQUJ (ORCPT
+        id S2403790AbfFMQUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:20:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:20:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731085AbfFMIj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:39:28 -0400
+        id S1731076AbfFMIjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:39:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E273421473;
-        Thu, 13 Jun 2019 08:39:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 463522147A;
+        Thu, 13 Jun 2019 08:39:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415168;
-        bh=LvyG5bBAfS352aiJgA4c+p3Ggc8y4HYfaYNzoQxw4lQ=;
+        s=default; t=1560415159;
+        bh=R/Ve0aXS+h/PtGsHTYEDIi7Q0bXSHxm7sxgGAhNn7tY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sNZHrK3fMaPQ2cikJBzWuR4GeOIj2v11vc3Vb/oxpJ6CsW2QQU5TxlrImq8thUsIY
-         RDPw3nFvwgoJcvhepprC/Q1XK6Bz0oMsj9vUmpMqWKv+VYQP20jsmluze0eBjdYXJa
-         LYZvSOU6mj7+J6Lz8xa9bXUmndamRpskWMqxdvlI=
+        b=pquThnU+9ajLKgX7d4gFS+p8lpDCLZ5E59+lRC2k6L2I3Bf7O/4MRj9BGXbLNQAfG
+         MzHi4ibOsTw5kqXFB7BGVwW44D1UJsx6lO9t/5PY4WDytuzd3vd8pNuXj1GOvkQMf8
+         hfDR+Mrnh2j6lncyJa466HCcUsFDwcpodKyTTW20=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Matt Redfearn <matt.redfearn@thinci.com>,
+        Sean Paul <seanpaul@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 027/118] drm/nouveau/kms/gv100-: fix spurious window immediate interlocks
-Date:   Thu, 13 Jun 2019 10:32:45 +0200
-Message-Id: <20190613075645.116443551@linuxfoundation.org>
+Subject: [PATCH 4.19 025/118] drm/bridge: adv7511: Fix low refresh rate selection
+Date:   Thu, 13 Jun 2019 10:32:43 +0200
+Message-Id: <20190613075645.000227060@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -60,60 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d2434e4d942c32cadcbdbcd32c58f35098f3b604 ]
+[ Upstream commit 67793bd3b3948dc8c8384b6430e036a30a0ecb43 ]
 
-Cursor position updates were accidentally causing us to attempt to interlock
-window with window immediate, and without a matching window immediate update,
-NVDisplay could hang forever in some circumstances.
+The driver currently sets register 0xfb (Low Refresh Rate) based on the
+value of mode->vrefresh. Firstly, this field is specified to be in Hz,
+but the magic numbers used by the code are Hz * 1000. This essentially
+leads to the low refresh rate always being set to 0x01, since the
+vrefresh value will always be less than 24000. Fix the magic numbers to
+be in Hz.
+Secondly, according to the comment in drm_modes.h, the field is not
+supposed to be used in a functional way anyway. Instead, use the helper
+function drm_mode_vrefresh().
 
-Fixes suspend/resume on (at least) Quadro RTX4000 (TU104).
-
-Reported-by: Lyude Paul <lyude@redhat.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Fixes: 9c8af882bf12 ("drm: Add adv7511 encoder driver")
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Matt Redfearn <matt.redfearn@thinci.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190424132210.26338-1-matt.redfearn@thinci.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/dispnv50/disp.h     | 1 +
- drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c | 1 +
- drivers/gpu/drm/nouveau/dispnv50/wndw.c     | 2 +-
- 3 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.h b/drivers/gpu/drm/nouveau/dispnv50/disp.h
-index e48c5eb35b49..66c125a6b0b3 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.h
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.h
-@@ -41,6 +41,7 @@ struct nv50_disp_interlock {
- 		NV50_DISP_INTERLOCK__SIZE
- 	} type;
- 	u32 data;
-+	u32 wimm;
- };
- 
- void corec37d_ntfy_init(struct nouveau_bo *, u32);
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c b/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c
-index 9103b8494279..f7dbd965e4e7 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c
-@@ -75,6 +75,7 @@ wimmc37b_init_(const struct nv50_wimm_func *func, struct nouveau_drm *drm,
- 		return ret;
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+index 85c2d407a52e..e7ddd3e3db92 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+@@ -747,11 +747,11 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
+ 			vsync_polarity = 1;
  	}
  
-+	wndw->interlock.wimm = wndw->interlock.data;
- 	wndw->immd = func;
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/wndw.c b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
-index 2187922e8dc2..b3db4553098d 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/wndw.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
-@@ -151,7 +151,7 @@ nv50_wndw_flush_set(struct nv50_wndw *wndw, u32 *interlock,
- 	if (asyw->set.point) {
- 		if (asyw->set.point = false, asyw->set.mask)
- 			interlock[wndw->interlock.type] |= wndw->interlock.data;
--		interlock[NV50_DISP_INTERLOCK_WIMM] |= wndw->interlock.data;
-+		interlock[NV50_DISP_INTERLOCK_WIMM] |= wndw->interlock.wimm;
- 
- 		wndw->immd->point(wndw, asyw);
- 		wndw->immd->update(wndw, interlock);
+-	if (mode->vrefresh <= 24000)
++	if (drm_mode_vrefresh(mode) <= 24)
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_24HZ;
+-	else if (mode->vrefresh <= 25000)
++	else if (drm_mode_vrefresh(mode) <= 25)
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_25HZ;
+-	else if (mode->vrefresh <= 30000)
++	else if (drm_mode_vrefresh(mode) <= 30)
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_30HZ;
+ 	else
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_NONE;
 -- 
 2.20.1
 
