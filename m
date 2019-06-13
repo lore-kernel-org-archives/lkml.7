@@ -2,284 +2,151 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCFDC31E45
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7508C31E4A
 	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 14:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E070207E0
+	by mail.kernel.org (Postfix) with ESMTP id BDB3E20B7C
 	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 14:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dRA7kkC6"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="MW29uUt3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732652AbfFMO7A (ORCPT
+        id S1732663AbfFMO7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 10:59:00 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39161 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732621AbfFMOzl (ORCPT
+        Thu, 13 Jun 2019 10:59:01 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44927 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbfFMOzj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:55:41 -0400
-Received: by mail-io1-f68.google.com with SMTP id r185so17522659iod.6
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 07:55:41 -0700 (PDT)
+        Thu, 13 Jun 2019 10:55:39 -0400
+Received: by mail-qk1-f196.google.com with SMTP id p144so802269qke.11
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 07:55:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uup4+yu3rtMc7LeujGtatwYo2KR3g+6RsZgNCQu53+s=;
-        b=dRA7kkC6r7wRPZLUONW10Np1uUb8HPBolEESaREKqFHCIt9zzjww757ZoQSNpKxNPG
-         hzG+r+5YOC8bst+qIvQX3Xfyd/NIpwF/n5adKAckP6Ym7vRhL/7uWyyKnoNTat0f/nX8
-         B/v+24+5LtdOQuMe3NPVEv7GWNVD6MuSM5cgFFNYRNcqOc35o62b1h/fb3YhTqQe6z0Q
-         sEllM3MXFo42WWWhRLZSYtLip27DXU+a86+XbEKRZKPZ6AeIzggquANG1MUxj7B8j+C8
-         bQ71VSyRSSIAU26XKUD916rOfN62mouWgp1ylR8aA9k5oYDq+qMlijPdOWeDkHHL7VBU
-         o5iw==
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=syRsM5x5t36T0uwBQ8w3WtlVORO0dY2X14fOyDlfmP4=;
+        b=MW29uUt3jByNSY9EdjIpGnBKSihl9HASLR+/ooJTV2ZJHETpBMlzK4M/8DVRozclGw
+         qI7jOYKnXbNco1i2jnu7jmHoEfvTNvCUFClQyrHEPDqCbosgl7YIZBBZ4vXEhgTljPIY
+         0Dlm6d90sHKdN6FETsRaV3IKYSAf2RT31FEXpzCgcw+y/DjEU1WFd6x468IKtWYaPO8R
+         2YwfQJ3pvmC2AkBTSNwSkBpurq4xsKkXzFn8sN3RjOx2JNLAsHUfTigkazfpHHg6HrzE
+         gpKP1GXUcLCaX6Bt6MuT7XDxJw0hZ4no5tVThuZ3BPlKt82LNfbzNwu0LDHQnKHktq59
+         yHbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uup4+yu3rtMc7LeujGtatwYo2KR3g+6RsZgNCQu53+s=;
-        b=BzTjd32Byr4Yq69RT0Xly9DZjt9PlVmXeQxLt79xk+Cujd308AEF949yOUhqXTuPUD
-         cCbGSTa48vv46pwl4p9tcxiAiNFsXRwDV41jQOCS2NuavoPc4jOHye3PnJIY8Hstsys5
-         pAkYywKMwAJh6g8w8oUTroecAKBPF/wzR3gx6+Qtcu0JujkZUTjC7HofTyAAXyQ3PIT/
-         tyw7tRsLWpLkto5SbO/oXFV3RE2bzqarv7p1wmoIbPXOGtnzx6ZilEMBPyCyKXGdBQoi
-         pkN2d2M75Zcg/RazVBgjDrpYPNlsTL9X4QfieQkU2RUlv0vsiHo4BIEKIGGUa0JZyVJl
-         aQpA==
-X-Gm-Message-State: APjAAAVv3hTD7Jn7O9hxZsS17Al8kiFibWNY4mzE/qIABF2PLbU9VzQq
-        2Z7/nLUiWkqHUIukRtfJ+CDQQNlX7uOl0YjV6/hEZQ==
-X-Google-Smtp-Source: APXvYqzndfKSRA8giBrYgV9Bq3flf7/vWqrwRTfUpglIJWfRs4WlFdnhSvBS3hk0Dee76SlakiYKGNbXkT69+kh9eqg=
-X-Received: by 2002:a6b:b556:: with SMTP id e83mr46526986iof.94.1560437740323;
- Thu, 13 Jun 2019 07:55:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=syRsM5x5t36T0uwBQ8w3WtlVORO0dY2X14fOyDlfmP4=;
+        b=Hbffsuux8zXiFrwPE4HSaX/GNLyuRmOm1O01pUu27JL8GG3hWi+NsIYXbOVafzJo2L
+         Yifll4UknwNrBgCMY9njuUlAQezECfaXBPVek518aIgzSUkamYA+71lVrDRDeetB740W
+         yhZlkHvxVg2xi4qJE40x8tpmw9fQiNxsmiDvaRcOueOCSm7+2fI2Y/ZIxP0UcD5mf5CN
+         Dggcci9w3lXqrNXT85H+tIdH+DX/Bk+Mt9+sHHl+NpTfNA9gC1TzPTz67y3uwJp9QSeJ
+         GGPyDzjXV2+hk+6RYPDvlRVgP8Mld8FxgNj8USctTqio5efXsJx4XrWNkzuisIKhpBKz
+         FNVQ==
+X-Gm-Message-State: APjAAAUytoHiYAWmFbn0rjSRd3T2g6H82Rk+RD/zMSXSw4WQQ21xGWgn
+        ZWQDIX9De9y7Psbm0zR6EEbWrw==
+X-Google-Smtp-Source: APXvYqyBEJXlITHzA9ZejAG6r56aunWdCYC9tOvEIffA6U0RZhtD9cozUHnyThUCVBCpbzxPxUSPyQ==
+X-Received: by 2002:a37:9c50:: with SMTP id f77mr71923542qke.6.1560437738450;
+        Thu, 13 Jun 2019 07:55:38 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::9d6b])
+        by smtp.gmail.com with ESMTPSA id a15sm1981399qtb.43.2019.06.13.07.55.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 07:55:37 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 10:55:36 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Roman Stratiienko <roman.stratiienko@globallogic.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>, linux-kernel@vger.kernel.org,
+        nbd@other.debian.org,
+        Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>,
+        linux-block@vger.kernel.org, axboe@kernel.dkn.org
+Subject: Re: [PATCH 2/2] nbd: add support for nbd as root device
+Message-ID: <20190613145535.tdesq3y2xy6ycpw7@MacBook-Pro-91.local>
+References: <20190612163144.18486-1-roman.stratiienko@globallogic.com>
+ <20190612163144.18486-2-roman.stratiienko@globallogic.com>
+ <20190613135241.aghcrrz7rg2au3bw@MacBook-Pro-91.local>
+ <CAODwZ7v=RSsmVj5GjcvGn2dn+ejLRBHZ79x-+S9DrX4GoXuVaQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190613141521.424-1-hdanton@sina.com>
-In-Reply-To: <20190613141521.424-1-hdanton@sina.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 13 Jun 2019 16:55:28 +0200
-Message-ID: <CACT4Y+bAuAiApr9CxSH5CoDnZ5hYmU+K4kJqrSo5yBZLyrzONA@mail.gmail.com>
-Subject: Re: memory leak in vhost_net_ioctl
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        syzbot <syzbot+0789f0c7e45efd7bb643@syzkaller.appspotmail.com>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        Asias He <asias@redhat.com>
-Content-Type: multipart/mixed; boundary="000000000000355591058b35b99c"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAODwZ7v=RSsmVj5GjcvGn2dn+ejLRBHZ79x-+S9DrX4GoXuVaQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000355591058b35b99c
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jun 13, 2019 at 4:15 PM Hillf Danton <hdanton@sina.com> wrote:
->
->
-> Hello Dmitry
->
-> On Thu, 13 Jun 2019 20:12:06 +0800 Dmitry Vyukov wrote:
-> > On Thu, Jun 13, 2019 at 2:07 PM Hillf Danton <hdanton@sina.com> wrote:
-> > >
-> > > Hello Jason
-> > >
-> > > On Thu, 13 Jun 2019 17:10:39 +0800 Jason Wang wrote:
-> > > >
-> > > > This is basically a kfree(ubuf) after the second vhost_net_flush() =
-in
-> > > > vhost_net_release().
-> > > >
-> > > Fairly good catch.
-> > >
-> > > > Could you please post a formal patch?
-> > > >
-> > > I'd like very much to do that; but I wont, I am afraid, until I colle=
-ct a
-> > > Tested-by because of reproducer without a cutting edge.
+On Thu, Jun 13, 2019 at 05:45:13PM +0300, Roman Stratiienko wrote:
+> On Thu, Jun 13, 2019 at 4:52 PM Josef Bacik <josef@toxicpanda.com> wrote:
 > >
-> > You can easily collect Tested-by from syzbot for any bug with a reprodu=
-cer;)
-> > https://github.com/google/syzkaller/blob/master/docs/syzbot.md#testing-=
-patches
+> > On Wed, Jun 12, 2019 at 07:31:44PM +0300, roman.stratiienko@globallogic.com wrote:
+> > > From: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> > >
+> > > Adding support to nbd to use it as a root device. This code essentially
+> > > provides a minimal nbd-client implementation within the kernel. It opens
+> > > a socket and makes the negotiation with the server. Afterwards it passes
+> > > the socket to the normal nbd-code to handle the connection.
+> > >
+> > > The arguments for the server are passed via kernel command line.
+> > > The kernel command line has the format
+> > > 'nbdroot=[<SERVER_IP>:]<SERVER_PORT>/<EXPORT_NAME>'.
+> > > SERVER_IP is optional. If it is not available it will use the
+> > > root_server_addr transmitted through DHCP.
+> > >
+> > > Based on those arguments, the connection to the server is established
+> > > and is connected to the nbd0 device. The rootdevice therefore is
+> > > root=/dev/nbd0.
+> > >
+> > > Patch was initialy posted by Markus Pargmann <mpa@pengutronix.de>
+> > > and can be found at https://lore.kernel.org/patchwork/patch/532556/
+> > >
+> > > Change-Id: I78f7313918bf31b9dc01a74a42f0f068bede312c
+> > > Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> > > Reviewed-by: Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>
 > >
-> Thank you for the light you are casting.
+> > Just throw nbd-client in your initramfs.  Every nbd server has it's own
+> > handshake protocol, embedding one particular servers handshake protocol into the
+> > kernel isn't the answer here.  Thanks,
+> >
+> > Josef
+> 
+> Hello Josef,
+> 
+> Let me share some of my thoughts that was the motivation for providing
+> this solution::
+> 
+> We choose NBD as a tool to run CI tests on our platforms.
+> We have a wide range of different BSP's with different kind of images
+> where using NFSROOT is hard or even impossible.
+> Most of these BSPs are not using initramfs and some of them are Android-based.
+> 
+> Taking all this into account we have to put significant efforts to
+> implement and test custom initramfs and it will not cover all our
+> needs.
+> 
+> Much easier way is to embed small client into the kernel and just
+> enable configuration when needed.
+> 
+> I believe such solution will be very useful for wide range of kernel users.
+> 
+> Also, as far as I know mainline nbd-server daemon have only 2
+> handshake protocols. So called OLD-STYLE and NEW-STYLE. And OLD-STYLE
+> is no longer supported. So it should not be a problem, or please fix
+> me if I'm wrong.
+> 
 
-:)
+I don't doubt you have a good reason to want it, I'm just not clear on why an
+initramfs isn't an option?  You have this special kernel with your special
+option, and you manage to get these things to boot your special kernel right?
+So why is a initramfs with a tiny nbd-client binary in there not an option?
 
-But you did not ask syzbot to test. That would be something like this
-(keeping syzbot email in CC):
+Also I mean that there are a bunch of different nbd servers out there.  We have
+our own here at Facebook, qemu has one, IIRC there's a ceph one.  They all have
+their own connection protocols.  The beauty of NBD is that it doesn't have to
+know about that part, it just does the block device part, and I'd really rather
+leave it that way.  Thanks,
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-master
-
-(I've attached the patch because my email client is incapable of
-sending non-corrupted patches inline, but otherwise inline patches
-should work too).
-
-
-> Here it goes.
-> --->8--------
-> From: Hillf Danton <hdanton@sina.com>
-> Subject: [PATCH] vhost: fix memory leak in vhost_net_release
->
-> syzbot found the following crash on:
->
-> HEAD commit:    788a0249 Merge tag 'arc-5.2-rc4' of git://git.kernel.org/=
-p..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x dc9ea6a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=C3=95c73825cbdc=
-7326
-> dashboard link: https://syzkaller.appspot.com/bug?extid 89f0c7e45efd7bb64=
-3
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x b31761a00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x 4892c1a00000
->
->
-> udit: type 00 audit(1559768703.229:36): avc:  denied  { map } for
-> pidq16 comm=3D"syz-executor330" path=3D"/root/syz-executor330334897"
-> dev=3D"sda1" ino 461 scontext=3Dunconfined_u:system_r:insmod_t:s0-s0:c0.c=
-1023
-> tcontext=3Dunconfined_u:object_r:user_home_t:s0 tclass=3Dfile permissive=
-=3D1
-> executing program
-> executing program
->
-> BUG: memory leak
-> unreferenced object 0xffff88812421fe40 (size 64):
->    comm "syz-executor330", pid 7117, jiffies 4294949245 (age 13.030s)
->    hex dump (first 32 bytes):
->      01 00 00 00 20 69 6f 63 00 00 00 00 64 65 76 2f  .... ioc....dev/
->      50 fe 21 24 81 88 ff ff 50 fe 21 24 81 88 ff ff  P.!$....P.!$....
->    backtrace:
->      [<00000000ae0c4ae0>] kmemleak_alloc_recursive include/linux/kmemleak=
-.h:55 [inline]
->      [<00000000ae0c4ae0>] slab_post_alloc_hook mm/slab.h:439 [inline]
->      [<00000000ae0c4ae0>] slab_alloc mm/slab.c:3326 [inline]
->      [<00000000ae0c4ae0>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:35=
-53
->      [<0000000079ebab38>] kmalloc include/linux/slab.h:547 [inline]
->      [<0000000079ebab38>] vhost_net_ubuf_alloc drivers/vhost/net.c:241 [i=
-nline]
->      [<0000000079ebab38>] vhost_net_set_backend drivers/vhost/net.c:1534 =
-[inline]
->      [<0000000079ebab38>] vhost_net_ioctl+0xb43/0xc10 drivers/vhost/net.c=
-:1716
->      [<000000009f6204a2>] vfs_ioctl fs/ioctl.c:46 [inline]
->      [<000000009f6204a2>] file_ioctl fs/ioctl.c:509 [inline]
->      [<000000009f6204a2>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
->      [<00000000b45866de>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
->      [<00000000dfb41eb8>] __do_sys_ioctl fs/ioctl.c:720 [inline]
->      [<00000000dfb41eb8>] __se_sys_ioctl fs/ioctl.c:718 [inline]
->      [<00000000dfb41eb8>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
->      [<0000000049c1f547>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.=
-c:301
->      [<0000000029cc8ca7>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
-> BUG: memory leak
-> unreferenced object 0xffff88812421fa80 (size 64):
->    comm "syz-executor330", pid 7130, jiffies 4294949755 (age 7.930s)
->    hex dump (first 32 bytes):
->      01 00 00 00 01 00 00 00 00 00 00 00 2f 76 69 72  ............/vir
->      90 fa 21 24 81 88 ff ff 90 fa 21 24 81 88 ff ff  ..!$......!$....
->    backtrace:
->      [<00000000ae0c4ae0>] kmemleak_alloc_recursive  include/linux/kmemlea=
-k.h:55 [inline]
->      [<00000000ae0c4ae0>] slab_post_alloc_hook mm/slab.h:439 [inline]
->      [<00000000ae0c4ae0>] slab_alloc mm/slab.c:3326 [inline]
->      [<00000000ae0c4ae0>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:35=
-53
->      [<0000000079ebab38>] kmalloc include/linux/slab.h:547 [inline]
->      [<0000000079ebab38>] vhost_net_ubuf_alloc drivers/vhost/net.c:241  [=
-inline]
->      [<0000000079ebab38>] vhost_net_set_backend drivers/vhost/net.c:1534 =
- [inline]
->      [<0000000079ebab38>] vhost_net_ioctl+0xb43/0xc10  drivers/vhost/net.=
-c:1716
->      [<000000009f6204a2>] vfs_ioctl fs/ioctl.c:46 [inline]
->      [<000000009f6204a2>] file_ioctl fs/ioctl.c:509 [inline]
->      [<000000009f6204a2>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
->      [<00000000b45866de>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
->      [<00000000dfb41eb8>] __do_sys_ioctl fs/ioctl.c:720 [inline]
->      [<00000000dfb41eb8>] __se_sys_ioctl fs/ioctl.c:718 [inline]
->      [<00000000dfb41eb8>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
->      [<0000000049c1f547>] do_syscall_64+0x76/0x1a0  arch/x86/entry/common=
-.c:301
->      [<0000000029cc8ca7>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
-> End of syzbot report.
->
-> The function vhost_net_ubuf_alloc() appears in the two cases of dump info=
-, for
-> pid 7130 and 7117, suggesting that it is ubuf leak.
->
-> Since commit c38e39c378f4 ("vhost-net: fix use-after-free in vhost_net_fl=
-ush")
-> the function vhost_net_flush() had been no longer releasing ubuf.
->
-> Freeing the slab after the last flush in the release path fixes it.
->
->
-> Fixes: c38e39c378f4 ("vhost-net: fix use-after-free in vhost_net_flush")
-> Reported-by: Syzbot <syzbot+0789f0c7e45efd7bb643@syzkaller.appspotmail.co=
-m>
-> Suggested-by: Jason Wang <jasowang@redhat.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Asias He <asias@redhat.com>
-> Signed-off-by: Hillf Danton <hdanton@sina.com>
-> ---
-> This is sent only for collecting Tested-by.
->
->  drivers/vhost/net.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-> index 3beb401..22fae0a 100644
-> --- a/drivers/vhost/net.c
-> +++ b/drivers/vhost/net.c
-> @@ -1404,6 +1404,7 @@ static int vhost_net_release(struct inode *inode, s=
-truct file *f)
->         /* We do an extra flush before freeing memory,
->          * since jobs can re-queue themselves. */
->         vhost_net_flush(n);
-> +       kfree(n->vqs[VHOST_NET_VQ_TX].ubufs);
->         kfree(n->vqs[VHOST_NET_VQ_RX].rxq.queue);
->         kfree(n->vqs[VHOST_NET_VQ_TX].xdp);
->         kfree(n->dev.vqs);
-> --
->
-
---000000000000355591058b35b99c
-Content-Type: application/octet-stream; name=patch
-Content-Disposition: attachment; filename=patch
-Content-Transfer-Encoding: base64
-Content-ID: <f_jwus9oj40>
-X-Attachment-Id: f_jwus9oj40
-
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvdmhvc3QvbmV0LmMgYi9kcml2ZXJzL3Zob3N0L25ldC5jCmlu
-ZGV4IDNiZWI0MDEuLjIyZmFlMGEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvdmhvc3QvbmV0LmMKKysr
-IGIvZHJpdmVycy92aG9zdC9uZXQuYwpAQCAtMTQwNCw2ICsxNDA0LDcgQEAgc3RhdGljIGludCB2
-aG9zdF9uZXRfcmVsZWFzZShzdHJ1Y3QgaW5vZGUgKmlub2RlLCBzdHJ1Y3QgZmlsZSAqZikKIAkv
-KiBXZSBkbyBhbiBleHRyYSBmbHVzaCBiZWZvcmUgZnJlZWluZyBtZW1vcnksCiAJICogc2luY2Ug
-am9icyBjYW4gcmUtcXVldWUgdGhlbXNlbHZlcy4gKi8KIAl2aG9zdF9uZXRfZmx1c2gobik7CisJ
-a2ZyZWUobi0+dnFzW1ZIT1NUX05FVF9WUV9UWF0udWJ1ZnMpOwogCWtmcmVlKG4tPnZxc1tWSE9T
-VF9ORVRfVlFfUlhdLnJ4cS5xdWV1ZSk7CiAJa2ZyZWUobi0+dnFzW1ZIT1NUX05FVF9WUV9UWF0u
-eGRwKTsKIAlrZnJlZShuLT5kZXYudnFzKTsKLS0K
---000000000000355591058b35b99c--
+Josef
