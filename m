@@ -2,272 +2,96 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BDBC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2E1C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23E2A205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:11:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHMpTD7P"
+	by mail.kernel.org (Postfix) with ESMTP id 24E2F205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:11:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560445916;
+	bh=no9PMWb5VDOx7ySl5Q7f0oB1g4k565KdjFHzM77TOLg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SF4oblNL3BM5mqlK6DMK9e0H5IB8icUZ6eELQ7UydtqsIsU7aw9I5nBXAaUCioJ8T
+	 8osviFEpN0eKCIoThpAitV0GjfzozUHQqaNFLBo/Mmly8fqO4lQToO8CB1qxCS/ehr
+	 ZFNmhwBYKUp9r0mJT+Pqr+Ots+yt/Et9DalILoWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393268AbfFMRLu (ORCPT
+        id S2393424AbfFMRLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:11:50 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44260 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729093AbfFLWQH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 18:16:07 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n2so9663765pgp.11;
-        Wed, 12 Jun 2019 15:16:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vmV6Z9YoxdO3LsAszVvwMO53gI1qiV1kJVHy5IXZtO4=;
-        b=KHMpTD7Pv5QKGDTr9cJqzCxwjdMfx74NiX60ltO8Ne61z+VEiPHDY5sxfUQwGDRiY4
-         zHbNF+Is2eHcvJ3C851S6IyAraSCFMH220Wn7ZzPbx9HbH7nmDPuu/2PM5Y48zr56BwO
-         rW6bPT4PDZI2mC0wsvRORbzKvOw5ajOwDsMWl26uAv69dB5jkIWrPpylpOzsc+GsbgsG
-         8UBNxUV+8TRjBjyb2IEc0qA6+DsWa9vxCSm6sb8EAF1+ZuEplJcjFUJXexh1yt35uhk+
-         ch8kAbDw+CUP2WCovTIYFUADTMWqKEUHFwQpvVqWXkmUrVWsaaiSwpL5DP+G852WVrYY
-         zUqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vmV6Z9YoxdO3LsAszVvwMO53gI1qiV1kJVHy5IXZtO4=;
-        b=iviIJL/+tgRf2zLknZsRsw0BD/ti8Wh1Bpp4+nvnPgMpNX5SCWtAMqMuMqxjPzG52l
-         XixE9nxvQJJnBAFV31pqL9zBYQ/VtX4bfnT3EEiY4JFRRlXchrqdHsOzA7guW/FXAISS
-         jdXJdmOXq4XC5ZYjsi5uTWdr99KkTE8hVDXNCdG7fi3iQcm/2wK1OppG/6bENFcSMIKd
-         yMvo70gyHmVTkjbpbNcG7KI/wAXBCmaO687ffl2KX02JDkwj39ZnZPTc+UTX9YPD5jw2
-         WD0DfUXFwNeKObp8qN7nle+/XUb2PCUAKdVytySFlT7BKTonRHJXiKUyQ4AFsFN3PG0P
-         JyNQ==
-X-Gm-Message-State: APjAAAX43+L12afPbA/AbSao5xWt29lAcqGK8rDaC93IxS+3en+NrBKn
-        A7ca4bXkSuFdt6dvoJhxYOeUMQ6l
-X-Google-Smtp-Source: APXvYqxYK22LyS/lrw/or94qVa7u0XQp+1NpMGZ5N4lAqatk7NSmWEMdP8yo+RlcYXATQe6n1OBP6w==
-X-Received: by 2002:a63:231c:: with SMTP id j28mr26677984pgj.430.1560377766327;
-        Wed, 12 Jun 2019 15:16:06 -0700 (PDT)
-Received: from localhost.localdomain ([167.220.56.169])
-        by smtp.gmail.com with ESMTPSA id f7sm506517pfd.43.2019.06.12.15.16.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 15:16:05 -0700 (PDT)
-From:   Prakhar Srivastava <prsriva02@gmail.com>
-To:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     zohar@linux.ibm.com, roberto.sassu@huawei.com, vgoyal@redhat.com,
-        Prakhar Srivastava <prsriva02@gmail.com>
-Subject: [PATCH V8 2/3] Define a new ima template field buf
-Date:   Wed, 12 Jun 2019 15:15:48 -0700
-Message-Id: <20190612221549.28399-3-prsriva02@gmail.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190612221549.28399-1-prsriva02@gmail.com>
-References: <20190612221549.28399-1-prsriva02@gmail.com>
+        Thu, 13 Jun 2019 13:11:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392711AbfFMRLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 13:11:42 -0400
+Received: from localhost (unknown [131.107.160.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0248C205ED;
+        Thu, 13 Jun 2019 17:11:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560445902;
+        bh=no9PMWb5VDOx7ySl5Q7f0oB1g4k565KdjFHzM77TOLg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pwobQrn2aoQYIN1bzYPeE5Ko11Ur0FE4EXjws5h5FTkyrG4Rm77bvEnzXFBjvcjPp
+         /xjX3Xawq2DH3fe4mM55XcblmrXZTA/Op+UQVzyL1/o0OrLAknvnr0ybQvzBKWlEnS
+         t9RrtqaDbsvYLAiE/D8WMC2Zd3a7/dIb4ESmg2CY=
+Date:   Thu, 13 Jun 2019 13:11:41 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     peterhuewe@gmx.de,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        jgg@ziepe.ca, corbet@lwn.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Microsoft Linux Kernel List <linux-kernel@microsoft.com>,
+        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
+        "Bryan Kelly (CSI)" <bryankel@microsoft.com>,
+        tee-dev@lists.linaro.org
+Subject: Re: [PATCH v4 1/2] fTPM: firmware TPM running in TEE
+Message-ID: <20190613171141.GL1513@sasha-vm>
+References: <20190530152758.16628-1-sashal@kernel.org>
+ <20190530152758.16628-2-sashal@kernel.org>
+ <CAFA6WYM1NrghG9qxUhrm76kopvBx9nmCL9XnRs11ysb2Yr0+Qw@mail.gmail.com>
+ <20190604200951.GB29739@sasha-vm>
+ <CAFA6WYMOjgHRw9RVrjherNo0ZNbTtEonPwSFFC0dT4CZO=A1NQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAFA6WYMOjgHRw9RVrjherNo0ZNbTtEonPwSFFC0dT4CZO=A1NQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A buffer(kexec cmdline args) measured into ima cannot be
-appraised without already being aware of the buffer contents.
-Since hashes are non-reversible, raw buffer is needed for
-validation or regenerating hash for appraisal/attestation.
+On Wed, Jun 05, 2019 at 04:39:36PM +0530, Sumit Garg wrote:
+>On Wed, 5 Jun 2019 at 01:39, Sasha Levin <sashal@kernel.org> wrote:
+>>
+>> On Tue, Jun 04, 2019 at 11:45:52AM +0530, Sumit Garg wrote:
+>> >On Thu, 30 May 2019 at 20:58, Sasha Levin <sashal@kernel.org> wrote:
+>> >> +       /* Open context with TEE driver */
+>> >> +       pvt_data->ctx = tee_client_open_context(NULL, ftpm_tee_match, NULL,
+>> >> +                                               NULL);
+>> >> +       if (IS_ERR(pvt_data->ctx)) {
+>> >> +               dev_err(dev, "%s:tee_client_open_context failed\n", __func__);
+>> >
+>> >Is this well tested? I see this misleading error multiple times as
+>> >follows although TEE driver works pretty well.
+>>
+>> Yes, this was all functionally tested.
+>
+>Can you share your build instructions and testing approach?
 
-This patch adds support to ima to allow store/read the
-buffer contents in HEX.
+Yes: it looks like you got all the kernel bits, but not the firmware.
+There are instructions for it here: https://github.com/microsoft/ms-tpm-20-ref
 
-- Add two new fields to ima_event_data to hold the buf and
-buf_len [Suggested by Roberto]
-- Add a new temaplte field 'buf' to be used to store/read
-the buffer data.[Suggested by Mimi]
-- Updated process_buffer_meaurement to add the buffer to
-ima_event_data. process_buffer_measurement added in
-"Define a new IMA hook to measure the boot command line
- arguments"
-- Add a new template policy name ima-buf to represent
-'d-ng|n-ng|buf'
+Once it's running, you can test it by running your favorite TPM usecases
+through /dev/tpm0.
 
-Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
-Reviewed-by: Roberto Sassu <roberto.sassu@huawei.com>
----
- Documentation/security/IMA-templates.rst  |  7 ++++---
- security/integrity/ima/ima.h              |  2 ++
- security/integrity/ima/ima_api.c          |  4 ++--
- security/integrity/ima/ima_init.c         |  2 +-
- security/integrity/ima/ima_main.c         |  2 ++
- security/integrity/ima/ima_template.c     |  3 +++
- security/integrity/ima/ima_template_lib.c | 21 +++++++++++++++++++++
- security/integrity/ima/ima_template_lib.h |  4 ++++
- 8 files changed, 39 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/security/IMA-templates.rst b/Documentation/security/IMA-templates.rst
-index 2cd0e273cc9a..fccdbbc984f5 100644
---- a/Documentation/security/IMA-templates.rst
-+++ b/Documentation/security/IMA-templates.rst
-@@ -69,14 +69,15 @@ descriptors by adding their identifier to the format string
-    algorithm (field format: [<hash algo>:]digest, where the digest
-    prefix is shown only if the hash algorithm is not SHA1 or MD5);
-  - 'n-ng': the name of the event, without size limitations;
-- - 'sig': the file signature.
--
-+ - 'sig': the file signature;
-+ - 'buf': the buffer data that was used to generate the hash without size limitations;
- 
- Below, there is the list of defined template descriptors:
- 
-  - "ima": its format is ``d|n``;
-  - "ima-ng" (default): its format is ``d-ng|n-ng``;
-- - "ima-sig": its format is ``d-ng|n-ng|sig``.
-+ - "ima-sig": its format is ``d-ng|n-ng|sig``;
-+ - "ima-buf": its format is ``d-ng|n-ng|buf``;
- 
- 
- 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index a4ad1270bffa..16110180545c 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -65,6 +65,8 @@ struct ima_event_data {
- 	struct evm_ima_xattr_data *xattr_value;
- 	int xattr_len;
- 	const char *violation;
-+	const void *buf;
-+	int buf_len;
- };
- 
- /* IMA template field data definition */
-diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-index ea7d8cbf712f..83ca99d65e4b 100644
---- a/security/integrity/ima/ima_api.c
-+++ b/security/integrity/ima/ima_api.c
-@@ -140,7 +140,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
- 	struct ima_template_entry *entry;
- 	struct inode *inode = file_inode(file);
- 	struct ima_event_data event_data = {iint, file, filename, NULL, 0,
--					    cause};
-+					    cause, NULL, 0};
- 	int violation = 1;
- 	int result;
- 
-@@ -296,7 +296,7 @@ void ima_store_measurement(struct integrity_iint_cache *iint,
- 	struct inode *inode = file_inode(file);
- 	struct ima_template_entry *entry;
- 	struct ima_event_data event_data = {iint, file, filename, xattr_value,
--					    xattr_len, NULL};
-+					    xattr_len, NULL, NULL, 0};
- 	int violation = 0;
- 
- 	if (iint->measured_pcrs & (0x1 << pcr))
-diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-index 993d0f1915ff..c8591406c0e2 100644
---- a/security/integrity/ima/ima_init.c
-+++ b/security/integrity/ima/ima_init.c
-@@ -50,7 +50,7 @@ static int __init ima_add_boot_aggregate(void)
- 	struct ima_template_entry *entry;
- 	struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
- 	struct ima_event_data event_data = {iint, NULL, boot_aggregate_name,
--					    NULL, 0, NULL};
-+					    NULL, 0, NULL, NULL, 0};
- 	int result = -ENOMEM;
- 	int violation = 0;
- 	struct {
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index d78b15a0bd44..720151b766fa 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -641,6 +641,8 @@ static void process_buffer_measurement(const void *buf, int size,
- 	memset(&hash, 0, sizeof(hash));
- 
- 	event_data.filename = eventname;
-+	event_data.buf = buf;
-+	event_data.buf_len = size;
- 
- 	iint->ima_hash = &hash.hdr;
- 	iint->ima_hash->algo = ima_hash_algo;
-diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
-index e6e892f31cbd..632f314c0e5a 100644
---- a/security/integrity/ima/ima_template.c
-+++ b/security/integrity/ima/ima_template.c
-@@ -26,6 +26,7 @@ static struct ima_template_desc builtin_templates[] = {
- 	{.name = IMA_TEMPLATE_IMA_NAME, .fmt = IMA_TEMPLATE_IMA_FMT},
- 	{.name = "ima-ng", .fmt = "d-ng|n-ng"},
- 	{.name = "ima-sig", .fmt = "d-ng|n-ng|sig"},
-+	{.name = "ima-buf", .fmt = "d-ng|n-ng|buf"},
- 	{.name = "", .fmt = ""},	/* placeholder for a custom format */
- };
- 
-@@ -43,6 +44,8 @@ static const struct ima_template_field supported_fields[] = {
- 	 .field_show = ima_show_template_string},
- 	{.field_id = "sig", .field_init = ima_eventsig_init,
- 	 .field_show = ima_show_template_sig},
-+	{.field_id = "buf", .field_init = ima_eventbuf_init,
-+	 .field_show = ima_show_template_buf},
- };
- #define MAX_TEMPLATE_NAME_LEN 15
- 
-diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
-index 513b457ae900..baf4de45c5aa 100644
---- a/security/integrity/ima/ima_template_lib.c
-+++ b/security/integrity/ima/ima_template_lib.c
-@@ -162,6 +162,12 @@ void ima_show_template_sig(struct seq_file *m, enum ima_show_type show,
- 	ima_show_template_field_data(m, show, DATA_FMT_HEX, field_data);
- }
- 
-+void ima_show_template_buf(struct seq_file *m, enum ima_show_type show,
-+			   struct ima_field_data *field_data)
-+{
-+	ima_show_template_field_data(m, show, DATA_FMT_HEX, field_data);
-+}
-+
- /**
-  * ima_parse_buf() - Parses lengths and data from an input buffer
-  * @bufstartp:       Buffer start address.
-@@ -389,3 +395,18 @@ int ima_eventsig_init(struct ima_event_data *event_data,
- 	return ima_write_template_field_data(xattr_value, event_data->xattr_len,
- 					     DATA_FMT_HEX, field_data);
- }
-+
-+/*
-+ *  ima_eventbuf_init - include the buffer(kexec-cmldine) as part of the
-+ *  template data.
-+ */
-+int ima_eventbuf_init(struct ima_event_data *event_data,
-+		      struct ima_field_data *field_data)
-+{
-+	if ((!event_data->buf) || (event_data->buf_len == 0))
-+		return 0;
-+
-+	return ima_write_template_field_data(event_data->buf,
-+					     event_data->buf_len, DATA_FMT_HEX,
-+					     field_data);
-+}
-diff --git a/security/integrity/ima/ima_template_lib.h b/security/integrity/ima/ima_template_lib.h
-index 6a3d8b831deb..f0178bc60c55 100644
---- a/security/integrity/ima/ima_template_lib.h
-+++ b/security/integrity/ima/ima_template_lib.h
-@@ -29,6 +29,8 @@ void ima_show_template_string(struct seq_file *m, enum ima_show_type show,
- 			      struct ima_field_data *field_data);
- void ima_show_template_sig(struct seq_file *m, enum ima_show_type show,
- 			   struct ima_field_data *field_data);
-+void ima_show_template_buf(struct seq_file *m, enum ima_show_type show,
-+				struct ima_field_data *field_data);
- int ima_parse_buf(void *bufstartp, void *bufendp, void **bufcurp,
- 		  int maxfields, struct ima_field_data *fields, int *curfields,
- 		  unsigned long *len_mask, int enforce_mask, char *bufname);
-@@ -42,4 +44,6 @@ int ima_eventname_ng_init(struct ima_event_data *event_data,
- 			  struct ima_field_data *field_data);
- int ima_eventsig_init(struct ima_event_data *event_data,
- 		      struct ima_field_data *field_data);
-+int ima_eventbuf_init(struct ima_event_data *event_data,
-+				struct ima_field_data *field_data);
- #endif /* __LINUX_IMA_TEMPLATE_LIB_H */
--- 
-2.19.1
-
+--
+Thanks,
+Sasha
