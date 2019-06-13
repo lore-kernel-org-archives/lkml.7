@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC929C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F2CC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C59332147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB58215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442655;
-	bh=MMu2sKMseQSw+TUl2Yw6NE1r/e8x0b/7CHCq+cul2ww=;
+	s=default; t=1560442662;
+	bh=mbqrXAitbexzm8M6vlarDFvT00EESUXBIBpAk6Pf+Sw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MWBqciiy2mMKFkhNpVeYFCRSVD1NKnBtHOO5kE3qBG3OMN4iX8V63lpFdbi+v2zaZ
-	 S00/FtgWDmQSyLbEnNlUQ9OcvtH29iJzkGn5lgSrdD8HTEmrstcv3Dl1d+8ZK89nNb
-	 rfNjAo5f+O/MoOBwbMDQrBaCX+gLf42t96pMlZY4=
+	b=D9SD/mK5B3JZ/ahWDWvI4iLTEmEgBG97EiHmBDKHhoH999lVB37y2415pLg6QDHNh
+	 ctf9Z4ZUA7gf5c14f2Rz4KXE+XiA7SpaB19JZkADBHgf5DIsfiEZKBafKH0MyKn26R
+	 Bxad04KZZQJ3b+v4+KFo6u3Z7Vm1uWeUQ9KaVA6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391990AbfFMQRA (ORCPT
+        id S2388638AbfFMQRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:17:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58460 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:17:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731146AbfFMIlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:41:12 -0400
+        id S1731134AbfFMIku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:40:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6A8121473;
-        Thu, 13 Jun 2019 08:41:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74B862147A;
+        Thu, 13 Jun 2019 08:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415271;
-        bh=MMu2sKMseQSw+TUl2Yw6NE1r/e8x0b/7CHCq+cul2ww=;
+        s=default; t=1560415250;
+        bh=mbqrXAitbexzm8M6vlarDFvT00EESUXBIBpAk6Pf+Sw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nhwPaCGEQpU5D+kh5cfGJX3j4LJWQbJMppg3Nr8N+l7pj3/Y0MSKdbYe1VyByvl57
-         gOAMNu+n6BWLuztf9lPSekXMJFesqp1/8Hj9nV9cG7IksZNYwcyDzd1XNRWoyqNS2e
-         HPy30EtezZOv4hSlhJ8dARWfORq/jGR3+RYKZkPQ=
+        b=mUIjfLvpp5fmLZIHz9oIuijgastmADWPOTH+3pi2vPAyiKbiIXx7b+s2y9GX9RTNO
+         PtzK/PAwxQMkg5PAphvf3r64FvaIpLhxbfGPB7o7wN1Aqb5/2l86rPqmci4+QyOTD7
+         on8CJhiyiVdJAC6jhSltoX7rQL2AHpYjr4Vb97ms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/118] f2fs: fix to avoid panic in dec_valid_block_count()
-Date:   Thu, 13 Jun 2019 10:32:56 +0200
-Message-Id: <20190613075645.712097097@linuxfoundation.org>
+Subject: [PATCH 4.19 057/118] misc: pci_endpoint_test: Fix test_reg_bar to be updated in pci_endpoint_test
+Date:   Thu, 13 Jun 2019 10:33:15 +0200
+Message-Id: <20190613075647.084348894@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -60,92 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5e159cd349bf3a31fb7e35c23a93308eb30f4f71 ]
+[ Upstream commit 8f220664570e755946db1282f48e07f26e1f2cb4 ]
 
-As Jungyeon reported in bugzilla:
+commit 834b90519925 ("misc: pci_endpoint_test: Add support for
+PCI_ENDPOINT_TEST regs to be mapped to any BAR") while adding
+test_reg_bar in order to map PCI_ENDPOINT_TEST regs to be mapped to any
+BAR failed to update test_reg_bar in pci_endpoint_test, resulting in
+test_reg_bar having invalid value when used outside probe.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203209
+Fix it.
 
-- Overview
-When mounting the attached crafted image and running program, I got this error.
-Additionally, it hangs on sync after the this script.
-
-The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
-
-- Reproduces
-cc poc_01.c
-./run.sh f2fs
-sync
-
- kernel BUG at fs/f2fs/f2fs.h:1788!
- RIP: 0010:f2fs_truncate_data_blocks_range+0x342/0x350
- Call Trace:
-  f2fs_truncate_blocks+0x36d/0x3c0
-  f2fs_truncate+0x88/0x110
-  f2fs_setattr+0x3e1/0x460
-  notify_change+0x2da/0x400
-  do_truncate+0x6d/0xb0
-  do_sys_ftruncate+0xf1/0x160
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The reason is dec_valid_block_count() will trigger kernel panic due to
-inconsistent count in between inode.i_blocks and actual block.
-
-To avoid panic, let's just print debug message and set SBI_NEED_FSCK to
-give a hint to fsck for latter repairing.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-[Jaegeuk Kim: fix build warning and add unlikely]
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 834b90519925 ("misc: pci_endpoint_test: Add support for PCI_ENDPOINT_TEST regs to be mapped to any BAR")
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/misc/pci_endpoint_test.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index a4b6eacf22ea..64f970cca1b4 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1744,6 +1744,7 @@ enospc:
- 	return -ENOSPC;
- }
- 
-+void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...);
- static inline void dec_valid_block_count(struct f2fs_sb_info *sbi,
- 						struct inode *inode,
- 						block_t count)
-@@ -1752,13 +1753,21 @@ static inline void dec_valid_block_count(struct f2fs_sb_info *sbi,
- 
- 	spin_lock(&sbi->stat_lock);
- 	f2fs_bug_on(sbi, sbi->total_valid_block_count < (block_t) count);
--	f2fs_bug_on(sbi, inode->i_blocks < sectors);
- 	sbi->total_valid_block_count -= (block_t)count;
- 	if (sbi->reserved_blocks &&
- 		sbi->current_reserved_blocks < sbi->reserved_blocks)
- 		sbi->current_reserved_blocks = min(sbi->reserved_blocks,
- 					sbi->current_reserved_blocks + count);
- 	spin_unlock(&sbi->stat_lock);
-+	if (unlikely(inode->i_blocks < sectors)) {
-+		f2fs_msg(sbi->sb, KERN_WARNING,
-+			"Inconsistent i_blocks, ino:%lu, iblocks:%llu, sectors:%llu",
-+			inode->i_ino,
-+			(unsigned long long)inode->i_blocks,
-+			(unsigned long long)sectors);
-+		set_sbi_flag(sbi, SBI_NEED_FSCK);
-+		return;
-+	}
- 	f2fs_i_blocks_write(inode, count, false, true);
- }
- 
-@@ -2727,7 +2736,6 @@ static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi,
- 
- bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
- 					block_t blkaddr, int type);
--void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...);
- static inline void verify_blkaddr(struct f2fs_sb_info *sbi,
- 					block_t blkaddr, int type)
- {
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 896e2df9400f..fd33a3b9c66f 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -662,6 +662,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+ 	data = (struct pci_endpoint_test_data *)ent->driver_data;
+ 	if (data) {
+ 		test_reg_bar = data->test_reg_bar;
++		test->test_reg_bar = test_reg_bar;
+ 		test->alignment = data->alignment;
+ 		irq_type = data->irq_type;
+ 	}
 -- 
 2.20.1
 
