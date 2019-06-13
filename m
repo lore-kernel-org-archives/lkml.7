@@ -2,163 +2,105 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 492ECC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F37C9C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 135E220449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560438760;
-	bh=fWn/j2co1eFhB4DIu2nWHccLcw32ULZkm0SQPN00GJ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=od13ng2uLXKSC0G8BsfId1ovnVU7C74NEtNhq0j161DibbtN8w0AWvhd/vL0acLP2
-	 kXuj0kC82hE1fxQBYfRVFSyvsDQa4GLb+CKa+g+QyZKoHqbipnqgpo+5xXjp+76xvd
-	 uv7gyqO7Oxx7UDuIuIIKJAi8ROMt4qYtykZazrCQ=
+	by mail.kernel.org (Postfix) with ESMTP id D34C421473
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388158AbfFMPMi (ORCPT
+        id S2388228AbfFMPMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732283AbfFMNqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:46:53 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75D0F20851;
-        Thu, 13 Jun 2019 13:46:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560433611;
-        bh=fWn/j2co1eFhB4DIu2nWHccLcw32ULZkm0SQPN00GJ0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cG+i+kOKixoCQcmut8i62OMOBk9DfbfDH7NSPCeVW9lIlCZ/A8keKKXgTcX6v8HFC
-         k++fvHnF3gzHI3CIOB1+q1xZS2y/fkJcvmGVwcRODyrgW2R3gL5YUXnsUB7u3CyR05
-         s0iiD7aWcKwY4IIEZ6e80nDIeKylwpvNYD6cH0oY=
-Date:   Thu, 13 Jun 2019 08:46:50 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     lorenzo.pieralisi@arm.com, arnd@arndb.de,
-        linux-pci@vger.kernel.org, rjw@rjwysocki.net,
-        linux-arm-kernel@lists.infradead.org, will.deacon@arm.com,
-        wangkefeng.wang@huawei.com, linuxarm@huawei.com,
-        andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com
-Subject: Re: [PATCH v4 2/3] lib: logic_pio: Reject accesses to unregistered
- CPU MMIO regions
-Message-ID: <20190613134650.GF13533@google.com>
-References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
- <1560262374-67875-3-git-send-email-john.garry@huawei.com>
- <20190613032034.GE13533@google.com>
- <2d5e6112-be27-33c2-c1fd-6ab06405fa40@huawei.com>
+        Thu, 13 Jun 2019 11:12:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48108 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732278AbfFMNpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 09:45:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 097D1AE12;
+        Thu, 13 Jun 2019 13:45:24 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 5E34FDA897; Thu, 13 Jun 2019 15:46:12 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 15:46:12 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Naohiro Aota <Naohiro.Aota@wdc.com>
+Cc:     "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>, Qu Wenruo <wqu@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Matias =?iso-8859-1?Q?Bj=F8rling?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH v2 00/19] btrfs zoned block device support
+Message-ID: <20190613134612.GU3563@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Naohiro Aota <Naohiro.Aota@wdc.com>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>, Qu Wenruo <wqu@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Matias =?iso-8859-1?Q?Bj=F8rling?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+References: <20190607131025.31996-1-naohiro.aota@wdc.com>
+ <20190612175138.GT3563@twin.jikos.cz>
+ <SN6PR04MB5231E2F482B8D794950058FF8CEF0@SN6PR04MB5231.namprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2d5e6112-be27-33c2-c1fd-6ab06405fa40@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <SN6PR04MB5231E2F482B8D794950058FF8CEF0@SN6PR04MB5231.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:17:37AM +0100, John Garry wrote:
-> On 13/06/2019 04:20, Bjorn Helgaas wrote:
-> > On Tue, Jun 11, 2019 at 10:12:53PM +0800, John Garry wrote:
-> > > Currently when accessing logical indirect PIO addresses in
-> > > logic_{in, out}{,s}, we first ensure that the region is registered.
-> 
-> > I think logic_pio is specifically concerned with I/O port space, so
-> > it's a little bit unfortunate that we named this "PIO".
+On Thu, Jun 13, 2019 at 04:59:23AM +0000, Naohiro Aota wrote:
+> On 2019/06/13 2:50, David Sterba wrote:
+> > On Fri, Jun 07, 2019 at 10:10:06PM +0900, Naohiro Aota wrote:
+> >> btrfs zoned block device support
+> >>
+> >> This series adds zoned block device support to btrfs.
 > > 
-> > PIO is a general term for "Programmed I/O", which just means the CPU
-> > is involved in each transfer, as opposed to DMA.  The transfers can be
-> > to either MMIO or I/O port space.
+> > The overall design sounds ok.
 > > 
-> > So this ends up being a little confusing because I think you mean
-> > "Port I/O", not "Programmed I/O".
+> > I skimmed through the patches and the biggest task I see is how to make
+> > the hmzoned adjustments and branches less visible, ie. there are too
+> > many if (hmzoned) { do something } standing out. But that's merely a
+> > matter of wrappers and maybe an abstraction here and there.
 > 
-> Personally I agree that the naming isn't great. But then Arnd does think
-> that "PIO" is appropriate.
+> Sure. I'll add some more abstractions in the next version.
+
+Ok, I'll reply to the patches with specific things.
+
+> > How can I test the zoned devices backed by files (or regular disks)? I
+> > searched for some concrete example eg. for qemu or dm-zoned, but closest
+> > match was a text description in libzbc README that it's possible to
+> > implement. All other howtos expect a real zoned device.
 > 
-> There were many different names along the way to this support merged, and I
-> think that the naming became almost irrelevant in the end.
+> You can use tcmu-runer [1] to create an emulated zoned device backed by 
+> a regular file. Here is a setup how-to:
+> http://zonedstorage.io/projects/tcmu-runner/#compilation-and-installation
 
-Yep, Arnd is right.  The "PIO" name contributed a little to my
-confusion, but I think the bigger piece was that I read the "indirect
-PIO addresses" above as being parallel to the "CPU MMIO regions"
-below, when in fact, they are not.  The arguments to logic_inb() are
-always port addresses, never CPU MMIO addresses, but in some cases
-logic_inb() internally references a CPU MMIO region that corresponds
-to the port address.
+That looks great, thanks. I wonder why there's no way to find that, all
+I got were dead links to linux-iscsi.org or tutorials of targetcli that
+were years old and not working.
 
-Possible commit log text:
+Feeding the textual commands to targetcli is not exactly what I'd
+expect for scripting, but at least it seems to work.
 
-  The logic_{in,out}*() functions access two regions of I/O port
-  addresses:
-
-    1) [0, MMIO_UPPER_LIMIT): these are assumed to be
-       LOGIC_PIO_CPU_MMIO regions, where a bridge converts CPU loads
-       and stores to MMIO space on its primary side into I/O port
-       transactions on its secondary side.
-
-    2) [MMIO_UPPER_LIMIT, IO_SPACE_LIMIT): these are assumed to be
-       LOGIC_PIO_INDIRECT regions, where we verify that the region was
-       registered by logic_pio_register_range() before calling the
-       logic_pio_host_ops functions to perform the access.
-
-  Previously there was no requirement that accesses to the
-  LOGIC_PIO_CPU_MMIO area matched anything registered by
-  logic_pio_register_range(), and accesses to unregistered I/O ports
-  could cause exceptions like the one below.
-
-  Verify that accesses to ports in the LOGIC_PIO_CPU_MMIO area
-  correspond to registered ranges.  Accesses to ports outside those
-  registered ranges fail (logic_in*() returns ~0 data and logic_out*()
-  does nothing).
-
-  This matches the x86 behavior where in*() returns ~0 if no device
-  responds, and out*() is dropped if no device claims it.
-
-> >   1) The simple "bridge converts CPU MMIO space to PCI I/O port space"
-> >      flavor is essentially identical to what ia64 (and probably other
-> >      architectures) does.  This should really be combined somehow.
-> 
-> Maybe. For ia64, it seems to have some "platform" versions of IO port
-> accessors, and then also accessors need a fence barrier. I'm not sure how
-> well that would fit with logical PIO. It would need further analysis.
-
-Right.  That shouldn't be part of this series, but I think it would be
-nice to someday unify the ia64 add_io_space() path with the
-pci_register_io_range() path.  There might have to be ia64-specific
-accessors at the bottom for the fences, but I think the top side could
-be unified because it's conceptually the same thing -- an MMIO region
-that is translated by a bridge to an I/O port region.
-
-> >   2) If you made a default set of logic_pio_host_ops that merely did
-> >      loads/stores and maybe added a couple fields in the struct
-> >      logic_pio_hwaddr, I bet you could unify the two kinds so
-> >      logic_inb() would look something like this:
-> 
-> Yeah, I did consider this. We do not provide host operators for PCI MMIO
-> ranges. We could simply provide regular versions of inb et al for this. A
-> small obstacle for this is that we redefine inb et al, so would need
-> "direct" versions also. It would be strange.
-
-Yeah, just a thought, maybe it wouldn't work out.
-
-> > > Any failed checks silently return.
-> > 
-> > I *think* what you're doing here is making inb/outb/etc work the same
-> > as on x86, i.e., if no device responds to an inb(), the caller gets
-> > ~0, and if no device claims an outb() the data gets dropped.
-> 
-> Correct, but with a caveat: when you say no device responds, this means that
-> - for arm64 case - no PCI MMIO region is mapped.
-
-Yep.  I was describing the x86 behavior, where we don't do any mapping
-and all we can say is that no device responded.
-
-Bjorn
+I tried to pass an emulated ZBC device on host to KVM guest (as a scsi
+device) but lsscsi does not recognize that it as a zonde device (just a
+QEMU harddisk). So this seems the emulation must be done inside the VM.
