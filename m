@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC8DC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041F5C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC682084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D685C21721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730791AbfFMQsz (ORCPT
+        id S1730197AbfFMQsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:48:55 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:50227 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727926AbfFMEoY (ORCPT
+        Thu, 13 Jun 2019 12:48:53 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:53297 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727942AbfFMEpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 00:44:24 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TU25N7U_1560401051;
+        Thu, 13 Jun 2019 00:45:19 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TU25N7U_1560401051;
 Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TU25N7U_1560401051)
           by smtp.aliyun-inc.com(127.0.0.1);
           Thu, 13 Jun 2019 12:44:19 +0800
@@ -30,9 +30,9 @@ To:     hughd@google.com, kirill.shutemov@linux.intel.com, mhocko@suse.com,
         vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org
 Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [v3 PATCH 1/2] mm: thp: make transhuge_vma_suitable available for anonymous THP
-Date:   Thu, 13 Jun 2019 12:44:00 +0800
-Message-Id: <1560401041-32207-2-git-send-email-yang.shi@linux.alibaba.com>
+Subject: [v3 PATCH 2/2] mm: thp: fix false negative of shmem vma's THP eligibility
+Date:   Thu, 13 Jun 2019 12:44:01 +0800
+Message-Id: <1560401041-32207-3-git-send-email-yang.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1560401041-32207-1-git-send-email-yang.shi@linux.alibaba.com>
 References: <1560401041-32207-1-git-send-email-yang.shi@linux.alibaba.com>
@@ -41,14 +41,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The transhuge_vma_suitable() was only available for shmem THP, but
-anonymous THP has the same check except pgoff check.  And, it will be
-used for THP eligible check in the later patch, so make it available for
-all kind of THPs.  This also helps reduce code duplication slightly.
+The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each
+vma") introduced THPeligible bit for processes' smaps. But, when checking
+the eligibility for shmem vma, __transparent_hugepage_enabled() is
+called to override the result from shmem_huge_enabled().  It may result
+in the anonymous vma's THP flag override shmem's.  For example, running a
+simple test which create THP for shmem, but with anonymous THP disabled,
+when reading the process's smaps, it may show:
 
-Since anonymous THP doesn't have to check pgoff, so make pgoff check
-shmem vma only.
+7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
+Size:               4096 kB
+...
+[snip]
+...
+ShmemPmdMapped:     4096 kB
+...
+[snip]
+...
+THPeligible:    0
 
+And, /proc/meminfo does show THP allocated and PMD mapped too:
+
+ShmemHugePages:     4096 kB
+ShmemPmdMapped:     4096 kB
+
+This doesn't make too much sense.  The shmem objects should be treated
+separately from anonymous THP.  Calling shmem_huge_enabled() with checking
+MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
+dax vma check since we already checked if the vma is shmem already.
+
+Also check if vma is suitable for THP by calling
+transhuge_vma_suitable().
+
+And minor fix to smaps output format and documentation.
+
+Fixes: 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each vma")
 Cc: Hugh Dickins <hughd@google.com>
 Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 Cc: Michal Hocko <mhocko@suse.com>
@@ -56,82 +83,77 @@ Cc: Vlastimil Babka <vbabka@suse.cz>
 Cc: David Rientjes <rientjes@google.com>
 Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 ---
- mm/huge_memory.c |  2 +-
- mm/internal.h    | 25 +++++++++++++++++++++++++
- mm/memory.c      | 13 -------------
- 3 files changed, 26 insertions(+), 14 deletions(-)
+ Documentation/filesystems/proc.txt | 4 ++--
+ fs/proc/task_mmu.c                 | 3 ++-
+ mm/huge_memory.c                   | 9 +++++++--
+ mm/shmem.c                         | 3 +++
+ 4 files changed, 14 insertions(+), 5 deletions(-)
 
+diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+index 66cad5c..b0ded06 100644
+--- a/Documentation/filesystems/proc.txt
++++ b/Documentation/filesystems/proc.txt
+@@ -477,8 +477,8 @@ replaced by copy-on-write) part of the underlying shmem object out on swap.
+ "SwapPss" shows proportional swap share of this mapping. Unlike "Swap", this
+ does not take into account swapped out page of underlying shmem objects.
+ "Locked" indicates whether the mapping is locked in memory or not.
+-"THPeligible" indicates whether the mapping is eligible for THP pages - 1 if
+-true, 0 otherwise.
++"THPeligible" indicates whether the mapping is eligible for allocating THP
++pages - 1 if true, 0 otherwise. It just shows the current status.
+ 
+ "VmFlags" field deserves a separate description. This member represents the kernel
+ flags associated with the particular virtual memory area in two letter encoded
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 01d4eb0..6a13882 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -796,7 +796,8 @@ static int show_smap(struct seq_file *m, void *v)
+ 
+ 	__show_smap(m, &mss);
+ 
+-	seq_printf(m, "THPeligible:    %d\n", transparent_hugepage_enabled(vma));
++	seq_printf(m, "THPeligible:		%d\n",
++		   transparent_hugepage_enabled(vma));
+ 
+ 	if (arch_pkeys_enabled())
+ 		seq_printf(m, "ProtectionKey:  %8u\n", vma_pkey(vma));
 diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 9f8bce9..4bc2552 100644
+index 4bc2552..36f0225 100644
 --- a/mm/huge_memory.c
 +++ b/mm/huge_memory.c
-@@ -691,7 +691,7 @@ vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf)
- 	struct page *page;
- 	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
+@@ -65,10 +65,15 @@
  
--	if (haddr < vma->vm_start || haddr + HPAGE_PMD_SIZE > vma->vm_end)
-+	if (!transhuge_vma_suitable(vma, haddr))
- 		return VM_FAULT_FALLBACK;
- 	if (unlikely(anon_vma_prepare(vma)))
- 		return VM_FAULT_OOM;
-diff --git a/mm/internal.h b/mm/internal.h
-index 9eeaf2b..7f096ba 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -555,4 +555,29 @@ static inline bool is_migrate_highatomic_page(struct page *page)
- 
- void setup_zone_pageset(struct zone *zone);
- extern struct page *alloc_new_node_page(struct page *page, unsigned long node);
-+
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+#define HPAGE_CACHE_INDEX_MASK (HPAGE_PMD_NR - 1)
-+static inline bool transhuge_vma_suitable(struct vm_area_struct *vma,
-+		unsigned long haddr)
-+{
-+	/* Don't have to check pgoff for anonymous vma */
-+	if (!vma_is_anonymous(vma)) {
-+		if (((vma->vm_start >> PAGE_SHIFT) & HPAGE_CACHE_INDEX_MASK) !=
-+			(vma->vm_pgoff & HPAGE_CACHE_INDEX_MASK))
-+			return false;
-+	}
-+
-+	if (haddr < vma->vm_start || haddr + HPAGE_PMD_SIZE > vma->vm_end)
-+		return false;
-+	return true;
-+}
-+#else
-+static inline bool transhuge_vma_suitable(struct vma_area_struct *vma,
-+		unsigned long haddr)
-+{
-+	return false;
-+}
-+#endif
-+
- #endif	/* __MM_INTERNAL_H */
-diff --git a/mm/memory.c b/mm/memory.c
-index 96f1d47..2286424 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3205,19 +3205,6 @@ static vm_fault_t pte_alloc_one_map(struct vm_fault *vmf)
- }
- 
- #ifdef CONFIG_TRANSPARENT_HUGE_PAGECACHE
--
--#define HPAGE_CACHE_INDEX_MASK (HPAGE_PMD_NR - 1)
--static inline bool transhuge_vma_suitable(struct vm_area_struct *vma,
--		unsigned long haddr)
--{
--	if (((vma->vm_start >> PAGE_SHIFT) & HPAGE_CACHE_INDEX_MASK) !=
--			(vma->vm_pgoff & HPAGE_CACHE_INDEX_MASK))
--		return false;
--	if (haddr < vma->vm_start || haddr + HPAGE_PMD_SIZE > vma->vm_end)
--		return false;
--	return true;
--}
--
- static void deposit_prealloc_pte(struct vm_fault *vmf)
+ bool transparent_hugepage_enabled(struct vm_area_struct *vma)
  {
- 	struct vm_area_struct *vma = vmf->vma;
++	/* The addr is used to check if the vma size fits */
++	unsigned long addr = (vma->vm_end & HPAGE_PMD_MASK) - HPAGE_PMD_SIZE;
++
++	if (!transhuge_vma_suitable(vma, addr))
++		return false;
+ 	if (vma_is_anonymous(vma))
+ 		return __transparent_hugepage_enabled(vma);
+-	if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
+-		return __transparent_hugepage_enabled(vma);
++	if (vma_is_shmem(vma))
++		return shmem_huge_enabled(vma);
+ 
+ 	return false;
+ }
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 1bb3b8d..a807712 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -3872,6 +3872,9 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
+ 	loff_t i_size;
+ 	pgoff_t off;
+ 
++	if ((vma->vm_flags & VM_NOHUGEPAGE) ||
++	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
++		return false;
+ 	if (shmem_huge == SHMEM_HUGE_FORCE)
+ 		return true;
+ 	if (shmem_huge == SHMEM_HUGE_DENY)
 -- 
 1.8.3.1
 
