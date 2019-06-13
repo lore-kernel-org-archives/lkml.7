@@ -4,54 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CD7C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AB7C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D907020896
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB2320896
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:11:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbfFMTJz (ORCPT
+        id S1727383AbfFMTLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 15:09:55 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:58362 "EHLO gloria.sntech.de"
+        Thu, 13 Jun 2019 15:11:13 -0400
+Received: from namei.org ([65.99.196.166]:38978 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfFMTJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:09:55 -0400
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hbV6T-0000Sd-2L; Thu, 13 Jun 2019 21:09:41 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     joro@8bytes.org, m.szyprowski@samsung.com, kgene@kernel.org,
-        krzk@kernel.org, will.deacon@arm.com, robin.murphy@arm.com,
-        agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 09/10] iommu/rockchip: convert to SPDX license tags
-Date:   Thu, 13 Jun 2019 21:09:39 +0200
-Message-ID: <1921640.M456AIj05J@diego>
-In-Reply-To: <20190613162703.986-9-tiny.windzz@gmail.com>
-References: <20190613162703.986-1-tiny.windzz@gmail.com> <20190613162703.986-9-tiny.windzz@gmail.com>
+        id S1725842AbfFMTLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 15:11:12 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x5DJAmSG022560;
+        Thu, 13 Jun 2019 19:10:48 GMT
+Date:   Fri, 14 Jun 2019 05:10:48 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Prakhar Srivastava <prsriva02@gmail.com>
+cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zohar@linux.ibm.com,
+        roberto.sassu@huawei.com, vgoyal@redhat.com
+Subject: Re: [PATCH V8 1/3] Define a new IMA hook to measure the boot command
+ line arguments
+In-Reply-To: <20190612221549.28399-2-prsriva02@gmail.com>
+Message-ID: <alpine.LRH.2.21.1906140501300.14107@namei.org>
+References: <20190612221549.28399-1-prsriva02@gmail.com> <20190612221549.28399-2-prsriva02@gmail.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 13. Juni 2019, 18:27:02 CEST schrieb Yangtao Li:
-> Updates license to use SPDX-License-Identifier.
+On Wed, 12 Jun 2019, Prakhar Srivastava wrote:
+
+> This patch adds support in ima to measure kexec cmdline args
+> during soft reboot(kexec_file_load).
 > 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> - A new ima hook ima_kexec_cmdline is defined to be called by the
+> kexec code.
+> - A new function process_buffer_measurement is defined to measure
+> the buffer hash into the ima log.
+> - A new func policy KEXEC_CMDLINE is defined to control the
+>  measurement.[Suggested by Mimi]
+> 
+> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
 
-Acked-by: Heiko Stuebner <heiko@sntech.de>
+> +	struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
+> +	struct ima_event_data event_data = {.iint = iint };
 
+Minor nit: looks like this could be simplified to:
+
+	struct integrity_iint_cache iint = {};
+	struct ima_event_data event_data = {.iint = &iint };
+
+which also saves the later memset. 'hash' can also be initialized with '= 
+{}'.
+
+
+-- 
+James Morris
+<jmorris@namei.org>
 
