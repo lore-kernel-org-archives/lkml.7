@@ -2,106 +2,54 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB17C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0757C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED62A20449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:36:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443779;
-	bh=mZOzCqx3eT/+VtqG9suaVNKtiI7GMTR02WnJhf2gRy0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IZiQXJElYDvYHLxzfM5Dm6Gczap91KDT4kbt/wi+2b9d47AEwLAXNik26egjCegIu
-	 5cy0NbmFimycYv2Zmw/WzZ/QAKTr2Jy9I4RXjG5s1P70ZClUZ6u2YZU7y4U1IoO3cE
-	 Kl9T0j0KlUdG6YjMpdwjk5QiOwWIQ1RcFjmU3skQ=
+	by mail.kernel.org (Postfix) with ESMTP id A03A020644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392605AbfFMQgR (ORCPT
+        id S2403834AbfFMQgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:36:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53624 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:36:32 -0400
+Received: from verein.lst.de ([213.95.11.211]:36328 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730692AbfFMHfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 03:35:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C5FF20866;
-        Thu, 13 Jun 2019 07:35:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560411320;
-        bh=mZOzCqx3eT/+VtqG9suaVNKtiI7GMTR02WnJhf2gRy0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L7rovxjtpPBh+rST+d1xo73WMv0KBX5MDbgsTQh7mHqvXrQA5Bht5or9M6z3fwWDb
-         8dNJQ9iXX4kQeXKdALwOpKoYwYqfEyvdvlEDie8W/4iAmAoJ9nxB2K0MkD4TtND6n5
-         fgNjBkIt1eUhepgTsPvpsXC5xGcdIYRj8bdIdWb8=
-Date:   Thu, 13 Jun 2019 09:35:18 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        linux-bluetooth@vger.kernel.org, Jeremy Cline <jeremy@jcline.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Bluetooth regression breaking BT connection for all 2.0 and
- older devices in 5.0.15+, 5.1.x and master
-Message-ID: <20190613073518.GA16436@kroah.com>
-References: <af8cf6f4-4979-2f6f-68ed-e5b368b17ec7@redhat.com>
+        id S1730679AbfFMHaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 03:30:09 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 504D068B02; Thu, 13 Jun 2019 09:29:37 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 09:29:37 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Christoph Hellwig <hch@lst.de>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [BISECTED REGRESSION] b43legacy broken on G4 PowerBook
+Message-ID: <20190613072937.GA12093@lst.de>
+References: <73da300c-871c-77ac-8a3a-deac226743ef@lwfinger.net> <20190607172902.GA8183@lst.de> <30000803-3772-3edf-f4a9-55122d504f3f@lwfinger.net> <20190610081825.GA16534@lst.de> <153c13f5-a829-1eab-a3c5-fecfb84127ff@lwfinger.net> <20190611060521.GA19512@lst.de> <5aaa600b-5b59-1f68-454f-20403c318f1a@lwfinger.net> <20190612065558.GA19585@lst.de> <d6d82c0d-4a40-a191-0414-6b9a64547f65@lwfinger.net> <05db995c55ad7c1002124374c139d2c0812ad034.camel@kernel.crashing.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <af8cf6f4-4979-2f6f-68ed-e5b368b17ec7@redhat.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <05db995c55ad7c1002124374c139d2c0812ad034.camel@kernel.crashing.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 03:31:55PM +0200, Hans de Goede wrote:
-> Hi All,
+On Thu, Jun 13, 2019 at 07:59:51AM +1000, Benjamin Herrenschmidt wrote:
+> > With the patch for Kconfig above, and the original patch setting 
+> > ARCH_ZONE_DMA_BITS to 30, everything works.
+> > 
+> > Do you have any ideas on what should trigger the change in ARCH_ZONE_BITS? 
+> > Should it be CONFIG_PPC32 defined, or perhaps CONFIG_G4_CPU defined?
 > 
-> First of all this is a known issue and it seems a fix is in the works,
-> but what I do not understand is why the commit causing this has not
-> simply been reverted until the fix is done, esp. for the 5.0.x
-> stable series where this was introduced in 5.0.15.
-> 
-> The problem I'm talking about is commit d5bb334a8e17 ("Bluetooth: Align
-> minimum encryption key size for LE and BR/EDR connections"):
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d5bb334a8e171b262e48f378bd2096c0ea458265
-> basically completely breaking all somewhat older (and some current cheap
-> no-name) bluetooth devices:
-> 
-> A revert of this was first proposed on May 22nd:
-> https://lore.kernel.org/netdev/CA+E=qVfopSA90vG2Kkh+XzdYdNn=M-hJN_AptW=R+B5v3HB9eA@mail.gmail.com/T/
-> We are 18 days further now and this problem still exists, including in the
-> 5.0.15+ and 5.1.x stable kernels.
-> 
-> A solution has been suggested: https://lore.kernel.org/linux-bluetooth/20190522070540.48895-1-marcel@holtmann.org/T/#u
-> and at least the Fedora 5.1.4+ kernels now carry this as a temporary fix,
-> but as of today I do not see a fix nor a revert in Torvald's tree yet and
-> neither does there seem to be any fix in the 5.0.x and 5.1.x stable series.
-> 
-> In the mean time we are getting a lot of bug reports about this:
-> https://bugzilla.kernel.org/show_bug.cgi?id=203643
-> https://bugzilla.redhat.com/show_bug.cgi?id=1711468
-> https://bugzilla.redhat.com/show_bug.cgi?id=1713871
-> https://bugzilla.redhat.com/show_bug.cgi?id=1713980
-> 
-> And some reporters:
-> https://bugzilla.redhat.com/show_bug.cgi?id=1713871#c4
-> Are indicating that the Fedora kernels with the workaround included
-> still do not work...
-> 
-> As such I would like to suggest that we just revert the troublesome
-> commit for now and re-add it when we have a proper fix.
+> I think CONFIG_PPC32 is fine
 
-I've now reverted this as it does not seem to be going anywhere anytime
-soon.  After the mess gets sorted out in Linus's tree, if someone could
-send stable@vger the commit ids that should be applied, I will be glad
-to do so.
-
-thanks,
-
-greg k-h
+I'll cook up a patch unless someone beats me to it.
