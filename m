@@ -2,96 +2,593 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EFEC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B65C5C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B73121743
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7744221473
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:17:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eeL24GRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388646AbfFMPRE (ORCPT
+        id S1733267AbfFMPRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:17:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58998 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbfFMNXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:23:43 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 010313003A59;
-        Thu, 13 Jun 2019 13:23:35 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D270C541C7;
-        Thu, 13 Jun 2019 13:23:33 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>
-Subject: [PATCH 1/9] perf/x86: Always store regs->ip in perf_callchain_kernel()
-Date:   Thu, 13 Jun 2019 08:20:58 -0500
-Message-Id: <3fc9271e95c87a4c31d8184514b8667007cb9540.1560431531.git.jpoimboe@redhat.com>
-In-Reply-To: <cover.1560431531.git.jpoimboe@redhat.com>
-References: <cover.1560431531.git.jpoimboe@redhat.com>
+        Thu, 13 Jun 2019 11:17:09 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36886 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732198AbfFMNXN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 09:23:13 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 20so10977622pgr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 06:23:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MaIyElzKL5RKMB8l9eySyc6lvUx5AGZ+HAJN95Nni9U=;
+        b=eeL24GRuf0+MT9gvXofIXXhK7ay/UZyh8gEHofspIt995zp3HPNqaRQQmrDCUU69cN
+         XLktcycXvXzNiLNN8t3c44g7ZCw3CbG7oIB39WPpYsjUT2NP/XaVZuetpmjGibHiODOD
+         rpAHaEewjHTAn0HtU8ikObP/RAKKVEollnmdnV/9EqfZC3icbr+cYbLIsutFWZ7yCllV
+         PwwRBV6b8Bf9/4nIUrg1OBQmCFT/EnvwFPZWUjVBOyLcURPoJNW998Bde1Pmh0uLl/Hv
+         ftyKXCfebsas+zt8tLdYaQCKzb1OcAFF3Vl1txUq2/06oN1+9Kt04t0RfqTlylAIyBU1
+         SSzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MaIyElzKL5RKMB8l9eySyc6lvUx5AGZ+HAJN95Nni9U=;
+        b=fTFz/iCw3AppFL+hnn8bUC0eIZD9XJxfBY5/RhOzo4Qne5kImfRVX+y/CvR1ZtW851
+         aQdgganYkWcBeoG2NTE83LOvnik6EAOHy4UeRNpCHfMlfHAkbia1y6zOaX1yHtAM+POg
+         qG3OJmk1fzJkpACfI2Vfi7jPdpVvwwFYtAfOmFEuO+vcipNuE7CTMXcaS+HkwWg94ttL
+         nutU1qKDFLT57jvrxn+BD4X4FNPF5+ODAqZzDqJzEDRr+fvmSEM6Q7OlGRDiriCmsnS3
+         a0HJc3cXYh7WOqbeTIH8n0QPVGNfN4vpKt/F/gvw/dMJwbtVpFTdc6gxkYwg6X94HS9M
+         +2sA==
+X-Gm-Message-State: APjAAAVrbLRO8JWR5Cvi8nFDZvXoZ/J+BTt8d5/ifvjfRdcCBdbsy2EA
+        n4wKQ2rDxKarrtUs/DBNfQ6D
+X-Google-Smtp-Source: APXvYqyFmMCW0hVXmZ1u+Axd9A96fVJqu6PJ3yff+WZbb+5Sz4BnH+MEtpVu3O3hzTg6ht6anJ4uhg==
+X-Received: by 2002:a17:90a:2627:: with SMTP id l36mr5745282pje.71.1560432192614;
+        Thu, 13 Jun 2019 06:23:12 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2405:204:7141:4858:bdd9:1134:3bdd:7ab4])
+        by smtp.gmail.com with ESMTPSA id f88sm3311pjg.5.2019.06.13.06.23.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Jun 2019 06:23:11 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 18:53:01 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     s.hauer@pengutronix.de, robh+dt@kernel.org, festevam@gmail.com,
+        kernel@pengutronix.de, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, pbrobinson@gmail.com,
+        yossi@novtech.com, nazik@novtech.com
+Subject: Re: [PATCH 2/2] ARM: dts: Add support for 96Boards Meerkat96 board
+Message-ID: <20190613132301.GB22171@Mani-XPS-13-9360>
+References: <20190522131550.9034-1-manivannan.sadhasivam@linaro.org>
+ <20190522131550.9034-3-manivannan.sadhasivam@linaro.org>
+ <20190603121710.GB15919@dragon>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 13 Jun 2019 13:23:43 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190603121710.GB15919@dragon>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Liu <songliubraving@fb.com>
+Hi Shawn,
 
-The stacktrace_map_raw_tp BPF selftest is failing because the RIP saved
-by perf_arch_fetch_caller_regs() isn't getting saved by
-perf_callchain_kernel().
+On Mon, Jun 03, 2019 at 08:17:17PM +0800, Shawn Guo wrote:
+> On Wed, May 22, 2019 at 06:45:50PM +0530, Manivannan Sadhasivam wrote:
+> > Add devicetree support for 96Boards Meerkat96 board from Novtech. This
+> > board is one of the Consumer Edition boards of the 96Boards family based
+> > on i.MX7D SoC. Following are the currently supported features of the
+> > board:
+> > 
+> > * uSD
+> > * WiFi/BT
+> > * USB
+> > 
+> > More information about this board can be found in 96Boards product page:
+> > https://www.96boards.org/product/imx7-96/
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  arch/arm/boot/dts/Makefile            |   1 +
+> >  arch/arm/boot/dts/imx7d-meerkat96.dts | 396 ++++++++++++++++++++++++++
+> >  2 files changed, 397 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/imx7d-meerkat96.dts
+> > 
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index f4f5aeaf3298..3018a763dbd1 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -579,6 +579,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
+> >  	imx7d-cl-som-imx7.dtb \
+> >  	imx7d-colibri-emmc-eval-v3.dtb \
+> >  	imx7d-colibri-eval-v3.dtb \
+> > +	imx7d-meerkat96.dtb \
+> >  	imx7d-nitrogen7.dtb \
+> >  	imx7d-pico-hobbit.dtb \
+> >  	imx7d-pico-pi.dtb \
+> > diff --git a/arch/arm/boot/dts/imx7d-meerkat96.dts b/arch/arm/boot/dts/imx7d-meerkat96.dts
+> > new file mode 100644
+> > index 000000000000..7898d27340f6
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx7d-meerkat96.dts
+> > @@ -0,0 +1,396 @@
+> > +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+> > +/*
+> > + * Copyright (C) 2019 Linaro Ltd.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "imx7d.dtsi"
+> > +
+> > +/ {
+> > +	model = "96Boards Meerkat96 Board";
+> > +	compatible = "novtech,imx7d-meerkat96", "fsl,imx7d";
+> > +
+> > +	chosen {
+> > +		stdout-path = &uart6;
+> > +	};
+> > +
+> > +	memory@80000000 {
+> > +		device_type = "memory";
+> > +		reg = <0x80000000 0x20000000>; /* 512MB */
+> > +	};
+> > +
+> > +	reg_wlreg_on: regulator-wlreg_on {
+> 
+> Use hyphen consistently in node name: regulator-wlreg-on
+> 
 
-This was broken by the following commit:
+Ack
 
-  d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+> > +		compatible = "regulator-fixed";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_wlreg_on>;
+> > +		regulator-name = "wlreg_on";
+> > +		regulator-min-microvolt = <3300000>;
+> > +		regulator-max-microvolt = <3300000>;
+> > +		startup-delay-us = <100>;
+> > +		gpio = <&gpio6 15 GPIO_ACTIVE_HIGH>;
+> > +		enable-active-high;
+> > +		regulator-always-on;
+> > +	};
+> > +
+> > +	reg_3p3v: regulator-3p3v {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "3P3V";
+> > +		regulator-min-microvolt = <3300000>;
+> > +		regulator-max-microvolt = <3300000>;
+> > +		regulator-always-on;
+> > +	};
+> > +
+> > +	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "usb_otg1_vbus";
+> > +		regulator-min-microvolt = <5000000>;
+> > +		regulator-max-microvolt = <5000000>;
+> > +	};
+> > +
+> > +	reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "usb_otg2_vbus";
+> > +		regulator-min-microvolt = <5000000>;
+> > +		regulator-max-microvolt = <5000000>;
+> > +		gpio = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+> > +		enable-active-high;
+> > +	};
+> > +
+> > +	sw1a_reg: sw1a {
+> > +		regulator-name = "sw1a_reg";
+> 
+> Is it a fixed regulator or what?
+> 
 
-With that change, when starting with non-HW regs, the unwinder starts
-with the current stack frame and unwinds until it passes up the frame
-which called perf_arch_fetch_caller_regs().  So regs->ip needs to be
-saved deliberately.
+yep, missed the compatible. will add it.
 
-Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- arch/x86/events/core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+> > +		regulator-min-microvolt = <700000>;
+> > +		regulator-max-microvolt = <1475000>;
+> > +		regulator-boot-on;
+> > +		regulator-always-on;
+> > +		regulator-ramp-delay = <6250>;
+> > +	};
+> > +
+> > +	leds {
+> > +		compatible = "gpio-leds";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_gpio_leds>;
+> > +
+> > +		led1 {
+> > +			label = "green:user1";
+> > +			gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+> > +			linux,default-trigger = "heartbeat";
+> > +			default-state = "off";
+> > +		};
+> > +
+> > +		led2 {
+> > +			label = "green:user2";
+> > +			gpios = <&gpio1 5 GPIO_ACTIVE_LOW>;
+> > +			linux,default-trigger = "mmc0";
+> > +			default-state = "off";
+> > +		};
+> > +
+> > +		led3 {
+> > +			label = "green:user3";
+> > +			gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
+> > +			linux,default-trigger = "mmc1";
+> > +			default-state = "off";
+> > +		};
+> > +
+> > +		led4 {
+> > +			label = "green:user4";
+> > +			gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
+> > +			linux,default-trigger = "none";
+> > +			default-state = "off";
+> > +			panic-indicator;
+> > +		};
+> > +
+> > +		led@5 {
+> 
+> led5
+> 
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index f0e4804515d8..6a7cfcadfc1e 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2328,13 +2328,13 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
- 		return;
- 	}
+Ack
+
+> > +			label = "yellow:wlan";
+> > +			gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
+> > +			linux,default-trigger = "phy0tx";
+> > +			default-state = "off";
+> > +		};
+> > +
+> > +		led@6 {
+> 
+> led6
+>
+
+Ack
  
--	if (perf_hw_regs(regs)) {
--		if (perf_callchain_store(entry, regs->ip))
--			return;
-+	if (perf_callchain_store(entry, regs->ip))
-+		return;
-+
-+	if (perf_hw_regs(regs))
- 		unwind_start(&state, current, regs, NULL);
--	} else {
-+	else
- 		unwind_start(&state, current, NULL, (void *)regs->sp);
--	}
- 
- 	for (; !unwind_done(&state); unwind_next_frame(&state)) {
- 		addr = unwind_get_return_address(&state);
--- 
-2.20.1
+> > +			label = "blue:bt";
+> > +			gpios = <&gpio5 2 GPIO_ACTIVE_HIGH>;
+> > +			linux,default-trigger = "bluetooth-power";
+> > +			default-state = "off";
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&cpu0 {
+> > +	cpu-supply = <&sw1a_reg>;
+> > +};
+> > +
+> > +&i2c1 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_i2c1>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&i2c2 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_i2c2>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&i2c3 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_i2c3>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&i2c4 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_i2c4>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&lcdif {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_lcdif>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&uart1 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_uart1>;
+> > +	assigned-clocks = <&clks IMX7D_UART1_ROOT_SRC>;
+> > +	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&uart3 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_uart3>;
+> > +	assigned-clocks = <&clks IMX7D_UART3_ROOT_SRC>;
+> > +	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
+> > +	fsl,uart-has-rtscts;
+> 
+> fsl,uart-has-rtscts is deprecated, should use uart-has-rtscts instead.
+> 
 
+Okay
+
+> > +	status = "okay";
+> > +};
+> > +
+> > +&uart6 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_uart6>;
+> > +	assigned-clocks = <&clks IMX7D_UART6_ROOT_SRC>;
+> > +	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&uart7 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_uart7 &pinctrl_bt_gpios>;
+> > +	assigned-clocks = <&clks IMX7D_UART7_ROOT_SRC>;
+> > +	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
+> > +	fsl,uart-has-rtscts;
+> 
+> Ditto
+> 
+
+Okay
+
+> > +	fsl,dte-mode;
+> > +	status = "okay";
+> > +
+> > +	bluetooth {
+> > +		compatible = "brcm,bcm43438-bt";
+> > +		device-wakeup-gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
+> > +		host-wakeup-gpios = <&gpio4 17 GPIO_ACTIVE_HIGH>;
+> > +	};
+> > +};
+> > +
+> > +&usbotg1 {
+> > +	vbus-supply = <&reg_usb_otg1_vbus>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&usbotg2 {
+> > +	vbus-supply = <&reg_usb_otg2_vbus>;
+> > +	dr_mode = "host";
+> > +	status = "okay";
+> > +};
+> > +
+> > +&usdhc1 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_usdhc1>;
+> > +	keep-power-in-suspend;
+> > +	tuning-step = <2>;
+> > +	vmmc-supply = <&reg_3p3v>;
+> > +	no-1-8-v;
+> > +	broken-cd;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&usdhc3 {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_usdhc3>;
+> > +	bus-width = <4>;
+> > +	no-1-8-v;
+> > +	no-mmc;
+> > +	non-removable;
+> > +	keep-power-in-suspend;
+> > +	enable-sdio-wakeup;
+> 
+> Should use 'wakeup-source'.  See bindings/power/wakeup-source.txt.
+> 
+
+Okay
+
+> > +	vmmc-supply = <&reg_wlreg_on>;
+> > +	vqmmc-supply =<&reg_3p3v>;
+> > +	status = "okay";
+> > +
+> > +	brcmf: wifi@1 {
+> > +		reg = <1>;
+> > +		compatible = "brcm,bcm4329-fmac";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_wlan_irq>;
+> > +		interrupt-parent = <&gpio6>;
+> > +		interrupts = <14 IRQ_TYPE_LEVEL_HIGH>;
+> > +		interrupt-names = "host-wake";
+> > +	};
+> > +};
+> > +
+> > +&iomuxc {
+> > +	imx7d-sdb {
+> 
+> This container node is unnecessary now, and can be dropped to save one
+> level of indentation.
+> 
+
+Ah, thanks for the info. It really got stretched...
+
+> > +		pinctrl_bt_gpios: bt_gpios {
+> 
+> Please name these pinctrl group node more consistently, something like
+> below:
+> 
+> 	pinctrl_xxx: xxxgrp {
+> 		...
+> 	};
+> 
+> Also keep them alphabetically sorted.
+> 
+
+Okay
+
+> > +			fsl,pins = <
+> > +				MX7D_PAD_SAI1_TX_BCLK__GPIO6_IO13	0x59
+> > +				MX7D_PAD_ECSPI1_MOSI__GPIO4_IO17	0x1f
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_i2c1: i2c1grp {
+> > +			fsl,pins = <
+> > +				MX7D_PAD_I2C1_SDA__I2C1_SDA		0x4000007f
+> > +				MX7D_PAD_I2C1_SCL__I2C1_SCL		0x4000007f
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_i2c2: i2c2grp {
+> > +			fsl,pins = <
+> > +				MX7D_PAD_I2C2_SDA__I2C2_SDA		0x4000007f
+> > +				MX7D_PAD_I2C2_SCL__I2C2_SCL		0x4000007f
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_i2c3: i2c3grp {
+> > +			fsl,pins = <
+> > +				MX7D_PAD_ENET1_RGMII_RD1__I2C3_SDA	0x4000007f
+> > +				MX7D_PAD_ENET1_RGMII_RD0__I2C3_SCL	0x4000007f
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_i2c4: i2c4grp {
+> > +			fsl,pins = <
+> > +				MX7D_PAD_SAI1_RX_BCLK__I2C4_SDA		0x4000007f
+> > +				MX7D_PAD_SAI1_RX_SYNC__I2C4_SCL		0x4000007f
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_lcdif: lcdifgrp {
+> > +			fsl,pins = <
+> > +				MX7D_PAD_LCD_DATA00__LCD_DATA0		0x79
+> > +				MX7D_PAD_LCD_DATA01__LCD_DATA1		0x79
+> > +				MX7D_PAD_LCD_DATA02__LCD_DATA2		0x79
+> > +				MX7D_PAD_LCD_DATA03__LCD_DATA3		0x79
+> > +				MX7D_PAD_LCD_DATA04__LCD_DATA4		0x79
+> > +				MX7D_PAD_LCD_DATA05__LCD_DATA5		0x79
+> > +				MX7D_PAD_LCD_DATA06__LCD_DATA6		0x79
+> > +				MX7D_PAD_LCD_DATA07__LCD_DATA7		0x79
+> > +				MX7D_PAD_LCD_DATA08__LCD_DATA8		0x79
+> > +				MX7D_PAD_LCD_DATA09__LCD_DATA9		0x79
+> > +				MX7D_PAD_LCD_DATA10__LCD_DATA10		0x79
+> > +				MX7D_PAD_LCD_DATA11__LCD_DATA11		0x79
+> > +				MX7D_PAD_LCD_DATA12__LCD_DATA12		0x79
+> > +				MX7D_PAD_LCD_DATA13__LCD_DATA13		0x79
+> > +				MX7D_PAD_LCD_DATA14__LCD_DATA14		0x79
+> > +				MX7D_PAD_LCD_DATA15__LCD_DATA15		0x79
+> > +				MX7D_PAD_LCD_DATA16__LCD_DATA16		0x79
+> > +				MX7D_PAD_LCD_DATA17__LCD_DATA17		0x79
+> > +				MX7D_PAD_LCD_DATA18__LCD_DATA18		0x79
+> > +				MX7D_PAD_LCD_DATA19__LCD_DATA19		0x79
+> > +				MX7D_PAD_LCD_DATA20__LCD_DATA20		0x79
+> > +				MX7D_PAD_LCD_DATA21__LCD_DATA21		0x79
+> > +				MX7D_PAD_LCD_DATA22__LCD_DATA22		0x79
+> > +				MX7D_PAD_LCD_DATA23__LCD_DATA23		0x79
+> > +				MX7D_PAD_LCD_CLK__LCD_CLK		0x79
+> > +				MX7D_PAD_LCD_ENABLE__LCD_ENABLE		0x79
+> > +				MX7D_PAD_LCD_VSYNC__LCD_VSYNC		0x79
+> > +				MX7D_PAD_LCD_HSYNC__LCD_HSYNC		0x79
+> > +				MX7D_PAD_LCD_RESET__LCD_RESET		0x79
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_gpio_leds: gpioledsgrp {
+> > +			fsl,pins = <
+> > +				MX7D_PAD_LPSR_GPIO1_IO00__GPIO1_IO0	0x59
+> > +				MX7D_PAD_LPSR_GPIO1_IO04__GPIO1_IO4	0x59
+> > +				MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5	0x59
+> > +				MX7D_PAD_LPSR_GPIO1_IO06__GPIO1_IO6	0x59
+> > +				MX7D_PAD_LPSR_GPIO1_IO07__GPIO1_IO7	0x59
+> > +				MX7D_PAD_SD1_RESET_B__GPIO5_IO2		0x59
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_tda998x: hdmigrp-1 {
+> 
+> Unused?  Maybe add it later when needed.
+> 
+
+yeah, no hdmi support as of now. Will add it later.
+
+Thanks,
+Mani
+
+> Shawn
+> 
+> > +			fsl,pins = <
+> > +				MX7D_PAD_EPDC_BDR0__GPIO2_IO28		0x59
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_uart1: uart1grp {
+> > +			fsl,pins = <
+> > +				MX7D_PAD_UART1_TX_DATA__UART1_DCE_TX	0x79
+> > +				MX7D_PAD_UART1_RX_DATA__UART1_DCE_RX	0x79
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_uart3: uart3grp {
+> > +			fsl,pins = <
+> > +				MX7D_PAD_SD3_DATA4__UART3_DCE_RX	0x79
+> > +				MX7D_PAD_SD3_DATA5__UART3_DCE_TX	0x79
+> > +				MX7D_PAD_SD3_DATA6__UART3_DCE_RTS	0x79
+> > +				MX7D_PAD_SD3_DATA7__UART3_DCE_CTS	0x79
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_uart6: uart6grp {
+> > +			fsl,pins = <
+> > +				MX7D_PAD_SD1_CD_B__UART6_DCE_RX		0x79
+> > +				MX7D_PAD_SD1_WP__UART6_DCE_TX		0x79
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_uart7: uart7grp {
+> > +			fsl,pins = <
+> > +				MX7D_PAD_ECSPI2_SCLK__UART7_DTE_TX	0x79
+> > +				MX7D_PAD_ECSPI2_MOSI__UART7_DTE_RX	0x79
+> > +				MX7D_PAD_ECSPI2_MISO__UART7_DTE_CTS	0x79
+> > +				MX7D_PAD_ECSPI2_SS0__UART7_DTE_RTS	0x79
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_usdhc1: usdhc1grp {
+> > +			fsl,pins = <
+> > +				MX7D_PAD_SD1_CMD__SD1_CMD		0x59
+> > +				MX7D_PAD_SD1_CLK__SD1_CLK		0x19
+> > +				MX7D_PAD_SD1_DATA0__SD1_DATA0		0x59
+> > +				MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
+> > +				MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
+> > +				MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_usdhc3: usdhc3grp {
+> > +			fsl,pins = <
+> > +				MX7D_PAD_SD3_CMD__SD3_CMD		0x59
+> > +				MX7D_PAD_SD3_CLK__SD3_CLK		0x0D
+> > +				MX7D_PAD_SD3_DATA0__SD3_DATA0		0x59
+> > +				MX7D_PAD_SD3_DATA1__SD3_DATA1		0x59
+> > +				MX7D_PAD_SD3_DATA2__SD3_DATA2		0x59
+> > +				MX7D_PAD_SD3_DATA3__SD3_DATA3		0x59
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_wlreg_on: wlreg_on {
+> > +			fsl,pins = <
+> > +				MX7D_PAD_SAI1_TX_DATA__GPIO6_IO15	0x19
+> > +			>;
+> > +		};
+> > +
+> > +		pinctrl_wlan_irq: wlan_irq {
+> > +			fsl,pins = <
+> > +				MX7D_PAD_SAI1_TX_SYNC__GPIO6_IO14	0x19
+> > +			>;
+> > +		};
+> > +	};
+> > +};
+> > -- 
+> > 2.17.1
+> > 
