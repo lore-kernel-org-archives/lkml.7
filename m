@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B63C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEA3C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22C7020679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45E320679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442121;
-	bh=RyQfi8PifalqsZTXPrVVALQ1aLa+4Pwc5y07uBkObAM=;
+	s=default; t=1560442126;
+	bh=rUrvbvH38CopufLnqpRn9sw2QyPuTREiClmjys0lCnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nlk+xV2OnRBIcergQo6twEVqtvO/KSkOlBnFnSXApeGwvd/A1BtQF8mDTvA0KddOD
-	 Wao6A2mDGuomgbApd8J7UbohM3dmzoFS+X0qHFNfJ4yd6KmOkJSX4ias/iF81qzQJN
-	 Pm7oH0oibszmdmTCoeaA5oYJF0mOcHNYaBjW0NAA=
+	b=auIGpCe+3yZY8hPbVpd/3bttyZwjzhs1Kz3kIM3+Uxo84d/lgjYbedqihwFA0nvoc
+	 isgs6oPoNwTecR04JaMi/arRt9WFsiL4j2CwJRVmrBKDB2h4uN5o7vsoSiXJNlJgsf
+	 RhhyRdtekKvshE+zO/ek1JyRMrC1miP47dXlDvp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390251AbfFMQIO (ORCPT
+        id S2388575AbfFMQIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:08:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34008 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:08:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731293AbfFMIpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:45:16 -0400
+        id S1731283AbfFMIo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:44:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FC5020851;
-        Thu, 13 Jun 2019 08:45:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3426C2175B;
+        Thu, 13 Jun 2019 08:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415515;
-        bh=RyQfi8PifalqsZTXPrVVALQ1aLa+4Pwc5y07uBkObAM=;
+        s=default; t=1560415498;
+        bh=rUrvbvH38CopufLnqpRn9sw2QyPuTREiClmjys0lCnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i+8S2E0Gr+a5W6xQ7ZEqFhD+poyJgE4wLMHm8cNdje6O0Alg36uGzudKMHzqqemZt
-         EFEEhgptgRqbLpUjZ2OgE6aPKRx7iNTBTMH+xQd2CtHuDBmPMPD6UtZdZNySLALsDy
-         g6SExICAZkt9b0UtU2glfJn2pOhPKA4RcTaefKf0=
+        b=UB0en7RY94q+SiLvJ/5/wzhMNsNovcNx+miaBT/g/OIqyKoCEPEwxt8rtgboyVGsG
+         W3Vx4Fj8rVrFbfFvuG/TZT/GH5ugZrkeURJ9aJMkRAjA76J5OT/f7qW6oZUamNrUkk
+         YZeXXGikk4u6PiAFq5VXoCWvMz1Q3LULbAzBfMn8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 029/155] drm/nouveau/disp/dp: respect sink limits when selecting failsafe link configuration
-Date:   Thu, 13 Jun 2019 10:32:21 +0200
-Message-Id: <20190613075654.544378169@linuxfoundation.org>
+Subject: [PATCH 5.1 023/155] mm/slab.c: fix an infinite loop in leaks_show()
+Date:   Thu, 13 Jun 2019 10:32:15 +0200
+Message-Id: <20190613075654.079935534@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -59,43 +66,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 13d03e9daf70dab032c03dc172e75bb98ad899c4 ]
+[ Upstream commit 745e10146c31b1c6ed3326286704ae251b17f663 ]
 
-Where possible, we want the failsafe link configuration (one which won't
-hang the OR during modeset because of not enough bandwidth for the mode)
-to also be supported by the sink.
+"cat /proc/slab_allocators" could hang forever on SMP machines with
+kmemleak or object debugging enabled due to other CPUs running do_drain()
+will keep making kmemleak_object or debug_objects_cache dirty and unable
+to escape the first loop in leaks_show(),
 
-This prevents "link rate unsupported by sink" messages when link training
-fails.
+do {
+	set_store_user_clean(cachep);
+	drain_cpu_caches(cachep);
+	...
 
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+} while (!is_store_user_clean(cachep));
+
+For example,
+
+do_drain
+  slabs_destroy
+    slab_destroy
+      kmem_cache_free
+        __cache_free
+          ___cache_free
+            kmemleak_free_recursive
+              delete_object_full
+                __delete_object
+                  put_object
+                    free_object_rcu
+                      kmem_cache_free
+                        cache_free_debugcheck --> dirty kmemleak_object
+
+One approach is to check cachep->name and skip both kmemleak_object and
+debug_objects_cache in leaks_show().  The other is to set store_user_clean
+after drain_cpu_caches() which leaves a small window between
+drain_cpu_caches() and set_store_user_clean() where per-CPU caches could
+be dirty again lead to slightly wrong information has been stored but
+could also speed up things significantly which sounds like a good
+compromise.  For example,
+
+ # cat /proc/slab_allocators
+ 0m42.778s # 1st approach
+ 0m0.737s  # 2nd approach
+
+[akpm@linux-foundation.org: tweak comment]
+Link: http://lkml.kernel.org/r/20190411032635.10325-1-cai@lca.pw
+Fixes: d31676dfde25 ("mm/slab: alternative implementation for DEBUG_SLAB_LEAK")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ mm/slab.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c
-index 5f301e632599..818d21bd28d3 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c
-@@ -365,8 +365,15 @@ nvkm_dp_train(struct nvkm_dp *dp, u32 dataKBps)
- 	 * and it's better to have a failed modeset than that.
+diff --git a/mm/slab.c b/mm/slab.c
+index 9142ee992493..fbbef79e1ad5 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -4328,8 +4328,12 @@ static int leaks_show(struct seq_file *m, void *p)
+ 	 * whole processing.
  	 */
- 	for (cfg = nvkm_dp_rates; cfg->rate; cfg++) {
--		if (cfg->nr <= outp_nr && cfg->nr <= outp_bw)
--			failsafe = cfg;
-+		if (cfg->nr <= outp_nr && cfg->nr <= outp_bw) {
-+			/* Try to respect sink limits too when selecting
-+			 * lowest link configuration.
-+			 */
-+			if (!failsafe ||
-+			    (cfg->nr <= sink_nr && cfg->bw <= sink_bw))
-+				failsafe = cfg;
-+		}
-+
- 		if (failsafe && cfg[1].rate < dataKBps)
- 			break;
- 	}
+ 	do {
+-		set_store_user_clean(cachep);
+ 		drain_cpu_caches(cachep);
++		/*
++		 * drain_cpu_caches() could make kmemleak_object and
++		 * debug_objects_cache dirty, so reset afterwards.
++		 */
++		set_store_user_clean(cachep);
+ 
+ 		x[1] = 0;
+ 
 -- 
 2.20.1
 
