@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B236C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 297DEC31E4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 210ED20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2432208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441388;
-	bh=SyJwNShy55tKhclXb+GU9q0BgotQ9kP/VIB+jVyeH9Q=;
+	s=default; t=1560441390;
+	bh=nRQm/OlsU6qlSd0WMhJZYlZHR7l0FvrSL1hpQ80ECOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j6Rn4HR148SEIxbYzNzbj+UCHF/VQo9jjEihpuYJirxkS1LBdGc5Ud4ZHvs0w0T3d
-	 C6fWL2Y1WOiQRvkMElBD0yEwkTfr4cfxoIAC/ErjGdhYfdnZDYTHYjgUg5E85Czovt
-	 JQDu35jvEQM4EvYlsJJTxvFRYA/qwQa3McsULf7U=
+	b=CMCByCOJgfnd2dy5zrC6kvJW7wmHdJ6ZIOYADytnSq9pqmYDSgiFDlj7su0CTkURE
+	 OsId8/kRZPhXz9MMl9uo0AilGqvbZfa5pN8fpi6zgNS8I36rxTzsEnwDcqDUmuUtBy
+	 fMV/KBOlPlDZVCA2uN42zIrNrVomYB+9dzroGmT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390308AbfFMP4L (ORCPT
+        id S2390287AbfFMP4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:56:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38834 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:56:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731530AbfFMIvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:51:23 -0400
+        id S1731531AbfFMIv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:51:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8537E21473;
-        Thu, 13 Jun 2019 08:51:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 743AB2147A;
+        Thu, 13 Jun 2019 08:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415883;
-        bh=SyJwNShy55tKhclXb+GU9q0BgotQ9kP/VIB+jVyeH9Q=;
+        s=default; t=1560415885;
+        bh=nRQm/OlsU6qlSd0WMhJZYlZHR7l0FvrSL1hpQ80ECOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rQP4rAj/1bGaLutfkCFoRaIoq/Ypdxy81rruQqBaWOr6Az/ws5OWRo4BB4wCkICw2
-         zf6E5ow8VrSzcnY4BWUggTiBQiErS9aOVy81GZuaGb3r/dMJrsejyE+zuPpHZ7xXgx
-         9yeWcvRvgw/ykuKouwSAJ9hi8V/Qu0Xnnrqidk7w=
+        b=BSAIVJr6dwRhrhFBYWTiQXUpOSt4iWaauSkgCfHLkWf+K6yuxp1dkyZ3CnsfsQwaJ
+         AMNI80vaF1nOW5wZYuV+P9//rV51MZwMOpd/Nxc34yDHdEZsfXUqvBMH8KYi2/LkNV
+         /kjr5pyWD2zsAF7r7kvlggglur8bAeWEZAMc0hS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 149/155] ARM: shmobile: porter: enable R-Car Gen2 regulator quirk
-Date:   Thu, 13 Jun 2019 10:34:21 +0200
-Message-Id: <20190613075701.211814686@linuxfoundation.org>
+        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-imx@nxp.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 150/155] gpio: vf610: Do not share irq_chip
+Date:   Thu, 13 Jun 2019 10:34:22 +0200
+Message-Id: <20190613075701.244231707@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -63,58 +64,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d5aa84087eadd6f2619628bc9f3d028eeabded0f ]
+[ Upstream commit 338aa10750ba24d04beeaf5dc5efc032e5cf343f ]
 
-Porter needs the regulator quirk, just like the other boards.
-But unlike the other boards, the Porter uses DA9063L, which
-is at 0x5a. Otherwise, DA9063L and DA9210 IRQ line is still
-connected to CPU IRQ2 .
+Fix the warning produced by gpiochip_set_irq_hooks() by allocating a
+dedicated IRQ chip per GPIO chip/port.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-imx@nxp.com
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-vf610.c | 26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c b/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c
-index dc526ef2e9b3..ee949255ced3 100644
---- a/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c
-+++ b/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * R-Car Generation 2 da9063/da9210 regulator quirk
-+ * R-Car Generation 2 da9063(L)/da9210 regulator quirk
-  *
-  * Certain Gen2 development boards have an da9063 and one or more da9210
-  * regulators. All of these regulators have their interrupt request lines
-@@ -65,6 +65,7 @@ static struct i2c_msg da9210_msg = {
+diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+index 541fa6ac399d..7e9451f47efe 100644
+--- a/drivers/gpio/gpio-vf610.c
++++ b/drivers/gpio/gpio-vf610.c
+@@ -29,6 +29,7 @@ struct fsl_gpio_soc_data {
  
- static const struct of_device_id rcar_gen2_quirk_match[] = {
- 	{ .compatible = "dlg,da9063", .data = &da9063_msg },
-+	{ .compatible = "dlg,da9063l", .data = &da9063_msg },
- 	{ .compatible = "dlg,da9210", .data = &da9210_msg },
- 	{},
+ struct vf610_gpio_port {
+ 	struct gpio_chip gc;
++	struct irq_chip ic;
+ 	void __iomem *base;
+ 	void __iomem *gpio_base;
+ 	const struct fsl_gpio_soc_data *sdata;
+@@ -60,8 +61,6 @@ struct vf610_gpio_port {
+ #define PORT_INT_EITHER_EDGE	0xb
+ #define PORT_INT_LOGIC_ONE	0xc
+ 
+-static struct irq_chip vf610_gpio_irq_chip;
+-
+ static const struct fsl_gpio_soc_data imx_data = {
+ 	.have_paddr = true,
  };
-@@ -147,6 +148,7 @@ static int __init rcar_gen2_regulator_quirk(void)
+@@ -237,15 +236,6 @@ static int vf610_gpio_irq_set_wake(struct irq_data *d, u32 enable)
+ 	return 0;
+ }
  
- 	if (!of_machine_is_compatible("renesas,koelsch") &&
- 	    !of_machine_is_compatible("renesas,lager") &&
-+	    !of_machine_is_compatible("renesas,porter") &&
- 	    !of_machine_is_compatible("renesas,stout") &&
- 	    !of_machine_is_compatible("renesas,gose"))
- 		return -ENODEV;
-@@ -210,7 +212,7 @@ static int __init rcar_gen2_regulator_quirk(void)
- 		goto err_free;
+-static struct irq_chip vf610_gpio_irq_chip = {
+-	.name		= "gpio-vf610",
+-	.irq_ack	= vf610_gpio_irq_ack,
+-	.irq_mask	= vf610_gpio_irq_mask,
+-	.irq_unmask	= vf610_gpio_irq_unmask,
+-	.irq_set_type	= vf610_gpio_irq_set_type,
+-	.irq_set_wake	= vf610_gpio_irq_set_wake,
+-};
+-
+ static int vf610_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -253,6 +243,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	struct vf610_gpio_port *port;
+ 	struct resource *iores;
+ 	struct gpio_chip *gc;
++	struct irq_chip *ic;
+ 	int i;
+ 	int ret;
+ 
+@@ -316,6 +307,14 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	gc->direction_output = vf610_gpio_direction_output;
+ 	gc->set = vf610_gpio_set;
+ 
++	ic = &port->ic;
++	ic->name = "gpio-vf610";
++	ic->irq_ack = vf610_gpio_irq_ack;
++	ic->irq_mask = vf610_gpio_irq_mask;
++	ic->irq_unmask = vf610_gpio_irq_unmask;
++	ic->irq_set_type = vf610_gpio_irq_set_type;
++	ic->irq_set_wake = vf610_gpio_irq_set_wake;
++
+ 	ret = gpiochip_add_data(gc, port);
+ 	if (ret < 0)
+ 		return ret;
+@@ -327,14 +326,13 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	/* Clear the interrupt status register for all GPIO's */
+ 	vf610_gpio_writel(~0, port->base + PORT_ISFR);
+ 
+-	ret = gpiochip_irqchip_add(gc, &vf610_gpio_irq_chip, 0,
+-				   handle_edge_irq, IRQ_TYPE_NONE);
++	ret = gpiochip_irqchip_add(gc, ic, 0, handle_edge_irq, IRQ_TYPE_NONE);
+ 	if (ret) {
+ 		dev_err(dev, "failed to add irqchip\n");
+ 		gpiochip_remove(gc);
+ 		return ret;
  	}
+-	gpiochip_set_chained_irqchip(gc, &vf610_gpio_irq_chip, port->irq,
++	gpiochip_set_chained_irqchip(gc, ic, port->irq,
+ 				     vf610_gpio_irq_handler);
  
--	pr_info("IRQ2 is asserted, installing da9063/da9210 regulator quirk\n");
-+	pr_info("IRQ2 is asserted, installing regulator quirk\n");
- 
- 	bus_register_notifier(&i2c_bus_type, &regulator_quirk_nb);
  	return 0;
 -- 
 2.20.1
