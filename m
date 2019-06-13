@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFD9C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D1EC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5079021721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB7721721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbfFMTkL (ORCPT
+        id S1729294AbfFMTkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 15:40:11 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40988 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729047AbfFMTkK (ORCPT
+        Thu, 13 Jun 2019 15:40:16 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45868 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729215AbfFMTkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:40:10 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DJabGD014422
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 15:40:09 -0400
-Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t3v8g1fp9-1
+        Thu, 13 Jun 2019 15:40:14 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DJabcU085590
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 15:40:14 -0400
+Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t3td364gb-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 15:40:09 -0400
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 15:40:13 -0400
 Received: from localhost
-        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Thu, 13 Jun 2019 20:40:08 +0100
+        Thu, 13 Jun 2019 20:40:13 +0100
 Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
-        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e35.co.us.ibm.com (192.168.1.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 13 Jun 2019 20:40:04 +0100
+        Thu, 13 Jun 2019 20:40:10 +0100
 Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5DJe0TI37093818
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5DJe6jE24052060
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Jun 2019 19:40:00 GMT
+        Thu, 13 Jun 2019 19:40:06 GMT
 Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7EF846E050;
-        Thu, 13 Jun 2019 19:40:00 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 7841A6E056;
+        Thu, 13 Jun 2019 19:40:06 +0000 (GMT)
 Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F3306E04E;
-        Thu, 13 Jun 2019 19:39:58 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id D16D16E058;
+        Thu, 13 Jun 2019 19:40:03 +0000 (GMT)
 Received: from akrowiak-ThinkPad-P50.ibm.com (unknown [9.85.158.129])
         by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu, 13 Jun 2019 19:39:58 +0000 (GMT)
+        Thu, 13 Jun 2019 19:40:03 +0000 (GMT)
 From:   Tony Krowiak <akrowiak@linux.ibm.com>
 To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
@@ -57,20 +57,20 @@ Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
         pmorel@linux.ibm.com, pasic@linux.ibm.com,
         alex.williamson@redhat.com, kwankhede@nvidia.com,
         Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH v4 4/7] s390: vfio-ap: implement in-use callback for vfio_ap driver
-Date:   Thu, 13 Jun 2019 15:39:37 -0400
+Subject: [PATCH v4 6/7] s390: vfio-ap: allow hot plug/unplug of AP resources using mdev device
+Date:   Thu, 13 Jun 2019 15:39:39 -0400
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
 References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19061319-8235-0000-0000-00000EA7837F
+x-cbid: 19061319-0012-0000-0000-00001744096D
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00011256; HX=3.00000242; KW=3.00000007;
  PH=3.00000004; SC=3.00000286; SDB=6.01217510; UDB=6.00640241; IPR=6.00998621;
- MB=3.00027298; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-13 19:40:07
+ MB=3.00027298; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-13 19:40:13
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061319-8236-0000-0000-000046025177
-Message-Id: <1560454780-20359-5-git-send-email-akrowiak@linux.ibm.com>
+x-cbparentid: 19061319-0013-0000-0000-000057AF4A11
+Message-Id: <1560454780-20359-7-git-send-email-akrowiak@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_12:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -83,91 +83,227 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's implement the callback to indicate when an APQN
-is in use by the vfio_ap device driver. The callback is
-invoked whenever a change to the apmask or aqmask may
-result in one or APQNs being removed from the driver. The
-vfio_ap device driver will indicate a resource is in use
-if any of the removed APQNs are assigned to any of the matrix
-mdev devices.
-
-To ensure that the AP bus apmask/aqmask interfaces are used to control
-which AP queues get manually bound to or unbound from the
-vfio_ap device driver, the bind/unbind sysfs interfaces will
-be disabled for the vfio_ap device driver. The reasons for this are:
-
-* To prevent unbinding an AP queue device from the vfio_ap device
-  driver representing a queue that is assigned to an mdev device.
-
-* To enforce the policy that the the AP resources must first be
-  unassigned from the mdev device - which will hot unplug them from a
-  guest using the mdev device - before changing ownership of APQNs
-  from the vfio_ap driver to a zcrypt driver. This ensures that private
-  crypto data intended for the guest will never be accessible from the
-  host.
-
-* It takes advantage of the AP architecture to prevent dynamic changes
-  to the LPAR configuration using the SE or SCLP commands from
-  compromising the guest crypto devices. For example:
-
-  * Even if an adapter is configured off, if and when it is configured
-    back on, the queue devices associated with the adapter will be bound
-    back to the vfio_ap driver and the queues will automatically be
-    available to a guest using the mdev to which the APQN of the queue
-    device is assigned.
-
-  * If adapters or domains are dynamically unassigned from the LPAR
-    in which the linux guest is running, effective masking will
-    prevent access to the AP resources by a guest using them.
+Let's allow AP resources - i.e., adapters, domains and control domains -
+to be assigned to or unassigned from an AP matrix mdev while it is in use
+by a guest. If an AP resource is assigned while a guest is using the
+matrix mdev, the guest's CRYCB will be dynamically updated to grant
+access to the adapter, domain or control domain being assigned. If an
+AP resource is unassigned while a guest is using the matrix mdev, the
+guest's CRYCB will be dynamically updated to take access to the adapter,
+domain or control domain away from the guest.
 
 Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 ---
- drivers/s390/crypto/vfio_ap_drv.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/s390/crypto/vfio_ap_ops.c | 68 ++++++++++++++++++++++-----------------
+ 1 file changed, 38 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
-index 3c60df70891b..7b52393007c6 100644
---- a/drivers/s390/crypto/vfio_ap_drv.c
-+++ b/drivers/s390/crypto/vfio_ap_drv.c
-@@ -164,6 +164,28 @@ static void vfio_ap_matrix_dev_destroy(void)
- 	root_device_unregister(root_device);
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index 9db86c0db52e..57325eb47278 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -465,6 +465,16 @@ static int vfio_ap_mdev_validate_masks(unsigned long *apm, unsigned long *aqm)
+ 	return vfio_ap_mdev_verify_no_sharing(apm, aqm);
  }
  
-+static bool vfio_ap_resource_in_use(unsigned long *apm, unsigned long *aqm)
++static void vfio_ap_mdev_update_crycb(struct ap_matrix_mdev *matrix_mdev)
 +{
-+	bool in_use = false;
-+	struct ap_matrix_mdev *matrix_mdev;
-+
-+	mutex_lock(&matrix_dev->lock);
-+
-+	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
-+		if (bitmap_intersects(matrix_mdev->matrix.apm,
-+				      apm, AP_DEVICES) &&
-+		    bitmap_intersects(matrix_mdev->matrix.aqm,
-+				      aqm, AP_DOMAINS)) {
-+			in_use = true;
-+			break;
-+		}
++	if (matrix_mdev->kvm && matrix_mdev->kvm->arch.crypto.crycbd) {
++		kvm_arch_crypto_set_masks(matrix_mdev->kvm,
++					  matrix_mdev->matrix.apm,
++					  matrix_mdev->matrix.aqm,
++					  matrix_mdev->matrix.adm);
 +	}
-+
-+	mutex_unlock(&matrix_dev->lock);
-+
-+	return in_use;
 +}
 +
- static int __init vfio_ap_init(void)
- {
- 	int ret;
-@@ -179,7 +201,9 @@ static int __init vfio_ap_init(void)
- 	memset(&vfio_ap_drv, 0, sizeof(vfio_ap_drv));
- 	vfio_ap_drv.probe = vfio_ap_queue_dev_probe;
- 	vfio_ap_drv.remove = vfio_ap_queue_dev_remove;
-+	vfio_ap_drv.in_use = vfio_ap_resource_in_use;
- 	vfio_ap_drv.ids = ap_queue_ids;
-+	vfio_ap_drv.driver.suppress_bind_attrs = true;
+ /**
+  * assign_adapter_store
+  *
+@@ -475,7 +485,10 @@ static int vfio_ap_mdev_validate_masks(unsigned long *apm, unsigned long *aqm)
+  * @count:	the number of bytes in @buf
+  *
+  * Parses the APID from @buf and sets the corresponding bit in the mediated
+- * matrix device's APM.
++ * matrix device's APM. If a guest is using the mediated matrix device and each
++ * new APQN formed as a result of the assignment identifies an AP queue device
++ * that is bound to the vfio_ap device driver, the guest will be granted access
++ * to the adapter with the specified APID.
+  *
+  * Returns the number of bytes processed if the APID is valid; otherwise,
+  * returns one of the following errors:
+@@ -507,10 +520,6 @@ static ssize_t assign_adapter_store(struct device *dev,
+ 	struct mdev_device *mdev = mdev_from_dev(dev);
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
  
- 	ret = ap_driver_register(&vfio_ap_drv, THIS_MODULE, VFIO_AP_DRV_NAME);
- 	if (ret) {
+-	/* If the guest is running, disallow assignment of adapter */
+-	if (matrix_mdev->kvm)
+-		return -EBUSY;
+-
+ 	ret = kstrtoul(buf, 0, &apid);
+ 	if (ret)
+ 		return ret;
+@@ -527,7 +536,9 @@ static ssize_t assign_adapter_store(struct device *dev,
+ 		mutex_unlock(&matrix_dev->lock);
+ 		return ret;
+ 	}
++
+ 	set_bit_inv(apid, matrix_mdev->matrix.apm);
++	vfio_ap_mdev_update_crycb(matrix_mdev);
+ 	mutex_unlock(&matrix_dev->lock);
+ 
+ 	return count;
+@@ -543,7 +554,9 @@ static DEVICE_ATTR_WO(assign_adapter);
+  * @count:	the number of bytes in @buf
+  *
+  * Parses the APID from @buf and clears the corresponding bit in the mediated
+- * matrix device's APM.
++ * matrix device's APM. If a guest is using the mediated matrix device and has
++ * access to the AP adapter with the specified APID, access to the adapter will
++ * be taken from the guest.
+  *
+  * Returns the number of bytes processed if the APID is valid; otherwise,
+  * returns one of the following errors:
+@@ -560,10 +573,6 @@ static ssize_t unassign_adapter_store(struct device *dev,
+ 	struct mdev_device *mdev = mdev_from_dev(dev);
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+ 
+-	/* If the guest is running, disallow un-assignment of adapter */
+-	if (matrix_mdev->kvm)
+-		return -EBUSY;
+-
+ 	ret = kstrtoul(buf, 0, &apid);
+ 	if (ret)
+ 		return ret;
+@@ -573,6 +582,7 @@ static ssize_t unassign_adapter_store(struct device *dev,
+ 
+ 	mutex_lock(&matrix_dev->lock);
+ 	clear_bit_inv((unsigned long)apid, matrix_mdev->matrix.apm);
++	vfio_ap_mdev_update_crycb(matrix_mdev);
+ 	mutex_unlock(&matrix_dev->lock);
+ 
+ 	return count;
+@@ -589,7 +599,10 @@ static DEVICE_ATTR_WO(unassign_adapter);
+  * @count:	the number of bytes in @buf
+  *
+  * Parses the APQI from @buf and sets the corresponding bit in the mediated
+- * matrix device's AQM.
++ * matrix device's AQM. If a guest is using the mediated matrix device and each
++ * new APQN formed as a result of the assignment identifies an AP queue device
++ * that is bound to the vfio_ap device driver, the guest will be given access
++ * to the AP queue(s) with the specified APQI.
+  *
+  * Returns the number of bytes processed if the APQI is valid; otherwise returns
+  * one of the following errors:
+@@ -622,10 +635,6 @@ static ssize_t assign_domain_store(struct device *dev,
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+ 	unsigned long max_apqi = matrix_mdev->matrix.aqm_max;
+ 
+-	/* If the guest is running, disallow assignment of domain */
+-	if (matrix_mdev->kvm)
+-		return -EBUSY;
+-
+ 	ret = kstrtoul(buf, 0, &apqi);
+ 	if (ret)
+ 		return ret;
+@@ -641,7 +650,9 @@ static ssize_t assign_domain_store(struct device *dev,
+ 		mutex_unlock(&matrix_dev->lock);
+ 		return ret;
+ 	}
++
+ 	set_bit_inv(apqi, matrix_mdev->matrix.aqm);
++	vfio_ap_mdev_update_crycb(matrix_mdev);
+ 	mutex_unlock(&matrix_dev->lock);
+ 
+ 	return count;
+@@ -659,7 +670,9 @@ static DEVICE_ATTR_WO(assign_domain);
+  * @count:	the number of bytes in @buf
+  *
+  * Parses the APQI from @buf and clears the corresponding bit in the
+- * mediated matrix device's AQM.
++ * mediated matrix device's AQM. If a guest is using the mediated matrix device
++ * and has access to queue(s) with the specified domain APQI, access to
++ * the queue(s) will be taken away from the guest.
+  *
+  * Returns the number of bytes processed if the APQI is valid; otherwise,
+  * returns one of the following errors:
+@@ -675,10 +688,6 @@ static ssize_t unassign_domain_store(struct device *dev,
+ 	struct mdev_device *mdev = mdev_from_dev(dev);
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+ 
+-	/* If the guest is running, disallow un-assignment of domain */
+-	if (matrix_mdev->kvm)
+-		return -EBUSY;
+-
+ 	ret = kstrtoul(buf, 0, &apqi);
+ 	if (ret)
+ 		return ret;
+@@ -688,6 +697,7 @@ static ssize_t unassign_domain_store(struct device *dev,
+ 
+ 	mutex_lock(&matrix_dev->lock);
+ 	clear_bit_inv((unsigned long)apqi, matrix_mdev->matrix.aqm);
++	vfio_ap_mdev_update_crycb(matrix_mdev);
+ 	mutex_unlock(&matrix_dev->lock);
+ 
+ 	return count;
+@@ -703,7 +713,9 @@ static DEVICE_ATTR_WO(unassign_domain);
+  * @count:	the number of bytes in @buf
+  *
+  * Parses the domain ID from @buf and sets the corresponding bit in the mediated
+- * matrix device's ADM.
++ * matrix device's ADM. If a guest is using the mediated matrix device and the
++ * guest does not have access to the control domain with the specified ID, the
++ * guest will be granted access to it.
+  *
+  * Returns the number of bytes processed if the domain ID is valid; otherwise,
+  * returns one of the following errors:
+@@ -719,10 +731,6 @@ static ssize_t assign_control_domain_store(struct device *dev,
+ 	struct mdev_device *mdev = mdev_from_dev(dev);
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+ 
+-	/* If the guest is running, disallow assignment of control domain */
+-	if (matrix_mdev->kvm)
+-		return -EBUSY;
+-
+ 	ret = kstrtoul(buf, 0, &id);
+ 	if (ret)
+ 		return ret;
+@@ -732,6 +740,7 @@ static ssize_t assign_control_domain_store(struct device *dev,
+ 
+ 	mutex_lock(&matrix_dev->lock);
+ 	set_bit_inv(id, matrix_mdev->matrix.adm);
++	vfio_ap_mdev_update_crycb(matrix_mdev);
+ 	mutex_unlock(&matrix_dev->lock);
+ 
+ 	return count;
+@@ -747,7 +756,9 @@ static DEVICE_ATTR_WO(assign_control_domain);
+  * @count:	the number of bytes in @buf
+  *
+  * Parses the domain ID from @buf and clears the corresponding bit in the
+- * mediated matrix device's ADM.
++ * mediated matrix device's ADM. If a guest is using the mediated matrix device
++ * and has access to control domain with the specified domain ID, access to
++ * the control domain will be taken from the guest.
+  *
+  * Returns the number of bytes processed if the domain ID is valid; otherwise,
+  * returns one of the following errors:
+@@ -764,10 +775,6 @@ static ssize_t unassign_control_domain_store(struct device *dev,
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+ 	unsigned long max_domid =  matrix_mdev->matrix.adm_max;
+ 
+-	/* If the guest is running, disallow un-assignment of control domain */
+-	if (matrix_mdev->kvm)
+-		return -EBUSY;
+-
+ 	ret = kstrtoul(buf, 0, &domid);
+ 	if (ret)
+ 		return ret;
+@@ -776,6 +783,7 @@ static ssize_t unassign_control_domain_store(struct device *dev,
+ 
+ 	mutex_lock(&matrix_dev->lock);
+ 	clear_bit_inv(domid, matrix_mdev->matrix.adm);
++	vfio_ap_mdev_update_crycb(matrix_mdev);
+ 	mutex_unlock(&matrix_dev->lock);
+ 
+ 	return count;
 -- 
 2.7.4
 
