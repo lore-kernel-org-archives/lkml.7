@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E1DC31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E89C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8074220449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D85420449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443337;
-	bh=JOdPkZMXMgwO6O1h6lMEJ/M1YMy4O+fPqZFYh3kUhcE=;
+	s=default; t=1560443339;
+	bh=3vPlgZNd7nYVW3NeAqRwuF3YuCgseMLE4XA7E4HD1mQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RVd5JifvwjS8iPT7+++VsdjSDXHGeL/7Y/8yeC5DS1IRx7BMMJB3R462RGcO4jhZ+
-	 9l4Z7pknqW9+OgMTU6Tibre6i0oVzwN1q2QcfrE9IGK2kwfGbNj45z0m6ySSQ2V3ht
-	 R/hTPqEPP/Rj7bU46m6/aYDCiT4oiPVn6ITmneMs=
+	b=KWhTKURzhqiS0dfiPbpjYpwal8Cn/pXAnRW5JdqATSHekxg8vzr4bOg6jM2GjLC3Q
+	 RTpAVHnekuiYOdUXqGAa6zFkICBGat2Kfq3L2jxMerKV83RTi6tCDcEs5DynNZoUCF
+	 EnRatYkTsTCyQwiNNT9k5COAwKjgAX3xVmQK1Ua4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392289AbfFMQ24 (ORCPT
+        id S2392473AbfFMQ25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:28:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53312 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:28:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730940AbfFMIff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:35:35 -0400
+        id S1730938AbfFMIfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:35:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E4EC20851;
-        Thu, 13 Jun 2019 08:35:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 836A9206E0;
+        Thu, 13 Jun 2019 08:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560414935;
-        bh=JOdPkZMXMgwO6O1h6lMEJ/M1YMy4O+fPqZFYh3kUhcE=;
+        s=default; t=1560414932;
+        bh=3vPlgZNd7nYVW3NeAqRwuF3YuCgseMLE4XA7E4HD1mQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NUMklaLukLVmjn92vD/Z5eNqSmtL5i+bP25M2Fgy5V7Jg7k8fBjEnRX4X/8oTnztK
-         nXk1uH7Nu4Cvjflv3VMM2EWfo5+REEiuQMkY5Hk7WpjcAVgLz4Dkga+22v9xUzmNt8
-         CRC+YQehYIJk0dsTfLKxon4HFPRFKwEaAvF7hHS4=
+        b=LXCXlstGx5n0tK1aNPqYoEyGDq8FP/Qt9kb4KeFZpH4dKAb7FOvoUWMBBPlObYEXZ
+         IvkvWiRlQtKUtmJdzMXuk6nm4KkDiDOxndG7tsRSCYo5t27n7M7J7lB1YVSTapJMyp
+         16Svozn0KY2mnvxtJHYvdER5KID9F+TYslwZP+lc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Prarit Bhargava <prarit@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 26/81] f2fs: fix to avoid panic in do_recover_data()
-Date:   Thu, 13 Jun 2019 10:33:09 +0200
-Message-Id: <20190613075651.058547062@linuxfoundation.org>
+Subject: [PATCH 4.14 25/81] ntp: Allow TAI-UTC offset to be set to zero
+Date:   Thu, 13 Jun 2019 10:33:08 +0200
+Message-Id: <20190613075650.991287714@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -60,76 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 22d61e286e2d9097dae36f75ed48801056b77cac ]
+[ Upstream commit fdc6bae940ee9eb869e493990540098b8c0fd6ab ]
 
-As Jungyeon reported in bugzilla:
+The ADJ_TAI adjtimex mode sets the TAI-UTC offset of the system clock.
+It is typically set by NTP/PTP implementations and it is automatically
+updated by the kernel on leap seconds. The initial value is zero (which
+applications may interpret as unknown), but this value cannot be set by
+adjtimex. This limitation seems to go back to the original "nanokernel"
+implementation by David Mills.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203227
+Change the ADJ_TAI check to accept zero as a valid TAI-UTC offset in
+order to allow setting it back to the initial value.
 
-- Overview
-When mounting the attached crafted image, following errors are reported.
-Additionally, it hangs on sync after trying to mount it.
-
-The image is intentionally fuzzed from a normal f2fs image for testing.
-Compile options for F2FS are as follows.
-CONFIG_F2FS_FS=y
-CONFIG_F2FS_STAT_FS=y
-CONFIG_F2FS_FS_XATTR=y
-CONFIG_F2FS_FS_POSIX_ACL=y
-CONFIG_F2FS_CHECK_FS=y
-
-- Reproduces
-mkdir test
-mount -t f2fs tmp.img test
-sync
-
-- Messages
- kernel BUG at fs/f2fs/recovery.c:549!
- RIP: 0010:recover_data+0x167a/0x1780
- Call Trace:
-  f2fs_recover_fsync_data+0x613/0x710
-  f2fs_fill_super+0x1043/0x1aa0
-  mount_bdev+0x16d/0x1a0
-  mount_fs+0x4a/0x170
-  vfs_kern_mount+0x5d/0x100
-  do_mount+0x200/0xcf0
-  ksys_mount+0x79/0xc0
-  __x64_sys_mount+0x1c/0x20
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-During recovery, if ofs_of_node is inconsistent in between recovered
-node page and original checkpointed node page, let's just fail recovery
-instead of making kernel panic.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 153b5d054ac2 ("ntp: support for TAI")
+Suggested-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Prarit Bhargava <prarit@redhat.com>
+Link: https://lkml.kernel.org/r/20190417084833.7401-1-mlichvar@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/recovery.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ kernel/time/ntp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index 6ea445377767..65a82c5bafcb 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -445,7 +445,15 @@ retry_dn:
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index 99e03bec68e4..4bb9b66338be 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -640,7 +640,7 @@ static inline void process_adjtimex_modes(struct timex *txc,
+ 		time_constant = max(time_constant, 0l);
+ 	}
  
- 	get_node_info(sbi, dn.nid, &ni);
- 	f2fs_bug_on(sbi, ni.ino != ino_of_node(page));
--	f2fs_bug_on(sbi, ofs_of_node(dn.node_page) != ofs_of_node(page));
-+
-+	if (ofs_of_node(dn.node_page) != ofs_of_node(page)) {
-+		f2fs_msg(sbi->sb, KERN_WARNING,
-+			"Inconsistent ofs_of_node, ino:%lu, ofs:%u, %u",
-+			inode->i_ino, ofs_of_node(dn.node_page),
-+			ofs_of_node(page));
-+		err = -EFAULT;
-+		goto err;
-+	}
+-	if (txc->modes & ADJ_TAI && txc->constant > 0)
++	if (txc->modes & ADJ_TAI && txc->constant >= 0)
+ 		*time_tai = txc->constant;
  
- 	for (; start < end; start++, dn.ofs_in_node++) {
- 		block_t src, dest;
+ 	if (txc->modes & ADJ_OFFSET)
 -- 
 2.20.1
 
