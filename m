@@ -2,116 +2,125 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF22C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FB7C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B812B21743
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:04:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="tDnFxoEo"
+	by mail.kernel.org (Postfix) with ESMTP id 9C13C2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560456254;
+	bh=STyJgmmKr944RjOkqQ8HWC3xeSyqe7HVqnGI2LWRsD8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fGKiR3ZA/H6sYpgzCJAxiR5Trsi3uRzCoVMbPZBT5hzY6C0aUt9ce//f9nGGgoNGg
+	 geP1TRPHZRlCbhGD7Gu9PFTzcy0ER2eOfrWuRPg2UKReJWBU6LBR6PVTYt0k5jstfu
+	 TZYctQxJFA0du0vgcE29HHCWZP5OHsNRrh9G9dfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfFMUEI (ORCPT
+        id S1729093AbfFMUEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:04:08 -0400
-Received: from mail-eopbgr150089.outbound.protection.outlook.com ([40.107.15.89]:13654
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726164AbfFMUEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:04:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YnyCRHhq6our3JahOP7YUJnCatYmzhQnh3SEMqGi3dI=;
- b=tDnFxoEoVdJBSN3ifgsVF1zVBJV+F7fIQFERH6l2SFzpul7cbtTkMS4MxC6YxRlST4jOSZUB3kCC8MnSqhwbNgP97LvBIHKqZn3DwjpIUiqGNULbal9I3/wQPE+1k7Qa4APNV7lQY7PyLFlmnfI34vV38Sl/Z5PjU8dXF8PeMCk=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB4381.eurprd05.prod.outlook.com (52.133.13.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.13; Thu, 13 Jun 2019 20:04:03 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
- 20:04:03 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 22/22] mm: don't select MIGRATE_VMA_HELPER from HMM_MIRROR
-Thread-Topic: [PATCH 22/22] mm: don't select MIGRATE_VMA_HELPER from
- HMM_MIRROR
-Thread-Index: AQHVIcyc3r2YZSS3CUapXwnP1XJouKaaAquA
-Date:   Thu, 13 Jun 2019 20:04:03 +0000
-Message-ID: <20190613200357.GC22062@mellanox.com>
-References: <20190613094326.24093-1-hch@lst.de>
- <20190613094326.24093-23-hch@lst.de>
-In-Reply-To: <20190613094326.24093-23-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YQXPR01CA0086.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:41::15) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a348214a-681a-493b-a591-08d6f03a4842
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4381;
-x-ms-traffictypediagnostic: VI1PR05MB4381:
-x-microsoft-antispam-prvs: <VI1PR05MB43813927D62479F9D88EF8ABCFEF0@VI1PR05MB4381.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:765;
-x-forefront-prvs: 0067A8BA2A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(39860400002)(376002)(136003)(396003)(199004)(189003)(446003)(476003)(14454004)(8936002)(6512007)(186003)(2616005)(11346002)(7736002)(3846002)(386003)(6116002)(76176011)(6506007)(316002)(7416002)(8676002)(4744005)(256004)(66946007)(66476007)(25786009)(73956011)(478600001)(14444005)(4326008)(64756008)(66446008)(66556008)(305945005)(486006)(66066001)(81166006)(36756003)(81156014)(68736007)(53936002)(52116002)(71190400001)(26005)(71200400001)(6246003)(2906002)(6486002)(99286004)(86362001)(229853002)(6916009)(33656002)(54906003)(5660300002)(1076003)(102836004)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4381;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wHlkn2ZfV9rDati83SasESQC5vPO5aAUc6haeZsc3mf5YMTqR0rvPOwQ/jmHjydNylEIBAbQSsIpA4xlWwWWmXVcbjuSbBG89xPpjgnzFAY9/pNQ0MevcNaLFvKVwmaofHBRX3U80+m+n/XNiTHFh4Dkr1Y8xUBqXH3Bm7kLAGqZNIa80R9+gfK1I/ojwlmseAk+31Z3tJJsHWoHjogYiG/BUrdnA2YRRv//z4Yoth+w2fzdP6j9E9OO8whiiJCjw7AHM2LJhRP1YU7SSXS5ASCcA0Aa7Ja/kHzVKJHzFIDfaLy7RBoiCbsIbgGKzVoRMwiljvO9aMLS2+LOzhiT2/5Ldlmi0pcEr629xNZ/eEkITnDNP+wcG4JcSreBI0wnIMLHZJIO86ajMA/D9QjQnb+9FjlgsHFbbVB1Rjgz34U=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <DC6C94E2B8591541A7B0CC844A612312@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a348214a-681a-493b-a591-08d6f03a4842
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 20:04:03.4038
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4381
+        Thu, 13 Jun 2019 16:04:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728752AbfFMUEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 16:04:12 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E84021537;
+        Thu, 13 Jun 2019 20:04:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560456250;
+        bh=STyJgmmKr944RjOkqQ8HWC3xeSyqe7HVqnGI2LWRsD8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=N2gTptqwNshky9t39zHrhF/tFwNwxgbkrbTJor+tak1vLqX97uKewRk8bUnzrn4Ko
+         U5IaH0MfRPlK77bT7Yc/4PbSrlc3n6J8M0GsjcRBoXIwR5bmuZZez1tgkNHDFM277/
+         c+zGeW7mHjTeucDkGZEHLB7VbopRA5mQ7/vZdAH4=
+Date:   Thu, 13 Jun 2019 13:04:08 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>
+Subject: Re: [PATCH] mm: Generalize and rename notify_page_fault() as
+ kprobe_page_fault()
+Message-Id: <20190613130408.3091869d8e50d0524157523f@linux-foundation.org>
+In-Reply-To: <1560420444-25737-1-git-send-email-anshuman.khandual@arm.com>
+References: <1560420444-25737-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:43:25AM +0200, Christoph Hellwig wrote:
-> The migrate_vma helper is only used by noveau to migrate device private
-> pages around.  Other HMM_MIRROR users like amdgpu or infiniband don't
-> need it.
->=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/gpu/drm/nouveau/Kconfig | 1 +
->  mm/Kconfig                      | 1 -
->  2 files changed, 1 insertion(+), 1 deletion(-)
+On Thu, 13 Jun 2019 15:37:24 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 
-Yes, the thing that calls migrate_vma() should be the thing that has
-the kconfig stuff.
+> Architectures which support kprobes have very similar boilerplate around
+> calling kprobe_fault_handler(). Use a helper function in kprobes.h to unify
+> them, based on the x86 code.
+> 
+> This changes the behaviour for other architectures when preemption is
+> enabled. Previously, they would have disabled preemption while calling the
+> kprobe handler. However, preemption would be disabled if this fault was
+> due to a kprobe, so we know the fault was not due to a kprobe handler and
+> can simply return failure.
+> 
+> This behaviour was introduced in the commit a980c0ef9f6d ("x86/kprobes:
+> Refactor kprobes_fault() like kprobe_exceptions_notify()")
+> 
+> ...
+>
+> --- a/arch/arm/mm/fault.c
+> +++ b/arch/arm/mm/fault.c
+> @@ -30,28 +30,6 @@
+>  
+>  #ifdef CONFIG_MMU
+>  
+> -#ifdef CONFIG_KPROBES
+> -static inline int notify_page_fault(struct pt_regs *regs, unsigned int fsr)
 
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Some architectures make this `static inline'.  Others make it
+`nokprobes_inline', others make it `static inline __kprobes'.  The
+latter seems weird - why try to put an inline function into
+.kprobes.text?
 
-Jason
+So..  what's the best thing to do here?  You chose `static
+nokprobe_inline' - is that the best approach, if so why?  Does
+kprobe_page_fault() actually need to be inlined?
+
+Also, some architectures had notify_page_fault returning int, others
+bool.  You chose bool and that seems appropriate and all callers are OK
+with that.
