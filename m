@@ -2,44 +2,45 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEC9C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8CCC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7999D206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24D8220851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:43:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfFMPnE (ORCPT
+        id S2388960AbfFMPm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:43:04 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:40502 "EHLO
+        Thu, 13 Jun 2019 11:42:59 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:40532 "EHLO
         kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731839AbfFMJrj (ORCPT
+        with ESMTP id S1731843AbfFMJsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:47:39 -0400
+        Thu, 13 Jun 2019 05:48:22 -0400
 Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id C606125B7FA;
-        Thu, 13 Jun 2019 19:47:36 +1000 (AEST)
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 8B79D25B7FA;
+        Thu, 13 Jun 2019 19:48:20 +1000 (AEST)
 Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id C5C31940483; Thu, 13 Jun 2019 11:47:34 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 11:47:34 +0200
+        id 89397940483; Thu, 13 Jun 2019 11:48:18 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 11:48:18 +0200
 From:   Simon Horman <horms@verge.net.au>
 To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
 Cc:     linux-i2c@vger.kernel.org,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/34] media: i2c: mt9m001: simplify getting the adapter
+Subject: Re: [PATCH 10/34] media: i2c: ov2640: simplify getting the adapter
  of a client
-Message-ID: <20190613094734.c26pbix5tlazxkby@verge.net.au>
+Message-ID: <20190613094818.v5xdf4uogv64uxyq@verge.net.au>
 References: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
- <20190608105619.593-8-wsa+renesas@sang-engineering.com>
+ <20190608105619.593-11-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190608105619.593-8-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190608105619.593-11-wsa+renesas@sang-engineering.com>
 Organisation: Horms Solutions BV
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,7 +48,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 12:55:46PM +0200, Wolfram Sang wrote:
+On Sat, Jun 08, 2019 at 12:55:49PM +0200, Wolfram Sang wrote:
 > We have a dedicated pointer for that, so use it. Much easier to read and
 > less computation involved.
 > 
@@ -55,3 +56,26 @@ On Sat, Jun 08, 2019 at 12:55:46PM +0200, Wolfram Sang wrote:
 
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
+> ---
+> 
+> Please apply to your subsystem tree.
+> 
+>  drivers/media/i2c/ov2640.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/i2c/ov2640.c b/drivers/media/i2c/ov2640.c
+> index 83031cfc7914..30e7e6b2b293 100644
+> --- a/drivers/media/i2c/ov2640.c
+> +++ b/drivers/media/i2c/ov2640.c
+> @@ -1197,7 +1197,7 @@ static int ov2640_probe(struct i2c_client *client,
+>  			const struct i2c_device_id *did)
+>  {
+>  	struct ov2640_priv	*priv;
+> -	struct i2c_adapter	*adapter = to_i2c_adapter(client->dev.parent);
+> +	struct i2c_adapter	*adapter = client->adapter;
+>  	int			ret;
+>  
+>  	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
+> -- 
+> 2.19.1
+> 
