@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A51EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3201CC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 635DB20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B2420644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442725;
-	bh=xpK+eI+s7i4P2DvAJ57ZpGxDAuf/wGSmZvPLg6y8mUI=;
+	s=default; t=1560442730;
+	bh=j5w28E3klWyw4CPlY2bADWeTaIatMocL/9pnRrsXdJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RIuOm30+/ZXiWlh64Msq3XD9tjL8pp+JoRwAuOM4p1JkFOar3e7oRaTNf+KiJWjsr
-	 8zhKZY49FWDGHPL5hsrOlSwXV7v8EjBbe1tOMm6Tsych8h/t8Pf+A1c3eFyH8sRrSl
-	 6ybUBPBnv5bBn5t8D7FdjEbTkCUsFY3Nt2T7C0RE=
+	b=uTzIL4ZwHrqtsgdPf31n/hunW743ZarHhutsDyI6ILUR7cLtxaTwn5HXauY73yHxF
+	 K/ck9lyVptq73oYpTzWGAWrBQ13fKn+5H93gVyXZFzUOosvgjRvTbBAoZu5rzXYjWF
+	 OzJ4eMk2+T8iTLsZQ0TKzBcJUhFbCPm/uRtTzZzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388616AbfFMQSn (ORCPT
+        id S2391925AbfFMQSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:18:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57682 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:18:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731109AbfFMIkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:40:12 -0400
+        id S1731113AbfFMIkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:40:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4648021473;
-        Thu, 13 Jun 2019 08:40:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E947620851;
+        Thu, 13 Jun 2019 08:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415211;
-        bh=xpK+eI+s7i4P2DvAJ57ZpGxDAuf/wGSmZvPLg6y8mUI=;
+        s=default; t=1560415214;
+        bh=j5w28E3klWyw4CPlY2bADWeTaIatMocL/9pnRrsXdJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cJnCTrQj+jCAzTcoq3ZAFbp8Iuojo3xYOw9qTsdLKtAg+wlA6Evq/WVMdXcRGrUYO
-         QYrKJ6vqk7917khZFjX8XlZG+HZJJ/UVwhkRbPPWsh5FeazpqF9zON6QE+8jcaenbK
-         VgvlixDsGr5dvXaJRJ5enOtC3yGAv4uT4CIcWejw=
+        b=kVS+itW3LQf+lBcPQ/7WIxbnLYkMCkPcOu9jGw39hSNoocK5VFllaO1QzzdAgsGr/
+         7pDDJg1YBaEojsdK9bu8Tir5Rht4sdrrOMX73FVy0UQukgJww7MrOtWlQ7S7zkiEV5
+         rH0fpokJnGD9ARzmfOJhxL3jogj1o+ljaJd1g5JY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 036/118] f2fs: fix to do sanity check on free nid
-Date:   Thu, 13 Jun 2019 10:32:54 +0200
-Message-Id: <20190613075645.612830799@linuxfoundation.org>
+Subject: [PATCH 4.19 045/118] PCI: dwc: Free MSI in dw_pcie_host_init() error path
+Date:   Thu, 13 Jun 2019 10:33:03 +0200
+Message-Id: <20190613075646.368348067@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -60,75 +63,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 626bcf2b7ce87211dba565f2bfa7842ba5be5c1b ]
+[ Upstream commit 9e2b5de5604a6ff2626c51e77014d92c9299722c ]
 
-As Jungyeon reported in bugzilla:
+If we ever did MSI-related initializations, we need to call
+dw_pcie_free_msi() in the error code path.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203225
+Remove the IS_ENABLED(CONFIG_PCI_MSI) check for MSI init because
+pci_msi_enabled() already has a stub for !CONFIG_PCI_MSI.
 
-- Overview
-When mounting the attached crafted image and unmounting it, following errors are reported.
-Additionally, it hangs on sync after unmounting.
-
-The image is intentionally fuzzed from a normal f2fs image for testing.
-Compile options for F2FS are as follows.
-CONFIG_F2FS_FS=y
-CONFIG_F2FS_STAT_FS=y
-CONFIG_F2FS_FS_XATTR=y
-CONFIG_F2FS_FS_POSIX_ACL=y
-CONFIG_F2FS_CHECK_FS=y
-
-- Reproduces
-mkdir test
-mount -t f2fs tmp.img test
-touch test/t
-umount test
-sync
-
-- Messages
- kernel BUG at fs/f2fs/node.c:3073!
- RIP: 0010:f2fs_destroy_node_manager+0x2f0/0x300
- Call Trace:
-  f2fs_put_super+0xf4/0x270
-  generic_shutdown_super+0x62/0x110
-  kill_block_super+0x1c/0x50
-  kill_f2fs_super+0xad/0xd0
-  deactivate_locked_super+0x35/0x60
-  cleanup_mnt+0x36/0x70
-  task_work_run+0x75/0x90
-  exit_to_usermode_loop+0x93/0xa0
-  do_syscall_64+0xba/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
- RIP: 0010:f2fs_destroy_node_manager+0x2f0/0x300
-
-NAT table is corrupted, so reserved meta/node inode ids were added into
-free list incorrectly, during file creation, since reserved id has cached
-in inode hash, so it fails the creation and preallocated nid can not be
-released later, result in kernel panic.
-
-To fix this issue, let's do nid boundary check during free nid loading.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/node.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 807a77518a49..34c3f732601c 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -2079,6 +2079,9 @@ static bool add_free_nid(struct f2fs_sb_info *sbi,
- 	if (unlikely(nid == 0))
- 		return false;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index b56e22262a77..4eedb2c54ab3 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -439,7 +439,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	if (ret)
+ 		pci->num_viewport = 2;
  
-+	if (unlikely(f2fs_check_nid_range(sbi, nid)))
-+		return false;
-+
- 	i = f2fs_kmem_cache_alloc(free_nid_slab, GFP_NOFS);
- 	i->nid = nid;
- 	i->state = FREE_NID;
+-	if (IS_ENABLED(CONFIG_PCI_MSI) && pci_msi_enabled()) {
++	if (pci_msi_enabled()) {
+ 		/*
+ 		 * If a specific SoC driver needs to change the
+ 		 * default number of vectors, it needs to implement
+@@ -477,7 +477,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	if (pp->ops->host_init) {
+ 		ret = pp->ops->host_init(pp);
+ 		if (ret)
+-			goto error;
++			goto err_free_msi;
+ 	}
+ 
+ 	pp->root_bus_nr = pp->busn->start;
+@@ -491,7 +491,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 
+ 	ret = pci_scan_root_bus_bridge(bridge);
+ 	if (ret)
+-		goto error;
++		goto err_free_msi;
+ 
+ 	bus = bridge->bus;
+ 
+@@ -507,6 +507,9 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	pci_bus_add_devices(bus);
+ 	return 0;
+ 
++err_free_msi:
++	if (pci_msi_enabled() && !pp->ops->msi_host_init)
++		dw_pcie_free_msi(pp);
+ error:
+ 	pci_free_host_bridge(bridge);
+ 	return ret;
 -- 
 2.20.1
 
