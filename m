@@ -2,138 +2,105 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9FFC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6451C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 196F121473
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8E4C2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388486AbfFMPV4 (ORCPT
+        id S2388763AbfFMPWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:21:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:39324 "EHLO foss.arm.com"
+        Thu, 13 Jun 2019 11:22:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56618 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731990AbfFMMod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 08:44:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36E163EF;
-        Thu, 13 Jun 2019 05:44:32 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F5113F694;
-        Thu, 13 Jun 2019 05:44:29 -0700 (PDT)
-Subject: Re: [PATCH 2/4] arm64: kdump: support reserving crashkernel above 4G
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com,
-        akpm@linux-foundation.org, ard.biesheuvel@linaro.org,
-        rppt@linux.ibm.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, ebiederm@xmission.com, horms@verge.net.au,
-        takahiro.akashi@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        linux-mm@kvack.org, wangkefeng.wang@huawei.com
-References: <20190507035058.63992-1-chenzhou10@huawei.com>
- <20190507035058.63992-3-chenzhou10@huawei.com>
- <df2b659d-7406-fbfd-597d-be3a3f69abcb@arm.com>
- <d15f334c-90cd-7c09-5e54-6501e822e7f1@huawei.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <b04f5578-4422-319c-da1f-62f7b465c9f6@arm.com>
-Date:   Thu, 13 Jun 2019 13:44:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1731989AbfFMMoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 08:44:09 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B5DF330860AE;
+        Thu, 13 Jun 2019 12:43:54 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 3080C1001B1A;
+        Thu, 13 Jun 2019 12:43:49 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 13 Jun 2019 14:43:54 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 14:43:48 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
+        'Andrew Morton' <akpm@linux-foundation.org>,
+        'Deepa Dinamani' <deepa.kernel@gmail.com>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "'arnd@arndb.de'" <arnd@arndb.de>,
+        "'dbueso@suse.de'" <dbueso@suse.de>,
+        "'axboe@kernel.dk'" <axboe@kernel.dk>,
+        "'dave@stgolabs.net'" <dave@stgolabs.net>,
+        "'e@80x24.org'" <e@80x24.org>,
+        "'jbaron@akamai.com'" <jbaron@akamai.com>,
+        "'linux-fsdevel@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>,
+        "'linux-aio@kvack.org'" <linux-aio@kvack.org>,
+        "'omar.kilani@gmail.com'" <omar.kilani@gmail.com>,
+        "'tglx@linutronix.de'" <tglx@linutronix.de>,
+        'Al Viro' <viro@ZenIV.linux.org.uk>,
+        'Linus Torvalds' <torvalds@linux-foundation.org>,
+        "'linux-arch@vger.kernel.org'" <linux-arch@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/5] signal: Teach sigsuspend to use set_user_sigmask
+Message-ID: <20190613124347.GB12506@redhat.com>
+References: <87k1dxaxcl.fsf_-_@xmission.com>
+ <87ef45axa4.fsf_-_@xmission.com>
+ <20190610162244.GB8127@redhat.com>
+ <87lfy96sta.fsf@xmission.com>
+ <9199239a450d4ea397783ccf98742220@AcuMS.aculab.com>
+ <20190612134558.GB3276@redhat.com>
+ <6f748b26bef748208e2a74174c0c0bfc@AcuMS.aculab.com>
+ <6e9b964b08d84c99980b1707e5fe3d1d@AcuMS.aculab.com>
+ <20190613094324.GA12506@redhat.com>
+ <66311ce9762849f7988c16bc752ea5a9@AcuMS.aculab.com>
 MIME-Version: 1.0
-In-Reply-To: <d15f334c-90cd-7c09-5e54-6501e822e7f1@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <66311ce9762849f7988c16bc752ea5a9@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 13 Jun 2019 12:44:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chen Zhou,
+On 06/13, David Laight wrote:
+>
+> > And you interpret this as if a pending signal should be delivered in any case,
+> > even if pselect succeeds. Again, perhaps you are right, but to me this is simply
+> > undocumented.
+>
+> This text (from http://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html) is moderately clear:
+>     ... if all threads within the process block delivery of the signal, the signal shall
+>     remain pending on the process until a thread calls a sigwait() function selecting that
+>     signal, a thread unblocks delivery of the signal, or the action associated with the signal
+>     is set to ignore the signal.
+>
+> So when pselect() 'replaces the signal mask' any pending signals should be delivered.
 
-On 13/06/2019 12:27, Chen Zhou wrote:
-> On 2019/6/6 0:29, James Morse wrote:
->> On 07/05/2019 04:50, Chen Zhou wrote:
->>> When crashkernel is reserved above 4G in memory, kernel should
->>> reserve some amount of low memory for swiotlb and some DMA buffers.
->>
->>> Meanwhile, support crashkernel=X,[high,low] in arm64. When use
->>> crashkernel=X parameter, try low memory first and fall back to high
->>> memory unless "crashkernel=X,high" is specified.
->>
->> What is the 'unless crashkernel=...,high' for? I think it would be simpler to relax the
->> ARCH_LOW_ADDRESS_LIMIT if reserve_crashkernel_low() allocated something.
->>
->> This way "crashkernel=1G" tries to allocate 1G below 4G, but fails if there isn't enough
->> memory. "crashkernel=1G crashkernel=16M,low" allocates 16M below 4G, which is more likely
->> to succeed, if it does it can then place the 1G block anywhere.
->>
-> Yeah, this is much simpler.
-
->>> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
->>> index 413d566..82cd9a0 100644
->>> --- a/arch/arm64/kernel/setup.c
->>> +++ b/arch/arm64/kernel/setup.c
->>> @@ -243,6 +243,9 @@ static void __init request_standard_resources(void)
->>>  			request_resource(res, &kernel_data);
->>>  #ifdef CONFIG_KEXEC_CORE
->>>  		/* Userspace will find "Crash kernel" region in /proc/iomem. */
->>> +		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
->>> +		    crashk_low_res.end <= res->end)
->>> +			request_resource(res, &crashk_low_res);
->>>  		if (crashk_res.end && crashk_res.start >= res->start &&
->>>  		    crashk_res.end <= res->end)
->>>  			request_resource(res, &crashk_res);
->>
->> With both crashk_low_res and crashk_res, we end up with two entries in /proc/iomem called
->> "Crash kernel". Because its sorted by address, and kexec-tools stops searching when it
->> find "Crash kernel", you are always going to get the kernel placed in the lower portion.
->>
->> I suspect this isn't what you want, can we rename crashk_low_res for arm64 so that
->> existing kexec-tools doesn't use it?
-
-> In my patchset, in addition to the kernel patches, i also modify the kexec-tools.
->   arm64: support more than one crash kernel regions(http://lists.infradead.org/pipermail/kexec/2019-April/022792.html).
-> In kexec-tools patch, we read all the "Crash kernel" entry and load crash kernel high.
-
-But we can't rely on people updating user-space when they update the kernel!
-
-[...]
+I fail to understand this logic.
 
 
->> I'm afraid you've missed the ugly bit of the crashkernel reservation...
->>
->> arch/arm64/mm/mmu.c::map_mem() marks the crashkernel as 'nomap' during the first pass of
->> page-table generation. This means it isn't mapped in the linear map. It then maps it with
->> page-size mappings, and removes the nomap flag.
->>
->> This is done so that arch_kexec_protect_crashkres() and
->> arch_kexec_unprotect_crashkres() can remove the valid bits of the crashkernel mapping.
->> This way the old-kernel can't accidentally overwrite the crashkernel. It also saves us if
->> the old-kernel and the crashkernel use different memory attributes for the mapping.
->>
->> As your low-memory reservation is intended to be used for devices, having it mapped by the
->> old-kernel as cacheable memory is going to cause problems if those CPUs aren't taken
->> offline and go corrupting this memory. (we did crash for a reason after all)
->>
->>
->> I think the simplest thing to do is mark the low region as 'nomap' in
->> reserve_crashkernel() and always leave it unmapped. We can then describe it via a
->> different string in /proc/iomem, something like "Crash kernel (low)". Older kexec-tools
->> shouldn't use it, (I assume its not using strncmp() in a way that would do this by
->> accident), and newer kexec-tools can know to describe it in the DT, but it can't write to it.
+> > However, linux never did this. Until the commit 854a6ed56839 ("signal: Add
+> > restore_user_sigmask()"). This commit caused regression. We had to revert it.
+>
+> That change wasn't expected to change the behaviour...
 
-> I did miss the bit of the crashkernel reservation.
-> I will fix this in next version.
+Yes.
 
-I think all that is needed is to make the low-region nmap, and describe it via /proc/iomem
-with a name where nothing will try and use it by accident.
+And the changed behaviour matched your understanding of standard. We had to
+change it back.
 
+So what do you want from me? ;)
 
-Thanks,
+Oleg.
 
-James
