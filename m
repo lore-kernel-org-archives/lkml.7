@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A77C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A57D8C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB1421743
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C5EE20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441480;
-	bh=Va7FBuaInC3NNkPQUrZrlKT+gZoeMrngN8RqkKo+ovk=;
+	s=default; t=1560441491;
+	bh=Ot4bg2E/0fMVA9DEsc0sW28rQgLbp+P61MuXrlfKVKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=takQsRhxG5zms9ojReqT8o5oc6lJQKS1e0ldQRnPnbImPEe7YVfWWHZAfT0iVV8F0
-	 M1DU7pziXRsIeEFSYtwC8huOVZ6CGVPwYeYELyiKzKJZ7QlCHG4zQkyKCoO0MaUubf
-	 ZXRwIGeLjaDPLmkXPHKN1GpPQhsn0N5qGiLYbGE8=
+	b=be0ktli95E/LOCfdJI5hSxJZEAr+FvvUL707Cp4vq5OEOYQ7mkXCf0YDv69O6G25+
+	 G22iUZksxuMLtpmmZgRTHLf/KHoYVtuTgpa2d3ozt1equbpi5Kr4d06s/pZa/IiCGc
+	 zKBltv5wwFilkVqnUDiAZnXX4fnLSlbfGnbWdQkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732394AbfFMP5r (ORCPT
+        id S2390290AbfFMP6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:57:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38080 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:58:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731503AbfFMIuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:50:32 -0400
+        id S1731495AbfFMIuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:50:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F21420851;
-        Thu, 13 Jun 2019 08:50:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28982206BA;
+        Thu, 13 Jun 2019 08:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415831;
-        bh=Va7FBuaInC3NNkPQUrZrlKT+gZoeMrngN8RqkKo+ovk=;
+        s=default; t=1560415814;
+        bh=Ot4bg2E/0fMVA9DEsc0sW28rQgLbp+P61MuXrlfKVKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fv8lUrdsOgJVd90pBx2DCQDrpb24OdUqa0hlx/jD60K1wLZrkxRMD1Q/JJvv5mNrk
-         YFmtJLFSYtn5UGe8tuTAy/+gjynPc34YimBklDPcW4mfoatv8sJdNqjhlP/gISXMEI
-         K5t9nSIUlHKBI9r/S5XeUPs7uar2Lti6OkLm1SG0=
+        b=LsdvNFccchZm9WPSOaW/bmpQASu3hile0rPBqA+aJnIXBHtSNT34xEYEQsLCJV8oS
+         jL5UAK9lXCvxZ8WQtq00jQJ6OY7G8tfG7EgXgXXl1gJ07Xhp3pdwFRO4C8T+Q2QWqk
+         LcY511YkZAEjd981GO+XMMBFKEUhnEUVYm0wXSak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yashaswini Raghuram Prathivadi Bhayankaram 
-        <yashaswini.raghuram.prathivadi.bhayankaram@intel.com>,
-        Bruce Allan <bruce.w.allan@intel.com>,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Nicolas Dechesne <nicolas.dechesne@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 139/155] ice: Enable LAN_EN for the right recipes
-Date:   Thu, 13 Jun 2019 10:34:11 +0200
-Message-Id: <20190613075700.466999217@linuxfoundation.org>
+Subject: [PATCH 5.1 133/155] arm64: dts: qcom: qcs404: Fix regulator supply names
+Date:   Thu, 13 Jun 2019 10:34:05 +0200
+Message-Id: <20190613075700.194975551@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -65,66 +63,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 277b3a4547b8afbbecdfc52fe7217f018de26c21 ]
+[ Upstream commit f95f57e4372207ede83ac28f300aba719b271ed5 ]
 
-In VEB mode, enable LAN_EN bit in the action fields for filter rules
-corresponding to the right recipes.
+The regulator definition got their supply names cleaned up during
+upstreaming, so they no longer match the driver defined names. Update
+the supply names.
 
-Signed-off-by: Yashaswini Raghuram Prathivadi Bhayankaram <yashaswini.raghuram.prathivadi.bhayankaram@intel.com>
-Reviewed-by: Bruce Allan <bruce.w.allan@intel.com>
-Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Also fill out the missing voltage of SMPS 5.
+
+Fixes: 0b363f5b871c ("arm64: dts: qcom: qcs404: Add PMS405 RPM regulators")
+Reported-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_switch.c | 29 ++++++++++++++-------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 28 ++++++++++++------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_switch.c b/drivers/net/ethernet/intel/ice/ice_switch.c
-index 09d1c314b68f..e40d5f34d59d 100644
---- a/drivers/net/ethernet/intel/ice/ice_switch.c
-+++ b/drivers/net/ethernet/intel/ice/ice_switch.c
-@@ -644,20 +644,31 @@ static void ice_fill_sw_info(struct ice_hw *hw, struct ice_fltr_info *fi)
- 	     fi->fltr_act == ICE_FWD_TO_Q ||
- 	     fi->fltr_act == ICE_FWD_TO_QGRP)) {
- 		fi->lb_en = true;
--		/* Do not set lan_en to TRUE if
-+		/* Set lan_en to TRUE if
- 		 * 1. The switch is a VEB AND
- 		 * 2
--		 * 2.1 The lookup is MAC with unicast addr for MAC, OR
--		 * 2.2 The lookup is MAC_VLAN with unicast addr for MAC
-+		 * 2.1 The lookup is VLAN, OR
-+		 * 2.2 The lookup is default port mode, OR
-+		 * 2.3 The lookup is MAC with mcast or bcast addr for MAC, OR
-+		 * 2.4 The lookup is MAC_VLAN with mcast or bcast addr for MAC.
- 		 *
--		 * In all other cases, the LAN enable has to be set to true.
-+		 * OR
-+		 *
-+		 * The switch is a VEPA.
-+		 *
-+		 * In all other cases, the LAN enable has to be set to false.
- 		 */
--		if (!(hw->evb_veb &&
--		      ((fi->lkup_type == ICE_SW_LKUP_MAC &&
--			is_unicast_ether_addr(fi->l_data.mac.mac_addr)) ||
--		       (fi->lkup_type == ICE_SW_LKUP_MAC_VLAN &&
--			is_unicast_ether_addr(fi->l_data.mac_vlan.mac_addr)))))
-+		if (hw->evb_veb) {
-+			if (fi->lkup_type == ICE_SW_LKUP_VLAN ||
-+			    fi->lkup_type == ICE_SW_LKUP_DFLT ||
-+			    (fi->lkup_type == ICE_SW_LKUP_MAC &&
-+			     !is_unicast_ether_addr(fi->l_data.mac.mac_addr)) ||
-+			    (fi->lkup_type == ICE_SW_LKUP_MAC_VLAN &&
-+			     !is_unicast_ether_addr(fi->l_data.mac.mac_addr)))
-+				fi->lan_en = true;
-+		} else {
- 			fi->lan_en = true;
-+		}
- 	}
- }
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+index 50b3589c7f15..536f735243d2 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+@@ -37,18 +37,18 @@
+ 	pms405-regulators {
+ 		compatible = "qcom,rpm-pms405-regulators";
  
+-		vdd-s1-supply = <&vph_pwr>;
+-		vdd-s2-supply = <&vph_pwr>;
+-		vdd-s3-supply = <&vph_pwr>;
+-		vdd-s4-supply = <&vph_pwr>;
+-		vdd-s5-supply = <&vph_pwr>;
+-		vdd-l1-l2-supply = <&vreg_s5_1p35>;
+-		vdd-l3-l8-supply = <&vreg_s5_1p35>;
+-		vdd-l4-supply = <&vreg_s5_1p35>;
+-		vdd-l5-l6-supply = <&vreg_s4_1p8>;
+-		vdd-l7-supply = <&vph_pwr>;
+-		vdd-l9-supply = <&vreg_s5_1p35>;
+-		vdd-l10-l11-l12-l13-supply = <&vph_pwr>;
++		vdd_s1-supply = <&vph_pwr>;
++		vdd_s2-supply = <&vph_pwr>;
++		vdd_s3-supply = <&vph_pwr>;
++		vdd_s4-supply = <&vph_pwr>;
++		vdd_s5-supply = <&vph_pwr>;
++		vdd_l1_l2-supply = <&vreg_s5_1p35>;
++		vdd_l3_l8-supply = <&vreg_s5_1p35>;
++		vdd_l4-supply = <&vreg_s5_1p35>;
++		vdd_l5_l6-supply = <&vreg_s4_1p8>;
++		vdd_l7-supply = <&vph_pwr>;
++		vdd_l9-supply = <&vreg_s5_1p35>;
++		vdd_l10_l11_l12_l13-supply = <&vph_pwr>;
+ 
+ 		vreg_s4_1p8: s4 {
+ 			regulator-min-microvolt = <1728000>;
+@@ -56,8 +56,8 @@
+ 		};
+ 
+ 		vreg_s5_1p35: s5 {
+-			regulator-min-microvolt = <>;
+-			regulator-max-microvolt = <>;
++			regulator-min-microvolt = <1352000>;
++			regulator-max-microvolt = <1352000>;
+ 		};
+ 
+ 		vreg_l1_1p3: l1 {
 -- 
 2.20.1
 
