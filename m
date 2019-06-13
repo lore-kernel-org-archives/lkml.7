@@ -2,176 +2,144 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D9FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EA5C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A15782082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92D80207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:05:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ticmJkeS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CY4EEIKX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbfFMSEf (ORCPT
+        id S1727280AbfFMSFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:04:35 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:33516 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfFMSEf (ORCPT
+        Thu, 13 Jun 2019 14:05:46 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38361 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfFMSFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:04:35 -0400
-X-Greylist: delayed 3924 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Jun 2019 14:04:34 EDT
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5DGrpok004190;
-        Thu, 13 Jun 2019 16:58:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=6+5uOXGUqpVe8l+j2JuRuHJpjiBJEwkfCvYqyjglD9c=;
- b=ticmJkeSwDxOe8hD+GOtaTLPcoKN4trEF+RZaRTAB+fwTqYt0lJIy83KlVY0+AECVtkR
- maulPoWxv3brp4qMdVvw1H6WbqSNRoE1eAnMOmHFN8luyGAVdTys31YUXpkaCy2aHSwF
- Y4NqBPkj8g6koo5XGx+GofBIC5Qo0PCKu36jTVF9JAs9KAp6UnZmdtUVVQf7owQUTddd
- YnSzubeVSWNg9p9BZvI/UumkA029RBlX3ImvrB1+E8REGKg8QY5aOwYzrRX2ApY/J8wx
- R/aWZ/Hu+UIif/4q4z1o1lWQOaB8lAWimBmkpb106QY04C7Kv0JzycaEZ9sJ3TNHLOaT Cw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2t04yntsn2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Jun 2019 16:58:40 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5DGviSH038486;
-        Thu, 13 Jun 2019 16:58:40 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2t04j0jt0g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Jun 2019 16:58:39 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5DGwbtW013038;
-        Thu, 13 Jun 2019 16:58:37 GMT
-Received: from [192.168.10.144] (/51.175.236.248)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 13 Jun 2019 09:58:37 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v2] RDMA/cma: Make CM response timeout and # CM retries
- configurable
-From:   =?utf-8?Q?H=C3=A5kon_Bugge?= <haakon.bugge@oracle.com>
-In-Reply-To: <174ccd37a9ffa05d0c7c03fe80ff7170a9270824.camel@redhat.com>
-Date:   Thu, 13 Jun 2019 18:58:30 +0200
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Parav Pandit <parav@mellanox.com>,
-        Steve Wise <swise@opengridcomputing.com>,
-        OFED mailing list <linux-rdma@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <67B4F337-4C3A-4193-B1EF-42FD4765CBB7@oracle.com>
-References: <20190226075722.1692315-1-haakon.bugge@oracle.com>
- <174ccd37a9ffa05d0c7c03fe80ff7170a9270824.camel@redhat.com>
-To:     Doug Ledford <dledford@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9287 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906130123
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9287 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906130123
+        Thu, 13 Jun 2019 14:05:45 -0400
+Received: by mail-pg1-f193.google.com with SMTP id v11so11387411pgl.5;
+        Thu, 13 Jun 2019 11:05:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6EdW1zQmAAxK0Wa2ppkGhsrx4V+WLwXRsMm+jl3+ewo=;
+        b=CY4EEIKXVyaEX9Q2YU2gGkUHWd0Pp+IvLWSb6NtU47cM2RbPyozw/YKui7GvEIcwXu
+         HKkMgmbcBo1EaMxgNpnwOvJZ6rOOjaKXtTQDMI18ftK6UlsiXnX69m3EuC4g+DFjMEP8
+         /Y5jh4IvbkOXkTlRmwSGNP92wjUu191GVcrBMWSmso443/L3e96pZUErlVAOEZLit1tu
+         71LtfO2NSARBP+p6M9M6EryIuIBu3VhwHn7lqcexvjPCcNB7rzothPlLhXbadTR04wqT
+         z7t9JiGqQKfncKIS0AxAEC+07IoUXybdLqMag/zqJROoNbpYwOTXOWl6Hy8i2X1DyHWS
+         VWcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6EdW1zQmAAxK0Wa2ppkGhsrx4V+WLwXRsMm+jl3+ewo=;
+        b=B329nxDxhP8B7FCzNqdtX7Jedvy47klGNjcJI+FLEqUs2xT9T5+M3qD8mebSUR0OJP
+         xaT/CD4tqj7SMl3ChawQp0RGOh+LSBpkqZpedlrbgSl5xwQn2zVhs4w7YFWALDRZDkrb
+         nSHaIgOEVtES1i9GLWS5yR8vbIgV6/TfhQEwi8Af4Gf3Sz5uN7fjg0f9DxGGsQU90G6v
+         02iGAC9PxHFGg9s6i9BQUZ9VaKTrYf5zFC6sh7smxrnoiQKz+K/BJiiRjbAi5K/At5eS
+         mT1uP63aKFNVUEqULfLGgLT4CKwqXbsBWIIXs0sUDXXpvCwcOuRSawkJwmBulhS7PIam
+         ssQw==
+X-Gm-Message-State: APjAAAX3bPM22rkAsv20az3oxmpOUW75etHs8vh5jQzWnJPD6cHFHEBG
+        zE0fE33+qSgFpB2rdU8aZ3w=
+X-Google-Smtp-Source: APXvYqw1YQzFVkNF9Msoqos5HCsJR3CRbWRv0JJz9cZgpC8b19GXB02dTSyHEal1BUYRQWmrQUAang==
+X-Received: by 2002:a17:90a:2648:: with SMTP id l66mr6718507pje.65.1560449144861;
+        Thu, 13 Jun 2019 11:05:44 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 16sm343780pfo.65.2019.06.13.11.05.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 11:05:43 -0700 (PDT)
+Subject: Re: [PATCH v7 3/5] usb: host: ohci-sm501: init genalloc for local
+ memory
+To:     Fredrik Noring <noring@nocrew.org>
+Cc:     laurentiu.tudor@nxp.com, hch@lst.de, stern@rowland.harvard.edu,
+        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        marex@denx.de, leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
+        robin.murphy@arm.com, JuergenUrban@gmx.de
+References: <20190529102843.13174-1-laurentiu.tudor@nxp.com>
+ <20190529102843.13174-4-laurentiu.tudor@nxp.com>
+ <20190605214622.GA22254@roeck-us.net> <20190611133223.GA30054@roeck-us.net>
+ <20190611172654.GA2602@sx9> <20190611190343.GA18459@roeck-us.net>
+ <20190613134033.GA2489@sx9>
+ <bdfd2178-9e3c-dc15-6aa1-ec1f1fbcb191@roeck-us.net>
+ <20190613153414.GA909@sx9>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <3f2164cd-7655-b7cc-ec57-d8751886728c@roeck-us.net>
+Date:   Thu, 13 Jun 2019 11:05:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190613153414.GA909@sx9>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/13/19 8:34 AM, Fredrik Noring wrote:
+> Hi Guenter,
+> 
+>> Thanks for the confirmation. Do you see the problem only with the
+>> ohci-sm501 driver or also with others ?
+> 
+> All are likely affected, but it depends, because I believe the problem is
+> that the USB subsystem runs out of memory. Please try the attached patch!
+> 
+> The pool assumed 4096 byte page alignment for every allocation, which is
+> excessive given that many requests are for 16 and 32 bytes. In the patch
+> below, I have turned down the order to 5, which is good enough for the ED
+> and TD structures of the OHCI, but not enough for the HCCA that needs 256
+> byte alignment. With some luck, the WARN_ON_ONCE will not trigger in your
+> test, though. If it does, you may try to increase the order from 5 to 8.
+> 
 
+You are right, the patch below fixes the problem. I did not get the warning
+with order==5. Nevertheless, I also tested with order==8; that works as well.
 
-> On 13 Jun 2019, at 16:25, Doug Ledford <dledford@redhat.com> wrote:
->=20
-> On Tue, 2019-02-26 at 08:57 +0100, H=C3=A5kon Bugge wrote:
->> During certain workloads, the default CM response timeout is too
->> short, leading to excessive retries. Hence, make it configurable
->> through sysctl. While at it, also make number of CM retries
->> configurable.
->>=20
->> The defaults are not changed.
->>=20
->> Signed-off-by: H=C3=A5kon Bugge <haakon.bugge@oracle.com>
->> ---
->> v1 -> v2:
->>   * Added unregister_net_sysctl_table() in cma_cleanup()
->> ---
->> drivers/infiniband/core/cma.c | 52 ++++++++++++++++++++++++++++++---
->> --
->> 1 file changed, 45 insertions(+), 7 deletions(-)
->=20
-> This has been sitting on patchworks since forever.  Presumably because
-> Jason and I neither one felt like we really wanted it, but also
-> couldn't justify flat refusing it.
+Thanks a lot for tracking this down!
+Guenter
 
-I thought the agreement was to use NL and iproute2. But I haven't had =
-the capacity.
-
->  Well, I've made up my mind, so
-> unless Jason wants to argue the other side, I'm rejecting this patch.=20=
-
-> Here's why.  The whole concept of a timeout is to help recovery in a
-> situation that overloads one end of the connection.  There is a
-> relationship between the max queue backlog on the one host and the
-> timeout on the other host. =20
-
-If you refer to the backlog parameter in rdma_listen(), I cannot see it =
-being used at all for IB.
-
-For CX-3, which is paravirtualized wrt. MAD packets, it is the proxy UD =
-receive queue length for the PF driver that can be construed as a =
-backlog. Remember that any MAD packet being sent from a VF or the PF =
-itself, is sent to a proxy UD QP in the PF. Those packets are then =
-multiplexed out on the real QP0/1. Incoming MAD packets are =
-demultiplexed and sent once more to the proxy QP in the VF.
-
-> Generally, in order for a request to get
-> dropped and us to need to retransmit, the queue must already have a
-> full backlog.  So, how long does it take a heavily loaded system to
-> process a full backlog?  That, plus a fuzz for a margin of error,
-> should be our timeout.  We shouldn't be asking users to configure it.
-
-Customer configures #VMs and different workload may lead to way =
-different number of CM connections. The proxying of MAD packet through =
-the PF driver has a finite packet rate. With 64 VMs, 10.000 QPs on each, =
-all going down due to a switch failing or similar, you have 640.000 =
-DREQs to be sent, and with the finite packet rate of MA packets through =
-the PF, this takes more than the current CM timeout. And then you =
-re-transmit and increase the burden of the PF proxying.
-
-So, we can change the default to cope with this. But, a MAD packet is =
-unreliable, we may have transient loss. In this case, we want a short =
-timeout.
-
-> However, if users change the default backlog queue on their systems,
-> *then* it would make sense to have the users also change the timeout
-> here, but I think guidance would be helpful.
->=20
-> So, to revive this patch, what I'd like to see is some attempt to
-> actually quantify a reasonable timeout for the default backlog depth,
-> then the patch should actually change the default to that reasonable
-> timeout, and then put in the ability to adjust the timeout with some
-> sort of doc guidance on how to calculate a reasonable timeout based on
-> configured backlog depth.
-
-I can agree to this :-)
-
-
-Thxs, H=C3=A5kon
-
->=20
-> --=20
-> Doug Ledford <dledford@redhat.com>
->    GPG KeyID: B826A3330E572FDD
->    Key fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57
-> 2FDD
+> I have observed strange things happen when the USB subsystem runs out of
+> memory. The mass storage drivers often seem to busy-wait on -ENOMEM,
+> consuming a lot of processor resources. It would be much more efficient
+> to sleep waiting for memory to become available.
+> 
+> In your case I suspect that allocation failures are not correctly
+> attributed. Certain kinds of temporary freezes may also occur, as the
+> various devices are reset due to host memory allocation errors.
+>  > Fredrik
+> 
+> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+> --- a/drivers/usb/core/hcd.c
+> +++ b/drivers/usb/core/hcd.c
+> @@ -3011,7 +3011,7 @@ int usb_hcd_setup_local_mem(struct usb_hcd *hcd, phys_addr_t phys_addr,
+>   	int err;
+>   	void __iomem *local_mem;
+>   
+> -	hcd->localmem_pool = devm_gen_pool_create(hcd->self.sysdev, PAGE_SHIFT,
+> +	hcd->localmem_pool = devm_gen_pool_create(hcd->self.sysdev, 5,
+>   						  dev_to_node(hcd->self.sysdev),
+>   						  dev_name(hcd->self.sysdev));
+>   	if (IS_ERR(hcd->localmem_pool))
+> diff --git a/drivers/usb/host/ohci-hcd.c b/drivers/usb/host/ohci-hcd.c
+> --- a/drivers/usb/host/ohci-hcd.c
+> +++ b/drivers/usb/host/ohci-hcd.c
+> @@ -517,6 +517,7 @@ static int ohci_init (struct ohci_hcd *ohci)
+>   						GFP_KERNEL);
+>   	if (!ohci->hcca)
+>   		return -ENOMEM;
+> +	WARN_ON_ONCE(ohci->hcca_dma & 0xff);
+>   
+>   	if ((ret = ohci_mem_init (ohci)) < 0)
+>   		ohci_stop (hcd);
+> 
 
