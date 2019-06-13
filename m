@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FABC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0F7C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC9D120644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684442175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442807;
-	bh=xHK2yznNvP7abV7OQvqrwN/hV3EsN1/XtGCm2HbYo8c=;
+	s=default; t=1560442811;
+	bh=LvyG5bBAfS352aiJgA4c+p3Ggc8y4HYfaYNzoQxw4lQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HOdcHnA009UaaZT2c27T2VUj81P19Z9r+2Zbu3NiH4EK2kfJ53MAnF/ecDGz9ApxV
-	 ySarR4jVYiXbY+Z5AGEo8H8ZYu0Iyc1p9/oVZNcIC5XJwuKeLXfpoFz0FHONanfG6S
-	 KAjqNUb8uUVYIKCLJ2S6R6zNNYzK/JB/16mjPLzs=
+	b=cmhC5VimaLoRHy8vCVvAeC2ASDoAcuGtH9dye/wGKl7eRHV1AdVu0ufwoOZX4560n
+	 kyev/t74AePh4kKyZj+Hh+zl6cnljQlsKxZ6/AXBSEAaer88gGQXDpGWptVTzgBtqd
+	 K2MSm99X7f1+zmEZuYC7nbjeZGu6Tn+1Q17bXei0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403756AbfFMQUG (ORCPT
+        id S2392123AbfFMQUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:20:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57078 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:20:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731086AbfFMIje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:39:34 -0400
+        id S1731085AbfFMIj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:39:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94BF321479;
-        Thu, 13 Jun 2019 08:39:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E273421473;
+        Thu, 13 Jun 2019 08:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415174;
-        bh=xHK2yznNvP7abV7OQvqrwN/hV3EsN1/XtGCm2HbYo8c=;
+        s=default; t=1560415168;
+        bh=LvyG5bBAfS352aiJgA4c+p3Ggc8y4HYfaYNzoQxw4lQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lkutTp2URsBZM1H1R1YxN7hr6dCGBQucHjHK1gt68BaY+M1PzI1kcuBpVn5OnRnsg
-         nRg590R7zeoeCdzy/Czc0+HniYXH1wwHzosuGH2Jm9xS0qgVuWoCj4Mzq3mBsh0ctL
-         fMD1EZX55ciriPehBfqyjuBLDMqxC12AqeIpkXSE=
+        b=sNZHrK3fMaPQ2cikJBzWuR4GeOIj2v11vc3Vb/oxpJ6CsW2QQU5TxlrImq8thUsIY
+         RDPw3nFvwgoJcvhepprC/Q1XK6Bz0oMsj9vUmpMqWKv+VYQP20jsmluze0eBjdYXJa
+         LYZvSOU6mj7+J6Lz8xa9bXUmndamRpskWMqxdvlI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Borislav Petkov <bp@suse.de>,
-        Johannes Thumshirn <jth@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>, linuxppc-dev@ozlabs.org,
-        morbidrsa@gmail.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 029/118] EDAC/mpc85xx: Prevent building as a module
-Date:   Thu, 13 Jun 2019 10:32:47 +0200
-Message-Id: <20190613075645.207725772@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 027/118] drm/nouveau/kms/gv100-: fix spurious window immediate interlocks
+Date:   Thu, 13 Jun 2019 10:32:45 +0200
+Message-Id: <20190613075645.116443551@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -64,55 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2b8358a951b1e2a534a54924cd8245e58a1c5fb8 ]
+[ Upstream commit d2434e4d942c32cadcbdbcd32c58f35098f3b604 ]
 
-The mpc85xx EDAC driver can be configured as a module but then fails to
-build because it uses two unexported symbols:
+Cursor position updates were accidentally causing us to attempt to interlock
+window with window immediate, and without a matching window immediate update,
+NVDisplay could hang forever in some circumstances.
 
-  ERROR: ".pci_find_hose_for_OF_device" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
-  ERROR: ".early_find_capability" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
+Fixes suspend/resume on (at least) Quadro RTX4000 (TU104).
 
-We don't want to export those symbols just for this driver, so make the
-driver only configurable as a built-in.
-
-This seems to have been broken since at least
-
-  c92132f59806 ("edac/85xx: Add PCIe error interrupt edac support")
-
-(Nov 2013).
-
- [ bp: make it depend on EDAC=y so that the EDAC core doesn't get built
-   as a module. ]
-
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Johannes Thumshirn <jth@kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: linuxppc-dev@ozlabs.org
-Cc: morbidrsa@gmail.com
-Link: https://lkml.kernel.org/r/20190502141941.12927-1-mpe@ellerman.id.au
+Reported-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/nouveau/dispnv50/disp.h     | 1 +
+ drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c | 1 +
+ drivers/gpu/drm/nouveau/dispnv50/wndw.c     | 2 +-
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 57304b2e989f..b00cc03ad6b6 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -250,8 +250,8 @@ config EDAC_PND2
- 	  micro-server but may appear on others in the future.
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.h b/drivers/gpu/drm/nouveau/dispnv50/disp.h
+index e48c5eb35b49..66c125a6b0b3 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.h
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.h
+@@ -41,6 +41,7 @@ struct nv50_disp_interlock {
+ 		NV50_DISP_INTERLOCK__SIZE
+ 	} type;
+ 	u32 data;
++	u32 wimm;
+ };
  
- config EDAC_MPC85XX
--	tristate "Freescale MPC83xx / MPC85xx"
--	depends on FSL_SOC
-+	bool "Freescale MPC83xx / MPC85xx"
-+	depends on FSL_SOC && EDAC=y
- 	help
- 	  Support for error detection and correction on the Freescale
- 	  MPC8349, MPC8560, MPC8540, MPC8548, T4240
+ void corec37d_ntfy_init(struct nouveau_bo *, u32);
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c b/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c
+index 9103b8494279..f7dbd965e4e7 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/wimmc37b.c
+@@ -75,6 +75,7 @@ wimmc37b_init_(const struct nv50_wimm_func *func, struct nouveau_drm *drm,
+ 		return ret;
+ 	}
+ 
++	wndw->interlock.wimm = wndw->interlock.data;
+ 	wndw->immd = func;
+ 	return 0;
+ }
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/wndw.c b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
+index 2187922e8dc2..b3db4553098d 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/wndw.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
+@@ -151,7 +151,7 @@ nv50_wndw_flush_set(struct nv50_wndw *wndw, u32 *interlock,
+ 	if (asyw->set.point) {
+ 		if (asyw->set.point = false, asyw->set.mask)
+ 			interlock[wndw->interlock.type] |= wndw->interlock.data;
+-		interlock[NV50_DISP_INTERLOCK_WIMM] |= wndw->interlock.data;
++		interlock[NV50_DISP_INTERLOCK_WIMM] |= wndw->interlock.wimm;
+ 
+ 		wndw->immd->point(wndw, asyw);
+ 		wndw->immd->update(wndw, interlock);
 -- 
 2.20.1
 
