@@ -2,119 +2,176 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DCAC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D9FC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F3F20645
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A15782082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:04:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sK80hHPx"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ticmJkeS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbfFMSAq (ORCPT
+        id S1728376AbfFMSEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:00:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57098 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbfFMSAp (ORCPT
+        Thu, 13 Jun 2019 14:04:35 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33516 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfFMSEf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:00:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Y2HBP4Suq4cb9acUey5TgY5ehjcUkDf2judRGou1cAw=; b=sK80hHPxTYIdRxZtA26Sm+wM6
-        DPW6vJpYt7QVdrCYSs3qmMJz9tsGHzUkd4u8y5+qHNA7lpc5wcvhFYiAojZCtZxNT1UDzbnFiFKYg
-        RND4ASdgud8UfdyIAGW4eNyXFCNjE9+PwIEElIrhw8bLJJFmmFsuYWQCYqKDGvg2AnjYfgkV9RaoW
-        9xONLRy7uVoREwEFcOKhcVUwOvMOQDTgYRTt6N1unwvIrqWM5NN0XlXB3GkKvEmWtpI+Ikjac0mAL
-        1WgdKIkUjkoIzf3YcW/av051DIoWiXZjvFBSL886OQ4q1tuF3I0osiw7xj32UOrXme8h60gaQAWS6
-        NMhIZOHcw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbU1X-0002TU-SW; Thu, 13 Jun 2019 18:00:32 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A81E7209CC9DD; Thu, 13 Jun 2019 20:00:29 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 20:00:29 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     David Howells <dhowells@redhat.com>, akiyks@gmail.com,
-        andrea.parri@amarulasolutions.com, boqun.feng@gmail.com,
-        dlustig@nvidia.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        npiggin@gmail.com, paulmck@linux.ibm.com, will.deacon@arm.com,
-        paul.burton@mips.com, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org
-Subject: Re: [PATCH v2 0/4] atomic: Fixes to smp_mb__{before,after}_atomic()
- and mips.
-Message-ID: <20190613180029.GO3436@hirez.programming.kicks-ass.net>
-References: <1674.1560435952@warthog.procyon.org.uk>
- <Pine.LNX.4.44L0.1906131253230.1307-100000@iolanthe.rowland.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1906131253230.1307-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 13 Jun 2019 14:04:35 -0400
+X-Greylist: delayed 3924 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Jun 2019 14:04:34 EDT
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5DGrpok004190;
+        Thu, 13 Jun 2019 16:58:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=6+5uOXGUqpVe8l+j2JuRuHJpjiBJEwkfCvYqyjglD9c=;
+ b=ticmJkeSwDxOe8hD+GOtaTLPcoKN4trEF+RZaRTAB+fwTqYt0lJIy83KlVY0+AECVtkR
+ maulPoWxv3brp4qMdVvw1H6WbqSNRoE1eAnMOmHFN8luyGAVdTys31YUXpkaCy2aHSwF
+ Y4NqBPkj8g6koo5XGx+GofBIC5Qo0PCKu36jTVF9JAs9KAp6UnZmdtUVVQf7owQUTddd
+ YnSzubeVSWNg9p9BZvI/UumkA029RBlX3ImvrB1+E8REGKg8QY5aOwYzrRX2ApY/J8wx
+ R/aWZ/Hu+UIif/4q4z1o1lWQOaB8lAWimBmkpb106QY04C7Kv0JzycaEZ9sJ3TNHLOaT Cw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2t04yntsn2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 16:58:40 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5DGviSH038486;
+        Thu, 13 Jun 2019 16:58:40 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2t04j0jt0g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 16:58:39 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5DGwbtW013038;
+        Thu, 13 Jun 2019 16:58:37 GMT
+Received: from [192.168.10.144] (/51.175.236.248)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 13 Jun 2019 09:58:37 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v2] RDMA/cma: Make CM response timeout and # CM retries
+ configurable
+From:   =?utf-8?Q?H=C3=A5kon_Bugge?= <haakon.bugge@oracle.com>
+In-Reply-To: <174ccd37a9ffa05d0c7c03fe80ff7170a9270824.camel@redhat.com>
+Date:   Thu, 13 Jun 2019 18:58:30 +0200
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Parav Pandit <parav@mellanox.com>,
+        Steve Wise <swise@opengridcomputing.com>,
+        OFED mailing list <linux-rdma@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <67B4F337-4C3A-4193-B1EF-42FD4765CBB7@oracle.com>
+References: <20190226075722.1692315-1-haakon.bugge@oracle.com>
+ <174ccd37a9ffa05d0c7c03fe80ff7170a9270824.camel@redhat.com>
+To:     Doug Ledford <dledford@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9287 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906130123
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9287 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906130123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 12:58:11PM -0400, Alan Stern wrote:
-> On Thu, 13 Jun 2019, David Howells wrote:
-> 
-> > Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > > Basically we fail for:
-> > > 
-> > > 	*x = 1;
-> > > 	atomic_inc(u);
-> > > 	smp_mb__after_atomic();
-> > > 	r0 = *y;
-> > > 
-> > > Because, while the atomic_inc() implies memory order, it
-> > > (surprisingly) does not provide a compiler barrier. This then allows
-> > > the compiler to re-order like so:
-> > 
-> > To quote memory-barriers.txt:
-> > 
-> >  (*) smp_mb__before_atomic();
-> >  (*) smp_mb__after_atomic();
-> > 
-> >      These are for use with atomic (such as add, subtract, increment and
-> >      decrement) functions that don't return a value, especially when used for
-> >      reference counting.  These functions do not imply memory barriers.
-> > 
-> > so it's entirely to be expected?
-> 
-> The text is perhaps ambiguous.  It means that the atomic functions
-> which don't return values -- like atomic_inc() -- do not imply memory
-> barriers.  It doesn't mean that smp_mb__before_atomic() and
-> smp_mb__after_atomic() do not imply memory barriers.
-> 
-> The behavior Peter described is not to be expected.  The expectation is 
-> that the smp_mb__after_atomic() in the example should force the "*x = 
-> 1" store to execute before the "r0 = *y" load.  But on current x86 it 
-> doesn't force this, for the reason explained in the description.
 
-Indeed, thanks Alan.
 
-The other other approach would be to upgrade smp_mb__{before,after}_mb()
-to actual full memory barriers on x86, but that seems quite rediculous
-since atomic_inc() already does all the expensive bits and is only
-missing the compiler barrier.
+> On 13 Jun 2019, at 16:25, Doug Ledford <dledford@redhat.com> wrote:
+>=20
+> On Tue, 2019-02-26 at 08:57 +0100, H=C3=A5kon Bugge wrote:
+>> During certain workloads, the default CM response timeout is too
+>> short, leading to excessive retries. Hence, make it configurable
+>> through sysctl. While at it, also make number of CM retries
+>> configurable.
+>>=20
+>> The defaults are not changed.
+>>=20
+>> Signed-off-by: H=C3=A5kon Bugge <haakon.bugge@oracle.com>
+>> ---
+>> v1 -> v2:
+>>   * Added unregister_net_sysctl_table() in cma_cleanup()
+>> ---
+>> drivers/infiniband/core/cma.c | 52 ++++++++++++++++++++++++++++++---
+>> --
+>> 1 file changed, 45 insertions(+), 7 deletions(-)
+>=20
+> This has been sitting on patchworks since forever.  Presumably because
+> Jason and I neither one felt like we really wanted it, but also
+> couldn't justify flat refusing it.
 
-That would result in code like:
+I thought the agreement was to use NL and iproute2. But I haven't had =
+the capacity.
 
-	mov $1, x
-	lock inc u
-	lock addl $0, -4(%rsp) # aka smp_mb()
-	mov y, %r
+>  Well, I've made up my mind, so
+> unless Jason wants to argue the other side, I'm rejecting this patch.=20=
 
-which is really quite silly.
+> Here's why.  The whole concept of a timeout is to help recovery in a
+> situation that overloads one end of the connection.  There is a
+> relationship between the max queue backlog on the one host and the
+> timeout on the other host. =20
 
-And as noted in the Changelog, about half the non-value returning
-atomics already implied the compiler barrier anyway.
+If you refer to the backlog parameter in rdma_listen(), I cannot see it =
+being used at all for IB.
+
+For CX-3, which is paravirtualized wrt. MAD packets, it is the proxy UD =
+receive queue length for the PF driver that can be construed as a =
+backlog. Remember that any MAD packet being sent from a VF or the PF =
+itself, is sent to a proxy UD QP in the PF. Those packets are then =
+multiplexed out on the real QP0/1. Incoming MAD packets are =
+demultiplexed and sent once more to the proxy QP in the VF.
+
+> Generally, in order for a request to get
+> dropped and us to need to retransmit, the queue must already have a
+> full backlog.  So, how long does it take a heavily loaded system to
+> process a full backlog?  That, plus a fuzz for a margin of error,
+> should be our timeout.  We shouldn't be asking users to configure it.
+
+Customer configures #VMs and different workload may lead to way =
+different number of CM connections. The proxying of MAD packet through =
+the PF driver has a finite packet rate. With 64 VMs, 10.000 QPs on each, =
+all going down due to a switch failing or similar, you have 640.000 =
+DREQs to be sent, and with the finite packet rate of MA packets through =
+the PF, this takes more than the current CM timeout. And then you =
+re-transmit and increase the burden of the PF proxying.
+
+So, we can change the default to cope with this. But, a MAD packet is =
+unreliable, we may have transient loss. In this case, we want a short =
+timeout.
+
+> However, if users change the default backlog queue on their systems,
+> *then* it would make sense to have the users also change the timeout
+> here, but I think guidance would be helpful.
+>=20
+> So, to revive this patch, what I'd like to see is some attempt to
+> actually quantify a reasonable timeout for the default backlog depth,
+> then the patch should actually change the default to that reasonable
+> timeout, and then put in the ability to adjust the timeout with some
+> sort of doc guidance on how to calculate a reasonable timeout based on
+> configured backlog depth.
+
+I can agree to this :-)
+
+
+Thxs, H=C3=A5kon
+
+>=20
+> --=20
+> Doug Ledford <dledford@redhat.com>
+>    GPG KeyID: B826A3330E572FDD
+>    Key fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57
+> 2FDD
+
