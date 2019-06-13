@@ -2,56 +2,109 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52CDC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18478C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7C620679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E581D20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560442052;
+	bh=sSYbn8TpRkDbnMKW/pslPsGm6fozgk7nH3JxDJUHq00=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=os/n8xq/WEws8U8c6omU1zVEVLPS2isqT79ybcn6yUd0Usa77QSsR6sEIEGhegBDA
+	 5w9WhsHlMFw9pqlhrBIqDL/qrssrKyerDyJOzMme5YyiOzj7+swoo9Y2YalfYpmvFU
+	 wP4wciEaatZge2PAPUWQsXHjez4WCWkhw0xAubXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391379AbfFMQH2 (ORCPT
+        id S2390407AbfFMQH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:07:28 -0400
-Received: from verein.lst.de ([213.95.11.211]:36671 "EHLO newverein.lst.de"
+        Thu, 13 Jun 2019 12:07:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731302AbfFMIp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:45:29 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id DEC0668B05; Thu, 13 Jun 2019 10:44:58 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 10:44:58 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Kashyap Desai <kashyap.desai@broadcom.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>, linux-block@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>,
-        PDL-MPT-FUSIONLINUX <mpt-fusionlinux.pdl@broadcom.com>,
-        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/13] megaraid_sas: set virt_boundary_mask in the scsi
- host
-Message-ID: <20190613084458.GB13221@lst.de>
-References: <20190605190836.32354-1-hch@lst.de> <20190605190836.32354-11-hch@lst.de> <cd713506efb9579d1f69a719d831c28d@mail.gmail.com>
+        id S1731304AbfFMIpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:45:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D5392173C;
+        Thu, 13 Jun 2019 08:45:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560415533;
+        bh=sSYbn8TpRkDbnMKW/pslPsGm6fozgk7nH3JxDJUHq00=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lwF7pwFXQBuJLu8q5YBCxvD7SNUTsIUpajBgklSHd0BFl0HNdeh1Es5SwMqZ7rdcZ
+         A8zL2aJdLUJrUWwKNaQOwLdoC+YzJ1B4xwdgc0ppZMWUeu0f4SsUNAjywwAkCYLfw7
+         KTayfA6KizB3nxIxJN376ygEEB4J7Mw3C6xchMX8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Matt Redfearn <matt.redfearn@thinci.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 034/155] drm/bridge: adv7511: Fix low refresh rate selection
+Date:   Thu, 13 Jun 2019 10:32:26 +0200
+Message-Id: <20190613075654.942680737@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
+References: <20190613075652.691765927@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cd713506efb9579d1f69a719d831c28d@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So before I respin this series, can you help with a way to figure out
-for mpt3sas and megaraid if a given controller supports NVMe devices
-at all, so that we don't have to set the virt boundary if not?
+[ Upstream commit 67793bd3b3948dc8c8384b6430e036a30a0ecb43 ]
+
+The driver currently sets register 0xfb (Low Refresh Rate) based on the
+value of mode->vrefresh. Firstly, this field is specified to be in Hz,
+but the magic numbers used by the code are Hz * 1000. This essentially
+leads to the low refresh rate always being set to 0x01, since the
+vrefresh value will always be less than 24000. Fix the magic numbers to
+be in Hz.
+Secondly, according to the comment in drm_modes.h, the field is not
+supposed to be used in a functional way anyway. Instead, use the helper
+function drm_mode_vrefresh().
+
+Fixes: 9c8af882bf12 ("drm: Add adv7511 encoder driver")
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Matt Redfearn <matt.redfearn@thinci.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190424132210.26338-1-matt.redfearn@thinci.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+index ec2ca71e1323..c532e9c9e491 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+@@ -748,11 +748,11 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
+ 			vsync_polarity = 1;
+ 	}
+ 
+-	if (mode->vrefresh <= 24000)
++	if (drm_mode_vrefresh(mode) <= 24)
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_24HZ;
+-	else if (mode->vrefresh <= 25000)
++	else if (drm_mode_vrefresh(mode) <= 25)
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_25HZ;
+-	else if (mode->vrefresh <= 30000)
++	else if (drm_mode_vrefresh(mode) <= 30)
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_30HZ;
+ 	else
+ 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_NONE;
+-- 
+2.20.1
+
+
+
