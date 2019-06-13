@@ -2,102 +2,124 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D28C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9989C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE88720644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:34:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i2mhSEu3"
+	by mail.kernel.org (Postfix) with ESMTP id 8BFFD20449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:34:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390771AbfFMQe1 (ORCPT
+        id S2392498AbfFMQeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:34:27 -0400
-Received: from mail-ot1-f52.google.com ([209.85.210.52]:38021 "EHLO
-        mail-ot1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730775AbfFMHwY (ORCPT
+        Thu, 13 Jun 2019 12:34:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39944 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730771AbfFMHv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 03:52:24 -0400
-Received: by mail-ot1-f52.google.com with SMTP id d17so18064767oth.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 00:52:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x7HLKRclBYkI4l8xezabyIsI1B9pbvnD70ysiff/Q9I=;
-        b=i2mhSEu3HULgbyY3/yHZx3wJfp9kSeVS6V90pgxEo1RvXXcUN2VbDcaukTCsYRJzlE
-         eRz7XH+tRZJFjQaE5xBGY0gWA6cjEoSogRGArWjPbNilUgg35eQnVsBuLrgs2NtjXLJh
-         w+xq5wE4Z6Sc/NAHILr8fPixyTflU0YR2cEEi0n8bo/6GESlRZ6f8ZiVmR0RxizFoeGB
-         NKvM+7fe5os65B7BpoQv8nggL16sa3ceXec1kyI7HDzQPj2nLIdNy4VEZve+YODOGcuR
-         2ZJ/x1vEJR8L5k67sCIOG22Hz3J0CIV8aIW0rEHhELpxhyO9XzRMURwa3KPSb/81MZ80
-         sCfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x7HLKRclBYkI4l8xezabyIsI1B9pbvnD70ysiff/Q9I=;
-        b=VAxv3k3Am1Xlm7oQhkR9CIJZoU8j1o5x/R2C/pEHW6kb1Sojto0D5hJt0jojPZ/Srd
-         ccypZ56ThLSZkChN1j8pXnANm6Fy+4ATwSs14V4jMm4x0XmxYlZrf9I4IjN2QQ244wn1
-         K4gwmskfkvSRoqm9qdxmgoXs/xZqsrceUv4BEeUIjSR71DfCeQ7CiLZG9iNqAFTK/t14
-         rHTOtgGeecvwFdeaS55WxkU8zpv9cUu9qu4N0orcMm7P9VtltZHpPcOiToFVfONELQ5F
-         GmW58BoHx+XEv/Dk0krrfQgPCLsluMLDJ3Y2r++pQHu/KjlXGnJgBtitzibZM2tKN58P
-         31dw==
-X-Gm-Message-State: APjAAAUwS8bFVVkrTEYe/S+c/ktNJSHaSLaQs0N5kNqYvZwRT6xzcIKU
-        zfoBCRBrvrR6IDN6sR9qO9muJgTXJgmSYX96VAvfr6PhvFw=
-X-Google-Smtp-Source: APXvYqzul2HTv6oUHbzOV/m3sOro8XF+jwMiCPBp7INX3G7Ere0e+wvfo+oHu/kHRTbah1JqMy85q9UHRUoq0RcaLA4=
-X-Received: by 2002:a9d:3f62:: with SMTP id m89mr43725442otc.128.1560412343351;
- Thu, 13 Jun 2019 00:52:23 -0700 (PDT)
+        Thu, 13 Jun 2019 03:51:26 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5D7lmBw123485
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 03:51:25 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t3j5agw72-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 03:51:24 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Thu, 13 Jun 2019 08:51:22 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 13 Jun 2019 08:51:20 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5D7pJMr42270804
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 07:51:19 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2A80BA4053;
+        Thu, 13 Jun 2019 07:51:19 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6F43A4040;
+        Thu, 13 Jun 2019 07:51:18 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 13 Jun 2019 07:51:18 +0000 (GMT)
+Date:   Thu, 13 Jun 2019 09:51:17 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: Re: [PATCH v3 0/4] s390/crypto: Use -ENODEV instead of -EOPNOTSUPP
+References: <20190612133306.10231-1-david@redhat.com>
+ <20190612150850.GA4038@osiris>
+ <20190613031355.7vya4vwhr3eia5g4@gondor.apana.org.au>
 MIME-Version: 1.0
-References: <CAOuPNLifSHQmi+jCMzRGYz3kzct+NB_vyv-yiwL91adRZPkTrQ@mail.gmail.com>
-In-Reply-To: <CAOuPNLifSHQmi+jCMzRGYz3kzct+NB_vyv-yiwL91adRZPkTrQ@mail.gmail.com>
-From:   Shyam Saini <mayhs11saini@gmail.com>
-Date:   Thu, 13 Jun 2019 13:22:12 +0530
-Message-ID: <CAOfkYf7BZ1Ttrm7iVioq4mxZcJy7V44gNmusavPzgi=59=TY6g@mail.gmail.com>
-Subject: Re: Pause a process execution from external program
-To:     Pintu Agarwal <pintu.ping@gmail.com>
-Cc:     Kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        open list <linux-kernel@vger.kernel.org>, pedro@palves.net
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613031355.7vya4vwhr3eia5g4@gondor.apana.org.au>
+X-TM-AS-GCONF: 00
+x-cbid: 19061307-0012-0000-0000-00000328BBCE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061307-0013-0000-0000-00002161C685
+Message-Id: <20190613075117.GA4292@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=898 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906130062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pintu,
+On Thu, Jun 13, 2019 at 11:13:55AM +0800, Herbert Xu wrote:
+> On Wed, Jun 12, 2019 at 05:08:50PM +0200, Heiko Carstens wrote:
+> > On Wed, Jun 12, 2019 at 03:33:02PM +0200, David Hildenbrand wrote:
+> > > s390x crypto is one of the rare modules that returns -EOPNOTSUPP instead of
+> > > -ENODEV in case HW support is not available.
+> > > 
+> > > Convert to -ENODEV, so e.g., systemd's systemd-modules-load.service
+> > > ignores this error properly.
+> > > 
+> > > v2 -> v3:
+> > > - "s390/pkey: Use -ENODEV instead of -EOPNOTSUPP"
+> > > -- Also convert pkey_clr2protkey() as requested by Harald
+> > > - Add r-b's (thanks!)
+> > > 
+> > > v1 -> v2:
+> > > - Include
+> > > -- "s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP"
+> > > -- "s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP"
+> > > -- "s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP"
+> > > 
+> > > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > > Cc: "David S. Miller" <davem@davemloft.net>
+> > > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> > > Cc: Vasily Gorbik <gor@linux.ibm.com>
+> > > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> > > Cc: Harald Freudenberger <freude@linux.ibm.com>
+> > > Cc: Cornelia Huck <cohuck@redhat.com>
+> > > 
+> > > David Hildenbrand (4):
+> > >   s390/pkey: Use -ENODEV instead of -EOPNOTSUPP
+> > >   s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP
+> > >   s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP
+> > >   s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP
+> > 
+> > Should I pick these up so they can go upstream via the s390 tree?
+> 
+> Sure Heiko.  Thanks!
 
+Ok, all applied. Thanks!
 
-> Hi All,
-> I was just wondering if this is possible in the Linux world.
-> My requirement is:
-> For some reason, I want to halt/pause the execution (for some
-> specified time) of a running process/thread (at some location),
-> without modified the source, may be by firing some events/signals from
-> an another external program, by specifying the address location or a
-> line number.
->
-> Is this possible ?
-> May be by using some system call, or other mechanism using the process PID.
-> Assume that its a debugging system with all root privileges.
->
-> Basically, its just like how "gdb" is able to set the break-point in a
-> program, and able to stop its execution exactly at that location.
-> I am wondering what mechanism "gdb" uses to do this?
-
-gdb uses ptrace system call, may you can explore ptrace?
-
-> I tried to check here, but could find the exact place, where this is handled:
-> https://github.com/bminor/binutils-gdb/blob/master/gdb/breakpoint.c
-
-from command line we use ctrl-z to stop execution of a foreground
-process but you can program
-SIGTSTP signal handler in your application code to do the same.
-
-is that you want ?
-
-Thanks a lot,
-Shyam
