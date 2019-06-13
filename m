@@ -2,227 +2,179 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B71CC31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC01C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFCC220449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54CB320449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388246AbfFMPPj (ORCPT
+        id S2388355AbfFMPPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:15:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:39842 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732218AbfFMNYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:24:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 973282B;
-        Thu, 13 Jun 2019 06:24:38 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5BD033F73C;
-        Thu, 13 Jun 2019 06:24:38 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id 1DEE2682412; Thu, 13 Jun 2019 14:24:37 +0100 (BST)
-Date:   Thu, 13 Jun 2019 14:24:37 +0100
-From:   Liviu Dudau <Liviu.Dudau@arm.com>
-To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH v2 2/2] drm/komeda: Adds komeda_kms_drop_master
-Message-ID: <20190613132436.GN4173@e110455-lin.cambridge.arm.com>
-References: <1560251589-31827-1-git-send-email-lowry.li@arm.com>
- <1560251589-31827-3-git-send-email-lowry.li@arm.com>
- <20190611123038.GC2458@phenom.ffwll.local>
- <20190612022617.GA8595@james-ThinkStation-P300>
- <20190613081727.GE23020@phenom.ffwll.local>
- <20190613082813.GM4173@e110455-lin.cambridge.arm.com>
- <20190613090814.GJ23020@phenom.ffwll.local>
+        Thu, 13 Jun 2019 11:15:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53706 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732217AbfFMNYg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 09:24:36 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 43399260D9A
+Subject: Re: [PATCH 0/2] Use Media Dev Allocator to fix vimc dev lifetime bugs
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1558667245.git.skhan@linuxfoundation.org>
+ <c9160fe7-e880-4070-3959-b9e9177acf54@xs4all.nl>
+From:   Helen Koike <helen.koike@collabora.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=helen.koike@collabora.com; keydata=
+ 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
+Message-ID: <2862ebca-c58f-c265-cc74-8d0f9b943275@collabora.com>
+Date:   Thu, 13 Jun 2019 10:24:28 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <c9160fe7-e880-4070-3959-b9e9177acf54@xs4all.nl>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190613090814.GJ23020@phenom.ffwll.local>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:08:14AM +0200, Daniel Vetter wrote:
-> On Thu, Jun 13, 2019 at 09:28:13AM +0100, Liviu Dudau wrote:
-> > On Thu, Jun 13, 2019 at 10:17:27AM +0200, Daniel Vetter wrote:
-> > > On Wed, Jun 12, 2019 at 02:26:24AM +0000, james qian wang (Arm Technology China) wrote:
-> > > > On Tue, Jun 11, 2019 at 02:30:38PM +0200, Daniel Vetter wrote:
-> > > > > On Tue, Jun 11, 2019 at 11:13:45AM +0000, Lowry Li (Arm Technology China) wrote:
-> > > > > > From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-> > > > > >
-> > > > > > The komeda internal resources (pipelines) are shared between crtcs,
-> > > > > > and resources release by disable_crtc. This commit is working for once
-> > > > > > user forgot disabling crtc like app quit abnomally, and then the
-> > > > > > resources can not be used by another crtc. Adds drop_master to
-> > > > > > shutdown the device and make sure all the komeda resources have been
-> > > > > > released and can be used for the next usage.
-> > > > > >
-> > > > > > Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-> > > > > > ---
-> > > > > >  drivers/gpu/drm/arm/display/komeda/komeda_kms.c | 13 +++++++++++++
-> > > > > >  1 file changed, 13 insertions(+)
-> > > > > >
-> > > > > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> > > > > > index 8543860..647bce5 100644
-> > > > > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> > > > > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> > > > > > @@ -54,11 +54,24 @@ static irqreturn_t komeda_kms_irq_handler(int irq, void *data)
-> > > > > >  return status;
-> > > > > >  }
-> > > > > >
-> > > > > > +/* Komeda internal resources (pipelines) are shared between crtcs, and resources
-> > > > > > + * are released by disable_crtc. But if user forget disabling crtc like app quit
-> > > > > > + * abnormally, the resources can not be used by another crtc.
-> > > > > > + * Use drop_master to shutdown the device and make sure all the komeda resources
-> > > > > > + * have been released, and can be used for the next usage.
-> > > > > > + */
-> > > > >
-> > > > > No. If we want this, we need to implement this across drivers, not with
-> > > > > per-vendor hacks.
-> > > > >
-> > > > > The kerneldoc should have been a solid hint: "Only used by vmwgfx."
-> > > > > -Daniel
-> > > > 
-> > > > Hi Daniel:
-> > > > This drop_master is really what we want, can we update the doc and
-> > > > add komeda as a user of this hacks like "used by vmwfgx and komeda",
-> > > > or maybe directly promote this per-vendor hacks as an optional chip
-> > > > function ?
-> > > 
-> > > Still no, because it would mean different behaviour for arm/komeda
-> > > compared to everyone else. And we really don't want this, because this
-> > > would completely break flicker-less vt-switching.
-> > > 
-> > > Currently the only fallback for this case is the lastclose handler, which
-> > > atm just restores fbcon/fbdev. If you want to change/extend that to work
-> > > without fbdev, then that's the place to do the change. And across _all_
-> > > drm kms drivers, so that we have consistent behaviour.
-> > 
-> > Slightly unrelated, just thinking of a solution and wanted confirmation/double
-> > checking: can a CRTC be instantiated without any planes (or without a primary
-> > plane)?
+
+
+On 6/13/19 2:44 AM, Hans Verkuil wrote:
+> On 5/24/19 5:31 AM, Shuah Khan wrote:
+>> media_device is embedded in struct vimc_device and when vimc is removed
+>> vimc_device and the embedded media_device goes with it, while the active
+>> stream and vimc_capture continue to access it.
+>>
+>> Fix the media_device lifetime problem by changing vimc to create shared
+>> media_device using Media Device Allocator API and vimc_capture getting
+>> a reference to vimc module. With this change, vimc module can be removed
+>> only when the references are gone. vimc can be removed after vimc_capture
+>> is removed.
+>>
+>> Media Device Allocator API supports just USB devices. Enhance it
+>> adding a genetic device allocate interface to support other media
+>> drivers.
+>>
+>> The new interface takes pointer to struct device instead and creates
+>> media device. This interface allows a group of drivers that have a
+>> common root device to share media device resource and ensure media
+>> device doesn't get deleted as long as one of the drivers holds its
+>> reference.
+>>
+>> The new interface has been tested with vimc component driver to fix
+>> panics when vimc module is removed while streaming is in progress.
 > 
-> Without a primary plane maybe not so recommended, because it would break
-> all the legacy userspace. Might even result in some oopses, not sure we
-> check for crtc->primary != NULL.
+> Helen, can you review this series? I'm not sure this is the right approach
+> for a driver like vimc, and even if it is, then it is odd that vimc-capture
+> is the only vimc module that's handled here.
+
+Hi Hans,
+
+Yes, I can take a look. Sorry, I've been a bit busy these days but I'll
+try to take a look at this patch series (and the others) asap.
+
+Helen
+
 > 
-> I'm not sure what you mean about instantiating it without any plane at
-> all. That would be rather useless.
-
-Agree, and I think I have one way of solving the scenario Lowry and James are
-trying to cover. Basically, komeda has 2 pipelines that are exposed as 2 crtcs.
-However, layers (planes in DRM) can be associated with any of the pipelines and
-it is possible to have a DRM master open up crtc0 and enable all possible planes,
-which would leave crtc1 with no available layer to use (but technically still visible to
-userspace, as it has been drm_crtc_init-ed. James and Lowry are trying to give
-another master a chance of enabling crtc1 if previous master drops the
-ownership of crtc0 without disabling it. So one solution I'm thinking of is to
-tie one of the layers/planes to crtc1 regardless if that pipeline is enabled or
-not.
-
-Alternatively, we need a more generic solution for re-allocating resources
-between CRTCs that might be enabled at different times. Ideas on how userspace
-should handle it first are welcome as well.
-
-Best regards,
-Liviu
-
-> -Daniel
+> My gut feeling is that this should be handled inside vimc directly and not
+> using the media-dev-allocator.
 > 
-> > 
-> > Best regards,
-> > Liviu
-> > 
-> > > 
-> > > kms is a cross-vendor api, vendor hacks are very, very much not cool.
-> > > -Daniel
-> > > 
-> > > > 
-> > > > James
-> > > > 
-> > > > > > +static void komeda_kms_drop_master(struct drm_device *dev,
-> > > > > > +   struct drm_file *file_priv)
-> > > > > > +{
-> > > > > > +drm_atomic_helper_shutdown(dev);
-> > > > > > +}
-> > > > > > +
-> > > > > >  static struct drm_driver komeda_kms_driver = {
-> > > > > >  .driver_features = DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC |
-> > > > > >     DRIVER_PRIME | DRIVER_HAVE_IRQ,
-> > > > > >  .lastclose= drm_fb_helper_lastclose,
-> > > > > >  .irq_handler= komeda_kms_irq_handler,
-> > > > > > +.master_drop= komeda_kms_drop_master,
-> > > > > >  .gem_free_object_unlocked= drm_gem_cma_free_object,
-> > > > > >  .gem_vm_ops= &drm_gem_cma_vm_ops,
-> > > > > >  .dumb_create= komeda_gem_cma_dumb_create,
-> > > > > > --
-> > > > > > 1.9.1
-> > > > > >
-> > > > > > _______________________________________________
-> > > > > > dri-devel mailing list
-> > > > > > dri-devel@lists.freedesktop.org
-> > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > > > >
-> > > > > --
-> > > > > Daniel Vetter
-> > > > > Software Engineer, Intel Corporation
-> > > > > http://blog.ffwll.ch
-> > > > IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
-> > > > _______________________________________________
-> > > > dri-devel mailing list
-> > > > dri-devel@lists.freedesktop.org
-> > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > > 
-> > > -- 
-> > > Daniel Vetter
-> > > Software Engineer, Intel Corporation
-> > > http://blog.ffwll.ch
-> > 
-> > -- 
-> > ====================
-> > | I would like to |
-> > | fix the world,  |
-> > | but they're not |
-> > | giving me the   |
-> >  \ source code!  /
-> >   ---------------
-> >     ¯\_(ツ)_/¯
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> Regards,
 > 
-> -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
-
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+> 	Hans
+> 
+>>
+>> Shuah Khan (2):
+>>   media: add generic device allocate interface to media-dev-allocator
+>>   vimc: fix BUG: unable to handle kernel NULL pointer dereference
+>>
+>>  drivers/media/Makefile                     |  4 +-
+>>  drivers/media/media-dev-allocator.c        | 39 ++++++++++++++
+>>  drivers/media/platform/vimc/vimc-capture.c | 17 +++++-
+>>  drivers/media/platform/vimc/vimc-core.c    | 60 ++++++++++++----------
+>>  include/media/media-dev-allocator.h        | 46 ++++++++++++++---
+>>  5 files changed, 130 insertions(+), 36 deletions(-)
+>>
+> 
