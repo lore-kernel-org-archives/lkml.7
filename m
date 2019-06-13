@@ -5,51 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9465DC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C52CDC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA9520679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B64620679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442187;
-	bh=nlxQQu1TVOMaBROokJCURPMsg/tlJX3WGEfpYjys6DU=;
+	s=default; t=1560442190;
+	bh=2sRyGT6WhhGD6b+fHn6Kn+9DOMFvsxq0SnHINw/ACOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GW01w3Oe57cAySIJLEJpRqNN2nIcyGVG3hTZ09vfn/9jEZCYXlIjONgnv/63un66Y
-	 SwM8DHfNhSAN1+DErl+UdvGNYjxn1SJeoVOWInu2xs0R80hRx0pzO8WxM+5nQftyfy
-	 Dt5+ncZ3K9698W8wUIM58CvEQPAyA6gk07ilToDM=
+	b=fZhFhZlfpNio2znjaauCAEd9IanO0WOnC18lAx8t7QdbvVwMDM0079xcv6uZD9Lkj
+	 s2xdOXZQ5ic0n4GFBTPTgreTZTiZQREN7qt2PLg42Rc4L5hnbcqh1/+lRhwuH2qpSq
+	 +AUyDBzRMa6Gz/weESOGgPUcLSEzK3gvBh/yVDis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390176AbfFMQJq (ORCPT
+        id S2391188AbfFMQJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:09:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33266 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:09:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731260AbfFMIoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:44:21 -0400
+        id S1731259AbfFMIoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:44:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FB8620851;
-        Thu, 13 Jun 2019 08:44:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3A952063F;
+        Thu, 13 Jun 2019 08:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415460;
-        bh=nlxQQu1TVOMaBROokJCURPMsg/tlJX3WGEfpYjys6DU=;
+        s=default; t=1560415458;
+        bh=2sRyGT6WhhGD6b+fHn6Kn+9DOMFvsxq0SnHINw/ACOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Epin70MVnd/hXC3XexAbSCutELvPUwTjs/x4J1xlTIualSKX1qUZjAegrocQy/FxQ
-         ksdJBzE8w3G7jOveTWvMAS9SgXniUVXnAvpJUn0jdkch5efnPetKwAU7b3/bJu4TrY
-         +LAxC5BJ1jIM6qVNwDutcxZAG3vltT0n6IUXpzBg=
+        b=pkQbhLmDpp1GuRiEW9K0N8MPJPqQCFydunWpq8466kK4aPWQJ4jNQmtNTcwXPJZLZ
+         uP3/6SLiDMu+78Mk4WABhWvymKh6YHemuJhQYWFPibF4KXl0U9BSoLmMFooFsr5tmR
+         pGffNydsytGa9GvD1frOA/EvuWxn2/mR+9yh9e1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mathieu Malaterre <malat@debian.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        Borislav Petkov <bp@suse.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 002/155] media: rockchip/vpu: Fix/re-order probe-error/remove path
-Date:   Thu, 13 Jun 2019 10:31:54 +0200
-Message-Id: <20190613075652.837733651@linuxfoundation.org>
+Subject: [PATCH 5.1 011/155] ARM: prevent tracing IPI_CPU_BACKTRACE
+Date:   Thu, 13 Jun 2019 10:32:03 +0200
+Message-Id: <20190613075653.376823259@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -62,56 +81,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fc8670d1f72b746ff3a5fe441f1fca4c4dba0e6f ]
+[ Upstream commit be167862ae7dd85c56d385209a4890678e1b0488 ]
 
-media_device_cleanup() and v4l2_m2m_unregister_media_controller() were
-missing in the probe error path.
-While at it, re-order calls in the remove path to unregister/cleanup
-things in the reverse order they were initialized/registered.
+Patch series "compiler: allow all arches to enable
+CONFIG_OPTIMIZE_INLINING", v3.
 
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This patch (of 11):
+
+When function tracing for IPIs is enabled, we get a warning for an
+overflow of the ipi_types array with the IPI_CPU_BACKTRACE type as
+triggered by raise_nmi():
+
+  arch/arm/kernel/smp.c: In function 'raise_nmi':
+  arch/arm/kernel/smp.c:489:2: error: array subscript is above array bounds [-Werror=array-bounds]
+    trace_ipi_raise(target, ipi_types[ipinr]);
+
+This is a correct warning as we actually overflow the array here.
+
+This patch raise_nmi() to call __smp_cross_call() instead of
+smp_cross_call(), to avoid calling into ftrace.  For clarification, I'm
+also adding a two new code comments describing how this one is special.
+
+The warning appears to have shown up after commit e7273ff49acf ("ARM:
+8488/1: Make IPI_CPU_BACKTRACE a "non-secure" SGI"), which changed the
+number assignment from '15' to '8', but as far as I can tell has existed
+since the IPI tracepoints were first introduced.  If we decide to
+backport this patch to stable kernels, we probably need to backport
+e7273ff49acf as well.
+
+[yamada.masahiro@socionext.com: rebase on v5.1-rc1]
+Link: http://lkml.kernel.org/r/20190423034959.13525-2-yamada.masahiro@socionext.com
+Fixes: e7273ff49acf ("ARM: 8488/1: Make IPI_CPU_BACKTRACE a "non-secure" SGI")
+Fixes: 365ec7b17327 ("ARM: add IPI tracepoints") # v3.17
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Mathieu Malaterre <malat@debian.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Stefan Agner <stefan@agner.ch>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: Brian Norris <computersforpeace@gmail.com>
+Cc: Marek Vasut <marek.vasut@gmail.com>
+Cc: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/arm/include/asm/hardirq.h | 1 +
+ arch/arm/kernel/smp.c          | 6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c b/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
-index 962412c79b91..33b556b3f0df 100644
---- a/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
-+++ b/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
-@@ -481,10 +481,12 @@ static int rockchip_vpu_probe(struct platform_device *pdev)
- 	return 0;
- err_video_dev_unreg:
- 	if (vpu->vfd_enc) {
-+		v4l2_m2m_unregister_media_controller(vpu->m2m_dev);
- 		video_unregister_device(vpu->vfd_enc);
- 		video_device_release(vpu->vfd_enc);
- 	}
- err_m2m_rel:
-+	media_device_cleanup(&vpu->mdev);
- 	v4l2_m2m_release(vpu->m2m_dev);
- err_v4l2_unreg:
- 	v4l2_device_unregister(&vpu->v4l2_dev);
-@@ -501,13 +503,13 @@ static int rockchip_vpu_remove(struct platform_device *pdev)
- 	v4l2_info(&vpu->v4l2_dev, "Removing %s\n", pdev->name);
+diff --git a/arch/arm/include/asm/hardirq.h b/arch/arm/include/asm/hardirq.h
+index cba23eaa6072..7a88f160b1fb 100644
+--- a/arch/arm/include/asm/hardirq.h
++++ b/arch/arm/include/asm/hardirq.h
+@@ -6,6 +6,7 @@
+ #include <linux/threads.h>
+ #include <asm/irq.h>
  
- 	media_device_unregister(&vpu->mdev);
--	v4l2_m2m_unregister_media_controller(vpu->m2m_dev);
--	v4l2_m2m_release(vpu->m2m_dev);
--	media_device_cleanup(&vpu->mdev);
- 	if (vpu->vfd_enc) {
-+		v4l2_m2m_unregister_media_controller(vpu->m2m_dev);
- 		video_unregister_device(vpu->vfd_enc);
- 		video_device_release(vpu->vfd_enc);
- 	}
-+	media_device_cleanup(&vpu->mdev);
-+	v4l2_m2m_release(vpu->m2m_dev);
- 	v4l2_device_unregister(&vpu->v4l2_dev);
- 	clk_bulk_unprepare(vpu->variant->num_clocks, vpu->clocks);
- 	pm_runtime_disable(vpu->dev);
++/* number of IPIS _not_ including IPI_CPU_BACKTRACE */
+ #define NR_IPI	7
+ 
+ typedef struct {
+diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+index facd4240ca02..c93fe0f256de 100644
+--- a/arch/arm/kernel/smp.c
++++ b/arch/arm/kernel/smp.c
+@@ -70,6 +70,10 @@ enum ipi_msg_type {
+ 	IPI_CPU_STOP,
+ 	IPI_IRQ_WORK,
+ 	IPI_COMPLETION,
++	/*
++	 * CPU_BACKTRACE is special and not included in NR_IPI
++	 * or tracable with trace_ipi_*
++	 */
+ 	IPI_CPU_BACKTRACE,
+ 	/*
+ 	 * SGI8-15 can be reserved by secure firmware, and thus may
+@@ -797,7 +801,7 @@ core_initcall(register_cpufreq_notifier);
+ 
+ static void raise_nmi(cpumask_t *mask)
+ {
+-	smp_cross_call(mask, IPI_CPU_BACKTRACE);
++	__smp_cross_call(mask, IPI_CPU_BACKTRACE);
+ }
+ 
+ void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
 -- 
 2.20.1
 
