@@ -2,134 +2,110 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0ECC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C409BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C72A121721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:38:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560454707;
-	bh=kV/UXS6UPdtHW20LkC6qiHL5zLsxwcgJ+5MfGIH3Y+Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xS7OepEX88EWdb7fg9U206YgXkHHUNBRu641esNM7HSVq1Hp6ukx05JIxa3ESknba
-	 TUu9Mb0UhPp0d+XLC9PhiXNlObvDnc6NTKnE4IWNv7ckDKKdpbAC2pJtSujuCF18Xe
-	 L9gSDRpIRL5PLCEBe6Wg0kCx7S4qP/ohKivP86ZU=
+	by mail.kernel.org (Postfix) with ESMTP id A036820B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:39:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ieCtWqkW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbfFMTi0 (ORCPT
+        id S1728964AbfFMTjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 15:38:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbfFMTi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:38:26 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EFE320B7C;
-        Thu, 13 Jun 2019 19:38:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560454705;
-        bh=kV/UXS6UPdtHW20LkC6qiHL5zLsxwcgJ+5MfGIH3Y+Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YqLBr4gitPEc2L7ti7o+3dV2DpciuQOuMnQ3qd/V8odd/Ih6uTz4dp6UhdaKupkMF
-         O89xwyGlzkvaiF7D71/ryDd3kduYWRCI3OT9g0Zu175L/KRQTJu60lJxp53XrmruJg
-         Jp10v1l+w4VZdhMuXAhAX8DPQ0DzKP2xlNjzTp0s=
-Date:   Thu, 13 Jun 2019 12:38:23 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     <vvs@virtuozzo.com>, <adobriyan@sw.ru>, <adobriyan@gmail.com>,
-        <tglx@linutronix.de>, <gregkh@linuxfoundation.org>,
-        <mingo@kernel.org>, <viresh.kumar@linaro.org>, <luto@kernel.org>,
-        <arjan@linux.intel.com>, <Nadia.Derbey@bull.net>,
-        <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
-        <stern@rowland.harvard.edu>, <paulmck@linux.vnet.ibm.com>,
-        <masami.hiramatsu.pt@hitachi.com>, <alex.huangjianhui@huawei.com>,
-        <dylix.dailei@huawei.com>,
-        Stanislav Kinsbursky <skinsbursky@parallels.com>,
-        Trond Myklebust <Trond.Myklebust@netapp.com>
-Subject: Re: [PATCH] kernel/notifier.c: remove notifier_chain_register
-Message-Id: <20190613123823.bf75e7305e22dd1dcab04fb8@linux-foundation.org>
-In-Reply-To: <1560434864-98664-1-git-send-email-nixiaoming@huawei.com>
-References: <1560434864-98664-1-git-send-email-nixiaoming@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 13 Jun 2019 15:39:14 -0400
+Received: from mail-eopbgr80047.outbound.protection.outlook.com ([40.107.8.47]:20161
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725809AbfFMTjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 15:39:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kynqoWA1ZTWnY9VFOPXvMf/AcdQpgMQDiT/cVThh9kM=;
+ b=ieCtWqkWrx4Ap+H1W7y2YcH2DPeDbFBIsA/cSDxRf5I6afMVyMS7Q0xUURicnSoBdNudME6QcTBsiy+81C3IbMWz1lTHh6gNKB+VRaz/0N9rsmAoTojsjpo3H2HaONgV9lNjMgmE63w9uTjfjbiJbhvFs+L4QsFWunybTSDmVSI=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5006.eurprd05.prod.outlook.com (20.177.52.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.10; Thu, 13 Jun 2019 19:39:09 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
+ 19:39:09 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 14/22] nouveau: use alloc_page_vma directly
+Thread-Topic: [PATCH 14/22] nouveau: use alloc_page_vma directly
+Thread-Index: AQHVIcyOHaopcwSxm0ibFlXFitCRUaaZ+7iA
+Date:   Thu, 13 Jun 2019 19:39:09 +0000
+Message-ID: <20190613193905.GW22062@mellanox.com>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-15-hch@lst.de>
+In-Reply-To: <20190613094326.24093-15-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BL0PR02CA0138.namprd02.prod.outlook.com
+ (2603:10b6:208:35::43) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b8abe11b-1e47-4154-4922-08d6f036cd7c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5006;
+x-ms-traffictypediagnostic: VI1PR05MB5006:
+x-microsoft-antispam-prvs: <VI1PR05MB500624416AC3B3A1B5C8E2F6CFEF0@VI1PR05MB5006.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:541;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(136003)(396003)(366004)(39860400002)(199004)(189003)(11346002)(33656002)(52116002)(486006)(99286004)(76176011)(7416002)(386003)(229853002)(2906002)(66066001)(102836004)(6506007)(54906003)(3846002)(6512007)(6916009)(6436002)(6486002)(186003)(26005)(476003)(446003)(2616005)(6116002)(36756003)(305945005)(64756008)(316002)(66446008)(8676002)(14444005)(66556008)(66476007)(25786009)(68736007)(73956011)(5660300002)(66946007)(4326008)(81166006)(86362001)(7736002)(81156014)(14454004)(4744005)(6246003)(8936002)(71200400001)(53936002)(478600001)(71190400001)(256004)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5006;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: YSP7XrTOSi8fUyoaKByWR58FatUSy2ppLe9VhcSpPwu/wfB8XDF8r0oHaqPYSG9NWIgAkTMgAZi+ezOPH5w7TGwVfD102STiXwTJ21mHpP1UydPE8LZuWkAixhMnczpX46wzVnsV52eiIZX6dwcE3hxweW7Br1G/mt9wQXjZqNbaYHs40BTr4i/AfAKdH/enSRIAwZQnN0uZ3sc2Ne6NiDpwggxYvPDCJq4sbrk7Olkv3LCwSnb6lvrPjgermYp/bmm3NczcubPkbJnNP2sz/GS1nvijscZP7ArQAyAwaOTSzObWCoCjHijINdKUtfXp+Hu0Nv4X/FhfcfSdYVXgwAYSHTwX8fruI3xVLq2oJ+f7Ioo2Vp/IFt6juTU4cgYJxJIgJ8jUfsumZNL1JpDHVcDcGBvoaHB35bSi0MwaH2g=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <CA662AD9B612344580205C283CE6481B@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8abe11b-1e47-4154-4922-08d6f036cd7c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 19:39:09.3344
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5006
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019 22:07:44 +0800 Xiaoming Ni <nixiaoming@huawei.com> wrote:
+On Thu, Jun 13, 2019 at 11:43:17AM +0200, Christoph Hellwig wrote:
+> hmm_vma_alloc_locked_page is scheduled to go away, use the proper
+> mm function directly.
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/gpu/drm/nouveau/nouveau_dmem.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-> Registering the same notifier to a hook repeatedly can cause the hook
-> list to form a ring or lose other members of the list.
-> 
-> case1: An infinite loop in notifier_chain_register can cause soft lockup
-> 	atomic_notifier_chain_register(&test_notifier_list, &test_notifier1);
-> 	atomic_notifier_chain_register(&test_notifier_list, &test_notifier1);
-> 	atomic_notifier_chain_register(&test_notifier_list, &test_notifier2);
-> 
-> case2: An infinite loop in notifier_chain_register can cause soft lockup
-> 	atomic_notifier_chain_register(&test_notifier_list, &test_notifier1);
-> 	atomic_notifier_chain_register(&test_notifier_list, &test_notifier1);
-> 	atomic_notifier_call_chain(&test_notifier_list, 0, NULL);
-> 
-> case3: lose other hook "test_notifier2"
-> 	atomic_notifier_chain_register(&test_notifier_list, &test_notifier1);
-> 	atomic_notifier_chain_register(&test_notifier_list, &test_notifier2);
-> 	atomic_notifier_chain_register(&test_notifier_list, &test_notifier1);
-> 
-> case4: Unregister returns 0, but the hook is still in the linked list,
-> 	and it is not really registered. If you call notifier_call_chain
-> 	after ko is unloaded, it will trigger oops.
-> 
-> If the system is configured with softlockup_panic and the same
-> hook is repeatedly registered on the panic_notifier_list, it
-> will cause a loop panic.
-> 
-> The only difference between notifier_chain_cond_register and
-> notifier_chain_register is that a check is added in order to
-> avoid registering the same notifier multiple times to the same hook.
-> So consider removing notifier_chain_register and replacing it
-> with notifier_chain_cond_register.
->
-> ...
-> 
-> diff --git a/kernel/notifier.c b/kernel/notifier.c
-> index d9f5081..56efd54 100644
-> --- a/kernel/notifier.c
-> +++ b/kernel/notifier.c
-> @@ -19,20 +19,6 @@
->   *	are layered on top of these, with appropriate locking added.
->   */
->  
-> -static int notifier_chain_register(struct notifier_block **nl,
-> -		struct notifier_block *n)
-> -{
-> -	while ((*nl) != NULL) {
-> -		WARN_ONCE(((*nl) == n), "double register detected");
-> -		if (n->priority > (*nl)->priority)
-> -			break;
-> -		nl = &((*nl)->next);
-> -	}
-> -	n->next = *nl;
-> -	rcu_assign_pointer(*nl, n);
-> -	return 0;
-> -}
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 
-Registering an already-registered notifier is a bug (except for in
-net/sunrpc/rpc_pipe.c, apparently).  The effect of this change is to
-remove the warning about the presence of the bug, so the bug is less
-likely to get fixed.
-
-I think it would be better to remove notifier_chain_cond_register() and
-blocking_notifier_chain_cond_register() and to figure out why
-net/sunrpc/rpc_pipe.c is using it and to redo the rpc code so it no
-longer has that need.
-
+Jason
