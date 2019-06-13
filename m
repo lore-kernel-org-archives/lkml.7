@@ -2,120 +2,163 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940A8C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492ECC31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D88920449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JRz6imxO"
+	by mail.kernel.org (Postfix) with ESMTP id 135E220449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560438760;
+	bh=fWn/j2co1eFhB4DIu2nWHccLcw32ULZkm0SQPN00GJ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=od13ng2uLXKSC0G8BsfId1ovnVU7C74NEtNhq0j161DibbtN8w0AWvhd/vL0acLP2
+	 kXuj0kC82hE1fxQBYfRVFSyvsDQa4GLb+CKa+g+QyZKoHqbipnqgpo+5xXjp+76xvd
+	 uv7gyqO7Oxx7UDuIuIIKJAi8ROMt4qYtykZazrCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388214AbfFMPMZ (ORCPT
+        id S2388158AbfFMPMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:12:25 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46306 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388158AbfFMPMV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:12:21 -0400
-Received: by mail-qk1-f194.google.com with SMTP id x18so975562qkn.13
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 08:12:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R4sEx9DRCkbOcqkLsi6Jkv1GflPMZb75UMnrOJnbtJI=;
-        b=JRz6imxOTGsNuMS76M162KvumiMVyYkKXhz/IAFwKjp3Igi0hICl/m4BUGOuw61YG6
-         Pf3He7hg9Kt6x6X1WZuq8bUrqc1a1W2UmAo8VaUwVPA2GdvPEx7a5YMbLY0nfJoFWaQM
-         YEbV9dRjW/drtmRraCujxYyThEP6QtwiSJs3iYcbutlXVk7Z5dASy1/Oy0G/oorjue0j
-         RzaH6Drn7BTg39I+BUiwTL6fije0cyR1reQqzW1AIca5v1agyVprI5RgkLHLmKlYW9Fi
-         0n1zTcJtV1luwZoUboeqFK2xDSzt81BhwHG/KONzmn78w16+WuqvsJOUxxwdcX8amTie
-         g0WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R4sEx9DRCkbOcqkLsi6Jkv1GflPMZb75UMnrOJnbtJI=;
-        b=XXXXCzVEkrtDz1iFPu7QFUDTWwNMRFsQSS6N8nIaY7R0UsFo1yZV5yio17/MLaUy8C
-         QdfXewudFIDpJxEVISbeoGy0xvNuO+1sQvh9ugCiehq9dq492wE/ShHxIsVwIoA+aJ24
-         2THISNkbmm3Qi7DVq3TfPHKh8KUwOjOC5pIRwN2qOf5NnoTecYyfCSG72R40kKWzGt4Z
-         hdS55m6RAMSiIKzPcZ3wvHK62HK6/weQzX+pKEg263CjzYFLD+VnnjJ9xniWoXcNswNW
-         942pzCLO4ptfZdUq1CwzLXYUS1swwZUSO9WPe9IPbUylEqCD+jOAVIlGQx4suTqIhRG3
-         z4Rw==
-X-Gm-Message-State: APjAAAWxD4ON0KYKdAumiO5sEqyU2GZnb59rwxUwWfuuL+FTthuUOpPA
-        5SSsKeei2heCXM/oWYRmVK0mLR90EuHSXg==
-X-Google-Smtp-Source: APXvYqzM9yCChTgMP3KlIhiG1BK19OOrfQlMOx6JZlNrolhLErYOjGfGuCWD8w4PBuxWllsDgHA6QA==
-X-Received: by 2002:a37:e506:: with SMTP id e6mr3810214qkg.229.1560438740039;
-        Thu, 13 Jun 2019 08:12:20 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id n10sm1577550qke.72.2019.06.13.08.12.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Jun 2019 08:12:19 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hbROk-0001qR-Po; Thu, 13 Jun 2019 12:12:18 -0300
-Date:   Thu, 13 Jun 2019 12:12:18 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190613151218.GB22901@ziepe.ca>
-References: <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
- <20190607103636.GA12765@quack2.suse.cz>
- <20190607121729.GA14802@ziepe.ca>
- <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
- <20190612102917.GB14578@quack2.suse.cz>
- <20190612114721.GB3876@ziepe.ca>
- <20190612120907.GC14578@quack2.suse.cz>
- <20190612191421.GM3876@ziepe.ca>
- <20190612221336.GA27080@iweiny-DESK2.sc.intel.com>
- <CAPcyv4gkksnceCV-p70hkxAyEPJWFvpMezJA1rEj6TEhKAJ7qQ@mail.gmail.com>
+        Thu, 13 Jun 2019 11:12:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732283AbfFMNqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 09:46:53 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75D0F20851;
+        Thu, 13 Jun 2019 13:46:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560433611;
+        bh=fWn/j2co1eFhB4DIu2nWHccLcw32ULZkm0SQPN00GJ0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cG+i+kOKixoCQcmut8i62OMOBk9DfbfDH7NSPCeVW9lIlCZ/A8keKKXgTcX6v8HFC
+         k++fvHnF3gzHI3CIOB1+q1xZS2y/fkJcvmGVwcRODyrgW2R3gL5YUXnsUB7u3CyR05
+         s0iiD7aWcKwY4IIEZ6e80nDIeKylwpvNYD6cH0oY=
+Date:   Thu, 13 Jun 2019 08:46:50 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     lorenzo.pieralisi@arm.com, arnd@arndb.de,
+        linux-pci@vger.kernel.org, rjw@rjwysocki.net,
+        linux-arm-kernel@lists.infradead.org, will.deacon@arm.com,
+        wangkefeng.wang@huawei.com, linuxarm@huawei.com,
+        andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com
+Subject: Re: [PATCH v4 2/3] lib: logic_pio: Reject accesses to unregistered
+ CPU MMIO regions
+Message-ID: <20190613134650.GF13533@google.com>
+References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
+ <1560262374-67875-3-git-send-email-john.garry@huawei.com>
+ <20190613032034.GE13533@google.com>
+ <2d5e6112-be27-33c2-c1fd-6ab06405fa40@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4gkksnceCV-p70hkxAyEPJWFvpMezJA1rEj6TEhKAJ7qQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <2d5e6112-be27-33c2-c1fd-6ab06405fa40@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 03:54:19PM -0700, Dan Williams wrote:
-> > > My preference would be to avoid this scenario, but if it is really
-> > > necessary, we could probably build it with some work.
-> > >
-> > > The only case we use it today is forced HW hot unplug, so it is rarely
-> > > used and only for an 'emergency' like use case.
-> >
-> > I'd really like to avoid this as well.  I think it will be very confusing for
-> > RDMA apps to have their context suddenly be invalid.  I think if we have a way
-> > for admins to ID who is pinning a file the admin can take more appropriate
-> > action on those processes.   Up to and including killing the process.
+On Thu, Jun 13, 2019 at 11:17:37AM +0100, John Garry wrote:
+> On 13/06/2019 04:20, Bjorn Helgaas wrote:
+> > On Tue, Jun 11, 2019 at 10:12:53PM +0800, John Garry wrote:
+> > > Currently when accessing logical indirect PIO addresses in
+> > > logic_{in, out}{,s}, we first ensure that the region is registered.
 > 
-> Can RDMA context invalidation, "device disassociate", be inflicted on
-> a process from the outside? 
+> > I think logic_pio is specifically concerned with I/O port space, so
+> > it's a little bit unfortunate that we named this "PIO".
+> > 
+> > PIO is a general term for "Programmed I/O", which just means the CPU
+> > is involved in each transfer, as opposed to DMA.  The transfers can be
+> > to either MMIO or I/O port space.
+> > 
+> > So this ends up being a little confusing because I think you mean
+> > "Port I/O", not "Programmed I/O".
+> 
+> Personally I agree that the naming isn't great. But then Arnd does think
+> that "PIO" is appropriate.
+> 
+> There were many different names along the way to this support merged, and I
+> think that the naming became almost irrelevant in the end.
 
-Yes, but it is currently only applied to the entire device - ie you do
-'rmmod mlx5_ib' and all the running user space process see that their
-FD has moved to some error and the device is broken.
+Yep, Arnd is right.  The "PIO" name contributed a little to my
+confusion, but I think the bigger piece was that I read the "indirect
+PIO addresses" above as being parallel to the "CPU MMIO regions"
+below, when in fact, they are not.  The arguments to logic_inb() are
+always port addresses, never CPU MMIO addresses, but in some cases
+logic_inb() internally references a CPU MMIO region that corresponds
+to the port address.
 
-Targetting the disassociate of only a single FD would be a new thing.
+Possible commit log text:
 
-Jason
+  The logic_{in,out}*() functions access two regions of I/O port
+  addresses:
+
+    1) [0, MMIO_UPPER_LIMIT): these are assumed to be
+       LOGIC_PIO_CPU_MMIO regions, where a bridge converts CPU loads
+       and stores to MMIO space on its primary side into I/O port
+       transactions on its secondary side.
+
+    2) [MMIO_UPPER_LIMIT, IO_SPACE_LIMIT): these are assumed to be
+       LOGIC_PIO_INDIRECT regions, where we verify that the region was
+       registered by logic_pio_register_range() before calling the
+       logic_pio_host_ops functions to perform the access.
+
+  Previously there was no requirement that accesses to the
+  LOGIC_PIO_CPU_MMIO area matched anything registered by
+  logic_pio_register_range(), and accesses to unregistered I/O ports
+  could cause exceptions like the one below.
+
+  Verify that accesses to ports in the LOGIC_PIO_CPU_MMIO area
+  correspond to registered ranges.  Accesses to ports outside those
+  registered ranges fail (logic_in*() returns ~0 data and logic_out*()
+  does nothing).
+
+  This matches the x86 behavior where in*() returns ~0 if no device
+  responds, and out*() is dropped if no device claims it.
+
+> >   1) The simple "bridge converts CPU MMIO space to PCI I/O port space"
+> >      flavor is essentially identical to what ia64 (and probably other
+> >      architectures) does.  This should really be combined somehow.
+> 
+> Maybe. For ia64, it seems to have some "platform" versions of IO port
+> accessors, and then also accessors need a fence barrier. I'm not sure how
+> well that would fit with logical PIO. It would need further analysis.
+
+Right.  That shouldn't be part of this series, but I think it would be
+nice to someday unify the ia64 add_io_space() path with the
+pci_register_io_range() path.  There might have to be ia64-specific
+accessors at the bottom for the fences, but I think the top side could
+be unified because it's conceptually the same thing -- an MMIO region
+that is translated by a bridge to an I/O port region.
+
+> >   2) If you made a default set of logic_pio_host_ops that merely did
+> >      loads/stores and maybe added a couple fields in the struct
+> >      logic_pio_hwaddr, I bet you could unify the two kinds so
+> >      logic_inb() would look something like this:
+> 
+> Yeah, I did consider this. We do not provide host operators for PCI MMIO
+> ranges. We could simply provide regular versions of inb et al for this. A
+> small obstacle for this is that we redefine inb et al, so would need
+> "direct" versions also. It would be strange.
+
+Yeah, just a thought, maybe it wouldn't work out.
+
+> > > Any failed checks silently return.
+> > 
+> > I *think* what you're doing here is making inb/outb/etc work the same
+> > as on x86, i.e., if no device responds to an inb(), the caller gets
+> > ~0, and if no device claims an outb() the data gets dropped.
+> 
+> Correct, but with a caveat: when you say no device responds, this means that
+> - for arm64 case - no PCI MMIO region is mapped.
+
+Yep.  I was describing the x86 behavior, where we don't do any mapping
+and all we can say is that no device responded.
+
+Bjorn
