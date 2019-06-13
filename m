@@ -6,35 +6,36 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 016C5C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF228C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB71A20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E0820851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:49:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389017AbfFMPtu (ORCPT
+        id S2389740AbfFMPtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:49:50 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18155 "EHLO huawei.com"
+        Thu, 13 Jun 2019 11:49:53 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18153 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731706AbfFMJOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:14:22 -0400
+        id S1731702AbfFMJOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:14:21 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 377B3CB890F0F6847C2D;
-        Thu, 13 Jun 2019 17:14:19 +0800 (CST)
+        by Forcepoint Email with ESMTP id 396BA4459CE4CA10A628;
+        Thu, 13 Jun 2019 17:14:14 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 13 Jun 2019 17:14:09 +0800
+ 14.3.439.0; Thu, 13 Jun 2019 17:14:07 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
+        <linuxarm@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
+        Weihang Li <liweihang@hisilicon.com>,
         Peng Li <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 10/12] net: hns3: fix for skb leak when doing selftest
-Date:   Thu, 13 Jun 2019 17:12:30 +0800
-Message-ID: <1560417152-53050-11-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 03/12] net: hns3: process H/W errors occurred before HNS dev initialization
+Date:   Thu, 13 Jun 2019 17:12:23 +0800
+Message-ID: <1560417152-53050-4-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560417152-53050-1-git-send-email-tanhuazhong@huawei.com>
 References: <1560417152-53050-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,44 +48,216 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Shiju Jose <shiju.jose@huawei.com>
 
-If hns3_nic_net_xmit does not return NETDEV_TX_BUSY when doing
-a loopback selftest, the skb is not freed in hns3_clean_tx_ring
-or hns3_nic_net_xmit, which causes skb not freed problem.
+Presently the HNS driver enables the HNS H/W error interrupts after
+the dev initialization is completed. However some exceptions such as
+NCSI errors can occur when the network port driver is not loaded
+and those errors required reporting to the BMC.
+Therefore the firmware enabled all the HNS ras error interrupts
+before the driver is loaded. And in some cases, there will be some
+H/W errors remained unclear before reboot. Thus the HNS driver needs
+to process and recover those hw errors occurred before HNS driver is
+initialized.
 
-This patch fixes it by freeing skb when hns3_nic_net_xmit does
-not return NETDEV_TX_OK.
+This patch adds processing of the HNS hw errors(RAS and MSI-X)
+which occurred before the driver initialization. For RAS, because
+they are enabled by firmware, so we can detect specific bits, then
+log and clear them. But for MSI-X which can not be enabled before
+open vector0 irq, we can't detect the specific error bits, so we
+just write 1 to all interrupt source registers to clear.
 
-Fixes: c39c4d98dc65 ("net: hns3: Add mac loopback selftest support in hns3 driver")
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+Signed-off-by: Weihang Li <liweihang@hisilicon.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 111 +++++++++++++++++++--
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |   1 +
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    |   3 +
+ 3 files changed, 107 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index 6ce724d..0998647 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -250,11 +250,13 @@ static int hns3_lp_run_test(struct net_device *ndev, enum hnae3_loop mode)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+index 3ea305e..ab9c5d5 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+@@ -1595,6 +1595,12 @@ pci_ers_result_t hclge_handle_hw_ras_error(struct hnae3_ae_dev *ae_dev)
+ 	struct device *dev = &hdev->pdev->dev;
+ 	u32 status;
  
- 		skb_get(skb);
- 		tx_ret = hns3_nic_net_xmit(skb, ndev);
--		if (tx_ret == NETDEV_TX_OK)
-+		if (tx_ret == NETDEV_TX_OK) {
- 			good_cnt++;
--		else
-+		} else {
-+			kfree_skb(skb);
- 			netdev_err(ndev, "hns3_lb_run_test xmit failed: %d\n",
- 				   tx_ret);
-+		}
++	if (!test_bit(HCLGE_STATE_SERVICE_INITED, &hdev->state)) {
++		dev_err(dev,
++			"Can't recover - RAS error reported during dev init\n");
++		return PCI_ERS_RESULT_NONE;
++	}
++
+ 	status = hclge_read_dev(&hdev->hw, HCLGE_RAS_PF_OTHER_INT_STS_REG);
+ 
+ 	if (status & HCLGE_RAS_REG_NFE_MASK ||
+@@ -1631,6 +1637,21 @@ pci_ers_result_t hclge_handle_hw_ras_error(struct hnae3_ae_dev *ae_dev)
+ 	return PCI_ERS_RESULT_RECOVERED;
+ }
+ 
++static int hclge_clear_hw_msix_error(struct hclge_dev *hdev,
++				     struct hclge_desc *desc, bool is_mpf,
++				     u32 bd_num)
++{
++	if (is_mpf)
++		desc[0].opcode =
++			cpu_to_le16(HCLGE_QUERY_CLEAR_ALL_MPF_MSIX_INT);
++	else
++		desc[0].opcode = cpu_to_le16(HCLGE_QUERY_CLEAR_ALL_PF_MSIX_INT);
++
++	desc[0].flag = cpu_to_le16(HCLGE_CMD_FLAG_NO_INTR | HCLGE_CMD_FLAG_IN);
++
++	return hclge_cmd_send(&hdev->hw, &desc[0], bd_num);
++}
++
+ /* hclge_query_8bd_info: query information about over_8bd_nfe_err
+  * @hdev: pointer to struct hclge_dev
+  * @vf_id: Index of the virtual function with error
+@@ -1706,8 +1727,8 @@ static void hclge_handle_over_8bd_err(struct hclge_dev *hdev,
  	}
- 	if (good_cnt != HNS3_NIC_LB_TEST_PKT_NUM) {
- 		ret_val = HNS3_NIC_LB_TEST_TX_CNT_ERR;
+ }
+ 
+-int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
+-			       unsigned long *reset_requests)
++static int hclge_handle_all_hw_msix_error(struct hclge_dev *hdev,
++					  unsigned long *reset_requests)
+ {
+ 	struct hclge_mac_tnl_stats mac_tnl_stats;
+ 	struct device *dev = &hdev->pdev->dev;
+@@ -1764,8 +1785,7 @@ int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
+ 				status, reset_requests);
+ 
+ 	/* clear all main PF MSIx errors */
+-	hclge_cmd_reuse_desc(&desc[0], false);
+-	ret = hclge_cmd_send(&hdev->hw, &desc[0], mpf_bd_num);
++	ret = hclge_clear_hw_msix_error(hdev, desc, true, mpf_bd_num);
+ 	if (ret) {
+ 		dev_err(dev, "clear all mpf msix int cmd failed (%d)\n",
+ 			ret);
+@@ -1811,11 +1831,10 @@ int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
+ 		hclge_handle_over_8bd_err(hdev, reset_requests);
+ 
+ 	/* clear all PF MSIx errors */
+-	hclge_cmd_reuse_desc(&desc[0], false);
+-	ret = hclge_cmd_send(&hdev->hw, &desc[0], pf_bd_num);
++	ret = hclge_clear_hw_msix_error(hdev, desc, false, pf_bd_num);
+ 	if (ret) {
+-		dev_err(dev, "clear all pf msix int cmd failed (%d)\n",
+-			ret);
++		dev_err(dev, "clear all pf msix int cmd failed (%d)\n", ret);
++		goto msi_error;
+ 	}
+ 
+ 	/* query and clear mac tnl interruptions */
+@@ -1847,3 +1866,79 @@ int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
+ out:
+ 	return ret;
+ }
++
++int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
++			       unsigned long *reset_requests)
++{
++	struct device *dev = &hdev->pdev->dev;
++
++	if (!test_bit(HCLGE_STATE_SERVICE_INITED, &hdev->state)) {
++		dev_err(dev,
++			"Can't handle - MSIx error reported during dev init\n");
++		return 0;
++	}
++
++	return hclge_handle_all_hw_msix_error(hdev, reset_requests);
++}
++
++void hclge_handle_all_hns_hw_errors(struct hnae3_ae_dev *ae_dev)
++{
++#define HCLGE_DESC_NO_DATA_LEN 8
++
++	struct hclge_dev *hdev = ae_dev->priv;
++	struct device *dev = &hdev->pdev->dev;
++	u32 mpf_bd_num, pf_bd_num, bd_num;
++	struct hclge_desc desc_bd;
++	struct hclge_desc *desc;
++	u32 status;
++	int ret;
++
++	ae_dev->hw_err_reset_req = 0;
++	status = hclge_read_dev(&hdev->hw, HCLGE_RAS_PF_OTHER_INT_STS_REG);
++
++	/* query the number of bds for the MSIx int status */
++	hclge_cmd_setup_basic_desc(&desc_bd, HCLGE_QUERY_MSIX_INT_STS_BD_NUM,
++				   true);
++	ret = hclge_cmd_send(&hdev->hw, &desc_bd, 1);
++	if (ret) {
++		dev_err(dev, "fail(%d) to query msix int status bd num\n",
++			ret);
++		return;
++	}
++
++	mpf_bd_num = le32_to_cpu(desc_bd.data[0]);
++	pf_bd_num = le32_to_cpu(desc_bd.data[1]);
++	bd_num = max_t(u32, mpf_bd_num, pf_bd_num);
++
++	desc = kcalloc(bd_num, sizeof(struct hclge_desc), GFP_KERNEL);
++	if (!desc)
++		return;
++
++	/* Clear HNS hw errors reported through msix  */
++	memset(&desc[0].data[0], 0xFF, mpf_bd_num * sizeof(struct hclge_desc) -
++	       HCLGE_DESC_NO_DATA_LEN);
++	ret = hclge_clear_hw_msix_error(hdev, desc, true, mpf_bd_num);
++	if (ret) {
++		dev_err(dev, "fail(%d) to clear mpf msix int during init\n",
++			ret);
++		goto msi_error;
++	}
++
++	memset(&desc[0].data[0], 0xFF, pf_bd_num * sizeof(struct hclge_desc) -
++	       HCLGE_DESC_NO_DATA_LEN);
++	ret = hclge_clear_hw_msix_error(hdev, desc, false, pf_bd_num);
++	if (ret) {
++		dev_err(dev, "fail(%d) to clear pf msix int during init\n",
++			ret);
++		goto msi_error;
++	}
++
++	/* Handle Non-fatal HNS RAS errors */
++	if (status & HCLGE_RAS_REG_NFE_MASK) {
++		dev_warn(dev, "HNS hw error(RAS) identified during init\n");
++		hclge_handle_all_ras_errors(hdev);
++	}
++
++msi_error:
++	kfree(desc);
++}
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
+index be1186a..d821a76 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
+@@ -123,6 +123,7 @@ struct hclge_hw_error {
+ int hclge_config_mac_tnl_int(struct hclge_dev *hdev, bool en);
+ int hclge_config_nic_hw_error(struct hclge_dev *hdev, bool state);
+ int hclge_config_rocee_ras_interrupt(struct hclge_dev *hdev, bool en);
++void hclge_handle_all_hns_hw_errors(struct hnae3_ae_dev *ae_dev);
+ pci_ers_result_t hclge_handle_hw_ras_error(struct hnae3_ae_dev *ae_dev);
+ int hclge_handle_hw_msix_error(struct hclge_dev *hdev,
+ 			       unsigned long *reset_requests);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index f3e9030..d9863c30 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -8611,6 +8611,9 @@ static int hclge_init_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 
+ 	hclge_clear_all_event_cause(hdev);
+ 
++	/* Log and clear the hw errors those already occurred */
++	hclge_handle_all_hns_hw_errors(ae_dev);
++
+ 	/* Enable MISC vector(vector0) */
+ 	hclge_enable_vector(&hdev->misc_vector, true);
+ 
 -- 
 2.7.4
 
