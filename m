@@ -2,104 +2,104 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096A2C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F254C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34FA20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:54:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="fXL4Bw5K"
+	by mail.kernel.org (Postfix) with ESMTP id 0F07320851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388055AbfFMPyB (ORCPT
+        id S2389399AbfFMPyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:54:01 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:36302 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731591AbfFMI5H (ORCPT
+        Thu, 13 Jun 2019 11:54:07 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44846 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731583AbfFMIzv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:57:07 -0400
-Received: by mail-yb1-f194.google.com with SMTP id b22so5982166yba.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 01:57:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5rpwm+WXYqpS5Yt4a3EFiaLIxY1PzE0lEAcH6B/6h0A=;
-        b=fXL4Bw5Kwl/mMKIWGa1cdKDK4KAo0XR2yGRH64ZJ/I1MVExg0wWUUDX3vBHTYZkjOF
-         vYFKvyecLJNLSA/E7m7sTD8zh55AOz/agx/OfhCByMjAe9qffdMIJXqrpeOoxi+v3NkU
-         sXmf687D6xOZ2qyVaV0Av3gvkn68lJwqr/d2PEpnz/YSD7pg1u3UtvyzLDx4Mi3w75OR
-         HJJI+g/bVt6L2m1CG0hBdOwJes2EebjVxjs/giB7QyWUieZGe5ei2HyxPmHI0pV+dWgb
-         1hEim2OLo6wzfu6Jcv47M0Q4ZvWL5BNXddHdsTUs3Eu/hfMQJY2po5LVVP9PbG0vjMfb
-         rW5Q==
+        Thu, 13 Jun 2019 04:55:51 -0400
+Received: by mail-qt1-f195.google.com with SMTP id x47so21609711qtk.11;
+        Thu, 13 Jun 2019 01:55:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5rpwm+WXYqpS5Yt4a3EFiaLIxY1PzE0lEAcH6B/6h0A=;
-        b=YLqQydzPztMzYlVTAx9Nnq5kxAgv+i4myIXMxUz9a0moZufVG/BySNzrlYis7pL5L0
-         1Aq2zgvoVy5jkjVCPrKABOucEhX3fDOoHq1zknroIxzxmHOrScbIWgcCgVdr7ZX6os9n
-         1MZjer9tlIte63wDbmxKdn+N0jVgoa5aG2sqLBtdKl3bNUnFuKd/gfPtl88NMah8L7JB
-         5rTj+E2h0XHOkrr1goY8e3rewE+8FRRGvqFSJZ/M6YQbgw7PTqKkDaaehfJ/nm6Ybjpk
-         xV5sdR3S7auPrHG7EF0Gl7J3pvrQhimT6GBDMoOz9BdBtRwnq6bm2EgEY0MoIOpHk4zJ
-         zHQg==
-X-Gm-Message-State: APjAAAUmAz08tez9AKtGX46zaGu57NELvetlIC0IGJqax/Cg2OsOJ6In
-        l1zg4JfZmMACrtnY9Iu1rGVoyQ==
-X-Google-Smtp-Source: APXvYqw1zJomCCuCV1QnOnfqSwphH8qY2fZ84XDZGajBAG2kedoKa5gZ+d1vm3seCvUptjeuiel9rQ==
-X-Received: by 2002:a5b:b8b:: with SMTP id l11mr40277348ybq.165.1560416227034;
-        Thu, 13 Jun 2019 01:57:07 -0700 (PDT)
-Received: from [172.20.10.3] (mobile-166-172-57-221.mycingular.net. [166.172.57.221])
-        by smtp.gmail.com with ESMTPSA id i199sm607899ywe.89.2019.06.13.01.57.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 01:57:06 -0700 (PDT)
-Subject: Re: [PATCH] io_uring: fix SQPOLL cpu check
-To:     Stephen Bates <sbates@raithlin.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shhuiw@foxmail.com" <shhuiw@foxmail.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <5D2859FE-DB39-48F5-BBB5-6EDD3791B6C3@raithlin.com>
- <20190612092403.GA38578@lakrids.cambridge.arm.com>
- <DCE71F95-F72A-414C-8A02-98CC81237F40@raithlin.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b3c9138e-bf3b-0851-a63e-f52f926d5ed8@kernel.dk>
-Date:   Thu, 13 Jun 2019 02:54:45 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n7PArDXUl7LOBVHDgdyyLrxHdLxjO1IqwghuUIhjgcI=;
+        b=d2hn+aLmeC3GeEaXUCxbRm6Xh48sTjGT+zTdVYxP/SpuxyOzTsD6eFLT8i3onuPGVH
+         S+oHZLiiY0FWVbHHfxY71k2+8X8wgQMpbPxUBwhivXFHxbv4jYVxKNGlH0cH+lW3uGRE
+         VkU1OlRcR5TOaKZRg3oFAI2n9LSV6S2CZlxT+cDsk0tQARhQB90oBdBsFQSXw+tMsZfg
+         HWy493u2K/yNlb52sMgGP8fi9hva6oZs57/Ra/me9pPfyyrLJqMNZkalvlWbagK3kqwq
+         R6Rf4nLrAKXT7iZzYvP5HjOZnmgo0I+guXW8zmo/p11iwEaORS6udSj5yjyY+80vzyk0
+         UZvQ==
+X-Gm-Message-State: APjAAAUuuM+/7gyAFr6WKLYUrtWBpJNWII/QKZ3VOG4wkXa4qykH05tj
+        PsJq2Tn2FHe0+TctyDgBJBGzx41TPewNwToPd1Q=
+X-Google-Smtp-Source: APXvYqyV757/8drEgvHANCu8E4/7UvtAUgKyhza7EAYxf/aJTGFuMfHORa+kSycX7K8zIro0bivSjBR0z6Hb1yOYhpU=
+X-Received: by 2002:a0c:8b49:: with SMTP id d9mr2445970qvc.63.1560416149917;
+ Thu, 13 Jun 2019 01:55:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <DCE71F95-F72A-414C-8A02-98CC81237F40@raithlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190611125904.1013-1-cai@lca.pw>
+In-Reply-To: <20190611125904.1013-1-cai@lca.pw>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 13 Jun 2019 10:55:33 +0200
+Message-ID: <CAK8P3a1rK79aj38H0i9vnzeycv6YZ0iUhBFz4giAFc7COTnmWQ@mail.gmail.com>
+Subject: Re: [PATCH -next] efi/tpm: fix a compilation warning
+To:     Qian Cai <cai@lca.pw>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>, mjg59@google.com,
+        linux-efi <linux-efi@vger.kernel.org>, bsz@semihalf.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/19 3:47 AM, Stephen  Bates wrote:
->> Aargh. My original patch [1] handled that correctly, and this case was
->> explicitly called out in the commit message, which was retained even
->> when the patch was "simplified". That's rather disappointing. :/
->    
-> It looks like Jens did a fix for this (44a9bd18a0f06bba
-> " io_uring: fix failure to verify SQ_AFF cpu") which is in the 5.2-rc series
-> but which hasn’t been applied to the stable series yet. I am not sure how
-> I missed that but it makes my patch redundant.
-> 
-> Jens, will 44a9bd18a0f06bba be applied to stable kernels?
+On Tue, Jun 11, 2019 at 3:59 PM Qian Cai <cai@lca.pw> wrote:
+>
+> The linux-next "tpm: Reserve the TPM final events table" [1] introduced
+> a compilation warning,
+>
+> drivers/firmware/efi/tpm.c: In function 'efi_tpm_eventlog_init':
+> drivers/firmware/efi/tpm.c:80:10: warning: passing argument 1 of
+> 'tpm2_calc_event_log_size' makes pointer from integer without a cast
+> [-Wint-conversion]
+>   tbl_size = tpm2_calc_event_log_size(efi.tpm_final_log
+> drivers/firmware/efi/tpm.c:19:43: note: expected 'void *' but argument
+> is of type 'long unsigned int'
+>
+> Fix it by making a necessary cast for the argument 1 of
+> tpm2_calc_event_log_size().
+>
+> [1] https://lore.kernel.org/linux-efi/20190520205501.177637-3-matthewgarrett@google.com/
+>
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Yes, we can get it flagged for stable. Greg, can you pull in the above
-commit for 5.1 stable?
+I see the same build warning, but I don't think adding a cast here
+solves the problem:
 
+- efi.tpm_final_log is a physical address that gets passed into
+  memremap() to return a pointer
+- tpm2_calc_event_log_size() takes a pointer argument and
+  dereferences it.
 
--- 
-Jens Axboe
+My best guess is that we should pass the output of memremap()
+here rather than the input:
 
+--- a/drivers/firmware/efi/tpm.c
++++ b/drivers/firmware/efi/tpm.c
+@@ -75,7 +75,7 @@ int __init efi_tpm_eventlog_init(void)
+                goto out;
+        }
+
+-       tbl_size = tpm2_calc_event_log_size(efi.tpm_final_log
++       tbl_size = tpm2_calc_event_log_size(final_tbl
+                                            + sizeof(final_tbl->version)
+                                            + sizeof(final_tbl->nr_events),
+                                            final_tbl->nr_events,
+
+No idea if that is actually what was intended here, but it makes
+the code look more plausible.
+
+        Arnd
