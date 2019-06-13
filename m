@@ -2,147 +2,302 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7570EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A091EC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2E7207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B40207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SjLLkrxl"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="jwfykhPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733137AbfFMPCC (ORCPT
+        id S1733116AbfFMPB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:02:02 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:6732 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733035AbfFMPCA (ORCPT
+        Thu, 13 Jun 2019 11:01:56 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46235 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732526AbfFMOd3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:02:00 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0265670002>; Thu, 13 Jun 2019 08:01:59 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 13 Jun 2019 08:01:59 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 13 Jun 2019 08:01:59 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Jun
- 2019 15:01:57 +0000
-Subject: Re: [PATCH v5 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
-To:     Sameer Pujar <spujar@nvidia.com>, <thierry.reding@gmail.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <mkumard@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1560422477-11242-1-git-send-email-spujar@nvidia.com>
- <3f1ebc62-1498-f26c-9044-8634242fc61e@nvidia.com>
- <9c5dbfc5-122b-2049-fdad-7ffeab6a9ec9@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <97303572-48d5-3da6-6e60-51056c82b7fd@nvidia.com>
-Date:   Thu, 13 Jun 2019 16:01:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 10:33:29 -0400
+Received: by mail-qt1-f196.google.com with SMTP id h21so22740608qtn.13
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 07:33:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=C0BRU3dqqy6s0BgRmHroD92cvMT3xBvdMouvBj//NjQ=;
+        b=jwfykhPEHp2zA3zN3PapEE5CBrYWwvoLScWqftQfoS0bkS4ZzhtLfcR8BLCo2T1iRP
+         guqc2WaY0ZIWfNII5WUa9VTISaEgeDv0pXl1q+S8HkktoqGkgOtmQ32GFPxGDEjy9KFQ
+         quMPLMXsjJAHTfFnLlcO76CjviArKvDOnmIKX583CCWQTOIo4Erbrd6xoRmXbVm0gJuy
+         QR504cXAcuiJq6HPVPX6c5Nap3XXpS/eQaWK9iJEzxDJiARkVhPjuaYFvL919NUi7Vif
+         8y1X0aicXyQ2EZ2wotUp9tOvTL/0SlmaiXbE1hjEKzmwAm9Kav6qac0Li+limHEs/d7c
+         D6Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=C0BRU3dqqy6s0BgRmHroD92cvMT3xBvdMouvBj//NjQ=;
+        b=lOTqGfS/swvKl2v/AKdC6fQaAebSWtAC4OMGI/IyznYLXtk+vBRcXul+5qlGdA+r9o
+         29QLrply7R5x2V61ggdJNqxZkWimxNSOPb/ncPOW6Qcd1KgSxN3Fk4u382Rm+Kdbxyk/
+         gAVag+1OlJCKrgsIPx0HTV0En0lijr+MXFW1lWS1gP7wuu0osNQdc/k6IBgymWTa9qRJ
+         c6a3zxLndTqty8Qz119OZoGLXmWy+j2J7rE2OQM8qV8o2R1iYXt2yaRzLlJzIcuw+cX1
+         5piHQNwx5g/TCkdFmrfYcljS5L6FLsHnmGJ7EOqxAp/9rN9yo8D8JzJkGyONuDFVu2y9
+         nchA==
+X-Gm-Message-State: APjAAAUf1Z4Nfqf6rPT+GvfiTfIfLj5lbsLn3ILKizcb2Vkq85rx6kYK
+        WoAW1mE0T3DD7w23heQBnjxXcA==
+X-Google-Smtp-Source: APXvYqxdQgoSA422ayCmjEKzjzuRUO+lo5MIbD9rb3kEteQPPipbhA3D5vzV8Xf3EefJLoWjb7pQUg==
+X-Received: by 2002:ac8:2906:: with SMTP id y6mr54187982qty.138.1560436408154;
+        Thu, 13 Jun 2019 07:33:28 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::9d6b])
+        by smtp.gmail.com with ESMTPSA id w19sm548604qkj.66.2019.06.13.07.33.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 07:33:27 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 10:33:26 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Naohiro Aota <naohiro.aota@wdc.com>
+Cc:     linux-btrfs@vger.kernel.org, David Sterba <dsterba@suse.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
+        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        linux-fsdevel@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Matias =?utf-8?B?QmrDuHJsaW5n?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH 18/19] btrfs: support dev-replace in HMZONED mode
+Message-ID: <20190613143325.bxcbsx5y44upgqle@MacBook-Pro-91.local>
+References: <20190607131025.31996-1-naohiro.aota@wdc.com>
+ <20190607131025.31996-19-naohiro.aota@wdc.com>
 MIME-Version: 1.0
-In-Reply-To: <9c5dbfc5-122b-2049-fdad-7ffeab6a9ec9@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560438119; bh=gAeYNrokAD9Q2kca+yWScB3sbyQIxjUJco5GbiuobI8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=SjLLkrxl12fk5dLATa9X7QQSsJB3mKzVLXzocYLZAsRb8Ujbfjn/O4TUsCommW+Kx
-         0YUlZl0V+wMcHqzns4QKM7Iq138xtW0mMSSNcpkv208Ar6pPe38/av3wWkNPr0WEAn
-         n1MYFRryF3pRteSTg2InXvl7Kh5VGLDdEKdTx0RYDrfRxlI89kdh1RxkxipItU0xHY
-         Cl1zvUWTOpp3Yn212zxZbVEiaK84V2oiciohoeLcQ5MbgjxKPqQAT1Mvw2S2Lp0OEG
-         dfMe6sGJ4dpo/6uJtrqt3GGEsxDMM6JWdaiXqNc1/YmeS4hxFuk+By6vz45gQuzhWI
-         OletykY5rHcIQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607131025.31996-19-naohiro.aota@wdc.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 07, 2019 at 10:10:24PM +0900, Naohiro Aota wrote:
+> Currently, dev-replace copy all the device extents on source device to the
+> target device, and it also clones new incoming write I/Os from users to the
+> source device into the target device.
+> 
+> Cloning incoming IOs can break the sequential write rule in the target
+> device. When write is mapped in the middle of block group, that I/O is
+> directed in the middle of a zone of target device, which breaks the
+> sequential write rule.
+> 
+> However, the cloning function cannot be simply disabled since incoming I/Os
+> targeting already copied device extents must be cloned so that the I/O is
+> executed on the target device.
+> 
+> We cannot use dev_replace->cursor_{left,right} to determine whether bio
+> is going to not yet copied region.  Since we have time gap between
+> finishing btrfs_scrub_dev() and rewriting the mapping tree in
+> btrfs_dev_replace_finishing(), we can have newly allocated device extent
+> which is never cloned (by handle_ops_on_dev_replace) nor copied (by the
+> dev-replace process).
+> 
+> So the point is to copy only already existing device extents. This patch
+> introduce mark_block_group_to_copy() to mark existing block group as a
+> target of copying. Then, handle_ops_on_dev_replace() and dev-replace can
+> check the flag to do their job.
+> 
+> This patch also handles empty region between used extents. Since
+> dev-replace is smart to copy only used extents on source device, we have to
+> fill the gap to honor the sequential write rule in the target device.
+> 
+> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
+> ---
+>  fs/btrfs/ctree.h       |   1 +
+>  fs/btrfs/dev-replace.c |  96 +++++++++++++++++++++++
+>  fs/btrfs/extent-tree.c |  32 +++++++-
+>  fs/btrfs/scrub.c       | 169 +++++++++++++++++++++++++++++++++++++++++
+>  fs/btrfs/volumes.c     |  27 ++++++-
+>  5 files changed, 319 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
+> index dad8ea5c3b99..a0be2b96117a 100644
+> --- a/fs/btrfs/ctree.h
+> +++ b/fs/btrfs/ctree.h
+> @@ -639,6 +639,7 @@ struct btrfs_block_group_cache {
+>  	unsigned int has_caching_ctl:1;
+>  	unsigned int removed:1;
+>  	unsigned int wp_broken:1;
+> +	unsigned int to_copy:1;
+>  
+>  	int disk_cache_state;
+>  
+> diff --git a/fs/btrfs/dev-replace.c b/fs/btrfs/dev-replace.c
+> index fbe5ea2a04ed..5011b5ce0e75 100644
+> --- a/fs/btrfs/dev-replace.c
+> +++ b/fs/btrfs/dev-replace.c
+> @@ -263,6 +263,13 @@ static int btrfs_init_dev_replace_tgtdev(struct btrfs_fs_info *fs_info,
+>  	device->dev_stats_valid = 1;
+>  	set_blocksize(device->bdev, BTRFS_BDEV_BLOCKSIZE);
+>  	device->fs_devices = fs_info->fs_devices;
+> +	if (bdev_is_zoned(bdev)) {
+> +		ret = btrfs_get_dev_zonetypes(device);
+> +		if (ret) {
+> +			mutex_unlock(&fs_info->fs_devices->device_list_mutex);
+> +			goto error;
+> +		}
+> +	}
+>  	list_add(&device->dev_list, &fs_info->fs_devices->devices);
+>  	fs_info->fs_devices->num_devices++;
+>  	fs_info->fs_devices->open_devices++;
+> @@ -396,6 +403,88 @@ static char* btrfs_dev_name(struct btrfs_device *device)
+>  		return rcu_str_deref(device->name);
+>  }
+>  
+> +static int mark_block_group_to_copy(struct btrfs_fs_info *fs_info,
+> +				    struct btrfs_device *src_dev)
+> +{
+> +	struct btrfs_path *path;
+> +	struct btrfs_key key;
+> +	struct btrfs_key found_key;
+> +	struct btrfs_root *root = fs_info->dev_root;
+> +	struct btrfs_dev_extent *dev_extent = NULL;
+> +	struct btrfs_block_group_cache *cache;
+> +	struct extent_buffer *l;
+> +	int slot;
+> +	int ret;
+> +	u64 chunk_offset, length;
+> +
+> +	path = btrfs_alloc_path();
+> +	if (!path)
+> +		return -ENOMEM;
+> +
+> +	path->reada = READA_FORWARD;
+> +	path->search_commit_root = 1;
+> +	path->skip_locking = 1;
+> +
+> +	key.objectid = src_dev->devid;
+> +	key.offset = 0ull;
+> +	key.type = BTRFS_DEV_EXTENT_KEY;
+> +
+> +	while (1) {
+> +		ret = btrfs_search_slot(NULL, root, &key, path, 0, 0);
+> +		if (ret < 0)
+> +			break;
+> +		if (ret > 0) {
+> +			if (path->slots[0] >=
+> +			    btrfs_header_nritems(path->nodes[0])) {
+> +				ret = btrfs_next_leaf(root, path);
+> +				if (ret < 0)
+> +					break;
+> +				if (ret > 0) {
+> +					ret = 0;
+> +					break;
+> +				}
+> +			} else {
+> +				ret = 0;
+> +			}
+> +		}
+> +
+> +		l = path->nodes[0];
+> +		slot = path->slots[0];
+> +
+> +		btrfs_item_key_to_cpu(l, &found_key, slot);
+> +
+> +		if (found_key.objectid != src_dev->devid)
+> +			break;
+> +
+> +		if (found_key.type != BTRFS_DEV_EXTENT_KEY)
+> +			break;
+> +
+> +		if (found_key.offset < key.offset)
+> +			break;
+> +
+> +		dev_extent = btrfs_item_ptr(l, slot, struct btrfs_dev_extent);
+> +		length = btrfs_dev_extent_length(l, dev_extent);
+> +
+> +		chunk_offset = btrfs_dev_extent_chunk_offset(l, dev_extent);
+> +
+> +		cache = btrfs_lookup_block_group(fs_info, chunk_offset);
+> +		if (!cache)
+> +			goto skip;
+> +
+> +		cache->to_copy = 1;
+> +
+> +		btrfs_put_block_group(cache);
+> +
+> +skip:
+> +		key.offset = found_key.offset + length;
+> +		btrfs_release_path(path);
+> +	}
+> +
+> +	btrfs_free_path(path);
+> +
+> +	return ret;
+> +}
+> +
+>  static int btrfs_dev_replace_start(struct btrfs_fs_info *fs_info,
+>  		const char *tgtdev_name, u64 srcdevid, const char *srcdev_name,
+>  		int read_src)
+> @@ -439,6 +528,13 @@ static int btrfs_dev_replace_start(struct btrfs_fs_info *fs_info,
+>  	}
+>  
+>  	need_unlock = true;
+> +
+> +	mutex_lock(&fs_info->chunk_mutex);
+> +	ret = mark_block_group_to_copy(fs_info, src_device);
+> +	mutex_unlock(&fs_info->chunk_mutex);
+> +	if (ret)
+> +		return ret;
+> +
+>  	down_write(&dev_replace->rwsem);
+>  	switch (dev_replace->replace_state) {
+>  	case BTRFS_IOCTL_DEV_REPLACE_STATE_NEVER_STARTED:
+> diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+> index ff4d55d6ef04..268365dd9a5d 100644
+> --- a/fs/btrfs/extent-tree.c
+> +++ b/fs/btrfs/extent-tree.c
+> @@ -29,6 +29,7 @@
+>  #include "qgroup.h"
+>  #include "ref-verify.h"
+>  #include "rcu-string.h"
+> +#include "dev-replace.h"
+>  
+>  #undef SCRAMBLE_DELAYED_REFS
+>  
+> @@ -2022,7 +2023,31 @@ int btrfs_discard_extent(struct btrfs_fs_info *fs_info, u64 bytenr,
+>  			if (btrfs_dev_is_sequential(stripe->dev,
+>  						    stripe->physical) &&
+>  			    stripe->length == stripe->dev->zone_size) {
+> -				ret = blkdev_reset_zones(stripe->dev->bdev,
+> +				struct btrfs_device *dev = stripe->dev;
+> +
+> +				ret = blkdev_reset_zones(dev->bdev,
+> +							 stripe->physical >>
+> +								 SECTOR_SHIFT,
+> +							 stripe->length >>
+> +								 SECTOR_SHIFT,
+> +							 GFP_NOFS);
+> +				if (!ret)
+> +					discarded_bytes += stripe->length;
+> +				else
+> +					break;
+> +				set_bit(stripe->physical >>
+> +					dev->zone_size_shift,
+> +					dev->empty_zones);
+> +
+> +				if (!btrfs_dev_replace_is_ongoing(
+> +					    &fs_info->dev_replace) ||
+> +				    stripe->dev != fs_info->dev_replace.srcdev)
+> +					continue;
+> +
+> +				/* send to target as well */
+> +				dev = fs_info->dev_replace.tgtdev;
+> +
+> +				ret = blkdev_reset_zones(dev->bdev,
 
-On 13/06/2019 15:43, Sameer Pujar wrote:
->=20
-> On 6/13/2019 7:39 PM, Jon Hunter wrote:
->> On 13/06/2019 11:41, Sameer Pujar wrote:
->>> Add DT nodes for following devices on Tegra186 and Tegra194
->>> =C2=A0 * ACONNECT
->>> =C2=A0 * ADMA
->>> =C2=A0 * AGIC
->>>
->>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
->>> ---
->>> =C2=A0 changes from previous revision
->>> =C2=A0=C2=A0 * fixed size value for ranges property in aconnect
->>>
->>> =C2=A0 arch/arm64/boot/dts/nvidia/tegra186.dtsi | 67
->>> ++++++++++++++++++++++++++++++++
->>> =C2=A0 arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67
->>> ++++++++++++++++++++++++++++++++
->>> =C2=A0 2 files changed, 134 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->>> b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->>> index 426ac0b..5e9fe7e 100644
->>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->>> @@ -1295,4 +1295,71 @@
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_=
-LOW)>;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupt-parent=
- =3D <&gic>;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->>> +
->>> +=C2=A0=C2=A0=C2=A0 aconnect {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "nvidia,tegr=
-a210-aconnect";
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clocks =3D <&bpmp TEGRA186_=
-CLK_APE>,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 <&bpmp TEGRA186_CLK_APB2APE>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clock-names =3D "ape", "apb=
-2ape";
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 power-domains =3D <&bpmp TE=
-GRA186_POWER_DOMAIN_AUD>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #address-cells =3D <1>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #size-cells =3D <1>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ranges =3D <0x02900000 0x0 =
-0x02900000 0x200000>;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 status =3D "disabled";
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dma-controller@2930000 {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 com=
-patible =3D "nvidia,tegra186-adma";
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg=
- =3D <0x02930000 0x50000>;
->> Sorry but I have been double checking these register addresses and I
->> wonder if this should be a length of 0x10000. The 0x50000 includes all
->> the ranges where the registers are paged, so I don't think that this is
->> correct including these.
-> Is it because we don't have virtualization support yet?
+This is unrelated to dev replace isn't it?  Please make this it's own patch, and
+it's own helper while you are at it.  Thanks,
 
-Yes those are for virtulisation, but I don't believe we need them here.
-
-> and isn't the range 0x10000 covers only global register space, don't we
-> want to include page1 ADMA channel registers. In that case it would be
-> 0x20000.
-
-Yes, 0x20000 is correct indeed
-
-Cheers
-Jon
-
---=20
-nvpublic
+Josef
