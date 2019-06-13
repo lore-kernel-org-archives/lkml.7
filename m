@@ -2,175 +2,79 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C6AC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1022C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D76C620665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:53:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="EtRqSs0z"
+	by mail.kernel.org (Postfix) with ESMTP id 8405A20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393093AbfFMQx5 (ORCPT
+        id S2393098AbfFMQyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:53:57 -0400
-Received: from mail-eopbgr80078.outbound.protection.outlook.com ([40.107.8.78]:31054
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730074AbfFMDBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 23:01:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3yL5M61+dLVUgU5eb/obmOGKRpmvxkGFbVItjRbFhac=;
- b=EtRqSs0z9Ocbth/pOfAdxMa2fapfDQKEEEXFB8fwzkC51+rU7K5ktM/ElG1nCtkei/WN86ufSbGmV8yIfRQwSUihJPHber1qoF70awH/6n0thjnj6fEgyEotRYLg2kFRfaScJ+5zjq286ilGmSmAZHFajzjWIm0wJUCmIHfjV9g=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6688.eurprd04.prod.outlook.com (20.179.235.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.17; Thu, 13 Jun 2019 03:00:58 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::a5b5:13f5:f89c:9a30]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::a5b5:13f5:f89c:9a30%7]) with mapi id 15.20.1987.010; Thu, 13 Jun 2019
- 03:00:58 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC/RFT PATCH v2] ASoC: fsl_esai: Revert "ETDR and TX0~5
- registers are non volatile"
-Thread-Topic: [RFC/RFT PATCH v2] ASoC: fsl_esai: Revert "ETDR and TX0~5
- registers are non volatile"
-Thread-Index: AdUhkxXnpB3dbv39SZ66Nf7IqVutFQ==
-Date:   Thu, 13 Jun 2019 03:00:58 +0000
-Message-ID: <VE1PR04MB6479D4B1D5F00B07C5CECC5BE3EF0@VE1PR04MB6479.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1cd8986e-c323-4144-5799-08d6efab5c32
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6688;
-x-ms-traffictypediagnostic: VE1PR04MB6688:
-x-microsoft-antispam-prvs: <VE1PR04MB6688C9F4D37529BF375514FEE3EF0@VE1PR04MB6688.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0067A8BA2A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(346002)(376002)(136003)(366004)(189003)(199004)(14444005)(9686003)(256004)(305945005)(14454004)(99286004)(33656002)(486006)(7736002)(68736007)(478600001)(7696005)(186003)(6506007)(2501003)(26005)(8676002)(73956011)(229853002)(55016002)(6246003)(6116002)(81156014)(76116006)(66476007)(66066001)(52536014)(64756008)(316002)(66556008)(6436002)(8936002)(7416002)(4326008)(71190400001)(81166006)(74316002)(476003)(102836004)(54906003)(71200400001)(2906002)(5660300002)(66446008)(66946007)(25786009)(86362001)(3846002)(53936002)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6688;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ooH8LHpVo4O/v4bkbKou+2a2d0xnpBiQceLog/d0JDl+Bjn318L1JLkwMbi6LxEIZWBmTRqYcoSmKwmoyrhfUWv3EsKXcjM9mJfIg9e7eJEBTXrjvdepvuCkmXxuSJyCOXclXH2A6XCIJkvxDs5hLg0DFjIJTBgmzplZKD9NO0lMthttOoVOUljlITxOHb/p4bU/r7wxMfkhIjja4oFxxMFPD/TJFQq5GBQdDKbG2Y6KAbscX0sfqZ752iN2PGMlG8+arDnMSr9lqNTBh5wQQ12Dszb/fFw5B9DsBz28KU0wh5TOJmY4q0zwT6fUpB54uIbO/aJHSQ8H1CY792RnXvXpu9i0jx3R0+sjS3ZSaumgq2Dc3PxFq4U5mcaC8SnETzjEmzIYl2oAsq7mhYVU/TkoFI5PhrrWRKFmnRTTCf0=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 13 Jun 2019 12:54:04 -0400
+Received: from mail-it1-f198.google.com ([209.85.166.198]:54588 "EHLO
+        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730065AbfFMCxB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 22:53:01 -0400
+Received: by mail-it1-f198.google.com with SMTP id n81so6811240ita.4
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 19:53:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=Np5gXReZhEQY+f0111rtDnwU/KIuuZ02Fmiq9/XZl1M=;
+        b=MATjW/+hcDlTZqTOJM63qTNWIrRKgGPDjJh7+jKZ+mQNJ9jTN/T/+51ZsOcpAX3O8N
+         RV8gf8xTjWU2w4QWgj/0OqJsXWFAdvYN2qmDTKq7SAFWU78z+cjU547FVo2TL/t/a2ve
+         pYGx0gltmrzudWgqoHmn2YzZ65f7fdCNOZVKowv8+NmfmzxzHmEH7p8n39Tlge2OC5Rx
+         deJ1wQCoDuhfUccwcAG44P6c7zKbYu6FAy2d+HFvxqL9PEr5IJ//IeNjnL1Zqmofld6G
+         jBl4aT8i/OIZ18GK1Qq0eGW8sqnrwKrPNYvWS4jZBU1hG/3ihmVd1Lc0lFdsJmQaX0xx
+         klSA==
+X-Gm-Message-State: APjAAAVeqaCZiiPOnCN/3uaaP3ao1IX43v2H27xwoixOa6BZCwLLJzT+
+        AaN+3lZQfzWgQF0quO6aucLpZgPO6sN91tBH2O+u32oomEk2
+X-Google-Smtp-Source: APXvYqx5IsSM2NAOI/iAdm4c3z4Q0KMokZxWs1UI+Ut9ao7lxnz24tDe4bNCdFgQ1DgRpytXrLHrXA/sEafV/s9VWjsSAD+q/q20
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1cd8986e-c323-4144-5799-08d6efab5c32
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 03:00:58.3573
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: shengjiu.wang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6688
+X-Received: by 2002:a24:9d15:: with SMTP id f21mr1753140itd.13.1560394380348;
+ Wed, 12 Jun 2019 19:53:00 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 19:53:00 -0700
+In-Reply-To: <000000000000a861f6058b2699e0@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c0103a058b2ba0ec@google.com>
+Subject: Re: INFO: task syz-executor can't die for more than 143 seconds.
+From:   syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+To:     jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        yuchao0@huawei.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
->=20
-> Commit 8973112aa41b ("ASoC: fsl_esai: ETDR and TX0~5 registers are non
-> volatile") removed TX data registers from the volatile_reg list and appen=
-ded
-> default values for them. However, being data registers of TX, they should
-> not have been removed from the list because they should not be cached --
-> see the following reason.
->=20
-> When doing regcache_sync(), this operation might accidentally write some
-> dirty data to these registers, in case that cached data happen to be
-> different from the default ones, which might also result in a channel shi=
-ft or
-> swap situation, since the number of write-via-sync operations at ETDR
-> would very unlikely match the channel number.
->=20
-> So this patch reverts the original commit to keep TX data registers in
-> volatile_reg list in order to prevent them from being written by
-> regcache_sync().
->=20
-> Note: this revert is not a complete revert as it keeps those macros of
-> registers remaining in the default value list while the original commit a=
-lso
-> changed other entries in the list. And this patch isn't very necessary to=
- Cc
-> stable tree since there has been always a FIFO reset operation around the
-> regcache_sync() call, even prior to this reverted commit.
->=20
-> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> Cc: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
-> Hi Mark,
-> In case there's no objection against the patch, I'd still like to wait fo=
-r a
-> Tested-by from NXP folks before submitting it. Thanks!
+syzbot has bisected this bug to:
 
-bool regmap_volatile(struct regmap *map, unsigned int reg)
-{
-        if (!map->format.format_write && !regmap_readable(map, reg))
-                return false;
+commit 4ddc1b28aac57a90c6426d55e0dea3c1b5eb4782
+Author: Chao Yu <yuchao0@huawei.com>
+Date:   Wed Jul 25 23:19:48 2018 +0000
 
+     f2fs: fix to restrict mount condition when without CONFIG_QUOTA
 
-Actually with this patch, the regcache_sync will write the 0 to ETDR, even
-It is declared volatile, the reason is that in regmap_volatile(), the first
-condition
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=142f4e49a00000
+start commit:   81a72c79 Add linux-next specific files for 20190612
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=122f4e49a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8aa46bbce201b8b6
+dashboard link: https://syzkaller.appspot.com/bug?extid=8ab2d0f39fb79fe6ca40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1250ae3ea00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1568557aa00000
 
-(!map->format.format_write && !regmap_readable(map, reg))  is true.
+Reported-by: syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com
+Fixes: 4ddc1b28aac5 ("f2fs: fix to restrict mount condition when without  
+CONFIG_QUOTA")
 
-So the regmap_volatile will return false.
-
-And in regcache_reg_needs_sync(), because there is no default value
-It will return true, then the ETDR need be synced, and be written 0.
-
-Here is the code for regcache_default_sync()
-
-static int regcache_default_sync(struct regmap *map, unsigned int min,
-                                 unsigned int max)
-{
-        unsigned int reg;
-
-        for (reg =3D min; reg <=3D max; reg +=3D map->reg_stride) {
-                unsigned int val;
-                int ret;
-
-                if (regmap_volatile(map, reg) ||
-                    !regmap_writeable(map, reg))
-                        continue;
-
-                ret =3D regcache_read(map, reg, &val);
-                if (ret)
-                        return ret;
-
-                if (!regcache_reg_needs_sync(map, reg, val))
-                        continue;
-
-                map->cache_bypass =3D true;
-                ret =3D _regmap_write(map, reg, val);
-                map->cache_bypass =3D false;
-
-Best regards
-Wang shengjiu
-
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
