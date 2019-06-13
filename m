@@ -2,198 +2,124 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B78C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B7AC31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 056FC20645
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8563020866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:58:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AqI8F2BB"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="PfQXkQIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfFMR56 (ORCPT
+        id S1727675AbfFMR6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:57:58 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35655 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfFMR56 (ORCPT
+        Thu, 13 Jun 2019 13:58:00 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:33022 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727158AbfFMR57 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:57:58 -0400
-Received: by mail-io1-f67.google.com with SMTP id m24so18952072ioo.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 10:57:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=S+C5KnlUcg5YPzZfX26R37voPkYptIXnREwPhl8gT4c=;
-        b=AqI8F2BBGVu1AQ1QdKMRqGCvQpB4/wiYaeyLAwgWmgVRrgplVxSsHhYOmgrTvl8VK0
-         jgocQhcA+U0TrCIdBQapKE5yLVXWO57i7ONmO7p9CsS/3OUDpJyQ6J47nj1rEv/GerpP
-         4h2xArBSYHO+qkiyjyhs19XMw55shFqfIvw60=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=S+C5KnlUcg5YPzZfX26R37voPkYptIXnREwPhl8gT4c=;
-        b=VDvs/+QYDQUSMG/OPuvFEFNyBstzZN8ctMu+Z/W/TXrTWaQ9MKpepYm4PrflI01OiS
-         LxjB07q+tQriixFgfHGC/57006tGscmAl51EJ6bh/b/MViQfsxCxEeiHkg/1wzwkUCaG
-         atsN6B1Y3yQ18VF1XgDHBX3UX16UZQnH7sTupvLQ3n9yCS4ShV7caEe+QM5fR8z4rpTX
-         GvmviiiL4rGDROhkwo1dOQFrLaEEUJhNe7XYSfOdmS/Opcw3Lf93Fjqv3S6hFSl3ll/D
-         WOcgR2scIy1zF10LFHWGuA8/A9zRzLOvuCQ1rhffdVetf3MMZXgH/MEtxeqeekDY3DIJ
-         jPRA==
-X-Gm-Message-State: APjAAAVNY2vZoe8yn8jIFOKwRJy2/iKf9ENB7O9aAF6RcDTuET3D14E+
-        F2OthWRK23/VZCd/0bHdcCOyXEToWNxwOg==
-X-Google-Smtp-Source: APXvYqzKkWi7k7+kBN7kjxQzWJCjBTHLx+VRcTgTIwS7rSUvJ+bZFVTvY5WZIaZ0EsMHlqSOHPYhmw==
-X-Received: by 2002:a05:6638:5:: with SMTP id z5mr18806075jao.58.1560448677432;
-        Thu, 13 Jun 2019 10:57:57 -0700 (PDT)
-Received: from twawrzynczak.bld.corp.google.com ([2620:15c:183:200:b018:adbe:f5f7:d86b])
-        by smtp.gmail.com with ESMTPSA id k8sm491091iob.78.2019.06.13.10.57.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 13 Jun 2019 10:57:56 -0700 (PDT)
-From:   twawrzynczak@chromium.org
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Olof Johansson <olof@lixom.net>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6] platform/chrome: mfd/cros_ec_debugfs: Add debugfs entry to retrieve EC uptime.
-Date:   Thu, 13 Jun 2019 11:57:36 -0600
-Message-Id: <20190613175736.260117-1-twawrzynczak@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <b4d1a261-fb0e-77ce-8fa3-48c71eb70dce@collabora.com>
-References: <b4d1a261-fb0e-77ce-8fa3-48c71eb70dce@collabora.com>
+        Thu, 13 Jun 2019 13:57:59 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DHpnxo001518
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 10:57:58 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=SN9bJYBvVZmjIY7TQwW3dcHWX2b73J5/DqqXtyPOt5g=;
+ b=PfQXkQIXJKJYZzYLK2K6BK+Mcwkf22sy+R8ogNnL5euBKlXTZdZh6uBUfvrIEjf6xLFF
+ jBqMf2Z3I1TEuaNXdU2U6zAW5c7JfcRtkGEU3aZPsWh3woDfucKpJpSHzuDh/YJuq99C
+ u6HPiugIHARcUnKwy8BwfvqMgpFVL2Xf2eE= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2t3py212uu-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 10:57:58 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 13 Jun 2019 10:57:55 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 3DA8762E1C18; Thu, 13 Jun 2019 10:57:55 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+CC:     <oleg@redhat.com>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+        <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
+        <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v4 0/5] THP aware uprobe
+Date:   Thu, 13 Jun 2019 10:57:42 -0700
+Message-ID: <20190613175747.1964753-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906130131
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Wawrzynczak <twawrzynczak@chromium.org>
+This set makes uprobe aware of THPs.
 
-The new debugfs entry 'uptime' is being made available to userspace so that
-a userspace daemon can synchronize EC logs with host time.
+Currently, when uprobe is attached to text on THP, the page is split by
+FOLL_SPLIT. As a result, uprobe eliminates the performance benefit of THP.
 
-Signed-off-by: Tim Wawrzynczak <twawrzynczak@chromium.org>
----
-Sorry about that Enric, I was confused that you meant Lee's tree.  Also I
-got myself confused with all the patchsets :)
+This set makes uprobe THP-aware. Instead of FOLL_SPLIT, we introduces
+FOLL_SPLIT_PMD, which only split PMD for uprobe. After all uprobes within
+the THP are removed, the PTEs are regrouped into huge PMD.
 
-Changelist from v5:
- 1) Rebase on lee's for-mfd-next
-Changelist from v4:
- 1) Add EC_CMD_GET_UPTIME_INFO
- 2) Rebase on top of 5.3
- 3) Get rid of cros_ec_create_uptime
-Changelist from v3:
- 1) Don't check return values of debugfs_* functions.
- 2) Only expose 'uptime' file if EC supports it.
----
- Documentation/ABI/testing/debugfs-cros-ec | 10 ++++
- drivers/platform/chrome/cros_ec_debugfs.c | 56 +++++++++++++++++++++++
- 2 files changed, 66 insertions(+)
- create mode 100644 Documentation/ABI/testing/debugfs-cros-ec
+Note that, with uprobes attached, the process runs with PTEs for the huge
+page. The performance benefit of THP is recovered _after_ all uprobes on
+the huge page are detached.
 
-diff --git a/Documentation/ABI/testing/debugfs-cros-ec b/Documentation/ABI/testing/debugfs-cros-ec
-new file mode 100644
-index 000000000000..ca6f4838ee0d
---- /dev/null
-+++ b/Documentation/ABI/testing/debugfs-cros-ec
-@@ -0,0 +1,10 @@
-+What:		/sys/kernel/debug/<cros-ec-device>/uptime
-+Date:		June 2019
-+KernelVersion:	5.3
-+Description:
-+		Read-only.
-+		Reads the EC's current uptime information
-+		(using EC_CMD_GET_UPTIME_INFO) and prints
-+		time_since_ec_boot_ms into the file.
-+		This is used for synchronizing AP host time
-+		with the cros_ec log.
-diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
-index 4c2a27f6a6d0..dbba007c576d 100644
---- a/drivers/platform/chrome/cros_ec_debugfs.c
-+++ b/drivers/platform/chrome/cros_ec_debugfs.c
-@@ -241,6 +241,52 @@ static ssize_t cros_ec_pdinfo_read(struct file *file,
- 				       read_buf, p - read_buf);
- }
- 
-+static int cros_ec_get_uptime(struct cros_ec_device *ec_dev, u32 *uptime)
-+{
-+	struct {
-+		struct cros_ec_command msg;
-+		struct ec_response_uptime_info resp;
-+	} __packed ec_buf;
-+	struct ec_response_uptime_info *resp;
-+	struct cros_ec_command *msg;
-+	int ret;
-+
-+	msg = &ec_buf.msg;
-+	resp = (struct ec_response_uptime_info *)msg->data;
-+
-+	msg->command = EC_CMD_GET_UPTIME_INFO;
-+	msg->version = 0;
-+	msg->insize = sizeof(*resp);
-+	msg->outsize = 0;
-+
-+	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
-+	if (ret < 0)
-+		return ret;
-+
-+	*uptime = resp->time_since_ec_boot_ms;
-+	return 0;
-+}
-+
-+static ssize_t cros_ec_uptime_read(struct file *file,
-+				   char __user *user_buf,
-+				   size_t count,
-+				   loff_t *ppos)
-+{
-+	struct cros_ec_debugfs *debug_info = file->private_data;
-+	struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
-+	char read_buf[32];
-+	u32 uptime;
-+	int ret;
-+
-+	ret = cros_ec_get_uptime(ec_dev, &uptime);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = scnprintf(read_buf, sizeof(read_buf), "%u\n", uptime);
-+
-+	return simple_read_from_buffer(user_buf, count, ppos, read_buf, ret);
-+}
-+
- const struct file_operations cros_ec_console_log_fops = {
- 	.owner = THIS_MODULE,
- 	.open = cros_ec_console_log_open,
-@@ -257,6 +303,13 @@ const struct file_operations cros_ec_pdinfo_fops = {
- 	.llseek = default_llseek,
- };
- 
-+const struct file_operations cros_ec_uptime_fops = {
-+	.owner = THIS_MODULE,
-+	.open = simple_open,
-+	.read = cros_ec_uptime_read,
-+	.llseek = default_llseek,
-+};
-+
- static int ec_read_version_supported(struct cros_ec_dev *ec)
- {
- 	struct ec_params_get_cmd_versions_v1 *params;
-@@ -408,6 +461,9 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
- 	debugfs_create_file("pdinfo", 0444, debug_info->dir, debug_info,
- 			    &cros_ec_pdinfo_fops);
- 
-+	debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
-+			    &cros_ec_uptime_fops);
-+
- 	ec->debug_info = debug_info;
- 
- 	dev_set_drvdata(&pd->dev, ec);
--- 
-2.22.0.rc2.383.gf4fbbf30c2-goog
+This set (plus a few THP patches) is also available at
 
+   https://github.com/liu-song-6/linux/tree/uprobe-thp
+
+Changes since v3:
+1. Simplify FOLL_SPLIT_PMD case in follow_pmd_mask(), (Kirill A. Shutemov)
+2. Fix try_collapse_huge_pmd() to match change in follow_pmd_mask().
+
+Changes since v2:
+1. For FOLL_SPLIT_PMD, populated the page table in follow_pmd_mask().
+2. Simplify logic in uprobe_write_opcode. (Oleg Nesterov)
+3. Fix page refcount handling with FOLL_SPLIT_PMD.
+4. Much more testing, together with THP on ext4 and btrfs (sending in
+   separate set).
+5. Rebased up on Linus's tree:
+   commit 35110e38e6c5 ("Merge tag 'media/v5.2-2' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media")
+
+Changes since v1:
+1. introduces FOLL_SPLIT_PMD, instead of modifying split_huge_pmd*();
+2. reuse pages_identical() from ksm.c;
+3. rewrite most of try_collapse_huge_pmd().
+
+Song Liu (5):
+  mm: move memcmp_pages() and pages_identical()
+  uprobe: use original page when all uprobes are removed
+  mm, thp: introduce FOLL_SPLIT_PMD
+  uprobe: use FOLL_SPLIT_PMD instead of FOLL_SPLIT
+  uprobe: collapse THP pmd after removing all uprobes
+
+ include/linux/huge_mm.h |  7 +++++
+ include/linux/mm.h      |  8 +++++
+ kernel/events/uprobes.c | 54 +++++++++++++++++++++++++-------
+ mm/gup.c                |  9 ++++--
+ mm/huge_memory.c        | 69 +++++++++++++++++++++++++++++++++++++++++
+ mm/ksm.c                | 18 -----------
+ mm/util.c               | 13 ++++++++
+ 7 files changed, 146 insertions(+), 32 deletions(-)
+
+--
+2.17.1
