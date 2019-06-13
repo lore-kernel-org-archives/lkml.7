@@ -2,87 +2,127 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AE3C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344CBC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1DA2147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A282147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:34:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uKaZA9Zx"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="iUpnm6J9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbfFMTdt (ORCPT
+        id S1728800AbfFMTeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 15:33:49 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37908 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbfFMTds (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:33:48 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a186so12438055pfa.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 12:33:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=do2ZI6AB84f51HhCgs64o/OwEByfbyhqfdO3MCEI11w=;
-        b=uKaZA9Zxh7dZs0jS87LP/3uLU+Xx4ZfnKYpIumrpHzc+bsYNKjAsjwm4dlWaYMbD7m
-         22QjRog6LAoPdR2/G1bQojmdqmL4Ntx9Jz/So2VnLCauxnDP6oA2oTkF7we+4p5fvcQy
-         L0ON+ARGO7XZkiS8Pea48mu09SaNhyc4seHQmMiy+mnMxifwi9tYmShnOy5Sh09gfHD2
-         Edp/RI1qtnwPJ9vZy5skTF9m7Dx953HC5jThN3FXUXTfmQBXXQtMOhciWDqUygwJ47kG
-         2jkywOogcNcI+F+lVU1S2RSHBfR8H4GzBGvhWiJHfjKZdX0ERpswZ9sqhboY1N1i+tZJ
-         A+rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=do2ZI6AB84f51HhCgs64o/OwEByfbyhqfdO3MCEI11w=;
-        b=g2aarK6YmrSZp1kxQdxl15AV6jti82nOv1WZ/qdpMYlBltMP9kavBtlU5tJS1zZ69Z
-         4S6x/pw60rpCsyadcXyr4OwUnKFhsIzL5g69gK2wYQI8RtfLpgCQNz1uU4INjrxR3MXY
-         XJLo+biDLpmgvyWKGBThBH/73eSS1qmC0qVkjT7Ixzxf7qk+c/gTMH73sJpvzqGoKu19
-         lL46PKiGuU13431Rq69Efj10D7Xv1CV7DAUMM/brxH98qlGMXU0liIxSISyZnFoUh7hR
-         iufHrK2oc65o0JU9iUtll6jTwcNB0FHZ2nExYZLJWzG9lc1d1r2JytYslCzmdRRXxHue
-         zTaw==
-X-Gm-Message-State: APjAAAXdwj8mtFuQwmeHNMIQ/UQuzRFJ0oNvq1szCDCXNc/+4WR4SQuy
-        Va4wqpezHZfDvYrZaPC3YNeSNg==
-X-Google-Smtp-Source: APXvYqxQMYR4H3vojZQSKEgSWAnX0V+23fNF0VDvBBd/zGvF3dlCJJBIKHc8Mt23k45dhtm2gAwWwg==
-X-Received: by 2002:a63:2d0:: with SMTP id 199mr31768286pgc.188.1560454427686;
-        Thu, 13 Jun 2019 12:33:47 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.googlemail.com with ESMTPSA id 135sm469175pfb.137.2019.06.13.12.33.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Jun 2019 12:33:47 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] arm64: dts: meson: sei510: add sound card
-In-Reply-To: <20190524140318.17608-1-jbrunet@baylibre.com>
-References: <20190524140318.17608-1-jbrunet@baylibre.com>
-Date:   Thu, 13 Jun 2019 12:33:46 -0700
-Message-ID: <7hh88t46w5.fsf@baylibre.com>
+        Thu, 13 Jun 2019 15:34:36 -0400
+Received: from mail-eopbgr50061.outbound.protection.outlook.com ([40.107.5.61]:28547
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726954AbfFMTeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 15:34:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EHKRMNw9g2ihF+kxFu2QxbCGLLD+Dv1zpejuy8kLLZA=;
+ b=iUpnm6J9uAc2yjehlZggxWFZYnKjETahRTv9czZSJmRWPzW0c51V9hOVdRyMTHee9htECLtgsjxbSbXXTMK9Qo8zztfp4DzvDNdvYkG9j5XEA3xndXD0rPc3xF4w+ErYDv17IJNFO1S+2JDvJIZa+4wCOKDxz2p2P1kLyObkgUk=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB4703.eurprd05.prod.outlook.com (20.176.4.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.10; Thu, 13 Jun 2019 19:34:31 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
+ 19:34:31 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 09/22] memremap: lift the devmap_enable manipulation into
+ devm_memremap_pages
+Thread-Topic: [PATCH 09/22] memremap: lift the devmap_enable manipulation into
+ devm_memremap_pages
+Thread-Index: AQHVIcyGh+LZVhNi2EuUux9FsS41VqaZ+m2A
+Date:   Thu, 13 Jun 2019 19:34:31 +0000
+Message-ID: <20190613193427.GU22062@mellanox.com>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-10-hch@lst.de>
+In-Reply-To: <20190613094326.24093-10-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BL0PR02CA0046.namprd02.prod.outlook.com
+ (2603:10b6:207:3d::23) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2344bec2-d78c-4486-b0bc-08d6f0362814
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4703;
+x-ms-traffictypediagnostic: VI1PR05MB4703:
+x-microsoft-antispam-prvs: <VI1PR05MB4703615FBFE57552FC7A5F3ECFEF0@VI1PR05MB4703.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(136003)(366004)(376002)(346002)(39860400002)(396003)(189003)(199004)(43544003)(25786009)(71190400001)(2616005)(316002)(256004)(446003)(71200400001)(68736007)(476003)(11346002)(26005)(99286004)(76176011)(386003)(229853002)(52116002)(66066001)(6116002)(53936002)(3846002)(66946007)(2906002)(6916009)(6506007)(102836004)(6246003)(6436002)(54906003)(66446008)(66556008)(486006)(64756008)(66476007)(14454004)(6486002)(478600001)(73956011)(86362001)(81166006)(305945005)(81156014)(7736002)(8936002)(186003)(5660300002)(7416002)(1076003)(36756003)(4326008)(4744005)(6512007)(8676002)(33656002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4703;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 2nSk9n4j3C4hJek/u+dZ6x7dV3tjTsGkUY3UXBXRkHKaWJqXhdg8ZS34cQZL7GwgyF5/MSzAJhv2aUAjjtk8CRvLzUVGNduiTuQkZy3Kv+MZPwfJIT90IFGBZ/ZsH3qZoh/CPWzTLkRl4wuE3WtmH20XC331wtkLzLWek4XEe0R+LNOkx+Hp/SCi2uxUbb7ts65BsfUxQNVpaOPGaYiTXZ2cklEw1b8NCzBt7dR1vWFs9sxDlNJ47eMYM+Bo+bdfGOd5g+9egoEaH5hhoSSUEnB25YzaoPWpks/1OJjOwTG1qouPEkgHuHQomu5+xxWhDy/fHuXrTHWkWiYva0Hxy3ILfkB1RQoRgbijiJvrA35MkyYBW3WSRajPXlSEBpJNXi4TzI+dMNkmRB5ftUjxHXdrJM09OJwhUKDw/JKjuRo=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <2494E1C39D43164DA0596E93A4038E37@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2344bec2-d78c-4486-b0bc-08d6f0362814
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 19:34:31.3397
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4703
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+On Thu, Jun 13, 2019 at 11:43:12AM +0200, Christoph Hellwig wrote:
+> Just check if there is a ->page_free operation set and take care of the
+> static key enable, as well as the put using device managed resources.
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index c76a1b5defda..6dc769feb2e1 100644
+> +++ b/mm/hmm.c
+> @@ -1378,8 +1378,6 @@ struct hmm_devmem *hmm_devmem_add(const struct hmm_=
+devmem_ops *ops,
+>  	void *result;
+>  	int ret;
+> =20
+> -	dev_pagemap_get_ops();
+> -
 
-> This patchset adds the sound card of sei510 board.
->
-> Note #1:
-> The patchset (build) depends on the tohdmitx ASoC patch [0] for the dt
-> bindings of the tohdmitx glue. It also (run) depends on the mpll clock
-> series [1] to get a correct clock sources.
+Where was the matching dev_pagemap_put_ops() for this hmm case? This
+is a bug fix too?
 
-Queuing this for v5.3, but it's pending a stable tag/branch from ASoC
-maintainers.  If that doesn't work out, I'll queue it up after v5.3-rc1.
+The nouveau driver is the only one to actually call this hmm function
+and it does it as part of a probe function.=20
 
-Thanks,
+Seems reasonable, however, in the unlikely event that it fails to init
+'dmem' the driver will retain a dev_pagemap_get_ops until it unloads.
+This imbalance doesn't seem worth worrying about.
 
-Kevin
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+
+Jason
