@@ -2,134 +2,95 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1682BC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AA7C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3509206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:36:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFFG03IL"
+	by mail.kernel.org (Postfix) with ESMTP id C87592082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:36:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729434AbfFMPgH (ORCPT
+        id S1732406AbfFMPgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:36:07 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34691 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731971AbfFMPf2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:35:28 -0400
-Received: by mail-io1-f68.google.com with SMTP id k8so17886380iot.1;
-        Thu, 13 Jun 2019 08:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aF7WfJBqic6Edz88lRv/0CL+oI9ZSIdnX+8VgBOn3LM=;
-        b=YFFG03ILxrBxA6EZc7HJyHTcZQG8lYtS0piFG6RoKFTL9WaRyzxFvfEfAYIJhj/ftv
-         9ExuTCWv50qCckQUHlJWT2UsUYTEATiFrwqXse8mop93NQaSCaMjFPtYLHL53CS1iBdu
-         FSSVPGtnBTxP4GW8ocS4dqqaF8GUvpBrzW2/4wt80dCCxcvClhxqJh5SbP92pc3pYdQl
-         jlJmooBJcmedVvhBjo+Q5iscUzsWXs4DECS3/+7zXE3IHqrut20IQRp4C0HcFKIYAcT7
-         4RLMs3kfUprhpOWBGSDxx6PuB5IH+dkxMni5cJQm3aX/POi0LH+cq45V7JYf6aWa4T1L
-         TnxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aF7WfJBqic6Edz88lRv/0CL+oI9ZSIdnX+8VgBOn3LM=;
-        b=cwC3Bk0V8cUVTlb5qC7wk5kq7I3t9CVr4PqsCr8WSUiLGBZ/8WL/kMB4qdyIKVzRdH
-         buJk1mKOFiQE6rRZFCCqpaPDj3OvnID4rpzBnr8aQ/WhlTk7rAouXapnq0psqZVA3dI6
-         s69WzM4VGxKNAnjXKZBOrI3R1QjfFFdzhCc0zyFVrci/GhM0kWzCgai47baHISfAB5hu
-         C2MoXb5GmagXRFwL7t9WkcwxMrVuUFpv5UQmEHS+clEkEOVNTy8fgcl9Hr2EMdKeUR4p
-         F243oO+9HFJzBpmgeIBaowsoc8vsm5TIJb9+YfhiwuEWyw6dqtOsUOTHz4hRwnQ5icaL
-         sNNw==
-X-Gm-Message-State: APjAAAVljhOXp1qUwGhi/DMT7gFGRuHPtw4DlJ+98KZ/RWtwyTPuT8mk
-        6uLnARmf8hUPjByjS0T7cC9rr6wVLiMAECQhkNs=
-X-Google-Smtp-Source: APXvYqzEXd8Sr1aUseL+zTWDc5Ak4NVxezALw+LIg0QIm0xSXFjXqsm8USdWkhi9CiqHsaqRen64MfMyW8gnwFYF5X4=
-X-Received: by 2002:a5d:9047:: with SMTP id v7mr36860549ioq.18.1560440127125;
- Thu, 13 Jun 2019 08:35:27 -0700 (PDT)
+        Thu, 13 Jun 2019 11:36:20 -0400
+Received: from app2.whu.edu.cn ([202.114.64.89]:50524 "EHLO whu.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727379AbfFMKUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 06:20:09 -0400
+Received: from localhost (unknown [111.202.192.3])
+        by email2 (Coremail) with SMTP id AgBjCgBHTvZJIwJdy3VkAQ--.48697S2;
+        Thu, 13 Jun 2019 18:19:59 +0800 (CST)
+From:   Peng Wang <rocking@whu.edu.cn>
+To:     peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com
+Cc:     linux-kernel@vger.kernel.org, Peng Wang <rocking@whu.edu.cn>
+Subject: [PATCH] locking/rwsem: save unnecessary rwsem_set_owner() after slow path
+Date:   Thu, 13 Jun 2019 18:18:09 +0800
+Message-Id: <20190613101809.16231-1-rocking@whu.edu.cn>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-References: <20190525181329.18657-1-tiny.windzz@gmail.com> <20190525181329.18657-2-tiny.windzz@gmail.com>
- <20190527122752.uc7q6zkjti3zag4q@flea> <CAEExFWtxEB67Pv-8x4ry=tZcJjOD6Kxydq_YB73Gox25VmQn7A@mail.gmail.com>
- <20190612154325.m6z7xsxlpdq4wkxv@flea>
-In-Reply-To: <20190612154325.m6z7xsxlpdq4wkxv@flea>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Thu, 13 Jun 2019 23:35:15 +0800
-Message-ID: <CAEExFWskAsNquULKBLtBFUOosNpks8L6aUhw-+cF=oZ0aghAtQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] thermal: sun8i: add thermal driver for h6
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        David Miller <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        paulmck@linux.ibm.com, Linux PM <linux-pm@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AgBjCgBHTvZJIwJdy3VkAQ--.48697S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar4ftr17GFWDCrWxJr4kCrg_yoW8JFy7pr
+        1FkFyqkr9FqFy7WrZrJa10va15Aw10yr97GanxCrW8AFnxAF4xJFs8Wr17tFy8GFyIkrWY
+        qF4fCFWF9ayxKrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkq14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
+        JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gw1l
+        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
+        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUboKZJUUUUU==
+X-CM-SenderInfo: qsqrijaqrviiqqxyq4lkxovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 9:26 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Fri, Jun 07, 2019 at 09:34:44PM +0800, Frank Lee wrote:
-> > On Mon, May 27, 2019 at 8:27 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > +     ret = devm_request_threaded_irq(dev, irq, NULL,
-> > > > +                                     tmdev->chip->irq_thread,
-> > > > +                                     IRQF_ONESHOT, "ths", tmdev);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > >
-> > > Is there any particular reason to use a threaded interrupt?
-> >
-> > Just to improve real-time.
->
-> What do you mean by real-time here? If anything, that will increase
-> the latency of the interrupts here.
->
-> And in preempt-rt, regular top-half interrupts will be forced into a
-> threaded interrupt anyway.
->
-> > > > +static int sun8i_ths_remove(struct platform_device *pdev)
-> > > > +{
-> > > > +     struct ths_device *tmdev = platform_get_drvdata(pdev);
-> > > > +
-> > > > +     clk_disable_unprepare(tmdev->bus_clk);
-> > >
-> > > I know that we discussed that already, but I'm not sure why you switch
-> > > back to a regular call to regmap_init_mmio, while regmap_init_mmio_clk
-> > > will take care of enabling and disabling the bus clock for you?
-> >
-> > It seems that regmap_init_mmio_clk just get clk and prepare clk
-> > but no enable.
->
-> At init time, yes. But it will enable it only when you access the
-> registers, which is what you want anyway.
+rwsem_down_write_failed() and rwsem_down_write_failed_killable() return
+with sem->owner set if acquire semaphore successfully, so we can skip
+rwsem_set_owner() to keep pace with reading.
 
-But after accessing the register, it turns the clock off, which
-affects the ad conversion and the occurrence of the interrupt.
+Signed-off-by: Peng Wang <rocking@whu.edu.cn>
+---
+ kernel/locking/rwsem.h | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-In addition, when resuming from suspend, we need to enable
-the clock, so I think it is necessary to have a clock pointer.
+diff --git a/kernel/locking/rwsem.h b/kernel/locking/rwsem.h
+index 64877f5294e3..4fa21f737151 100644
+--- a/kernel/locking/rwsem.h
++++ b/kernel/locking/rwsem.h
+@@ -225,7 +225,8 @@ static inline void __down_write(struct rw_semaphore *sem)
+ 					     &sem->count);
+ 	if (unlikely(tmp != RWSEM_ACTIVE_WRITE_BIAS))
+ 		rwsem_down_write_failed(sem);
+-	rwsem_set_owner(sem);
++	else
++		rwsem_set_owner(sem);
+ }
+ 
+ static inline int __down_write_killable(struct rw_semaphore *sem)
+@@ -234,10 +235,12 @@ static inline int __down_write_killable(struct rw_semaphore *sem)
+ 
+ 	tmp = atomic_long_add_return_acquire(RWSEM_ACTIVE_WRITE_BIAS,
+ 					     &sem->count);
+-	if (unlikely(tmp != RWSEM_ACTIVE_WRITE_BIAS))
++	if (unlikely(tmp != RWSEM_ACTIVE_WRITE_BIAS)) {
+ 		if (IS_ERR(rwsem_down_write_failed_killable(sem)))
+ 			return -EINTR;
+-	rwsem_set_owner(sem);
++	} else {
++		rwsem_set_owner(sem);
++	}
+ 	return 0;
+ }
+ 
+-- 
+2.19.1
 
-Yangtao
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
