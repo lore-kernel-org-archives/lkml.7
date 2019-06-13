@@ -2,109 +2,171 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1878C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E569C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7BD121721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3103E20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:40:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="aSm9LhD4"
+	dkim=pass (2048-bit key) header.d=telekom.de header.i=@telekom.de header.b="fofUkg4E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392729AbfFMQkF (ORCPT
+        id S2392603AbfFMQkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:40:05 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46832 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730522AbfFMHC2 (ORCPT
+        Thu, 13 Jun 2019 12:40:18 -0400
+Received: from mailout41.telekom.de ([194.25.225.151]:58351 "EHLO
+        mailout41.telekom.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730581AbfFMHBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 03:02:28 -0400
-Received: by mail-ed1-f65.google.com with SMTP id d4so6284759edr.13
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 00:02:27 -0700 (PDT)
+        Thu, 13 Jun 2019 03:01:44 -0400
+X-Greylist: delayed 591 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Jun 2019 03:01:41 EDT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hEIAcCGP/z08es9NPtS+WIS/044Mw9yHEo/3xcrUrOQ=;
-        b=aSm9LhD41KyVNm1kAG5u34+mKwpYwx5XNhQDDw9zsJO6CA9/ZrTjwnq03lmLGckAgV
-         WB/Jufh/GaG7HI2DNmiZwwhCjV2CdQJTnimi+UiV2BU3nNGzYaO8EJQAELkQsWbdWzhj
-         b06A1fi9dwGfA9OR0dJ0ZINqm/Zhg1X39GkGXb5IQXrN1QJM/AIkHv61ErcuitnDvW4S
-         E9SjotrvOzO7iCyKwCroJgD0iRa2jeRGWe0cn1vb0w54JDzXDEDi1NMcAXXhcgG401il
-         sQR8j7go+2RXq+kFYhM3xXz5GDtwGAzFxEXajV1UdVOi/H5DYC8JsebbyXhZEnW3WF8b
-         frcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hEIAcCGP/z08es9NPtS+WIS/044Mw9yHEo/3xcrUrOQ=;
-        b=p5Q9VqqfMADw4V2wcVJcFQvBKyIFzbNTIxNREHdpKDJ7Img3lAGxX9O4knf646DzyW
-         CFB6ILIkOjyXw3cIrQBFtEfaXE48JCySnoNTAzHwm4yzcfBevd+1o5eXcRRPAVB22oPB
-         f3NQm53b+HVuRTNpKryEtKuDX3sLUbvrj218rY1OxCiRzF1WFoYCfKUTzNuDoQMoWMxa
-         +QAOUfcAYGqIQj5MOVZdf4pGZNdbuVzaco4JaW8D+Pguct7YNpdBPMHl/3r2QJyM6bFX
-         1UpevOkzDofQrYCccuf6Bt9oPAUeW9Gubaqqvd7lQthMrsCejpqlD88WMoJ68fNlWCHp
-         SorQ==
-X-Gm-Message-State: APjAAAWLznqtJuroiMrjNSVEJIioNATxUvVCc60ZnkUMtGgoZg4pxPpa
-        0SUXPbnnVhc+koPsTx7ELOp7bgqh16U=
-X-Google-Smtp-Source: APXvYqza3mLrvU3YM5VyMqSx78u2vQxPUBVN06/agdAfqU+pu5LLY6r5sM67YvsmtZPlzjyIyXLBHw==
-X-Received: by 2002:a17:906:d549:: with SMTP id gk9mr58363207ejb.268.1560409346566;
-        Thu, 13 Jun 2019 00:02:26 -0700 (PDT)
-Received: from viisi.d.ethz.ch (mpp-cp1-natpool-1-013.ethz.ch. [82.130.71.13])
-        by smtp.gmail.com with ESMTPSA id e23sm383626ejj.13.2019.06.13.00.02.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 00:02:26 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     palmer@sifive.com
-Subject: [PATCH] MAINTAINERS: don't automatically patches involving SiFive to the linux-riscv list
-Date:   Thu, 13 Jun 2019 00:02:25 -0700
-Message-Id: <20190613070225.7209-1-paul.walmsley@sifive.com>
-X-Mailer: git-send-email 2.20.1
+  d=telekom.de; i=@telekom.de; q=dns/txt; s=dtag1;
+  t=1560409300; x=1591945300;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=nRT5A4BOCigKt/CJPzf6Dd1bvDtB6M9sLgzli8jFXXQ=;
+  b=fofUkg4E8mVuj/711x+aFdnDkKZXypt0XB2LpP7VJ5fpjtqbieivrAAK
+   VN6LaLw4pBeA2/EJxWsOGhl8wBI6rs8jCloa45HDk6hsh+vUEcUfs9h2X
+   IHUvn7qlMeErSvBUl7gVDLuJSQCbDztVoKA5PL/PeEgCj+dV025kYQk7C
+   OZEwnOgetDgSdByKyRPDRe2FQDuIqI3r8veHjVTk/u33BokZEXD13DKdA
+   BaOEqXoeCJF6Uuuyh6IncxzAjrs+CAvajChQFDZm+Qhl+MXGKHfQC4doT
+   lLvKGCiNa0Bke9vSSv7V4utU4HMmSxzUIcUtx5eC08qdW8hIoX9FXe/MB
+   A==;
+Received: from qde8e4.de.t-internal.com ([10.171.255.33])
+  by MAILOUT41.dmznet.de.t-internal.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 08:51:47 +0200
+X-IronPort-AV: E=Sophos;i="5.63,368,1557180000"; 
+   d="scan'208";a="558044997"
+X-MGA-submission: =?us-ascii?q?MDHC1rrIcAjntsWRCRfIx0s0XoBWc+1elqhHWn?=
+ =?us-ascii?q?EP/ZMmzTuwUn8UPMKXKeLg1dlxyWbwfw0gRSKHEnCvGkPchNM6qInt5G?=
+ =?us-ascii?q?qyakdshclRUWMT7550SXVLQWSNOZEQsEh4HFqXwN694A+nkl6d/cuvdw?=
+ =?us-ascii?q?vItwNlbr54aNHYkwOH+UvKbw=3D=3D?=
+Received: from he105717.emea1.cds.t-internal.com ([10.169.118.53])
+  by QDE8PP.de.t-internal.com with ESMTP/TLS/AES256-SHA; 13 Jun 2019 08:51:49 +0200
+Received: from HE105664.EMEA1.cds.t-internal.com (10.169.118.61) by
+ HE105717.emea1.cds.t-internal.com (10.169.118.53) with Microsoft SMTP Server
+ (TLS) id 15.0.1473.3; Thu, 13 Jun 2019 08:51:35 +0200
+Received: from HE106564.emea1.cds.t-internal.com (10.171.40.16) by
+ HE105664.EMEA1.cds.t-internal.com (10.169.118.61) with Microsoft SMTP Server
+ (TLS) id 15.0.1473.3 via Frontend Transport; Thu, 13 Jun 2019 08:51:35 +0200
+Received: from GER01-FRA-obe.outbound.protection.outlook.de (51.4.80.16) by
+ O365mail01.telekom.de (172.30.0.234) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Thu, 13 Jun 2019 08:51:29 +0200
+Received: from FRAPR01MB1170.DEUPRD01.PROD.OUTLOOK.DE (10.158.133.21) by
+ FRAPR01MB0899.DEUPRD01.PROD.OUTLOOK.DE (10.158.135.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.16; Thu, 13 Jun 2019 06:51:34 +0000
+Received: from FRAPR01MB1170.DEUPRD01.PROD.OUTLOOK.DE
+ ([fe80::d969:b29f:d3b6:e1bb]) by FRAPR01MB1170.DEUPRD01.PROD.OUTLOOK.DE
+ ([fe80::d969:b29f:d3b6:e1bb%5]) with mapi id 15.20.1965.018; Thu, 13 Jun 2019
+ 06:51:34 +0000
+From:   <Markus.Amend@telekom.de>
+To:     <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <dccp@vger.kernel.org>
+Subject: RE: [PATCH v3] net: dccp: Checksum verification enhancement
+Thread-Topic: [PATCH v3] net: dccp: Checksum verification enhancement
+Thread-Index: AdT/bWC4cN8MoIp5SSiDAcCedYQ21wD9aPSAB5EDExA=
+Date:   Thu, 13 Jun 2019 06:51:34 +0000
+Message-ID: <FRAPR01MB117066D965524B71A7E18FA0FAEF0@FRAPR01MB1170.DEUPRD01.PROD.OUTLOOK.DE>
+References: <FRAPR01MB11707401056D4D6C95D8C615FA3A0@FRAPR01MB1170.DEUPRD01.PROD.OUTLOOK.DE>
+ <20190505.095309.439816991626967361.davem@davemloft.net>
+In-Reply-To: <20190505.095309.439816991626967361.davem@davemloft.net>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Markus.Amend@telekom.de; 
+x-originating-ip: [212.201.104.11]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e8a08c9a-0a57-44a4-23a0-08d6efcb9324
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:FRAPR01MB0899;
+x-ms-traffictypediagnostic: FRAPR01MB0899:
+x-microsoft-antispam-prvs: <FRAPR01MB08991FC8434BAD3983AD191FFAEF0@FRAPR01MB0899.DEUPRD01.PROD.OUTLOOK.DE>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(39860400002)(346002)(366004)(13464003)(199004)(189003)(2906002)(186003)(26005)(5660300002)(476003)(11346002)(446003)(72206003)(478600001)(14454004)(66066001)(15650500001)(66556008)(66476007)(64756008)(73956011)(68736007)(76116006)(66446008)(66946007)(53546011)(7696005)(76176011)(75402003)(52396003)(6916009)(486006)(74482002)(54906003)(102836004)(53936002)(6116002)(3846002)(6246003)(4326008)(86362001)(7736002)(305945005)(229853002)(316002)(55016002)(9686003)(81166006)(81156014)(8936002)(71190400001)(71200400001)(14444005)(256004)(8676002)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:FRAPR01MB0899;H:FRAPR01MB1170.DEUPRD01.PROD.OUTLOOK.DE;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: telekom.de does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: LCahYJiTI76PjoTUUgxBiblSw/2oSRZi50y4tHU5C+6pNiZ6TX6t4O6J+zVabMIazIQqzlhB7Jky4z3SQEGDytYyzYl4g85bxnXDE1NYjWvB1B81xO8PRyGIBBU+pw9L/8HFk3DzeZ2B7CYylH/1+HrUVhDkmjhKklcqnHzH5qwsn8usQMSs4ZQqUYbH82Mq/O2SJKXM73aeGjWZkxOxA0lhHx8v5ZGbECZDdYO9iG/2YTyMONEFtML1zu0BMEzstvMdKzpKXYdk9VSHpq9qlCRjIAw6JfZaN8Mk8FKWt2ohqVHfizDoeTYpoIe3CmMbAV/ZRitUlPFygeTR3n2SnwYyiZ1FbDux4/ctnTA0OP94zNxgexTJ1HxXfdRNZG4XJ5o7lE2xt6WWUI4Ibx9Z060RxWY2+cmLHKwu2frRE0k=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8a08c9a-0a57-44a4-23a0-08d6efcb9324
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 06:51:34.4992
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: bde4dffc-4b60-4cf6-8b04-a5eeb25f5c4f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Markus.Amend@telekom.de
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: FRAPR01MB0899
+X-OriginatorOrg: telekom.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current K: entry in the "SIFIVE DRIVERS" section causes
-scripts/get_maintainer.pl to recommend that all patches that originate
-from, or are sent or copied to, anyone with a @sifive.com E-mail
-address to be copied to the linux-riscv@lists.infradead.org mailing
-list:
+Hi David,
 
-https://lore.kernel.org/linux-riscv/CABEDWGxKCqCq2HBU8u1-=QgmMCdb69oXxN5rz65nxNODxdCAnw@mail.gmail.com/
+Yes, you are right, I overlooked this. Unfortunately the current receive pr=
+ocess in the DCCP layer does from my view not properly support the skb->ip_=
+summed flag verification, because the checksum validation takes place at di=
+fferent places. This would require some dirty hacks...
 
-This is undesirable, since not all of these patches may be relevant to
-the linux-riscv@ mailing list.  Fix by excluding K: matches that look
-like a sifive.com E-mail address.
+I see two options.
 
-Based on the following patch from Palmer Dabbelt <palmer@sifive.com>:
+1. Adding the ip_summed flag verification=20
 
-https://lore.kernel.org/linux-riscv/mhng-2a897a66-1f3d-4878-ba47-1ae36b555540@palmer-si-x1e/
 
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+or 2. Learn from the UDP stack
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 57f496cff999..66d23856781d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14332,7 +14332,7 @@ M:	Paul Walmsley <paul.walmsley@sifive.com>
- L:	linux-riscv@lists.infradead.org
- T:	git git://github.com/sifive/riscv-linux.git
- S:	Supported
--K:	sifive
-+K:	[^@]sifive
- N:	sifive
- 
- SILEAD TOUCHSCREEN DRIVER
--- 
-2.20.1
+Since UDP/UDP-Lite are very similar to DCCP, at least from a checksum verif=
+ication point, I ask myself if it would make sense to re-work DCCP's receiv=
+e process according to the one of UDP/UDP-Lite?=20
+The relevant process in the udp stack (for IPv4) I identified therefore, ca=
+n be found in /net/ipv4/udp.c, within the function __udp4_lib_rcv. There it=
+ is done, compared to DCCP, the other way round it starts with an udp4_csum=
+_init and most likely a later udp_lib_checksum_complete. Both consider skb-=
+>ip_summed. If we would implement similar functions into the DCCP stack and=
+ adapt the DCCP rcv checksum validation process to the one in UDP could mak=
+e probably more sense?!
 
+
+Personally I prefer the second option, what do you think?
+
+BR
+
+Markus
+
+
+> -----Original Message-----
+> From: David Miller <davem@davemloft.net>
+> Sent: Sonntag, 5. Mai 2019 18:53
+> To: Amend, Markus <Markus.Amend@telekom.de>
+> Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org;
+> dccp@vger.kernel.org
+> Subject: Re: [PATCH v3] net: dccp: Checksum verification enhancement
+>=20
+> From: <Markus.Amend@telekom.de>
+> Date: Tue, 30 Apr 2019 16:11:07 +0000
+>=20
+> > The current patch modifies the checksum verification of a received
+> > DCCP packet, by adding the function __skb_checksum_validate into the
+> > dccp_vX_rcv routine. The purpose of the modification is to allow the
+> > verification of the skb->ip_summed flags during the checksum
+> > validation process (for checksum offload purposes). As
+> > __skb_checksum_validate covers the functionalities of skb_checksum and
+> > dccp_vX_csum_finish they are needless and therefore removed.
+> >
+> > Signed-off-by: Nathalie Romo Moreno <natha.ro.moreno@gmail.com>
+> > Signed-off-by: Markus Amend <markus.amend@telekom.de>
+>=20
+> I don't see how this can be correct as you're not taking the csum coverag=
+e
+> value into consideration at all.
