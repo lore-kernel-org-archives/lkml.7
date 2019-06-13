@@ -7,59 +7,47 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D12CC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC85C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA5B20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4884320665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441816;
-	bh=rhGaHDwv9dUaGCsFFnIec7tDiELzAKFONg2bR2RZwYc=;
+	s=default; t=1560441819;
+	bh=LC8O5udZCLaZ8jZmYSRFYyGAk/b9k69zvK5jhojZ45M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U8mxYTIUfxa+pMJRW17T90iNp3Nlv6am2IaNxUXya7hL8I3th5IeekAV7aANehtP7
-	 ZbJ/YTZlkJpcX9grWPZFmA0gbXvsZT8FHq30RsPNwARDfih4+hLlmX+EvjBG+tkA++
-	 ARmgZSBo4HSkKej4HIGMivnlXq+gybal4ku5u+oo=
+	b=jb5XQ/ZuURW5BdwzE0R9zLG9O07r7L8RNrU8Lb+4vAQ4RNUTo/AVNgR9+A/mJAusf
+	 cjBem5EDP86/zPQpxac0QoTfdcWXtFKs/lYIPf+JJh3g4YwD7eiGE+fEtMTVv2FNle
+	 y+LYOJ+mn61nLNSpwXS/pChkjExuFp+v9snGBOfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391154AbfFMQDd (ORCPT
+        id S2391098AbfFMQDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:03:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35598 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:03:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731380AbfFMIrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:47:21 -0400
+        id S1731382AbfFMIrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:47:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C45020851;
-        Thu, 13 Jun 2019 08:47:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18F9A206BA;
+        Thu, 13 Jun 2019 08:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415640;
-        bh=rhGaHDwv9dUaGCsFFnIec7tDiELzAKFONg2bR2RZwYc=;
+        s=default; t=1560415643;
+        bh=LC8O5udZCLaZ8jZmYSRFYyGAk/b9k69zvK5jhojZ45M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=115yItnlo6TdyWZarkFyT6JqJ+1neXO1BKqomSIj1KLog1dEd1Yx5mZkVWxvghzj1
-         pWeoMmL3HdxeP2GDDfki0H+zTmzd0L2/vwaUJuuFowIzoKhrVI4WQZGIsOXx7+nBIR
-         7IrZVi65a7tocb2RGOI59BvV8nmZKS8EAYY8f2Ew=
+        b=buU4YLTSt5zhyrfPOigYjvq4cRy9jWVYUoktXlHP5ptStykvBShpzNyHMAjMnkxNU
+         3/8K9dy6zfkZfavbRFdYoPW/BlEoUBY66nSNCV22Hp1uaLgvOgXTSzR+4e9uz+DaY0
+         2a+Yagf7TBSe0ClsuMPulcvoHuoPGQi9XZBoROps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Juergen Gross <jgross@suse.com>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 066/155] mips: Make sure dt memory regions are valid
-Date:   Thu, 13 Jun 2019 10:32:58 +0200
-Message-Id: <20190613075656.699404735@linuxfoundation.org>
+        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 075/155] nvme-pci: unquiesce admin queue on shutdown
+Date:   Thu, 13 Jun 2019 10:33:07 +0200
+Message-Id: <20190613075657.179216321@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -72,67 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 93fa5b280761a4dbb14c5330f260380385ab2b49 ]
+[ Upstream commit c8e9e9b7646ebe1c5066ddc420d7630876277eb4 ]
 
-There are situations when memory regions coming from dts may be
-too big for the platform physical address space. This especially
-concerns XPA-capable systems. Bootloader may determine more than 4GB
-memory available and pass it to the kernel over dts memory node, while
-kernel is built without XPA/64BIT support. In this case the region
-may either simply be truncated by add_memory_region() method
-or by u64->phys_addr_t type casting. But in worst case the method
-can even drop the memory region if it exceeds PHYS_ADDR_MAX size.
-So lets make sure the retrieved from dts memory regions are valid,
-and if some of them aren't, just manually truncate them with a warning
-printed out.
+Just like IO queues, the admin queue also will not be restarted after a
+controller shutdown. Unquiesce this queue so that we do not block
+request dispatch on a permanently disabled controller.
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc: Huacai Chen <chenhc@lemote.com>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Serge Semin <Sergey.Semin@t-platforms.ru>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Reported-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/prom.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/nvme/host/pci.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
-index 93b8e0b4332f..b9d6c6ec4177 100644
---- a/arch/mips/kernel/prom.c
-+++ b/arch/mips/kernel/prom.c
-@@ -41,7 +41,19 @@ char *mips_get_machine_name(void)
- #ifdef CONFIG_USE_OF
- void __init early_init_dt_add_memory_arch(u64 base, u64 size)
- {
--	return add_memory_region(base, size, BOOT_MEM_RAM);
-+	if (base >= PHYS_ADDR_MAX) {
-+		pr_warn("Trying to add an invalid memory region, skipped\n");
-+		return;
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index a90cf5d63aac..e5dcc769ab8f 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2438,8 +2438,11 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
+ 	 * must flush all entered requests to their failed completion to avoid
+ 	 * deadlocking blk-mq hot-cpu notifier.
+ 	 */
+-	if (shutdown)
++	if (shutdown) {
+ 		nvme_start_queues(&dev->ctrl);
++		if (dev->ctrl.admin_q && !blk_queue_dying(dev->ctrl.admin_q))
++			blk_mq_unquiesce_queue(dev->ctrl.admin_q);
 +	}
-+
-+	/* Truncate the passed memory region instead of type casting */
-+	if (base + size - 1 >= PHYS_ADDR_MAX || base + size < base) {
-+		pr_warn("Truncate memory region %llx @ %llx to size %llx\n",
-+			size, base, PHYS_ADDR_MAX - base);
-+		size = PHYS_ADDR_MAX - base;
-+	}
-+
-+	add_memory_region(base, size, BOOT_MEM_RAM);
+ 	mutex_unlock(&dev->shutdown_lock);
  }
  
- int __init early_init_dt_reserve_memory_arch(phys_addr_t base,
 -- 
 2.20.1
 
