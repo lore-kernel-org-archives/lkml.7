@@ -2,232 +2,196 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C84EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F87AC31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2060D2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 010192082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404339AbfFMQtf (ORCPT
+        id S2404316AbfFMQtd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:49:35 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33792 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727570AbfFMEWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 00:22:01 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F3FDF257335E87EE0923;
-        Thu, 13 Jun 2019 12:21:57 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 13 Jun 2019
- 12:21:53 +0800
-Subject: Re: [PATCH net v2] tcp: avoid creating multiple req socks with the
- same tuples
-To:     Eric Dumazet <edumazet@google.com>
-References: <20190612035715.166676-1-maowenan@huawei.com>
- <CANn89iJH6ZBH774SNrd2sUd_A5OBniiUVX=HBq6H4PXEW4cjwQ@mail.gmail.com>
-CC:     David Miller <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <6de5d6d8-e481-8235-193e-b12e7f511030@huawei.com>
-Date:   Thu, 13 Jun 2019 12:21:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Thu, 13 Jun 2019 12:49:33 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:56337 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727637AbfFMEcW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 00:32:22 -0400
+Received: from [192.168.1.162] ([37.4.249.160]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MZl1l-1i7PGS1Jwd-00WmSh; Thu, 13 Jun 2019 06:31:59 +0200
+Subject: Re: [PATCH v4 0/7] cpufreq support for Raspberry Pi
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org
+Cc:     mbrugger@suse.de, viresh.kumar@linaro.org, rjw@rjwysocki.net,
+        sboyd@kernel.org, eric@anholt.net,
+        bcm-kernel-feedback-list@broadcom.com, ptesarik@suse.com,
+        linux-rpi-kernel@lists.infradead.org, ssuloev@orpaltech.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        mturquette@baylibre.com, linux-pm@vger.kernel.org
+References: <20190612182500.4097-1-nsaenzjulienne@suse.de>
+ <6a9e1450-80ad-a13c-59d2-d0b39f25f67e@gmail.com>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ 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 AQ==
+Message-ID: <7acfd967-0a82-5429-4eed-8b802e6620f5@i2se.com>
+Date:   Thu, 13 Jun 2019 06:31:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CANn89iJH6ZBH774SNrd2sUd_A5OBniiUVX=HBq6H4PXEW4cjwQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+In-Reply-To: <6a9e1450-80ad-a13c-59d2-d0b39f25f67e@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Provags-ID: V03:K1:JVQIgpWCtEazzL5rYiYN0IJEAR5Tb9mY8miRG4xc6XNEwCRWInY
+ TBwHbJFIaEUrGyLOdt+lXcrTaziNHMDMs64ofG55owRH1Hd/pEOrQrkqoSTEKiQjrw3qqMT
+ PGjkYDSvB+3PNpnSt/fsfWOKgiKhM8yfyq8E4iBNUJab5rhepnrj4VioMJI95IQYvgQsocg
+ ukaDas5WPpS6ZzzEt5xgQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qTId+nsNh3Q=:i8CAXhIIDdMqRAoBpJ9bt2
+ ElRxq5FvcgqdFuSs46Gehl0C5YDmpEC4nUw0cXizSVc+cWPR4aDgNyt5MPdUasAcqCukaufE0
+ A7rpfAf14PYX14/UuixSC8G6rwBWtySYTocpCMRNmuRIYvd/1IF1sc5EzGLAv3XPnQDORdHeL
+ FHFY0elcDduUGr00RxgyLZUa52To9/aHr0Jy+BzdK2szuPoTyPClXcwRZWx2CoOQY2jiAQwAz
+ VEhOgJ/NwhZ+nh18bkePYiEyoN1Et5gjqHD0vpa3a3BPC3XpGJbtTbuBeRsRlYe0hFyDjCXZj
+ a4hxDc4qiuzX4hIRjsZUkKVyyHKngdQWTY4199PaN16W8r3siQLEBtoTFOeO0zeSGLqnvebAv
+ e91JVWr0VJc/D7LOEr8ZAl+AgA9PGOq+tG4vaV1XKof8TU37n4eGKOFxIR8JrQ5KHC1cKyiHL
+ 0Plpno2LtvUS5UOjEfuMGSbLuMdsZHcyd0TxhmnQw5Wk71nHTwOunWsosug8d+btZr1JWHTE2
+ 2+a+C/kaaWlfoi7FInYZxLiYPCiCCwNkuWfwgiss98//YWHRwvEQCs9JbUC9Lv2BvCUHrpYHi
+ d8edz+iAQZ1HWZv5zZ/nAG6S8LXQM+jRAO4DNxlesBvt/RBD4nqViubNWwCk8zPu+U2X5dflG
+ M3hUe7u2xoBMl81wdQrWiXhYgk2o+pp2G8+E+KUd61+6gVOEOUSn0pHXeLQWn1TnEG73iTKBZ
+ 5eCFdS73IJl8M4suuTFS2oS17r+uowBuhkjRzVPTW60WV8bJZrvzTk78XUc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Florian,
+hi Stephen,
 
+Am 13.06.19 um 05:31 schrieb Florian Fainelli:
+>
+> On 6/12/2019 11:24 AM, Nicolas Saenz Julienne wrote:
+>> Hi all,
+>> this aims at adding cpufreq support to the Raspberry Pi family of
+>> boards.
+>>
+>> The series first factors out 'pllb' from clk-bcm2385 and creates a new
+>> clk driver that operates it over RPi's firmware interface[1]. We are
+>> forced to do so as the firmware 'owns' the pll and we're not allowed to
+>> change through the register interface directly as we might race with the
+>> over-temperature and under-voltage protections provided by the firmware.
+>>
+>> Next it creates a minimal cpufreq driver that populates the CPU's opp
+>> table, and registers cpufreq-dt. Which is needed as the firmware
+>> controls the max and min frequencies available.
+>>
+>> This was tested on a RPi3b+ and RPI2b, both using multi_v7_defconfig and
+>> arm64's defconfig.
+> How do we go about merging this? Stefan, will you pick up patch 3, 6 and
+> 7 and submit them for 5.3/5.4? Viresh has already picked up patch 4.
 
-On 2019/6/13 0:30, Eric Dumazet wrote:
-> On Tue, Jun 11, 2019 at 8:49 PM Mao Wenan <maowenan@huawei.com> wrote:
+is it possible to let patches 1,2, 3 and 5 go via clk-tree?
+
+I would take care of 6 and 7.
+
+Stefan
+
+>
+>> That's all,
+>> kind regards,
+>> Nicolas
 >>
->> There is one issue about bonding mode BOND_MODE_BROADCAST, and
->> two slaves with diffierent affinity, so packets will be handled
->> by different cpu. These are two pre-conditions in this case.
+>> [1] https://github.com/raspberrypi/firmware/wiki/Mailbox-property-interface
 >>
->> When two slaves receive the same syn packets at the same time,
->> two request sock(reqsk) will be created if below situation happens:
->> 1. syn1 arrived tcp_conn_request, create reqsk1 and have not yet called
->> inet_csk_reqsk_queue_hash_add.
->> 2. syn2 arrived tcp_v4_rcv, it goes to tcp_conn_request and create
->> reqsk2
->> because it can't find reqsk1 in the __inet_lookup_skb.
->>
->> Then reqsk1 and reqsk2 are added to establish hash table, and two synack
->> with different
->> seq(seq1 and seq2) are sent to client, then tcp ack arrived and will be
->> processed in tcp_v4_rcv and tcp_check_req, if __inet_lookup_skb find the
->> reqsk2, and
->> tcp ack packet is ack_seq is seq1, it will be failed after checking:
->> TCP_SKB_CB(skb)->ack_seq != tcp_rsk(req)->snt_isn + 1)
->> and then tcp rst will be sent to client and close the connection.
->>
->> To fix this, call __inet_lookup_established() before __sk_nulls_add_node_rcu()
->> in inet_ehash_insert(). If there is existed reqsk with same tuples in
->> established hash table, directly to remove current reqsk2, and does not send
->> synack to client.
->>
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
 >> ---
->>  v2: move __inet_lookup_established from tcp_conn_request() to inet_ehash_insert()
->>  as Eric suggested.
->> ---
->>  include/net/inet_connection_sock.h |  2 +-
->>  net/ipv4/inet_connection_sock.c    | 16 ++++++++++++----
->>  net/ipv4/inet_hashtables.c         | 13 +++++++++++++
->>  net/ipv4/tcp_input.c               |  7 ++++---
->>  4 files changed, 30 insertions(+), 8 deletions(-)
 >>
->> diff --git a/include/net/inet_connection_sock.h b/include/net/inet_connection_sock.h
->> index c57d53e7e02c..2d3538e333cb 100644
->> --- a/include/net/inet_connection_sock.h
->> +++ b/include/net/inet_connection_sock.h
->> @@ -263,7 +263,7 @@ struct dst_entry *inet_csk_route_child_sock(const struct sock *sk,
->>  struct sock *inet_csk_reqsk_queue_add(struct sock *sk,
->>                                       struct request_sock *req,
->>                                       struct sock *child);
->> -void inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_sock *req,
->> +bool inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_sock *req,
->>                                    unsigned long timeout);
->>  struct sock *inet_csk_complete_hashdance(struct sock *sk, struct sock *child,
->>                                          struct request_sock *req,
->> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
->> index 13ec7c3a9c49..fd45ed2fd985 100644
->> --- a/net/ipv4/inet_connection_sock.c
->> +++ b/net/ipv4/inet_connection_sock.c
->> @@ -749,7 +749,7 @@ static void reqsk_timer_handler(struct timer_list *t)
->>         inet_csk_reqsk_queue_drop_and_put(sk_listener, req);
->>  }
+>> Changes since v3:
+>>   - Fix sparse warnings in clk-raspberrypi.c
+>>   - Minor cleanups
 >>
->> -static void reqsk_queue_hash_req(struct request_sock *req,
->> +static bool reqsk_queue_hash_req(struct request_sock *req,
->>                                  unsigned long timeout)
->>  {
->>         req->num_retrans = 0;
->> @@ -759,19 +759,27 @@ static void reqsk_queue_hash_req(struct request_sock *req,
->>         timer_setup(&req->rsk_timer, reqsk_timer_handler, TIMER_PINNED);
->>         mod_timer(&req->rsk_timer, jiffies + timeout);
+>> Changes since v2:
+>>   - Fixed configs to match Stefan's comments
+>>   - Round OPP frequencies
+>>   - Rebase onto linux-next
+>>   - Minor cleanups & checkpatch.pl
 >>
->> -       inet_ehash_insert(req_to_sk(req), NULL);
->> +       if (!inet_ehash_insert(req_to_sk(req), NULL)) {
->> +               if (timer_pending(&req->rsk_timer))
->> +                       del_timer_sync(&req->rsk_timer);
->> +               return false;
->> +       }
->>         /* before letting lookups find us, make sure all req fields
->>          * are committed to memory and refcnt initialized.
->>          */
->>         smp_wmb();
->>         refcount_set(&req->rsk_refcnt, 2 + 1);
->> +       return true;
->>  }
+>> Changes since v1:
+>>   - Enabled by default on the whole family of devices
+>>   - Added/Fixed module support
+>>   - clk device now registered by firmware driver
+>>   - raspberrypi-cpufreq device now registered by clk driver
+>>   - Reimplemented clk rounding unsing determine_rate()
+>>   - Enabled in configs for arm and arm64
 >>
->> -void inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_sock *req,
->> +bool inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_sock *req,
->>                                    unsigned long timeout)
->>  {
->> -       reqsk_queue_hash_req(req, timeout);
->> +       if (!reqsk_queue_hash_req(req, timeout))
->> +               return false;
->> +
->>         inet_csk_reqsk_queue_added(sk);
->> +       return true;
->>  }
->>  EXPORT_SYMBOL_GPL(inet_csk_reqsk_queue_hash_add);
+>> Changes since RFC:
+>>   - Move firmware clk device into own driver
 >>
->> diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
->> index c4503073248b..b6a1b5334565 100644
->> --- a/net/ipv4/inet_hashtables.c
->> +++ b/net/ipv4/inet_hashtables.c
->> @@ -477,6 +477,7 @@ bool inet_ehash_insert(struct sock *sk, struct sock *osk)
->>         struct inet_ehash_bucket *head;
->>         spinlock_t *lock;
->>         bool ret = true;
->> +       struct sock *reqsk = NULL;
+>> Nicolas Saenz Julienne (7):
+>>   clk: bcm2835: remove pllb
+>>   clk: bcm283x: add driver interfacing with Raspberry Pi's firmware
+>>   firmware: raspberrypi: register clk device
+>>   cpufreq: add driver for Raspberry Pi
+>>   clk: raspberrypi: register platform device for raspberrypi-cpufreq
+>>   ARM: defconfig: enable cpufreq driver for RPi
+>>   arm64: defconfig: enable cpufreq support for RPi3
 >>
->>         WARN_ON_ONCE(!sk_unhashed(sk));
+>>  arch/arm/configs/bcm2835_defconfig    |   9 +
+>>  arch/arm/configs/multi_v7_defconfig   |   2 +
+>>  arch/arm64/configs/defconfig          |   2 +
+>>  drivers/clk/bcm/Kconfig               |   7 +
+>>  drivers/clk/bcm/Makefile              |   1 +
+>>  drivers/clk/bcm/clk-bcm2835.c         |  28 +--
+>>  drivers/clk/bcm/clk-raspberrypi.c     | 315 ++++++++++++++++++++++++++
+>>  drivers/cpufreq/Kconfig.arm           |   8 +
+>>  drivers/cpufreq/Makefile              |   1 +
+>>  drivers/cpufreq/raspberrypi-cpufreq.c |  97 ++++++++
+>>  drivers/firmware/raspberrypi.c        |  10 +
+>>  11 files changed, 456 insertions(+), 24 deletions(-)
+>>  create mode 100644 drivers/clk/bcm/clk-raspberrypi.c
+>>  create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
 >>
->> @@ -486,6 +487,18 @@ bool inet_ehash_insert(struct sock *sk, struct sock *osk)
->>         lock = inet_ehash_lockp(hashinfo, sk->sk_hash);
->>
->>         spin_lock(lock);
->> +       if (!osk)
->> +               reqsk = __inet_lookup_established(sock_net(sk), &tcp_hashinfo,
->> +                                                       sk->sk_daddr, sk->sk_dport,
->> +                                                       sk->sk_rcv_saddr, sk->sk_num,
->> +                                                       sk->sk_bound_dev_if, sk->sk_bound_dev_if);
->> +       if (unlikely(reqsk)) {
-> 
-> What reqsk would be a SYN_RECV socket, and not a ESTABLISH one (or a
-> TIME_WAIT ?)
-
-It wouldn't be SYN_RECV,ESTABLISH or TIME_WAIT, just TCP_NEW_SYN_RECV.
-
-When server receives the third handshake packet ACK, SYN_RECV sk will insert to hash with osk(!= NULL).
-The looking up here just avoid to create two or more request sk with TCP_NEW_SYN_RECV when receive syn packet.
-
-> 
->> +               ret = false;
->> +               reqsk_free(inet_reqsk(sk));
->> +               spin_unlock(lock);
->> +               return ret;
->> +       }
->> +
->>         if (osk) {
-> 
-> This test should have be a hint here : Sometime we _expect_ to have an
-> old socket (TIMEWAIT) and remove it
-I will check TIMEWAIT sk.
-> 
-> 
->>                 WARN_ON_ONCE(sk->sk_hash != osk->sk_hash);
->>                 ret = sk_nulls_del_node_init_rcu(osk);
->> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
->> index 38dfc308c0fb..358272394590 100644
->> --- a/net/ipv4/tcp_input.c
->> +++ b/net/ipv4/tcp_input.c
->> @@ -6570,9 +6570,10 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
->>                 sock_put(fastopen_sk);
->>         } else {
->>                 tcp_rsk(req)->tfo_listener = false;
->> -               if (!want_cookie)
->> -                       inet_csk_reqsk_queue_hash_add(sk, req,
->> -                               tcp_timeout_init((struct sock *)req));
->> +               if (!want_cookie && !inet_csk_reqsk_queue_hash_add(sk, req,
->> +                                       tcp_timeout_init((struct sock *)req)))
->> +                       return 0;
->> +
->>                 af_ops->send_synack(sk, dst, &fl, req, &foc,
->>                                     !want_cookie ? TCP_SYNACK_NORMAL :
->>                                                    TCP_SYNACK_COOKIE);
->> --
->> 2.20.1
->>
-> 
-> I believe the proper fix is more complicated.
-yes, pretty complicated.
-> 
-> Probably we need to move the locking in a less deeper location.
-
-> 
-> (Also a similar fix would be needed in IPv6)
-ok
-> 
-> Thanks.
-> 
-> .
-> 
 
