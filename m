@@ -4,51 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA998C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F44C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8EE20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C4BB20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441883;
-	bh=+f5Qo9PDRYZX5uTDxbpOtMvtOK+wPUi0yp778V82wJw=;
+	s=default; t=1560441888;
+	bh=N8qfoztD7dRorllnB+Hau1xtrZJQ97QIH7SlFYFD3ls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a9ESSX2n9NruEHFAECojSKo75T4eQwZlKUVTBUsyiL3KQ7kDSPPMIsDv/nwamE4wj
-	 RIfMvtpmaWQSRJ9kVV0z65aOB89ApIz2zjeq/EhuHe7NJdOx01KIgo/WUFiZgO/y+b
-	 9Q7iahlLjSmDX28Hl47qTk5TlaWO7DD93OzGa+HM=
+	b=2st5770hsCKmZ4LerwkoNHktnRtMd+tVTNRD7q/r8N0efcIbVqs5ox6njbDS5Simr
+	 arJPD973QsJrgyngG5TXHxsdnZrclzWh1RX6/OI5sOW6rHkIBHXBtZLvVgiODOiYHL
+	 M5U1FOIQRhwn1ps7RVqkL+stGn/pj8+FEkclITak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391179AbfFMQEl (ORCPT
+        id S2391205AbfFMQEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:04:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35236 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:04:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731351AbfFMIqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:46:50 -0400
+        id S1731350AbfFMIqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:46:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6AF12147A;
-        Thu, 13 Jun 2019 08:46:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4823720851;
+        Thu, 13 Jun 2019 08:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415609;
-        bh=+f5Qo9PDRYZX5uTDxbpOtMvtOK+wPUi0yp778V82wJw=;
+        s=default; t=1560415606;
+        bh=N8qfoztD7dRorllnB+Hau1xtrZJQ97QIH7SlFYFD3ls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wz2OcUWHdx6A+xYl41iqoSx+VYPNaiAZK/Kg+QrOmIEkN0ivF4wecQ0NB744tBOcU
-         QonyYPCTyUMttVjheG7dR13pQ+7uFPPii/8KFi5r4alGJZr9r/l8a6qwmr2gRD9FZ7
-         QUvSPaXQTJJ2sHdDykN9JXD4my7OjwSKS2Zupj0E=
+        b=bUMvCvpbilBl7vr+DWkmeRg0FYils+lFfxqgRafRQle0yRqlaI33zp4188WSo97xP
+         VrXy9epDP6A47GH9009AqspbTcTGHRbPz1gYs3ivq6AoaAXdWWoOScdYBL1gF4K/Gx
+         ln0cwAB3CxbN2in4HhkIwrQOrSbsCNB19PXd/9rY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Murphy Zhou <jencce.kernel@gmail.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
+        stable@vger.kernel.org, Andreas Schwab <schwab@linux-m68k.org>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Yisheng Xie <ysxie@foxmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Marko Myllynen <myllynen@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 062/155] ovl: do not generate duplicate fsnotify events for "fake" path
-Date:   Thu, 13 Jun 2019 10:32:54 +0200
-Message-Id: <20190613075656.522287198@linuxfoundation.org>
+Subject: [PATCH 5.1 061/155] fbcon: Dont reset logo_shown when logo is currently shown
+Date:   Thu, 13 Jun 2019 10:32:53 +0200
+Message-Id: <20190613075656.477705080@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -61,51 +68,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d989903058a83e8536cc7aadf9256a47d5c173fe ]
+[ Upstream commit 3c5a1b111373e669c8220803464c3a508a87e254 ]
 
-Overlayfs "fake" path is used for stacked file operations on underlying
-files.  Operations on files with "fake" path must not generate fsnotify
-events with path data, because those events have already been generated at
-overlayfs layer and because the reported event->fd for fanotify marks on
-underlying inode/filesystem will have the wrong path (the overlayfs path).
+When the logo is currently drawn on a virtual console, and the console
+loglevel is reduced to quiet, logo_shown must be left alone, so that it
+the scrolling region on that virtual console is properly reset.
 
-Link: https://lore.kernel.org/linux-fsdevel/20190423065024.12695-1-jencce.kernel@gmail.com/
-Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
-Fixes: d1d04ef8572b ("ovl: stack file ops")
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: 10993504d647 ("fbcon: Silence fbcon logo on 'quiet' boots")
+Signed-off-by: Andreas Schwab <schwab@linux-m68k.org>
+Cc: Prarit Bhargava <prarit@redhat.com>
+Cc: Yisheng Xie <ysxie@foxmail.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Marko Myllynen <myllynen@redhat.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/overlayfs/file.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/video/fbdev/core/fbcon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
-index 50e4407398d8..7129dcd78b6b 100644
---- a/fs/overlayfs/file.c
-+++ b/fs/overlayfs/file.c
-@@ -29,10 +29,11 @@ static struct file *ovl_open_realfile(const struct file *file,
- 	struct inode *inode = file_inode(file);
- 	struct file *realfile;
- 	const struct cred *old_cred;
-+	int flags = file->f_flags | O_NOATIME | FMODE_NONOTIFY;
+diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+index c59b23f6e9ba..a9c69ae30878 100644
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -1069,7 +1069,7 @@ static void fbcon_init(struct vc_data *vc, int init)
  
- 	old_cred = ovl_override_creds(inode->i_sb);
--	realfile = open_with_fake_path(&file->f_path, file->f_flags | O_NOATIME,
--				       realinode, current_cred());
-+	realfile = open_with_fake_path(&file->f_path, flags, realinode,
-+				       current_cred());
- 	revert_creds(old_cred);
+ 	cap = info->flags;
  
- 	pr_debug("open(%p[%pD2/%c], 0%o) -> (%p, 0%o)\n",
-@@ -50,7 +51,7 @@ static int ovl_change_flags(struct file *file, unsigned int flags)
- 	int err;
+-	if (console_loglevel <= CONSOLE_LOGLEVEL_QUIET)
++	if (logo_shown < 0 && console_loglevel <= CONSOLE_LOGLEVEL_QUIET)
+ 		logo_shown = FBCON_LOGO_DONTSHOW;
  
- 	/* No atime modificaton on underlying */
--	flags |= O_NOATIME;
-+	flags |= O_NOATIME | FMODE_NONOTIFY;
- 
- 	/* If some flag changed that cannot be changed then something's amiss */
- 	if (WARN_ON((file->f_flags ^ flags) & ~OVL_SETFL_MASK))
+ 	if (vc != svc || logo_shown == FBCON_LOGO_DONTSHOW ||
 -- 
 2.20.1
 
