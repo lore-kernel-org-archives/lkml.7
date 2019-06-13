@@ -2,125 +2,119 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76617C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FFDC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D84921537
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:20:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560460845;
-	bh=Z+dlfQ+ctdx1EZOVcyaPL/M3KC9IFJCZZQf6DaOItA8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CKrp0PH7xO8quDXuql1DgRFZgrPfdXBtJWd7DhWT/VNyM8s9cldCcAWM2UBhnTI26
-	 txhDi/LutlUjQ7ZWxyax1+rDCtvsWhVBPDCInfQXoU2yd5Uj6x1Hb5iELNF2E65+2M
-	 HZIcxhkJOpO5ltfFf8s7hUjowuBGPuZuTId2Gacg=
+	by mail.kernel.org (Postfix) with ESMTP id 6E58321473
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:21:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Me7H5hQM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfFMVUn (ORCPT
+        id S1728687AbfFMVVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 17:20:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfFMVUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 17:20:43 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEC2321473;
-        Thu, 13 Jun 2019 21:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560460842;
-        bh=Z+dlfQ+ctdx1EZOVcyaPL/M3KC9IFJCZZQf6DaOItA8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HhcbtQcq5QR7cOc09f+ozD33NfZaEOy1Qy0TGzGi2LQCEsVwvf5m7yl9KdtncBTde
-         8oDTNA6pUU+R7pJHHchh1X29sM3oQzK4kQ/lw6ggbMqnVT/ze3Gr/pkw6EB/+Vq5OR
-         YIYLFzDSDAOwfaH4a8Om7PTRuzslwtedAuvZCr6I=
-Date:   Thu, 13 Jun 2019 16:20:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     linux-pci@vger.kernel.org, KarimAllah Ahmed <karahmed@amazon.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/IOV: Fix VF cfg_size
-Message-ID: <20190613212039.GL13533@google.com>
-References: <155966918965.10361.16228304474160813310.stgit@gimli.home>
- <20190604143617.0a226555@x1.home>
+        Thu, 13 Jun 2019 17:21:17 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38575 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfFMVVQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 17:21:16 -0400
+Received: by mail-qt1-f194.google.com with SMTP id n11so124442qtl.5;
+        Thu, 13 Jun 2019 14:21:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0v9rxXyrt/oumJFTrMOMHu3FGLQRsByRDgIPJ5m2WUM=;
+        b=Me7H5hQMJp+1aqQY871nL/yGYHiEW3+3jRaGCeh7r+zYK3eiFxCnxKRX/upZFMVYPH
+         NteppeHTQhEa3ig7TTzs4yNey69twkZqavgykh02bU0dXhKJl8A0x9bOcRa1hLYjQrIv
+         ABytd1Ba79nQ563JVsuf/6H0WItrCf87YPqskbKzxXhGSVcvCzP285AtXvXAkZ8Ppbou
+         z+ILwFeQqPOe/SgatiHuX75oZUlzHzLh7JhWayOsgRyvDOmta+RMKRzS38f7SoV9DqpL
+         IiQScCueUo3LYPTW9KAMm1ufW10vyHpUqX7K/HvFtXxzExQrSLvBVczilDphPTczzn9C
+         6Atw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0v9rxXyrt/oumJFTrMOMHu3FGLQRsByRDgIPJ5m2WUM=;
+        b=nmMlq3QpnuJBCCZL3u/D9niKqFivQFnCuQwNGdGqywj6OpphJOKgX8bNilW5SRA+At
+         3wLu4lhSM+CEe+nRMvUCnuKHO6Jxfp7RNtmsrNWx0Ed+QvW8zK6Cy8BTAghyEdPG4hI4
+         hEVSLSOefCJ3V0lH7EI1JCnVegMayWi1lmLGppEbBHdD9czOo9kP+uPjIYohPoaXI+zw
+         PSqZTGops/VXj49yuhtWUNt5RY0lz6yAs3UjNL3iiKGcTVjGca3PIKNI0muvd/dT8GsW
+         z7VFAX5iAoQRqCoyxCVOweGhJehSstyCWaKEshmh7UaU2DsyfJ4x1h2SJJ/jpPUqyF+8
+         Tbqw==
+X-Gm-Message-State: APjAAAXZKpPMo9aLn3bh+adg3NB93uwh3gExXy7k5DQW/Uu/kB/U+UAY
+        TxIT9VmlEQN8gPQD84lMag==
+X-Google-Smtp-Source: APXvYqzkZ3YHHNI5sQCGFJfB3JVDieHfRZzEtq80wOh7IQh3p4yzZG5ow375+4MQgtf2N1HoAkHMow==
+X-Received: by 2002:ac8:70cd:: with SMTP id g13mr9927363qtp.325.1560460875422;
+        Thu, 13 Jun 2019 14:21:15 -0700 (PDT)
+Received: from kmo-pixel (c-71-234-172-214.hsd1.vt.comcast.net. [71.234.172.214])
+        by smtp.gmail.com with ESMTPSA id y20sm551232qka.14.2019.06.13.14.21.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 14:21:14 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 17:21:12 -0400
+From:   Kent Overstreet <kent.overstreet@gmail.com>
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: pagecache locking (was: bcachefs status update) merged)
+Message-ID: <20190613212112.GB28171@kmo-pixel>
+References: <20190610191420.27007-1-kent.overstreet@gmail.com>
+ <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
+ <20190611011737.GA28701@kmo-pixel>
+ <20190611043336.GB14363@dread.disaster.area>
+ <20190612162144.GA7619@kmo-pixel>
+ <20190612230224.GJ14308@dread.disaster.area>
+ <20190613183625.GA28171@kmo-pixel>
+ <AE838C22-1A11-4F93-AB88-80CF009BD301@dilger.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190604143617.0a226555@x1.home>
+In-Reply-To: <AE838C22-1A11-4F93-AB88-80CF009BD301@dilger.ca>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 02:36:17PM -0600, Alex Williamson wrote:
-> On Tue, 04 Jun 2019 11:26:42 -0600
-> Alex Williamson <alex.williamson@redhat.com> wrote:
-> 
-> > Commit 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for
-> > other VFs") attempts to cache the config space size of VF0 to re-use
-> > for all other VFs, but the cache is setup before the call to
-> > pci_setup_device(), where we use set_pcie_port_type() to setup the
-> > pcie_cap field on the struct pci_dev.  Without pcie_cap configured,
-> > pci_cfg_space_size() returns PCI_CFG_SPACE_SIZE for the size.  VF0
-> > has a bypass through pci_cfg_space_size(), so its size is reported
-> > correctly, but all subsequent VFs incorrectly report 256 bytes of
-> > config space.
-> > 
-> > Resolve by delaying pci_read_vf_config_common() until after
-> > pci_setup_device().
-> > 
-> > Fixes: 975bb8b4dc93 ("PCI/IOV: Use VF0 cached config space size for other VFs")
-> > Link: https://bugzilla.redhat.com/show_bug.cgi?id=1714978
-> > Cc: KarimAllah Ahmed <karahmed@amazon.de>
-> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > ---
-> >  drivers/pci/iov.c |    6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> > index 3aa115ed3a65..34b1f78f4d31 100644
-> > --- a/drivers/pci/iov.c
-> > +++ b/drivers/pci/iov.c
-> > @@ -161,13 +161,13 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
-> >  	virtfn->is_virtfn = 1;
-> >  	virtfn->physfn = pci_dev_get(dev);
-> >  
-> > -	if (id == 0)
-> > -		pci_read_vf_config_common(virtfn);
-> > -
-> >  	rc = pci_setup_device(virtfn);
-> >  	if (rc)
-> >  		goto failed1;
-> >  
-> > +	if (id == 0)
-> > +		pci_read_vf_config_common(virtfn);
-> > +
-> >  	virtfn->dev.parent = dev->dev.parent;
-> >  	virtfn->multifunction = 0;
-> 
-> Would it actually make more sense to revert 975bb8b4dc93 and just
-> assume any is_virtfn device has PCI_CFG_SPACE_EXP_SIZE for cfg_size?
-> Per the SR-IOV spec, VFs are required to implement a PCIe capability,
-> which should imply 4K of config space.  The reachability of that
-> extended config space seems unnecessary to test if we assume that it
-> has the same characteristics as the PF, which must be reachable if
-> we're able to enable SR-IOV.  Thoughts?  Thanks,
+On Thu, Jun 13, 2019 at 03:13:40PM -0600, Andreas Dilger wrote:
+> There are definitely workloads that require multiple threads doing non-overlapping
+> writes to a single file in HPC.  This is becoming an increasingly common problem
+> as the number of cores on a single client increase, since there is typically one
+> thread per core trying to write to a shared file.  Using multiple files (one per
+> core) is possible, but that has file management issues for users when there are a
+> million cores running on the same job/file (obviously not on the same client node)
+> dumping data every hour.
 
-I like this idea.
+Mixed buffered and O_DIRECT though? That profile looks like just buffered IO to
+me.
 
-I first thought maybe we'd still be susceptible to the gotchas
-described in the pci_cfg_space_size_ext() comment, i.e., we might not
-have a way to generate extended config space accesses, or the device
-might be behind a reverse Express bridge.
+> We were just looking at this exact problem last week, and most of the threads are
+> spinning in grab_cache_page_nowait->add_to_page_cache_lru() and set_page_dirty()
+> when writing at 1.9GB/s when they could be writing at 5.8GB/s (when threads are
+> writing O_DIRECT instead of buffered).  Flame graph is attached for 16-thread case,
+> but high-end systems today easily have 2-4x that many cores.
 
-But as you say, SR-IOV is an extended capability that must be located
-at config offset 0x100 or greater, so the fact that we have a VF at
-all means we must be able to reach it.
+Yeah I've been spending some time on buffered IO performance too - 4k page
+overhead is a killer.
 
-Bjorn
+bcachefs has a buffered write path that looks up multiple pages at a time and
+locks them, and then copies the data to all the pages at once (I stole the idea
+from btrfs). It was a very significant performance increase.
+
+https://evilpiepirate.org/git/bcachefs.git/tree/fs/bcachefs/fs-io.c#n1498
