@@ -2,202 +2,133 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9A8C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 707C8C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 787452053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:17:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=appneta.com header.i=@appneta.com header.b="DZrBSJdr"
+	by mail.kernel.org (Postfix) with ESMTP id 4E0F82133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfFMXRV (ORCPT
+        id S1727167AbfFMXR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 19:17:21 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33768 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfFMXRV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 19:17:21 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x15so197989pfq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 16:17:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=appneta.com; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=CbjQfCCZwiSsYH4YiMUo/AKyv6rSmzSkQV067FGZEME=;
-        b=DZrBSJdrvWPc/Y/e/dn9oz+sWV2pwbNiU3XcW6SB8lhZQB5EyD/kWau5sv67w00nd+
-         ZLDPoUMMNI87xh39oPLSNJb5yvnDfY8rifqHlej7mRggdsVtY7HjLdj5X0KxheMtOISo
-         qMjrTkLBhb4EJFkX9bTqccoPFOt+83sM/KxYo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=CbjQfCCZwiSsYH4YiMUo/AKyv6rSmzSkQV067FGZEME=;
-        b=sqnSlfJ1xy63pUxvsnleDeTHZoA0cbKbsszLuAAOhy76b9wjKg/m6bUfOPwRmZcXCs
-         Sttl06i/3gTPXVjXnNYyDuVUh/OOze5RDeq7U54++6ho8MLnxIdLGwTOqpnzWZcmK7b/
-         SQpPN0AcU8jVpVyGN9mUooH/+aXhbww1HBjgpMn8WqHMRrnaWEdGt7RKsAmOTeDKTQY4
-         w/rIZ0ZZmzjasY5KhKsIKXInk0xMEFr+Kz6pvQ4Hcoe+Xf7adwdX6azS7gZVQB+hy6SE
-         JfNJArKA/fyzKouew7x5Hna8KnoaIwO0ulixxeSqIQsOJypClYWueuWs3bOKSeVSldjD
-         Qb8g==
-X-Gm-Message-State: APjAAAW4e5AzBdrhVqh8dJjBDhus6epz8veiT2e7cERIw4Wq4H1S3yB/
-        11kv8bqHiPu/CyFNTai7IuFCmQ==
-X-Google-Smtp-Source: APXvYqxcWU2EXfT8Cp45fldnGEUzcDKojfFhGQbZQ+q0cQB8HtayFQNW/2oDwAPvehUKFi6m5msE3A==
-X-Received: by 2002:a17:90a:d3c3:: with SMTP id d3mr8084484pjw.17.1560467839151;
-        Thu, 13 Jun 2019 16:17:19 -0700 (PDT)
-Received: from jltm109.jaalam.net (vancouver-a.appneta.com. [209.139.228.33])
-        by smtp.gmail.com with ESMTPSA id r15sm732562pfc.162.2019.06.13.16.17.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 16:17:17 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH net-next v2 1/3] net/udpgso_bench_tx: options to exercise
- TX CMSG
-From:   Fred Klassen <fklassen@appneta.com>
-In-Reply-To: <CAF=yD-KcA5NZ2_tp3zaxW5sbf75a17DLX+VR9hyZo7MTcYAxiw@mail.gmail.com>
-Date:   Thu, 13 Jun 2019 16:17:16 -0700
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <361B0BB3-0351-4F97-9BAD-9E37DCCFAE2F@appneta.com>
-References: <20190528184708.16516-1-fklassen@appneta.com>
- <20190528184708.16516-2-fklassen@appneta.com>
- <CAF=yD-KcA5NZ2_tp3zaxW5sbf75a17DLX+VR9hyZo7MTcYAxiw@mail.gmail.com>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Thu, 13 Jun 2019 19:17:57 -0400
+Received: from mga12.intel.com ([192.55.52.136]:13074 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726519AbfFMXR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 19:17:56 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 16:17:55 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga005.jf.intel.com with ESMTP; 13 Jun 2019 16:17:55 -0700
+Date:   Thu, 13 Jun 2019 16:17:55 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        "serge@hallyn.com" <serge@hallyn.com>,
+        "paul@paul-moore.com" <paul@paul-moore.com>,
+        "eparis@parisplace.org" <eparis@parisplace.org>,
+        "jethro@fortanix.com" <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "pmccallum@redhat.com" <pmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
+        "josh@joshtriplett.org" <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
+ SELinux
+Message-ID: <20190613231755.GD18385@linux.intel.com>
+References: <cover.1560131039.git.cedric.xing@intel.com>
+ <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
+ <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
+ <20190611220243.GB3416@linux.intel.com>
+ <8d99d8fb-a921-286a-8cf0-cd522e09b37c@tycho.nsa.gov>
+ <960B34DE67B9E140824F1DCDEC400C0F65503EDD@ORSMSX116.amr.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F65503EDD@ORSMSX116.amr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On May 28, 2019, at 2:35 PM, Willem de Bruijn =
-<willemdebruijn.kernel@gmail.com> wrote:
->> -static void flush_zerocopy(int fd)
->> +static void flush_cmsg(struct cmsghdr *cmsg)
->> {
->> -       struct msghdr msg =3D {0};        /* flush */
->> +       switch (cmsg->cmsg_level) {
->> +       case SOL_SOCKET:
->> +               if (cmsg->cmsg_type =3D=3D SO_TIMESTAMPING) {
->> +                       int i;
->> +
->> +                       i =3D (cfg_tx_ts =3D=3D =
-SOF_TIMESTAMPING_TX_HARDWARE) ? 2 : 0;
->> +                       struct scm_timestamping *tss;
->=20
-> Please don't mix declarations and code
+On Thu, Jun 13, 2019 at 04:03:24PM -0700, Xing, Cedric wrote:
+> > From: Stephen Smalley [mailto:sds@tycho.nsa.gov]
+> > Sent: Thursday, June 13, 2019 10:02 AM
+> > 
+> > > My RFC series[1] implements #1.  My understanding is that Andy
+> > > (Lutomirski) prefers #2.  Cedric's RFC series implements #3.
+> > >
+> > > Perhaps the easiest way to make forward progress is to rule out the
+> > > options we absolutely *don't* want by focusing on the potentially
+> > > blocking issue with each option:
+> > >
+> > >    #1 - SGX UAPI funkiness
+> > >
+> > >    #2 - Auditing complexity, potential enclave lock contention
+> > >
+> > >    #3 - Pushing SGX details into LSMs and complexity of kernel
+> > > implementation
+> > >
+> > >
+> > > [1]
+> > > https://lkml.kernel.org/r/20190606021145.12604-1-sean.j.christopherson
+> > > @intel.com
+> > 
+> > Given the complexity tradeoff, what is the clear motivating example for
+> > why #1 isn't the obvious choice? That the enclave loader has no way of
+> > knowing a priori whether the enclave will require W->X or WX?  But
+> > aren't we better off requiring enclaves to be explicitly marked as
+> > needing such so that we can make a more informed decision about whether
+> > to load them in the first place?
+> 
+> Are you asking this question at a) page granularity, b) file granularity or
+> c) enclave (potentially comprised of multiple executable files) granularity?
+> 
+> #b is what we have on regular executable files and shared objects (i.e.
+> FILE__EXECMOD). We all know how to do that.
+> 
+> #c is kind of new but could be done via some proxy file (e.g. sigstruct file)
+> hence reduced to #b.
+> 
+> #a is problematic. It'd require compilers/linkers to generate such
+> information, and proper executable image file format to carry that
+> information, to be eventually picked up the loader. SELinux doesn't have
+> PAGE__EXECMOD I guess is because it is generally considered impractical.
+> 
+> Option #1 however requires #a because the driver doesn't track which page was
+> loaded from which file, otherwise it can no longer be qualified "simple". Or
+> we could just implement #c, which will make all options simpler. But I guess
+> #b is still preferred, to be aligned with what SELinux is enforcing today on
+> regular memory pages.o
 
-Fixing this as well as other declarations for v3.
-
->> +
->> +                       tss =3D (struct scm_timestamping =
-*)CMSG_DATA(cmsg);
->> +                       if (tss->ts[i].tv_sec =3D=3D 0)
->> +                               stat_tx_ts_errors++;
->> +               } else {
->> +                       error(1, 0,
->> +                             "unknown SOL_SOCKET cmsg type=3D%u =
-level=3D%u\n",
->> +                             cmsg->cmsg_type, cmsg->cmsg_level);
->=20
-> Technically, no need to repeat cmsg_level
-
-
-Will fix all 3 similar messages
-
->> +               }
->> +               break;
->> +       case SOL_IP:
->> +       case SOL_IPV6:
->> +               switch (cmsg->cmsg_type) {
->> +               case IP_RECVERR:
->> +               case IPV6_RECVERR:
->> +               {
->> +                       struct sock_extended_err *err;
->> +
->> +                       err =3D (struct sock_extended_err =
-*)CMSG_DATA(cmsg);
->> +                       switch (err->ee_origin) {
->> +                       case SO_EE_ORIGIN_TIMESTAMPING:
->> +                               // Got a TX timestamp from error =
-queue
->> +                               stat_tx_ts++;
->> +                               break;
->> +                       case SO_EE_ORIGIN_ICMP:
->> +                       case SO_EE_ORIGIN_ICMP6:
->> +                               if (cfg_verbose)
->> +                                       fprintf(stderr,
->> +                                               "received ICMP error: =
-type=3D%u, code=3D%u\n",
->> +                                               err->ee_type, =
-err->ee_code);
->> +                               break;
->> +                       case SO_EE_ORIGIN_ZEROCOPY:
->> +                       {
->> +                               __u32 lo =3D err->ee_info;
->> +                               __u32 hi =3D err->ee_data;
->> +
->> +                               if (hi =3D=3D lo - 1) {
->> +                                       // TX was aborted
->=20
-> where does this come from?
-
-This check can be removed. In sock_zerocopy_callback() this
-check was intended to cover the condition where len =3D=3D 0,
-however it appears that it is impossible.
-
-	/* if !len, there was only 1 call, and it was aborted
-	 * so do not queue a completion notification
-	 */
-
-	if (!uarg->len || sock_flag(sk, SOCK_DEAD))
-		goto release;
-
-	len =3D uarg->len;
-	lo =3D uarg->id;
-	hi =3D uarg->id + len - 1;
-
-
->=20
->> +                                       stat_zcopy_errors++;
->> +                                       if (cfg_verbose)
->> +                                               fprintf(stderr,
->> +                                                       "Zerocopy TX =
-aborted: lo=3D%u hi=3D%u\n",
->> +                                                       lo, hi);
->> +                               } else if (hi =3D=3D lo) {
->=20
-> technically, no need to special case
->=20
-
-Removed
-
->> +                                       // single ID acknowledged
->> +                                       stat_zcopies++;
->> +                               } else {
->> +                                       // range of IDs acknowledged
->> +                                       stat_zcopies +=3D hi - lo + =
-1;
->> +                               }
->> +                               break;
->=20
->> +static void set_tx_timestamping(int fd)
->> +{
->> +       int val =3D SOF_TIMESTAMPING_OPT_CMSG | =
-SOF_TIMESTAMPING_OPT_ID;
->=20
-> Could consider adding SOF_TIMESTAMPING_OPT_TSONLY to not have to deal
-> with a data buffer on recv from errqueue.
-
-Will add and modify code appropriately for v3.
-
+Option #1 doesn't require (a).  The checks will happen for every page,
+but in the RFCs I sent, the policies are still attached to files and
+processes, i.e. (b).
