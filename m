@@ -2,96 +2,82 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CC1C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C858C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C352721773
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05EB7207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:39:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733023AbfFMPj1 (ORCPT
+        id S1732122AbfFMPjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:39:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:43218 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731932AbfFMPjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:39:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CBCF43EF;
-        Thu, 13 Jun 2019 08:39:22 -0700 (PDT)
-Received: from C02TF0J2HF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDD3E3F718;
-        Thu, 13 Jun 2019 08:39:16 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 16:39:07 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kselftest@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 1/2] arm64: Define
- Documentation/arm64/tagged-address-abi.txt
-Message-ID: <20190613153906.GV28951@C02TF0J2HF1T.local>
-References: <cover.1560339705.git.andreyknvl@google.com>
- <20190612142111.28161-1-vincenzo.frascino@arm.com>
- <20190612142111.28161-2-vincenzo.frascino@arm.com>
- <20190612153538.GL28951@C02TF0J2HF1T.local>
- <141c740a-94c2-2243-b6d1-b44ffee43791@arm.com>
- <20190613113731.GY28398@e103592.cambridge.arm.com>
- <20190613122821.GS28951@C02TF0J2HF1T.local>
- <20190613132342.GZ28398@e103592.cambridge.arm.com>
+        Thu, 13 Jun 2019 11:39:37 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:40930 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731921AbfFMJy0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:54:26 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 31BC625BE48;
+        Thu, 13 Jun 2019 19:54:24 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id 3954E940483; Thu, 13 Jun 2019 11:54:22 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 11:54:22 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 33/34] staging: media: soc_camera: soc_mt9v022: simplify
+ getting the adapter of a client
+Message-ID: <20190613095421.qmi7665txyszhkwn@verge.net.au>
+References: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
+ <20190608105619.593-34-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190613132342.GZ28398@e103592.cambridge.arm.com>
-User-Agent: Mutt/1.11.2 (2019-01-07)
+In-Reply-To: <20190608105619.593-34-wsa+renesas@sang-engineering.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 02:23:43PM +0100, Dave P Martin wrote:
-> On Thu, Jun 13, 2019 at 01:28:21PM +0100, Catalin Marinas wrote:
-> > On Thu, Jun 13, 2019 at 12:37:32PM +0100, Dave P Martin wrote:
-> > > On Thu, Jun 13, 2019 at 11:15:34AM +0100, Vincenzo Frascino wrote:
-> > > > On 12/06/2019 16:35, Catalin Marinas wrote:
-> > > > > On Wed, Jun 12, 2019 at 03:21:10PM +0100, Vincenzo Frascino wrote:
-> > > > >> +  - PR_GET_TAGGED_ADDR_CTRL: can be used to check the status of the Tagged
-> > > > >> +                             Address ABI.
-> > [...]
-> > > Is there a canonical way to detect whether this whole API/ABI is
-> > > available?  (i.e., try to call this prctl / check for an HWCAP bit,
-> > > etc.)
-> > 
-> > The canonical way is a prctl() call. HWCAP doesn't make sense since it's
-> > not a hardware feature. If you really want a different way of detecting
-> > this (which I don't think it's worth), we can reinstate the AT_FLAGS
-> > bit.
+On Sat, Jun 08, 2019 at 12:56:12PM +0200, Wolfram Sang wrote:
+> We have a dedicated pointer for that, so use it. Much easier to read and
+> less computation involved.
 > 
-> Sure, I think this probably makes sense -- I'm still getting my around
-> which parts of the design are directly related to MTE and which aren't.
-> 
-> I was a bit concerned about the interaction between
-> PR_SET_TAGGED_ADDR_CTRL and the sysctl: the caller might conclude that
-> this API is unavailable when actually tagged addresses are stuck on.
-> 
-> I'm not sure whether this matters, but it's a bit weird.
-> 
-> One option would be to change the semantics, so that the sysctl just
-> forbids turning tagging from off to on.  Alternatively, we could return
-> a different error code to distinguish this case.
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-This is the intention, just to forbid turning tagging on. We could
-return -EPERM instead, though my original intent was to simply pretend
-that the prctl does not exist like in an older kernel version.
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
--- 
-Catalin
+> ---
+> 
+> Please apply to your subsystem tree.
+> 
+>  drivers/staging/media/soc_camera/soc_mt9v022.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/media/soc_camera/soc_mt9v022.c b/drivers/staging/media/soc_camera/soc_mt9v022.c
+> index e7e0d3d29499..1739a618846d 100644
+> --- a/drivers/staging/media/soc_camera/soc_mt9v022.c
+> +++ b/drivers/staging/media/soc_camera/soc_mt9v022.c
+> @@ -883,7 +883,7 @@ static int mt9v022_probe(struct i2c_client *client,
+>  {
+>  	struct mt9v022 *mt9v022;
+>  	struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
+> -	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
+> +	struct i2c_adapter *adapter = client->adapter;
+>  	struct mt9v022_platform_data *pdata;
+>  	int ret;
+>  
+> -- 
+> 2.19.1
+> 
