@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96355C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DB9C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5DC20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C699C20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442193;
-	bh=TjV3RwwWRZ1gCM6lQIitVpUg75zrgZi1QDrGyCoKdYg=;
+	s=default; t=1560442201;
+	bh=r9PVd2oBi+l5mmfgbA2673gCPPqo7CsSezjV9vr1aHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q1AihEexI2Qhf183ZLYHPKuNJdnif3vnP4LgsktDZPLmdEoP6QgpeNvdNUYNvxMZ9
-	 DOGsC8oRhb6DWFmGChX3/aex8ezbVZlIJkGzRQP7iw68MkVw0PKo2dVQWt1j5Thw1T
-	 RBTU8ehaLYi9E+KwN2lXi9Ff9I638iUJJujgEQs4=
+	b=Aw0xG7ZXVL1SI1t38EDH0lB2iDCgaZAmmyZ6vpVPrDTHiCwKcTqy8WAHFXEy05y2o
+	 vQw2CVPN+/jxHksGu25aouxmY4yzJB4wMyaIuDOsYX4Z9XB0GmCeYgTYh3rPMnR+7p
+	 Y5epCDUuFWS/RqB7lbX66OgUqi7+7Gy5Un0+Ixg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391304AbfFMQJw (ORCPT
+        id S2390593AbfFMQKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:09:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33164 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:10:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731258AbfFMIoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:44:15 -0400
+        id S1731257AbfFMIoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:44:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D125E20851;
-        Thu, 13 Jun 2019 08:44:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ADAA2147A;
+        Thu, 13 Jun 2019 08:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415455;
-        bh=TjV3RwwWRZ1gCM6lQIitVpUg75zrgZi1QDrGyCoKdYg=;
+        s=default; t=1560415452;
+        bh=r9PVd2oBi+l5mmfgbA2673gCPPqo7CsSezjV9vr1aHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PrgboXWFGLYiUwFY5Lq4DlrXrez9aTbtHxmv8F6CpFcXOdWBSMGl1A9Q5C3aYKdBq
-         LJiGOtAxdfKRYIlVA3bRHzwLM/BGGSRMMKNNo7ORPq+pdWlQiIlK+9zpf2w52PmxNy
-         GQum0uKukqBHWyEQ0ee4JgkxYXFO3zvb5VJ4xfGM=
+        b=N+T1BDjRxrjulRcaKhwTKtA+IFiPk0DQwYmBEWK2Kgcqjdxs9qbdYMIq/fvCW17nC
+         /+8ZweSZko1sxllSVOS0m6RsL5w6EHa+AKG1+k8pMDlauOWUFZhzgpOFO90Y6vGpi+
+         G7tpf61UiNT7xJTh7z7CzuGXv8Sm5M1UIBz3M9tA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Song Liu <liu.song.a23@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Dave Airlie <airlied@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 010/155] mm/mprotect.c: fix compilation warning because of unused mm variable
-Date:   Thu, 13 Jun 2019 10:32:02 +0200
-Message-Id: <20190613075653.320914667@linuxfoundation.org>
+Subject: [PATCH 5.1 001/155] Revert "drm: allow render capable master with DRM_AUTH ioctls"
+Date:   Thu, 13 Jun 2019 10:31:53 +0200
+Message-Id: <20190613075652.777739182@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,66 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 94393c78964c432917014e3a456fa15c3e78f741 ]
+[ Upstream commit dbb92471674a48892f5e50779425e03388073ab9 ]
 
-Since 0cbe3e26abe0 ("mm: update ptep_modify_prot_start/commit to take
-vm_area_struct as arg") the only place that uses the local 'mm' variable
-in change_pte_range() is the call to set_pte_at().
+This reverts commit 8059add0478e29cb641936011a8fcc9ce9fd80be.
 
-Many architectures define set_pte_at() as macro that does not use the 'mm'
-parameter, which generates the following compilation warning:
+This commit while seemingly a good idea, breaks a radv check,
+for a node being master because something succeeds where it failed
+before now.
 
- CC      mm/mprotect.o
-mm/mprotect.c: In function 'change_pte_range':
-mm/mprotect.c:42:20: warning: unused variable 'mm' [-Wunused-variable]
-  struct mm_struct *mm = vma->vm_mm;
-                    ^~
+Apply the Linus rule, revert early and try again, we don't break
+userspace.
 
-Fix it by passing vma->mm to set_pte_at() and dropping the local 'mm'
-variable in change_pte_range().
-
-[liu.song.a23@gmail.com: fix missed conversions]
-  Link: http://lkml.kernel.org/r/CAPhsuW6wcQgYLHNdBdw6m0YiR4RWsS4XzfpSKU7wBLLeOCTbpw@mail.gmail.comLink: http://lkml.kernel.org/r/1557305432-4940-1-git-send-email-rppt@linux.ibm.com
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Song Liu <liu.song.a23@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Dave Airlie <airlied@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/mprotect.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_ioctl.c | 20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 028c724dcb1a..ab40f3d04aa3 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -39,7 +39,6 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
- 		unsigned long addr, unsigned long end, pgprot_t newprot,
- 		int dirty_accountable, int prot_numa)
+diff --git a/drivers/gpu/drm/drm_ioctl.c b/drivers/gpu/drm/drm_ioctl.c
+index 687943df58e1..ab5692104ea0 100644
+--- a/drivers/gpu/drm/drm_ioctl.c
++++ b/drivers/gpu/drm/drm_ioctl.c
+@@ -508,13 +508,6 @@ int drm_version(struct drm_device *dev, void *data,
+ 	return err;
+ }
+ 
+-static inline bool
+-drm_render_driver_and_ioctl(const struct drm_device *dev, u32 flags)
+-{
+-	return drm_core_check_feature(dev, DRIVER_RENDER) &&
+-		(flags & DRM_RENDER_ALLOW);
+-}
+-
+ /**
+  * drm_ioctl_permit - Check ioctl permissions against caller
+  *
+@@ -529,19 +522,14 @@ drm_render_driver_and_ioctl(const struct drm_device *dev, u32 flags)
+  */
+ int drm_ioctl_permit(u32 flags, struct drm_file *file_priv)
  {
--	struct mm_struct *mm = vma->vm_mm;
- 	pte_t *pte, oldpte;
- 	spinlock_t *ptl;
- 	unsigned long pages = 0;
-@@ -136,7 +135,7 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
- 				newpte = swp_entry_to_pte(entry);
- 				if (pte_swp_soft_dirty(oldpte))
- 					newpte = pte_swp_mksoft_dirty(newpte);
--				set_pte_at(mm, addr, pte, newpte);
-+				set_pte_at(vma->vm_mm, addr, pte, newpte);
+-	const struct drm_device *dev = file_priv->minor->dev;
+-
+ 	/* ROOT_ONLY is only for CAP_SYS_ADMIN */
+ 	if (unlikely((flags & DRM_ROOT_ONLY) && !capable(CAP_SYS_ADMIN)))
+ 		return -EACCES;
  
- 				pages++;
- 			}
-@@ -150,7 +149,7 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
- 				 */
- 				make_device_private_entry_read(&entry);
- 				newpte = swp_entry_to_pte(entry);
--				set_pte_at(mm, addr, pte, newpte);
-+				set_pte_at(vma->vm_mm, addr, pte, newpte);
+-	/* AUTH is only for master ... */
+-	if (unlikely((flags & DRM_AUTH) && drm_is_primary_client(file_priv))) {
+-		/* authenticated ones, or render capable on DRM_RENDER_ALLOW. */
+-		if (!file_priv->authenticated &&
+-		    !drm_render_driver_and_ioctl(dev, flags))
+-			return -EACCES;
+-	}
++	/* AUTH is only for authenticated or render client */
++	if (unlikely((flags & DRM_AUTH) && !drm_is_render_client(file_priv) &&
++		     !file_priv->authenticated))
++		return -EACCES;
  
- 				pages++;
- 			}
+ 	/* MASTER is only for master or control clients */
+ 	if (unlikely((flags & DRM_MASTER) &&
 -- 
 2.20.1
 
