@@ -2,91 +2,156 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CF0C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4E5C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E23D420896
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560449387;
-	bh=rsGgkx3rpqY3+nUtSc2fxwM03iz+i4mYfMRQf4Y4nI0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YwRfUaP+OBtG5+WFCR5vMABgsYqMMvdOYSWzd6yD/CQDWQiEFARyQwceki7AD+Obk
-	 EMVAPwkocxoPCMboFGiehnuSUmGvacyUsHc3Ip7hskyMEWx8DzyvgQSoc1QmIQqShS
-	 Ij3IthId+VmP5ahKvQthwvbAppd84wzePTIHGINg=
+	by mail.kernel.org (Postfix) with ESMTP id 5B02C20896
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:09:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mf5jaB7k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfFMSJq (ORCPT
+        id S1728936AbfFMSJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:09:46 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38246 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728830AbfFMSJm (ORCPT
+        Thu, 13 Jun 2019 14:09:48 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36809 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728784AbfFMSJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:09:42 -0400
-Received: by mail-qt1-f195.google.com with SMTP id n11so21504828qtl.5;
-        Thu, 13 Jun 2019 11:09:41 -0700 (PDT)
+        Thu, 13 Jun 2019 14:09:41 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d21so8480830plr.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:09:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=tdCawkMT0anxJW8FSDZK6m/NJostd3XTSkOzgfPQn0Q=;
+        b=mf5jaB7kX+XRVtnRvHZffXHsZAw7gJ6kkjtfXgdPXKTbY/WZISAN5HhkoRUYxrqVOz
+         CIUmVOEmHGLJEeueaKOt+V8g/AwI/FqSKGjQ4vCa4h9ULh8uQprslzbr5s0hRGeLAN1N
+         pK56wF3q2TA4A9DnlabXxMaG1pipZUkRFqrds=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=byG1DV+SoKVQRZ27UyZDVXVCyKyLBhM0+1OWg3TXATI=;
-        b=ICc6e6ayMI4tJQpDEv6T+ULFWUsJcvMuR3iLKrePyaOiSQWYTNL9UgQQbZ73xUi31X
-         KQtWufxTRqVfSDH/BPwAP4dtTHi7eU4aXcwAlXyHFprNQpmZaWe8B8AzeqKIV4N9LTvI
-         VG08nz+q0t75yMKBtEARa7jrnRrboCj/ogGyITd0jNEVwTz7lmhWBFeNkrinzouuXQ/a
-         9vUUHFUuCXgNhv022NU9Z1WKBySeufSM8Axo31HE/rEJshTv9E07XlRMtkdwHzJKq711
-         o9cy07Jp8A0rqtJOkGNM9LtZPm/eNfKQ2XI6fqyLdKLyCTuYw7GQjLjDVGDj1HVZgQBI
-         M4ig==
-X-Gm-Message-State: APjAAAV6V7LYGJBoNgWPOo4xPvLNkOQ1RD5/bg/tHY1ahwPKlAGA2YAk
-        TqOtFi8ku7psyUJ+6ow4Ow==
-X-Google-Smtp-Source: APXvYqyEaSvDNTf8H7iXKdq/akmJoa4ONV459oM3gCr7ZXgwysR2Do7HLe/sAVmwb/5+dG6pTTj5OA==
-X-Received: by 2002:a0c:9214:: with SMTP id a20mr4763658qva.195.1560449381341;
-        Thu, 13 Jun 2019 11:09:41 -0700 (PDT)
-Received: from localhost ([64.188.179.243])
-        by smtp.gmail.com with ESMTPSA id w30sm230529qtb.28.2019.06.13.11.09.40
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tdCawkMT0anxJW8FSDZK6m/NJostd3XTSkOzgfPQn0Q=;
+        b=tbZ4Pj/cBC8okT83463UX7mGXfszYPj0wMgeSY2+PtQAS4/NjsAbJzfIA27Urt2Hp3
+         phr5cOvHsm+aU27XrOyqGTmKp0dzipH7VZsU8s9pbAcruSIf2idXUNorEPTfDk4E7FBU
+         QQyp16FGI3SQfN6kXtnYrDSfL1rtSU3H/e1u2Ss4DlbV73fYiHVN+iHB4xkttA2IhDdN
+         fUqr12U03OU7pXwjuaaTebUCRVYw5+acxNZtcR0ht1P248IrHdm7jGwmEV36RSSZz3rX
+         tIKHk0bSwg74rbSvtO3nLBkIn4IGMIi7U9B0ei47eZQQskLb7ht/bL6Pat2sfA7tSIqC
+         QE2w==
+X-Gm-Message-State: APjAAAWm5o/3pl9uocrq/yho3Rf5u/L7nY2AEDRnz0tZO6WqNMjttt/D
+        6xlZDQeukSX7PrZYOA08582qHg==
+X-Google-Smtp-Source: APXvYqw3skyj71cKVk7V0TEm8qi1kLdrqArdUhAr2oBHZ0u8bpdELGgi5uziIcTe0bxflQtpvA4PjA==
+X-Received: by 2002:a17:902:e183:: with SMTP id cd3mr52052469plb.164.1560449380605;
+        Thu, 13 Jun 2019 11:09:40 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id b15sm454449pff.31.2019.06.13.11.09.39
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
         Thu, 13 Jun 2019 11:09:40 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 12:09:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com,
-        ssantosh@kernel.org, dan.j.williams@intel.com,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com,
-        tony@atomide.com
-Subject: Re: [PATCH 02/16] bindings: soc: ti: add documentation for k3 ringacc
-Message-ID: <20190613180939.GA6840@bogus>
-References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
- <20190506123456.6777-3-peter.ujfalusi@ti.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: [PATCH 8/8] tpm: add legacy sysfs attributes for tpm2
+Date:   Thu, 13 Jun 2019 11:09:31 -0700
+Message-Id: <20190613180931.65445-9-swboyd@chromium.org>
+X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
+In-Reply-To: <20190613180931.65445-1-swboyd@chromium.org>
+References: <20190613180931.65445-1-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190506123456.6777-3-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 May 2019 15:34:42 +0300, Peter Ujfalusi wrote:
-> From: Grygorii Strashko <grygorii.strashko@ti.com>
-> 
-> The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
-> enable straightforward passing of work between a producer and a consumer.
-> There is one RINGACC module per NAVSS on TI AM65x SoCs.
-> 
-> This patch introduces RINGACC device tree bindings.
-> 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
->  .../devicetree/bindings/soc/ti/k3-ringacc.txt | 59 +++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
-> 
+From: Andrey Pronin <apronin@chromium.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Userland scripts and tests rely on certain sysfs attributes
+present in the familiar location:
+/sys/class/tpm/tpm0/device/enabled
+/sys/class/tpm/tpm0/device/owned
+
+This change:
+1) Adds two RO properties to sysfs for tpm in TPM2.0 case:
+   - owned: set to 1 if storage hierarchy is enabled
+     (TPMA_STARTUP_CLEAR.shEnable == 1)
+   - enabled: set to 1 if an owner authorizaton is set
+     (TPMA_PERMANENT.ownerAuthSet == 1)
+2) Makes the sysfs attributes available at the legacy location:
+   the attributes are now created under /sys/class/tpm/tpm0/,
+   so symlinks are created in /sys/class/tpm/tpm0/device.
+
+Signed-off-by: Andrey Pronin <apronin@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+
+This probably isn't necessary, but it's sent so if anyone wants to test
+out ChromeOS userspace they can easily do so. I believe Jason rejected
+this in https://lkml.kernel.org/r/20160715032145.GE9347@obsidianresearch.com/
+
+ drivers/char/tpm/tpm-chip.c  | 4 ++--
+ drivers/char/tpm/tpm-sysfs.c | 8 ++++++++
+ 2 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+index 8804c9e916fd..43f99f4c4c8a 100644
+--- a/drivers/char/tpm/tpm-chip.c
++++ b/drivers/char/tpm/tpm-chip.c
+@@ -492,7 +492,7 @@ static void tpm_del_legacy_sysfs(struct tpm_chip *chip)
+ {
+ 	struct attribute **i;
+ 
+-	if (chip->flags & (TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_VIRTUAL))
++	if (chip->flags & TPM_CHIP_FLAG_VIRTUAL)
+ 		return;
+ 
+ 	sysfs_remove_link(&chip->dev.parent->kobj, "ppi");
+@@ -510,7 +510,7 @@ static int tpm_add_legacy_sysfs(struct tpm_chip *chip)
+ 	struct attribute **i;
+ 	int rc;
+ 
+-	if (chip->flags & (TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_VIRTUAL))
++	if (chip->flags & TPM_CHIP_FLAG_VIRTUAL)
+ 		return 0;
+ 
+ 	rc = __compat_only_sysfs_link_entry_to_kobj(
+diff --git a/drivers/char/tpm/tpm-sysfs.c b/drivers/char/tpm/tpm-sysfs.c
+index e9f6f7960023..fe3683f82d48 100644
+--- a/drivers/char/tpm/tpm-sysfs.c
++++ b/drivers/char/tpm/tpm-sysfs.c
+@@ -413,6 +413,12 @@ TPM2_PROP_FLAG_ATTR(ph_enable_nv,
+ TPM2_PROP_FLAG_ATTR(orderly,
+ 		    TPM2_PT_STARTUP_CLEAR, TPM2_ATTR_ORDERLY);
+ 
++/* Aliases for userland scripts in TPM2 case */
++TPM2_PROP_FLAG_ATTR(enabled,
++		    TPM2_PT_STARTUP_CLEAR, TPM2_ATTR_SH_ENABLE);
++TPM2_PROP_FLAG_ATTR(owned,
++		    TPM2_PT_PERMANENT, TPM2_ATTR_OWNER_AUTH_SET);
++
+ TPM2_PROP_U32_ATTR(lockout_counter, TPM2_PT_LOCKOUT_COUNTER);
+ TPM2_PROP_U32_ATTR(max_auth_fail, TPM2_PT_MAX_AUTH_FAIL);
+ TPM2_PROP_U32_ATTR(lockout_interval, TPM2_PT_LOCKOUT_INTERVAL);
+@@ -431,6 +437,8 @@ static struct attribute *tpm2_dev_attrs[] = {
+ 	ATTR_FOR_TPM2_PROP(eh_enable),
+ 	ATTR_FOR_TPM2_PROP(ph_enable_nv),
+ 	ATTR_FOR_TPM2_PROP(orderly),
++	ATTR_FOR_TPM2_PROP(enabled),
++	ATTR_FOR_TPM2_PROP(owned),
+ 	ATTR_FOR_TPM2_PROP(lockout_counter),
+ 	ATTR_FOR_TPM2_PROP(max_auth_fail),
+ 	ATTR_FOR_TPM2_PROP(lockout_interval),
+-- 
+Sent by a computer through tubes
+
