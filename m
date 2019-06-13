@@ -2,137 +2,95 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7A8C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86829C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD13A20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A8E820449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:35:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YG8USjoN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404041AbfFMQfS (ORCPT
+        id S2404043AbfFMQf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:35:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38932 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730730AbfFMHoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 03:44:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 920EBAB91;
-        Thu, 13 Jun 2019 07:44:00 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id B5C631E4328; Thu, 13 Jun 2019 09:43:59 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 09:43:59 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190613074359.GB26505@quack2.suse.cz>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606195114.GA30714@ziepe.ca>
- <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
- <20190607103636.GA12765@quack2.suse.cz>
- <20190607121729.GA14802@ziepe.ca>
- <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
- <20190612102917.GB14578@quack2.suse.cz>
- <CAPcyv4jSyTjC98UsWb3-FnZekV0oyboiSe9n1NYDC2TSKAqiqw@mail.gmail.com>
+        Thu, 13 Jun 2019 12:35:27 -0400
+Received: from mail-vs1-f50.google.com ([209.85.217.50]:40119 "EHLO
+        mail-vs1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730724AbfFMHnd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 03:43:33 -0400
+Received: by mail-vs1-f50.google.com with SMTP id a186so10111044vsd.7
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 00:43:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=hotLWlJT65xEbJ61TV1i6ABCww+sxM3+UkKCRR2VvlQ=;
+        b=YG8USjoNprxHuqspzE0bCI9G/czG9Bpmq8c13aybYyA2uPv6mGc4K/kxV4MKObBCXn
+         VO+3wB0nSK56AukwJpc9eObDRy0A2QoLuOenXR7F19rKMHv1oprv0EJSU9/OSLYK+/Wi
+         DtINoXmlSVoJSm0MdJn4WoLyREIFnkbXu66DmCl8r0+1jAaPvFRirQE3JcpguwggQTO3
+         rOUB3bIcW07qNreqZOk/9lUnR2zylA5EjK/TyuvsxZTOODEcKwebcMHh4Q0GnNy53JvS
+         aCd51/jxleDuBriRwzn/g3axx6jkj6M8y3RW4XGcXLvGCkcO8MaoUzyBf+IanrvLpBZG
+         ct4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=hotLWlJT65xEbJ61TV1i6ABCww+sxM3+UkKCRR2VvlQ=;
+        b=NjJFCdWfYAi7YDCA5h2S5daQYJPA2iDVHkKPIbkncAKuKtLc0ZEiv44+PG3UEY/p2p
+         mb5A/R6Rp7hgkWyGjt748I32TnBS3Wmu+CbMcC2MZDtZryjvTDRQNEYZxcjsR47uxU16
+         SzWhqnm3e3vt4zcsSlkdJWQxtxPlRmJ4TqhsEOdtOh1DaVPAmE9TRQUdfbUKjzy4nFoE
+         ObxtcLGMPIiYjp/mdwOgFa1ua9MYfY9+eaNBVG00cbyoguXYcwDCGEP6Jn+0zC/+P/Cs
+         u0YCN5Ao4N4CFU9HuxkRXvADD57bmqUGxSfV3GT1oJBzfFo1r9teAba1snHW32rAdhOm
+         gTkw==
+X-Gm-Message-State: APjAAAV83yJjg8wzdZ5KlGOKLtntEY04jHg9R9/I8QjbVDr+mCUtPtLT
+        PsizCFJdBOlmvlRvjMPUec1cdFZ+KLD9bzGVz3n1zAskX0M=
+X-Google-Smtp-Source: APXvYqwrVqv21Jxe7l7wvY0AC21Hp5Db9lwc3hNEGCAT2hhOG+q80MLPYviUu6jdSvuDaiyfqXClOX/k5IbPqJjTvgI=
+X-Received: by 2002:a67:ec5a:: with SMTP id z26mr43636516vso.144.1560411812380;
+ Thu, 13 Jun 2019 00:43:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jSyTjC98UsWb3-FnZekV0oyboiSe9n1NYDC2TSKAqiqw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Pintu Agarwal <pintu.ping@gmail.com>
+Date:   Thu, 13 Jun 2019 13:13:21 +0530
+Message-ID: <CAOuPNLifSHQmi+jCMzRGYz3kzct+NB_vyv-yiwL91adRZPkTrQ@mail.gmail.com>
+Subject: Pause a process execution from external program
+To:     kernelnewbies@kernelnewbies.org,
+        open list <linux-kernel@vger.kernel.org>, pedro@palves.net
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 12-06-19 11:49:52, Dan Williams wrote:
-> On Wed, Jun 12, 2019 at 3:29 AM Jan Kara <jack@suse.cz> wrote:
-> >
-> > On Fri 07-06-19 07:52:13, Ira Weiny wrote:
-> > > On Fri, Jun 07, 2019 at 09:17:29AM -0300, Jason Gunthorpe wrote:
-> > > > On Fri, Jun 07, 2019 at 12:36:36PM +0200, Jan Kara wrote:
-> > > >
-> > > > > Because the pins would be invisible to sysadmin from that point on.
-> > > >
-> > > > It is not invisible, it just shows up in a rdma specific kernel
-> > > > interface. You have to use rdma netlink to see the kernel object
-> > > > holding this pin.
-> > > >
-> > > > If this visibility is the main sticking point I suggest just enhancing
-> > > > the existing MR reporting to include the file info for current GUP
-> > > > pins and teaching lsof to collect information from there as well so it
-> > > > is easy to use.
-> > > >
-> > > > If the ownership of the lease transfers to the MR, and we report that
-> > > > ownership to userspace in a way lsof can find, then I think all the
-> > > > concerns that have been raised are met, right?
-> > >
-> > > I was contemplating some new lsof feature yesterday.  But what I don't
-> > > think we want is sysadmins to have multiple tools for multiple
-> > > subsystems.  Or even have to teach lsof something new for every potential
-> > > new subsystem user of GUP pins.
-> >
-> > Agreed.
-> >
-> > > I was thinking more along the lines of reporting files which have GUP
-> > > pins on them directly somewhere (dare I say procfs?) and teaching lsof to
-> > > report that information.  That would cover any subsystem which does a
-> > > longterm pin.
-> >
-> > So lsof already parses /proc/<pid>/maps to learn about files held open by
-> > memory mappings. It could parse some other file as well I guess. The good
-> > thing about that would be that then "longterm pin" structure would just hold
-> > struct file reference. That would avoid any needs of special behavior on
-> > file close (the file reference in the "longterm pin" structure would make
-> > sure struct file and thus the lease stays around, we'd just need to make
-> > explicit lease unlock block until the "longterm pin" structure is freed).
-> > The bad thing is that it requires us to come up with a sane new proc
-> > interface for reporting "longterm pins" and associated struct file. Also we
-> > need to define what this interface shows if the pinned pages are in DRAM
-> > (either page cache or anon) and not on NVDIMM.
-> 
-> The anon vs shared detection case is important because a longterm pin
-> might be blocking a memory-hot-unplug operation if it is pinning
-> ZONE_MOVABLE memory, but I don't think we want DRAM vs NVDIMM to be an
-> explicit concern of the interface. For the anon / cached case I expect
-> it might be useful to put that communication under the memory-blocks
-> sysfs interface. I.e. a list of pids that are pinning that
-> memory-block from being hot-unplugged.
+Hi All,
+I was just wondering if this is possible in the Linux world.
+My requirement is:
+For some reason, I want to halt/pause the execution (for some
+specified time) of a running process/thread (at some location),
+without modified the source, may be by firing some events/signals from
+an another external program, by specifying the address location or a
+line number.
 
-Yes, I was thinking of memory hotplug as well. But I don't think the
-distinction is really shared vs anon - a pinned page cache page can be
-blocking your memory unplug / migration the same way as a pinned anon page.
-So the information for a pin we need to convey is the "location of
-resources" being pinned - that is pfn (both for DRAM and NVDIMM) - but then
-also additional mapping information (which is filename for DAX page, not
-sure about DRAM). Also a separate question is how to expose this
-information so that it is efficiently usable by userspace. For lsof, a file
-in /proc/<pid>/xxx with information would be probably the easiest to use
-plus all the issues with file access permissions and visibility among
-different user namespaces is solved out of the box. And I believe it would
-be reasonably usable for memory hotplug usecase as well. A file in sysfs
-would be OK for memory hotplug I guess, but not really usable for lsof and
-so I'm not sure we really need it when we are going to have one in procfs.
+Is this possible ?
+May be by using some system call, or other mechanism using the process PID.
+Assume that its a debugging system with all root privileges.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Basically, its just like how "gdb" is able to set the break-point in a
+program, and able to stop its execution exactly at that location.
+I am wondering what mechanism "gdb" uses to do this?
+I tried to check here, but could find the exact place, where this is handled:
+https://github.com/bminor/binutils-gdb/blob/master/gdb/breakpoint.c
+
+Unfortunately, I cannot use "gdb", but I wanted to borrow this
+mechanism only to serve my purpose.
+
+If anyone is aware, please let me know.
+I will share my findings here, after I get some useful results of my
+experimentation.
+
+Thank you for your help!
+
+
+Regards,
+Pintu
