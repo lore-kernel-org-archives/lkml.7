@@ -2,56 +2,70 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 265E6C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F920C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05BF32133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E655A2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:58:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbfFMT5L (ORCPT
+        id S1729342AbfFMT6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 15:57:11 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:55327 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726379AbfFMT5L (ORCPT
+        Thu, 13 Jun 2019 15:58:11 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:36268 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfFMT6K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:57:11 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x5DJv68X008670
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jun 2019 15:57:06 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id D73F0420484; Thu, 13 Jun 2019 15:57:05 -0400 (EDT)
-Date:   Thu, 13 Jun 2019 15:57:05 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     "R.F. Burns" <burnsrf@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: PC speaker
-Message-ID: <20190613195705.GC9609@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        "R.F. Burns" <burnsrf@gmail.com>, linux-kernel@vger.kernel.org
-References: <CABG1boNKq4Q49t2tFA863hi=jrFnJLarER5nyyGSpFPMbT1Qvg@mail.gmail.com>
+        Thu, 13 Jun 2019 15:58:10 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hbVrD-0002N9-07; Thu, 13 Jun 2019 21:57:59 +0200
+Date:   Thu, 13 Jun 2019 21:57:58 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCHv2 0/3] improve wait logic of stop_machine
+In-Reply-To: <20190613103510.60529-1-heiko.carstens@de.ibm.com>
+Message-ID: <alpine.DEB.2.21.1906132157281.1791@nanos.tec.linutronix.de>
+References: <20190613103510.60529-1-heiko.carstens@de.ibm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABG1boNKq4Q49t2tFA863hi=jrFnJLarER5nyyGSpFPMbT1Qvg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 12:16:37PM -0400, R.F. Burns wrote:
-> Is it possible to write a kernel module which, when loaded, will blow
-> the PC speaker?
+On Thu, 13 Jun 2019, Heiko Carstens wrote:
+> 
+> Heiko Carstens (2):
+>   processor: remove spin_cpu_yield
+>   processor: get rid of cpu_relax_yield
+> 
+> Martin Schwidefsky (1):
+>   s390: improve wait logic of stop_machine
+> 
+>  arch/powerpc/include/asm/processor.h |  2 --
+>  arch/s390/include/asm/processor.h    |  7 +------
+>  arch/s390/kernel/processor.c         | 19 +++++++++++++------
+>  arch/s390/kernel/smp.c               |  2 +-
+>  include/linux/processor.h            |  9 ---------
+>  include/linux/sched.h                |  4 ----
+>  include/linux/stop_machine.h         |  1 +
+>  kernel/stop_machine.c                | 19 ++++++++++++++-----
+>  8 files changed, 30 insertions(+), 33 deletions(-)
 
-Yes; in fact, it's already been done.  See sound/drivers/pcsp/ in the
-Linux kernel sources.
-
-						- Ted
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
