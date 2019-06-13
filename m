@@ -2,119 +2,60 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FFDC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4DDC31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E58321473
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:21:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Me7H5hQM"
+	by mail.kernel.org (Postfix) with ESMTP id 0CA9721537
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbfFMVVR (ORCPT
+        id S1728910AbfFMVVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 17:21:17 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38575 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfFMVVQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 17:21:16 -0400
-Received: by mail-qt1-f194.google.com with SMTP id n11so124442qtl.5;
-        Thu, 13 Jun 2019 14:21:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0v9rxXyrt/oumJFTrMOMHu3FGLQRsByRDgIPJ5m2WUM=;
-        b=Me7H5hQMJp+1aqQY871nL/yGYHiEW3+3jRaGCeh7r+zYK3eiFxCnxKRX/upZFMVYPH
-         NteppeHTQhEa3ig7TTzs4yNey69twkZqavgykh02bU0dXhKJl8A0x9bOcRa1hLYjQrIv
-         ABytd1Ba79nQ563JVsuf/6H0WItrCf87YPqskbKzxXhGSVcvCzP285AtXvXAkZ8Ppbou
-         z+ILwFeQqPOe/SgatiHuX75oZUlzHzLh7JhWayOsgRyvDOmta+RMKRzS38f7SoV9DqpL
-         IiQScCueUo3LYPTW9KAMm1ufW10vyHpUqX7K/HvFtXxzExQrSLvBVczilDphPTczzn9C
-         6Atw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0v9rxXyrt/oumJFTrMOMHu3FGLQRsByRDgIPJ5m2WUM=;
-        b=nmMlq3QpnuJBCCZL3u/D9niKqFivQFnCuQwNGdGqywj6OpphJOKgX8bNilW5SRA+At
-         3wLu4lhSM+CEe+nRMvUCnuKHO6Jxfp7RNtmsrNWx0Ed+QvW8zK6Cy8BTAghyEdPG4hI4
-         hEVSLSOefCJ3V0lH7EI1JCnVegMayWi1lmLGppEbBHdD9czOo9kP+uPjIYohPoaXI+zw
-         PSqZTGops/VXj49yuhtWUNt5RY0lz6yAs3UjNL3iiKGcTVjGca3PIKNI0muvd/dT8GsW
-         z7VFAX5iAoQRqCoyxCVOweGhJehSstyCWaKEshmh7UaU2DsyfJ4x1h2SJJ/jpPUqyF+8
-         Tbqw==
-X-Gm-Message-State: APjAAAXZKpPMo9aLn3bh+adg3NB93uwh3gExXy7k5DQW/Uu/kB/U+UAY
-        TxIT9VmlEQN8gPQD84lMag==
-X-Google-Smtp-Source: APXvYqzkZ3YHHNI5sQCGFJfB3JVDieHfRZzEtq80wOh7IQh3p4yzZG5ow375+4MQgtf2N1HoAkHMow==
-X-Received: by 2002:ac8:70cd:: with SMTP id g13mr9927363qtp.325.1560460875422;
-        Thu, 13 Jun 2019 14:21:15 -0700 (PDT)
-Received: from kmo-pixel (c-71-234-172-214.hsd1.vt.comcast.net. [71.234.172.214])
-        by smtp.gmail.com with ESMTPSA id y20sm551232qka.14.2019.06.13.14.21.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 14:21:14 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 17:21:12 -0400
-From:   Kent Overstreet <kent.overstreet@gmail.com>
-To:     Andreas Dilger <adilger@dilger.ca>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Thu, 13 Jun 2019 17:21:30 -0400
+Received: from verein.lst.de ([213.95.11.211]:41290 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfFMVVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 17:21:30 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id A375468B02; Thu, 13 Jun 2019 23:21:01 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 23:21:01 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
         Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: pagecache locking (was: bcachefs status update) merged)
-Message-ID: <20190613212112.GB28171@kmo-pixel>
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
- <20190611011737.GA28701@kmo-pixel>
- <20190611043336.GB14363@dread.disaster.area>
- <20190612162144.GA7619@kmo-pixel>
- <20190612230224.GJ14308@dread.disaster.area>
- <20190613183625.GA28171@kmo-pixel>
- <AE838C22-1A11-4F93-AB88-80CF009BD301@dilger.ca>
+Subject: Re: dev_pagemap related cleanups
+Message-ID: <20190613212101.GA27174@lst.de>
+References: <20190613094326.24093-1-hch@lst.de> <CAPcyv4jBdwYaiVwkhy6kP78OBAs+vJme1UTm47dX4Eq_5=JgSg@mail.gmail.com> <20190613204043.GD22062@mellanox.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AE838C22-1A11-4F93-AB88-80CF009BD301@dilger.ca>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190613204043.GD22062@mellanox.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 03:13:40PM -0600, Andreas Dilger wrote:
-> There are definitely workloads that require multiple threads doing non-overlapping
-> writes to a single file in HPC.  This is becoming an increasingly common problem
-> as the number of cores on a single client increase, since there is typically one
-> thread per core trying to write to a shared file.  Using multiple files (one per
-> core) is possible, but that has file management issues for users when there are a
-> million cores running on the same job/file (obviously not on the same client node)
-> dumping data every hour.
+On Thu, Jun 13, 2019 at 08:40:46PM +0000, Jason Gunthorpe wrote:
+> > Perhaps we should pull those out and resend them through hmm.git?
+> 
+> It could be done - but how bad is the conflict resolution?
 
-Mixed buffered and O_DIRECT though? That profile looks like just buffered IO to
-me.
+Trivial.  All but one patch just apply using git-am, and the other one
+just has a few lines of offsets.
 
-> We were just looking at this exact problem last week, and most of the threads are
-> spinning in grab_cache_page_nowait->add_to_page_cache_lru() and set_page_dirty()
-> when writing at 1.9GB/s when they could be writing at 5.8GB/s (when threads are
-> writing O_DIRECT instead of buffered).  Flame graph is attached for 16-thread case,
-> but high-end systems today easily have 2-4x that many cores.
-
-Yeah I've been spending some time on buffered IO performance too - 4k page
-overhead is a killer.
-
-bcachefs has a buffered write path that looks up multiple pages at a time and
-locks them, and then copies the data to all the pages at once (I stole the idea
-from btrfs). It was a very significant performance increase.
-
-https://evilpiepirate.org/git/bcachefs.git/tree/fs/bcachefs/fs-io.c#n1498
+I've also done a preliminary rebase of my series on top of those
+patches, and it really nicely helps making the drivers even simpler
+and allows using the internal refcount in p2pdma.c as well.
