@@ -2,91 +2,110 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C77C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5708C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8355720665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YleoHbS7"
+	by mail.kernel.org (Postfix) with ESMTP id 7BD3820665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560442395;
+	bh=OlfFuwqkusPg47NaZV4i+qxupDmk6G6+k2SfXQaRtMc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DHw33cSJTjHCABsbuQORUr//80dEznvcDY5QYMLq/nEbmemkjOxea8SvHVMmgwkne
+	 T0zneJKo4Zg6H9XPA5AICJpbWPV067nLhPaPYBGMbscYrz+bA26sU/qTN4ZabonN4Y
+	 1OLU3rab7GyPIOl6RBqq/E2GgmrIUOuVHu/1Og6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391521AbfFMQNH (ORCPT
+        id S2391580AbfFMQNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:13:07 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:48496 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731311AbfFMQNB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:13:01 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9C5F652B;
-        Thu, 13 Jun 2019 18:12:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1560442379;
-        bh=O/PZY85pTQxQmUoStPvJKbejGO3f+dYiYwhdTvsNeVA=;
-        h=Subject:To:Cc:References:From:Reply-To:Date:In-Reply-To:From;
-        b=YleoHbS7pkKOhtICOcD/5Rpxd/M9jclI6y9NieMlRKvuH6xduRu7U1M5E4/M2UsxH
-         semZ1DMjy1Y6yAd9L7rlNIj3AHUeUpCC8OKaYYYbwYLorQYP+9EeHWLFGKHeEbBdsp
-         bEuXv4uy3FUl0Pd3dD+DUsryNmxr62lsxkV9qcyw=
-Subject: Re: [PATCH 4/4] media: zd1301_demod: don't check retval after our own
- assignemt
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-media@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, Antti Palosaari <crope@iki.fi>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20190613155421.16408-1-wsa+renesas@sang-engineering.com>
- <20190613155421.16408-5-wsa+renesas@sang-engineering.com>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Organization: Ideas on Board
-Message-ID: <add2dbb7-3036-8052-6063-2aa85c93f8b4@ideasonboard.com>
-Date:   Thu, 13 Jun 2019 17:12:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 12:13:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60174 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731216AbfFMInC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:43:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECD582063F;
+        Thu, 13 Jun 2019 08:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560415381;
+        bh=OlfFuwqkusPg47NaZV4i+qxupDmk6G6+k2SfXQaRtMc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WWTmjUbE9h9G1FDGlXi0LusETsZhyhGq/4RejdYfvOtW5X+BzmgLKr4Rg1wjkJxDD
+         PfKwIh538S0B1YX9tnww01DEbc4CLvFhbUL5Vz2NG1XtSFzoeMAHuAD/FqD08lT+ow
+         vvFEPtpD5uf1AvSlvt33JiXkBeQyjTqSo/SxLpKs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Enrico Granata <egranata@chromium.org>,
+        Jett Rink <jettrink@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 075/118] platform/chrome: cros_ec_proto: check for NULL transfer function
+Date:   Thu, 13 Jun 2019 10:33:33 +0200
+Message-Id: <20190613075648.247115542@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
+References: <20190613075643.642092651@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190613155421.16408-5-wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+[ Upstream commit 94d4e7af14a1170e34cf082d92e4c02de9e9fb88 ]
 
-On 13/06/2019 16:54, Wolfram Sang wrote:
-> No need to check a retval after we assigned a constant to it.
+As new transfer mechanisms are added to the EC codebase, they may
+not support v2 of the EC protocol.
 
-With title fixed,
+If the v3 initial handshake transfer fails, the kernel will try
+and call cmd_xfer as a fallback. If v2 is not supported, cmd_xfer
+will be NULL, and the code will end up causing a kernel panic.
 
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Add a check for NULL before calling the transfer function, along
+with a helpful comment explaining how one might end up in this
+situation.
 
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  drivers/media/dvb-frontends/zd1301_demod.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/dvb-frontends/zd1301_demod.c b/drivers/media/dvb-frontends/zd1301_demod.c
-> index 96adbba7a82b..bbabe6a2d4f4 100644
-> --- a/drivers/media/dvb-frontends/zd1301_demod.c
-> +++ b/drivers/media/dvb-frontends/zd1301_demod.c
-> @@ -421,8 +421,7 @@ static int zd1301_demod_i2c_master_xfer(struct i2c_adapter *adapter,
->  	} else {
->  		dev_dbg(&pdev->dev, "unknown msg[0].len=%u\n", msg[0].len);
->  		ret = -EOPNOTSUPP;
-> -		if (ret)
-> -			goto err;
-> +		goto err;
->  	}
->  
->  	return num;
-> 
+Signed-off-by: Enrico Granata <egranata@chromium.org>
+Reviewed-by: Jett Rink <jettrink@chromium.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/chrome/cros_ec_proto.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+index e5d5b1adb5a9..ac784ac66ac3 100644
+--- a/drivers/platform/chrome/cros_ec_proto.c
++++ b/drivers/platform/chrome/cros_ec_proto.c
+@@ -67,6 +67,17 @@ static int send_command(struct cros_ec_device *ec_dev,
+ 	else
+ 		xfer_fxn = ec_dev->cmd_xfer;
+ 
++	if (!xfer_fxn) {
++		/*
++		 * This error can happen if a communication error happened and
++		 * the EC is trying to use protocol v2, on an underlying
++		 * communication mechanism that does not support v2.
++		 */
++		dev_err_once(ec_dev->dev,
++			     "missing EC transfer API, cannot send command\n");
++		return -EIO;
++	}
++
+ 	ret = (*xfer_fxn)(ec_dev, msg);
+ 	if (msg->result == EC_RES_IN_PROGRESS) {
+ 		int i;
+-- 
+2.20.1
+
+
 
