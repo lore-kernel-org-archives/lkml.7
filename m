@@ -2,158 +2,131 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041F5C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AB7C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D685C21721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2214A2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730197AbfFMQsx (ORCPT
+        id S2404310AbfFMQtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:48:53 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:53297 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727942AbfFMEpT (ORCPT
+        Thu, 13 Jun 2019 12:49:13 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:47152 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727666AbfFMEhV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 00:45:19 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TU25N7U_1560401051;
-Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TU25N7U_1560401051)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 13 Jun 2019 12:44:19 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     hughd@google.com, kirill.shutemov@linux.intel.com, mhocko@suse.com,
-        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [v3 PATCH 2/2] mm: thp: fix false negative of shmem vma's THP eligibility
-Date:   Thu, 13 Jun 2019 12:44:01 +0800
-Message-Id: <1560401041-32207-3-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1560401041-32207-1-git-send-email-yang.shi@linux.alibaba.com>
-References: <1560401041-32207-1-git-send-email-yang.shi@linux.alibaba.com>
+        Thu, 13 Jun 2019 00:37:21 -0400
+Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-01.mgc.mentorg.com)
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1hbHU5-0001Yz-Ai from Harish_Kandiga@mentor.com ; Wed, 12 Jun 2019 21:37:09 -0700
+Received: from [10.0.3.15] (137.202.0.90) by svr-ies-mbx-01.mgc.mentorg.com
+ (139.181.222.1) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Thu, 13 Jun
+ 2019 05:37:01 +0100
+Subject: Re: [PATCH] wlcore/wl18xx: Add invert-irq OF property for physically
+ inverted IRQ
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Marc Zyngier <marc.zyngier@arm.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kalle Valo <kvalo@codeaurora.org>, Eyal Reizer <eyalr@ti.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
+        Joshua Frkuska <joshua_frkuska@mentor.com>,
+        "George G . Davis" <george_davis@mentor.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>
+References: <20190607172958.20745-1-erosca@de.adit-jv.com>
+ <87tvcxncuq.fsf@codeaurora.org> <20190610083012.GV5447@atomide.com>
+ <CAMuHMdUOc17ocqmt=oNmyN1UT_K7_y=af1pwjwr5PTgQL2o2OQ@mail.gmail.com>
+ <08bc4755-5f47-d792-8b5a-927b5fbe7619@arm.com>
+ <20190612094538.GA16575@vmlxhi-102.adit-jv.com>
+ <86d0jjglax.wl-marc.zyngier@arm.com>
+ <20190612150644.GA22002@vmlxhi-102.adit-jv.com>
+From:   Harish Jenny K N <harish_kandiga@mentor.com>
+Message-ID: <e878bb37-3228-0055-bf6e-69be7f7a09df@mentor.com>
+Date:   Thu, 13 Jun 2019 10:06:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190612150644.GA22002@vmlxhi-102.adit-jv.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: SVR-IES-MBX-04.mgc.mentorg.com (139.181.222.4) To
+ svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each
-vma") introduced THPeligible bit for processes' smaps. But, when checking
-the eligibility for shmem vma, __transparent_hugepage_enabled() is
-called to override the result from shmem_huge_enabled().  It may result
-in the anonymous vma's THP flag override shmem's.  For example, running a
-simple test which create THP for shmem, but with anonymous THP disabled,
-when reading the process's smaps, it may show:
 
-7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
-Size:               4096 kB
-...
-[snip]
-...
-ShmemPmdMapped:     4096 kB
-...
-[snip]
-...
-THPeligible:    0
+On 12/06/19 8:36 PM, Eugeniu Rosca wrote:
+> Hi Marc,
+>
+> Thanks for your comment.
+>
+> On Wed, Jun 12, 2019 at 11:17:10AM +0100, Marc Zyngier wrote:
+>> Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+>>> On Tue, Jun 11, 2019 at 10:00:41AM +0100, Marc Zyngier wrote:
+> [..]
+>>>> We already have plenty of that in the tree, the canonical example
+>>>> probably being drivers/irqchip/irq-mtk-sysirq.c. It should be pretty
+>>>> easy to turn this driver into something more generic.
+>>> I don't think drivers/irqchip/irq-mtk-sysirq.c can serve the
+>>> use-case/purpose of this patch. The MTK driver seems to be dealing with
+>>> the polarity inversion of on-SoC interrupts which are routed to GiC,
+>>> whereas in this patch we are talking about an off-chip interrupt
+>>> wired to R-Car GPIO controller.
+>> And how different is that? The location of the interrupt source is
+>> pretty irrelevant here.
+> The main difference which I sense is that a driver like irq-mtk-sysirq
+> mostly (if not exclusively) deals with internal kernel implementation
+> detail (tuned via DT) whilst adding an inverter for GPIO IRQs raises
+> a whole bunch of new questions (e.g. how to arbitrate between
+> kernel-space and user-space IRQ polarity configuration?).
+>
+>> The point is that there is already a general
+>> scheme to deal with these "signal altering widgets", and that we
+>> should try to reuse at least the concept, if not the code.
+> Since Harish Jenny K N might be working on a new driver doing GPIO IRQ
+> inversion, I have CC-ed him as well to avoid any overlapping work.
 
-And, /proc/meminfo does show THP allocated and PMD mapped too:
 
-ShmemHugePages:     4096 kB
-ShmemPmdMapped:     4096 kB
+Sorry I am not completely aware of the background discussion.
 
-This doesn't make too much sense.  The shmem objects should be treated
-separately from anonymous THP.  Calling shmem_huge_enabled() with checking
-MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
-dax vma check since we already checked if the vma is shmem already.
+But here is the link to my proposal for new consumer driver to provide a new virtual
+gpio controller to configure the polarity of the gpio pins used by the userspace.
 
-Also check if vma is suitable for THP by calling
-transhuge_vma_suitable().
+https://www.spinics.net/lists/linux-gpio/msg39681.html
 
-And minor fix to smaps output format and documentation.
 
-Fixes: 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each vma")
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: David Rientjes <rientjes@google.com>
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
- Documentation/filesystems/proc.txt | 4 ++--
- fs/proc/task_mmu.c                 | 3 ++-
- mm/huge_memory.c                   | 9 +++++++--
- mm/shmem.c                         | 3 +++
- 4 files changed, 14 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-index 66cad5c..b0ded06 100644
---- a/Documentation/filesystems/proc.txt
-+++ b/Documentation/filesystems/proc.txt
-@@ -477,8 +477,8 @@ replaced by copy-on-write) part of the underlying shmem object out on swap.
- "SwapPss" shows proportional swap share of this mapping. Unlike "Swap", this
- does not take into account swapped out page of underlying shmem objects.
- "Locked" indicates whether the mapping is locked in memory or not.
--"THPeligible" indicates whether the mapping is eligible for THP pages - 1 if
--true, 0 otherwise.
-+"THPeligible" indicates whether the mapping is eligible for allocating THP
-+pages - 1 if true, 0 otherwise. It just shows the current status.
- 
- "VmFlags" field deserves a separate description. This member represents the kernel
- flags associated with the particular virtual memory area in two letter encoded
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 01d4eb0..6a13882 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -796,7 +796,8 @@ static int show_smap(struct seq_file *m, void *v)
- 
- 	__show_smap(m, &mss);
- 
--	seq_printf(m, "THPeligible:    %d\n", transparent_hugepage_enabled(vma));
-+	seq_printf(m, "THPeligible:		%d\n",
-+		   transparent_hugepage_enabled(vma));
- 
- 	if (arch_pkeys_enabled())
- 		seq_printf(m, "ProtectionKey:  %8u\n", vma_pkey(vma));
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 4bc2552..36f0225 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -65,10 +65,15 @@
- 
- bool transparent_hugepage_enabled(struct vm_area_struct *vma)
- {
-+	/* The addr is used to check if the vma size fits */
-+	unsigned long addr = (vma->vm_end & HPAGE_PMD_MASK) - HPAGE_PMD_SIZE;
-+
-+	if (!transhuge_vma_suitable(vma, addr))
-+		return false;
- 	if (vma_is_anonymous(vma))
- 		return __transparent_hugepage_enabled(vma);
--	if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
--		return __transparent_hugepage_enabled(vma);
-+	if (vma_is_shmem(vma))
-+		return shmem_huge_enabled(vma);
- 
- 	return false;
- }
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 1bb3b8d..a807712 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -3872,6 +3872,9 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
- 	loff_t i_size;
- 	pgoff_t off;
- 
-+	if ((vma->vm_flags & VM_NOHUGEPAGE) ||
-+	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
-+		return false;
- 	if (shmem_huge == SHMEM_HUGE_FORCE)
- 		return true;
- 	if (shmem_huge == SHMEM_HUGE_DENY)
--- 
-1.8.3.1
+>
+>>> It looks to me that the nice DTS sketch shared by Linus Walleij in [5]
+>>> might come closer to the concept proposed by Geert? FWIW, the
+>>> infrastructure/implementation to make this possible is still not
+>>> ready.
+>> Which looks like what I'm suggesting.
+> Then we are on the same page. Thanks.
+>
+>> 	M.
+>>
+>> -- 
+>> Jazz is not dead, it just smells funny.
 
