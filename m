@@ -7,50 +7,56 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501F6C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4A1C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259FE20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5491B20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442913;
-	bh=aDPUmGYA4iLb9ZP7GEHdFdls6Iuzsq1XRDoInvDGYKg=;
+	s=default; t=1560442916;
+	bh=JpX2HqfV0kfphin4vUFM4wFsB69DCZ4xUn8eM4NjeXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p1p36B9u2E5Bd+c2Vy+AYfGlbZnEphHvgozfGKzdLfRwnz70sgZSyjpOopfp8b2p1
-	 TudG6KWxSQLpPefWxTm57wv/Q0OEGKSSogt/+A77IB/bVldfOmuH9rzsY5e5Dp1nVd
-	 +F8hp5jbp2cCIJ9lePtESZcHse39Yz7RVZJ2OGiI=
+	b=GUUXhKQMBpoS18XRJ9ZEsVmTL/85qaqKL3ppUzzxP4v6KG2sOXnYgT+c5TzB+3K+H
+	 pp4jMDeL0p11/H/etG3UT7mqyMmQ8/yGY2SASio1Plf74CnWUezLSLR/f5wQCKe/lh
+	 SUSmvgaOHI30Uu1QnTgdljGBqePN0Jdbf5HSq4HU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388872AbfFMQVv (ORCPT
+        id S1728499AbfFMQVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:21:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56120 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:21:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731053AbfFMIih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:38:37 -0400
+        id S1731054AbfFMIik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:38:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C522F21479;
-        Thu, 13 Jun 2019 08:38:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49F0B2147A;
+        Thu, 13 Jun 2019 08:38:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415117;
-        bh=aDPUmGYA4iLb9ZP7GEHdFdls6Iuzsq1XRDoInvDGYKg=;
+        s=default; t=1560415119;
+        bh=JpX2HqfV0kfphin4vUFM4wFsB69DCZ4xUn8eM4NjeXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZvrYLbhItoQCYG+bCOkgLceSN6R/HO662cJyZMHSMKrVR9eriUmOUAzK+4FRIwwUt
-         5G+VGI1aUvPixaVx4vb8SuSJIFif8PD2bxwZf6rtqcIQ6FOgeruHfICohG8309ajSb
-         e51MghFPbyNjQ+zMNy1TQXRBDcaAj8JQBYy/tCcQ=
+        b=bP58H/xn7K9cvw9hMgPeAkdAqTLiKCsQexxu41nm4DQ4vfb/r+nIN2QKihhg1GKQc
+         em7j9R/tCyzRCbfpo8svKvz2k32rXh0frDlwWRgXchZm+Yea7agMMM2hj9t1VPVZlU
+         z8uoGDxQqYUDLBmY4jsTZn8thDT6KydWNKnKNgmE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        stable@vger.kernel.org, Christian Brauner <christian@brauner.io>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Waiman Long <longman@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 002/118] fs/fat/file.c: issue flush after the writeback of FAT
-Date:   Thu, 13 Jun 2019 10:32:20 +0200
-Message-Id: <20190613075643.802892063@linuxfoundation.org>
+Subject: [PATCH 4.19 003/118] sysctl: return -EINVAL if val violates minmax
+Date:   Thu, 13 Jun 2019 10:32:21 +0200
+Message-Id: <20190613075643.856357641@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -63,52 +69,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bd8309de0d60838eef6fb575b0c4c7e95841cf73 ]
+[ Upstream commit e260ad01f0aa9e96b5386d5cd7184afd949dc457 ]
 
-fsync() needs to make sure the data & meta-data of file are persistent
-after the return of fsync(), even when a power-failure occurs later.  In
-the case of fat-fs, the FAT belongs to the meta-data of file, so we need
-to issue a flush after the writeback of FAT instead before.
+Currently when userspace gives us a values that overflow e.g.  file-max
+and other callers of __do_proc_doulongvec_minmax() we simply ignore the
+new value and leave the current value untouched.
 
-Also bail out early when any stage of fsync fails.
+This can be problematic as it gives the illusion that the limit has
+indeed be bumped when in fact it failed.  This commit makes sure to
+return EINVAL when an overflow is detected.  Please note that this is a
+userspace facing change.
 
-Link: http://lkml.kernel.org/r/20190409030158.136316-1-houtao1@huawei.com
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Acked-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Link: http://lkml.kernel.org/r/20190210203943.8227-4-christian@brauner.io
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
 Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jan Kara <jack@suse.cz>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Waiman Long <longman@redhat.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fat/file.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ kernel/sysctl.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/fat/file.c b/fs/fat/file.c
-index 4f3d72fb1e60..f86ea08bd6ce 100644
---- a/fs/fat/file.c
-+++ b/fs/fat/file.c
-@@ -193,12 +193,17 @@ static int fat_file_release(struct inode *inode, struct file *filp)
- int fat_file_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
- {
- 	struct inode *inode = filp->f_mapping->host;
--	int res, err;
-+	int err;
-+
-+	err = __generic_file_fsync(filp, start, end, datasync);
-+	if (err)
-+		return err;
- 
--	res = generic_file_fsync(filp, start, end, datasync);
- 	err = sync_mapping_buffers(MSDOS_SB(inode->i_sb)->fat_inode->i_mapping);
-+	if (err)
-+		return err;
- 
--	return res ? res : err;
-+	return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
- }
- 
- 
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 9a85c7ae7362..f8576509c7be 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -2791,8 +2791,10 @@ static int __do_proc_doulongvec_minmax(void *data, struct ctl_table *table, int
+ 			if (neg)
+ 				continue;
+ 			val = convmul * val / convdiv;
+-			if ((min && val < *min) || (max && val > *max))
+-				continue;
++			if ((min && val < *min) || (max && val > *max)) {
++				err = -EINVAL;
++				break;
++			}
+ 			*i = val;
+ 		} else {
+ 			val = convdiv * (*i) / convmul;
 -- 
 2.20.1
 
