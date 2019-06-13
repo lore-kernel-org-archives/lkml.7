@@ -2,139 +2,88 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4C8C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C60FC31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3C9320665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEC7520665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560444990;
-	bh=245hSvEJ1fyVQ/NUoZsypuMJ69r/WWckga7/iHsIA6Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Yyd42k09WjnqkLFmbYIj0rl4H+GakyJyAcTDmIFrHg9Jqk19FOE7wyLckqlX0Xwrc
-	 OOXGXZXPJA/WPvwmnDblR+CkQbKwpywu4wwPN0h9ImzSlu4+JB93G3fHYyRSs6UlHT
-	 TlDYF9Nl92WNgGbMFu2znZru0yTaav46V8+HBYus=
+	s=default; t=1560444992;
+	bh=E3BVSamBEJXWxz5OabhY2ueDy3SNwdh0BFD9+FBsprM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cYQRa55ERiz8vXSOJaQ+b6EZTSNtjSetFALCqx5fG3DvSGWXnhWdkSheeyrkmZ77u
+	 kTy44NStfB2+RkRT1SBhxgLZswCtPjeo+sdWoZwn05abhXTDr1IkPBe1LC7Ne71Foi
+	 ZRnomN9vvdRkERwQd2ZJrGTtMsxjnbyc0YXDzHX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388082AbfFMQ42 (ORCPT
+        id S1731545AbfFMQ4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:56:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40880 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:56:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729968AbfFMBaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 21:30:18 -0400
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729970AbfFMBjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 21:39:09 -0400
+Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE7AA217F4
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 01:30:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59E1520B7C;
+        Thu, 13 Jun 2019 01:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560389416;
-        bh=245hSvEJ1fyVQ/NUoZsypuMJ69r/WWckga7/iHsIA6Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2ZR5cg5qXeIW8QeSueU+v+XoVtJwJqgh/zbPK+Vh23DiNB76z6igVBk5QmFjC4Q/b
-         GYn8i0J6URP72JalBhebTaSz6TzlBV+Qnr5O7B+twJgiUQVPaKaKwsqofehUrHIiSR
-         AYRWMsmaxcXIZJR9IifMDN2N37eieMRhYyWPJmug=
-Received: by mail-wr1-f52.google.com with SMTP id v14so18849243wrr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 18:30:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAW3P+YraFRiuQ0VLKCaXLD9t1HzyYC9AShdb+HpWDyx3GQdjtW4
-        gvVvY/Z9Gio9alC/+53ZUiZOsdmrgGyUGbEEoYKJhw==
-X-Google-Smtp-Source: APXvYqy3xOlRMyGf+QmnX5kkUuMj4E/JOwcOVlo4m18xwdccaTtfWmajwtmET8pdpGl6blYVFY3m4ysGcKL2J5xWm7w=
-X-Received: by 2002:adf:ef48:: with SMTP id c8mr35692572wrp.352.1560389415200;
- Wed, 12 Jun 2019 18:30:15 -0700 (PDT)
+        s=default; t=1560389948;
+        bh=E3BVSamBEJXWxz5OabhY2ueDy3SNwdh0BFD9+FBsprM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rxQ1w6A2RQZRn7b7ecknRx0Tz6fy2EaASij1/HQZci8yLHrzeuqzCkPKS2yn9QJEN
+         nK8YNrAuZ2hBU4KK+VbD874D5qOGlu97wBEGAwClolQhR8FDBmoSBTZWEWX4arbYZ2
+         +Y/MTKIdfKPfrpKHr7UTrB2d2B5BCjattasT3JrQ=
+Date:   Thu, 13 Jun 2019 09:38:32 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Oliver Graute <oliver.graute@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, narmstrong@baylibre.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 0/2] Variscite DART-6UL SoM support
+Message-ID: <20190613013830.GC20747@dragon>
+References: <1559839624-12286-1-git-send-email-oliver.graute@gmail.com>
 MIME-Version: 1.0
-References: <20190612170834.14855-1-mhillenb@amazon.de> <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com>
- <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net>
-In-Reply-To: <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 12 Jun 2019 18:30:03 -0700
-X-Gmail-Original-Message-ID: <CALCETrXHbS9VXfZ80kOjiTrreM2EbapYeGp68mvJPbosUtorYA@mail.gmail.com>
-Message-ID: <CALCETrXHbS9VXfZ80kOjiTrreM2EbapYeGp68mvJPbosUtorYA@mail.gmail.com>
-Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM secrets
-To:     Dave Hansen <dave.hansen@intel.com>, Nadav Amit <namit@vmware.com>
-Cc:     Marius Hillenbrand <mhillenb@amazon.de>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux-MM <linux-mm@kvack.org>, Alexander Graf <graf@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559839624-12286-1-git-send-email-oliver.graute@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 1:27 PM Andy Lutomirski <luto@amacapital.net> wrote=
-:
->
->
->
-> > On Jun 12, 2019, at 12:55 PM, Dave Hansen <dave.hansen@intel.com> wrote=
-:
-> >
-> >> On 6/12/19 10:08 AM, Marius Hillenbrand wrote:
-> >> This patch series proposes to introduce a region for what we call
-> >> process-local memory into the kernel's virtual address space.
-> >
-> > It might be fun to cc some x86 folks on this series.  They might have
-> > some relevant opinions. ;)
-> >
-> > A few high-level questions:
-> >
-> > Why go to all this trouble to hide guest state like registers if all th=
-e
-> > guest data itself is still mapped?
-> >
-> > Where's the context-switching code?  Did I just miss it?
-> >
-> > We've discussed having per-cpu page tables where a given PGD is only in
-> > use from one CPU at a time.  I *think* this scheme still works in such =
-a
-> > case, it just adds one more PGD entry that would have to context-switch=
-ed.
->
-> Fair warning: Linus is on record as absolutely hating this idea. He might=
- change his mind, but it=E2=80=99s an uphill battle.
+On Thu, Jun 06, 2019 at 06:47:00PM +0200, Oliver Graute wrote:
+> Need feedback to the following patches which adds support for a DART-6UL Board
+> 
+> Product Page: https://www.variscite.com/product/evaluation-kits/dart-6ul-kits
+> 
+> Oliver Graute (2):
+>   ARM: dts: imx6ul: Add Variscite DART-6UL SoM support
+>   ARM: dts: Add support for i.MX6 UltraLite DART Variscite Customboard
 
-I looked at the patch, and it (sensibly) has nothing to do with
-per-cpu PGDs.  So it's in great shape!
+It's already v3?  I did not find previous versions.  What's changed
+since previous versions?
 
-Seriously, though, here are some very high-level review comments:
+Shawn
 
-Please don't call it "process local", since "process" is meaningless.
-Call it "mm local" or something like that.
-
-We already have a per-mm kernel mapping: the LDT.  So please nix all
-the code that adds a new VA region, etc, except to the extent that
-some of it consists of valid cleanups in and of itself.  Instead,
-please refactor the LDT code (arch/x86/kernel/ldt.c, mainly) to make
-it use a more general "mm local" address range, and then reuse the
-same infrastructure for other fancy things.  The code that makes it
-KASLR-able should be in its very own patch that applies *after* the
-code that makes it all work so that, when the KASLR part causes a
-crash, we can bisect it.
-
-+ /*
-+ * Faults in process-local memory may be caused by process-local
-+ * addresses leaking into other contexts.
-+ * tbd: warn and handle gracefully.
-+ */
-+ if (unlikely(fault_in_process_local(address))) {
-+ pr_err("page fault in PROCLOCAL at %lx", address);
-+ force_sig_fault(SIGSEGV, SEGV_MAPERR, (void __user *)address, current);
-+ }
-+
-
-Huh?  Either it's an OOPS or you shouldn't print any special
-debugging.  As it is, you're just blatantly leaking the address of the
-mm-local range to malicious user programs.
-
-Also, you should IMO consider using this mechanism for kmap_atomic().
-Hi, Nadav!
+> 
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  .../boot/dts/imx6ul-imx6ull-var-dart-common.dtsi   | 458 +++++++++++++++++++++
+>  arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts    | 209 ++++++++++
+>  3 files changed, 668 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi
+>  create mode 100644 arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
+> 
+> -- 
+> 2.7.4
+> 
