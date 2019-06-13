@@ -5,180 +5,174 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DF6C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200D2C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D98BF20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E986F2080A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:53:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fluc7UHZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VHXWTh2m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbfFMQxM (ORCPT
+        id S1730903AbfFMQxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:53:12 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38810 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfFMQxL (ORCPT
+        Thu, 13 Jun 2019 12:53:18 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:35343 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730096AbfFMDFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:53:11 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f97so8414639plb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 09:53:11 -0700 (PDT)
+        Wed, 12 Jun 2019 23:05:01 -0400
+Received: by mail-yw1-f67.google.com with SMTP id k128so7722218ywf.2;
+        Wed, 12 Jun 2019 20:05:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=2HSyqLuA62fmX26BujT/9wqw7NfTPaJ58H9IBnHqPR8=;
-        b=Fluc7UHZgtrOSv48l3jODB7SJVkjZk5yCoE+1wfUSMQimt3UMruLylStkmXn4JtV/D
-         VkWSX4zWn820Xuc9juOV3UG5yEyX5E0GTTloV7TdeyhJWYKCXRBQIXyVDJ2zyDQ5rwdd
-         dSxVKQxrZjW7JsjWPwGCeIW3pKpFttvkTQgsi4KBjPun3xyzWYzSjbHVc1PZbGhlg5Ix
-         JkGdyKUj2hB3aG6mzCYa9p+of1y7m4SuR9GFj5cQ7kiY4TXJR0x7Q1LHMBQKjN8h23Xn
-         9ww0GexfFjqpFR43m/6seVS1p53rGZ2WJPNy7RMxiYErT8kl3xWlVpTkhS7Y266vnH7r
-         qnZw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=maWSYYRrvybYLk/ZwWvDJFQUXbxnczUBvQ66MuAR1dc=;
+        b=VHXWTh2mZ0oAsXy17t6u1QflJMPukrCoBzvL9WuTHC8D+AHupnXjAB/LeT3RpTZ3sC
+         iOOEwf8Xi3ADTgIWVAQ+8Gg9wrhOeWRCnJS/JaTUIDbTpkNwVAmrU2hj8hYHGistWht3
+         er3TxXYJgi5K32kJbaKxmqYfiK2487FfbqBsYm8esStBaNxAyQbemBSdYVFQmRuleyoO
+         QEVFbQ6U5vtVmQsM6MqUSUFvnJRybJ9bHy8kr77e7w5q2l7maA6lpYR4XjzxFfsMqOeu
+         Ie9LqaGuRQTVk7DYW5FbLovrMyQ0ijYjhmXY104yCkm9bpePQevfjtMW19yH7HTBbkaP
+         LPeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2HSyqLuA62fmX26BujT/9wqw7NfTPaJ58H9IBnHqPR8=;
-        b=qfBtBMV1qpYIbQRdVRR9elKy3MDyviAtPXea5aDjMW7oydzHAhiLYDbzN8lwIdwnvQ
-         SD3nXFrsaN5i5/gDsNFFvOFm1mbAG5nCoNhETXaJgl2cEqgh41C/YTVLygc1AMPuvrjn
-         icvf2MlFLfTXZlaN/xau8accMxB2bjeYMm2bgFgNMOyYUuhn2uUCr+oouM1UWP5p8CXT
-         hostBFm6m5c1VLhsbXmOiT2JHup6NJRe3ly5+Nsj1S7q9t5+Qhvv4SZeMYAWCQy3F8hj
-         AeW9lLFNZSURKezq6SLniyNHrPHDKLagDi/JMWOjEPdL7wCMd3tpmKdKsayJGamXulFd
-         JMww==
-X-Gm-Message-State: APjAAAWtSxXBJKXImgsZm8KhLsIpN+Xzd9ySrI3tbEuFtAqIlbEyy/Uj
-        ng13djxkHz7UetnVNATqaBI=
-X-Google-Smtp-Source: APXvYqxGJS5iyGw3xreG2M23XcLYW2TbjhbEYU/AXfDGmkWeX5kocrJKp1hcZcn6qQNw0CB5X1EJvA==
-X-Received: by 2002:a17:902:a81:: with SMTP id 1mr88073076plp.287.1560444790802;
-        Thu, 13 Jun 2019 09:53:10 -0700 (PDT)
-Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
-        by smtp.gmail.com with ESMTPSA id c12sm197500pfn.104.2019.06.13.09.53.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Jun 2019 09:53:10 -0700 (PDT)
-From:   Yangtao Li <tiny.windzz@gmail.com>
-To:     joro@8bytes.org, s-anna@ti.com
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v2] iommu/omap: convert to SPDX license tags
-Date:   Thu, 13 Jun 2019 12:53:03 -0400
-Message-Id: <20190613165303.1219-1-tiny.windzz@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=maWSYYRrvybYLk/ZwWvDJFQUXbxnczUBvQ66MuAR1dc=;
+        b=T/piU1+rcSNXmHeQOGuadLDC6xQFpY9Sinhqalj9OnnRFI+LITHzoVM6NCObwBzF2N
+         m+q6BOT3cBKLTslEXzR7W1KhDsZZcFtHKM7wss1ixI/4d2atnJBTxL94L8a0K8d9q70m
+         jyHgJgkgjvxBNt3QKzAhuUlImLXw2iqvdNB+HHRqxyvMD2ECIxT4nskh7kaxe9gRZfLo
+         V3mK8WbIz1j7E14L5k9M0NOYx+cEk5MFK0zSI1rS6nr8B0z1DpQzS4rKjADsyc/WvyeS
+         NiIxiSGwRs7PH3fGr16oWbkTqTb3gkYQXeUcPbl23wJ+cmHY305ttftZ91oL5g5RTZpG
+         4LSA==
+X-Gm-Message-State: APjAAAWK56vdmr3U9I0YQ4TDnE5xMgyj+shpx/F2W4Qg3+WqbRQ99wOs
+        kHEdJV7paB3BISxVELW2mg==
+X-Google-Smtp-Source: APXvYqwalc9ioEK569U58MgtvdylDr75TJ1pfhNP9M1+ymoS432VWYMQYU2WFK7KGp9WIIZ1vRywXQ==
+X-Received: by 2002:a81:4786:: with SMTP id u128mr46699794ywa.43.1560395100453;
+        Wed, 12 Jun 2019 20:05:00 -0700 (PDT)
+Received: from 960.localdomain ([71.46.56.3])
+        by smtp.gmail.com with ESMTPSA id j184sm424831ywf.8.2019.06.12.20.04.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 20:05:00 -0700 (PDT)
+From:   Ayman Bagabas <ayman.bagabas@gmail.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     ayman.bagabas@gmail.com
+Subject: [PATCH v2 5/8] platform/x86: huawei-wmi: add battery charging protection support
+Date:   Wed, 12 Jun 2019 23:04:12 -0400
+Message-Id: <20190613030416.25807-7-ayman.bagabas@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190613030416.25807-1-ayman.bagabas@gmail.com>
+References: <20190613030416.25807-1-ayman.bagabas@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Updates license to use SPDX-License-Identifier.
+Some models that implement the new WMI management interface can control
+battery charging thresholds where it limits charging the battery once it
+reaches certain thresholds. This feature is not present in MateBook X
+(2017).
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Acked-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 ---
-v2:
--add include/linux/platform_data/iommu-omap.h
----
- drivers/iommu/omap-iommu-debug.c         | 5 +----
- drivers/iommu/omap-iommu.c               | 5 +----
- drivers/iommu/omap-iommu.h               | 5 +----
- drivers/iommu/omap-iopgtable.h           | 5 +----
- include/linux/platform_data/iommu-omap.h | 5 +----
- 5 files changed, 5 insertions(+), 20 deletions(-)
+ drivers/platform/x86/huawei-wmi.c | 56 +++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-diff --git a/drivers/iommu/omap-iommu-debug.c b/drivers/iommu/omap-iommu-debug.c
-index 4abc0ef522a8..55ec67a45101 100644
---- a/drivers/iommu/omap-iommu-debug.c
-+++ b/drivers/iommu/omap-iommu-debug.c
-@@ -1,13 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * omap iommu: debugfs interface
-  *
-  * Copyright (C) 2008-2009 Nokia Corporation
-  *
-  * Written by Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+index 358d9d168300..06d83e613504 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -6,6 +6,7 @@
   */
  
- #include <linux/err.h>
-diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
-index d2fb347aa4ff..e6442876913f 100644
---- a/drivers/iommu/omap-iommu.c
-+++ b/drivers/iommu/omap-iommu.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * omap iommu: tlb and pagetable primitives
-  *
-@@ -6,10 +7,6 @@
-  *
-  * Written by Hiroshi DOYU <Hiroshi.DOYU@nokia.com>,
-  *		Paul Mundt and Toshihiro Kobayashi
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
+ #include <linux/acpi.h>
++#include <linux/delay.h>
+ #include <linux/dmi.h>
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
+@@ -48,6 +49,7 @@ struct huawei_wmi {
+ 	struct led_classdev cdev;
+ 	struct input_dev *idev[2];
+ 	struct mutex wmi_lock;
++	struct mutex battery_lock;
+ 	struct platform_device *pdev;
+ };
  
- #include <linux/dma-mapping.h>
-diff --git a/drivers/iommu/omap-iommu.h b/drivers/iommu/omap-iommu.h
-index 1703159ef5af..5256e17d86a7 100644
---- a/drivers/iommu/omap-iommu.h
-+++ b/drivers/iommu/omap-iommu.h
-@@ -1,13 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * omap iommu: main structures
-  *
-  * Copyright (C) 2008-2009 Nokia Corporation
-  *
-  * Written by Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
+@@ -302,6 +304,59 @@ static int huawei_wmi_leds_setup(struct device *dev)
+ 	return devm_led_classdev_register(dev, &huawei->cdev);
+ }
  
- #ifndef _OMAP_IOMMU_H
-diff --git a/drivers/iommu/omap-iopgtable.h b/drivers/iommu/omap-iopgtable.h
-index 01a315227bf0..871c2a38f453 100644
---- a/drivers/iommu/omap-iopgtable.h
-+++ b/drivers/iommu/omap-iopgtable.h
-@@ -1,13 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * omap iommu: pagetable definitions
-  *
-  * Copyright (C) 2008-2010 Nokia Corporation
-  *
-  * Written by Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
++/* Battery protection */
++
++static int huawei_wmi_battery_get(struct device *dev, int *low, int *high)
++{
++	struct huawei_wmi *huawei = dev_get_drvdata(dev);
++	u8 ret[0x100];
++	int err, i;
++
++	mutex_lock(&huawei->battery_lock);
++	err = huawei_wmi_cmd(dev, BATTERY_THRESH_GET, ret, 0x100);
++	mutex_unlock(&huawei->battery_lock);
++	if (err) {
++		return err;
++	}
++
++	/* Find the last two non-zero values. Return status is ignored. */
++	i = 0x100;
++	do {
++		*low = ret[i-1];
++		*high = ret[i];
++	} while (i > 2 && !ret[i--]);
++
++	return 0;
++}
++
++static int huawei_wmi_battery_set(struct device *dev, int low, int high)
++{
++	struct huawei_wmi *huawei = dev_get_drvdata(dev);
++	u8 arg[8];
++	int err;
++
++	*(u64 *)arg = BATTERY_THRESH_SET;
++	arg[2] = low;
++	arg[3] = high;
++
++	/* This is an edge case were some models turn battery protection
++	 * off without changing their thresholds values. We clear the
++	 * values before turning off protection. Sometimes we need a sleep delay to
++	 * make sure these values make their way to EC memory.
++	 */
++	if (low == 0 && high == 100) {
++		huawei_wmi_battery_set(dev, 0, 0);
++	}
++
++	mutex_lock(&huawei->battery_lock);
++	err = huawei_wmi_cmd(dev, *(u64 *)arg, NULL, NULL);
++	if (quirks && quirks->battery_sleep)
++		msleep(1000);
++	mutex_unlock(&huawei->battery_lock);
++
++	return err;
++}
++
+ /* Input */
  
- #ifndef _OMAP_IOPGTABLE_H
-diff --git a/include/linux/platform_data/iommu-omap.h b/include/linux/platform_data/iommu-omap.h
-index e8b12dbf6170..a6cbca5406e0 100644
---- a/include/linux/platform_data/iommu-omap.h
-+++ b/include/linux/platform_data/iommu-omap.h
-@@ -1,13 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * omap iommu: main structures
-  *
-  * Copyright (C) 2008-2009 Nokia Corporation
-  *
-  * Written by Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
+ static void huawei_wmi_process_key(struct input_dev *idev, int code)
+@@ -424,6 +479,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
  
- #include <linux/platform_device.h>
+ 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
+ 		mutex_init(&huawei->wmi_lock);
++		mutex_init(&huawei->battery_lock);
+ 		err = huawei_wmi_leds_setup(&pdev->dev);
+ 		if (err)
+ 			dev_err(&pdev->dev, "Failed to setup leds\n");
 -- 
-2.17.0
+2.20.1
 
