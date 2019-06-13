@@ -2,108 +2,141 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3FCC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EFDC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 074C820679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="R9RMC0+/"
+	by mail.kernel.org (Postfix) with ESMTP id 5C49120679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560442301;
+	bh=A5Xx2Aqh1hWg4dfyiMJoC0wgEqYFNJwUMovmGBOQ3ok=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YXjATIEnmB8Q+SAX3y6X9hfaRsD885BoXOoCbUEVWk5UxUm48TYN/21KjuyUaDFYJ
+	 GsMJJ32jR2ihaCy9sEjxMNoCRTftFNxwFYSkHYzqzsInL5VH8ONykgIF13tgJbW90K
+	 RUgLiMtyM6wm+GSXm/fz647ZSj5Nbi6DfBFVIdFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391260AbfFMQLe (ORCPT
+        id S2391571AbfFMQL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:11:34 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:48460 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391587AbfFMQLb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:11:31 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AA45452B;
-        Thu, 13 Jun 2019 18:11:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1560442290;
-        bh=MaF7TDloZgBgF7rWBELeUNc1VaEnB2RDm5tUeyg06EE=;
-        h=Subject:To:Cc:References:From:Reply-To:Date:In-Reply-To:From;
-        b=R9RMC0+/8VswNPTW7Ozc26K3zG813e59Y876RK3lY+HbNNLyKs1sDQqPDgrCo/rtB
-         tTHTz/laKJPEFPwHOyioaK2hZQtxN6PH9FjxKPVzKVJMSZUcOotZwqLBu2VTfZ03Ed
-         pXsiv/3RqzaBBr5D0MKdUf7K808QkN+zt0nBO0bQ=
-Subject: Re: [PATCH 2/4] media: mn88472: don't check retval after our own
- assignemt
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-media@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, Antti Palosaari <crope@iki.fi>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20190613155421.16408-1-wsa+renesas@sang-engineering.com>
- <20190613155421.16408-3-wsa+renesas@sang-engineering.com>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Organization: Ideas on Board
-Message-ID: <55afdf32-68a8-c754-152a-2e80a686bde4@ideasonboard.com>
-Date:   Thu, 13 Jun 2019 17:11:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 12:11:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731234AbfFMInb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:43:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7222821479;
+        Thu, 13 Jun 2019 08:43:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560415410;
+        bh=A5Xx2Aqh1hWg4dfyiMJoC0wgEqYFNJwUMovmGBOQ3ok=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=G8Wh0avhjzYaBwiRc27MgGeJuAQwB/VZh2Eu2Y5wQqKTqwAZKc4phYcSRjEfGu/Gm
+         g7RJt3HVDk6tLP8osLwg6BnU7u4k28+B8MGi5RF/MRm7ndDGVMiExW8feQAxfZFxR2
+         MzBYHOlaBLyaxkInSyuqHr4ZFRWQlpLI98zVpkqA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sven Joachim <svenjoac@gmx.de>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dave Airlie <airlied@redhat.com>,
+        Thomas Backlund <tmb@mageia.org>
+Subject: [PATCH 4.19 115/118] Revert "drm/nouveau: add kconfig option to turn off nouveau legacy contexts. (v3)"
+Date:   Thu, 13 Jun 2019 10:34:13 +0200
+Message-Id: <20190613075651.001437991@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
+References: <20190613075643.642092651@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190613155421.16408-3-wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Same comment in title (on all 4 patches in fact)
-	s/assignemt/assignment/
+This reverts commit 610382337557bd2057d9b47f996af0b6ff827a2b which is
+commit b30a43ac7132cdda833ac4b13dd1ebd35ace14b7 upstream.
 
+Sven reports:
+	Commit 1e07d63749 ("drm/nouveau: add kconfig option to turn off nouveau
+	legacy contexts. (v3)") has caused a build failure for me when I
+	actually tried that option (CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n):
 
-On 13/06/2019 16:54, Wolfram Sang wrote:
-> No need to check a retval after we assigned a constant to it.
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  drivers/media/dvb-frontends/mn88472.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/dvb-frontends/mn88472.c b/drivers/media/dvb-frontends/mn88472.c
-> index 731b44b9b74c..0a4d0d5fb4b6 100644
-> --- a/drivers/media/dvb-frontends/mn88472.c
-> +++ b/drivers/media/dvb-frontends/mn88472.c
-> @@ -616,8 +616,7 @@ static int mn88472_probe(struct i2c_client *client,
->  	if (!dev->client[1]) {
->  		ret = -ENODEV;
->  		dev_err(&client->dev, "I2C registration failed\n");
-> -		if (ret)
-> -			goto err_regmap_0_regmap_exit;
-> +		goto err_regmap_0_regmap_exit;
+	,----
+	| Kernel: arch/x86/boot/bzImage is ready  (#1)
+	|   Building modules, stage 2.
+	|   MODPOST 290 modules
+	| ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
+	| scripts/Makefile.modpost:91: recipe for target '__modpost' failed
+	`----
 
-Ack
+	Upstream does not have that problem, as commit bed2dd8421 ("drm/ttm:
+	Quick-test mmap offset in ttm_bo_mmap()") has removed the use of
+	drm_legacy_mmap from nouveau_ttm.c.  Unfortunately that commit does not
+	apply in 5.1.9.
 
->  	}
->  	dev->regmap[1] = regmap_init_i2c(dev->client[1], &regmap_config);
->  	if (IS_ERR(dev->regmap[1])) {
-> @@ -630,8 +629,7 @@ static int mn88472_probe(struct i2c_client *client,
->  	if (!dev->client[2]) {
->  		ret = -ENODEV;
->  		dev_err(&client->dev, "2nd I2C registration failed\n");
-> -		if (ret)
-> -			goto err_regmap_1_regmap_exit;
-> +		goto err_regmap_1_regmap_exit;
+The ensuing discussion proposed a number of one-off patches, but no
+solid agreement was made, so just revert the commit for now to get
+people's systems building again.
 
-Ack.
+Reported-by: Sven Joachim <svenjoac@gmx.de>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Dave Airlie <airlied@redhat.com>
+Cc: Thomas Backlund <tmb@mageia.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/gpu/drm/nouveau/Kconfig       |   13 +------------
+ drivers/gpu/drm/nouveau/nouveau_drm.c |    7 ++-----
+ 2 files changed, 3 insertions(+), 17 deletions(-)
 
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+--- a/drivers/gpu/drm/nouveau/Kconfig
++++ b/drivers/gpu/drm/nouveau/Kconfig
+@@ -16,20 +16,9 @@ config DRM_NOUVEAU
+ 	select INPUT if ACPI && X86
+ 	select THERMAL if ACPI && X86
+ 	select ACPI_VIDEO if ACPI && X86
+-	help
+-	  Choose this option for open-source NVIDIA support.
+-
+-config NOUVEAU_LEGACY_CTX_SUPPORT
+-	bool "Nouveau legacy context support"
+-	depends on DRM_NOUVEAU
+ 	select DRM_VM
+-	default y
+ 	help
+-	  There was a version of the nouveau DDX that relied on legacy
+-	  ctx ioctls not erroring out. But that was back in time a long
+-	  ways, so offer a way to disable it now. For uapi compat with
+-	  old nouveau ddx this should be on by default, but modern distros
+-	  should consider turning it off.
++	  Choose this option for open-source NVIDIA support.
+ 
+ config NOUVEAU_PLATFORM_DRIVER
+ 	bool "Nouveau (NVIDIA) SoC GPUs"
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -1015,11 +1015,8 @@ nouveau_driver_fops = {
+ static struct drm_driver
+ driver_stub = {
+ 	.driver_features =
+-		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER
+-#if defined(CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT)
+-		| DRIVER_KMS_LEGACY_CONTEXT
+-#endif
+-		,
++		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER |
++		DRIVER_KMS_LEGACY_CONTEXT,
+ 
+ 	.load = nouveau_drm_load,
+ 	.unload = nouveau_drm_unload,
 
->  	}
->  	dev->regmap[2] = regmap_init_i2c(dev->client[2], &regmap_config);
->  	if (IS_ERR(dev->regmap[2])) {
-> 
 
