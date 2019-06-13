@@ -2,52 +2,53 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C33C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA29CC31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F8120679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22B1208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441580;
-	bh=FRMtpE/fbjkGP/2V8FIwkcRf6zRchrkvT6wBZYNj5x0=;
+	s=default; t=1560441581;
+	bh=6qm8dsSAAvZzsQrVpV/U/Q9NvOzvbQ9vwMwJpnapczA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I50ET4gWzwWoiKAB3KCRIVBybcgIesCE2GS7JU8bgS68Y6GwOcbEXzlLmIP/R0ZSS
-	 xjjQs1spPShk9QxStLrvdkyjbjYpPp+XwKgL76zXqIS6paqESeRgzo0k7KuexTKZgX
-	 ihs3vST0osW2uM4o5uH4CYHJ0ASd+nvuv1FCc774=
+	b=u/+puliblXwaVy+CLh55f0HLnZi8atWusspVdPDqYzuTPK9mddxoPtY9iHlz+ZBNK
+	 WE2MXtow2d2QchOY/VNudwIa0UlM/VhbTRN0b3lCqSJa4ABh1zqP/8VSIC0z5H9SW8
+	 tb7ZLPtUjKCGGtW70vnurOJnE5a2HuwUSiWnH3EU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390749AbfFMP7i (ORCPT
+        id S2390721AbfFMP7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:59:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37312 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:59:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731480AbfFMItf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:49:35 -0400
+        id S1731483AbfFMItl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:49:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BF26206BA;
-        Thu, 13 Jun 2019 08:49:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEB43206BA;
+        Thu, 13 Jun 2019 08:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415774;
-        bh=FRMtpE/fbjkGP/2V8FIwkcRf6zRchrkvT6wBZYNj5x0=;
+        s=default; t=1560415780;
+        bh=6qm8dsSAAvZzsQrVpV/U/Q9NvOzvbQ9vwMwJpnapczA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TjUffJ9f0N8FH832APkLF15dNXMaiU7AAnZHWpIfx3gsTD7hz+kZZtyqCsTbP5Lb3
-         h1CDJP5+5FL0L2ti7wjW4ZfAHj8cwF4cmaI+dn69CAo5wXMryxtfJWUAnoP01Jpynm
-         Z9bJGyZ1ZuUbOu6CQP7hVGQRDM7ZdKGQy+JC9JqA=
+        b=pFkjKCOcV5rWdFNQXlqpO5cEFuRW06wktti0gpjT/v3jZAzYuh8TFixA2XizVqDe1
+         lsR66u7QQ4wtNwgSE1N99ehnvlp37Js+y6OYBnfombmYm1uCPGXh3XfH9teApnE81X
+         j7761w6Ne+hmBjj8Pvu5b7DKe4ujBXXfIptrzGrg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kabir Sahane <x0153567@ti.com>,
-        "Andrew F. Davis" <afd@ti.com>, Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 118/155] ARM: OMAP2+: pm33xx-core: Do not Turn OFF CEFUSE as PPA may be using it
-Date:   Thu, 13 Jun 2019 10:33:50 +0200
-Message-Id: <20190613075659.501071260@linuxfoundation.org>
+Subject: [PATCH 5.1 095/155] power: supply: cpcap-battery: Fix signed counter sample register
+Date:   Thu, 13 Jun 2019 10:33:27 +0200
+Message-Id: <20190613075658.392164493@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,39 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 72aff4ecf1cb85a3c6e6b42ccbda0bc631b090b3 ]
+[ Upstream commit c68b901ac4fa969db8917b6a9f9b40524a690d20 ]
 
-This area is used to store keys by HSPPA in case of AM438x SOC. Leave it
-active.
+The accumulator sample register is signed 32-bits wide register on
+droid 4. And only the earlier version of cpcap has a signed 24-bits
+wide register. We're currently passing it around as unsigned, so
+let's fix that and use sign_extend32() for the earlier revision.
 
-Signed-off-by: Kabir Sahane <x0153567@ti.com>
-Signed-off-by: Andrew F. Davis <afd@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/pm33xx-core.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/power/supply/cpcap-battery.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/pm33xx-core.c b/arch/arm/mach-omap2/pm33xx-core.c
-index 724cf5774a6c..c93b6efd565f 100644
---- a/arch/arm/mach-omap2/pm33xx-core.c
-+++ b/arch/arm/mach-omap2/pm33xx-core.c
-@@ -51,10 +51,12 @@ static int amx3_common_init(void)
+diff --git a/drivers/power/supply/cpcap-battery.c b/drivers/power/supply/cpcap-battery.c
+index 6887870ba32c..453baa8f7d73 100644
+--- a/drivers/power/supply/cpcap-battery.c
++++ b/drivers/power/supply/cpcap-battery.c
+@@ -82,7 +82,7 @@ struct cpcap_battery_config {
+ };
  
- 	/* CEFUSE domain can be turned off post bootup */
- 	cefuse_pwrdm = pwrdm_lookup("cefuse_pwrdm");
--	if (cefuse_pwrdm)
--		omap_set_pwrdm_state(cefuse_pwrdm, PWRDM_POWER_OFF);
--	else
-+	if (!cefuse_pwrdm)
- 		pr_err("PM: Failed to get cefuse_pwrdm\n");
-+	else if (omap_type() != OMAP2_DEVICE_TYPE_GP)
-+		pr_info("PM: Leaving EFUSE power domain active\n");
-+	else
-+		omap_set_pwrdm_state(cefuse_pwrdm, PWRDM_POWER_OFF);
+ struct cpcap_coulomb_counter_data {
+-	s32 sample;		/* 24-bits */
++	s32 sample;		/* 24 or 32 bits */
+ 	s32 accumulator;
+ 	s16 offset;		/* 10-bits */
+ };
+@@ -213,7 +213,7 @@ static int cpcap_battery_get_current(struct cpcap_battery_ddata *ddata)
+  * TI or ST coulomb counter in the PMIC.
+  */
+ static int cpcap_battery_cc_raw_div(struct cpcap_battery_ddata *ddata,
+-				    u32 sample, s32 accumulator,
++				    s32 sample, s32 accumulator,
+ 				    s16 offset, u32 divider)
+ {
+ 	s64 acc;
+@@ -224,7 +224,6 @@ static int cpcap_battery_cc_raw_div(struct cpcap_battery_ddata *ddata,
+ 	if (!divider)
+ 		return 0;
  
- 	return 0;
+-	sample &= 0xffffff;		/* 24-bits, unsigned */
+ 	offset &= 0x7ff;		/* 10-bits, signed */
+ 
+ 	switch (ddata->vendor) {
+@@ -259,7 +258,7 @@ static int cpcap_battery_cc_raw_div(struct cpcap_battery_ddata *ddata,
+ 
+ /* 3600000μAms = 1μAh */
+ static int cpcap_battery_cc_to_uah(struct cpcap_battery_ddata *ddata,
+-				   u32 sample, s32 accumulator,
++				   s32 sample, s32 accumulator,
+ 				   s16 offset)
+ {
+ 	return cpcap_battery_cc_raw_div(ddata, sample,
+@@ -268,7 +267,7 @@ static int cpcap_battery_cc_to_uah(struct cpcap_battery_ddata *ddata,
  }
+ 
+ static int cpcap_battery_cc_to_ua(struct cpcap_battery_ddata *ddata,
+-				  u32 sample, s32 accumulator,
++				  s32 sample, s32 accumulator,
+ 				  s16 offset)
+ {
+ 	return cpcap_battery_cc_raw_div(ddata, sample,
+@@ -312,6 +311,8 @@ cpcap_battery_read_accumulated(struct cpcap_battery_ddata *ddata,
+ 	/* Sample value CPCAP_REG_CCS1 & 2 */
+ 	ccd->sample = (buf[1] & 0x0fff) << 16;
+ 	ccd->sample |= buf[0];
++	if (ddata->vendor == CPCAP_VENDOR_TI)
++		ccd->sample = sign_extend32(24, ccd->sample);
+ 
+ 	/* Accumulator value CPCAP_REG_CCA1 & 2 */
+ 	ccd->accumulator = ((s16)buf[3]) << 16;
 -- 
 2.20.1
 
