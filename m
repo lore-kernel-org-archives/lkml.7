@@ -2,218 +2,80 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4D0C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF1FC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1280C20673
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:46:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fcMHhd8S"
+	by mail.kernel.org (Postfix) with ESMTP id 1027E20673
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:46:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbfFMQpz (ORCPT
+        id S2392699AbfFMQqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:45:55 -0400
-Received: from mail-wr1-f42.google.com ([209.85.221.42]:37742 "EHLO
-        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730321AbfFMFqU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 01:46:20 -0400
-Received: by mail-wr1-f42.google.com with SMTP id v14so19259434wrr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 22:46:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=+KC+G8mdsFHRq3fTO8qSFdNuM/o8bUU5Ws1W0tY9nMQ=;
-        b=fcMHhd8SlQkGpmu4B4nnHAcWQF7KwY2oVV3mNcGcuZAm4mu6blLKC7FPW5p4xwO0k4
-         ElkPvnrtllGvpBASvZHiwuIorqIrmYPY1qDm4otU9sYAlokfFwYlR4PR2pE8qjSxJ2bv
-         Cc+n3yEeKCFqbEXJLo7edU2gB4dYlbZHfUPcT4pMQ8U0cZqodb/v5NPuEnuAp7VrL9N0
-         bZEESFOJmsJ97ksQTSUutEBELnFtWGZo8oAQ+JLQxVoFeSB81OPPH9JWwTl3JqqBruas
-         4CREGmjevp7mkIo8lNxjmg3TZAzNDJaThvyulLFtw+2h+imVMSsk2+eDbUEoGTrUF22T
-         NjIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=+KC+G8mdsFHRq3fTO8qSFdNuM/o8bUU5Ws1W0tY9nMQ=;
-        b=YiExsr6ef0UEUp9xf+mCdyzRM3XWEKcj/Cln3YXk6+KD6fMG6VCXqblzX3z0uRz+4I
-         mIZ0bWlPnH9QlUEbTzDQ1SR9HKPRO0A643j0uXk8OElIPD37wWdvTLIQJX/6AiQSCTNl
-         bXl7fs9+332yzR1IPLGfsDS7XYfCGovhkhumL24uuueOuaF83jUa0CbsRfxD/9n/jBuA
-         laMg+CojZkQ79GVgqwemn90eCWAonWigwly/rQl8DppCqpqJMVYrEro5CGDw2KQwgZIP
-         obkH/RsinyeFrwPR5w+BJcsNR5vY2T0xUp/w/7aS/sudj6FKe+x3zS+UBzIqL0c1S2oI
-         pdUQ==
-X-Gm-Message-State: APjAAAVIQuwJtKwaFHyEQvVjWHWMDCBwvqXtlIf9So5p6EtNtTzbrIU6
-        vmf3Zq36whvsNGbphDePgWn73A==
-X-Google-Smtp-Source: APXvYqw/aYOTu9cU/Ok5QkUUC38n3D+JffJJRYpP42j/6jsR85bV4Vha18mx5IR6w74L0iQ1L9eZ9A==
-X-Received: by 2002:adf:ebc6:: with SMTP id v6mr14275239wrn.222.1560404777633;
-        Wed, 12 Jun 2019 22:46:17 -0700 (PDT)
-Received: from [192.168.0.102] (88-147-71-233.dyn.eolo.it. [88.147.71.233])
-        by smtp.gmail.com with ESMTPSA id z14sm3164273wre.96.2019.06.12.22.46.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 22:46:16 -0700 (PDT)
-From:   Paolo Valente <paolo.valente@linaro.org>
-Message-Id: <43486E4F-2237-4E40-BDFE-07CFCCFFFA25@linaro.org>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_C82715EC-E52D-48BB-975D-458C5D643A93";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-Date:   Thu, 13 Jun 2019 07:46:12 +0200
-In-Reply-To: <7c5e9d11-4a3d-7df4-c1e6-7c95919522ab@csail.mit.edu>
-Cc:     linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <5B6570A2-541A-4CF8-98E0-979EA6E3717D@linaro.org>
- <2CB39B34-21EE-4A95-A073-8633CF2D187C@linaro.org>
- <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
- <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
- <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
- <686D6469-9DE7-4738-B92A-002144C3E63E@linaro.org>
- <01d55216-5718-767a-e1e6-aadc67b632f4@csail.mit.edu>
- <CA8A23E2-6F22-4444-9A20-E052A94CAA9B@linaro.org>
- <cc148388-3c82-d7c0-f9ff-8c31bb5dc77d@csail.mit.edu>
- <6FE0A98F-1E3D-4EF6-8B38-2C85741924A4@linaro.org>
- <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
- <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
- <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
- <5b71028c-72f0-73dd-0cd5-f28ff298a0a3@csail.mit.edu>
- <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
- <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
- <7B74A790-BD98-412B-ADAB-3B513FB1944E@linaro.org>
- <6a6f4aa4-fc95-f132-55b2-224ff52bd2d8@csail.mit.edu>
- <7c5e9d11-4a3d-7df4-c1e6-7c95919522ab@csail.mit.edu>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Thu, 13 Jun 2019 12:46:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:34580 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730311AbfFMFhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 01:37:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C1A428;
+        Wed, 12 Jun 2019 22:37:15 -0700 (PDT)
+Received: from [10.162.40.191] (p8cg001049571a15.blr.arm.com [10.162.40.191])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB5673F73C;
+        Wed, 12 Jun 2019 22:37:11 -0700 (PDT)
+Subject: Re: [PATCH V5 - Rebased] mm/hotplug: Reorder memblock_[free|remove]()
+ calls in try_remove_memory()
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, ard.biesheuvel@arm.com, osalvador@suse.de,
+        mhocko@suse.com, mark.rutland@arm.com
+References: <36e0126f-e2d1-239c-71f3-91125a49e019@redhat.com>
+ <1560252373-3230-1-git-send-email-anshuman.khandual@arm.com>
+ <20190611151908.cdd6b73fd17fda09b1b3b65b@linux-foundation.org>
+ <5b4f1f19-2f8d-9b8f-4240-7b728952b6fe@arm.com>
+ <67f5c5ad-d753-77d8-8746-96cf4746b3e0@redhat.com>
+ <20190612185450.73841b9f5af3a4189de6f910@linux-foundation.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <92ce901d-42dc-6872-1ff0-0ca13d5cefbe@arm.com>
+Date:   Thu, 13 Jun 2019 11:07:30 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190612185450.73841b9f5af3a4189de6f910@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Apple-Mail=_C82715EC-E52D-48BB-975D-458C5D643A93
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
 
+On 06/13/2019 07:24 AM, Andrew Morton wrote:
+> On Wed, 12 Jun 2019 08:53:33 +0200 David Hildenbrand <david@redhat.com> wrote:
+> 
+>>>>> ...
+>>>>>
+>>>>>
+>>>>> - Rebased on linux-next (next-20190611)
+>>>>
+>>>> Yet the patch you've prepared is designed for 5.3.  Was that
+>>>> deliberate, or should we be targeting earlier kernels?
+>>>
+>>> It was deliberate for 5.3 as a preparation for upcoming reworked arm64 hot-remove.
+>>>
+>>
+>> We should probably add to the patch description something like "This is
+>> a preparation for arm64 memory hotremove. The described issue is not
+>> relevant on other architectures."
+> 
+> Please.  And is there any reason to merge it separately?  Can it be
+> [patch 1/3] in the "arm64/mm: Enable memory hot remove" series?
 
-
-> Il giorno 12 giu 2019, alle ore 00:34, Srivatsa S. Bhat =
-<srivatsa@csail.mit.edu> ha scritto:
->=20
-> On 6/2/19 12:04 AM, Srivatsa S. Bhat wrote:
->> On 5/30/19 3:45 AM, Paolo Valente wrote:
->>>=20
-> [...]
->>> At any rate, since you pointed out that you are interested in
->>> out-of-the-box performance, let me complete the context: in case
->>> low_latency is left set, one gets, in return for this 12% loss,
->>> a) at least 1000% higher responsiveness, e.g., 1000% lower start-up
->>> times of applications under load [1];
->>> b) 500-1000% higher throughput in multi-client server workloads, as =
-I
->>> already pointed out [2].
->>>=20
->>=20
->> I'm very happy that you could solve the problem without having to
->> compromise on any of the performance characteristics/features of BFQ!
->>=20
->>=20
->>> I'm going to prepare complete patches.  In addition, if ok for you,
->>> I'll report these results on the bug you created.  Then I guess we =
-can
->>> close it.
->>>=20
->>=20
->> Sounds great!
->>=20
->=20
-> Hi Paolo,
->=20
-
-Hi
-
-> Hope you are doing great!
->=20
-
-Sort of, thanks :)
-
-> I was wondering if you got a chance to post these patches to LKML for
-> review and inclusion... (No hurry, of course!)
->=20
-
-
-I'm having troubles testing these new patches on 5.2-rc4.  As it
-happened with the first release candidates for 5.1, the CPU of my test
-machine (Intel Core i7-2760QM@2.40GHz) is so slowed down that results
-are heavily distorted with every I/O scheduler.
-
-Unfortunately, I'm not competent enough to spot the cause of this
-regression in a feasible amount of time.  I hope it'll go away with
-next release candidates, or I'll test on 5.1.
-
-> Also, since your fixes address the performance issues in BFQ, do you
-> have any thoughts on whether they can be adapted to CFQ as well, to
-> benefit the older stable kernels that still support CFQ?
->=20
-
-I have implanted my fixes on the existing throughput-boosting
-infrastructure of BFQ.  CFQ doesn't have such an infrastructure.
-
-If you need I/O control with older kernels, you may want to check my
-version of BFQ for legacy block, named bfq-sq and available in this
-repo:
-https://github.com/Algodev-github/bfq-mq/
-
-I'm willing to provide you with any information or help if needed.
-
-Thanks,
-Paolo
-
-
-> Thank you!
->=20
-> Regards,
-> Srivatsa
-> VMware Photon OS
-
-
---Apple-Mail=_C82715EC-E52D-48BB-975D-458C5D643A93
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEpYoduex+OneZyvO8OAkCLQGo9oMFAl0B4yQACgkQOAkCLQGo
-9oNOVg/+KTDsN0F9V0g74Et2TxDdqnhABWgQ3HrajfUnRzmLdMR0Tx0C0YUBZM5t
-S3xp4ofC2oP3HItm6gJ+z+Pw/6K+C5k8cd09zRh9W9wkw4dLGXTuotakmMupTpyT
-XTymYIUfHt72H42arlX0dxtoPkhMMRuP7PXKtvbLun4dLiErjGh03Lvs139EQvyJ
-L65pJTeoIaTT7r+MlblZkmaVRpqG/XF8yRzRNg5/pSbkvPhegZsJC7pMMdjwLsK8
-1skizw2Nt1G24RqGSuofRti9lCDPKLSND2t4xBUZ1BWN93f9Nz3Zm8m9ylWiCNGE
-c0G3RpRTknqxbYtkPUr71MJZ63Hl2d5F/02XUkZGkSo7EtOoMKiKCg6VzzIq24JP
-gxL/lMoVO27+JM9DWBUBvdWxkOHtvD1JRAaGX9VWqTi7ksUFDlFHOF83Udyj5HBz
-PJS2TL5dQ+X+l3G7nD3YHJCwSD2+DC1rZPQhj75BGu1CBnGXaEHtEMn3CfmVVQpL
-H0pVqIyF7lnJJu+vEYuea73RfnfSi4FU+MpFFYFCG6fElqUik9X7IzCQRcB6ianK
-vqNbdqMwq9BeFgwm3f09fKzc6JdkBu0YApmPJp9mxeYkvQLJYLxGlyYnUU7ottDL
-4QlYZevYyTv9G+O8HM/l8PuET7+X66xi8Dlj5oGnURXNmRLh64g=
-=PUTU
------END PGP SIGNATURE-----
-
---Apple-Mail=_C82715EC-E52D-48BB-975D-458C5D643A93--
+Sure it can be. I will make this [patch 1/3] in the next version for
+"arm64/mm: Enable memory hot remove". Apologies for the noise here.
