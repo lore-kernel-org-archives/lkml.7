@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF5AC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DC8C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6499D20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 527AF20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441928;
-	bh=kr4WLHb8ykzlmdHs3+5pe59y2Z1G3RHQQ5ZQEnni65A=;
+	s=default; t=1560441939;
+	bh=Jq0JqMHJvXFx8ZChVTZwuwvn2uI3AkZCp2W+XRv0lQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LXAbd+7YDt4WMXNf2fVf0nEbdatOEThckwfSlP+LXKEf5yNF5RygotwYeJqdwxG3v
-	 5fgq50ET2wrpTjJ2pIgEoj530jPPRxYXbDiNpPB5C3h+ZbCUFqah8y0VyuRKqAb7r4
-	 q0ct7ytwpKM+8eIZochsLb1ymp2G1nY28DVO0P7U=
+	b=rEJjesXwZbWfdJVgNgzXjfkKzVz7D9FMel+/LvPHiyPCcE855EO9RtISHGVgZlZkW
+	 lIomHG06ZcM68JrY68vABAmzBySVnkxWTBQSxzDvVaibapTKRILkrqTCZ6gzCHGypf
+	 Hwc4Z4buJNMmxnYaBm9KgabqAylJt7MTZ+Gq5KKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390976AbfFMQFL (ORCPT
+        id S1731680AbfFMQFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:05:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35134 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:05:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731348AbfFMIql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:46:41 -0400
+        id S1731336AbfFMIq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:46:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C63D6215EA;
-        Thu, 13 Jun 2019 08:46:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34DD42147A;
+        Thu, 13 Jun 2019 08:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415601;
-        bh=kr4WLHb8ykzlmdHs3+5pe59y2Z1G3RHQQ5ZQEnni65A=;
+        s=default; t=1560415586;
+        bh=Jq0JqMHJvXFx8ZChVTZwuwvn2uI3AkZCp2W+XRv0lQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=chZhQ8rp7iqoRZkyQiDMwD+QQeqlvM6e4d0NSv/VkYwAcYahl4ifOZ+Y85v+5Pi0L
-         YXnf6jncCt1zqnyPCUg6SMhrPw7b0XMMUnIrppHiIGJXpyP4tG1FXXDL+oX1q7khQn
-         x37A42fE+deKTE/sds04Xf7DCfMJ1TWb/7aUbEaE=
+        b=x4DAJ2dOElvltN9PCBt4mIqWVuWHPWzEM4XWRpplbYoej0HSFnk0KdWhAs6h2XvVi
+         Xh8zPLTgLW4MAIcIB9g5/ihJcmQi/kfjFbS1X6uaeveFMEpEHdISUmGagWd8Be5QiO
+         SZXNAB1XomVls4livLV1pMogwScVbwV9MF3CXwLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 059/155] PCI: dwc: Free MSI in dw_pcie_host_init() error path
-Date:   Thu, 13 Jun 2019 10:32:51 +0200
-Message-Id: <20190613075656.383108747@linuxfoundation.org>
+Subject: [PATCH 5.1 055/155] media: atmel: atmel-isc: fix asd memory allocation
+Date:   Thu, 13 Jun 2019 10:32:47 +0200
+Message-Id: <20190613075656.195251339@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -63,64 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9e2b5de5604a6ff2626c51e77014d92c9299722c ]
+[ Upstream commit 1e4e25c4959c10728fbfcc6a286f9503d32dfe02 ]
 
-If we ever did MSI-related initializations, we need to call
-dw_pcie_free_msi() in the error code path.
+The subsystem will free the asd memory on notifier cleanup, if the asd is
+added to the notifier.
+However the memory is freed using kfree.
+Thus, we cannot allocate the asd using devm_*
+This can lead to crashes and problems.
+To test this issue, just return an error at probe, but cleanup the
+notifier beforehand.
 
-Remove the IS_ENABLED(CONFIG_PCI_MSI) check for MSI init because
-pci_msi_enabled() already has a stub for !CONFIG_PCI_MSI.
+Fixes: 106267444f ("[media] atmel-isc: add the Image Sensor Controller code")
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/media/platform/atmel/atmel-isc.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 25087d3c9a82..acd185b4661e 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -439,7 +439,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (ret)
- 		pci->num_viewport = 2;
+diff --git a/drivers/media/platform/atmel/atmel-isc.c b/drivers/media/platform/atmel/atmel-isc.c
+index 50178968b8a6..5b0e96bd8c7e 100644
+--- a/drivers/media/platform/atmel/atmel-isc.c
++++ b/drivers/media/platform/atmel/atmel-isc.c
+@@ -2065,8 +2065,11 @@ static int isc_parse_dt(struct device *dev, struct isc_device *isc)
+ 			break;
+ 		}
  
--	if (IS_ENABLED(CONFIG_PCI_MSI) && pci_msi_enabled()) {
-+	if (pci_msi_enabled()) {
- 		/*
- 		 * If a specific SoC driver needs to change the
- 		 * default number of vectors, it needs to implement
-@@ -477,7 +477,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (pp->ops->host_init) {
- 		ret = pp->ops->host_init(pp);
- 		if (ret)
--			goto error;
-+			goto err_free_msi;
- 	}
+-		subdev_entity->asd = devm_kzalloc(dev,
+-				     sizeof(*subdev_entity->asd), GFP_KERNEL);
++		/* asd will be freed by the subsystem once it's added to the
++		 * notifier list
++		 */
++		subdev_entity->asd = kzalloc(sizeof(*subdev_entity->asd),
++					     GFP_KERNEL);
+ 		if (!subdev_entity->asd) {
+ 			of_node_put(rem);
+ 			ret = -ENOMEM;
+@@ -2210,6 +2213,7 @@ static int atmel_isc_probe(struct platform_device *pdev)
+ 						     subdev_entity->asd);
+ 		if (ret) {
+ 			fwnode_handle_put(subdev_entity->asd->match.fwnode);
++			kfree(subdev_entity->asd);
+ 			goto cleanup_subdev;
+ 		}
  
- 	pp->root_bus_nr = pp->busn->start;
-@@ -491,7 +491,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 
- 	ret = pci_scan_root_bus_bridge(bridge);
- 	if (ret)
--		goto error;
-+		goto err_free_msi;
- 
- 	bus = bridge->bus;
- 
-@@ -507,6 +507,9 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	pci_bus_add_devices(bus);
- 	return 0;
- 
-+err_free_msi:
-+	if (pci_msi_enabled() && !pp->ops->msi_host_init)
-+		dw_pcie_free_msi(pp);
- error:
- 	pci_free_host_bridge(bridge);
- 	return ret;
 -- 
 2.20.1
 
