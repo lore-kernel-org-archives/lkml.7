@@ -2,116 +2,372 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3882EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9ECEC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 115FF2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:12:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DUVDHpee"
+	by mail.kernel.org (Postfix) with ESMTP id 85F8D2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbfFMRMm (ORCPT
+        id S2404552AbfFMRMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:12:42 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:46606 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729008AbfFLWG7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 18:06:59 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CLxUYH009662
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 15:06:58 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=IZysbkBOWuoojpHfDDSz6omhgc5cHCXvaawoTaDfhK0=;
- b=DUVDHpeehWi10Lab//cDJwDOb/LI4bsHpLt5aH50Rgna7p8/rCnjYziNeuis0xU0Wxws
- jfRURV1mTQbo2ldDDAYkYwWv7EwKRnaLoj2tPFSsi1yqOxUQeMk+3cyfGWoYULT+FU/k
- Czvqi3Ku+4e2072gRPXrVbJCSLzjTDFnxS0= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2t3338hk8y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 15:06:57 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 12 Jun 2019 15:06:14 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 04C3C62E2CFA; Wed, 12 Jun 2019 15:03:41 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-CC:     <namit@vmware.com>, <peterz@infradead.org>, <oleg@redhat.com>,
-        <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
-        <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v3 4/5] uprobe: use FOLL_SPLIT_PMD instead of FOLL_SPLIT
-Date:   Wed, 12 Jun 2019 15:03:18 -0700
-Message-ID: <20190612220320.2223898-5-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190612220320.2223898-1-songliubraving@fb.com>
-References: <20190612220320.2223898-1-songliubraving@fb.com>
-X-FB-Internal: Safe
+        Thu, 13 Jun 2019 13:12:48 -0400
+Received: from mga09.intel.com ([134.134.136.24]:14489 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728055AbfFMRMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 13:12:46 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 10:12:45 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga004.jf.intel.com with ESMTP; 13 Jun 2019 10:12:43 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hbTHG-0006Lx-RY; Thu, 13 Jun 2019 20:12:42 +0300
+Date:   Thu, 13 Jun 2019 20:12:42 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Stefan Roese <sr@denx.de>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 3/3 v6] tty/serial/8250: use mctrl_gpio helpers
+Message-ID: <20190613171242.GF9224@smile.fi.intel.com>
+References: <20190613154542.32438-1-sr@denx.de>
+ <20190613154542.32438-3-sr@denx.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=730 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906120153
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613154542.32438-3-sr@denx.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patches uses newly added FOLL_SPLIT_PMD in uprobe. This enables easy
-regroup of huge pmd after the uprobe is disabled (in next patch).
+On Thu, Jun 13, 2019 at 05:45:42PM +0200, Stefan Roese wrote:
+> From: Yegor Yefremov <yegorslists@googlemail.com>
+> 
+> This patch permits the usage for GPIOs to control
+> the CTS/RTS/DTR/DSR/DCD/RI signals.
+> 
+> Changed by Stefan:
+> Only call mctrl_gpio_init(), if the device has no ACPI companion device
+> to not break existing ACPI based systems. Also only use the mctrl_gpio_
+> functions when "gpios" is available.
+> 
+> Use MSR / MCR <-> TIOCM wrapper functions.
 
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- kernel/events/uprobes.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index f7c61a1ef720..a20d7b43a056 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -153,7 +153,7 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
- {
- 	struct mm_struct *mm = vma->vm_mm;
- 	struct page_vma_mapped_walk pvmw = {
--		.page = old_page,
-+		.page = compound_head(old_page),
- 		.vma = vma,
- 		.address = addr,
- 	};
-@@ -165,8 +165,6 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
- 	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, mm, addr,
- 				addr + PAGE_SIZE);
- 
--	VM_BUG_ON_PAGE(PageTransHuge(old_page), old_page);
--
- 	if (!orig) {
- 		err = mem_cgroup_try_charge(new_page, vma->vm_mm, GFP_KERNEL,
- 					    &memcg, false);
-@@ -483,7 +481,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
- retry:
- 	/* Read the page with vaddr into memory */
- 	ret = get_user_pages_remote(NULL, mm, vaddr, 1,
--			FOLL_FORCE | FOLL_SPLIT, &old_page, &vma, NULL);
-+			FOLL_FORCE | FOLL_SPLIT_PMD, &old_page, &vma, NULL);
- 	if (ret <= 0)
- 		return ret;
- 
+I'm a bit busy now, but I will try to find a time to actually test this on some
+affected machines.
+
+> 
+> Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Stefan Roese <sr@denx.de>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> Cc: Yegor Yefremov <yegorslists@googlemail.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+> v6:
+> - Use newly introduced TIOCM <-> MCR/MSR wrapper functions
+> - serial8250_in_MCR(): Don't save the already read MCR bits in TIOCM
+>   format but "or" them later to the GPIO MCR value
+> - Correctly use "!up->gpios" (Andy)
+> - Removed Mika's reviewed by tag (because of changes)
+> 
+> v5:
+> - Dropped a few "if (up->gpios)" checks, as the mctrl_gpio_foo() API
+>   handles gpios == NULL (return)
+> - 8250_omap: Changed "IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(up->gpios, ...))"
+>   to "up->gpios == NULL", as mctrl_gpio_to_gpiod() does not handle
+>   gpios == NULL correctly.
+> 
+> v4:
+> - Added Mika's reviewed by tag
+> - Added Johan to Cc
+> 
+> v3:
+> - Only call mctrl_gpio_init(), if the device has no ACPI companion device
+>   to not break existing ACPI based systems, as suggested by Andy
+> 
+> v2:
+> - No change
+> 
+> Please note that this patch was already applied before [1]. And later
+> reverted [2] because it introduced problems on some x86 based boards
+> (ACPI GPIO related). Here a detailed description of the issue at that
+> time:
+> 
+> https://lkml.org/lkml/2016/8/9/357
+> http://www.spinics.net/lists/linux-serial/msg23071.html
+> 
+> This is a re-send of the original patch that was applied at that time.
+> With patch 1/2 from this series this issue should be fixed now (please
+> note that I can't test it on such an x86 platform causing these
+> problems).
+> 
+> Andy (or Mika), perhaps it would be possible for you to test this
+> patch again, now with patch 1/2 of this series applied as well?
+> That would be really helpful.
+> 
+> Thanks,
+> Stefan
+> 
+> [1] 4ef03d328769 ("tty/serial/8250: use mctrl_gpio helpers")
+> [2] 5db4f7f80d16 ("Revert "tty/serial/8250: use mctrl_gpio helpers"")
+> 
+>  .../devicetree/bindings/serial/8250.txt       | 19 ++++++++++++
+>  drivers/tty/serial/8250/8250.h                | 18 +++++++++++-
+>  drivers/tty/serial/8250/8250_core.c           | 17 +++++++++++
+>  drivers/tty/serial/8250/8250_omap.c           | 29 ++++++++++---------
+>  drivers/tty/serial/8250/8250_port.c           |  8 +++++
+>  drivers/tty/serial/8250/Kconfig               |  1 +
+>  include/linux/serial_8250.h                   |  1 +
+>  7 files changed, 79 insertions(+), 14 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
+> index 3cba12f855b7..20d351f268ef 100644
+> --- a/Documentation/devicetree/bindings/serial/8250.txt
+> +++ b/Documentation/devicetree/bindings/serial/8250.txt
+> @@ -53,6 +53,9 @@ Optional properties:
+>    programmable TX FIFO thresholds.
+>  - resets : phandle + reset specifier pairs
+>  - overrun-throttle-ms : how long to pause uart rx when input overrun is encountered.
+> +- {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD
+> +  line respectively. It will use specified GPIO instead of the peripheral
+> +  function pin for the UART feature. If unsure, don't specify this property.
+>  
+>  Note:
+>  * fsl,ns16550:
+> @@ -74,3 +77,19 @@ Example:
+>  		interrupts = <10>;
+>  		reg-shift = <2>;
+>  	};
+> +
+> +Example for OMAP UART using GPIO-based modem control signals:
+> +
+> +	uart4: serial@49042000 {
+> +		compatible = "ti,omap3-uart";
+> +		reg = <0x49042000 0x400>;
+> +		interrupts = <80>;
+> +		ti,hwmods = "uart4";
+> +		clock-frequency = <48000000>;
+> +		cts-gpios = <&gpio3 5 GPIO_ACTIVE_LOW>;
+> +		rts-gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;
+> +		dtr-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
+> +		dsr-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
+> +		dcd-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
+> +		rng-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
+> +	};
+> diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
+> index 793da2e510e0..75c7c5449461 100644
+> --- a/drivers/tty/serial/8250/8250.h
+> +++ b/drivers/tty/serial/8250/8250.h
+> @@ -11,6 +11,8 @@
+>  #include <linux/serial_reg.h>
+>  #include <linux/dmaengine.h>
+>  
+> +#include "../serial_mctrl_gpio.h"
+> +
+>  struct uart_8250_dma {
+>  	int (*tx_dma)(struct uart_8250_port *p);
+>  	int (*rx_dma)(struct uart_8250_port *p);
+> @@ -196,11 +198,25 @@ static inline int serial8250_MSR_to_TIOCM(int msr)
+>  static inline void serial8250_out_MCR(struct uart_8250_port *up, int value)
+>  {
+>  	serial_out(up, UART_MCR, value);
+> +
+> +	if (up->gpios)
+> +		mctrl_gpio_set(up->gpios, serial8250_MCR_to_TIOCM(value));
+>  }
+>  
+>  static inline int serial8250_in_MCR(struct uart_8250_port *up)
+>  {
+> -	return serial_in(up, UART_MCR);
+> +	int mctrl;
+> +
+> +	mctrl = serial_in(up, UART_MCR);
+> +
+> +	if (up->gpios) {
+> +		unsigned int mctrl_gpio = 0;
+> +
+> +		mctrl_gpio = mctrl_gpio_get_outputs(up->gpios, &mctrl_gpio);
+> +		mctrl |= serial8250_TIOCM_to_MCR(mctrl_gpio);
+> +	}
+> +
+> +	return mctrl;
+>  }
+>  
+>  #if defined(__alpha__) && !defined(CONFIG_PCI)
+> diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+> index e441221e04b9..a4470771005f 100644
+> --- a/drivers/tty/serial/8250/8250_core.c
+> +++ b/drivers/tty/serial/8250/8250_core.c
+> @@ -14,6 +14,7 @@
+>   *	      serial8250_register_8250_port() ports
+>   */
+>  
+> +#include <linux/acpi.h>
+>  #include <linux/module.h>
+>  #include <linux/moduleparam.h>
+>  #include <linux/ioport.h>
+> @@ -982,6 +983,8 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
+>  
+>  	uart = serial8250_find_match_or_unused(&up->port);
+>  	if (uart && uart->port.type != PORT_8250_CIR) {
+> +		struct mctrl_gpios *gpios;
+> +
+>  		if (uart->port.dev)
+>  			uart_remove_one_port(&serial8250_reg, &uart->port);
+>  
+> @@ -1016,6 +1019,20 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
+>  		if (up->port.flags & UPF_FIXED_TYPE)
+>  			uart->port.type = up->port.type;
+>  
+> +		/*
+> +		 * Only call mctrl_gpio_init(), if the device has no ACPI
+> +		 * companion device
+> +		 */
+> +		if (!has_acpi_companion(uart->port.dev)) {
+> +			gpios = mctrl_gpio_init(&uart->port, 0);
+> +			if (IS_ERR(gpios)) {
+> +				if (PTR_ERR(gpios) != -ENOSYS)
+> +					return PTR_ERR(gpios);
+> +			} else {
+> +				uart->gpios = gpios;
+> +			}
+> +		}
+> +
+>  		serial8250_set_defaults(uart);
+>  
+>  		/* Possibly override default I/O functions.  */
+> diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
+> index 0a8316632d75..d5bbfc8f2284 100644
+> --- a/drivers/tty/serial/8250/8250_omap.c
+> +++ b/drivers/tty/serial/8250/8250_omap.c
+> @@ -141,18 +141,20 @@ static void omap8250_set_mctrl(struct uart_port *port, unsigned int mctrl)
+>  
+>  	serial8250_do_set_mctrl(port, mctrl);
+>  
+> -	/*
+> -	 * Turn off autoRTS if RTS is lowered and restore autoRTS setting
+> -	 * if RTS is raised
+> -	 */
+> -	lcr = serial_in(up, UART_LCR);
+> -	serial_out(up, UART_LCR, UART_LCR_CONF_MODE_B);
+> -	if ((mctrl & TIOCM_RTS) && (port->status & UPSTAT_AUTORTS))
+> -		priv->efr |= UART_EFR_RTS;
+> -	else
+> -		priv->efr &= ~UART_EFR_RTS;
+> -	serial_out(up, UART_EFR, priv->efr);
+> -	serial_out(up, UART_LCR, lcr);
+> +	if (!up->gpios) {
+> +		/*
+> +		 * Turn off autoRTS if RTS is lowered and restore autoRTS
+> +		 * setting if RTS is raised
+> +		 */
+> +		lcr = serial_in(up, UART_LCR);
+> +		serial_out(up, UART_LCR, UART_LCR_CONF_MODE_B);
+> +		if ((mctrl & TIOCM_RTS) && (port->status & UPSTAT_AUTORTS))
+> +			priv->efr |= UART_EFR_RTS;
+> +		else
+> +			priv->efr &= ~UART_EFR_RTS;
+> +		serial_out(up, UART_EFR, priv->efr);
+> +		serial_out(up, UART_LCR, lcr);
+> +	}
+>  }
+>  
+>  /*
+> @@ -453,7 +455,8 @@ static void omap_8250_set_termios(struct uart_port *port,
+>  	priv->efr = 0;
+>  	up->port.status &= ~(UPSTAT_AUTOCTS | UPSTAT_AUTORTS | UPSTAT_AUTOXOFF);
+>  
+> -	if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW) {
+> +	if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW &&
+> +	    !up->gpios) {
+>  		/* Enable AUTOCTS (autoRTS is enabled when RTS is raised) */
+>  		up->port.status |= UPSTAT_AUTOCTS | UPSTAT_AUTORTS;
+>  		priv->efr |= UART_EFR_CTS;
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index 47f0a8d01a57..bc4a5e7f7f63 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -1662,6 +1662,8 @@ static void serial8250_disable_ms(struct uart_port *port)
+>  	if (up->bugs & UART_BUG_NOMSR)
+>  		return;
+>  
+> +	mctrl_gpio_disable_ms(up->gpios);
+> +
+>  	up->ier &= ~UART_IER_MSI;
+>  	serial_port_out(port, UART_IER, up->ier);
+>  }
+> @@ -1674,6 +1676,8 @@ static void serial8250_enable_ms(struct uart_port *port)
+>  	if (up->bugs & UART_BUG_NOMSR)
+>  		return;
+>  
+> +	mctrl_gpio_enable_ms(up->gpios);
+> +
+>  	up->ier |= UART_IER_MSI;
+>  
+>  	serial8250_rpm_get(up);
+> @@ -1944,11 +1948,15 @@ unsigned int serial8250_do_get_mctrl(struct uart_port *port)
+>  {
+>  	struct uart_8250_port *up = up_to_u8250p(port);
+>  	unsigned int status;
+> +	unsigned int val = 0;
+>  
+>  	serial8250_rpm_get(up);
+>  	status = serial8250_modem_status(up);
+>  	serial8250_rpm_put(up);
+>  
+> +	if (up->gpios)
+> +		return mctrl_gpio_get(up->gpios, &val);
+> +
+>  	return serial8250_MSR_to_TIOCM(status);
+>  }
+>  EXPORT_SYMBOL_GPL(serial8250_do_get_mctrl);
+> diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
+> index 296115f6a4d8..509f6a3bb9ff 100644
+> --- a/drivers/tty/serial/8250/Kconfig
+> +++ b/drivers/tty/serial/8250/Kconfig
+> @@ -8,6 +8,7 @@ config SERIAL_8250
+>  	tristate "8250/16550 and compatible serial support"
+>  	depends on !S390
+>  	select SERIAL_CORE
+> +	select SERIAL_MCTRL_GPIO if GPIOLIB
+>  	---help---
+>  	  This selects whether you want to include the driver for the standard
+>  	  serial ports.  The standard answer is Y.  People who might say N
+> diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
+> index 5e0b59422a68..bb2bc99388ca 100644
+> --- a/include/linux/serial_8250.h
+> +++ b/include/linux/serial_8250.h
+> @@ -110,6 +110,7 @@ struct uart_8250_port {
+>  						 *   if no_console_suspend
+>  						 */
+>  	unsigned char		probe;
+> +	struct mctrl_gpios	*gpios;
+>  #define UART_PROBE_RSA	(1 << 0)
+>  
+>  	/*
+> -- 
+> 2.22.0
+> 
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
