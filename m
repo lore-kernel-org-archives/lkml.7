@@ -2,107 +2,147 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F38EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E9EC31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0150321721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:50:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560444645;
-	bh=PCrq6q+mOLmJQuerOsS11Z/JVvaxvlgW/2tzRTgNMec=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YWXV8J7SJMVGsXnOdXSQEj5cjuIG6Nn3wJ81vXS98MDhJ6V+LOLysWZb7M/jtPFer
-	 wEksjnKhLR8h+zfOmqO3qZzyH6JKncoqiz/Vvk5Q1NnDKg2XJkOQOg+uVi7Kkqa04K
-	 2d/QJU9PFUNcDfnZMbEXckcX/TKB1MgvSAy+TETw=
+	by mail.kernel.org (Postfix) with ESMTP id B39FD21721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:50:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VY1ARRR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404362AbfFMQum (ORCPT
+        id S1730172AbfFMQuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:50:42 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43499 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfFMEBA (ORCPT
+        Thu, 13 Jun 2019 12:50:50 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38711 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730175AbfFMDyt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 00:01:00 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j29so13870683lfk.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 21:00:58 -0700 (PDT)
+        Wed, 12 Jun 2019 23:54:49 -0400
+Received: by mail-pg1-f196.google.com with SMTP id v11so10102894pgl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 20:54:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fbJVJjV4JHgO+lN2CsoiJmjNN9A/OrzWGNbZgYy8/Gk=;
-        b=ZuHB+EFIWdmyBI+Bcm6q34WvnNer+ayYdcSCBHw9qKdJL9RuMOUEPVDSrPOV456jEe
-         Mu2BtvM6HHM2VC/dxpIL71LNetzBiC2Kp/5bf8wCUjnRs36qyJeTHEY/nu3+T/gkFmV2
-         AKNJR7dBb43TR0xZODVPwIEf0f2Q0JzJ6s+UY=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mKy9mX5Pp1ioIzP2A8hzp0vntRtGgDnY3IkJQGZ2PBw=;
+        b=VY1ARRR2PzJXX/T0X0dikiSYlvBOEZzpixIOxb3/mvvoEJvO1W+6VTiUN6qa+hwMMo
+         jsl2ys0dkXq4g+DWURE4vjrOA2narBcN4B7lhf7YxeZhy+Z0fu5wAAQFHrloFTYa9bAY
+         McCy2tdVTjXdUZYioxoPhBdfF9xPSgXf05UMISQO85e9KsMEvjDb2BwLLkPYMcRNEssg
+         h7H455qyD1uCW4Zr8pD6qbBPtHYMzyMsJRpcuPVSkar+w665vxzgBZhRWnurIda6PDgu
+         5Rof3ELHIuGjr0Fe4ShBzdXI70oyHYUPHypZZDzQB9bOCqzydNXdWbkpM5J+7NxaoAQ2
+         xrow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fbJVJjV4JHgO+lN2CsoiJmjNN9A/OrzWGNbZgYy8/Gk=;
-        b=fNCjViMW5FWBO6ONXxlH/1Br/9YTx8IxjCg2dEXTUGmFbGzJzB2brwxhzYK9014QsU
-         USOjeL1Rd7HG7REi/rZKWgTvEacTkn6fi5EdvpHhf+8Hx9desPoBIctkrTqOz++4Pyv5
-         kXX4uKzfxvV9PUjKWY6PnLRjgFN2APaKzN/feocovoxcTgjl681vLMOSPBVYmPHp3w7o
-         xNpYPGkMEjbcfdsbD+5VUoXNgJvhXiPpAX+HsiJqJ8lo7GciYa5a70Y+XzO+aKTJO7tq
-         PlxeK2s/yWK1KFX1VpTmnR1IVdpQZoWN+iNgaHzryjGF/BBsPm+ZurP3nO1cTqgZqEyf
-         yiwg==
-X-Gm-Message-State: APjAAAVJ/PSxdrLdu8AiqlWlDWiESe7J1fU6Pykd0zT3TTauuk1pqqCp
-        +nVMpJfT8ci5xxYEpNH3QB5dz2KATo0=
-X-Google-Smtp-Source: APXvYqz5Nm37zxojVrusz5L1bDSxR2BJjoIotJxPguHypWXEegb2g9Qh/YxNgqFDXXxn/KhlbfMxBA==
-X-Received: by 2002:ac2:51a3:: with SMTP id f3mr35977962lfk.125.1560398457286;
-        Wed, 12 Jun 2019 21:00:57 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id p15sm319635lji.80.2019.06.12.21.00.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 21:00:55 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id 16so17055237ljv.10
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 21:00:55 -0700 (PDT)
-X-Received: by 2002:a2e:2c07:: with SMTP id s7mr5616489ljs.44.1560398455064;
- Wed, 12 Jun 2019 21:00:55 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mKy9mX5Pp1ioIzP2A8hzp0vntRtGgDnY3IkJQGZ2PBw=;
+        b=OphGZrj4RmFKssPeuodoUJlw/Fg8Sg5YUGC8PX8KoGUsJ7o//dTIRM6hJ2UtnmG27L
+         GMvh9NlMBi3ILDrx17xX82IVSkk2Uj72gUtGXnROHvPxqCNPcovrgjRnoZQEZCXUl0IA
+         ZYCriZFjhSWlhXP/f43KHfFvPqZIzbn5aaDb4GM0GxH03VoOT6wjmo4sLSi0im9qS6Rk
+         zzqul9l5VD3uQedqRL6yjmrBjlbBeJRkXCYmI5el4p8YN+UClTxQMqd4b4xX097KBFN1
+         aSsTHFkUrahoohd0UyhsfOQJkyigHx5R1RomXvilVuKoKgtfLRNV/U62t4UrxO13FwhB
+         VCUg==
+X-Gm-Message-State: APjAAAV8eEirR54z+eWOgFd9EUk9L8gA0utOsF84f6WNu91jJL5XCJar
+        CVQCJ0GAaaUwP/tuFdDMpHo=
+X-Google-Smtp-Source: APXvYqzRZrUpdn80GYYwHJcJVav31KYzUN1LPr7q/EkOEPciQgLl7crthZ3eONR3VME76glRiBDUmQ==
+X-Received: by 2002:a65:5304:: with SMTP id m4mr27956862pgq.126.1560398089063;
+        Wed, 12 Jun 2019 20:54:49 -0700 (PDT)
+Received: from Asurada (c-98-248-47-108.hsd1.ca.comcast.net. [98.248.47.108])
+        by smtp.gmail.com with ESMTPSA id y22sm994911pgj.38.2019.06.12.20.54.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jun 2019 20:54:48 -0700 (PDT)
+Date:   Wed, 12 Jun 2019 20:54:35 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "broonie@kernel.org" <broonie@kernel.org>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC/RFT PATCH v2] ASoC: fsl_esai: Revert "ETDR and TX0~5
+ registers are non volatile"
+Message-ID: <20190613035434.GA7692@Asurada>
+References: <VE1PR04MB6479D4B1D5F00B07C5CECC5BE3EF0@VE1PR04MB6479.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190612225431.p753mzqynxpsazb7@brauner.io>
-In-Reply-To: <20190612225431.p753mzqynxpsazb7@brauner.io>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 12 Jun 2019 18:00:39 -1000
-X-Gmail-Original-Message-ID: <CAHk-=wh2Khe1Lj-Pdu3o2cXxumL1hegg_1JZGJXki6cchg_Q2Q@mail.gmail.com>
-Message-ID: <CAHk-=wh2Khe1Lj-Pdu3o2cXxumL1hegg_1JZGJXki6cchg_Q2Q@mail.gmail.com>
-Subject: Re: Regression for MS_MOVE on kernel v5.1
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VE1PR04MB6479D4B1D5F00B07C5CECC5BE3EF0@VE1PR04MB6479.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.22 (2013-10-16)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 12:54 PM Christian Brauner <christian@brauner.io> wrote:
->
-> The commit changes the internal logic to lock mounts when propagating
-> mounts (user+)mount namespaces and - I believe - causes do_mount_move()
-> to fail at:
+Hi Shengjiu,
 
-You mean 'do_move_mount()'.
+On Thu, Jun 13, 2019 at 03:00:58AM +0000, S.j. Wang wrote:
+> > Commit 8973112aa41b ("ASoC: fsl_esai: ETDR and TX0~5 registers are non
+> > volatile") removed TX data registers from the volatile_reg list and appended
+> > default values for them. However, being data registers of TX, they should
+> > not have been removed from the list because they should not be cached --
+> > see the following reason.
+> > 
+> > When doing regcache_sync(), this operation might accidentally write some
+> > dirty data to these registers, in case that cached data happen to be
+> > different from the default ones, which might also result in a channel shift or
+> > swap situation, since the number of write-via-sync operations at ETDR
+> > would very unlikely match the channel number.
+> > 
+> > So this patch reverts the original commit to keep TX data registers in
+> > volatile_reg list in order to prevent them from being written by
+> > regcache_sync().
+> > 
+> > Note: this revert is not a complete revert as it keeps those macros of
+> > registers remaining in the default value list while the original commit also
+> > changed other entries in the list. And this patch isn't very necessary to Cc
+> > stable tree since there has been always a FIFO reset operation around the
+> > regcache_sync() call, even prior to this reverted commit.
+> > 
+> > Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> > Cc: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> > Hi Mark,
+> > In case there's no objection against the patch, I'd still like to wait for a
+> > Tested-by from NXP folks before submitting it. Thanks!
+> 
+> bool regmap_volatile(struct regmap *map, unsigned int reg)
+> {
+>         if (!map->format.format_write && !regmap_readable(map, reg))
+>                 return false;
+> 
+> 
+> Actually with this patch, the regcache_sync will write the 0 to ETDR, even
+> It is declared volatile, the reason is that in regmap_volatile(), the first
+> condition
+> 
+> (!map->format.format_write && !regmap_readable(map, reg))  is true.
+> 
+> So the regmap_volatile will return false.
 
-> if (old->mnt.mnt_flags & MNT_LOCKED)
->         goto out;
->
-> If that's indeed the case we should either revert this commit (reverts
-> cleanly, just tested it) or find a fix.
+Interesting finding.....so a write-only register will not be treated
+as a volatile register (to avoid regcache_sync) at all....
 
-Hmm.. I'm not entirely sure of the logic here, and just looking at
-that commit 3bd045cc9c4b ("separate copying and locking mount tree on
-cross-userns copies") doesn't make me go "Ahh" either.
+> And in regcache_reg_needs_sync(), because there is no default value
+> It will return true, then the ETDR need be synced, and be written 0.
 
-Al? My gut feel is that we need to just revert, since this was in 5.1
-and it's getting reasonably late in 5.2 too. But maybe you go "guys,
-don't be silly, this is easily fixed with this one-liner".
+Looks like either way of keeping them in or out of volatile_reg list
+might have the same result of having a data being written, while our
+current code at least would not force to write 0.
 
-                      Linus
+So I think having a FIFO reset won't be a bad idea at all. And since
+our suspend/resume() functions are already doing regcache_sync() with
+a FIFO reset, we can just reuse that code for your reset routine.
+
+Thanks a lot
+Nicolin
