@@ -2,122 +2,175 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E76FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397FCC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D81C521473
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:18:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qc01olia"
+	by mail.kernel.org (Postfix) with ESMTP id 194552175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:18:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388824AbfFMPSn (ORCPT
+        id S1732622AbfFMPSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:18:43 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38217 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732154AbfFMNFQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:05:16 -0400
-Received: by mail-io1-f68.google.com with SMTP id k13so16651893iop.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 06:05:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=COMq1DZp1tUFDOVJCz+Oc5oRle5W+TVy2bbvRpSIdF4=;
-        b=qc01olia4cmwrnoPTe2ZFrmw8g/xeegnMkBjI6b5n3TIdaetazObaCuOVxxJGxztfx
-         UWxdZDvZDFYmTfiHnlGPUNiNlz24GdHLSttZMTJdYvj6tFmu3BtHAev5gqLNhXvSPYnM
-         NsXWoj0lkbckrxBeZEJgG5KoxPDrFhBmupApL0hfeJS3hCMIKbbkjYDoZCw2sNnAkwZQ
-         6cKSZeJReF8wUT0bqEHGB7mByLnj/TeKWcvCjWas4NwnEgzQpNFuh3wA5GgvZBs88li2
-         oNEgWYm244rN1o23TzoBUZ+n2kFqLpUW00bU/764tbCeMtdqKf/ChMz/FSj1569Oj9Ra
-         UQvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=COMq1DZp1tUFDOVJCz+Oc5oRle5W+TVy2bbvRpSIdF4=;
-        b=jzoOy0UQB5naT6aqhyQXp62XrPg+0y9+927v+ZN+34fZE29XlyrmIRy7srGjBNjgj+
-         FNskKsL3yZtz6fYa6K5PQ7eI9pK2PsB1iFWUghAeiJeshSuTFBn4l7DorRbh4MtwQe1R
-         hXB9oBZrc4CxCq2m2duhStjW95hUqcaPHnPeHBS5WpZ65tU6rwLPDkuLOZ7qao23G46L
-         Ir6t/vT7+sP9gMLxlG3YScXm6et0iIvkf9zfR+OxL0bt4qGrPpWG2rOzpmIU56SHv/WJ
-         m0plRY8dtxIS9JFA2vN7LhrVuY3bTMG2fGZAWtYtAmQ23XOzAcuH5Aak288svKNc69jH
-         jn5A==
-X-Gm-Message-State: APjAAAWiMjD88QzRQL86CpNBByp8HrBywLY/WjrkGyg6Oglono/808r9
-        IQyaYvzymfKjscD17OlEpQx4TWcnP2BPh0qSOLmwpQ==
-X-Google-Smtp-Source: APXvYqx+Wyo9dQ01vmbb1QVMUlNB4LxKek/Z4JsplxvhFxRKIXJWRUTg5jAa3SaPJ4zJ8mK/k/T7Pj1+pIKN6neeKaQ=
-X-Received: by 2002:a5d:80d6:: with SMTP id h22mr6100497ior.231.1560431115386;
- Thu, 13 Jun 2019 06:05:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190613081357.1360-1-walter-zh.wu@mediatek.com> <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
-In-Reply-To: <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 13 Jun 2019 15:05:04 +0200
-Message-ID: <CACT4Y+ZGEmGE2LFmRfPGgtUGwBqyL+s_CSp5DCpWGanTJCRcXw@mail.gmail.com>
-Subject: Re: [PATCH v3] kasan: add memory corruption identification for
- software tag-based mode
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Walter Wu <walter-zh.wu@mediatek.com>,
-        Alexander Potapenko <glider@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 13 Jun 2019 11:18:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:39582 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732146AbfFMNEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 09:04:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37EAA2B;
+        Thu, 13 Jun 2019 06:04:04 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 736773F694;
+        Thu, 13 Jun 2019 06:04:01 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 14:03:53 +0100
+Message-ID: <86imt9bps6.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2] clocksource/arm_arch_timer: extract elf_hwcap use to arch-helper
+In-Reply-To: <20190613125102.23879-1-andrew.murray@arm.com>
+References: <20190613125102.23879-1-andrew.murray@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 2:27 PM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
-> On 6/13/19 11:13 AM, Walter Wu wrote:
-> > This patch adds memory corruption identification at bug report for
-> > software tag-based mode, the report show whether it is "use-after-free"
-> > or "out-of-bound" error instead of "invalid-access" error.This will make
-> > it easier for programmers to see the memory corruption problem.
-> >
-> > Now we extend the quarantine to support both generic and tag-based kasan.
-> > For tag-based kasan, the quarantine stores only freed object information
-> > to check if an object is freed recently. When tag-based kasan reports an
-> > error, we can check if the tagged addr is in the quarantine and make a
-> > good guess if the object is more like "use-after-free" or "out-of-bound".
-> >
->
->
-> We already have all the information and don't need the quarantine to make such guess.
-> Basically if shadow of the first byte of object has the same tag as tag in pointer than it's out-of-bounds,
-> otherwise it's use-after-free.
->
-> In pseudo-code it's something like this:
->
-> u8 object_tag = *(u8 *)kasan_mem_to_shadow(nearest_object(cacche, page, access_addr));
->
-> if (access_addr_tag == object_tag && object_tag != KASAN_TAG_INVALID)
->         // out-of-bounds
-> else
->         // use-after-free
++ Daniel
 
-But we don't have redzones in tag mode (intentionally), so unless I am
-missing something we don't have the necessary info. Both cases look
-the same -- we hit a different tag.
-There may only be a small trailer for kmalloc-allocated objects that
-is painted with a different tag. I don't remember if we actually use a
-different tag for the trailer. Since tag mode granularity is 16 bytes,
-for smaller objects the trailer is impossible at all.
+On Thu, 13 Jun 2019 13:51:02 +0100,
+Andrew Murray <andrew.murray@arm.com> wrote:
+> 
+> Different mechanisms are used to test and set elf_hwcaps between ARM
+> and ARM64, this results in the use of ifdeferry in this file when
+> setting/testing for the EVTSTRM hwcap.
+> 
+> Let's improve readability by extracting this to an arch helper.
+> 
+> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Acked-by: Will Deacon <will.deacon@arm.com>
+
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+
+Daniel, can you please take this though the clocksource tree?
+
+Thanks,
+
+	M.
+
+> ---
+>  arch/arm/include/asm/arch_timer.h    | 10 ++++++++++
+>  arch/arm64/include/asm/arch_timer.h  | 13 +++++++++++++
+>  drivers/clocksource/arm_arch_timer.c | 15 ++-------------
+>  3 files changed, 25 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/arm/include/asm/arch_timer.h b/arch/arm/include/asm/arch_timer.h
+> index 4b66ecd6be99..ae533caec1e9 100644
+> --- a/arch/arm/include/asm/arch_timer.h
+> +++ b/arch/arm/include/asm/arch_timer.h
+> @@ -4,6 +4,7 @@
+>  
+>  #include <asm/barrier.h>
+>  #include <asm/errno.h>
+> +#include <asm/hwcap.h>
+>  #include <linux/clocksource.h>
+>  #include <linux/init.h>
+>  #include <linux/types.h>
+> @@ -124,6 +125,15 @@ static inline void arch_timer_set_cntkctl(u32 cntkctl)
+>  	isb();
+>  }
+>  
+> +static inline bool arch_timer_set_evtstrm_feature(void)
+> +{
+> +	elf_hwcap |= HWCAP_EVTSTRM;
+> +}
+> +
+> +static inline bool arch_timer_have_evtstrm_feature(void)
+> +{
+> +	return elf_hwcap & HWCAP_EVTSTRM;
+> +}
+>  #endif
+>  
+>  #endif
+> diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
+> index 50b3ab7ded4f..a847a3ee6cab 100644
+> --- a/arch/arm64/include/asm/arch_timer.h
+> +++ b/arch/arm64/include/asm/arch_timer.h
+> @@ -20,6 +20,7 @@
+>  #define __ASM_ARCH_TIMER_H
+>  
+>  #include <asm/barrier.h>
+> +#include <asm/hwcap.h>
+>  #include <asm/sysreg.h>
+>  
+>  #include <linux/bug.h>
+> @@ -240,4 +241,16 @@ static inline int arch_timer_arch_init(void)
+>  	return 0;
+>  }
+>  
+> +static inline void arch_timer_set_evtstrm_feature(void)
+> +{
+> +	cpu_set_named_feature(EVTSTRM);
+> +#ifdef CONFIG_COMPAT
+> +	compat_elf_hwcap |= COMPAT_HWCAP_EVTSTRM;
+> +#endif
+> +}
+> +
+> +static inline bool arch_timer_have_evtstrm_feature(void)
+> +{
+> +	return cpu_have_named_feature(EVTSTRM);
+> +}
+>  #endif
+> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+> index b2a951a798e2..3583a92ad960 100644
+> --- a/drivers/clocksource/arm_arch_timer.c
+> +++ b/drivers/clocksource/arm_arch_timer.c
+> @@ -804,14 +804,7 @@ static void arch_timer_evtstrm_enable(int divider)
+>  	cntkctl |= (divider << ARCH_TIMER_EVT_TRIGGER_SHIFT)
+>  			| ARCH_TIMER_VIRT_EVT_EN;
+>  	arch_timer_set_cntkctl(cntkctl);
+> -#ifdef CONFIG_ARM64
+> -	cpu_set_named_feature(EVTSTRM);
+> -#else
+> -	elf_hwcap |= HWCAP_EVTSTRM;
+> -#endif
+> -#ifdef CONFIG_COMPAT
+> -	compat_elf_hwcap |= COMPAT_HWCAP_EVTSTRM;
+> -#endif
+> +	arch_timer_set_evtstrm_feature();
+>  	cpumask_set_cpu(smp_processor_id(), &evtstrm_available);
+>  }
+>  
+> @@ -1040,11 +1033,7 @@ static int arch_timer_cpu_pm_notify(struct notifier_block *self,
+>  	} else if (action == CPU_PM_ENTER_FAILED || action == CPU_PM_EXIT) {
+>  		arch_timer_set_cntkctl(__this_cpu_read(saved_cntkctl));
+>  
+> -#ifdef CONFIG_ARM64
+> -		if (cpu_have_named_feature(EVTSTRM))
+> -#else
+> -		if (elf_hwcap & HWCAP_EVTSTRM)
+> -#endif
+> +		if (arch_timer_have_evtstrm_feature())
+>  			cpumask_set_cpu(smp_processor_id(), &evtstrm_available);
+>  	}
+>  	return NOTIFY_OK;
+> -- 
+> 2.21.0
+> 
+
+-- 
+Jazz is not dead, it just smells funny.
