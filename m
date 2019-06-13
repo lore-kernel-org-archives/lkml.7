@@ -2,69 +2,112 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F16C4C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EB9C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB1621721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:52:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560444758;
-	bh=3oMBlDRrBIeV7aZZR/5/H9S3HH+AvOnnKJxido+N9jM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=LvYFzM/UhxuBgXeTehdyZ/Iv0jp4ENjkfGrGI7ZQwSedWCRsv5AoeJFSGw4YPd/cT
-	 q8eVNeoyzvflpy4aKSlb7RcVjJY5eR8NY3ZRsMqHuokN+HSCbPMRajjnaqFUEHiTXK
-	 asBJgR0CZdc3er9O9KZ8pO5KWS1NX77FjPnOg6Aw=
+	by mail.kernel.org (Postfix) with ESMTP id DD0BC2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:52:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gf4dv7WU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393048AbfFMQwc (ORCPT
+        id S2393000AbfFMQwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:52:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730118AbfFMDPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 23:15:10 -0400
-Subject: Re: [GIT PULL] SELinux fixes for v5.2 (#2)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560395709;
-        bh=3oMBlDRrBIeV7aZZR/5/H9S3HH+AvOnnKJxido+N9jM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=S7rHAx4A+QXwEhTqiv2M9GU+ligvs1br2kDnnJw0r+NROKSFH/zSnINxo5iro0vvl
-         nv69qfZuvTSW93VWyxwhfCFKlMY+4Sa5FZYX6pbiqISAj7u8aFLA2Ihlfl8SR7rtXx
-         yapvJ6xAQlY0zALPMEfnso8zSWhj0A5ra91DGpwM=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAHC9VhT8tYyUt_gtUR-jD-33LMW2RmzSXwP_OgPrh5ujQSiuUA@mail.gmail.com>
-References: <CAHC9VhT8tYyUt_gtUR-jD-33LMW2RmzSXwP_OgPrh5ujQSiuUA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAHC9VhT8tYyUt_gtUR-jD-33LMW2RmzSXwP_OgPrh5ujQSiuUA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
- tags/selinux-pr-20190612
-X-PR-Tracked-Commit-Id: fec6375320c6399c708fa9801f8cfbf950fee623
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b076173a309e2ceae84257d1d52cd3cc53b00e39
-Message-Id: <156039570947.24640.14489241728856509537.pr-tracker-bot@kernel.org>
-Date:   Thu, 13 Jun 2019 03:15:09 +0000
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Thu, 13 Jun 2019 12:52:49 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47294 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730102AbfFMDFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 23:05:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=5347sLkcqdCaDr4KbIIf3bKPXQaQU7AVUw40AwlLk0E=; b=gf4dv7WU5lUnCVxWX1b/VbhuEP
+        RpAMKwYyUlhgcAdDBmtQ/bz/ehU3elbdJn89YliwF//sPf0+wbq8mbjoMZbkAAQy3GEUTYilX4iSj
+        k/MtsOknTvg2JkzcbSuGPMoJIAd1IqE+0bhPaUj7Ck/jBLsepF1XEmo5T3V4WLhxVkr261JgfaI+q
+        kJdtOMZfu7WKBScGQVBpA4dS8b+VasmQTV9rhm1DmyISlPeT+ImRMVI4LVCJpBHXKH56hgyQZ+xL8
+        8Mm8BTD5aVCrnkDcvN3rqEi+H2BBxYlZt6vaok0WqL/4pL/2cGXo4h4qLmCehl6qYrFBo+IjcXnE5
+        8GXZHODg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbG3Y-0006L6-IB; Thu, 13 Jun 2019 03:05:40 +0000
+Subject: Re: mmotm 2019-06-11-16-59 uploaded (ocfs2)
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     broonie@kernel.org, mhocko@suse.cz, sfr@canb.auug.org.au,
+        linux-next@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        mm-commits@vger.kernel.org, ocfs2-devel@oss.oracle.com,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>
+References: <20190611235956.4FZF6%akpm@linux-foundation.org>
+ <492b4bcc-4760-7cbb-7083-9f22e7ab4b82@infradead.org>
+ <20190612181813.48ad05832e05f767e7116d7b@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a412fca5-7204-7001-cc1a-f620ea6f64bd@infradead.org>
+Date:   Wed, 12 Jun 2019 20:05:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190612181813.48ad05832e05f767e7116d7b@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 12 Jun 2019 16:59:05 -0400:
+On 6/12/19 6:18 PM, Andrew Morton wrote:
+> On Wed, 12 Jun 2019 07:15:30 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
+> 
+>> On 6/11/19 4:59 PM, akpm@linux-foundation.org wrote:
+>>> The mm-of-the-moment snapshot 2019-06-11-16-59 has been uploaded to
+>>>
+>>>    http://www.ozlabs.org/~akpm/mmotm/
+>>>
+>>> mmotm-readme.txt says
+>>>
+>>> README for mm-of-the-moment:
+>>>
+>>> http://www.ozlabs.org/~akpm/mmotm/
+>>>
+>>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+>>> more than once a week.
+>>
+>>
+>> on i386:
+>>
+>> ld: fs/ocfs2/dlmglue.o: in function `ocfs2_dlm_seq_show':
+>> dlmglue.c:(.text+0x46e4): undefined reference to `__udivdi3'
+> 
+> Thanks.  This, I guess:
+> 
+> --- a/fs/ocfs2/dlmglue.c~ocfs2-add-locking-filter-debugfs-file-fix
+> +++ a/fs/ocfs2/dlmglue.c
+> @@ -3115,7 +3115,7 @@ static int ocfs2_dlm_seq_show(struct seq
+>  		 * otherwise, only dump the last N seconds active lock
+>  		 * resources.
+>  		 */
+> -		if ((now - last) / 1000000 > dlm_debug->d_filter_secs)
+> +		if (div_u64(now - last, 1000000) > dlm_debug->d_filter_secs)
+>  			return 0;
+>  	}
+>  #endif
+> 
+> review and test, please?
+> 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git tags/selinux-pr-20190612
+Builds for me.  Thanks.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b076173a309e2ceae84257d1d52cd3cc53b00e39
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-Thank you!
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+~Randy
