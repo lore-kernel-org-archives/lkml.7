@@ -2,127 +2,126 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C24C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89412C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C681E2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C6120B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:32:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ea1jZnIt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iMC2hvEI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731780AbfFMPcd (ORCPT
+        id S1726784AbfFMPck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:32:33 -0400
-Received: from mail-io1-f54.google.com ([209.85.166.54]:36735 "EHLO
-        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfFMKs1 (ORCPT
+        Thu, 13 Jun 2019 11:32:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41576 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728462AbfFMKrr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 06:48:27 -0400
-Received: by mail-io1-f54.google.com with SMTP id h6so15819034ioh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 03:48:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=r080oZfzTGw4PlNPynE57ID3Ar9Ahtv7iL/o1sb0dx0=;
-        b=ea1jZnItELWGPu6bHxAH/mmHocHpLmDlCmmIL2DjSC0Sx7VqH0Ol3gF4IcXRnmg9yM
-         aWTdWeTpwVEK5N9uUKAIwBKzkS7fWKmfEIRb4V668/k38X++IMjsYMDuE8rpvMNrJuD9
-         SClkbjfnhXP8mup6eWm/jU0ElYl3JLd+TbWXANcbeoSguFsZy3w4qGPngJy267Wcejx5
-         187akwnOcJwaH/eSOVrX0sKBU0vjA0jroIvFe1D6BMipVWVj5sRIyhYESsYCEq6n5n0J
-         xj2uKE6W4zMuksq/Co6nd2kNVQRx/U0czve+f4jvbuPoLaM87hVgS5WovV2HN3YRdQqk
-         RO4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=r080oZfzTGw4PlNPynE57ID3Ar9Ahtv7iL/o1sb0dx0=;
-        b=tMJhGGJLCmSbvHwvqd+zKN1nMPI5w/jV2vGYgR27XEardGEVuhWj93i8Z0Pt5qpvXs
-         X2/cZ3MZu3enW9hWY53GzXFoJIll370uqdEjVAnpB+mNQoKrcXXV5gjSnvQHmkyLa3r5
-         kTjbsVocXA5QQmPQRw9x9XJc0EmsTd5yddH17LFuOk3Nh61rjKOJ46mVf2zv6wTOVkPs
-         kz/oqF7413wnrRsnj+eh3za20Y2Wy5PZCOjzN8bgCFi+K0RheOC0z7ug9LasS+bfTdoW
-         ezsdZZXdxRIw6Jy9zfyTkM0zTpHzymgllzghBrDt6JT3sYMlU6U6MWGL72eB0mq66hsj
-         ZCXQ==
-X-Gm-Message-State: APjAAAUydCS8f9TCvIqc3erBWWwQ2xcocUGDq/Aqc4QBTImyAFU9dExI
-        ekG+49S4V6Kta3xnCgAXWJ18kJQuZHWrV0gGDg==
-X-Google-Smtp-Source: APXvYqzwF3HmOhVDJq8nYtvL9kM9vETJJiWfoMI/eBiNbY/jmRS0SgwDC9W3GIwckpCQG/bo7cqE02EF1cqQIUlZ06A=
-X-Received: by 2002:a6b:4107:: with SMTP id n7mr10681260ioa.12.1560422905974;
- Thu, 13 Jun 2019 03:48:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <1559725820-26138-1-git-send-email-kernelfans@gmail.com>
- <87tvcwhzdo.fsf@linux.ibm.com> <2807E5FD2F6FDA4886F6618EAC48510E79D8D79B@CRSMSX101.amr.corp.intel.com>
- <20190612135458.GA19916@dhcp-128-55.nay.redhat.com> <20190612235031.GF14336@iweiny-DESK2.sc.intel.com>
-In-Reply-To: <20190612235031.GF14336@iweiny-DESK2.sc.intel.com>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Thu, 13 Jun 2019 18:48:14 +0800
-Message-ID: <CAFgQCTsO-C=Fy6im+VQnNwvyp74tV2dZ-0Pa8QfFyFrBX8Ohvg@mail.gmail.com>
-Subject: Re: [PATCHv3 1/2] mm/gup: fix omission of check on FOLL_LONGTERM in get_user_pages_fast()
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Thu, 13 Jun 2019 06:47:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GEs9TuIKz96lXRS7FnLGyqSMFlOm6a6Nuvp5RkrDbpg=; b=iMC2hvEIOcyryH8ttvBTFCIwJ
+        +/UTOZxleRRIx/Qk3yqPfUzPCOda7GErke13ZzFQak5ewSoRm8WulpfqNH7Zcz8Q/4E8j/T6eNEmH
+        zqn/a0VQTD+joB/VdqCU1xYbOG/t0Yt1iH7D4MVcM+JnmapUwUFZ9n9jOt8V0iESGcP+afyjOL9pH
+        +Z800XzTY/YS/+CM4flrqhchMwkDHfagPOomV5WMld5ChIy1boYvTjVntNNzTcy5LKpr/Bsx2mf7S
+        S446zK0y8A3V0fwGhTmnFSvXqbCAHfkut7f3C9ZExu7tOQe+5MbplKDwi6MAkqGaZIAtnEYCa3p8M
+        bMZjvH0qQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbNGh-0007DC-6o; Thu, 13 Jun 2019 10:47:43 +0000
+Date:   Thu, 13 Jun 2019 03:47:43 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
         John Hubbard <jhubbard@nvidia.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190613104743.GH32656@bombadil.infradead.org>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
+ <20190607110426.GB12765@quack2.suse.cz>
+ <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
+ <20190608001036.GF14308@dread.disaster.area>
+ <20190612123751.GD32656@bombadil.infradead.org>
+ <20190613002555.GH14363@dread.disaster.area>
+ <20190613032320.GG32656@bombadil.infradead.org>
+ <20190613043649.GJ14363@dread.disaster.area>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613043649.GJ14363@dread.disaster.area>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 7:49 AM Ira Weiny <ira.weiny@intel.com> wrote:
->
-> On Wed, Jun 12, 2019 at 09:54:58PM +0800, Pingfan Liu wrote:
-> > On Tue, Jun 11, 2019 at 04:29:11PM +0000, Weiny, Ira wrote:
-> > > > Pingfan Liu <kernelfans@gmail.com> writes:
-> > > >
-> > > > > As for FOLL_LONGTERM, it is checked in the slow path
-> > > > > __gup_longterm_unlocked(). But it is not checked in the fast path=
-,
-> > > > > which means a possible leak of CMA page to longterm pinned requir=
-ement
-> > > > > through this crack.
-> > > >
-> > > > Shouldn't we disallow FOLL_LONGTERM with get_user_pages fastpath? W=
-.r.t
-> > > > dax check we need vma to ensure whether a long term pin is allowed =
-or not.
-> > > > If FOLL_LONGTERM is specified we should fallback to slow path.
-> > >
-> > > Yes, the fastpath bails to the slowpath if FOLL_LONGTERM _and_ DAX.  =
-But it does this while walking the page tables.  I missed the CMA case and =
-Pingfan's patch fixes this.  We could check for CMA pages while walking the=
- page tables but most agreed that it was not worth it.  For DAX we already =
-had checks for *_devmap() so it was easier to put the FOLL_LONGTERM checks =
-there.
-> > >
-> > Then for CMA pages, are you suggesting something like:
->
-> I'm not suggesting this.
-OK, then I send out v4.
->
-> Sorry I wrote this prior to seeing the numbers in your other email.  Give=
-n
-> the numbers it looks like performing the check whilst walking the tables =
-is
-> worth the extra complexity.  I was just trying to summarize the thread.  =
-I
-> don't think we should disallow FOLL_LONGTERM because it only affects CMA =
-and
-> DAX.  Other pages will be fine with FOLL_LONGTERM.  Why penalize every ca=
-ll if
-> we don't have to.  Also in the case of DAX the use of vma will be going
-> away...[1]  Eventually...  ;-)
-A good feature. Trying to catch up.
+On Thu, Jun 13, 2019 at 02:36:49PM +1000, Dave Chinner wrote:
+> On Wed, Jun 12, 2019 at 08:23:20PM -0700, Matthew Wilcox wrote:
+> > On Thu, Jun 13, 2019 at 10:25:55AM +1000, Dave Chinner wrote:
+> > > On Wed, Jun 12, 2019 at 05:37:53AM -0700, Matthew Wilcox wrote:
+> > > > That's rather different from the normal meaning of 'exclusive' in the
+> > > > context of locks, which is "only one user can have access to this at
+> > > > a time".
+> > > 
+> > > Layout leases are not locks, they are a user access policy object.
+> > > It is the process/fd which holds the lease and it's the process/fd
+> > > that is granted exclusive access.  This is exactly the same semantic
+> > > as O_EXCL provides for granting exclusive access to a block device
+> > > via open(), yes?
+> > 
+> > This isn't my understanding of how RDMA wants this to work, so we should
+> > probably clear that up before we get too far down deciding what name to
+> > give it.
+> > 
+> > For the RDMA usage case, it is entirely possible that both process A
+> > and process B which don't know about each other want to perform RDMA to
+> > file F.  So there will be two layout leases active on this file at the
+> > same time.  It's fine for IOs to simultaneously be active to both leases.
+> 
+> Yes, it is.
+> 
+> > But if the filesystem wants to move blocks around, it has to break
+> > both leases.
+> 
+> No, the _lease layer_ needs to break both leases when the filesystem
+> calls break_layout().
 
-Thanks,
-Pingfan
+That's a distinction without a difference as far as userspace is
+concerned.  If process A asks for an exclusive lease (and gets it),
+then process B asks for an exclusive lease (and gets it), that lease
+isn't exclusive!  It's shared.
+
+I think the example you give of O_EXCL is more of a historical accident.
+It's a relatively recent Linuxism that O_EXCL on a block device means
+"this block device is not part of a filesystem", and I don't think
+most userspace programmers are aware of what it means when not paired
+with O_CREAT.
+
+> > If Process C tries to do a write to file F without a lease, there's no
+> > problem, unless a side-effect of the write would be to change the block
+> > mapping,
+> 
+> That's a side effect we cannot predict ahead of time. But it's
+> also _completely irrelevant_ to the layout lease layer API and
+> implementation.(*)
+
+It's irrelevant to the naming, but you brought it up as part of the
+semantics.
+
