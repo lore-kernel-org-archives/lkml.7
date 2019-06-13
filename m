@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A679C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21ACAC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53BCA20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E176F208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441352;
-	bh=PH6dG94hNLWF7W1sTLFFWbqMCAI3bu5OdGA+wHUVEiA=;
+	s=default; t=1560441356;
+	bh=e12xH+UmhDSQmVu0wlMCeN9EoyGK+UZJOaudMdluF+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q4Fi/SgPV3QG4jIVy4OvO0YBxaWDr+CMf2VLgBy1Uz3iAaYNFGaWZX6z7ruBFjR/s
-	 YlfPOJS6gbpDkGKsJLibtaHmRAOj4jY0Xxo57uPE/seBwzjeJS4D2vtorwOYLZoCMV
-	 F1jAGDS/QhOaQ8XOF3lwVlFe0t3uip3yMXr7Q6M8=
+	b=b0gBQfE3oBU27XoHr74f5UMDlkrOesVgNBEQPTp4eH0ZzqUS1nxZMiMyx570nWrXh
+	 i+FWYgDNQF3jJYz/G2jDQPuF2utwcnZST5oN+88Hm5s5Jvev62wHSj8VzjSkKMefi3
+	 YHJpA9RHzAFZi1ybpxGYXyfEpnIIyqYj7lCSPJDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390222AbfFMPzv (ORCPT
+        id S2390263AbfFMPzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:55:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:55:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731535AbfFMIvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:51:38 -0400
+        id S1731533AbfFMIvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:51:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECCD6215EA;
-        Thu, 13 Jun 2019 08:51:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22D0D21473;
+        Thu, 13 Jun 2019 08:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415897;
-        bh=PH6dG94hNLWF7W1sTLFFWbqMCAI3bu5OdGA+wHUVEiA=;
+        s=default; t=1560415891;
+        bh=e12xH+UmhDSQmVu0wlMCeN9EoyGK+UZJOaudMdluF+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wvUrYAFbFHisBrvfWT3JSvvVGdQ7Mp9hiJxbQ872ixM2yVPTYGY31hPa/17/jaLNw
-         3LsdmoA+PtpF0OkLGNxOR5OveKJHuCQmtvVD/AtlKbtxtWuZY/7g0h5r0R8SIWxlFt
-         rGQASZoVPULv/qylrUDyP0rx9gCygNPml8IaPpAA=
+        b=xIa77YgmdzcNSuIQEnbRHlvvzasX7mSm8t2bqraK5AD/VK0b67X3AoY02OTLzWTtE
+         9dw+xkp0pcRcoyU9+onRw1HKkKLrrpj75Xlxwt1FjPfio/SnsHyYuTMlqa+ClX0pfD
+         SI3fbCmFBEj3GK12bf421/HOnRn3m7aTLZSPse2g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Amir Goldstein <amir73il@gmail.com>
-Subject: [PATCH 5.1 154/155] ovl: check the capability before cred overridden
-Date:   Thu, 13 Jun 2019 10:34:26 +0200
-Message-Id: <20190613075701.378918396@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Khoruzhick <anarsoul@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jeremy Cline <jeremy@jcline.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>
+Subject: [PATCH 5.1 152/155] Revert "Bluetooth: Align minimum encryption key size for LE and BR/EDR connections"
+Date:   Thu, 13 Jun 2019 10:34:24 +0200
+Message-Id: <20190613075701.309484157@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,141 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 98487de318a6f33312471ae1e2afa16fbf8361fe upstream.
+This reverts commit 07e38998a19d72b916c39a983c19134522ae806b which is
+commit d5bb334a8e171b262e48f378bd2096c0ea458265 upstream.
 
-We found that it return success when we set IMMUTABLE_FL flag to a file in
-docker even though the docker didn't have the capability
-CAP_LINUX_IMMUTABLE.
+Lots of people have reported issues with this patch, and as there does
+not seem to be a fix going into Linus's kernel tree any time soon,
+revert the commit in the stable trees so as to get people's machines
+working properly again.
 
-The commit d1d04ef8572b ("ovl: stack file ops") and dab5ca8fd9dd ("ovl: add
-lsattr/chattr support") implemented chattr operations on a regular overlay
-file. ovl_real_ioctl() overridden the current process's subjective
-credentials with ofs->creator_cred which have the capability
-CAP_LINUX_IMMUTABLE so that it will return success in
-vfs_ioctl()->cap_capable().
-
-Fix this by checking the capability before cred overridden. And here we
-only care about APPEND_FL and IMMUTABLE_FL, so get these information from
-inode.
-
-[SzM: move check and call to underlying fs inside inode locked region to
-prevent two such calls from racing with each other]
-
-Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Cc: Amir Goldstein <amir73il@gmail.com>
+Reported-by: Vasily Khoruzhick <anarsoul@gmail.com>
+Reported-by: Hans de Goede <hdegoede@redhat.com>
+Cc: Jeremy Cline <jeremy@jcline.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>
+Cc: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/overlayfs/file.c |   79 ++++++++++++++++++++++++++++++++++++++++------------
- 1 file changed, 61 insertions(+), 18 deletions(-)
+ include/net/bluetooth/hci_core.h |    3 ---
+ net/bluetooth/hci_conn.c         |    8 --------
+ 2 files changed, 11 deletions(-)
 
---- a/fs/overlayfs/file.c
-+++ b/fs/overlayfs/file.c
-@@ -11,6 +11,7 @@
- #include <linux/mount.h>
- #include <linux/xattr.h>
- #include <linux/uio.h>
-+#include <linux/uaccess.h>
- #include "overlayfs.h"
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -190,9 +190,6 @@ struct adv_info {
  
- static char ovl_whatisit(struct inode *inode, struct inode *realinode)
-@@ -372,10 +373,68 @@ static long ovl_real_ioctl(struct file *
- 	return ret;
+ #define HCI_MAX_SHORT_NAME_LENGTH	10
+ 
+-/* Min encryption key size to match with SMP */
+-#define HCI_MIN_ENC_KEY_SIZE		7
+-
+ /* Default LE RPA expiry time, 15 minutes */
+ #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
+ 
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -1276,14 +1276,6 @@ int hci_conn_check_link_mode(struct hci_
+ 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
+ 		return 0;
+ 
+-	/* The minimum encryption key size needs to be enforced by the
+-	 * host stack before establishing any L2CAP connections. The
+-	 * specification in theory allows a minimum of 1, but to align
+-	 * BR/EDR and LE transports, a minimum of 7 is chosen.
+-	 */
+-	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
+-		return 0;
+-
+ 	return 1;
  }
  
--static long ovl_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+static unsigned int ovl_get_inode_flags(struct inode *inode)
-+{
-+	unsigned int flags = READ_ONCE(inode->i_flags);
-+	unsigned int ovl_iflags = 0;
-+
-+	if (flags & S_SYNC)
-+		ovl_iflags |= FS_SYNC_FL;
-+	if (flags & S_APPEND)
-+		ovl_iflags |= FS_APPEND_FL;
-+	if (flags & S_IMMUTABLE)
-+		ovl_iflags |= FS_IMMUTABLE_FL;
-+	if (flags & S_NOATIME)
-+		ovl_iflags |= FS_NOATIME_FL;
-+
-+	return ovl_iflags;
-+}
-+
-+static long ovl_ioctl_set_flags(struct file *file, unsigned long arg)
- {
- 	long ret;
- 	struct inode *inode = file_inode(file);
-+	unsigned int flags;
-+	unsigned int old_flags;
-+
-+	if (!inode_owner_or_capable(inode))
-+		return -EACCES;
-+
-+	if (get_user(flags, (int __user *) arg))
-+		return -EFAULT;
-+
-+	ret = mnt_want_write_file(file);
-+	if (ret)
-+		return ret;
-+
-+	inode_lock(inode);
-+
-+	/* Check the capability before cred override */
-+	ret = -EPERM;
-+	old_flags = ovl_get_inode_flags(inode);
-+	if (((flags ^ old_flags) & (FS_APPEND_FL | FS_IMMUTABLE_FL)) &&
-+	    !capable(CAP_LINUX_IMMUTABLE))
-+		goto unlock;
-+
-+	ret = ovl_maybe_copy_up(file_dentry(file), O_WRONLY);
-+	if (ret)
-+		goto unlock;
-+
-+	ret = ovl_real_ioctl(file, FS_IOC_SETFLAGS, arg);
-+
-+	ovl_copyflags(ovl_inode_real(inode), inode);
-+unlock:
-+	inode_unlock(inode);
-+
-+	mnt_drop_write_file(file);
-+
-+	return ret;
-+
-+}
-+
-+static long ovl_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	long ret;
- 
- 	switch (cmd) {
- 	case FS_IOC_GETFLAGS:
-@@ -383,23 +442,7 @@ static long ovl_ioctl(struct file *file,
- 		break;
- 
- 	case FS_IOC_SETFLAGS:
--		if (!inode_owner_or_capable(inode))
--			return -EACCES;
--
--		ret = mnt_want_write_file(file);
--		if (ret)
--			return ret;
--
--		ret = ovl_maybe_copy_up(file_dentry(file), O_WRONLY);
--		if (!ret) {
--			ret = ovl_real_ioctl(file, cmd, arg);
--
--			inode_lock(inode);
--			ovl_copyflags(ovl_inode_real(inode), inode);
--			inode_unlock(inode);
--		}
--
--		mnt_drop_write_file(file);
-+		ret = ovl_ioctl_set_flags(file, arg);
- 		break;
- 
- 	default:
 
 
