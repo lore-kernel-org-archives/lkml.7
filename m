@@ -5,54 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17932C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5CDC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB74620866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6344520866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442546;
-	bh=fyZu/gYrV7PPh/Thl9XnRrH6GNZTCy6xAUWW3u4hmlc=;
+	s=default; t=1560442552;
+	bh=glGAQulXkaG0h3nhf3yMOgZuD6vGHDRD7v3JNTNpgSI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LqOnQu6B0Fl+4LH62umgU+A086Gxfm8bXZnnLjjMWAZQhB4HhvSc7RqOmv79qKO87
-	 OGHgzcFAq/JrEIYHsbrmWBnXdWr5GBxJ59/QU2EeGWciQhoUHUjkqQZSjuEwluoBDl
-	 4rCQdmiwSPD7G230ZPLZV8ujUQ27JfHW6OIMrUD0=
+	b=Tue7L4VCui7xXpUnNTfPauIcw3LhniOFS7qWju8DncN+WOeA7Hr7aaI57A7kOkESj
+	 uFnJQfdEdGwGgw6Xxv3S8uQ+q2X8YkZvthwEzr2ryVDZClZftrDwH9WRW8S/fjt2j2
+	 DFodKipXB++bFpBnN60OXZeeaeayf8PUWsE6BI2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391676AbfFMQPe (ORCPT
+        id S2391887AbfFMQPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:15:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59006 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:15:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731172AbfFMIlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:41:51 -0400
+        id S1731164AbfFMIlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:41:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21C7421479;
-        Thu, 13 Jun 2019 08:41:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB98B2147A;
+        Thu, 13 Jun 2019 08:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415310;
-        bh=fyZu/gYrV7PPh/Thl9XnRrH6GNZTCy6xAUWW3u4hmlc=;
+        s=default; t=1560415299;
+        bh=glGAQulXkaG0h3nhf3yMOgZuD6vGHDRD7v3JNTNpgSI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zwFtCUsdQKD7GvoRKoUTRb8bh3J+XHKhGzUOsvvXDzSn5i9n0bJWMy+x0R55aQFhI
-         ZvIlPT6u3RVBYOT6EAF4BCuNpej+JEju88Fsnbo/vt+soLEIJFISMgHu2dVGaRZksC
-         ofcaLy5qBi5hOIRB/dNSia/oVvrMTDA6nPjUasXs=
+        b=BE0YxSoJShJmrjchEa2+yLT+QPQDXcGRT1PJm8PszZTryN25ebHIXHMPxMUMzLv6+
+         y9N2pOLD+NRSC/pFIg03nS+pU8UDZDeoBM1IZvaqEMHbQG+rEANrndvJVgwhqRfvLO
+         Lnz+9/XTg5ML2PW7C3eulmdidJcuf6D/jQYiJ84M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "J. Bruce Fields" <bfields@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 080/118] ARM: dts: imx51: Specify IMX5_CLK_IPG as "ahb" clock to SDMA
-Date:   Thu, 13 Jun 2019 10:33:38 +0200
-Message-Id: <20190613075648.475709941@linuxfoundation.org>
+Subject: [PATCH 4.19 068/118] nfsd: avoid uninitialized variable warning
+Date:   Thu, 13 Jun 2019 10:33:26 +0200
+Message-Id: <20190613075647.789649503@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -65,43 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 918bbde8085ae147a43dcb491953e0dd8f3e9d6a ]
+[ Upstream commit 0ab88ca4bcf18ba21058d8f19220f60afe0d34d8 ]
 
-Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
-clock to determine if it needs to configure the IP block as operating
-at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
-clocks as IMX5_CLK_SDMA results in driver incorrectly thinking that
-ratio is 1:1 which results in broken SDMA funtionality. Fix the code
-to specify IMX5_CLK_AHB as "ahb" clock for SDMA, to avoid detecting
-incorrect clock ratio.
+clang warns that 'contextlen' may be accessed without an initialization:
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Angus Ainslie (Purism) <angus@akkea.ca>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+fs/nfsd/nfs4xdr.c:2911:9: error: variable 'contextlen' is uninitialized when used here [-Werror,-Wuninitialized]
+                                                                contextlen);
+                                                                ^~~~~~~~~~
+fs/nfsd/nfs4xdr.c:2424:16: note: initialize the variable 'contextlen' to silence this warning
+        int contextlen;
+                      ^
+                       = 0
+
+Presumably this cannot happen, as FATTR4_WORD2_SECURITY_LABEL is
+set if CONFIG_NFSD_V4_SECURITY_LABEL is enabled.
+Adding another #ifdef like the other two in this function
+avoids the warning.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx51.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfs4xdr.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-index 5c4ba91e43ba..ef2abc097843 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -481,7 +481,7 @@
- 				reg = <0x83fb0000 0x4000>;
- 				interrupts = <6>;
- 				clocks = <&clks IMX5_CLK_SDMA_GATE>,
--					 <&clks IMX5_CLK_SDMA_GATE>;
-+					 <&clks IMX5_CLK_AHB>;
- 				clock-names = "ipg", "ahb";
- 				#dma-cells = <3>;
- 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx51.bin";
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 418fa9c78186..db0beefe65ec 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -2413,8 +2413,10 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+ 	__be32 status;
+ 	int err;
+ 	struct nfs4_acl *acl = NULL;
++#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
+ 	void *context = NULL;
+ 	int contextlen;
++#endif
+ 	bool contextsupport = false;
+ 	struct nfsd4_compoundres *resp = rqstp->rq_resp;
+ 	u32 minorversion = resp->cstate.minorversion;
+@@ -2899,12 +2901,14 @@ out_acl:
+ 			*p++ = cpu_to_be32(NFS4_CHANGE_TYPE_IS_TIME_METADATA);
+ 	}
+ 
++#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
+ 	if (bmval2 & FATTR4_WORD2_SECURITY_LABEL) {
+ 		status = nfsd4_encode_security_label(xdr, rqstp, context,
+ 								contextlen);
+ 		if (status)
+ 			goto out;
+ 	}
++#endif
+ 
+ 	attrlen = htonl(xdr->buf->len - attrlen_offset - 4);
+ 	write_bytes_to_xdr_buf(xdr->buf, attrlen_offset, &attrlen, 4);
 -- 
 2.20.1
 
