@@ -2,124 +2,115 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2569C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E68C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877E520851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD209208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RvVfgl22"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="HwzQ0rH3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389231AbfFMPsJ (ORCPT
+        id S2389539AbfFMPsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:48:09 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50160 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfFMJVh (ORCPT
+        Thu, 13 Jun 2019 11:48:18 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34632 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731751AbfFMPsC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:21:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KNxPWlWuxnDwYXMMhXWadjBNeF5Uv67xMzgxslH4spI=; b=RvVfgl22PpGBJDNLkXFMiMjLs
-        u8EyR5xVLEFRoaxMXVmWkgS3oWG0cFcTq94IwDR7upEolKf/rdjFDkLH8uYoayUuNpIviET6kY9/8
-        tbb/DBMzpHXF5XxnKNtjV46uRJS0UaH/2h+CpUg5R5DWhCY6Q++wILsSOi+cl7IF0vBSJ90GTuunC
-        bCj7nyddUBt0KfPVT3aZpEv8LRFzH7VdqyrF41olQSipswiMd3oI+WWxkn21LhC+JiiYWDkDaKY/j
-        GfjiqyLLH4ow9K7AOYgLJrGwE8KfWhs1zsCVQlmoIR2Jbf7d9y07Ie9yPKBC1GIea5Nu6gR4dOV/y
-        zHArEAOGg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbLvA-0000K1-OV; Thu, 13 Jun 2019 09:21:24 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 33A9D209C844F; Thu, 13 Jun 2019 11:21:23 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 11:21:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     aryabinin@virtuozzo.com, dvyukov@google.com, glider@google.com,
-        andreyknvl@google.com, mark.rutland@arm.com, hpa@zytor.com,
-        corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        x86@kernel.org, arnd@arndb.de, jpoimboe@redhat.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
-Subject: Re: [PATCH v3 2/3] x86: Use static_cpu_has in uaccess region to
- avoid instrumentation
-Message-ID: <20190613092123.GO3402@hirez.programming.kicks-ass.net>
-References: <20190531150828.157832-1-elver@google.com>
- <20190531150828.157832-3-elver@google.com>
+        Thu, 13 Jun 2019 11:48:02 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y198so15500074lfa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 08:48:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=MhxG2VWV0PUqNmkC6UYengHNix8YULmmoQX86iMuI1Q=;
+        b=HwzQ0rH3HntP0X1Ut+3aziFTUNyu7eZWshFffAcbuEQadz4P6sC2snoDJGp4KSyvu2
+         Kig7hRqtroYC7jNl67KKgqHxE423RPSnEeZfbHsd+gLto0eo7V3yt/GGwc+21qgO0c3A
+         GIH+62EGfN0eHFV/TMnqz5oJqV2MDDVZaYpN0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MhxG2VWV0PUqNmkC6UYengHNix8YULmmoQX86iMuI1Q=;
+        b=gDBrR19XXVYiDcu/XfU1lSeFb+vmaNE5v85NVkD4sAarO0quEWGv2OIyUFGhVRsMoB
+         R7XG03HqwE+fAtAwXma9i5HgRAatx4xRpie9kpgaiUNQeGo/quOanj8YMwzDIV+jMoOa
+         evaawVB6DkSAdX5U9lxgsPAmMJP65ScxNOkQ3+jQ3mRiEACfH/s/x+M0sqS7D3WRwa3o
+         toy+91tHFTk5BGVyHWGE3rFuaFHq4hmW5x7LTrg4uZp7nOULOIFSg/eB8v/zeiyJHDff
+         qd1qEomaEsHisYAd0Ab3kD4sOMHkoh5JJzClwILxLgIqiBNFbomxk8O8cEm1G9QHgfrO
+         7OmQ==
+X-Gm-Message-State: APjAAAXWCQ5fsc0m3s/3tQ+Z3SdffuJy+oiLmcSJLlmgQ7ON92PGl9Lu
+        MD3PDL0YmjCMVUeKNMR8latoGTVghoJX20glTsXd+g==
+X-Google-Smtp-Source: APXvYqzrRigc/QwtHv0h+SK0yPrIqLoP/sTRt4T7cb0mR/3kmBMhY1s0fNVfrmh2vHW4vI1uCiYqipwR2/fMUdkpn8I=
+X-Received: by 2002:a19:c383:: with SMTP id t125mr38852030lff.89.1560440880394;
+ Thu, 13 Jun 2019 08:48:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190531150828.157832-3-elver@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190613112709.7215-1-afabre@cloudflare.com> <20190613154152.GA9636@mini-arch>
+In-Reply-To: <20190613154152.GA9636@mini-arch>
+From:   Arthur Fabre <afabre@cloudflare.com>
+Date:   Thu, 13 Jun 2019 16:47:49 +0100
+Message-ID: <CAOn4ftu8dv4rOei=Janw8bRMGLM5bganNGjp3nLUof82Z9vSiQ@mail.gmail.com>
+Subject: Re: [PATCH] bpf: selftests: Fix warning in flow_dissector
+To:     Stanislav Fomichev <sdf@fomichev.me>
+Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        linux-kselftest@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 05:08:30PM +0200, Marco Elver wrote:
-> This patch is a pre-requisite for enabling KASAN bitops instrumentation;
-> using static_cpu_has instead of boot_cpu_has avoids instrumentation of
-> test_bit inside the uaccess region. With instrumentation, the KASAN
-> check would otherwise be flagged by objtool.
-> 
-> For consistency, kernel/signal.c was changed to mirror this change,
-> however, is never instrumented with KASAN (currently unsupported under
-> x86 32bit).
+Ah yes good catch. I guess it hasn't made it into bpf-next yet.
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
-Thanks!
-
-> 
-> Signed-off-by: Marco Elver <elver@google.com>
-> Suggested-by: H. Peter Anvin <hpa@zytor.com>
-> ---
-> Changes in v3:
-> * Use static_cpu_has instead of moving boot_cpu_has outside uaccess
->   region.
-> 
-> Changes in v2:
-> * Replaces patch: 'tools/objtool: add kasan_check_* to uaccess
->   whitelist'
-> ---
->  arch/x86/ia32/ia32_signal.c | 2 +-
->  arch/x86/kernel/signal.c    | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
-> index 629d1ee05599..1cee10091b9f 100644
-> --- a/arch/x86/ia32/ia32_signal.c
-> +++ b/arch/x86/ia32/ia32_signal.c
-> @@ -358,7 +358,7 @@ int ia32_setup_rt_frame(int sig, struct ksignal *ksig,
->  		put_user_ex(ptr_to_compat(&frame->uc), &frame->puc);
->  
->  		/* Create the ucontext.  */
-> -		if (boot_cpu_has(X86_FEATURE_XSAVE))
-> +		if (static_cpu_has(X86_FEATURE_XSAVE))
->  			put_user_ex(UC_FP_XSTATE, &frame->uc.uc_flags);
->  		else
->  			put_user_ex(0, &frame->uc.uc_flags);
-> diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
-> index 364813cea647..52eb1d551aed 100644
-> --- a/arch/x86/kernel/signal.c
-> +++ b/arch/x86/kernel/signal.c
-> @@ -391,7 +391,7 @@ static int __setup_rt_frame(int sig, struct ksignal *ksig,
->  		put_user_ex(&frame->uc, &frame->puc);
->  
->  		/* Create the ucontext.  */
-> -		if (boot_cpu_has(X86_FEATURE_XSAVE))
-> +		if (static_cpu_has(X86_FEATURE_XSAVE))
->  			put_user_ex(UC_FP_XSTATE, &frame->uc.uc_flags);
->  		else
->  			put_user_ex(0, &frame->uc.uc_flags);
-> -- 
-> 2.22.0.rc1.257.g3120a18244-goog
-> 
+On Thu, Jun 13, 2019 at 4:41 PM Stanislav Fomichev <sdf@fomichev.me> wrote:
+>
+> On 06/13, Arthur Fabre wrote:
+> > Building the userspace part of the flow_dissector resulted in:
+> >
+> > prog_tests/flow_dissector.c: In function =E2=80=98tx_tap=E2=80=99:
+> > prog_tests/flow_dissector.c:176:9: warning: implicit declaration
+> > of function =E2=80=98writev=E2=80=99; did you mean =E2=80=98write=E2=80=
+=99? [-Wimplicit-function-declaration]
+> >   return writev(fd, iov, ARRAY_SIZE(iov));
+> >          ^~~~~~
+> >          write
+> >
+> > Include <sys/uio.h> to fix this.
+> Wasn't it fixed already?
+>
+> See
+> https://lore.kernel.org/netdev/20190528190218.GA6950@ip-172-31-44-144.us-=
+west-2.compute.internal/
+>
+> > Signed-off-by: Arthur Fabre <afabre@cloudflare.com>
+> > ---
+> >  tools/testing/selftests/bpf/prog_tests/flow_dissector.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/flow_dissector.c b/=
+tools/testing/selftests/bpf/prog_tests/flow_dissector.c
+> > index fbd1d88a6095..c938283ac232 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/flow_dissector.c
+> > @@ -3,6 +3,7 @@
+> >  #include <error.h>
+> >  #include <linux/if.h>
+> >  #include <linux/if_tun.h>
+> > +#include <sys/uio.h>
+> >
+> >  #define CHECK_FLOW_KEYS(desc, got, expected)                         \
+> >       CHECK_ATTR(memcmp(&got, &expected, sizeof(got)) !=3D 0,          =
+ \
+> > --
+> > 2.20.1
+> >
