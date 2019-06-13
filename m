@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F9BC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4D7C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB352173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E3E92173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:42:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MvLy9Z5w"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iJ2vRTDh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbfFMXma (ORCPT
+        id S1727998AbfFMXmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 19:42:30 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34785 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727576AbfFMXmN (ORCPT
+        Thu, 13 Jun 2019 19:42:38 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39320 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727468AbfFMXmM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 19:42:13 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p10so409986pgn.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 16:42:13 -0700 (PDT)
+        Thu, 13 Jun 2019 19:42:12 -0400
+Received: by mail-pl1-f196.google.com with SMTP id b7so180795pls.6
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 16:42:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=00LaqICpwM9YOieDteVKl28OeJvNxsjKf3w+38t5DQM=;
-        b=MvLy9Z5wXSd9OviDwGx/a9f6GyaM1INYAiT0IsoEyf4KpOIaHa3eRMwuu5IO/O0HlA
-         TnzMGBOrhOLake233PtHLia0lHm7DQz/GTZzDlnZYZJBJieXnzpvxpYc05eDbq1aR4A4
-         uv4Ma5UYC9SOgb0nuN11vIzWnPCFi0ZY9ey8I=
+        bh=c7083/wRDhjfXKIPLOR/z/xGqx+N3NzGcEXMjAPkrtk=;
+        b=iJ2vRTDhZeW4lVDaqVPjbVshWP4qjnkSnSGc+SrRGQ5aAPmwmUXkPpXZGJjODoGMiE
+         z9Jm0f9FJ8ZQqbLU8oFkC1ru/LfZlKOFSblwIEKz0JHO/x4QY+girk7kLvPF2SnSW6iP
+         u/ybRoaZsNnm7HpTBOdVgcftH21NcEWRLr7p8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=00LaqICpwM9YOieDteVKl28OeJvNxsjKf3w+38t5DQM=;
-        b=UQAbkaw25ZK/Czp4fo7ySPioKbkMo38XarATM0p3xUHObXVdh+ggXSri2y1/jMWDe5
-         SsRw70uxfx5Xy/+nfmQ7r6WFUMhlWl72k0jJQEr2ifoVcm5KcagvHdDhZgkqO2baMIzq
-         gS28/a3Lmz/O7orINu+mM9x3XdnKMPKOD8zXNVWT7lLQjmTeofbFVcdO+FAJ6F2ovRGL
-         m0veL785ZjmHCWYFu9lctSxTtl45bFsdD93gAM6CiDqx+ThBxh8Fa8DORpsj7UOxGuIX
-         NBS1uAI9/OiKpOwuLFMGHsD+K0E8GoURyKHsiP2G0Yq0WO8JZU+kxAGsRjok+/6GAyRX
-         OITQ==
-X-Gm-Message-State: APjAAAUY6vW8RE+ZA6fz9B54UC4r3VGV+azCaDwxwG0mjLD4cwztW3ji
-        bdR4oxhxO5BhK73dQBDfOAVOFA==
-X-Google-Smtp-Source: APXvYqz3Xqez9uoGK3fVk6+p5Ke5NypkmIbmDEcShWic6SM+R4pi58ILoJD0wSRRnhH8nE17iF/u1w==
-X-Received: by 2002:a17:90a:db42:: with SMTP id u2mr8109422pjx.48.1560469333161;
-        Thu, 13 Jun 2019 16:42:13 -0700 (PDT)
+        bh=c7083/wRDhjfXKIPLOR/z/xGqx+N3NzGcEXMjAPkrtk=;
+        b=GQYwycQbUJXfQ90vCj4A2XeEMiBnDq5VBrQQbk297Y9/4Cy/XA+g9CudaUVINnZmjD
+         hHou/wG07eReJnWM0CYoWGbgjFf8q7rboRA4hWw1vHJT0vXI8PYEr0xES+fLbs6Zb5K1
+         6HMyqw+OeRNdov0tQIk0d5HlENPRlbOrTle4cMgiJ6JV6ocYs0aJgbej+0n+5RnOs6TC
+         nS6LeH/7wa+8oNrTsHnHqYEzDxsM9+y+kqUcZdJDFlsDSoJXzCgtS8+BQZJmOfJWxgii
+         +HaOjVNSH3riHTrlcHusus6PS8A3NM8FwGYe4uHpnYPUNEx3GQi2yZfNc/6m6Uh9ZWM0
+         hGDQ==
+X-Gm-Message-State: APjAAAWM3FhO8KmyW54+SuCap9kKKCGsAvyvzAbv6o+CbmvAPde7Pev2
+        Q/UFC15mtx7LIu7fIAe4ic6Yxg==
+X-Google-Smtp-Source: APXvYqwoIyI7QZt4blA5Q5la53DjUJQtY42TC4Gcx1xTxy4vkRuynr/kzG9FYakwMCM6kZGmAeP4XA==
+X-Received: by 2002:a17:902:8d92:: with SMTP id v18mr67370527plo.211.1560469331903;
+        Thu, 13 Jun 2019 16:42:11 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id p7sm781088pfp.131.2019.06.13.16.42.11
+        by smtp.gmail.com with ESMTPSA id p7sm781088pfp.131.2019.06.13.16.42.10
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 16:42:12 -0700 (PDT)
+        Thu, 13 Jun 2019 16:42:11 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Kalle Valo <kvalo@codeaurora.org>,
@@ -68,13 +68,16 @@ Cc:     brcm80211-dev-list.pdl@broadcom.com,
         Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
         netdev@vger.kernel.org, brcm80211-dev-list@cypress.com,
         Douglas Anderson <dianders@chromium.org>,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Avri Altman <avri.altman@wdc.com>
-Subject: [PATCH v4 4/5] mmc: core: Add sdio_retune_hold_now() and sdio_retune_release()
-Date:   Thu, 13 Jun 2019 16:41:52 -0700
-Message-Id: <20190613234153.59309-5-dianders@chromium.org>
+        Hans de Goede <hdegoede@redhat.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        linux-kernel@vger.kernel.org,
+        Madhan Mohan R <MadhanMohan.R@cypress.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH v4 3/5] brcmfmac: sdio: Disable auto-tuning around commands expected to fail
+Date:   Thu, 13 Jun 2019 16:41:51 -0700
+Message-Id: <20190613234153.59309-4-dianders@chromium.org>
 X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
 In-Reply-To: <20190613234153.59309-1-dianders@chromium.org>
 References: <20190613234153.59309-1-dianders@chromium.org>
@@ -85,93 +88,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We want SDIO drivers to be able to temporarily stop retuning when the
-driver knows that the SDIO card is not in a state where retuning will
-work (maybe because the card is asleep).  We'll move the relevant
-functions to a place where drivers can call them.
+There are certain cases, notably when transitioning between sleep and
+active state, when Broadcom SDIO WiFi cards will produce errors on the
+SDIO bus.  This is evident from the source code where you can see that
+we try commands in a loop until we either get success or we've tried
+too many times.  The comment in the code reinforces this by saying
+"just one write attempt may fail"
 
+Unfortunately these failures sometimes end up causing an "-EILSEQ"
+back to the core which triggers a retuning of the SDIO card and that
+blocks all traffic to the card until it's done.
+
+Let's disable retuning around the commands we expect might fail.
+
+Fixes: bd11e8bd03ca ("mmc: core: Flag re-tuning is needed on CRC errors")
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 Changes in v4:
-- Moved retune hold/release to SDIO API (Adrian).
+- Adjust to API rename (Adrian, Ulf).
 
 Changes in v3:
-- ("mmc: core: Export mmc_retune_hold_now() mmc_retune_release()") new for v3.
+- Expect errors for all of brcmf_sdio_kso_control() (Adrian).
 
 Changes in v2: None
 
- drivers/mmc/core/sdio_io.c    | 40 +++++++++++++++++++++++++++++++++++
- include/linux/mmc/sdio_func.h |  3 +++
- 2 files changed, 43 insertions(+)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/mmc/core/sdio_io.c b/drivers/mmc/core/sdio_io.c
-index f822a9630b0e..1b6fe737bd72 100644
---- a/drivers/mmc/core/sdio_io.c
-+++ b/drivers/mmc/core/sdio_io.c
-@@ -15,6 +15,7 @@
- #include "sdio_ops.h"
- #include "core.h"
- #include "card.h"
-+#include "host.h"
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+index 4a750838d8cd..ee76593259a7 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -667,6 +667,8 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
  
- /**
-  *	sdio_claim_host - exclusively claim a bus for a certain SDIO function
-@@ -770,3 +771,42 @@ void sdio_retune_crc_enable(struct sdio_func *func)
- 	func->card->host->retune_crc_disable = false;
+ 	brcmf_dbg(TRACE, "Enter: on=%d\n", on);
+ 
++	sdio_retune_crc_disable(bus->sdiodev->func1);
++
+ 	wr_val = (on << SBSDIO_FUNC1_SLEEPCSR_KSO_SHIFT);
+ 	/* 1st KSO write goes to AOS wake up core if device is asleep  */
+ 	brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR, wr_val, &err);
+@@ -727,6 +729,8 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
+ 	if (try_cnt > MAX_KSO_ATTEMPTS)
+ 		brcmf_err("max tries: rd_val=0x%x err=%d\n", rd_val, err);
+ 
++	sdio_retune_crc_enable(bus->sdiodev->func1);
++
+ 	return err;
  }
- EXPORT_SYMBOL_GPL(sdio_retune_crc_enable);
-+
-+/**
-+ *	sdio_retune_hold_now - start deferring retuning requests till release
-+ *	@func: SDIO function attached to host
-+ *
-+ *	This function can be called if it's currently a bad time to do
-+ *	a retune of the SDIO card.  Retune requests made during this time
-+ *	will be held and we'll actually do the retune sometime after the
-+ *	release.
-+ *
-+ *	This function could be useful if an SDIO card is in a power state
-+ *	where it can respond to a small subset of commands that doesn't
-+ *	include the retuning command.  Care should be taken when using
-+ *	this function since (presumably) the retuning request we might be
-+ *	deferring was made for a good reason.
-+ *
-+ *	This function should be called while the host is claimed.
-+ */
-+void sdio_retune_hold_now(struct sdio_func *func)
-+{
-+	mmc_retune_hold_now(func->card->host);
-+}
-+EXPORT_SYMBOL_GPL(sdio_retune_hold_now);
-+
-+/**
-+ *	sdio_retune_release - signal that it's OK to retune now
-+ *	@func: SDIO function attached to host
-+ *
-+ *	This is the complement to sdio_retune_hold_now().  Calling this
-+ *	function won't make a retune happen right away but will allow
-+ *	them to be scheduled normally.
-+ *
-+ *	This function should be called while the host is claimed.
-+ */
-+void sdio_retune_release(struct sdio_func *func)
-+{
-+	mmc_retune_release(func->card->host);
-+}
-+EXPORT_SYMBOL_GPL(sdio_retune_release);
-diff --git a/include/linux/mmc/sdio_func.h b/include/linux/mmc/sdio_func.h
-index 4820e6d09dac..5a177f7a83c3 100644
---- a/include/linux/mmc/sdio_func.h
-+++ b/include/linux/mmc/sdio_func.h
-@@ -170,4 +170,7 @@ extern int sdio_set_host_pm_flags(struct sdio_func *func, mmc_pm_flag_t flags);
- extern void sdio_retune_crc_disable(struct sdio_func *func);
- extern void sdio_retune_crc_enable(struct sdio_func *func);
  
-+extern void sdio_retune_hold_now(struct sdio_func *func);
-+extern void sdio_retune_release(struct sdio_func *func);
-+
- #endif /* LINUX_MMC_SDIO_FUNC_H */
 -- 
 2.22.0.rc2.383.gf4fbbf30c2-goog
 
