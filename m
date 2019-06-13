@@ -4,174 +4,133 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC6AC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAC7C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C420520644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DDC220644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:31:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392568AbfFMQbN (ORCPT
+        id S2403953AbfFMQb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:31:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:36110 "EHLO foss.arm.com"
+        Thu, 13 Jun 2019 12:31:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59694 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730890AbfFMI2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:28:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B48C6367;
-        Thu, 13 Jun 2019 01:28:14 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 784543F694;
-        Thu, 13 Jun 2019 01:28:14 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id 3A02F682574; Thu, 13 Jun 2019 09:28:13 +0100 (BST)
-Date:   Thu, 13 Jun 2019 09:28:13 +0100
-From:   Liviu Dudau <Liviu.Dudau@arm.com>
-To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH v2 2/2] drm/komeda: Adds komeda_kms_drop_master
-Message-ID: <20190613082813.GM4173@e110455-lin.cambridge.arm.com>
-References: <1560251589-31827-1-git-send-email-lowry.li@arm.com>
- <1560251589-31827-3-git-send-email-lowry.li@arm.com>
- <20190611123038.GC2458@phenom.ffwll.local>
- <20190612022617.GA8595@james-ThinkStation-P300>
- <20190613081727.GE23020@phenom.ffwll.local>
+        id S1730876AbfFMI0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:26:40 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 73FF830860C0;
+        Thu, 13 Jun 2019 08:26:39 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-87.pek2.redhat.com [10.72.12.87])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6E3E960FB1;
+        Thu, 13 Jun 2019 08:26:31 +0000 (UTC)
+Date:   Thu, 13 Jun 2019 16:26:27 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, roberto.sassu@huawei.com,
+        "Eric W. Biederman" <ebiederm@xmission.com>, vgoyal@redhat.com,
+        kexec <kexec@lists.infradead.org>
+Subject: Re: [PATCH V8 3/3] Call ima_kexec_cmdline to measure the cmdline args
+Message-ID: <20190613082627.GA30288@dhcp-128-65.nay.redhat.com>
+References: <20190612221549.28399-1-prsriva02@gmail.com>
+ <20190612221549.28399-4-prsriva02@gmail.com>
+ <1560378703.4578.91.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190613081727.GE23020@phenom.ffwll.local>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1560378703.4578.91.camel@linux.ibm.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 13 Jun 2019 08:26:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 10:17:27AM +0200, Daniel Vetter wrote:
-> On Wed, Jun 12, 2019 at 02:26:24AM +0000, james qian wang (Arm Technology China) wrote:
-> > On Tue, Jun 11, 2019 at 02:30:38PM +0200, Daniel Vetter wrote:
-> > > On Tue, Jun 11, 2019 at 11:13:45AM +0000, Lowry Li (Arm Technology China) wrote:
-> > > > From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-> > > >
-> > > > The komeda internal resources (pipelines) are shared between crtcs,
-> > > > and resources release by disable_crtc. This commit is working for once
-> > > > user forgot disabling crtc like app quit abnomally, and then the
-> > > > resources can not be used by another crtc. Adds drop_master to
-> > > > shutdown the device and make sure all the komeda resources have been
-> > > > released and can be used for the next usage.
-> > > >
-> > > > Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-> > > > ---
-> > > >  drivers/gpu/drm/arm/display/komeda/komeda_kms.c | 13 +++++++++++++
-> > > >  1 file changed, 13 insertions(+)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> > > > index 8543860..647bce5 100644
-> > > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> > > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> > > > @@ -54,11 +54,24 @@ static irqreturn_t komeda_kms_irq_handler(int irq, void *data)
-> > > >  return status;
-> > > >  }
-> > > >
-> > > > +/* Komeda internal resources (pipelines) are shared between crtcs, and resources
-> > > > + * are released by disable_crtc. But if user forget disabling crtc like app quit
-> > > > + * abnormally, the resources can not be used by another crtc.
-> > > > + * Use drop_master to shutdown the device and make sure all the komeda resources
-> > > > + * have been released, and can be used for the next usage.
-> > > > + */
-> > >
-> > > No. If we want this, we need to implement this across drivers, not with
-> > > per-vendor hacks.
-> > >
-> > > The kerneldoc should have been a solid hint: "Only used by vmwgfx."
-> > > -Daniel
+On 06/12/19 at 06:31pm, Mimi Zohar wrote:
+> [Cc: kexec mailing list]
+> 
+> Hi Eric, Dave,
+> 
+> On Wed, 2019-06-12 at 15:15 -0700, Prakhar Srivastava wrote:
+> > During soft reboot(kexec_file_load) boot cmdline args
+> > are not measured.Thus the new kernel on load boots with
+> > an assumption of cold reboot.
 > > 
-> > Hi Daniel:
-> > This drop_master is really what we want, can we update the doc and
-> > add komeda as a user of this hacks like "used by vmwfgx and komeda",
-> > or maybe directly promote this per-vendor hacks as an optional chip
-> > function ?
-> 
-> Still no, because it would mean different behaviour for arm/komeda
-> compared to everyone else. And we really don't want this, because this
-> would completely break flicker-less vt-switching.
-> 
-> Currently the only fallback for this case is the lastclose handler, which
-> atm just restores fbcon/fbdev. If you want to change/extend that to work
-> without fbdev, then that's the place to do the change. And across _all_
-> drm kms drivers, so that we have consistent behaviour.
-
-Slightly unrelated, just thinking of a solution and wanted confirmation/double
-checking: can a CRTC be instantiated without any planes (or without a primary
-plane)?
-
-Best regards,
-Liviu
-
-> 
-> kms is a cross-vendor api, vendor hacks are very, very much not cool.
-> -Daniel
-> 
+> > This patch makes a call to the ima hook ima_kexec_cmdline,
+> > added in "Define a new IMA hook to measure the boot command
+> > line arguments"
+> > to measure the boot cmdline args into the ima log.
 > > 
-> > James
+> > - call ima_kexec_cmdline from kexec_file_load.
+> > - move the call ima_add_kexec_buffer after the cmdline
+> > args have been measured.
 > > 
-> > > > +static void komeda_kms_drop_master(struct drm_device *dev,
-> > > > +   struct drm_file *file_priv)
-> > > > +{
-> > > > +drm_atomic_helper_shutdown(dev);
-> > > > +}
-> > > > +
-> > > >  static struct drm_driver komeda_kms_driver = {
-> > > >  .driver_features = DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC |
-> > > >     DRIVER_PRIME | DRIVER_HAVE_IRQ,
-> > > >  .lastclose= drm_fb_helper_lastclose,
-> > > >  .irq_handler= komeda_kms_irq_handler,
-> > > > +.master_drop= komeda_kms_drop_master,
-> > > >  .gem_free_object_unlocked= drm_gem_cma_free_object,
-> > > >  .gem_vm_ops= &drm_gem_cma_vm_ops,
-> > > >  .dumb_create= komeda_gem_cma_dumb_create,
-> > > > --
-> > > > 1.9.1
-> > > >
-> > > > _______________________________________________
-> > > > dri-devel mailing list
-> > > > dri-devel@lists.freedesktop.org
-> > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > >
-> > > --
-> > > Daniel Vetter
-> > > Software Engineer, Intel Corporation
-> > > http://blog.ffwll.ch
-> > IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
+> Cc: Eric W. Biederman <ebiederm@xmission.com>
+> Cc: Dave Young <dyoung@redhat.com>
 > 
-> -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+> Any chance we could get some Acks?
 
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+The ima_* is blackbox functions to me, looks like this patch is trying
+to measure kexec cmdline buffer and save in some ima logs and then add all the
+measure results including those for kernel/initrd to a kexec_buf and pass to 2nd
+kernel.
+
+It should be good and only take effect when IMA enabled. If all the
+assumptions are right:
+
+Acked-by: Dave Young <dyoung@redhat.com>
+> 
+> thanks,
+> 
+> Mimi
+> 
+> > ---
+> >  kernel/kexec_file.c | 9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> > index 072b6ee55e3f..b0c724e5d86c 100644
+> > --- a/kernel/kexec_file.c
+> > +++ b/kernel/kexec_file.c
+> > @@ -198,9 +198,6 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+> >  		return ret;
+> >  	image->kernel_buf_len = size;
+> >  
+> > -	/* IMA needs to pass the measurement list to the next kernel. */
+> > -	ima_add_kexec_buffer(image);
+> > -
+> >  	/* Call arch image probe handlers */
+> >  	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
+> >  					    image->kernel_buf_len);
+> > @@ -241,8 +238,14 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+> >  			ret = -EINVAL;
+> >  			goto out;
+> >  		}
+> > +
+> > +		ima_kexec_cmdline(image->cmdline_buf,
+> > +				  image->cmdline_buf_len - 1);
+> >  	}
+> >  
+> > +	/* IMA needs to pass the measurement list to the next kernel. */
+> > +	ima_add_kexec_buffer(image);
+> > +
+> >  	/* Call arch image load handlers */
+> >  	ldata = arch_kexec_kernel_image_load(image);
+> >  
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
