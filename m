@@ -2,162 +2,177 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7ABDC31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63942C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A702054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:20:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560439245;
-	bh=hGTL0UDB9YcWjm74Ir6wQQkX+JwdFyiJOCXF2M+5evU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uSoPzi+fGqpaO691BrM/F7Wa4718r0eUhkbdOMBc86xlIURHoSN0Jprn/Vj7ZARxh
-	 zgiFWJ8L/Wfj7ypP0Jatnh2EvstvuIB4wO8eUxngVmXAvPS3Q0tzMbvAW6CcAChp7q
-	 VE9GnjFmDSi+ZmH3X4rji/DTmYP1ZuzuqPrUrfL0=
+	by mail.kernel.org (Postfix) with ESMTP id 2F2C32054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:21:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NyjBpczB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732024AbfFMPUo (ORCPT
+        id S1732160AbfFMPU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:20:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34812 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:20:59 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:58650 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732015AbfFMMwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 08:52:06 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B79F217F5;
-        Thu, 13 Jun 2019 12:52:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560430325;
-        bh=hGTL0UDB9YcWjm74Ir6wQQkX+JwdFyiJOCXF2M+5evU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wTbq5CEloa5SHhkjgeBYGYhL8+3cX1A9KNfN+w4wcEsou4uoK3R8GYYknSIbC0XIw
-         yMulQoFX7Op9+tmF1uisRQ1zdrMdT6oHMrM5jwVwc6ZR0HX/6KT6sJuFaqhby7RTL4
-         hoqPqr8M2vylF39fcb7bXFgXZLZDkOMCY3ZSYu+A=
-Received: by mail-qt1-f174.google.com with SMTP id z24so9121577qtj.10;
-        Thu, 13 Jun 2019 05:52:05 -0700 (PDT)
-X-Gm-Message-State: APjAAAUZdZeBp7EFAIhRQCVQ3CEwI66QPvqMbp/wqw8y7ssY8VH5oBhV
-        /7KDepjn2vLfHDRQO8BxR/1RuS0VkvSJpb/c7Q==
-X-Google-Smtp-Source: APXvYqyQSf3AAUre27+KCK29BAV13oivw2pUie02NLqVC7Y0PandMlDUCad0+vn9k1QO92NFUsbnlgd0BItkrNEdFVo=
-X-Received: by 2002:a0c:b786:: with SMTP id l6mr3426471qve.148.1560430324645;
- Thu, 13 Jun 2019 05:52:04 -0700 (PDT)
+        id S1732005AbfFMMuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 08:50:44 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45Pk9r1GVwz9v00L;
+        Thu, 13 Jun 2019 14:50:40 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=NyjBpczB; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id SVtYa9beBncy; Thu, 13 Jun 2019 14:50:40 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45Pk9q752Dz9v00J;
+        Thu, 13 Jun 2019 14:50:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1560430240; bh=pTwwRiZdJKJ6tY+T10JSotQr5almlLpVgBNMt/5ukTg=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=NyjBpczBJ59J8xTZ+BnVahuln2IIek0w4aqoEqv560r/EO4MxtGOWUsT9o+Upsl27
+         S3/kNEon/ZpKRC46mLcrQkDYcIvTU/J+KPfcZ2hGGZ9EwkDbzeM4USNrgYZ2ERNqjB
+         ae8pW/yDaqCZ8T19xIwbZ7ztlX0jd8tF5GzYN7zA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EF4688B8B9;
+        Thu, 13 Jun 2019 14:50:40 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id z2IbEDTJueAY; Thu, 13 Jun 2019 14:50:40 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C94EA8B8E4;
+        Thu, 13 Jun 2019 14:50:39 +0200 (CEST)
+Subject: Re: [PATCH v3 1/4] crypto: talitos - move struct talitos_edesc into
+ talitos.h
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, horia.geanta@nxp.com
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+References: <cover.1560429844.git.christophe.leroy@c-s.fr>
+ <0ada8523d5765391ddc6899815e0e1eb511bcb7d.1560429844.git.christophe.leroy@c-s.fr>
+Message-ID: <eb4463ff-04aa-fc47-e126-c15f39062686@c-s.fr>
+Date:   Thu, 13 Jun 2019 14:50:39 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190611040350.90064-1-dbasehore@chromium.org>
- <20190611040350.90064-3-dbasehore@chromium.org> <CAL_JsqLM1CikZ8+NPjLk2CEW-z9vPynZpVG20x0jsa7hVq0LvA@mail.gmail.com>
- <CAGAzgsoWGqf0JQPNyRFnv2xZTMxje6idce7Dy5FZzuxj30mQyw@mail.gmail.com>
-In-Reply-To: <CAGAzgsoWGqf0JQPNyRFnv2xZTMxje6idce7Dy5FZzuxj30mQyw@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 13 Jun 2019 06:51:52 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+9K764hFT6GG=4paumGaxOUbnts4VJvTZ9a8Y-YPWdhg@mail.gmail.com>
-Message-ID: <CAL_Jsq+9K764hFT6GG=4paumGaxOUbnts4VJvTZ9a8Y-YPWdhg@mail.gmail.com>
-Subject: Re: [PATCH 2/5] dt-bindings: display/panel: Expand rotation documentation
-To:     "dbasehore ." <dbasehore@chromium.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0ada8523d5765391ddc6899815e0e1eb511bcb7d.1560429844.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 4:02 PM dbasehore . <dbasehore@chromium.org> wrote:
->
-> On Tue, Jun 11, 2019 at 8:25 AM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Mon, Jun 10, 2019 at 10:03 PM Derek Basehore <dbasehore@chromium.org> wrote:
-> > >
-> > > This adds to the rotation documentation to explain how drivers should
-> > > use the property and gives an example of the property in a devicetree
-> > > node.
-> > >
-> > > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> > > ---
-> > >  .../bindings/display/panel/panel.txt          | 32 +++++++++++++++++++
-> > >  1 file changed, 32 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/panel/panel.txt b/Documentation/devicetree/bindings/display/panel/panel.txt
-> > > index e2e6867852b8..f35d62d933fc 100644
-> > > --- a/Documentation/devicetree/bindings/display/panel/panel.txt
-> > > +++ b/Documentation/devicetree/bindings/display/panel/panel.txt
-> > > @@ -2,3 +2,35 @@ Common display properties
-> > >  -------------------------
-> > >
-> > >  - rotation:    Display rotation in degrees counter clockwise (0,90,180,270)
-> > > +
-> > > +Property read from the device tree using of of_drm_get_panel_orientation
-> >
-> > Don't put kernel specifics into bindings.
->
-> Will remove that. I'll clean up the documentation to indicate that
-> this binding creates a panel orientation property unless the rotation
-> is handled in the Timing Controller on the panel if that sounds fine.
 
-Even if the timing ctrlr handles it, don't you still need to know what
-the native orientation is?
 
-> > > +
-> > > +The panel driver may apply the rotation at the TCON level, which will
-> >
-> > What's TCON? Something Mediatek specific IIRC.
->
-> The TCON is the Timing controller, which is on the panel. Every panel
-> has one. I'll add to the doc that the TCON is in the panel, etc.
->
-> >
-> > > +make the panel look like it isn't rotated to the kernel and any other
-> > > +software.
-> > > +
-> > > +If not, a panel orientation property should be added through the SoC
-> > > +vendor DRM code using the drm_connector_init_panel_orientation_property
-> > > +function.
-> >
-> > The 'rotation' property should be defined purely based on how the
-> > panel is mounted relative to a device's orientation. If the display
-> > pipeline has some ability to handle rotation, that's a feature of the
-> > display pipeline and not the panel.
->
-> This is how the panel orientation property is already handled in the
-> kernel. See drivers/gpu/drm/i915/vlv_dsi.c for more details.
+Le 13/06/2019 à 14:48, Christophe Leroy a écrit :
+> Moves it into talitos.h so that it can be used
+> from any place in talitos.c
+> 
+> This will be required for next
+> patch ("crypto: talitos - fix hash on SEC1")
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-The point is your description is all about the kernel. This is a
-binding which is not kernel specific.
+Cc: stable@vger.kernel.org
 
-> > > +
-> > > +Example:
-> >
-> > This file is a collection of common properties. It shouldn't have an
-> > example especially as this example is mostly non-common properties.
->
-> Just copied one of our DTS entries that uses the property. I'll remove
-> everything under compatible except for rotation and status.
-
-Just remove the example or add what you want to the "boe,himax8279d8p"
-binding doc. We are moving towards examples being compiled and
-validated, so incomplete ones won't work.
-
-Rob
+> ---
+>   drivers/crypto/talitos.c | 30 ------------------------------
+>   drivers/crypto/talitos.h | 30 ++++++++++++++++++++++++++++++
+>   2 files changed, 30 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
+> index 3b3e99f1cddb..5b401aec6c84 100644
+> --- a/drivers/crypto/talitos.c
+> +++ b/drivers/crypto/talitos.c
+> @@ -951,36 +951,6 @@ static int aead_des3_setkey(struct crypto_aead *authenc,
+>   	goto out;
+>   }
+>   
+> -/*
+> - * talitos_edesc - s/w-extended descriptor
+> - * @src_nents: number of segments in input scatterlist
+> - * @dst_nents: number of segments in output scatterlist
+> - * @icv_ool: whether ICV is out-of-line
+> - * @iv_dma: dma address of iv for checking continuity and link table
+> - * @dma_len: length of dma mapped link_tbl space
+> - * @dma_link_tbl: bus physical address of link_tbl/buf
+> - * @desc: h/w descriptor
+> - * @link_tbl: input and output h/w link tables (if {src,dst}_nents > 1) (SEC2)
+> - * @buf: input and output buffeur (if {src,dst}_nents > 1) (SEC1)
+> - *
+> - * if decrypting (with authcheck), or either one of src_nents or dst_nents
+> - * is greater than 1, an integrity check value is concatenated to the end
+> - * of link_tbl data
+> - */
+> -struct talitos_edesc {
+> -	int src_nents;
+> -	int dst_nents;
+> -	bool icv_ool;
+> -	dma_addr_t iv_dma;
+> -	int dma_len;
+> -	dma_addr_t dma_link_tbl;
+> -	struct talitos_desc desc;
+> -	union {
+> -		struct talitos_ptr link_tbl[0];
+> -		u8 buf[0];
+> -	};
+> -};
+> -
+>   static void talitos_sg_unmap(struct device *dev,
+>   			     struct talitos_edesc *edesc,
+>   			     struct scatterlist *src,
+> diff --git a/drivers/crypto/talitos.h b/drivers/crypto/talitos.h
+> index 32ad4fc679ed..95f78c6d9206 100644
+> --- a/drivers/crypto/talitos.h
+> +++ b/drivers/crypto/talitos.h
+> @@ -42,6 +42,36 @@ struct talitos_desc {
+>   
+>   #define TALITOS_DESC_SIZE	(sizeof(struct talitos_desc) - sizeof(__be32))
+>   
+> +/*
+> + * talitos_edesc - s/w-extended descriptor
+> + * @src_nents: number of segments in input scatterlist
+> + * @dst_nents: number of segments in output scatterlist
+> + * @icv_ool: whether ICV is out-of-line
+> + * @iv_dma: dma address of iv for checking continuity and link table
+> + * @dma_len: length of dma mapped link_tbl space
+> + * @dma_link_tbl: bus physical address of link_tbl/buf
+> + * @desc: h/w descriptor
+> + * @link_tbl: input and output h/w link tables (if {src,dst}_nents > 1) (SEC2)
+> + * @buf: input and output buffeur (if {src,dst}_nents > 1) (SEC1)
+> + *
+> + * if decrypting (with authcheck), or either one of src_nents or dst_nents
+> + * is greater than 1, an integrity check value is concatenated to the end
+> + * of link_tbl data
+> + */
+> +struct talitos_edesc {
+> +	int src_nents;
+> +	int dst_nents;
+> +	bool icv_ool;
+> +	dma_addr_t iv_dma;
+> +	int dma_len;
+> +	dma_addr_t dma_link_tbl;
+> +	struct talitos_desc desc;
+> +	union {
+> +		struct talitos_ptr link_tbl[0];
+> +		u8 buf[0];
+> +	};
+> +};
+> +
+>   /**
+>    * talitos_request - descriptor submission request
+>    * @desc: descriptor pointer (kernel virtual)
+> 
