@@ -2,88 +2,102 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4953BC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EAAC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B37820644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD47A2147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560443212;
+	bh=YCT7ioCTMlfSNqJdXxS/UUxBZzG++8zttWVLIz3vY/w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Q+iqOlPF25QX+h3440onjrr/LtJUctjMP9lt9EjEJek/vBg2I9guZIzZYB+/m+CA7
+	 Xvy0ksNJirc7Av+VSuym5RK9Nt0JZbgNyOrwiRlWWJUEx8nM3FfaAJ4RTa2MiPo/if
+	 FazUtKkgguQqj0r0dNhMQUhfM5bgY/3rQ7KhQ/rQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392360AbfFMQ0l (ORCPT
+        id S2392308AbfFMQ0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:26:41 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:35773 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733022AbfFMQ00 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:26:26 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hbSYP-0001xt-72; Thu, 13 Jun 2019 18:26:21 +0200
-Date:   Thu, 13 Jun 2019 18:26:14 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-cc:     Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Waiman Long <longman@redhat.com>, X86 ML <x86@kernel.org>
-Subject: Re: infinite loop in read_hpet from ktime_get_boot_fast_ns
-In-Reply-To: <CAHmME9pVeYBkUX058EA-W4ZkEch=enPsiPioWnkVLK03djuQ9A@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1906131822300.1791@nanos.tec.linutronix.de>
-References: <CAHmME9qBDtO1vJrA2Ch3SQigsu435wR7Q3vTm_3R=u=BE49S-Q@mail.gmail.com> <alpine.DEB.2.21.1906112257120.2214@nanos.tec.linutronix.de> <20190612090257.GF3436@hirez.programming.kicks-ass.net> <CAHmME9obwzZ5x=p3twDfNYux+kg0h4QAGe0ePAkZ2KqvguBK3g@mail.gmail.com>
- <CAK8P3a15NTV=njOjz-ccYL8=_q_MdEru0A+jeE=f7ufUTOOTgw@mail.gmail.com> <CAHmME9pOWk_ZteUZc_PT19rMn1kfYcXtmLcyAy5sncdV1tNuiQ@mail.gmail.com> <CAK8P3a3DpRvk1Mw_MKs8wAbRJbMUQoY2UTgK1CF8UOiBQg=btw@mail.gmail.com>
- <CAHmME9pVeYBkUX058EA-W4ZkEch=enPsiPioWnkVLK03djuQ9A@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 13 Jun 2019 12:26:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53828 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730964AbfFMIgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:36:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68D652146F;
+        Thu, 13 Jun 2019 08:36:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560414977;
+        bh=YCT7ioCTMlfSNqJdXxS/UUxBZzG++8zttWVLIz3vY/w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LlNOZSS0xV1+nCkp/7dWSUv2gGBA9NFbIdHnIG6GsyjB/jvxKwY6yNgCjgy7fy4hK
+         xv2h+yoTxbMmmw4LgOA2CablMg8bqkTZXx0itPw1ZlEJSV39fwMYoEVC7ooT4Y/ewh
+         j45+V9erFA7NKlMEaJHl8GaTm9Az6RIaFToqRZp4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 18/81] drm/nouveau/disp/dp: respect sink limits when selecting failsafe link configuration
+Date:   Thu, 13 Jun 2019 10:33:01 +0200
+Message-Id: <20190613075650.410787319@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
+References: <20190613075649.074682929@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019, Jason A. Donenfeld wrote:
-> Hey Arnd,
-> 
-> On Thu, Jun 13, 2019 at 5:40 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > A seqlock is a very cheap synchronization primitive, I would actually
-> > guess that this is faster than most implementations of sched_clock()
-> > that access a hardware register for reading the time.
-> 
-> It appears to me that ktime_get_coarse_boottime() has a granularity of
-> a whole second, which is a lot worse than jiffies. Looking at the
-> source, you assign base but don't then add ns like the other
-> functions. At first I thought this was an intentional quirk to avoid
-> hitting the slow hardware paths. But noticing this poor granularity
-> now and observing that there's actually a blank line (\n\n) where the
-> nanosecond addition normally would be, I wonder if something was lost
-> in cut-and-paste?
-> 
-> I'm still poking around trying to see what's up. As a quick test,
-> running this on every packet during a high speed test shows the left
-> incrementing many times per second, whereas the right increments once
-> per second:
-> 
-> static int x = 0;
-> if (!(x++ % 30000))
->      pr_err("%llu %llu\n", local_clock(), ktime_get_coarse_boottime());
+[ Upstream commit 13d03e9daf70dab032c03dc172e75bb98ad899c4 ]
 
-That does not make sense. The coarse time getters use
-tk->tkr_mono.base. base is updated every tick (or if the machine is
-completely idle right when the first CPU wakes up again).
+Where possible, we want the failsafe link configuration (one which won't
+hang the OR during modeset because of not enough bandwidth for the mode)
+to also be supported by the sink.
 
-timekeeping_get_ns() which is added in ktime_get_boottime() is the time in
-ns elapsed since base was updated last, which is less than a tick.
+This prevents "link rate unsupported by sink" messages when link training
+fails.
 
-Thanks,
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-	tglx
+diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c
+index 6160a6158cf2..5e51a5c1eb01 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c
++++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c
+@@ -364,8 +364,15 @@ nvkm_dp_train(struct nvkm_dp *dp, u32 dataKBps)
+ 	 * and it's better to have a failed modeset than that.
+ 	 */
+ 	for (cfg = nvkm_dp_rates; cfg->rate; cfg++) {
+-		if (cfg->nr <= outp_nr && cfg->nr <= outp_bw)
+-			failsafe = cfg;
++		if (cfg->nr <= outp_nr && cfg->nr <= outp_bw) {
++			/* Try to respect sink limits too when selecting
++			 * lowest link configuration.
++			 */
++			if (!failsafe ||
++			    (cfg->nr <= sink_nr && cfg->bw <= sink_bw))
++				failsafe = cfg;
++		}
++
+ 		if (failsafe && cfg[1].rate < dataKBps)
+ 			break;
+ 	}
+-- 
+2.20.1
+
+
+
