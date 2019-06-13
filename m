@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D22C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAC2C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1CC820665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A06CC20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442448;
-	bh=ZPH16qG/Ca5t+j0juJTeNqQ9wDqZdh+nyOxINpzAyb4=;
+	s=default; t=1560442451;
+	bh=/IMbikxRv8tv9hKiJzmRlZz3kER9v/NyBLeLBn/W8KI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nOYR3CS5sKKNte4BOnbnbYVM1QF/BEZZmVYmRe+wnir3d3T3Qyf4irYT0DvkEl/aF
-	 CDqGlvq+CsLyoBE58npCS55kVdd5LKWMjTZQ2rGmLKW9wzPB6pQgeVGOfqlMt5i0pe
-	 +G+e09fCYqaDqUusM5/ueSIE5Q60EywDpGtGF9So=
+	b=xPyURhv8gZWyiKHarE6lVSHhdHaQN5oSgsIrEhVLjpD2jiqKZw6CAls+07ZNH2BAJ
+	 BShq3dBOkkN/vG3ezb7cZN5ntgbptqJpOFIwb5OumR6afUXPNpoquv+RRMWK9ESRV6
+	 sxrEzw2Qmi64xrSHaX00X0hgKm3CuE9kwOsd8uag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391776AbfFMQOC (ORCPT
+        id S2391756AbfFMQOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:14:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59712 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:14:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731199AbfFMImd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:42:33 -0400
+        id S1731200AbfFMImh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:42:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8757921479;
-        Thu, 13 Jun 2019 08:42:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3CA52147A;
+        Thu, 13 Jun 2019 08:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415353;
-        bh=ZPH16qG/Ca5t+j0juJTeNqQ9wDqZdh+nyOxINpzAyb4=;
+        s=default; t=1560415356;
+        bh=/IMbikxRv8tv9hKiJzmRlZz3kER9v/NyBLeLBn/W8KI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tep264qEiFZ2fM9sRw7qG+CZG5uA477mnArmM2UuNUDtruv41QCvr/Kvioju/0VP9
-         peTuHbzUGSuanC8iRgB4i1fV7AHrZKNI58SVFIWRz3PVDiXrQLUflyID8roPdFAq5/
-         whVdQPBdiiISRRtnuGyetEtCVsGS8xnwIAZM4Hl8=
+        b=g528rEXwFvTKqc2iMrOPLxKPJsF05zteK5ZGMlgff/xZ8yW2skDcv5C+QYO8thl67
+         u1jirAvgR7fPeMbzAdli3tAqB8R9todlom9d8FpUZjEdTsOmwV8sOx8/KeiMx3tYXP
+         BwieR2Lta8Zhnb7EzaYAmgRRIS3+ptdudHKKnB7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Kurz <akurz@blala.de>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org, Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 094/118] power: supply: max14656: fix potential use-before-alloc
-Date:   Thu, 13 Jun 2019 10:33:52 +0200
-Message-Id: <20190613075649.370367610@linuxfoundation.org>
+Subject: [PATCH 4.19 095/118] net: hns3: return 0 and print warning when hit duplicate MAC
+Date:   Thu, 13 Jun 2019 10:33:53 +0200
+Message-Id: <20190613075649.440852957@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -61,61 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0cd0e49711556d2331a06b1117b68dd786cb54d2 ]
+[ Upstream commit 72110b567479f0282489a9b3747e76d8c67d75f5 ]
 
-Call order on probe():
-- max14656_hw_init() enables interrupts on the chip
-- devm_request_irq() starts processing interrupts, isr
-  could be called immediately
--    isr: schedules delayed work (irq_work)
--    irq_work: calls power_supply_changed()
-- devm_power_supply_register() registers the power supply
+When set 2 same MAC to different function of one port, IMP
+will return error as the later one may modify the origin one.
+This will cause bond fail for 2 VFs of one port.
 
-Depending on timing, it's possible that power_supply_changed()
-is called on an unregistered power supply structure.
+Driver just print warning and return 0 with this patch, so
+if set same MAC address, it will return 0 but do not really
+configure HW.
 
-Fix by registering the power supply before requesting the irq.
-
-Cc: Alexander Kurz <akurz@blala.de>
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/max14656_charger_detector.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/supply/max14656_charger_detector.c b/drivers/power/supply/max14656_charger_detector.c
-index b91b1d2999dc..d19307f791c6 100644
---- a/drivers/power/supply/max14656_charger_detector.c
-+++ b/drivers/power/supply/max14656_charger_detector.c
-@@ -280,6 +280,13 @@ static int max14656_probe(struct i2c_client *client,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 340baf6a470c..4648c6a9d9e8 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -4300,8 +4300,11 @@ int hclge_add_uc_addr_common(struct hclge_vport *vport,
+ 		return hclge_add_mac_vlan_tbl(vport, &req, NULL);
  
- 	INIT_DELAYED_WORK(&chip->irq_work, max14656_irq_worker);
- 
-+	chip->detect_psy = devm_power_supply_register(dev,
-+		       &chip->psy_desc, &psy_cfg);
-+	if (IS_ERR(chip->detect_psy)) {
-+		dev_err(dev, "power_supply_register failed\n");
-+		return -EINVAL;
+ 	/* check if we just hit the duplicate */
+-	if (!ret)
+-		ret = -EINVAL;
++	if (!ret) {
++		dev_warn(&hdev->pdev->dev, "VF %d mac(%pM) exists\n",
++			 vport->vport_id, addr);
++		return 0;
 +	}
-+
- 	ret = devm_request_irq(dev, chip->irq, max14656_irq,
- 			       IRQF_TRIGGER_FALLING,
- 			       MAX14656_NAME, chip);
-@@ -289,13 +296,6 @@ static int max14656_probe(struct i2c_client *client,
- 	}
- 	enable_irq_wake(chip->irq);
  
--	chip->detect_psy = devm_power_supply_register(dev,
--		       &chip->psy_desc, &psy_cfg);
--	if (IS_ERR(chip->detect_psy)) {
--		dev_err(dev, "power_supply_register failed\n");
--		return -EINVAL;
--	}
--
- 	schedule_delayed_work(&chip->irq_work, msecs_to_jiffies(2000));
- 
- 	return 0;
+ 	dev_err(&hdev->pdev->dev,
+ 		"PF failed to add unicast entry(%pM) in the MAC table\n",
 -- 
 2.20.1
 
