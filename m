@@ -2,239 +2,245 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1F9C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD34C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08305206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:37:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K6EBvzH+"
+	by mail.kernel.org (Postfix) with ESMTP id 7EBA7207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732994AbfFMPhA (ORCPT
+        id S2387511AbfFMPhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:37:00 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:16433 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727066AbfFMKQd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 06:16:33 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d02227e0000>; Thu, 13 Jun 2019 03:16:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 13 Jun 2019 03:16:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 13 Jun 2019 03:16:30 -0700
-Received: from HQMAIL112.nvidia.com (172.18.146.18) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Jun
- 2019 10:16:30 +0000
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL112.nvidia.com
- (172.18.146.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Jun
- 2019 10:16:30 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 13 Jun 2019 10:16:30 +0000
-Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d02227c0000>; Thu, 13 Jun 2019 03:16:30 -0700
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <mkumard@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH v4 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
-Date:   Thu, 13 Jun 2019 15:46:11 +0530
-Message-ID: <1560420972-22350-1-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 13 Jun 2019 11:37:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:37576 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727045AbfFMKPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 06:15:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D58E367;
+        Thu, 13 Jun 2019 03:15:37 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F29693F694;
+        Thu, 13 Jun 2019 03:17:18 -0700 (PDT)
+Subject: Re: [PATCH v4 1/2] arm64: Define
+ Documentation/arm64/tagged-address-abi.txt
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>
+References: <cover.1560339705.git.andreyknvl@google.com>
+ <20190612142111.28161-1-vincenzo.frascino@arm.com>
+ <20190612142111.28161-2-vincenzo.frascino@arm.com>
+ <20190612153538.GL28951@C02TF0J2HF1T.local>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <141c740a-94c2-2243-b6d1-b44ffee43791@arm.com>
+Date:   Thu, 13 Jun 2019 11:15:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560420990; bh=9c7yqiehVPBF0gU8twCaup2E2H4w3JuhvGV1X2GVlCU=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:Content-Type;
-        b=K6EBvzH+bvA2GdIjtkVvyMLDKjKUQGlru5RmPCgeEfWCT5mxr29UDkhnXkCBmBedB
-         4Rqsa4Y8mcbMi7/rRw3W3om1Wv1OsFQy2QEmCMm69NF6GOBzf3uvBaiAR8zvFCuZ4H
-         Xm8n9YBkN0q0Pfr0QNpXKm+NuyY3b2s3gLpKXzVrDEu8d6IbU8kAlgNffhbzpe2rhO
-         NQMl8fBcZsmgGMEPpppP8XhpQ2yunXoGnfBAzOlxjDH0+r6pMVYFME+3bZjnqIV6/u
-         COuFKcjJSdD9yaN/DBU6Vzhto87wCTVrmyZFSQwISZG9kIq3KbjOqFb8rgslXfS8Sy
-         N7xUJoCFtV5IA==
+In-Reply-To: <20190612153538.GL28951@C02TF0J2HF1T.local>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT nodes for following devices on Tegra186 and Tegra194
- * ACONNECT
- * ADMA
- * AGIC
+Hi Catalin,
 
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
----
- changes in current revision
-  * node names changed for aconnect and agic
-  * size value updated for ranges property in aconnect node
+On 12/06/2019 16:35, Catalin Marinas wrote:
+> Hi Vincenzo,
+> 
+> Some minor comments below but it looks fine to me overall. Cc'ing
+> Szabolcs as well since I'd like a view from the libc people.
+> 
 
- arch/arm64/boot/dts/nvidia/tegra186.dtsi | 67 ++++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67 ++++++++++++++++++++++++++++++++
- 2 files changed, 134 insertions(+)
+Thanks for this, I saw Szabolcs comments.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index 426ac0b..017fddd 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -1295,4 +1295,71 @@
- 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
- 		interrupt-parent = <&gic>;
- 	};
-+
-+	aconnect {
-+		compatible = "nvidia,tegra210-aconnect";
-+		clocks = <&bpmp TEGRA186_CLK_APE>,
-+			 <&bpmp TEGRA186_CLK_APB2APE>;
-+		clock-names = "ape", "apb2ape";
-+		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_AUD>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x02900000 0x0 0x02900000 0x1fffff>;
-+		status = "disabled";
-+
-+		dma-controller@2930000 {
-+			compatible = "nvidia,tegra186-adma";
-+			reg = <0x02930000 0x50000>;
-+			interrupt-parent = <&agic>;
-+			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+			#dma-cells = <1>;
-+			clocks = <&bpmp TEGRA186_CLK_AHUB>;
-+			clock-names = "d_audio";
-+			status = "disabled";
-+		};
-+
-+		agic: interrupt-controller@2a41000 {
-+			compatible = "nvidia,tegra210-agic";
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+			reg = <0x02a41000 0x1000>,
-+			      <0x02a42000 0x2000>;
-+			interrupts = <GIC_SPI 145
-+				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-+			clocks = <&bpmp TEGRA186_CLK_APE>;
-+			clock-names = "clk";
-+			status = "disabled";
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index c77ca21..06608d8 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -1054,4 +1054,71 @@
- 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
- 		interrupt-parent = <&gic>;
- 	};
-+
-+	aconnect {
-+		compatible = "nvidia,tegra210-aconnect";
-+		clocks = <&bpmp TEGRA194_CLK_APE>,
-+			 <&bpmp TEGRA194_CLK_APB2APE>;
-+		clock-names = "ape", "apb2ape";
-+		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_AUD>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x02900000 0x0 0x02900000 0x1fffff>;
-+		status = "disabled";
-+
-+		dma-controller@2930000 {
-+			compatible = "nvidia,tegra186-adma";
-+			reg = <0x02930000 0x50000>;
-+			interrupt-parent = <&agic>;
-+			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+			#dma-cells = <1>;
-+			clocks = <&bpmp TEGRA194_CLK_AHUB>;
-+			clock-names = "d_audio";
-+			status = "disabled";
-+		};
-+
-+		agic: interrupt-controller@2a41000 {
-+			compatible = "nvidia,tegra210-agic";
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+			reg = <0x02a41000 0x1000>,
-+			      <0x02a42000 0x2000>;
-+			interrupts = <GIC_SPI 145
-+				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-+			clocks = <&bpmp TEGRA194_CLK_APE>;
-+			clock-names = "clk";
-+			status = "disabled";
-+		};
-+	};
- };
+> On Wed, Jun 12, 2019 at 03:21:10PM +0100, Vincenzo Frascino wrote:
+>> diff --git a/Documentation/arm64/tagged-address-abi.txt b/Documentation/arm64/tagged-address-abi.txt
+>> new file mode 100644
+>> index 000000000000..96e149e2c55c
+>> --- /dev/null
+>> +++ b/Documentation/arm64/tagged-address-abi.txt
+>> @@ -0,0 +1,111 @@
+>> +ARM64 TAGGED ADDRESS ABI
+>> +========================
+>> +
+>> +This document describes the usage and semantics of the Tagged Address
+>> +ABI on arm64.
+>> +
+>> +1. Introduction
+>> +---------------
+>> +
+>> +On arm64 the TCR_EL1.TBI0 bit has been always enabled on the arm64 kernel,
+>> +hence the userspace (EL0) is allowed to set a non-zero value in the top
+> 
+> I'd be clearer here: "userspace (EL0) is allowed to perform a user
+> memory access through a 64-bit pointer with a non-zero top byte" (or
+> something along the lines). Otherwise setting a non-zero top byte is
+> allowed on any architecture, dereferencing it is a problem.
+> 
+
+Ok.
+
+>> +byte but the resulting pointers are not allowed at the user-kernel syscall
+>> +ABI boundary.
+>> +
+>> +This document describes a relaxation of the ABI with which it is possible
+> 
+> "relaxation of the ABI that makes it possible to..."
+> 
+>> +to pass tagged tagged pointers to the syscalls, when these pointers are in
+>> +memory ranges obtained as described in paragraph 2.
+> 
+> "section 2" is better. There are a lot more paragraphs.
+> 
+
+Agree.
+
+>> +
+>> +Since it is not desirable to relax the ABI to allow tagged user addresses
+>> +into the kernel indiscriminately, arm64 provides a new sysctl interface
+>> +(/proc/sys/abi/tagged_addr) that is used to prevent the applications from
+>> +enabling the relaxed ABI and a new prctl() interface that can be used to
+>> +enable or disable the relaxed ABI.
+>> +
+>> +The sysctl is meant also for testing purposes in order to provide a simple
+>> +way for the userspace to verify the return error checking of the prctl()
+>> +command without having to reconfigure the kernel.
+>> +
+>> +The ABI properties are inherited by threads of the same application and
+>> +fork()'ed children but cleared when a new process is spawn (execve()).
+> 
+> "spawned".
+> 
+> I guess you could drop these three paragraphs here and mention the
+> inheritance properties when introducing the prctl() below. You can also
+> mention the global sysctl switch after the prctl() was introduced.
+> 
+
+I will move the last two (rewording them) to the _section_ 2, but I would still
+prefer the Introduction to give an overview of the solution as well.
+
+>> +
+>> +2. ARM64 Tagged Address ABI
+>> +---------------------------
+>> +
+>> +From the kernel syscall interface prospective, we define, for the purposes
+>> +of this document, a "valid tagged pointer" as a pointer that either it has
+> 
+> "either has" (no 'it') sounds slightly better but I'm not a native
+> English speaker either.
+> 
+>> +a zero value set in the top byte or it has a non-zero value, it is in memory
+>> +ranges privately owned by a userspace process and it is obtained in one of
+>> +the following ways:
+>> +  - mmap() done by the process itself, where either:
+>> +    * flags = MAP_PRIVATE | MAP_ANONYMOUS
+>> +    * flags = MAP_PRIVATE and the file descriptor refers to a regular
+>> +      file or "/dev/zero"
+>> +  - a mapping below sbrk(0) done by the process itself
+>> +  - any memory mapped by the kernel in the process's address space during
+>> +    creation and following the restrictions presented above (i.e. data, bss,
+>> +    stack).
+>> +
+>> +The ARM64 Tagged Address ABI is an opt-in feature, and an application can
+>> +control it using the following prctl()s:
+>> +  - PR_SET_TAGGED_ADDR_CTRL: can be used to enable the Tagged Address ABI.
+> 
+> enable or disable (not sure we need the latter but it doesn't heart).
+> 
+> I'd add the arg2 description here as well.
+> 
+
+Good point I missed this.
+
+>> +  - PR_GET_TAGGED_ADDR_CTRL: can be used to check the status of the Tagged
+>> +                             Address ABI.
+>> +
+>> +As a consequence of invoking PR_SET_TAGGED_ADDR_CTRL prctl() by an applications,
+>> +the ABI guarantees the following behaviours:
+>> +
+>> +  - Every current or newly introduced syscall can accept any valid tagged
+>> +    pointers.
+>> +
+>> +  - If a non valid tagged pointer is passed to a syscall then the behaviour
+>> +    is undefined.
+>> +
+>> +  - Every valid tagged pointer is expected to work as an untagged one.
+>> +
+>> +  - The kernel preserves any valid tagged pointers and returns them to the
+>> +    userspace unchanged in all the cases except the ones documented in the
+>> +    "Preserving tags" paragraph of tagged-pointers.txt.
+> 
+> I'd think we need to qualify the context here in which the kernel
+> preserves the tagged pointers. Did you mean on the syscall return?
+> 
+
+What this means is that on syscall return the tags are preserved, but if for
+example you have tagged pointers inside siginfo_t, they will not because
+according to tagged-pointers.txt non-zero tags are not preserved when delivering
+signals.
+
+>> +
+>> +A definition of the meaning of tagged pointers on arm64 can be found in:
+>> +Documentation/arm64/tagged-pointers.txt.
+>> +
+>> +3. ARM64 Tagged Address ABI Exceptions
+>> +--------------------------------------
+>> +
+>> +The behaviours described in paragraph 2, with particular reference to the
+> 
+> "section 2"
+> 
+>> +acceptance by the syscalls of any valid tagged pointer are not applicable
+>> +to the following cases:
+>> +  - mmap() addr parameter.
+>> +  - mremap() new_address parameter.
+>> +  - prctl_set_mm() struct prctl_map fields.
+>> +  - prctl_set_mm_map() struct prctl_map fields.
+>> +
+>> +4. Example of correct usage
+>> +---------------------------
+>> +
+>> +void main(void)
+>> +{
+>> +	static int tbi_enabled = 0;
+>> +	unsigned long tag = 0;
+>> +
+>> +	char *ptr = mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE,
+>> +			 MAP_ANONYMOUS, -1, 0);
+>> +
+>> +	if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE,
+>> +		  0, 0, 0) == 0)
+>> +		tbi_enabled = 1;
+>> +
+>> +	if (!ptr)
+>> +		return -1;
+>> +
+>> +	if (tbi_enabled)
+>> +		tag = rand() & 0xff;
+>> +
+>> +	ptr = (char *)((unsigned long)ptr | (tag << TAG_SHIFT));
+>> +
+>> +	*ptr = 'a';
+>> +
+>> +	...
+>> +}
+>> +
+>> -- 
+>> 2.21.0
+> 
+
 -- 
-2.7.4
-
+Regards,
+Vincenzo
