@@ -2,96 +2,62 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDA1C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3592C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABD432175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D234821721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404080AbfFMQij (ORCPT
+        id S2392750AbfFMQip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:38:39 -0400
-Received: from smtp3-g21.free.fr ([212.27.42.3]:11951 "EHLO smtp3-g21.free.fr"
+        Thu, 13 Jun 2019 12:38:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:46272 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392729AbfFMQic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:38:32 -0400
-Received: from anisse-station.iliad.local (unknown [213.36.7.13])
-        by smtp3-g21.free.fr (Postfix) with ESMTPS id 3D8A813F8F2;
-        Thu, 13 Jun 2019 18:38:05 +0200 (CEST)
-From:   Anisse Astier <aastier@freebox.fr>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Kristina Martsenko <kristina.martsenko@arm.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, Rich Felker <dalias@aerifal.cx>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Ricardo Salveti <ricardo@foundries.io>,
-        Anisse Astier <aastier@freebox.fr>
-Subject: [PATCH] arm64/sve: <uapi/asm/ptrace.h> should not depend on <uapi/linux/prctl.h>
-Date:   Thu, 13 Jun 2019 18:38:01 +0200
-Message-Id: <20190613163801.21949-1-aastier@freebox.fr>
-X-Mailer: git-send-email 2.19.1
+        id S1730904AbfFMQil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:38:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BE4B367;
+        Thu, 13 Jun 2019 09:38:41 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD1933F694;
+        Thu, 13 Jun 2019 09:38:38 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 17:38:36 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     joro@8bytes.org, m.szyprowski@samsung.com, kgene@kernel.org,
+        krzk@kernel.org, robin.murphy@arm.com, agross@kernel.org,
+        david.brown@linaro.org, robdclark@gmail.com, heiko@sntech.de,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 07/10] iommu/io-pgtable-arm: convert to SPDX license tags
+Message-ID: <20190613163836.GF18966@fuggles.cambridge.arm.com>
+References: <20190613162703.986-1-tiny.windzz@gmail.com>
+ <20190613162703.986-7-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613162703.986-7-tiny.windzz@gmail.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Otherwise this will create userspace build issues for any program
-(strace, qemu) that includes both <sys/prctl.h> (with musl libc) and
-<linux/ptrace.h> (which then includes <asm/ptrace.h>), like this:
+On Thu, Jun 13, 2019 at 12:27:00PM -0400, Yangtao Li wrote:
+> Updates license to use SPDX-License-Identifier.
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  drivers/iommu/io-pgtable-arm.c | 13 +------------
+>  1 file changed, 1 insertion(+), 12 deletions(-)
 
-	error: redefinition of 'struct prctl_mm_map'
-	 struct prctl_mm_map {
+Acked-by: Will Deacon <will.deacon@arm.com>
 
-See https://github.com/foundriesio/meta-lmp/commit/6d4a106e191b5d79c41b9ac78fd321316d3013c0
-for a public example of people working around this issue.
-
-This fixes an UAPI regression introduced in commit 43d4da2c45b2
-("arm64/sve: ptrace and ELF coredump support").
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Anisse Astier <aastier@freebox.fr>
----
- arch/arm64/include/uapi/asm/ptrace.h | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/include/uapi/asm/ptrace.h b/arch/arm64/include/uapi/asm/ptrace.h
-index d78623acb649..03b6d6f029fc 100644
---- a/arch/arm64/include/uapi/asm/ptrace.h
-+++ b/arch/arm64/include/uapi/asm/ptrace.h
-@@ -65,8 +65,6 @@
- 
- #ifndef __ASSEMBLY__
- 
--#include <linux/prctl.h>
--
- /*
-  * User structures for general purpose, floating point and debug registers.
-  */
-@@ -113,10 +111,10 @@ struct user_sve_header {
- 
- /*
-  * Common SVE_PT_* flags:
-- * These must be kept in sync with prctl interface in <linux/ptrace.h>
-+ * These must be kept in sync with prctl interface in <linux/prctl.h>
-  */
--#define SVE_PT_VL_INHERIT		(PR_SVE_VL_INHERIT >> 16)
--#define SVE_PT_VL_ONEXEC		(PR_SVE_SET_VL_ONEXEC >> 16)
-+#define SVE_PT_VL_INHERIT		(1 << 1) /* PR_SVE_VL_INHERIT */
-+#define SVE_PT_VL_ONEXEC		(1 << 2) /* PR_SVE_SET_VL_ONEXEC */
- 
- 
- /*
--- 
-2.19.1
-
+Will
