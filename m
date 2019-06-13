@@ -2,126 +2,205 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DBAC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8AFC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9782721773
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9EF2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:29:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Zf/du4Xd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbfFMP3G (ORCPT
+        id S1731212AbfFMP3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:29:06 -0400
-Received: from ou.quest-ce.net ([195.154.187.82]:36471 "EHLO ou.quest-ce.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728891AbfFML0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 07:26:19 -0400
-Received: from [2a01:e35:39f2:1220:9dd7:c176:119b:4c9d] (helo=test.quest-ce.net)
-        by ou.quest-ce.net with esmtpsa (TLS1.1:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <ydroneaud@opteya.com>)
-        id 1hbNs0-000871-5r; Thu, 13 Jun 2019 13:26:16 +0200
-From:   Yann Droneaud <ydroneaud@opteya.com>
-To:     linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Yann Droneaud <ydroneaud@opteya.com>
-Date:   Thu, 13 Jun 2019 13:26:05 +0200
-Message-Id: <42e5c3182c28b2e5c5d10fde340fd0cfcfac376f.1560423331.git.ydroneaud@opteya.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1560423331.git.ydroneaud@opteya.com>
-References: <cover.1560423331.git.ydroneaud@opteya.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a01:e35:39f2:1220:9dd7:c176:119b:4c9d
-X-SA-Exim-Mail-From: ydroneaud@opteya.com
-Subject: [PATCH 2/3] binfmt/elf: align AT_RANDOM array
-X-SA-Exim-Version: 4.2.1 (built Mon, 26 Dec 2011 16:24:06 +0000)
-X-SA-Exim-Scanned: Yes (on ou.quest-ce.net)
+        Thu, 13 Jun 2019 11:29:09 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55892 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728894AbfFML0W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 07:26:22 -0400
+X-Greylist: delayed 1864 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Jun 2019 07:26:20 EDT
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5DAnOoB071082;
+        Thu, 13 Jun 2019 10:54:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=wgp7cj5gIWhGNVKXNvU3r2tQN8cWgiUhKrlM8F56c+g=;
+ b=Zf/du4Xdcj4gMvx8OhplpKEfYVBLca2/955+Ow9J7w7ql/yYy+w7xZL8YUNzcyB2mvEK
+ 7pDp4e9JVNj16ftv9sNC1+v+RRS5y2uGhXKU7cyUyMULXuVwIBPUFsq9Y9L5vqZF5SCm
+ x6WS7uorSc7OpBdGEfDcTifKJKIYNkLQXE69y2Ic0ilg5X2/28VKDvPJH6e1DqmRjFwL
+ dl4E6pn6m0n6cQ6PhamH/Ocao65dEVuH/VcchqJUDjJyrRvbtmErBOzQs7QtIpx5zTf/
+ cmkGRaoFrSbmrlEvXpmyzWThl0y8+EIgb6HjpBiCMzTkOYX3uNVRGGEimLeW9iDcecMw kA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2t04ynrnpv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 10:54:59 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5DAss25021565;
+        Thu, 13 Jun 2019 10:54:59 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2t1jpjg18a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 10:54:58 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5DAsu5Y024439;
+        Thu, 13 Jun 2019 10:54:56 GMT
+Received: from [192.168.14.112] (/79.177.239.28)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 13 Jun 2019 03:54:56 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM
+ secrets
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <20190612182550.GI20308@linux.intel.com>
+Date:   Thu, 13 Jun 2019 13:54:51 +0300
+Cc:     Marius Hillenbrand <mhillenb@amazon.de>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        linux-mm@kvack.org, Alexander Graf <graf@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <65D4DBEB-5A9A-457D-909B-2D31A3031607@oracle.com>
+References: <20190612170834.14855-1-mhillenb@amazon.de>
+ <20190612182550.GI20308@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=707
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906130085
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9286 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=756 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906130085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because AT_RANDOM array is put on stack after AT_PLATFORM and
-AT_BASE_PLATFORM strings, it's aligned on a 1 byte boundary:
 
-on x86:
 
-  $ for i in 1 2 3 ; do LD_SHOW_AUXV=1 ./bin32 | grep AT_RANDOM ; done
-  AT_RANDOM:            0xffb91ffb
-  AT_RANDOM:            0xffcd60eb
-  AT_RANDOM:            0xffd7d99b
+> On 12 Jun 2019, at 21:25, Sean Christopherson =
+<sean.j.christopherson@intel.com> wrote:
+>=20
+> On Wed, Jun 12, 2019 at 07:08:24PM +0200, Marius Hillenbrand wrote:
+>> The Linux kernel has a global address space that is the same for any
+>> kernel code. This address space becomes a liability in a world with
+>> processor information leak vulnerabilities, such as L1TF. With the =
+right
+>> cache load gadget, an attacker-controlled hyperthread pair can leak
+>> arbitrary data via L1TF. Disabling hyperthreading is one recommended
+>> mitigation, but it comes with a large performance hit for a wide =
+range
+>> of workloads.
+>>=20
+>> An alternative mitigation is to not make certain data in the kernel
+>> globally visible, but only when the kernel executes in the context of
+>> the process where this data belongs to.
+>>=20
+>> This patch series proposes to introduce a region for what we call
+>> process-local memory into the kernel's virtual address space. Page
+>> tables and mappings in that region will be exclusive to one address
+>> space, instead of implicitly shared between all kernel address =
+spaces.
+>> Any data placed in that region will be out of reach of cache load
+>> gadgets that execute in different address spaces. To implement
+>> process-local memory, we introduce a new interface =
+kmalloc_proclocal() /
+>> kfree_proclocal() that allocates and maps pages exclusively into the
+>> current kernel address space. As a first use case, we move =
+architectural
+>> state of guest CPUs in KVM out of reach of other kernel address =
+spaces.
+>=20
+> Can you briefly describe what types of attacks this is intended to
+> mitigate?  E.g. guest-guest, userspace-guest, etc...  I don't want to
+> make comments based on my potentially bad assumptions.
 
-on x86_64:
+I think I can assist in the explanation.
 
-  $ for i in 1 2 3 ; do LD_SHOW_AUXV=1 ./bin64 | grep AT_RANDOM ; done
-  AT_RANDOM:            0x7ffe3ce7d559
-  AT_RANDOM:            0x7ffeb9ecd2b9
-  AT_RANDOM:            0x7ffd37cebd49
+Consider the following scenario:
+1) Hyperthread A in CPU core runs in guest and triggers a VMExit which =
+is handled by host kernel.
+While hyperthread A runs VMExit handler, it populates CPU core cache / =
+internal-resources (e.g. MDS buffers)
+with some sensitive data it have speculatively/architecturally access.
+2) During hyperthread A running on host kernel, hyperthread B on same =
+CPU core runs in guest and use
+some CPU speculative execution vulnerability to leak the sensitive host =
+data populated by hyperthread A
+in CPU core cache / internal-resources.
 
-Unlike AT_ENTROPY1 and AT_ENTROPY2, AT_ENTROPY, or AT_RANDOM1 and
-AT_RANDOM2 proposals[1][2][3] which would be 32bits or 64bits integers,
-kernel never promise AT_RANDOM array to be aligned[4].
+Current CPU microcode mitigations (L1D/MDS flush) only handle the case =
+of a single hyperthread and don=E2=80=99t
+provide a mechanism to mitigate this hyperthreading attack scenario.
 
-But having a 16bytes array not aligned might not be optimal. Userspace
-could benefit from an aligned array.
+Assuming there is some guest triggerable speculative load gadget in some =
+VMExit path,
+it can be used to force any data that is mapped into kernel address =
+space to be loaded into CPU resource that is subject to leak.
+Therefore, there were multiple attempts to reduce sensitive information =
+from being mapped into the kernel address space
+that is accessible by this VMExit path.
 
-As the AT_PLATFORM and AT_BASE_PLATFORM are asciiz C strings, they don't
-need to be aligned, thus they can be put after AT_RANDOM array.
+One attempt was XPFO which attempts to remove from kernel direct-map any =
+page that is currently used only by userspace.
+Unfortunately, XPFO currently exhibits multiple performance issues that =
+*currently* makes it impractical as far as I know.
 
-As AT_RANDOM array is first put on stack, it's alignment should match
-the one set by arch_align_stack().
+Another attempt is this patch-series which attempts to remove from one =
+vCPU thread host kernel address space,
+the state of vCPUs of other guests. Which is very specific but I =
+personally have additional ideas on how this patch series can be further =
+used.
+For example, vhost-net needs to kmap entire guest memory into =
+kernel-space to write ingress packets data into guest memory.
+Thus, vCPU thread kernel address space now maps entire other guest =
+memory which can be leaked using the technique described above.
+Therefore, it should be useful to also move this kmap() to happen on =
+process-local kernel virtual address region.
 
-[1] https://lore.kernel.org/lkml/4675C678.3080807@gentoo.org/
-[2] https://lore.kernel.org/lkml/467948F5.3010709@gentoo.org/
-[3] https://sourceware.org/ml/libc-alpha/2008-10/msg00013.html
-[1] https://lore.kernel.org/lkml/20081003001616.GN10632@outflux.net/
+One could argue however that there is still a much bigger issue because =
+of kernel direct-map that maps all physical pages that kernel
+manage (i.e. have struct page) in kernel virtual address space. And all =
+of those pages can theoretically be leaked.
+However, this could be handled by complementary techniques such as =
+booting host kernel with =E2=80=9Cmem=3DX=E2=80=9D and mapping guest =
+memory
+by directly mmap relevant portion of /dev/mem.
+Which is probably what AWS does given these upstream KVM patches they =
+have contributed:
+bd53cb35a3e9 X86/KVM: Handle PFNs outside of kernel reach when touching =
+GPTEs
+e45adf665a53 KVM: Introduce a new guest mapping API
+0c55671f84ff kvm, x86: Properly check whether a pfn is an MMIO or not
 
-Link: https://lore.kernel.org/lkml/cover.1560423331.git.ydroneaud@opteya.com
-Signed-off-by: Yann Droneaud <ydroneaud@opteya.com>
----
- fs/binfmt_elf.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Also note that when using such =E2=80=9Cmem=3DX=E2=80=9D technique, you =
+can also avoid performance penalties introduced by CPU microcode =
+mitigations.
+E.g. You can avoid doing L1D flush on VMEntry if VMExit handler run only =
+in kernel and didn=E2=80=99t context-switch as you assume kernel address
+space don=E2=80=99t map any host sensitive data.
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 87f0c8a21350..cfcc01fff4ae 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -219,6 +219,14 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
- 
- 	p = arch_align_stack(p);
- 
-+	/*
-+	 * Generate 16 random bytes for userspace PRNG seeding.
-+	 */
-+	get_random_bytes(k_rand_bytes, sizeof(k_rand_bytes));
-+	u_rand_bytes = elf_stack_alloc(&p, sizeof(k_rand_bytes));
-+	if (__copy_to_user(u_rand_bytes, k_rand_bytes, sizeof(k_rand_bytes)))
-+		return -EFAULT;
-+
- 	/*
- 	 * If this architecture has a platform capability string, copy it
- 	 * to userspace.  In some cases (Sparc), this info is impossible
-@@ -247,14 +255,6 @@ create_elf_tables(struct linux_binprm *bprm, struct elfhdr *exec,
- 			return -EFAULT;
- 	}
- 
--	/*
--	 * Generate 16 random bytes for userspace PRNG seeding.
--	 */
--	get_random_bytes(k_rand_bytes, sizeof(k_rand_bytes));
--	u_rand_bytes = elf_stack_alloc(&p, sizeof(k_rand_bytes));
--	if (__copy_to_user(u_rand_bytes, k_rand_bytes, sizeof(k_rand_bytes)))
--		return -EFAULT;
--
- 	/* Create the ELF interpreter info */
- 	elf_info = (elf_addr_t *)current->mm->saved_auxv;
- 	/* update AT_VECTOR_SIZE_BASE if the number of NEW_AUX_ENT() changes */
--- 
-2.21.0
+It=E2=80=99s also worth mentioning that another alternative that I have =
+attempted to this =E2=80=9Cmem=3DX=E2=80=9D technique
+was to create an isolated address space that is only used when running =
+KVM VMExit handlers.
+For more information, refer to:
+https://lkml.org/lkml/2019/5/13/515
+(See some of my comments on that thread)
+
+This is my 2cents on this at least.
+
+-Liran
+
 
