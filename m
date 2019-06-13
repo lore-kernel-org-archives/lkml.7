@@ -2,100 +2,222 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914A6C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D87EC31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 658DD20449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="nC26i9JZ"
+	by mail.kernel.org (Postfix) with ESMTP id F0A6220449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560443441;
+	bh=ihrLxrSa7FC+n0vxZyUf0wIfXbdG0+4X7WlRWofidRE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hBJ4qHRjIbtJJD0LGBuMub7L7MhsrMkp70SIYvH0ycR3W+Vj0RtpQyABHqO+wR5W7
+	 DTfJzXCeE1R7haJnGnhPiRKhKVRL0jm4CAy8WIMyEHMazlBy9n4D8ORfbT3E/0xuau
+	 FrxLvakoWPU8xgdwUSsgLHh0DN8SnJXHtriupLAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392554AbfFMQag (ORCPT
+        id S2392377AbfFMQaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:30:36 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38432 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392530AbfFMQa1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:30:27 -0400
-Received: by mail-wr1-f67.google.com with SMTP id d18so21472422wrs.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 09:30:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=fbFJcCZogG4E0hVeCzNVPT+VFyUUm0Zv3ff/zggRHYY=;
-        b=nC26i9JZniQCZC/cxtHX3spCrKHdGQw/wG6eftGbeaFS50K26skje7xVYYal3QjLyy
-         hLPTDRtiG7DlPKoeF0lF9Er2i0uHz0iI2yNx+Av7Yo5iWpvLuFBDg6gl1/RPeIYTQScH
-         jm+6FxTaJ3K4otAkUwc4N3wDGrxixX0744FgmJbk7gkweXPsgWUu9UohbJ78CJAttij+
-         iq4WL7NW/oGdRcA1+xofjHY/zbBArzMk1Z87t421coV5fW0Q4O2XusJkXtXnm7A1p+EK
-         emVX2QhkmwlPGW841InmZBl/jmjOOUoF8u2cPvgoaDC9PCmj79rfozcL6jJbw5G7f5rh
-         cSSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=fbFJcCZogG4E0hVeCzNVPT+VFyUUm0Zv3ff/zggRHYY=;
-        b=Bf72k3Ta5bO5Q0pjluCGr5EupVfqLZSjR8y2oimkF6DzMLB6wcAGXPkH0tbEZtGgGo
-         B5La1lWIwqVUSenAbHJE4gRmLOeDIuQl8dVQASqVBSykMSvQACagfvwa0PHnK/l94wLk
-         +buZxYRKjmVuGQdYw2mPVPX7SGqR2pKbl5eamuVwxYHRTqAhVmf7T/XweQi8WBKEHjz9
-         OrRv94bRLTtt3gWcP0OPAZ5lhhuvmPnREMfmIIwOmg9OYsPeVDmypMKSwekMUZ84Pna5
-         6QcujJ49TgrQk4KOdbS923uGHAaEOyOBggWwaYdDK8xMrU+BELJiWpgwp78YJp2jaQml
-         +GCg==
-X-Gm-Message-State: APjAAAWZE1KTRuNPonQ0HMPikZ3E6N1cZsmqq31KzqBU9YJhEdmUoCQq
-        djI3vhVtuuT2ZVPzFrZS+iKrnQ==
-X-Google-Smtp-Source: APXvYqwNQCbkcJmm/T/NHKOZkmzfBzdL0AsrgI/bKFEd3JLelxC5l8wP46eIXBRintpzIwFqS6LM9Q==
-X-Received: by 2002:adf:fc91:: with SMTP id g17mr9205518wrr.194.1560443425582;
-        Thu, 13 Jun 2019 09:30:25 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id f1sm180193wml.28.2019.06.13.09.30.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 09:30:24 -0700 (PDT)
-Message-ID: <5d027a20.1c69fb81.fcc4f.1023@mx.google.com>
-Date:   Thu, 13 Jun 2019 09:30:24 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.14.125-82-ge64912eac71b
-X-Kernelci-Branch: linux-4.14.y
-X-Kernelci-Tree: stable-rc
+        Thu, 13 Jun 2019 12:30:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52712 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730915AbfFMIe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:34:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3287120B7C;
+        Thu, 13 Jun 2019 08:34:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560414897;
+        bh=ihrLxrSa7FC+n0vxZyUf0wIfXbdG0+4X7WlRWofidRE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=M2XDtflGeB/KdJFkjnb4Sx+TzHIn8JttZRCB+yEB2josmmCJ8FEAZj1lKgLWpNoh/
+         OaytmfOwCZxQQbuscf/kp70zdJAHCYw0eswTHFjEBOlm7fPp6nT6X87NNWUJWiGu66
+         f95CWUrRYxFyBulW89Bor0gujpZuoWfMPmQfzjFM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+        Zhang Yu <zhangyu31@baidu.com>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 04/81] ipc: prevent lockup on alloc_msg and free_msg
+Date:   Thu, 13 Jun 2019 10:32:47 +0200
+Message-Id: <20190613075649.388702863@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 00/81] 4.14.126-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.14.y boot: 116 boots: 0 failed, 116 passed (v4.14.125-82-=
-ge64912eac71b)
+[ Upstream commit d6a2946a88f524a47cc9b79279667137899db807 ]
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.125-82-ge64912eac71b/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.125-82-ge64912eac71b/
+msgctl10 of ltp triggers the following lockup When CONFIG_KASAN is
+enabled on large memory SMP systems, the pages initialization can take a
+long time, if msgctl10 requests a huge block memory, and it will block
+rcu scheduler, so release cpu actively.
 
-Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.125-82-ge64912eac71b
-Git Commit: e64912eac71ba57be3613c8fcc36e316fe8aa601
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 62 unique boards, 23 SoC families, 14 builds out of 201
+After adding schedule() in free_msg, free_msg can not be called when
+holding spinlock, so adding msg to a tmp list, and free it out of
+spinlock
 
+  rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+  rcu:     Tasks blocked on level-1 rcu_node (CPUs 16-31): P32505
+  rcu:     Tasks blocked on level-1 rcu_node (CPUs 48-63): P34978
+  rcu:     (detected by 11, t=35024 jiffies, g=44237529, q=16542267)
+  msgctl10        R  running task    21608 32505   2794 0x00000082
+  Call Trace:
+   preempt_schedule_irq+0x4c/0xb0
+   retint_kernel+0x1b/0x2d
+  RIP: 0010:__is_insn_slot_addr+0xfb/0x250
+  Code: 82 1d 00 48 8b 9b 90 00 00 00 4c 89 f7 49 c1 ee 03 e8 59 83 1d 00 48 b8 00 00 00 00 00 fc ff df 4c 39 eb 48 89 9d 58 ff ff ff <41> c6 04 06 f8 74 66 4c 8d 75 98 4c 89 f1 48 c1 e9 03 48 01 c8 48
+  RSP: 0018:ffff88bce041f758 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+  RAX: dffffc0000000000 RBX: ffffffff8471bc50 RCX: ffffffff828a2a57
+  RDX: dffffc0000000000 RSI: dffffc0000000000 RDI: ffff88bce041f780
+  RBP: ffff88bce041f828 R08: ffffed15f3f4c5b3 R09: ffffed15f3f4c5b3
+  R10: 0000000000000001 R11: ffffed15f3f4c5b2 R12: 000000318aee9b73
+  R13: ffffffff8471bc50 R14: 1ffff1179c083ef0 R15: 1ffff1179c083eec
+   kernel_text_address+0xc1/0x100
+   __kernel_text_address+0xe/0x30
+   unwind_get_return_address+0x2f/0x50
+   __save_stack_trace+0x92/0x100
+   create_object+0x380/0x650
+   __kmalloc+0x14c/0x2b0
+   load_msg+0x38/0x1a0
+   do_msgsnd+0x19e/0xcf0
+   do_syscall_64+0x117/0x400
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+  rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+  rcu:     Tasks blocked on level-1 rcu_node (CPUs 0-15): P32170
+  rcu:     (detected by 14, t=35016 jiffies, g=44237525, q=12423063)
+  msgctl10        R  running task    21608 32170  32155 0x00000082
+  Call Trace:
+   preempt_schedule_irq+0x4c/0xb0
+   retint_kernel+0x1b/0x2d
+  RIP: 0010:lock_acquire+0x4d/0x340
+  Code: 48 81 ec c0 00 00 00 45 89 c6 4d 89 cf 48 8d 6c 24 20 48 89 3c 24 48 8d bb e4 0c 00 00 89 74 24 0c 48 c7 44 24 20 b3 8a b5 41 <48> c1 ed 03 48 c7 44 24 28 b4 25 18 84 48 c7 44 24 30 d0 54 7a 82
+  RSP: 0018:ffff88af83417738 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
+  RAX: dffffc0000000000 RBX: ffff88bd335f3080 RCX: 0000000000000002
+  RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88bd335f3d64
+  RBP: ffff88af83417758 R08: 0000000000000000 R09: 0000000000000000
+  R10: 0000000000000001 R11: ffffed13f3f745b2 R12: 0000000000000000
+  R13: 0000000000000002 R14: 0000000000000000 R15: 0000000000000000
+   is_bpf_text_address+0x32/0xe0
+   kernel_text_address+0xec/0x100
+   __kernel_text_address+0xe/0x30
+   unwind_get_return_address+0x2f/0x50
+   __save_stack_trace+0x92/0x100
+   save_stack+0x32/0xb0
+   __kasan_slab_free+0x130/0x180
+   kfree+0xfa/0x2d0
+   free_msg+0x24/0x50
+   do_msgrcv+0x508/0xe60
+   do_syscall_64+0x117/0x400
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Davidlohr said:
+ "So after releasing the lock, the msg rbtree/list is empty and new
+  calls will not see those in the newly populated tmp_msg list, and
+  therefore they cannot access the delayed msg freeing pointers, which
+  is good. Also the fact that the node_cache is now freed before the
+  actual messages seems to be harmless as this is wanted for
+  msg_insert() avoiding GFP_ATOMIC allocations, and after releasing the
+  info->lock the thing is freed anyway so it should not change things"
+
+Link: http://lkml.kernel.org/r/1552029161-4957-1-git-send-email-lirongqing@baidu.com
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-For more info write to <info@kernelci.org>
+ ipc/mqueue.c  | 10 ++++++++--
+ ipc/msgutil.c |  6 ++++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/ipc/mqueue.c b/ipc/mqueue.c
+index d24025626310..5c0ae912f2f2 100644
+--- a/ipc/mqueue.c
++++ b/ipc/mqueue.c
+@@ -374,7 +374,8 @@ static void mqueue_evict_inode(struct inode *inode)
+ 	struct user_struct *user;
+ 	unsigned long mq_bytes, mq_treesize;
+ 	struct ipc_namespace *ipc_ns;
+-	struct msg_msg *msg;
++	struct msg_msg *msg, *nmsg;
++	LIST_HEAD(tmp_msg);
+ 
+ 	clear_inode(inode);
+ 
+@@ -385,10 +386,15 @@ static void mqueue_evict_inode(struct inode *inode)
+ 	info = MQUEUE_I(inode);
+ 	spin_lock(&info->lock);
+ 	while ((msg = msg_get(info)) != NULL)
+-		free_msg(msg);
++		list_add_tail(&msg->m_list, &tmp_msg);
+ 	kfree(info->node_cache);
+ 	spin_unlock(&info->lock);
+ 
++	list_for_each_entry_safe(msg, nmsg, &tmp_msg, m_list) {
++		list_del(&msg->m_list);
++		free_msg(msg);
++	}
++
+ 	/* Total amount of bytes accounted for the mqueue */
+ 	mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
+ 		min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
+diff --git a/ipc/msgutil.c b/ipc/msgutil.c
+index 84598025a6ad..e65593742e2b 100644
+--- a/ipc/msgutil.c
++++ b/ipc/msgutil.c
+@@ -18,6 +18,7 @@
+ #include <linux/utsname.h>
+ #include <linux/proc_ns.h>
+ #include <linux/uaccess.h>
++#include <linux/sched.h>
+ 
+ #include "util.h"
+ 
+@@ -64,6 +65,9 @@ static struct msg_msg *alloc_msg(size_t len)
+ 	pseg = &msg->next;
+ 	while (len > 0) {
+ 		struct msg_msgseg *seg;
++
++		cond_resched();
++
+ 		alen = min(len, DATALEN_SEG);
+ 		seg = kmalloc(sizeof(*seg) + alen, GFP_KERNEL_ACCOUNT);
+ 		if (seg == NULL)
+@@ -176,6 +180,8 @@ void free_msg(struct msg_msg *msg)
+ 	kfree(msg);
+ 	while (seg != NULL) {
+ 		struct msg_msgseg *tmp = seg->next;
++
++		cond_resched();
+ 		kfree(seg);
+ 		seg = tmp;
+ 	}
+-- 
+2.20.1
+
+
+
