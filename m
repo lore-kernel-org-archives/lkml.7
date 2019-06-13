@@ -2,120 +2,203 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AAFC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B849C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E78D7206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E96206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:30:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NKNfBrS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfFMPak (ORCPT
+        id S1728702AbfFMPat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:30:40 -0400
-Received: from nautica.notk.org ([91.121.71.147]:47360 "EHLO nautica.notk.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728691AbfFMLKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 07:10:46 -0400
-Received: by nautica.notk.org (Postfix, from userid 1001)
-        id F0942C009; Thu, 13 Jun 2019 13:10:42 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 13:10:27 +0200
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     Lu Shuaibing <shuaibinglu@126.com>
-Cc:     ericvh@gmail.com, lucho@ionkov.net, davem@davemloft.net,
-        v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] 9p: Transport error uninitialized
-Message-ID: <20190613111027.GB9525@nautica>
-References: <20190613070854.10434-1-shuaibinglu@126.com>
+        Thu, 13 Jun 2019 11:30:49 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37892 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728686AbfFMLJO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 07:09:14 -0400
+Received: by mail-wm1-f66.google.com with SMTP id s15so9676339wmj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 04:09:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DB2ymoMUDc6KVKZd31hZLwNlwKiWHLGwTThu+RNF8Pw=;
+        b=NKNfBrS3w1T+MzUAyWsWKKnkqjXhfCQWp4viwIcR2G4X3HXuCScV0Ib7cTIugkm4up
+         RaUBuzrS3VquYgjUQXxKH4zYX63mlqATkLxSholHDkrUc+zw8jgkZiKyuFeggN4UFOe7
+         OxZo8c1eSGq+vCm+Yg6R8h+FVEwIjZDlTsRBWF3sMxvlD2HZ5nCumB5/YakwqBXulMvg
+         UD+n7H14NB+Dk3XU5QofIOsso9yAEqRwy2ZZzWPEZXDcE3agXilEwFnI8qVya3+TQVtz
+         JJyhU0LXQXlvFWx08y1xsh9u9U6e7Blx/jcOHaDerqf8QFGQqrJ58pjwbU3YqkefXe36
+         601w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=DB2ymoMUDc6KVKZd31hZLwNlwKiWHLGwTThu+RNF8Pw=;
+        b=L8FjHhetfxe5g4pS9o+ou0Y6Fzn6TnHDlh1wJLpkuaYlPsdig7E+SemlINYm/ntR3i
+         rNkCcftow0p5znvyLAgR+pvAS4XRGQZPBxkn+YieeWdi6kAglDvCm9zHxfoXFVqMmxq9
+         BfHF64Lplp9SrwsyS4djyDPw9g9snNJ0+RcsgnrLVy7c/4mEJWEPNqqHJ/Q2mQobKmTD
+         7UQskePF3++sLz3TRn9P9tzF6cfJFI36cWqlQnpbAF6DO/YjZJbxotoy62mjBUUgwECY
+         sVmxR5JMx+utcIOX0gZpaxIfsYDXak4ZHcS5CqIeBLPHqo1MNJHgS8qnkMiMG0KPzhth
+         Kaeg==
+X-Gm-Message-State: APjAAAVsoq+7v471peJWoHxeMlSDvxIUHHC975Sonkn6wgG8HYhsrgRn
+        4CnT3sAmya2Fj12pR3DZf7pd1A==
+X-Google-Smtp-Source: APXvYqzxwXUvpJu+eTgSRHDqK5JGjU8X0kpO9Gv/9ntBMljsVPhU15lFTS4qww9Baz7A+LqxxJIL1w==
+X-Received: by 2002:a1c:c003:: with SMTP id q3mr3300657wmf.42.1560424150892;
+        Thu, 13 Jun 2019 04:09:10 -0700 (PDT)
+Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id x17sm3139429wrq.64.2019.06.13.04.09.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 04:09:09 -0700 (PDT)
+Subject: Re: [PATCH repost] dt-bindings: timer: renesas, cmt: Document
+ r8a779{5|65|90} CMT support
+To:     Simon Horman <horms@verge.net.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-renesas-soc@vger.kernel.org
+Cc:     Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Cao Van Dong <cv-dong@jinso.co.jp>
+References: <20190509122949.23256-1-horms+renesas@verge.net.au>
+ <20190613101219.vx4ht6dixxu7fioi@verge.net.au>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ mQINBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
+ sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
+ 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
+ 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
+ 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
+ xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
+ P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
+ 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
+ wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
+ eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABtCpEYW5pZWwgTGV6
+ Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz6JAlcEEwEIAEECGwEFCwkIBwIGFQoJ
+ CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAK
+ CRCP9LjScWdVJ+vYEACStDg7is2JdE7xz1PFu7jnrlOzoITfw05BurgJMqlvoiFYt9tEeUMl
+ zdU2+r0cevsmepqSUVuUvXztN8HA/Ep2vccmWnCXzlE56X1AK7PRRdaQd1SK/eVsJVaKbQTr
+ ii0wjbs6AU1uo0LdLINLjwwItnQ83/ttbf1LheyN8yknlch7jn6H6J2A/ORZECTfJbG4ecVr
+ 7AEm4A/G5nyPO4BG7dMKtjQ+crl/pSSuxV+JTDuoEWUO+YOClg6azjv8Onm0cQ46x9JRtahw
+ YmXdIXD6NsJHmMG9bKmVI0I7o5Q4XL52X6QxkeMi8+VhvqXXIkIZeizZe5XLTYUvFHLdexzX
+ Xze0LwLpmMObFLifjziJQsLP2lWwOfg6ZiH8z8eQJFB8bYTSMqmfTulB61YO0mhd676q17Y7
+ Z7u3md3CLH7rh61wU1g7FcLm9p5tXXWWaAud9Aa2kne2O3sirO0+JhsKbItz3d9yXuWgv6w3
+ heOIF0b91JyrY6tjz42hvyjxtHywRr4cdAEQa2S7HeQkw48BQOG6PqQ9d3FYU34pt3WFJ19V
+ A5qqAiEjqc4N0uPkC79W32yLGdyg0EEe8v0Uhs3CxM9euGg37kr5fujMm+akMtR1ENITo+UI
+ fgsxdwjBD5lNb/UGodU4QvPipB/xx4zz7pS5+2jGimfLeoe7mgGJxrkBDQRb/8z6AQgAvSkg
+ 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
+ +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
+ dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
+ XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
+ bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABiQI2BBgBCAAgFiEE
+ JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwACgkQj/S40nFnVSf4OhAAhWJPjgUu6VfS
+ mV53AUGIyqpOynPvSaMoGJzhNsDeNUDfV5dEZN8K4qjuz2CTNvGIyt4DE/IJbtasvi5dW4wW
+ Fl85bF6xeLM0qpCaZtXAsU5gzp3uT7ut++nTPYW+CpfYIlIpyOIzVAmw7rZbfgsId2Lj7g1w
+ QCjvGHw19mq85/wiEiZZNHeJQ3GuAr/uMoiaRBnf6wVcdpUTFMXlkE8/tYHPWbW0YKcKFwJ3
+ uIsNxZUe6coNzYnL0d9GK2fkDoqKfKbFjNhW9TygfeL2Qhk949jMGQudFS3zlwvN9wwVaC0i
+ KC/D303DiTnB0WFPT8CltMAZSbQ1WEWfwqxhY26di3k9pj+X3BfOmDL9GBlnRTSgwjqjqzpG
+ VZsWouuTfXd9ZPPzvYdUBrlTKgojk1C8v4fhSqb+ard+bZcwNp8Tzl/EI9ygw6lYEATGCUYI
+ Wco+fjehCgG1FWvWavMU+jLNs8/8uwj1u+BtRpWFj4ug/VaDDIuiApKPwl1Ge+zoC7TLMtyb
+ c00W5/8EckjmNgLDIINEsOsidMH61ZOlwDKCxo2lbV+Ij078KHBIY76zuHlwonEQaHLCAdqm
+ WiI95pYZNruAJEqZCpvXDdClmBVMZRDRePzSljCvoHxn7ArEt3F14mabn2RRq/hqB8IhC6ny
+ xAEPQIZaxxginIFYEziOjR65AQ0EW//NCAEIALcJqSmQdkt04vIBD12dryF6WcVWYvVwhspt
+ RlZbZ/NZ6nzarzEYPFcXaYOZCOCv+Xtm6hB8fh5XHd7Y8CWuZNDVp3ozuqwTkzQuux/aVdNb
+ Fe4VNeKGN2FK1aNlguAXJNCDNRCpWgRHuU3rWwGUMgentJogARvxfex2/RV/5mzYG/N1DJKt
+ F7g1zEcQD3JtK6WOwZXd+NDyke3tdG7vsNRFjMDkV4046bOOh1BKbWYu8nL3UtWBxhWKx3Pu
+ 1VOBUVwL2MJKW6umk+WqUNgYc2bjelgcTSdz4A6ZhJxstUO4IUfjvYRjoqle+dQcx1u+mmCn
+ 8EdKJlbAoR4NUFZy7WUAEQEAAYkDbAQYAQgAIBYhBCTWJvJTvp6H5s5b9I/0uNJxZ1UnBQJb
+ /80IAhsCAUAJEI/0uNJxZ1UnwHQgBBkBCAAdFiEEGn3N4YVz0WNVyHskqDIjiipP6E8FAlv/
+ zQgACgkQqDIjiipP6E+FuggAl6lkO7BhTkrRbFhrcjCm0bEoYWnCkQtX9YFvElQeA7MhxznO
+ BY/r1q2Uf6Ifr3YGEkLnME/tQQzUwznydM94CtRJ8KDSa1CxOseEsKq6B38xJtjgYSxNdgQb
+ EIfCzUHIGfk94AFKPdV6pqqSU5VpPUagF+JxiAkoEPOdFiQCULFNRLMsOtG7yp8uSyJRp6Tz
+ cQ+0+1QyX1krcHBUlNlvfdmL9DM+umPtbS9F6oRph15mvKVYiPObI1z8ymHoc68ReWjhUuHc
+ IDQs4w9rJVAyLypQ0p+ySDcTc+AmPP6PGUayIHYX63Q0KhJFgpr1wH0pHKpC78DPtX1a7HGM
+ 7MqzQ4NbD/4oLKKwByrIp12wLpSe3gDQPxLpfGgsJs6BBuAGVdkrdfIx2e6ENnwDoF0Veeji
+ BGrVmjVgLUWV9nUP92zpyByzd8HkRSPNZNlisU4gnz1tKhQl+j6G/l2lDYsqKeRG55TXbu9M
+ LqJYccPJ85B0PXcy63fL9U5DTysmxKQ5RgaxcxIZCM528ULFQs3dfEx5euWTWnnh7pN30RLg
+ a+0AjSGd886Bh0kT1Dznrite0dzYlTHlacbITZG84yRk/gS7DkYQdjL8zgFr/pxH5CbYJDk0
+ tYUhisTESeesbvWSPO5uNqqy1dAFw+dqRcF5gXIh3NKX0gqiAA87NM7nL5ym/CNpJ7z7nRC8
+ qePOXubgouxumi5RQs1+crBmCDa/AyJHKdG2mqCt9fx5EPbDpw6Zzx7hgURh4ikHoS7/tLjK
+ iqWjuat8/HWc01yEd8rtkGuUcMqbCi1XhcAmkaOnX8FYscMRoyyMrWClRZEQRokqZIj79+PR
+ adkDXtr4MeL8BaB7Ij2oyRVjXUwhFQNKi5Z5Rve0a3zvGkkqw8Mz20BOksjSWjAF6g9byukl
+ CUVjC03PdMSufNLK06x5hPc/c4tFR4J9cLrV+XxdCX7r0zGos9SzTPGNuIk1LK++S3EJhLFj
+ 4eoWtNhMWc1uiTf9ENza0ntqH9XBWEQ6IA1gubCniGG+Xg==
+Message-ID: <7171405c-4647-173f-2883-c7a281e998ea@linaro.org>
+Date:   Thu, 13 Jun 2019 13:09:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190613101219.vx4ht6dixxu7fioi@verge.net.au>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190613070854.10434-1-shuaibinglu@126.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lu Shuaibing wrote on Thu, Jun 13, 2019:
-> The p9_tag_alloc() does not initialize the transport error t_err field.
-> The struct p9_req_t *req is allocated and stored in a struct p9_client
-> variable. The field t_err is never initialized before p9_conn_cancel()
-> checks its value.
+On 13/06/2019 12:12, Simon Horman wrote:
+> On Thu, May 09, 2019 at 02:29:49PM +0200, Simon Horman wrote:
+>> From: Cao Van Dong <cv-dong@jinso.co.jp>
+>>
+>> Document SoC specific bindings for R-Car H3/M3-N/E3 SoCs.
 > 
-> KUMSAN(KernelUninitializedMemorySantizer, a new error detection tool)
-> reports this bug.
+> Hi Daniel and Thomas,
 > 
-> ==================================================================
-> BUG: KUMSAN: use of uninitialized memory in p9_conn_cancel+0x2d9/0x3b0
-> Read of size 4 at addr ffff88805f9b600c by task kworker/1:2/1216
-> 
-> CPU: 1 PID: 1216 Comm: kworker/1:2 Not tainted 5.2.0-rc4+ #28
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-> Workqueue: events p9_write_work
-> Call Trace:
->  dump_stack+0x75/0xae
->  __kumsan_report+0x17c/0x3e6
->  kumsan_report+0xe/0x20
->  p9_conn_cancel+0x2d9/0x3b0
->  p9_write_work+0x183/0x4a0
->  process_one_work+0x4d1/0x8c0
->  worker_thread+0x6e/0x780
->  kthread+0x1ca/0x1f0
->  ret_from_fork+0x35/0x40
-> 
-> Allocated by task 1979:
->  save_stack+0x19/0x80
->  __kumsan_kmalloc.constprop.3+0xbc/0x120
->  kmem_cache_alloc+0xa7/0x170
->  p9_client_prepare_req.part.9+0x3b/0x380
->  p9_client_rpc+0x15e/0x880
->  p9_client_create+0x3d0/0xac0
->  v9fs_session_init+0x192/0xc80
->  v9fs_mount+0x67/0x470
->  legacy_get_tree+0x70/0xd0
->  vfs_get_tree+0x4a/0x1c0
->  do_mount+0xba9/0xf90
->  ksys_mount+0xa8/0x120
->  __x64_sys_mount+0x62/0x70
->  do_syscall_64+0x6d/0x1e0
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Freed by task 0:
-> (stack is not available)
-> 
-> The buggy address belongs to the object at ffff88805f9b6008
->  which belongs to the cache p9_req_t of size 144
-> The buggy address is located 4 bytes inside of
->  144-byte region [ffff88805f9b6008, ffff88805f9b6098)
-> The buggy address belongs to the page:
-> page:ffffea00017e6d80 refcount:1 mapcount:0 mapping:ffff888068b63740 index:0xffff88805f9b7d90 compound_mapcount: 0
-> flags: 0x100000000010200(slab|head)
-> raw: 0100000000010200 ffff888068b66450 ffff888068b66450 ffff888068b63740
-> raw: ffff88805f9b7d90 0000000000100001 00000001ffffffff 0000000000000000
-> page dumped because: kumsan: bad access detected
-> ==================================================================
-> 
-> Signed-off-by: Lu Shuaibing <shuaibinglu@126.com>
+> would you object to me taking this patch through the renesas tree.
+> It has been outstanding for some time now.
 
-Looks good to me, will queue it up for -next after I've had time to run
-some tests - probably early next week.
-
-This made me realize that this refcount_set is too late, it is possible
-in theory to find the request with p9_tag_lookup as soon as the tag
-alloc worked so both this req->t_err and refcount initialization should
-go before the idr chunk with the other field initializations.
-
-I also checked by the way that no other fields were forgotten, the only
-field that is not initialized now is ->aux, but that field is never used
-so it might be just as fast to remove the field instead...
-I'll submit a couple of patches to move these two inits up and remove
-the aux field when I find time.
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
 
-Thanks!
+>> Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+>> ---
+>>  Documentation/devicetree/bindings/timer/renesas,cmt.txt | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+>> index c0594450e9ef..c5220bcd852b 100644
+>> --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+>> +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+>> @@ -42,12 +42,18 @@ Required Properties:
+>>      - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
+>>      - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
+>>      - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
+>> +    - "renesas,r8a7795-cmt0" for the 32-bit CMT0 device included in r8a7795.
+>> +    - "renesas,r8a7795-cmt1" for the 48-bit CMT1 device included in r8a7795.
+>>      - "renesas,r8a7796-cmt0" for the 32-bit CMT0 device included in r8a7796.
+>>      - "renesas,r8a7796-cmt1" for the 48-bit CMT1 device included in r8a7796.
+>> +    - "renesas,r8a77965-cmt0" for the 32-bit CMT0 device included in r8a77965.
+>> +    - "renesas,r8a77965-cmt1" for the 48-bit CMT1 device included in r8a77965.
+>>      - "renesas,r8a77970-cmt0" for the 32-bit CMT0 device included in r8a77970.
+>>      - "renesas,r8a77970-cmt1" for the 48-bit CMT1 device included in r8a77970.
+>>      - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
+>>      - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
+>> +    - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
+>> +    - "renesas,r8a77990-cmt1" for the 48-bit CMT1 device included in r8a77990.
+>>  
+>>      - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2
+>>  		and RZ/G1.
+>> -- 
+>> 2.11.0
+>>
+
+
 -- 
-Dominique
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
