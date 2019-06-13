@@ -2,169 +2,150 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8A7C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0268BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C361021473
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1ABA21473
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:00:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iwg9vvI8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbfFMV75 (ORCPT
+        id S1729108AbfFMWA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 17:59:57 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:39798 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727727AbfFMV75 (ORCPT
+        Thu, 13 Jun 2019 18:00:58 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38273 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfFMWA5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 17:59:57 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hbXlC-0003f5-9X; Thu, 13 Jun 2019 15:59:54 -0600
-Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hbXl1-0005In-SA; Thu, 13 Jun 2019 15:59:54 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>
-References: <20190612225431.p753mzqynxpsazb7@brauner.io>
-        <CAHk-=wh2Khe1Lj-Pdu3o2cXxumL1hegg_1JZGJXki6cchg_Q2Q@mail.gmail.com>
-        <20190613132250.u65yawzvf4voifea@brauner.io>
-        <871rzxwcz7.fsf@xmission.com>
-        <CAJfpegvZwDY+zoWjDTrPpMCS01rzQgeE-_z-QtGfvcRnoamzgg@mail.gmail.com>
-Date:   Thu, 13 Jun 2019 16:59:24 -0500
-In-Reply-To: <CAJfpegvZwDY+zoWjDTrPpMCS01rzQgeE-_z-QtGfvcRnoamzgg@mail.gmail.com>
-        (Miklos Szeredi's message of "Thu, 13 Jun 2019 22:25:44 +0200")
-Message-ID: <878su5tadf.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Thu, 13 Jun 2019 18:00:57 -0400
+Received: by mail-pf1-f195.google.com with SMTP id a186so95570pfa.5;
+        Thu, 13 Jun 2019 15:00:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=o0Xxr326HdVBxJMQJ7yuDvuInC+0DtTaN16E8H3a2bk=;
+        b=iwg9vvI8CIMUZnifphfNAi7MMdiXb5tLze1Wjdtzn7ptvajN7YJIN73rJAnv2SrorO
+         jaB81fzQaDK+JMuvGQwsEE4jwIY44z/DGTKqHsx1Kk/FS9iP+UWfZMMBxHTRuP8CxTpv
+         lE2+2k9L/W9bUVM85tyuyWEiDqRKBGK360DmIiwCIMI03BRlU/cATpcM5f3pZFwONuJG
+         +ECxR2b/P1pdEt88fbls+/HzpMYKTj6mRovaUUUBvLBgzOv5x8mAEGF7A6fKy964hfVf
+         o6Nkds204NQYzmDXEZSD927Lq0tTL+Rk8JstUF21VPd7LrycvbiyHEYwZ81t0J47QGr/
+         9Upg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o0Xxr326HdVBxJMQJ7yuDvuInC+0DtTaN16E8H3a2bk=;
+        b=FqMKztGuUftCBfuks53GPnwMQDNYPsvqfdyR0p25JyET5RA/XH3NCyskIC87SNLlJN
+         iXrIBKBchbiqzg1Yn6i+/PbVyG73tidckRgfCP+CxwoS3+fzjWyxc8HT6VBzg40doTOQ
+         JbnanzHlVZt1saEkPQYXAPSuVj59KyBHlrbh++rnrYzfO4VNrqT5e6LuEQuLYJDeBKpP
+         vYmkGwm57eLHYFAdT2lwjGUQmEScPIK5cSIw/qPuU8NHVZOOjAnxsgIs/lyylfpbwtOR
+         OTMnXQCl7m3YLZj9sbmk8f/UNr7czFJgOQrpWrJ6/QkeVD5hcAI0/6lflzzc1+s120iJ
+         5F6w==
+X-Gm-Message-State: APjAAAUpzARKrZr5wKItpaFWL2XpAODXi5IT35DyrDbGbkzeEeLx05v2
+        NfRzxjZiuU9g8N/vVqc7/OA=
+X-Google-Smtp-Source: APXvYqwyywNqJkHJDH2mvO+bvRmgBxFaFgJmncdf/zEQvCUIGwjF1LxvkA+ZwyfyqgkYoFfmqTWUOw==
+X-Received: by 2002:a62:82c2:: with SMTP id w185mr75108171pfd.202.1560463257135;
+        Thu, 13 Jun 2019 15:00:57 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::2:e034])
+        by smtp.gmail.com with ESMTPSA id g8sm723759pgd.29.2019.06.13.15.00.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 15:00:56 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 15:00:55 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>
+Subject: Re: [PATCH 7/9] x86/unwind/orc: Fall back to using frame pointers
+ for generated code
+Message-ID: <20190613220054.tmonrgfdeie2kl74@ast-mbp.dhcp.thefacebook.com>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <4f536ec4facda97406273a22a4c2677f7cb22148.1560431531.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hbXl1-0005In-SA;;;mid=<878su5tadf.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/SZanX4kiIZau4CCkkUy83QNZgHjgF9e8=
-X-SA-Exim-Connect-IP: 72.206.97.68
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: Regression for MS_MOVE on kernel v5.1
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4f536ec4facda97406273a22a4c2677f7cb22148.1560431531.git.jpoimboe@redhat.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miklos Szeredi <miklos@szeredi.hu> writes:
+On Thu, Jun 13, 2019 at 08:21:04AM -0500, Josh Poimboeuf wrote:
+> The ORC unwinder can't unwind through BPF JIT generated code because
+> there are no ORC entries associated with the code.
+> 
+> If an ORC entry isn't available, try to fall back to frame pointers.  If
+> BPF and other generated code always do frame pointer setup (even with
+> CONFIG_FRAME_POINTERS=n) then this will allow ORC to unwind through most
+> generated code despite there being no corresponding ORC entries.
+> 
+> Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+> Reported-by: Song Liu <songliubraving@fb.com>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+>  arch/x86/kernel/unwind_orc.c | 26 ++++++++++++++++++++++----
+>  1 file changed, 22 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+> index 33b66b5c5aec..72b997eaa1fc 100644
+> --- a/arch/x86/kernel/unwind_orc.c
+> +++ b/arch/x86/kernel/unwind_orc.c
+> @@ -82,9 +82,9 @@ static struct orc_entry *orc_find(unsigned long ip);
+>   * But they are copies of the ftrace entries that are static and
+>   * defined in ftrace_*.S, which do have orc entries.
+>   *
+> - * If the undwinder comes across a ftrace trampoline, then find the
+> + * If the unwinder comes across a ftrace trampoline, then find the
+>   * ftrace function that was used to create it, and use that ftrace
+> - * function's orc entrie, as the placement of the return code in
+> + * function's orc entry, as the placement of the return code in
+>   * the stack will be identical.
+>   */
+>  static struct orc_entry *orc_ftrace_find(unsigned long ip)
+> @@ -128,6 +128,16 @@ static struct orc_entry null_orc_entry = {
+>  	.type = ORC_TYPE_CALL
+>  };
+>  
+> +/* Fake frame pointer entry -- used as a fallback for generated code */
+> +static struct orc_entry orc_fp_entry = {
+> +	.type		= ORC_TYPE_CALL,
+> +	.sp_reg		= ORC_REG_BP,
+> +	.sp_offset	= 16,
+> +	.bp_reg		= ORC_REG_PREV_SP,
+> +	.bp_offset	= -16,
+> +	.end		= 0,
+> +};
+> +
+>  static struct orc_entry *orc_find(unsigned long ip)
+>  {
+>  	static struct orc_entry *orc;
+> @@ -392,8 +402,16 @@ bool unwind_next_frame(struct unwind_state *state)
+>  	 * calls and calls to noreturn functions.
+>  	 */
+>  	orc = orc_find(state->signal ? state->ip : state->ip - 1);
+> -	if (!orc)
+> -		goto err;
+> +	if (!orc) {
+> +		/*
+> +		 * As a fallback, try to assume this code uses a frame pointer.
+> +		 * This is useful for generated code, like BPF, which ORC
+> +		 * doesn't know about.  This is just a guess, so the rest of
+> +		 * the unwind is no longer considered reliable.
+> +		 */
+> +		orc = &orc_fp_entry;
+> +		state->error = true;
 
-> On Thu, Jun 13, 2019 at 8:35 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->>
->> Christian Brauner <christian@brauner.io> writes:
->>
->> > On Wed, Jun 12, 2019 at 06:00:39PM -1000, Linus Torvalds wrote:
->> >> On Wed, Jun 12, 2019 at 12:54 PM Christian Brauner <christian@brauner.io> wrote:
->> >> >
->> >> > The commit changes the internal logic to lock mounts when propagating
->> >> > mounts (user+)mount namespaces and - I believe - causes do_mount_move()
->> >> > to fail at:
->> >>
->> >> You mean 'do_move_mount()'.
->> >>
->> >> > if (old->mnt.mnt_flags & MNT_LOCKED)
->> >> >         goto out;
->> >> >
->> >> > If that's indeed the case we should either revert this commit (reverts
->> >> > cleanly, just tested it) or find a fix.
->> >>
->> >> Hmm.. I'm not entirely sure of the logic here, and just looking at
->> >> that commit 3bd045cc9c4b ("separate copying and locking mount tree on
->> >> cross-userns copies") doesn't make me go "Ahh" either.
->> >>
->> >> Al? My gut feel is that we need to just revert, since this was in 5.1
->> >> and it's getting reasonably late in 5.2 too. But maybe you go "guys,
->> >> don't be silly, this is easily fixed with this one-liner".
->> >
->> > David and I have been staring at that code today for a while together.
->> > I think I made some sense of it.
->> > One thing we weren't absolutely sure is if the old MS_MOVE behavior was
->> > intentional or a bug. If it is a bug we have a problem since we quite
->> > heavily rely on this...
->>
->> It was intentional.
->>
->> The only mounts that are locked in propagation are the mounts that
->> propagate together.  If you see the mounts come in as individuals you
->> can always see/manipulate/work with the underlying mount.
->>
->> I can think of only a few ways for MNT_LOCKED to become set:
->> a) unshare(CLONE_NEWNS)
->> b) mount --rclone /path/to/mnt/tree /path/to/propagation/point
->> c) mount --move /path/to/mnt/tree /path/to/propgation/point
->>
->> Nothing in the target namespace should be locked on the propgation point
->> but all of the new mounts that came across as a unit should be locked
->> together.
->
-> Locked together means the root of the new mount tree doesn't have
-> MNT_LOCKED set, but all mounts below do have MNT_LOCKED, right?
->
-> Isn't the bug here that the root mount gets MNT_LOCKED as well?
-
-Yes, and the code to remove MNT_LOCKED is still sitting there in
-propogate_one right after it calls copy_tree.  It should be a trivial
-matter of moving that change to after the lock_mnt_tree call.
-
-Now that I have been elightened about anonymous mount namespaces
-I am suspecting that we want to take the user_namespace of the anonymous
-namespace into account when deciding to lock the mounts.
-
->> Then it breaking is definitely a regression that needs to be fixed.
->>
->> I believe the problematic change as made because the new mount
->> api allows attaching floating mounts.  Or that was the plan last I
->> looked.   Those floating mounts don't have a mnt_ns so will result
->> in a NULL pointer dereference when they are attached.
->
-> Well, it's called anonymous namespace.  So there *is* an mnt_ns, and
-> its lifetime is bound to the file returned by fsmount().
-
-Interesting.  That has changed since I last saw the patches.
-
-Below is what will probably be a straight forward fix for the regression.
-
-Eric
-
-diff --git a/fs/namespace.c b/fs/namespace.c
-index ffb13f0562b0..a39edeecbc46 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -2105,6 +2105,7 @@ static int attach_recursive_mnt(struct mount *source_mnt,
-                /* Notice when we are propagating across user namespaces */
-                if (child->mnt_parent->mnt_ns->user_ns != user_ns)
-                        lock_mnt_tree(child);
-+               child->mnt.mnt_flags &= ~MNT_LOCKED;
-                commit_tree(child);
-        }
-        put_mountpoint(smp);
-diff --git a/fs/pnode.c b/fs/pnode.c
-index 7ea6cfb65077..012be405fec0 100644
---- a/fs/pnode.c
-+++ b/fs/pnode.c
-@@ -262,7 +262,6 @@ static int propagate_one(struct mount *m)
-        child = copy_tree(last_source, last_source->mnt.mnt_root, type);
-        if (IS_ERR(child))
-                return PTR_ERR(child);
--       child->mnt.mnt_flags &= ~MNT_LOCKED;
-        mnt_set_mountpoint(m, mp, child);
-        last_dest = m;
-        last_source = child;
-
+That seems fragile.
+Can't we populate orc_unwind tables after JIT ?
 
