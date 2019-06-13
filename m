@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C66C9C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB27C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C001208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92339208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442144;
-	bh=GSTTpigTR+QKB1kZBNgiJYTC8qGHTEziFPt1bj0+VAI=;
+	s=default; t=1560442150;
+	bh=haeOm/iHF6Ymi2w3NIruSHvEIpq/d+b10TKv8Coa/hM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0LzXA6xX7y8DvemLQZJnj1yvAZ65Vo4qHneSjMTxzTH1kynvNnI321NvMnk35fXlV
-	 yHNryHwaDhQaa9pzc5L3XTrJvxTjLlenziC94bC3/Ralkja9xum/PpGM3IwuTCKLid
-	 tJhKfsI85y8XWiQ0/wjUS8AtKXQe5O1CI/VXUVME=
+	b=TvA+mxOMbbn+RyYpqlNiARP9/kwxE0EpNZKLiOAoVkVWBfmPFOnba1DknUuyK5iGv
+	 52F/SZ9zCM/8PWE5oAAex4KGyrxPTiSyJ6FwPI8Y6JeP051JtoXbntpae0QwvXvTfm
+	 Xb53CconNH4BmSu2qOD3z+2iiJpJo1UGOtar0E68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391299AbfFMQJD (ORCPT
+        id S1732494AbfFMQI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:09:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33592 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:08:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731268AbfFMIot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:44:49 -0400
+        id S1731271AbfFMIoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:44:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A60342147A;
-        Thu, 13 Jun 2019 08:44:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3829215EA;
+        Thu, 13 Jun 2019 08:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415488;
-        bh=GSTTpigTR+QKB1kZBNgiJYTC8qGHTEziFPt1bj0+VAI=;
+        s=default; t=1560415493;
+        bh=haeOm/iHF6Ymi2w3NIruSHvEIpq/d+b10TKv8Coa/hM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ID8YxHt9B+31S+P7Bk6D56XgSkh2X/2tg1EIPIbUytOy3nz+QUMErgcjjLp1Sjiwr
-         yjlo3ogocYHGoe1aGF8649hUp+7orVrTV3xStLK4J/4GBvqL9xhMzgfKRi8vu+9Wgt
-         d6emFVtmpSnQeLiV1ILUmmjvq7CWAwkz+y5bP64g=
+        b=tYTin/SJPjnXwJ7yCVbbHvuBJwcvP86t0eXsHOGXQmx3xXHyfDTSjf0K8Wtg6jNMu
+         ACIiYq4RMz61hX+dMb36iOrxHBQQN1RzMSNjpCK6rMVRLK9zpKuhA5rxIxNIBcq7Qz
+         uRNvzlOOc90dIrabYrre1xsWGqVFXgVZD392aHiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 009/155] drm/pl111: Initialize clock spinlock early
-Date:   Thu, 13 Jun 2019 10:32:01 +0200
-Message-Id: <20190613075653.263419369@linuxfoundation.org>
+Subject: [PATCH 5.1 013/155] hugetlbfs: on restore reserve error path retain subpool reservation
+Date:   Thu, 13 Jun 2019 10:32:05 +0200
+Message-Id: <20190613075653.507415166@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,63 +66,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3e01ae2612bdd7975c74ec7123d7f8f5e6eed795 ]
+[ Upstream commit 0919e1b69ab459e06df45d3ba6658d281962db80 ]
 
-The following warning is seen on systems with broken clock divider.
+When a huge page is allocated, PagePrivate() is set if the allocation
+consumed a reservation.  When freeing a huge page, PagePrivate is checked.
+If set, it indicates the reservation should be restored.  PagePrivate
+being set at free huge page time mostly happens on error paths.
 
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 0 PID: 1 Comm: swapper Not tainted 5.1.0-09698-g1fb3b52 #1
-Hardware name: ARM Integrator/CP (Device Tree)
-[<c0011be8>] (unwind_backtrace) from [<c000ebb8>] (show_stack+0x10/0x18)
-[<c000ebb8>] (show_stack) from [<c07d3fd0>] (dump_stack+0x18/0x24)
-[<c07d3fd0>] (dump_stack) from [<c0060d48>] (register_lock_class+0x674/0x6f8)
-[<c0060d48>] (register_lock_class) from [<c005de2c>]
-	(__lock_acquire+0x68/0x2128)
-[<c005de2c>] (__lock_acquire) from [<c0060408>] (lock_acquire+0x110/0x21c)
-[<c0060408>] (lock_acquire) from [<c07f755c>] (_raw_spin_lock+0x34/0x48)
-[<c07f755c>] (_raw_spin_lock) from [<c0536c8c>]
-	(pl111_display_enable+0xf8/0x5fc)
-[<c0536c8c>] (pl111_display_enable) from [<c0502f54>]
-	(drm_atomic_helper_commit_modeset_enables+0x1ec/0x244)
+When huge page reservations are created, a check is made to determine if
+the mapping is associated with an explicitly mounted filesystem.  If so,
+pages are also reserved within the filesystem.  The default action when
+freeing a huge page is to decrement the usage count in any associated
+explicitly mounted filesystem.  However, if the reservation is to be
+restored the reservation/use count within the filesystem should not be
+decrementd.  Otherwise, a subsequent page allocation and free for the same
+mapping location will cause the file filesystem usage to go 'negative'.
 
-Since commit eedd6033b4c8 ("drm/pl111: Support variants with broken clock
-divider"), the spinlock is not initialized if the clock divider is broken.
-Initialize it earlier to fix the problem.
+Filesystem                         Size  Used Avail Use% Mounted on
+nodev                              4.0G -4.0M  4.1G    - /opt/hugepool
 
-Fixes: eedd6033b4c8 ("drm/pl111: Support variants with broken clock divider")
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/1557758781-23586-1-git-send-email-linux@roeck-us.net
+To fix, when freeing a huge page do not adjust filesystem usage if
+PagePrivate() is set to indicate the reservation should be restored.
+
+I did not cc stable as the problem has been around since reserves were
+added to hugetlbfs and nobody has noticed.
+
+Link: http://lkml.kernel.org/r/20190328234704.27083-2-mike.kravetz@oracle.com
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/pl111/pl111_display.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ mm/hugetlb.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/pl111/pl111_display.c b/drivers/gpu/drm/pl111/pl111_display.c
-index 754f6b25f265..6d9f78612dee 100644
---- a/drivers/gpu/drm/pl111/pl111_display.c
-+++ b/drivers/gpu/drm/pl111/pl111_display.c
-@@ -531,14 +531,15 @@ pl111_init_clock_divider(struct drm_device *drm)
- 		dev_err(drm->dev, "CLCD: unable to get clcdclk.\n");
- 		return PTR_ERR(parent);
- 	}
-+
-+	spin_lock_init(&priv->tim2_lock);
-+
- 	/* If the clock divider is broken, use the parent directly */
- 	if (priv->variant->broken_clockdivider) {
- 		priv->clk = parent;
- 		return 0;
- 	}
- 	parent_name = __clk_get_name(parent);
--
--	spin_lock_init(&priv->tim2_lock);
- 	div->init = &init;
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 5baf1f00ad42..5b4f00be325d 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1258,12 +1258,23 @@ void free_huge_page(struct page *page)
+ 	ClearPagePrivate(page);
  
- 	ret = devm_clk_hw_register(drm->dev, div);
+ 	/*
+-	 * A return code of zero implies that the subpool will be under its
+-	 * minimum size if the reservation is not restored after page is free.
+-	 * Therefore, force restore_reserve operation.
++	 * If PagePrivate() was set on page, page allocation consumed a
++	 * reservation.  If the page was associated with a subpool, there
++	 * would have been a page reserved in the subpool before allocation
++	 * via hugepage_subpool_get_pages().  Since we are 'restoring' the
++	 * reservtion, do not call hugepage_subpool_put_pages() as this will
++	 * remove the reserved page from the subpool.
+ 	 */
+-	if (hugepage_subpool_put_pages(spool, 1) == 0)
+-		restore_reserve = true;
++	if (!restore_reserve) {
++		/*
++		 * A return code of zero implies that the subpool will be
++		 * under its minimum size if the reservation is not restored
++		 * after page is free.  Therefore, force restore_reserve
++		 * operation.
++		 */
++		if (hugepage_subpool_put_pages(spool, 1) == 0)
++			restore_reserve = true;
++	}
+ 
+ 	spin_lock(&hugetlb_lock);
+ 	clear_page_huge_active(page);
 -- 
 2.20.1
 
