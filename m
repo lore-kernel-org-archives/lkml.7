@@ -5,55 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF96C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A10C5C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E366920679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 767C520679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442010;
-	bh=fv8bfEeCFUkwXzWiI3k/sImyYmTTUj5rlS+GDRSg9Yk=;
+	s=default; t=1560442012;
+	bh=+EOijRYzI9FkbnvTNEtmNJ+L0BCsXTD1RgtsBpxrh8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SoSqtFYAMw+9SU38oB8LQxVIPiOZ1cTUgNzmtH6QwFzyCFWmhXV9Lye/Ol5r79iks
-	 j9ntWfpbTw+GQk3Pav8OSBpuNUm2p5zWQYAZ27D9V1CQuSTnHpCqXWp9kH2BQ5e+F6
-	 2f65wbw7NlKpeB8T0a5KyQEFD64JSmUhs+ClCMW8=
+	b=z4nNuUbI8eC1BCA7jkGPLch7iZDd//1D8NDTEwOIB2EAsZogEh+vY+ThIy6bGis7J
+	 dYQLsBUHphVnrlE04YCxG0AdCjtNEy2rEl3agIHZ2/zi5hfZ5ARdCA3ohQc+6YtK+B
+	 4h/j0cq2ayxAmzfDm+x0QHVA/r9Y68lJYnbP57LQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391342AbfFMQGo (ORCPT
+        id S2391022AbfFMQGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:06:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34442 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:06:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731310AbfFMIpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:45:47 -0400
+        id S1731312AbfFMIpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:45:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 389332173C;
-        Thu, 13 Jun 2019 08:45:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8E4D21743;
+        Thu, 13 Jun 2019 08:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415546;
-        bh=fv8bfEeCFUkwXzWiI3k/sImyYmTTUj5rlS+GDRSg9Yk=;
+        s=default; t=1560415552;
+        bh=+EOijRYzI9FkbnvTNEtmNJ+L0BCsXTD1RgtsBpxrh8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tQ56MudSpo721wwtBdA5NNXIxs6nPtBT2H2CpFyFoKP+mamgUDg7gNtaXAisWYwYR
-         yTA7iotNwwAV4nu36zUKVN2fPxlIjqfHvE73di2/KUdxO5LMGUAGi0QKQmXGmH2ruE
-         jpwKsw2oPuAIBE4cmSCEFiAl1spgRdJkDHuBc2cg=
+        b=o4fwdlTRx/vk8tbdjtMllTHqZx4JD5suFp9Wxo2/orq2NlvzmqUZOCOFUhWPD5B86
+         zfqFpgkzsf01W/gdhaKTeuLxF+FiZV9+0xvtQS+ZDQA7b5SDEwlAezq/irCJzsDDoQ
+         173c8bq7Yh/yYujXhjixhEKLQfN1pcRlscB4rw60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yue Hu <huyue2@yulong.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 016/155] mm/cma.c: fix crash on CMA allocation if bitmap allocation fails
-Date:   Thu, 13 Jun 2019 10:32:08 +0200
-Message-Id: <20190613075653.681074527@linuxfoundation.org>
+Subject: [PATCH 5.1 018/155] mm/compaction.c: fix an undefined behaviour
+Date:   Thu, 13 Jun 2019 10:32:10 +0200
+Message-Id: <20190613075653.778873177@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -66,42 +63,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1df3a339074e31db95c4790ea9236874b13ccd87 ]
+[ Upstream commit dd7ef7bd14640f11763b54f55131000165f48321 ]
 
-f022d8cb7ec7 ("mm: cma: Don't crash on allocation if CMA area can't be
-activated") fixes the crash issue when activation fails via setting
-cma->count as 0, same logic exists if bitmap allocation fails.
+In a low-memory situation, cc->fast_search_fail can keep increasing as it
+is unable to find an available page to isolate in
+fast_isolate_freepages().  As the result, it could trigger an error below,
+so just compare with the maximum bits can be shifted first.
 
-Link: http://lkml.kernel.org/r/20190325081309.6004-1-zbestahu@gmail.com
-Signed-off-by: Yue Hu <huyue2@yulong.com>
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
+UBSAN: Undefined behaviour in mm/compaction.c:1160:30
+shift exponent 64 is too large for 64-bit type 'unsigned long'
+CPU: 131 PID: 1308 Comm: kcompactd1 Kdump: loaded Tainted: G
+W    L    5.0.0+ #17
+Call trace:
+ dump_backtrace+0x0/0x450
+ show_stack+0x20/0x2c
+ dump_stack+0xc8/0x14c
+ __ubsan_handle_shift_out_of_bounds+0x7e8/0x8c4
+ compaction_alloc+0x2344/0x2484
+ unmap_and_move+0xdc/0x1dbc
+ migrate_pages+0x274/0x1310
+ compact_zone+0x26ec/0x43bc
+ kcompactd+0x15b8/0x1a24
+ kthread+0x374/0x390
+ ret_from_fork+0x10/0x18
+
+[akpm@linux-foundation.org: code cleanup]
+Link: http://lkml.kernel.org/r/20190320203338.53367-1-cai@lca.pw
+Fixes: 70b44595eafe ("mm, compaction: use free lists to quickly locate a migration source")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/cma.c | 4 +++-
+ mm/compaction.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/mm/cma.c b/mm/cma.c
-index bb2d333ffcb3..8cb95cd1193a 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -106,8 +106,10 @@ static int __init cma_activate_area(struct cma *cma)
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 368445cc71cf..2d7bb9eb07cd 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -1164,7 +1164,9 @@ static bool suitable_migration_target(struct compact_control *cc,
+ static inline unsigned int
+ freelist_scan_limit(struct compact_control *cc)
+ {
+-	return (COMPACT_CLUSTER_MAX >> cc->fast_search_fail) + 1;
++	unsigned short shift = BITS_PER_LONG - 1;
++
++	return (COMPACT_CLUSTER_MAX >> min(shift, cc->fast_search_fail)) + 1;
+ }
  
- 	cma->bitmap = kzalloc(bitmap_size, GFP_KERNEL);
- 
--	if (!cma->bitmap)
-+	if (!cma->bitmap) {
-+		cma->count = 0;
- 		return -ENOMEM;
-+	}
- 
- 	WARN_ON_ONCE(!pfn_valid(pfn));
- 	zone = page_zone(pfn_to_page(pfn));
+ /*
 -- 
 2.20.1
 
