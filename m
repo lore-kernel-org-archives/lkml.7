@@ -2,337 +2,613 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9159FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E85CC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD09205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22705205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:09:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Id+xAM61"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I3GYar+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393482AbfFMRIw (ORCPT
+        id S2393556AbfFMRJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:08:52 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44511 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729969AbfFMRDv (ORCPT
+        Thu, 13 Jun 2019 13:09:00 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40501 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404452AbfFMRDu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:03:51 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r16so2441950wrl.11;
-        Thu, 13 Jun 2019 10:03:48 -0700 (PDT)
+        Thu, 13 Jun 2019 13:03:50 -0400
+Received: by mail-pf1-f194.google.com with SMTP id p184so8925241pfp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 10:03:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GxCcO+M7AShhGpFpRgiyxF7HY5zzF8IQeYxesvPCT9E=;
-        b=Id+xAM611ZgpDtXt8pKY0xqVi2URqxDVPGbL7dMtYpkHwOznp1Aw9VIhiLsP3PXyRt
-         z84O1xhQi62I2mzIzS78AZSyUJaDS03xi/8nq4gaasOdQaA8LfCIACAUZg2uELARB6bB
-         MzfBbtYGHCE6R8z8ua2OXDe4RmLksWZKaF6WcRCJ2iRpCm4MBXMDVqUigbU0XtRYawZc
-         kjCwIJlxeNXJQgRLElRoAvW1S/n1Y+TuKp22oaEV49qswikOSsSnmUQtDaeM+m3+ir5V
-         KghizBjF3k/VLWdym37N+pfwXk0YPhNg+zEAkCeGLXY18gwTpGnnqP+DdhXEds5hcCHR
-         bxjA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XRza9/nX/AVz8g7hPSG2DNaFuABmwAREVdt+czc0FpA=;
+        b=I3GYar+6Adau5gO+T/ugawQHY3A+iFNvOIDQmJh5sNaYZ01miXS2kM8S+cBxlLpuVv
+         sq+aotHhov+dwnrfTD8UHyZIwlZ8o4eTL3y71xvzNw1G9XCo3ii9cS11wpROIE2V77nk
+         uekK7z91f1KVCjfUyW/JNe/xJXFfsMTHiuoNtWhtYvK1nOyYrUZ+Ub/QWCPlMluLlbb4
+         Hx+EBVQUm4HEubOGo8Ccn9kBqP6hYqhYoF8ibKo/2lUQSnE8X9LkYAWSQo95wd0xW3Vj
+         mxU80rR8jfIBQbAaoeHAyPRiD8B0R+zFk6NAPqCiKmePEC2Yg9HQaIz6QK6H7G1jMb6d
+         j9SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=GxCcO+M7AShhGpFpRgiyxF7HY5zzF8IQeYxesvPCT9E=;
-        b=nm0KYf4o+a7xlzzuorpl+CKmsb/jROgxwMeiWUU6h+wPJcKlQtAJdgfCco7sUmhe29
-         wpIFBLES10CQfQY3JSe3eSBVejc1clWNV3w788pFZRMUbr/PChV1G5UsEZ7nXcs7jBBH
-         Tt37oLnGh4RCoIAeMpY7P8pVd3IMZcDzbh6qFdOtwDCIUp4gqwYys55U0HBYBWzl+lcM
-         a8klB0as8cqCnyFA5uuVpgeBEqZ4FZibiMhqSL1D4ZflIH642Vx507D6OO2Sh7bJRv+A
-         2la2JyJVdBSD9EZvTPJkw0ue1y4rc0OTxUsJKKQuhSYK1qpPujrKLF9x+NJ4xCN7+tvc
-         Bmag==
-X-Gm-Message-State: APjAAAUlB4F8UKKsFqsGhagfk7c+EKWx+AlDqu/X+Bx5Lk9gVP3j79oX
-        oQPiyiMhoqaCXX1a6ITz/yf7P9Iy
-X-Google-Smtp-Source: APXvYqx5tHhNNDsVU3hxOTz8Uc6f/RW98Wv0SV/16fsr7iSFgp521h3qouAeglLU841I8PgtzsZCyw==
-X-Received: by 2002:adf:db02:: with SMTP id s2mr24574180wri.326.1560445427925;
-        Thu, 13 Jun 2019 10:03:47 -0700 (PDT)
-Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.03.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 10:03:47 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        vkuznets@redhat.com
-Subject: [PATCH 13/43] KVM: nVMX: Sync rarely accessed guest fields only when needed
-Date:   Thu, 13 Jun 2019 19:02:59 +0200
-Message-Id: <1560445409-17363-14-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
-References: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XRza9/nX/AVz8g7hPSG2DNaFuABmwAREVdt+czc0FpA=;
+        b=ej20zXKMudCSUKHTHcbYDIhvWBRfNdgUOMCNwKHLOO390CMKhxK+ehdGaJbmONNouS
+         RHaG5qSLLPt+lgDaHZBV+SSFMuragFOnhXGXUTmxB+chq++nU+pCIt/Td+XRGyc8t81j
+         M17ZoN+PW/f6IUMyMReOV0IWePxM5p58xxS6E6AW2ciMJ19j8yPUnvbyYtsbfvQQdOXX
+         /ewoPqtFuOi3HLcfFewwM39SosH16W3c8BJgN1SmKjZwVNclMYTQnk0v1LERPxcpjO3h
+         TKPrPT8/ShsGWs5PORZOxF3wCf0ro0sryCFTEgQKZA07i5/iXuhX7qhwe+1qEpOnAIrd
+         zzxg==
+X-Gm-Message-State: APjAAAVNMG8k+CS80wsgi3Y+c5eoX/sJmwHW9UhAiJEP/IrcRxtqIt+k
+        N/VLiQmKDHzaONrVpH8uwYvbbA==
+X-Google-Smtp-Source: APXvYqybIx0r2TNBzaJsFnmZth8kZqiNFhsWXLaSG73n6UwWeUW4LS+t6dbEjRtq9WRcdiUnNf5tDw==
+X-Received: by 2002:a17:90a:9291:: with SMTP id n17mr6502233pjo.66.1560445428843;
+        Thu, 13 Jun 2019 10:03:48 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id l13sm375198pjq.20.2019.06.13.10.03.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 10:03:48 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 10:04:34 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Nisha Kumari <nishakumari@codeaurora.org>
+Cc:     broonie@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com,
+        david.brown@linaro.org, linux-kernel@vger.kernel.org,
+        kgunda@codeaurora.org, rnayak@codeaurora.org
+Subject: Re: [PATCH 3/4] regulator: Add labibb driver
+Message-ID: <20190613170434.GH22737@tuxbook-pro>
+References: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
+ <1560337252-27193-4-git-send-email-nishakumari@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560337252-27193-4-git-send-email-nishakumari@codeaurora.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+On Wed 12 Jun 04:00 PDT 2019, Nisha Kumari wrote:
 
-Many guest fields are rarely read (or written) by VMMs, i.e. likely
-aren't accessed between runs of a nested VMCS.  Delay pulling rarely
-accessed guest fields from vmcs02 until they are VMREAD or until vmcs12
-is dirtied.  The latter case is necessary because nested VM-Entry will
-consume all manner of fields when vmcs12 is dirty, e.g. for consistency
-checks.
+> This patch adds labibb regulator driver for supporting LCD mode display
+> on SDM845 platform.
+> 
+> Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
+> ---
+>  drivers/regulator/Kconfig                 |  10 +
+>  drivers/regulator/Makefile                |   1 +
+>  drivers/regulator/qcom-labibb-regulator.c | 438 ++++++++++++++++++++++++++++++
+>  3 files changed, 449 insertions(+)
+>  create mode 100644 drivers/regulator/qcom-labibb-regulator.c
+> 
+> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> index b7f249e..ab9d272 100644
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -1057,5 +1057,15 @@ config REGULATOR_WM8994
+>  	  This driver provides support for the voltage regulators on the
+>  	  WM8994 CODEC.
+>  
+> +config REGULATOR_QCOM_LABIBB
+> +	tristate "QCOM LAB/IBB regulator support"
+> +	depends on SPMI || COMPILE_TEST
+> +	help
+> +	  This driver supports Qualcomm's LAB/IBB regulators present on the
+> +	  Qualcomm's PMIC chip pmi8998. QCOM LAB and IBB are SPMI
+> +	  based PMIC implementations. LAB can be used as positive
+> +	  boost regulator and IBB can be used as a negative boost regulator
+> +	  for LCD display panel.
+> +
+>  endif
+>  
+> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+> index 1169f8a..f123f3e 100644
+> --- a/drivers/regulator/Makefile
+> +++ b/drivers/regulator/Makefile
+> @@ -81,6 +81,7 @@ obj-$(CONFIG_REGULATOR_MT6311) += mt6311-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6323)	+= mt6323-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6380)	+= mt6380-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6397)	+= mt6397-regulator.o
+> +obj-$(CONFIG_REGULATOR_QCOM_LABIBB) += qcom-labibb-regulator.o
+>  obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
+>  obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
+>  obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
+> diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
+> new file mode 100644
+> index 0000000..0c68883
+> --- /dev/null
+> +++ b/drivers/regulator/qcom-labibb-regulator.c
+> @@ -0,0 +1,438 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> +
+> +#include <linux/module.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/driver.h>
+> +#include <linux/regulator/of_regulator.h>
+> +
+> +#define REG_PERPH_TYPE                  0x04
+> +#define QCOM_LAB_TYPE			0x24
+> +#define QCOM_IBB_TYPE			0x20
+> +
+> +#define REG_LAB_STATUS1			0x08
+> +#define REG_LAB_ENABLE_CTL		0x46
+> +#define LAB_STATUS1_VREG_OK_BIT		BIT(7)
+> +#define LAB_ENABLE_CTL_EN		BIT(7)
+> +
+> +#define REG_IBB_STATUS1			0x08
+> +#define REG_IBB_ENABLE_CTL		0x46
+> +#define IBB_STATUS1_VREG_OK_BIT		BIT(7)
+> +#define IBB_ENABLE_CTL_MASK		(BIT(7) | BIT(6))
+> +#define IBB_CONTROL_ENABLE		BIT(7)
+> +
+> +#define POWER_DELAY			8000
+> +
+> +struct lab_regulator {
+> +	struct regulator_dev		*rdev;
+> +	int				vreg_enabled;
+> +};
+> +
+> +struct ibb_regulator {
+> +	struct regulator_dev		*rdev;
+> +	int				vreg_enabled;
+> +};
+> +
+> +struct qcom_labibb {
+> +	struct device			*dev;
+> +	struct regmap			*regmap;
+> +	u16				lab_base;
+> +	u16				ibb_base;
+> +	struct lab_regulator		lab_vreg;
+> +	struct ibb_regulator		ibb_vreg;
+> +};
+> +
+> +static int qcom_labibb_read(struct qcom_labibb *labibb, u16 address,
 
-Note, an alternative to synchronizing all guest fields on VMREAD would
-be to read *only* the field being accessed, but switching VMCS pointers
-is expensive and odds are good if one guest field is being accessed then
-others will soon follow, or that vmcs12 will be dirtied due to a VMWRITE
-(see above).  And the full synchronization results in slightly cleaner
-code.
+These three wrappers are essentially just aliases of the regmap
+functions, with an error print. In all call sights you check for errors
+and print another error. So they don't reduce the amount of code at the
+callers and they simply means that any error result in two prints in the
+log.
 
-Note, although GUEST_PDPTRs are relevant only for a 32-bit PAE guest,
-they are accessed quite frequently for said guests, and a separate patch
-is in flight to optimize away GUEST_PDTPR synchronziation for non-PAE
-guests.
+Please drop these three wrappers and just call the regmap functions
+directly.
 
-Skipping rarely accessed guest fields reduces the latency of a nested
-VM-Exit by ~200 cycles.
+> +			    u8 *val, int count)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_bulk_read(labibb->regmap, address, val, count);
+> +	if (ret < 0)
+> +		dev_err(labibb->dev, "spmi read failed ret=%d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int qcom_labibb_write(struct qcom_labibb *labibb, u16 address,
+> +			     u8 *val, int count)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_bulk_write(labibb->regmap, address, val, count);
+> +	if (ret < 0)
+> +		dev_err(labibb->dev, "spmi write failed: ret=%d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int qcom_labibb_masked_write(struct qcom_labibb *labibb, u16 address,
+> +				    u8 mask, u8 val)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_update_bits(labibb->regmap, address, mask, val);
+> +	if (ret < 0)
+> +		dev_err(labibb->dev, "spmi write failed: ret=%d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int qcom_enable_ibb(struct qcom_labibb *labibb, bool enable)
+> +{
+> +	int ret;
+> +	u8 val = enable ? IBB_CONTROL_ENABLE : 0;
+> +
+> +	ret = qcom_labibb_masked_write(labibb,
+> +				       labibb->ibb_base + REG_IBB_ENABLE_CTL,
+> +				       IBB_ENABLE_CTL_MASK, val);
+> +	if (ret < 0)
+> +		dev_err(labibb->dev, "Unable to configure IBB_ENABLE_CTL ret=%d\n",
+> +			ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int qcom_lab_regulator_enable(struct regulator_dev *rdev)
+> +{
+> +	int ret;
+> +	u8 val;
+> +	struct qcom_labibb *labibb  = rdev_get_drvdata(rdev);
+> +
+> +	val = LAB_ENABLE_CTL_EN;
+> +	ret = qcom_labibb_write(labibb,
+> +				labibb->lab_base + REG_LAB_ENABLE_CTL,
+> +				&val, 1);
+> +	if (ret < 0) {
+> +		dev_err(labibb->dev, "Write register failed ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Wait for a small period before reading REG_LAB_STATUS1 */
+> +	usleep_range(POWER_DELAY, POWER_DELAY + 100);
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/vmx/nested.c | 140 +++++++++++++++++++++++++++++++++++++++-------
- arch/x86/kvm/vmx/vmx.h    |   7 +++
- 2 files changed, 127 insertions(+), 20 deletions(-)
+Wait between 8 and 8.1ms? How about giving the scheduler some more slack
+and making that +100 larger?
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index a6fe6cfe96f6..6f7b572417a4 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -3376,20 +3376,57 @@ static u32 vmx_get_preemption_timer_value(struct kvm_vcpu *vcpu)
- 	return value >> VMX_MISC_EMULATED_PREEMPTION_TIMER_RATE;
- }
- 
--/*
-- * Update the guest state fields of vmcs12 to reflect changes that
-- * occurred while L2 was running. (The "IA-32e mode guest" bit of the
-- * VM-entry controls is also updated, since this is really a guest
-- * state bit.)
-- */
--static void sync_vmcs02_to_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
-+static bool is_vmcs12_ext_field(unsigned long field)
- {
--	vmcs12->guest_cr0 = vmcs12_guest_cr0(vcpu, vmcs12);
--	vmcs12->guest_cr4 = vmcs12_guest_cr4(vcpu, vmcs12);
-+	switch (field) {
-+	case GUEST_ES_SELECTOR:
-+	case GUEST_CS_SELECTOR:
-+	case GUEST_SS_SELECTOR:
-+	case GUEST_DS_SELECTOR:
-+	case GUEST_FS_SELECTOR:
-+	case GUEST_GS_SELECTOR:
-+	case GUEST_LDTR_SELECTOR:
-+	case GUEST_TR_SELECTOR:
-+	case GUEST_ES_LIMIT:
-+	case GUEST_CS_LIMIT:
-+	case GUEST_SS_LIMIT:
-+	case GUEST_DS_LIMIT:
-+	case GUEST_FS_LIMIT:
-+	case GUEST_GS_LIMIT:
-+	case GUEST_LDTR_LIMIT:
-+	case GUEST_TR_LIMIT:
-+	case GUEST_GDTR_LIMIT:
-+	case GUEST_IDTR_LIMIT:
-+	case GUEST_ES_AR_BYTES:
-+	case GUEST_DS_AR_BYTES:
-+	case GUEST_FS_AR_BYTES:
-+	case GUEST_GS_AR_BYTES:
-+	case GUEST_LDTR_AR_BYTES:
-+	case GUEST_TR_AR_BYTES:
-+	case GUEST_ES_BASE:
-+	case GUEST_CS_BASE:
-+	case GUEST_SS_BASE:
-+	case GUEST_DS_BASE:
-+	case GUEST_FS_BASE:
-+	case GUEST_GS_BASE:
-+	case GUEST_LDTR_BASE:
-+	case GUEST_TR_BASE:
-+	case GUEST_GDTR_BASE:
-+	case GUEST_IDTR_BASE:
-+	case GUEST_PENDING_DBG_EXCEPTIONS:
-+	case GUEST_BNDCFGS:
-+		return true;
-+	default:
-+		break;
-+	}
- 
--	vmcs12->guest_rsp = kvm_rsp_read(vcpu);
--	vmcs12->guest_rip = kvm_rip_read(vcpu);
--	vmcs12->guest_rflags = vmcs_readl(GUEST_RFLAGS);
-+	return false;
-+}
-+
-+static void sync_vmcs02_to_vmcs12_rare(struct kvm_vcpu *vcpu,
-+				       struct vmcs12 *vmcs12)
-+{
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 
- 	vmcs12->guest_es_selector = vmcs_read16(GUEST_ES_SELECTOR);
- 	vmcs12->guest_cs_selector = vmcs_read16(GUEST_CS_SELECTOR);
-@@ -3410,8 +3447,6 @@ static void sync_vmcs02_to_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
- 	vmcs12->guest_gdtr_limit = vmcs_read32(GUEST_GDTR_LIMIT);
- 	vmcs12->guest_idtr_limit = vmcs_read32(GUEST_IDTR_LIMIT);
- 	vmcs12->guest_es_ar_bytes = vmcs_read32(GUEST_ES_AR_BYTES);
--	vmcs12->guest_cs_ar_bytes = vmcs_read32(GUEST_CS_AR_BYTES);
--	vmcs12->guest_ss_ar_bytes = vmcs_read32(GUEST_SS_AR_BYTES);
- 	vmcs12->guest_ds_ar_bytes = vmcs_read32(GUEST_DS_AR_BYTES);
- 	vmcs12->guest_fs_ar_bytes = vmcs_read32(GUEST_FS_AR_BYTES);
- 	vmcs12->guest_gs_ar_bytes = vmcs_read32(GUEST_GS_AR_BYTES);
-@@ -3427,11 +3462,65 @@ static void sync_vmcs02_to_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
- 	vmcs12->guest_tr_base = vmcs_readl(GUEST_TR_BASE);
- 	vmcs12->guest_gdtr_base = vmcs_readl(GUEST_GDTR_BASE);
- 	vmcs12->guest_idtr_base = vmcs_readl(GUEST_IDTR_BASE);
-+	vmcs12->guest_pending_dbg_exceptions =
-+		vmcs_readl(GUEST_PENDING_DBG_EXCEPTIONS);
-+	if (kvm_mpx_supported())
-+		vmcs12->guest_bndcfgs = vmcs_read64(GUEST_BNDCFGS);
-+
-+	vmx->nested.need_sync_vmcs02_to_vmcs12_rare = false;
-+}
-+
-+static void copy_vmcs02_to_vmcs12_rare(struct kvm_vcpu *vcpu,
-+				       struct vmcs12 *vmcs12)
-+{
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+	int cpu;
-+
-+	if (!vmx->nested.need_sync_vmcs02_to_vmcs12_rare)
-+		return;
-+
-+
-+	WARN_ON_ONCE(vmx->loaded_vmcs != &vmx->vmcs01);
-+
-+	cpu = get_cpu();
-+	vmx->loaded_vmcs = &vmx->nested.vmcs02;
-+	vmx_vcpu_load(&vmx->vcpu, cpu);
-+
-+	sync_vmcs02_to_vmcs12_rare(vcpu, vmcs12);
-+
-+	vmx->loaded_vmcs = &vmx->vmcs01;
-+	vmx_vcpu_load(&vmx->vcpu, cpu);
-+	put_cpu();
-+}
-+
-+/*
-+ * Update the guest state fields of vmcs12 to reflect changes that
-+ * occurred while L2 was running. (The "IA-32e mode guest" bit of the
-+ * VM-entry controls is also updated, since this is really a guest
-+ * state bit.)
-+ */
-+static void sync_vmcs02_to_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
-+{
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+
-+	if (vmx->nested.hv_evmcs)
-+		sync_vmcs02_to_vmcs12_rare(vcpu, vmcs12);
-+
-+	vmx->nested.need_sync_vmcs02_to_vmcs12_rare = !vmx->nested.hv_evmcs;
-+
-+	vmcs12->guest_cr0 = vmcs12_guest_cr0(vcpu, vmcs12);
-+	vmcs12->guest_cr4 = vmcs12_guest_cr4(vcpu, vmcs12);
-+
-+	vmcs12->guest_rsp = kvm_rsp_read(vcpu);
-+	vmcs12->guest_rip = kvm_rip_read(vcpu);
-+	vmcs12->guest_rflags = vmcs_readl(GUEST_RFLAGS);
-+
-+	vmcs12->guest_cs_ar_bytes = vmcs_read32(GUEST_CS_AR_BYTES);
-+	vmcs12->guest_ss_ar_bytes = vmcs_read32(GUEST_SS_AR_BYTES);
- 
- 	vmcs12->guest_interruptibility_info =
- 		vmcs_read32(GUEST_INTERRUPTIBILITY_INFO);
--	vmcs12->guest_pending_dbg_exceptions =
--		vmcs_readl(GUEST_PENDING_DBG_EXCEPTIONS);
-+
- 	if (vcpu->arch.mp_state == KVM_MP_STATE_HALTED)
- 		vmcs12->guest_activity_state = GUEST_ACTIVITY_HLT;
- 	else
-@@ -3481,8 +3570,6 @@ static void sync_vmcs02_to_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
- 	vmcs12->guest_sysenter_cs = vmcs_read32(GUEST_SYSENTER_CS);
- 	vmcs12->guest_sysenter_esp = vmcs_readl(GUEST_SYSENTER_ESP);
- 	vmcs12->guest_sysenter_eip = vmcs_readl(GUEST_SYSENTER_EIP);
--	if (kvm_mpx_supported())
--		vmcs12->guest_bndcfgs = vmcs_read64(GUEST_BNDCFGS);
- }
- 
- /*
-@@ -4280,6 +4367,8 @@ static inline void nested_release_vmcs12(struct kvm_vcpu *vcpu)
- 	if (vmx->nested.current_vmptr == -1ull)
- 		return;
- 
-+	copy_vmcs02_to_vmcs12_rare(vcpu, get_vmcs12(vcpu));
-+
- 	if (enable_shadow_vmcs) {
- 		/* copy to memory all shadowed fields in case
- 		   they were modified */
-@@ -4397,6 +4486,9 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
- 		return nested_vmx_failValid(vcpu,
- 			VMXERR_UNSUPPORTED_VMCS_COMPONENT);
- 
-+	if (!is_guest_mode(vcpu) && is_vmcs12_ext_field(field))
-+		copy_vmcs02_to_vmcs12_rare(vcpu, vmcs12);
-+
- 	/* Read the field, zero-extended to a u64 field_value */
- 	field_value = vmcs12_read_any(vmcs12, field, offset);
- 
-@@ -4495,9 +4587,16 @@ static int handle_vmwrite(struct kvm_vcpu *vcpu)
- 		return nested_vmx_failValid(vcpu,
- 			VMXERR_VMWRITE_READ_ONLY_VMCS_COMPONENT);
- 
--	if (!is_guest_mode(vcpu))
-+	if (!is_guest_mode(vcpu)) {
- 		vmcs12 = get_vmcs12(vcpu);
--	else {
-+
-+		/*
-+		 * Ensure vmcs12 is up-to-date before any VMWRITE that dirties
-+		 * vmcs12, else we may crush a field or consume a stale value.
-+		 */
-+		if (!is_shadow_field_rw(field))
-+			copy_vmcs02_to_vmcs12_rare(vcpu, vmcs12);
-+	} else {
- 		/*
- 		 * When vmcs->vmcs_link_pointer is -1ull, any VMWRITE
- 		 * to shadowed-field sets the ALU flags for VMfailInvalid.
-@@ -5317,6 +5416,7 @@ static int vmx_get_nested_state(struct kvm_vcpu *vcpu,
- 	 */
- 	if (is_guest_mode(vcpu)) {
- 		sync_vmcs02_to_vmcs12(vcpu, vmcs12);
-+		sync_vmcs02_to_vmcs12_rare(vcpu, vmcs12);
- 	} else if (!vmx->nested.need_vmcs12_to_shadow_sync) {
- 		if (vmx->nested.hv_evmcs)
- 			copy_enlightened_to_vmcs12(vmx);
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index f4448292df0f..ed65999b07a8 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -109,6 +109,7 @@ struct nested_vmx {
- 	 * to guest memory during VM exit.
- 	 */
- 	struct vmcs12 *cached_shadow_vmcs12;
-+
- 	/*
- 	 * Indicates if the shadow vmcs or enlightened vmcs must be updated
- 	 * with the data held by struct vmcs12.
-@@ -117,6 +118,12 @@ struct nested_vmx {
- 	bool dirty_vmcs12;
- 
- 	/*
-+	 * Indicates lazily loaded guest state has not yet been decached from
-+	 * vmcs02.
-+	 */
-+	bool need_sync_vmcs02_to_vmcs12_rare;
-+
-+	/*
- 	 * vmcs02 has been initialized, i.e. state that is constant for
- 	 * vmcs02 has been written to the backing VMCS.  Initialization
- 	 * is delayed until L1 actually attempts to run a nested VM.
--- 
-1.8.3.1
+> +
+> +	ret = qcom_labibb_read(labibb, labibb->lab_base +
+> +			       REG_LAB_STATUS1, &val, 1);
+> +	if (ret < 0) {
+> +		dev_err(labibb->dev, "Read register failed ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	if (!(val & LAB_STATUS1_VREG_OK_BIT)) {
+> +		dev_err(labibb->dev, "Can't enable LAB\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	labibb->lab_vreg.vreg_enabled = 1;
 
+You don't use vreg_enabled in this patch, how about adding it in the
+next patch where it's actually used instead.
 
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_lab_regulator_disable(struct regulator_dev *rdev)
+> +{
+> +	int ret;
+> +	u8 val = 0;
+> +	struct qcom_labibb *labibb  = rdev_get_drvdata(rdev);
+> +
+> +	ret = qcom_labibb_write(labibb,
+> +				labibb->lab_base + REG_LAB_ENABLE_CTL,
+> +				&val, 1);
+> +	if (ret < 0) {
+> +		dev_err(labibb->dev, "Write register failed ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +	/* after this delay, lab should get disabled */
+> +	usleep_range(POWER_DELAY, POWER_DELAY + 100);
+> +
+> +	ret = qcom_labibb_read(labibb, labibb->lab_base +
+> +			       REG_LAB_STATUS1, &val, 1);
+> +	if (ret < 0) {
+> +		dev_err(labibb->dev, "Read register failed ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	if (val & LAB_STATUS1_VREG_OK_BIT) {
+> +		dev_err(labibb->dev, "Can't disable LAB\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	labibb->lab_vreg.vreg_enabled = 0;
+> +
+
+disable is pretty much identical to enable, so might be worth moving its
+content to a common helper function and calling that from the two.
+
+> +	return 0;
+> +}
+> +
+> +static int qcom_lab_regulator_is_enabled(struct regulator_dev *rdev)
+> +{
+> +	int ret;
+> +	u8 val;
+> +	struct qcom_labibb *labibb  = rdev_get_drvdata(rdev);
+> +
+> +	ret = qcom_labibb_read(labibb, labibb->lab_base +
+> +			       REG_LAB_STATUS1, &val, 1);
+> +	if (ret < 0) {
+> +		dev_err(labibb->dev, "Read register failed ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return val & LAB_STATUS1_VREG_OK_BIT;
+> +}
+> +
+> +static struct regulator_ops qcom_lab_ops = {
+> +	.enable			= qcom_lab_regulator_enable,
+> +	.disable		= qcom_lab_regulator_disable,
+> +	.is_enabled		= qcom_lab_regulator_is_enabled,
+> +};
+> +
+> +static const struct regulator_desc lab_desc = {
+> +	.name = "lab_reg",
+> +	.ops = &qcom_lab_ops,
+> +	.type = REGULATOR_VOLTAGE,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static int qcom_ibb_regulator_enable(struct regulator_dev *rdev)
+> +{
+> +	int ret, retries = 10;
+> +	u8 val;
+> +	struct qcom_labibb *labibb  = rdev_get_drvdata(rdev);
+> +
+> +	ret = qcom_enable_ibb(labibb, 1);
+> +	if (ret < 0) {
+> +		dev_err(labibb->dev, "Unable to set IBB mode ret= %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	while (retries--) {
+
+Is there a reason why would don't want this wait for the "lab"? That
+should allow you to use the same functions for both regulators.
+
+> +		/* Wait for a small period before reading IBB_STATUS1 */
+> +		usleep_range(POWER_DELAY, POWER_DELAY + 100);
+> +
+> +		ret = qcom_labibb_read(labibb, labibb->ibb_base +
+> +				       REG_IBB_STATUS1, &val, 1);
+> +		if (ret < 0) {
+> +			dev_err(labibb->dev,
+> +				"Read register failed ret = %d\n", ret);
+> +			return ret;
+> +		}
+> +
+> +		if (val & IBB_STATUS1_VREG_OK_BIT) {
+> +			labibb->ibb_vreg.vreg_enabled = 1;
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	dev_err(labibb->dev, "Can't enable IBB\n");
+> +	return -EINVAL;
+> +}
+> +
+> +static int qcom_ibb_regulator_disable(struct regulator_dev *rdev)
+> +{
+> +	int ret, retries = 2;
+> +	u8 val;
+> +	struct qcom_labibb *labibb  = rdev_get_drvdata(rdev);
+> +
+> +	ret = qcom_enable_ibb(labibb, 0);
+> +	if (ret < 0) {
+> +		dev_err(labibb->dev,
+> +			"Unable to set IBB_MODULE_EN ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* poll IBB_STATUS to make sure ibb had been disabled */
+> +	while (retries--) {
+> +		usleep_range(POWER_DELAY, POWER_DELAY + 100);
+> +		ret = qcom_labibb_read(labibb, labibb->ibb_base +
+> +				       REG_IBB_STATUS1, &val, 1);
+> +		if (ret < 0) {
+> +			dev_err(labibb->dev, "Read register failed ret = %d\n",
+> +				ret);
+> +			return ret;
+> +		}
+> +
+> +		if (!(val & IBB_STATUS1_VREG_OK_BIT)) {
+> +			labibb->ibb_vreg.vreg_enabled = 0;
+> +			return 0;
+> +		}
+> +	}
+> +	dev_err(labibb->dev, "Can't disable IBB\n");
+> +	return -EINVAL;
+> +}
+> +
+> +static int qcom_ibb_regulator_is_enabled(struct regulator_dev *rdev)
+> +{
+> +	int ret;
+> +	u8 val;
+> +	struct qcom_labibb *labibb  = rdev_get_drvdata(rdev);
+> +
+> +	ret = qcom_labibb_read(labibb, labibb->ibb_base +
+> +			REG_IBB_STATUS1, &val, 1);
+> +	if (ret < 0) {
+> +		dev_err(labibb->dev, "Read register failed ret = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return(val & IBB_STATUS1_VREG_OK_BIT);
+> +}
+> +
+> +static struct regulator_ops qcom_ibb_ops = {
+> +	.enable			= qcom_ibb_regulator_enable,
+> +	.disable		= qcom_ibb_regulator_disable,
+> +	.is_enabled		= qcom_ibb_regulator_is_enabled,
+> +};
+> +
+> +static const struct regulator_desc ibb_desc = {
+> +	.name = "ibb_reg",
+> +	.ops = &qcom_ibb_ops,
+> +	.type = REGULATOR_VOLTAGE,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static int register_lab_regulator(struct qcom_labibb *labibb,
+> +				  struct device_node *of_node)
+> +{
+> +	int ret = 0;
+> +	struct regulator_init_data *init_data;
+> +	struct regulator_config cfg = {};
+> +
+> +	cfg.dev = labibb->dev;
+> +	cfg.driver_data = labibb;
+> +	cfg.of_node = of_node;
+> +	init_data =
+> +		of_get_regulator_init_data(labibb->dev,
+> +					   of_node, &lab_desc);
+
+Rather than calling of_get_regulator_init_data() directly, you should
+use desc->of_match to match the children of the regulator driver.
+
+> +	if (!init_data) {
+> +		dev_err(labibb->dev,
+> +			"unable to get init data for LAB\n");
+> +		return -ENOMEM;
+> +	}
+> +	cfg.init_data = init_data;
+> +
+> +	labibb->lab_vreg.rdev = devm_regulator_register(labibb->dev, &lab_desc,
+> +							&cfg);
+> +	if (IS_ERR(labibb->lab_vreg.rdev)) {
+> +		ret = PTR_ERR(labibb->lab_vreg.rdev);
+> +		dev_err(labibb->dev,
+> +			"unable to register LAB regulator");
+> +		return ret;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int register_ibb_regulator(struct qcom_labibb *labibb,
+> +				  struct device_node *of_node)
+> +{
+> +	int ret;
+> +	struct regulator_init_data *init_data;
+> +	struct regulator_config cfg = {};
+> +
+> +	cfg.dev = labibb->dev;
+> +	cfg.driver_data = labibb;
+> +	cfg.of_node = of_node;
+> +	init_data =
+> +		of_get_regulator_init_data(labibb->dev,
+> +					   of_node, &ibb_desc);
+> +	if (!init_data) {
+> +		dev_err(labibb->dev,
+> +			"unable to get init data for IBB\n");
+> +		return -ENOMEM;
+> +	}
+> +	cfg.init_data = init_data;
+> +
+> +	labibb->ibb_vreg.rdev = devm_regulator_register(labibb->dev, &ibb_desc,
+> +							&cfg);
+> +	if (IS_ERR(labibb->ibb_vreg.rdev)) {
+> +		ret = PTR_ERR(labibb->ibb_vreg.rdev);
+> +		dev_err(labibb->dev,
+> +			"unable to register IBB regulator");
+> +		return ret;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int qcom_labibb_regulator_probe(struct platform_device *pdev)
+> +{
+> +	struct qcom_labibb *labibb;
+> +	struct device_node *child;
+> +	unsigned int base;
+> +	u8 type;
+> +	int ret;
+> +
+> +	labibb = devm_kzalloc(&pdev->dev, sizeof(*labibb), GFP_KERNEL);
+> +	if (!labibb)
+> +		return -ENOMEM;
+> +
+> +	labibb->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!labibb->regmap) {
+> +		dev_err(&pdev->dev, "Couldn't get parent's regmap\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	labibb->dev = &pdev->dev;
+> +
+> +	for_each_available_child_of_node(pdev->dev.of_node, child) {
+> +		ret = of_property_read_u32(child, "reg", &base);
+> +		if (ret < 0) {
+> +			dev_err(&pdev->dev,
+> +				"Couldn't find reg in node = %s ret = %d\n",
+> +				child->full_name, ret);
+> +			return ret;
+> +		}
+> +
+> +		ret = qcom_labibb_read(labibb, base + REG_PERPH_TYPE,
+> +				       &type, 1);
+> +		if (ret < 0) {
+> +			dev_err(labibb->dev,
+> +				"Peripheral type read failed ret=%d\n",
+> +				ret);
+> +		}
+> +
+> +		switch (type) {
+> +		case QCOM_LAB_TYPE:
+> +			labibb->lab_base = base;
+> +			ret = register_lab_regulator(labibb, child);
+> +			if (ret < 0) {
+> +				dev_err(labibb->dev,
+> +					"Failed LAB regulator registration");
+> +				return ret;
+> +			}
+> +			break;
+> +
+> +		case QCOM_IBB_TYPE:
+> +			labibb->ibb_base = base;
+> +			ret = register_ibb_regulator(labibb, child);
+> +			if (ret < 0) {
+> +				dev_err(labibb->dev,
+> +					"Failed IBB regulator registration");
+> +				return ret;
+> +			}
+> +			break;
+> +
+> +		default:
+> +			dev_err(labibb->dev,
+> +				"qcom_labibb: unknown peripheral type\n");
+> +			return -EINVAL;
+> +		}
+> +	}
+
+Given how the registers are laid out, the accessors looks like and this
+loop I think that rather than having a "virtual" labibb device you
+should instantiate two devices directly.
+
+> +
+> +	dev_set_drvdata(&pdev->dev, labibb);
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id qcom_labibb_match_table[] = {
+> +	{ .compatible = "qcom,lab-ibb-regulator", },
+
+So please make this qcom,pmi8998-lab and qcom,pmi8998-ibb.
+
+Regards,
+Bjorn
+
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, qcom_labibb_match_table);
+> +
+> +static struct platform_driver qcom_labibb_regulator_driver = {
+> +	.driver		= {
+> +		.name		= "qcom-lab-ibb-regulator",
+> +		.of_match_table	= qcom_labibb_match_table,
+> +	},
+> +	.probe		= qcom_labibb_regulator_probe,
+> +};
+> +module_platform_driver(qcom_labibb_regulator_driver);
+> +
+> +MODULE_DESCRIPTION("Qualcomm labibb driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
