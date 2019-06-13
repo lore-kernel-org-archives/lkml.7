@@ -2,104 +2,151 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE5CC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A398CC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B29332175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:05:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="oP6ERCa1"
+	by mail.kernel.org (Postfix) with ESMTP id 7E9EC21743
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:05:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732616AbfFMPFC (ORCPT
+        id S1733134AbfFMPE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:05:02 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46734 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732461AbfFMORK (ORCPT
+        Thu, 13 Jun 2019 11:04:58 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:43572 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732471AbfFMOSn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:17:10 -0400
-Received: by mail-qt1-f195.google.com with SMTP id h21so22668784qtn.13
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 07:17:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IdWKzce3sZz9+VK0mMGhceU7W1z4LrhQkC1c9OeYugc=;
-        b=oP6ERCa1F6T8r6pSHlZINu6LknBTF+UPLpwmpRJcH+T6FdeYawjrBm7oQ0iaSVxmjD
-         LZmwbZomBs1w1G2Z2uECjOVu4ctdMmjAbGswoZajXSueNHfNEi2kDdbB0eo5K/L6TPX7
-         gZDgT2bbG1XJxfKdQTmNc/rRjKzTRncWVcJVin9R+eQOLHXhMw81x04KLiHKKskUszQf
-         ZBhBJw5X9u7/w7EZhQAiKlEqEZsI6T8SkRldzr2n/0VkSPQGDovwNcD8pbdF8P8kD9fH
-         yrx5FvRP/YCxnPdJUo/PdMnD9HHxHisaI1pK2EJyShl5GyzSbTt0LN5tNALrEQUHkLxB
-         Gsyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IdWKzce3sZz9+VK0mMGhceU7W1z4LrhQkC1c9OeYugc=;
-        b=X/2g5K2wmsMXUfAWg0sDwKZwkaKO0LrgrrCGH9w0NZCJhO+ZvQW+4DN1jmoDedTrL1
-         YxIrItsUfMt5yzxO+ISgCr3nsux3vIAgptU4QOcm24Evbqgm1eFP78BoYcxQXk71xUxJ
-         KlxFpsVh+k2B8oGnvtN+OQ2zXwivFMMfVHSe0cRghGOWnoCsa8PXj9bJC1hg0dL0bvR5
-         PddPZRTEf/Mxj0HYRnQIyz8IVP3/kD16Ia8YdBEQqXMB6pVWnBb+c/evfOVT+wFFzpJD
-         WN6hwe1waFfAdkSma+jmGP+5ZsCcyd5W8KnjLeSBhVkyOBISt46LSyCyJzmR7G/+HM11
-         SXkA==
-X-Gm-Message-State: APjAAAX4WpGZ1PFc8u8ToKGUaPMBcG+wd2xr+Kh2sURikfPkrfAiCJkQ
-        SBklm/JvnxQ+0J8Ge7roR3b9fQ==
-X-Google-Smtp-Source: APXvYqx5jPsVPa9dGQd9Bui4/XGgLT6BOzvijxJlMoqU0XvFjHiv3oPKH2im4jOl3Wj+44uE9UzG2A==
-X-Received: by 2002:ac8:25dd:: with SMTP id f29mr66160028qtf.144.1560435429256;
-        Thu, 13 Jun 2019 07:17:09 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::9d6b])
-        by smtp.gmail.com with ESMTPSA id 102sm1338356qte.52.2019.06.13.07.17.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 07:17:09 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 10:17:07 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Naohiro Aota <naohiro.aota@wdc.com>
-Cc:     linux-btrfs@vger.kernel.org, David Sterba <dsterba@suse.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
-        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
-        linux-fsdevel@vger.kernel.org,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Matias =?utf-8?B?QmrDuHJsaW5n?= <mb@lightnvm.io>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH 13/19] btrfs: avoid sync IO prioritization on checksum in
- HMZONED mode
-Message-ID: <20190613141706.tbxc5wufplfybfib@MacBook-Pro-91.local>
-References: <20190607131025.31996-1-naohiro.aota@wdc.com>
- <20190607131025.31996-14-naohiro.aota@wdc.com>
+        Thu, 13 Jun 2019 10:18:43 -0400
+Received: from [109.168.11.45] (port=39754 helo=pc-ceresoli.dev.aim)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1hbQYr-0005He-Rc; Thu, 13 Jun 2019 16:18:41 +0200
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     linux-media@vger.kernel.org
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: [PATCH 5/9] media: docs: v4l2-controls: rearrange control initialization sequence
+Date:   Thu, 13 Jun 2019 16:18:22 +0200
+Message-Id: <20190613141826.26775-5-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190613141826.26775-1-luca@lucaceresoli.net>
+References: <20190613141826.26775-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607131025.31996-14-naohiro.aota@wdc.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 10:10:19PM +0900, Naohiro Aota wrote:
-> Btrfs prioritize sync I/Os to be handled by async checksum worker earlier.
-> As a result, checksumming sync I/Os to larger logical extent address can
-> finish faster than checksumming non-sync I/Os to smaller logical extent
-> address.
-> 
-> Since we have upper limit of number of checksum worker, it is possible that
-> sync I/Os to wait forever for non-starting checksum of I/Os for smaller
-> address.
-> 
-> This situation can be reproduced by e.g. fstests btrfs/073.
-> 
-> To avoid such disordering, disable sync IO prioritization for now. Note
-> that sync I/Os anyway must wait for I/Os to smaller address to finish. So,
-> actually prioritization have no benefit in HMZONED mode.
-> 
+The code snippet showing how to add controls to the driver’s top-level
+struct is present twice, but only the second time it is split in the V4L2
+and subdev cases. Consolidate everything at the beginning.
 
-This stuff is going away once we finish the io.weight work anyway, I wouldn't
-worry about this.  Thanks,
+Also remove the "Where foo->bar is of type struct baz" sentences, this
+obvious from the code.
 
-Josef
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+---
+ Documentation/media/kapi/v4l2-controls.rst | 40 +++++++++-------------
+ 1 file changed, 17 insertions(+), 23 deletions(-)
+
+diff --git a/Documentation/media/kapi/v4l2-controls.rst b/Documentation/media/kapi/v4l2-controls.rst
+index 0c3f486727ed..5281c9b1fd66 100644
+--- a/Documentation/media/kapi/v4l2-controls.rst
++++ b/Documentation/media/kapi/v4l2-controls.rst
+@@ -52,15 +52,29 @@ Basic usage for V4L2 and sub-device drivers
+ 
+ 1.1) Add the handler to your driver's top-level struct:
+ 
++For V4L2 drivers:
++
+ .. code-block:: none
+ 
+ 	struct foo_dev {
++		...
++		struct v4l2_device v4l2_dev;
+ 		...
+ 		struct v4l2_ctrl_handler ctrl_handler;
+ 		...
+ 	};
+ 
+-	struct foo_dev *foo;
++For sub-device drivers:
++
++.. code-block:: none
++
++	struct foo_dev {
++		...
++		struct v4l2_subdev sd;
++		...
++		struct v4l2_ctrl_handler ctrl_handler;
++		...
++	};
+ 
+ 1.2) Initialize the handler:
+ 
+@@ -74,43 +88,23 @@ information. It is a hint only.
+ 
+ 1.3) Hook the control handler into the driver:
+ 
+-1.3.1) For V4L2 drivers do this:
++For V4L2 drivers:
+ 
+ .. code-block:: none
+ 
+-	struct foo_dev {
+-		...
+-		struct v4l2_device v4l2_dev;
+-		...
+-		struct v4l2_ctrl_handler ctrl_handler;
+-		...
+-	};
+-
+ 	foo->v4l2_dev.ctrl_handler = &foo->ctrl_handler;
+ 
+-Where foo->v4l2_dev is of type struct v4l2_device.
+-
+ Finally, remove all control functions from your v4l2_ioctl_ops (if any):
+ vidioc_queryctrl, vidioc_query_ext_ctrl, vidioc_querymenu, vidioc_g_ctrl,
+ vidioc_s_ctrl, vidioc_g_ext_ctrls, vidioc_try_ext_ctrls and vidioc_s_ext_ctrls.
+ Those are now no longer needed.
+ 
+-1.3.2) For sub-device drivers do this:
++For sub-device drivers:
+ 
+ .. code-block:: none
+ 
+-	struct foo_dev {
+-		...
+-		struct v4l2_subdev sd;
+-		...
+-		struct v4l2_ctrl_handler ctrl_handler;
+-		...
+-	};
+-
+ 	foo->sd.ctrl_handler = &foo->ctrl_handler;
+ 
+-Where foo->sd is of type struct v4l2_subdev.
+-
+ 1.4) Clean up the handler at the end:
+ 
+ .. code-block:: none
+-- 
+2.21.0
+
