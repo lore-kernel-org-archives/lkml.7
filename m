@@ -2,105 +2,122 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1480FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8340BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E54752133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5809B21537
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:48:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbfFMUpc (ORCPT
+        id S1729552AbfFMUsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:45:32 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:36517 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfFMUpc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:45:32 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hbWb3-00044F-Il; Thu, 13 Jun 2019 22:45:21 +0200
-Date:   Thu, 13 Jun 2019 22:45:20 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Octavio Alvarez <octallk1@alvarezp.org>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Jiang Biao <jiang.biao2@zte.com.cn>,
-        Yi Wang <wang.yi59@zte.com.cn>,
-        Dou Liyang <douly.fnst@cn.fujitsu.com>,
-        Nicolai Stange <nstange@suse.de>
-Subject: Re: PROBLEM: Marvell 88E8040 (sky2) fails after hibernation
-In-Reply-To: <2cf2f745-0e29-13a7-6364-0a981dae758c@alvarezp.org>
-Message-ID: <alpine.DEB.2.21.1906132229540.1791@nanos.tec.linutronix.de>
-References: <aba1c363-92de-66d7-4aac-b555f398e70a@alvarezp.org> <2cf2f745-0e29-13a7-6364-0a981dae758c@alvarezp.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 13 Jun 2019 16:48:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40314 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfFMUsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 16:48:04 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 01294308427C;
+        Thu, 13 Jun 2019 20:48:04 +0000 (UTC)
+Received: from [10.10.120.121] (ovpn-120-121.rdu2.redhat.com [10.10.120.121])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 593B060FBD;
+        Thu, 13 Jun 2019 20:48:03 +0000 (UTC)
+Subject: Re: [PATCH v4 00/10] klp-convert livepatch build tooling
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-kbuild@vger.kernel.org
+References: <20190509143859.9050-1-joe.lawrence@redhat.com>
+ <alpine.LSU.2.21.1906131451560.22698@pobox.suse.cz>
+ <b1a627a4-3702-9689-6c03-0c2123c06a2d@redhat.com>
+Message-ID: <c9021573-11c6-b576-0aa6-97754c98a06e@redhat.com>
+Date:   Thu, 13 Jun 2019 16:48:02 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <b1a627a4-3702-9689-6c03-0c2123c06a2d@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 13 Jun 2019 20:48:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Octavio,
-
-On Thu, 13 Jun 2019, Octavio Alvarez wrote:
-
-> I reported this to different people but I have not received a response [1]
-> [2]. I am following the reporting procedure described in the kernel admin
-> guide [3] so now I am escalating to you. What am I missing?
+On 6/13/19 9:15 AM, Joe Lawrence wrote:
+> On 6/13/19 9:00 AM, Miroslav Benes wrote:
+>> Hi Joe,
+>>
+>> first, I'm sorry for the lack of response so far.
+>>
+>> Maybe you've already noticed but the selftests fail. Well, at least in
+>> my VM. When test_klp_convert1.ko is loaded, the process is killed with
+>>
+>> [  518.041826] BUG: kernel NULL pointer dereference, address: 0000000000000000
+>> [  518.042816] #PF: supervisor read access in kernel mode
+>> [  518.043393] #PF: error_code(0x0000) - not-present page
+>> [  518.043981] PGD 0 P4D 0
+>> [  518.044185] Oops: 0000 [#1] SMP PTI
+>> [  518.044518] CPU: 2 PID: 2255 Comm: insmod Tainted: G           O  K   5.1.0-klp_convert_v4-193435-g67748576637e #2
+>> [  518.045784] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
+>> [  518.046940] RIP: 0010:test_klp_convert_init+0x1c/0x40 [test_klp_convert1]
+>> [  518.047611] Code: 1b a0 48 89 c6 e9 a8 c0 f4 e0 0f 1f 40 00 0f 1f 44 00 00 53 48 c7 c7 00 30 1b a0 e8 5e 33 f6 e0 85 c0 89 c3 74 04 89 d8 5b c3 <48> 8b 35 5d ef e4 5f 48 c7 c7 28 20 1b a0 e8 75 c0 f4 e0 e8 6c ff
+>> [  518.049779] RSP: 0018:ffffc90000f37cc8 EFLAGS: 00010246
+>> [  518.050243] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000027de0
+>> [  518.050922] RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff88807ab54f40
+>> [  518.051619] RBP: ffffffffa01b1080 R08: 0000000096efde7a R09: 0000000000000001
+>> [  518.052332] R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffffffff
+>> [  518.053012] R13: 0000000000000000 R14: ffff888078b55000 R15: ffffc90000f37ea0
+>> [  518.053714] FS:  00007febece1fb80(0000) GS:ffff88807d400000(0000) knlGS:0000000000000000
+>> [  518.054514] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [  518.055078] CR2: 0000000000000000 CR3: 000000007a56a000 CR4: 00000000000006e0
+>> [  518.055818] Call Trace:
+>> [  518.056007]  do_one_initcall+0x6a/0x2da
+>> [  518.056340]  ? do_init_module+0x22/0x230
+>> [  518.056702]  ? rcu_read_lock_sched_held+0x96/0xa0
+>> [  518.057125]  ? kmem_cache_alloc_trace+0x284/0x2e0
+>> [  518.057493]  do_init_module+0x5a/0x230
+>> [  518.057900]  load_module+0x17bc/0x1f50
+>> [  518.058214]  ? __symbol_put+0x40/0x40
+>> [  518.058499]  ? vfs_read+0x12d/0x160
+>> [  518.058766]  __do_sys_finit_module+0x83/0xc0
+>> [  518.059122]  do_syscall_64+0x57/0x190
+>> [  518.059407]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>> ...
+>>
+>> It crashes right in test_klp_convert_init() when print_*() using
+>> supposed-to-be-converted symbols are called. I'll debug it next week. Can
+>> you reproduce it too?
 > 
-> I noticed that Thomas' mailbox is filtering my mail because of some RBL and
-> have not figured out why that is yet so maybe he has not gotten any e-mails
-> from me. However, I already tried conacting using a different mail provider.
-
-I got your mail from June 1st via LKML and this one directly and via
-LKML. It's in the pile of the other ~1000 mails in my backlog as I was out
-on vacation and travel. Just because people do not reply immediately does
-not mean they ignore you. 
-
-> Hibernating the machine and bringing it back does not properly bring back the
-> Marvell NIC. Most of the time a module reload does not help.
+> Hey, thanks for the report..
 > 
-> Problem starts on the following commit, which if I revert over a recent
-> master, the problem goes away:
+> I don't recall the tests crashing, but I had put this patchset on the
+> side for a few weeks now.  I'll try to fire up a VM and see what happens
+> today.
 > 
-> $ PAGER= git show bc976233a872c0f20f018fb1e89264a541584e25
-> commit bc976233a872c0f20f018fb1e89264a541584e25
-> Author: Thomas Gleixner <tglx@linutronix.de>
-> Date:   Fri Dec 29 10:47:22 2017 +0100
-> 
->     genirq/msi, x86/vector: Prevent reservation mode for non maskable MSI
 
-That does not make sense. This brings the MSI code back to the state which
-it had _BEFORE_ I reworked the vector allocation and MSI code. It rather
-looks like this patch unearths some other weird issue in that Marvell NIC
-(or the driver) which was not visible before. And looking at the code the
-hardware has known problems with MSI interrupts and uses a magic probe
-function to verify whether they work at all.
+Hmm, I haven't been able to reproduce using my original base (Linux 5.1-rc6)
+or when rebased ontop of livepatching.git/master + 997a55f3fb6d("stacktrace: Unbreak stack_trace_save_tsk_reliable()")
 
-Can you please provide the content of /proc/interrupts with the driver
-loaded and working after boot (don't hibernate) for the following kernels:
 
-  Linus upstream
+FWIW, my test_klp_convert1.ko has these klp-converted relocations:
 
-  Linus upstream + revert
+Relocation section [36] '.klp.rela.vmlinux..text.unlikely' for section [ 5] '.text.unlikely' at offset 0x4a6b8 contains 1 entry:                                   
+  Offset              Type            Value               Addend Name                                                                                              
+  0x0000000000000003  X86_64_PC32     000000000000000000      -4 .klp.sym.vmlinux.saved_command_line,0 
 
-  4.14 stable (that's before the big overhaul of the vector/msi code)
+Relocation section [37] '.klp.rela.test_klp_convert_mod..text.unlikely' for section [ 5] '.text.unlikely' at offset 0x4a6d0 contains 4 entries:                    
+  Offset              Type            Value               Addend Name                                                                                              
+  0x000000000000004e  X86_64_PC32     000000000000000000      -4 .klp.sym.test_klp_convert_mod.get_homonym_string,1                                                
+  0x000000000000003d  X86_64_32S      000000000000000000      +0 .klp.sym.test_klp_convert_mod.homonym_string,1                                                    
+  0x0000000000000027  X86_64_PC32     000000000000000000      -4 .klp.sym.test_klp_convert_mod.get_driver_name,0                                                   
+  0x0000000000000016  X86_64_32S      000000000000000000      +0 .klp.sym.test_klp_convert_mod.driver_name,0
 
-Thanks,
-
-	tglx
-
+-- Joe
