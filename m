@@ -2,154 +2,158 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834CFC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD05C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BCA020B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:01:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j5e9Vl4x"
+	by mail.kernel.org (Postfix) with ESMTP id 8582620B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 19:04:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbfFMTBz (ORCPT
+        id S1729485AbfFMTEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 15:01:55 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52785 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727329AbfFMTBy (ORCPT
+        Thu, 13 Jun 2019 15:04:10 -0400
+Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:36476 "EHLO
+        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727327AbfFMTEJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 15:01:54 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s3so11327458wms.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 12:01:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6KguLrFwl0xPCes0CytFyV6BjIEPLyEaRz6Aj70yR7w=;
-        b=j5e9Vl4xfjq394daE3nOYQWA0Yekr+zPxdRyPz1NMbmUt/44pK1HGdBPJz+1wrf9DT
-         5GHpISbHFPFcJCzoK1FSc0RziFvPWERUsFKxv8wpsFV0YvjMaS/9ZC/ie6YqL6h3uBmg
-         tLkotCkYLzdUThhlfYJgI1rwyyWdzjfbhO/I0k64FwtwHFdxKGTJViStVDB8elBiU90H
-         iEoSkMzicwD5LQ7yHlON3YDs0f31wcGJp5UCD+Sg23lBMPm4WT3YnyT6V9/SeqKnifnG
-         SZ/bZmbv9TrwYiEIOT/R4+VjAE7u7/52hPOp/ppo6h3PPa8Tr1G9rCM7H9R5ikzloyvU
-         SGZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6KguLrFwl0xPCes0CytFyV6BjIEPLyEaRz6Aj70yR7w=;
-        b=PYDbw4qDXPZ+RsKSS47hCP/O/P28wXVZ2trXmJcQtR+bH/a5DxbSzcj71KgBdqJX08
-         fUgMrh6W+4KM/rUJaDvrBAmRociF1eC4PthRYecpqfDL9pXC0BYULvJMWHi9/8S9y8ko
-         HxiW++QRc+YVcK3lIrSehrpryOuGAsVOkyWmNg+AZqS6WCpUQaeVWZLZUXxQhKhhmONz
-         Z1LYz28Qn2d4ub+z2V5+wiNCHexzuK4pxjqt69pG0mOL7nwiYV4lQ+0f7goLhZsm1ZCW
-         bkk+G2X6D6SUWzFu3GE/hW7Ah7UN9Y1vps0E3fq1eLkYUIg3yNgCcAdC7hJZrKCe0UG4
-         V/vA==
-X-Gm-Message-State: APjAAAWH/2fL9DUJ9b79Zn3wLel58juUk2kSmp2LLgHkATaEvIxL6i81
-        IPFhfAkn6AXcy1yyxUChaZfCm5ETGJZY6Mx5xQwF/g==
-X-Google-Smtp-Source: APXvYqxuT1gm3u8/hCDM3wezjyGA7tgkxOInncWJuSpR6tMq+J0eK/KQWnX8tpXhhukbO20sOdbPNpxPlxd5f/YG518=
-X-Received: by 2002:a1c:9a53:: with SMTP id c80mr4584144wme.173.1560452512591;
- Thu, 13 Jun 2019 12:01:52 -0700 (PDT)
+        Thu, 13 Jun 2019 15:04:09 -0400
+Received: from [4.30.142.84] (helo=srivatsab-a01.vmware.com)
+        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
+        (Exim 4.82)
+        (envelope-from <srivatsa@csail.mit.edu>)
+        id 1hbV14-0006b2-P6; Thu, 13 Jun 2019 15:04:06 -0400
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jan Kara <jack@suse.cz>, Paolo Valente <paolo.valente@linaro.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Jeff Moyer <jmoyer@redhat.com>,
+        Theodore Ts'o <tytso@mit.edu>, amakhalov@vmware.com,
+        anishs@vmware.com, srivatsab@vmware.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stable <stable@vger.kernel.org>
+References: <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
+ <E270AD92-943E-4529-8158-AB480D6D9DF8@linaro.org>
+ <5b71028c-72f0-73dd-0cd5-f28ff298a0a3@csail.mit.edu>
+ <FFA44D26-75FF-4A8E-A331-495349BE5FFC@linaro.org>
+ <0d6e3c02-1952-2177-02d7-10ebeb133940@csail.mit.edu>
+ <7B74A790-BD98-412B-ADAB-3B513FB1944E@linaro.org>
+ <6a6f4aa4-fc95-f132-55b2-224ff52bd2d8@csail.mit.edu>
+ <7c5e9d11-4a3d-7df4-c1e6-7c95919522ab@csail.mit.edu>
+ <20190612130446.GD14578@quack2.suse.cz>
+ <dd32ed59-a543-fc76-9a9a-2462f0119270@csail.mit.edu>
+ <20190613060203.GA25205@kroah.com>
+From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Message-ID: <61946313-c229-6213-d65f-83bd221e4b6d@csail.mit.edu>
+Date:   Thu, 13 Jun 2019 12:03:59 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <1560377606-40855-1-git-send-email-fei.yang@intel.com>
-In-Reply-To: <1560377606-40855-1-git-send-email-fei.yang@intel.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 13 Jun 2019 12:01:39 -0700
-Message-ID: <CALAqxLXeXt1Me_gzUFX8uBAuw_26QEOAX84324kzq7Hih1XDQw@mail.gmail.com>
-Subject: Re: [PATCH] usb: gadget: f_fs: data_len used before properly set
-To:     "Yang, Fei" <fei.yang@intel.com>
-Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        mgautam@codeaurora.org,
-        Andrzej Pietrasiewicz <andrzej.p@samsung.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190613060203.GA25205@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 3:13 PM <fei.yang@intel.com> wrote:
->
-> From: Fei Yang <fei.yang@intel.com>
->
-> The following line of code in function ffs_epfile_io is trying to set
-> flag io_data->use_sg in case buffer required is larger than one page.
->
->     io_data->use_sg = gadget->sg_supported && data_len > PAGE_SIZE;
->
-> However at this point of time the variable data_len has not been set
-> to the proper buffer size yet. The consequence is that io_data->use_sg
-> is always set regardless what buffer size really is, because the condition
-> (data_len > PAGE_SIZE) is effectively an unsigned comparison between
-> -EINVAL and PAGE_SIZE which would always result in TRUE.
->
-> Fixes: 772a7a724f69 ("usb: gadget: f_fs: Allow scatter-gather buffers")
-> Signed-off-by: Fei Yang <fei.yang@intel.com>
-> Cc: stable <stable@vger.kernel.org>
+On 6/12/19 11:02 PM, Greg Kroah-Hartman wrote:
+> On Wed, Jun 12, 2019 at 12:36:53PM -0700, Srivatsa S. Bhat wrote:
+>>
+>> [ Adding Greg to CC ]
+>>
+>> On 6/12/19 6:04 AM, Jan Kara wrote:
+>>> On Tue 11-06-19 15:34:48, Srivatsa S. Bhat wrote:
+>>>> On 6/2/19 12:04 AM, Srivatsa S. Bhat wrote:
+>>>>> On 5/30/19 3:45 AM, Paolo Valente wrote:
+>>>>>>
+>>>> [...]
+>>>>>> At any rate, since you pointed out that you are interested in
+>>>>>> out-of-the-box performance, let me complete the context: in case
+>>>>>> low_latency is left set, one gets, in return for this 12% loss,
+>>>>>> a) at least 1000% higher responsiveness, e.g., 1000% lower start-up
+>>>>>> times of applications under load [1];
+>>>>>> b) 500-1000% higher throughput in multi-client server workloads, as I
+>>>>>> already pointed out [2].
+>>>>>>
+>>>>>
+>>>>> I'm very happy that you could solve the problem without having to
+>>>>> compromise on any of the performance characteristics/features of BFQ!
+>>>>>
+>>>>>
+>>>>>> I'm going to prepare complete patches.  In addition, if ok for you,
+>>>>>> I'll report these results on the bug you created.  Then I guess we can
+>>>>>> close it.
+>>>>>>
+>>>>>
+>>>>> Sounds great!
+>>>>>
+>>>>
+>>>> Hi Paolo,
+>>>>
+>>>> Hope you are doing great!
+>>>>
+>>>> I was wondering if you got a chance to post these patches to LKML for
+>>>> review and inclusion... (No hurry, of course!)
+>>>>
+>>>> Also, since your fixes address the performance issues in BFQ, do you
+>>>> have any thoughts on whether they can be adapted to CFQ as well, to
+>>>> benefit the older stable kernels that still support CFQ?
+>>>
+>>> Since CFQ doesn't exist in current upstream kernel anymore, I seriously
+>>> doubt you'll be able to get any performance improvements for it in the
+>>> stable kernels...
+>>>
+>>
+>> I suspected as much, but that seems unfortunate though. The latest LTS
+>> kernel is based on 4.19, which still supports CFQ. It would have been
+>> great to have a process to address significant issues on older
+>> kernels too.
+>>
+>> Greg, do you have any thoughts on this? The context is that both CFQ
+>> and BFQ I/O schedulers have issues that cause I/O throughput to suffer
+>> upto 10x - 30x on certain workloads and system configurations, as
+>> reported in [1].
+>>
+>> In this thread, Paolo posted patches to fix BFQ performance on
+>> mainline. However CFQ suffers from the same performance collapse, but
+>> CFQ was removed from the kernel in v5.0. So obviously the usual stable
+>> backporting path won't work here for several reasons:
+>>
+>>   1. There won't be a mainline commit to backport from, as CFQ no
+>>      longer exists in mainline.
+>>
+>>   2. This is not a security/stability fix, and is likely to involve
+>>      invasive changes.
+>>
+>> I was wondering if there was a way to address the performance issues
+>> in CFQ in the older stable kernels (including the latest LTS 4.19),
+>> despite the above constraints, since the performance drop is much too
+>> significant. I guess not, but thought I'd ask :-)
+> 
+> If someone cares about something like this, then I strongly just
+> recommend they move to the latest kernel version.  There should not be
+> anything stoping them from doing that, right?  Nothing "forces" anyone
+> to be on the 4.19.y release, especially when it really starts to show
+> its age.
+> 
+> Don't ever treat the LTS releases as "the only thing someone can run, so
+> we must backport huge things to it!"  Just use 5.1, and then move to 5.2
+> when it is out and so on.  That's always the preferred way, you always
+> get better support, faster kernels, newer features, better hardware
+> support, and most importantly, more bugfixes.
+> 
 
-Hey Fei! Thanks so much for sending this out! I was excited that this
-might resolve the ffs stalls I've been seeing on dwc3/dwc2 hardware,
-but when I gave it a shot, it doesn't seem to help. In fact, rather
-then a stall, I end up seeing the following panic:
-
-[  383.415362] Unable to handle kernel read from unreadable memory at
-virtual address 0000000000000018
-[  383.431935] Mem abort info:
-[  383.431937]   ESR = 0x96000005
-[  383.431940]   Exception class = DABT (current EL), IL = 32 bits
-[  383.431941]   SET = 0, FnV = 0
-[  383.431942]   EA = 0, S1PTW = 0
-[  383.431943] Data abort info:
-[  383.431945]   ISV = 0, ISS = 0x00000005
-[  383.431946]   CM = 0, WnR = 0
-[  383.431951] user pgtable: 4k pages, 39-bit VAs, pgdp=00000000aae1f000
-[  383.431953] [0000000000000018] pgd=000000009f064003,
-pud=000000009f064003, pmd=0000000000000000
-[  383.482560] Internal error: Oops: 96000005 [#1] PREEMPT SMP
-[  383.488128] Modules linked in:
-[  383.491181] CPU: 0 PID: 399 Comm: irq/69-dwc3 Tainted: G S
-      5.2.0-rc4-00092-gf5f12f5d3fdd #296
-[  383.501002] Hardware name: HiKey960 (DT)
-[  383.504918] pstate: 20400085 (nzCv daIf +PAN -UAO)
-[  383.509714] pc : dma_direct_unmap_sg+0x38/0x80
-[  383.514151] lr : dma_direct_unmap_sg+0x5c/0x80
-[  383.518586] sp : ffffff8011fcbc40
-[  383.521893] x29: ffffff8011fcbc40 x28: ffffffc0bad9c180
-[  383.527199] x27: ffffffc0bae05300 x26: 0000000000000002
-[  383.532504] x25: ffffffc0b9a9fd00 x24: 0000000000000000
-[  383.537809] x23: 0000000000000001 x22: ffffffc0bad9fc10
-[  383.543114] x21: 0000000000000002 x20: 0000000000000001
-[  383.548420] x19: 0000000000000000 x18: 0000000000000000
-[  383.553726] x17: 0000000000000000 x16: 0000000000000000
-[  383.559032] x15: 0000000000000000 x14: ffffff8010eb6ad0
-[  383.564338] x13: 0000000000000000 x12: 0000000000000000
-[  383.569643] x11: 0000000000000000 x10: 00000000000009d0
-[  383.574949] x9 : ffffff8011fcbd20 x8 : ffffffc0b63c3a30
-[  383.580254] x7 : ffffffc0bc515c00 x6 : 0000000000000007
-[  383.585560] x5 : 0000000000000001 x4 : 0000000000000004
-[  383.590865] x3 : 0000000000000001 x2 : 0000000000000001
-[  383.596169] x1 : 000000000006bf42 x0 : 0000000000000000
-[  383.601477] Call trace:
-[  383.603916]  dma_direct_unmap_sg+0x38/0x80
-[  383.608013]  usb_gadget_unmap_request_by_dev+0xb0/0xc8
-[  383.613148]  dwc3_gadget_del_and_unmap_request.isra.13+0x78/0x150
-[  383.619235]  dwc3_gadget_giveback+0x30/0x68
-[  383.623412]  dwc3_thread_interrupt+0x694/0x14e0
-[  383.627938]  irq_thread_fn+0x28/0x78
-[  383.631506]  irq_thread+0x124/0x1c0
-[  383.634991]  kthread+0x128/0x130
-[  383.638214]  ret_from_fork+0x10/0x1c
-[  383.641786] Code: 2a0303f7 aa0403f8 52800014 d503201f (b9401a62)
-[  383.647874] ---[ end trace f48053c2040c5658 ]---
-
-From the looks of it though, I suspect your fix is a good one, and
-maybe its just helping expose some related underlying issues in the
-dwc3 driver?
-
-thanks
--john
+Thank you for the clarification!
+ 
+Regards,
+Srivatsa
+VMware Photon OS
