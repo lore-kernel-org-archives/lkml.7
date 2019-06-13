@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE22C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA563C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40CAD20866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE26720866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442036;
-	bh=DOgLhY7Ndb490Cu9eMS6Sn6ICuXyTtW1a/l7jx7auDc=;
+	s=default; t=1560442043;
+	bh=nZ9mjRNW1Bgexwp8v7itdN7Ro72sgff9guZIoOH2c2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KxymhmAtr+qbkj01b7AzN+6GwA5llFyuV8qcG5bF7lfkggdiIROG1ozmBj5wuri0R
-	 BhRE+7WTyj8D2eEUvBKVem+VD4NsgUHhozogu0xYVeZU1IBhFOA+DaOhmPl1/mZeeE
-	 YHQfwLsRrHrelk2ro2AZJVfUJIdNJbB+5btvcZ4Q=
+	b=s4WWYq6X9wyKb2VWKdynLdlfnaN/Qsw6y88Pr2xJCONAjYkZ1FjNnVoXFYBfewndu
+	 TLdfFmwo7dXkPuda/dIoe+hwDG7B3/l+SsS2RGBbr0zIwgSLPOM/nuo0ia4mUh02LO
+	 GDkgC5cztaBDFZd8OmFhiU3DcJkjLty6pPmUT2l4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390999AbfFMQHO (ORCPT
+        id S2390642AbfFMQHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:07:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34304 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:07:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731305AbfFMIpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:45:36 -0400
+        id S1731303AbfFMIpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:45:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3597E2173C;
-        Thu, 13 Jun 2019 08:45:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85FFD20851;
+        Thu, 13 Jun 2019 08:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415535;
-        bh=DOgLhY7Ndb490Cu9eMS6Sn6ICuXyTtW1a/l7jx7auDc=;
+        s=default; t=1560415530;
+        bh=nZ9mjRNW1Bgexwp8v7itdN7Ro72sgff9guZIoOH2c2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SPOCI251K3vX23EU++BOzlaX488YxQJgPsCb9OU85gc/9hPyZaJQaNxx/rqLM5Y6f
-         rut7eTunA9umPzcQOQ1iHLrH0Xmk/gA2Bi90RSrk0MidJOrYizny3r71EqTHqz1ONQ
-         nDCrn5ywhUJDYzkY9UO/IPpOyvpcT3nKhoaAW7F0=
+        b=MDfkENeapAzeb7QQphLa0rh1oJIgLl4G3BvOdzkTN0AOZfHuY5fHm+tge5as8iwzc
+         4RVeRb8119W2u3Utp8qyzQEQbzPJarBCiHBqwyfXGi3pevhW1XA54bkW/bEfk2rDMw
+         IKR2QxS1ll1fyRCCv1rW51gqGINlyroD5w5NTAlU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 035/155] objtool: Dont use ignore flag for fake jumps
-Date:   Thu, 13 Jun 2019 10:32:27 +0200
-Message-Id: <20190613075655.022431009@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Peteris Rudzusiks <peteris.rudzusiks@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 033/155] drm/nouveau: fix duplication of nv50_head_atom struct
+Date:   Thu, 13 Jun 2019 10:32:25 +0200
+Message-Id: <20190613075654.866267624@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -62,68 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e6da9567959e164f82bc81967e0d5b10dee870b4 ]
+[ Upstream commit c4a52d669690423ee3c99d8eda1e69cd0821fcad ]
 
-The ignore flag is set on fake jumps in order to keep
-add_jump_destinations() from setting their jump_dest, since it already
-got set when the fake jump was created.
+nv50_head_atomic_duplicate_state() makes a copy of nv50_head_atom
+struct. This patch adds copying of struct member named "or", which
+previously was left uninitialized in the duplicated structure.
 
-But using the ignore flag is a bit of a hack.  It's normally used to
-skip validation of an instruction, which doesn't really make sense for
-fake jumps.
+Due to this bug, incorrect nhsync and nvsync values were sometimes used.
+In my particular case, that lead to a mismatch between the output
+resolution of the graphics device (GeForce GT 630 OEM) and the reported
+input signal resolution on the display. xrandr reported 1680x1050, but
+the display reported 1280x1024. As a result of this mismatch, the output
+on the display looked like it was cropped (only part of the output was
+actually visible on the display).
 
-Also, after the next patch, using the ignore flag for fake jumps can
-trigger a false "why am I validating an ignored function?" warning.
+git bisect pointed to commit 2ca7fb5c1cc6 ("drm/nouveau/kms/nv50: handle
+SetControlOutputResource from head"), which added the member "or" to
+nv50_head_atom structure, but forgot to copy it in
+nv50_head_atomic_duplicate_state().
 
-Instead just add an explicit check in add_jump_destinations() to skip
-fake jumps.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/71abc072ff48b2feccc197723a9c52859476c068.1557766718.git.jpoimboe@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 2ca7fb5c1cc6 ("drm/nouveau/kms/nv50: handle SetControlOutputResource from head")
+Signed-off-by: Peteris Rudzusiks <peteris.rudzusiks@gmail.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/nouveau/dispnv50/head.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 2cd57730381b..ecf5fc77f50b 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -28,6 +28,8 @@
- #include <linux/hashtable.h>
- #include <linux/kernel.h>
- 
-+#define FAKE_JUMP_OFFSET -1
-+
- struct alternative {
- 	struct list_head list;
- 	struct instruction *insn;
-@@ -501,7 +503,7 @@ static int add_jump_destinations(struct objtool_file *file)
- 		    insn->type != INSN_JUMP_UNCONDITIONAL)
- 			continue;
- 
--		if (insn->ignore)
-+		if (insn->ignore || insn->offset == FAKE_JUMP_OFFSET)
- 			continue;
- 
- 		rela = find_rela_by_dest_range(insn->sec, insn->offset,
-@@ -670,10 +672,10 @@ static int handle_group_alt(struct objtool_file *file,
- 		clear_insn_state(&fake_jump->state);
- 
- 		fake_jump->sec = special_alt->new_sec;
--		fake_jump->offset = -1;
-+		fake_jump->offset = FAKE_JUMP_OFFSET;
- 		fake_jump->type = INSN_JUMP_UNCONDITIONAL;
- 		fake_jump->jump_dest = list_next_entry(last_orig_insn, list);
--		fake_jump->ignore = true;
-+		fake_jump->func = orig_insn->func;
- 	}
- 
- 	if (!special_alt->new_len) {
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/head.c b/drivers/gpu/drm/nouveau/dispnv50/head.c
+index 8efb778a3b20..06ee23823a68 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/head.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/head.c
+@@ -413,6 +413,7 @@ nv50_head_atomic_duplicate_state(struct drm_crtc *crtc)
+ 	asyh->ovly = armh->ovly;
+ 	asyh->dither = armh->dither;
+ 	asyh->procamp = armh->procamp;
++	asyh->or = armh->or;
+ 	asyh->dp = armh->dp;
+ 	asyh->clr.mask = 0;
+ 	asyh->set.mask = 0;
 -- 
 2.20.1
 
