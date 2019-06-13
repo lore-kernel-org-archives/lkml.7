@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FCAC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D329DC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7E8F20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B03206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441838;
-	bh=EFuefgkk3y0ZXHnkLQX7Tj/A14qq9Kx55hAdXvkexwA=;
+	s=default; t=1560441852;
+	bh=T2azg12apvWS++HL4vLtMOF4yjNH/5aptvXET4B6RXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HO/l8kOXkP2vreKzx3NfkhkLHE8xdF8ESRSbs4BYcqcDWJyvw3iezWfa5IqZuI84b
-	 TfHatIRNlwSRPQzYmlA4wuFt97IWTBa97usIoaXWXyvXYqSulw4Fk97k02YuYix63C
-	 67NgQMrGwwJvTmb3aMbfx5BIjrVv6pKgSwgeocqY=
+	b=a/sSCNP6C5GcEEJRVwRJAo79m0ou8WwXk9xHFtPDuMJUs5I+QvA/TKMBtZLr0ZJeC
+	 x5u7aJB0aOPih0qG5hgCFYULpywrhmceRSi6L1/4FJZagwv+jtlabzuSJUSydZwhWX
+	 SiR5ZuZwyHHH+6ycsHvpGv+MxUspLYKlkFmmwxR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbfFMQD5 (ORCPT
+        id S2390742AbfFMQEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:03:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35488 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:04:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731373AbfFMIrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:47:13 -0400
+        id S1731360AbfFMIrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:47:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F410B2147A;
-        Thu, 13 Jun 2019 08:47:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AC3F2173C;
+        Thu, 13 Jun 2019 08:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415632;
-        bh=EFuefgkk3y0ZXHnkLQX7Tj/A14qq9Kx55hAdXvkexwA=;
+        s=default; t=1560415624;
+        bh=T2azg12apvWS++HL4vLtMOF4yjNH/5aptvXET4B6RXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WrqwzYiXzwTjKJfJ1lEazqKEs/RInDtTe3A0aTFYpBLbLY5OYgcfSp2LmaoFe0ifs
-         M7NrkgKW9icNtkexP+xAqum0ceLin1jXebMH8ODcmcg7YMwniz1FUXN2h6NPqXtJQ+
-         0kFuVVAIyTPcWHwxN09adMfMWWeiz3NLtf0qQvG8=
+        b=ppuRKiTkiNNHSPLxE1wPtEc+xfNYKFpQOTOMeUd+4BdF0jJhhhKGANAC1S+je+UwP
+         C8p+GUYZald2/1RrcCveSHjmWAgymlG5s+8L9ky9CLBgMQdgTLCsLNq1xTcwC691HE
+         hJIlFTofE/rha7RT7lOHpWVP4EFYBNg6D2MccvVE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 046/155] f2fs: fix to do sanity check on free nid
-Date:   Thu, 13 Jun 2019 10:32:38 +0200
-Message-Id: <20190613075655.696316634@linuxfoundation.org>
+Subject: [PATCH 5.1 043/155] f2fs: fix to avoid panic in f2fs_inplace_write_data()
+Date:   Thu, 13 Jun 2019 10:32:35 +0200
+Message-Id: <20190613075655.517378170@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,15 +60,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 626bcf2b7ce87211dba565f2bfa7842ba5be5c1b ]
+[ Upstream commit 05573d6ccf702df549a7bdeabef31e4753df1a90 ]
 
 As Jungyeon reported in bugzilla:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203225
+https://bugzilla.kernel.org/show_bug.cgi?id=203239
 
 - Overview
-When mounting the attached crafted image and unmounting it, following errors are reported.
-Additionally, it hangs on sync after unmounting.
+When mounting the attached crafted image and running program, following errors are reported.
+Additionally, it hangs on sync after running program.
 
 The image is intentionally fuzzed from a normal f2fs image for testing.
 Compile options for F2FS are as follows.
@@ -79,56 +79,66 @@ CONFIG_F2FS_FS_POSIX_ACL=y
 CONFIG_F2FS_CHECK_FS=y
 
 - Reproduces
-mkdir test
-mount -t f2fs tmp.img test
-touch test/t
-umount test
+cc poc_15.c
+./run.sh f2fs
 sync
 
-- Messages
- kernel BUG at fs/f2fs/node.c:3073!
- RIP: 0010:f2fs_destroy_node_manager+0x2f0/0x300
+- Kernel messages
+ ------------[ cut here ]------------
+ kernel BUG at fs/f2fs/segment.c:3162!
+ RIP: 0010:f2fs_inplace_write_data+0x12d/0x160
  Call Trace:
-  f2fs_put_super+0xf4/0x270
-  generic_shutdown_super+0x62/0x110
-  kill_block_super+0x1c/0x50
-  kill_f2fs_super+0xad/0xd0
-  deactivate_locked_super+0x35/0x60
-  cleanup_mnt+0x36/0x70
-  task_work_run+0x75/0x90
-  exit_to_usermode_loop+0x93/0xa0
-  do_syscall_64+0xba/0xf0
+  f2fs_do_write_data_page+0x3c1/0x820
+  __write_data_page+0x156/0x720
+  f2fs_write_cache_pages+0x20d/0x460
+  f2fs_write_data_pages+0x1b4/0x300
+  do_writepages+0x15/0x60
+  __filemap_fdatawrite_range+0x7c/0xb0
+  file_write_and_wait_range+0x2c/0x80
+  f2fs_do_sync_file+0x102/0x810
+  do_fsync+0x33/0x60
+  __x64_sys_fsync+0xb/0x10
+  do_syscall_64+0x43/0xf0
   entry_SYSCALL_64_after_hwframe+0x44/0xa9
- RIP: 0010:f2fs_destroy_node_manager+0x2f0/0x300
 
-NAT table is corrupted, so reserved meta/node inode ids were added into
-free list incorrectly, during file creation, since reserved id has cached
-in inode hash, so it fails the creation and preallocated nid can not be
-released later, result in kernel panic.
+The reason is f2fs_inplace_write_data() will trigger kernel panic due
+to data block locates in node type segment.
 
-To fix this issue, let's do nid boundary check during free nid loading.
+To avoid panic, let's just return error code and set SBI_NEED_FSCK to
+give a hint to fsck for latter repairing.
 
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/node.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/f2fs/segment.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index d45ecef75116..63bb6134d39a 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -2082,6 +2082,9 @@ static bool add_free_nid(struct f2fs_sb_info *sbi,
- 	if (unlikely(nid == 0))
- 		return false;
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index ddfa2eb7ec58..3d6efbfe180f 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3188,13 +3188,18 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
+ {
+ 	int err;
+ 	struct f2fs_sb_info *sbi = fio->sbi;
++	unsigned int segno;
  
-+	if (unlikely(f2fs_check_nid_range(sbi, nid)))
-+		return false;
+ 	fio->new_blkaddr = fio->old_blkaddr;
+ 	/* i/o temperature is needed for passing down write hints */
+ 	__get_segment_type(fio);
+ 
+-	f2fs_bug_on(sbi, !IS_DATASEG(get_seg_entry(sbi,
+-			GET_SEGNO(sbi, fio->new_blkaddr))->type));
++	segno = GET_SEGNO(sbi, fio->new_blkaddr);
 +
- 	i = f2fs_kmem_cache_alloc(free_nid_slab, GFP_NOFS);
- 	i->nid = nid;
- 	i->state = FREE_NID;
++	if (!IS_DATASEG(get_seg_entry(sbi, segno)->type)) {
++		set_sbi_flag(sbi, SBI_NEED_FSCK);
++		return -EFAULT;
++	}
+ 
+ 	stat_inc_inplace_blocks(fio->sbi);
+ 
 -- 
 2.20.1
 
