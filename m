@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557E0C31E4F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BC0C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD9F217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8735421743
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441524;
-	bh=jUnIi8qxGVzrWiwwjjzyY15R8iihMx4ycck8fUcRCTo=;
+	s=default; t=1560441530;
+	bh=0iHPDu7N/ipPv7fFNejJe04jzUKCtwa1EnSarexpuew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yrypydUeswb3AaoyFTyv1wwVx96n74K9fwHFEITmr+psQcHhsQuNt/FUjmBbEGt6W
-	 geJThrRMx2Mohyi/V0kyaZ0zSZvPiiex1wrdDnm39tQ4q5k7k18O4D9jgziP121FWi
-	 jVdyyeLzHjtFdFCCtnwa5tN114CF+6juTFAbkB5w=
+	b=BnmZlRoXHYJDJTuMD0yGuSuMYMTqBvSeg+yvMPr0bnwE0+1QqPb6g1jvrYKqN259l
+	 4kQWw73Wkia0uSbl1N8RvKDbKNZkwM/5Jc5kGSIvdpjLoWKsTfMR0PpdcuLrgyJELD
+	 XrbCqhPGKknFZJcQi3jRDt2rXZL8MeVU8fBuGgzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390371AbfFMP6Y (ORCPT
+        id S2390582AbfFMP6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:58:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37752 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:58:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731493AbfFMIuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:50:09 -0400
+        id S1731492AbfFMIuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:50:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7655220851;
-        Thu, 13 Jun 2019 08:50:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB26721473;
+        Thu, 13 Jun 2019 08:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415809;
-        bh=jUnIi8qxGVzrWiwwjjzyY15R8iihMx4ycck8fUcRCTo=;
+        s=default; t=1560415806;
+        bh=0iHPDu7N/ipPv7fFNejJe04jzUKCtwa1EnSarexpuew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k3qeS0m4/l7/BCmI0NmCCf6ctqJqc455202AE+tzG9usgIJrshEMmG7UuCk7AP7cK
-         3RwhuiDdoKEDfZRT16C6od3V70UVRCVsm/ar6ui8ptItXc98XdjHQAo+PGKz8VS3v9
-         bGV+adY+D+ewc8sbsUgQoC9h0vRdTIxwN4dcjknc=
+        b=Z+3rUDk6HLRNi47i+qkNDlffVQkN1pKzCbCoMSh8LED2VGGc6ykJg6z4Ym/aDsLMv
+         ndgeDONJiJi6HZqPplRAwbuD5f9SBdXJQwcLaVleibUHr0k+HDhxtpqtkj9WQHEIk9
+         POVEkPPwT4jJvnHPywnB5M+tU9gnZl2HVK3pZWVg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Holger=20Hoffst=C3=A4tte?= 
-        <holger@applied-asynchrony.com>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 131/155] block, bfq: increase idling for weight-raised queues
-Date:   Thu, 13 Jun 2019 10:34:03 +0200
-Message-Id: <20190613075700.105303320@linuxfoundation.org>
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Aditya Pakki <pakki001@umn.edu>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Rob Herring <robh@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 130/155] video: imsttfb: fix potential NULL pointer dereferences
+Date:   Thu, 13 Jun 2019 10:34:02 +0200
+Message-Id: <20190613075700.059278389@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -63,61 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 778c02a236a8728bb992de10ed1f12c0be5b7b0e ]
+[ Upstream commit 1d84353d205a953e2381044953b7fa31c8c9702d ]
 
-If a sync bfq_queue has a higher weight than some other queue, and
-remains temporarily empty while in service, then, to preserve the
-bandwidth share of the queue, it is necessary to plug I/O dispatching
-until a new request arrives for the queue. In addition, a timeout
-needs to be set, to avoid waiting for ever if the process associated
-with the queue has actually finished its I/O.
+In case ioremap fails, the fix releases resources and returns
+-ENOMEM to avoid NULL pointer dereferences.
 
-Even with the above timeout, the device is however not fed with new
-I/O for a while, if the process has finished its I/O. If this happens
-often, then throughput drops and latencies grow. For this reason, the
-timeout is kept rather low: 8 ms is the current default.
-
-Unfortunately, such a low value may cause, on the opposite end, a
-violation of bandwidth guarantees for a process that happens to issue
-new I/O too late. The higher the system load, the higher the
-probability that this happens to some process. This is a problem in
-scenarios where service guarantees matter more than throughput. One
-important case are weight-raised queues, which need to be granted a
-very high fraction of the bandwidth.
-
-To address this issue, this commit lower-bounds the plugging timeout
-for weight-raised queues to 20 ms. This simple change provides
-relevant benefits. For example, on a PLEXTOR PX-256M5S, with which
-gnome-terminal starts in 0.6 seconds if there is no other I/O in
-progress, the same applications starts in
-- 0.8 seconds, instead of 1.2 seconds, if ten files are being read
-  sequentially in parallel
-- 1 second, instead of 2 seconds, if, in parallel, five files are
-  being read sequentially, and five more files are being written
-  sequentially
-
-Tested-by: Holger Hoffstätte <holger@applied-asynchrony.com>
-Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Cc: Aditya Pakki <pakki001@umn.edu>
+Cc: Finn Thain <fthain@telegraphics.com.au>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[b.zolnierkie: minor patch summary fixup]
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/video/fbdev/imsttfb.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 5ba1e0d841b4..679d608347ea 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2545,6 +2545,8 @@ static void bfq_arm_slice_timer(struct bfq_data *bfqd)
- 	if (BFQQ_SEEKY(bfqq) && bfqq->wr_coeff == 1 &&
- 	    bfq_symmetric_scenario(bfqd))
- 		sl = min_t(u64, sl, BFQ_MIN_TT);
-+	else if (bfqq->wr_coeff > 1)
-+		sl = max_t(u32, sl, 20ULL * NSEC_PER_MSEC);
- 
- 	bfqd->last_idling_start = ktime_get();
- 	hrtimer_start(&bfqd->idle_slice_timer, ns_to_ktime(sl),
+diff --git a/drivers/video/fbdev/imsttfb.c b/drivers/video/fbdev/imsttfb.c
+index 4b9615e4ce74..35bba3c2036d 100644
+--- a/drivers/video/fbdev/imsttfb.c
++++ b/drivers/video/fbdev/imsttfb.c
+@@ -1515,6 +1515,11 @@ static int imsttfb_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	info->fix.smem_start = addr;
+ 	info->screen_base = (__u8 *)ioremap(addr, par->ramdac == IBM ?
+ 					    0x400000 : 0x800000);
++	if (!info->screen_base) {
++		release_mem_region(addr, size);
++		framebuffer_release(info);
++		return -ENOMEM;
++	}
+ 	info->fix.mmio_start = addr + 0x800000;
+ 	par->dc_regs = ioremap(addr + 0x800000, 0x1000);
+ 	par->cmap_regs_phys = addr + 0x840000;
 -- 
 2.20.1
 
