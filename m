@@ -2,207 +2,84 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 564E5C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136EEC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB4120B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D45842082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:31:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560439861;
+	bh=XDQr+qoInVgE+aU3q1x+Me+5mPriKhlcp+T0v66tN24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gQvNpuQ750yP+VIXlcOXgwYX5YEtXQPaAd43iN7sZan0YOJK7jUKx7SfofVuKWnq4
+	 Kb/CSMu8bkzToKAyVsrdTQBjhbbjoaq6ClzqF9uBldEemdOEYjBwks/4We2jbL2ev1
+	 viCWI/0uctBMDsoZTxD12IyMv3TslYjAC3tL9CuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfFMPaw (ORCPT
+        id S1730734AbfFMPbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:30:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42346 "EHLO mx1.redhat.com"
+        Thu, 13 Jun 2019 11:31:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728666AbfFMLIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 07:08:21 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728641AbfFMLGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 07:06:34 -0400
+Received: from localhost (unknown [122.167.115.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2FEA22F8BC8;
-        Thu, 13 Jun 2019 11:08:21 +0000 (UTC)
-Received: from localhost (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A203660BE2;
-        Thu, 13 Jun 2019 11:08:18 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Sebastian Ott <sebott@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: [PATCH] s390/cio: introduce driver_override on the css bus
-Date:   Thu, 13 Jun 2019 13:08:15 +0200
-Message-Id: <20190613110815.17251-1-cohuck@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B0A221721;
+        Thu, 13 Jun 2019 11:06:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560423993;
+        bh=XDQr+qoInVgE+aU3q1x+Me+5mPriKhlcp+T0v66tN24=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kbIaeXp+vdvXnTR8du/ADgav63Wt6IyfifVXvc+ctveMuww6Bv2hPf0Rujo7CQpef
+         UpUNMStJma1uV7zaK0E723Fzrhay3rM0To+8T3uMKE43AHidiii+2Kg2CmGUqYtOEc
+         TsleUH3XXu9p1eikRsOp7D+fYd7mruK71+g0so60=
+Date:   Thu, 13 Jun 2019 16:33:25 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+Subject: Re: [EXT] Re: [V3 2/2] dmaengine: fsl-dpaa2-qdma: Add NXP dpaa2 qDMA
+ controller driver for Layerscape SoCs
+Message-ID: <20190613110325.GD9160@vkoul-mobl.Dlink>
+References: <20190409072212.15860-1-peng.ma@nxp.com>
+ <20190409072212.15860-2-peng.ma@nxp.com>
+ <20190429053203.GF3845@vkoul-mobl.Dlink>
+ <VI1PR04MB4431B87A1F712DC232A46ECBED130@VI1PR04MB4431.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 13 Jun 2019 11:08:21 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB4431B87A1F712DC232A46ECBED130@VI1PR04MB4431.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes, we want to control which of the matching drivers
-binds to a subchannel device (e.g. for subchannels we want to
-handle via vfio-ccw).
+On 10-06-19, 09:51, Peng Ma wrote:
 
-For pci devices, a mechanism to do so has been introduced in
-782a985d7af2 ("PCI: Introduce new device binding path using
-pci_dev.driver_override"). It makes sense to introduce the
-driver_override attribute for subchannel devices as well, so
-that we can easily extend the 'driverctl' tool (which makes
-use of the driver_override attribute for pci).
+> >> +                     goto err;
+> >> +
+> >> +             comp_temp->fl_virt_addr =
+> >> +                     (void *)((struct dpaa2_fd *)
+> >> +                             comp_temp->fd_virt_addr + 1);
+> >
+> >casts and pointer math, what could go wrong!! This doesnt smell right!
+> >
+> >> +             comp_temp->fl_bus_addr = comp_temp->fd_bus_addr +
+> >> +                                     sizeof(struct dpaa2_fd);
+> >
+> >why not use fl_virt_addr and get the bus_address?
+> What you mean is I should use virt_to_phys to get the bus_address?
 
-Note that unlike pci we still require a driver override to
-match the subchannel type; matching more than one subchannel
-type is probably not useful anyway.
-
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
----
-
-Lightly tested; did not yet attempt to adapt driverctl to actually
-make use of it.
-
-For some background, refer to the thread around
-https://lore.kernel.org/kvm/20190612091439.3a33f17b.cohuck@redhat.com/
-
----
- Documentation/ABI/testing/sysfs-bus-css | 23 +++++++++++
- drivers/s390/cio/cio.h                  |  1 +
- drivers/s390/cio/css.c                  | 53 +++++++++++++++++++++++++
- 3 files changed, 77 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-css b/Documentation/ABI/testing/sysfs-bus-css
-index 2979c40c10e9..966f8504bd7b 100644
---- a/Documentation/ABI/testing/sysfs-bus-css
-+++ b/Documentation/ABI/testing/sysfs-bus-css
-@@ -33,3 +33,26 @@ Description:	Contains the PIM/PAM/POM values, as reported by the
- 		in sync with the values current in the channel subsystem).
- 		Note: This is an I/O-subchannel specific attribute.
- Users:		s390-tools, HAL
-+
-+What:		/sys/bus/css/devices/.../driver_override
-+Date:		June 2019
-+Contact:	Cornelia Huck <cohuck@redhat.com>
-+		linux-s390@vger.kernel.org
-+Description:	This file allows the driver for a device to be specified. When
-+		specified, only a driver with a name matching the value written
-+		to driver_override will have an opportunity to bind to the
-+		device. The override is specified by writing a string to the
-+		driver_override file (echo vfio-ccw > driver_override) and
-+		may be cleared with an empty string (echo > driver_override).
-+		This returns the device to standard matching rules binding.
-+		Writing to driver_override does not automatically unbind the
-+		device from its current driver or make any attempt to
-+		automatically load the specified driver.  If no driver with a
-+		matching name is currently loaded in the kernel, the device
-+		will not bind to any driver.  This also allows devices to
-+		opt-out of driver binding using a driver_override name such as
-+		"none".  Only a single driver may be specified in the override,
-+		there is no support for parsing delimiters.
-+		Note that unlike the mechanism of the same name for pci, this
-+		file does not allow to override basic matching rules. I.e.,
-+		the driver must still match the subchannel type of the device.
-diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
-index 06a91743335a..8c4af88f1ac3 100644
---- a/drivers/s390/cio/cio.h
-+++ b/drivers/s390/cio/cio.h
-@@ -113,6 +113,7 @@ struct subchannel {
- 	enum sch_todo todo;
- 	struct work_struct todo_work;
- 	struct schib_config config;
-+	char *driver_override; /* Driver name to force a match */
- } __attribute__ ((aligned(8)));
- 
- DECLARE_PER_CPU_ALIGNED(struct irb, cio_irb);
-diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-index aea502922646..f3436a17e3b5 100644
---- a/drivers/s390/cio/css.c
-+++ b/drivers/s390/cio/css.c
-@@ -165,6 +165,7 @@ static void css_subchannel_release(struct device *dev)
- 
- 	sch->config.intparm = 0;
- 	cio_commit_config(sch);
-+	kfree(sch->driver_override);
- 	kfree(sch->lock);
- 	kfree(sch);
- }
-@@ -315,9 +316,57 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
- 
- static DEVICE_ATTR_RO(modalias);
- 
-+static ssize_t driver_override_store(struct device *dev,
-+				     struct device_attribute *attr,
-+				     const char *buf, size_t count)
-+{
-+	struct subchannel *sch = to_subchannel(dev);
-+	char *driver_override, *old, *cp;
-+
-+	/* We need to keep extra room for a newline */
-+	if (count >= (PAGE_SIZE - 1))
-+		return -EINVAL;
-+
-+	driver_override = kstrndup(buf, count, GFP_KERNEL);
-+	if (!driver_override)
-+		return -ENOMEM;
-+
-+	cp = strchr(driver_override, '\n');
-+	if (cp)
-+		*cp = '\0';
-+
-+	device_lock(dev);
-+	old = sch->driver_override;
-+	if (strlen(driver_override)) {
-+		sch->driver_override = driver_override;
-+	} else {
-+		kfree(driver_override);
-+		sch->driver_override = NULL;
-+	}
-+	device_unlock(dev);
-+
-+	kfree(old);
-+
-+	return count;
-+}
-+
-+static ssize_t driver_override_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
-+{
-+	struct subchannel *sch = to_subchannel(dev);
-+	ssize_t len;
-+
-+	device_lock(dev);
-+	len = snprintf(buf, PAGE_SIZE, "%s\n", sch->driver_override);
-+	device_unlock(dev);
-+	return len;
-+}
-+static DEVICE_ATTR_RW(driver_override);
-+
- static struct attribute *subch_attrs[] = {
- 	&dev_attr_type.attr,
- 	&dev_attr_modalias.attr,
-+	&dev_attr_driver_override.attr,
- 	NULL,
- };
- 
-@@ -1222,6 +1271,10 @@ static int css_bus_match(struct device *dev, struct device_driver *drv)
- 	struct css_driver *driver = to_cssdriver(drv);
- 	struct css_device_id *id;
- 
-+	/* When driver_override is set, only bind to the matching driver */
-+	if (sch->driver_override && strcmp(sch->driver_override, drv->name))
-+		return 0;
-+
- 	for (id = driver->subchannel_type; id->match_flags; id++) {
- 		if (sch->st == id->type)
- 			return 1;
+Yes instead of maintaining both pointers, just use one and then when
+required use one to get other. For bus address I would prefer
+dma_map_single rather than virt_to_phys()
 -- 
-2.20.1
-
+~Vinod
