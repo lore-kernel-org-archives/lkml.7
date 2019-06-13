@@ -2,147 +2,84 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB679C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3620C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC6920665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:58:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEizGQl1"
+	by mail.kernel.org (Postfix) with ESMTP id 722E120665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393103AbfFMQ6L (ORCPT
+        id S2393054AbfFMQ6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:58:11 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37441 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729911AbfFMAwm (ORCPT
+        Thu, 13 Jun 2019 12:58:17 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:60482 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S2393126AbfFMQ6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 20:52:42 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 20so9876858pgr.4;
-        Wed, 12 Jun 2019 17:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GJ8o+cBP4X+ha08iy7wHCSwd72glWWHxr08lI7M45nE=;
-        b=lEizGQl1b5EgyAZNMMQ46629BYRAFhx9ttWnhZqIDKjfDw0ZTyIk/sUA0xQ804TUJb
-         xvqMfKH8Ovd2cRJHxNV2fAfHq8FgIe9qAhUw6N+iEH4+SxYVXKOL+3iKdcqy+pcsrP2g
-         D/Rnd/WVKPT0lF63GJCxK3RuLAHbihOdFpcKGuRorJVk4etgQe1I0pG3NTJNhe1Zmt2n
-         7B8+i2Gwr/Guuu0OohtYr7qWit3mbGM5FhZV/3hDPCt+JP21xw33Qs8e7kL0knMOcA/l
-         MWimb6FJOm9/J6pq+Ior4K1gEmfW7EeoMy0lydcRAi2kz8HIrTe8InKwt7maTsDzE5tD
-         E0xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=GJ8o+cBP4X+ha08iy7wHCSwd72glWWHxr08lI7M45nE=;
-        b=NY/dfFKObyyAKwYzii4jRd0gLigbE+O8HpnR52fBKVQ2CjpJYC7myC92N2inesk7Qq
-         tlDPOsmPf9fF7XWyji0C2Ji2TTj/0cmYv9c12kj6eSTdgAs6GvH3zx0y2H1C+sPGoPHb
-         a2WnY+C4vKaOxlAwpS+zTqV9vyN43eBihkqxS/GqUHxnI9KBSaDX9Obile7pNYdTYtw+
-         qajxcPTbSGM7WN8X93aELJNVpnt7kLcpgtBZXVe2TKyg96xsmC71DNFvLuz0JASLCOLy
-         1aYrgW5Q2Z2zCqdPZyz7xfXBy+OTKOeNyFqfB0QWC4IAN7U7h5rmvy0yyGvKjYLyusSc
-         JJGQ==
-X-Gm-Message-State: APjAAAWgaCWexoZCTQoJPgjiwBY4v/E0DZPZekK751MZ3aynHRlDX8nC
-        eJkQYh9viWrakBDoOSNlzL5/Fzzo
-X-Google-Smtp-Source: APXvYqxpAerfCpvhIrYL6ibZo8hWuFq5nU/ic2e6rfoz5nc8mWeoEo4j2U3bxvuYja91y58Jce7n7g==
-X-Received: by 2002:a17:90a:a407:: with SMTP id y7mr1947345pjp.97.1560387161726;
-        Wed, 12 Jun 2019 17:52:41 -0700 (PDT)
-Received: from localhost.localdomain ([2604:3d09:b080:d00:7990:5eb3:9633:9569])
-        by smtp.gmail.com with ESMTPSA id t13sm519015pjo.13.2019.06.12.17.52.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 17:52:41 -0700 (PDT)
-From:   jassisinghbrar@gmail.com
-To:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        orito.takao@socionext.com, masami.hiramatsu@linaro.org,
-        kasai.kazuhiro@socionext.com,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: [PATCH 1/2] dt-bindings: milbeaut-m10v-hdmac: Add Socionext Milbeaut HDMAC bindings
-Date:   Wed, 12 Jun 2019 19:52:37 -0500
-Message-Id: <20190613005237.1996-1-jassisinghbrar@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190613005109.1867-1-jassisinghbrar@gmail.com>
-References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
+        Thu, 13 Jun 2019 12:58:12 -0400
+Received: (qmail 4098 invoked by uid 2102); 13 Jun 2019 12:58:11 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 13 Jun 2019 12:58:11 -0400
+Date:   Thu, 13 Jun 2019 12:58:11 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     David Howells <dhowells@redhat.com>
+cc:     Peter Zijlstra <peterz@infradead.org>, <akiyks@gmail.com>,
+        <andrea.parri@amarulasolutions.com>, <boqun.feng@gmail.com>,
+        <dlustig@nvidia.com>, <j.alglave@ucl.ac.uk>,
+        <luc.maranget@inria.fr>, <npiggin@gmail.com>,
+        <paulmck@linux.ibm.com>, <will.deacon@arm.com>,
+        <paul.burton@mips.com>, <linux-kernel@vger.kernel.org>,
+        <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 0/4] atomic: Fixes to smp_mb__{before,after}_atomic()
+ and mips.
+In-Reply-To: <1674.1560435952@warthog.procyon.org.uk>
+Message-ID: <Pine.LNX.4.44L0.1906131253230.1307-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jassi Brar <jaswinder.singh@linaro.org>
+On Thu, 13 Jun 2019, David Howells wrote:
 
-Document the devicetree bindings for Socionext Milbeaut HDMAC
-controller. Controller has upto 8 floating channels, that need
-a predefined slave-id to work from a set of slaves.
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > Basically we fail for:
+> > 
+> > 	*x = 1;
+> > 	atomic_inc(u);
+> > 	smp_mb__after_atomic();
+> > 	r0 = *y;
+> > 
+> > Because, while the atomic_inc() implies memory order, it
+> > (surprisingly) does not provide a compiler barrier. This then allows
+> > the compiler to re-order like so:
+> 
+> To quote memory-barriers.txt:
+> 
+>  (*) smp_mb__before_atomic();
+>  (*) smp_mb__after_atomic();
+> 
+>      These are for use with atomic (such as add, subtract, increment and
+>      decrement) functions that don't return a value, especially when used for
+>      reference counting.  These functions do not imply memory barriers.
+> 
+> so it's entirely to be expected?
 
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
----
- .../bindings/dma/milbeaut-m10v-hdmac.txt           | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+The text is perhaps ambiguous.  It means that the atomic functions
+which don't return values -- like atomic_inc() -- do not imply memory
+barriers.  It doesn't mean that smp_mb__before_atomic() and
+smp_mb__after_atomic() do not imply memory barriers.
 
-diff --git a/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-new file mode 100644
-index 000000000000..a104fcb9e73d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-@@ -0,0 +1,51 @@
-+* Milbeaut AHB DMA Controller
-+
-+Milbeaut AHB DMA controller has transfer capability bellow.
-+ - memory to memory transfer
-+ - device to memory transfer
-+ - memory to device transfer
-+
-+Required property:
-+- compatible:       Should be  "socionext,milbeaut-m10v-hdmac"
-+- reg:              Should contain DMA registers location and length.
-+- interrupts:       Should contain all of the per-channel DMA interrupts.
-+- #dma-cells:       Should be 1. Specify the ID of the slave.
-+- clocks:           Phandle to the clock used by the HDMAC module.
-+
-+
-+Example:
-+
-+	hdmac1: hdmac@1e110000 {
-+		compatible = "socionext,milbeaut-m10v-hdmac";
-+		reg = <0x1e110000 0x10000>;
-+		interrupts = <0 132 4>,
-+			     <0 133 4>,
-+			     <0 134 4>,
-+			     <0 135 4>,
-+			     <0 136 4>,
-+			     <0 137 4>,
-+			     <0 138 4>,
-+			     <0 139 4>;
-+		#dma-cells = <1>;
-+		clocks = <&dummy_clk>;
-+	};
-+
-+* DMA client
-+
-+Clients have to specify the DMA requests with phandles in a list.
-+
-+Required properties:
-+- dmas:             List of one or more DMA request specifiers. One DMA request specifier
-+                    consists of a phandle to the DMA controller followed by the integer
-+                    specifying the request line.
-+- dma-names:        List of string identifiers for the DMA requests. For the correct
-+                    names, have a look at the specific client driver.
-+
-+Example:
-+
-+	sni_spi1: spi@1e800100 {
-+		...
-+		dmas = <&hdmac1 22>, <&hdmac1 21>;
-+		dma-names = "tx", "rx";
-+		...
-+	};
--- 
-2.17.1
+The behavior Peter described is not to be expected.  The expectation is 
+that the smp_mb__after_atomic() in the example should force the "*x = 
+1" store to execute before the "r0 = *y" load.  But on current x86 it 
+doesn't force this, for the reason explained in the description.
+
+Alan
 
