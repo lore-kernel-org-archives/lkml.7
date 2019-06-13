@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AE9C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA0EC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDAFC20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D68B620851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441404;
-	bh=Kw+HJr+R42y6/vvn4jURGVl/5vkrzlwKS9vwDuY+uEk=;
+	s=default; t=1560441411;
+	bh=NIHUt78GqB9CwMdiYBFF7fCkC0zbkLSvOS8PMpFSDDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jUqf5EcbDk9lQvgoxG+dEUssv0AbVMruisBAqzN6d8r5qjknlcsHgxiagcchMfHuK
-	 Rjar+o8YKhrORT7bq4zgGAS51+6wTe2v245mxoFSTCeCOBGGf98AKpqliUHuh0mHIH
-	 Zuc7sNvYRSJdFqNAd+2OCTbOspjG5XZe2bA72NjI=
+	b=DBGAyXo1qEPQvgGmJFc9GTIDpYbGdRLM8asPUEJoHEdnNULClQ4y7R+R5xaobVNFC
+	 rbENkn6EEA72J7jzT+RT03B73ZAKbjZU+YmBLSgR8p9YyQP3WX1oIciCtLWXGcAsPK
+	 aHcG5gmKrswZzlg0nxf+X1/IMZS0wcutavodAs5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390026AbfFMP4n (ORCPT
+        id S2390129AbfFMP4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:56:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38576 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:56:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731521AbfFMIvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:51:06 -0400
+        id S1731520AbfFMIvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:51:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71F7421473;
-        Thu, 13 Jun 2019 08:51:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8D2220851;
+        Thu, 13 Jun 2019 08:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415865;
-        bh=Kw+HJr+R42y6/vvn4jURGVl/5vkrzlwKS9vwDuY+uEk=;
+        s=default; t=1560415863;
+        bh=NIHUt78GqB9CwMdiYBFF7fCkC0zbkLSvOS8PMpFSDDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VYr70y0wmOuhBUKe4/tq5VWMEckbjAUcObAs6caZZLayTotYYkKG1Bpc980vGP7g1
-         waB+7Zqgsk6KlH1inwDS4ak9p4ia8fZxuBOA+9pRCPliiVYaq/p2CLJ9ns1a70X46c
-         pAqsQpDmhk91Z5x+7v0zDQ8vRoStPNnEc+TYLHsY=
+        b=CSonEmzvfxsfaHLCPqAmfATKe0gpZjth7yVmSf5jeg04261bBnwEDSecV/6Ync5X0
+         kUXaI9Lu9omZDAe68J/f2AdtPXJuWqngaLAnALAgcp5oMc1Oh+5ACldI9gqEJX6E9M
+         uFrm/AiWOR0I/+mds3BjS4rwCRLpyL40JbTszKnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 125/155] PCI: rcar: Fix a potential NULL pointer dereference
-Date:   Thu, 13 Jun 2019 10:33:57 +0200
-Message-Id: <20190613075659.825943377@linuxfoundation.org>
+Subject: [PATCH 5.1 124/155] PCI: dwc: Remove default MSI initialization for platform specific MSI chips
+Date:   Thu, 13 Jun 2019 10:33:56 +0200
+Message-Id: <20190613075659.784066759@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -63,37 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f0d14edd2ba43b995bef4dd5da5ffe0ae19321a1 ]
+[ Upstream commit fd8a44bd5b76dc77133f814dd63d414d49dc74c0 ]
 
-In case __get_free_pages() fails and returns NULL, fix the return
-value to -ENOMEM and release resources to avoid dereferencing a
-NULL pointer.
+Platforms which populate msi_host_init() have their own MSI controller
+logic. Writing to MSI control registers on platforms which do not use
+Designware's MSI controller logic might have side effects.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+To be safe, do not write to MSI control registers if the platform uses
+its own MSI controller logic instead of Designware's MSI one.
+
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+[lorenzo.pieralisi@arm.com: updated commit log]
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-rcar.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../pci/controller/dwc/pcie-designware-host.c | 24 ++++++++++---------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
-index 6a4e435bd35f..765c39911c0c 100644
---- a/drivers/pci/controller/pcie-rcar.c
-+++ b/drivers/pci/controller/pcie-rcar.c
-@@ -931,6 +931,10 @@ static int rcar_pcie_enable_msi(struct rcar_pcie *pcie)
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 9d22b19b76f2..214e883aa0a1 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -653,17 +653,19 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
  
- 	/* setup MSI data target */
- 	msi->pages = __get_free_pages(GFP_KERNEL, 0);
-+	if (!msi->pages) {
-+		err = -ENOMEM;
-+		goto err;
-+	}
- 	base = virt_to_phys((void *)msi->pages);
+ 	dw_pcie_setup(pci);
  
- 	rcar_pci_write_reg(pcie, base | MSIFE, PCIEMSIALR);
+-	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+-
+-	/* Initialize IRQ Status array */
+-	for (ctrl = 0; ctrl < num_ctrls; ctrl++) {
+-		pp->irq_mask[ctrl] = ~0;
+-		dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_MASK +
+-					(ctrl * MSI_REG_CTRL_BLOCK_SIZE),
+-				    4, pp->irq_mask[ctrl]);
+-		dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE +
+-					(ctrl * MSI_REG_CTRL_BLOCK_SIZE),
+-				    4, ~0);
++	if (!pp->ops->msi_host_init) {
++		num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
++
++		/* Initialize IRQ Status array */
++		for (ctrl = 0; ctrl < num_ctrls; ctrl++) {
++			pp->irq_mask[ctrl] = ~0;
++			dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_MASK +
++					    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
++					    4, pp->irq_mask[ctrl]);
++			dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE +
++					    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
++					    4, ~0);
++		}
+ 	}
+ 
+ 	/* Setup RC BARs */
 -- 
 2.20.1
 
