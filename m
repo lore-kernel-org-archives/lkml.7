@@ -2,177 +2,85 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 312F1C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 766ECC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1027520449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4AF21743
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:16:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="iCcOgYbW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732990AbfFMPQQ (ORCPT
+        id S2387703AbfFMPQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:16:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35834 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732208AbfFMNXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:23:52 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E21E130F1BA3;
-        Thu, 13 Jun 2019 13:23:46 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B95F6541F8;
-        Thu, 13 Jun 2019 13:23:45 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>
-Subject: [PATCH 5/9] x86/bpf: Support SIB byte generation
-Date:   Thu, 13 Jun 2019 08:21:02 -0500
-Message-Id: <30e798c2a5b5d89908e6beea03bf2938eaf2a1ca.1560431531.git.jpoimboe@redhat.com>
-In-Reply-To: <cover.1560431531.git.jpoimboe@redhat.com>
-References: <cover.1560431531.git.jpoimboe@redhat.com>
+        Thu, 13 Jun 2019 11:16:13 -0400
+Received: from mail-vs1-f52.google.com ([209.85.217.52]:46522 "EHLO
+        mail-vs1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732214AbfFMNXx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 09:23:53 -0400
+Received: by mail-vs1-f52.google.com with SMTP id l125so12572842vsl.13
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 06:23:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IpdX1rIhn/1Lk8TZ4g/8IVbNpyTArq72nZxCv7jiCEo=;
+        b=iCcOgYbWClI74T8LsWilhPOboTshwxc7nWtBvvK8Z7ywJ/r+FATaJHnGW4MyMnvh4y
+         jUk7j+7+CY44jsMrY3m5tGIRuT67dJ6MwiEBmUW2puE+7W8OGkW6NyYnJjz8Wfu57MF9
+         tr5iFsez+1s52JVknUcrrcublDgoBc03Sv0dTTzYZMicYz6pQjqYUb82KCRNuG9SRLtl
+         2RSzBD+X98xoNhqjtPtg/L4mDXicIA6OpG3eJwUST9rSNzXbmMyWUp6pNf0wiZvKnwW2
+         DvxHyhE6zon70y/pcwFSJAFmGr/DEXc5Zp7XyutonkaJmcBVo1bJp1otzRo6lOT0Qrwm
+         6izA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IpdX1rIhn/1Lk8TZ4g/8IVbNpyTArq72nZxCv7jiCEo=;
+        b=XCkvMmC+DruCaaBuVU+VreJEQgKRrZgxbG7o8eEjbA2nkjKSbsZvgzXGiYFdGJGR0J
+         xuLxurPDz4wPD9u2tZDUxAODUxckObwzP3R2vcj2RuEIetKT9wn76XgFYWXmzvRHUFGB
+         iuYwLLpn2Jytm/+bCAZ4cFPyn+RdZlA3oj6/7qy9lf/HTHpbIq10MgqkZXvcB1X1Yf5O
+         hFMuvsbvIn8OEjw9RPboDhDLO0g63Kz5bAI0Ob+IvBWqnvAa39l+/gwI29X0eSRI5P4u
+         xe6Tca5f1njJLP594c/z3auoRNlrYKk0row6XrE8nYr5Ved58/6GoPIE2/4Tc0cJAdkg
+         n+Pw==
+X-Gm-Message-State: APjAAAXtp6Spu28+zeStgYM1gFEEvxds5kvaDx+R5GN9ljkoQEMdKdJc
+        xvxy1rX46Fi+pDo1lsoZmWNDeeuv8zqKZsNQNR5n+A==
+X-Google-Smtp-Source: APXvYqwN8czoMioCoFYKKJ0HxRg3Skkt2+83tzAgsp1qG20DYQ44UvNFXUtP89dTXn1ua69Avn0x1vk4+P+YzCnp5ek=
+X-Received: by 2002:a67:f795:: with SMTP id j21mr996812vso.226.1560432232846;
+ Thu, 13 Jun 2019 06:23:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 13 Jun 2019 13:23:52 +0000 (UTC)
+References: <20190611125904.1013-1-cai@lca.pw> <CAK8P3a1rK79aj38H0i9vnzeycv6YZ0iUhBFz4giAFc7COTnmWQ@mail.gmail.com>
+ <CABLO=+kZnpBm8W9MmSkSf=18R5fLMFe65+_YWw1-of46B+B1dA@mail.gmail.com> <CAK8P3a1xhaxBc+N=VXRDZyjUQ+W+=fkeDTUcZqeorsyDCTewZg@mail.gmail.com>
+In-Reply-To: <CAK8P3a1xhaxBc+N=VXRDZyjUQ+W+=fkeDTUcZqeorsyDCTewZg@mail.gmail.com>
+From:   Bartosz Szczepanek <bsz@semihalf.com>
+Date:   Thu, 13 Jun 2019 15:23:42 +0200
+Message-ID: <CABLO=+kNiyLZ5gcSLwGtrXPpnWjutLpaAgE8D0rWGLmkJ15PtA@mail.gmail.com>
+Subject: Re: [PATCH -next] efi/tpm: fix a compilation warning
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Qian Cai <cai@lca.pw>, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Matthew Garrett <mjg59@google.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for using R12 indexing instructions in BPF JIT code, add
-support for generating the x86 SIB byte.
+On Thu, Jun 13, 2019 at 2:40 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Would it be correct to change that to 'false' then (or completely remove
+> the additional remap, given that the other two callers pass false
+> already) and pass final_tbl?
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- arch/x86/net/bpf_jit_comp.c | 69 +++++++++++++++++++++++++++++--------
- 1 file changed, 54 insertions(+), 15 deletions(-)
+The problem is that we don't know the final_tbl size before running
+tpm2_calc_event_log_size on it, so we cannot map it's entire content.
+Only table header is mapped at the beginning.
 
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index 485692d4b163..e649f977f8e1 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -143,6 +143,12 @@ static bool is_axreg(u32 reg)
- 	return reg == BPF_REG_0;
- }
- 
-+static bool is_sib_reg(u32 reg)
-+{
-+	/* R12 isn't used yet */
-+	false;
-+}
-+
- /* Add modifiers if 'reg' maps to x86-64 registers R8..R15 */
- static u8 add_1mod(u8 byte, u32 reg)
- {
-@@ -779,10 +785,19 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
- 		case BPF_ST | BPF_MEM | BPF_DW:
- 			EMIT2(add_1mod(0x48, dst_reg), 0xC7);
- 
--st:			if (is_imm8(insn->off))
--				EMIT2(add_1reg(0x40, dst_reg), insn->off);
-+st:
-+			if (is_imm8(insn->off))
-+				EMIT1(add_1reg(0x40, dst_reg));
-+			else
-+				EMIT1(add_1reg(0x80, dst_reg));
-+
-+			if (is_sib_reg(dst_reg))
-+				EMIT1(add_1reg(0x20, dst_reg));
-+
-+			if (is_imm8(insn->off))
-+				EMIT1(insn->off);
- 			else
--				EMIT1_off32(add_1reg(0x80, dst_reg), insn->off);
-+				EMIT(insn->off, 4);
- 
- 			EMIT(imm32, bpf_size_to_x86_bytes(BPF_SIZE(insn->code)));
- 			break;
-@@ -811,11 +826,19 @@ st:			if (is_imm8(insn->off))
- 			goto stx;
- 		case BPF_STX | BPF_MEM | BPF_DW:
- 			EMIT2(add_2mod(0x48, dst_reg, src_reg), 0x89);
--stx:			if (is_imm8(insn->off))
--				EMIT2(add_2reg(0x40, dst_reg, src_reg), insn->off);
-+stx:
-+			if (is_imm8(insn->off))
-+				EMIT1(add_2reg(0x40, dst_reg, src_reg));
- 			else
--				EMIT1_off32(add_2reg(0x80, dst_reg, src_reg),
--					    insn->off);
-+				EMIT1(add_2reg(0x80, dst_reg, src_reg));
-+
-+			if (is_sib_reg(dst_reg))
-+				EMIT1(add_1reg(0x20, dst_reg));
-+
-+			if (is_imm8(insn->off))
-+				EMIT1(insn->off);
-+			else
-+				EMIT(insn->off, 4);
- 			break;
- 
- 			/* LDX: dst_reg = *(u8*)(src_reg + off) */
-@@ -837,16 +860,24 @@ stx:			if (is_imm8(insn->off))
- 		case BPF_LDX | BPF_MEM | BPF_DW:
- 			/* Emit 'mov rax, qword ptr [rax+0x14]' */
- 			EMIT2(add_2mod(0x48, src_reg, dst_reg), 0x8B);
--ldx:			/*
-+ldx:
-+			/*
- 			 * If insn->off == 0 we can save one extra byte, but
- 			 * special case of x86 R13 which always needs an offset
- 			 * is not worth the hassle
- 			 */
- 			if (is_imm8(insn->off))
--				EMIT2(add_2reg(0x40, src_reg, dst_reg), insn->off);
-+				EMIT1(add_2reg(0x40, src_reg, dst_reg));
-+			else
-+				EMIT1(add_2reg(0x80, src_reg, dst_reg));
-+
-+			if (is_sib_reg(src_reg))
-+				EMIT1(add_1reg(0x20, src_reg));
-+
-+			if (is_imm8(insn->off))
-+				EMIT1(insn->off);
- 			else
--				EMIT1_off32(add_2reg(0x80, src_reg, dst_reg),
--					    insn->off);
-+				EMIT(insn->off, 4);
- 			break;
- 
- 			/* STX XADD: lock *(u32*)(dst_reg + off) += src_reg */
-@@ -859,11 +890,19 @@ stx:			if (is_imm8(insn->off))
- 			goto xadd;
- 		case BPF_STX | BPF_XADD | BPF_DW:
- 			EMIT3(0xF0, add_2mod(0x48, dst_reg, src_reg), 0x01);
--xadd:			if (is_imm8(insn->off))
--				EMIT2(add_2reg(0x40, dst_reg, src_reg), insn->off);
-+xadd:
-+			if (is_imm8(insn->off))
-+				EMIT1(add_2reg(0x40, dst_reg, src_reg));
-+			else
-+				EMIT1(add_2reg(0x80, dst_reg, src_reg));
-+
-+			if (is_sib_reg(dst_reg))
-+				EMIT1(add_1reg(0x20, dst_reg));
-+
-+			if (is_imm8(insn->off))
-+				EMIT1(insn->off);
- 			else
--				EMIT1_off32(add_2reg(0x80, dst_reg, src_reg),
--					    insn->off);
-+				EMIT(insn->off, 4);
- 			break;
- 
- 			/* call */
--- 
-2.20.1
-
+After size of entire table is calculated it can be mapped as a whole
+and no additional remap is needed, hence the calls with do_mapping =
+false.
