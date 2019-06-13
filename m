@@ -2,108 +2,83 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387B3C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B1CC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11DFB206E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:04:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441867;
-	bh=LoeZwMdx8lyEmitXs28F03cf04OY7TJPSfs/FF3NIJc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I+92Ujbb237q21CDoygjvp+/8R+yFkty/bwGDgqVlQ0eOWc5t6J+/j7y1ydniEhGg
-	 sgdfNY/NMECwan8keNdV/Sq0MoPO1Bscc1FHDhiaDi+ZZwXWcdNkAPnPcyfpz/INzs
-	 5K+99rs/ToJ3ik9SOb3JdLC9vfGse+LDDCayk0Yg=
+	by mail.kernel.org (Postfix) with ESMTP id E463120665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:04:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391165AbfFMQE0 (ORCPT
+        id S2391174AbfFMQE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:04:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35328 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:04:29 -0400
+Received: from sauhun.de ([88.99.104.3]:42058 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731354AbfFMIq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:46:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C274521743;
-        Thu, 13 Jun 2019 08:46:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415618;
-        bh=LoeZwMdx8lyEmitXs28F03cf04OY7TJPSfs/FF3NIJc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M7On0Ekx01vB7MHDpYcohNVHU9IkEVUp4gld2sSQt+bsCWM7UcIig7eltuhnrmIsE
-         OvhzlqkCLt+zxEJ7leKERqD+jBDu/Ccobu+3qY/rFTEgSA6JchCENp1LbAdie7OrOq
-         k6oGdsM0Ld54umCSUq6eGn0iLZT+LT1rfcdkqNRc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 041/155] ntp: Allow TAI-UTC offset to be set to zero
-Date:   Thu, 13 Jun 2019 10:32:33 +0200
-Message-Id: <20190613075655.401187746@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
-References: <20190613075652.691765927@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1727721AbfFMQE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:04:27 -0400
+Received: from localhost (p5486CF99.dip0.t-ipconnect.de [84.134.207.153])
+        by pokefinder.org (Postfix) with ESMTPSA id EB38D4A127B;
+        Thu, 13 Jun 2019 18:04:25 +0200 (CEST)
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     alsa-devel@alsa-project.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] ALSA: pci: echoaudio: remove variable which is a constant
+Date:   Thu, 13 Jun 2019 18:04:23 +0200
+Message-Id: <20190613160423.17097-1-wsa@the-dreams.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fdc6bae940ee9eb869e493990540098b8c0fd6ab ]
+Checking a variable which is always '1' has no use.
 
-The ADJ_TAI adjtimex mode sets the TAI-UTC offset of the system clock.
-It is typically set by NTP/PTP implementations and it is automatically
-updated by the kernel on leap seconds. The initial value is zero (which
-applications may interpret as unknown), but this value cannot be set by
-adjtimex. This limitation seems to go back to the original "nanokernel"
-implementation by David Mills.
-
-Change the ADJ_TAI check to accept zero as a valid TAI-UTC offset in
-order to allow setting it back to the initial value.
-
-Fixes: 153b5d054ac2 ("ntp: support for TAI")
-Suggested-by: Ondrej Mosnacek <omosnace@redhat.com>
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Prarit Bhargava <prarit@redhat.com>
-Link: https://lkml.kernel.org/r/20190417084833.7401-1-mlichvar@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 ---
- kernel/time/ntp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-index 92a90014a925..f43d47c8c3b6 100644
---- a/kernel/time/ntp.c
-+++ b/kernel/time/ntp.c
-@@ -690,7 +690,7 @@ static inline void process_adjtimex_modes(const struct __kernel_timex *txc,
- 		time_constant = max(time_constant, 0l);
- 	}
+Only build tested. Found by static code analysis of similar patterns.
+
+ sound/pci/echoaudio/echoaudio_dsp.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/sound/pci/echoaudio/echoaudio_dsp.c b/sound/pci/echoaudio/echoaudio_dsp.c
+index b181752b8481..50d4a87a6bb3 100644
+--- a/sound/pci/echoaudio/echoaudio_dsp.c
++++ b/sound/pci/echoaudio/echoaudio_dsp.c
+@@ -1058,7 +1058,6 @@ static int allocate_pipes(struct echoaudio *chip, struct audiopipe *pipe,
+ {
+ 	int i;
+ 	u32 channel_mask;
+-	char is_cyclic;
  
--	if (txc->modes & ADJ_TAI && txc->constant > 0)
-+	if (txc->modes & ADJ_TAI && txc->constant >= 0)
- 		*time_tai = txc->constant;
+ 	dev_dbg(chip->card->dev,
+ 		"allocate_pipes: ch=%d int=%d\n", pipe_index, interleave);
+@@ -1066,8 +1065,6 @@ static int allocate_pipes(struct echoaudio *chip, struct audiopipe *pipe,
+ 	if (chip->bad_board)
+ 		return -EIO;
  
- 	if (txc->modes & ADJ_OFFSET)
+-	is_cyclic = 1;	/* This driver uses cyclic buffers only */
+-
+ 	for (channel_mask = i = 0; i < interleave; i++)
+ 		channel_mask |= 1 << (pipe_index + i);
+ 	if (chip->pipe_alloc_mask & channel_mask) {
+@@ -1078,8 +1075,8 @@ static int allocate_pipes(struct echoaudio *chip, struct audiopipe *pipe,
+ 
+ 	chip->comm_page->position[pipe_index] = 0;
+ 	chip->pipe_alloc_mask |= channel_mask;
+-	if (is_cyclic)
+-		chip->pipe_cyclic_mask |= channel_mask;
++	/* This driver uses cyclic buffers only */
++	chip->pipe_cyclic_mask |= channel_mask;
+ 	pipe->index = pipe_index;
+ 	pipe->interleave = interleave;
+ 	pipe->state = PIPE_STATE_STOPPED;
 -- 
 2.20.1
-
-
 
