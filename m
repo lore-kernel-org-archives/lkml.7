@@ -2,54 +2,52 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976D0C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD37C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD7920665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DC620665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441747;
-	bh=uwVshWOluPUjLM4fSWWgcdbrPcHDFtlVUyODm2FjKHw=;
+	s=default; t=1560441748;
+	bh=6AsnjSp4I8XPLFUdtj4253p9jBp5YwDl72Dnx/K14u0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CoYZfjAHHitPQ878IASr3NhZwMm6sqyWUsmPPxtY95shGtaLcseifkmzjb7xFvQO8
-	 IgZNxk06yEEygLHUQ8qxeDaC22Krve5Ec0Eda6g0VL2iBoJGxkbq1Ft1RJDSjiZJb7
-	 MnNnOJRvKbotSwwj/VkwLYyplsUXg3RhlK7g3mFs=
+	b=rcyZRL3ubJ4cbil25xWpm88jNFgcPkitCAgYPbBMMfNIFX8zZgC1aH4k8yP5aUg8C
+	 JDT0yB+ExFLNqkHrbmryGkgwXF/K+whHxOFBYhHPJwXmbzz90dXelypOb5jWe8uoOR
+	 VBRY7yX0YNC8zVrBCFX6nEuuqxVVkrnEh7aCUzyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390957AbfFMQC0 (ORCPT
+        id S2390985AbfFMQC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:02:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35998 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:02:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731407AbfFMIr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:47:56 -0400
+        id S1731406AbfFMIrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:47:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6CB6206BA;
-        Thu, 13 Jun 2019 08:47:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9798F20851;
+        Thu, 13 Jun 2019 08:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415675;
-        bh=uwVshWOluPUjLM4fSWWgcdbrPcHDFtlVUyODm2FjKHw=;
+        s=default; t=1560415672;
+        bh=6AsnjSp4I8XPLFUdtj4253p9jBp5YwDl72Dnx/K14u0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EOniGk+p0abkaoVyhd5how3McCv6rMLjryzrHO27OPhMcD8xG7DuZRnIgM9hFe8vX
-         /QnGSYc/MJ7RvKxiJ/MeDrLzg5M+juXpXDPWhImQuAdKbviss1kCGwAK06vQPT1X0a
-         mv+AgZL3RpBaMj9JWSOZxJaCO5m3ZgjdXrgim0eo=
+        b=10pfZn07hOgHGbiE3LLTnBgAxAr5vUoUeP6WP31MQvq2CQgXd1rSE1FEQ7MTNuRHH
+         Og+CrBpye8N+c/u1/59rEKZ0RDe52UIffbXP2dA5BgwTi+0I1SAYsKdlKb+z0DzeZE
+         mvywfJQ8FQlB2KTe3Yr3fanaDxbdvnJiLSOMr80M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kirill Smelkov <kirr@nexedi.com>,
-        Han-Wen Nienhuys <hanwen@google.com>,
-        Jakob Unterwurzacher <jakobunt@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 085/155] fuse: retrieve: cap requested size to negotiated max_write
-Date:   Thu, 13 Jun 2019 10:33:17 +0200
-Message-Id: <20190613075657.843759297@linuxfoundation.org>
+Subject: [PATCH 5.1 067/155] netfilter: nf_tables: fix base chain stat rcu_dereference usage
+Date:   Thu, 13 Jun 2019 10:32:59 +0200
+Message-Id: <20190613075656.746734042@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -62,61 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7640682e67b33cab8628729afec8ca92b851394f ]
+[ Upstream commit edbd82c5fba009f68d20b5db585be1e667c605f6 ]
 
-FUSE filesystem server and kernel client negotiate during initialization
-phase, what should be the maximum write size the client will ever issue.
-Correspondingly the filesystem server then queues sys_read calls to read
-requests with buffer capacity large enough to carry request header + that
-max_write bytes. A filesystem server is free to set its max_write in
-anywhere in the range between [1*page, fc->max_pages*page]. In particular
-go-fuse[2] sets max_write by default as 64K, wheres default fc->max_pages
-corresponds to 128K. Libfuse also allows users to configure max_write, but
-by default presets it to possible maximum.
+Following splat gets triggered when nfnetlink monitor is running while
+xtables-nft selftests are running:
 
-If max_write is < fc->max_pages*page, and in NOTIFY_RETRIEVE handler we
-allow to retrieve more than max_write bytes, corresponding prepared
-NOTIFY_REPLY will be thrown away by fuse_dev_do_read, because the
-filesystem server, in full correspondence with server/client contract, will
-be only queuing sys_read with ~max_write buffer capacity, and
-fuse_dev_do_read throws away requests that cannot fit into server request
-buffer. In turn the filesystem server could get stuck waiting indefinitely
-for NOTIFY_REPLY since NOTIFY_RETRIEVE handler returned OK which is
-understood by clients as that NOTIFY_REPLY was queued and will be sent
-back.
+net/netfilter/nf_tables_api.c:1272 suspicious rcu_dereference_check() usage!
+other info that might help us debug this:
 
-Cap requested size to negotiate max_write to avoid the problem.  This
-aligns with the way NOTIFY_RETRIEVE handler works, which already
-unconditionally caps requested retrieve size to fuse_conn->max_pages.  This
-way it should not hurt NOTIFY_RETRIEVE semantic if we return less data than
-was originally requested.
+1 lock held by xtables-nft-mul/27006:
+ #0: 00000000e0f85be9 (&net->nft.commit_mutex){+.+.}, at: nf_tables_valid_genid+0x1a/0x50
+Call Trace:
+ nf_tables_fill_chain_info.isra.45+0x6cc/0x6e0
+ nf_tables_chain_notify+0xf8/0x1a0
+ nf_tables_commit+0x165c/0x1740
 
-Please see [1] for context where the problem of stuck filesystem was hit
-for real, how the situation was traced and for more involving patch that
-did not make it into the tree.
+nf_tables_fill_chain_info() can be called both from dumps (rcu read locked)
+or from the transaction path if a userspace process subscribed to nftables
+notifications.
 
-[1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
-[2] https://github.com/hanwen/go-fuse
+In the 'table dump' case, rcu_access_pointer() cannot be used: We do not
+hold transaction mutex so the pointer can be NULLed right after the check.
+Just unconditionally fetch the value, then have the helper return
+immediately if its NULL.
 
-Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-Cc: Han-Wen Nienhuys <hanwen@google.com>
-Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+In the notification case we don't hold the rcu read lock, but updates are
+prevented due to transaction mutex. Use rcu_dereference_check() to make lockdep
+aware of this.
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/dev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nf_tables_api.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -1749,7 +1749,7 @@ static int fuse_retrieve(struct fuse_con
- 	offset = outarg->offset & ~PAGE_MASK;
- 	file_size = i_size_read(inode);
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 1606eaa5ae0d..aa5e7b00a581 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -1190,6 +1190,9 @@ static int nft_dump_stats(struct sk_buff *skb, struct nft_stats __percpu *stats)
+ 	u64 pkts, bytes;
+ 	int cpu;
  
--	num = outarg->size;
-+	num = min(outarg->size, fc->max_write);
- 	if (outarg->offset > file_size)
- 		num = 0;
- 	else if (outarg->offset + num > file_size)
++	if (!stats)
++		return 0;
++
+ 	memset(&total, 0, sizeof(total));
+ 	for_each_possible_cpu(cpu) {
+ 		cpu_stats = per_cpu_ptr(stats, cpu);
+@@ -1247,6 +1250,7 @@ static int nf_tables_fill_chain_info(struct sk_buff *skb, struct net *net,
+ 	if (nft_is_base_chain(chain)) {
+ 		const struct nft_base_chain *basechain = nft_base_chain(chain);
+ 		const struct nf_hook_ops *ops = &basechain->ops;
++		struct nft_stats __percpu *stats;
+ 		struct nlattr *nest;
+ 
+ 		nest = nla_nest_start(skb, NFTA_CHAIN_HOOK);
+@@ -1268,8 +1272,9 @@ static int nf_tables_fill_chain_info(struct sk_buff *skb, struct net *net,
+ 		if (nla_put_string(skb, NFTA_CHAIN_TYPE, basechain->type->name))
+ 			goto nla_put_failure;
+ 
+-		if (rcu_access_pointer(basechain->stats) &&
+-		    nft_dump_stats(skb, rcu_dereference(basechain->stats)))
++		stats = rcu_dereference_check(basechain->stats,
++					      lockdep_commit_lock_is_held(net));
++		if (nft_dump_stats(skb, stats))
+ 			goto nla_put_failure;
+ 	}
+ 
+-- 
+2.20.1
+
 
 
