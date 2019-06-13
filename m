@@ -2,126 +2,103 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A7FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A96C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DED521473
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC64020896
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ijH4AZve"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUUE0h4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388048AbfFMPLg (ORCPT
+        id S2388071AbfFMPLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:11:36 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:48770 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732294AbfFMNuf (ORCPT
+        Thu, 13 Jun 2019 11:11:39 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35324 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732294AbfFMPLh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:50:35 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DDkxYm019850;
-        Thu, 13 Jun 2019 15:50:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=7dQ+9lqtmTtedvp/b3rgO/AqPLUdhqousiUICsfwmlU=;
- b=ijH4AZveed8r4NRn2xYB5nDS0pakBJfLjvIf0GqKUmFnV/7y+itrFb9RfIPwRF9a3sA1
- CRawx/Ss7DilL/8/TriOLtNJRsBGOvkirJquY7FdK907Ctabg73A+xw9rf4C7LW+7RAt
- eyGHhz6CAlJvEtQgYYxR09sKR2NoQgLRPsaSFOdjTx1z4YTpE8BVVQvtDz+Frp310hHJ
- 1/oatkRyxqaKhX9PUb/CLU1KxRYKzf6PCOAoowWF0DwSoI37XrMgzSAhHDYGItgAWEpE
- vE3rVEzkS0P3QKLxpVcnfkGE1/tVpvF6fu/KPAYJ3X5Z1/1p2lTHbw7Qmru+EK0Rpxs5 sA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2t2gxec01t-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 13 Jun 2019 15:50:22 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 588373F;
-        Thu, 13 Jun 2019 13:50:21 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3C5A02BC0;
-        Thu, 13 Jun 2019 13:50:21 +0000 (GMT)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 13 Jun
- 2019 15:50:20 +0200
-Received: from localhost (10.201.23.31) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 13 Jun 2019 15:50:20
- +0200
-From:   Erwan Le Ray <erwan.leray@st.com>
+        Thu, 13 Jun 2019 11:11:37 -0400
+Received: by mail-pg1-f196.google.com with SMTP id s27so11134547pgl.2;
+        Thu, 13 Jun 2019 08:11:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=j6uLYgb9QUdzdOV+EOdPf7OIqvEJL4woU3/ylFU7b/E=;
+        b=AUUE0h4mfwO+9oLPVlcfntVXYuJjpD/YvgN/OCriJDEhw6YWT9XSyFNOpC6eVIGC/X
+         EzOUR7LqN+yMEDzKNgyRFJ13yD8V/WiPtupw1/OhZBuvumEn2A0tPD7ZJimwBNnlJvez
+         loJQbFqwUbtO2IqiajTQU0I7EGYDI1WPRayuKt1LXPUPda3QO3ctpwahDc/bj9U4EDrK
+         5O+2yzU3fC/ajDh92fJpVU608LH//GJKBoIT84FJcYuiBh+szce99d70cDvaz3jOh7BH
+         zOPuOQ+xZt0AyplE7XzElpcSur9TZTmasyswP2RWEBQfAQWOustFJzoj9CjcQsIJXztn
+         dA+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j6uLYgb9QUdzdOV+EOdPf7OIqvEJL4woU3/ylFU7b/E=;
+        b=TW2Qrdj28KEJzmKiBX+wvDbDJJGD//+31nts9/kZwGwah8AN8tix3jzFHh3lU/400e
+         O+jOgfiaPqH7SibfIrGRZmq5uWlTNqN94snZiNYnjNjQBX4W5KVLyF3caelpWYpdrCB5
+         STuyDF1qWWCu6qRZipPFuPHwJ+vyc1t2KcL+J1bXK1ytlgMvAEM3sqkOFdRluIWXTM/e
+         8xlFUYLRLse3Fch0q0IwM2qCFB0tsRDsM0pT41wwB6EOnqgC/U1ARFMnpIJRyf8078IO
+         t09qkn6qI+V0OC2MtkYv7ENR0gjAKiDGZqfy2nkOtC15KKgbl/9mPtVDvCjxkBbgUceK
+         yZIQ==
+X-Gm-Message-State: APjAAAUgU4rCkR21/shgtwrm2v3UPl+Tl0EUQ4qhT8F47vSVN7XwIlxn
+        Vez7GumMH+HV+9cGpHeznUOeFkY8
+X-Google-Smtp-Source: APXvYqyoOI8zf5byMPkbdIwPwjTQvGI4rR/4FIYmFfGEuz1rg6rJfAIcEmG/zEHXT2m8mYaSrsFR8A==
+X-Received: by 2002:a63:3381:: with SMTP id z123mr1470380pgz.164.1560438696218;
+        Thu, 13 Jun 2019 08:11:36 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d5sm22655pfn.25.2019.06.13.08.11.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 08:11:35 -0700 (PDT)
+Subject: Re: [PATCH 4.14 00/81] 4.14.126-stable review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "Alexandre Torgue" <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>
-CC:     <linux-serial@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Erwan Le Ray <erwan.leray@st.com>,
-        "Fabrice Gasnier" <fabrice.gasnier@st.com>,
-        Bich Hemon <bich.hemon@st.com>
-Subject: [PATCH v3 07/10] ARM: dts: stm32: update uart4 pin configurations for low power
-Date:   Thu, 13 Jun 2019 15:49:57 +0200
-Message-ID: <1560433800-12255-8-git-send-email-erwan.leray@st.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1560433800-12255-1-git-send-email-erwan.leray@st.com>
-References: <1560433800-12255-1-git-send-email-erwan.leray@st.com>
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20190613075649.074682929@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <1139f9d4-1a0a-b422-276d-546e7cb1bc85@roeck-us.net>
+Date:   Thu, 13 Jun 2019 08:11:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.31]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_08:,,
- signatures=0
+In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, pinctrl states defines only one "sleep" configuration for pins,
-no matter the possible uart low power modes (Rx pin always kept active).
+On 6/13/19 1:32 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.126 release.
+> There are 81 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat 15 Jun 2019 07:54:51 AM UTC.
+> Anything received after that time might be too late.
+> 
 
-Sleep pin configuration is refined for low power modes:
-- "sleep" (no wakeup & console suspend enabled): put pins in analog state
-  to optimize power
-- "idle" (wakeup capability): keep Rx pin in alternate function
-- "default" state remains untouched, to be used while the UART is active
-  or in case the no_console_suspend mode is enabled
+[early feedback]
 
-Signed-off-by: Bich Hemon <bich.hemon@st.com>
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+Building mips:nlm_xlp_defconfig ... failed (and other mips builds)
+--------------
+Error log:
+/opt/buildbot/slave/stable-queue-4.14/build/arch/mips/kernel/prom.c: In function 'early_init_dt_add_memory_arch':
+/opt/buildbot/slave/stable-queue-4.14/build/arch/mips/kernel/prom.c:44:14: error: 'PHYS_ADDR_MAX' undeclared
 
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-index 85c417d..2e1ab1b 100644
---- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -599,6 +599,23 @@
- 					bias-disable;
- 				};
- 			};
-+
-+			uart4_idle_pins_a: uart4-idle-0 {
-+				pins1 {
-+					pinmux = <STM32_PINMUX('G', 11, ANALOG)>; /* UART4_TX */
-+				};
-+				pins2 {
-+					pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
-+					bias-disable;
-+				};
-+			};
-+
-+			uart4_sleep_pins_a: uart4-sleep-0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('G', 11, ANALOG)>, /* UART4_TX */
-+						 <STM32_PINMUX('B', 2, ANALOG)>; /* UART4_RX */
-+				};
-+			};
- 		};
- 
- 		pinctrl_z: pin-controller-z@54004000 {
--- 
-1.9.1
+The problem affects v4.14.y and all earlier branches.
+PHYS_ADDR_MAX is indeed undeclared in those branches. It was introduced
+with commit 1c4bc43ddfd52 ("mm/memblock: introduce PHYS_ADDR_MAX").
 
+Guenter
