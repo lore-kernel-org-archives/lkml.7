@@ -2,170 +2,105 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29357C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 512B5C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03FB221721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E1720B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560462613;
+	bh=qCRcrp0HOwMnB3fac1d2H0LwpHaQcFZWwqb+IXLewTM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UHG/nuQi2Y809bGwVmfEUSRlN1eSm0w883mSExGWx1kRqiheA+f8xB6H60Rxs1M3Y
+	 +TWbg3aQPncI+8ibz9DyX51P9s2yJq26iIbCdPOAjd2B1DFpk5BhKykGFw+PbqMOM0
+	 TkF9rc2bgu8X/oxMJ6oqH/GHXpdTYbXfaeSX+DX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbfFMVsS (ORCPT
+        id S1727478AbfFMVuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 17:48:18 -0400
-Received: from mga14.intel.com ([192.55.52.115]:18119 "EHLO mga14.intel.com"
+        Thu, 13 Jun 2019 17:50:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfFMVsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 17:48:18 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 14:48:17 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga002.jf.intel.com with ESMTP; 13 Jun 2019 14:48:16 -0700
-Date:   Thu, 13 Jun 2019 14:49:38 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 3/3] mm/gup_benchemark: add LONGTERM_BENCHMARK test in
- gup fast path
-Message-ID: <20190613214938.GG32404@iweiny-DESK2.sc.intel.com>
-References: <1560422702-11403-1-git-send-email-kernelfans@gmail.com>
- <1560422702-11403-4-git-send-email-kernelfans@gmail.com>
- <20190613214247.GF32404@iweiny-DESK2.sc.intel.com>
+        id S1725843AbfFMVuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 17:50:11 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4367821537;
+        Thu, 13 Jun 2019 21:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560462610;
+        bh=qCRcrp0HOwMnB3fac1d2H0LwpHaQcFZWwqb+IXLewTM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AdSryiXB4u6olTXPqQYTrJoZCLs/5VXjUqYqj42vzt2Nv+Gk8d6CBwA/VOn4D19t4
+         tr+KdWXKOqSyXbEx7HkRuwyomr2PzNM980WkOAlbG5ZL/yzFSPVP7gSerU8Eqj1oVB
+         nEL0bsyJJLHV/pSK1y7Vft1dTgZQigFwzTLya7yA=
+Date:   Thu, 13 Jun 2019 16:50:08 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        myron.stowe@redhat.com, bodong@mellanox.com, eli@mellanox.com,
+        laine@redhat.com
+Subject: Re: [PATCH] PCI: Always allow probing with driver_override
+Message-ID: <20190613215008.GN13533@google.com>
+References: <155742996741.21878.569845487290798703.stgit@gimli.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190613214247.GF32404@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <155742996741.21878.569845487290798703.stgit@gimli.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 02:42:47PM -0700, 'Ira Weiny' wrote:
-> On Thu, Jun 13, 2019 at 06:45:02PM +0800, Pingfan Liu wrote:
-> > Introduce a GUP_LONGTERM_BENCHMARK ioctl to test longterm pin in gup fast
-> > path.
-> > 
-> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> > Cc: Ira Weiny <ira.weiny@intel.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Mike Rapoport <rppt@linux.ibm.com>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: Matthew Wilcox <willy@infradead.org>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> > Cc: Keith Busch <keith.busch@intel.com>
-> > Cc: Christoph Hellwig <hch@infradead.org>
-> > Cc: Shuah Khan <shuah@kernel.org>
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  mm/gup_benchmark.c                         | 11 +++++++++--
-> >  tools/testing/selftests/vm/gup_benchmark.c | 10 +++++++---
-> >  2 files changed, 16 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
-> > index 7dd602d..83f3378 100644
-> > --- a/mm/gup_benchmark.c
-> > +++ b/mm/gup_benchmark.c
-> > @@ -6,8 +6,9 @@
-> >  #include <linux/debugfs.h>
-> >  
-> >  #define GUP_FAST_BENCHMARK	_IOWR('g', 1, struct gup_benchmark)
-> > -#define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
-> > -#define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
-> > +#define GUP_FAST_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
-> > +#define GUP_LONGTERM_BENCHMARK	_IOWR('g', 3, struct gup_benchmark)
-> > +#define GUP_BENCHMARK		_IOWR('g', 4, struct gup_benchmark)
+On Thu, May 09, 2019 at 01:27:22PM -0600, Alex Williamson wrote:
+> Commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
+> VF driver binding") introduced the sriov_drivers_autoprobe attribute
+> which allows users to prevent the kernel from automatically probing a
+> driver for new VFs as they are created.  This allows VFs to be spawned
+> without automatically binding the new device to a host driver, such as
+> in cases where the user intends to use the device only with a meta
+> driver like vfio-pci.  However, the current implementation prevents any
+> use of drivers_probe with the VF while sriov_drivers_autoprobe=0.  This
+> blocks the now current general practice of setting driver_override
+> followed by using drivers_probe to bind a device to a specified driver.
 > 
-> But I really like this addition!  Thanks!
+> The kernel never automatically sets a driver_override therefore it seems
+> we can assume a driver_override reflects the intent of the user.  Also,
+> probing a device using a driver_override match seems outside the scope
+> of the 'auto' part of sriov_drivers_autoprobe.  Therefore, let's allow
+> driver_override matches regardless of sriov_drivers_autoprobe, which we
+> can do by simply testing if a driver_override is set for a device as a
+> 'can probe' condition.
 > 
-> But why not just add GUP_FAST_LONGTERM_BENCHMARK to the end of this list (value
-> 4)?  I know the user space test program is probably expected to be lock step
-> with this code but it seems odd to redefine GUP_LONGTERM_BENCHMARK and
-> GUP_BENCHMARK with this change.
+> Fixes: 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
+> Link: https://lore.kernel.org/linux-pci/155672991496.20698.4279330795743262888.stgit@gimli.home/T/#u
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 
-I see that Andrew pull this change.  So if others don't think this renumbering
-is an issue feel free to add my:
+Applied to pci/enumeration for v5.3, thanks!
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-
+> ---
 > 
-> Ira
+>  drivers/pci/pci-driver.c |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> >  
-> >  struct gup_benchmark {
-> >  	__u64 get_delta_usec;
-> > @@ -53,6 +54,11 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
-> >  			nr = get_user_pages_fast(addr, nr, gup->flags & 1,
-> >  						 pages + i);
-> >  			break;
-> > +		case GUP_FAST_LONGTERM_BENCHMARK:
-> > +			nr = get_user_pages_fast(addr, nr,
-> > +					(gup->flags & 1) | FOLL_LONGTERM,
-> > +					 pages + i);
-> > +			break;
-> >  		case GUP_LONGTERM_BENCHMARK:
-> >  			nr = get_user_pages(addr, nr,
-> >  					    (gup->flags & 1) | FOLL_LONGTERM,
-> > @@ -96,6 +102,7 @@ static long gup_benchmark_ioctl(struct file *filep, unsigned int cmd,
-> >  
-> >  	switch (cmd) {
-> >  	case GUP_FAST_BENCHMARK:
-> > +	case GUP_FAST_LONGTERM_BENCHMARK:
-> >  	case GUP_LONGTERM_BENCHMARK:
-> >  	case GUP_BENCHMARK:
-> >  		break;
-> > diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/selftests/vm/gup_benchmark.c
-> > index c0534e2..ade8acb 100644
-> > --- a/tools/testing/selftests/vm/gup_benchmark.c
-> > +++ b/tools/testing/selftests/vm/gup_benchmark.c
-> > @@ -15,8 +15,9 @@
-> >  #define PAGE_SIZE sysconf(_SC_PAGESIZE)
-> >  
-> >  #define GUP_FAST_BENCHMARK	_IOWR('g', 1, struct gup_benchmark)
-> > -#define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
-> > -#define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
-> > +#define GUP_FAST_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
-> > +#define GUP_LONGTERM_BENCHMARK	_IOWR('g', 3, struct gup_benchmark)
-> > +#define GUP_BENCHMARK		_IOWR('g', 4, struct gup_benchmark)
-> >  
-> >  struct gup_benchmark {
-> >  	__u64 get_delta_usec;
-> > @@ -37,7 +38,7 @@ int main(int argc, char **argv)
-> >  	char *file = "/dev/zero";
-> >  	char *p;
-> >  
-> > -	while ((opt = getopt(argc, argv, "m:r:n:f:tTLUSH")) != -1) {
-> > +	while ((opt = getopt(argc, argv, "m:r:n:f:tTlLUSH")) != -1) {
-> >  		switch (opt) {
-> >  		case 'm':
-> >  			size = atoi(optarg) * MB;
-> > @@ -54,6 +55,9 @@ int main(int argc, char **argv)
-> >  		case 'T':
-> >  			thp = 0;
-> >  			break;
-> > +		case 'l':
-> > +			cmd = GUP_FAST_LONGTERM_BENCHMARK;
-> > +			break;
-> >  		case 'L':
-> >  			cmd = GUP_LONGTERM_BENCHMARK;
-> >  			break;
-> > -- 
-> > 2.7.5
-> > 
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index da7b82e56c83..9b9e9c63cde8 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -399,7 +399,8 @@ void __weak pcibios_free_irq(struct pci_dev *dev)
+>  #ifdef CONFIG_PCI_IOV
+>  static inline bool pci_device_can_probe(struct pci_dev *pdev)
+>  {
+> -	return (!pdev->is_virtfn || pdev->physfn->sriov->drivers_autoprobe);
+> +	return (!pdev->is_virtfn || pdev->physfn->sriov->drivers_autoprobe ||
+> +		pdev->driver_override);
+>  }
+>  #else
+>  static inline bool pci_device_can_probe(struct pci_dev *pdev)
 > 
