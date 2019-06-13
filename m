@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761E6C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5A4C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F66620644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 573FD20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442714;
-	bh=9QDiZhwmO4zLi7ec8y4uzN+gMC+axulGwP8cLoqMR3Y=;
+	s=default; t=1560442717;
+	bh=Pr0OKV+vNmFOWLJsWKtStxn11AlVOWFE4I2lYa1OZyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RIMTi7kiJ2SCDrbpM3slYuUnLKMfAnSuTuPfZ5pvgRQieW3GYXnkUjWvCintEQm26
-	 BUxfxqM8zgQvWNw2FpNtY929wvbh+Xc5FQGN5vqR3WtfL1dgNaxtLSLkowyfgkgUQN
-	 ckcW4fdU6CIXwOo7oukhBd0+/g1M6WqBs3R/0EVs=
+	b=WVJeVmCeVVi7LjeOTQNmOVHQnx/oVe+1S4smWi8/hEwf5s4QORQpfMsiYw3r2Pbzr
+	 9CT21aLJXyxJ7OHGkAAQgQbD4JZu8/bn8o/ZzzbAG97TJlg1DXgUqHMeno2gDl/y6j
+	 she1l9P0CiR7PV/Dnz/oIE7ONSKv4iUqTovUg6c0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403925AbfFMQS3 (ORCPT
+        id S2391813AbfFMQS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:18:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57758 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:18:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731114AbfFMIkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:40:17 -0400
+        id S1731115AbfFMIkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:40:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E75C21473;
-        Thu, 13 Jun 2019 08:40:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A49721473;
+        Thu, 13 Jun 2019 08:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415217;
-        bh=9QDiZhwmO4zLi7ec8y4uzN+gMC+axulGwP8cLoqMR3Y=;
+        s=default; t=1560415222;
+        bh=Pr0OKV+vNmFOWLJsWKtStxn11AlVOWFE4I2lYa1OZyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xYvolUSmNk8cHjdIwIaHirlSormf4ObTlH2/SIedbSo30oEmaL/j3lVYmAfdH1iU8
-         bfiT1Yftw6KTWLPbGomZVYYVBxFu1+vjEu5Oge49olunUmWfkP4GgKrZzoetjjK0Zk
-         sZiztJOPXz0x1Po/CLetlcb3YpSNm0RgoxlV1VC0=
+        b=ZnBQBL8ENIU9bLKKFvPHmG/BIFPVfcZ3ioyM4ZLNx62mDukNjjyVmotVQpyqaob4/
+         w8+NaEMH2uA61qtkqjF5y2XFRTKW2mFwWqUgNG7Z8FFRtP4kb43dmXverFQRoH6WaG
+         +gRjVpfNTQgufa2C9H5xv5U3eVE5b9vMazSCOlKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        stable@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 046/118] PCI: dwc: Free MSI IRQ page in dw_pcie_free_msi()
-Date:   Thu, 13 Jun 2019 10:33:04 +0200
-Message-Id: <20190613075646.483766820@linuxfoundation.org>
+Subject: [PATCH 4.19 048/118] mmc: mmci: Prevent polling for busy detection in IRQ context
+Date:   Thu, 13 Jun 2019 10:33:06 +0200
+Message-Id: <20190613075646.591338044@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -63,66 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dc69a3d567941784c3d00e1d0834582b42b0b3e7 ]
+[ Upstream commit 8520ce1e17799b220ff421d4f39438c9c572ade3 ]
 
-To avoid a memory leak, free the page allocated for MSI IRQ in
-dw_pcie_free_msi().
+The IRQ handler, mmci_irq(), loops until all status bits have been cleared.
+However, the status bit signaling busy in variant->busy_detect_flag, may be
+set even if busy detection isn't monitored for the current request.
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+This may be the case for the CMD11 when switching the I/O voltage, which
+leads to that mmci_irq() busy loops in IRQ context. Fix this problem, by
+clearing the status bit for busy, before continuing to validate the
+condition for the loop. This is safe, because the busy status detection has
+already been taken care of by mmci_cmd_irq().
+
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c | 12 ++++++++----
- drivers/pci/controller/dwc/pcie-designware.h      |  1 +
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ drivers/mmc/host/mmci.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 4eedb2c54ab3..acd50920c2ff 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -303,20 +303,24 @@ void dw_pcie_free_msi(struct pcie_port *pp)
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index 1841d250e9e2..eb1a65cb878f 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -1295,9 +1295,10 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+ 		}
  
- 	irq_domain_remove(pp->msi_domain);
- 	irq_domain_remove(pp->irq_domain);
-+
-+	if (pp->msi_page)
-+		__free_page(pp->msi_page);
- }
+ 		/*
+-		 * Don't poll for busy completion in irq context.
++		 * Busy detection has been handled by mmci_cmd_irq() above.
++		 * Clear the status bit to prevent polling in IRQ context.
+ 		 */
+-		if (host->variant->busy_detect && host->busy_status)
++		if (host->variant->busy_detect_flag)
+ 			status &= ~host->variant->busy_detect_flag;
  
- void dw_pcie_msi_init(struct pcie_port *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct device *dev = pci->dev;
--	struct page *page;
- 	u64 msi_target;
- 
--	page = alloc_page(GFP_KERNEL);
--	pp->msi_data = dma_map_page(dev, page, 0, PAGE_SIZE, DMA_FROM_DEVICE);
-+	pp->msi_page = alloc_page(GFP_KERNEL);
-+	pp->msi_data = dma_map_page(dev, pp->msi_page, 0, PAGE_SIZE,
-+				    DMA_FROM_DEVICE);
- 	if (dma_mapping_error(dev, pp->msi_data)) {
- 		dev_err(dev, "Failed to map MSI data\n");
--		__free_page(page);
-+		__free_page(pp->msi_page);
-+		pp->msi_page = NULL;
- 		return;
- 	}
- 	msi_target = (u64)pp->msi_data;
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 9f1a5e399b70..14dcf6646699 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -164,6 +164,7 @@ struct pcie_port {
- 	struct irq_domain	*irq_domain;
- 	struct irq_domain	*msi_domain;
- 	dma_addr_t		msi_data;
-+	struct page		*msi_page;
- 	u32			num_vectors;
- 	u32			irq_status[MAX_MSI_CTRLS];
- 	raw_spinlock_t		lock;
+ 		ret = 1;
 -- 
 2.20.1
 
