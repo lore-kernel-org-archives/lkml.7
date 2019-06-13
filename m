@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA07C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7983C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7031206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86267206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i4YhAVe8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XcXPi//K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbfFMRET (ORCPT
+        id S2404754AbfFMREX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:04:19 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45829 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393371AbfFMREC (ORCPT
+        Thu, 13 Jun 2019 13:04:23 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40410 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404587AbfFMREG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:04:02 -0400
-Received: by mail-wr1-f66.google.com with SMTP id f9so21543741wre.12;
-        Thu, 13 Jun 2019 10:04:01 -0700 (PDT)
+        Thu, 13 Jun 2019 13:04:06 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p11so21600051wre.7;
+        Thu, 13 Jun 2019 10:04:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LrsdwY5oeKnCEzpxEpH2pMSwNmXiuq/c8to0EOSJdAw=;
-        b=i4YhAVe8Qi4Qs5oPDdcySnM088oH4WdO9dqUWtrO637Uq3eQmNM6oGgjpRP4j9bIP0
-         oV/LtUO+3iikkJYJ9EW+vUM1SjUgobPybdK41hzOe4/SYzpZcfxm+/74gQ6tcW9ymyxT
-         1K7DgAb13dc2lpGxMVVgy48EOwsWp7r/6dRiuMRH731ODirFOGcgdVeX8ZMceVDxPx+3
-         uYKAtGTi/s2yb3A86EZlroJVDh+wLzvSD2OxResnp3S1p9gOfEMDCoeAI7nR4GRk2lMe
-         jGfw41cKKDn4jowhjZpLMKMlDRNVyuSzhAF25K6VmEMgTKpbHNg6VPUJP0OW4HqWQXeY
-         IXIw==
+        bh=9yV6J7ifAff8sWvhUN35A0JwiLFUyPYJf7ITEUIAEwY=;
+        b=XcXPi//KbdBrUANkJJ839VnUYpRtH6R60bRuX+VZF3do4Z2nJOvmZLktvhHnGgI1Cl
+         RcJmnNm+KTAAUmBNetFr5nLpIXPIGJ7cFVvLeM4xKoZSqO1FI/4myUWYrWq/dZnCb93c
+         ftRKTxUoAL1FeGsTkZqLpoYwg3h6hturfqbZ0dvH6kVxMzz2ua1Hx4AgYmHgfRlmk9Lf
+         tkllHjdMFinG14GumL5bwYh1LmP0feQQ0tXTiEk47oDe6upevUf5cS2po86bF+5ZLZNc
+         fVg8sutV7HWUbjStTYYumzMXqaZpLDQGbi9MpueK1T69rZzsZ8K70uzGeXF1TmgIRPCp
+         3jhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=LrsdwY5oeKnCEzpxEpH2pMSwNmXiuq/c8to0EOSJdAw=;
-        b=gQRlREIE83J+3BzFDVze52Xqtz1qsD7nhKxkDCHvWO417ZEND0YkRU06ErxsNU3v4T
-         Xylc4NP5O/XhaZaPLnaMkC4ufBysu0fyF2v+S9ahTbYX2cD259yeva6tvhlaEy3XNrPB
-         xZWrqFdX0aHX2Vy7T3XltZYIp7VO6km8P6y3fsLmNfuoKm3D4gAm+8MLNwwuwaWTKC6E
-         4eD5ml0aRBMVAmb9dI1Fs/yG7/LDpBaS0iLBTXgBxfBKtW6YGMDfYKPw2nZBOQ+3mUJp
-         RfpH/u0EpM2cl3B624SgcyFf+q2ELgwI1KoYfzMwFHzW/xJGvrwjBvN0/7wx0Bf7+5ho
-         i/bA==
-X-Gm-Message-State: APjAAAXDsP+Cpg1T978J2Mr6wnsyjGQsUb1tTYrYypn3Anmw2txAF9m6
-        cqGL500XVnEnCVVKsf5W1uSRwk47
-X-Google-Smtp-Source: APXvYqxARXtkNdCcBtlyjbs1jKCmTWAlnWJ47Uqs+Trbh1paf715xSsyrQ2yWJoykr9/GSbnSzkgng==
-X-Received: by 2002:a05:6000:4b:: with SMTP id k11mr9222858wrx.82.1560445440327;
-        Thu, 13 Jun 2019 10:04:00 -0700 (PDT)
+        bh=9yV6J7ifAff8sWvhUN35A0JwiLFUyPYJf7ITEUIAEwY=;
+        b=fa67IHZPQxraItY9VQ0kGN0xgTA80Wfe2ySXSvfEkDRyKvTeFTohMi2Z9kxKmdmBQA
+         Jvc1QMFhi2Asrqe5UmhyVFLWui/xXLKon+/21moFji1H7+8auDTBp/CnqzqS/UiNRqHn
+         rCXeJwqFJ2yavWSpV47yZ+iRz8JVG1OPhClqQsrljAJ+j65UYGWi40IPmkJohWVEHta1
+         bpFgfZornIVGeDaNjzOuY1V/ohS5/R5Pl+GNvTW7FOotzbHj8149c9knSElfZ6/IRskz
+         izAjPAeiJrz3p1dW7drkjPCxcqcD6PWqSMtRRV1cBppqR+vnJyF7lVv7gIbO5zWcwqkT
+         jD/w==
+X-Gm-Message-State: APjAAAVekS8ajhQAEWhr6isdIpZHNbde8rWzRna9TE53F3tn63zHGd9s
+        D/RjILfG1el0bbnquKG2jQvyw/s1
+X-Google-Smtp-Source: APXvYqzTv5lKKWnyD2CHpXvxDr9rukfvyo7jfaRY6n1f3tIgwX9edkVd/dB6Ujuu1zNBb2ZIp8cwrQ==
+X-Received: by 2002:a5d:4841:: with SMTP id n1mr2133314wrs.320.1560445443889;
+        Thu, 13 Jun 2019 10:04:03 -0700 (PDT)
 Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.03.59
+        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.04.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 10:03:59 -0700 (PDT)
+        Thu, 13 Jun 2019 10:04:03 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         vkuznets@redhat.com
-Subject: [PATCH 27/43] KVM: nVMX: Update vmcs12 for MSR_IA32_DEBUGCTLMSR when it's written
-Date:   Thu, 13 Jun 2019 19:03:13 +0200
-Message-Id: <1560445409-17363-28-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 31/43] KVM: nVMX: Use adjusted pin controls for vmcs02
+Date:   Thu, 13 Jun 2019 19:03:17 +0200
+Message-Id: <1560445409-17363-32-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
 References: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
@@ -72,53 +72,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-KVM unconditionally intercepts WRMSR to MSR_IA32_DEBUGCTLMSR.  In the
-unlikely event that L1 allows L2 to write L1's MSR_IA32_DEBUGCTLMSR, but
-but saves L2's value on VM-Exit, update vmcs12 during L2's WRMSR so as
-to eliminate the need to VMREAD the value from vmcs02 on nested VM-Exit.
+KVM provides a module parameter to allow disabling virtual NMI support
+to simplify testing (hardware *without* virtual NMI support is hard to
+come by but it does have users).  When preparing vmcs02, use the accessor
+for pin controls to ensure that the module param is respected for nested
+guests.
 
+Opportunistically swap the order of applying L0's and L1's pin controls
+to better align with other controls and to prepare for a future patche
+that will ignore L1's, but not L0's, preemption timer flag.
+
+Fixes: d02fcf50779ec ("kvm: vmx: Allow disabling virtual NMI support")
+Cc: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/nested.c | 4 +---
- arch/x86/kvm/vmx/vmx.c    | 8 ++++++++
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 5 ++---
+ arch/x86/kvm/vmx/vmx.c    | 2 +-
+ arch/x86/kvm/vmx/vmx.h    | 1 +
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 68c031e2cc4d..138f27597c91 100644
+index 1b42bd0bf354..f5612b475393 100644
 --- a/arch/x86/kvm/vmx/nested.c
 +++ b/arch/x86/kvm/vmx/nested.c
-@@ -3563,10 +3563,8 @@ static void sync_vmcs02_to_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
- 		(vmcs12->vm_entry_controls & ~VM_ENTRY_IA32E_MODE) |
- 		(vm_entry_controls_get(to_vmx(vcpu)) & VM_ENTRY_IA32E_MODE);
+@@ -2013,10 +2013,9 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
+ 	/*
+ 	 * PIN CONTROLS
+ 	 */
+-	exec_control = vmcs12->pin_based_vm_exec_control;
+-
++	exec_control = vmx_pin_based_exec_ctrl(vmx);
++	exec_control |= vmcs12->pin_based_vm_exec_control;
+ 	/* Preemption timer setting is computed directly in vmx_vcpu_run.  */
+-	exec_control |= vmcs_config.pin_based_exec_ctrl;
+ 	exec_control &= ~PIN_BASED_VMX_PREEMPTION_TIMER;
+ 	vmx->loaded_vmcs->hv_timer_armed = false;
  
--	if (vmcs12->vm_exit_controls & VM_EXIT_SAVE_DEBUG_CONTROLS) {
-+	if (vmcs12->vm_exit_controls & VM_EXIT_SAVE_DEBUG_CONTROLS)
- 		kvm_get_dr(vcpu, 7, (unsigned long *)&vmcs12->guest_dr7);
--		vmcs12->guest_ia32_debugctl = vmcs_read64(GUEST_IA32_DEBUGCTL);
--	}
- 
- 	if (vmcs12->vm_exit_controls & VM_EXIT_SAVE_IA32_EFER)
- 		vmcs12->guest_ia32_efer = vcpu->arch.efer;
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index ede2ac670f5b..975b2705c5b2 100644
+index ede565bec19e..91e43c03144d 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1845,6 +1845,14 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			get_vmcs12(vcpu)->guest_sysenter_esp = data;
- 		vmcs_writel(GUEST_SYSENTER_ESP, data);
- 		break;
-+	case MSR_IA32_DEBUGCTLMSR:
-+		if (is_guest_mode(vcpu) && get_vmcs12(vcpu)->vm_exit_controls &
-+						VM_EXIT_SAVE_DEBUG_CONTROLS)
-+			get_vmcs12(vcpu)->guest_ia32_debugctl = data;
-+
-+		ret = kvm_set_msr_common(vcpu, msr_info);
-+		break;
-+
- 	case MSR_IA32_BNDCFGS:
- 		if (!kvm_mpx_supported() ||
- 		    (!msr_info->host_initiated &&
+@@ -3825,7 +3825,7 @@ void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
+ 	vmcs_writel(CR4_GUEST_HOST_MASK, ~vmx->vcpu.arch.cr4_guest_owned_bits);
+ }
+ 
+-static u32 vmx_pin_based_exec_ctrl(struct vcpu_vmx *vmx)
++u32 vmx_pin_based_exec_ctrl(struct vcpu_vmx *vmx)
+ {
+ 	u32 pin_based_exec_ctrl = vmcs_config.pin_based_exec_ctrl;
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 36a2056fafd4..136f22f2e797 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -480,6 +480,7 @@ static inline u32 vmx_vmexit_ctrl(void)
+ }
+ 
+ u32 vmx_exec_control(struct vcpu_vmx *vmx);
++u32 vmx_pin_based_exec_ctrl(struct vcpu_vmx *vmx);
+ 
+ static inline struct kvm_vmx *to_kvm_vmx(struct kvm *kvm)
+ {
 -- 
 1.8.3.1
 
