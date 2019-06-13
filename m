@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52316C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6796C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD9721743
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DCA920851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441540;
-	bh=76D3vaAouJvHGGAHeFdnU7ReK0evbpdCzSUXWh05FYc=;
+	s=default; t=1560441542;
+	bh=IwLjCkQVR7JyIw0Tu6rfzQmaBLe/AQ7PaEB7IlDfThI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M0puMoFumapaLbHvWYSWmBgnRZPY3/ufPXtKjtES+zfqzQo0stpelu0DF4VgSvN0V
-	 Osa9P7saWggBoSQVunGvOKj2ETf6tdFwAsB2lZSSeLZhUcMNpZPGZRNpFXC5EZWvRW
-	 WpBHZyKOqOiJpjqnE8uSE2pKnEvMsr8u0nolI3kM=
+	b=b2LaTgt7GfGCJQBk4yv2YC25YH0BLyyfKdP0devtuaBDgrnPYvGnB3mGJDegvFsrR
+	 kuJgL1E19mrKTcYG6pj4UWgku1n9rKTt/hOZ1lzPo0HcgfWv67QmxNKyE5fI0afD7y
+	 u9eeuTw25lJWHKOxtnbWTg3eFxiA8+9iSDKZkAEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390395AbfFMP67 (ORCPT
+        id S2390662AbfFMP7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:58:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37650 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:59:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731489AbfFMIuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:50:01 -0400
+        id S1731487AbfFMItz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:49:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0FAA20851;
-        Thu, 13 Jun 2019 08:49:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 758E6206BA;
+        Thu, 13 Jun 2019 08:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415800;
-        bh=76D3vaAouJvHGGAHeFdnU7ReK0evbpdCzSUXWh05FYc=;
+        s=default; t=1560415795;
+        bh=IwLjCkQVR7JyIw0Tu6rfzQmaBLe/AQ7PaEB7IlDfThI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ed9x4pwJzF9lSzdTHbJ3Li2XuCibqMiJna+QyI25fcY7IooGi/3fv+aUx09r+AZOj
-         hBmO6DGNu70DWyarUC21v6RGRJiRWatg1VgpVSQd8ittNpSHxXVQvG5Yw04r2bD9c0
-         E0rFHVkrK7YjZS/NoGkKvU3I3WoWPPl/iclEYB7c=
+        b=a1g/Wk/twBPOJPEuGuDyKecGTo82N+1WoubFY3mdnDkWNuo+HFEhyQpxgxkE5eWqZ
+         oZxHXQIcqfi76hNGkvHRGbkbqvw5yfFypBP+g9B6wR2rco7m4Sw6XdAXwbnnirKqz5
+         1fJAhWFMeX2pGyKsRdmAUkFQujKA5ejEuAAY0m/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 092/155] x86/PCI: Fix PCI IRQ routing table memory leak
-Date:   Thu, 13 Jun 2019 10:33:24 +0200
-Message-Id: <20190613075658.239152949@linuxfoundation.org>
+Subject: [PATCH 5.1 100/155] clk: rockchip: Turn on "aclk_dmac1" for suspend on rk3288
+Date:   Thu, 13 Jun 2019 10:33:32 +0200
+Message-Id: <20190613075658.631320957@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -62,65 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ea094d53580f40c2124cef3d072b73b2425e7bfd ]
+[ Upstream commit 57a20248ef3e429dc822f0774bc4e00136c46c83 ]
 
-In pcibios_irq_init(), the PCI IRQ routing table 'pirq_table' is first
-found through pirq_find_routing_table().  If the table is not found and
-CONFIG_PCI_BIOS is defined, the table is then allocated in
-pcibios_get_irq_routing_table() using kmalloc().  Later, if the I/O APIC is
-used, this table is actually not used.  In that case, the allocated table
-is not freed, which is a memory leak.
+Experimentally it can be seen that going into deep sleep (specifically
+setting PMU_CLR_DMA and PMU_CLR_BUS in RK3288_PMU_PWRMODE_CON1)
+appears to fail unless "aclk_dmac1" is on.  The failure is that the
+system never signals that it made it into suspend on the GLOBAL_PWROFF
+pin and it just hangs.
 
-Free the allocated table if it is not used.
+NOTE that it's confirmed that it's the actual suspend that fails, not
+one of the earlier calls to read/write registers.  Specifically if you
+comment out the "PMU_GLOBAL_INT_DISABLE" setting in
+rk3288_slp_mode_set() and then comment out the "cpu_do_idle()" call in
+rockchip_lpmode_enter() then you can exercise the whole suspend path
+without any crashing.
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-[bhelgaas: added Ingo's reviewed-by, since the only change since v1 was to
-use the irq_routing_table local variable name he suggested]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
+This is currently not a problem with suspend upstream because there is
+no current way to exercise the deep suspend code.  However, anyone
+trying to make it work will run into this issue.
+
+This was not a problem on shipping rk3288-based Chromebooks because
+those devices all ran on an old kernel based on 3.14.  On that kernel
+"aclk_dmac1" appears to be left on all the time.
+
+There are several ways to skin this problem.
+
+A) We could add "aclk_dmac1" to the list of critical clocks and that
+apperas to work, but presumably that wastes power.
+
+B) We could keep a list of "struct clk" objects to enable at suspend
+time in clk-rk3288.c and use the standard clock APIs.
+
+C) We could make the rk3288-pmu driver keep a list of clocks to enable
+at suspend time.  Presumably this would require a dts and bindings
+change.
+
+D) We could just whack the clock on in the existing syscore suspend
+function where we whack a bunch of other clocks.  This is particularly
+easy because we know for sure that the clock's only parent
+("aclk_cpu") is a critical clock so we don't need to do anything more
+than ungate it.
+
+In this case I have chosen D) because it seemed like the least work,
+but any of the other options would presumably also work fine.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Elaine Zhang <zhangqing@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/pci/irq.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/clk/rockchip/clk-rk3288.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
-index 52e55108404e..d3a73f9335e1 100644
---- a/arch/x86/pci/irq.c
-+++ b/arch/x86/pci/irq.c
-@@ -1119,6 +1119,8 @@ static const struct dmi_system_id pciirq_dmi_table[] __initconst = {
- 
- void __init pcibios_irq_init(void)
- {
-+	struct irq_routing_table *rtable = NULL;
+diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+index 355d6a3611db..18460e0993bc 100644
+--- a/drivers/clk/rockchip/clk-rk3288.c
++++ b/drivers/clk/rockchip/clk-rk3288.c
+@@ -856,6 +856,9 @@ static const int rk3288_saved_cru_reg_ids[] = {
+ 	RK3288_CLKSEL_CON(10),
+ 	RK3288_CLKSEL_CON(33),
+ 	RK3288_CLKSEL_CON(37),
 +
- 	DBG(KERN_DEBUG "PCI: IRQ init\n");
++	/* We turn aclk_dmac1 on for suspend; this will restore it */
++	RK3288_CLKGATE_CON(10),
+ };
  
- 	if (raw_pci_ops == NULL)
-@@ -1129,8 +1131,10 @@ void __init pcibios_irq_init(void)
- 	pirq_table = pirq_find_routing_table();
- 
- #ifdef CONFIG_PCI_BIOS
--	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN))
-+	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN)) {
- 		pirq_table = pcibios_get_irq_routing_table();
-+		rtable = pirq_table;
-+	}
- #endif
- 	if (pirq_table) {
- 		pirq_peer_trick();
-@@ -1145,8 +1149,10 @@ void __init pcibios_irq_init(void)
- 		 * If we're using the I/O APIC, avoid using the PCI IRQ
- 		 * routing table
- 		 */
--		if (io_apic_assign_pci_irqs)
-+		if (io_apic_assign_pci_irqs) {
-+			kfree(rtable);
- 			pirq_table = NULL;
-+		}
+ static u32 rk3288_saved_cru_regs[ARRAY_SIZE(rk3288_saved_cru_reg_ids)];
+@@ -871,6 +874,14 @@ static int rk3288_clk_suspend(void)
+ 				readl_relaxed(rk3288_cru_base + reg_id);
  	}
  
- 	x86_init.pci.fixup_irqs();
++	/*
++	 * Going into deep sleep (specifically setting PMU_CLR_DMA in
++	 * RK3288_PMU_PWRMODE_CON1) appears to fail unless
++	 * "aclk_dmac1" is on.
++	 */
++	writel_relaxed(1 << (12 + 16),
++		       rk3288_cru_base + RK3288_CLKGATE_CON(10));
++
+ 	/*
+ 	 * Switch PLLs other than DPLL (for SDRAM) to slow mode to
+ 	 * avoid crashes on resume. The Mask ROM on the system will
 -- 
 2.20.1
 
