@@ -2,203 +2,207 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B849C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 564E5C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29E96206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:30:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NKNfBrS3"
+	by mail.kernel.org (Postfix) with ESMTP id 2BB4120B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:30:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbfFMPat (ORCPT
+        id S1728145AbfFMPaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:30:49 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37892 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728686AbfFMLJO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 07:09:14 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s15so9676339wmj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 04:09:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DB2ymoMUDc6KVKZd31hZLwNlwKiWHLGwTThu+RNF8Pw=;
-        b=NKNfBrS3w1T+MzUAyWsWKKnkqjXhfCQWp4viwIcR2G4X3HXuCScV0Ib7cTIugkm4up
-         RaUBuzrS3VquYgjUQXxKH4zYX63mlqATkLxSholHDkrUc+zw8jgkZiKyuFeggN4UFOe7
-         OxZo8c1eSGq+vCm+Yg6R8h+FVEwIjZDlTsRBWF3sMxvlD2HZ5nCumB5/YakwqBXulMvg
-         UD+n7H14NB+Dk3XU5QofIOsso9yAEqRwy2ZZzWPEZXDcE3agXilEwFnI8qVya3+TQVtz
-         JJyhU0LXQXlvFWx08y1xsh9u9U6e7Blx/jcOHaDerqf8QFGQqrJ58pjwbU3YqkefXe36
-         601w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=DB2ymoMUDc6KVKZd31hZLwNlwKiWHLGwTThu+RNF8Pw=;
-        b=L8FjHhetfxe5g4pS9o+ou0Y6Fzn6TnHDlh1wJLpkuaYlPsdig7E+SemlINYm/ntR3i
-         rNkCcftow0p5znvyLAgR+pvAS4XRGQZPBxkn+YieeWdi6kAglDvCm9zHxfoXFVqMmxq9
-         BfHF64Lplp9SrwsyS4djyDPw9g9snNJ0+RcsgnrLVy7c/4mEJWEPNqqHJ/Q2mQobKmTD
-         7UQskePF3++sLz3TRn9P9tzF6cfJFI36cWqlQnpbAF6DO/YjZJbxotoy62mjBUUgwECY
-         sVmxR5JMx+utcIOX0gZpaxIfsYDXak4ZHcS5CqIeBLPHqo1MNJHgS8qnkMiMG0KPzhth
-         Kaeg==
-X-Gm-Message-State: APjAAAVsoq+7v471peJWoHxeMlSDvxIUHHC975Sonkn6wgG8HYhsrgRn
-        4CnT3sAmya2Fj12pR3DZf7pd1A==
-X-Google-Smtp-Source: APXvYqzxwXUvpJu+eTgSRHDqK5JGjU8X0kpO9Gv/9ntBMljsVPhU15lFTS4qww9Baz7A+LqxxJIL1w==
-X-Received: by 2002:a1c:c003:: with SMTP id q3mr3300657wmf.42.1560424150892;
-        Thu, 13 Jun 2019 04:09:10 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id x17sm3139429wrq.64.2019.06.13.04.09.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 04:09:09 -0700 (PDT)
-Subject: Re: [PATCH repost] dt-bindings: timer: renesas, cmt: Document
- r8a779{5|65|90} CMT support
-To:     Simon Horman <horms@verge.net.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-renesas-soc@vger.kernel.org
-Cc:     Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Cao Van Dong <cv-dong@jinso.co.jp>
-References: <20190509122949.23256-1-horms+renesas@verge.net.au>
- <20190613101219.vx4ht6dixxu7fioi@verge.net.au>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <7171405c-4647-173f-2883-c7a281e998ea@linaro.org>
-Date:   Thu, 13 Jun 2019 13:09:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 11:30:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42346 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728666AbfFMLIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 07:08:21 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2FEA22F8BC8;
+        Thu, 13 Jun 2019 11:08:21 +0000 (UTC)
+Received: from localhost (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A203660BE2;
+        Thu, 13 Jun 2019 11:08:18 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Sebastian Ott <sebott@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: [PATCH] s390/cio: introduce driver_override on the css bus
+Date:   Thu, 13 Jun 2019 13:08:15 +0200
+Message-Id: <20190613110815.17251-1-cohuck@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190613101219.vx4ht6dixxu7fioi@verge.net.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 13 Jun 2019 11:08:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/06/2019 12:12, Simon Horman wrote:
-> On Thu, May 09, 2019 at 02:29:49PM +0200, Simon Horman wrote:
->> From: Cao Van Dong <cv-dong@jinso.co.jp>
->>
->> Document SoC specific bindings for R-Car H3/M3-N/E3 SoCs.
-> 
-> Hi Daniel and Thomas,
-> 
-> would you object to me taking this patch through the renesas tree.
-> It has been outstanding for some time now.
+Sometimes, we want to control which of the matching drivers
+binds to a subchannel device (e.g. for subchannels we want to
+handle via vfio-ccw).
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+For pci devices, a mechanism to do so has been introduced in
+782a985d7af2 ("PCI: Introduce new device binding path using
+pci_dev.driver_override"). It makes sense to introduce the
+driver_override attribute for subchannel devices as well, so
+that we can easily extend the 'driverctl' tool (which makes
+use of the driver_override attribute for pci).
 
+Note that unlike pci we still require a driver override to
+match the subchannel type; matching more than one subchannel
+type is probably not useful anyway.
 
->> Signed-off-by: Cao Van Dong <cv-dong@jinso.co.jp>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
->> ---
->>  Documentation/devicetree/bindings/timer/renesas,cmt.txt | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
->> index c0594450e9ef..c5220bcd852b 100644
->> --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
->> +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
->> @@ -42,12 +42,18 @@ Required Properties:
->>      - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
->>      - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
->>      - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
->> +    - "renesas,r8a7795-cmt0" for the 32-bit CMT0 device included in r8a7795.
->> +    - "renesas,r8a7795-cmt1" for the 48-bit CMT1 device included in r8a7795.
->>      - "renesas,r8a7796-cmt0" for the 32-bit CMT0 device included in r8a7796.
->>      - "renesas,r8a7796-cmt1" for the 48-bit CMT1 device included in r8a7796.
->> +    - "renesas,r8a77965-cmt0" for the 32-bit CMT0 device included in r8a77965.
->> +    - "renesas,r8a77965-cmt1" for the 48-bit CMT1 device included in r8a77965.
->>      - "renesas,r8a77970-cmt0" for the 32-bit CMT0 device included in r8a77970.
->>      - "renesas,r8a77970-cmt1" for the 48-bit CMT1 device included in r8a77970.
->>      - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
->>      - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
->> +    - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
->> +    - "renesas,r8a77990-cmt1" for the 48-bit CMT1 device included in r8a77990.
->>  
->>      - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2
->>  		and RZ/G1.
->> -- 
->> 2.11.0
->>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+---
 
+Lightly tested; did not yet attempt to adapt driverctl to actually
+make use of it.
 
+For some background, refer to the thread around
+https://lore.kernel.org/kvm/20190612091439.3a33f17b.cohuck@redhat.com/
+
+---
+ Documentation/ABI/testing/sysfs-bus-css | 23 +++++++++++
+ drivers/s390/cio/cio.h                  |  1 +
+ drivers/s390/cio/css.c                  | 53 +++++++++++++++++++++++++
+ 3 files changed, 77 insertions(+)
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-css b/Documentation/ABI/testing/sysfs-bus-css
+index 2979c40c10e9..966f8504bd7b 100644
+--- a/Documentation/ABI/testing/sysfs-bus-css
++++ b/Documentation/ABI/testing/sysfs-bus-css
+@@ -33,3 +33,26 @@ Description:	Contains the PIM/PAM/POM values, as reported by the
+ 		in sync with the values current in the channel subsystem).
+ 		Note: This is an I/O-subchannel specific attribute.
+ Users:		s390-tools, HAL
++
++What:		/sys/bus/css/devices/.../driver_override
++Date:		June 2019
++Contact:	Cornelia Huck <cohuck@redhat.com>
++		linux-s390@vger.kernel.org
++Description:	This file allows the driver for a device to be specified. When
++		specified, only a driver with a name matching the value written
++		to driver_override will have an opportunity to bind to the
++		device. The override is specified by writing a string to the
++		driver_override file (echo vfio-ccw > driver_override) and
++		may be cleared with an empty string (echo > driver_override).
++		This returns the device to standard matching rules binding.
++		Writing to driver_override does not automatically unbind the
++		device from its current driver or make any attempt to
++		automatically load the specified driver.  If no driver with a
++		matching name is currently loaded in the kernel, the device
++		will not bind to any driver.  This also allows devices to
++		opt-out of driver binding using a driver_override name such as
++		"none".  Only a single driver may be specified in the override,
++		there is no support for parsing delimiters.
++		Note that unlike the mechanism of the same name for pci, this
++		file does not allow to override basic matching rules. I.e.,
++		the driver must still match the subchannel type of the device.
+diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
+index 06a91743335a..8c4af88f1ac3 100644
+--- a/drivers/s390/cio/cio.h
++++ b/drivers/s390/cio/cio.h
+@@ -113,6 +113,7 @@ struct subchannel {
+ 	enum sch_todo todo;
+ 	struct work_struct todo_work;
+ 	struct schib_config config;
++	char *driver_override; /* Driver name to force a match */
+ } __attribute__ ((aligned(8)));
+ 
+ DECLARE_PER_CPU_ALIGNED(struct irb, cio_irb);
+diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
+index aea502922646..f3436a17e3b5 100644
+--- a/drivers/s390/cio/css.c
++++ b/drivers/s390/cio/css.c
+@@ -165,6 +165,7 @@ static void css_subchannel_release(struct device *dev)
+ 
+ 	sch->config.intparm = 0;
+ 	cio_commit_config(sch);
++	kfree(sch->driver_override);
+ 	kfree(sch->lock);
+ 	kfree(sch);
+ }
+@@ -315,9 +316,57 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+ 
+ static DEVICE_ATTR_RO(modalias);
+ 
++static ssize_t driver_override_store(struct device *dev,
++				     struct device_attribute *attr,
++				     const char *buf, size_t count)
++{
++	struct subchannel *sch = to_subchannel(dev);
++	char *driver_override, *old, *cp;
++
++	/* We need to keep extra room for a newline */
++	if (count >= (PAGE_SIZE - 1))
++		return -EINVAL;
++
++	driver_override = kstrndup(buf, count, GFP_KERNEL);
++	if (!driver_override)
++		return -ENOMEM;
++
++	cp = strchr(driver_override, '\n');
++	if (cp)
++		*cp = '\0';
++
++	device_lock(dev);
++	old = sch->driver_override;
++	if (strlen(driver_override)) {
++		sch->driver_override = driver_override;
++	} else {
++		kfree(driver_override);
++		sch->driver_override = NULL;
++	}
++	device_unlock(dev);
++
++	kfree(old);
++
++	return count;
++}
++
++static ssize_t driver_override_show(struct device *dev,
++				    struct device_attribute *attr, char *buf)
++{
++	struct subchannel *sch = to_subchannel(dev);
++	ssize_t len;
++
++	device_lock(dev);
++	len = snprintf(buf, PAGE_SIZE, "%s\n", sch->driver_override);
++	device_unlock(dev);
++	return len;
++}
++static DEVICE_ATTR_RW(driver_override);
++
+ static struct attribute *subch_attrs[] = {
+ 	&dev_attr_type.attr,
+ 	&dev_attr_modalias.attr,
++	&dev_attr_driver_override.attr,
+ 	NULL,
+ };
+ 
+@@ -1222,6 +1271,10 @@ static int css_bus_match(struct device *dev, struct device_driver *drv)
+ 	struct css_driver *driver = to_cssdriver(drv);
+ 	struct css_device_id *id;
+ 
++	/* When driver_override is set, only bind to the matching driver */
++	if (sch->driver_override && strcmp(sch->driver_override, drv->name))
++		return 0;
++
+ 	for (id = driver->subchannel_type; id->match_flags; id++) {
+ 		if (sch->st == id->type)
+ 			return 1;
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.20.1
 
