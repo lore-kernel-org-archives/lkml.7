@@ -2,119 +2,199 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F12C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C07C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5608D20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B1120679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:11:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560442286;
+	bh=PH6dG94hNLWF7W1sTLFFWbqMCAI3bu5OdGA+wHUVEiA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RONy6kJp+R5VQDApd8Ygeol7MJMUQEVl6D7zIHzLLqyd6Yb3fZBLMIcJMPp6InFf8
+	 3m7pRbVXaB1GAsuQXdt+yKs4PcHtq/+A933kSqLye4ZDDFr+EqXBoErmP0ARuk9nJb
+	 d92LVr3KmMM0XeuujCT1QeBWtAHqoXcOhpBbq2wU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391527AbfFMQLX (ORCPT
+        id S2391543AbfFMQLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:11:23 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18565 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731238AbfFMInd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:11:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731242AbfFMInd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Jun 2019 04:43:33 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E75AE9BFC10B89B23C95;
-        Thu, 13 Jun 2019 16:43:30 +0800 (CST)
-Received: from HGHY4L002753561.china.huawei.com (10.133.215.186) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 13 Jun 2019 16:43:21 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v9 3/7] s390/pci: add support for IOMMU default DMA mode build options
-Date:   Thu, 13 Jun 2019 16:42:36 +0800
-Message-ID: <20190613084240.16768-4-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.21.0.windows.1
-In-Reply-To: <20190613084240.16768-1-thunder.leizhen@huawei.com>
-References: <20190613084240.16768-1-thunder.leizhen@huawei.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B9AF2147A;
+        Thu, 13 Jun 2019 08:43:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560415413;
+        bh=PH6dG94hNLWF7W1sTLFFWbqMCAI3bu5OdGA+wHUVEiA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tDAX8zpQNngusszD0XcthOBBZ28+2UfSSU/YjkFws+72+EucQrLbHjLFU39AA0j1j
+         Q6nry/WXOT5F/w4ejCc1gJOUGLP5v/J70Gp4QCfiEnk++hyOsanVrnd4Som62t5bTu
+         eBdVvJZvhYHFd6y2IPzeZvRyJheetsuh/UMsPE7I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Amir Goldstein <amir73il@gmail.com>
+Subject: [PATCH 4.19 116/118] ovl: check the capability before cred overridden
+Date:   Thu, 13 Jun 2019 10:34:14 +0200
+Message-Id: <20190613075651.066987620@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
+References: <20190613075643.642092651@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.133.215.186]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default DMA mode is LAZY on s390, this patch make it can be set to
-STRICT at build time. It can be overridden by boot option.
+From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
 
-There is no functional change.
+commit 98487de318a6f33312471ae1e2afa16fbf8361fe upstream.
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Acked-by: Sebastian Ott <sebott@linux.ibm.com>
+We found that it return success when we set IMMUTABLE_FL flag to a file in
+docker even though the docker didn't have the capability
+CAP_LINUX_IMMUTABLE.
+
+The commit d1d04ef8572b ("ovl: stack file ops") and dab5ca8fd9dd ("ovl: add
+lsattr/chattr support") implemented chattr operations on a regular overlay
+file. ovl_real_ioctl() overridden the current process's subjective
+credentials with ofs->creator_cred which have the capability
+CAP_LINUX_IMMUTABLE so that it will return success in
+vfs_ioctl()->cap_capable().
+
+Fix this by checking the capability before cred overridden. And here we
+only care about APPEND_FL and IMMUTABLE_FL, so get these information from
+inode.
+
+[SzM: move check and call to underlying fs inside inode locked region to
+prevent two such calls from racing with each other]
+
+Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Cc: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/s390/pci/pci_dma.c | 2 +-
- drivers/iommu/Kconfig   | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ fs/overlayfs/file.c |   79 ++++++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 61 insertions(+), 18 deletions(-)
 
-diff --git a/arch/s390/pci/pci_dma.c b/arch/s390/pci/pci_dma.c
-index 9e52d1527f71495..784ad1e0acecfb1 100644
---- a/arch/s390/pci/pci_dma.c
-+++ b/arch/s390/pci/pci_dma.c
-@@ -17,7 +17,7 @@
+--- a/fs/overlayfs/file.c
++++ b/fs/overlayfs/file.c
+@@ -11,6 +11,7 @@
+ #include <linux/mount.h>
+ #include <linux/xattr.h>
+ #include <linux/uio.h>
++#include <linux/uaccess.h>
+ #include "overlayfs.h"
  
- static struct kmem_cache *dma_region_table_cache;
- static struct kmem_cache *dma_page_table_cache;
--static int s390_iommu_strict;
-+static int s390_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
+ static char ovl_whatisit(struct inode *inode, struct inode *realinode)
+@@ -372,10 +373,68 @@ static long ovl_real_ioctl(struct file *
+ 	return ret;
+ }
  
- static int zpci_refresh_global(struct zpci_dev *zdev)
+-static long ovl_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
++static unsigned int ovl_get_inode_flags(struct inode *inode)
++{
++	unsigned int flags = READ_ONCE(inode->i_flags);
++	unsigned int ovl_iflags = 0;
++
++	if (flags & S_SYNC)
++		ovl_iflags |= FS_SYNC_FL;
++	if (flags & S_APPEND)
++		ovl_iflags |= FS_APPEND_FL;
++	if (flags & S_IMMUTABLE)
++		ovl_iflags |= FS_IMMUTABLE_FL;
++	if (flags & S_NOATIME)
++		ovl_iflags |= FS_NOATIME_FL;
++
++	return ovl_iflags;
++}
++
++static long ovl_ioctl_set_flags(struct file *file, unsigned long arg)
  {
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index fe715fb295c6ed2..a8dd69d175fb3c6 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -78,6 +78,7 @@ config IOMMU_DEBUGFS
- choice
- 	prompt "IOMMU default DMA mode"
- 	depends on IOMMU_API
-+	default IOMMU_DEFAULT_LAZY if S390_IOMMU
- 	default IOMMU_DEFAULT_STRICT
- 	help
- 	  This option allows an IOMMU DMA mode to be chosen at build time, to
-@@ -89,6 +90,7 @@ choice
+ 	long ret;
+ 	struct inode *inode = file_inode(file);
++	unsigned int flags;
++	unsigned int old_flags;
++
++	if (!inode_owner_or_capable(inode))
++		return -EACCES;
++
++	if (get_user(flags, (int __user *) arg))
++		return -EFAULT;
++
++	ret = mnt_want_write_file(file);
++	if (ret)
++		return ret;
++
++	inode_lock(inode);
++
++	/* Check the capability before cred override */
++	ret = -EPERM;
++	old_flags = ovl_get_inode_flags(inode);
++	if (((flags ^ old_flags) & (FS_APPEND_FL | FS_IMMUTABLE_FL)) &&
++	    !capable(CAP_LINUX_IMMUTABLE))
++		goto unlock;
++
++	ret = ovl_maybe_copy_up(file_dentry(file), O_WRONLY);
++	if (ret)
++		goto unlock;
++
++	ret = ovl_real_ioctl(file, FS_IOC_SETFLAGS, arg);
++
++	ovl_copyflags(ovl_inode_real(inode), inode);
++unlock:
++	inode_unlock(inode);
++
++	mnt_drop_write_file(file);
++
++	return ret;
++
++}
++
++static long ovl_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
++{
++	long ret;
  
- config IOMMU_DEFAULT_PASSTHROUGH
- 	bool "passthrough"
-+	depends on !S390_IOMMU
- 	help
- 	  In this mode, the DMA access through IOMMU without any addresses
- 	  translation. That means, the wrong or illegal DMA access can not
--- 
-1.8.3
+ 	switch (cmd) {
+ 	case FS_IOC_GETFLAGS:
+@@ -383,23 +442,7 @@ static long ovl_ioctl(struct file *file,
+ 		break;
+ 
+ 	case FS_IOC_SETFLAGS:
+-		if (!inode_owner_or_capable(inode))
+-			return -EACCES;
+-
+-		ret = mnt_want_write_file(file);
+-		if (ret)
+-			return ret;
+-
+-		ret = ovl_maybe_copy_up(file_dentry(file), O_WRONLY);
+-		if (!ret) {
+-			ret = ovl_real_ioctl(file, cmd, arg);
+-
+-			inode_lock(inode);
+-			ovl_copyflags(ovl_inode_real(inode), inode);
+-			inode_unlock(inode);
+-		}
+-
+-		mnt_drop_write_file(file);
++		ret = ovl_ioctl_set_flags(file, arg);
+ 		break;
+ 
+ 	default:
 
 
