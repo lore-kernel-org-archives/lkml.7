@@ -2,79 +2,65 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1022C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDE6C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8405A20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E9120665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:54:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GWw1XCUe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393098AbfFMQyE (ORCPT
+        id S2393020AbfFMQyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:54:04 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:54588 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730065AbfFMCxB (ORCPT
+        Thu, 13 Jun 2019 12:54:03 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47274 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730070AbfFMC56 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 22:53:01 -0400
-Received: by mail-it1-f198.google.com with SMTP id n81so6811240ita.4
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 19:53:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Np5gXReZhEQY+f0111rtDnwU/KIuuZ02Fmiq9/XZl1M=;
-        b=MATjW/+hcDlTZqTOJM63qTNWIrRKgGPDjJh7+jKZ+mQNJ9jTN/T/+51ZsOcpAX3O8N
-         RV8gf8xTjWU2w4QWgj/0OqJsXWFAdvYN2qmDTKq7SAFWU78z+cjU547FVo2TL/t/a2ve
-         pYGx0gltmrzudWgqoHmn2YzZ65f7fdCNOZVKowv8+NmfmzxzHmEH7p8n39Tlge2OC5Rx
-         deJ1wQCoDuhfUccwcAG44P6c7zKbYu6FAy2d+HFvxqL9PEr5IJ//IeNjnL1Zqmofld6G
-         jBl4aT8i/OIZ18GK1Qq0eGW8sqnrwKrPNYvWS4jZBU1hG/3ihmVd1Lc0lFdsJmQaX0xx
-         klSA==
-X-Gm-Message-State: APjAAAVeqaCZiiPOnCN/3uaaP3ao1IX43v2H27xwoixOa6BZCwLLJzT+
-        AaN+3lZQfzWgQF0quO6aucLpZgPO6sN91tBH2O+u32oomEk2
-X-Google-Smtp-Source: APXvYqx5IsSM2NAOI/iAdm4c3z4Q0KMokZxWs1UI+Ut9ao7lxnz24tDe4bNCdFgQ1DgRpytXrLHrXA/sEafV/s9VWjsSAD+q/q20
+        Wed, 12 Jun 2019 22:57:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=6MX8OED4iPuMUzZoWjHnMMsbyE6LcGoKSFwbgfasOio=; b=GWw1XCUedIoJbJcs7FUZ8an9a0
+        0s9R3NG9C9M6fMUKdEQAoDR5zyQerx6o6AEUC/WYsSt9TGPmBMul5NgSAH/Zwnxqri/zCiByTfoLu
+        0a73I2qMmJBbSas6+SNifAogFpvsegGVHQEwYC2Mh7LFwtaqFCIFavvWV/ixg5BWZRU/SHmsZoGeb
+        tM7RnFfg5YI2I8UM9EeIKvE733CyGRQWdFNvY2t6F4qfJEOnO0+mcmBiRmmdTcFlJjq9R/f7XKsMX
+        ElrP8QtekP4u+Fa0FJ26LK9XvUnq+RJ94ZuGsJcJWP6ZO8Y7Z4zfQYoLMn0Hp9THkyhAmgJB3KHNr
+        Eubx9G0g==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbFvw-0006F7-La; Thu, 13 Jun 2019 02:57:48 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: mmotm: objtool warning
+Message-ID: <5baaf9ec-8ea7-544c-49d1-dde519d919ca@infradead.org>
+Date:   Wed, 12 Jun 2019 19:57:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-Received: by 2002:a24:9d15:: with SMTP id f21mr1753140itd.13.1560394380348;
- Wed, 12 Jun 2019 19:53:00 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 19:53:00 -0700
-In-Reply-To: <000000000000a861f6058b2699e0@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c0103a058b2ba0ec@google.com>
-Subject: Re: INFO: task syz-executor can't die for more than 143 seconds.
-From:   syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
-To:     jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        yuchao0@huawei.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+In yesterday's mmotm, I see this objtool warning:
 
-commit 4ddc1b28aac57a90c6426d55e0dea3c1b5eb4782
-Author: Chao Yu <yuchao0@huawei.com>
-Date:   Wed Jul 25 23:19:48 2018 +0000
+arch/x86/entry/entry_64.o: warning: objtool: .entry.text+0x908: unreachable instruction
 
-     f2fs: fix to restrict mount condition when without CONFIG_QUOTA
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=142f4e49a00000
-start commit:   81a72c79 Add linux-next specific files for 20190612
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=122f4e49a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8aa46bbce201b8b6
-dashboard link: https://syzkaller.appspot.com/bug?extid=8ab2d0f39fb79fe6ca40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1250ae3ea00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1568557aa00000
-
-Reported-by: syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com
-Fixes: 4ddc1b28aac5 ("f2fs: fix to restrict mount condition when without  
-CONFIG_QUOTA")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+~Randy
