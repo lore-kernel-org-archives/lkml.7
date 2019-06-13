@@ -2,126 +2,177 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEADCC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D696C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96B1720665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:52:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="PlAlSnaO"
+	by mail.kernel.org (Postfix) with ESMTP id 2F78C20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393045AbfFMQwT (ORCPT
+        id S2404400AbfFMQw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:52:19 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:32991 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730125AbfFMDW4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 23:22:56 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x2so20056581qtr.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 20:22:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=LMV8qmRyYz+ACjw7vTpB3a3X9PpgtIV1RY8/GE0Ksi8=;
-        b=PlAlSnaOIx0F1iguX+ksulHPvQfnoA0CZXjUwI7XykDfXBWZ/5Amzv7U06xkkG8gi+
-         a25nxcJm27v1g4+k/29+6WjsC1A8RNJBXl3x61IxxPFl7bghmocNeNLpTsQDAdmkwQMF
-         Etv46nTQ3rmCcAw0p/wBiNsdIKsFRaqI6wYvs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=LMV8qmRyYz+ACjw7vTpB3a3X9PpgtIV1RY8/GE0Ksi8=;
-        b=elWP43nIoOxhu+GtSpKwwrK1IsPW3txnJPReD+quJuhpkpzGb6JATwMZEG3u0ACkng
-         c0o9POq0qw+y68RiVZxC75inZzi5qr+zgOWOzfIx/S0JYUeF5787J2JerN2x2XuFSpwT
-         547FqUyJhNSud/rCJboEKSLpy6Y142yYQ0IQZT1r1kOyAcslb38kxlSIeHQfE8S4R9U+
-         +S+G6stNldGAa/EjiYwWus3cSZ/6D8WdceLic2yDzKm8e7PhMh9dI/nPrw3wXZcVTlRq
-         YInGiKPV2sW2zIuR7O7+PNjcZV1z0/EjL+Ac04IdeSuxCWIhcB1q4VCFmMf1hQC4/rAp
-         VuMA==
-X-Gm-Message-State: APjAAAUxounOECxkcGpPKZBwuUNYS3+MPkVFvgX/3PysZbtpS8ZtqUDz
-        eHaJvEvk1CuXrig3szQIzu1AYQ==
-X-Google-Smtp-Source: APXvYqxdXwLzWyJ+c5OXEKgknoAOryleJkXq2q5AFQQ7yCUAvCLeH3gEQi5b/debrhh4XH9r+YIZPQ==
-X-Received: by 2002:ac8:26dc:: with SMTP id 28mr71243705qtp.88.1560396175685;
-        Wed, 12 Jun 2019 20:22:55 -0700 (PDT)
-Received: from sinkpad (192-222-189-155.qc.cable.ebox.net. [192.222.189.155])
-        by smtp.gmail.com with ESMTPSA id r5sm871085qkc.42.2019.06.12.20.22.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 20:22:54 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 23:22:46 -0400
-From:   Julien Desfossez <jdesfossez@digitalocean.com>
-To:     Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Cc:     Aaron Lu <aaron.lu@linux.alibaba.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-Message-ID: <20190613032246.GA17752@sinkpad>
-References: <cover.1559129225.git.vpillai@digitalocean.com>
- <CAERHkruDE-7R5K=2yRqCJRCpV87HkHzDYbQA2WQkruVYpG7t7Q@mail.gmail.com>
- <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com>
- <20190531210816.GA24027@sinkpad>
- <20190606152637.GA5703@sinkpad>
- <20190612163345.GB26997@sinkpad>
- <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com>
+        Thu, 13 Jun 2019 12:52:28 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18140 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730120AbfFMDRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 23:17:10 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 527EFD4584B87ACC92FD;
+        Thu, 13 Jun 2019 11:17:05 +0800 (CST)
+Received: from [10.177.30.175] (10.177.30.175) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 13 Jun 2019 11:16:59 +0800
+Subject: Re: [PATCH net-next v2 1/2] hinic: add rss support
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <luoshaokai@huawei.com>,
+        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>,
+        <wulike1@huawei.com>
+References: <20190611181234.4843-1-xuechaojing@huawei.com>
+ <20190611181234.4843-2-xuechaojing@huawei.com>
+ <20190612155603.4078ebb3@cakuba.netronome.com>
+From:   xuechaojing <xuechaojing@huawei.com>
+Message-ID: <2949b2f6-e975-f1f9-39a8-7633a34610e7@huawei.com>
+Date:   Thu, 13 Jun 2019 11:16:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20190612155603.4078ebb3@cakuba.netronome.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com>
-X-Mailer: Mutt 1.5.24 (2015-08-30)
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.177.30.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-Jun-2019 05:03:08 PM, Subhra Mazumdar wrote:
-> 
-> On 6/12/19 9:33 AM, Julien Desfossez wrote:
-> >After reading more traces and trying to understand why only untagged
-> >tasks are starving when there are cpu-intensive tasks running on the
-> >same set of CPUs, we noticed a difference in behavior in ‘pick_task’. In
-> >the case where ‘core_cookie’ is 0, we are supposed to only prefer the
-> >tagged task if it’s priority is higher, but when the priorities are
-> >equal we prefer it as well which causes the starving. ‘pick_task’ is
-> >biased toward selecting its first parameter in case of equality which in
-> >this case was the ‘class_pick’ instead of ‘max’. Reversing the order of
-> >the parameter solves this issue and matches the expected behavior.
-> >
-> >So we can get rid of this vruntime_boost concept.
-> >
-> >We have tested the fix below and it seems to work well with
-> >tagged/untagged tasks.
-> >
-> My 2 DB instance runs with this patch are better with CORESCHED_STALL_FIX
-> than NO_CORESCHED_STALL_FIX in terms of performance, std deviation and
-> idleness. May be enable it by default?
+Hi
 
-Yes if the fix is approved, we will just remove the option and it will
-always be enabled.
+UDP RSS is supported on hinic device, so we set udp rss type to 1.
 
-Thanks,
+Thanks for reviewing.
 
-Julien
+xue
+
+�� 2019/6/13 6:56, Jakub Kicinski wrote:
+> On Tue, 11 Jun 2019 18:12:33 +0000, Xue Chaojing wrote:
+>> This patch adds rss support for the HINIC driver.
+>>
+>> Signed-off-by: Xue Chaojing <xuechaojing@huawei.com>
+>> +static int hinic_rss_init(struct hinic_dev *nic_dev)
+>> +{
+>> +	u8 default_rss_key[HINIC_RSS_KEY_SIZE] = {
+>> +			0x6d, 0x5a, 0x56, 0xda, 0x25, 0x5b, 0x0e, 0xc2,
+>> +			0x41, 0x67, 0x25, 0x3d, 0x43, 0xa3, 0x8f, 0xb0,
+>> +			0xd0, 0xca, 0x2b, 0xcb, 0xae, 0x7b, 0x30, 0xb4,
+>> +			0x77, 0xcb, 0x2d, 0xa3, 0x80, 0x30, 0xf2, 0x0c,
+>> +			0x6a, 0x42, 0xb7, 0x3b, 0xbe, 0xac, 0x01, 0xfa};
+> netdev_rss_key_fill()
+>
+>> +	u32 indir_tbl[HINIC_RSS_INDIR_SIZE] = { 0 };
+>> +	u8 tmpl_idx = nic_dev->rss_tmpl_idx;
+>> +	int err, i;
+>> +
+>> +	for (i = 0; i < HINIC_RSS_INDIR_SIZE; i++)
+>> +		indir_tbl[i] = (i / HINIC_RSS_INDIR_SIZE) * nic_dev->num_rss +
+>> +				i % nic_dev->num_rss;
+>> +
+>> +	err = hinic_rss_set_template_tbl(nic_dev, tmpl_idx, default_rss_key);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	err = hinic_rss_set_indir_tbl(nic_dev, tmpl_idx, indir_tbl);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	err = hinic_set_rss_type(nic_dev, tmpl_idx, nic_dev->rss_type);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	err = hinic_rss_set_hash_engine(nic_dev, tmpl_idx,
+>> +					nic_dev->rss_hash_engine);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	err = hinic_rss_cfg(nic_dev, 1, tmpl_idx);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void hinic_rss_deinit(struct hinic_dev *nic_dev)
+>> +{
+>> +	hinic_rss_cfg(nic_dev, 0, nic_dev->rss_tmpl_idx);
+>> +}
+>> +
+>> +static void hinic_init_rss_parameters(struct hinic_dev *nic_dev)
+>> +{
+>> +	nic_dev->rss_hash_engine = HINIC_RSS_HASH_ENGINE_TYPE_XOR;
+>> +	nic_dev->rss_type.tcp_ipv6_ext = 1;
+>> +	nic_dev->rss_type.ipv6_ext = 1;
+>> +	nic_dev->rss_type.tcp_ipv6 = 1;
+>> +	nic_dev->rss_type.ipv6 = 1;
+>> +	nic_dev->rss_type.tcp_ipv4 = 1;
+>> +	nic_dev->rss_type.ipv4 = 1;
+>> +	nic_dev->rss_type.udp_ipv6 = 1;
+>> +	nic_dev->rss_type.udp_ipv4 = 1;
+> Usually UDP is disabled by default because fragmentation leads to
+> reorders (NICs file all fragmented packets to queue 0 while other
+> packets are distributed by RSS).
+>
+>> +}
+>> +
+>> +static void hinic_enable_rss(struct hinic_dev *nic_dev)
+>> +{
+>> +	struct net_device *netdev = nic_dev->netdev;
+>> +	struct hinic_hwdev *hwdev = nic_dev->hwdev;
+>> +	struct hinic_hwif *hwif = hwdev->hwif;
+>> +	struct pci_dev *pdev = hwif->pdev;
+>> +	int i, node, err = 0;
+>> +	u16 num_cpus = 0;
+>> +
+>> +	nic_dev->max_qps = hinic_hwdev_max_num_qps(hwdev);
+>> +	if (nic_dev->max_qps <= 1) {
+>> +		nic_dev->flags &= ~HINIC_RSS_ENABLE;
+>> +		nic_dev->rss_limit = nic_dev->max_qps;
+>> +		nic_dev->num_qps = nic_dev->max_qps;
+>> +		nic_dev->num_rss = nic_dev->max_qps;
+>> +
+>> +		return;
+>> +	}
+>> +
+>> +	err = hinic_rss_template_alloc(nic_dev, &nic_dev->rss_tmpl_idx);
+>> +	if (err) {
+>> +		netif_err(nic_dev, drv, netdev,
+>> +			  "Failed to alloc tmpl_idx for rss, can't enable rss for this function\n");
+>> +		nic_dev->flags &= ~HINIC_RSS_ENABLE;
+>> +		nic_dev->max_qps = 1;
+>> +		nic_dev->rss_limit = nic_dev->max_qps;
+>> +		nic_dev->num_qps = nic_dev->max_qps;
+>> +		nic_dev->num_rss = nic_dev->max_qps;
+>> +
+>> +		return;
+>> +	}
+>> +
+>> +	nic_dev->flags |= HINIC_RSS_ENABLE;
+>> +
+>> +	for (i = 0; i < num_online_cpus(); i++) {
+>> +		node = cpu_to_node(i);
+>> +		if (node == dev_to_node(&pdev->dev))
+>> +			num_cpus++;
+>> +	}
+>> +
+>> +	if (!num_cpus)
+>> +		num_cpus = num_online_cpus();
+>> +
+>> +	nic_dev->num_qps = min_t(u16, nic_dev->max_qps, num_cpus);
+> We generally use netif_get_num_default_rss_queues() for RX queues
+> and num_online_cpus() for TX queues but I'm not sure you can do
+> different counts, so it's probably fine.
+> .
+>
