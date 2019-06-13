@@ -2,135 +2,203 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78E3C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D408C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B1420896
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F7E120896
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PRF9P8So"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="BvbGJfCr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfFMXgC (ORCPT
+        id S1727216AbfFMXhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 19:36:02 -0400
-Received: from mail-eopbgr1300123.outbound.protection.outlook.com ([40.107.130.123]:37321
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726283AbfFMXgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 19:36:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=tdIKXBL6dSOw2YEXeeucdsA+RL/KHX6S3k0ZQxXwA5lC5d6TZBXMqaVn3O9jKDLqjYIQvISoAMyBXW/0Z0LVSk2Foe2UWaSMWhPlZJapcFeJ9WyOsC/58KG613KJhr6euvYkcCu1ZFwQyUf5Vxb8ChnJLO3epwK9QeT7a4fRnDQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FSjTmiYEtto6t8rXpcplD6OVdR1LgDnRMNjgGnLbQHg=;
- b=LuyWBzen1kclnKR1Q3zi6oR/xNVMFO/4kdiN8lZx5YeBSmz2NYqVpWgY/4clN6rGFkeLMWIXXS+TUJTXUSGw4xqC1ZQ5G3dXormnNoKbgmD3D0EoZE2W0wafxhimp8ksEcHD64wLQY/sN1Kop3NGpAXZ77SMetb86kcjt5ljBTY=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FSjTmiYEtto6t8rXpcplD6OVdR1LgDnRMNjgGnLbQHg=;
- b=PRF9P8SozpFXRunWQtel7/DzrMD3d+JeCFFUH4Dp7q5Ijw0B1/sz+Ap6D8LXNIgaeVCVfCtBa2IQkFRk05pW/DsubpuUfP5v1o8N2Gw3CaItjV5OiJmZSMzTGvsZO6ahKKmMh+cdrOagDakVWBRVfTVgH8spIvBXeQztfKwCGHU=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0107.APCP153.PROD.OUTLOOK.COM (10.170.188.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.0; Thu, 13 Jun 2019 23:35:54 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d896:4219:e493:b04]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d896:4219:e493:b04%4]) with mapi id 15.20.2008.007; Thu, 13 Jun 2019
- 23:35:54 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net] hvsock: fix epollout hang from race condition
-Thread-Topic: [PATCH net] hvsock: fix epollout hang from race condition
-Thread-Index: AdUhY/kd1+XRZykcRS6vcxcYhC9DaQA3F6qQ
-Date:   Thu, 13 Jun 2019 23:35:53 +0000
-Message-ID: <PU1P153MB016994A9A0C4C3D1306B8FE4BFEF0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <MW2PR2101MB11164C6EEAA5C511B395EF3AC0EC0@MW2PR2101MB1116.namprd21.prod.outlook.com>
-In-Reply-To: <MW2PR2101MB11164C6EEAA5C511B395EF3AC0EC0@MW2PR2101MB1116.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-13T23:35:51.8575032Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=50c95844-09f0-4178-8ae3-887c91853fa5;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:a:51e0:dd5e:82b6:a386]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e44b62cc-a6de-48bb-0d54-08d6f057e0bf
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0107;
-x-ms-traffictypediagnostic: PU1P153MB0107:
-x-microsoft-antispam-prvs: <PU1P153MB0107F5C7074A7A064C0484FBBFEF0@PU1P153MB0107.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 0067A8BA2A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(39860400002)(136003)(346002)(396003)(189003)(199004)(51914003)(4326008)(55016002)(8676002)(186003)(46003)(74316002)(7736002)(8936002)(5660300002)(81156014)(486006)(76176011)(25786009)(66556008)(81166006)(66476007)(2906002)(64756008)(66946007)(6636002)(478600001)(10290500003)(52536014)(446003)(11346002)(14454004)(73956011)(305945005)(33656002)(71200400001)(1511001)(316002)(6506007)(476003)(66446008)(22452003)(86362001)(4744005)(10090500001)(76116006)(54906003)(9686003)(14444005)(256004)(6436002)(110136005)(6116002)(68736007)(6246003)(53936002)(102836004)(8990500004)(229853002)(99286004)(7696005)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0107;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: vZBc9eSyhLatgwvFhnmHyXcCVWvpCnMlUFNwXxB74JEV6jgO0AadUugLD9D+H86yys/WTgZTQsVuUlzjSjMgnRH1+98QzR4AgzN+oTpDlhiGgBmZlDaYDhs6bDFOzjO+/y34bQOdVQ0f271xQkqohA0MxW944b1SgPID6hLrx4Idw0rBMTVcJUfhzSYP1SeDMG2YRBQ9NPX8y/bQWGZ3rjc+n+o3u4FIpGiXSWGS3Tv1TgdGXHVmLl8OAX+Il3o566jHpq36QDQfYxVnNBz2YI8JUDaVbdlYe7AnqXNHo/hhRKbMpwExDwO2YtBBqii276JWFzK0enkK17DxjQYa8zKxM4FzW4AthAdFq7TC6umb9aBcwMTXpAYbiO9YwmIwLwrFuFOHjF2Ina7P1M64QPDryCbKwe9676SksYu5Cx0=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 13 Jun 2019 19:37:13 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51441 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbfFMXhM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 19:37:12 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 207so465801wma.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 16:37:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oodRWfym8vGhEJNTwBcKhJMKuWNGLtph+QGLWfAyKO0=;
+        b=BvbGJfCrFemSkbH88wzZyyFSZzIZCF3X5vaX3OL9UB8Lz6ZMFUlq6T7RtZ5xwzVe2m
+         HGeBjbnEatgk9gSuh2WSiV+1vzf4BLyKfU6qbBz/4JMx/GGodTcx4WLzM+cUKFDgk7ut
+         8X7p3+SL7XYNw8+ei+6PhnS02p01XJ+5Xzs1Fn/fGsDgjjxrjpq6INY/46Ooh+ZdhAGK
+         Z+wGDUrYd+UR1Q8ZFuUHNrQwf4ValMHY33hco3gNPx00Auyxm4rAcRlWv9qKAvua0nBx
+         yvAtdRmzcUviT0Kw+M6SucHg8julb2219C8fnqqt8ccGYQs4MvzsDL0f34FkR2JospN9
+         pp4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oodRWfym8vGhEJNTwBcKhJMKuWNGLtph+QGLWfAyKO0=;
+        b=O6FtXcM1siUfEY+HbKgLqQcEPpI1V2XxktsKs3gGhgrBp/11VRM6Qfz1FBQQpXoti7
+         QAquwrFPQnASuLJhtsWmQle7+HWFnrSEWd1AUcp1QvBQsaZrS4ekiYZcb6D81RR50ApR
+         4o407aI5aCehsG0z1K3mUbTAw3JqdXdvlyZ37AvLnC0EeIR2l5Lf1lGjTYTscEJjq49U
+         ei6fseRz92rIblDeAZdmeciGC7j+fz9iG7sSZqmJpjqj6nVUGUx52z26A+XmBKVlcyEi
+         du4IOHKKQ8nWp3HL7OXBB91RaUy8VIaiv2YlI225RwWqgFjhQHt4Vl9ZwHUWMl2l/2QC
+         Qf+Q==
+X-Gm-Message-State: APjAAAWCwtxuSupmQ7kWYZscLaOpiJWRwnV6iwonjrrQkN8qeuPRAWNS
+        4ly+kkHAkd7ii3F+cFhCnFvlxg==
+X-Google-Smtp-Source: APXvYqzEfhmewH9tg1rXq9RVwyKLlMT4ECRx5um77h5E2+ZurrtbqNeEBidyPPF+YuN7/SeF8pNtfw==
+X-Received: by 2002:a7b:cd84:: with SMTP id y4mr5640506wmj.41.1560469029595;
+        Thu, 13 Jun 2019 16:37:09 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id f13sm2169960wrt.27.2019.06.13.16.37.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 16:37:09 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 01:37:07 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: Regression for MS_MOVE on kernel v5.1
+Message-ID: <20190613233706.6k6struu7valxaxy@brauner.io>
+References: <20190612225431.p753mzqynxpsazb7@brauner.io>
+ <CAHk-=wh2Khe1Lj-Pdu3o2cXxumL1hegg_1JZGJXki6cchg_Q2Q@mail.gmail.com>
+ <20190613132250.u65yawzvf4voifea@brauner.io>
+ <871rzxwcz7.fsf@xmission.com>
+ <CAJfpegvZwDY+zoWjDTrPpMCS01rzQgeE-_z-QtGfvcRnoamzgg@mail.gmail.com>
+ <878su5tadf.fsf@xmission.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e44b62cc-a6de-48bb-0d54-08d6f057e0bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 23:35:53.8994
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0107
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <878su5tadf.fsf@xmission.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Sunil Muthuswamy <sunilmut@microsoft.com>
-> Sent: Wednesday, June 12, 2019 2:19 PM
->  ...
-> The fix is to set the pending size to the default size and never change i=
-t.
-> This way the host will always notify the guest whenever the writable spac=
-e
-> is bigger than the pending size. The host is already optimized to *only*
-> notify the guest when the pending size threshold boundary is crossed and
-> not everytime.
->=20
-> This change also reduces the cpu usage somewhat since
-> hv_stream_has_space()
-> is in the hotpath of send:
-> vsock_stream_sendmsg()->hv_stream_has_space()
-> Earlier hv_stream_has_space was setting/clearing the pending size on ever=
-y
-> call.
->=20
-> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+On Thu, Jun 13, 2019 at 04:59:24PM -0500, Eric W. Biederman wrote:
+> Miklos Szeredi <miklos@szeredi.hu> writes:
+> 
+> > On Thu, Jun 13, 2019 at 8:35 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> >>
+> >> Christian Brauner <christian@brauner.io> writes:
+> >>
+> >> > On Wed, Jun 12, 2019 at 06:00:39PM -1000, Linus Torvalds wrote:
+> >> >> On Wed, Jun 12, 2019 at 12:54 PM Christian Brauner <christian@brauner.io> wrote:
+> >> >> >
+> >> >> > The commit changes the internal logic to lock mounts when propagating
+> >> >> > mounts (user+)mount namespaces and - I believe - causes do_mount_move()
+> >> >> > to fail at:
+> >> >>
+> >> >> You mean 'do_move_mount()'.
+> >> >>
+> >> >> > if (old->mnt.mnt_flags & MNT_LOCKED)
+> >> >> >         goto out;
+> >> >> >
+> >> >> > If that's indeed the case we should either revert this commit (reverts
+> >> >> > cleanly, just tested it) or find a fix.
+> >> >>
+> >> >> Hmm.. I'm not entirely sure of the logic here, and just looking at
+> >> >> that commit 3bd045cc9c4b ("separate copying and locking mount tree on
+> >> >> cross-userns copies") doesn't make me go "Ahh" either.
+> >> >>
+> >> >> Al? My gut feel is that we need to just revert, since this was in 5.1
+> >> >> and it's getting reasonably late in 5.2 too. But maybe you go "guys,
+> >> >> don't be silly, this is easily fixed with this one-liner".
+> >> >
+> >> > David and I have been staring at that code today for a while together.
+> >> > I think I made some sense of it.
+> >> > One thing we weren't absolutely sure is if the old MS_MOVE behavior was
+> >> > intentional or a bug. If it is a bug we have a problem since we quite
+> >> > heavily rely on this...
+> >>
+> >> It was intentional.
+> >>
+> >> The only mounts that are locked in propagation are the mounts that
+> >> propagate together.  If you see the mounts come in as individuals you
+> >> can always see/manipulate/work with the underlying mount.
+> >>
+> >> I can think of only a few ways for MNT_LOCKED to become set:
+> >> a) unshare(CLONE_NEWNS)
+> >> b) mount --rclone /path/to/mnt/tree /path/to/propagation/point
+> >> c) mount --move /path/to/mnt/tree /path/to/propgation/point
+> >>
+> >> Nothing in the target namespace should be locked on the propgation point
+> >> but all of the new mounts that came across as a unit should be locked
+> >> together.
+> >
+> > Locked together means the root of the new mount tree doesn't have
+> > MNT_LOCKED set, but all mounts below do have MNT_LOCKED, right?
+> >
+> > Isn't the bug here that the root mount gets MNT_LOCKED as well?
 
-Hi Sunil, thanks for the fix! It looks good.
+Yes, we suspected this as well. We just couldn't pinpoint where the
+surgery would need to start.
 
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> 
+> Yes, and the code to remove MNT_LOCKED is still sitting there in
+> propogate_one right after it calls copy_tree.  It should be a trivial
+> matter of moving that change to after the lock_mnt_tree call.
+> 
+> Now that I have been elightened about anonymous mount namespaces
+> I am suspecting that we want to take the user_namespace of the anonymous
+> namespace into account when deciding to lock the mounts.
+> 
+> >> Then it breaking is definitely a regression that needs to be fixed.
+> >>
+> >> I believe the problematic change as made because the new mount
+> >> api allows attaching floating mounts.  Or that was the plan last I
+> >> looked.   Those floating mounts don't have a mnt_ns so will result
+> >> in a NULL pointer dereference when they are attached.
+> >
+> > Well, it's called anonymous namespace.  So there *is* an mnt_ns, and
+> > its lifetime is bound to the file returned by fsmount().
+> 
+> Interesting.  That has changed since I last saw the patches.
+> 
+> Below is what will probably be a straight forward fix for the regression.
 
+Tested the patch just now applied on top of v5.1. It fixes the
+regression.
+Can you please send a proper patch, Eric?
+
+Tested-by: Christian Brauner <christian@brauner.io>
+Acked-by: Christian Brauner <christian@brauner.io>
+
+> 
+> Eric
+> 
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index ffb13f0562b0..a39edeecbc46 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -2105,6 +2105,7 @@ static int attach_recursive_mnt(struct mount *source_mnt,
+>                 /* Notice when we are propagating across user namespaces */
+>                 if (child->mnt_parent->mnt_ns->user_ns != user_ns)
+>                         lock_mnt_tree(child);
+> +               child->mnt.mnt_flags &= ~MNT_LOCKED;
+>                 commit_tree(child);
+>         }
+>         put_mountpoint(smp);
+> diff --git a/fs/pnode.c b/fs/pnode.c
+> index 7ea6cfb65077..012be405fec0 100644
+> --- a/fs/pnode.c
+> +++ b/fs/pnode.c
+> @@ -262,7 +262,6 @@ static int propagate_one(struct mount *m)
+>         child = copy_tree(last_source, last_source->mnt.mnt_root, type);
+>         if (IS_ERR(child))
+>                 return PTR_ERR(child);
+> -       child->mnt.mnt_flags &= ~MNT_LOCKED;
+>         mnt_set_mountpoint(m, mp, child);
+>         last_dest = m;
+>         last_source = child;
+> 
+> 
