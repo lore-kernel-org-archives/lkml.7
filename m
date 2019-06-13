@@ -5,53 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDDBC31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD78C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3568F21721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F0920644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443003;
-	bh=/a0mpmk+F++Irb56hdEMgOxXqHCddPGLkXPRjC/8KCM=;
+	s=default; t=1560443005;
+	bh=X+R5vzI3sP3DJBHPZdTdhePeFCbETwqSZUEN09NkQjo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pJBD9iQnVC0FGP+mW8W1H6EgHATmvuYiIz7p95WnSZzjTsF9e6Bgk0uw5E/ROmeAx
-	 iD7XIcb6KZPaVtD2/5mmwP9QiY7SipbCnc76DPtMPHWc9RcjT29h3YFDnKwMGNx1Yj
-	 W2w6UdCsUb6vCP2BT1DItC1MOakKcal1nmxSunqE=
+	b=vgm6EtBi/BFxqWUCOGK59Ey6TzXXqEruhiaoK6yoe5GkdqtokU2MGUSlHEYnizIBV
+	 nIAd1QPgpKb2sLyrFWkrRrgMkAJbNX2iX4c6l8gisT1BwgRUjj74R7Pu+2Skr3uDx4
+	 BIOo2zPsDw4ws3GN4ezHGvN8MRN374yb9RzrOfaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392102AbfFMQXG (ORCPT
+        id S2391478AbfFMQXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:23:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55352 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:23:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731033AbfFMIh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:37:56 -0400
+        id S1731034AbfFMIh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:37:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D405B2146F;
-        Thu, 13 Jun 2019 08:37:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC89C21473;
+        Thu, 13 Jun 2019 08:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415075;
-        bh=/a0mpmk+F++Irb56hdEMgOxXqHCddPGLkXPRjC/8KCM=;
+        s=default; t=1560415078;
+        bh=X+R5vzI3sP3DJBHPZdTdhePeFCbETwqSZUEN09NkQjo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZqhXu/lwICh17TQReV4DrsFmZDObQ2hjBAUQbh2ZUMMFF3ZuyTeOkCRYMQ+WmaBp
-         2ixYS/R7WYNIS0eb1C9gmxd4iP35wG7Dyia9N56MbcCkK5pFbKoBOKSAnZyy7HbhqP
-         XL4MZddvNqHcDKRI6MRpWAPEtlbflbD98Lp0aNws=
+        b=HCDCczUYgm6G+WxEidmZKZqp97q9ZIqXtIatdAeICyHm4jb+VRqSeCU7ZxGhiOQvb
+         BjzEEQijYQ6J7mJCF+A+nvr/XGWVp7eZ+rvrop53dm+xxulUOb1wg75oInEPiFiWcs
+         Itgy6CC3TaSkMgAFhski253d1KxhbbZhFo6ANdzY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-imx@nxp.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 77/81] gpio: vf610: Do not share irq_chip
-Date:   Thu, 13 Jun 2019 10:34:00 +0200
-Message-Id: <20190613075654.646180331@linuxfoundation.org>
+        stable@vger.kernel.org, Dennis Zhou <dennis@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 78/81] percpu: do not search past bitmap when allocating an area
+Date:   Thu, 13 Jun 2019 10:34:01 +0200
+Message-Id: <20190613075654.739666493@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -64,104 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 338aa10750ba24d04beeaf5dc5efc032e5cf343f ]
+[ Upstream commit 8c43004af01635cc9fbb11031d070e5e0d327ef2 ]
 
-Fix the warning produced by gpiochip_set_irq_hooks() by allocating a
-dedicated IRQ chip per GPIO chip/port.
+pcpu_find_block_fit() guarantees that a fit is found within
+PCPU_BITMAP_BLOCK_BITS. Iteration is used to determine the first fit as
+it compares against the block's contig_hint. This can lead to
+incorrectly scanning past the end of the bitmap. The behavior was okay
+given the check after for bit_off >= end and the correctness of the
+hints from pcpu_find_block_fit().
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-imx@nxp.com
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+This patch fixes this by bounding the end offset by the number of bits
+in a chunk.
+
+Signed-off-by: Dennis Zhou <dennis@kernel.org>
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-vf610.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+ mm/percpu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-index 1309b444720e..3210fba16a9b 100644
---- a/drivers/gpio/gpio-vf610.c
-+++ b/drivers/gpio/gpio-vf610.c
-@@ -37,6 +37,7 @@ struct fsl_gpio_soc_data {
- 
- struct vf610_gpio_port {
- 	struct gpio_chip gc;
-+	struct irq_chip ic;
- 	void __iomem *base;
- 	void __iomem *gpio_base;
- 	const struct fsl_gpio_soc_data *sdata;
-@@ -66,8 +67,6 @@ struct vf610_gpio_port {
- #define PORT_INT_EITHER_EDGE	0xb
- #define PORT_INT_LOGIC_ONE	0xc
- 
--static struct irq_chip vf610_gpio_irq_chip;
--
- static const struct fsl_gpio_soc_data imx_data = {
- 	.have_paddr = true,
- };
-@@ -243,15 +242,6 @@ static int vf610_gpio_irq_set_wake(struct irq_data *d, u32 enable)
- 	return 0;
- }
- 
--static struct irq_chip vf610_gpio_irq_chip = {
--	.name		= "gpio-vf610",
--	.irq_ack	= vf610_gpio_irq_ack,
--	.irq_mask	= vf610_gpio_irq_mask,
--	.irq_unmask	= vf610_gpio_irq_unmask,
--	.irq_set_type	= vf610_gpio_irq_set_type,
--	.irq_set_wake	= vf610_gpio_irq_set_wake,
--};
--
- static int vf610_gpio_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *of_id = of_match_device(vf610_gpio_dt_ids,
-@@ -261,6 +251,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
- 	struct vf610_gpio_port *port;
- 	struct resource *iores;
- 	struct gpio_chip *gc;
-+	struct irq_chip *ic;
- 	int i;
- 	int ret;
- 
-@@ -297,6 +288,14 @@ static int vf610_gpio_probe(struct platform_device *pdev)
- 	gc->direction_output = vf610_gpio_direction_output;
- 	gc->set = vf610_gpio_set;
- 
-+	ic = &port->ic;
-+	ic->name = "gpio-vf610";
-+	ic->irq_ack = vf610_gpio_irq_ack;
-+	ic->irq_mask = vf610_gpio_irq_mask;
-+	ic->irq_unmask = vf610_gpio_irq_unmask;
-+	ic->irq_set_type = vf610_gpio_irq_set_type;
-+	ic->irq_set_wake = vf610_gpio_irq_set_wake;
-+
- 	ret = gpiochip_add_data(gc, port);
- 	if (ret < 0)
- 		return ret;
-@@ -308,14 +307,13 @@ static int vf610_gpio_probe(struct platform_device *pdev)
- 	/* Clear the interrupt status register for all GPIO's */
- 	vf610_gpio_writel(~0, port->base + PORT_ISFR);
- 
--	ret = gpiochip_irqchip_add(gc, &vf610_gpio_irq_chip, 0,
--				   handle_edge_irq, IRQ_TYPE_NONE);
-+	ret = gpiochip_irqchip_add(gc, ic, 0, handle_edge_irq, IRQ_TYPE_NONE);
- 	if (ret) {
- 		dev_err(dev, "failed to add irqchip\n");
- 		gpiochip_remove(gc);
- 		return ret;
- 	}
--	gpiochip_set_chained_irqchip(gc, &vf610_gpio_irq_chip, port->irq,
-+	gpiochip_set_chained_irqchip(gc, ic, port->irq,
- 				     vf610_gpio_irq_handler);
- 
- 	return 0;
+diff --git a/mm/percpu.c b/mm/percpu.c
+index bc58bcbe4b60..9beb84800d8d 100644
+--- a/mm/percpu.c
++++ b/mm/percpu.c
+@@ -984,7 +984,8 @@ static int pcpu_alloc_area(struct pcpu_chunk *chunk, int alloc_bits,
+ 	/*
+ 	 * Search to find a fit.
+ 	 */
+-	end = start + alloc_bits + PCPU_BITMAP_BLOCK_BITS;
++	end = min_t(int, start + alloc_bits + PCPU_BITMAP_BLOCK_BITS,
++		    pcpu_chunk_map_bits(chunk));
+ 	bit_off = bitmap_find_next_zero_area(chunk->alloc_map, end, start,
+ 					     alloc_bits, align_mask);
+ 	if (bit_off >= end)
 -- 
 2.20.1
 
