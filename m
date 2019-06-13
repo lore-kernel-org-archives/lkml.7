@@ -2,123 +2,104 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F691C46477
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A71AC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19054207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:01:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560438073;
-	bh=gVhsA2V4Up0x7d4yh2MEfkVq4qTx2nGcU8j8Txc5KoQ=;
-	h=Date:From:To:cc:Subject:List-ID:From;
-	b=vSu1Iu5FrJvxFDeVDlU5DGqU0tHDqI9PavHPLNa0LlaZCzHbkfDDpm7oRvkAYTYt4
-	 O+Hra9Oxl6U0olcPGLK9dGNlYvQfBqIAYw9SRbvTmwpM6Mg7aHuThEGUYtbW2cCCyr
-	 SpavUw3vnT7Xk/BhbgqwxvEPJMnPouC5jxJCiYI8=
+	by mail.kernel.org (Postfix) with ESMTP id 6AE12207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733005AbfFMPBI (ORCPT
+        id S1733026AbfFMPBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:01:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732562AbfFMOhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:37:23 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BAFF20679;
-        Thu, 13 Jun 2019 14:37:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560436643;
-        bh=gVhsA2V4Up0x7d4yh2MEfkVq4qTx2nGcU8j8Txc5KoQ=;
-        h=Date:From:To:cc:Subject:From;
-        b=d+dOAvT/t+u/ZGFW+ta3v9me+sCiznvzQ8oEVTWBJYvr7k674sLVSHKTmzkIKSZ43
-         r+SLgmvUEblp3vmSiLZl1J2TiuudDHUTAY7H5p9C0tgogc/oaB/BMRit3ZHtwwU698
-         z36dWjNIPVQZBbVtrFdbuLYbE5mtMP2/cohx+uwE=
-Date:   Thu, 13 Jun 2019 16:37:20 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     linux-kernel@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [GIT PULL] HID fixes for 5.2-rc
-Message-ID: <nycvar.YFH.7.76.1906131632070.27227@cbobk.fhfr.pm>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Thu, 13 Jun 2019 11:01:17 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54454 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733019AbfFMPBQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 11:01:16 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id D442A281A15
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Collabora Kernel ML <kernel@collabora.com>,
+        Thinh Nguyen <thinhn@synopsys.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: dwc3: Fix core validation in probe, move after clocks are enabled
+Date:   Thu, 13 Jun 2019 17:01:07 +0200
+Message-Id: <20190613150107.7892-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-2
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+The required clocks needs to be enabled before the first register
+access. After commit fe8abf332b8f ("usb: dwc3: support clocks and resets
+for DWC3 core"), this happens when the dwc3_core_is_valid function is
+called, but the mentioned commit adds that call in the wrong place,
+before the clocks are enabled. So, move that call after the
+clk_bulk_enable() to ensure the clocks are enabled and the reset
+deasserted.
 
-please pull from
+I detected this while, as experiment, I tried to move the clocks and resets
+from the glue layer to the DWC3 core on a Samsung Chromebook Plus.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
+That was not detected before because, in most cases, the glue layer
+initializes SoC-specific things and then populates the child "snps,dwc3"
+with those clocks already enabled.
 
-to receive fixes for HID subsystem; highlights:
+Fixes: b873e2d0ea1ef ("usb: dwc3: Do core validation early on probe")
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
 
-=====
-- regression fixes (reverts) for module loading changes that turned out to
-  be incompatible with some userspace, from Benjamin Tissoires
-- regression fix for special Logitech unifiying receiver 0xc52f, from Hans 
-  de Goede
-- a few device ID additions to logitech driver, from Hans de Goede
-- fix for Bluetooth support on 2nd-gen Wacom Intuos Pro, from Jason 
-  Gerecke
-=====
+ drivers/usb/dwc3/core.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-Thanks.
-
-----------------------------------------------------------------
-Benjamin Tissoires (4):
-      HID: multitouch: handle faulty Elo touch device
-      Revert "HID: Increase maximum report size allowed by hid_field_extract()"
-      Revert "HID: core: Do not call request_module() in async context"
-      Revert "HID: core: Call request_module before doing device_add"
-
-B³a¿ej Szczygie³ (1):
-      HID: a4tech: fix horizontal scrolling
-
-Hans de Goede (4):
-      HID: logitech-dj: add support for the Logitech MX5500's Bluetooth Mini-Receiver
-      HID: logitech-hidpp: add support for the MX5500 keyboard
-      HID: logitech-hidpp: Add support for the S510 remote control
-      HID: logitech-dj: Fix 064d:c52f receiver support
-
-Jason Gerecke (5):
-      HID: wacom: Don't set tool type until we're in range
-      HID: wacom: Don't report anything prior to the tool entering range
-      HID: wacom: Send BTN_TOUCH in response to INTUOSP2_BT eraser contact
-      HID: wacom: Correct button numbering 2nd-gen Intuos Pro over Bluetooth
-      HID: wacom: Sync INTUOSP2_BT touch state after each frame if necessary
-
-Joseph Salisbury (1):
-      HID: hyperv: Add a module description line
-
-Kai-Heng Feng (1):
-      HID: i2c-hid: add iBall Aer3 to descriptor override
-
-Tobias Auerochs (1):
-      HID: rmi: Use SET_REPORT request on control endpoint for Acer Switch 3 and 5
-
- drivers/hid/hid-a4tech.c                 | 11 +++--
- drivers/hid/hid-core.c                   | 16 ++-----
- drivers/hid/hid-hyperv.c                 |  2 +
- drivers/hid/hid-ids.h                    |  1 +
- drivers/hid/hid-logitech-dj.c            | 50 +++++++++++++++-------
- drivers/hid/hid-logitech-hidpp.c         |  9 ++++
- drivers/hid/hid-multitouch.c             |  7 ++++
- drivers/hid/hid-rmi.c                    | 15 ++++++-
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c |  8 ++++
- drivers/hid/wacom_wac.c                  | 71 ++++++++++++++++++++++----------
- 10 files changed, 136 insertions(+), 54 deletions(-)
-
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 4aff1d8dbc4f..6e9e172010fc 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1423,11 +1423,6 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	dwc->regs	= regs;
+ 	dwc->regs_size	= resource_size(&dwc_res);
+ 
+-	if (!dwc3_core_is_valid(dwc)) {
+-		dev_err(dwc->dev, "this is not a DesignWare USB3 DRD Core\n");
+-		return -ENODEV;
+-	}
+-
+ 	dwc3_get_properties(dwc);
+ 
+ 	dwc->reset = devm_reset_control_get_optional_shared(dev, NULL);
+@@ -1460,6 +1455,12 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto unprepare_clks;
+ 
++	if (!dwc3_core_is_valid(dwc)) {
++		dev_err(dwc->dev, "this is not a DesignWare USB3 DRD Core\n");
++		ret = -ENODEV;
++		goto disable_clks;
++	}
++
+ 	platform_set_drvdata(pdev, dwc);
+ 	dwc3_cache_hwparams(dwc);
+ 
+@@ -1525,6 +1526,7 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	pm_runtime_put_sync(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ 
++disable_clks:
+ 	clk_bulk_disable(dwc->num_clks, dwc->clks);
+ unprepare_clks:
+ 	clk_bulk_unprepare(dwc->num_clks, dwc->clks);
 -- 
-Jiri Kosina
-SUSE Labs
+2.20.1
 
