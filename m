@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80761C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF38C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 594D620449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 652A620449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:27:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KIQBhcVG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mjcoCpLn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392380AbfFMQ1X (ORCPT
+        id S2392403AbfFMQ12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:27:23 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36556 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403765AbfFMQ1R (ORCPT
+        Thu, 13 Jun 2019 12:27:28 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41146 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731247AbfFMQ1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:27:17 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r7so6279739pfl.3;
-        Thu, 13 Jun 2019 09:27:16 -0700 (PDT)
+        Thu, 13 Jun 2019 12:27:25 -0400
+Received: by mail-pl1-f195.google.com with SMTP id s24so8351791plr.8;
+        Thu, 13 Jun 2019 09:27:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4q0HVXuQG17ks872jOkTIKAqD21+aLHXoXWPegnJvdQ=;
-        b=KIQBhcVGmgiJ+25JjcqJ9tMu8LPz/C1psYpC5wyrJmzadCvcovqJZGLqt8+qJ1BF/5
-         tPToBydwjBOnqzqZbE2hR/6beOAxQL9C0IievEXrtoXnD7OLHrs+mw4qdejaM5wSDTBG
-         CLcmLzUkYxfz+AnyQw1a3fC24z9cyNuDzmexwu9/Vwo51eK0W41TqSuxRFIfI2j01xBW
-         DEqV6PRuN1jntSaDch6yJtQ7xCLE2uy+3Qyb/9VHu5rjoydFOH4Z58/u51fOvqzFhMYL
-         sMtccU1vG5n+dLZNpMs8j3+b+FZeurJ4Z/i7iuWdfllKkf2Nfa+X+aY1k8GFk6VTvSZL
-         KCEA==
+        bh=+uAxJSSMcJzrTyyAujU7IWsabWssr7wxWhZR9Nz/dEI=;
+        b=mjcoCpLnewM+pZoDokMZAPSV/jh4geTMwUOmHG9y9n54CNHb+seQlWHkRh0LfXU2kG
+         M1bsOCW/Q8ZWGhyjhg1kB3VBXcLp+4k4lw277HOODN6TQANWjdBZitLqtft7IXpYjzWU
+         tW4N8VKEUAmCfU8OH+FofeI05RRXIbdjpYotmNG0fBWxgmI6hlFoXiDqqGgsDf5B0RDP
+         rYQDO2dXDZuenFNvBQyAgl+nk/uhYYstKsah2kuVTFsx/opMo45b4su+X1i9d8e2MWUR
+         oZZCcvQjSr6X6cHRWBCXBWMcPUS1VRdRpS2vkFXSSrPAnO/WpIvBScWt/ygIZ2ar4x+I
+         pgcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=4q0HVXuQG17ks872jOkTIKAqD21+aLHXoXWPegnJvdQ=;
-        b=kp+rqOzYPAN4J6ZspGktea+1xl2Cm2SPVgc4pLIJ3YNzlLLcNGZuZpFYdlq0BGrSMT
-         MQqZAmFl1Q4JkJUKzOR4npuTDetvaUzjHKR2/GXy85IRJ1fTWdCsetfkiYoxL8f/1Joy
-         CPBb1F4sg1eF8rJTUYdXIHivb7/++p+uIOl9iFpFFjTOgs4GEvUft1BO0/WyjTNLzZqH
-         8JMivcRiCY++GfFBsCCUkr8TE0ak6VLim3FIuRBwWF7E08/l2P37BbJe1qmvJHnBc8Lg
-         AEeIqp2C4IYhOnDhwQSNby2Z1gfOLTnGykx4bjxMXpvhPNuAZRDPR7OBv3VvaV5RhMt/
-         ZIPw==
-X-Gm-Message-State: APjAAAVxZAWF3dlYyR8/x1lU/zhAT3ZUeRBvKeLTGDVa1tHPly9ImpLK
-        RjzWU/NVsFbRG190pKMFR+g=
-X-Google-Smtp-Source: APXvYqxaBMg5bVhjUDBZsPXeyp3WVLYyOR0fUzELSMvjn8ql2xGJ98zarH9fUind6w2w+LFWAAHJSg==
-X-Received: by 2002:a17:90a:216f:: with SMTP id a102mr6573720pje.29.1560443236390;
-        Thu, 13 Jun 2019 09:27:16 -0700 (PDT)
+        bh=+uAxJSSMcJzrTyyAujU7IWsabWssr7wxWhZR9Nz/dEI=;
+        b=TgbcyNhYkaMbLS7pVtlre+1BgRZLKSo5zRqesWKfPyaZnLzymiRdBXLp7Shasb3LF0
+         TVkH3s/dmLgjku/+vb6aGbLe1aFsqwSDeOk7XoZsyqdeen83LKnjcACZBxaPXUBa30TY
+         hBzbimuyR8+nDWkbqDD30sCwUBsZ0qbz5A+Jh26bQSdfmv8hUdh0JrOpd3YV2NDIH+od
+         xPRtW7tUl0SvWAU2o00OLMxDY2dZR/VCJLHl6e3Ok65qbtrGeqNfTcd+tT35D0bb2kXP
+         rtZL+PEc+YVQuxNx0Jm4o5ZKeurfMOW/mGlW5b4ViyU+5OIXX+QMXca8otjUm5l7UMI1
+         dYxg==
+X-Gm-Message-State: APjAAAVh57Str1bkxe90/LCnlnqkvjnKfw+xtKr03aHhPxuZss68B2Cc
+        ph2as0UhCsR4qxP/ecStD/Bup+rFJF8=
+X-Google-Smtp-Source: APXvYqxkQlemuxcSLQHtMtBC5Ri9a3BRMGjgpcVRFo4X60vYKhFABWujvq+0K3YJ88vz/VdAg59zEw==
+X-Received: by 2002:a17:902:860c:: with SMTP id f12mr89128629plo.127.1560443244418;
+        Thu, 13 Jun 2019 09:27:24 -0700 (PDT)
 Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
-        by smtp.gmail.com with ESMTPSA id n127sm282319pga.57.2019.06.13.09.27.15
+        by smtp.gmail.com with ESMTPSA id 128sm170411pfd.66.2019.06.13.09.27.23
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Jun 2019 09:27:15 -0700 (PDT)
+        Thu, 13 Jun 2019 09:27:23 -0700 (PDT)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     joro@8bytes.org, m.szyprowski@samsung.com, kgene@kernel.org,
         krzk@kernel.org, will.deacon@arm.com, robin.murphy@arm.com,
@@ -66,9 +66,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
         Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 03/10] iommu/omap: convert to SPDX license tags
-Date:   Thu, 13 Jun 2019 12:26:56 -0400
-Message-Id: <20190613162703.986-3-tiny.windzz@gmail.com>
+Subject: [PATCH 05/10] iommu/dma-iommu: convert to SPDX license tags
+Date:   Thu, 13 Jun 2019 12:26:58 -0400
+Message-Id: <20190613162703.986-5-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.0
 In-Reply-To: <20190613162703.986-1-tiny.windzz@gmail.com>
 References: <20190613162703.986-1-tiny.windzz@gmail.com>
@@ -81,89 +81,37 @@ Updates license to use SPDX-License-Identifier.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/iommu/omap-iommu-debug.c | 5 +----
- drivers/iommu/omap-iommu.c       | 5 +----
- drivers/iommu/omap-iommu.h       | 5 +----
- drivers/iommu/omap-iopgtable.h   | 5 +----
- 4 files changed, 4 insertions(+), 16 deletions(-)
+ drivers/iommu/dma-iommu.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/drivers/iommu/omap-iommu-debug.c b/drivers/iommu/omap-iommu-debug.c
-index 4abc0ef522a8..55ec67a45101 100644
---- a/drivers/iommu/omap-iommu-debug.c
-+++ b/drivers/iommu/omap-iommu-debug.c
-@@ -1,13 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * omap iommu: debugfs interface
-  *
-  * Copyright (C) 2008-2009 Nokia Corporation
-  *
-  * Written by Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
- 
- #include <linux/err.h>
-diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
-index d2fb347aa4ff..e6442876913f 100644
---- a/drivers/iommu/omap-iommu.c
-+++ b/drivers/iommu/omap-iommu.c
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 129c4badf9ae..2d76bac43b82 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
 @@ -1,3 +1,4 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  * omap iommu: tlb and pagetable primitives
+  * A fairly generic DMA-API to IOMMU-API glue layer.
   *
-@@ -6,10 +7,6 @@
+@@ -5,18 +6,6 @@
   *
-  * Written by Hiroshi DOYU <Hiroshi.DOYU@nokia.com>,
-  *		Paul Mundt and Toshihiro Kobayashi
+  * based in part on arch/arm/mm/dma-mapping.c:
+  * Copyright (C) 2000-2004 Russell King
 - *
 - * This program is free software; you can redistribute it and/or modify
 - * it under the terms of the GNU General Public License version 2 as
 - * published by the Free Software Foundation.
-  */
- 
- #include <linux/dma-mapping.h>
-diff --git a/drivers/iommu/omap-iommu.h b/drivers/iommu/omap-iommu.h
-index 1703159ef5af..5256e17d86a7 100644
---- a/drivers/iommu/omap-iommu.h
-+++ b/drivers/iommu/omap-iommu.h
-@@ -1,13 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * omap iommu: main structures
-  *
-  * Copyright (C) 2008-2009 Nokia Corporation
-  *
-  * Written by Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
 - *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
- 
- #ifndef _OMAP_IOMMU_H
-diff --git a/drivers/iommu/omap-iopgtable.h b/drivers/iommu/omap-iopgtable.h
-index 01a315227bf0..871c2a38f453 100644
---- a/drivers/iommu/omap-iopgtable.h
-+++ b/drivers/iommu/omap-iopgtable.h
-@@ -1,13 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * omap iommu: pagetable definitions
-  *
-  * Copyright (C) 2008-2010 Nokia Corporation
-  *
-  * Written by Hiroshi DOYU <Hiroshi.DOYU@nokia.com>
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
 - *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
   */
  
- #ifndef _OMAP_IOPGTABLE_H
+ #include <linux/acpi_iort.h>
 -- 
 2.17.0
 
