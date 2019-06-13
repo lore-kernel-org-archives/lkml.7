@@ -2,160 +2,79 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40224C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 074C4C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 139B12080A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:40:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EVF5KCfM"
+	by mail.kernel.org (Postfix) with ESMTP id D50CA206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:40:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733072AbfFMPko (ORCPT
+        id S1728631AbfFMPkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:40:44 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43502 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731896AbfFMPki (ORCPT
+        Thu, 13 Jun 2019 11:40:37 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:40772 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731896AbfFMJwY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:40:38 -0400
-Received: by mail-io1-f65.google.com with SMTP id k20so17897275ios.10;
-        Thu, 13 Jun 2019 08:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EpD3K83Ka5TSMWScDEZ67LqOf1a52nrRlcufyYeUVis=;
-        b=EVF5KCfM/tbCC1NUruLaLM1ywMuSdGBvkXeBgYZziTY1Fu5IOQMwl/YEykfdfHE94/
-         5QhSSfT+HerbBUvPTaklNNwaQiMW+RuP7nsBtwx6ndRZ49HI2xa3wRNse4N0EmE2nDBI
-         UX6PTk+0Q7GMEQEus7rSCJlyx0RNLhLVbQmeSjNxGHAV/nPkKTFjfSXdEZSWFpsLz1rR
-         sqsSSNlCuZJHrJgYuGY6frS0JLBfNE+8ovsVuaYwIrZ13IgkCHNO8QtYKqPrpuVbuMnO
-         aaIPzzirKfJhUOr14DzULqNhzdkbtHrJGN7BRdvcKnYNI+8v3Jj53itJ6+hz/xeG9d1j
-         gDYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EpD3K83Ka5TSMWScDEZ67LqOf1a52nrRlcufyYeUVis=;
-        b=DLGJbvwKwEMVmt1/sOKgzUxBHN7IlMxYlfuWgexP28NQ9Z9+/8dp1OGWdrwvXEglTz
-         mXa/kmQVT8B9lKtA32fFc6elkXJFl32yzQMqapBR6+rKlzCVBEute3YGAykqXXQThMlf
-         I0sdPyhtC9BnkCbp3cUmd+r330h30HOjE2dKg/Awdh+Eq2yTnOsKbgJ8+AiMsaQFqhwL
-         xnqTYV/kqxdgVOAHkxm+FNZgHMi4pASxlZuaHtPGZTekrMdjry3eMal9bGi8DCoIumSp
-         uicys03mVTJzwMp5Xd/YirY1W3l+LGnVFIHWzfmyN6LGXQFzk9lVy7CHCH6DQ2VlTsub
-         lQRA==
-X-Gm-Message-State: APjAAAWRiBNtBTWJKnIbP3YHB8AKzfl2pTr9dSbTaP0hSYsychN0moT7
-        3Hcz++AKm3jSaRiqX9SASgc2SRbdR2Y59raFvZs=
-X-Google-Smtp-Source: APXvYqwZXBIAJdOqwZSdv8NDfcAq1aYocY317Ws60K3D4JLeybC++4tQpNDF9GWJlvOplwYy9A08l89/Eo+aDNa+N+E=
-X-Received: by 2002:a02:b10b:: with SMTP id r11mr55931310jah.140.1560440437577;
- Thu, 13 Jun 2019 08:40:37 -0700 (PDT)
+        Thu, 13 Jun 2019 05:52:24 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 54BDF25BE33;
+        Thu, 13 Jun 2019 19:52:22 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id 61B0E940483; Thu, 13 Jun 2019 11:52:20 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 11:52:20 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 20/34] power: supply: max17040_battery: simplify getting
+ the adapter of a client
+Message-ID: <20190613095220.gmdztxllxrzqc5fv@verge.net.au>
+References: <20190608105619.593-1-wsa+renesas@sang-engineering.com>
+ <20190608105619.593-21-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-References: <20190613142157.8674-1-jeffrey.l.hugo@gmail.com>
- <20190613142416.8985-1-jeffrey.l.hugo@gmail.com> <20190613153633.GF6792@builder>
-In-Reply-To: <20190613153633.GF6792@builder>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Thu, 13 Jun 2019 09:40:27 -0600
-Message-ID: <CAOCk7NrGgDNEczP5mqirUzwoE+wKF-D5nYvJXfa-e3eFni62iw@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] dt-bindings: qcom_spmi: Document pms405 support
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190608105619.593-21-wsa+renesas@sang-engineering.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 9:36 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Thu 13 Jun 07:24 PDT 2019, Jeffrey Hugo wrote:
->
-> > From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-> >
-> > The PMS405 supports 5 SMPS and 13 LDO regulators.
-> >
-> > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > ---
-> >  .../regulator/qcom,spmi-regulator.txt         | 24 +++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-> > index ba94bc2d407a..19cffb239094 100644
-> > --- a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-> > +++ b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
-> > @@ -10,6 +10,7 @@ Qualcomm SPMI Regulators
-> >                       "qcom,pm8941-regulators"
-> >                       "qcom,pm8994-regulators"
-> >                       "qcom,pmi8994-regulators"
-> > +                     "qcom,pms405-regulators"
-> >
-> >  - interrupts:
-> >       Usage: optional
-> > @@ -111,6 +112,29 @@ Qualcomm SPMI Regulators
-> >       Definition: Reference to regulator supplying the input pin, as
-> >                   described in the data sheet.
-> >
-> > +- vdd_s1-supply:
-> > +- vdd_s2-supply:
-> > +- vdd_s3-supply:
-> > +- vdd_s4-supply:
-> > +- vdd_s5-supply:
-> > +- vdd_l1-supply:
-> > +- vdd_l2-supply:
-> > +- vdd_l3-supply:
-> > +- vdd_l4-supply:
-> > +- vdd_l5-supply:
-> > +- vdd_l6-supply:
-> > +- vdd_l7-supply:
-> > +- vdd_l8-supply:
-> > +- vdd_l9-supply:
-> > +- vdd_l10-supply:
-> > +- vdd_l11-supply:
-> > +- vdd_l12-supply:
-> > +- vdd_l13-supply:
->
-> No, the supply pins are as follows:
->
-> - vdd_l1_l2-supply:
-> - vdd_l3_l8-supply:
-> - vdd_l4-supply:
-> - vdd_l5_l6-supply:
-> - vdd_l10_l11_l12_l13-supply:
-> - vdd_l7-supply:
-> - vdd_l9-supply:
-> - vdd_s1-supply:
-> - vdd_s2-supply:
-> - vdd_s3-supply:
-> - vdd_s4-supply:
-> - vdd_s5-supply:
+On Sat, Jun 08, 2019 at 12:55:59PM +0200, Wolfram Sang wrote:
+> We have a dedicated pointer for that, so use it. Much easier to read and
+> less computation involved.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Sure, will update.
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
->
->
-> Regards,
-> Bjorn
->
-> > +     Usage: optional (pms405 only)
-> > +     Value type: <phandle>
-> > +     Definition: Reference to regulator supplying the input pin, as
-> > +                 described in the data sheet.
-> > +
-> >  - qcom,saw-reg:
-> >       Usage: optional
-> >       Value type: <phandle>
-> > --
-> > 2.17.1
-> >
+> ---
+> 
+> Please apply to your subsystem tree.
+> 
+>  drivers/power/supply/max17040_battery.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+> index 91cafc7bed30..62499018e68b 100644
+> --- a/drivers/power/supply/max17040_battery.c
+> +++ b/drivers/power/supply/max17040_battery.c
+> @@ -193,7 +193,7 @@ static const struct power_supply_desc max17040_battery_desc = {
+>  static int max17040_probe(struct i2c_client *client,
+>  			const struct i2c_device_id *id)
+>  {
+> -	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
+> +	struct i2c_adapter *adapter = client->adapter;
+>  	struct power_supply_config psy_cfg = {};
+>  	struct max17040_chip *chip;
+>  
+> -- 
+> 2.19.1
+> 
