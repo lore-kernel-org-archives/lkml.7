@@ -2,200 +2,167 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 134D6C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C3AC46477
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF32421537
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:32:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mh0Rc495"
+	by mail.kernel.org (Postfix) with ESMTP id 6884C21537
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:32:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbfFMUco (ORCPT
+        id S1729841AbfFMUcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 13 Jun 2019 16:32:48 -0400
+Received: from mga17.intel.com ([192.55.52.151]:5160 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726289AbfFMUco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Jun 2019 16:32:44 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:44441 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfFMUco (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:32:44 -0400
-Received: by mail-ua1-f65.google.com with SMTP id 8so48555uaz.11
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 13:32:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XnwdqEB/zxSUoi8AX3TTUKJIQzqvpn/EDnWBDbRAeC0=;
-        b=mh0Rc495xOBUVTnnEmr4AY5NBwVSaqzX7zqV6Dc0pZhAdBBMh97ij8pz/2/iyufp6F
-         ooJ45PQgHYRytRZez//z7awy8/LfcteuyU4iQPzoIaxepq7w2liWukbsUhe7AVsGV2m4
-         cGRVK2X2wHvYVrnO3N3b1vRlOqgAy1SA4v+7JmfMJIywOp9HK3ygvJWCv7tbo6q745j4
-         w7aNSUQU4VPwQ+rzdjFOPSxICgPxP25z9gSYvI9Fr4DHolTZx7l7s1QyHkMnZG2KUxWG
-         2/hwjxPew43xbKjCW3en5tfPSloSM/x9hxBFVQ0j+Y7gNVoK1FrgVaKF+OIkIdmaZH4p
-         Ua2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XnwdqEB/zxSUoi8AX3TTUKJIQzqvpn/EDnWBDbRAeC0=;
-        b=GrlLopzh1nLW/kZjJkdPRR/i0Hu/qzkAaywNsuQpY6wT3Jd6qyu+MWaRbTdy6x+pKU
-         ebLDyGKDxRKrGa3zGnElQnGxpKky6CuCHDxCEW+OcbHP3D91X2wy/V9KOfNKnGCu8lFG
-         Ia+homfY7fKWQU6quu9FWtVhMR70c0PHxzAB3JHMxyg8U9pdmexovYVvaTEcEtywSR5I
-         xxpEzWJyLzrny9PDe7RvVdXsE0hdJGKa1NGFocbpdH4rL+jOOFv39v10+yt+Wub6pMI5
-         pzzfVDaYfFwD1G9NSAsQ8iqrgcuf6yiDO8dRZeX32uMSqQ5Q7VuLVKIwxJu4QUyr7UY5
-         qN7g==
-X-Gm-Message-State: APjAAAXkk5CIz3EX1Wofft1MkxhM/bV52/gMnJdr9UsYmWtowHdaAGiW
-        0m1uBlR6u/FnJEkRgH6INGifuCboMz32Rw4r7VvxZr/zJt7bSQ==
-X-Google-Smtp-Source: APXvYqwYSC5celn0/YY56qS1Ya7QSTRLAhhjVJF5SlLdd0JuZboIS3qB8YqgOjoOCvVdt0mtU6tXdL4lZWb7/Se6XdM=
-X-Received: by 2002:ab0:6619:: with SMTP id r25mr3232042uam.33.1560457962568;
- Thu, 13 Jun 2019 13:32:42 -0700 (PDT)
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 13:32:43 -0700
+X-ExtLoop1: 1
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Jun 2019 13:32:43 -0700
+Date:   Thu, 13 Jun 2019 13:34:05 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-rdma@vger.kernel.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190613203404.GA30404@iweiny-DESK2.sc.intel.com>
+References: <20190606014544.8339-1-ira.weiny@intel.com>
+ <20190606104203.GF7433@quack2.suse.cz>
+ <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
+ <20190607110426.GB12765@quack2.suse.cz>
+ <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
+ <20190608001036.GF14308@dread.disaster.area>
+ <20190612123751.GD32656@bombadil.infradead.org>
+ <20190613002555.GH14363@dread.disaster.area>
 MIME-Version: 1.0
-References: <156007465229.3335.10259979070641486905.stgit@buzz>
- <156007493995.3335.9595044802115356911.stgit@buzz> <20190612231426.GA3639@gmail.com>
- <f15478b5-098f-e1be-0928-62f46cff77e7@yandex-team.ru>
-In-Reply-To: <f15478b5-098f-e1be-0928-62f46cff77e7@yandex-team.ru>
-From:   Andrei Vagin <avagin@gmail.com>
-Date:   Thu, 13 Jun 2019 13:32:31 -0700
-Message-ID: <CANaxB-xUADVJx7HL6uHNRLDLNC19urcp-NY6RnyrckuH2neaAw@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] proc: use down_read_killable mmap_sem for /proc/pid/map_files
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Roman Gushchin <guro@fb.com>, Dmitry Safonov <dima@arista.com>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613002555.GH14363@dread.disaster.area>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 1:15 AM Konstantin Khlebnikov
-<khlebnikov@yandex-team.ru> wrote:
->
-> On 13.06.2019 2:14, Andrei Vagin wrote:
-> > On Sun, Jun 09, 2019 at 01:09:00PM +0300, Konstantin Khlebnikov wrote:
-> >> Do not stuck forever if something wrong.
-> >> Killable lock allows to cleanup stuck tasks and simplifies investigation.
-> >
-> > This patch breaks the CRIU project, because stat() returns EINTR instead
-> > of ENOENT:
-> >
-> > [root@fc24 criu]# stat /proc/self/map_files/0-0
-> > stat: cannot stat '/proc/self/map_files/0-0': Interrupted system call
->
-> Good catch.
->
-> It seems CRIU tests has good coverage for darkest corners of kernel API.
-> Kernel CI projects should use it. I suppose you know how to promote this. =)
+On Thu, Jun 13, 2019 at 10:25:55AM +1000, Dave Chinner wrote:
+> On Wed, Jun 12, 2019 at 05:37:53AM -0700, Matthew Wilcox wrote:
+> > On Sat, Jun 08, 2019 at 10:10:36AM +1000, Dave Chinner wrote:
+> > > On Fri, Jun 07, 2019 at 11:25:35AM -0700, Ira Weiny wrote:
+> > > > Are you suggesting that we have something like this from user space?
+> > > > 
+> > > > 	fcntl(fd, F_SETLEASE, F_LAYOUT | F_UNBREAKABLE);
+> > > 
+> > > Rather than "unbreakable", perhaps a clearer description of the
+> > > policy it entails is "exclusive"?
+> > > 
+> > > i.e. what we are talking about here is an exclusive lease that
+> > > prevents other processes from changing the layout. i.e. the
+> > > mechanism used to guarantee a lease is exclusive is that the layout
+> > > becomes "unbreakable" at the filesystem level, but the policy we are
+> > > actually presenting to uses is "exclusive access"...
+> > 
+> > That's rather different from the normal meaning of 'exclusive' in the
+> > context of locks, which is "only one user can have access to this at
+> > a time".
+> 
+> 
+> Layout leases are not locks, they are a user access policy object.
+> It is the process/fd which holds the lease and it's the process/fd
+> that is granted exclusive access.  This is exactly the same semantic
+> as O_EXCL provides for granting exclusive access to a block device
+> via open(), yes?
+> 
+> > As I understand it, this is rather more like a 'shared' or
+> > 'read' lock.  The filesystem would be the one which wants an exclusive
+> > lock, so it can modify the mapping of logical to physical blocks.
+> 
+> ISTM that you're conflating internal filesystem implementation with
+> application visible semantics. Yes, the filesystem uses internal
+> locks to serialise the modification of the things the lease manages
+> access too, but that has nothing to do with the access policy the
+> lease provides to users.
+> 
+> e.g. Process A has an exclusive layout lease on file F. It does an
+> IO to file F. The filesystem IO path checks that Process A owns the
+> lease on the file and so skips straight through layout breaking
+> because it owns the lease and is allowed to modify the layout. It
+> then takes the inode metadata locks to allocate new space and write
+> new data.
+> 
+> Process B now tries to write to file F. The FS checks whether
+> Process B owns a layout lease on file F. It doesn't, so then it
+> tries to break the layout lease so the IO can proceed. The layout
+> breaking code sees that process A has an exclusive layout lease
+> granted, and so returns -ETXTBSY to process B - it is not allowed to
+> break the lease and so the IO fails with -ETXTBSY.
+> 
+> i.e. the exclusive layout lease prevents other processes from
+> performing operations that may need to modify the layout from
+> performing those operations. It does not "lock" the file/inode in
+> any way, it just changes how the layout lease breaking behaves.
 
-I remember Mike was trying to add the CRIU test suite into kernel-ci,
-but it looks like this ended up with nothing.
+Question: Do we expect Process A to get notified that Process B was attempting
+to change the layout?
 
-The good thing here is that we have our own kernel-ci:
-https://travis-ci.org/avagin/linux/builds
+This changes the exclusivity semantics.  While Process A has an exclusive lease
+it could release it if notified to allow process B temporary exclusivity.
 
-Travis-CI doesn't allow to replace the kernel, so we use CRIU to
-dump/restore a ssh session and travis doesn't notice when we kexec a
-new kernel.
+Question 2: Do we expect other process' (say Process C) to also be able to map
+and pin the file?  I believe users will need this and for layout purposes it is
+ok to do so.  But this means that Process A does not have "exclusive" access to
+the lease.
 
->
-> >
-> > Here is one inline comment with the fix for this issue.
-> >
-> >>
-> >> It seems ->d_revalidate() could return any error (except ECHILD) to
-> >> abort validation and pass error as result of lookup sequence.
-> >>
-> >> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> >> Reviewed-by: Roman Gushchin <guro@fb.com>
-> >> Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
-> >> Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-> >
-> > It was nice to see all four of you in one place :).
-> >
-> >> Acked-by: Michal Hocko <mhocko@suse.com>
-> >> ---
-> >>   fs/proc/base.c |   27 +++++++++++++++++++++------
-> >>   1 file changed, 21 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> >> index 9c8ca6cd3ce4..515ab29c2adf 100644
-> >> --- a/fs/proc/base.c
-> >> +++ b/fs/proc/base.c
-> >> @@ -1962,9 +1962,12 @@ static int map_files_d_revalidate(struct dentry *dentry, unsigned int flags)
-> >>              goto out;
-> >>
-> >>      if (!dname_to_vma_addr(dentry, &vm_start, &vm_end)) {
-> >> -            down_read(&mm->mmap_sem);
-> >> -            exact_vma_exists = !!find_exact_vma(mm, vm_start, vm_end);
-> >> -            up_read(&mm->mmap_sem);
-> >> +            status = down_read_killable(&mm->mmap_sem);
-> >> +            if (!status) {
-> >> +                    exact_vma_exists = !!find_exact_vma(mm, vm_start,
-> >> +                                                        vm_end);
-> >> +                    up_read(&mm->mmap_sem);
-> >> +            }
-> >>      }
-> >>
-> >>      mmput(mm);
-> >> @@ -2010,8 +2013,11 @@ static int map_files_get_link(struct dentry *dentry, struct path *path)
-> >>      if (rc)
-> >>              goto out_mmput;
-> >>
-> >> +    rc = down_read_killable(&mm->mmap_sem);
-> >> +    if (rc)
-> >> +            goto out_mmput;
-> >> +
-> >>      rc = -ENOENT;
-> >> -    down_read(&mm->mmap_sem);
-> >>      vma = find_exact_vma(mm, vm_start, vm_end);
-> >>      if (vma && vma->vm_file) {
-> >>              *path = vma->vm_file->f_path;
-> >> @@ -2107,7 +2113,10 @@ static struct dentry *proc_map_files_lookup(struct inode *dir,
-> >>      if (!mm)
-> >>              goto out_put_task;
-> >>
-> >> -    down_read(&mm->mmap_sem);
-> >> +    result = ERR_PTR(-EINTR);
-> >> +    if (down_read_killable(&mm->mmap_sem))
-> >> +            goto out_put_mm;
-> >> +
-> >
-> >       result = ERR_PTR(-ENOENT);
-> >
-> >>      vma = find_exact_vma(mm, vm_start, vm_end);
-> >>      if (!vma)
-> >>              goto out_no_vma;
-> >> @@ -2118,6 +2127,7 @@ static struct dentry *proc_map_files_lookup(struct inode *dir,
-> >>
-> >>   out_no_vma:
-> >>      up_read(&mm->mmap_sem);
-> >> +out_put_mm:
-> >>      mmput(mm);
-> >>   out_put_task:
-> >>      put_task_struct(task);
-> >> @@ -2160,7 +2170,12 @@ proc_map_files_readdir(struct file *file, struct dir_context *ctx)
-> >>      mm = get_task_mm(task);
-> >>      if (!mm)
-> >>              goto out_put_task;
-> >> -    down_read(&mm->mmap_sem);
-> >> +
-> >> +    ret = down_read_killable(&mm->mmap_sem);
-> >> +    if (ret) {
-> >> +            mmput(mm);
-> >> +            goto out_put_task;
-> >> +    }
-> >>
-> >>      nr_files = 0;
-> >>
+So given Process C has also placed a layout lease on the file.  Indicating
+that it does not want the layout to change.  Both A and C need to be "broken"
+by Process B to change the layout.  If there is no Process B; A and C can run
+just fine with a "locked" layout.
+
+Ira
+
+> 
+> Further, the "exclusiveness" of a layout lease is completely
+> irrelevant to the filesystem that is indicating that an operation
+> that may need to modify the layout is about to be performed. All the
+> filesystem has to do is handle failures to break the lease
+> appropriately.  Yes, XFS serialises the layout lease validation
+> against other IO to the same file via it's IO locks, but that's an
+> internal data IO coherency requirement, not anything to do with
+> layout lease management.
+> 
+> Note that I talk about /writes/ here. This is interchangable with
+> any other operation that may need to modify the extent layout of the
+> file, be it truncate, fallocate, etc: the attempt to break the
+> layout lease by a non-owner should fail if the lease is "exclusive"
+> to the owner.
+> 
+> > The complication being that by default the filesystem has an exclusive
+> > lock on the mapping, and what we're trying to add is the ability for
+> > readers to ask the filesystem to give up its exclusive lock.
+> 
+> The filesystem doesn't even lock the "mapping" until after the
+> layout lease has been validated or broken.
+> 
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
+> 
