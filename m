@@ -2,127 +2,227 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C970C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC760C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227BF20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C20B217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442410;
-	bh=76D3vaAouJvHGGAHeFdnU7ReK0evbpdCzSUXWh05FYc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SQ20s5bhYlFO5NL8Ma++MtP5K97S96Y2ecucRYi3vq43Puxi1NYWYiINSxF3mePNQ
-	 YlSS7sWqxJVIrnetZWakeI9Qj2M58lITNr6OlnYsCNewtcwY3K1rPGSC1DWkGIlBN1
-	 6q04XQNpSvHXDL4jj8DwrmqhGTxSR9uSk8hJLMQo=
+	s=default; t=1560442415;
+	bh=RT5ARPzRqXVzJnJRWsb4aSjhGlmdp5Dxz378/CaIaL8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nal29ny7Vc/xXrvcbTndmzSIfHM+kgtYEvr+OX1CRM7q6x+AXqSGtd9R4k6hCpl50
+	 KDKSdWeHONxlHu734NgyINTLCu+vDKSDekOch4Iu9vFHZLkB+E0dOhCSnGfJTBE7Cg
+	 +6B95opCnEh2Mu9lDnpIognJbTs2YvTV6JuZoBKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391550AbfFMQNQ (ORCPT
+        id S2390441AbfFMQNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:13:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60086 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:13:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731208AbfFMIm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:42:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730097AbfFMQNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:13:33 -0400
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 381CF21479;
-        Thu, 13 Jun 2019 08:42:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1EE62184C
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 16:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415375;
-        bh=76D3vaAouJvHGGAHeFdnU7ReK0evbpdCzSUXWh05FYc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S+6tyKq8t6sL85UHSUgBcsUYGb+CgxBz7owFx+wQYGiEv+D2JdL145/VfcW4XQhbX
-         aJOJpgMkAE7pjOHSJFf/T2m5jSCmKXDcdf9DUzamU6tlLbntVlQpTzvCuv5wysQL8Q
-         Yu82e29Bev0tVQKVPnMyNN/A20gsWTda2TbJYVPM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 073/118] x86/PCI: Fix PCI IRQ routing table memory leak
-Date:   Thu, 13 Jun 2019 10:33:31 +0200
-Message-Id: <20190613075648.152331358@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
-References: <20190613075643.642092651@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1560442412;
+        bh=RT5ARPzRqXVzJnJRWsb4aSjhGlmdp5Dxz378/CaIaL8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NwGeY6c5yx5u+vAf+WFQFGDxu4tJunZee5S3v8/3Qa+DA8OJcbCm8FmnWlW22EeIo
+         pvPbgqFLEzgMn1IjNleSrLm81jYN3yBQ71Ciz8HfYJq/FtRHBbbhMiZLbPlFV0PnuP
+         ocg5sCTo1sMNGcufG6vv6SGvTttlwV0I45IEbCZo=
+Received: by mail-wm1-f54.google.com with SMTP id w9so6965302wmd.1
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 09:13:31 -0700 (PDT)
+X-Gm-Message-State: APjAAAW2CzpbwoCK31lEUxwQBYFDBb0Z1PkTvI2yFNJ9QtVvJ6UxuSoc
+        Axv7gyKVReKp7PJbSi/ZsJ5OnF0qFzrpSlsYSrjDZw==
+X-Google-Smtp-Source: APXvYqxORucqKuGLKjes9H2wam29KDoQdYjsLf9dyQzWSteNOhlzCVgUt/QAWlV6lgXowPWhEDBN5CK0AZlXmczTjmM=
+X-Received: by 2002:a7b:cd84:: with SMTP id y4mr4464357wmj.79.1560442410236;
+ Thu, 13 Jun 2019 09:13:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190612170834.14855-1-mhillenb@amazon.de> <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com>
+ <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net> <CALCETrXHbS9VXfZ80kOjiTrreM2EbapYeGp68mvJPbosUtorYA@mail.gmail.com>
+ <459e2273-bc27-f422-601b-2d6cdaf06f84@amazon.com>
+In-Reply-To: <459e2273-bc27-f422-601b-2d6cdaf06f84@amazon.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 13 Jun 2019 09:13:19 -0700
+X-Gmail-Original-Message-ID: <CALCETrVRuQb-P7auHCgxzs5L=qA2_qHzVGTtRMAqoMAut0ETFw@mail.gmail.com>
+Message-ID: <CALCETrVRuQb-P7auHCgxzs5L=qA2_qHzVGTtRMAqoMAut0ETFw@mail.gmail.com>
+Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM secrets
+To:     Alexander Graf <graf@amazon.com>, Nadav Amit <namit@vmware.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Marius Hillenbrand <mhillenb@amazon.de>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux-MM <linux-mm@kvack.org>, Alexander Graf <graf@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ea094d53580f40c2124cef3d072b73b2425e7bfd ]
+On Thu, Jun 13, 2019 at 12:53 AM Alexander Graf <graf@amazon.com> wrote:
+>
+>
+> On 13.06.19 03:30, Andy Lutomirski wrote:
+> > On Wed, Jun 12, 2019 at 1:27 PM Andy Lutomirski <luto@amacapital.net> w=
+rote:
+> >>
+> >>
+> >>> On Jun 12, 2019, at 12:55 PM, Dave Hansen <dave.hansen@intel.com> wro=
+te:
+> >>>
+> >>>> On 6/12/19 10:08 AM, Marius Hillenbrand wrote:
+> >>>> This patch series proposes to introduce a region for what we call
+> >>>> process-local memory into the kernel's virtual address space.
+> >>> It might be fun to cc some x86 folks on this series.  They might have
+> >>> some relevant opinions. ;)
+> >>>
+> >>> A few high-level questions:
+> >>>
+> >>> Why go to all this trouble to hide guest state like registers if all =
+the
+> >>> guest data itself is still mapped?
+> >>>
+> >>> Where's the context-switching code?  Did I just miss it?
+> >>>
+> >>> We've discussed having per-cpu page tables where a given PGD is only =
+in
+> >>> use from one CPU at a time.  I *think* this scheme still works in suc=
+h a
+> >>> case, it just adds one more PGD entry that would have to context-swit=
+ched.
+> >> Fair warning: Linus is on record as absolutely hating this idea. He mi=
+ght change his mind, but it=E2=80=99s an uphill battle.
+> > I looked at the patch, and it (sensibly) has nothing to do with
+> > per-cpu PGDs.  So it's in great shape!
+>
+>
+> Thanks a lot for the very timely review!
+>
+>
+> >
+> > Seriously, though, here are some very high-level review comments:
+> >
+> > Please don't call it "process local", since "process" is meaningless.
+> > Call it "mm local" or something like that.
+>
+>
+> Naming is hard, yes :). Is "mmlocal" obvious enough to most readers? I'm
+> not fully convinced, but I don't find it better or worse than proclocal.
+> So whatever flies with the majority works for me :).
 
-In pcibios_irq_init(), the PCI IRQ routing table 'pirq_table' is first
-found through pirq_find_routing_table().  If the table is not found and
-CONFIG_PCI_BIOS is defined, the table is then allocated in
-pcibios_get_irq_routing_table() using kmalloc().  Later, if the I/O APIC is
-used, this table is actually not used.  In that case, the allocated table
-is not freed, which is a memory leak.
+My objection to "proc" is that we have many concepts of "process" in
+the kernel: task, mm, signal handling context, etc.  These memory
+ranges are specifically local to the mm.  Admittedly, it would be very
+surprising to have memory that is local to a signal handling context,
+but still.
 
-Free the allocated table if it is not used.
+>
+>
+> > We already have a per-mm kernel mapping: the LDT.  So please nix all
+> > the code that adds a new VA region, etc, except to the extent that
+> > some of it consists of valid cleanups in and of itself.  Instead,
+> > please refactor the LDT code (arch/x86/kernel/ldt.c, mainly) to make
+> > it use a more general "mm local" address range, and then reuse the
+> > same infrastructure for other fancy things.  The code that makes it
+>
+>
+> I don't fully understand how those two are related. Are you referring to
+> the KPTI enabling code in there? That just maps the LDT at the same
+> address in both kernel and user mappings, no?
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-[bhelgaas: added Ingo's reviewed-by, since the only change since v1 was to
-use the irq_routing_table local variable name he suggested]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/pci/irq.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+The relevance here is that, when KPTI is on, the exact same address
+refers to a different LDT in different mms, so it's genuinely an
+mm-local mapping.  It works just like yours: a whole top-level paging
+entry is reserved for it.  What I'm suggesting is that, when you're
+all done, the LDT should be more or less just one more mm-local
+mapping, with two caveats.  First, the LDT needs special KPTI
+handling, but that's fine.  Second, the LDT address is visible to user
+code on non-UMIP systems, so you'll have to decide if that's okay.  My
+suggestion is to have the LDT be the very first address in the
+mm-local range and then to randomize everything else in the mm-local
+range.
 
-diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
-index 52e55108404e..d3a73f9335e1 100644
---- a/arch/x86/pci/irq.c
-+++ b/arch/x86/pci/irq.c
-@@ -1119,6 +1119,8 @@ static const struct dmi_system_id pciirq_dmi_table[] __initconst = {
- 
- void __init pcibios_irq_init(void)
- {
-+	struct irq_routing_table *rtable = NULL;
-+
- 	DBG(KERN_DEBUG "PCI: IRQ init\n");
- 
- 	if (raw_pci_ops == NULL)
-@@ -1129,8 +1131,10 @@ void __init pcibios_irq_init(void)
- 	pirq_table = pirq_find_routing_table();
- 
- #ifdef CONFIG_PCI_BIOS
--	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN))
-+	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN)) {
- 		pirq_table = pcibios_get_irq_routing_table();
-+		rtable = pirq_table;
-+	}
- #endif
- 	if (pirq_table) {
- 		pirq_peer_trick();
-@@ -1145,8 +1149,10 @@ void __init pcibios_irq_init(void)
- 		 * If we're using the I/O APIC, avoid using the PCI IRQ
- 		 * routing table
- 		 */
--		if (io_apic_assign_pci_irqs)
-+		if (io_apic_assign_pci_irqs) {
-+			kfree(rtable);
- 			pirq_table = NULL;
-+		}
- 	}
- 
- 	x86_init.pci.fixup_irqs();
--- 
-2.20.1
+>
+> So you're suggesting we use the new mm local address as LDT address
+> instead and have that mapped in both kernel and user space? This patch
+> set today maps "mm local" data only in kernel space, not in user space,
+> as it's meant for kernel data structures.
 
+Yes, exactly.
 
+>
+> So I'm not really seeing the path to adapt any of the LDT logic to this.
+> Could you please elaborate?
+>
+>
+> > KASLR-able should be in its very own patch that applies *after* the
+> > code that makes it all work so that, when the KASLR part causes a
+> > crash, we can bisect it.
+>
+>
+> That sounds very reasonable, yes.
+>
+>
+> >
+> > + /*
+> > + * Faults in process-local memory may be caused by process-local
+> > + * addresses leaking into other contexts.
+> > + * tbd: warn and handle gracefully.
+> > + */
+> > + if (unlikely(fault_in_process_local(address))) {
+> > + pr_err("page fault in PROCLOCAL at %lx", address);
+> > + force_sig_fault(SIGSEGV, SEGV_MAPERR, (void __user *)address, current=
+);
+> > + }
+> > +
+> >
+> > Huh?  Either it's an OOPS or you shouldn't print any special
+> > debugging.  As it is, you're just blatantly leaking the address of the
+> > mm-local range to malicious user programs.
+>
+>
+> Yes, this is a left over bit from an idea that we discussed and rejected
+> yesterday. The idea was to have a DEBUG config option that allows
+> proclocal memory to leak into other processes, but print debug output so
+> that it's easier to catch bugs. After discussion, I think we managed to
+> convince everyone that an OOPS is the better tool to find bugs :).
+>
+> Any trace of this will disappear in the next version.
+>
+>
+> >
+> > Also, you should IMO consider using this mechanism for kmap_atomic().
+>
+>
+> It might make sense to use it for kmap_atomic() for debug purposes, as
+> it ensures that other users can no longer access the same mapping
+> through the linear map. However, it does come at quite a big cost, as we
+> need to shoot down the TLB of all other threads in the system. So I'm
+> not sure it's of general value?
 
+What I meant was that kmap_atomic() could use mm-local memory so that
+it doesn't need to do a global shootdown.  But I guess it's not
+actually used for real on 64-bit, so this is mostly moot.  Are you
+planning to support mm-local on 32-bit?
+
+--Andy
+>
+>
+> Alex
+>
+>
+> > Hi, Nadav!
