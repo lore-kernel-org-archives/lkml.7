@@ -2,133 +2,101 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 707C8C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABD1C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0F82133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AFF921537
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:26:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="AjDLlpwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfFMXR5 (ORCPT
+        id S1726930AbfFMX0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 19:17:57 -0400
-Received: from mga12.intel.com ([192.55.52.136]:13074 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726519AbfFMXR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 19:17:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 16:17:55 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga005.jf.intel.com with ESMTP; 13 Jun 2019 16:17:55 -0700
-Date:   Thu, 13 Jun 2019 16:17:55 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "serge@hallyn.com" <serge@hallyn.com>,
-        "paul@paul-moore.com" <paul@paul-moore.com>,
-        "eparis@parisplace.org" <eparis@parisplace.org>,
-        "jethro@fortanix.com" <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "pmccallum@redhat.com" <pmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        "Tricca, Philip B" <philip.b.tricca@intel.com>
-Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
- SELinux
-Message-ID: <20190613231755.GD18385@linux.intel.com>
-References: <cover.1560131039.git.cedric.xing@intel.com>
- <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
- <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
- <20190611220243.GB3416@linux.intel.com>
- <8d99d8fb-a921-286a-8cf0-cd522e09b37c@tycho.nsa.gov>
- <960B34DE67B9E140824F1DCDEC400C0F65503EDD@ORSMSX116.amr.corp.intel.com>
+        Thu, 13 Jun 2019 19:26:16 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45308 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfFMX0P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 19:26:15 -0400
+Received: by mail-qt1-f194.google.com with SMTP id j19so396384qtr.12
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 16:26:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=F+ZNNkU42Zd6MKvCjZT6fZTudYGwmy2RKo0LgzcVRSU=;
+        b=AjDLlpwmNfzoZ3a+L0pKpghn4C5KkwKVJhZ1zpGZH4YRef546YsvXQeegAaUOJiQ4Y
+         EkUHkw+kuMW8NCJYYwOPRTMc531YMSk+0JHhUv5uB7hussU1rnPJkrReZJcsOl6uxivE
+         1ubH7ByO3aIRqk6FIKNEkGtmCo7RSIATaONs+bqvXGbFHQxP5PiAE+idq1/HaJn3VhpO
+         jH3pPSYX+K9RYL+lP5v9NAfetb7zLERYuHnGGnPQRWz/FXdJ9HcNJmt7R7ZB0Oe+4ngb
+         eKRI119lOCP64fDy7SfKWm4vtn6ZrAFZUdAV6Q/bWDU4P3Dbv9NqcMhW8ps0m9Ql/owS
+         94PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=F+ZNNkU42Zd6MKvCjZT6fZTudYGwmy2RKo0LgzcVRSU=;
+        b=iTqVTYNsXd7CDqgjs2WB53xPxJiUr12ukf6VREwEWiVKRRDDuFgyTN+G8C+wkripX5
+         mEctVIFXnjAMRIZxSSdMPG+lSuzcTxK8j3/y5N/zDbHHwYMyrnba0wwA7l/Yhi9jNLCA
+         aIwLj/6e6OC0vpw+Oj54GC3vwomMUrywz6BB+hzpUADXr4af7k1MvNI9WeNCAbTREJpp
+         ErRfErn5k6l1xhMn48WUbx1A9PbIb4Y+Y/M+sTep3UxmtRQ0JfYN94RMGBoUB0tFFoi2
+         HbFY0ZChW4G5jXBIX5RBLKvkERxNiijMTKablQqDz88UEb4tbIOxdDqqQwF2uLghv91N
+         TiEw==
+X-Gm-Message-State: APjAAAWsJkHZ9gXVSqotgoM+qWd+oZbx9PzNxqn/+CxJr2mMs1frRhMm
+        ms+D7hTyutUsto/Mg89T3vY6fg==
+X-Google-Smtp-Source: APXvYqzWriKVUDZ5RTX5KYjr8TMROH1C4/qZXtl38Ut2dLWUQfovUnmMtQwIEJSQL8gvZ8G5onWSxg==
+X-Received: by 2002:a0c:981b:: with SMTP id c27mr5622812qvd.48.1560468374799;
+        Thu, 13 Jun 2019 16:26:14 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id o185sm565691qkd.64.2019.06.13.16.26.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Jun 2019 16:26:13 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hbZ6j-00011c-BZ; Thu, 13 Jun 2019 20:26:13 -0300
+Date:   Thu, 13 Jun 2019 20:26:13 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andrey Pronin <apronin@chromium.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH 1/8] tpm: block messages while suspended
+Message-ID: <20190613232613.GH22901@ziepe.ca>
+References: <20190613180931.65445-1-swboyd@chromium.org>
+ <20190613180931.65445-2-swboyd@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F65503EDD@ORSMSX116.amr.corp.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190613180931.65445-2-swboyd@chromium.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 04:03:24PM -0700, Xing, Cedric wrote:
-> > From: Stephen Smalley [mailto:sds@tycho.nsa.gov]
-> > Sent: Thursday, June 13, 2019 10:02 AM
-> > 
-> > > My RFC series[1] implements #1.  My understanding is that Andy
-> > > (Lutomirski) prefers #2.  Cedric's RFC series implements #3.
-> > >
-> > > Perhaps the easiest way to make forward progress is to rule out the
-> > > options we absolutely *don't* want by focusing on the potentially
-> > > blocking issue with each option:
-> > >
-> > >    #1 - SGX UAPI funkiness
-> > >
-> > >    #2 - Auditing complexity, potential enclave lock contention
-> > >
-> > >    #3 - Pushing SGX details into LSMs and complexity of kernel
-> > > implementation
-> > >
-> > >
-> > > [1]
-> > > https://lkml.kernel.org/r/20190606021145.12604-1-sean.j.christopherson
-> > > @intel.com
-> > 
-> > Given the complexity tradeoff, what is the clear motivating example for
-> > why #1 isn't the obvious choice? That the enclave loader has no way of
-> > knowing a priori whether the enclave will require W->X or WX?  But
-> > aren't we better off requiring enclaves to be explicitly marked as
-> > needing such so that we can make a more informed decision about whether
-> > to load them in the first place?
+On Thu, Jun 13, 2019 at 11:09:24AM -0700, Stephen Boyd wrote:
+> From: Andrey Pronin <apronin@chromium.org>
 > 
-> Are you asking this question at a) page granularity, b) file granularity or
-> c) enclave (potentially comprised of multiple executable files) granularity?
+> Other drivers or userspace may initiate sending a message to the tpm
+> while the device itself and the controller of the bus it is on are
+> suspended. That may break the bus driver logic.
+> Block sending messages while the device is suspended.
 > 
-> #b is what we have on regular executable files and shared objects (i.e.
-> FILE__EXECMOD). We all know how to do that.
+> Signed-off-by: Andrey Pronin <apronin@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > 
-> #c is kind of new but could be done via some proxy file (e.g. sigstruct file)
-> hence reduced to #b.
-> 
-> #a is problematic. It'd require compilers/linkers to generate such
-> information, and proper executable image file format to carry that
-> information, to be eventually picked up the loader. SELinux doesn't have
-> PAGE__EXECMOD I guess is because it is generally considered impractical.
-> 
-> Option #1 however requires #a because the driver doesn't track which page was
-> loaded from which file, otherwise it can no longer be qualified "simple". Or
-> we could just implement #c, which will make all options simpler. But I guess
-> #b is still preferred, to be aligned with what SELinux is enforcing today on
-> regular memory pages.o
+> I don't think this was ever posted before.
 
-Option #1 doesn't require (a).  The checks will happen for every page,
-but in the RFCs I sent, the policies are still attached to files and
-processes, i.e. (b).
+Use a real lock.
+
+Jason
