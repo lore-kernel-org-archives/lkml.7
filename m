@@ -2,246 +2,115 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D37C31E4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A31C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 196F321473
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:14:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="BXofh382"
+	by mail.kernel.org (Postfix) with ESMTP id 60CC72175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388452AbfFMPOO (ORCPT
+        id S1732875AbfFMPO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:14:14 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:37237 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732259AbfFMNaS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:30:18 -0400
-Received: by mail-yw1-f68.google.com with SMTP id 186so8328876ywo.4
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 06:30:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gpC/BcbJqZm/b199OKanFtWwuFNfn3Nh4TAP7OeO2NA=;
-        b=BXofh382FGQ6XKPL2MfgAofF8BQm+/tgz4ml76l/iJkrG2E/+Dn2CcsfgfbiuEU3tj
-         RuZDqTsDzm6ObH1XEtafWfBUf0me0bv7ELlRK/EDgBLTTgGPCN72PLbTY5I64v8joDPd
-         vxEGj4K1laNQ4h//KZVXnpwBplBXDchGCJsiGY/LoSNyOPFsqamliqkc/auc6LnvDP6z
-         NdYHf9KnTMvUsC+0FFJCOuLumZOWQWWFFm7EjGvUO1RF3FRQHmeF81IER2zJvyqqJvVa
-         tYxikwp4VS73sfIlUIcSULdSIFQqhVNuqn4zfVaeOca9Eh6qh4k1yBfMCKcYh7/N9fdC
-         cPzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gpC/BcbJqZm/b199OKanFtWwuFNfn3Nh4TAP7OeO2NA=;
-        b=E64NERG+Bi5M3l7RKJc2UtBXNydjSDd57hDxcOVOq/gGDzrP6kQW9lQoxWQ2QIN817
-         EdvdF1doqFZSs9+RobAzjVIfb6AmjyLpUYhQGha17+fjvdncUHFJqFZ08V/hAfAYLTRY
-         LUxD0xmfoFTlz2aL5ji2sKFVHinBESErAOIULtICYbvBydG5/2IQjeEAp0TnS7s4HSN5
-         0hwpAlVvA29C6F4sk2Y5gjd276dTxR+wT9LoQS1LuPXetbJ0a/K0uyyjeEtFddy8LWaY
-         KW86gNcwFy2kH010aYfRCQRfjGW0n5sT9D8YmoYjCdM/evxitrYyYRBE21dyxIoWv5EW
-         n6ug==
-X-Gm-Message-State: APjAAAVGU7tobtPmRX+UVlnbJPkbMubOWRpuN4PpWuTUkvOQpwYyXd/M
-        BDMmNddoQzwwTcjBAfVYfG4SpA==
-X-Google-Smtp-Source: APXvYqxTssA/J+9V16+D44hORYBVXWzyfYlD4b0eRTXEkb7pd189qJsIUW5hoWZ7PNVmk1rzS/3Kzg==
-X-Received: by 2002:a0d:ea10:: with SMTP id t16mr32493125ywe.221.1560432617677;
-        Thu, 13 Jun 2019 06:30:17 -0700 (PDT)
-Received: from kudzu.us (76-230-155-4.lightspeed.rlghnc.sbcglobal.net. [76.230.155.4])
-        by smtp.gmail.com with ESMTPSA id p12sm742658ywg.72.2019.06.13.06.30.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 06:30:17 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 09:30:15 -0400
-From:   Jon Mason <jdmason@kudzu.us>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kselftest@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Eric Pilmore <epilmore@gigaio.com>
-Subject: Re: [PATCH v5 00/10]  Support using MSI interrupts in ntb_transport
-Message-ID: <20190613133014.GE1572@kudzu.us>
-References: <20190523223100.5526-1-logang@deltatee.com>
+        Thu, 13 Jun 2019 11:14:26 -0400
+Received: from mga12.intel.com ([192.55.52.136]:49413 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732442AbfFMPOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 11:14:24 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 08:14:22 -0700
+X-ExtLoop1: 1
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 13 Jun 2019 08:14:18 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+        id CC735159; Thu, 13 Jun 2019 18:14:17 +0300 (EEST)
+Date:   Thu, 13 Jun 2019 18:14:17 +0300
+From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "namit@vmware.com" <namit@vmware.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Re: [PATCH v3 3/5] mm, thp: introduce FOLL_SPLIT_PMD
+Message-ID: <20190613151417.7cjxwudjssl5h2pf@black.fi.intel.com>
+References: <20190612220320.2223898-1-songliubraving@fb.com>
+ <20190612220320.2223898-4-songliubraving@fb.com>
+ <20190613125718.tgplv5iqkbfhn6vh@box>
+ <5A80A2B9-51C3-49C4-97B6-33889CC47F08@fb.com>
+ <20190613141615.yvmckzi3fac4qjag@box>
+ <32E15B93-24B9-4DBB-BDD4-DDD8537C7CE0@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190523223100.5526-1-logang@deltatee.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <32E15B93-24B9-4DBB-BDD4-DDD8537C7CE0@fb.com>
+User-Agent: NeoMutt/20170714-126-deb55f (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 04:30:50PM -0600, Logan Gunthorpe wrote:
-> This is another resend as there has been no feedback since v4.
-> Seems Jon has been MIA this past cycle so hopefully he appears on the
-> list soon.
+On Thu, Jun 13, 2019 at 03:03:01PM +0000, Song Liu wrote:
 > 
-> I've addressed the feedback so far and rebased on the latest kernel
-> and would like this to be considered for merging this cycle.
 > 
-> The only outstanding issue I know of is that it still will not work
-> with IDT hardware, but ntb_transport doesn't work with IDT hardware
-> and there is still no sensible common infrastructure to support
-> ntb_peer_mw_set_trans(). Thus, I decline to consider that complication
-> in this patchset. However, I'll be happy to review work that adds this
-> feature in the future.
+> > On Jun 13, 2019, at 7:16 AM, Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> > 
+> > On Thu, Jun 13, 2019 at 01:57:30PM +0000, Song Liu wrote:
+> >>> And I'm not convinced that it belongs here at all. User requested PMD
+> >>> split and it is done after split_huge_pmd(). The rest can be handled by
+> >>> the caller as needed.
+> >> 
+> >> I put this part here because split_huge_pmd() for file-backed THP is
+> >> not really done after split_huge_pmd(). And I would like it done before
+> >> calling follow_page_pte() below. Maybe we can still do them here, just 
+> >> for file-backed THPs?
+> >> 
+> >> If we would move it, shall we move to callers of follow_page_mask()? 
+> >> In that case, we will probably end up with similar code in two places:
+> >> __get_user_pages() and follow_page(). 
+> >> 
+> >> Did I get this right?
+> > 
+> > Would it be enough to replace pte_offset_map_lock() in follow_page_pte()
+> > with pte_alloc_map_lock()?
 > 
-> Also, as the port number and resource index stuff is a bit complicated,
-> I made a quick out of tree test fixture to ensure it's correct[1]. As
-> an excerise I also wrote some test code[2] using the upcomming KUnit
-> feature.
+> This is similar to my previous version:
+> 
+> +		} else {  /* flags & FOLL_SPLIT_PMD */
+> +			pte_t *pte;
+> +			spin_unlock(ptl);
+> +			split_huge_pmd(vma, pmd, address);
+> +			pte = get_locked_pte(mm, address, &ptl);
+> +			if (!pte)
+> +				return no_page_table(vma, flags);
+> +			spin_unlock(ptl);
+> +			ret = 0;
+> +		}
+> 
+> I think this is cleaner than use pte_alloc_map_lock() in follow_page_pte(). 
+> What's your thought on these two versions (^^^ vs. pte_alloc_map_lock)?
 
-Sorry for the delay.  The patch is now in the ntb-next branch.  We've
-missed window for 5.2, but it will be in the 5.3 pull request (barring
-last minute comments).
+It's additional lock-unlock cycle and few more lines of code...
 
-Thanks,
-Jon
+> > This will leave bunch not populated PTE entries, but it is fine: they will
+> > be populated on the next access to them.
+> 
+> We need to handle page fault during next access, right? Since we already
+> allocated everything, we can just populate the PTE entries and saves a
+> lot of page faults (assuming we will access them later). 
 
-> 
-> Logan
-> 
-> [1] https://repl.it/repls/ExcitingPresentFile
-> [2] https://github.com/sbates130272/linux-p2pmem/commits/ntb_kunit
-> 
-> --
-> 
-> Changes in v5:
-> 
-> * Rebased onto v5.2-rc1 (plus the patches in ntb-next)
-> 
-> --
-> 
-> Changes in v4:
-> 
-> * Rebased onto v5.1-rc6 (No changes)
-> 
-> * Numerous grammar and spelling mistakes spotted by Bjorn
-> 
-> --
-> 
-> Changes in v3:
-> 
-> * Rebased onto v5.1-rc1 (Dropped the first two patches as they have
->   been merged, and cleaned up some minor conflicts in the PCI tree)
-> 
-> * Added a new patch (#3) to calculate logical port numbers that
->   are port numbers from 0 to (number of ports - 1). This is
->   then used in ntb_peer_resource_idx() to fix the issues brought
->   up by Serge.
-> 
-> * Fixed missing __iomem and iowrite calls (as noticed by Serge)
-> 
-> * Added patch 10 which describes ntb_msi_test in the documentation
->   file (as requested by Serge)
-> 
-> * A couple other minor nits and documentation fixes
-> 
-> --
-> 
-> Changes in v2:
-> 
-> * Cleaned up the changes in intel_irq_remapping.c to make them
->   less confusing and add a comment. (Per discussion with Jacob and
->   Joerg)
-> 
-> * Fixed a nit from Bjorn and collected his Ack
-> 
-> * Added a Kconfig dependancy on CONFIG_PCI_MSI for CONFIG_NTB_MSI
->   as the Kbuild robot hit a random config that didn't build
->   without it.
-> 
-> * Worked in a callback for when the MSI descriptor changes so that
->   the clients can resend the new address and data values to the peer.
->   On my test system this was never necessary, but there may be
->   other platforms where this can occur. I tested this by hacking
->   in a path to rewrite the MSI descriptor when I change the cpu
->   affinity of an IRQ. There's a bit of uncertainty over the latency
->   of the change, but without hardware this can acctually occur on
->   we can't test this. This was the result of a discussion with Dave.
-> 
-> --
-> 
-> This patch series adds optional support for using MSI interrupts instead
-> of NTB doorbells in ntb_transport. This is desirable seeing doorbells on
-> current hardware are quite slow and therefore switching to MSI interrupts
-> provides a significant performance gain. On switchtec hardware, a simple
-> apples-to-apples comparison shows ntb_netdev/iperf numbers going from
-> 3.88Gb/s to 14.1Gb/s when switching to MSI interrupts.
-> 
-> To do this, a couple changes are required outside of the NTB tree:
-> 
-> 1) The IOMMU must know to accept MSI requests from aliased bused numbers
-> seeing NTB hardware typically sends proxied request IDs through
-> additional requester IDs. The first patch in this series adds support
-> for the Intel IOMMU. A quirk to add these aliases for switchtec hardware
-> was already accepted. See commit ad281ecf1c7d ("PCI: Add DMA alias quirk
-> for Microsemi Switchtec NTB") for a description of NTB proxy IDs and why
-> this is necessary.
-> 
-> 2) NTB transport (and other clients) may often need more MSI interrupts
-> than the NTB hardware actually advertises support for. However, seeing
-> these interrupts will not be triggered by the hardware but through an
-> NTB memory window, the hardware does not actually need support or need
-> to know about them. Therefore we add the concept of Virtual MSI
-> interrupts which are allocated just like any other MSI interrupt but
-> are not programmed into the hardware's MSI table. This is done in
-> Patch 2 and then made use of in Patch 3.
-> 
-> The remaining patches in this series add a library for dealing with MSI
-> interrupts, a test client and finally support in ntb_transport.
-> 
-> The series is based off of v5.1-rc6 plus the patches in ntb-next.
-> A git repo is available here:
-> 
-> https://github.com/sbates130272/linux-p2pmem/ ntb_transport_msi_v4
-> 
-> Thanks,
-> 
-> Logan
-> 
-> --
-> 
-> Logan Gunthorpe (10):
->   PCI/MSI: Support allocating virtual MSI interrupts
->   PCI/switchtec: Add module parameter to request more interrupts
->   NTB: Introduce helper functions to calculate logical port number
->   NTB: Introduce functions to calculate multi-port resource index
->   NTB: Rename ntb.c to support multiple source files in the module
->   NTB: Introduce MSI library
->   NTB: Introduce NTB MSI Test Client
->   NTB: Add ntb_msi_test support to ntb_test
->   NTB: Add MSI interrupt support to ntb_transport
->   NTB: Describe the ntb_msi_test client in the documentation.
-> 
->  Documentation/ntb.txt                   |  27 ++
->  drivers/ntb/Kconfig                     |  11 +
->  drivers/ntb/Makefile                    |   3 +
->  drivers/ntb/{ntb.c => core.c}           |   0
->  drivers/ntb/msi.c                       | 415 +++++++++++++++++++++++
->  drivers/ntb/ntb_transport.c             | 169 ++++++++-
->  drivers/ntb/test/Kconfig                |   9 +
->  drivers/ntb/test/Makefile               |   1 +
->  drivers/ntb/test/ntb_msi_test.c         | 433 ++++++++++++++++++++++++
->  drivers/pci/msi.c                       |  54 ++-
->  drivers/pci/switch/switchtec.c          |  12 +-
->  include/linux/msi.h                     |   8 +
->  include/linux/ntb.h                     | 196 ++++++++++-
->  include/linux/pci.h                     |   9 +
->  tools/testing/selftests/ntb/ntb_test.sh |  54 ++-
->  15 files changed, 1386 insertions(+), 15 deletions(-)
->  rename drivers/ntb/{ntb.c => core.c} (100%)
->  create mode 100644 drivers/ntb/msi.c
->  create mode 100644 drivers/ntb/test/ntb_msi_test.c
-> 
-> --
-> 2.20.1
+Not a lot due to faultaround and they may never happen, but you need to
+tear down the mapping any way.
+
+-- 
+ Kirill A. Shutemov
