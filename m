@@ -5,60 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 185A6C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56484C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A0C2173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E452147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442896;
-	bh=oxMuwjtktYkxiK9sd1zMzgf0XzAJf1R4ngfEY3DRXtA=;
+	s=default; t=1560442901;
+	bh=GSTTpigTR+QKB1kZBNgiJYTC8qGHTEziFPt1bj0+VAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FVeyGisF0SwsVwz+x2eCueLHpFLJv1aQm98jKu4gU4DqcO1QxdDEEWWTDR/XsBu7/
-	 JBPxZiiCZW+t+7noBagnt5yD/+aws+NQhyb2o1tHaHhcEtlzgsKKBSyr2kO4RiIkkm
-	 h/QJN22WrmOcTkuS9KLeq2HwB0Zr1PPUq1E42MvU=
+	b=08Z3dfPZyJTN3Ckp2xZJWFM5VS0szeuaRK3Jpm+gV/aqcVeNwG8cEa7zqCsnBFJps
+	 5M67+rmWqu9qlem2+TKe8UTtEydviFa+XiNUVylqNpC4N8kT9sdG7dnTIeCPugNd4C
+	 9aI9xrqGKT6/XCHWnoKEp81ydccRhWmFSo13kWrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392185AbfFMQV3 (ORCPT
+        id S2392204AbfFMQVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:21:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56382 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:21:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731061AbfFMIiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:38:51 -0400
+        id S1731058AbfFMIiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:38:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D370721721;
-        Thu, 13 Jun 2019 08:38:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3613B20851;
+        Thu, 13 Jun 2019 08:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415131;
-        bh=oxMuwjtktYkxiK9sd1zMzgf0XzAJf1R4ngfEY3DRXtA=;
+        s=default; t=1560415125;
+        bh=GSTTpigTR+QKB1kZBNgiJYTC8qGHTEziFPt1bj0+VAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R7aXyva+DlUnmafakCFVmj5t+MogfFmME6uxoS+8NFnkTP4hxZb/1pRJjX2H1WTAz
-         tZeIKV0uHdR1lFp9fEo2QMKBPFMIRya/zVGd4EkctjBaCgd+DrSHNm5/PwGa+Xkb+0
-         Do8FTFetJvgnZeBVoO48n0/rQAiKaZStXzbTEJnw=
+        b=a27DKpFSs9qZScUk+D9LaOSeU+PkDc8B9Pk19JkQoIo8HHEMxcnvuEQGlPEPNJYYY
+         cpS8Syd4uIJ2be9xm7OA9wtorAD1gdYAwQNsyTS87VY/L+9LVFQhNBkVZi5fnM82nN
+         MBYxI82QyrbDVIHhpALa67mFwWsEtQ5/Lqqrmn7Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 007/118] mm/hmm: select mmu notifier when selecting HMM
-Date:   Thu, 13 Jun 2019 10:32:25 +0200
-Message-Id: <20190613075644.104278652@linuxfoundation.org>
+Subject: [PATCH 4.19 005/118] drm/pl111: Initialize clock spinlock early
+Date:   Thu, 13 Jun 2019 10:32:23 +0200
+Message-Id: <20190613075643.985340438@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -71,48 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 734fb89968900b5c5f8edd5038bd4cdeab8c61d2 ]
+[ Upstream commit 3e01ae2612bdd7975c74ec7123d7f8f5e6eed795 ]
 
-To avoid random config build issue, select mmu notifier when HMM is
-selected.  In any cases when HMM get selected it will be by users that
-will also wants the mmu notifier.
+The following warning is seen on systems with broken clock divider.
 
-Link: http://lkml.kernel.org/r/20190403193318.16478-2-jglisse@redhat.com
-Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-Acked-by: Balbir Singh <bsingharora@gmail.com>
-Cc: Ralph Campbell <rcampbell@nvidia.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Souptick Joarder <jrdr.linux@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 1 Comm: swapper Not tainted 5.1.0-09698-g1fb3b52 #1
+Hardware name: ARM Integrator/CP (Device Tree)
+[<c0011be8>] (unwind_backtrace) from [<c000ebb8>] (show_stack+0x10/0x18)
+[<c000ebb8>] (show_stack) from [<c07d3fd0>] (dump_stack+0x18/0x24)
+[<c07d3fd0>] (dump_stack) from [<c0060d48>] (register_lock_class+0x674/0x6f8)
+[<c0060d48>] (register_lock_class) from [<c005de2c>]
+	(__lock_acquire+0x68/0x2128)
+[<c005de2c>] (__lock_acquire) from [<c0060408>] (lock_acquire+0x110/0x21c)
+[<c0060408>] (lock_acquire) from [<c07f755c>] (_raw_spin_lock+0x34/0x48)
+[<c07f755c>] (_raw_spin_lock) from [<c0536c8c>]
+	(pl111_display_enable+0xf8/0x5fc)
+[<c0536c8c>] (pl111_display_enable) from [<c0502f54>]
+	(drm_atomic_helper_commit_modeset_enables+0x1ec/0x244)
+
+Since commit eedd6033b4c8 ("drm/pl111: Support variants with broken clock
+divider"), the spinlock is not initialized if the clock divider is broken.
+Initialize it earlier to fix the problem.
+
+Fixes: eedd6033b4c8 ("drm/pl111: Support variants with broken clock divider")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/1557758781-23586-1-git-send-email-linux@roeck-us.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/pl111/pl111_display.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/mm/Kconfig b/mm/Kconfig
-index de64ea658716..b457e94ae618 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -700,12 +700,12 @@ config DEV_PAGEMAP_OPS
+diff --git a/drivers/gpu/drm/pl111/pl111_display.c b/drivers/gpu/drm/pl111/pl111_display.c
+index 754f6b25f265..6d9f78612dee 100644
+--- a/drivers/gpu/drm/pl111/pl111_display.c
++++ b/drivers/gpu/drm/pl111/pl111_display.c
+@@ -531,14 +531,15 @@ pl111_init_clock_divider(struct drm_device *drm)
+ 		dev_err(drm->dev, "CLCD: unable to get clcdclk.\n");
+ 		return PTR_ERR(parent);
+ 	}
++
++	spin_lock_init(&priv->tim2_lock);
++
+ 	/* If the clock divider is broken, use the parent directly */
+ 	if (priv->variant->broken_clockdivider) {
+ 		priv->clk = parent;
+ 		return 0;
+ 	}
+ 	parent_name = __clk_get_name(parent);
+-
+-	spin_lock_init(&priv->tim2_lock);
+ 	div->init = &init;
  
- config HMM
- 	bool
-+	select MMU_NOTIFIER
- 	select MIGRATE_VMA_HELPER
- 
- config HMM_MIRROR
- 	bool "HMM mirror CPU page table into a device page table"
- 	depends on ARCH_HAS_HMM
--	select MMU_NOTIFIER
- 	select HMM
- 	help
- 	  Select HMM_MIRROR if you want to mirror range of the CPU page table of a
+ 	ret = devm_clk_hw_register(drm->dev, div);
 -- 
 2.20.1
 
