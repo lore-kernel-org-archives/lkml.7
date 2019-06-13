@@ -5,55 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB892C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700F4C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A817F2147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4134420644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442786;
-	bh=PuYNLRFYktJBwpfgdZA3wjG/njTMVcgHDj7Fu63EghY=;
+	s=default; t=1560442792;
+	bh=D80zUZagERK3VG96zY69ItG3mgc6LTMnoqeh+qlyOno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bDPsH4h31cv0o3fky+Pr+Yg29DpY6ICUFLAfnVhcBb1fmku6xukCrEXoKiWBxWi/O
-	 WGW/LGgo/twzi/VQQujmaXhZrCFz9jooQbVvwHbEJa6UL8BZd2MVwG2OK8Bh+juolz
-	 apj3FDUrN+sBfKimmiS3XENWVKYiZ35hO7BmkP5g=
+	b=Dc5Nm5aO+ezRJYzsrTt/b9bffAX4+bw6ol2oq82RXnAtmmbUKTXx7c4677HFZ1M3V
+	 Xx4HMxsIH3pgLQp4sl7Qty7jMr7YPDyFib412wofIzZLtJEH5wqZS9C1bzc/g2XLkz
+	 4li9Twl+r2cC6z2r/ruGZex6L701IqmdOvZmoWQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391924AbfFMQTg (ORCPT
+        id S2392088AbfFMQTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:19:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57344 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:19:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731094AbfFMIjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:39:54 -0400
+        id S1731089AbfFMIjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:39:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1081821479;
-        Thu, 13 Jun 2019 08:39:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE51621473;
+        Thu, 13 Jun 2019 08:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415193;
-        bh=PuYNLRFYktJBwpfgdZA3wjG/njTMVcgHDj7Fu63EghY=;
+        s=default; t=1560415182;
+        bh=D80zUZagERK3VG96zY69ItG3mgc6LTMnoqeh+qlyOno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O2/oBkQms5RjQsbtIknObR49qRykjgUeYghBovCp3f5TagiU3hvxLp3J+aHyVCYUw
-         V7VlV+UtfnueDg6N8PvO1t63TG4Mj1j9iGCxbMGhu9phB3qjIhE030/2MpGWlFq2L7
-         FGNFBbkYN4rlGWnrsDISGerrJSEOdW0WzlDoCy3o=
+        b=sJHxyxOldmLmsLuFYIeuFVDfLyTZp24lS8wNkWa3ikOBiz4R4aNleh2nRmQ7uD3dS
+         Gib2XpGUWmVrNojBY8Wd+F1PZW4EwGB5CJVT1cxgWwCM272JCD8wBsD95/IElEFswl
+         C4SBaZwRD/+MkChKci1vF9nz9ThHj6fe95L48tOw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yue Hu <huyue2@yulong.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Prarit Bhargava <prarit@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 010/118] mm/cma.c: fix crash on CMA allocation if bitmap allocation fails
-Date:   Thu, 13 Jun 2019 10:32:28 +0200
-Message-Id: <20190613075644.271087701@linuxfoundation.org>
+Subject: [PATCH 4.19 032/118] ntp: Allow TAI-UTC offset to be set to zero
+Date:   Thu, 13 Jun 2019 10:32:50 +0200
+Message-Id: <20190613075645.362258448@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -66,42 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1df3a339074e31db95c4790ea9236874b13ccd87 ]
+[ Upstream commit fdc6bae940ee9eb869e493990540098b8c0fd6ab ]
 
-f022d8cb7ec7 ("mm: cma: Don't crash on allocation if CMA area can't be
-activated") fixes the crash issue when activation fails via setting
-cma->count as 0, same logic exists if bitmap allocation fails.
+The ADJ_TAI adjtimex mode sets the TAI-UTC offset of the system clock.
+It is typically set by NTP/PTP implementations and it is automatically
+updated by the kernel on leap seconds. The initial value is zero (which
+applications may interpret as unknown), but this value cannot be set by
+adjtimex. This limitation seems to go back to the original "nanokernel"
+implementation by David Mills.
 
-Link: http://lkml.kernel.org/r/20190325081309.6004-1-zbestahu@gmail.com
-Signed-off-by: Yue Hu <huyue2@yulong.com>
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Change the ADJ_TAI check to accept zero as a valid TAI-UTC offset in
+order to allow setting it back to the initial value.
+
+Fixes: 153b5d054ac2 ("ntp: support for TAI")
+Suggested-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Prarit Bhargava <prarit@redhat.com>
+Link: https://lkml.kernel.org/r/20190417084833.7401-1-mlichvar@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/cma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/time/ntp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/cma.c b/mm/cma.c
-index bfe9f5397165..6ce6e22f82d9 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -106,8 +106,10 @@ static int __init cma_activate_area(struct cma *cma)
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index c5e0cba3b39c..6b23cd584295 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -698,7 +698,7 @@ static inline void process_adjtimex_modes(const struct timex *txc, s32 *time_tai
+ 		time_constant = max(time_constant, 0l);
+ 	}
  
- 	cma->bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+-	if (txc->modes & ADJ_TAI && txc->constant > 0)
++	if (txc->modes & ADJ_TAI && txc->constant >= 0)
+ 		*time_tai = txc->constant;
  
--	if (!cma->bitmap)
-+	if (!cma->bitmap) {
-+		cma->count = 0;
- 		return -ENOMEM;
-+	}
- 
- 	WARN_ON_ONCE(!pfn_valid(pfn));
- 	zone = page_zone(pfn_to_page(pfn));
+ 	if (txc->modes & ADJ_OFFSET)
 -- 
 2.20.1
 
