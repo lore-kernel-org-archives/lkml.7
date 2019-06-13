@@ -2,53 +2,53 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA29CC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0F8C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22B1208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D2B820679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441581;
-	bh=6qm8dsSAAvZzsQrVpV/U/Q9NvOzvbQ9vwMwJpnapczA=;
+	s=default; t=1560441587;
+	bh=YL8MIoVT72q5kWa4/vm5yvnqtrpUHTG172GFL97hqFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u/+puliblXwaVy+CLh55f0HLnZi8atWusspVdPDqYzuTPK9mddxoPtY9iHlz+ZBNK
-	 WE2MXtow2d2QchOY/VNudwIa0UlM/VhbTRN0b3lCqSJa4ABh1zqP/8VSIC0z5H9SW8
-	 tb7ZLPtUjKCGGtW70vnurOJnE5a2HuwUSiWnH3EU=
+	b=zIx6d0mmVvrF9WbRvJfksS9OvxbabKcE/kUj2pjg9YxtCI7msHkdh6sNyRH4MTAKo
+	 PebN9fdU3SZtwAibMUeoV3fRC1EogJOdG1BZwve2/NHaGfzWN5o3YuZcHP8DOeFjnR
+	 d9teAOEoU1KozwPWM8siizPeNqDqqglS1iGQTsp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390721AbfFMP7e (ORCPT
+        id S1731726AbfFMP7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:59:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37380 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:59:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731483AbfFMItl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:49:41 -0400
+        id S1731481AbfFMIti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:49:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEB43206BA;
-        Thu, 13 Jun 2019 08:49:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C582206BA;
+        Thu, 13 Jun 2019 08:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415780;
-        bh=6qm8dsSAAvZzsQrVpV/U/Q9NvOzvbQ9vwMwJpnapczA=;
+        s=default; t=1560415777;
+        bh=YL8MIoVT72q5kWa4/vm5yvnqtrpUHTG172GFL97hqFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pFkjKCOcV5rWdFNQXlqpO5cEFuRW06wktti0gpjT/v3jZAzYuh8TFixA2XizVqDe1
-         lsR66u7QQ4wtNwgSE1N99ehnvlp37Js+y6OYBnfombmYm1uCPGXh3XfH9teApnE81X
-         j7761w6Ne+hmBjj8Pvu5b7DKe4ujBXXfIptrzGrg=
+        b=EbuOSLg4fECNBEAaHFhCC2HVVaYWK95fl4uWPdkwFdCcNlvv6bahllZcfpiSLdsnI
+         6fzuYrYbL8QmVmE83rtYfzGqvOkxocxV2NMJcJH0b/lW1RebmFK4w69vFsC4QRQIyg
+         rW0QuyEP7d7Djf0xbu/Bn37QldizRGRHFDArHNQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org, Binbin Wu <binbin.wu@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 095/155] power: supply: cpcap-battery: Fix signed counter sample register
-Date:   Thu, 13 Jun 2019 10:33:27 +0200
-Message-Id: <20190613075658.392164493@linuxfoundation.org>
+Subject: [PATCH 5.1 119/155] pinctrl: pinctrl-intel: move gpio suspend/resume to noirq phase
+Date:   Thu, 13 Jun 2019 10:33:51 +0200
+Message-Id: <20190613075659.546693851@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -61,78 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c68b901ac4fa969db8917b6a9f9b40524a690d20 ]
+[ Upstream commit 2fef32766861c6e171f436ab99c89198cf0ca6e1 ]
 
-The accumulator sample register is signed 32-bits wide register on
-droid 4. And only the earlier version of cpcap has a signed 24-bits
-wide register. We're currently passing it around as unsigned, so
-let's fix that and use sign_extend32() for the earlier revision.
+In current driver, SET_LATE_SYSTEM_SLEEP_PM_OPS is used to install the
+callbacks for suspend/resume.
+GPIO pin may be used as the interrupt pin by some device. However, using
+SET_LATE_SYSTEM_SLEEP_PM_OPS() to install the callbacks, the resume
+callback is called after resume_device_irqs(). Unintended interrupts may
+arrive due to resuming device irqs first, but the GPIO controller is not
+properly restored.
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Normally, for a SMP system, there are multiple cores, so even when there are
+unintended interrupts, BSP gets the chance to initialize the GPIO chip soon.
+But when there is only 1 core is active (other cores are offlined or
+single core) during resume, it is more easily to observe the unintended
+interrupts.
+
+This patch renames the suspend/resume function by adding suffix "_noirq",
+and installs the callbacks using SET_NOIRQ_SYSTEM_SLEEP_PM_OPS().
+
+Signed-off-by: Binbin Wu <binbin.wu@intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/cpcap-battery.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/pinctrl/intel/pinctrl-intel.c |  8 ++++----
+ drivers/pinctrl/intel/pinctrl-intel.h | 11 ++++++-----
+ 2 files changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/power/supply/cpcap-battery.c b/drivers/power/supply/cpcap-battery.c
-index 6887870ba32c..453baa8f7d73 100644
---- a/drivers/power/supply/cpcap-battery.c
-+++ b/drivers/power/supply/cpcap-battery.c
-@@ -82,7 +82,7 @@ struct cpcap_battery_config {
- };
- 
- struct cpcap_coulomb_counter_data {
--	s32 sample;		/* 24-bits */
-+	s32 sample;		/* 24 or 32 bits */
- 	s32 accumulator;
- 	s16 offset;		/* 10-bits */
- };
-@@ -213,7 +213,7 @@ static int cpcap_battery_get_current(struct cpcap_battery_ddata *ddata)
-  * TI or ST coulomb counter in the PMIC.
-  */
- static int cpcap_battery_cc_raw_div(struct cpcap_battery_ddata *ddata,
--				    u32 sample, s32 accumulator,
-+				    s32 sample, s32 accumulator,
- 				    s16 offset, u32 divider)
- {
- 	s64 acc;
-@@ -224,7 +224,6 @@ static int cpcap_battery_cc_raw_div(struct cpcap_battery_ddata *ddata,
- 	if (!divider)
- 		return 0;
- 
--	sample &= 0xffffff;		/* 24-bits, unsigned */
- 	offset &= 0x7ff;		/* 10-bits, signed */
- 
- 	switch (ddata->vendor) {
-@@ -259,7 +258,7 @@ static int cpcap_battery_cc_raw_div(struct cpcap_battery_ddata *ddata,
- 
- /* 3600000μAms = 1μAh */
- static int cpcap_battery_cc_to_uah(struct cpcap_battery_ddata *ddata,
--				   u32 sample, s32 accumulator,
-+				   s32 sample, s32 accumulator,
- 				   s16 offset)
- {
- 	return cpcap_battery_cc_raw_div(ddata, sample,
-@@ -268,7 +267,7 @@ static int cpcap_battery_cc_to_uah(struct cpcap_battery_ddata *ddata,
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index 3b1818184207..70638b74f9d6 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -1466,7 +1466,7 @@ static bool intel_pinctrl_should_save(struct intel_pinctrl *pctrl, unsigned int
+ 	return false;
  }
  
- static int cpcap_battery_cc_to_ua(struct cpcap_battery_ddata *ddata,
--				  u32 sample, s32 accumulator,
-+				  s32 sample, s32 accumulator,
- 				  s16 offset)
+-int intel_pinctrl_suspend(struct device *dev)
++int intel_pinctrl_suspend_noirq(struct device *dev)
  {
- 	return cpcap_battery_cc_raw_div(ddata, sample,
-@@ -312,6 +311,8 @@ cpcap_battery_read_accumulated(struct cpcap_battery_ddata *ddata,
- 	/* Sample value CPCAP_REG_CCS1 & 2 */
- 	ccd->sample = (buf[1] & 0x0fff) << 16;
- 	ccd->sample |= buf[0];
-+	if (ddata->vendor == CPCAP_VENDOR_TI)
-+		ccd->sample = sign_extend32(24, ccd->sample);
+ 	struct intel_pinctrl *pctrl = dev_get_drvdata(dev);
+ 	struct intel_community_context *communities;
+@@ -1505,7 +1505,7 @@ int intel_pinctrl_suspend(struct device *dev)
  
- 	/* Accumulator value CPCAP_REG_CCA1 & 2 */
- 	ccd->accumulator = ((s16)buf[3]) << 16;
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(intel_pinctrl_suspend);
++EXPORT_SYMBOL_GPL(intel_pinctrl_suspend_noirq);
+ 
+ static void intel_gpio_irq_init(struct intel_pinctrl *pctrl)
+ {
+@@ -1527,7 +1527,7 @@ static void intel_gpio_irq_init(struct intel_pinctrl *pctrl)
+ 	}
+ }
+ 
+-int intel_pinctrl_resume(struct device *dev)
++int intel_pinctrl_resume_noirq(struct device *dev)
+ {
+ 	struct intel_pinctrl *pctrl = dev_get_drvdata(dev);
+ 	const struct intel_community_context *communities;
+@@ -1589,7 +1589,7 @@ int intel_pinctrl_resume(struct device *dev)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(intel_pinctrl_resume);
++EXPORT_SYMBOL_GPL(intel_pinctrl_resume_noirq);
+ #endif
+ 
+ MODULE_AUTHOR("Mathias Nyman <mathias.nyman@linux.intel.com>");
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.h b/drivers/pinctrl/intel/pinctrl-intel.h
+index b8a07d37d18f..a8e958f1dcf5 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.h
++++ b/drivers/pinctrl/intel/pinctrl-intel.h
+@@ -177,13 +177,14 @@ int intel_pinctrl_probe_by_hid(struct platform_device *pdev);
+ int intel_pinctrl_probe_by_uid(struct platform_device *pdev);
+ 
+ #ifdef CONFIG_PM_SLEEP
+-int intel_pinctrl_suspend(struct device *dev);
+-int intel_pinctrl_resume(struct device *dev);
++int intel_pinctrl_suspend_noirq(struct device *dev);
++int intel_pinctrl_resume_noirq(struct device *dev);
+ #endif
+ 
+-#define INTEL_PINCTRL_PM_OPS(_name)						  \
+-const struct dev_pm_ops _name = {						  \
+-	SET_LATE_SYSTEM_SLEEP_PM_OPS(intel_pinctrl_suspend, intel_pinctrl_resume) \
++#define INTEL_PINCTRL_PM_OPS(_name)					\
++const struct dev_pm_ops _name = {					\
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(intel_pinctrl_suspend_noirq,	\
++				      intel_pinctrl_resume_noirq)	\
+ }
+ 
+ #endif /* PINCTRL_INTEL_H */
 -- 
 2.20.1
 
