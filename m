@@ -2,122 +2,136 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8340BC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671DEC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5809B21537
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FD3521537
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:48:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560458916;
+	bh=QBKFiYL+IE6QfIxDxWONJrMHcfZVbZUqMyER/iI/i+c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qk8BRlzu/jbOx98aeeHg+1iqOHl/BTFrFgFcCQo7SRe83bD4E54/iqM54vXK88+CN
+	 zotCCWFGsGEJsrI87yeKZyKsD2bPZ7+/hH8sr5St4KAFiWGVwi0rou2Ty9LY8LyIHN
+	 3tsbmj01ecGwwlNQM7KytuuDV1GdRTxkWZ8I0aKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbfFMUsE (ORCPT
+        id S1730000AbfFMUse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:48:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40314 "EHLO mx1.redhat.com"
+        Thu, 13 Jun 2019 16:48:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfFMUsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:48:04 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725747AbfFMUsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 16:48:33 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 01294308427C;
-        Thu, 13 Jun 2019 20:48:04 +0000 (UTC)
-Received: from [10.10.120.121] (ovpn-120-121.rdu2.redhat.com [10.10.120.121])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 593B060FBD;
-        Thu, 13 Jun 2019 20:48:03 +0000 (UTC)
-Subject: Re: [PATCH v4 00/10] klp-convert livepatch build tooling
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-kbuild@vger.kernel.org
-References: <20190509143859.9050-1-joe.lawrence@redhat.com>
- <alpine.LSU.2.21.1906131451560.22698@pobox.suse.cz>
- <b1a627a4-3702-9689-6c03-0c2123c06a2d@redhat.com>
-Message-ID: <c9021573-11c6-b576-0aa6-97754c98a06e@redhat.com>
-Date:   Thu, 13 Jun 2019 16:48:02 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <b1a627a4-3702-9689-6c03-0c2123c06a2d@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 13 Jun 2019 20:48:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B3942133D;
+        Thu, 13 Jun 2019 20:48:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560458913;
+        bh=QBKFiYL+IE6QfIxDxWONJrMHcfZVbZUqMyER/iI/i+c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=W8RFMGE2XEBfIMgZiJVLDJlgDCfrRRk8a5YMGm6NJWq3iOW7BFqDgEcE3jR3EzuxH
+         6mecnfow3Qth0X+c0FNOd8EU7Tgs7NtIzjtvm3fET+fi8GtnZHvccohCORja+Kjvbx
+         qMyCzCY6jdHR6rPl/G9MUU/Sgsma/isYN3+x1ZvE=
+Date:   Thu, 13 Jun 2019 13:48:31 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        nouveau@lists.freedesktop.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, Linux MM <linux-mm@kvack.org>,
+        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, linux-pci@vger.kernel.org
+Subject: Re: dev_pagemap related cleanups
+Message-Id: <20190613134831.a7ecb1b422a732bff156ec50@linux-foundation.org>
+In-Reply-To: <d0da4c86-ef52-b981-06af-b37e3e0515ee@deltatee.com>
+References: <20190613094326.24093-1-hch@lst.de>
+        <CAPcyv4jBdwYaiVwkhy6kP78OBAs+vJme1UTm47dX4Eq_5=JgSg@mail.gmail.com>
+        <283e87e8-20b6-0505-a19b-5d18e057f008@deltatee.com>
+        <CAPcyv4hx=ng3SxzAWd8s_8VtAfoiiWhiA5kodi9KPc=jGmnejg@mail.gmail.com>
+        <d0da4c86-ef52-b981-06af-b37e3e0515ee@deltatee.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/19 9:15 AM, Joe Lawrence wrote:
-> On 6/13/19 9:00 AM, Miroslav Benes wrote:
->> Hi Joe,
->>
->> first, I'm sorry for the lack of response so far.
->>
->> Maybe you've already noticed but the selftests fail. Well, at least in
->> my VM. When test_klp_convert1.ko is loaded, the process is killed with
->>
->> [  518.041826] BUG: kernel NULL pointer dereference, address: 0000000000000000
->> [  518.042816] #PF: supervisor read access in kernel mode
->> [  518.043393] #PF: error_code(0x0000) - not-present page
->> [  518.043981] PGD 0 P4D 0
->> [  518.044185] Oops: 0000 [#1] SMP PTI
->> [  518.044518] CPU: 2 PID: 2255 Comm: insmod Tainted: G           O  K   5.1.0-klp_convert_v4-193435-g67748576637e #2
->> [  518.045784] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
->> [  518.046940] RIP: 0010:test_klp_convert_init+0x1c/0x40 [test_klp_convert1]
->> [  518.047611] Code: 1b a0 48 89 c6 e9 a8 c0 f4 e0 0f 1f 40 00 0f 1f 44 00 00 53 48 c7 c7 00 30 1b a0 e8 5e 33 f6 e0 85 c0 89 c3 74 04 89 d8 5b c3 <48> 8b 35 5d ef e4 5f 48 c7 c7 28 20 1b a0 e8 75 c0 f4 e0 e8 6c ff
->> [  518.049779] RSP: 0018:ffffc90000f37cc8 EFLAGS: 00010246
->> [  518.050243] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000027de0
->> [  518.050922] RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff88807ab54f40
->> [  518.051619] RBP: ffffffffa01b1080 R08: 0000000096efde7a R09: 0000000000000001
->> [  518.052332] R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffffffff
->> [  518.053012] R13: 0000000000000000 R14: ffff888078b55000 R15: ffffc90000f37ea0
->> [  518.053714] FS:  00007febece1fb80(0000) GS:ffff88807d400000(0000) knlGS:0000000000000000
->> [  518.054514] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [  518.055078] CR2: 0000000000000000 CR3: 000000007a56a000 CR4: 00000000000006e0
->> [  518.055818] Call Trace:
->> [  518.056007]  do_one_initcall+0x6a/0x2da
->> [  518.056340]  ? do_init_module+0x22/0x230
->> [  518.056702]  ? rcu_read_lock_sched_held+0x96/0xa0
->> [  518.057125]  ? kmem_cache_alloc_trace+0x284/0x2e0
->> [  518.057493]  do_init_module+0x5a/0x230
->> [  518.057900]  load_module+0x17bc/0x1f50
->> [  518.058214]  ? __symbol_put+0x40/0x40
->> [  518.058499]  ? vfs_read+0x12d/0x160
->> [  518.058766]  __do_sys_finit_module+0x83/0xc0
->> [  518.059122]  do_syscall_64+0x57/0x190
->> [  518.059407]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->> ...
->>
->> It crashes right in test_klp_convert_init() when print_*() using
->> supposed-to-be-converted symbols are called. I'll debug it next week. Can
->> you reproduce it too?
-> 
-> Hey, thanks for the report..
-> 
-> I don't recall the tests crashing, but I had put this patchset on the
-> side for a few weeks now.  I'll try to fire up a VM and see what happens
-> today.
-> 
+On Thu, 13 Jun 2019 14:24:20 -0600 Logan Gunthorpe <logang@deltatee.com> wr=
+ote:
 
-Hmm, I haven't been able to reproduce using my original base (Linux 5.1-rc6)
-or when rebased ontop of livepatching.git/master + 997a55f3fb6d("stacktrace: Unbreak stack_trace_save_tsk_reliable()")
+>=20
+>=20
+> On 2019-06-13 2:21 p.m., Dan Williams wrote:
+> > On Thu, Jun 13, 2019 at 1:18 PM Logan Gunthorpe <logang@deltatee.com> w=
+rote:
+> >>
+> >>
+> >>
+> >> On 2019-06-13 12:27 p.m., Dan Williams wrote:
+> >>> On Thu, Jun 13, 2019 at 2:43 AM Christoph Hellwig <hch@lst.de> wrote:
+> >>>>
+> >>>> Hi Dan, J=E9r=F4me and Jason,
+> >>>>
+> >>>> below is a series that cleans up the dev_pagemap interface so that
+> >>>> it is more easily usable, which removes the need to wrap it in hmm
+> >>>> and thus allowing to kill a lot of code
+> >>>>
+> >>>> Diffstat:
+> >>>>
+> >>>>  22 files changed, 245 insertions(+), 802 deletions(-)
+> >>>
+> >>> Hooray!
+> >>>
+> >>>> Git tree:
+> >>>>
+> >>>>     git://git.infradead.org/users/hch/misc.git hmm-devmem-cleanup
+> >>>
+> >>> I just realized this collides with the dev_pagemap release rework in
+> >>> Andrew's tree (commit ids below are from next.git and are not stable)
+> >>>
+> >>> 4422ee8476f0 mm/devm_memremap_pages: fix final page put race
+> >>> 771f0714d0dc PCI/P2PDMA: track pgmap references per resource, not glo=
+bally
+> >>> af37085de906 lib/genalloc: introduce chunk owners
+> >>> e0047ff8aa77 PCI/P2PDMA: fix the gen_pool_add_virt() failure path
+> >>> 0315d47d6ae9 mm/devm_memremap_pages: introduce devm_memunmap_pages
+> >>> 216475c7eaa8 drivers/base/devres: introduce devm_release_action()
+> >>>
+> >>> CONFLICT (content): Merge conflict in tools/testing/nvdimm/test/iomap=
+.c
+> >>> CONFLICT (content): Merge conflict in mm/hmm.c
+> >>> CONFLICT (content): Merge conflict in kernel/memremap.c
+> >>> CONFLICT (content): Merge conflict in include/linux/memremap.h
+> >>> CONFLICT (content): Merge conflict in drivers/pci/p2pdma.c
+> >>> CONFLICT (content): Merge conflict in drivers/nvdimm/pmem.c
+> >>> CONFLICT (content): Merge conflict in drivers/dax/device.c
+> >>> CONFLICT (content): Merge conflict in drivers/dax/dax-private.h
+> >>>
+> >>> Perhaps we should pull those out and resend them through hmm.git?
+> >>
+> >> Hmm, I've been waiting for those patches to get in for a little while =
+now ;(
+> >=20
+> > Unless Andrew was going to submit as v5.2-rc fixes I think I should
+> > rebase / submit them on current hmm.git and then throw these cleanups
+> > from Christoph on top?
+>=20
+> Whatever you feel is best. I'm just hoping they get in sooner rather
+> than later. They do fix a bug after all. Let me know if you want me to
+> retest the P2PDMA stuff after the rebase.
 
+I had them down for 5.3-rc1.  I'll send them along for 5.2-rc5 instead.
 
-FWIW, my test_klp_convert1.ko has these klp-converted relocations:
-
-Relocation section [36] '.klp.rela.vmlinux..text.unlikely' for section [ 5] '.text.unlikely' at offset 0x4a6b8 contains 1 entry:                                   
-  Offset              Type            Value               Addend Name                                                                                              
-  0x0000000000000003  X86_64_PC32     000000000000000000      -4 .klp.sym.vmlinux.saved_command_line,0 
-
-Relocation section [37] '.klp.rela.test_klp_convert_mod..text.unlikely' for section [ 5] '.text.unlikely' at offset 0x4a6d0 contains 4 entries:                    
-  Offset              Type            Value               Addend Name                                                                                              
-  0x000000000000004e  X86_64_PC32     000000000000000000      -4 .klp.sym.test_klp_convert_mod.get_homonym_string,1                                                
-  0x000000000000003d  X86_64_32S      000000000000000000      +0 .klp.sym.test_klp_convert_mod.homonym_string,1                                                    
-  0x0000000000000027  X86_64_PC32     000000000000000000      -4 .klp.sym.test_klp_convert_mod.get_driver_name,0                                                   
-  0x0000000000000016  X86_64_32S      000000000000000000      +0 .klp.sym.test_klp_convert_mod.driver_name,0
-
--- Joe
