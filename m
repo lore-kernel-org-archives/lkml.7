@@ -2,118 +2,182 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 371AEC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D14C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ED6A21537
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E5F621473
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:56:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bmGw/SSM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfFMV4G (ORCPT
+        id S1728396AbfFMV4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 17:56:06 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:37645 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfFMV4G (ORCPT
+        Thu, 13 Jun 2019 17:56:51 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41886 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfFMV4u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 17:56:06 -0400
-Received: by mail-io1-f69.google.com with SMTP id j18so310305ioj.4
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 14:56:05 -0700 (PDT)
+        Thu, 13 Jun 2019 17:56:50 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 83so260273pgg.8
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 14:56:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CqSKUfplOln9iJ64al9vHogCwxzrRaa83C6tRk2QQv4=;
+        b=bmGw/SSMPtz8TE4EKqoCf4eLamt3dGCnE78OhZFLR1j3AZMAPdFK6N1D2wU0jpgmTc
+         TQMHeLtGxZalAqLGnm4EwKQ86Br67IcUCO4J2VujjS2raHFk08WiqngAoT1IhPARrEaQ
+         02N2tSwU3jtn+gGyNBs3XOqsFEvuYN/QORCeI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ydFXxI0znwbofCXLJ9CCbdYtdW7CJQT/GmF/kJrlloQ=;
-        b=d/0NAjVNLjbwDjt0cKpef959u8QzxTt+7CSxylXWUKtTrYjmyl/66PAZcGKfuULH3Q
-         tMpUvfS3kyJcK3zsPonTLp25+f9CGisvnshyYCkn1weQOgwtDt6J29R4YuP0NBd+zpwN
-         6MWDHn3toPtJcGNiS5HOVi5C7T22EVI1xPyOwjxjkCkVC2lCbRGLAB/sslQaaZRVYqg5
-         +sVnj+hMzIprYsFgCq+DB3m8d8k1BdeOujJU/FFUJ7nVM2Ol/5B/nrPI+MtsehZHKWuS
-         EcR07qpZfzMLOHZ02fzpgcIbwvAaZaZ9K7O663HxU5SudUUy8hjjSUT4Ak0m4exz3oVU
-         qIyA==
-X-Gm-Message-State: APjAAAVbCp+BiaMzhS1qsUpLbJW+sztm+2qP7eFBuoBmQ60wj6XH8fxT
-        AhJZE8Mmk3VHIldu2wOSUO7Ae1Z/5M2nt2+ejxzdYdASBAUN
-X-Google-Smtp-Source: APXvYqzmnd/bESLoN/unmpNR/LTqQ9cjpPKHPfcD/kaNr1DUjqrCy4dA4fIZMBPCQo7Tm4BkaQSiXpFejZNzmJO24gBZ/Z0eORkN
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CqSKUfplOln9iJ64al9vHogCwxzrRaa83C6tRk2QQv4=;
+        b=XP8MoXFn1Nc7LO3GZCOTlkV6czQIdp0gL97w8f7809RJx4NdSOOScUemIykIvnTi/u
+         35H5tngB4G8FSWnxXpJm98UjMHtMPr0N1k0d4Cs/2LGP8P0cvfza6r006k3KICGOYdA1
+         QsI1v40rCzmhTMluV3piLDmQ0c6e8dheM5iA7qXh06U9vGlz09H+7jpllvFkcQtBuNP+
+         xi0K8hsJ5qSTLq5zFMszAj+164V2oD5Tq5vpD0KnQKnqPVEoB/fy6ESJZrl9UIZGz3rb
+         ujJeX2lJR1/f1vy2ZagAqkqqqO9EnjLTFk7wzSjyzbAADc5Qi3G9gPUsed6a438Na/0J
+         dSJQ==
+X-Gm-Message-State: APjAAAWqVIzTL4XnUlE6mfhxjOCW49R79u9eG8XXOVpnveTT6ff402xG
+        btUSJVmMV/nCreO/DSu6F3Yh8A==
+X-Google-Smtp-Source: APXvYqxa8NPQpW/ncEZ+9wWZVsY/YQvADDPz4jjl5yyTTQ0yaFx82hxstv7CK/gJQmit6jtF7CSy+w==
+X-Received: by 2002:a17:90a:b294:: with SMTP id c20mr7807965pjr.16.1560463009452;
+        Thu, 13 Jun 2019 14:56:49 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id v28sm687528pga.65.2019.06.13.14.56.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 14:56:48 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 14:56:46 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 2/4] backlight: Expose brightness curve type through sysfs
+Message-ID: <20190613215646.GO137143@google.com>
+References: <20190613194326.180889-1-mka@chromium.org>
+ <20190613194326.180889-3-mka@chromium.org>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:2cc7:: with SMTP id s190mr54766893ios.29.1560462965302;
- Thu, 13 Jun 2019 14:56:05 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 14:56:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bb6d57058b3b98eb@google.com>
-Subject: memory leak in binder_transaction
-From:   syzbot <syzbot+182ce46596c3f2e1eb24@syzkaller.appspotmail.com>
-To:     arve@android.com, christian@brauner.io, devel@driverdev.osuosl.org,
-        gregkh@linuxfoundation.org, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, maco@android.com,
-        syzkaller-bugs@googlegroups.com, tkjos@android.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190613194326.180889-3-mka@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+I noticed a few minor things when glancing over the patch on patchwork
 
-syzbot found the following crash on:
+On Thu, Jun 13, 2019 at 12:43:24PM -0700, Matthias Kaehlcke wrote:
+> Backlight brightness curves can have different shapes. The two main
+> types are linear and non-linear curves. The human eye doesn't
+> perceive linearly increasing/decreasing brightness as linear (see
+> also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
+> linearly to human eye"), hence many backlights use non-linear (often
+> logarithmic) brightness curves. The type of curve currently is opaque
+> to userspace, so userspace often relies on more or less reliable
 
-HEAD commit:    d1fdb6d8 Linux 5.2-rc4
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15e5ce1ea00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cb38d33cd06d8d48
-dashboard link: https://syzkaller.appspot.com/bug?extid=182ce46596c3f2e1eb24
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1181703ea00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14e14392a00000
+nit: avoid relies ... reliable :)
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+182ce46596c3f2e1eb24@syzkaller.appspotmail.com
+> heuristics (like the number of brightness levels) to decide whether
+> to treat a backlight device as linear or non-linear.
+> 
+> Export the type of the brightness curve via the new sysfs attribute
+> 'scale'. The value of the attribute may be a simple string like
+> 'linear' or 'non-linear', or a composite string similar to
+> 'compatible' strings of the device tree. A composite string consists
+> of different elements separated by commas, starting with the
+> most-detailed description and ending with the least-detailed one. An
+> example for a composite string is "cie-1931,perceptual,non-linear"
+> This brightness curve was generated with the CIE 1931 algorithm, it
+> is perceptually linear, but not actually linear in terms of the
+> emitted light. If userspace doesn't know about 'cie-1931' or
+> 'perceptual' it should at least be able to interpret the 'non-linear'
+> part.
+> 
+> For devices that don't provide information about the scale of their
+> brightness curve the value of the 'scale' attribute is 'unknown'.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  .../ABI/testing/sysfs-class-backlight         | 32 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  drivers/video/backlight/backlight.c           | 22 +++++++++++++
+>  include/linux/backlight.h                     | 10 ++++++
+>  4 files changed, 65 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-backlight
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-backlight b/Documentation/ABI/testing/sysfs-class-backlight
+> new file mode 100644
+> index 000000000000..924fb68940e6
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-class-backlight
+> @@ -0,0 +1,32 @@
+> +What:		/sys/class/backlight/<backlight>/scale
+> +Date:		June 2019
+> +KernelVersion:	5.4
+> +Contact:	Daniel Thompson <daniel.thompson@linaro.org>
+> +Description:
+> +		Description of the scale of the brightness curve. The
+> +		description consists of one or more elements separated by
+> +		commas, from the most detailed to the least detailed
+> +		description.
+> +
+> +		Possible values are:
+> +
+> +		unknown
+> +		  The scale of the brightness curve is unknown.
+> +
+> +		linear
+> +		  The brightness changes linearly in terms of the emitted
+> +		  light, changes are perceived as non-linear by the human eye.
+> +
+> +		non-linear
+> +		  The brightness changes non-linearly in terms of the emitted
+> +		  light, changes might be perceived as linear by the human eye.
+> +
+> +		perceptual,non-linear
+> +		  The brightness changes non-linearly in terms of the emitted
+> +		  light, changes should be perceived as linear by the human eye.
+> +
+> +		cie-1931,perceptual,non-linear
+> +		  The brightness curves was calculated with the CIE 1931
 
--executor774" scontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023  
-tcontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023 tclass=binder  
-permissive=1
-BUG: memory leak
-unreferenced object 0xffff888123934800 (size 32):
-   comm "syz-executor774", pid 7083, jiffies 4294941834 (age 7.970s)
-   hex dump (first 32 bytes):
-     00 48 93 23 81 88 ff ff 00 48 93 23 81 88 ff ff  .H.#.....H.#....
-     02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<0000000038ba7202>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<0000000038ba7202>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<0000000038ba7202>] slab_alloc mm/slab.c:3326 [inline]
-     [<0000000038ba7202>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000004e63839>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000004e63839>] kzalloc include/linux/slab.h:742 [inline]
-     [<0000000004e63839>] binder_transaction+0x28b/0x2eb0  
-drivers/android/binder.c:3072
-     [<0000000050997ec4>] binder_thread_write+0x357/0x1430  
-drivers/android/binder.c:3794
-     [<00000000ab2de227>] binder_ioctl_write_read  
-drivers/android/binder.c:4827 [inline]
-     [<00000000ab2de227>] binder_ioctl+0x8bc/0xbb4  
-drivers/android/binder.c:5004
-     [<000000002eec2b63>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<000000002eec2b63>] file_ioctl fs/ioctl.c:509 [inline]
-     [<000000002eec2b63>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<0000000048cfc9e6>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<0000000030bf392d>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<0000000030bf392d>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<0000000030bf392d>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<000000007dec438c>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<00000000ae043c96>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+s/curves/curve/
 
+> +static const char *const backlight_scale_types[] = {
+> +	[BACKLIGHT_SCALE_UNKNOWN]	= "unknown",
+> +	[BACKLIGHT_SCALE_CIE1931]	= "cie-1931,perceptual,non-linear",
+> +	[BACKLIGHT_SCALE_PERCEPTUAL]	= "perceptual,non-linear",
+> +	[BACKLIGHT_SCALE_LINEAR]	= "linear",
+> +	[BACKLIGHT_SCALE_NON_LINEAR]	= "non-linear",
+> +};
+> +
+> +
 
+Delete one blank line
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> +enum backlight_scale {
+> +	BACKLIGHT_SCALE_UNKNOWN,
+> +	BACKLIGHT_SCALE_CIE1931 = 1,
+> +	BACKLIGHT_SCALE_PERCEPTUAL,
+> +	BACKLIGHT_SCALE_LINEAR,
+> +	BACKLIGHT_SCALE_NON_LINEAR,	/* needed for backwards compatibility */
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+maybe better list the more generic options first, same for the string
+table.
