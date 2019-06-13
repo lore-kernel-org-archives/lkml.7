@@ -2,138 +2,93 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF74C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD3CC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47BBE20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G/wqaOYF"
+	by mail.kernel.org (Postfix) with ESMTP id 1D3FC20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbfFMUNR (ORCPT
+        id S1729681AbfFMUNY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:13:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56212 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfFMUNQ (ORCPT
+        Thu, 13 Jun 2019 16:13:24 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33966 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727682AbfFMUNY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:13:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bKMWCvMopA9EQ8AelBJcmdTvyJTL93JTREGP6k5ibdU=; b=G/wqaOYFUB3TMjUpS3ONKm6h2
-        NN3wE402X9P0slndGVuuqdBym+wP9BG81c6LZYuPXZOaFeLMzRGpaMd2xUUqtOmCCV8FaBOLVbtDP
-        dBxeG0ztr6bYJdWoek1hsvgU9EwPKuEIFZk9ASjgChEgXovvBXHOW9pp5PwWge3ocoO0mzGSurPsz
-        6uGLk5FSz/TieWTB9yB8nNJC5okV7oYWfpoRhKGky95UO9peXc6tzxtVGkfdcWHFc1j9lntOgW8oU
-        bMV3PwYjHc5kl+M1wyiKrGhpQRZak9OlavimRnGHtYyXYRSh8XCvDQoJFa4yit2sca5SOtVmeWrWg
-        hsK/KHoww==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbW5z-0002lr-Bx; Thu, 13 Jun 2019 20:13:15 +0000
-Subject: Re: linux-next: Tree for Jun 13 (drivers/soc/qcom/Kconfig)
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        bjorn.andersson@linaro.org
-References: <20190613193054.37bde7fa@canb.auug.org.au>
- <00d6da06-1316-6560-5541-0caf8ea5084b@infradead.org>
- <2480052.F5ZUPELBQ8@kreacher>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9dd920db-f1c9-d5b7-dc01-aa0e0e70df0e@infradead.org>
-Date:   Thu, 13 Jun 2019 13:13:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 16:13:24 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y198so105517lfa.1;
+        Thu, 13 Jun 2019 13:13:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WyzKJThMrvfYdU5AiRz/a/lZbGM/BDuNcJRJenL7TFM=;
+        b=CKZJaXBb1KtJlFabyzzovT8D71vouF72S1FIqgt6UNEyaC4SE0HJYgbJ14gkYjE9Ga
+         pB7O7uayoJuZlElJq021JyPoydU3wc2A8oahm57E+6iJ/lQ2fYignJzpxCuvlmJHD2+n
+         9rsFppOnIWXEPvk234MeAALq1vHB1fa6tvfnTiU8D1FAM6KMri2B9u8SR9yGtBWjr1Sx
+         0X6x9CU+drxkBJ57Gm/Rr7gAbqrgNxrM3EdYDJlBBIMIn+34L8LLAka8xDxZ4vxAP0JC
+         k9JiN1zfqUCKC6nCJIjavBGmoGJ48Vf+gSuOJGeS1WBq2vjOAhiqfQiZDoWKOLYbacyP
+         zAcw==
+X-Gm-Message-State: APjAAAXV5D8BmPA2MWFSlYmca1hIgmytiF9DVu3vrGvBUYVEpYWMGW7y
+        kiWHU49Ux6zQ73fh6GijWemYDVfa6nhqkJtw+60=
+X-Google-Smtp-Source: APXvYqz0FHOGO7r59qR/V6uklYqF+Nt5DNTmVC4uhdi5vTG1EcR+FFpaX0vy5eaklu3BGnvQOrUHFKsK9/Q0h7NpaHY=
+X-Received: by 2002:ac2:597c:: with SMTP id h28mr7020435lfp.90.1560456801790;
+ Thu, 13 Jun 2019 13:13:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2480052.F5ZUPELBQ8@kreacher>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190613180824.6ajwjelzr5fmjnie@debie>
+In-Reply-To: <20190613180824.6ajwjelzr5fmjnie@debie>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 13 Jun 2019 22:13:07 +0200
+Message-ID: <CAMuHMdWVbPVRp3tFMVA6HLLESMBp3qdEFUftPGK=Sd8pF_GorA@mail.gmail.com>
+Subject: Re: [PATCH] serial: sh-sci: fix uninitialized variable warning
+To:     Charles <18oliveira.charles@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        rodrigosiqueiramelo@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/19 11:27 AM, Rafael J. Wysocki wrote:
-> On Thursday, June 13, 2019 6:12:43 PM CEST Randy Dunlap wrote:
->>  This is a multi-part message in MIME format.
->> --------------D4992319A3EA7FFA5EF515C6
->> Content-Type: text/plain; charset=windows-1252
->> Content-Transfer-Encoding: 8bit
->>
->> On 6/13/19 2:30 AM, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> Changes since 20190612:
->>>
->>
->>
->> on x86_64:
->>
->> ../drivers/base/power/domain.c: In function �genpd_queue_power_off_work�:
->> ../drivers/base/power/domain.c:485:13: error: �pm_wq� undeclared (first use in this function)
->>   queue_work(pm_wq, &genpd->power_off_work);
->>              ^
->> ../drivers/base/power/domain.c:485:13: note: each undeclared identifier is reported only once for each function it appears in
->> ../drivers/base/power/domain.c: In function �genpd_dev_pm_qos_notifier�:
->> ../drivers/base/power/domain.c:675:25: error: �struct dev_pm_info� has no member named �ignore_children�
->>    if (!dev || dev->power.ignore_children)
->>                          ^
->> ../drivers/base/power/domain.c: In function �rtpm_status_str�:
->> ../drivers/base/power/domain.c:2754:16: error: �struct dev_pm_info� has no member named �runtime_error�
->>   if (dev->power.runtime_error)
->>                 ^
->> ../drivers/base/power/domain.c:2756:21: error: �struct dev_pm_info� has no member named �disable_depth�
->>   else if (dev->power.disable_depth)
->>                      ^
->> ../drivers/base/power/domain.c:2758:21: error: �struct dev_pm_info� has no member named �runtime_status�
->>   else if (dev->power.runtime_status < ARRAY_SIZE(status_lookup))
->>                      ^
->> ../drivers/base/power/domain.c:2759:31: error: �struct dev_pm_info� has no member named �runtime_status�
->>    p = status_lookup[dev->power.runtime_status];
->>                                ^
->>
->>
->> Full randconfig file is attached.
-> 
-> PM_GENERIC_DOMAINS, which is set, depend on PM, which is not set.
+Hi Charles,
 
-Thanks for that.  (I changed the subject to indicate the errant entity.)
+On Thu, Jun 13, 2019 at 8:09 PM Charles <18oliveira.charles@gmail.com> wrote:
+> Avoid following compiler warning on uninitialized variable
+>
+> In file included from ./include/linux/rwsem.h:16:0,
+>                  from ./include/linux/notifier.h:15,
+>                  from ./include/linux/clk.h:17,
+>                  from drivers/tty/serial/sh-sci.c:24:
+> drivers/tty/serial/sh-sci.c: In function ‘sci_dma_rx_submit’:
+> ./include/linux/spinlock.h:288:3: warning: ‘flags’ may be used
+> uninitialized in this function [-Wmaybe-uninitialized]
+>    _raw_spin_unlock_irqrestore(lock, flags); \
+>    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/tty/serial/sh-sci.c:1353:16: note: ‘flags’ was declared here
+>   unsigned long flags;
+>                 ^~~~~
+>
+> Signed-off-by: Charles Oliveira <18oliveira.charles@gmail.com>
 
-> Looks like an impossible configuration to me.
+Thanks for your patch, but this is a false positive: the compiler is not
+smart enough to realize that both initialization and use depend on
+the same condition.
 
-It's what happens when a driver selects PM_GENERIC_DOMAINS when PM is not set/enabled.
+Gr{oetje,eeting}s,
 
-From drivers/soc/qcom/Kconfig:
-
-config QCOM_AOSS_QMP
-	tristate "Qualcomm AOSS Driver"
-	depends on ARCH_QCOM || COMPILE_TEST
-	depends on MAILBOX
-	depends on COMMON_CLK
-	select PM_GENERIC_DOMAINS
-
-In my test case, COMPILE_TEST=y.  ARCH_QCOM is not set.
-
-And kconfig does warn:
-
-WARNING: unmet direct dependencies detected for PM_GENERIC_DOMAINS
-  Depends on [n]: PM [=n]
-  Selected by [m]:
-  - QCOM_AOSS_QMP [=m] && (ARCH_QCOM || COMPILE_TEST [=y]) && MAILBOX [=y] && COMMON_CLK [=y]
-
-
-Who is responsible for that Kconfig segment?
-Ah, Bjorn.  Cc-ed.
+                        Geert
 
 -- 
-~Randy
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
