@@ -2,137 +2,92 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1B1C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17741C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2728121537
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:05:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="Mo5DuFV4"
+	by mail.kernel.org (Postfix) with ESMTP id D20962147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:07:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560463653;
+	bh=N8wMDOzH3NR/D/vhV1x/SnhqYDyUd2czCNvXPmF+qeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=18c9Ql8BFauJJfNAVCtqqpIyeJZ26BrBe3Aovpm1DkZE2dGtdk6V7S/d0kLImPhW3
+	 iRT70br8afV5wQsrR85CslLINDz4tk9sHhu4mj4oM0kh2wWdluLxpONnRbktRGdNd1
+	 vsQvnrlst/e4yCvTG50U2NWcc69N9YhECEx0kcdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbfFMWFQ (ORCPT
+        id S1728216AbfFMWHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 18:05:16 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40094 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfFMWFQ (ORCPT
+        Thu, 13 Jun 2019 18:07:32 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:47094 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbfFMWHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 18:05:16 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k8so391971eds.7
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 15:05:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+8FvL87Ik+dUxncoVW6eXP+WAOS+Kbo5uxd7wggC77c=;
-        b=Mo5DuFV4W+iqjVJHcaknEsCoQX+9r9R3zkQZn92xWa05rjFhhkC0HtClNh4vf71yy8
-         nby6fhcDhR8VsAd7ZPwydTtJgdbnXiLYbbfT0JM9g7Ntp8qz9yxbZ+cjEvktrR/9ErsF
-         rr7cbJqNEqC0GZ2uv7Msi0fwVmBsGgXqZsDHKF3V7RWq1znSnzINiITvElO9BaXA4J5m
-         MCv9yuVn+IUyfIeZJCmorxS8maTflpd2d7t8VKW4MQmd8b7JR2sYDUP3+zVuetFaTg0y
-         +SGBQ7RyKF3YQFlqsD+HhU5gAssHvs6O2yPrAEhkMKNkV/QGhXxhznwljopC2Sgbaax/
-         I+9A==
+        Thu, 13 Jun 2019 18:07:32 -0400
+Received: by mail-qk1-f195.google.com with SMTP id x18so400393qkn.13;
+        Thu, 13 Jun 2019 15:07:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+8FvL87Ik+dUxncoVW6eXP+WAOS+Kbo5uxd7wggC77c=;
-        b=O0FnsEvbDtVn6raf7zdTTYxeA2gRZemMt9TJlPRmDs0s9ZL/qHBwO4SvEWXRaeWUmG
-         un7iLueyBii84KN3V6XeYx2bsix7Af81NRGWk5kXnzhwZb+VaICKBM0F2FMoR3vilAR6
-         AO6v9VdsiZflUgVyvVAhIuT5VLTbC0DilcmVeadIJFxkIl9VdvCCED8nIEGib+8Xidtu
-         WtXjnPWSomLKsCQAnsR9U73ltK6gX/1kOHRNZYY3m47BrXdl1exoqArxnHodmGmkssC2
-         O7yiZ9dmQOJf8Z2iK3IktOs6qH8/phC1G4/dW11N4lGivBPQoxA9YBbD532uFpTfTCGb
-         EGsg==
-X-Gm-Message-State: APjAAAUEg3ULPYW+hmuPmRo7dh0Cg2BeSCtkvaPK/GSYQVc6ZF4dlgOB
-        dUBQsIsUcr/mvxWeTGgAgS693Q==
-X-Google-Smtp-Source: APXvYqzRh8XRpIEzGGrVqaF3sGuE8RkE68bfw601NWT0H/WwJBa9FMPJcilB7GxE0YJ1BE/C6buV5g==
-X-Received: by 2002:a17:906:2641:: with SMTP id i1mr1020153ejc.9.1560463514055;
-        Thu, 13 Jun 2019 15:05:14 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8084:a0:bc00:8042:d435:a754:1f22])
-        by smtp.googlemail.com with ESMTPSA id c26sm272089edb.40.2019.06.13.15.05.12
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BhWdQ+n9lb5V8igkIdjlDGkO+bOshDClHntzHo4xkx4=;
+        b=pB8ZQhLWydN7xaJSbR0D7SlL/nA6gyRv96uz10UScA+WoCvpn7fjWrqtlEFr0yZVOA
+         2stJzMuVMJg+dWmZDFI+kw3yKZCKyjGza3X9ZSKfTe/0XoaHqEbQ4uG1GRgIXIXfcfk+
+         cZH781VT2lUFcGyFEAAAh/+XLJWO5E/dRnx8mLx+HTf8eSJSfqATq6d523izP75RROJ1
+         Da8gHmb/p/rfdxl1/y/QxTR3NXJMA4/Xgmjx4wHJ1NWD1SyFzzYQF0LkUjhDurgfL4q5
+         UETq1WCB1dgUDZ2IkceOjMcUJIl1RatDFA0hoEpmDGfsp8qQkZoubz37swFV6enAYvAh
+         v4hw==
+X-Gm-Message-State: APjAAAVF7fVuQSZgobzul++G9TT1Hrw8snyz/c3/KIcxfdvmWu3mYaLT
+        pRJAVAqR+NVp5AQ2ByMJjA==
+X-Google-Smtp-Source: APXvYqzlg3l0HADoNTIkv5SXk7nuuzVo6Jw7oSlbsAolVM+MxEBgZazQrw5oWThYP2sbSY8L9PzBsg==
+X-Received: by 2002:a37:6512:: with SMTP id z18mr73992402qkb.158.1560463650992;
+        Thu, 13 Jun 2019 15:07:30 -0700 (PDT)
+Received: from localhost ([64.188.179.243])
+        by smtp.gmail.com with ESMTPSA id t8sm708240qtc.80.2019.06.13.15.07.30
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 15:05:13 -0700 (PDT)
-From:   Tom Murphy <murphyt7@tcd.ie>
-To:     iommu@lists.linux-foundation.org
-Cc:     Tom Murphy <murphyt7@tcd.ie>, Joerg Roedel <joro@8bytes.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] iommu/amd: Flush not present cache in iommu_map_page
-Date:   Thu, 13 Jun 2019 23:04:55 +0100
-Message-Id: <20190613220455.6599-1-murphyt7@tcd.ie>
-X-Mailer: git-send-email 2.20.1
+        Thu, 13 Jun 2019 15:07:30 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 16:07:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     Li Yang <leoyang.li@nxp.com>, Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ran Wang <ran.wang_1@nxp.com>
+Subject: Re: [PATCH 2/3] Documentation: dt: binding: fsl: Add 'little-endian'
+ and update Chassis define
+Message-ID: <20190613220729.GA29761@bogus>
+References: <20190517024748.15534-1-ran.wang_1@nxp.com>
+ <20190517024748.15534-2-ran.wang_1@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517024748.15534-2-ran.wang_1@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-check if there is a not-present cache present and flush it if there is.
+On Fri, 17 May 2019 10:47:47 +0800, Ran Wang wrote:
+> By default, QorIQ SoC's RCPM register block is Big Endian. But
+> there are some exceptions, such as LS1088A and LS2088A, are Little
+> Endian. So add this optional property to help identify them.
+> 
+> Actually LS2021A and other Layerscapes won't totally follow Chassis
+> 2.1, so separate them from powerpc SoC.
+> 
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/soc/fsl/rcpm.txt |    8 +++++++-
+>  1 files changed, 7 insertions(+), 1 deletions(-)
+> 
 
-Signed-off-by: Tom Murphy <murphyt7@tcd.ie>
----
-v3:
---applied Qian Cai's "iommu/amd: fix a null-ptr-deref in map_sg()" fix
-
- drivers/iommu/amd_iommu.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index f5d4a0011d25..73740b969e62 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1295,6 +1295,16 @@ static void domain_flush_complete(struct protection_domain *domain)
- 	}
- }
- 
-+/* Flush the not present cache if it exists */
-+static void domain_flush_np_cache(struct protection_domain *domain,
-+		dma_addr_t iova, size_t size)
-+{
-+	if (unlikely(amd_iommu_np_cache)) {
-+		domain_flush_pages(domain, iova, size);
-+		domain_flush_complete(domain);
-+	}
-+}
-+
- 
- /*
-  * This function flushes the DTEs for all devices in domain
-@@ -2377,10 +2387,7 @@ static dma_addr_t __map_single(struct device *dev,
- 	}
- 	address += offset;
- 
--	if (unlikely(amd_iommu_np_cache)) {
--		domain_flush_pages(&dma_dom->domain, address, size);
--		domain_flush_complete(&dma_dom->domain);
--	}
-+	domain_flush_np_cache(&dma_dom->domain, address, size);
- 
- out:
- 	return address;
-@@ -2559,6 +2566,9 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
- 		s->dma_length   = s->length;
- 	}
- 
-+	if (s)
-+		domain_flush_np_cache(domain, s->dma_address, s->dma_length);
-+
- 	return nelems;
- 
- out_unmap:
-@@ -3039,6 +3049,8 @@ static int amd_iommu_map(struct iommu_domain *dom, unsigned long iova,
- 	ret = iommu_map_page(domain, iova, paddr, page_size, prot, GFP_KERNEL);
- 	mutex_unlock(&domain->api_lock);
- 
-+	domain_flush_np_cache(domain, iova, page_size);
-+
- 	return ret;
- }
- 
--- 
-2.20.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
