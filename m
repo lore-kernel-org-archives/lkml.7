@@ -2,55 +2,57 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A34DC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4733AC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF3720665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB0220665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442474;
-	bh=1Xvyej120jzAEw8ZdqMdUjBYsdzqfM30Il+iZxiARLs=;
+	s=default; t=1560442480;
+	bh=/xsKunJb0b7JNI+hxbSs2B2m7XRoClfEzzm84fBCY4s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jo1XSGJc0dQlYmD81inu4XdwblNNf1bs2NL3NGp0XMLOAq82Px+3iW9WDPHcF0G3k
-	 vBQpMhFj/S+pELMI/LzkNJUbGd32wpGcrAiG3Ado6sheYkfuNPQt8LKgIUK5OS/NEv
-	 HUagHh8eexic9AErF/0O8wFHvmiwC5JNUG1uRbW0=
+	b=Ktk6DrZ+BDinpnhiXxLijtX2h5XL5/CDOyW/h3kFYOcXCPsVkVHFggnCGXPq7wKuK
+	 gMlbL0Za2NkN2hVyEVuGgcaJV1rv3dMuKlT9J9Kkb4uQFEiPLwBE8W2O99RrKV8OOd
+	 vf/hs3NsnmBsruWZN877XjyfNzZJ4Cv673Md99q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391797AbfFMQOd (ORCPT
+        id S2391818AbfFMQOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:14:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59552 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:14:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731190AbfFMImX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:42:23 -0400
+        id S1731187AbfFMImQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:42:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37C7121479;
-        Thu, 13 Jun 2019 08:42:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 707C12147A;
+        Thu, 13 Jun 2019 08:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415341;
-        bh=1Xvyej120jzAEw8ZdqMdUjBYsdzqfM30Il+iZxiARLs=;
+        s=default; t=1560415335;
+        bh=/xsKunJb0b7JNI+hxbSs2B2m7XRoClfEzzm84fBCY4s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EOY14euBJhXtewDfIbIfU+xom38quIE8JaHKMS90aLARBn4CSZiuGhI17/GrnUY0q
-         CATY5xoFzS3GHUgaUgP1HmcOvj28HpHMc5irXnw8Ib3Q/KQvwkKtAzBUA3vlyNuRPJ
-         MtKViDstmpsZKzbxwHJOxn6grE1RxdcC8LKae3Cg=
+        b=G0R3ww2q310bufO2v/P3vRARdIy2WZ9LPsuSa8NOiND1bUC3ka5DD9Hxgislj+qSm
+         GX3G5ZKGfVWpftNRkIRT/V+I7P9G7FBeOB88p6S0nfhF+Pgr2GEPwmUEwGQVUMI/wl
+         eI8gTykos4Xnt/a2n3R3Lp/AKpmtztYW1zsGHsDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Sun peng Li <Sunpeng.Li@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>, Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 090/118] drm/amd/display: Use plane->color_space for dpp if specified
-Date:   Thu, 13 Jun 2019 10:33:48 +0200
-Message-Id: <20190613075649.099323956@linuxfoundation.org>
+        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Chris Healy <cphealy@gmail.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Adam Ford <aford173@gmail.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 088/118] ARM: dts: imx6qdl: Specify IMX6QDL_CLK_IPG as "ipg" clock to SDMA
+Date:   Thu, 13 Jun 2019 10:33:46 +0200
+Message-Id: <20190613075648.954823832@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -63,69 +65,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a1e07ba89d49581471d64c48152dbe03b42bd025 ]
+[ Upstream commit b14c872eebc501b9640b04f4a152df51d6eaf2fc ]
 
-[Why]
-The input color space for the plane was previously ignored even if it
-was set.
+Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
+clock to determine if it needs to configure the IP block as operating
+at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
+clocks as IMX6QDL_CLK_SDMA results in driver incorrectly thinking that
+ratio is 1:1 which results in broken SDMA funtionality(this at least
+breaks RAVE SP serdev driver on RDU2). Fix the code to specify
+IMX6QDL_CLK_IPG as "ipg" clock for SDMA, to avoid detecting incorrect
+clock ratio.
 
-If a limited range YUV format was given to DC then the
-wrong color transformation matrix was being used since DC assumed that
-it was full range instead.
-
-[How]
-Respect the given color_space format for the plane if it isn't
-COLOR_SPACE_UNKNOWN. Otherwise, use the implicit default since DM
-didn't specify.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
-Acked-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Tested-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp.c          | 6 +++++-
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 2 +-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp.c
-index bf8b68f8db4f..bce5741f2952 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp.c
-@@ -388,6 +388,10 @@ void dpp1_cnv_setup (
- 	default:
- 		break;
- 	}
-+
-+	/* Set default color space based on format if none is given. */
-+	color_space = input_color_space ? input_color_space : color_space;
-+
- 	REG_SET(CNVC_SURFACE_PIXEL_FORMAT, 0,
- 			CNVC_SURFACE_PIXEL_FORMAT, pixel_format);
- 	REG_UPDATE(FORMAT_CONTROL, FORMAT_CONTROL__ALPHA_EN, alpha_en);
-@@ -399,7 +403,7 @@ void dpp1_cnv_setup (
- 		for (i = 0; i < 12; i++)
- 			tbl_entry.regval[i] = input_csc_color_matrix.matrix[i];
- 
--		tbl_entry.color_space = input_color_space;
-+		tbl_entry.color_space = color_space;
- 
- 		if (color_space >= COLOR_SPACE_YCBCR601)
- 			select = INPUT_CSC_SELECT_ICSC;
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-index a0355709abd1..7736ef123e9b 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-@@ -1890,7 +1890,7 @@ static void update_dpp(struct dpp *dpp, struct dc_plane_state *plane_state)
- 			plane_state->format,
- 			EXPANSION_MODE_ZERO,
- 			plane_state->input_csc_color_matrix,
--			COLOR_SPACE_YCBCR601_LIMITED);
-+			plane_state->color_space);
- 
- 	//set scale and bias registers
- 	build_prescale_params(&bns_params, plane_state);
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 61d2d26afbf4..00d44a60972f 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -905,7 +905,7 @@
+ 				compatible = "fsl,imx6q-sdma", "fsl,imx35-sdma";
+ 				reg = <0x020ec000 0x4000>;
+ 				interrupts = <0 2 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX6QDL_CLK_SDMA>,
++				clocks = <&clks IMX6QDL_CLK_IPG>,
+ 					 <&clks IMX6QDL_CLK_SDMA>;
+ 				clock-names = "ipg", "ahb";
+ 				#dma-cells = <3>;
 -- 
 2.20.1
 
