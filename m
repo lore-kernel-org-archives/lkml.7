@@ -2,69 +2,68 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD79C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4C8C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 295F62080A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tj0SOdds"
+	by mail.kernel.org (Postfix) with ESMTP id F3C9320665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560444990;
+	bh=245hSvEJ1fyVQ/NUoZsypuMJ69r/WWckga7/iHsIA6Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Yyd42k09WjnqkLFmbYIj0rl4H+GakyJyAcTDmIFrHg9Jqk19FOE7wyLckqlX0Xwrc
+	 OOXGXZXPJA/WPvwmnDblR+CkQbKwpywu4wwPN0h9ImzSlu4+JB93G3fHYyRSs6UlHT
+	 TlDYF9Nl92WNgGbMFu2znZru0yTaav46V8+HBYus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393136AbfFMQz7 (ORCPT
+        id S2388082AbfFMQ42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:55:59 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45079 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729983AbfFMBwE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 21:52:04 -0400
-Received: by mail-ot1-f67.google.com with SMTP id x21so6501214otq.12;
-        Wed, 12 Jun 2019 18:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4YLpdO5VcPNfqGuCEmPtti/BB1Ea2T5YKgJiGp1aHp4=;
-        b=tj0SOddsC5uFhxIdz4osLZ1oaNMbdtigpjpU9txIBvUrk90XVDrFgislox81vno4HA
-         yL4jQxY3zcm6OkKjfBLN1+iwT9dr/DoKHFU1eChU/qA3QV7vOk76Df0PyqQK0BZCriJS
-         SWBoQlCiEKqgmew6TS4AtZOTpb/hZNT5UBeV5VDGS7KMDqpVyjZUPFsvlx3sZKMdFFIb
-         +9LasJI1iXSd0wiqSiHxyL+qphFlvzDjDeHRJzHIZ9C2u6uRiF1iT4GrnzXinqlNb1uZ
-         jxjh607dzjapc+ARLclyIA+EzWR31aK+VAFIxnjbMmytpaVb1xJxAKJVBn0KAJMtkfNR
-         TYAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4YLpdO5VcPNfqGuCEmPtti/BB1Ea2T5YKgJiGp1aHp4=;
-        b=Okk5c2q9lyppwqciv2fPvhmVDqc9MsqecKj81ZRCkvVbAq2GI4pAbIn8muUzk39xYw
-         ptU7Bt6LJYU9eWutdiS1DyJ6F3BWsOjjBSwfe2+pBT4F7KU35tqkQCnTP3kbvh8jFzBL
-         b4HKM/7JHmzCwZM60IGM28Eg7CPwlJ91aIxVDzvsBPSLTpM1wTY2A0C8ANHK291n9U2A
-         RfsX5xqn4aRoOVk+BrxxnkCkplemPnhwOWfbAtmqZNKvR7Q2ZMeCAtrMOe104R2Vt25b
-         LKtkIQg2d1XhGnRhE3Bxn/wMJz02ImbilshhMILWoO1Kr5biqg4OCsDC2ey5afd96PMn
-         HMug==
-X-Gm-Message-State: APjAAAVZuoN/Mq0bL6HugYxx5eAaG1TpqJylhNjDlfdCKFkjct2DRhxU
-        XoWrqR9DNHwI1t9XL73p1myXLZX51njZvJR/i3A=
-X-Google-Smtp-Source: APXvYqwIBFpXD0PfU+Hlo+MCCYXlsFZv9VFDlSPtmeYGxL/j63XAs/fxFiXUOP6JRjqYGHIiiDP1TTIFY/1pkb/3G9E=
-X-Received: by 2002:a9d:62c4:: with SMTP id z4mr26184693otk.56.1560390723336;
- Wed, 12 Jun 2019 18:52:03 -0700 (PDT)
+        Thu, 13 Jun 2019 12:56:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729968AbfFMBaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 21:30:18 -0400
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE7AA217F4
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 01:30:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560389416;
+        bh=245hSvEJ1fyVQ/NUoZsypuMJ69r/WWckga7/iHsIA6Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2ZR5cg5qXeIW8QeSueU+v+XoVtJwJqgh/zbPK+Vh23DiNB76z6igVBk5QmFjC4Q/b
+         GYn8i0J6URP72JalBhebTaSz6TzlBV+Qnr5O7B+twJgiUQVPaKaKwsqofehUrHIiSR
+         AYRWMsmaxcXIZJR9IifMDN2N37eieMRhYyWPJmug=
+Received: by mail-wr1-f52.google.com with SMTP id v14so18849243wrr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 18:30:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAW3P+YraFRiuQ0VLKCaXLD9t1HzyYC9AShdb+HpWDyx3GQdjtW4
+        gvVvY/Z9Gio9alC/+53ZUiZOsdmrgGyUGbEEoYKJhw==
+X-Google-Smtp-Source: APXvYqy3xOlRMyGf+QmnX5kkUuMj4E/JOwcOVlo4m18xwdccaTtfWmajwtmET8pdpGl6blYVFY3m4ysGcKL2J5xWm7w=
+X-Received: by 2002:adf:ef48:: with SMTP id c8mr35692572wrp.352.1560389415200;
+ Wed, 12 Jun 2019 18:30:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <1560332419-17195-1-git-send-email-wanpengli@tencent.com>
- <20190612151447.GD20308@linux.intel.com> <20190612192243.GA23583@flask> <20190612192720.GB23583@flask>
-In-Reply-To: <20190612192720.GB23583@flask>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 13 Jun 2019 09:52:45 +0800
-Message-ID: <CANRm+CyoweaCXApSivdvicFfHhvdMeUzEK3QWgqjgvZaT7fNQg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] KVM: LAPIC: Optimize timer latency consider world
- switch time
-To:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
+References: <20190612170834.14855-1-mhillenb@amazon.de> <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com>
+ <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net>
+In-Reply-To: <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 12 Jun 2019 18:30:03 -0700
+X-Gmail-Original-Message-ID: <CALCETrXHbS9VXfZ80kOjiTrreM2EbapYeGp68mvJPbosUtorYA@mail.gmail.com>
+Message-ID: <CALCETrXHbS9VXfZ80kOjiTrreM2EbapYeGp68mvJPbosUtorYA@mail.gmail.com>
+Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM secrets
+To:     Dave Hansen <dave.hansen@intel.com>, Nadav Amit <namit@vmware.com>
+Cc:     Marius Hillenbrand <mhillenb@amazon.de>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux-MM <linux-mm@kvack.org>, Alexander Graf <graf@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,122 +71,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019 at 03:27, Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.c=
-om> wrote:
+On Wed, Jun 12, 2019 at 1:27 PM Andy Lutomirski <luto@amacapital.net> wrote=
+:
 >
-> 2019-06-12 21:22+0200, Radim Kr=C4=8Dm=C3=A1=C5=99:
-> > 2019-06-12 08:14-0700, Sean Christopherson:
-> > > On Wed, Jun 12, 2019 at 05:40:18PM +0800, Wanpeng Li wrote:
-> > > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > > > @@ -145,6 +145,12 @@ module_param(tsc_tolerance_ppm, uint, S_IRUGO =
-| S_IWUSR);
-> > > >  static int __read_mostly lapic_timer_advance_ns =3D -1;
-> > > >  module_param(lapic_timer_advance_ns, int, S_IRUGO | S_IWUSR);
-> > > >
-> > > > +/*
-> > > > + * lapic timer vmentry advance (tscdeadline mode only) in nanoseco=
-nds.
-> > > > + */
-> > > > +u32 __read_mostly vmentry_advance_ns =3D 300;
-> > >
-> > > Enabling this by default makes me nervous, e.g. nothing guarantees th=
-at
-> > > future versions of KVM and/or CPUs will continue to have 300ns of ove=
-rhead
-> > > between wait_lapic_expire() and VM-Enter.
-> > >
-> > > If we want it enabled by default so that it gets tested, the default
-> > > value should be extremely conservative, e.g. set the default to a sma=
-ll
-> > > percentage (25%?) of the latency of VM-Enter itself on modern CPUs,
-> > > VM-Enter latency being the min between VMLAUNCH and VMLOAD+VMRUN+VMSA=
-VE.
+>
+>
+> > On Jun 12, 2019, at 12:55 PM, Dave Hansen <dave.hansen@intel.com> wrote=
+:
 > >
-> > I share the sentiment.  We definitely must not enter the guest before
-> > the deadline has expired and CPUs are approaching 5 GHz (in turbo), so
-> > 300 ns would be too much even today.
+> >> On 6/12/19 10:08 AM, Marius Hillenbrand wrote:
+> >> This patch series proposes to introduce a region for what we call
+> >> process-local memory into the kernel's virtual address space.
 > >
-> > I wrote a simple testcase for rough timing and there are 267 cycles
-> > (111 ns @ 2.4 GHz) between doing rdtsc() right after
-> > kvm_wait_lapic_expire() [1] and doing rdtsc() in the guest as soon as
-> > possible (see the attached kvm-unit-test).
+> > It might be fun to cc some x86 folks on this series.  They might have
+> > some relevant opinions. ;)
+> >
+> > A few high-level questions:
+> >
+> > Why go to all this trouble to hide guest state like registers if all th=
+e
+> > guest data itself is still mapped?
+> >
+> > Where's the context-switching code?  Did I just miss it?
+> >
+> > We've discussed having per-cpu page tables where a given PGD is only in
+> > use from one CPU at a time.  I *think* this scheme still works in such =
+a
+> > case, it just adds one more PGD entry that would have to context-switch=
+ed.
 >
-> I forgot to attach it, pasting here as a patch for kvm-unit-tests.
+> Fair warning: Linus is on record as absolutely hating this idea. He might=
+ change his mind, but it=E2=80=99s an uphill battle.
 
-Thanks for this, Radim. :)
+I looked at the patch, and it (sensibly) has nothing to do with
+per-cpu PGDs.  So it's in great shape!
 
-Regards,
-Wanpeng Li
+Seriously, though, here are some very high-level review comments:
 
->
-> ---
-> diff --git a/x86/Makefile.common b/x86/Makefile.common
-> index e612dbe..ceed648 100644
-> --- a/x86/Makefile.common
-> +++ b/x86/Makefile.common
-> @@ -58,7 +58,7 @@ tests-common =3D $(TEST_DIR)/vmexit.flat $(TEST_DIR)/ts=
-c.flat \
->                 $(TEST_DIR)/init.flat $(TEST_DIR)/smap.flat \
->                 $(TEST_DIR)/hyperv_synic.flat $(TEST_DIR)/hyperv_stimer.f=
-lat \
->                 $(TEST_DIR)/hyperv_connections.flat \
-> -               $(TEST_DIR)/umip.flat
-> +               $(TEST_DIR)/umip.flat $(TEST_DIR)/vmentry_latency.flat
->
->  ifdef API
->  tests-api =3D api/api-sample api/dirty-log api/dirty-log-perf
-> diff --git a/x86/vmentry_latency.c b/x86/vmentry_latency.c
-> new file mode 100644
-> index 0000000..3859f09
-> --- /dev/null
-> +++ b/x86/vmentry_latency.c
-> @@ -0,0 +1,45 @@
-> +#include "x86/vm.h"
-> +
-> +static u64 get_last_hypervisor_tsc_delta(void)
-> +{
-> +       u64 a =3D 0, b, c, d;
-> +       u64 tsc;
-> +
-> +       /*
-> +        * The first vmcall is there to force a vm exit just before measu=
-ring.
-> +        */
-> +       asm volatile ("vmcall" : "+a"(a), "=3Db"(b), "=3Dc"(c), "=3Dd"(d)=
-);
-> +
-> +       tsc =3D rdtsc();
-> +
-> +       /*
-> +        * The second hypercall recovers the value that was stored when v=
-m
-> +        * entering to execute the rdtsc()
-> +        */
-> +       a =3D 11;
-> +       asm volatile ("vmcall" : "+a"(a), "=3Db"(b), "=3Dc"(c), "=3Dd"(d)=
-);
-> +
-> +       return tsc - a;
-> +}
-> +
-> +static void vmentry_latency(void)
-> +{
-> +       unsigned i =3D 1000000;
-> +       u64 min =3D -1;
-> +
-> +       while (i--) {
-> +               u64 latency =3D get_last_hypervisor_tsc_delta();
-> +               if (latency < min)
-> +                       min =3D latency;
-> +       }
-> +
-> +       printf("vm entry latency is %"PRIu64" TSC cycles\n", min);
-> +}
-> +
-> +int main(void)
-> +{
-> +       setup_vm();
-> +       vmentry_latency();
-> +
-> +       return 0;
-> +}
+Please don't call it "process local", since "process" is meaningless.
+Call it "mm local" or something like that.
+
+We already have a per-mm kernel mapping: the LDT.  So please nix all
+the code that adds a new VA region, etc, except to the extent that
+some of it consists of valid cleanups in and of itself.  Instead,
+please refactor the LDT code (arch/x86/kernel/ldt.c, mainly) to make
+it use a more general "mm local" address range, and then reuse the
+same infrastructure for other fancy things.  The code that makes it
+KASLR-able should be in its very own patch that applies *after* the
+code that makes it all work so that, when the KASLR part causes a
+crash, we can bisect it.
+
++ /*
++ * Faults in process-local memory may be caused by process-local
++ * addresses leaking into other contexts.
++ * tbd: warn and handle gracefully.
++ */
++ if (unlikely(fault_in_process_local(address))) {
++ pr_err("page fault in PROCLOCAL at %lx", address);
++ force_sig_fault(SIGSEGV, SEGV_MAPERR, (void __user *)address, current);
++ }
++
+
+Huh?  Either it's an OOPS or you shouldn't print any special
+debugging.  As it is, you're just blatantly leaking the address of the
+mm-local range to malicious user programs.
+
+Also, you should IMO consider using this mechanism for kmap_atomic().
+Hi, Nadav!
