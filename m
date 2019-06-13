@@ -2,88 +2,187 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D0FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9675CC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F038206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:00:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GQXJaktv"
+	by mail.kernel.org (Postfix) with ESMTP id 672B92080A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:00:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560445222;
+	bh=NTkyzDj/QTOLghrPG/JLDkCzWtcmWPclnCXZ6csi8dA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BpfIw5NvddccACZmJqkvhAiekLAmWRQ3EwfuB1PcFAUHroV5jd0Cbwxa6ylavMKZK
+	 oag/bBqImrCGPBQ62hLudX37chwxbiGPgtxvCHK/ZYm4Fo3YcV1NUj0W9gbJ5kbXWD
+	 pch8sS7TgIALwuG0D1CXFCOH/nUE/1hFkr25NbHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404367AbfFMRAN (ORCPT
+        id S2404501AbfFMRAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:00:13 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46862 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729781AbfFMAEp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 20:04:45 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 81so10588778pfy.13
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 17:04:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=enyuAfwIUm7QZb/zhVy1/4Va6a5/NPi/JrG9djy3bF8=;
-        b=GQXJaktvgKtFOEDW1sUlsUsVwTuVAnIA8hh4WjxCiXsXvlvtfRzGg7etclRAdgKv4U
-         4ShkffdYG971cLxlYNt6mPgcxcVKbfFPcLkX7gZMRMy0uHwgTA+CLDAnKeuUPidLGO3I
-         bqwz3QvEooRJpl5P8hL/GSorok8hu1ktGl9+0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=enyuAfwIUm7QZb/zhVy1/4Va6a5/NPi/JrG9djy3bF8=;
-        b=GO7klXVRSyR0iYziogSEp36FVatv8c19D71tyuNho1nVjpux64PVmJxGhZ1C6puPv4
-         MNOGs+fOT87reCWTkNaMczhiyMBo8FC0ffHGzYKOf1269EvjOSC+tZ7chzE3oNKXx7Xn
-         MyLYBpXTTz1lTKKCPUVT2FOG1rDJphNYrApLb2h8xqNk5nxfSTYedDkTNjoh62OE7Dmh
-         jNUS/17VtUpJ1drJkWmK0rYnyUbPxsLL+oQQYT3njZY/ufczTIgEpfoLHufdufWPs+W8
-         R1OIji2PONS8CRvIYWIIXtz8Tj6Wfl+daz1A7QFPslShq83g+PuX4oCPiDVujqjUBv+1
-         MPPA==
-X-Gm-Message-State: APjAAAWa/MCvTuFlmbC0Yv7E+uMa+vIsfjICIm6TYJeLpOSX4tLxXoZk
-        7AnzgRFsM5mn6UWl5TyRvdKaJQ==
-X-Google-Smtp-Source: APXvYqwO5UFiyckgdUgkZVSFQmP4vYWEFYVqaJ7SB58Em//0AXY36VhkhuJlG3u3XDCMdNZATgT/Wg==
-X-Received: by 2002:a17:90a:ba94:: with SMTP id t20mr1876181pjr.116.1560384284934;
-        Wed, 12 Jun 2019 17:04:44 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id x66sm642436pfx.139.2019.06.12.17.04.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 17:04:43 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 17:04:41 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>,
-        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Qais.Yousef@arm.com, juri.lelli@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 3/5] PM / QoS: Add support for MIN/MAX frequency
- constraints
-Message-ID: <20190613000441.GM137143@google.com>
-References: <cover.1560163748.git.viresh.kumar@linaro.org>
- <8c0ead9cc598f9eb7d15bd4878108b545368dd6e.1560163748.git.viresh.kumar@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <8c0ead9cc598f9eb7d15bd4878108b545368dd6e.1560163748.git.viresh.kumar@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 13 Jun 2019 13:00:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42690 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729779AbfFMAEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 20:04:31 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8381A215EA;
+        Thu, 13 Jun 2019 00:04:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560384270;
+        bh=NTkyzDj/QTOLghrPG/JLDkCzWtcmWPclnCXZ6csi8dA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PwhK9KDIoVeC2KXyMTN6hRechTgZcxmHUKfC6o0xKoyJM52N4EE9Tk90KuatIgf9i
+         3X905okdRCZm9quqBHQxd1WrrwOO1YuXMgfgt3pkNwWDgP6kbVmVhXk3xT+PbA37ho
+         198aMxiCu+sXlojynnQhbEz6gXddsNXhRzs7LkF4=
+Date:   Wed, 12 Jun 2019 17:04:29 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal =?ISO-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Roman Gushchin <guro@fb.com>, Dmitry Safonov <dima@arista.com>
+Subject: Re: [PATCH v2 5/6] proc: use down_read_killable mmap_sem for
+ /proc/pid/map_files
+Message-Id: <20190612170429.baaae5fe6d84b864508a3ec5@linux-foundation.org>
+In-Reply-To: <20190612231426.GA3639@gmail.com>
+References: <156007465229.3335.10259979070641486905.stgit@buzz>
+        <156007493995.3335.9595044802115356911.stgit@buzz>
+        <20190612231426.GA3639@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 04:21:34PM +0530, Viresh Kumar wrote:
-> This patch introduces the min-frequency and max-frequency device
-> constraints, which will be used by the cpufreq core to begin with.
+On Wed, 12 Jun 2019 16:14:28 -0700 Andrei Vagin <avagin@gmail.com> wrote:
+
+> On Sun, Jun 09, 2019 at 01:09:00PM +0300, Konstantin Khlebnikov wrote:
+> > Do not stuck forever if something wrong.
+> > Killable lock allows to cleanup stuck tasks and simplifies investigation.
 > 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> This patch breaks the CRIU project, because stat() returns EINTR instead
+> of ENOENT:
+> 
+> [root@fc24 criu]# stat /proc/self/map_files/0-0
+> stat: cannot stat '/proc/self/map_files/0-0': Interrupted system call
+> 
+> Here is one inline comment with the fix for this issue.
+> 
+> > @@ -2107,7 +2113,10 @@ static struct dentry *proc_map_files_lookup(struct inode *dir,
+> >  	if (!mm)
+> >  		goto out_put_task;
+> >  
+> > -	down_read(&mm->mmap_sem);
+> > +	result = ERR_PTR(-EINTR);
+> > +	if (down_read_killable(&mm->mmap_sem))
+> > +		goto out_put_mm;
+> > +
+> 
+> 	result = ERR_PTR(-ENOENT);
+> 
 
-Again, I'm mostly ignorant about QoS, in the context of the
-existing code (particularly looking at DEV_PM_QOS_RESUME_LATENCY)
-this looks reasonable to me. FWIW:
+yes, thanks.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+--- a/fs/proc/base.c~proc-use-down_read_killable-mmap_sem-for-proc-pid-map_files-fix
++++ a/fs/proc/base.c
+@@ -2117,6 +2117,7 @@ static struct dentry *proc_map_files_loo
+ 	if (down_read_killable(&mm->mmap_sem))
+ 		goto out_put_mm;
+ 
++	result = ERR_PTR(-ENOENT);
+ 	vma = find_exact_vma(mm, vm_start, vm_end);
+ 	if (!vma)
+ 		goto out_no_vma;
+
+
+
+We started doing this trick of using
+
+	ret = -EFOO;
+	if (something)
+		goto out;
+
+decades ago because it generated slightly better code.  I rather doubt
+whether that's still the case.
+
+In fact this:
+
+--- a/fs/proc/base.c~a
++++ a/fs/proc/base.c
+@@ -2096,35 +2096,45 @@ static struct dentry *proc_map_files_loo
+ 	struct dentry *result;
+ 	struct mm_struct *mm;
+ 
+-	result = ERR_PTR(-ENOENT);
+ 	task = get_proc_task(dir);
+-	if (!task)
++	if (!task) {
++		result = ERR_PTR(-ENOENT);
+ 		goto out;
++	}
+ 
+-	result = ERR_PTR(-EACCES);
+-	if (!ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS))
++	if (!ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS)) {
++		result = ERR_PTR(-EACCES);
+ 		goto out_put_task;
++	}
+ 
+-	result = ERR_PTR(-ENOENT);
+-	if (dname_to_vma_addr(dentry, &vm_start, &vm_end))
++	if (dname_to_vma_addr(dentry, &vm_start, &vm_end)) {
++		result = ERR_PTR(-ENOENT);
+ 		goto out_put_task;
++	}
+ 
+ 	mm = get_task_mm(task);
+-	if (!mm)
++	if (!mm) {
++		result = ERR_PTR(-ENOENT);
+ 		goto out_put_task;
++	}
+ 
+-	result = ERR_PTR(-EINTR);
+-	if (down_read_killable(&mm->mmap_sem))
++	if (down_read_killable(&mm->mmap_sem)) {
++		result = ERR_PTR(-EINTR);
+ 		goto out_put_mm;
++	}
+ 
+-	result = ERR_PTR(-ENOENT);
+ 	vma = find_exact_vma(mm, vm_start, vm_end);
+-	if (!vma)
++	if (!vma) {
++		result = ERR_PTR(-ENOENT);
+ 		goto out_no_vma;
++	}
+ 
+-	if (vma->vm_file)
++	if (vma->vm_file) {
+ 		result = proc_map_files_instantiate(dentry, task,
+ 				(void *)(unsigned long)vma->vm_file->f_mode);
++	} else {
++		result = ERR_PTR(-ENOENT);
++	}
+ 
+ out_no_vma:
+ 	up_read(&mm->mmap_sem);
+
+makes no change to the generated assembly with gcc-7.2.0.
+
+And I do think that the above style is clearer and more reliable, as
+this bug demonstrates.
+
