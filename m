@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3174EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8B6C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069E420644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9EB2147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443097;
-	bh=WnPZXcNzEfxMzANJxwkOhxhwm2dFitigp5+8teQ6OHs=;
+	s=default; t=1560443100;
+	bh=Atz/PVqdX2JmNW5ZQGp5ovEwbyHfj5+/BdW0PF7Ct24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cac6AXMDf4sUnDdurGuC+y6o+x29M/FOFKN4QMvRljQzW9EfrqJgJ2YfBccPavHIm
-	 aytltpckkSiKnI6ZNkzPtopCz9Psi+DePOpXMPKyvcpehx/Q1nHyxFs6D61UTRWP6E
-	 iun/UUkqow9hk9lT1l6vCOj5pnMkSxXJSv8swKNc=
+	b=VaPDPdw0q1fgY8ljJMJMEK0HP5o/XL9xIQCV+VnjOG2N8/mmyPIsIhBHt1gKVgDU3
+	 lgPNK/jMxjS5bGtoMczOQpBsUBnghRrdisITm64JgIUFHwa0RWbX6EXNSs0Ans6Mq6
+	 adisw7tH7d6n2Fw17pvZBe5sF1KMRIt/oLmdGPeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392127AbfFMQYz (ORCPT
+        id S2391943AbfFMQY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:24:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54358 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:24:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730983AbfFMIgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:36:55 -0400
+        id S1730984AbfFMIg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:36:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45E1E20851;
-        Thu, 13 Jun 2019 08:36:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4A282133D;
+        Thu, 13 Jun 2019 08:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415014;
-        bh=WnPZXcNzEfxMzANJxwkOhxhwm2dFitigp5+8teQ6OHs=;
+        s=default; t=1560415017;
+        bh=Atz/PVqdX2JmNW5ZQGp5ovEwbyHfj5+/BdW0PF7Ct24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OFS2q/a66LW4Zb8J6r/SCWOR5TtMxfsX34hQnUXss6v+2KvMo+fk/0IkCMkMTOuwQ
-         2wqi/1Xgz4QI4F6h1E7Mh9Bf8MrtoNY+Pevy5XEYfHRGYdjaXvfZxIDdpOWiP/pRpT
-         G5QZ0ZPr7HnIT37jHQhnOTviPFaF2WwQI7gYj40Y=
+        b=HhXdZenD5Ov3Gdwx3K2BMkV2MImNjXBEtTdU7nH5fBnMVEmabRS5+i/Y4NDAgpueU
+         Rvth8CDc8iScu1+cfxGa76A8Lj/xuM6Ov+sW754Hn0aXTZKiXJPLESsGShRC3pwi3B
+         K7gTSDKlOKch0gYzxx7R1Mqeh85LA9s4pPG8Znz8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 55/81] ARM: dts: imx6sx: Specify IMX6SX_CLK_IPG as "ahb" clock to SDMA
-Date:   Thu, 13 Jun 2019 10:33:38 +0200
-Message-Id: <20190613075653.237162041@linuxfoundation.org>
+        stable@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 38/81] iommu/vt-d: Set intel_iommu_gfx_mapped correctly
+Date:   Thu, 13 Jun 2019 10:33:21 +0200
+Message-Id: <20190613075652.152591981@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -65,43 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cc839d0f8c284fcb7591780b568f13415bbb737c ]
+[ Upstream commit cf1ec4539a50bdfe688caad4615ca47646884316 ]
 
-Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
-clock to determine if it needs to configure the IP block as operating
-at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
-clocks as IMX6SL_CLK_SDMA results in driver incorrectly thinking that
-ratio is 1:1 which results in broken SDMA funtionality. Fix the code
-to specify IMX6SL_CLK_AHB as "ahb" clock for SDMA, to avoid detecting
-incorrect clock ratio.
+The intel_iommu_gfx_mapped flag is exported by the Intel
+IOMMU driver to indicate whether an IOMMU is used for the
+graphic device. In a virtualized IOMMU environment (e.g.
+QEMU), an include-all IOMMU is used for graphic device.
+This flag is found to be clear even the IOMMU is used.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Angus Ainslie (Purism) <angus@akkea.ca>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Reported-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Fixes: c0771df8d5297 ("intel-iommu: Export a flag indicating that the IOMMU is used for iGFX.")
+Suggested-by: Kevin Tian <kevin.tian@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6sl.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/intel-iommu.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 3f76f980947e..bd9308b222ba 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -718,7 +718,7 @@
- 				reg = <0x020ec000 0x4000>;
- 				interrupts = <0 2 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6SL_CLK_SDMA>,
--					 <&clks IMX6SL_CLK_SDMA>;
-+					 <&clks IMX6SL_CLK_AHB>;
- 				clock-names = "ipg", "ahb";
- 				#dma-cells = <3>;
- 				/* imx6sl reuses imx6q sdma firmware */
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index fe935293fa7b..baa4c58e2736 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -4019,9 +4019,7 @@ static void __init init_no_remapping_devices(void)
+ 
+ 		/* This IOMMU has *only* gfx devices. Either bypass it or
+ 		   set the gfx_mapped flag, as appropriate */
+-		if (dmar_map_gfx) {
+-			intel_iommu_gfx_mapped = 1;
+-		} else {
++		if (!dmar_map_gfx) {
+ 			drhd->ignored = 1;
+ 			for_each_active_dev_scope(drhd->devices,
+ 						  drhd->devices_cnt, i, dev)
+@@ -4807,6 +4805,9 @@ int __init intel_iommu_init(void)
+ 		goto out_free_reserved_range;
+ 	}
+ 
++	if (dmar_map_gfx)
++		intel_iommu_gfx_mapped = 1;
++
+ 	init_no_remapping_devices();
+ 
+ 	ret = init_dmars();
 -- 
 2.20.1
 
