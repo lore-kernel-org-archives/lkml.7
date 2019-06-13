@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FC5C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D4AC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35828208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 199AB208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441726;
-	bh=R+J2GFuWWAezQyQpmaUHq2znXbw+AdAzBsI4QI5nUWc=;
+	s=default; t=1560441729;
+	bh=MJS7yvKUa19erwoVH5y45fZ1qZjemf3n4yflpZz+0dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hsQMy/y7aDBSE/yIR32GZS5tzi+pKpHU8wii9p7D7EqhNX6vLWg3Hgqg1Eg2u4A/G
-	 FkzHS7kcdL8DL8T8SyqwZkNtk22YSwykXrMFrIarOeKCr2Yhlt6XuZbVi9/iCnCtWr
-	 XIMruGZio740T36ZOBjeLPNPg9fS3HMnFKCm3PPc=
+	b=outAWVxqiad7A9/cB9i2BgTJwS9OikpUuly4RjKnmim/g4wXVDHRo8vNV7aD2TxZV
+	 iBxG5+xktO/YxIilV45EN3jnbKL7NpNU3oX6uC9rE0w3MZUtMgFz9xsysK8cZzfBy4
+	 F613oyNTvKk4wmFnuUE7nPhMWd3sJfFLCq79BVBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390936AbfFMQCB (ORCPT
+        id S2390914AbfFMQCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:02:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36036 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:02:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731408AbfFMIr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:47:58 -0400
+        id S1731413AbfFMIsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:48:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6838D20851;
-        Thu, 13 Jun 2019 08:47:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ECA9215EA;
+        Thu, 13 Jun 2019 08:48:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415677;
-        bh=R+J2GFuWWAezQyQpmaUHq2znXbw+AdAzBsI4QI5nUWc=;
+        s=default; t=1560415686;
+        bh=MJS7yvKUa19erwoVH5y45fZ1qZjemf3n4yflpZz+0dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FncZgWe8dEO64ykPtyfX9/0P67N14ZVXBpykWid+pGqiI+NOYkeIKrCdMGlEN3Xee
-         kCoy7gsK9rQrC5/4JHkB5BgFU+toPlXKxrIcuezufYehtz4ZXagSJt5HjFRfAXMbEK
-         0lqaoEmk1HQIuOrLrf0FOh2DjOgmQyj2H0geP9do=
+        b=LeHxfZ3M6u3nsak/tpsowCZe/jNiS7tAUb7vFTRY5zbtdVOMy1JEWyDTN9q+PtfeW
+         B8HlkEJL+UHj+govU2HitSJKPVmTN0nSmVeBa3VGhegfYPZ6548Zvd3/BjWeE6Z5ia
+         2KGsVjRsr1e8xQbgfpQ8e2IdiaZVVVcf51vHEXcM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org,
+        "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 086/155] nfsd: allow fh_want_write to be called twice
-Date:   Thu, 13 Jun 2019 10:33:18 +0200
-Message-Id: <20190613075657.904410856@linuxfoundation.org>
+Subject: [PATCH 5.1 089/155] iommu/arm-smmu-v3: Dont disable SMMU in kdump kernel
+Date:   Thu, 13 Jun 2019 10:33:21 +0200
+Message-Id: <20190613075658.081599160@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -59,49 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0b8f62625dc309651d0efcb6a6247c933acd8b45 ]
+[ Upstream commit 3f54c447df34ff9efac7809a4a80fd3208efc619 ]
 
-A fuzzer recently triggered lockdep warnings about potential sb_writers
-deadlocks caused by fh_want_write().
+Disabling the SMMU when probing from within a kdump kernel so that all
+incoming transactions are terminated can prevent the core of the crashed
+kernel from being transferred off the machine if all I/O devices are
+behind the SMMU.
 
-Looks like we aren't careful to pair each fh_want_write() with an
-fh_drop_write().
+Instead, continue to probe the SMMU after it is disabled so that we can
+reinitialise it entirely and re-attach the DMA masters as they are reset.
+Since the kdump kernel may not have drivers for all of the active DMA
+masters, we suppress fault reporting to avoid spamming the console and
+swamping the IRQ threads.
 
-It's not normally a problem since fh_put() will call fh_drop_write() for
-us.  And was OK for NFSv3 where we'd do one operation that might call
-fh_want_write(), and then put the filehandle.
-
-But an NFSv4 protocol fuzzer can do weird things like call unlink twice
-in a compound, and then we get into trouble.
-
-I'm a little worried about this approach of just leaving everything to
-fh_put().  But I think there are probably a lot of
-fh_want_write()/fh_drop_write() imbalances so for now I think we need it
-to be more forgiving.
-
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Reported-by: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Tested-by: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/vfs.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/iommu/arm-smmu-v3.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index a7e107309f76..db351247892d 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -120,8 +120,11 @@ void		nfsd_put_raparams(struct file *file, struct raparms *ra);
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index d3880010c6cf..d8b73da6447d 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -2454,13 +2454,9 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
+ 	/* Clear CR0 and sync (disables SMMU and queue processing) */
+ 	reg = readl_relaxed(smmu->base + ARM_SMMU_CR0);
+ 	if (reg & CR0_SMMUEN) {
+-		if (is_kdump_kernel()) {
+-			arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
+-			arm_smmu_device_disable(smmu);
+-			return -EBUSY;
+-		}
+-
+ 		dev_warn(smmu->dev, "SMMU currently enabled! Resetting...\n");
++		WARN_ON(is_kdump_kernel() && !disable_bypass);
++		arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
+ 	}
  
- static inline int fh_want_write(struct svc_fh *fh)
- {
--	int ret = mnt_want_write(fh->fh_export->ex_path.mnt);
-+	int ret;
+ 	ret = arm_smmu_device_disable(smmu);
+@@ -2553,6 +2549,8 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
+ 		return ret;
+ 	}
  
-+	if (fh->fh_want_write)
-+		return 0;
-+	ret = mnt_want_write(fh->fh_export->ex_path.mnt);
- 	if (!ret)
- 		fh->fh_want_write = true;
- 	return ret;
++	if (is_kdump_kernel())
++		enables &= ~(CR0_EVTQEN | CR0_PRIQEN);
+ 
+ 	/* Enable the SMMU interface, or ensure bypass */
+ 	if (!bypass || disable_bypass) {
 -- 
 2.20.1
 
