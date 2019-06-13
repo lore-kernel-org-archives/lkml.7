@@ -2,121 +2,79 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72D7C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F68C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B35420449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C97320449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:36:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d21HABiS"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KyS1UsvA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389679AbfFMQfl (ORCPT
+        id S2392582AbfFMQgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:35:41 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39067 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404046AbfFMQf3 (ORCPT
+        Thu, 13 Jun 2019 12:36:06 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:48700 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726795AbfFMQfx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:35:29 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z23so10797361wma.4;
-        Thu, 13 Jun 2019 09:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CdU3AkHiGyVIlUJsXB82LDChYizZRFvTCAKkkb1a9Bo=;
-        b=d21HABiSP22hYq6h2HqZvldGkD4KwFsLbe2nO07JgkifWj0n4vD0ejq10JdusropKA
-         YP96a/ggrRLmwTlidX1zYOwLTTXsiJH551QUJmoK4cBh4WpCxGKz8Kn/uYGhb06UfZ6N
-         j4RdWgRKhPgN188N8oiDPBv7oyI+9je3uKohQdNf8sDXc3H4AbKIcuQ78mwtlfjhhR3B
-         zzFLHCGl6Fo1DTuchVDz1NHIjsQaDgroHBpaqatm9Se8lPtL4zAs0xVTjn3sgeW9GJn3
-         iB9UyijNjXwP/DSzbp2aWx+gJ6Z0MzidOSvO9rdIx9m/7DS/nsMx/v6vhYTVOkMvACWL
-         mNMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CdU3AkHiGyVIlUJsXB82LDChYizZRFvTCAKkkb1a9Bo=;
-        b=h9Volw+ShA/ku7NZl+wH3H5+RfenS5bYObJrpy2D8J7PNtZQ5IFNg9aXgUFmaB93KT
-         QiYdh++8uo/Y7biC77TFHDXN34JGSUNh7kGP4JbKOERMDfNodocBsaOO2GfH5z0oGW8r
-         mMIiOVn+IZBz0Kqkd6WLCqs4zI9t2fOhB42Urp0WYD8cMFSmsbN5/C/X6wQLbr47WRkk
-         nz2UlC+Tjx+zeKtt/63bDdcjR/CZhh+RJz2+/MIw3f8YdZkq3Fex0hGSddrLjK6Y1FGW
-         LA6BHKZsK58+k60T9/Wqgulh5v7EoX2r7kkZhRMMojkOqKtCVpYvGGj4w66WKSIXR5lE
-         XIyA==
-X-Gm-Message-State: APjAAAUZNd9vm0VTW7x1CAkK1z6DXsFhe1kf+Sq+JGmAKcDXWiWpKQ7m
-        yRmEbc/ouRey7h4b5TXA6Vk=
-X-Google-Smtp-Source: APXvYqzTMsGQ5gi7WuA5z1F9IWEkNjr/KmvxNpinkh3KQ2V8PASKooKQ8TQ9V8D6BrB+t6HYIGVZmQ==
-X-Received: by 2002:a7b:c251:: with SMTP id b17mr4698049wmj.143.1560443726939;
-        Thu, 13 Jun 2019 09:35:26 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id d18sm223569wrn.26.2019.06.13.09.35.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 09:35:26 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 18:35:25 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     joro@8bytes.org, m.szyprowski@samsung.com, kgene@kernel.org,
-        krzk@kernel.org, will.deacon@arm.com, robin.murphy@arm.com,
-        agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com,
-        heiko@sntech.de, jonathanh@nvidia.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 10/10] iommu/tegra-smmu: convert to SPDX license tags
-Message-ID: <20190613163525.GB3258@ulmo>
-References: <20190613162703.986-1-tiny.windzz@gmail.com>
- <20190613162703.986-10-tiny.windzz@gmail.com>
+        Thu, 13 Jun 2019 12:35:53 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id F0CFE52B;
+        Thu, 13 Jun 2019 18:35:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1560443751;
+        bh=xYJTnR0BQQsX9pSkqK7GIQ6uoOB+X60qJ0Nav0xrwYE=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=KyS1UsvAm48Ahvvu+6wlakTthmDnIYVISXTkkNlPky7ERMbQ1PMQXh6v0ldpM28nm
+         aIDWrWBjv/Pd6LtreDBJoFGhYFGnCv4BG852XXxKhNq8AXCGb4X4LpaxjbB8IYr2MB
+         NGeOj4EUmKkSGfBqRLqdpqUCITWZ2pZe2FM1qqug=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH 1/4] media: cxd2820r: don't check retval after our own
+ assignemt
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Antti Palosaari <crope@iki.fi>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20190613155421.16408-1-wsa+renesas@sang-engineering.com>
+ <20190613155421.16408-2-wsa+renesas@sang-engineering.com>
+ <550e0dbf-1776-000b-27ca-40e40e317da2@ideasonboard.com>
+ <20190613161922.GA5015@kunai>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <cbf928b6-33d6-d412-87dd-05f1fb5f1b6c@ideasonboard.com>
+Date:   Thu, 13 Jun 2019 17:35:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xgyAXRrhYN0wYx8y"
-Content-Disposition: inline
-In-Reply-To: <20190613162703.986-10-tiny.windzz@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190613161922.GA5015@kunai>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Wolfram,
 
---xgyAXRrhYN0wYx8y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 13/06/2019 17:19, Wolfram Sang wrote:
+> 
+>> In the title/subject:
+>>
+>> media: cxd2820r: don't check retval after our own assignemt
+>>
+>> s/assignemt/assignment/
+> 
+> Eeeks, in deed :( Shall I resend? Sorry for the noise.
+> 
 
-On Thu, Jun 13, 2019 at 12:27:03PM -0400, Yangtao Li wrote:
-> Updates license to use SPDX-License-Identifier.
->=20
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  drivers/iommu/tegra-smmu.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---xgyAXRrhYN0wYx8y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Ce00ACgkQ3SOs138+
-s6FKzA//cTztUQT0grkWSjIr7uw4dhz8d4QkKoLpgJNMBy86/9lW7oGsYjGSTQd8
-TElU4HT1/mbjm22/k8CS7uzTkDVIzJpLTMWIsvzJ8xlBD81/lnzau+NgzFxbCe+D
-4FwpGJd9wsi1b3h1eWFzxsrY8xi17liG26hKPMl5I0uvPs0XXgIJxLvxshpwU5IH
-p+Q7EDpSkcbtyxJCFcVNWQsAi0SsDawMHk42EHYEZYqgywlMfWqW/nisTODLcQGy
-dWKABd5zclXza3ISw77plAvPu/7XZ79QGOLVadS2qEydL2Ec8cJg2JZovnn3hl3U
-5Q7R7dq+3ArKEQXYiUhUNxNJ+pjiusO2mgn2elLB8gMcf3UehFZ6lVhFbkOete7H
-rA5gaZhZd1nDC9J3wuTnCjlLDvWB/IcapgPLEiP1rvvAUJCgaQmAWgzsJs8wXm1B
-robCwCzXX9q7ktjBLpeVGrrFtPDruXHWC1qcQI//nJdr7QPhliTbgrSt5+H83eY/
-07UXShb9r+n+v4j8slwC6G9uuMZzq0o0OowDC3PXc5S+GXruiyVt1wB2+Z6RTvbF
-P0mHLRfpPnsxC9YBejsrhVCRWHS71CQc9xuuRczo0smJXlmb3sU5KGZhZJaHWNTs
-nPbGRR7vEW3lhNbSpACEZzLweA6/ALaRgri+qx3cHHnx6biX+A4=
-=nAP7
------END PGP SIGNATURE-----
-
---xgyAXRrhYN0wYx8y--
+Not necessary for me, so I guess that's up to Mauro/Hans.
+Not sure who will pick these up and apply them.
+--
+Kieran
