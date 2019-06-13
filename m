@@ -2,114 +2,102 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80808C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE48C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA5E3206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F194206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:26:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intenta.de header.i=@intenta.de header.b="MeM9nY7f"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UOJA6IDR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfFMP0Z (ORCPT
+        id S1728997AbfFMP0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:26:25 -0400
-Received: from mail.intenta.de ([178.249.25.132]:34947 "EHLO mail.intenta.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729176AbfFMLoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 07:44:02 -0400
-X-Greylist: delayed 359 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Jun 2019 07:44:01 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
-        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:CC:To:From:Date; bh=QQPcew8OO4uWb22KfzOtVt5mqOvY+NBIVgehiNO+p5g=;
-        b=MeM9nY7f3cZ90lL4rVQxYVufUJWVijCGsM8VNa570Vmemc9Y+dPh2CCk5QfPO4GgEQUkL4OOlgOR4WhNgsmBoKs2WpSYk3Kg5aXldYB6IXl7JmJyoCOrpFeuO25V4zrTlJCrDErXf//tD2uVv+ns67OSh4os0L8yg52I4x1CGatCTdyIUC7XBlk0KBce244jX/LJEfkIb3Y+6aEnWG0PJBoDtWLmtDZDhY4Z5g4BCxHFamAOkk/A8HFC8oIWvFrfWAICoZf0GmntVxKisUifc3lPHOQV3USodD50SuOMP3ZkMXbNipcN+pxWQTz5pOJt2kmnNMJxxVROtECIevg8xg==;
-X-CTCH-RefID: str=0001.0A0C0201.5D023595.00A2,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Date:   Thu, 13 Jun 2019 13:37:57 +0200
-From:   Helmut Grohne <helmut.grohne@intenta.de>
-To:     Naga Sureshkumar Relli <nagasure@xilinx.com>
-CC:     "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        "nagasureshkumarrelli@gmail.com" <nagasureshkumarrelli@gmail.com>
-Subject: Re: [LINUX PATCH v14] mtd: rawnand: pl353: Add basic driver for arm
- pl353 smc nand interface
-Message-ID: <20190613113756.53nzb6o2vuurep2a@laureti-dev>
-References: <1555326613-26739-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
- <20190425112338.dipgmqqfuj45gx6s@laureti-dev>
- <DM6PR02MB4779EE37978EC0E6475C55D7AF390@DM6PR02MB4779.namprd02.prod.outlook.com>
- <20190429121804.4jzspv4goehwdpez@laureti-dev>
- <BYAPR02MB4776C0226F9A9F55C9A6DE44AFEF0@BYAPR02MB4776.namprd02.prod.outlook.com>
+        Thu, 13 Jun 2019 11:26:32 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8638 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729165AbfFMLnm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 07:43:42 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0236ed0000>; Thu, 13 Jun 2019 04:43:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 13 Jun 2019 04:43:41 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 13 Jun 2019 04:43:41 -0700
+Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Jun
+ 2019 11:43:37 +0000
+Subject: Re: [PATCH V5 6/7] i2c: tegra: fix PIO rx/tx residual transfer check
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
+        "Dmitry Osipenko" <digetx@gmail.com>,
+        Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1560250274-18499-1-git-send-email-bbiswas@nvidia.com>
+ <1560250274-18499-6-git-send-email-bbiswas@nvidia.com>
+ <20190612102458.liieiohnprfyyvs6@ninjato>
+From:   Bitan Biswas <bbiswas@nvidia.com>
+Message-ID: <2157c7f9-fe83-2fd6-745e-4a4283a2293f@nvidia.com>
+Date:   Thu, 13 Jun 2019 04:43:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <BYAPR02MB4776C0226F9A9F55C9A6DE44AFEF0@BYAPR02MB4776.namprd02.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
- (10.10.16.48)
+In-Reply-To: <20190612102458.liieiohnprfyyvs6@ninjato>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560426221; bh=OTRRal3/SqNWKvrRP4mxKVhuOpOkfAWN1luMPgJFCbs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=UOJA6IDRtWFI9H69sNPaAuTN/acWQ0Njt5onyc0RtodwSJxDqqxHde2JIhCU0bxx/
+         R6KdysrodVxr1qSNnttlsUgv+kOdsoSIuq9ZtG3gwQPlrW6bsahI5jgY7PFGPWXrV1
+         UTZBFQMa5FvlDDpwEJQ0ryf9QYQCvam6EyiKdR8YLHvB5TJGbAGuhQEwa8Cf4VXIgs
+         pcvkZHSU3gYKy2xfXpqddYOxKPpDmTpan9gJZPt1hrcgXKmuzU8rC901FE8fUtsRwu
+         o5efMpAJn+wM44xF5m/fNEuFuSNl6EkeWk4VAyLBB2p49C4rx7AT5dww0RTcxsEqBL
+         57yk4Lpwb46Mw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Naga,
 
-On Thu, Jun 13, 2019 at 10:18:00AM +0000, Naga Sureshkumar Relli wrote:
-> I spent much of time to address all your comments.
-> All are addressed and tested. except the above one(address offset calculation)
-> I didn't see any issue with the address calculation.
 
-Let me first point out that this comment was not trying to imply a bug.
-I was trying to understand the code by comparing it to similar code and
-that turned up an inconsistency, which can be intentional or a bug in
-either of the sides being compared.
-
-> for (i = 0; i < min_t(unsigned int, 4, naddrs); i++) {
-> 	nfc_op->addrs |= instr->ctx.addr.addrs[i] <<
-> 			 (8 * i);
-> }
-> If you go through the nand_base.c, there nand_fill_column_cycles() API, fills the first two or one address cycle
-> Based on bus width and page size.
-> That means, addrs[0]/[1] will be updated here.
-
-The problem at hand is that `addrs` is imprecise. In this code, there
-are `instr->ctx.addr.addrs`, `addrs`, and `nfc_op->addrs`. All of them
-are different. My original remark was targeting the possible confusion
-of these different `addrs`.
-
-> And the page is updated to the next offsets.
-> In the similar way we have to extract the offsets in driver.
-> So the first four address bytes are stored using the above for() loop and if the
-> Address cycles are more than 4, then store the remaining offsets as well.
+On 6/12/19 3:24 AM, Wolfram Sang wrote:
+> On Tue, Jun 11, 2019 at 03:51:13AM -0700, Bitan Biswas wrote:
+>> Fix expression for residual bytes(less than word) transfer
+>> in I2C PIO mode RX/TX.
+>>
+>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
 > 
-> I just compared the offsets that are updated in driver with the offsets(page and column) that the frame work(nand_base.c) is sending, and the offsets are same.
-> I have also checked these offsets with older driver(not exec_op() implemented) and both are matching.
+> I applied patches 1-5 to my for-next tree now. No need to resend them
+> anymore, you can focus on the remaining patches now.
 > 
-> So I didn't see any issue with this addrs calculation.
-> As per the statement mentioned by you, this driver consumes addr[0], addr[1], addr[2], addr[3] and
-> If more address cycles needed, then addr[4] and addr[5]. This is correct.
+> Question: The nominal maintainer for this driver is
+> 
+>          Laxman Dewangan <ldewangan@nvidia.com> (supporter:TEGRA I2C DRIVER)
+> 
+> I wonder if he is still around and interested?
+> 
+> That aside, thanks a lot Dmitry for the review of this series!
+> 
+Thanks Wolfram. I shall work on remaining patches.
 
-Again, the lack of precision makes it difficult to discuss the matter.
-You refer to `addr`, but there is no `addr`. I assume that you meant
-`addrs` here. Based on that assumption, your second last statement is
-wrong. The driver consumes `addrs[0]|addrs[-offset]` rather than
-`addrs[0]` as the first byte.  Then it proceeds consuming
-`addrs[1-offset]` instead of `addrs[1]`, `addrs[2-offset]` instead of
-`addrs[2]`, and `addrs[3-offset]` instead of `addrs[3]`. Finally it
-consumes `addrs[4]` and `addrs[5]` if more cycles are needed.
 
-I would not have commented the code if it were actually using `addrs[0]`
-through `addrs[5]`. Your description looks reasonable to me, but it
-doesn't match the code.
 
-I'm looking forward to the next version of the patch.
-
-Helmut
