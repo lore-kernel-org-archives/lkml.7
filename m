@@ -5,51 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFE0C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9F2C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D302820679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4DB020851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441628;
-	bh=XLkufEsEZBuRqb2pPmA7YNzFgIHzzj0W7dsrIzOrwAU=;
+	s=default; t=1560441640;
+	bh=Fn/BZnm2Tk9XwXfjdqcyenLpHQeLwkYMXwttEoI4MRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BUeTTppZrZMvheDtcFLtgZbtu1dpOa+cTnB2mVgyMUUq57OyKe+7L6IgYg4XDnyE6
-	 0b2tmBjTR/Y0TpeQyToEYrDFvXEdYw1cMSQ1o98kC9xhc+mJseZ1ptT2iwe1bmiWjv
-	 JepUeD9oioC2qLfuAwYtfYQgOj1FJKU553lEPdCk=
+	b=aCeAMZaK3+5yVvxYufGsW5gCdJslO/yMDfaWu++l/kX76tZ8IY9oRdmNYlNrn9BCM
+	 8R3kvRqp7v3nwE1oF5Bvr/recWkM2JfGVlPW0+/gYhCbcqqwJcy5OpgfdVljymtRb5
+	 MbehETFDE7wQZ/l8wugqVpsXGN9EE2jAL1bsecnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388888AbfFMQA1 (ORCPT
+        id S2390370AbfFMQAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:00:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36960 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:00:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731466AbfFMItG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:49:06 -0400
+        id S1731461AbfFMIsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:48:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9A8120851;
-        Thu, 13 Jun 2019 08:49:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36D03206BA;
+        Thu, 13 Jun 2019 08:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415746;
-        bh=XLkufEsEZBuRqb2pPmA7YNzFgIHzzj0W7dsrIzOrwAU=;
+        s=default; t=1560415734;
+        bh=Fn/BZnm2Tk9XwXfjdqcyenLpHQeLwkYMXwttEoI4MRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HdQo7HE+iwe2B3ksMi5GzZa6S1iFxRDxyl76pMsA3fcoemFze23RHixxCafB2JO+l
-         sZnrHxOPARnOLFbvTzB6wxpfu4YoiB69JJAE1HTf+ceQ0cPZRAsxmgxz56FwjIjCcc
-         eFanqgpW1wCwWTV7pHf3SF4G2ZNMhogYbRZ8CIR8=
+        b=nMOfOsFl0S9sPe8pFivQGAh/7as/sEobX5e3MjZeBJQ8LQW36559aYaQsl5yVXl8y
+         UaRAeafchGUGIkr6ciHsNDus66sFKO3KUqV/KZQQcnfZ11GJrSBjG41gnbmIDvZcuh
+         4BbZvhBwsJit/O5t4mGtu+sN2+JyTtzfhw1XZIng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Adam Ludkiewicz <adam.ludkiewicz@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 094/155] i40e: Queues are reserved despite "Invalid argument" error
-Date:   Thu, 13 Jun 2019 10:33:26 +0200
-Message-Id: <20190613075658.342251502@linuxfoundation.org>
+Subject: [PATCH 5.1 108/155] ARM: dts: imx6sx: Specify IMX6SX_CLK_IPG as "ahb" clock to SDMA
+Date:   Thu, 13 Jun 2019 10:33:40 +0200
+Message-Id: <20190613075659.031264916@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -62,48 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3e957b377bf4262aec2dd424f28ece94e36814d4 ]
+[ Upstream commit cc839d0f8c284fcb7591780b568f13415bbb737c ]
 
-Added a new local variable in the i40e_setup_tc function named
-old_queue_pairs so num_queue_pairs can be restored to the correct
-value in case configuring queue channels fails. Additionally, moved
-the exit label in the i40e_setup_tc function so the if (need_reset)
-block can be executed.
-Also, fixed data packing in the i40e_setup_tc function.
+Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
+clock to determine if it needs to configure the IP block as operating
+at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
+clocks as IMX6SL_CLK_SDMA results in driver incorrectly thinking that
+ratio is 1:1 which results in broken SDMA funtionality. Fix the code
+to specify IMX6SL_CLK_AHB as "ahb" clock for SDMA, to avoid detecting
+incorrect clock ratio.
 
-Signed-off-by: Adam Ludkiewicz <adam.ludkiewicz@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/imx6sl.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index ac9fcb097689..133f5e008822 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -6854,10 +6854,12 @@ static int i40e_setup_tc(struct net_device *netdev, void *type_data)
- 	struct i40e_pf *pf = vsi->back;
- 	u8 enabled_tc = 0, num_tc, hw;
- 	bool need_reset = false;
-+	int old_queue_pairs;
- 	int ret = -EINVAL;
- 	u16 mode;
- 	int i;
- 
-+	old_queue_pairs = vsi->num_queue_pairs;
- 	num_tc = mqprio_qopt->qopt.num_tc;
- 	hw = mqprio_qopt->qopt.hw;
- 	mode = mqprio_qopt->mode;
-@@ -6958,6 +6960,7 @@ config_tc:
- 		}
- 		ret = i40e_configure_queue_channels(vsi);
- 		if (ret) {
-+			vsi->num_queue_pairs = old_queue_pairs;
- 			netdev_info(netdev,
- 				    "Failed configuring queue channels\n");
- 			need_reset = true;
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 4b4813f176cd..1f2a4ed99ed3 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -741,7 +741,7 @@
+ 				reg = <0x020ec000 0x4000>;
+ 				interrupts = <0 2 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SL_CLK_SDMA>,
+-					 <&clks IMX6SL_CLK_SDMA>;
++					 <&clks IMX6SL_CLK_AHB>;
+ 				clock-names = "ipg", "ahb";
+ 				#dma-cells = <3>;
+ 				/* imx6sl reuses imx6q sdma firmware */
 -- 
 2.20.1
 
