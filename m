@@ -2,54 +2,53 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22884C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50ED9C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECB9220665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A1B520665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442609;
-	bh=ps35N8dXyDT8sBbLKr32CXqTHpRjXSBruuA29nDeFZI=;
+	s=default; t=1560442611;
+	bh=ca8hpd4iCLHcAhRM0DE9ZQQoexWnVF4x/YufQSM3HeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hK+I4sKZ3IBW57a7VS0nnPtYq+VpjseDVTrbfVFChGej2Hsc99hQF36CzLHs/FRHz
-	 FXDH6qRxo5DrOmgiZbqOp7SB4PZ/GTeSGQmyHxv01kxdlr9yBSNcmjcv425RMpjTwI
-	 YRuWshHnbRtLQ5cXDS7tULYkIIplVc82BVOcD650=
+	b=VzMYTBmhJf6rukajT8Dt8ygMWmhR1KT1V8WzeIsuhFkbCOXVfXgE8Ql8eU6HlAVHi
+	 mUDlj2OeEy0IP3uNf+pFAAf2Cjr5PmEgyv0/bt+fT1ykne5QMcNNdl5JaKk+a2mHiC
+	 wVO3gK7vr1B4hRgijI/scutKPY3+kLAQTrS/gVQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391512AbfFMQQs (ORCPT
+        id S2391761AbfFMQQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:16:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58534 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:16:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731149AbfFMIlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:41:17 -0400
+        id S1731148AbfFMIlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:41:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E1FB21473;
-        Thu, 13 Jun 2019 08:41:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5225921479;
+        Thu, 13 Jun 2019 08:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415276;
-        bh=ps35N8dXyDT8sBbLKr32CXqTHpRjXSBruuA29nDeFZI=;
+        s=default; t=1560415273;
+        bh=ca8hpd4iCLHcAhRM0DE9ZQQoexWnVF4x/YufQSM3HeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q3ilWpdKktSZi8GH7Jeqk+XuOkO/wpmztXezIcj/qvuPIEYzNTww4tL7mVxUvxBAw
-         Pd6Ivu9kGbBbGgoOC9tEBdSev2NDSxqEtx3jc4EIgRj4/ii3jvYLLSaCzOSjydOTup
-         MDvyVApfYW2Qm2G3YKoK2vX0P69hywRQuzI05JmQ=
+        b=FlYBAZlE7dPaQOvgb+aabNGv74RQXfQvndRZ9eM+nsuSws7mocZq9GcdfPyIPPrFA
+         cNCYDwUv73PLBSXTY7Ua9VFv51Zi5mv7tSQknYU3GGnz9w/EK3/hlwj1wndWDCGvfK
+         4dVZM2ghfL4l4FEcXAgEUaT1LoXInkysM4jBSoek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kirill Smelkov <kirr@nexedi.com>,
-        Han-Wen Nienhuys <hanwen@google.com>,
-        Jakob Unterwurzacher <jakobunt@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 066/118] fuse: retrieve: cap requested size to negotiated max_write
-Date:   Thu, 13 Jun 2019 10:33:24 +0200
-Message-Id: <20190613075647.675913876@linuxfoundation.org>
+Subject: [PATCH 4.19 065/118] nvmem: sunxi_sid: Support SID on A83T and H5
+Date:   Thu, 13 Jun 2019 10:33:23 +0200
+Message-Id: <20190613075647.617270423@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -62,61 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7640682e67b33cab8628729afec8ca92b851394f ]
+[ Upstream commit da75b8909756160b8e785104ba421a20b756c975 ]
 
-FUSE filesystem server and kernel client negotiate during initialization
-phase, what should be the maximum write size the client will ever issue.
-Correspondingly the filesystem server then queues sys_read calls to read
-requests with buffer capacity large enough to carry request header + that
-max_write bytes. A filesystem server is free to set its max_write in
-anywhere in the range between [1*page, fc->max_pages*page]. In particular
-go-fuse[2] sets max_write by default as 64K, wheres default fc->max_pages
-corresponds to 128K. Libfuse also allows users to configure max_write, but
-by default presets it to possible maximum.
+The device tree binding already lists compatible strings for these two
+SoCs. They don't have the defect as seen on the H3, and the size and
+register layout is the same as the A64. Furthermore, the driver does
+not include nvmem cell definitions.
 
-If max_write is < fc->max_pages*page, and in NOTIFY_RETRIEVE handler we
-allow to retrieve more than max_write bytes, corresponding prepared
-NOTIFY_REPLY will be thrown away by fuse_dev_do_read, because the
-filesystem server, in full correspondence with server/client contract, will
-be only queuing sys_read with ~max_write buffer capacity, and
-fuse_dev_do_read throws away requests that cannot fit into server request
-buffer. In turn the filesystem server could get stuck waiting indefinitely
-for NOTIFY_REPLY since NOTIFY_RETRIEVE handler returned OK which is
-understood by clients as that NOTIFY_REPLY was queued and will be sent
-back.
+Add support for these two compatible strings, re-using the config for
+the A64.
 
-Cap requested size to negotiate max_write to avoid the problem.  This
-aligns with the way NOTIFY_RETRIEVE handler works, which already
-unconditionally caps requested retrieve size to fuse_conn->max_pages.  This
-way it should not hurt NOTIFY_RETRIEVE semantic if we return less data than
-was originally requested.
-
-Please see [1] for context where the problem of stuck filesystem was hit
-for real, how the situation was traced and for more involving patch that
-did not make it into the tree.
-
-[1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
-[2] https://github.com/hanwen/go-fuse
-
-Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-Cc: Han-Wen Nienhuys <hanwen@google.com>
-Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/dev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvmem/sunxi_sid.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -1681,7 +1681,7 @@ static int fuse_retrieve(struct fuse_con
- 	offset = outarg->offset & ~PAGE_MASK;
- 	file_size = i_size_read(inode);
- 
--	num = outarg->size;
-+	num = min(outarg->size, fc->max_write);
- 	if (outarg->offset > file_size)
- 		num = 0;
- 	else if (outarg->offset + num > file_size)
+diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
+index d020f89248fd..69f8e972e29c 100644
+--- a/drivers/nvmem/sunxi_sid.c
++++ b/drivers/nvmem/sunxi_sid.c
+@@ -235,8 +235,10 @@ static const struct sunxi_sid_cfg sun50i_a64_cfg = {
+ static const struct of_device_id sunxi_sid_of_match[] = {
+ 	{ .compatible = "allwinner,sun4i-a10-sid", .data = &sun4i_a10_cfg },
+ 	{ .compatible = "allwinner,sun7i-a20-sid", .data = &sun7i_a20_cfg },
++	{ .compatible = "allwinner,sun8i-a83t-sid", .data = &sun50i_a64_cfg },
+ 	{ .compatible = "allwinner,sun8i-h3-sid", .data = &sun8i_h3_cfg },
+ 	{ .compatible = "allwinner,sun50i-a64-sid", .data = &sun50i_a64_cfg },
++	{ .compatible = "allwinner,sun50i-h5-sid", .data = &sun50i_a64_cfg },
+ 	{/* sentinel */},
+ };
+ MODULE_DEVICE_TABLE(of, sunxi_sid_of_match);
+-- 
+2.20.1
+
 
 
