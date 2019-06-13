@@ -2,230 +2,239 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E338C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2DBC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6812063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911B32063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:52:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="afRoLu+5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389969AbfFMPwZ (ORCPT
+        id S1732275AbfFMPwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:52:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34636 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731642AbfFMJKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:10:25 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5E94588E63;
-        Thu, 13 Jun 2019 09:10:14 +0000 (UTC)
-Received: from [10.72.12.64] (ovpn-12-64.pek2.redhat.com [10.72.12.64])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AECB45F9B0;
-        Thu, 13 Jun 2019 09:09:50 +0000 (UTC)
-Subject: Re: memory leak in vhost_net_ioctl
-To:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+0789f0c7e45efd7bb643@syzkaller.appspotmail.com>
-Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mst@redhat.com,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        virtualization@lists.linux-foundation.org,
-        xdp-newbies@vger.kernel.org
-References: <20190606144013.9884-1-hdanton@sina.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <4664ac5d-07b7-a141-4130-b563b7974181@redhat.com>
-Date:   Thu, 13 Jun 2019 17:09:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 11:52:41 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33100 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731636AbfFMJIU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:08:20 -0400
+Received: by mail-ed1-f68.google.com with SMTP id i11so2148293edq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 02:08:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=oGEIi8ZbA4ElBKoNoWg8Zqmm+0W4iEZ9Wl2E4vqqzu4=;
+        b=afRoLu+5c04elHJ9uSoU2wVJnLiY9rPJ9vYsrVBioEbs51ckV/BunuGGpEgJFvzl0l
+         I1R/fsNKud2MVuDRx41d91f6KvBM1srcUoi9bm980sFG3jlIS6+Yl9Iz3IW2NPNrv+dJ
+         GarwtuEbHx4dlM9c/5rvuXuCEdW7ReVjVeu8I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=oGEIi8ZbA4ElBKoNoWg8Zqmm+0W4iEZ9Wl2E4vqqzu4=;
+        b=uand4xJSYhEgL1t5M6jU3Kha0diRRTgSlfOKMu+Mv/4vvgMdGjaG2y4OpWzYThoYYz
+         P40glqhqYmAggmnUL74YEa4JzQHrsMlnbdHGvqazc1U9Lj7IgwkQO1tK8O4yLCrg1ndz
+         30BUcTkjaJe0c4bptm/p6az6ORPZaVntWhR6R1ILBtqTR6Vwjf+1cTA0ddt6VSQanGg6
+         a4hQUPyPjbeHyUKT73yLwNN/fz+NZVh66/zkFcqV19HPw/iDR4oK8JncXQMIR6wq56Fv
+         hrbLDYAdhRT+LwfojBaQNW8Rz+QZCXtJkYm+1zVXaS4O+uoaO02Jg5c+/Knh+dwdi6D0
+         BJYg==
+X-Gm-Message-State: APjAAAVt0uuOpLbhuJ08hmsta7f59rlAXHgf3gOU1hybCH8fYUywxRCM
+        aYZ3z3F02WjrrGLtYFm5GvcFvA==
+X-Google-Smtp-Source: APXvYqydkA6pzT/U0/NpSQ7oV3DnmdRZaVFlX0FJYEsGCpXnNScbZQ+PXN4JLY8tF6ss3+ZxAaGP9g==
+X-Received: by 2002:a50:aa7c:: with SMTP id p57mr44549776edc.179.1560416898007;
+        Thu, 13 Jun 2019 02:08:18 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id w7sm436487ejn.92.2019.06.13.02.08.16
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 02:08:16 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 11:08:14 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>
+Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH v2 2/2] drm/komeda: Adds komeda_kms_drop_master
+Message-ID: <20190613090814.GJ23020@phenom.ffwll.local>
+Mail-Followup-To: Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        nd <nd@arm.com>
+References: <1560251589-31827-1-git-send-email-lowry.li@arm.com>
+ <1560251589-31827-3-git-send-email-lowry.li@arm.com>
+ <20190611123038.GC2458@phenom.ffwll.local>
+ <20190612022617.GA8595@james-ThinkStation-P300>
+ <20190613081727.GE23020@phenom.ffwll.local>
+ <20190613082813.GM4173@e110455-lin.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190606144013.9884-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 13 Jun 2019 09:10:24 +0000 (UTC)
+In-Reply-To: <20190613082813.GM4173@e110455-lin.cambridge.arm.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 13, 2019 at 09:28:13AM +0100, Liviu Dudau wrote:
+> On Thu, Jun 13, 2019 at 10:17:27AM +0200, Daniel Vetter wrote:
+> > On Wed, Jun 12, 2019 at 02:26:24AM +0000, james qian wang (Arm Technology China) wrote:
+> > > On Tue, Jun 11, 2019 at 02:30:38PM +0200, Daniel Vetter wrote:
+> > > > On Tue, Jun 11, 2019 at 11:13:45AM +0000, Lowry Li (Arm Technology China) wrote:
+> > > > > From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+> > > > >
+> > > > > The komeda internal resources (pipelines) are shared between crtcs,
+> > > > > and resources release by disable_crtc. This commit is working for once
+> > > > > user forgot disabling crtc like app quit abnomally, and then the
+> > > > > resources can not be used by another crtc. Adds drop_master to
+> > > > > shutdown the device and make sure all the komeda resources have been
+> > > > > released and can be used for the next usage.
+> > > > >
+> > > > > Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> > > > > ---
+> > > > >  drivers/gpu/drm/arm/display/komeda/komeda_kms.c | 13 +++++++++++++
+> > > > >  1 file changed, 13 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > > > > index 8543860..647bce5 100644
+> > > > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > > > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > > > > @@ -54,11 +54,24 @@ static irqreturn_t komeda_kms_irq_handler(int irq, void *data)
+> > > > >  return status;
+> > > > >  }
+> > > > >
+> > > > > +/* Komeda internal resources (pipelines) are shared between crtcs, and resources
+> > > > > + * are released by disable_crtc. But if user forget disabling crtc like app quit
+> > > > > + * abnormally, the resources can not be used by another crtc.
+> > > > > + * Use drop_master to shutdown the device and make sure all the komeda resources
+> > > > > + * have been released, and can be used for the next usage.
+> > > > > + */
+> > > >
+> > > > No. If we want this, we need to implement this across drivers, not with
+> > > > per-vendor hacks.
+> > > >
+> > > > The kerneldoc should have been a solid hint: "Only used by vmwgfx."
+> > > > -Daniel
+> > > 
+> > > Hi Daniel:
+> > > This drop_master is really what we want, can we update the doc and
+> > > add komeda as a user of this hacks like "used by vmwfgx and komeda",
+> > > or maybe directly promote this per-vendor hacks as an optional chip
+> > > function ?
+> > 
+> > Still no, because it would mean different behaviour for arm/komeda
+> > compared to everyone else. And we really don't want this, because this
+> > would completely break flicker-less vt-switching.
+> > 
+> > Currently the only fallback for this case is the lastclose handler, which
+> > atm just restores fbcon/fbdev. If you want to change/extend that to work
+> > without fbdev, then that's the place to do the change. And across _all_
+> > drm kms drivers, so that we have consistent behaviour.
+> 
+> Slightly unrelated, just thinking of a solution and wanted confirmation/double
+> checking: can a CRTC be instantiated without any planes (or without a primary
+> plane)?
 
-On 2019/6/6 下午10:40, Hillf Danton wrote:
->
-> On Wed, 05 Jun 2019 16:42:05 -0700 (PDT) syzbot wrote:
->> Hello,
->>
->> syzbot found the following crash on:
->>
->> HEAD commit:    788a0249 Merge tag 'arc-5.2-rc4' of 
->> git://git.kernel.org/p..
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=15dc9ea6a00000
->> kernel config: 
->> https://syzkaller.appspot.com/x/.config?x=d5c73825cbdc7326
->> dashboard link: 
->> https://syzkaller.appspot.com/bug?extid=0789f0c7e45efd7bb643
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->> syz repro: https://syzkaller.appspot.com/x/repro.syz?x=10b31761a00000
->> C reproducer: https://syzkaller.appspot.com/x/repro.c?x=124892c1a00000
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the 
->> commit:
->> Reported-by: syzbot+0789f0c7e45efd7bb643@syzkaller.appspotmail.com
->>
->> udit: type=1400 audit(1559768703.229:36): avc:  denied  { map } for  
->> pid=7116 comm="syz-executor330" path="/root/syz-executor330334897" 
->> dev="sda1" ino=16461 
->> scontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023 
->> tcontext=unconfined_u:object_r:user_home_t:s0 tclass=file permissive=1
->> executing program
->> executing program
->> BUG: memory leak
->> unreferenced object 0xffff88812421fe40 (size 64):
->>    comm "syz-executor330", pid 7117, jiffies 4294949245 (age 13.030s)
->>    hex dump (first 32 bytes):
->>      01 00 00 00 20 69 6f 63 00 00 00 00 64 65 76 2f  .... ioc....dev/
->>      50 fe 21 24 81 88 ff ff 50 fe 21 24 81 88 ff ff P.!$....P.!$....
->>    backtrace:
->>      [<00000000ae0c4ae0>] kmemleak_alloc_recursive 
->> include/linux/kmemleak.h:55 [inline]
->>      [<00000000ae0c4ae0>] slab_post_alloc_hook mm/slab.h:439 [inline]
->>      [<00000000ae0c4ae0>] slab_alloc mm/slab.c:3326 [inline]
->>      [<00000000ae0c4ae0>] kmem_cache_alloc_trace+0x13d/0x280 
->> mm/slab.c:3553
->>      [<0000000079ebab38>] kmalloc include/linux/slab.h:547 [inline]
->>      [<0000000079ebab38>] vhost_net_ubuf_alloc 
->> drivers/vhost/net.c:241 [inline]
->>      [<0000000079ebab38>] vhost_net_set_backend 
->> drivers/vhost/net.c:1534 [inline]
->>      [<0000000079ebab38>] vhost_net_ioctl+0xb43/0xc10 
->> drivers/vhost/net.c:1716
->>      [<000000009f6204a2>] vfs_ioctl fs/ioctl.c:46 [inline]
->>      [<000000009f6204a2>] file_ioctl fs/ioctl.c:509 [inline]
->>      [<000000009f6204a2>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
->>      [<00000000b45866de>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
->>      [<00000000dfb41eb8>] __do_sys_ioctl fs/ioctl.c:720 [inline]
->>      [<00000000dfb41eb8>] __se_sys_ioctl fs/ioctl.c:718 [inline]
->>      [<00000000dfb41eb8>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
->>      [<0000000049c1f547>] do_syscall_64+0x76/0x1a0 
->> arch/x86/entry/common.c:301
->>      [<0000000029cc8ca7>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>
->> BUG: memory leak
->> unreferenced object 0xffff88812421fa80 (size 64):
->>    comm "syz-executor330", pid 7130, jiffies 4294949755 (age 7.930s)
->>    hex dump (first 32 bytes):
->>      01 00 00 00 01 00 00 00 00 00 00 00 2f 76 69 72 ............/vir
->>      90 fa 21 24 81 88 ff ff 90 fa 21 24 81 88 ff ff ..!$......!$....
->>    backtrace:
->>      [<00000000ae0c4ae0>] kmemleak_alloc_recursive 
->> include/linux/kmemleak.h:55 [inline]
->>      [<00000000ae0c4ae0>] slab_post_alloc_hook mm/slab.h:439 [inline]
->>      [<00000000ae0c4ae0>] slab_alloc mm/slab.c:3326 [inline]
->>      [<00000000ae0c4ae0>] kmem_cache_alloc_trace+0x13d/0x280 
->> mm/slab.c:3553
->>      [<0000000079ebab38>] kmalloc include/linux/slab.h:547 [inline]
->>      [<0000000079ebab38>] vhost_net_ubuf_alloc 
->> drivers/vhost/net.c:241 [inline]
->>      [<0000000079ebab38>] vhost_net_set_backend 
->> drivers/vhost/net.c:1534 [inline]
->>      [<0000000079ebab38>] vhost_net_ioctl+0xb43/0xc10 
->> drivers/vhost/net.c:1716
->>      [<000000009f6204a2>] vfs_ioctl fs/ioctl.c:46 [inline]
->>      [<000000009f6204a2>] file_ioctl fs/ioctl.c:509 [inline]
->>      [<000000009f6204a2>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
->>      [<00000000b45866de>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
->>      [<00000000dfb41eb8>] __do_sys_ioctl fs/ioctl.c:720 [inline]
->>      [<00000000dfb41eb8>] __se_sys_ioctl fs/ioctl.c:718 [inline]
->>      [<00000000dfb41eb8>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
->>      [<0000000049c1f547>] do_syscall_64+0x76/0x1a0 
->> arch/x86/entry/common.c:301
->>      [<0000000029cc8ca7>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>
->>
->>
->> ---
->> This bug is generated by a bot. It may contain errors.
->> See https://goo.gl/tpsmEJ for more information about syzbot.
->> syzbot engineers can be reached at syzkaller@googlegroups.com.
->>
->> syzbot will keep track of this bug report. See:
->> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->> syzbot can test patches for this bug, for details see:
->> https://goo.gl/tpsmEJ#testing-patches
->>
-> Ignore my noise if you have no interest seeing the syzbot report.
->
-> After commit c38e39c378f46f ("vhost-net: fix use-after-free in
-> vhost_net_flush") flush would no longer free ubuf, just wait until 
-> ubuf users
-> disappear instead.
->
-> The following diff, in hope that may perhaps help you handle the 
-> memory leak,
-> makes flush able to free ubuf in the path of file release.
->
-> Thanks
-> Hillf
-> ---
-> drivers/vhost/net.c | 8 +++++++-
-> 1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-> index 3beb401..dcf20b6 100644
-> --- a/drivers/vhost/net.c
-> +++ b/drivers/vhost/net.c
-> @@ -141,6 +141,7 @@ struct vhost_net {
->     unsigned tx_zcopy_err;
->     /* Flush in progress. Protected by tx vq lock. */
->     bool tx_flush;
-> +    bool ld;    /* Last dinner */
->     /* Private page frag */
->     struct page_frag page_frag;
->     /* Refcount bias of page frag */
-> @@ -1283,6 +1284,7 @@ static int vhost_net_open(struct inode *inode, 
-> struct file *f)
->     n = kvmalloc(sizeof *n, GFP_KERNEL | __GFP_RETRY_MAYFAIL);
->     if (!n)
->         return -ENOMEM;
-> +    n->ld = false;
->     vqs = kmalloc_array(VHOST_NET_VQ_MAX, sizeof(*vqs), GFP_KERNEL);
->     if (!vqs) {
->         kvfree(n);
-> @@ -1376,7 +1378,10 @@ static void vhost_net_flush(struct vhost_net *n)
->         n->tx_flush = true;
->         mutex_unlock(&n->vqs[VHOST_NET_VQ_TX].vq.mutex);
->         /* Wait for all lower device DMAs done. */
-> - vhost_net_ubuf_put_and_wait(n->vqs[VHOST_NET_VQ_TX].ubufs);
-> +        if (n->ld)
-> + vhost_net_ubuf_put_wait_and_free(n->vqs[VHOST_NET_VQ_TX].ubufs);
-> +        else
-> + vhost_net_ubuf_put_and_wait(n->vqs[VHOST_NET_VQ_TX].ubufs);
->         mutex_lock(&n->vqs[VHOST_NET_VQ_TX].vq.mutex);
->         n->tx_flush = false;
-> atomic_set(&n->vqs[VHOST_NET_VQ_TX].ubufs->refcount, 1);
-> @@ -1403,6 +1408,7 @@ static int vhost_net_release(struct inode 
-> *inode, struct file *f)
->     synchronize_rcu();
->     /* We do an extra flush before freeing memory,
->      * since jobs can re-queue themselves. */
-> +    n->ld = true;
->     vhost_net_flush(n);
->     kfree(n->vqs[VHOST_NET_VQ_RX].rxq.queue);
->     kfree(n->vqs[VHOST_NET_VQ_TX].xdp);
+Without a primary plane maybe not so recommended, because it would break
+all the legacy userspace. Might even result in some oopses, not sure we
+check for crtc->primary != NULL.
+
+I'm not sure what you mean about instantiating it without any plane at
+all. That would be rather useless.
+-Daniel
+
+> 
+> Best regards,
+> Liviu
+> 
+> > 
+> > kms is a cross-vendor api, vendor hacks are very, very much not cool.
+> > -Daniel
+> > 
+> > > 
+> > > James
+> > > 
+> > > > > +static void komeda_kms_drop_master(struct drm_device *dev,
+> > > > > +   struct drm_file *file_priv)
+> > > > > +{
+> > > > > +drm_atomic_helper_shutdown(dev);
+> > > > > +}
+> > > > > +
+> > > > >  static struct drm_driver komeda_kms_driver = {
+> > > > >  .driver_features = DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC |
+> > > > >     DRIVER_PRIME | DRIVER_HAVE_IRQ,
+> > > > >  .lastclose= drm_fb_helper_lastclose,
+> > > > >  .irq_handler= komeda_kms_irq_handler,
+> > > > > +.master_drop= komeda_kms_drop_master,
+> > > > >  .gem_free_object_unlocked= drm_gem_cma_free_object,
+> > > > >  .gem_vm_ops= &drm_gem_cma_vm_ops,
+> > > > >  .dumb_create= komeda_gem_cma_dumb_create,
+> > > > > --
+> > > > > 1.9.1
+> > > > >
+> > > > > _______________________________________________
+> > > > > dri-devel mailing list
+> > > > > dri-devel@lists.freedesktop.org
+> > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > >
+> > > > --
+> > > > Daniel Vetter
+> > > > Software Engineer, Intel Corporation
+> > > > http://blog.ffwll.ch
+> > > IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > 
+> > -- 
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+> 
 > -- 
+> ====================
+> | I would like to |
+> | fix the world,  |
+> | but they're not |
+> | giving me the   |
+>  \ source code!  /
+>   ---------------
+>     ¯\_(ツ)_/¯
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-
-This is basically a kfree(ubuf) after the second vhost_net_flush() in 
-vhost_net_release().
-
-Could you please post a formal patch?
-
-Thanks
-
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
