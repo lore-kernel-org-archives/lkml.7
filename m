@@ -2,85 +2,172 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F85C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C3CC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C4C21473
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1755320851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389954AbfFMPwL (ORCPT
+        id S1731879AbfFMPwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:52:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:43848 "EHLO foss.arm.com"
+        Thu, 13 Jun 2019 11:52:21 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:58270 "EHLO ns.iliad.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389679AbfFMPvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:51:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D8B5367;
-        Thu, 13 Jun 2019 08:51:54 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ED2FB3F246;
-        Thu, 13 Jun 2019 08:51:52 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH v5 0/2] arm64 relaxed ABI
-Date:   Thu, 13 Jun 2019 16:51:35 +0100
-Message-Id: <20190613155137.47675-1-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1560339705.git.andreyknvl@google.com>
-References: <cover.1560339705.git.andreyknvl@google.com>
+        id S1731649AbfFMJKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:10:42 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 84C7C20AC3;
+        Thu, 13 Jun 2019 11:10:39 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 6B7F0207ED;
+        Thu, 13 Jun 2019 11:10:39 +0200 (CEST)
+Subject: Re: [PATCH] phy: qcom-qmp: Correct READY_STATUS poll break condition
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>
+References: <20190604232443.3417-1-bjorn.andersson@linaro.org>
+ <619d2559-6d88-e795-76e0-3078236933ef@free.fr>
+ <20190612172501.GY4814@minitux>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <3570d880-2b76-88ae-8721-e75cf5acec4c@free.fr>
+Date:   Thu, 13 Jun 2019 11:10:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612172501.GY4814@minitux>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Jun 13 11:10:39 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On arm64 the TCR_EL1.TBI0 bit has been always enabled on the arm64 kernel,
-hence the userspace (EL0) is allowed to set a non-zero value in the top
-byte but the resulting pointers are not allowed at the user-kernel syscall
-ABI boundary.
+On 12/06/2019 19:25, Bjorn Andersson wrote:
 
-This patchset proposes a relaxation of the ABI with which it is possible
-to pass tagged tagged pointers to the syscalls, when these pointers are in
-memory ranges obtained as described in tagged-address-abi.txt contained in
-this patch series.
+> On Wed 12 Jun 09:24 PDT 2019, Marc Gonzalez wrote:
+> 
+>> On 05/06/2019 01:24, Bjorn Andersson wrote:
+>>
+>>> After issuing a PHY_START request to the QMP, the hardware documentation
+>>> states that the software should wait for the PCS_READY_STATUS to become 1.
+>>>
+>>> With the introduction of c9b589791fc1 ("phy: qcom: Utilize UFS reset
+>>> controller") an additional 1ms delay was introduced between the start
+>>> request and the check of the status bit. This greatly increases the
+>>> chances for the hardware to actually becoming ready before the status
+>>> bit is read.
+>>>
+>>> The result can be seen in that UFS PHY enabling is now reported as a
+>>> failure in 10% of the boots on SDM845, which is a clear regression from
+>>> the previous rare/occasional failure.
+>>>
+>>> This patch fixes the "break condition" of the poll to check for the
+>>> correct state of the status bit.
+>>>
+>>> Unfortunately PCIe on 8996 and 8998 does not specify the mask_pcs_ready
+>>> register, which means that the code checks a bit that's always 0. So the
+>>> patch also fixes these, in order to not regress these targets.
+>>>
+>>> Cc: stable@vger.kernel.org
+>>> Cc: Evan Green <evgreen@chromium.org>
+>>> Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
+>>> Cc: Vivek Gautam <vivek.gautam@codeaurora.org>
+>>> Fixes: 73d7ec899bd8 ("phy: qcom-qmp: Add msm8998 PCIe QMP PHY support")
+>>> Fixes: e78f3d15e115 ("phy: qcom-qmp: new qmp phy driver for qcom-chipsets")
+>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>> ---
+>>>
+>>> @Kishon, this is a regression spotted in v5.2-rc1, so please consider applying
+>>> this towards v5.2.
+>>>
+>>>  drivers/phy/qualcomm/phy-qcom-qmp.c | 4 +++-
+>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+>>> index cd91b4179b10..43abdfd0deed 100644
+>>> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+>>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+>>> @@ -1074,6 +1074,7 @@ static const struct qmp_phy_cfg msm8996_pciephy_cfg = {
+>>>  
+>>>  	.start_ctrl		= PCS_START | PLL_READY_GATE_EN,
+>>>  	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+>>> +	.mask_pcs_ready		= PHYSTATUS,
+>>>  	.mask_com_pcs_ready	= PCS_READY,
+>>>  
+>>>  	.has_phy_com_ctrl	= true,
+>>> @@ -1253,6 +1254,7 @@ static const struct qmp_phy_cfg msm8998_pciephy_cfg = {
+>>>  
+>>>  	.start_ctrl             = SERDES_START | PCS_START,
+>>>  	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+>>> +	.mask_pcs_ready		= PHYSTATUS,
+>>>  	.mask_com_pcs_ready	= PCS_READY,
+>>>  };
+>>>  
+>>> @@ -1547,7 +1549,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+>>>  	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
+>>>  	mask = cfg->mask_pcs_ready;
+>>>  
+>>> -	ret = readl_poll_timeout(status, val, !(val & mask), 1,
+>>> +	ret = readl_poll_timeout(status, val, val & mask, 1,
+>>>  				 PHY_INIT_COMPLETE_TIMEOUT);
+>>>  	if (ret) {
+>>>  		dev_err(qmp->dev, "phy initialization timed-out\n");
+>>
+>> Your patch made me realize that:
+>> msm8998_pciephy_cfg.has_phy_com_ctrl = false
+>> thus
+>> msm8998_pciephy_cfg.mask_com_pcs_ready is useless, AFAICT.
+> 
+> While 8998 has a COM block, it does (among other things) not have a
+> ready bit. So afaict has_phy_com_ctrl = false is correct.
 
-Since it is not desirable to relax the ABI to allow tagged user addresses
-into the kernel indiscriminately, this patchset documents a new sysctl
-interface (/proc/sys/abi/tagged_addr) that is used to prevent the applications
-from enabling the relaxed ABI and a new prctl() interface that can be used to
-enable or disable the relaxed ABI.
+Pfff... Working blind without the HPG sucks...
 
-This patchset should be merged together with [1].
+> The addition of mask_pcs_ready is part of resolving the regression in
+> 5.2, so I suggest that we remove mask_com_pcs_ready separately.
 
-[1] https://patchwork.kernel.org/cover/10674351/
+I agree that it should be done separately.
+I'll send a patch on top of yours.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-CC: Andrey Konovalov <andreyknvl@google.com>
-CC: Alexander Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+>> (I copied msm8996_pciephy_cfg for msm8998_pciephy_cfg)
+>>
+>> Does msm8996_pciephy_cfg really need both mask_pcs_ready AND
+>> mask_com_pcs_ready?
+> 
+> 8996 has a COM block and it contains both the control bits and the
+> status bits, so that looks correct.
 
-Vincenzo Frascino (2):
-  arm64: Define Documentation/arm64/tagged-address-abi.txt
-  arm64: Relax Documentation/arm64/tagged-pointers.txt
+Thanks for checking.
 
- Documentation/arm64/tagged-address-abi.txt | 134 +++++++++++++++++++++
- Documentation/arm64/tagged-pointers.txt    |  23 ++--
- 2 files changed, 150 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/arm64/tagged-address-abi.txt
+>> I'll test your patch tomorrow.
+> 
+> I appreciate that.
 
--- 
-2.21.0
+Here are my observations for a 8998 board:
 
+1) If I apply only the readl_poll_timeout() fix (not the mask_pcs_ready fixup)
+qcom_pcie_probe() fails with a timeout in phy_init.
+=> this is in line with your regression analysis.
+
+2) Your patch also fixes a long-standing bug in UFS init whereby sending
+lots of information to the console during phy init would lead to an
+incorrectly diagnosed time-out.
+
+Good stuff!
+
+Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+
+Regards.
