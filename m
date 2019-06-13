@@ -2,120 +2,95 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC65CC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126DEC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8165F215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:41:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="NM3YEaN0"
+	by mail.kernel.org (Postfix) with ESMTP id E5714215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392762AbfFMQly (ORCPT
+        id S1730797AbfFMQl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:41:54 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:39715 "EHLO frisell.zx2c4.com"
+        Thu, 13 Jun 2019 12:41:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:46448 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730531AbfFMQlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:41:50 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id c62331ad
-        for <linux-kernel@vger.kernel.org>;
-        Thu, 13 Jun 2019 16:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=+xsFDwonOouL/xgaMNdYF45q7mU=; b=NM3YEa
-        N0QYc2oN1LtaLfVCe+WHduQXzS39cMKx8ThxIeAOMqKPvlX2u430mNgg7LAIFnw/
-        X/p/fvxQjv8fKnxGKu8WXHuWCNtBkzGeoZ4UMWvU6zX9t4LQzhs0apOCkyZaFYNJ
-        pfWCcBoWtQtmuapq5As6KNfo0MyNRpPjMUwk1NaX7EX82egjzc9C/agLTxr+8T80
-        CDBwXs+nqqr6C7xWTvECDZSYuMGDUzRcVzWCrI8pvC1gvIFdSyz4S0EGrDHkW7I9
-        pD2Je2OMHzjPWxb6m/zzuIAIaP3i9dl8WsksXhSe65g4RyZyOo+nZHq9ghrqBYY+
-        pFl7KgJV+WYAC/Mw==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 622bf7b9 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO)
-        for <linux-kernel@vger.kernel.org>;
-        Thu, 13 Jun 2019 16:09:25 +0000 (UTC)
-Received: by mail-oi1-f170.google.com with SMTP id w7so14932173oic.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 09:41:49 -0700 (PDT)
-X-Gm-Message-State: APjAAAWUgqxcM6/mKyEheDka6SpzKOuBiSPtE1zWss4G3A91M9/PeBRT
-        CyNARj+paWSqNQDMJK8qzvo29V+XvSgf1nG1v4M=
-X-Google-Smtp-Source: APXvYqzSxyWLIGJ5pdEVhCNp9dFzZ+7fDyo26Zj7jyFURW0wR51EC2Zm7ycoNPwlAfTQUEX2EyHA+B6L1bkdzIIwdUE=
-X-Received: by 2002:aca:3a0a:: with SMTP id h10mr3676675oia.52.1560444108355;
- Thu, 13 Jun 2019 09:41:48 -0700 (PDT)
+        id S1731742AbfFMQlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:41:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23D96367;
+        Thu, 13 Jun 2019 09:41:53 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B7EF3F694;
+        Thu, 13 Jun 2019 09:41:49 -0700 (PDT)
+Subject: Re: [PATCH 05/10] iommu/dma-iommu: convert to SPDX license tags
+To:     Yangtao Li <tiny.windzz@gmail.com>, joro@8bytes.org,
+        m.szyprowski@samsung.com, kgene@kernel.org, krzk@kernel.org,
+        will.deacon@arm.com, agross@kernel.org, david.brown@linaro.org,
+        robdclark@gmail.com, heiko@sntech.de, thierry.reding@gmail.com,
+        jonathanh@nvidia.com
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org
+References: <20190613162703.986-1-tiny.windzz@gmail.com>
+ <20190613162703.986-5-tiny.windzz@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <867e7308-7ef7-b2a3-e088-7e9419878b76@arm.com>
+Date:   Thu, 13 Jun 2019 17:41:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CAHmME9qBDtO1vJrA2Ch3SQigsu435wR7Q3vTm_3R=u=BE49S-Q@mail.gmail.com>
- <alpine.DEB.2.21.1906112257120.2214@nanos.tec.linutronix.de>
- <20190612090257.GF3436@hirez.programming.kicks-ass.net> <CAHmME9obwzZ5x=p3twDfNYux+kg0h4QAGe0ePAkZ2KqvguBK3g@mail.gmail.com>
- <CAK8P3a15NTV=njOjz-ccYL8=_q_MdEru0A+jeE=f7ufUTOOTgw@mail.gmail.com>
- <CAHmME9pOWk_ZteUZc_PT19rMn1kfYcXtmLcyAy5sncdV1tNuiQ@mail.gmail.com>
- <CAK8P3a3DpRvk1Mw_MKs8wAbRJbMUQoY2UTgK1CF8UOiBQg=btw@mail.gmail.com>
- <CAHmME9pVeYBkUX058EA-W4ZkEch=enPsiPioWnkVLK03djuQ9A@mail.gmail.com>
- <alpine.DEB.2.21.1906131822300.1791@nanos.tec.linutronix.de> <CAHmME9q1ihF617=Gjw9k9BK7OC9Ghnzfnfi6LfvJ8DG+vrQOqA@mail.gmail.com>
-In-Reply-To: <CAHmME9q1ihF617=Gjw9k9BK7OC9Ghnzfnfi6LfvJ8DG+vrQOqA@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Thu, 13 Jun 2019 18:41:36 +0200
-X-Gmail-Original-Message-ID: <CAHmME9oNr9VUiDqRHsrSg+oFmsoJfTv3yGTzjDsokUX7ZYv0JQ@mail.gmail.com>
-Message-ID: <CAHmME9oNr9VUiDqRHsrSg+oFmsoJfTv3yGTzjDsokUX7ZYv0JQ@mail.gmail.com>
-Subject: Re: infinite loop in read_hpet from ktime_get_boot_fast_ns
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Waiman Long <longman@redhat.com>, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190613162703.986-5-tiny.windzz@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Or in case that's not clear enough:
+On 13/06/2019 17:26, Yangtao Li wrote:
+> Updates license to use SPDX-License-Identifier.
 
-int __init mod_init(void)
-{
-  u64 j1 = 0, j2, k1 = 0, k2, l1 = 0, l2;
-  for (;;) {
-    j2 = jiffies64_to_nsecs(get_jiffies_64());
-    k2 = ktime_get_coarse_boottime();
-    l2 = local_clock();
-    pr_err("%llu %llu %llu\n", j2 - j1, k2 - k1, l2 - l1);
-    j1 = j2;
-    k1 = k2;
-    l1 = l2;
-    msleep(200);
-  }
-  return 0;
-}
+A more complete version of this (which also covers the header) is 
+already queued in -next.
 
-[    0.289469] wireguard: 17179569424000000 18446744073155127569 289468886
-[    0.495002] wireguard: 208000000 1000000000 205528400
-[    0.702857] wireguard: 208000000 0 207855129
-[    0.910836] wireguard: 208000000 0 207979087
-[    1.118871] wireguard: 208000000 0 208034819
-[    1.326964] wireguard: 208000000 0 208093122
-[    1.534941] wireguard: 208000000 1000000000 207976614
-[    1.742868] wireguard: 208000000 0 207927167
-[    1.950877] wireguard: 208000000 0 208009538
-[    2.158865] wireguard: 208000000 0 207987922
-[    2.367012] wireguard: 208000000 0 208146016
-[    2.574931] wireguard: 208000000 1000000000 207918184
-[    2.782871] wireguard: 208000000 0 207939645
-[    2.991017] wireguard: 208000000 0 208148426
-[    3.198943] wireguard: 208000000 0 207925281
-[    3.406959] wireguard: 208000000 0 208014262
-[    3.614892] wireguard: 208000000 1000000000 207934524
-[    3.822869] wireguard: 208000000 0 207976970
-[    4.030994] wireguard: 208000000 0 208125835
-[    4.238792] wireguard: 208000000 0 207800186
-[    4.446853] wireguard: 208000000 0 208056350
-[    4.654978] wireguard: 208000000 1000000000 208126753
-[    4.862801] wireguard: 208000000 0 207822955
-[    5.070999] wireguard: 208000000 0 208198517
-[    5.278818] wireguard: 208000000 0 207820902
-[    5.486879] wireguard: 208000000 1000000000 208059285
-[    5.694959] wireguard: 208000000 0 208066514
-[    5.903011] wireguard: 208000000 0 208065258
-[    6.111015] wireguard: 208000000 0 208004056
-[    6.318856] wireguard: 208000000 0 207841271
+Robin.
+
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>   drivers/iommu/dma-iommu.c | 13 +------------
+>   1 file changed, 1 insertion(+), 12 deletions(-)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index 129c4badf9ae..2d76bac43b82 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -1,3 +1,4 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>   /*
+>    * A fairly generic DMA-API to IOMMU-API glue layer.
+>    *
+> @@ -5,18 +6,6 @@
+>    *
+>    * based in part on arch/arm/mm/dma-mapping.c:
+>    * Copyright (C) 2000-2004 Russell King
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License version 2 as
+> - * published by the Free Software Foundation.
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+> - *
+> - * You should have received a copy of the GNU General Public License
+> - * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>    */
+>   
+>   #include <linux/acpi_iort.h>
+> 
