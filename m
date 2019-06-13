@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFDDC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64987C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17FDE20866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C9CA208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442423;
-	bh=Rr5mg9fg85M46vDGUr8i07bvXIQUBUKS7QRutZEt8Xw=;
+	s=default; t=1560442424;
+	bh=lrKXsr2OjonUOOQWsPIwOl6T08bXjYyq3cI+FJ7ZUYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s1DIsZKfIxcAZnDqZdTF4bZwFyPemt69t4ZdEzA8svepgb2mG4BWISNc/NibSsvZG
-	 o2jz2fTSL52DAPn8lNbrOXepxCpQysF/rMkXVYNQlyRUvJ3HT+pUpun4nao3lnbHYD
-	 Czxg3Rf56LW0+WbebsVkLkVbFNCBReCy2brmwGp4=
+	b=r+BAtD+CGa1vU+6zoDuHKRSF1dR8/M+H5Lzb5DMbyGHDKhD5qVpP4R4o9dsELUHGD
+	 Y2vue0EBP/zPNRYNE7jAZAqR9hNT47A+wERnngOpa/cpTWTOwv5KFz83XIg/d4SL9l
+	 LYdp/x/h/6slTwlQfPuXa/ogfAO+F7G8qdgMZhMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391732AbfFMQNl (ORCPT
+        id S2391739AbfFMQNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:13:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59950 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:13:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731205AbfFMIms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:42:48 -0400
+        id S1731204AbfFMImp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:42:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E3E121479;
-        Thu, 13 Jun 2019 08:42:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A59472147A;
+        Thu, 13 Jun 2019 08:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415367;
-        bh=Rr5mg9fg85M46vDGUr8i07bvXIQUBUKS7QRutZEt8Xw=;
+        s=default; t=1560415364;
+        bh=lrKXsr2OjonUOOQWsPIwOl6T08bXjYyq3cI+FJ7ZUYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g1N7E8jIXW135MWVkAvkjVC4PUfAC7b4J2IvwWQ81D95J1GS0Lb9Y7pSeHdGRdfhW
-         s84lliGvRthwK0wPjHo15vrZ2Y8q00hdUlc5wJnUT028nFwBAO54MkNKgCHGLrA0dq
-         1YEdnn/gOl35jmWHNBXBns+UVYQhly9PM2uA498c=
+        b=lgjXhlNsQxGV6vQb32VwTPIkIP7pkTiFNfxz/EPuMQr3h8/JjH4WUsEYaYsQlMaW4
+         YE0yRLjc7K7Ompkt9rvalMNkHqyVStAjmdHP8ve9laV6rxWQXJfpN7EqRcrzI+opG3
+         kuh6xuTerqlt/b42lyZUkKjB5uT6zOb0upMpsuHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Giridhar Malavali <gmalavali@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 098/118] scsi: qla2xxx: Reset the FCF_ASYNC_{SENT|ACTIVE} flags
-Date:   Thu, 13 Jun 2019 10:33:56 +0200
-Message-Id: <20190613075649.645249428@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        linux-renesas-soc@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 097/118] PCI: rcar: Fix 64bit MSI message address handling
+Date:   Thu, 13 Jun 2019 10:33:55 +0200
+Message-Id: <20190613075649.581113343@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -61,44 +65,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0257eda08e806b82ee1fc90ef73583b6f022845c ]
+[ Upstream commit 954b4b752a4c4e963b017ed8cef4c453c5ed308d ]
 
-Driver maintains state machine for processing and completing switch
-commands. This patch resets FCF_ASYNC_{SENT|ACTIVE} flag to indicate if the
-previous command is active or sent, in order for next GPSC command to
-advance the state machine.
+The MSI message address in the RC address space can be 64 bit. The
+R-Car PCIe RC supports such a 64bit MSI message address as well.
+The code currently uses virt_to_phys(__get_free_pages()) to obtain
+a reserved page for the MSI message address, and the return value
+of which can be a 64 bit physical address on 64 bit system.
 
-[mkp: commit desc typo]
+However, the driver only programs PCIEMSIALR register with the bottom
+32 bits of the virt_to_phys(__get_free_pages()) return value and does
+not program the top 32 bits into PCIEMSIAUR, but rather programs the
+PCIEMSIAUR register with 0x0. This worked fine on older 32 bit R-Car
+SoCs, however may fail on new 64 bit R-Car SoCs.
 
-Signed-off-by: Giridhar Malavali <gmalavali@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Since from a PCIe controller perspective, an inbound MSI is a memory
+write to a special address (in case of this controller, defined by
+the value in PCIEMSIAUR:PCIEMSIALR), which triggers an interrupt, but
+never hits the DRAM _and_ because allocation of an MSI by a PCIe card
+driver obtains the MSI message address by reading PCIEMSIAUR:PCIEMSIALR
+in rcar_msi_setup_irqs(), incorrectly programmed PCIEMSIAUR cannot
+cause memory corruption or other issues.
+
+There is however the possibility that if virt_to_phys(__get_free_pages())
+returned address above the 32bit boundary _and_ PCIEMSIAUR was programmed
+to 0x0 _and_ if the system had physical RAM at the address matching the
+value of PCIEMSIALR, a PCIe card driver could allocate a buffer with a
+physical address matching the value of PCIEMSIALR and a remote write to
+such a buffer by a PCIe card would trigger a spurious MSI.
+
+Fixes: e015f88c368d ("PCI: rcar: Add support for R-Car H3 to pcie-rcar")
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>
+Cc: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-renesas-soc@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_gs.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/controller/pcie-rcar.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
-index de3f2a097451..1f1a05a90d3d 100644
---- a/drivers/scsi/qla2xxx/qla_gs.c
-+++ b/drivers/scsi/qla2xxx/qla_gs.c
-@@ -3261,6 +3261,8 @@ static void qla24xx_async_gpsc_sp_done(void *s, int res)
- 	    "Async done-%s res %x, WWPN %8phC \n",
- 	    sp->name, res, fcport->port_name);
+diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
+index 765c39911c0c..9b9c677ad3a0 100644
+--- a/drivers/pci/controller/pcie-rcar.c
++++ b/drivers/pci/controller/pcie-rcar.c
+@@ -892,7 +892,7 @@ static int rcar_pcie_enable_msi(struct rcar_pcie *pcie)
+ {
+ 	struct device *dev = pcie->dev;
+ 	struct rcar_msi *msi = &pcie->msi;
+-	unsigned long base;
++	phys_addr_t base;
+ 	int err, i;
  
-+	fcport->flags &= ~(FCF_ASYNC_SENT | FCF_ASYNC_ACTIVE);
-+
- 	if (res == QLA_FUNCTION_TIMEOUT)
- 		return;
+ 	mutex_init(&msi->lock);
+@@ -937,8 +937,8 @@ static int rcar_pcie_enable_msi(struct rcar_pcie *pcie)
+ 	}
+ 	base = virt_to_phys((void *)msi->pages);
  
-@@ -4604,6 +4606,7 @@ int qla24xx_async_gnnid(scsi_qla_host_t *vha, fc_port_t *fcport)
+-	rcar_pci_write_reg(pcie, base | MSIFE, PCIEMSIALR);
+-	rcar_pci_write_reg(pcie, 0, PCIEMSIAUR);
++	rcar_pci_write_reg(pcie, lower_32_bits(base) | MSIFE, PCIEMSIALR);
++	rcar_pci_write_reg(pcie, upper_32_bits(base), PCIEMSIAUR);
  
- done_free_sp:
- 	sp->free(sp);
-+	fcport->flags &= ~FCF_ASYNC_SENT;
- done:
- 	return rval;
- }
+ 	/* enable all MSI interrupts */
+ 	rcar_pci_write_reg(pcie, 0xffffffff, PCIEMSIIER);
 -- 
 2.20.1
 
