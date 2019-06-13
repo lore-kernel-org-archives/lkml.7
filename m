@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC56C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 404F1C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9CA20866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E65A20896
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:09:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FAbijmMd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AskOkpFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbfFMSJf (ORCPT
+        id S1728733AbfFMSJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:09:35 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35235 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727060AbfFMSJe (ORCPT
+        Thu, 13 Jun 2019 14:09:40 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42366 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727060AbfFMSJg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:09:34 -0400
-Received: by mail-pg1-f196.google.com with SMTP id s27so11404025pgl.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:09:33 -0700 (PDT)
+        Thu, 13 Jun 2019 14:09:36 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q10so12308532pff.9
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:09:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pVbmGCXMlUq2A1hktcADs+0IfWfAQ2M2FW/CfDBhtLg=;
-        b=FAbijmMdOArgULwBkXsBJp3YbUW1/Wrzaqs6dcYUYMl82wQ5JDMEWbDHYL6JEOFTK6
-         3jUCluBlQdC0v3nbnxUgF8unfFjlPoH9r457SeTA879FsDsaanaiuHYZPar9Mowen66B
-         eWsg52ZG0Viw9c+nueScpWKxFYh2vdQF+vZQU=
+        bh=s4UOPmCaMTA/ZsZDFJPVYGvmCISuBSexVdeFUduycxw=;
+        b=AskOkpFh+++DQTTwkArdgdbEfkDEWm7fPaUOs7Ny9QWsIUaPiNRiGi5WaJeUUHcjym
+         gm+jUgHvjsTqYfPalPPiLiATfaYoIQekqX/3rNGp/yQFbm0/XdoLXLLQaDF50fZuML1V
+         MdHGKBpojl7UUP03AIFcdmLEsEYcSIGP8ZgI0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pVbmGCXMlUq2A1hktcADs+0IfWfAQ2M2FW/CfDBhtLg=;
-        b=JyGpuvlESvWWPcSPkI2lD9ha4KPa8rDViOG8HgIooPzIJQPe2DDSIvBZjcwWRRXnQ5
-         pm3O39W21mVgKOeJyg8UvyxLlNW68KbLcYbDlEGlWmK5hVUWQHgqmXPJOXahCqVxAJyf
-         GNerrh3H/gl0KcdIqnP+IMbJgiW2GTKbzI+ylRygR0csW0zBkKJfjuNW6BfQhRRJ2lSP
-         tOXWVX5nIKYy48EjVOvmrUrooILeQ+JchpEUoZWjyoYb7cj1GOUrks8KFde4x5B5rzO6
-         EmJtrYinP1M2oBXGIB9rNqFy2/v9KlGZTpIJKzpQcs6P9nE7h5pohJnhRKeqor/IFEpH
-         xNkA==
-X-Gm-Message-State: APjAAAW+Zpw481REZWKdghe3MUhSr07OSAFgaSalmVijUl7kSeZBQ+PR
-        SzjtDHzkNOkyFJThZHuRJOm21zVYvv4=
-X-Google-Smtp-Source: APXvYqyrMSrLzGbPNmpEqq+83phzC38yETj3P78gr8NXQrfb8K/U7PH0ROe9UTKCnF6fg+nejUXM+Q==
-X-Received: by 2002:a63:6ec1:: with SMTP id j184mr15876956pgc.225.1560449373537;
-        Thu, 13 Jun 2019 11:09:33 -0700 (PDT)
+        bh=s4UOPmCaMTA/ZsZDFJPVYGvmCISuBSexVdeFUduycxw=;
+        b=P4F1yBS/VNb/C2DGCMsU9cLnmcUkiTN01awCwEzzqdC115N5VKFWnBfnypG9oMTcDW
+         jFZoGYKd3MgseFHVm/HJntZ76vUWF2HLYLa5i6WAMIsToYTHBfcmOzbfGaSw2fnMZQNo
+         zvaXy6WhEZIDpqTnx7pbmOe+Vc+KqxL9ltIAG/JYAI3aCFcUgdubnPPV1JZligt+DVO8
+         Dd0njxaHpebLzRAUAOPOFEwTYJLDFvFee5CiwyZKB+7VpQrUo2N2UUqiq1H/TO9OowTX
+         b4PLqfxYdt5c+QhgchnJSJTFUM/O10n68mcdTS4bYrXoqnO1e94ECrzKAOh9GuYxpBjJ
+         gvaw==
+X-Gm-Message-State: APjAAAXSiw5ofbRyf5gAQEyMf9EddkSK4et3gyLIVRz3uUP137bpse5O
+        nLYMGOsCkmAPLpEiga5g9p0Oag==
+X-Google-Smtp-Source: APXvYqyK//TFyvvsB14tdex9tb6JEfZao67LE8nQZkwFwZLlBu9O+FoPljXy615K3VxpUOjo9MniMw==
+X-Received: by 2002:a62:14c4:: with SMTP id 187mr20886406pfu.241.1560449375606;
+        Thu, 13 Jun 2019 11:09:35 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b15sm454449pff.31.2019.06.13.11.09.32
+        by smtp.gmail.com with ESMTPSA id b15sm454449pff.31.2019.06.13.11.09.34
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 11:09:33 -0700 (PDT)
+        Thu, 13 Jun 2019 11:09:35 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     Peter Huewe <peterhuewe@gmx.de>,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
@@ -61,10 +61,11 @@ Cc:     Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-integrity@vger.kernel.org, devicetree@vger.kernel.org,
         Duncan Laurie <dlaurie@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH 1/8] tpm: block messages while suspended
-Date:   Thu, 13 Jun 2019 11:09:24 -0700
-Message-Id: <20190613180931.65445-2-swboyd@chromium.org>
+        Guenter Roeck <groeck@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>
+Subject: [PATCH 3/8] tpm_tis_spi: add max xfer size
+Date:   Thu, 13 Jun 2019 11:09:26 -0700
+Message-Id: <20190613180931.65445-4-swboyd@chromium.org>
 X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
 In-Reply-To: <20190613180931.65445-1-swboyd@chromium.org>
 References: <20190613180931.65445-1-swboyd@chromium.org>
@@ -77,81 +78,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andrey Pronin <apronin@chromium.org>
 
-Other drivers or userspace may initiate sending a message to the tpm
-while the device itself and the controller of the bus it is on are
-suspended. That may break the bus driver logic.
-Block sending messages while the device is suspended.
+Reject burstcounts larger than 64 bytes reported by tpm.
+SPI Hardware Protocol defined in section 6.4 of TCG PTP
+Spec supports up to 64 bytes of data in a transaction.
 
 Signed-off-by: Andrey Pronin <apronin@chromium.org>
+Reviewed-by: Dmitry Torokhov <dtor@chromium.org>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
-I don't think this was ever posted before.
+This is a resend of https://lkml.kernel.org/r/1469677797-74304-3-git-send-email-apronin@chromium.org
 
- drivers/char/tpm/tpm-interface.c | 16 ++++++++++++++--
- include/linux/tpm.h              |  2 ++
- 2 files changed, 16 insertions(+), 2 deletions(-)
+ drivers/char/tpm/tpm_tis_spi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-index ae1030c9b086..7232527652e8 100644
---- a/drivers/char/tpm/tpm-interface.c
-+++ b/drivers/char/tpm/tpm-interface.c
-@@ -86,6 +86,11 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
- 		return -E2BIG;
- 	}
+diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
+index 9914f6973463..0fdd3966a3b3 100644
+--- a/drivers/char/tpm/tpm_tis_spi.c
++++ b/drivers/char/tpm/tpm_tis_spi.c
+@@ -194,6 +194,7 @@ static const struct tpm_tis_phy_ops tpm_spi_phy_ops = {
+ 	.read16 = tpm_tis_spi_read16,
+ 	.read32 = tpm_tis_spi_read32,
+ 	.write32 = tpm_tis_spi_write32,
++	.max_xfer_size = MAX_SPI_FRAMESIZE,
+ };
  
-+	if (test_bit(0, &chip->is_suspended)) {
-+		dev_warn(&chip->dev, "blocking transmit while suspended\n");
-+		return -EAGAIN;
-+	}
-+
- 	rc = chip->ops->send(chip, buf, count);
- 	if (rc < 0) {
- 		if (rc != -EPIPE)
-@@ -403,14 +408,19 @@ int tpm_pm_suspend(struct device *dev)
- 		return 0;
- 
- 	if (!tpm_chip_start(chip)) {
--		if (chip->flags & TPM_CHIP_FLAG_TPM2)
-+		if (chip->flags & TPM_CHIP_FLAG_TPM2) {
- 			tpm2_shutdown(chip, TPM2_SU_STATE);
--		else
-+			set_bit(0, &chip->is_suspended);
-+		} else {
- 			rc = tpm1_pm_suspend(chip, tpm_suspend_pcr);
-+		}
- 
- 		tpm_chip_stop(chip);
- 	}
- 
-+	if (!rc)
-+		set_bit(0, &chip->is_suspended);
-+
- 	return rc;
- }
- EXPORT_SYMBOL_GPL(tpm_pm_suspend);
-@@ -426,6 +436,8 @@ int tpm_pm_resume(struct device *dev)
- 	if (chip == NULL)
- 		return -ENODEV;
- 
-+	clear_bit(0, &chip->is_suspended);
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(tpm_pm_resume);
-diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-index 1b5436b213a2..48df005228d0 100644
---- a/include/linux/tpm.h
-+++ b/include/linux/tpm.h
-@@ -132,6 +132,8 @@ struct tpm_chip {
- 	int dev_num;		/* /dev/tpm# */
- 	unsigned long is_open;	/* only one allowed */
- 
-+	unsigned long is_suspended;
-+
- 	char hwrng_name[64];
- 	struct hwrng hwrng;
- 
+ static int tpm_tis_spi_probe(struct spi_device *dev)
 -- 
 Sent by a computer through tubes
 
