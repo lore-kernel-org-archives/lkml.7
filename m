@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0F8C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E1FC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2B820679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9B020679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441587;
-	bh=YL8MIoVT72q5kWa4/vm5yvnqtrpUHTG172GFL97hqFA=;
+	s=default; t=1560441594;
+	bh=3H//TXWicvgD2rfLiPqxf/vl4tRM2FVw4ISUgdkNjuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zIx6d0mmVvrF9WbRvJfksS9OvxbabKcE/kUj2pjg9YxtCI7msHkdh6sNyRH4MTAKo
-	 PebN9fdU3SZtwAibMUeoV3fRC1EogJOdG1BZwve2/NHaGfzWN5o3YuZcHP8DOeFjnR
-	 d9teAOEoU1KozwPWM8siizPeNqDqqglS1iGQTsp0=
+	b=vgLcYXdLgEF41nrg4l93kJImCuK3oFVZSfhTgcQV+YEfcNbbUfeLknI2LsuAwOrD7
+	 E612ODkSD5cMcBOABUM1mlAKxCUdXW2U4V0n8rW8WXY3hA9Ej5avtdvylDzt1GkWee
+	 Jx7UzU1Dm3QRx+6CuX77lYA8hIEJygCm1SpejPxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731726AbfFMP7o (ORCPT
+        id S1733188AbfFMP7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:59:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37342 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:59:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731481AbfFMIti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:49:38 -0400
+        id S1731476AbfFMIta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:49:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C582206BA;
-        Thu, 13 Jun 2019 08:49:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF06F206BA;
+        Thu, 13 Jun 2019 08:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415777;
-        bh=YL8MIoVT72q5kWa4/vm5yvnqtrpUHTG172GFL97hqFA=;
+        s=default; t=1560415769;
+        bh=3H//TXWicvgD2rfLiPqxf/vl4tRM2FVw4ISUgdkNjuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EbuOSLg4fECNBEAaHFhCC2HVVaYWK95fl4uWPdkwFdCcNlvv6bahllZcfpiSLdsnI
-         6fzuYrYbL8QmVmE83rtYfzGqvOkxocxV2NMJcJH0b/lW1RebmFK4w69vFsC4QRQIyg
-         rW0QuyEP7d7Djf0xbu/Bn37QldizRGRHFDArHNQg=
+        b=ybbPVPxGesSF7ONcQW/wZgoJLKbeD+8BgLY/6wEF3ZgIt+PYLjPH9d8U1NIdOPXb4
+         6MwEaU80HvloTr3Q2OxJiQq1Q9B2l1NnkD3FRATJuQAe9+mcP5TX96l9yhSezmjB0e
+         06UNR3rX8YupX3joY43vKy/qsH5RkMdkEQFnp9Vk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Binbin Wu <binbin.wu@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Sun peng Li <Sunpeng.Li@amd.com>,
+        Aric Cyr <Aric.Cyr@amd.com>, Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 119/155] pinctrl: pinctrl-intel: move gpio suspend/resume to noirq phase
-Date:   Thu, 13 Jun 2019 10:33:51 +0200
-Message-Id: <20190613075659.546693851@linuxfoundation.org>
+Subject: [PATCH 5.1 116/155] drm/amd/display: Use plane->color_space for dpp if specified
+Date:   Thu, 13 Jun 2019 10:33:48 +0200
+Message-Id: <20190613075659.406547890@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -61,98 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2fef32766861c6e171f436ab99c89198cf0ca6e1 ]
+[ Upstream commit a1e07ba89d49581471d64c48152dbe03b42bd025 ]
 
-In current driver, SET_LATE_SYSTEM_SLEEP_PM_OPS is used to install the
-callbacks for suspend/resume.
-GPIO pin may be used as the interrupt pin by some device. However, using
-SET_LATE_SYSTEM_SLEEP_PM_OPS() to install the callbacks, the resume
-callback is called after resume_device_irqs(). Unintended interrupts may
-arrive due to resuming device irqs first, but the GPIO controller is not
-properly restored.
+[Why]
+The input color space for the plane was previously ignored even if it
+was set.
 
-Normally, for a SMP system, there are multiple cores, so even when there are
-unintended interrupts, BSP gets the chance to initialize the GPIO chip soon.
-But when there is only 1 core is active (other cores are offlined or
-single core) during resume, it is more easily to observe the unintended
-interrupts.
+If a limited range YUV format was given to DC then the
+wrong color transformation matrix was being used since DC assumed that
+it was full range instead.
 
-This patch renames the suspend/resume function by adding suffix "_noirq",
-and installs the callbacks using SET_NOIRQ_SYSTEM_SLEEP_PM_OPS().
+[How]
+Respect the given color_space format for the plane if it isn't
+COLOR_SPACE_UNKNOWN. Otherwise, use the implicit default since DM
+didn't specify.
 
-Signed-off-by: Binbin Wu <binbin.wu@intel.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
+Acked-by: Aric Cyr <Aric.Cyr@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/intel/pinctrl-intel.c |  8 ++++----
- drivers/pinctrl/intel/pinctrl-intel.h | 11 ++++++-----
- 2 files changed, 10 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp.c          | 6 +++++-
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 2 +-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 3b1818184207..70638b74f9d6 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1466,7 +1466,7 @@ static bool intel_pinctrl_should_save(struct intel_pinctrl *pctrl, unsigned int
- 	return false;
- }
- 
--int intel_pinctrl_suspend(struct device *dev)
-+int intel_pinctrl_suspend_noirq(struct device *dev)
- {
- 	struct intel_pinctrl *pctrl = dev_get_drvdata(dev);
- 	struct intel_community_context *communities;
-@@ -1505,7 +1505,7 @@ int intel_pinctrl_suspend(struct device *dev)
- 
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(intel_pinctrl_suspend);
-+EXPORT_SYMBOL_GPL(intel_pinctrl_suspend_noirq);
- 
- static void intel_gpio_irq_init(struct intel_pinctrl *pctrl)
- {
-@@ -1527,7 +1527,7 @@ static void intel_gpio_irq_init(struct intel_pinctrl *pctrl)
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp.c
+index cd1ebe57ed59..1951f9276e41 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_dpp.c
+@@ -392,6 +392,10 @@ void dpp1_cnv_setup (
+ 	default:
+ 		break;
  	}
- }
++
++	/* Set default color space based on format if none is given. */
++	color_space = input_color_space ? input_color_space : color_space;
++
+ 	REG_SET(CNVC_SURFACE_PIXEL_FORMAT, 0,
+ 			CNVC_SURFACE_PIXEL_FORMAT, pixel_format);
+ 	REG_UPDATE(FORMAT_CONTROL, FORMAT_CONTROL__ALPHA_EN, alpha_en);
+@@ -403,7 +407,7 @@ void dpp1_cnv_setup (
+ 		for (i = 0; i < 12; i++)
+ 			tbl_entry.regval[i] = input_csc_color_matrix.matrix[i];
  
--int intel_pinctrl_resume(struct device *dev)
-+int intel_pinctrl_resume_noirq(struct device *dev)
- {
- 	struct intel_pinctrl *pctrl = dev_get_drvdata(dev);
- 	const struct intel_community_context *communities;
-@@ -1589,7 +1589,7 @@ int intel_pinctrl_resume(struct device *dev)
+-		tbl_entry.color_space = input_color_space;
++		tbl_entry.color_space = color_space;
  
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(intel_pinctrl_resume);
-+EXPORT_SYMBOL_GPL(intel_pinctrl_resume_noirq);
- #endif
+ 		if (color_space >= COLOR_SPACE_YCBCR601)
+ 			select = INPUT_CSC_SELECT_ICSC;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index 5b551a544e82..1fac86d3032d 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -1936,7 +1936,7 @@ static void update_dpp(struct dpp *dpp, struct dc_plane_state *plane_state)
+ 			plane_state->format,
+ 			EXPANSION_MODE_ZERO,
+ 			plane_state->input_csc_color_matrix,
+-			COLOR_SPACE_YCBCR601_LIMITED);
++			plane_state->color_space);
  
- MODULE_AUTHOR("Mathias Nyman <mathias.nyman@linux.intel.com>");
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.h b/drivers/pinctrl/intel/pinctrl-intel.h
-index b8a07d37d18f..a8e958f1dcf5 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.h
-+++ b/drivers/pinctrl/intel/pinctrl-intel.h
-@@ -177,13 +177,14 @@ int intel_pinctrl_probe_by_hid(struct platform_device *pdev);
- int intel_pinctrl_probe_by_uid(struct platform_device *pdev);
- 
- #ifdef CONFIG_PM_SLEEP
--int intel_pinctrl_suspend(struct device *dev);
--int intel_pinctrl_resume(struct device *dev);
-+int intel_pinctrl_suspend_noirq(struct device *dev);
-+int intel_pinctrl_resume_noirq(struct device *dev);
- #endif
- 
--#define INTEL_PINCTRL_PM_OPS(_name)						  \
--const struct dev_pm_ops _name = {						  \
--	SET_LATE_SYSTEM_SLEEP_PM_OPS(intel_pinctrl_suspend, intel_pinctrl_resume) \
-+#define INTEL_PINCTRL_PM_OPS(_name)					\
-+const struct dev_pm_ops _name = {					\
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(intel_pinctrl_suspend_noirq,	\
-+				      intel_pinctrl_resume_noirq)	\
- }
- 
- #endif /* PINCTRL_INTEL_H */
+ 	//set scale and bias registers
+ 	build_prescale_params(&bns_params, plane_state);
 -- 
 2.20.1
 
