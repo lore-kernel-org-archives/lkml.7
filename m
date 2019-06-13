@@ -2,120 +2,112 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39514C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD1BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111FF2175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443290;
-	bh=pTWfd28rxTsC36j5nVi4lXHdrxsHMLFah47TRp8/Hl0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eaYHJLwzZjVXe/J8qBEJwHr8s6rp/iMLAymyFQQRTqSXTHEy8Rbsj1gb5ieYpLNrv
-	 oNF96YKYkuIyfcS8MTzFZmHxjqAdJ3PYOoSZNIS0Twqz3/oLLxLkgakO4+2doKv1XX
-	 NsLfXYsBsWIwo+NJwZybmd6KEXJkE+EDEfIlqUZM=
+	by mail.kernel.org (Postfix) with ESMTP id 7350B20449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcwiPxgj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403893AbfFMQ2I (ORCPT
+        id S2392263AbfFMQ2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:28:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727271AbfFMQ2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:28:06 -0400
-Received: from localhost (unknown [131.107.160.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EE1F21743;
-        Thu, 13 Jun 2019 16:28:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560443285;
-        bh=pTWfd28rxTsC36j5nVi4lXHdrxsHMLFah47TRp8/Hl0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jH+hYGmLO1NFzZnYcUN5UZLEqmsoQQ3AoV3p5xisj858SDLvyW9Nh3RakQJBRYq4g
-         oBxFnQEyHGkFv/4dw+UJxCsMrHHu5+M315FphN83xvW4/NOf+v9mP2WcwFdyfr8Zdk
-         pJD1fokgt1FQHAtnRbEeOUG/eM3pCje3IPwso66A=
-Date:   Thu, 13 Jun 2019 12:28:05 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
-Subject: Re: [PATCH 4.14 61/81] ALSA: seq: Protect in-kernel ioctl calls with
- mutex
-Message-ID: <20190613162805.GI1513@sasha-vm>
-References: <20190613075649.074682929@linuxfoundation.org>
- <20190613075653.581995283@linuxfoundation.org>
- <s5hzhmlluwx.wl-tiwai@suse.de>
- <20190613091122.GA31122@kroah.com>
- <s5hv9x9luek.wl-tiwai@suse.de>
- <20190613153946.GG1513@sasha-vm>
- <s5hwohpjxrk.wl-tiwai@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <s5hwohpjxrk.wl-tiwai@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 13 Jun 2019 12:28:14 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42105 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388457AbfFMQ1U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:27:20 -0400
+Received: by mail-pg1-f195.google.com with SMTP id l19so8641494pgh.9;
+        Thu, 13 Jun 2019 09:27:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=JsgCC/BMGBMjxmW7o9BryeGGLOEsGyP+ouOS5p6QwrY=;
+        b=JcwiPxgjLgV6N4VCuG8y04JytNqGA3wjUEQKXd/8c9NKoASVZrzY9YqxjRgcnxpj/m
+         xYimd6aF0FM3qGzIYEie1Obu9Fv9hNkPj5fOH/k1Cq8DDcTXGvzHfbdZZhCf2rHYdqoK
+         irX41RQFqAFcvftuCdOl2TIoHJ7GuhiI3Lp4/3pYT1WHUTlWCSo2uZS0xVBoOWxaygH0
+         Qhyde+t2vasIdzZ+OUXv4OvvVQwY7REx9a6hOOv/nwJg0o08wp2sRXgZY/BCBEUe5dt5
+         QSiS7Bi23/N6707zjA7xU7gvDKFjyL8fi7H0FXAHjINXJuoR7QtNv2s6u2JezgqDFeA7
+         CcCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=JsgCC/BMGBMjxmW7o9BryeGGLOEsGyP+ouOS5p6QwrY=;
+        b=RqnpGk0dvObotJH45D8WUdFWRJYy85aL7kugRIvy44IAvWGemwer3L7RM2dB8rrlE0
+         tko8CdzNR2cFMboy/7hLtduOYmm4gaNBN4w2eLhDi45GMySfT7HsZFY0vUwc/H1F6JTo
+         rpzwmGkQFr2UPiyUtEiPefNDgR4Bg7k+y/s18Zl0e1PwENaowgCznmXlBorDaCY54Cbh
+         a316YXSxFGF70GejjIGqZZ/zHrnj9JHnLhUS7ezcsxzt0MVqwxR/5U4SIIct7XEqHBOy
+         5H4rGR0MwmDScOCF3Np3s5Dlhgqb0MT6A4rREh3JOE8a/BynJrXQsMHUXI1czaZbaNX2
+         iR0A==
+X-Gm-Message-State: APjAAAUkf3w5Uf+iosKSCcmQoJjin78CB/6r2UtJ0QQ//8uN3m1RT7/9
+        M50OynRsi43vRwj+NiVaQ34=
+X-Google-Smtp-Source: APXvYqzz/wBg2hFMk5AN2wVrdkk/+d5jQkSOOjBN2BUU2pkNiSLnjcEV8rg9DLZ1/j1U47rn0NUi1g==
+X-Received: by 2002:a62:1bd1:: with SMTP id b200mr69156992pfb.210.1560443239837;
+        Thu, 13 Jun 2019 09:27:19 -0700 (PDT)
+Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
+        by smtp.gmail.com with ESMTPSA id l8sm265407pgb.76.2019.06.13.09.27.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Jun 2019 09:27:19 -0700 (PDT)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     joro@8bytes.org, m.szyprowski@samsung.com, kgene@kernel.org,
+        krzk@kernel.org, will.deacon@arm.com, robin.murphy@arm.com,
+        agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com,
+        heiko@sntech.de, thierry.reding@gmail.com, jonathanh@nvidia.com
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
+        Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH 04/10] iommu/qcom: convert to SPDX license tags
+Date:   Thu, 13 Jun 2019 12:26:57 -0400
+Message-Id: <20190613162703.986-4-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.0
+In-Reply-To: <20190613162703.986-1-tiny.windzz@gmail.com>
+References: <20190613162703.986-1-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 05:44:15PM +0200, Takashi Iwai wrote:
->On Thu, 13 Jun 2019 17:39:46 +0200,
->Sasha Levin wrote:
->>
->> On Thu, Jun 13, 2019 at 11:13:55AM +0200, Takashi Iwai wrote:
->> >On Thu, 13 Jun 2019 11:11:22 +0200,
->> >Greg Kroah-Hartman wrote:
->> >>
->> >> On Thu, Jun 13, 2019 at 11:02:54AM +0200, Takashi Iwai wrote:
->> >> > On Thu, 13 Jun 2019 10:33:44 +0200,
->> >> > Greg Kroah-Hartman wrote:
->> >> > >
->> >> > > [ Upstream commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32 ]
->> >> > >
->> >> > > ALSA OSS sequencer calls the ioctl function indirectly via
->> >> > > snd_seq_kernel_client_ctl().  While we already applied the protection
->> >> > > against races between the normal ioctls and writes via the client's
->> >> > > ioctl_mutex, this code path was left untouched.  And this seems to be
->> >> > > the cause of still remaining some rare UAF as spontaneously triggered
->> >> > > by syzkaller.
->> >> > >
->> >> > > For the sake of robustness, wrap the ioctl_mutex also for the call via
->> >> > > snd_seq_kernel_client_ctl(), too.
->> >> > >
->> >> > > Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
->> >> > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
->> >> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
->> >> >
->> >> > This commit is reverted later by commit f0654ba94e33.
->> >> > So please drop this.  The proper fix is done later by commit
->> >> > 7c32ae35fbf9 ("ALSA: seq: Cover unsubscribe_port() in list_mutex")
->> >> >
->> >> > Ditto for 4.19.y and 5.1.y.
->> >>
->> >> Now dropped everywhere, and I added 7c32ae35fbf9 ("ALSA: seq: Cover
->> >> unsubscribe_port() in list_mutex") everywhere instead.
->> >
->> >Thanks!
->> >
->> >BTW, do we have a systematic check whether the selected stable commit
->> >is reverted in a later commit?  At least, you can track it as long as
->> >Fixes tag is properly set.
->>
->> I have that scripting in place, and I usually check it once before I
->> send the initial reviews and then once Greg does the -rc release.
->
->OK, good to hear.  So this time must be some exceptional error.
+Updates license to use SPDX-License-Identifier.
 
-I still run these manually (I guess it's time to automate that too), so
-it happens sometimes that folks notice these faster :)
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ drivers/iommu/qcom_iommu.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
---
-Thanks,
-Sasha
+diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
+index 8cdd3f059513..ad913720d7dd 100644
+--- a/drivers/iommu/qcom_iommu.c
++++ b/drivers/iommu/qcom_iommu.c
+@@ -1,18 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * IOMMU API for QCOM secure IOMMUs.  Somewhat based on arm-smmu.c
+  *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+- *
+  * Copyright (C) 2013 ARM Limited
+  * Copyright (C) 2017 Red Hat
+  */
+-- 
+2.17.0
+
