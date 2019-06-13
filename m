@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BA3C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B236C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF562208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210ED20851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441382;
-	bh=OwZ0qLFkEiHNIobShGBggg/4oh/hdfHyky43omuQniU=;
+	s=default; t=1560441388;
+	bh=SyJwNShy55tKhclXb+GU9q0BgotQ9kP/VIB+jVyeH9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YuS2wwAB8ab4IAIIk4JmBNjTia9wgwpQyOT5JtC1dJ63tK4NHW1O1/uDqHKdYKPwp
-	 iAdyDw2t4/tO4Jlm2YUuSqnBXJ3a7sB0l7HFOoo6XOgq1sz5wqqf9iYn6Zfxy5fev4
-	 oUK2rr7OZKGkQxIQRzBTCgNTxDUtML92oHtFcka8=
+	b=j6Rn4HR148SEIxbYzNzbj+UCHF/VQo9jjEihpuYJirxkS1LBdGc5Ud4ZHvs0w0T3d
+	 C6fWL2Y1WOiQRvkMElBD0yEwkTfr4cfxoIAC/ErjGdhYfdnZDYTHYjgUg5E85Czovt
+	 JQDu35jvEQM4EvYlsJJTxvFRYA/qwQa3McsULf7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389341AbfFMP4N (ORCPT
+        id S2390308AbfFMP4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:56:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38772 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:56:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731527AbfFMIvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:51:17 -0400
+        id S1731530AbfFMIvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:51:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C723F206BA;
-        Thu, 13 Jun 2019 08:51:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8537E21473;
+        Thu, 13 Jun 2019 08:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415877;
-        bh=OwZ0qLFkEiHNIobShGBggg/4oh/hdfHyky43omuQniU=;
+        s=default; t=1560415883;
+        bh=SyJwNShy55tKhclXb+GU9q0BgotQ9kP/VIB+jVyeH9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SxUlaMUgNedUocdk7KfXx80JUdR64wWUjgV1weOhkzFXpLmC3hyKHEjrLMXvUFo39
-         txjSg+wXkYoPoSZF7PLyxBW0RprvmnqT/kQzfS/QbBQk813HwugR3K/IRm5n79SsG8
-         EoINzAtcEriwXpE59VAMmy6XzZ9o8xBxgKwWdBZo=
+        b=rQP4rAj/1bGaLutfkCFoRaIoq/Ypdxy81rruQqBaWOr6Az/ws5OWRo4BB4wCkICw2
+         zf6E5ow8VrSzcnY4BWUggTiBQiErS9aOVy81GZuaGb3r/dMJrsejyE+zuPpHZ7xXgx
+         9yeWcvRvgw/ykuKouwSAJ9hi8V/Qu0Xnnrqidk7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Aditya Pakki <pakki001@umn.edu>,
-        Ferenc Bakonyi <fero@drama.obuda.kando.hu>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 129/155] video: hgafb: fix potential NULL pointer dereference
-Date:   Thu, 13 Jun 2019 10:34:01 +0200
-Message-Id: <20190613075700.013319542@linuxfoundation.org>
+Subject: [PATCH 5.1 149/155] ARM: shmobile: porter: enable R-Car Gen2 regulator quirk
+Date:   Thu, 13 Jun 2019 10:34:21 +0200
+Message-Id: <20190613075701.211814686@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -62,34 +63,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ec7f6aad57ad29e4e66cc2e18e1e1599ddb02542 ]
+[ Upstream commit d5aa84087eadd6f2619628bc9f3d028eeabded0f ]
 
-When ioremap fails, hga_vram should not be dereferenced. The fix
-check the failure to avoid NULL pointer dereference.
+Porter needs the regulator quirk, just like the other boards.
+But unlike the other boards, the Porter uses DA9063L, which
+is at 0x5a. Otherwise, DA9063L and DA9210 IRQ line is still
+connected to CPU IRQ2 .
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Cc: Aditya Pakki <pakki001@umn.edu>
-Cc: Ferenc Bakonyi <fero@drama.obuda.kando.hu>
-[b.zolnierkie: minor patch summary fixup]
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/hgafb.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/hgafb.c b/drivers/video/fbdev/hgafb.c
-index 463028543173..59e1cae57948 100644
---- a/drivers/video/fbdev/hgafb.c
-+++ b/drivers/video/fbdev/hgafb.c
-@@ -285,6 +285,8 @@ static int hga_card_detect(void)
- 	hga_vram_len  = 0x08000;
+diff --git a/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c b/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c
+index dc526ef2e9b3..ee949255ced3 100644
+--- a/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c
++++ b/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * R-Car Generation 2 da9063/da9210 regulator quirk
++ * R-Car Generation 2 da9063(L)/da9210 regulator quirk
+  *
+  * Certain Gen2 development boards have an da9063 and one or more da9210
+  * regulators. All of these regulators have their interrupt request lines
+@@ -65,6 +65,7 @@ static struct i2c_msg da9210_msg = {
  
- 	hga_vram = ioremap(0xb0000, hga_vram_len);
-+	if (!hga_vram)
-+		goto error;
+ static const struct of_device_id rcar_gen2_quirk_match[] = {
+ 	{ .compatible = "dlg,da9063", .data = &da9063_msg },
++	{ .compatible = "dlg,da9063l", .data = &da9063_msg },
+ 	{ .compatible = "dlg,da9210", .data = &da9210_msg },
+ 	{},
+ };
+@@ -147,6 +148,7 @@ static int __init rcar_gen2_regulator_quirk(void)
  
- 	if (request_region(0x3b0, 12, "hgafb"))
- 		release_io_ports = 1;
+ 	if (!of_machine_is_compatible("renesas,koelsch") &&
+ 	    !of_machine_is_compatible("renesas,lager") &&
++	    !of_machine_is_compatible("renesas,porter") &&
+ 	    !of_machine_is_compatible("renesas,stout") &&
+ 	    !of_machine_is_compatible("renesas,gose"))
+ 		return -ENODEV;
+@@ -210,7 +212,7 @@ static int __init rcar_gen2_regulator_quirk(void)
+ 		goto err_free;
+ 	}
+ 
+-	pr_info("IRQ2 is asserted, installing da9063/da9210 regulator quirk\n");
++	pr_info("IRQ2 is asserted, installing regulator quirk\n");
+ 
+ 	bus_register_notifier(&i2c_bus_type, &regulator_quirk_nb);
+ 	return 0;
 -- 
 2.20.1
 
