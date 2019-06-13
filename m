@@ -2,116 +2,113 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEB5C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7ECC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B014F21721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="GWhicdJz"
+	by mail.kernel.org (Postfix) with ESMTP id 689BF215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392628AbfFMQhE (ORCPT
+        id S2392637AbfFMQhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:37:04 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:47255 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730670AbfFMHUt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 03:20:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1560410448; x=1591946448;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=dhmXrepDAZcjXkpQs5VfxOBzitc3aINuYRH8cXmOgbc=;
-  b=GWhicdJzBpWeJdgTa7sgEYhPFV3t6Oyh9XsErtlfW76CtRRC5iZR+nBE
-   qhghegzUiVbUo1ul+bNUu7mxZWUA9NvCdURG0rJdnAUqSNT07VRcDGlhI
-   2herR7rcSnOTimoyXZNMNu7IB8pvKN/Cn7NeCeBwx+sNGjrYu48KEg2fq
-   c=;
-X-IronPort-AV: E=Sophos;i="5.62,368,1554768000"; 
-   d="scan'208";a="737272759"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 13 Jun 2019 07:20:46 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com (Postfix) with ESMTPS id 254ACA26DA;
-        Thu, 13 Jun 2019 07:20:44 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 13 Jun 2019 07:20:43 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.160.69) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 13 Jun 2019 07:20:41 +0000
-Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM
- secrets
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Marius Hillenbrand <mhillenb@amazon.de>
-CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-hardening@lists.openwall.com>, <linux-mm@kvack.org>,
-        Alexander Graf <graf@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>
-References: <20190612170834.14855-1-mhillenb@amazon.de>
- <20190612182550.GI20308@linux.intel.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <7162182f-74e5-9be7-371d-48ee483206c2@amazon.com>
-Date:   Thu, 13 Jun 2019 09:20:40 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Thu, 13 Jun 2019 12:37:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35270 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730526AbfFMHRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 03:17:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 45815AF05;
+        Thu, 13 Jun 2019 07:17:50 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 051E71E4328; Thu, 13 Jun 2019 09:17:47 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 09:17:47 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Ira Weiny <ira.weiny@intel.com>, Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190613071746.GA26505@quack2.suse.cz>
+References: <20190606104203.GF7433@quack2.suse.cz>
+ <20190606195114.GA30714@ziepe.ca>
+ <20190606222228.GB11698@iweiny-DESK2.sc.intel.com>
+ <20190607103636.GA12765@quack2.suse.cz>
+ <20190607121729.GA14802@ziepe.ca>
+ <20190607145213.GB14559@iweiny-DESK2.sc.intel.com>
+ <20190612102917.GB14578@quack2.suse.cz>
+ <20190612114721.GB3876@ziepe.ca>
+ <20190612120907.GC14578@quack2.suse.cz>
+ <CAPcyv4ikn219XUgHwsPdYp06vBNAJB9Rk-hjZA-fYT4GB3gi+w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190612182550.GI20308@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.43.160.69]
-X-ClientProxiedBy: EX13D22UWC001.ant.amazon.com (10.43.162.192) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4ikn219XUgHwsPdYp06vBNAJB9Rk-hjZA-fYT4GB3gi+w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 12-06-19 11:41:53, Dan Williams wrote:
+> On Wed, Jun 12, 2019 at 5:09 AM Jan Kara <jack@suse.cz> wrote:
+> >
+> > On Wed 12-06-19 08:47:21, Jason Gunthorpe wrote:
+> > > On Wed, Jun 12, 2019 at 12:29:17PM +0200, Jan Kara wrote:
+> > >
+> > > > > > The main objection to the current ODP & DAX solution is that very
+> > > > > > little HW can actually implement it, having the alternative still
+> > > > > > require HW support doesn't seem like progress.
+> > > > > >
+> > > > > > I think we will eventually start seein some HW be able to do this
+> > > > > > invalidation, but it won't be universal, and I'd rather leave it
+> > > > > > optional, for recovery from truely catastrophic errors (ie my DAX is
+> > > > > > on fire, I need to unplug it).
+> > > > >
+> > > > > Agreed.  I think software wise there is not much some of the devices can do
+> > > > > with such an "invalidate".
+> > > >
+> > > > So out of curiosity: What does RDMA driver do when userspace just closes
+> > > > the file pointing to RDMA object? It has to handle that somehow by aborting
+> > > > everything that's going on... And I wanted similar behavior here.
+> > >
+> > > It aborts *everything* connected to that file descriptor. Destroying
+> > > everything avoids creating inconsistencies that destroying a subset
+> > > would create.
+> > >
+> > > What has been talked about for lease break is not destroying anything
+> > > but very selectively saying that one memory region linked to the GUP
+> > > is no longer functional.
+> >
+> > OK, so what I had in mind was that if RDMA app doesn't play by the rules
+> > and closes the file with existing pins (and thus layout lease) we would
+> > force it to abort everything. Yes, it is disruptive but then the app didn't
+> > obey the rule that it has to maintain file lease while holding pins. Thus
+> > such situation should never happen unless the app is malicious / buggy.
+> 
+> When you say 'close' do you mean the final release of the fd? The vma
+> keeps a reference to a 'struct file' live even after the fd is closed.
 
-On 12.06.19 20:25, Sean Christopherson wrote:
-> On Wed, Jun 12, 2019 at 07:08:24PM +0200, Marius Hillenbrand wrote:
->> The Linux kernel has a global address space that is the same for any
->> kernel code. This address space becomes a liability in a world with
->> processor information leak vulnerabilities, such as L1TF. With the right
->> cache load gadget, an attacker-controlled hyperthread pair can leak
->> arbitrary data via L1TF. Disabling hyperthreading is one recommended
->> mitigation, but it comes with a large performance hit for a wide range
->> of workloads.
->>
->> An alternative mitigation is to not make certain data in the kernel
->> globally visible, but only when the kernel executes in the context of
->> the process where this data belongs to.
->>
->> This patch series proposes to introduce a region for what we call
->> process-local memory into the kernel's virtual address space. Page
->> tables and mappings in that region will be exclusive to one address
->> space, instead of implicitly shared between all kernel address spaces.
->> Any data placed in that region will be out of reach of cache load
->> gadgets that execute in different address spaces. To implement
->> process-local memory, we introduce a new interface kmalloc_proclocal() /
->> kfree_proclocal() that allocates and maps pages exclusively into the
->> current kernel address space. As a first use case, we move architectural
->> state of guest CPUs in KVM out of reach of other kernel address spaces.
-> Can you briefly describe what types of attacks this is intended to
-> mitigate?  E.g. guest-guest, userspace-guest, etc...  I don't want to
-> make comments based on my potentially bad assumptions.
+When I say 'close', I mean a call to ->release file operation which happens
+when the last reference to struct file is dropped. I.e., when all file
+descriptors and vmas (and possibly other places holding struct file
+reference) are gone.
 
-
-(quickly jumping in for Marius, he's offline today)
-
-The main purpose of this is to protect from leakage of data from one 
-guest into another guest using speculation gadgets on the host.
-
-The same mechanism can be used to prevent leakage of secrets from one 
-host process into another host process though, as host processes 
-potentially have access to gadgets via the syscall interface.
-
-
-Alex
-
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
