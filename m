@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF5BC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A814C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C9C20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FFB520851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:45:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L3WbZ0JS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YfEdLD5C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733120AbfFMPpf (ORCPT
+        id S2389250AbfFMPpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:45:35 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33318 "EHLO
+        Thu, 13 Jun 2019 11:45:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33280 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731803AbfFMJnr (ORCPT
+        with ESMTP id S1731799AbfFMJnm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:43:47 -0400
+        Thu, 13 Jun 2019 05:43:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=FEkGt+ty/uGWp0o9n/p7YTGA7bk3QKQR9GKnB3yrWi0=; b=L3WbZ0JSiDvBXJFsDUCJ02wcbX
-        BVJRpc0UiDSz8hdf9PGCQmrkNO9cC3Ct9Euv83j64Pvqa+bMG7zPftv6Qc47ddagd0apxJ3S9LtxK
-        YL0Gd6JRejUQjbVJguc5cGI104IqQQmLmGxj/QrnU1/8eCRFXHiVtvxgGKwlwToPy+mfQe5RgeuNc
-        7YyFcHDGYRl8yFp9cwxZhKia1V56GYhuyZqZJ3NB32yZYe7DQM/hr05KkwXqr/uf34lWIk5VMshTf
-        CpMaS4eanmRpQSDsR1G7yDdfQpx78Otwq1ePYvSywGpRHwk4jd2yXAVh0H6em6K2SgA7+4HrNyFnG
-        Se1/PImw==;
+        bh=xP52k8PSxiWJA231A7iOWwtNJf1wPwc/yjXMJD2RBtk=; b=YfEdLD5CH3U9ysOCwdL2FYmTCm
+        7+M9qmqGSvaM914U2KnoFaX+n4shPpJhrUd/PvcrkZkqrHimpFDBxMasr7oVEDrDKecmBuTaLZCGM
+        iT/KWUgZgRrB5zdJ/8S6pGh3KqkYgPjzhaOvvfgtZVAUrvCGJ6viIrfd+IFAUOmCbaSXdn3Xqi6dP
+        IyH7Omvq4XCgzsLItQEh8dQn6hfmBqy4TB1udG/rSepK2+eOtVvT3UK4eCYBuVf36OinvPDjaWT7K
+        MXnnYC67WwxGCvY3QR0pM8YGYOMCMRIMWbIz573pF9NwIAyI8Sbpnmm+OJEQEqq7JYkUxrcjdGlkh
+        kmjcQnIg==;
 Received: from mpp-cp1-natpool-1-198.ethz.ch ([82.130.71.198] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbMGl-0001l6-GH; Thu, 13 Jun 2019 09:43:43 +0000
+        id 1hbMGf-0001kQ-VY; Thu, 13 Jun 2019 09:43:38 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Dan Williams <dan.j.williams@intel.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
@@ -46,9 +46,9 @@ To:     Dan Williams <dan.j.williams@intel.com>,
 Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 05/22] mm: export alloc_pages_vma
-Date:   Thu, 13 Jun 2019 11:43:08 +0200
-Message-Id: <20190613094326.24093-6-hch@lst.de>
+Subject: [PATCH 03/22] mm: remove hmm_devmem_add_resource
+Date:   Thu, 13 Jun 2019 11:43:06 +0200
+Message-Id: <20190613094326.24093-4-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190613094326.24093-1-hch@lst.de>
 References: <20190613094326.24093-1-hch@lst.de>
@@ -60,26 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-noveau is currently using this through an odd hmm wrapper, and I plan
-to switch it to the real thing later in this series.
+This function has never been used since it was first added to the kernel
+more than a year and a half ago, and if we ever grow a consumer of the
+MEMORY_DEVICE_PUBLIC infrastructure it can easily use devm_memremap_pages
+directly now that we've simplified the API for it.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- mm/mempolicy.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/hmm.h |  3 ---
+ mm/hmm.c            | 54 ---------------------------------------------
+ 2 files changed, 57 deletions(-)
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 01600d80ae01..f9023b5fba37 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -2098,6 +2098,7 @@ alloc_pages_vma(gfp_t gfp, int order, struct vm_area_struct *vma,
- out:
- 	return page;
- }
-+EXPORT_SYMBOL_GPL(alloc_pages_vma);
+diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+index 4867b9da1b6c..5761a39221a6 100644
+--- a/include/linux/hmm.h
++++ b/include/linux/hmm.h
+@@ -688,9 +688,6 @@ struct hmm_devmem {
+ struct hmm_devmem *hmm_devmem_add(const struct hmm_devmem_ops *ops,
+ 				  struct device *device,
+ 				  unsigned long size);
+-struct hmm_devmem *hmm_devmem_add_resource(const struct hmm_devmem_ops *ops,
+-					   struct device *device,
+-					   struct resource *res);
  
- /**
-  * 	alloc_pages_current - Allocate pages.
+ /*
+  * hmm_devmem_page_set_drvdata - set per-page driver data field
+diff --git a/mm/hmm.c b/mm/hmm.c
+index ff2598eb7377..0c62426d1257 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -1445,58 +1445,4 @@ struct hmm_devmem *hmm_devmem_add(const struct hmm_devmem_ops *ops,
+ 	return devmem;
+ }
+ EXPORT_SYMBOL_GPL(hmm_devmem_add);
+-
+-struct hmm_devmem *hmm_devmem_add_resource(const struct hmm_devmem_ops *ops,
+-					   struct device *device,
+-					   struct resource *res)
+-{
+-	struct hmm_devmem *devmem;
+-	void *result;
+-	int ret;
+-
+-	if (res->desc != IORES_DESC_DEVICE_PUBLIC_MEMORY)
+-		return ERR_PTR(-EINVAL);
+-
+-	dev_pagemap_get_ops();
+-
+-	devmem = devm_kzalloc(device, sizeof(*devmem), GFP_KERNEL);
+-	if (!devmem)
+-		return ERR_PTR(-ENOMEM);
+-
+-	init_completion(&devmem->completion);
+-	devmem->pfn_first = -1UL;
+-	devmem->pfn_last = -1UL;
+-	devmem->resource = res;
+-	devmem->device = device;
+-	devmem->ops = ops;
+-
+-	ret = percpu_ref_init(&devmem->ref, &hmm_devmem_ref_release,
+-			      0, GFP_KERNEL);
+-	if (ret)
+-		return ERR_PTR(ret);
+-
+-	ret = devm_add_action_or_reset(device, hmm_devmem_ref_exit,
+-			&devmem->ref);
+-	if (ret)
+-		return ERR_PTR(ret);
+-
+-	devmem->pfn_first = devmem->resource->start >> PAGE_SHIFT;
+-	devmem->pfn_last = devmem->pfn_first +
+-			   (resource_size(devmem->resource) >> PAGE_SHIFT);
+-	devmem->page_fault = hmm_devmem_fault;
+-
+-	devmem->pagemap.type = MEMORY_DEVICE_PUBLIC;
+-	devmem->pagemap.res = *devmem->resource;
+-	devmem->pagemap.page_free = hmm_devmem_free;
+-	devmem->pagemap.altmap_valid = false;
+-	devmem->pagemap.ref = &devmem->ref;
+-	devmem->pagemap.data = devmem;
+-	devmem->pagemap.kill = hmm_devmem_ref_kill;
+-
+-	result = devm_memremap_pages(devmem->device, &devmem->pagemap);
+-	if (IS_ERR(result))
+-		return result;
+-	return devmem;
+-}
+-EXPORT_SYMBOL_GPL(hmm_devmem_add_resource);
+ #endif /* CONFIG_DEVICE_PRIVATE || CONFIG_DEVICE_PUBLIC */
 -- 
 2.20.1
 
