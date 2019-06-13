@@ -2,104 +2,137 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1508AC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF54FC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13D8218FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560447174;
-	bh=EnqBZe7BBllYmMHMndH2QOmDp6rkXHTqfgQGs6C2lRQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iEn/vB2IqF7WtZqh0VHagn5ggxrvG4mtJ4idCtX8FSqo9ID2tvRnxBk1sA03UA/JJ
-	 iahloIOQZ70LlQVvW7dZfbeAfUYAbTd58LwYq4mqKcGz3i6GkdpCPTMUMC58JvSyPE
-	 OxvFyhj0Kze9gr8B2CEvhf7xwA5CqASR2OuAT0Sg=
+	by mail.kernel.org (Postfix) with ESMTP id C7038218B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:39:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="k6uPVU1r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfFMRcw (ORCPT
+        id S1728198AbfFMRjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:32:52 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49864 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfFMRcw (ORCPT
+        Thu, 13 Jun 2019 13:39:46 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:53032 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726965AbfFMRjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:32:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TJhF0E3c8kYvjflA3VkVxxaZVVwJAMblQcrgE5YFtmQ=; b=JZkSdnJwfGPx/1jqRNH4+i8jw
-        DdAG3QMIXZsZYN+5fk4nKhnktoYmOf37wO4QyR3q+nBmcOi6BoHVCg56XIBpDJghFEZHIwbq/sy4w
-        yOS8vudJARiTVyJYQqQKFvl7Jbu9oXSYQ8ZY1LtGbUqttU7lv1Lg6Xa0Fhr4ESopAjaXc=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hbTaj-0005L2-OX; Thu, 13 Jun 2019 17:32:49 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 2E6B0440046; Thu, 13 Jun 2019 18:32:49 +0100 (BST)
-Date:   Thu, 13 Jun 2019 18:32:48 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     keerthy <j-keerthy@ti.com>
-Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, t-kristo@ti.com
-Subject: Re: [RESEND PATCH v2 3/3] regulator: lp87565: Add 4-phase lp87561
- regulator support
-Message-ID: <20190613173248.GP5316@sirena.org.uk>
-References: <20190612144620.28331-1-j-keerthy@ti.com>
- <20190613154552.GL5316@sirena.org.uk>
- <bfb19336-fbe9-06d8-25d3-f2e0b8ea6c9b@ti.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zn4k3Q+N5puqXur4"
-Content-Disposition: inline
-In-Reply-To: <bfb19336-fbe9-06d8-25d3-f2e0b8ea6c9b@ti.com>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 13 Jun 2019 13:39:46 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5DHd4Zg185540;
+        Thu, 13 Jun 2019 17:39:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=mi9aElUTCRIiQJie6XA4eLpTipbeI9MjyOvAunbdU/M=;
+ b=k6uPVU1rrtdvUJOhXKY7/nJHUkwHYhPS59cSDuKj3bHFVedl5PHcBifOfBvzSBqRfhq1
+ iGBr93FhN3vuY+NxzWCIUb9oe2nXYsWjL5NeGByyht/ACIvyZyD18YqmpXMruT63zm2c
+ lXaY5AbzZHjo5WDbvw8e3b0NQaUnjgP42EBQTFrgQmgHAnY8PyAC17eUzxcPlZgEXIbd
+ 8hqxEEXHzCvin+m0tEN1i629+gYWI57BQII3y2PeOHJWY5OWHH0cCfbdQBgvmDLhYHc/
+ lt2ZhJw5wE+yyuZ4AqVgNooUHR6nC42pZq8hSFC7EU3FLsgi3Cz4agGvc0hf9JVgbBpr qA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2t05nr32bg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 17:39:32 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5DHcFUY196011;
+        Thu, 13 Jun 2019 17:39:31 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2t0p9shnt2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 17:39:31 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5DHdTSR009412;
+        Thu, 13 Jun 2019 17:39:29 GMT
+Received: from [192.168.10.144] (/51.175.236.248)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 13 Jun 2019 10:39:29 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v2] RDMA/cma: Make CM response timeout and # CM retries
+ configurable
+From:   =?utf-8?Q?H=C3=A5kon_Bugge?= <haakon.bugge@oracle.com>
+In-Reply-To: <20190613172355.GF22901@ziepe.ca>
+Date:   Thu, 13 Jun 2019 19:39:24 +0200
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Parav Pandit <parav@mellanox.com>,
+        Steve Wise <swise@opengridcomputing.com>,
+        OFED mailing list <linux-rdma@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1D8E6B14-3336-42B3-B572-596DD2183D89@oracle.com>
+References: <20190226075722.1692315-1-haakon.bugge@oracle.com>
+ <174ccd37a9ffa05d0c7c03fe80ff7170a9270824.camel@redhat.com>
+ <67B4F337-4C3A-4193-B1EF-42FD4765CBB7@oracle.com>
+ <20190613172355.GF22901@ziepe.ca>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9287 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906130129
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9287 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906130129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---zn4k3Q+N5puqXur4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Thu, Jun 13, 2019 at 10:32:45PM +0530, keerthy wrote:
-> On 6/13/2019 9:15 PM, Mark Brown wrote:
-> > On Wed, Jun 12, 2019 at 08:16:20PM +0530, Keerthy wrote:
+> On 13 Jun 2019, at 19:23, Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>=20
+> On Thu, Jun 13, 2019 at 06:58:30PM +0200, H=C3=A5kon Bugge wrote:
+>=20
+>> If you refer to the backlog parameter in rdma_listen(), I cannot see
+>> it being used at all for IB.
+>>=20
+>> For CX-3, which is paravirtualized wrt. MAD packets, it is the proxy
+>> UD receive queue length for the PF driver that can be construed as a
+>> backlog.=20
+>=20
+> No, in IB you can drop UD packets if your RQ is full - so the proxy RQ
+> is really part of the overall RQ on QP1.
+>=20
+> The backlog starts once packets are taken off the RQ and begin the
+> connection accept processing.
 
-> > > patches 1/3 2/3 are already applied to linux-next.
+Do think we say the same thing. If, incoming REQ processing is severly =
+delayed, the backlog is #entries in the QP1 receive queue in the PF. I =
+can call rdma_listen() with a backlog of a zillion, but it will not =
+help.
 
-> > This doesn't build without those patches:
+>> Customer configures #VMs and different workload may lead to way
+>> different number of CM connections. The proxying of MAD packet
+>> through the PF driver has a finite packet rate. With 64 VMs, 10.000
+>> QPs on each, all going down due to a switch failing or similar, you
+>> have 640.000 DREQs to be sent, and with the finite packet rate of MA
+>> packets through the PF, this takes more than the current CM
+>> timeout. And then you re-transmit and increase the burden of the PF
+>> proxying.
+>=20
+> I feel like the performance of all this proxying is too low to support
+> such a large work load :(
 
-> They are already on next. Do you want me to resend them as well?
+That is what I am aiming at, for example to spread the =
+completion_vector(s) for said QPs ;-)
 
-That's no good, it still breaks the build of my tree.  I can't apply
-this until the code is in my tree, either through a shared branch or
-through Lihus' tree.  I see I acked the patch, I'll have been expecting
-the patch to be applied to Lee's tree.  If that's not possible or
-there's no branch then please resend after the merge window.
+-h
 
---zn4k3Q+N5puqXur4
-Content-Type: application/pgp-signature; name="signature.asc"
+>=20
+> Can it be improved?
+>=20
+> Jason
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0CiMAACgkQJNaLcl1U
-h9CTIwf9Fmh40EtSogz1kbW5Y6D4/CrNI3ad/hB3hEl3kBob++f4JYXKFzSJBlTm
-wcnkN150boPQ/MwZGrrcWBMJ0YzbsGEeHcftINv+AB2r3yCUfwa7Ab7zvu8epDRy
-+1UTdgM/NzgOOrFFkuWfjoDm4tn4m1WrcAcdVC9Zm1SAtKgVZYDUZCiHiYRng/+F
-iXZrzcnaGXN/6ZPzdf8PPAIu5ssCHh1dXG2ccqgiC6LQuxvZF0NkUOvKenRuzSGu
-fTkwLLkUn6jQyNkJ5NCcfoR0rpaFgtngZUk3Tp+QrAlxbYGKFM4flKN5U/H9hq5i
-JoAQYqCjLQf4GWwBTl8hszhR26LllQ==
-=lSLB
------END PGP SIGNATURE-----
-
---zn4k3Q+N5puqXur4--
