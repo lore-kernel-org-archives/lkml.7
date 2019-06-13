@@ -2,179 +2,227 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC01C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC79C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54CB320449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1683C20449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:15:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388355AbfFMPPp (ORCPT
+        id S1732381AbfFMPPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:15:45 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53706 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732217AbfFMNYg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 09:24:36 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 43399260D9A
-Subject: Re: [PATCH 0/2] Use Media Dev Allocator to fix vimc dev lifetime bugs
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1558667245.git.skhan@linuxfoundation.org>
- <c9160fe7-e880-4070-3959-b9e9177acf54@xs4all.nl>
-From:   Helen Koike <helen.koike@collabora.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=helen.koike@collabora.com; keydata=
- mQINBFmOMD4BEADb2nC8Oeyvklh+ataw2u/3mrl+hIHL4WSWtii4VxCapl9+zILuxFDrxw1p
- XgF3cfx7g9taWBrmLE9VEPwJA6MxaVnQuDL3GXxTxO/gqnOFgT3jT+skAt6qMvoWnhgurMGH
- wRaA3dO4cFrDlLsZIdDywTYcy7V2bou81ItR5Ed6c5UVX7uTTzeiD/tUi8oIf0XN4takyFuV
- Rf09nOhi24bn9fFN5xWHJooFaFf/k2Y+5UTkofANUp8nn4jhBUrIr6glOtmE0VT4pZMMLT63
- hyRB+/s7b1zkOofUGW5LxUg+wqJXZcOAvjocqSq3VVHcgyxdm+Nv0g9Hdqo8bQHC2KBK86VK
- vB+R7tfv7NxVhG1sTW3CQ4gZb0ZugIWS32Mnr+V+0pxci7QpV3jrtVp5W2GA5HlXkOyC6C7H
- Ao7YhogtvFehnlUdG8NrkC3HhCTF8+nb08yGMVI4mMZ9v/KoIXKC6vT0Ykz434ed9Oc9pDow
- VUqaKi3ey96QczfE4NI029bmtCY4b5fucaB/aVqWYRH98Jh8oIQVwbt+pY7cL5PxS7dQ/Zuz
- 6yheqDsUGLev1O3E4R8RZ8jPcfCermL0txvoXXIA56t4ZjuHVcWEe2ERhLHFGq5Zw7KC6u12
- kJoiZ6WDBYo4Dp+Gd7a81/WsA33Po0j3tk/8BWoiJCrjXzhtRwARAQABtCdIZWxlbiBLb2lr
- ZSA8aGVsZW4ua29pa2VAY29sbGFib3JhLmNvbT6JAlQEEwEKAD4CGwEFCwkIBwMFFQoJCAsF
- FgIDAQACHgECF4AWIQSofQA6zrItXEgHWTzAfqwo9yFiXQUCXEz3bwUJBKaPRQAKCRDAfqwo
- 9yFiXdUCD/4+WZr503hQ13KB4DijOW76ju8JDPp4p++qoPxtoAsld3yROoTI+VPWmt7ojHrr
- TZc7sTLxOFzaUC8HjGTb3r9ilIhIKf/M9KRLkpIJ+iLA+VoUbcSOMYWoVNfgLmbnqoezjPcy
- OHJwVw9dzEeYpvG6nkY6E4UktANySp27AniSXNuHOvYsOsXmUOqU1ScdsrQ9s732p/OGdTyw
- 1yd3gUMLZvCKFOBVHILH59HCRJgpwUPiws8G4dGMs4GTRvHT2s2mDQdQ0HEvcM9rvCRVixuC
- 5ZeOymZNi6lDIUIysgiZ+yzk6i5l/Ni6r7v20N3JppZvhPK6LqtaYceyAGyc3jjnOqoHT/qR
- kPjCwzmKiPtXjLw6HbRXtGgGtP5m3y8v6bfHH+66zd2vGCY0Z9EsqcnK4DCqRkLncFLPM2gn
- 9cZcCmO4ZqXUhTyn1nHM494kd5NX1Op4HO+t9ErnpufkVjoMUeBwESdQwwwHT3rjUueGmCrn
- VJK69/qhA4La72VTxHutl+3Z0Xy20HWsZS8Gsam39f95/LtPLzbBwnOOi5ZoXnm97tF8HrAZ
- 2h+kcRLMWw3BXy5q4gic+oFZMZP9oq1G9XTFld4FGgJ9ys8aGmhLM+uB1pFxb3XFtWQ2z4AJ
- iEp2VLl34quwfD6Gg4csiZe2KzvQHUe0w8SJ9LplrHPPprkCDQRZjjChARAAzISLQaHzaDOv
- ZxcoCNBk/hUGo2/gsmBW4KSj73pkStZ+pm3Yv2CRtOD4jBlycXjzhwBV7/70ZMH70/Y25dJa
- CnJKl/Y76dPPn2LDWrG/4EkqUzoJkhRIYFUTpkPdaVYznqLgsho19j7HpEbAum8r3jemYBE1
- AIuVGg4bqY3UkvuHWLVRMuaHZNy55aYwnUvd46E64JH7O990mr6t/nu2a1aJ0BDdi8HZ0RMo
- Eg76Avah+YR9fZrhDFmBQSL+mcCVWEbdiOzHmGYFoToqzM52wsNEpo2aStH9KLk8zrCXGx68
- ohJyQoALX4sS03RIWh1jFjnlw2FCbEdj/HDX0+U0i9COtanm54arYXiBTnAnx0F7LW7pv7sb
- 6tKMxsMLmprP/nWyV5AfFRi3jxs5tdwtDDk/ny8WH6KWeLR/zWDwpYgnXLBCdg8l97xUoPQO
- 0VkKSa4JEXUZWZx9q6kICzFGsuqApqf9gIFJZwUmirsxH80Fe04Tv+IqIAW7/djYpOqGjSyk
- oaEVNacwLLgZr+/j69/1ZwlbS8K+ChCtyBV4kEPzltSRZ4eU19v6sDND1JSTK9KSDtCcCcAt
- VGFlr4aE00AD/aOkHSylc93nPinBFO4AGhcs4WypZ3GGV6vGWCpJy9svfWsUDhSwI7GS/i/v
- UQ1+bswyYEY1Q3DjJqT7fXcAEQEAAYkEcgQYAQoAJgIbAhYhBKh9ADrOsi1cSAdZPMB+rCj3
- IWJdBQJcTPfVBQkEpo7hAkDBdCAEGQEKAB0WIQSomGMEg78Cd/pMshveCRfNeJ05lgUCWY4w
- oQAKCRDeCRfNeJ05lp0gD/49i95kPKjpgjUbYeidjaWuINXMCA171KyaBAp+Jp2Qrun4sIJB
- Z6srMj6O/gC34AhZln2sXeQdxe88sNbg6HjlN+4AkhTd6DttjOfUwnamLDA7uw+YIapGgsgN
- lznjLnqOaQ9mtEwRbZMUOdyRf9osSuL14vHl4ia3bYNJ52WYre6gLMu4K+Ghd02og+ILgIio
- Q827h0spqIJYHrR3Ynnhxdlv5GPCobh+AKsQMdTIuCzR6JSCBk6GHkg33SiWScKMUzT8B/cn
- ypLfGnfV/LDZ9wS2TMzIlK/uv0Vd4C0OGDd/GCi5Gwu/Ot0aY7fzZo2CiRV+/nJBWPRRBTji
- bE4FG2rt7WSRLO/QmH2meIW4f0USDiHeNwznHkPei59vRdlMyQdsxrmgSRDuX9Y3UkERxbgd
- uscqC8Cpcy5kpF11EW91J8aGpcxASc+5Pa66/+7CrpBC2DnfcfACdMAje7yeMn9XlHrqXNlQ
- GaglEcnGN2qVqRcKgcjJX+ur8l56BVpBPFYQYkYkIdQAuhlPylxOvsMcqI6VoEWNt0iFF3dA
- //0MNb8fEqw5TlxDPOt6BDhDKowkxOGIA9LOcF4PkaR9Qkvwo2P4vA/8fhCnMqlSPom4xYdk
- Ev8P554zDoL/XMHl+s7A0MjIJzT253ejZKlWeO68pAbNy/z7QRn2lFDnjwkQwH6sKPchYl2f
- 0g//Yu3vDkqk8+mi2letP3XBl2hjv2eCZjTh34VvtgY5oeL2ROSJWNd18+7O6q3hECZ727EW
- gIb3LK9g4mKF6+Rch6Gwz1Y4fmC5554fd2Y2XbVzzz6AGUC6Y+ohNg7lTAVO4wu43+IyTB8u
- ip5rX/JDGFv7Y1sl6tQJKAVIKAJE+Z3Ncqh3doQr9wWHl0UiQYKbSR9HpH1lmC1C3EEbTpwK
- fUIpZd1eQNyNJl1jHsZZIBYFsAfVNH/u6lB1TU+9bSOsV5SepdIb88d0fm3oZ4KzjhRHLFQF
- RwNUNn3ha6x4fbxYcwbvu5ZCiiX6yRTPoage/LUNkgQNX2PtPcur6CdxK6Pqm8EAI7PmYLfN
- NY3y01XhKNRvaVZoH2FugfUkhsBITglTIpI+n6YU06nDAcbeINFo67TSE0iL6Pek5a6gUQQC
- 6w+hJCaMr8KYud0q3ccHyU3TlAPDe10En3GsVz7Y5Sa3ODGdbmkfjK8Af3ogGNBVmpV16Xl8
- 4rETFv7POSUB2eMtbpmBopd+wKqHCwUEy3fx1zDbM9mp+pcDoL73rRZmlgmNfW/4o4qBzxRf
- FYTQLE69wAFU2IFce9PjtUAlBdC+6r3X24h3uD+EC37s/vWhxuKj2glaU9ONrVJ/SPvlqXOO
- WR1Zqw57vHMKimLdG3c24l8PkSw1usudgAA5OyO5Ag0EWY4wyQEQAMVp0U38Le7d80Mu6AT+
- 1dMes87iKn30TdMuLvSg2uYqJ1T2riRBF7zU6u74HF6zps0rPQviBXOgoSuKa1hnS6OwFb9x
- yQPlk76LY96SUB5jPWJ3fO78ZGSwkVbJFuG9gpD/41n8Unn1hXgDb2gUaxD0oXv/723EmTYC
- vSo3z6Y8A2aBQNr+PyhQAPDazvVQ+P7vnZYq1oK0w+D7aIix/Bp4mo4VbgAeAeMxXWSZs8N5
- NQtXeTBgB7DqrfJP5wWwgCsROfeds6EoddcYgqhG0zVU9E54C8JcPOA0wKVs+9+gt2eyRNtx
- 0UhFbah7qXuJGhWy/0CLXvVoCoS+7qpWz070TBAlPZrg9D0o2gOw01trQgoKAYBKKgJhxaX/
- 4gzi+5Ccm33LYH9lAVTdzdorejuV1xWdsnNyc8OAPeoXBf9RIIWfQVmbhVXBp2DAPjV6/kIJ
- Eml7MNJfEvqjV9zKsWF9AFlsqDWZDCyUdqR96ahTSD34pRwb6a9H99/GrjeowKaaL95DIVZT
- C6STvDNL6kpys4sOe2AMmQGv2MMcJB3aYLzH8f1sEQ9S0UMX7/6CifEG6JodG6Y/W/lLo1Vv
- DxeDA+u4Lgq6qxlksp8M78FjcmxFVlf4cpCi2ucbZxurhlBkjtZZ8MVAEde3hlqjcBl2Ah6Q
- D826FTxscOGlHEfNABEBAAGJAjwEGAEKACYCGwwWIQSofQA6zrItXEgHWTzAfqwo9yFiXQUC
- XEz31QUJBKaOuQAKCRDAfqwo9yFiXUvnEACBWe8wSnIvSX+9k4LxuLq6GQTOt+RNfliZQkCW
- 5lT3KL1IJyzzOm4x+/slHRBl8bF7KEZyOPinXQXyJ/vgIdgSYxDqoZ7YZn3SvuNe4aT6kGwL
- EYYEV8Ecj4ets15FR2jSUNnVv5YHWtZ7bP/oUzr2LT54fjRcstYxgwzoj8AREtHQ4EJWAWCO
- ZuEHTSm5clMFoi41CmG4DlJbzbo4YfilKYm69vwh50Y8WebcRN31jh0g8ufjOJnBldYYBLwN
- Obymhlfy/HKBDIbyCGBuwYoAkoJ6LR/cqzl/FuhwhuDocCGlXyYaJOwXgHaCvVXI3PLQPxWZ
- +vPsD+TSVHc9m/YWrOiYDnZn6aO0Uk1Zv/m9+BBkWAwsreLJ/evn3SsJV1omNBTITG+uxXcf
- JkgmmesIAw8mpI6EeLmReUJLasz8QkzhZIC7t5rGlQI94GQG3Jg2dC+kpaGWOaT5G4FVMcBj
- iR1nXfMxENVYnM5ag7mBZyD/kru5W1Uj34L6AFaDMXFPwedSCpzzqUiHb0f+nYkfOodf5xy0
- 46+3THy/NUS/ZZp/rI4F7Y77+MQPVg7vARfHHX1AxYUKfRVW5j88QUB70txn8Vgi1tDrOr4J
- eD+xr0CvIGa5lKqgQacQtGkpOpJ8zY4ObSvpNubey/qYUE3DCXD0n2Xxk4muTvqlkFpOYA==
-Message-ID: <2862ebca-c58f-c265-cc74-8d0f9b943275@collabora.com>
-Date:   Thu, 13 Jun 2019 10:24:28 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 11:15:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59468 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732216AbfFMNX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 09:23:57 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 132F83082126;
+        Thu, 13 Jun 2019 13:23:57 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C325351C66;
+        Thu, 13 Jun 2019 13:23:52 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>
+Subject: [PATCH 9/9] x86/bpf: Convert MOV function/macro argument ordering to AT&T syntax
+Date:   Thu, 13 Jun 2019 08:21:06 -0500
+Message-Id: <38ff1c9af6fc572aa962f171413dc7495453584c.1560431531.git.jpoimboe@redhat.com>
+In-Reply-To: <cover.1560431531.git.jpoimboe@redhat.com>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <c9160fe7-e880-4070-3959-b9e9177acf54@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 13 Jun 2019 13:23:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Now that the comments have been converted to AT&T syntax, swap the order
+of the src/dst arguments in the MOV-related functions and macros to
+match the ordering of AT&T syntax.
 
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+ arch/x86/net/bpf_jit_comp.c | 44 ++++++++++++++++++-------------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
 
-On 6/13/19 2:44 AM, Hans Verkuil wrote:
-> On 5/24/19 5:31 AM, Shuah Khan wrote:
->> media_device is embedded in struct vimc_device and when vimc is removed
->> vimc_device and the embedded media_device goes with it, while the active
->> stream and vimc_capture continue to access it.
->>
->> Fix the media_device lifetime problem by changing vimc to create shared
->> media_device using Media Device Allocator API and vimc_capture getting
->> a reference to vimc module. With this change, vimc module can be removed
->> only when the references are gone. vimc can be removed after vimc_capture
->> is removed.
->>
->> Media Device Allocator API supports just USB devices. Enhance it
->> adding a genetic device allocate interface to support other media
->> drivers.
->>
->> The new interface takes pointer to struct device instead and creates
->> media device. This interface allows a group of drivers that have a
->> common root device to share media device resource and ensure media
->> device doesn't get deleted as long as one of the drivers holds its
->> reference.
->>
->> The new interface has been tested with vimc component driver to fix
->> panics when vimc module is removed while streaming is in progress.
-> 
-> Helen, can you review this series? I'm not sure this is the right approach
-> for a driver like vimc, and even if it is, then it is odd that vimc-capture
-> is the only vimc module that's handled here.
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index a92c2445441d..0d0e96f84992 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -59,9 +59,9 @@ static bool is_uimm32(u64 value)
+ }
+ 
+ /* mov src, dst */
+-#define EMIT_mov(DST, SRC)								 \
++#define EMIT_mov(SRC, DST)								 \
+ 	do {										 \
+-		if (DST != SRC)								 \
++		if (SRC != DST)								 \
+ 			EMIT3(add_2mod(0x48, DST, SRC), 0x89, add_2reg(0xC0, DST, SRC)); \
+ 	} while (0)
+ 
+@@ -352,7 +352,7 @@ static void emit_bpf_tail_call(u8 **pprog)
+ }
+ 
+ static void emit_mov_imm32(u8 **pprog, bool sign_propagate,
+-			   u32 dst_reg, const u32 imm32)
++			   const u32 imm32, u32 dst_reg)
+ {
+ 	u8 *prog = *pprog;
+ 	u8 b1, b2, b3;
+@@ -392,8 +392,8 @@ static void emit_mov_imm32(u8 **pprog, bool sign_propagate,
+ 	*pprog = prog;
+ }
+ 
+-static void emit_mov_imm64(u8 **pprog, u32 dst_reg,
+-			   const u32 imm32_hi, const u32 imm32_lo)
++static void emit_mov_imm64(u8 **pprog, const u32 imm32_hi, const u32 imm32_lo,
++			   u32 dst_reg)
+ {
+ 	u8 *prog = *pprog;
+ 	int cnt = 0;
+@@ -405,7 +405,7 @@ static void emit_mov_imm64(u8 **pprog, u32 dst_reg,
+ 		 * directly, so save couple of bytes by just doing
+ 		 * 'mov imm32, %eax' instead.
+ 		 */
+-		emit_mov_imm32(&prog, false, dst_reg, imm32_lo);
++		emit_mov_imm32(&prog, false, imm32_lo, dst_reg);
+ 	} else {
+ 		/* movabs imm64, %rax */
+ 		EMIT2(add_1mod(0x48, dst_reg), add_1reg(0xB8, dst_reg));
+@@ -416,17 +416,17 @@ static void emit_mov_imm64(u8 **pprog, u32 dst_reg,
+ 	*pprog = prog;
+ }
+ 
+-static void emit_mov_reg(u8 **pprog, bool is64, u32 dst_reg, u32 src_reg)
++static void emit_mov_reg(u8 **pprog, bool is64, u32 src_reg, u32 dst_reg)
+ {
+ 	u8 *prog = *pprog;
+ 	int cnt = 0;
+ 
+ 	if (is64) {
+ 		/* mov src, dst */
+-		EMIT_mov(dst_reg, src_reg);
++		EMIT_mov(src_reg, dst_reg);
+ 	} else {
+ 		/* mov32 src, dst */
+-		if (is_ereg(dst_reg) || is_ereg(src_reg))
++		if (is_ereg(src_reg) || is_ereg(dst_reg))
+ 			EMIT1(add_2mod(0x40, dst_reg, src_reg));
+ 		EMIT2(0x89, add_2reg(0xC0, dst_reg, src_reg));
+ 	}
+@@ -487,7 +487,7 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
+ 		case BPF_ALU | BPF_MOV | BPF_X:
+ 			emit_mov_reg(&prog,
+ 				     BPF_CLASS(insn->code) == BPF_ALU64,
+-				     dst_reg, src_reg);
++				     src_reg, dst_reg);
+ 			break;
+ 
+ 			/* neg dst */
+@@ -553,11 +553,11 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
+ 		case BPF_ALU64 | BPF_MOV | BPF_K:
+ 		case BPF_ALU | BPF_MOV | BPF_K:
+ 			emit_mov_imm32(&prog, BPF_CLASS(insn->code) == BPF_ALU64,
+-				       dst_reg, imm32);
++				       imm32, dst_reg);
+ 			break;
+ 
+ 		case BPF_LD | BPF_IMM | BPF_DW:
+-			emit_mov_imm64(&prog, dst_reg, insn[1].imm, insn[0].imm);
++			emit_mov_imm64(&prog, insn[1].imm, insn[0].imm, dst_reg);
+ 			insn++;
+ 			i++;
+ 			break;
+@@ -576,13 +576,13 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
+ 
+ 			if (BPF_SRC(insn->code) == BPF_X)
+ 				/* mov src_reg, %r11 */
+-				EMIT_mov(AUX_REG, src_reg);
++				EMIT_mov(src_reg, AUX_REG);
+ 			else
+ 				/* mov imm32, %r11 */
+ 				EMIT3_off32(0x49, 0xC7, 0xC3, imm32);
+ 
+ 			/* mov dst_reg, %rax */
+-			EMIT_mov(BPF_REG_0, dst_reg);
++			EMIT_mov(dst_reg, BPF_REG_0);
+ 
+ 			/*
+ 			 * xor %edx, %edx
+@@ -608,7 +608,7 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
+ 			EMIT1(0x58); /* pop %rax */
+ 
+ 			/* mov %r11, dst_reg */
+-			EMIT_mov(dst_reg, AUX_REG);
++			EMIT_mov(AUX_REG, dst_reg);
+ 			break;
+ 
+ 		case BPF_ALU | BPF_MUL | BPF_K:
+@@ -624,12 +624,12 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
+ 				EMIT1(0x52); /* push %rdx */
+ 
+ 			/* mov dst_reg, %r11 */
+-			EMIT_mov(AUX_REG, dst_reg);
++			EMIT_mov(dst_reg, AUX_REG);
+ 
+ 			if (BPF_SRC(insn->code) == BPF_X)
+-				emit_mov_reg(&prog, is64, BPF_REG_0, src_reg);
++				emit_mov_reg(&prog, is64, src_reg, BPF_REG_0);
+ 			else
+-				emit_mov_imm32(&prog, is64, BPF_REG_0, imm32);
++				emit_mov_imm32(&prog, is64, imm32, BPF_REG_0);
+ 
+ 			if (is64)
+ 				EMIT1(add_1mod(0x48, AUX_REG));
+@@ -642,7 +642,7 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
+ 				EMIT1(0x5A); /* pop %rdx */
+ 			if (dst_reg != BPF_REG_0) {
+ 				/* mov %rax, dst_reg */
+-				EMIT_mov(dst_reg, BPF_REG_0);
++				EMIT_mov(BPF_REG_0, dst_reg);
+ 				EMIT1(0x58); /* pop %rax */
+ 			}
+ 			break;
+@@ -681,7 +681,7 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
+ 			/* Check for bad case when dst_reg == %rcx */
+ 			if (dst_reg == BPF_REG_4) {
+ 				/* mov dst_reg, %r11 */
+-				EMIT_mov(AUX_REG, dst_reg);
++				EMIT_mov(dst_reg, AUX_REG);
+ 				dst_reg = AUX_REG;
+ 			}
+ 
+@@ -689,7 +689,7 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
+ 				EMIT1(0x51); /* push %rcx */
+ 
+ 				/* mov src_reg, %rcx */
+-				EMIT_mov(BPF_REG_4, src_reg);
++				EMIT_mov(src_reg, BPF_REG_4);
+ 			}
+ 
+ 			/* shl %cl, %rax | shr %cl, %rax | sar %cl, %rax */
+@@ -710,7 +710,7 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
+ 
+ 			if (insn->dst_reg == BPF_REG_4)
+ 				/* mov %r11, dst_reg */
+-				EMIT_mov(insn->dst_reg, AUX_REG);
++				EMIT_mov(AUX_REG, insn->dst_reg);
+ 			break;
+ 
+ 		case BPF_ALU | BPF_END | BPF_FROM_BE:
+-- 
+2.20.1
 
-Hi Hans,
-
-Yes, I can take a look. Sorry, I've been a bit busy these days but I'll
-try to take a look at this patch series (and the others) asap.
-
-Helen
-
-> 
-> My gut feeling is that this should be handled inside vimc directly and not
-> using the media-dev-allocator.
-> 
-> Regards,
-> 
-> 	Hans
-> 
->>
->> Shuah Khan (2):
->>   media: add generic device allocate interface to media-dev-allocator
->>   vimc: fix BUG: unable to handle kernel NULL pointer dereference
->>
->>  drivers/media/Makefile                     |  4 +-
->>  drivers/media/media-dev-allocator.c        | 39 ++++++++++++++
->>  drivers/media/platform/vimc/vimc-capture.c | 17 +++++-
->>  drivers/media/platform/vimc/vimc-core.c    | 60 ++++++++++++----------
->>  include/media/media-dev-allocator.h        | 46 ++++++++++++++---
->>  5 files changed, 130 insertions(+), 36 deletions(-)
->>
-> 
