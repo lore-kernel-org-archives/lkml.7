@@ -2,117 +2,95 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C4FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F160C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7626D2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73D2F20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:31:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fCHp8Rts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730769AbfFMPbL (ORCPT
+        id S1732337AbfFMPbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:31:11 -0400
-Received: from mga05.intel.com ([192.55.52.43]:20387 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728631AbfFMLFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 07:05:33 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 04:05:32 -0700
-X-ExtLoop1: 1
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga001.jf.intel.com with ESMTP; 13 Jun 2019 04:05:30 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hbNXt-0003ZP-BF; Thu, 13 Jun 2019 14:05:29 +0300
-Date:   Thu, 13 Jun 2019 14:05:29 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Stefan Roese <sr@denx.de>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yegor Yefremov <yegorslists@googlemail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 2/2 v5] tty/serial/8250: use mctrl_gpio helpers
-Message-ID: <20190613110529.GR9224@smile.fi.intel.com>
-References: <20190611105603.4435-1-sr@denx.de>
- <20190611105603.4435-2-sr@denx.de>
- <20190611124415.GT9224@smile.fi.intel.com>
- <85f0d39c-e5d8-320b-e611-d956630a629f@denx.de>
- <20190611144828.GX9224@smile.fi.intel.com>
- <12e5180e-b4a0-e5fa-bcad-ddc8103d644c@denx.de>
- <20190612091621.GA9224@smile.fi.intel.com>
- <6a4f1001-b023-c972-7b36-6d2f8f9a3fa8@denx.de>
+        Thu, 13 Jun 2019 11:31:13 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36535 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728627AbfFMLEv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 07:04:51 -0400
+Received: by mail-qt1-f196.google.com with SMTP id p15so2604487qtl.3;
+        Thu, 13 Jun 2019 04:04:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4Yitzb6kjU2aLOslqgMIWbRZiABA1TAj4ngzKLKr9wE=;
+        b=fCHp8RtsWnLh5ko2sLFxCylLJJXn5AyrEpNNv0SopTUgnr2jgVBnd43lKLr+xpyPpV
+         h3ZQm28Vp7iGmDdvvI9KDs/FtEVKPjoYayTPJv6SxgP7fbtGk1ZdUnViHx0mgPZ1VrtL
+         3dzOCvXC2fs9rqNnsSuF8v7p/31HZBR9Bdv7srVGoH+jwuvgQwGvG7GQCuU4duwtSrsW
+         irx9hUAsDR2J02ekNAGu4SJw4ZsDesWc8Zw3k5FJxMh0vUyZwRICS4Pd8aXXrvv4U4wB
+         dSIYKct0mX2+cXKjNsZE5YSeu+j+4JB0K8V7w8XbsOrN1wbc5MIy4U4n1UYKIcYAefmF
+         OKZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4Yitzb6kjU2aLOslqgMIWbRZiABA1TAj4ngzKLKr9wE=;
+        b=UQ8RbFoa0y2XzbqIrDNTjtEFZXowX3EsDAUWlEeNAHxmFGM977PotZK34QGQkN/GyG
+         8tVdJDUUYhXYqPkUNQ/Ws2iQNN/R1qOp0Xjjm+UVgNeUf0hMoSHB/MlOP5bsqo12R0gI
+         zrXKoTrpAw5PjcCWfnjKU9zfgcnoq2P62/BnOFzVoKk5RbEArvbGUFN+k++ltojrdOGo
+         dD3SdnFXc9xNXSPFj6yT78AI2gVUkXAGNRTqN9NH538UcWi11BUFA/jyAUc+Yp1Yi1Ga
+         kC0BetcUwPRMlc00GsqbOXUYHZQp0Fm9G5JIS3A0cEI7UBMABQk2eb1RBYp0uH5Y6qm9
+         BGwQ==
+X-Gm-Message-State: APjAAAUyfj0yXbjqylDSR5ApZZxMa+dZI7z2FmxSWQIYmCAGSdVDF+sD
+        JLGZ46Bn9aEHOkqRUyPw3BIU5i3Qt/au
+X-Google-Smtp-Source: APXvYqxKem25yu2HU3N6YOMpfWBwfrpyww3WOxCrFTPTaSBVWq0llduc4WEKaj6v7esj8r8s/NKsbw==
+X-Received: by 2002:a0c:87ab:: with SMTP id 40mr2924212qvj.93.1560423890503;
+        Thu, 13 Jun 2019 04:04:50 -0700 (PDT)
+Received: from kmo-pixel (c-71-234-172-214.hsd1.vt.comcast.net. [71.234.172.214])
+        by smtp.gmail.com with ESMTPSA id r39sm1575102qtc.87.2019.06.13.04.04.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 04:04:49 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 07:04:47 -0400
+From:   Kent Overstreet <kent.overstreet@gmail.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-bcache@vger.kernel.org
+Subject: Re: [PATCH 10/12] bcache: move closures to lib/
+Message-ID: <20190613110447.GA15110@kmo-pixel>
+References: <20190610191420.27007-1-kent.overstreet@gmail.com>
+ <20190610191420.27007-11-kent.overstreet@gmail.com>
+ <20190613072841.GA7996@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6a4f1001-b023-c972-7b36-6d2f8f9a3fa8@denx.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20190613072841.GA7996@infradead.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 07:32:39AM +0200, Stefan Roese wrote:
-> On 12.06.19 11:16, Andy Shevchenko wrote:
-> > On Wed, Jun 12, 2019 at 10:13:05AM +0200, Stefan Roese wrote:
-> > > On 11.06.19 16:48, Andy Shevchenko wrote:
-
-> > > Do you something like this in mind?
-> > 
-> > More likely
-> > 
-> > static inline int serial8250_MCR_to_TIOCM(int mcr)
+On Thu, Jun 13, 2019 at 12:28:41AM -0700, Christoph Hellwig wrote:
+> On Mon, Jun 10, 2019 at 03:14:18PM -0400, Kent Overstreet wrote:
+> > Prep work for bcachefs - being a fork of bcache it also uses closures
 > 
-> MSR_to_TIOCM (see below) ...
+> NAK.  This obsfucation needs to go away from bcache and not actually be
+> spread further, especially not as an API with multiple users which will
+> make it even harder to get rid of it.
 
-Yes. true.
+Christoph, you've made it plenty clear how much you dislike closures in the past
+but "I don't like it" is not remotely the kind of objection that is appropriate
+or useful for technical discussions, and that's pretty much all you've ever
+given.
 
-> > {
-> > 	int tiocm = 0;
-> > 
-> > 	if (mcr & ...)
-> > 		tiocm |= ...;
-> > 	...
-> > 
-> > 	return tiocm;
-> > }
-> > 
-> > static inline int serial8250_TIOCM_to_MCR(int tiocm)
-> > {
-> > 	... in a similar way ...
-> > }
-> 
-> While implementing such wrapper functions I noticed, that get_mctrl() /
-> set_mctrl() need TIOCM->MCR and MSR->TIOCM (notice MSR vs MCR here) but
-> serial8250_in_MCR() needs MCR->TIOCM. So there is not that much
-> overlay here.
-
-It seems not only this driver is using such conversion. It's even possible to
-move it to serial level for all.
-
-> Additionally the wrappers would need to handle all bits
-> and only some of them are needed in serial8250_in/out_MCR(),
-> so I would
-> need to add masking here as well.
-
-I don't see this. You will get a value for exclusive bits only. No additional
-mask would be needed.
-
-> For my taste its not really worth adding these wrappers as they won't
-> make things much clearer (if at all).
-
-Hmm.. For me it would be quite clear if something with proposed name would be
-called in the code.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+If you really think that code should be gotten rid of, then maybe you should
+actually _look at what they do that's not covered by other kernel
+infrastructure_ and figure out something better. Otherwise... no one else seems
+to care all that much about closures, and you're not actually giving any
+technical feedback, so I'm not sure what you expect.
