@@ -2,317 +2,152 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BF9C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649F4C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA2822133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E062133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:41:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYnfKWAA"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="URF2uSJY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbfFMUlF (ORCPT
+        id S1729862AbfFMUla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:41:05 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35899 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfFMUlE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:41:04 -0400
-Received: by mail-qk1-f195.google.com with SMTP id g18so295130qkl.3;
-        Thu, 13 Jun 2019 13:41:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:resent-from:resent-date:resent-message-id:resent-to:date:to:cc
-         :subject:message-id:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=Ga4RTBqycYEUidDy9n98CCME7H69EjDvRnUzYc78220=;
-        b=lYnfKWAAb7KVo+oRFMGgDXYN8Z5i8JEijArmNkcPAAuYRPXQGKGStvGMNtNAfC0Kgg
-         Zi/l5ew7CN61zl4lZmVRmUPOEl5i1iIFqxVvFbuF4lsTybdi/u6L0zH+lHOqKXjTyQP5
-         LtPU0nMb8OSweRqAZ8Il3XLEKwj80/qlDpZWE/sZiov81nnRgqkcbEi7TOwK3kFKn/c9
-         Pp5K8o/WF1lLmnE1Lxyb/3gPxRfNqrskqGZU/BvsPGlqE/PbaGzpL8ekesovsfP6jXPj
-         ORFOzOUmh5TQeNDd9nezs2SBkAAkP5JBsDw6gLi/oV+JI5AwC6vBUU8qblJo5YVxxfTS
-         pQtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:resent-from:resent-date:resent-message-id
-         :resent-to:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ga4RTBqycYEUidDy9n98CCME7H69EjDvRnUzYc78220=;
-        b=Tfc6XouutQDHSb1Pvg9T+aYtZCyAdNWR7gQZtm4UQbKbkRUDNuT9t82a6sMsFYU/M2
-         1FxXI5RYXF1igHzbe3bwUoREhqlyj56mvPOonqeC7S17bwfPyBuIq+JxKI/42tO0Ss78
-         PrJcRLN8zNBTJMby7PysDxRRDplEq6nm+VJIJge18gIzewQrwxcVCTYqOGVE4ktD509O
-         pgLHSmskZmA+eiBqtLMRc0CS8/9KP5GCpZERorpq06CppDoHSP88hDGf1CcGWzVJ543a
-         03B8nBax5ELTPaVQ4N6qDXn3JP0q7/VkO1vFWi8Kq0s0TI/tYaB18hMAf7aDhaJmTLrz
-         tspQ==
-X-Gm-Message-State: APjAAAUDMQDyKeoTCKsYv2sifY6liBUnb9373T4T+NXgFUpNXNCkrSxz
-        PM7P1sfQjKGFaOIJttOUaV0=
-X-Google-Smtp-Source: APXvYqyW9uKSUonrBEDBTIvLPhbKZIeDjbmTWb+3eVgfsyGJvas2aCmEx6m8WoioBi7AyXKxCTyofw==
-X-Received: by 2002:a37:9107:: with SMTP id t7mr71181369qkd.135.1560458462874;
-        Thu, 13 Jun 2019 13:41:02 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([177.195.211.254])
-        by smtp.gmail.com with ESMTPSA id e133sm236183qkb.76.2019.06.13.13.41.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 13:41:01 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 356DD41149; Thu, 13 Jun 2019 17:40:58 -0300 (-03)
-Date:   Thu, 13 Jun 2019 15:15:14 -0300
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] perf augmented_raw_syscalls: Support arm64 raw
- syscalls
-Message-ID: <20190613181514.GC1402@kernel.org>
-References: <20190606094845.4800-1-leo.yan@linaro.org>
- <20190606094845.4800-4-leo.yan@linaro.org>
- <20190606133838.GC30166@kernel.org>
- <20190606141231.GC5970@leoy-ThinkPad-X240s>
- <20190606144412.GC21245@kernel.org>
- <20190607095831.GG5970@leoy-ThinkPad-X240s>
- <20190609131849.GB6357@leoy-ThinkPad-X240s>
- <20190610184754.GU21245@kernel.org>
- <20190611041831.GA3959@leoy-ThinkPad-X240s>
- <20190612024917.GG28689@kernel.org>
+        Thu, 13 Jun 2019 16:41:30 -0400
+Received: from mail-eopbgr20044.outbound.protection.outlook.com ([40.107.2.44]:56317
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726177AbfFMUla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 16:41:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PX9Eys8Q8xmnOpn1Ekl1bpVYtyk5txyOqqCNrhyPFYU=;
+ b=URF2uSJYN6xjfsDoOg3OcSWCsk/8ctWmC21ScNLKDpkwEtHJ77Vj0z41hA5Ec74JGDldBLZArLu5+S1sKmWbY1DMZNe7mhUfYpp2fx5Q/f3aOCCLDECz4wNM3EafC1Z9gcgvAOWNOJa9Jk5hWMKGL/4tbDvR5wOkPbeaKzUyz1g=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5455.eurprd05.prod.outlook.com (20.177.201.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.12; Thu, 13 Jun 2019 20:40:46 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
+ 20:40:46 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Christoph Hellwig <hch@lst.de>,
+        =?utf-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: dev_pagemap related cleanups
+Thread-Topic: dev_pagemap related cleanups
+Thread-Index: AQHVIcx5DdVrUhs/HUiF5V2FmmsvzKaZ58OAgAAlLoA=
+Date:   Thu, 13 Jun 2019 20:40:46 +0000
+Message-ID: <20190613204043.GD22062@mellanox.com>
+References: <20190613094326.24093-1-hch@lst.de>
+ <CAPcyv4jBdwYaiVwkhy6kP78OBAs+vJme1UTm47dX4Eq_5=JgSg@mail.gmail.com>
+In-Reply-To: <CAPcyv4jBdwYaiVwkhy6kP78OBAs+vJme1UTm47dX4Eq_5=JgSg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM5PR0602CA0012.eurprd06.prod.outlook.com
+ (2603:10a6:203:a3::22) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: de96dcdd-fcb6-4b31-c96c-08d6f03f6962
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR05MB5455;
+x-ms-traffictypediagnostic: VI1PR05MB5455:
+x-microsoft-antispam-prvs: <VI1PR05MB5455783021F6B9AAA05E7D83CFEF0@VI1PR05MB5455.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1751;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(366004)(39860400002)(136003)(346002)(199004)(189003)(68736007)(53936002)(7116003)(14454004)(476003)(486006)(76176011)(1076003)(2616005)(256004)(14444005)(229853002)(8676002)(66476007)(66946007)(6436002)(66556008)(7416002)(6116002)(64756008)(446003)(81166006)(81156014)(11346002)(73956011)(6512007)(3846002)(8936002)(6486002)(66066001)(86362001)(2906002)(102836004)(6246003)(6916009)(478600001)(6506007)(66446008)(186003)(4326008)(52116002)(33656002)(36756003)(5660300002)(66574012)(99286004)(26005)(7736002)(71200400001)(71190400001)(316002)(25786009)(305945005)(54906003)(53546011)(386003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5455;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: VOUbwNTtQRybG06If3HGlhEeAdyRzVHyFE1PeYAnM2YST+XoV0HGXZmSRan2NLI4WzAL1uZHMOtxy2X19FOcN+ugIzEDUFaX/y9lsF432qn7eSAyrVCYonDHrej64NV4alsmCSSJokb9RspANzH4x63s7VqvMHLgzo59lUHDsWdAEVbzpL7WQ18EWRni5TbqLfFiUPRVpSCZGqmJDVxOTingKPJqTbNp+v0SquuxNy3Mex+3+W3QOi7ysRhyLQb0zSCh5J5QVp0cRn132iQGoWMQelu0ugQqizw44PX87UzQ2V2o6rwl6/4Hnvt21dLXxJjYf8VqxNV1nOX9BSxMnePDL//+83pg+owX+oZg6X73UgwJVYNPVw4bnFul+YoMR4T2/va4ViKQdFdOkUW3qT7Y3anPGP/LSkSZAo/2xrw=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <865564E19763524E9F69913C820BFA34@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612024917.GG28689@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: de96dcdd-fcb6-4b31-c96c-08d6f03f6962
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 20:40:46.4819
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5455
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jun 11, 2019 at 11:49:17PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Jun 11, 2019 at 12:18:31PM +0800, Leo Yan escreveu:
-> > On Mon, Jun 10, 2019 at 03:47:54PM -0300, Arnaldo Carvalho de Melo wrote:
-> > 
-> > [...]
-> > 
-> > > > > I tested with the lastest perf/core branch which contains the patch:
-> > > > > 'perf augmented_raw_syscalls: Tell which args are filenames and how
-> > > > > many bytes to copy' and got the error as below:
-> > > > > 
-> > > > > # perf trace -e string -e /mnt/linux-kernel/linux-cs-dev/tools/perf/examples/bpf/augmented_raw_syscalls.c
-> > > > > Error:  Invalid syscall access, chmod, chown, creat, futimesat, lchown, link, lstat, mkdir, mknod, newfstatat, open, readlink, rename,
-> > > > > rmdir, stat, statfs, symlink, truncate, unlink
-> > > 
-> > > Humm, I think that we can just make the code that parses the
-> > > tools/perf/trace/strace/groups/string file to ignore syscalls it can't
-> > > find in the syscall_tbl, i.e. trace those if they exist in the arch.
-> > 
-> > Agree.
-> > 
-> > > > > Hint:   try 'perf list syscalls:sys_enter_*'
-> > > > > Hint:   and: 'man syscalls'
-> > > > > 
-> > > > > So seems mksyscalltbl has not included completely for syscalls, I
-> > > > > use below command to generate syscalltbl_arm64[] array and it don't
-> > > > > include related entries for access, chmod, chown, etc ...
-> > > 
-> > > So, we need to investigate why is that these are missing, good thing we
-> > > have this 'strings' group :-)
-> > > 
-> > > > > You could refer the generated syscalltbl_arm64 in:
-> > > > > http://paste.ubuntu.com/p/8Bj7Jkm2mP/
-> > > > 
-> > > > After digging into this issue on Arm64, below is summary info:
-> > > > 
-> > > > - arm64 uses the header include/uapi/linux/unistd.h to define system
-> > > >   call numbers, in this header some system calls are not defined (I
-> > > >   think the reason is these system calls are obsolete at the end) so the
-> > > >   corresponding strings are missed in the array syscalltbl_native,
-> > > >   for arm64 the array is defined in the file:
-> > > >   tools/perf/arch/arm64/include/generated/asm/syscalls.c.
-> > > 
-> > > Yeah, I looked at the 'access' case and indeed it is not present in
-> > > include/uapi/asm-generic/unistd.h, which is the place
-> > > include/uapi/linux/unistd.h ends up.
-> > > 
-> > > Ok please take a look at the patch at the end of this message, should be ok?
-> > > 
-> > > I tested it by changing the strace/gorups/string file to have a few
-> > > unknown syscalls, running it with -v we see:
-> > > 
-> > > [root@quaco perf]# perf trace -v -e string ls
-> > > Skipping unknown syscalls: access99, acct99, add_key99
-> > > <SNIP other verbose messages>
-> > > normal operation not considering those unknown syscalls.
-> > 
-> > I did testing with the patch, but it failed after I added eBPF event
-> > with below command, I even saw segmentation fault; please see below
-> > inline comments.
-> > 
-> >   perf --debug verbose=10 trace -e string -e \
-> >     /mnt/linux-kernel/linux-cs-dev/tools/perf/examples/bpf/augmented_raw_syscalls.c
-> > 
-> > [...]
-> > 
-> > > commit e0b34a78c4ed0a6422f5b2dafa0c8936e537ee41
-> > > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > Date:   Mon Jun 10 15:37:45 2019 -0300
-> > > 
-> > >     perf trace: Skip unknown syscalls when expanding strace like syscall groups
-> > >     
-> > >     We have $INSTALL_DIR/share/perf-core/strace/groups/string files with
-> > >     syscalls that should be selected when 'string' is used, meaning, in this
-> > >     case, syscalls that receive as one of its arguments a string, like a
-> > >     pathname.
-> > >     
-> > >     But those were first selected and tested on x86_64, and end up failing
-> > >     in architectures where some of those syscalls are not available, like
-> > >     the 'access' syscall on arm64, which makes using 'perf trace -e string'
-> > >     in such archs to fail.
-> > >     
-> > >     Since this the routine doing the validation is used only when reading
-> > >     such files, do not fail when some syscall is not found in the
-> > >     syscalltbl, instead just use pr_debug() to register that in case people
-> > >     are suspicious of problems.
-> > >     
-> > >     Now using 'perf trace -e string' should work on arm64, selecting only
-> > >     the syscalls that have a string and are available on that architecture.
-> > >     
-> > >     Reported-by: Leo Yan <leo.yan@linaro.org>
-> > >     Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > >     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > >     Cc: Alexei Starovoitov <ast@kernel.org>
-> > >     Cc: Daniel Borkmann <daniel@iogearbox.net>
-> > >     Cc: Jiri Olsa <jolsa@redhat.com>
-> > >     Cc: Martin KaFai Lau <kafai@fb.com>
-> > >     Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > >     Cc: Mike Leach <mike.leach@linaro.org>
-> > >     Cc: Namhyung Kim <namhyung@kernel.org>
-> > >     Cc: Song Liu <songliubraving@fb.com>
-> > >     Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > >     Cc: Yonghong Song <yhs@fb.com>
-> > >     Link: https://lkml.kernel.org/n/tip-oa4c2x8p3587jme0g89fyg18@git.kernel.org
-> > >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > 
-> > > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> > > index 1a2a605cf068..eb70a4b71755 100644
-> > > --- a/tools/perf/builtin-trace.c
-> > > +++ b/tools/perf/builtin-trace.c
-> > > @@ -1529,6 +1529,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
-> > >  static int trace__validate_ev_qualifier(struct trace *trace)
-> > >  {
-> > >  	int err = 0, i;
-> > > +	bool printed_invalid_prefix = false;
-> > >  	size_t nr_allocated;
-> > >  	struct str_node *pos;
-> > >  
-> > > @@ -1555,14 +1556,15 @@ static int trace__validate_ev_qualifier(struct trace *trace)
-> > >  			if (id >= 0)
-> > >  				goto matches;
-> > >  
-> > > -			if (err == 0) {
-> > > -				fputs("Error:\tInvalid syscall ", trace->output);
-> > > -				err = -EINVAL;
-> > > +			if (!printed_invalid_prefix) {
-> > > +				pr_debug("Skipping unknown syscalls: ");
-> > > +				printed_invalid_prefix = true;
-> > >  			} else {
-> > > -				fputs(", ", trace->output);
-> > > +				pr_debug(", ");
-> > >  			}
-> > >  
-> > > -			fputs(sc, trace->output);
-> > > +			pr_debug("%s", sc);
-> > > +			continue;
-> > 
-> > Here adds 'continue' so that we want to let ev_qualifier_ids.entries
-> > to only store valid system call ids.  But this is not sufficient,
-> > because we have initialized ev_qualifier_ids.nr at the beginning of
-> > the function:
-> > 
-> >   trace->ev_qualifier_ids.nr = strlist__nr_entries(trace->ev_qualifier);
-> > This sentence will set ids number to the string table's length; but
-> > actually some strings are not really supported; this leads to some
-> > items in trace->ev_qualifier_ids.entries[] will be not initialized
-> > properly.
-> > 
-> > If we want to get neat entries and entry number, I suggest at the
-> > beginning of the function we use variable 'nr_allocated' to store
-> > string table length and use it to allocate entries:
-> > 
-> >   nr_allocated = strlist__nr_entries(trace->ev_qualifier);
-> >   trace->ev_qualifier_ids.entries = malloc(nr_allocated *
-> >                                            sizeof(trace->ev_qualifier_ids.entries[0]));
-> > 
-> > If we find any matched string, then increment the nr field under
-> > 'matches' tag:
-> > 
-> > matches:
-> >                 trace->ev_qualifier_ids.nr++;
-> >                 trace->ev_qualifier_ids.entries[i++] = id;
-> > 
-> > This can ensure the entries[0..nr-1] has valid id and we can use
-> > ev_qualifier_ids.nr to maintain the valid system call numbers.
-> 
-> yeah, you're right, I'll address these issues in a followup patch,
-> tomorrow.
-
-This is equivalent and I think the smallest patch, I'll add one on top
-doing what you suggested about nr_allocated getting the
-strlist__nr_entries() and also will rename i to nr_used to contrast with
-nr_allocated, and then at the end set ev_qualifier_ids.nr to nr_used.
-
-- Arnaldo
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index eb70a4b71755..bd1f00e7a2eb 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1528,9 +1528,9 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 
- static int trace__validate_ev_qualifier(struct trace *trace)
- {
--	int err = 0, i;
-+	int err = 0;
- 	bool printed_invalid_prefix = false;
--	size_t nr_allocated;
-+	size_t nr_allocated, i;
- 	struct str_node *pos;
- 
- 	trace->ev_qualifier_ids.nr = strlist__nr_entries(trace->ev_qualifier);
-@@ -1575,7 +1575,7 @@ static int trace__validate_ev_qualifier(struct trace *trace)
- 			id = syscalltbl__strglobmatch_next(trace->sctbl, sc, &match_next);
- 			if (id < 0)
- 				break;
--			if (nr_allocated == trace->ev_qualifier_ids.nr) {
-+			if (nr_allocated == i) {
- 				void *entries;
- 
- 				nr_allocated += 8;
-@@ -1588,11 +1588,11 @@ static int trace__validate_ev_qualifier(struct trace *trace)
- 				}
- 				trace->ev_qualifier_ids.entries = entries;
- 			}
--			trace->ev_qualifier_ids.nr++;
- 			trace->ev_qualifier_ids.entries[i++] = id;
- 		}
- 	}
- 
-+	trace->ev_qualifier_ids.nr = i;
- out:
- 	if (printed_invalid_prefix)
- 		pr_debug("\n");
+T24gVGh1LCBKdW4gMTMsIDIwMTkgYXQgMTE6Mjc6MzlBTSAtMDcwMCwgRGFuIFdpbGxpYW1zIHdy
+b3RlOg0KPiBPbiBUaHUsIEp1biAxMywgMjAxOSBhdCAyOjQzIEFNIENocmlzdG9waCBIZWxsd2ln
+IDxoY2hAbHN0LmRlPiB3cm90ZToNCj4gPg0KPiA+IEhpIERhbiwgSsOpcsO0bWUgYW5kIEphc29u
+LA0KPiA+DQo+ID4gYmVsb3cgaXMgYSBzZXJpZXMgdGhhdCBjbGVhbnMgdXAgdGhlIGRldl9wYWdl
+bWFwIGludGVyZmFjZSBzbyB0aGF0DQo+ID4gaXQgaXMgbW9yZSBlYXNpbHkgdXNhYmxlLCB3aGlj
+aCByZW1vdmVzIHRoZSBuZWVkIHRvIHdyYXAgaXQgaW4gaG1tDQo+ID4gYW5kIHRodXMgYWxsb3dp
+bmcgdG8ga2lsbCBhIGxvdCBvZiBjb2RlDQo+ID4NCj4gPiBEaWZmc3RhdDoNCj4gPg0KPiA+ICAy
+MiBmaWxlcyBjaGFuZ2VkLCAyNDUgaW5zZXJ0aW9ucygrKSwgODAyIGRlbGV0aW9ucygtKQ0KPiAN
+Cj4gSG9vcmF5IQ0KPiANCj4gPiBHaXQgdHJlZToNCj4gPg0KPiA+ICAgICBnaXQ6Ly9naXQuaW5m
+cmFkZWFkLm9yZy91c2Vycy9oY2gvbWlzYy5naXQgaG1tLWRldm1lbS1jbGVhbnVwDQo+IA0KPiBJ
+IGp1c3QgcmVhbGl6ZWQgdGhpcyBjb2xsaWRlcyB3aXRoIHRoZSBkZXZfcGFnZW1hcCByZWxlYXNl
+IHJld29yayBpbg0KPiBBbmRyZXcncyB0cmVlIChjb21taXQgaWRzIGJlbG93IGFyZSBmcm9tIG5l
+eHQuZ2l0IGFuZCBhcmUgbm90IHN0YWJsZSkNCj4gDQo+IDQ0MjJlZTg0NzZmMCBtbS9kZXZtX21l
+bXJlbWFwX3BhZ2VzOiBmaXggZmluYWwgcGFnZSBwdXQgcmFjZQ0KPiA3NzFmMDcxNGQwZGMgUENJ
+L1AyUERNQTogdHJhY2sgcGdtYXAgcmVmZXJlbmNlcyBwZXIgcmVzb3VyY2UsIG5vdCBnbG9iYWxs
+eQ0KPiBhZjM3MDg1ZGU5MDYgbGliL2dlbmFsbG9jOiBpbnRyb2R1Y2UgY2h1bmsgb3duZXJzDQo+
+IGUwMDQ3ZmY4YWE3NyBQQ0kvUDJQRE1BOiBmaXggdGhlIGdlbl9wb29sX2FkZF92aXJ0KCkgZmFp
+bHVyZSBwYXRoDQo+IDAzMTVkNDdkNmFlOSBtbS9kZXZtX21lbXJlbWFwX3BhZ2VzOiBpbnRyb2R1
+Y2UgZGV2bV9tZW11bm1hcF9wYWdlcw0KPiAyMTY0NzVjN2VhYTggZHJpdmVycy9iYXNlL2RldnJl
+czogaW50cm9kdWNlIGRldm1fcmVsZWFzZV9hY3Rpb24oKQ0KPiANCj4gQ09ORkxJQ1QgKGNvbnRl
+bnQpOiBNZXJnZSBjb25mbGljdCBpbiB0b29scy90ZXN0aW5nL252ZGltbS90ZXN0L2lvbWFwLmMN
+Cj4gQ09ORkxJQ1QgKGNvbnRlbnQpOiBNZXJnZSBjb25mbGljdCBpbiBtbS9obW0uYw0KPiBDT05G
+TElDVCAoY29udGVudCk6IE1lcmdlIGNvbmZsaWN0IGluIGtlcm5lbC9tZW1yZW1hcC5jDQo+IENP
+TkZMSUNUIChjb250ZW50KTogTWVyZ2UgY29uZmxpY3QgaW4gaW5jbHVkZS9saW51eC9tZW1yZW1h
+cC5oDQo+IENPTkZMSUNUIChjb250ZW50KTogTWVyZ2UgY29uZmxpY3QgaW4gZHJpdmVycy9wY2kv
+cDJwZG1hLmMNCj4gQ09ORkxJQ1QgKGNvbnRlbnQpOiBNZXJnZSBjb25mbGljdCBpbiBkcml2ZXJz
+L252ZGltbS9wbWVtLmMNCj4gQ09ORkxJQ1QgKGNvbnRlbnQpOiBNZXJnZSBjb25mbGljdCBpbiBk
+cml2ZXJzL2RheC9kZXZpY2UuYw0KPiBDT05GTElDVCAoY29udGVudCk6IE1lcmdlIGNvbmZsaWN0
+IGluIGRyaXZlcnMvZGF4L2RheC1wcml2YXRlLmgNCj4gDQo+IFBlcmhhcHMgd2Ugc2hvdWxkIHB1
+bGwgdGhvc2Ugb3V0IGFuZCByZXNlbmQgdGhlbSB0aHJvdWdoIGhtbS5naXQ/DQoNCkl0IGNvdWxk
+IGJlIGRvbmUgLSBidXQgaG93IGJhZCBpcyB0aGUgY29uZmxpY3QgcmVzb2x1dGlvbj8NCg0KSSdk
+IGJlIG1vcmUgY29tZm9ydGFibGUgdG8gdGFrZSBhIFBSIGZyb20geW91IHRvIG1lcmdlIGludG8g
+aG1tLmdpdCwNCnJhdGhlciB0aGFuIHJhdyBwYXRjaGVzLCB0aGVuIGFwcGx5IENIJ3Mgc2VyaWVz
+IG9uIHRvcC4gSSB0aGluay4NCg0KVGhhdCB3YXkgaWYgc29tZXRoaW5nIGdvZXMgd3JvbmcgeW91
+IGNhbiBzZW5kIHlvdXIgUFIgdG8gTGludXMNCmRpcmVjdGx5Lg0KDQo+IEl0IGFsc28gdHVybnMg
+b3V0IHRoZSBudmRpbW0gdW5pdCB0ZXN0cyBjcmFzaCB3aXRoIHRoaXMgc2lnbmF0dXJlIG9uDQo+
+IHRoYXQgYnJhbmNoIHdoZXJlIGJhc2UgdjUuMi1yYzMgcGFzc2VzOg0KPiANCj4gICAgIEJVRzog
+a2VybmVsIE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZSwgYWRkcmVzczogMDAwMDAwMDAwMDAwMDAw
+OA0KPiAgICAgWy4uXQ0KPiAgICAgQ1BVOiAxNSBQSUQ6IDE0MTQgQ29tbTogbHQtbGlibmRjdGwg
+VGFpbnRlZDogRyAgICAgICAgICAgT0UNCj4gNS4yLjAtcmMzKyAjMzM5OQ0KPiAgICAgSGFyZHdh
+cmUgbmFtZTogUUVNVSBTdGFuZGFyZCBQQyAoaTQ0MEZYICsgUElJWCwgMTk5NiksIEJJT1MgMC4w
+LjAgMDIvMDYvMjAxNQ0KPiAgICAgUklQOiAwMDEwOnBlcmNwdV9yZWZfa2lsbF9hbmRfY29uZmly
+bSsweDFlLzB4MTgwDQo+ICAgICBbLi5dDQo+ICAgICBDYWxsIFRyYWNlOg0KPiAgICAgIHJlbGVh
+c2Vfbm9kZXMrMHgyMzQvMHgyODANCj4gICAgICBkZXZpY2VfcmVsZWFzZV9kcml2ZXJfaW50ZXJu
+YWwrMHhlOC8weDFiMA0KPiAgICAgIGJ1c19yZW1vdmVfZGV2aWNlKzB4ZjIvMHgxNjANCj4gICAg
+ICBkZXZpY2VfZGVsKzB4MTY2LzB4MzcwDQo+ICAgICAgdW5yZWdpc3Rlcl9kZXZfZGF4KzB4MjMv
+MHg1MA0KPiAgICAgIHJlbGVhc2Vfbm9kZXMrMHgyMzQvMHgyODANCj4gICAgICBkZXZpY2VfcmVs
+ZWFzZV9kcml2ZXJfaW50ZXJuYWwrMHhlOC8weDFiMA0KPiAgICAgIHVuYmluZF9zdG9yZSsweDk0
+LzB4MTIwDQo+ICAgICAga2VybmZzX2ZvcF93cml0ZSsweGYwLzB4MWEwDQo+ICAgICAgdmZzX3dy
+aXRlKzB4YjcvMHgxYjANCj4gICAgICBrc3lzX3dyaXRlKzB4NWMvMHhkMA0KPiAgICAgIGRvX3N5
+c2NhbGxfNjQrMHg2MC8weDI0MA0KDQpUb28gYmFkIHRoZSB0cmFjZSBkaWRuJ3Qgc2F5IHdoaWNo
+IGRldm0gY2xlYW51cCB0cmlnZ2VyZWQgaXQuLiBEaWQNCmRldl9wYWdlbWFwX3BlcmNwdV9leGl0
+IGdldCBjYWxsZWQgd2l0aCBhIE5VTEwgcGdtYXAtPnJlZiA/DQoNCkphc29uDQo=
