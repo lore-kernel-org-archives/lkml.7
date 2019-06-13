@@ -2,119 +2,109 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECCEC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF64EC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A8320449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:29:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443357;
-	bh=r/cQdU2vJehPtLKTUxVZzWc4VnWDJsWbAZXWsJZuhBw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BSot3iDp33l4ETzy59INoeKlqxCj4tdGJPjsa1ULT5KKMfdMD7JS6rPbuH+a8I+qP
-	 5tho3Cv2m1Q9g2T7VMnI7uTWnmNy6/YGo2zrPkPzns4zSGhbiBSHYvv2w8zaEhR7Fy
-	 bZyPtz/KGcNUwa+o+HDo+mPokKFKoYFKKmgmzZ8g=
+	by mail.kernel.org (Postfix) with ESMTP id C412821721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:29:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OxnRIln/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392033AbfFMQ3L (ORCPT
+        id S2388093AbfFMQ31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:29:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730933AbfFMIf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:35:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 113D120B7C;
-        Thu, 13 Jun 2019 08:35:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560414926;
-        bh=r/cQdU2vJehPtLKTUxVZzWc4VnWDJsWbAZXWsJZuhBw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EFa+4WGpWJc/koTHSq43Y2epWdWtqq6OPfQdBjI93XPa0fCROqOA0ZcftSPb9/zv+
-         OrrYvPIsQ2VQXCzdqxf96yCxTdvLucUspu0vkq8t17ozG45wbShSQeL1jox4WczzNV
-         QArYef2uYKZavSA/CedT2pY32wqzpMIgNdffaUck=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Borislav Petkov <bp@suse.de>,
-        Johannes Thumshirn <jth@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>, linuxppc-dev@ozlabs.org,
-        morbidrsa@gmail.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 23/81] EDAC/mpc85xx: Prevent building as a module
-Date:   Thu, 13 Jun 2019 10:33:06 +0200
-Message-Id: <20190613075650.845289943@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
-References: <20190613075649.074682929@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 13 Jun 2019 12:29:27 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:37644 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730925AbfFMIfS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:35:18 -0400
+Received: by mail-vs1-f65.google.com with SMTP id v6so12118840vsq.4;
+        Thu, 13 Jun 2019 01:35:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M/j512S8iNawEe8Fwmcxi5za0FB/PptLS7JGUaidYWg=;
+        b=OxnRIln/sM87E9yAMKkBvxzTuS55PzqwilzIiUk16/vzQLB+YOVGxrkEOMI/1T0fef
+         Tjz9MlXar7WzM/oRrPg8KIGEA5YlpiPcjw/e2QqsyG5dYc2SqlOwKu3q5+itA54IALWn
+         i96hlCvrcOOhMadLxROp27+OUusTMbi4nQ115G/RCUC6eYXU8ff6zsvwdCqPbhqW0EgS
+         m7zoVLxR8BXVvsqTQF04zStHGjY9yKdLJQEaxG2TAM44GxQitJ+n+Dyw+5dYgvENw2u8
+         PiEQV5fuRzvkDr6D0I8omoYJl4DVMhg+0BqBmwJKtbxT/nznxzjNEtJil+Csn25bB3et
+         cbFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M/j512S8iNawEe8Fwmcxi5za0FB/PptLS7JGUaidYWg=;
+        b=LSkFMlSIR2q7+qqD8Sx/v34wjavq/hJ6nu0QV6B9FuOdg8xlLEVq43iez72S58PTo5
+         XvVsaKlhYGomWO0OzyzzRbQCaOiHFoO1mCuUzE9+/MC7k5W8G3VTMTLyL9si90CIgtyQ
+         UdgEKH1lh2GM7AIfojwD+8wZnuXpEP5Fp6/lWlrvtseUDVIs0N7hkp3d/2L+yeVd2X2p
+         xlkDbfeQn0eByq6b5fijvNEATjGY4jVB4bF4cdGn4uX5SgeTwNhW2rSaapyf2/Z9rOjc
+         UQDyRe82kFx96qumUGUGYTolFLF/3hn3AXqGpKagO+lLDXsu3V7xEdR0yO/X3EtqS/yN
+         YFmw==
+X-Gm-Message-State: APjAAAWRmi7aEEHndzryzvc9ReAvx5KPlzokErywysDEHjEYSHilwSKi
+        jUrXLJP+i0EU77ELYlYCjj/UPsdbFQ4fd6gJ9RE=
+X-Google-Smtp-Source: APXvYqzXlBh2rBUbKHiKWqg1RIV3kUDnHNMsS0QRYDwTtb3AQTQI4zniACIqmZ18a8Q2qK+cPo7L2dtUQdc3qhiJdAo=
+X-Received: by 2002:a67:fb8d:: with SMTP id n13mr32198844vsr.46.1560414917499;
+ Thu, 13 Jun 2019 01:35:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190611200043.eib3g3acc7ilawsx@earth.universe> <20190612060328.GQ4797@dell>
+In-Reply-To: <20190612060328.GQ4797@dell>
+From:   Matti Vaittinen <mazziesaccount@gmail.com>
+Date:   Thu, 13 Jun 2019 11:35:06 +0300
+Message-ID: <CANhJrGNM7fBXa8cY6ybF8WsaigwcREMvbGN0K4pdUVKck4POzw@mail.gmail.com>
+Subject: Re: [PATCH v15 0/7] support ROHM BD70528 PMIC
+To:     Lee Jones <lee.jones@linaro.org>,
+        "Vaittinen, Matti" <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2b8358a951b1e2a534a54924cd8245e58a1c5fb8 ]
+On Wed, Jun 12, 2019 at 9:03 AM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Tue, 11 Jun 2019, Sebastian Reichel wrote:
+>
+> > Hi,
+> >
+> > On Mon, Jun 03, 2019 at 10:23:37AM +0300, Matti Vaittinen wrote:
+> > > Patch series introducing support for ROHM BD70528 PMIC
+> > > [...]
+> >
+> > I think all patches have been reviewed by the respective subsystem
+> > maintainers. Lee, can you provide an immutable branch with the MFD
+> > patches (1, 2, 4)? Looks like the other patches only depend on those
+> > and can go through their respective subsystems.
+>
+> Yes.  It's on my TODO list.
+>
+> Would you prefer this method over me just taking them all and sending
+> out a PR?  The latter is my usual flow, but I'm happy with either.
 
-The mpc85xx EDAC driver can be configured as a module but then fails to
-build because it uses two unexported symbols:
+Thanks guys for taking care of this! :)
 
-  ERROR: ".pci_find_hose_for_OF_device" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
-  ERROR: ".early_find_capability" [drivers/edac/mpc85xx_edac_mod.ko] undefined!
-
-We don't want to export those symbols just for this driver, so make the
-driver only configurable as a built-in.
-
-This seems to have been broken since at least
-
-  c92132f59806 ("edac/85xx: Add PCIe error interrupt edac support")
-
-(Nov 2013).
-
- [ bp: make it depend on EDAC=y so that the EDAC core doesn't get built
-   as a module. ]
-
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Johannes Thumshirn <jth@kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: linuxppc-dev@ozlabs.org
-Cc: morbidrsa@gmail.com
-Link: https://lkml.kernel.org/r/20190502141941.12927-1-mpe@ellerman.id.au
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/edac/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 96afb2aeed18..aaaa8ce8d3fd 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -246,8 +246,8 @@ config EDAC_PND2
- 	  micro-server but may appear on others in the future.
- 
- config EDAC_MPC85XX
--	tristate "Freescale MPC83xx / MPC85xx"
--	depends on FSL_SOC
-+	bool "Freescale MPC83xx / MPC85xx"
-+	depends on FSL_SOC && EDAC=y
- 	help
- 	  Support for error detection and correction on the Freescale
- 	  MPC8349, MPC8560, MPC8540, MPC8548, T4240
--- 
-2.20.1
-
-
-
+--Matti
