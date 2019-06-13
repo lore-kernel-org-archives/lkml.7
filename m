@@ -2,124 +2,91 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BEBC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CBCC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0723820665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63FBB20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:59:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+1NR0mK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ypcnb57a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404407AbfFMQ6t (ORCPT
+        id S1731770AbfFMQ7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:58:49 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43732 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729873AbfFMAmq (ORCPT
+        Thu, 13 Jun 2019 12:59:07 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46267 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729857AbfFMAkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 20:42:46 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w79so13109789oif.10;
-        Wed, 12 Jun 2019 17:42:45 -0700 (PDT)
+        Wed, 12 Jun 2019 20:40:04 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v24so12403950ljg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 17:40:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nzfgSWaDyWQ7VYFEA2FnSpF180XqoXN/iBONghZdkoM=;
-        b=h+1NR0mKWIopBaYt5fDVT1IjV39CbGYd8VsFUNeDRYd+ZrL/wB937Mnqd0OLXohUOZ
-         f0p6idhAJ9VbwAburlhluuM+NOcUa59YvqgIGIKJSljFTBFXQh+2At5Ya0+k1b9o2Dm2
-         7dXZwo7/AIywLr6AnTNr33L3fRbGeTii7QWWRDq+/FosBKcGNAwMDsx1LDRgh6qnsJ97
-         7nspxr7U8Mu2LMOXWjnbmnK8HI1z0unWb6lpqTrieIjxBFhf7WMUJxJCrz2Vg2010Ilq
-         8pwrqYj7Wn1dLVQWJvOmoKbRxuEg8c9RfTg3iI6SgP0IrbaWUeCmN0KmeXeptTegDv5u
-         ZN0Q==
+         :cc;
+        bh=+BgRm8z+fuFOYDnZHzzS3mkZjHYVE5tepOZGIldQ/Uw=;
+        b=Ypcnb57arGPy8htVQZvJkU6HDA/u3lSRi/yBbQIfuYWTEocd6WnL/Atu/ShME/mGGi
+         m8dAhYtJLFVK0bqModWdRZ8ddgNzueCHdVNU6HOQsWdWc9APhjQU6LK3Rnf1BuBF3SU9
+         2sxywfKtxFhwgtKH2Va8t7qZigdDiszn0kkuOthvzxOt1r9hTLtapNI5MX/p3KRgcVn2
+         tYQXQpopKGE1vAwEQBtoAyOSNLumds6hE2KFUm6Y0o4R6cOdlLkfRPhB3F4mE0t3IFsQ
+         kzkz/ykF/EppIeuyJl6tvaf0G4fQb5vQqba41XFRuTLVnRn28JGCueUwUnlNFIfkGDuF
+         nFyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nzfgSWaDyWQ7VYFEA2FnSpF180XqoXN/iBONghZdkoM=;
-        b=iEISjYc9XeE3vRWeta5VhKKQrqv8D7IPVbeuD1XB2rwJE6Vq5otBy7cpSB24w+sSPr
-         Ho0Mfh/Sg0Uak9TfIfvTtmFIwHV/Y5q4b13RISzEzp8aSH6xFTX6STaBqyjKnrnIjfth
-         kaiiqPL3xkwj3Bw051X2uTVcOtW4SqLaUcjpJ1FRzntmoOpvG3K6b1acd2J278/fMqp2
-         2Ag8ihFZ9wKEkDF48rWPl7jDjsrgT+Y7k06GpSDiBFAJ2oy9raidKqSzH1uvKQxeW7Bi
-         dlKLbbpC4XB2PquL56mxb2sETbGux+CjQcnMuqBg7OEqcjqqMSbDsq5LaT+noEZUaXU/
-         rCWQ==
-X-Gm-Message-State: APjAAAWztaLrNhxg48IQpCd5ab350QEPFZDuZ7/fx1vUysgUKcuAK1e7
-        WhjCTFjLTEtr+eKS1K8NsJu00T/ILjOL0LEqSWM=
-X-Google-Smtp-Source: APXvYqwmARrJG1lRaE0H4jiNgrJRy7gpduTn2xibtdvc0yq/mKt4J1wyqShWwfSNQuT9EuDT4PI4PTpPDdfmXhaz0Us=
-X-Received: by 2002:aca:b9d4:: with SMTP id j203mr1279874oif.5.1560386565463;
- Wed, 12 Jun 2019 17:42:45 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=+BgRm8z+fuFOYDnZHzzS3mkZjHYVE5tepOZGIldQ/Uw=;
+        b=Hk8nKLw+6NtqLtiRdRLkVOCHEkiFVvSDVc68GePgEdNM+8MrDfAFKX8EO4HEOZAEp7
+         RmZat+4Wmd7/0tQv9z6zUp2TB2rTNT8U6k4h6LvPCTB9+Ks5Geyx33xSDpeYWI4CwnPD
+         gfZWeNvLCU4YZoRTVgJrP4SVqraMbZ6SCUdzzUGuxUFmB7zmnoZZ1dSbOAOuM4OEklsD
+         q44o0cf1xlznTTHBe02Va5PRHSk/hc8Bt7Z5Iey0RAkFgd6IAaCQPJYpd1TCIYQNmkrI
+         6zqItvPVFZfIXqrL8F1ViZKutfP9ctPxZTSAzOhmp/S9/1cfQ431eHYlaA+LGFj1BueU
+         r7xg==
+X-Gm-Message-State: APjAAAUY7d9XwF1fcIzx33OC5QF+89piB/oqyF8f8tX6r7pT10hMYVui
+        Fhnbg0iWWXqsnAQrSv10HjA0bk+s6+kC0Ditdo1hwA==
+X-Google-Smtp-Source: APXvYqzLD0XU1anFNgzmQs/wupNY81zHREHeBVBg8Xkp+UQ+ikLxAqzOQqiH6vXp4DcOLwy5d/fNPl7wvagx1n+NZgk=
+X-Received: by 2002:a2e:2f12:: with SMTP id v18mr44314153ljv.196.1560386401982;
+ Wed, 12 Jun 2019 17:40:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <1560238451-19495-1-git-send-email-wanpengli@tencent.com>
- <1560238451-19495-2-git-send-email-wanpengli@tencent.com> <20190612160123.GH20308@linux.intel.com>
-In-Reply-To: <20190612160123.GH20308@linux.intel.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 13 Jun 2019 08:43:28 +0800
-Message-ID: <CANRm+CyyCq5keLokqu5ZZodnyvd-AmGejY_O3Gz2pcGWBrz=WA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] KVM: X86: Dynamic allocate core residency msr state
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <1560376776-21994-1-git-send-email-info@metux.net>
+In-Reply-To: <1560376776-21994-1-git-send-email-info@metux.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 13 Jun 2019 02:39:50 +0200
+Message-ID: <CACRpkdbBcbOmwu6=fB0TkSU-p_-mRRRLpeE3nFAgvSD4Z75DOA@mail.gmail.com>
+Subject: Re: [PATCH] include: linux: gpio: fix build warnings on undefined
+ struct pinctrl_dev
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019 at 00:01, Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Tue, Jun 11, 2019 at 03:34:07PM +0800, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Dynamic allocate core residency msr state. MSR_CORE_C1_RES is unreadabl=
-e
-> > except for ATOM platform, so it is ignore here.
-> >
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> >  arch/x86/include/asm/kvm_host.h | 11 +++++++++++
-> >  arch/x86/kvm/vmx/vmx.c          |  5 +++++
-> >  2 files changed, 16 insertions(+)
-> >
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm=
-_host.h
-> > index 15e973d..bd615ee 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -538,6 +538,15 @@ struct kvm_vcpu_hv {
-> >       cpumask_t tlb_flush;
-> >  };
-> >
-> > +#define NR_CORE_RESIDENCY_MSRS 3
-> > +
-> > +struct kvm_residency_msr {
-> > +     s64 value;
-> > +     u32 index;
-> > +     bool delta_from_host;
-> > +     bool count_with_host;
-> > +};
-> > +
-> >  struct kvm_vcpu_arch {
-> >       /*
-> >        * rip and regs accesses must go through
-> > @@ -785,6 +794,8 @@ struct kvm_vcpu_arch {
-> >
-> >       /* AMD MSRC001_0015 Hardware Configuration */
-> >       u64 msr_hwcr;
-> > +
-> > +     struct kvm_residency_msr *core_cstate_msrs;
->
-> Why are these in kvm_vcpu_arch?  AFAICT they're only wired up for VMX.
+On Thu, Jun 13, 2019 at 12:04 AM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
 
-They can be used by SVM later though I'm too busy to do that.
+> From: Enrico Weigelt <info@metux.net>
+>
+> This fixes the warnings:
+>
+> * include/linux/gpio.h:254:11: warning: 'struct pinctrl_dev' declared
+>   inside parameter list will not be visible outside of this definition
+>   or declaration
+> * include/linux/gpio/driver.h:602:11: warning: 'struct pinctrl_dev'
+>   declared inside parameter list will not be visible outside of this
+>   definition or declaration
+>
+> Signed-off-by: Enrico Weigelt <info@metux.net>
 
-Regards,
-Wanpeng Li
+Patch applied, also reported by the build robot.
+
+Thanks,
+Linus Walleij
