@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E0BC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED23DC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1899A20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D0F20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442831;
-	bh=H+5dwPgFB4MiHnOvTpStQdvAC/UlKgX1WYyo7jCx39M=;
+	s=default; t=1560442841;
+	bh=fUlNnJVN/Uym11TZChQIWssbZoXSKSgP5UVDGZ4N1/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aw9XWE7tHtoYVA+HekTC+Hc4mDp3HBUExqwVhqz/+VUox1w9H1vLpmeexkFdyFH4k
-	 CotIzfLe1js2kz9H+CJKPlZ6mDXhZA9B1pL1aI9ReSoq05bO1bpVoMZ5U7YCZdVV7G
-	 AHYXPUYgaBG1zjEChUvdAgHdX47lbMbcu+vlXgAA=
+	b=fQl4U0bN2B/1L8fxhBOb86ZHl7COYSuQmI1iNq7DbYNREcgCHwUfdAxTF5Y0nJP2I
+	 0KbNfrIJnuF1agusP5yJCXvY1DElbrkL1+V66XamrjAupOGNxyGK6JRi2oNWvrAVA0
+	 tWkvxw7mGAo6rbRh4+NU/GkKq63TIJM2PYaLNpXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391940AbfFMQUV (ORCPT
+        id S2392139AbfFMQUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:20:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56978 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:20:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731078AbfFMIj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:39:26 -0400
+        id S1731074AbfFMIjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:39:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E05452173C;
-        Thu, 13 Jun 2019 08:39:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72EB4215EA;
+        Thu, 13 Jun 2019 08:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415165;
-        bh=H+5dwPgFB4MiHnOvTpStQdvAC/UlKgX1WYyo7jCx39M=;
+        s=default; t=1560415153;
+        bh=fUlNnJVN/Uym11TZChQIWssbZoXSKSgP5UVDGZ4N1/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WTrxoS+FFuyETFqOJ1K5stVmtam0dtctxHBfoe1z1dv226JtxRxbIp11TRdLENywF
-         AemfMGZop8mRcOyxX2OALUD0b+0lnQ4XuSQkMwq07X/75YShev9fgdTDCiCtbAs0r3
-         4QRS1xQOqvppEvdI6QJ2iMAKgMGllrwhoF9M1Ccw=
+        b=uC6Z2acaIpGakTL2d/HNUI6rj0ihs4+iy8NwyETwa8vZnJd7jKLKrqlwI3Dth9J01
+         w1k2XVTm7FbIUNomL77zLCtYLMpiowXhCuwUtXYgOEKAVPpjbDOtNY5GF8VME4URbN
+         hzxfygPGry1tFPXA/v5hxJlwakC4Sq9HG8U+f2Jo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, jolsa@redhat.com,
+        kan.liang@intel.com, vincent.weaver@maine.edu,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 026/118] objtool: Dont use ignore flag for fake jumps
-Date:   Thu, 13 Jun 2019 10:32:44 +0200
-Message-Id: <20190613075645.065462393@linuxfoundation.org>
+Subject: [PATCH 4.19 023/118] perf/x86/intel: Allow PEBS multi-entry in watermark mode
+Date:   Thu, 13 Jun 2019 10:32:41 +0200
+Message-Id: <20190613075644.907843364@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -62,68 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e6da9567959e164f82bc81967e0d5b10dee870b4 ]
+[ Upstream commit c7a286577d7592720c2f179aadfb325a1ff48c95 ]
 
-The ignore flag is set on fake jumps in order to keep
-add_jump_destinations() from setting their jump_dest, since it already
-got set when the fake jump was created.
+This patch fixes a restriction/bug introduced by:
 
-But using the ignore flag is a bit of a hack.  It's normally used to
-skip validation of an instruction, which doesn't really make sense for
-fake jumps.
+   583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
 
-Also, after the next patch, using the ignore flag for fake jumps can
-trigger a false "why am I validating an ignored function?" warning.
+The original patch prevented using multi-entry PEBS when wakeup_events != 0.
+However given that wakeup_events is part of a union with wakeup_watermark, it
+means that in watermark mode, PEBS multi-entry is also disabled which is not the
+intent. This patch fixes this by checking is watermark mode is enabled.
 
-Instead just add an explicit check in add_jump_destinations() to skip
-fake jumps.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Stephane Eranian <eranian@google.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/71abc072ff48b2feccc197723a9c52859476c068.1557766718.git.jpoimboe@redhat.com
+Cc: jolsa@redhat.com
+Cc: kan.liang@intel.com
+Cc: vincent.weaver@maine.edu
+Fixes: 583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
+Link: http://lkml.kernel.org/r/20190514003400.224340-1-eranian@google.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/x86/events/intel/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 46be34576620..02a47e365e52 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -28,6 +28,8 @@
- #include <linux/hashtable.h>
- #include <linux/kernel.h>
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 09c53bcbd497..c8b0bf2b0d5e 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3072,7 +3072,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		return ret;
  
-+#define FAKE_JUMP_OFFSET -1
-+
- struct alternative {
- 	struct list_head list;
- 	struct instruction *insn;
-@@ -501,7 +503,7 @@ static int add_jump_destinations(struct objtool_file *file)
- 		    insn->type != INSN_JUMP_UNCONDITIONAL)
- 			continue;
- 
--		if (insn->ignore)
-+		if (insn->ignore || insn->offset == FAKE_JUMP_OFFSET)
- 			continue;
- 
- 		rela = find_rela_by_dest_range(insn->sec, insn->offset,
-@@ -670,10 +672,10 @@ static int handle_group_alt(struct objtool_file *file,
- 		clear_insn_state(&fake_jump->state);
- 
- 		fake_jump->sec = special_alt->new_sec;
--		fake_jump->offset = -1;
-+		fake_jump->offset = FAKE_JUMP_OFFSET;
- 		fake_jump->type = INSN_JUMP_UNCONDITIONAL;
- 		fake_jump->jump_dest = list_next_entry(last_orig_insn, list);
--		fake_jump->ignore = true;
-+		fake_jump->func = orig_insn->func;
- 	}
- 
- 	if (!special_alt->new_len) {
+ 	if (event->attr.precise_ip) {
+-		if (!(event->attr.freq || event->attr.wakeup_events)) {
++		if (!(event->attr.freq || (event->attr.wakeup_events && !event->attr.watermark))) {
+ 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+ 			if (!(event->attr.sample_type &
+ 			      ~intel_pmu_large_pebs_flags(event)))
 -- 
 2.20.1
 
