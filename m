@@ -2,151 +2,99 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7508C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 14:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A780C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 14:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDB3E20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 14:59:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="MW29uUt3"
+	by mail.kernel.org (Postfix) with ESMTP id EE03521743
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 14:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560437967;
+	bh=GYf/+gkGyncHp31uy7FPojBQ7mL+yl6nzbXTfvhlMGc=;
+	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
+	b=Rg/SVHcf0oStPwvwPkLlkhp65pwXtRbL07ipeR3YR4Vk2Y5V2k/vhssLv+JU/k/Nn
+	 kObiWs3L8MfDnQr8ZEfJDnIewP8TvyWXLdOEwbrUuhnx/hy+rtL5msbF89+wh84N+o
+	 g+V/riEbxThJ2tWrbotydX9vo10LGIaJlppW/MSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732663AbfFMO7B (ORCPT
+        id S1732710AbfFMO70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 10:59:01 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44927 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbfFMOzj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:55:39 -0400
-Received: by mail-qk1-f196.google.com with SMTP id p144so802269qke.11
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 07:55:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=syRsM5x5t36T0uwBQ8w3WtlVORO0dY2X14fOyDlfmP4=;
-        b=MW29uUt3jByNSY9EdjIpGnBKSihl9HASLR+/ooJTV2ZJHETpBMlzK4M/8DVRozclGw
-         qI7jOYKnXbNco1i2jnu7jmHoEfvTNvCUFClQyrHEPDqCbosgl7YIZBBZ4vXEhgTljPIY
-         0Dlm6d90sHKdN6FETsRaV3IKYSAf2RT31FEXpzCgcw+y/DjEU1WFd6x468IKtWYaPO8R
-         2YwfQJ3pvmC2AkBTSNwSkBpurq4xsKkXzFn8sN3RjOx2JNLAsHUfTigkazfpHHg6HrzE
-         gpKP1GXUcLCaX6Bt6MuT7XDxJw0hZ4no5tVThuZ3BPlKt82LNfbzNwu0LDHQnKHktq59
-         yHbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=syRsM5x5t36T0uwBQ8w3WtlVORO0dY2X14fOyDlfmP4=;
-        b=Hbffsuux8zXiFrwPE4HSaX/GNLyuRmOm1O01pUu27JL8GG3hWi+NsIYXbOVafzJo2L
-         Yifll4UknwNrBgCMY9njuUlAQezECfaXBPVek518aIgzSUkamYA+71lVrDRDeetB740W
-         yhZlkHvxVg2xi4qJE40x8tpmw9fQiNxsmiDvaRcOueOCSm7+2fI2Y/ZIxP0UcD5mf5CN
-         Dggcci9w3lXqrNXT85H+tIdH+DX/Bk+Mt9+sHHl+NpTfNA9gC1TzPTz67y3uwJp9QSeJ
-         GGPyDzjXV2+hk+6RYPDvlRVgP8Mld8FxgNj8USctTqio5efXsJx4XrWNkzuisIKhpBKz
-         FNVQ==
-X-Gm-Message-State: APjAAAUytoHiYAWmFbn0rjSRd3T2g6H82Rk+RD/zMSXSw4WQQ21xGWgn
-        ZWQDIX9De9y7Psbm0zR6EEbWrw==
-X-Google-Smtp-Source: APXvYqyBEJXlITHzA9ZejAG6r56aunWdCYC9tOvEIffA6U0RZhtD9cozUHnyThUCVBCpbzxPxUSPyQ==
-X-Received: by 2002:a37:9c50:: with SMTP id f77mr71923542qke.6.1560437738450;
-        Thu, 13 Jun 2019 07:55:38 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::9d6b])
-        by smtp.gmail.com with ESMTPSA id a15sm1981399qtb.43.2019.06.13.07.55.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 07:55:37 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 10:55:36 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Roman Stratiienko <roman.stratiienko@globallogic.com>
-Cc:     Josef Bacik <josef@toxicpanda.com>, linux-kernel@vger.kernel.org,
-        nbd@other.debian.org,
-        Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>,
-        linux-block@vger.kernel.org, axboe@kernel.dkn.org
-Subject: Re: [PATCH 2/2] nbd: add support for nbd as root device
-Message-ID: <20190613145535.tdesq3y2xy6ycpw7@MacBook-Pro-91.local>
-References: <20190612163144.18486-1-roman.stratiienko@globallogic.com>
- <20190612163144.18486-2-roman.stratiienko@globallogic.com>
- <20190613135241.aghcrrz7rg2au3bw@MacBook-Pro-91.local>
- <CAODwZ7v=RSsmVj5GjcvGn2dn+ejLRBHZ79x-+S9DrX4GoXuVaQ@mail.gmail.com>
+        Thu, 13 Jun 2019 10:59:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732611AbfFMOyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 10:54:07 -0400
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D82BB2175B;
+        Thu, 13 Jun 2019 14:54:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560437647;
+        bh=GYf/+gkGyncHp31uy7FPojBQ7mL+yl6nzbXTfvhlMGc=;
+        h=References:In-Reply-To:From:Date:Subject:To:From;
+        b=TcJCjqavWAlojNJrYEhlAxJC2cZ5+UcNQ+J8ry2eA6PDcyKHn5GTWrvlFPceYjtSN
+         fNESd+v8TcrthsynLoOq6/UUiPKuYYYpkBjUXEUYtQvUnIEhzpGldliabELRtYoQf4
+         H75jbCoov7obKq4HVZrmdfy9zEZ/PwTSrtP3JxCc=
+Received: by mail-lj1-f182.google.com with SMTP id k18so18822574ljc.11;
+        Thu, 13 Jun 2019 07:54:06 -0700 (PDT)
+X-Gm-Message-State: APjAAAV6XUq9F9E39O5SnpoMeGacdv0A3u8+bNEknKmJ8R7Hq8pUXmxb
+        zRI4+rKoLbLikeEtjCjloRJ44nNXNOhJlB2X4sE=
+X-Google-Smtp-Source: APXvYqxHuV7Q03SqzPQJxsXIaEVNMtkbU1nrHhyj83hOaQCq0FDxpomV2Y8SgjCcQw0UPaOf6ZfRnkeRkUssQQzCFAM=
+X-Received: by 2002:a2e:124b:: with SMTP id t72mr39255568lje.143.1560437645055;
+ Thu, 13 Jun 2019 07:54:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAODwZ7v=RSsmVj5GjcvGn2dn+ejLRBHZ79x-+S9DrX4GoXuVaQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20190604185229.7393-1-krzk@kernel.org>
+In-Reply-To: <20190604185229.7393-1-krzk@kernel.org>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 13 Jun 2019 16:53:53 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPd4LVFGgonbsuxii-5Fu5wWhxU9yotLHw+OXsPcxYw_3g@mail.gmail.com>
+Message-ID: <CAJKOXPd4LVFGgonbsuxii-5Fu5wWhxU9yotLHw+OXsPcxYw_3g@mail.gmail.com>
+Subject: Re: [PATCH v3] ARM: configs: Remove useless UEVENT_HELPER_PATH
+To:     arm@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 05:45:13PM +0300, Roman Stratiienko wrote:
-> On Thu, Jun 13, 2019 at 4:52 PM Josef Bacik <josef@toxicpanda.com> wrote:
-> >
-> > On Wed, Jun 12, 2019 at 07:31:44PM +0300, roman.stratiienko@globallogic.com wrote:
-> > > From: Roman Stratiienko <roman.stratiienko@globallogic.com>
-> > >
-> > > Adding support to nbd to use it as a root device. This code essentially
-> > > provides a minimal nbd-client implementation within the kernel. It opens
-> > > a socket and makes the negotiation with the server. Afterwards it passes
-> > > the socket to the normal nbd-code to handle the connection.
-> > >
-> > > The arguments for the server are passed via kernel command line.
-> > > The kernel command line has the format
-> > > 'nbdroot=[<SERVER_IP>:]<SERVER_PORT>/<EXPORT_NAME>'.
-> > > SERVER_IP is optional. If it is not available it will use the
-> > > root_server_addr transmitted through DHCP.
-> > >
-> > > Based on those arguments, the connection to the server is established
-> > > and is connected to the nbd0 device. The rootdevice therefore is
-> > > root=/dev/nbd0.
-> > >
-> > > Patch was initialy posted by Markus Pargmann <mpa@pengutronix.de>
-> > > and can be found at https://lore.kernel.org/patchwork/patch/532556/
-> > >
-> > > Change-Id: I78f7313918bf31b9dc01a74a42f0f068bede312c
-> > > Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
-> > > Reviewed-by: Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>
-> >
-> > Just throw nbd-client in your initramfs.  Every nbd server has it's own
-> > handshake protocol, embedding one particular servers handshake protocol into the
-> > kernel isn't the answer here.  Thanks,
-> >
-> > Josef
-> 
-> Hello Josef,
-> 
-> Let me share some of my thoughts that was the motivation for providing
-> this solution::
-> 
-> We choose NBD as a tool to run CI tests on our platforms.
-> We have a wide range of different BSP's with different kind of images
-> where using NFSROOT is hard or even impossible.
-> Most of these BSPs are not using initramfs and some of them are Android-based.
-> 
-> Taking all this into account we have to put significant efforts to
-> implement and test custom initramfs and it will not cover all our
-> needs.
-> 
-> Much easier way is to embed small client into the kernel and just
-> enable configuration when needed.
-> 
-> I believe such solution will be very useful for wide range of kernel users.
-> 
-> Also, as far as I know mainline nbd-server daemon have only 2
-> handshake protocols. So called OLD-STYLE and NEW-STYLE. And OLD-STYLE
-> is no longer supported. So it should not be a problem, or please fix
-> me if I'm wrong.
-> 
+On Tue, 4 Jun 2019 at 20:52, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Remove the CONFIG_UEVENT_HELPER_PATH because:
+> 1. It is disabled since commit 1be01d4a5714 ("driver: base: Disable
+>    CONFIG_UEVENT_HELPER by default") as its dependency (UEVENT_HELPER) was
+>    made default to 'n',
+> 2. It is not recommended (help message: "This should not be used today
+>    [...] creates a high system load") and was kept only for ancient
+>    userland,
+> 3. Certain userland specifically requests it to be disabled (systemd
+>    README: "Legacy hotplug slows down the system and confuses udev").
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> For vexpress:
+> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+>
+> ---
+>
+> Changes since v2:
+> 1. Remove unrelated files.
+> 2. Add Geert's ack.
+>
+> Changes sice v3:
+> 1. Change also mini2440_defconfig.
+> 2. Add more acks.
 
-I don't doubt you have a good reason to want it, I'm just not clear on why an
-initramfs isn't an option?  You have this special kernel with your special
-option, and you manage to get these things to boot your special kernel right?
-So why is a initramfs with a tiny nbd-client binary in there not an option?
+Hi Arnd and Olof,
 
-Also I mean that there are a bunch of different nbd servers out there.  We have
-our own here at Facebook, qemu has one, IIRC there's a ceph one.  They all have
-their own connection protocols.  The beauty of NBD is that it doesn't have to
-know about that part, it just does the block device part, and I'd really rather
-leave it that way.  Thanks,
+Do you want to apply it directly or maybe I can send it along with
+other my defconfig pull request?
 
-Josef
+Best regards,
+Krzysztof
