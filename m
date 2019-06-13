@@ -2,93 +2,90 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC9AC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B4BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C52CB20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:58:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0H+KKpK"
+	by mail.kernel.org (Postfix) with ESMTP id BB86020665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:58:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560445115;
+	bh=4lclOnf/sfAPyFXVi/HGPDJVKp6DvLHCXDKLDcqvQaU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VaBgKewh4K22sATaqPUYuwhe7uno/dCYXcEb4GA3RYf1GTa4BhhPYV51ZVIGRwyAA
+	 cOIuo7hEBtKZSdm6qBuz7FinEKB9OACu3zh9ZH1gbUATM31J9U4qs3tlIjH58g3J2d
+	 c6nQa/wS5leCniu5FyNBFDVhKVZXIBkjJ0PQ+k+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393126AbfFMQ60 (ORCPT
+        id S2393145AbfFMQ6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:58:26 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40626 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729893AbfFMAvc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 20:51:32 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a93so7332096pla.7;
-        Wed, 12 Jun 2019 17:51:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=oSJgfj17bUgTuk9GPBLNPBjjdz6lYPFQFv19Hz3KzW0=;
-        b=T0H+KKpK2Tsl4GmvFCodkR9pZgTF1E/sMmaYZs1ijGT6XrTgNZ8STm8ug0teibLo+k
-         wdfjEldf2UMhaLrcjrAfsK22rsC6YxcsymWjXA5MIGhgyTTQiFeF7v6bHzL6ZtHvgQmC
-         GTrUZs/8DLd9xPTDqengFkLODL5cmuuVNWrqtbKqgIgsIafXoFnJ1tGg08FCAwG+PL6v
-         QQvDnZrfuj7GOb1+1QZJPXxwLJHFEpg0Tf8mSHRjgnvUHCjyah6Z3kvQkUq6rBsK/zyZ
-         bDd09cCpkQF4QnQTu/pS0/lmlyN3c5Q+RmwAqYeImgeGgcP3Aatw6Ph4To4qJ+GaUKZi
-         NeKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=oSJgfj17bUgTuk9GPBLNPBjjdz6lYPFQFv19Hz3KzW0=;
-        b=Cyvp77OUAK5hXbx7/FkJoISgMrHztdBsuC+B7VCtneGB0ROJUonYIQpPzxbUNav9K+
-         u0ssp71hGj7XdWjwLKqFSRo3iJjEjCFOejNmvx19/svhQwVT9F3eFCZBLfpcWxUGL01a
-         5IFp9w3uiEjU3p/jEoSJctdI5lwkRhBv6IPuUWPfYE0eqIobHce6tlY/5WhkHGsIZiIa
-         qyvYW4gLYdwP7wcQqYH83LnGEmcrRHgyA+dbnEMMxIGxpzTyUOt+GxC7mDBZ0aG8PwWe
-         PE1uClDxL2bSTwiom37RnNIki9mUSF8G2ddPXosYfUKKMt3xsM6gaQQOm8ELur8KobM3
-         oKjQ==
-X-Gm-Message-State: APjAAAV3cCO6WGRrwxVTwTMZaUaJWxkLjU9jl/fb6dOsy2pFtfQnRzMt
-        mE//0aHtJxX5tukJlUCicb46JIM0
-X-Google-Smtp-Source: APXvYqwkqsAfPkLV50CyaPZ3uDtTzILJWDK3zcO7Hf2JXf6UL9/XLvZStg8UJ6EYavfuJfoBMVO3gA==
-X-Received: by 2002:a17:902:e312:: with SMTP id cg18mr17539006plb.212.1560387090754;
-        Wed, 12 Jun 2019 17:51:30 -0700 (PDT)
-Received: from localhost.localdomain ([2604:3d09:b080:d00:7990:5eb3:9633:9569])
-        by smtp.gmail.com with ESMTPSA id y68sm690214pfy.164.2019.06.12.17.51.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 17:51:29 -0700 (PDT)
-From:   jassisinghbrar@gmail.com
-To:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        orito.takao@socionext.com, masami.hiramatsu@linaro.org,
-        kasai.kazuhiro@socionext.com,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: [PATCH 0/2] Add support for AHB DMA controller on Milbeaut series
-Date:   Wed, 12 Jun 2019 19:51:09 -0500
-Message-Id: <20190613005109.1867-1-jassisinghbrar@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 13 Jun 2019 12:58:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729886AbfFMArs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 12 Jun 2019 20:47:48 -0400
+Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0644215EA;
+        Thu, 13 Jun 2019 00:47:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560386868;
+        bh=4lclOnf/sfAPyFXVi/HGPDJVKp6DvLHCXDKLDcqvQaU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Apd1/9RvRe5RRMZS7XQ5mBXWsp+u6fbo99Qa+k24pfkJ/rDYjokzMyqi2R02tYu1U
+         mgmuZuNYIIQgcl/+J3WTW0OGIJYhv4veu1KwtcdtxW3zcTFlr1GggxJDg5cBz95zlI
+         xTfzNH3Q9tNXDAlBIzzqKKbubumC1q/twZiOPTBc=
+Date:   Thu, 13 Jun 2019 08:47:10 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Horia Geanta <horia.geanta@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx7ulp: add crypto support
+Message-ID: <20190613004709.GB20747@dragon>
+References: <20190606080255.25504-1-horia.geanta@nxp.com>
+ <20190612103926.GE11086@dragon>
+ <VI1PR0402MB3485A573518D60A573BA55C298EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <20190612130602.GH11086@dragon>
+ <VI1PR0402MB348596BF52CE43B5D4CD534798EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <20190612132600.GI11086@dragon>
+ <20190612135952.ds6zzh7ppahiuodd@gondor.apana.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612135952.ds6zzh7ppahiuodd@gondor.apana.org.au>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jassi Brar <jaswinder.singh@linaro.org>
+On Wed, Jun 12, 2019 at 09:59:52PM +0800, Herbert Xu wrote:
+> On Wed, Jun 12, 2019 at 09:26:02PM +0800, Shawn Guo wrote:
+> >
+> > Yes, it happens from time to time depending on maintainer's style. I'm
+> > fine with the DT changes going through other subsystem tree, if the
+> > subsystem maintainer wants to and is willing to take the risk of merge
+> > conflict between his tree and arm-soc tree.
+> 
+> I have no problems with potential merge conflicts.
 
-The following series adds AHB DMA (HDMAC) controller support on Milbeaut series.
-This controller is capable of Mem<->MEM and DEV<->MEM transfer. But only DEV<->MEM
-is currently supported.
+Then feel free to take it:
 
-Jassi Brar (2):
-  dt-bindings: milbeaut-hdmac: Add Socionext Milbeaut HDMAC bindings
-  dmaengine: milbeaut-hdmac: Add HDMAC driver for Milbeaut platforms
-
- .../bindings/dma/milbeaut-m10v-hdmac.txt           |  54 ++
- drivers/dma/Kconfig                           |  10 +
- drivers/dma/Makefile                          |   1 +
- drivers/dma/milbeaut-hdmac.c                  | 572 ++++++++++++++++++
- 4 files changed, 637 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
- create mode 100644 drivers/dma/milbeaut-hdmac.c
-
--- 
-2.17.1
-
+Acked-by: Shawn Guo <shawnguo@kernel.org>
