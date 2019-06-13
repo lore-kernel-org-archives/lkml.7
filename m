@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA6CC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A02BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A4AB208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 040B6208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441733;
-	bh=XhiARO0SF7qEE7Hvfj1tJhp73yqlzo+pFRddRfLi7sw=;
+	s=default; t=1560441736;
+	bh=8M7Ht7uR3C8y+ng4cJglq02l4gO9fdwxHm6+doxQks8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bPcTxu4hP32KBb3btkHgj/K7E/oDai+r6UBDxTNM3XeZftvJZCkFuMEjziT82ILQJ
-	 VeQNsOn6lmnWMPC+Zx9fXVWGN7Ruvo4Fx/aBYgrmmstmKnOJJH/NQz6/M0SHDiYGcB
-	 jMVq1BaHN4n5+0Uc+PZf7km4PBWMzEBT5ldR49jQ=
+	b=TEF9GfZSk3BkbLFw5Ye8y1nW+LpWp4O/aVOXqVO+v70XNy/szKaPGOJbVr7kZKOtq
+	 2meqRQJ/QuxqLcKYV4pcyc0qyUkc7W2rcrKBEO3R+8kOy0U+2mMbSh4TGTIxIe/Ls4
+	 kdHh5FRCUG7nnqw/fgMtYlehuagtMMFWQcitvMqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390873AbfFMQB6 (ORCPT
+        id S2390571AbfFMQB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36166 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:01:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731416AbfFMIsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:48:10 -0400
+        id S1731419AbfFMIsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:48:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C846F2173C;
-        Thu, 13 Jun 2019 08:48:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E096321743;
+        Thu, 13 Jun 2019 08:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415689;
-        bh=XhiARO0SF7qEE7Hvfj1tJhp73yqlzo+pFRddRfLi7sw=;
+        s=default; t=1560415692;
+        bh=8M7Ht7uR3C8y+ng4cJglq02l4gO9fdwxHm6+doxQks8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DYaq8DTZM1NailC7qntJx/+eA/7+oUEmE9vYhYel8uKsracGSLuC2IKQyYuAp/dqP
-         AFXoTq/nyZRKh7+DojEAEi+6rb1lKfLavPhtuK9qvH4QmKEQ9LxB8sEV1JBlVDZHVX
-         cimGUlCfCtmMmRFnAg/XW3P4l6rg3XhVpP+QfZlE=
+        b=xMYmxM+XYY5Ybg1TTGGmCUIyVNjP3/kViE+oEwBEpBbU+vxcCaYWqY5umGmW1dpYj
+         eUV5kYHClaShHcG/+1GRLPJ8S26TEpSkFxPwopHb/cKa3uglyfPeoMT58ChJU+W8ag
+         R3XOLft53yq4nW93Y7i6XWai7rlpwidtPx1Uy2jI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wesley Sheng <wesley.sheng@microchip.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
+        stable@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 090/155] switchtec: Fix unintended mask of MRPC event
-Date:   Thu, 13 Jun 2019 10:33:22 +0200
-Message-Id: <20190613075658.131342524@linuxfoundation.org>
+Subject: [PATCH 5.1 091/155] net: thunderbolt: Unregister ThunderboltIP protocol handler when suspending
+Date:   Thu, 13 Jun 2019 10:33:23 +0200
+Message-Id: <20190613075658.184288472@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -61,44 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 083c1b5e50b701899dc32445efa8b153685260d5 ]
+[ Upstream commit 9872760eb7b1d4f6066ad8b560714a5d0a728fdb ]
 
-When running application tool switchtec-user's `firmware update` and `event
-wait` commands concurrently, sometimes the firmware update speed reduced
-significantly.
+The XDomain protocol messages may start as soon as Thunderbolt control
+channel is started. This means that if the other host starts sending
+ThunderboltIP packets early enough they will be passed to the network
+driver which then gets confused because its resume hook is not called
+yet.
 
-It is because when the MRPC event happened after MRPC event occurrence
-check but before the event mask loop reaches its header register in event
-ISR, the MRPC event would be masked unintentionally.  Since there's no
-chance to enable it again except for a module reload, all the following
-MRPC execution completion checks time out.
+Fix this by unregistering the ThunderboltIP protocol handler when
+suspending and registering it back on resume.
 
-Fix this bug by skipping the mask operation for MRPC event in event ISR,
-same as what we already do for LINK event.
-
-Fixes: 52eabba5bcdb ("switchtec: Add IOCTLs to the Switchtec driver")
-Signed-off-by: Wesley Sheng <wesley.sheng@microchip.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Acked-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/switch/switchtec.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/thunderbolt.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index e22766c79fe9..c2fa830b8ef5 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -1162,7 +1162,8 @@ static int mask_event(struct switchtec_dev *stdev, int eid, int idx)
- 	if (!(hdr & SWITCHTEC_EVENT_OCCURRED && hdr & SWITCHTEC_EVENT_EN_IRQ))
- 		return 0;
+diff --git a/drivers/net/thunderbolt.c b/drivers/net/thunderbolt.c
+index c48c3a1eb1f8..fcf31335a8b6 100644
+--- a/drivers/net/thunderbolt.c
++++ b/drivers/net/thunderbolt.c
+@@ -1282,6 +1282,7 @@ static int __maybe_unused tbnet_suspend(struct device *dev)
+ 		tbnet_tear_down(net, true);
+ 	}
  
--	if (eid == SWITCHTEC_IOCTL_EVENT_LINK_STATE)
-+	if (eid == SWITCHTEC_IOCTL_EVENT_LINK_STATE ||
-+	    eid == SWITCHTEC_IOCTL_EVENT_MRPC_COMP)
- 		return 0;
++	tb_unregister_protocol_handler(&net->handler);
+ 	return 0;
+ }
  
- 	dev_dbg(&stdev->dev, "%s: %d %d %x\n", __func__, eid, idx, hdr);
+@@ -1290,6 +1291,8 @@ static int __maybe_unused tbnet_resume(struct device *dev)
+ 	struct tb_service *svc = tb_to_service(dev);
+ 	struct tbnet *net = tb_service_get_drvdata(svc);
+ 
++	tb_register_protocol_handler(&net->handler);
++
+ 	netif_carrier_off(net->dev);
+ 	if (netif_running(net->dev)) {
+ 		netif_device_attach(net->dev);
 -- 
 2.20.1
 
