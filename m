@@ -2,137 +2,94 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1556DC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BCEC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26D320851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:51:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="P4HLxHwc"
+	by mail.kernel.org (Postfix) with ESMTP id B83A520851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:51:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560441107;
+	bh=x6g8SpdX2s4hgnOzlEqiNhMKdDtcVuerNEHpNk2rrmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nApVm9l08402tQKTbBkisaztOuFU4sMMa2+c97LGliVAy/OXv8zQ8qfj90upWiBnZ
+	 CaAURbXmxsh8UsS4UZjUJcCILQpYYXUuKSHYCTUM6dR9t6+ke50eQ8JpXYMwY5FU6r
+	 Hp0TzuCxz9Ytj2ZBojTUD6YtfJ2JJTK3xb3yPczI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731848AbfFMPvh (ORCPT
+        id S2387412AbfFMPvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:51:37 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:32983 "EHLO pegase1.c-s.fr"
+        Thu, 13 Jun 2019 11:51:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731661AbfFMJLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:11:54 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45PdKL5TQFzB09Zc;
-        Thu, 13 Jun 2019 11:11:50 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=P4HLxHwc; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 2ONhF_4wVYbN; Thu, 13 Jun 2019 11:11:50 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45PdKL4PXKzB09ZZ;
-        Thu, 13 Jun 2019 11:11:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1560417110; bh=9bGT30RNddz+6s3Fj4Y0toOHWCeSsq4ECvV0JMuzbp0=;
-        h=From:Subject:To:Cc:Date:From;
-        b=P4HLxHwcjeetZUgsWp8CxZ5zAKbXDp6cZougJwXqv8LPd5UC654rQi0P0xrYzHoWU
-         Ff12ygM2kNUiyu0P5aiF9inAJN8AdTQkxdyfmEu7XD+uioQo4BGOR+a4cInFTxul+4
-         2O/S6MWGTnUow/jn1HaJpnME1llzHX6ii4MH6iZc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id ACA028B8C0;
-        Thu, 13 Jun 2019 11:11:51 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id RwJpPaj8w0dh; Thu, 13 Jun 2019 11:11:51 +0200 (CEST)
-Received: from po16838vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6C9878B8B9;
-        Thu, 13 Jun 2019 11:11:51 +0200 (CEST)
-Received: by po16838vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id DF7F268B1D; Thu, 13 Jun 2019 09:11:50 +0000 (UTC)
-Message-Id:
- <35488171038e3d40e7680b8513dfbd52ff7b6ef2.1557487355.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 1/2] powerpc/8xx: move CPM1 related files from sysdev/ to
- platforms/8xx
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vitaly Bordug <vitb@kernel.crashing.org>,
-        Scott Wood <oss@buserror.net>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 13 Jun 2019 09:11:50 +0000 (UTC)
+        id S1731659AbfFMJL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:11:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 199922133D;
+        Thu, 13 Jun 2019 09:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560417085;
+        bh=x6g8SpdX2s4hgnOzlEqiNhMKdDtcVuerNEHpNk2rrmI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uTZL4pHjJOw7s/bprqy0krU4/Onto+EUdmkGYsEHNey88pVk2tB0UidD45l7fPpTp
+         LEuaNYkdd3tG9SHhffzcXQ/0B2ERGtQTvo2bWIMeqM9EbfqjP9e07ltsVpzrFcDYAx
+         7illd/oKz/AQSJo3ByZi7LPB8aBsqCF4lNhXqzkg=
+Date:   Thu, 13 Jun 2019 11:11:22 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.14 61/81] ALSA: seq: Protect in-kernel ioctl calls with
+ mutex
+Message-ID: <20190613091122.GA31122@kroah.com>
+References: <20190613075649.074682929@linuxfoundation.org>
+ <20190613075653.581995283@linuxfoundation.org>
+ <s5hzhmlluwx.wl-tiwai@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <s5hzhmlluwx.wl-tiwai@suse.de>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Message-ID: <20190613091150.kvIJj5alayXyFURi-vUYUvMvqZ6KBHy36En3lsE6PUE@z>
 
-Only 8xx selects CPM1 and related CONFIG options are already
-in platforms/8xx/Kconfig
+On Thu, Jun 13, 2019 at 11:02:54AM +0200, Takashi Iwai wrote:
+> On Thu, 13 Jun 2019 10:33:44 +0200,
+> Greg Kroah-Hartman wrote:
+> > 
+> > [ Upstream commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32 ]
+> > 
+> > ALSA OSS sequencer calls the ioctl function indirectly via
+> > snd_seq_kernel_client_ctl().  While we already applied the protection
+> > against races between the normal ioctls and writes via the client's
+> > ioctl_mutex, this code path was left untouched.  And this seems to be
+> > the cause of still remaining some rare UAF as spontaneously triggered
+> > by syzkaller.
+> > 
+> > For the sake of robustness, wrap the ioctl_mutex also for the call via
+> > snd_seq_kernel_client_ctl(), too.
+> > 
+> > Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
+> > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> 
+> This commit is reverted later by commit f0654ba94e33.
+> So please drop this.  The proper fix is done later by commit
+> 7c32ae35fbf9 ("ALSA: seq: Cover unsubscribe_port() in list_mutex")
+> 
+> Ditto for 4.19.y and 5.1.y.
 
-This patch moves the related C files to platforms/8xx/.
+Now dropped everywhere, and I added 7c32ae35fbf9 ("ALSA: seq: Cover
+unsubscribe_port() in list_mutex") everywhere instead.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/platforms/8xx/Makefile                 | 3 +++
- arch/powerpc/{sysdev => platforms/8xx}/cpm1.c       | 0
- arch/powerpc/{sysdev => platforms/8xx}/cpm_gpio.c   | 0
- arch/powerpc/{sysdev => platforms/8xx}/micropatch.c | 0
- arch/powerpc/sysdev/Makefile                        | 3 ---
- 5 files changed, 3 insertions(+), 3 deletions(-)
- rename arch/powerpc/{sysdev => platforms/8xx}/cpm1.c (100%)
- rename arch/powerpc/{sysdev => platforms/8xx}/cpm_gpio.c (100%)
- rename arch/powerpc/{sysdev => platforms/8xx}/micropatch.c (100%)
+thanks,
 
-diff --git a/arch/powerpc/platforms/8xx/Makefile b/arch/powerpc/platforms/8xx/Makefile
-index 708ab099e886..10b338436655 100644
---- a/arch/powerpc/platforms/8xx/Makefile
-+++ b/arch/powerpc/platforms/8xx/Makefile
-@@ -3,6 +3,9 @@
- # Makefile for the PowerPC 8xx linux kernel.
- #
- obj-y			+= m8xx_setup.o machine_check.o pic.o
-+obj-$(CONFIG_CPM1)		+= cpm1.o
-+obj-$(CONFIG_UCODE_PATCH)	+= micropatch.o
-+obj-$(CONFIG_8xx_GPIO)		+= cpm_gpio.o
- obj-$(CONFIG_MPC885ADS)   += mpc885ads_setup.o
- obj-$(CONFIG_MPC86XADS)   += mpc86xads_setup.o
- obj-$(CONFIG_PPC_EP88XC)  += ep88xc.o
-diff --git a/arch/powerpc/sysdev/cpm1.c b/arch/powerpc/platforms/8xx/cpm1.c
-similarity index 100%
-rename from arch/powerpc/sysdev/cpm1.c
-rename to arch/powerpc/platforms/8xx/cpm1.c
-diff --git a/arch/powerpc/sysdev/cpm_gpio.c b/arch/powerpc/platforms/8xx/cpm_gpio.c
-similarity index 100%
-rename from arch/powerpc/sysdev/cpm_gpio.c
-rename to arch/powerpc/platforms/8xx/cpm_gpio.c
-diff --git a/arch/powerpc/sysdev/micropatch.c b/arch/powerpc/platforms/8xx/micropatch.c
-similarity index 100%
-rename from arch/powerpc/sysdev/micropatch.c
-rename to arch/powerpc/platforms/8xx/micropatch.c
-diff --git a/arch/powerpc/sysdev/Makefile b/arch/powerpc/sysdev/Makefile
-index aaf23283ba0c..cfcade8270a9 100644
---- a/arch/powerpc/sysdev/Makefile
-+++ b/arch/powerpc/sysdev/Makefile
-@@ -37,12 +37,9 @@ obj-$(CONFIG_XILINX_PCI)	+= xilinx_pci.o
- obj-$(CONFIG_OF_RTC)		+= of_rtc.o
- 
- obj-$(CONFIG_CPM)		+= cpm_common.o
--obj-$(CONFIG_CPM1)		+= cpm1.o
- obj-$(CONFIG_CPM2)		+= cpm2.o cpm2_pic.o cpm_gpio.o
--obj-$(CONFIG_8xx_GPIO)		+= cpm_gpio.o
- obj-$(CONFIG_QUICC_ENGINE)	+= cpm_common.o
- obj-$(CONFIG_PPC_DCR)		+= dcr.o
--obj-$(CONFIG_UCODE_PATCH)	+= micropatch.o
- 
- obj-$(CONFIG_PPC_MPC512x)	+= mpc5xxx_clocks.o
- obj-$(CONFIG_PPC_MPC52xx)	+= mpc5xxx_clocks.o
--- 
-2.13.3
-
+greg k-h
