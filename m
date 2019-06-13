@@ -2,66 +2,66 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C0EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C44CAC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD4E2063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97ACA206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:03:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tauNLy6b"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WdLrHOMh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730341AbfFMRDo (ORCPT
+        id S2393210AbfFMRDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:03:44 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:56098 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729782AbfFMRDe (ORCPT
+        Thu, 13 Jun 2019 13:03:48 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36696 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729473AbfFMRDi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:03:34 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a15so10963508wmj.5;
-        Thu, 13 Jun 2019 10:03:33 -0700 (PDT)
+        Thu, 13 Jun 2019 13:03:38 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n4so21629200wrs.3;
+        Thu, 13 Jun 2019 10:03:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=7m3hMtDG7gra4X2zWk3roSWCEEO5EloSfs0dzfM9Apo=;
-        b=tauNLy6bXrdunw+dGY7UPzi569AXF/L59P1VXZL5xSxv7d3DhA+KdWe49kz5kSjdw+
-         Xj85YtiFbt884q5VSpfMECTWrgrZkAjpTzmhXmIYdrpGcgZthDuybh1SvrfQOyWS0RHh
-         XrekiJjrLprAQbw1aEIH01BaVXGrv5C4GT3t7CVeajy5ou+68XCPGxVfHou4GbHVt+nm
-         pUljNiF5uHfg55WvWtF86bvhGpv7WGaLXsCagILMsFt1Yq51nwyxfpy/xKlMATgHQq3H
-         I4UrmC1pAQCvTK1zGniWI0XtigXmXUf10Hd+a+/yAgpygT5CXA71SPlLnDvxtO+JReWW
-         Zivg==
+        bh=HxGWvvkcjHZyUe+PK8/i3cEvG07jumxhELUvt9aNYAI=;
+        b=WdLrHOMhoartmEAYdPzp9AU9A6dUM6GI8jCdiAEEcjzPqXzBzCoFpDQYA8j9m7hQHV
+         l+vvihF+DSCc0h/LCgbZ2Xf38rpWpmidv/Vfwjh8Q4ZqDaseq02+B7G3OQESAz/Zuvxe
+         bH814uIdijOsQ/PMqG19jaojmMYruj2iMO5M5QqZf3BauO5Q4BgwEmAFzRZZZAJDWa82
+         hnnsFURXVSCnXWpuKLspbaP1r+m2PGydxpdOxleDe32w/J6G4MYeqTQTWyK3YOP6jafF
+         hgu4iT0m03nJ9XoXJnZXRj8gw/2gdiAJKAxwLRyQkoZyJPefW6j8w7oClVAj+4rrx3Gh
+         kWBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=7m3hMtDG7gra4X2zWk3roSWCEEO5EloSfs0dzfM9Apo=;
-        b=adFEVZ7FyNBRr8CLd0NHCrsT+ecG2bgvPzwBnY29iWClJ/KNJkOm/wsjdS+cA7VgpC
-         iWhZlFSLDIMte4FlBvvyHm8PYTfxpNiOv1JYumPn81ji3uW2ZyC+l/o+lG0oJ6FwOQ7b
-         HpoHbJ1TxnpYiMrURCbD6a6ZPWjQ3z/1At5Ld62FrFNDc0/G6suGsnk5TgVfFW5/ZRay
-         EwF1fPLxH3QJjtlbL7hDMpRIIvfEa+jBQ81LUB8LZ86Bac+gPNhhyybBjfcgxaen8666
-         R/A+FP+CUxheBRBHdpPihLw0Mkc2PsuHZYOfkbz+fersscrdvE+mjizV3vn90meByQCZ
-         oLyQ==
-X-Gm-Message-State: APjAAAUM1q+PQjhYXe5Qh7Q3h3ztKjh2wH+j8jvk9GpQ+4lBIVoOfblT
-        PbzMozCjcMvD5ixVF4NdmNGIPdX1
-X-Google-Smtp-Source: APXvYqxu4kCzKA7T0Wtw/Hp+cpnGxPexT97EFPhWjhA/Q4yqMKDXbO1bwBc5hd5Ea1Yk2JQ4PZyZyA==
-X-Received: by 2002:a1c:7310:: with SMTP id d16mr4447800wmb.107.1560445413046;
-        Thu, 13 Jun 2019 10:03:33 -0700 (PDT)
+        bh=HxGWvvkcjHZyUe+PK8/i3cEvG07jumxhELUvt9aNYAI=;
+        b=nyLh94EPpVTFpcDTzaQois1oPaTicsUTo7gHMYcAlZcXsglStE12SS1oZV6cITYx2g
+         dxf/AhYQWDqhmNH0PSoSynXvn29fLdfo3YHK6q7OtqH2dIJMYdd9eKxk1nXXL/49GRmQ
+         SPPEudo4Xoy9yr5awTWLY1a4Mpv8gmyIREUJGA4KWXm6gmGGw7KCykIhC7bpqbXL6ZPZ
+         PLOZcGHcG3LiNgVBPCe4FBinytESlYUDXMMTY1GQLiSibKNQkzLSStJKYuj6hN7hIJYr
+         aWuMbu/u2ynHcI8dCKm6kRBy5U0YbQP7R2/s+rbzWH9CHaus94kJrruHdoTMmW+58TOH
+         j1AQ==
+X-Gm-Message-State: APjAAAXC3qQkH7PpkVSeWIu689lgyUkBbfRCwKCXn4JipDqCia+nE4jC
+        KXmpJ8ou/AUiA4ncBZfN9ikKqdfd
+X-Google-Smtp-Source: APXvYqzhiso8yN6Srr+T7nOtfYB4w1CdiB/mEAKepa/FoKr6hC0RJ0zosW72xi2uv92Wjet1QEte3w==
+X-Received: by 2002:adf:ce03:: with SMTP id p3mr33867177wrn.94.1560445415725;
+        Thu, 13 Jun 2019 10:03:35 -0700 (PDT)
 Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.03.32
+        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.03.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 10:03:32 -0700 (PDT)
+        Thu, 13 Jun 2019 10:03:35 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         vkuznets@redhat.com
-Subject: [PATCH 02/43] kvm: nVMX: small cleanup in handle_exception
-Date:   Thu, 13 Jun 2019 19:02:48 +0200
-Message-Id: <1560445409-17363-3-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 05/43] KVM: x86: Move kvm_{before,after}_interrupt() calls to vendor code
+Date:   Thu, 13 Jun 2019 19:02:51 +0200
+Message-Id: <1560445409-17363-6-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
 References: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
@@ -70,34 +70,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The reason for skipping handling of NMI and #MC in handle_exception is
-the same, namely they are handled earlier by vmx_complete_atomic_exit.
-Calling the machine check handler (which just returns 1) is misleading,
-don't do it.
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
+VMX can conditionally call kvm_{before,after}_interrupt() since KVM
+always uses "ack interrupt on exit" and therefore explicitly handles
+interrupts as opposed to blindly enabling irqs.
+
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ arch/x86/kvm/svm.c     | 2 ++
+ arch/x86/kvm/vmx/vmx.c | 4 ++++
+ arch/x86/kvm/x86.c     | 2 --
+ 3 files changed, 6 insertions(+), 2 deletions(-)
 
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 302cb409d452..acc09e9fc173 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -6174,6 +6174,7 @@ static int svm_check_intercept(struct kvm_vcpu *vcpu,
+ 
+ static void svm_handle_external_intr(struct kvm_vcpu *vcpu)
+ {
++	kvm_before_interrupt(vcpu);
+ 	local_irq_enable();
+ 	/*
+ 	 * We must have an instruction with interrupts enabled, so
+@@ -6181,6 +6182,7 @@ static void svm_handle_external_intr(struct kvm_vcpu *vcpu)
+ 	 */
+ 	asm("nop");
+ 	local_irq_disable();
++	kvm_after_interrupt(vcpu);
+ }
+ 
+ static void svm_sched_in(struct kvm_vcpu *vcpu, int cpu)
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 1b3ca0582a0c..da6c829bad9f 100644
+index c90abf33b509..963c8c409223 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4455,11 +4455,8 @@ static int handle_exception(struct kvm_vcpu *vcpu)
- 	vect_info = vmx->idt_vectoring_info;
- 	intr_info = vmx->exit_intr_info;
+@@ -6145,6 +6145,8 @@ static void vmx_handle_external_intr(struct kvm_vcpu *vcpu)
+ 	desc = (gate_desc *)host_idt_base + vector;
+ 	entry = gate_offset(desc);
  
--	if (is_machine_check(intr_info))
--		return handle_machine_check(vcpu);
--
--	if (is_nmi(intr_info))
--		return 1;  /* already handled by vmx_vcpu_run() */
-+	if (is_machine_check(intr_info) || is_nmi(intr_info))
-+		return 1;  /* already handled by vmx_complete_atomic_exit */
++	kvm_before_interrupt(vcpu);
++
+ 	asm volatile(
+ #ifdef CONFIG_X86_64
+ 		"mov %%" _ASM_SP ", %[sp]\n\t"
+@@ -6165,6 +6167,8 @@ static void vmx_handle_external_intr(struct kvm_vcpu *vcpu)
+ 		[ss]"i"(__KERNEL_DS),
+ 		[cs]"i"(__KERNEL_CS)
+ 	);
++
++	kvm_after_interrupt(vcpu);
+ }
+ STACK_FRAME_NON_STANDARD(vmx_handle_external_intr);
  
- 	if (is_invalid_opcode(intr_info))
- 		return handle_ud(vcpu);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5ec87ded17db..6e2f53cd8ea8 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7999,9 +7999,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 	vcpu->mode = OUTSIDE_GUEST_MODE;
+ 	smp_wmb();
+ 
+-	kvm_before_interrupt(vcpu);
+ 	kvm_x86_ops->handle_external_intr(vcpu);
+-	kvm_after_interrupt(vcpu);
+ 
+ 	++vcpu->stat.exits;
+ 
 -- 
 1.8.3.1
 
