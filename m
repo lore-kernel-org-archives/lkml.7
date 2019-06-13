@@ -2,178 +2,162 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5ADDC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B22BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44EB6207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 149EC207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:02:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="JxR+E22X"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="etfGOLWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733071AbfFMPBv (ORCPT
+        id S1733125AbfFMPB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:01:51 -0400
-Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:33624 "EHLO
-        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732535AbfFMOep (ORCPT
+        Thu, 13 Jun 2019 11:01:58 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:57327 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732525AbfFMOdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:34:45 -0400
-Received: from pps.filterd (m0122332.ppops.net [127.0.0.1])
-        by mx0a-00190b01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DEMi81008192;
-        Thu, 13 Jun 2019 15:34:43 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=jan2016.eng;
- bh=Vq6Gbxjs8auEAG0ZvLiUDtdRNTsYCDEZJ+1uHBJ7ReA=;
- b=JxR+E22XJ9NjF4wL3LpbaECgqHiAWS5tnaWGcnzbpyKTR+jHBMo+ri/AsgcBrsEl6AFH
- vbw8NAJdI3EX5jth48Ip4gL1Gbsp0kJHv4axUvGscHGddBmUqes2R+emA7kvcbPOTcWB
- BAqn3lvD2HyUNSj9ftmNHpIHz5JfaKnF2LgCjIcO3AtkiqVaq2HMwW+plCrO91gVH1MD
- WXMawdmr2VKQZIxtP8X0qLo0DtroCPhu5aFheUc9BPQx0HFUsWcO/REyVIwZ5kTZj3Os
- YqmfgJBS2DYXoVw8o68KJMPCJkWj5Ef9/vLpn+I/OVCxOde8XYONQ+GVubMyLVwphlKF eQ== 
-Received: from prod-mail-ppoint1 (prod-mail-ppoint1.akamai.com [184.51.33.18] (may be forged))
-        by mx0a-00190b01.pphosted.com with ESMTP id 2t3269c31e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jun 2019 15:34:43 +0100
-Received: from pps.filterd (prod-mail-ppoint1.akamai.com [127.0.0.1])
-        by prod-mail-ppoint1.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x5DEWStA009987;
-        Thu, 13 Jun 2019 10:34:41 -0400
-Received: from prod-mail-relay15.akamai.com ([172.27.17.40])
-        by prod-mail-ppoint1.akamai.com with ESMTP id 2t08bx9441-1;
-        Thu, 13 Jun 2019 10:34:41 -0400
-Received: from [172.29.170.83] (bos-lpjec.kendall.corp.akamai.com [172.29.170.83])
-        by prod-mail-relay15.akamai.com (Postfix) with ESMTP id 132A52006A;
-        Thu, 13 Jun 2019 14:34:40 +0000 (GMT)
-Subject: Re: [PATCH] lib: dynamic_debug: no need to check return value of
- debugfs_create functions
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <20190612153534.GA21141@kroah.com>
-From:   Jason Baron <jbaron@akamai.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jbaron@akamai.com; prefer-encrypt=mutual; keydata=
- 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
- JeQ7iQ==
-Message-ID: <4936c8d8-9b69-1385-1bbf-9d19ac08d061@akamai.com>
-Date:   Thu, 13 Jun 2019 10:33:23 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190612153534.GA21141@kroah.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 13 Jun 2019 10:33:10 -0400
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.63,369,1557212400"; 
+   d="scan'208";a="35701288"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Jun 2019 07:33:10 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.87.152) by
+ chn-vm-ex04.mchp-main.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 13 Jun 2019 07:33:08 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 13 Jun 2019 07:33:07 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RpMElIIPeAmVZNSUsuGG2pRHWS3F1XUZRafJUVk6erE=;
+ b=etfGOLWVVsZ3MpwS3nBPn1jNeJJxmOhbKxCCVoXDpKH298KilQDH3Fn8ISuyACHakZvI9VVt+bo9DL4ViSxhfMPXzhHfXkPhAlEG0JfzdoV39yZdU8lpXPykYwZBKcOriO7THJXML/qGSxDzBVgQnxYLazVfwBSc1QvmuMojRRw=
+Received: from BN6PR11MB1842.namprd11.prod.outlook.com (10.175.98.146) by
+ BN6PR11MB1970.namprd11.prod.outlook.com (10.175.98.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.11; Thu, 13 Jun 2019 14:33:06 +0000
+Received: from BN6PR11MB1842.namprd11.prod.outlook.com
+ ([fe80::e581:f807:acdc:cb36]) by BN6PR11MB1842.namprd11.prod.outlook.com
+ ([fe80::e581:f807:acdc:cb36%9]) with mapi id 15.20.1965.017; Thu, 13 Jun 2019
+ 14:33:06 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <robimarko@gmail.com>
+CC:     <bbrezillon@kernel.org>, <richard@nod.at>,
+        <linux-kernel@vger.kernel.org>, <marek.vasut@gmail.com>,
+        <linux-mtd@lists.infradead.org>, <computersforpeace@gmail.com>,
+        <dwmw2@infradead.org>, <vigneshr@ti.com>
+Subject: Re: [PATCH] mtd: spi-nor: Add Winbond w25q16jv support
+Thread-Topic: [PATCH] mtd: spi-nor: Add Winbond w25q16jv support
+Thread-Index: AQHUxKf5P1ZBDcn1LEmHy4bSCo3uraXpLIAAgAGaqYCAr5lSgA==
+Date:   Thu, 13 Jun 2019 14:33:06 +0000
+Message-ID: <113ffb44-b5a4-be63-d75e-0c5819f65604@microchip.com>
+References: <20190214205723.9011-1-robimarko@gmail.com>
+ <97e48e85-9700-53e3-0f7a-eeac6f93f721@microchip.com>
+ <CAOX2RU5MsnNLseBRqcp1KqbmQ+5_KzRyTQ_rGQB2DsrW_v-3iA@mail.gmail.com>
+In-Reply-To: <CAOX2RU5MsnNLseBRqcp1KqbmQ+5_KzRyTQ_rGQB2DsrW_v-3iA@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906130109
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906130109
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR09CA0066.eurprd09.prod.outlook.com
+ (2603:10a6:802:28::34) To BN6PR11MB1842.namprd11.prod.outlook.com
+ (2603:10b6:404:101::18)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 18026400-8710-4c4c-b415-08d6f00c0c5b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR11MB1970;
+x-ms-traffictypediagnostic: BN6PR11MB1970:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BN6PR11MB1970AA8A67625BC596E3F6AEF0EF0@BN6PR11MB1970.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(396003)(39860400002)(136003)(366004)(189003)(199004)(6246003)(8936002)(52116002)(76176011)(1411001)(14444005)(66066001)(54906003)(11346002)(81166006)(305945005)(446003)(256004)(316002)(81156014)(8676002)(5660300002)(99286004)(86362001)(66946007)(73956011)(2616005)(66446008)(7736002)(66476007)(476003)(71190400001)(31686004)(36756003)(71200400001)(6916009)(72206003)(31696002)(6306002)(2906002)(966005)(229853002)(64756008)(6436002)(14454004)(68736007)(6116002)(53936002)(26005)(4326008)(186003)(6486002)(25786009)(386003)(6506007)(53546011)(102836004)(3846002)(486006)(66556008)(478600001)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR11MB1970;H:BN6PR11MB1842.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pr+drSv8UncacVA4VVPmY5qs3vtwWca05DC8BCGfVSU/3Gqb1S43Un6bqvljLpjLAYquYbm50dig3LbuSJZZT1MlFKGjE5fzcqPggNyKkMS2GsOKXix6rJxikclqY2zOp2jTMedJRvd1pK45wSJGlPf4WgN6/PRqr8kvde1/RG8MxVmv7PY6lqIF5J+DB7WkPeyiGxSVF11XSVbjOPqXY24ZEqJKWU0al2s/fKwluvztsfNQlAD588XW0z8RcNIR6vYGwWWSoy8Qs++ZlmowQVkNmOIZRxxlMhsZqhbqWYyNKd7TC5uRUNgR2JUlf2TziV+b6KPkN+KunRgLTB04ygqzb/gO09gbkyfkUzx1XWJFXBSQMBpYxeiH0hfG6vFRaLIGbI84fn/MehBjGZ2pSXQ0KTU+XCbKWU/UiWhiKXU=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DEE4C4B6D51A4D44B8AF53A23A4484FF@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18026400-8710-4c4c-b415-08d6f00c0c5b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 14:33:06.0957
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tudor.ambarus@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1970
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/19 11:35 AM, Greg Kroah-Hartman wrote:
-> When calling debugfs functions, there is no need to ever check the
-> return value.  The function can work or not, but the code logic should
-> never do something different based on this.
-> 
-> Cc: Jason Baron <jbaron@akamai.com>
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  lib/dynamic_debug.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
-> 
-> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-> index 8a16c2d498e9..c60409138e13 100644
-> --- a/lib/dynamic_debug.c
-> +++ b/lib/dynamic_debug.c
-> @@ -993,20 +993,14 @@ static __initdata int ddebug_init_success;
->  
->  static int __init dynamic_debug_init_debugfs(void)
->  {
-> -	struct dentry *dir, *file;
-> +	struct dentry *dir;
->  
->  	if (!ddebug_init_success)
->  		return -ENODEV;
->  
->  	dir = debugfs_create_dir("dynamic_debug", NULL);
-> -	if (!dir)
-> -		return -ENOMEM;
-> -	file = debugfs_create_file("control", 0644, dir, NULL,
-> -					&ddebug_proc_fops);
-> -	if (!file) {
-> -		debugfs_remove(dir);
-> -		return -ENOMEM;
-> -	}
-> +	debugfs_create_file("control", 0644, dir, NULL, &ddebug_proc_fops);
-> +
->  	return 0;
->  }
->  
-> 
-
-Looks like debugfs_create_dir() can return NULL, and in that case if its
-passed to debugfs_create_file() then the 'control' file ends up in the
-root of debugfs? I think its better to just not create the file then
-have it in the wrong place so maybe the file creation should be guarded
-by if(IS_ERR_OR_NULL(dir)).
-
-Thanks,
-
--Jason
-
+SGksIFJvYmVydCwNCg0KT24gMDIvMjEvMjAxOSAxMDo1OCBQTSwgUm9iZXJ0IE1hcmtvIHdyb3Rl
+Og0KPiBPbiBXZWQsIDIwIEZlYiAyMDE5IGF0IDIxOjI5LCA8VHVkb3IuQW1iYXJ1c0BtaWNyb2No
+aXAuY29tPiB3cm90ZTo+Pg0KPiBIaSwgUm9iZXJ0LD4+IE9uIDAyLzE0LzIwMTkgMTA6NTcgUE0s
+IFJvYmVydCBNYXJrbyB3cm90ZTo+ID4NCj4gRGF0YXNoZWV0OiBodHRwczovL3d3dy53aW5ib25k
+LmNvbS9yZXNvdXJjZS1maWxlcy93MjVxMTZqdiUyMHNwaSUyMHJldmclMjAwMzIyMjAxOCUyMHBs
+dXMucGRmPg0KPj4+PiBUZXN0aW5nIGRvbmUgb24gTWlrcm90aWsgUm91dGVyYm9hcmQgUkI0NTBH
+eDQgYm9hcmQgdW5kZXIgNC4xOS4xOQ0KPiBrZXJuZWwuPj4gSXQgaXMgcHJlZmVyYWJsZSB0byBk
+byB0aGUgdGVzdCBvbiBzcGktbm9yL25leHRVbmZvcnR1bmF0ZWx5DQo+IEkgY2FudCBkbyB0aGF0
+IGFzIE9wZW5XcnQgaGFzIGEgY29uc2lkZXJhYmxlIGFtb3VudCBvZiBwYXRjaGVzIHRoYXQNCj4g
+d291bGQgbmVlZCB0byBiZSBwb3J0ZWQgYW5kIHdlIGFyZSBvbmx5IG1vdmluZyBmcm9tIExUUyB0
+byBMVFMgdmVyc2lvbg0KPiBhbmQgd2UgYXJlIGN1cnJlbnRseSBvbiA0LjE5Lg0KPj4+DQo+Pj4g
+VGVzdCBib2FyZCBkb2VzIG5vdCBzdXBwb3J0IER1YWwgb3IgUXVhZCBtb2Rlcy4NCj4+Pg0KPj4+
+IFNpZ25lZC1vZmYtYnk6IFJvYmVydCBNYXJrbyA8cm9iaW1hcmtvQGdtYWlsLmNvbT4NCj4+PiAt
+LS0NCj4+PiAgZHJpdmVycy9tdGQvc3BpLW5vci9zcGktbm9yLmMgfCA1ICsrKysrDQo+Pj4gIDEg
+ZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykNCj4+Pg0KPj4+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL210ZC9zcGktbm9yL3NwaS1ub3IuYyBiL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5j
+DQo+Pj4gaW5kZXggNmUxM2JiZDFhYWE1Li4wZTk1OGY0OGRiMWIgMTAwNjQ0DQo+Pj4gLS0tIGEv
+ZHJpdmVycy9tdGQvc3BpLW5vci9zcGktbm9yLmMNCj4+PiArKysgYi9kcml2ZXJzL210ZC9zcGkt
+bm9yL3NwaS1ub3IuYw0KPj4+IEBAIC0xOTc1LDYgKzE5NzUsMTEgQEAgc3RhdGljIGNvbnN0IHN0
+cnVjdCBmbGFzaF9pbmZvIHNwaV9ub3JfaWRzW10gPSB7DQo+Pj4gICAgICAgICAgICAgICAgICAg
+ICAgIFNFQ1RfNEsgfCBTUElfTk9SX0RVQUxfUkVBRCB8IFNQSV9OT1JfUVVBRF9SRUFEIHwNCj4+
+PiAgICAgICAgICAgICAgICAgICAgICAgU1BJX05PUl9IQVNfTE9DSyB8IFNQSV9OT1JfSEFTX1RC
+KQ0KPj4+ICAgICAgIH0sDQo+Pj4gKyAgICAgew0KPj4+ICsgICAgICAgICAgICAgIncyNXExNmp2
+IiwgSU5GTygweGVmNzAxNSwgMCwgNjQgKiAxMDI0LCAgMzIsDQo+Pj4gKyAgICAgICAgICAgICAg
+ICAgICAgIFNFQ1RfNEsgfCBTUElfTk9SX0RVQUxfUkVBRCB8IFNQSV9OT1JfUVVBRF9SRUFEIHwN
+Cj4+PiArICAgICAgICAgICAgICAgICAgICAgU1BJX05PUl9IQVNfTE9DSyB8IFNQSV9OT1JfSEFT
+X1RCKQ0KPj4NCj4+IFlvdSdsbCBuZWVkIGEgd2F5IHRvIGRpZmZlcmVudGlhdGUgYmV0d2VlbiBX
+MjVRMTZKVi1JUS9KUSBhbmQgVzI1UTE2SlYtSU0vSk0uDQo+IEhtLCBmcm9tIHdoYXQgSSB1bmRl
+cnN0b29kIEpWIGlzIHRoZSBzZXJpZXMgYW5kIHN1ZmZpeCBvbmx5IGluZGljdGVzDQo+IHRoZSBw
+YWNrYWdlLg0KPiBUaGV5IHNob3VsZCBhbGwgaGF2ZSB0aGUgc2FtZSBKRURFQyBJRCBhbmQgZmVh
+dHVyZXMuDQo+Pg0KDQpXMjVRMTZKVi1JUS9KUSBhbmQgVzI1UTE2SlYtSU0vSk0gaGF2ZSBkaWZm
+ZXJlbnQgamVkZWMgaWRzLCBzZWUgdGFibGUgIjkuMS4xDQpNYW51ZmFjdHVyZXIgYW5kIERldmlj
+ZSBJZGVudGlmaWNhdGlvbiIgZnJvbSB0aGUgZGF0YXNoZWV0IHRoYXQgeW91IGluZGljYXRlZCBp
+bg0KdGhlIGNvbW1pdCBtZXNzYWdlLg0KDQpMb29raW5nIGF0ICIxMi4gT1JERVJJTkcgSU5GT1JN
+QVRJT04iLCBJIHNlZSB0aGF0Og0KLSBRIHZlcnNpb24gaGFzIFFFID0gMSAoZml4ZWQpIGFuZCBp
+dCdzIGJhY2t3YXJkIGNvbXBhdGlibGUgdG8gRlYgZmFtaWx5DQotIE0gdmVyc2lvbiBoYXMgUUUg
+PSAwIChwcm9ncmFtbWFibGUpIGFuZCBoYXMgYSBuZXcgZGV2aWNlIElEDQpUaGUgc2FtZSBpcyBk
+ZXNjcmliZWQgaW4gIjguIFFVQUQgRU5BQkxFIChRRSkg4oCTIFZvbGF0aWxlL05vbi1Wb2xhdGls
+ZSBXcml0YWJsZSIuDQoNCkkgd291bGQgc3VnZ2VzdCB0byBuYW1lIHRoZSBmbGFzaCAidzI1cTE2
+anYtaW0vam0iLg0KDQpXaGF0IGRvIHlvdSB0aGluaz8NCnRhDQo=
