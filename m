@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834BBC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE10BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B912147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA6F21721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443036;
-	bh=3OEXiAs75ff7vu4u0tXJhZvD+5HKzFh2qQAAOpwAB7o=;
+	s=default; t=1560443038;
+	bh=ZGndjzQpcAoCRxlon7DC+AkKBhels1jY8c0itpcF84g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZtSGpPVy7f/3ldZ211bELad3j8szxuC0sDX1p7U6z779JYE8u983eKHjE/5Ilp9gr
-	 k9bMOiPAnDvfeuDhmH2ivVEQDJt12OaPj325xowPv+ycWuRBgq4cTDk0KN9fP84cIH
-	 3P4sZFmDIVTc3F3b0PK3F/jpa2lPvTRzMKCP33cs=
+	b=ITxSsp0jLrKOkRLi53FIDbdRFHDSFDuL+Ee8ogJGYeicq7zfx9FBuB4VLMWqs6x0N
+	 BVF+uATDQeDt4LxDcexekL1zusW0ctez7f4vy3aArfKfXHkLI+BCAaKV5Z6xS8Dpwx
+	 +P5FUqoimgNb9bRVHrtmZ038rZeinN+sV7jnoI+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403980AbfFMQXy (ORCPT
+        id S2403805AbfFMQXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:23:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54872 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:23:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731008AbfFMIh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:37:29 -0400
+        id S1731010AbfFMIhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:37:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8020820851;
-        Thu, 13 Jun 2019 08:37:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F69B2064A;
+        Thu, 13 Jun 2019 08:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415049;
-        bh=3OEXiAs75ff7vu4u0tXJhZvD+5HKzFh2qQAAOpwAB7o=;
+        s=default; t=1560415051;
+        bh=ZGndjzQpcAoCRxlon7DC+AkKBhels1jY8c0itpcF84g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EkjR69eKLOUNCXs5dikj9hioB+RV2x00rIoz2aY8Jn6cCYvM8j93zgSzk1iH8WCuY
-         uXVLGQJVyEWaFcH0zqjiaDGejHekWKm25p1+nIuJzXHiSkvjrX35Ed608YZA9kDDoI
-         1vE7wbNkC93DzJwEnUV34ezBIRPJMuDOfEgpK6b0=
+        b=ln2ptqPeNxJqyuGDAXEaxAI8AJImNOK/ec2qB8w07BAkhEyPbyvxJ7BWycxm6zR44
+         g2+oZSO+n2BasIpdKpQcIfAYJlJEVg0oRecfKH+07B5u9RPQw8wTGZrYd4KLQPbcbd
+         1I0uaDjsFcwL0VNPzGMHISHgKeXD5K6rP8/MRABk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liwei Song <liwei.song@windriver.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 41/81] ALSA: hda - Register irq handler after the chip initialization
-Date:   Thu, 13 Jun 2019 10:33:24 +0200
-Message-Id: <20190613075652.365131244@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 42/81] nvmem: core: fix read buffer in place
+Date:   Thu, 13 Jun 2019 10:33:25 +0200
+Message-Id: <20190613075652.424569646@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -59,61 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f495222e28275222ab6fd93813bd3d462e16d340 ]
+[ Upstream commit 2fe518fecb3a4727393be286db9804cd82ee2d91 ]
 
-Currently the IRQ handler in HD-audio controller driver is registered
-before the chip initialization.  That is, we have some window opened
-between the azx_acquire_irq() call and the CORB/RIRB setup.  If an
-interrupt is triggered in this small window, the IRQ handler may
-access to the uninitialized RIRB buffer, which leads to a NULL
-dereference Oops.
+When the bit_offset in the cell is zero, the pointer to the msb will
+not be properly initialized (ie, will still be pointing to the first
+byte in the buffer).
 
-This is usually no big problem since most of Intel chips do register
-the IRQ via MSI, and we've already fixed the order of the IRQ
-enablement and the CORB/RIRB setup in the former commit b61749a89f82
-("sound: enable interrupt after dma buffer initialization"), hence the
-IRQ won't be triggered in that room.  However, some platforms use a
-shared IRQ, and this may allow the IRQ trigger by another source.
+This being the case, if there are bits to clear in the msb, those will
+be left untouched while the mask will incorrectly clear bit positions
+on the first byte.
 
-Another possibility is the kdump environment: a stale interrupt might
-be present in there, the IRQ handler can be falsely triggered as well.
+This commit also makes sure that any byte unused in the cell is
+cleared.
 
-For covering this small race, let's move the azx_acquire_irq() call
-after hda_intel_init_chip() call.  Although this is a bit radical
-change, it can cover more widely than checking the CORB/RIRB setup
-locally in the callee side.
-
-Reported-by: Liwei Song <liwei.song@windriver.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/nvmem/core.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index afa591cf840a..65fb1e7edb9c 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1839,9 +1839,6 @@ static int azx_first_init(struct azx *chip)
- 			chip->msi = 0;
- 	}
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 635886e4835c..dba3f4d0a63d 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -954,7 +954,7 @@ static inline void nvmem_shift_read_buffer_in_place(struct nvmem_cell *cell,
+ 						    void *buf)
+ {
+ 	u8 *p, *b;
+-	int i, bit_offset = cell->bit_offset;
++	int i, extra, bit_offset = cell->bit_offset;
  
--	if (azx_acquire_irq(chip, 0) < 0)
--		return -EBUSY;
+ 	p = b = buf;
+ 	if (bit_offset) {
+@@ -969,11 +969,16 @@ static inline void nvmem_shift_read_buffer_in_place(struct nvmem_cell *cell,
+ 			p = b;
+ 			*b++ >>= bit_offset;
+ 		}
 -
- 	pci_set_master(pci);
- 	synchronize_irq(bus->irq);
- 
-@@ -1956,6 +1953,9 @@ static int azx_first_init(struct azx *chip)
- 		return -ENODEV;
+-		/* result fits in less bytes */
+-		if (cell->bytes != DIV_ROUND_UP(cell->nbits, BITS_PER_BYTE))
+-			*p-- = 0;
++	} else {
++		/* point to the msb */
++		p += cell->bytes - 1;
  	}
- 
-+	if (azx_acquire_irq(chip, 0) < 0)
-+		return -EBUSY;
 +
- 	strcpy(card->driver, "HDA-Intel");
- 	strlcpy(card->shortname, driver_short_names[chip->driver_type],
- 		sizeof(card->shortname));
++	/* result fits in less bytes */
++	extra = cell->bytes - DIV_ROUND_UP(cell->nbits, BITS_PER_BYTE);
++	while (--extra >= 0)
++		*p-- = 0;
++
+ 	/* clear msb bits if any leftover in the last byte */
+ 	*p &= GENMASK((cell->nbits%BITS_PER_BYTE) - 1, 0);
+ }
 -- 
 2.20.1
 
