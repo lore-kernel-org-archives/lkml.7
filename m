@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF87C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3528C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3149021773
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 849E320851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:07:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442018;
-	bh=S81DyfcSyqTgrPgcB8WEsbph6hxCHlDQv/JRvnmwRsg=;
+	s=default; t=1560442023;
+	bh=YQUflJc2V7Jfp6P/IYbSYenUtJTG5Ea+WwpWolfry0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r/Xw0O7J0Wxfy4+0WcGl7AO4zL7WcYr0YnPPgZJ+y6qr66rateqEFgbrAgolxE/So
-	 IV9SaMrg2YnfemLuyj8GGCdnGg7wC8LkVqlOOJ1fHZrWMjyn0une5JD2Hoo1371hjt
-	 j2jbVmNPQn/Wbpj+X3HgaXypSbkkS0JPlJ0ZYV3k=
+	b=qq0huBa+YxKY4wlcy3Giv//XaIa69/7/bxhelbloCJGFZSknTM7Dw/MNtZApKzaoV
+	 BMTFt9p07gu0VW5DHpHipi345pnsnAARV6iZziil22fgkPq71MkZlsOylJWF9p6f0h
+	 n6uiBex9LAD4bZAhcMoRYRYko68QEtL1gegTEU2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390632AbfFMQGf (ORCPT
+        id S2390869AbfFMQG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:06:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34668 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:06:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731320AbfFMIqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:46:00 -0400
+        id S1731324AbfFMIqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:46:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8981B20851;
-        Thu, 13 Jun 2019 08:45:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 626C121743;
+        Thu, 13 Jun 2019 08:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415560;
-        bh=S81DyfcSyqTgrPgcB8WEsbph6hxCHlDQv/JRvnmwRsg=;
+        s=default; t=1560415567;
+        bh=YQUflJc2V7Jfp6P/IYbSYenUtJTG5Ea+WwpWolfry0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jajKXGN+1orB/Sch9V0iKtXrdpQk2I13F96Fxh4YqRLpMzZdTWOos7nfiH50Ycws9
-         YSv0IWir1qu93e+r6JSPub7GOvrxdDnC5vKQt0cglkOLRXSaRTl38qpUpJt7/PGqk5
-         xr11QpTTqCxB2QKPSZ+DrVN2dV4tRjqJ0VpI41AQ=
+        b=acq09hVI5kdi3PiswDqJnX3pxxji9lBws3wnFjqPdrI4dawImRIqokJ1qRxaJHOuV
+         ocoatuQ116mz2umevpV53bJyMOHMQULtcUzVunfuZnDOxSNyUHNlqS4BnjAID8WwVI
+         qICf9uBFAAiYhXFfoX01gQaxbZdESIp9J1LGEGRU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 021/155] mm: page_mkclean vs MADV_DONTNEED race
-Date:   Thu, 13 Jun 2019 10:32:13 +0200
-Message-Id: <20190613075653.958101764@linuxfoundation.org>
+Subject: [PATCH 5.1 048/155] f2fs: fix to avoid panic in dec_valid_block_count()
+Date:   Thu, 13 Jun 2019 10:32:40 +0200
+Message-Id: <20190613075655.817813091@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -65,79 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 024eee0e83f0df52317be607ca521e0fc572aa07 ]
+[ Upstream commit 5e159cd349bf3a31fb7e35c23a93308eb30f4f71 ]
 
-MADV_DONTNEED is handled with mmap_sem taken in read mode.  We call
-page_mkclean without holding mmap_sem.
+As Jungyeon reported in bugzilla:
 
-MADV_DONTNEED implies that pages in the region are unmapped and subsequent
-access to the pages in that range is handled as a new page fault.  This
-implies that if we don't have parallel access to the region when
-MADV_DONTNEED is run we expect those range to be unallocated.
+https://bugzilla.kernel.org/show_bug.cgi?id=203209
 
-w.r.t page_mkclean() we need to make sure that we don't break the
-MADV_DONTNEED semantics.  MADV_DONTNEED check for pmd_none without holding
-pmd_lock.  This implies we skip the pmd if we temporarily mark pmd none.
-Avoid doing that while marking the page clean.
+- Overview
+When mounting the attached crafted image and running program, I got this error.
+Additionally, it hangs on sync after the this script.
 
-Keep the sequence same for dax too even though we don't support
-MADV_DONTNEED for dax mapping
+The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
 
-The bug was noticed by code review and I didn't observe any failures w.r.t
-test run.  This is similar to
+- Reproduces
+cc poc_01.c
+./run.sh f2fs
+sync
 
-commit 58ceeb6bec86d9140f9d91d71a710e963523d063
-Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Date:   Thu Apr 13 14:56:26 2017 -0700
+ kernel BUG at fs/f2fs/f2fs.h:1788!
+ RIP: 0010:f2fs_truncate_data_blocks_range+0x342/0x350
+ Call Trace:
+  f2fs_truncate_blocks+0x36d/0x3c0
+  f2fs_truncate+0x88/0x110
+  f2fs_setattr+0x3e1/0x460
+  notify_change+0x2da/0x400
+  do_truncate+0x6d/0xb0
+  do_sys_ftruncate+0xf1/0x160
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-    thp: fix MADV_DONTNEED vs. MADV_FREE race
+The reason is dec_valid_block_count() will trigger kernel panic due to
+inconsistent count in between inode.i_blocks and actual block.
 
-commit ced108037c2aa542b3ed8b7afd1576064ad1362a
-Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Date:   Thu Apr 13 14:56:20 2017 -0700
+To avoid panic, let's just print debug message and set SBI_NEED_FSCK to
+give a hint to fsck for latter repairing.
 
-    thp: fix MADV_DONTNEED vs. numa balancing race
-
-Link: http://lkml.kernel.org/r/20190321040610.14226-1-aneesh.kumar@linux.ibm.com
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc:"Kirill A . Shutemov" <kirill@shutemov.name>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+[Jaegeuk Kim: fix build warning and add unlikely]
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dax.c  | 2 +-
- mm/rmap.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ fs/f2fs/f2fs.h | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/fs/dax.c b/fs/dax.c
-index 83009875308c..f74386293632 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -814,7 +814,7 @@ static void dax_entry_mkclean(struct address_space *mapping, pgoff_t index,
- 				goto unlock_pmd;
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 7bea1bc6589f..74f06f12110f 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1789,6 +1789,7 @@ enospc:
+ 	return -ENOSPC;
+ }
  
- 			flush_cache_page(vma, address, pfn);
--			pmd = pmdp_huge_clear_flush(vma, address, pmdp);
-+			pmd = pmdp_invalidate(vma, address, pmdp);
- 			pmd = pmd_wrprotect(pmd);
- 			pmd = pmd_mkclean(pmd);
- 			set_pmd_at(vma->vm_mm, address, pmdp, pmd);
-diff --git a/mm/rmap.c b/mm/rmap.c
-index b30c7c71d1d9..76c8dfd3ae1c 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -928,7 +928,7 @@ static bool page_mkclean_one(struct page *page, struct vm_area_struct *vma,
- 				continue;
++void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...);
+ static inline void dec_valid_block_count(struct f2fs_sb_info *sbi,
+ 						struct inode *inode,
+ 						block_t count)
+@@ -1797,13 +1798,21 @@ static inline void dec_valid_block_count(struct f2fs_sb_info *sbi,
  
- 			flush_cache_page(vma, address, page_to_pfn(page));
--			entry = pmdp_huge_clear_flush(vma, address, pmd);
-+			entry = pmdp_invalidate(vma, address, pmd);
- 			entry = pmd_wrprotect(entry);
- 			entry = pmd_mkclean(entry);
- 			set_pmd_at(vma->vm_mm, address, pmd, entry);
+ 	spin_lock(&sbi->stat_lock);
+ 	f2fs_bug_on(sbi, sbi->total_valid_block_count < (block_t) count);
+-	f2fs_bug_on(sbi, inode->i_blocks < sectors);
+ 	sbi->total_valid_block_count -= (block_t)count;
+ 	if (sbi->reserved_blocks &&
+ 		sbi->current_reserved_blocks < sbi->reserved_blocks)
+ 		sbi->current_reserved_blocks = min(sbi->reserved_blocks,
+ 					sbi->current_reserved_blocks + count);
+ 	spin_unlock(&sbi->stat_lock);
++	if (unlikely(inode->i_blocks < sectors)) {
++		f2fs_msg(sbi->sb, KERN_WARNING,
++			"Inconsistent i_blocks, ino:%lu, iblocks:%llu, sectors:%llu",
++			inode->i_ino,
++			(unsigned long long)inode->i_blocks,
++			(unsigned long long)sectors);
++		set_sbi_flag(sbi, SBI_NEED_FSCK);
++		return;
++	}
+ 	f2fs_i_blocks_write(inode, count, false, true);
+ }
+ 
+@@ -2817,7 +2826,6 @@ static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi,
+ 
+ bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
+ 					block_t blkaddr, int type);
+-void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...);
+ static inline void verify_blkaddr(struct f2fs_sb_info *sbi,
+ 					block_t blkaddr, int type)
+ {
 -- 
 2.20.1
 
