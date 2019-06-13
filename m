@@ -2,172 +2,155 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2E4C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE517C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1615420B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:07:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NgBmX7rk"
+	by mail.kernel.org (Postfix) with ESMTP id 9EE4920896
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732965AbfFMPHp (ORCPT
+        id S1732992AbfFMPIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:07:45 -0400
-Received: from mail-eopbgr130084.outbound.protection.outlook.com ([40.107.13.84]:54190
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732389AbfFMOBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:01:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rQrX9RQyjPhk1o29x2UDUTYAagaN4qmvAjJXwwIPIX0=;
- b=NgBmX7rklLaS9C5GmJvNgxC84YDLidtg89akzdeBC8mquljAu3ZQYw49ogVKoxIR+XgchR68/d6dP3TqAf96yUCogQAZ1V5oI9g7zPZM/GvSE1utDF82qv6bF8PgkJrwHJQ2Zn8OJAKctpj+uaKXQVCxzbHoyLIs5yc2Qif1nF0=
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.235.152) by
- VE1PR04MB6669.eurprd04.prod.outlook.com (20.179.235.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.11; Thu, 13 Jun 2019 14:01:11 +0000
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::9e6:e136:4c09:fe67]) by VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::9e6:e136:4c09:fe67%5]) with mapi id 15.20.1987.010; Thu, 13 Jun 2019
- 14:01:11 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     Madalin-cristian Bucur <madalin.bucur@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Grant Likely <grant.likely@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>
-Subject: RE: [PATCH] arm64: defconfig: Enable FSL_EDMA driver
-Thread-Topic: [PATCH] arm64: defconfig: Enable FSL_EDMA driver
-Thread-Index: AQHU+TmPiTydrhJTUUimRYhw3zmrnqZjx/sAgDVIQzeAANP4cA==
-Date:   Thu, 13 Jun 2019 14:01:11 +0000
-Message-ID: <VE1PR04MB6687EE0E22DA0697A0A7038F8FEF0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <20190422183056.16375-1-leoyang.li@nxp.com>
- <20190510030525.GC15856@dragon>
- <CADRPPNT2G20j2pvSEyqX=_WNDPrcNR+xCR_XZukbnSW19wFLNA@mail.gmail.com>
- <20190613004508.GA20747@dragon>
-In-Reply-To: <20190613004508.GA20747@dragon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [136.49.234.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ecd90782-3b59-435e-e0fd-08d6f007974c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6669;
-x-ms-traffictypediagnostic: VE1PR04MB6669:
-x-microsoft-antispam-prvs: <VE1PR04MB66699A931785CB4608DE0FE48FEF0@VE1PR04MB6669.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0067A8BA2A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(136003)(366004)(39860400002)(13464003)(189003)(199004)(53546011)(6116002)(6436002)(14454004)(76176011)(4326008)(33656002)(3846002)(186003)(99286004)(54906003)(86362001)(446003)(6916009)(5660300002)(14444005)(55016002)(7696005)(26005)(6506007)(25786009)(478600001)(68736007)(2906002)(9686003)(81166006)(316002)(8676002)(8936002)(81156014)(102836004)(256004)(305945005)(476003)(66946007)(486006)(76116006)(66066001)(74316002)(66446008)(66556008)(7736002)(66476007)(73956011)(64756008)(53936002)(11346002)(71190400001)(6246003)(71200400001)(229853002)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6669;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: MfiHyzi+qwPVOxsMoUe62v3cF6DTpeosiu0nQmwChEg0mruGhIMDGAwjYhhndKLAjRjH8x8k+p3lZ0DrpFXXI0l5q4+k1NCl/g9QxaTbSI2hkIQoW9ECVTk4eHnbLLfhZJ4eoG3WI1EtTlbj+DgMXgT5RxJixE0yVAw4EGQtrwY3MiYHCLJy/V1rXJr2b6ifMMDw9U9Q/XlIYGEoz58D81djzzZ2PAxTxiKTh+cNQ8gUnzf09f/qlj6ivwOzAkdVFZ3uJ4HZtpcgr38Kfj+m31+B00nepl32jYFIX4z/rln2bMSbKmA/I93XRBk/oR9pRlSWIHASN8QcmHGCcF21G8mj5gSNzohqpje4daNKrP5MsIFqm3n+yRSSNakbcVWOzitDU8hkGvYvxbIKY4N4t12rCbBKuJ+BsKap3LLBTx8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 13 Jun 2019 11:08:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53130 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726870AbfFMPH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 11:07:59 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3666D30872C8;
+        Thu, 13 Jun 2019 15:07:58 +0000 (UTC)
+Received: from localhost (ovpn-12-28.pek2.redhat.com [10.72.12.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 944D061B7E;
+        Thu, 13 Jun 2019 15:07:47 +0000 (UTC)
+Date:   Thu, 13 Jun 2019 23:07:44 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     lijiang <lijiang@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "dyoung@redhat.com" <dyoung@redhat.com>
+Subject: Re: [PATCH 0/3 v11] add reserved e820 ranges to the kdump kernel
+ e820 table
+Message-ID: <20190613150744.GR26148@MiWiFi-R3L-srv>
+References: <20190608091030.GB32464@zn.tnic>
+ <20190608100139.GC26148@MiWiFi-R3L-srv>
+ <20190608100623.GA9138@zn.tnic>
+ <20190608102659.GA9130@MiWiFi-R3L-srv>
+ <20190610113747.GD5488@zn.tnic>
+ <20190612015549.GI26148@MiWiFi-R3L-srv>
+ <20190612151033.GJ32652@zn.tnic>
+ <3dfa5985-008a-20d8-5171-cfe96807c303@amd.com>
+ <20190612180724.GP32652@zn.tnic>
+ <d89ef4ef-b85a-ea94-acdf-2eed5666ed78@amd.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ecd90782-3b59-435e-e0fd-08d6f007974c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 14:01:11.1979
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: leoyang.li@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6669
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d89ef4ef-b85a-ea94-acdf-2eed5666ed78@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 13 Jun 2019 15:07:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 06/12/19 at 07:10pm, Lendacky, Thomas wrote:
+> On 6/12/19 1:07 PM, Borislav Petkov wrote:
+> > On Wed, Jun 12, 2019 at 04:52:22PM +0000, Lendacky, Thomas wrote:
+> >> I think the discussion ended up being that debuginfo wasn't being stripped
+> >> from the kernel and initrd (mainly the initrd).  What are the sizes of
+> >> the kernel and initrd that you are loading for kdump via kexec?
+> >>
+> >> From previous post:
+> >>   kexec -s -p /boot/vmlinuz-5.2.0-rc3+ --initrd=/boot/initrd.img-5.2.0-rc3+
+> > 
+> > You mean those sizes?
+> > 
+> > $ ls -lh /boot/vmlinuz-5.2.0-rc3+ /boot/initrd.img-5.2.0-rc3+
+> > -rw-r--r-- 1 root root 7.8M Jun 10 12:53 /boot/initrd.img-5.2.0-rc3+
+> > -rw-r--r-- 1 root root 6.7M Jun 10 12:53 /boot/vmlinuz-5.2.0-rc3+
+> > 
+> > That should fit easily in 256M :)
+> 
+> Certainly seems like they should. I know there are other things that are
+> loaded, but that should be plenty of room. I wonder if Baoquan or Lianbo
+> could track where things are being loaded to see if everything is being
+> calculated and placed properly.
 
+Today I did some investigations on speedway and another customer's
+machine with sme support. 
 
-> -----Original Message-----
-> From: Shawn Guo <shawnguo@kernel.org>
-> Sent: Wednesday, June 12, 2019 7:45 PM
-> To: Leo Li <leoyang.li@nxp.com>
-> Cc: Madalin-cristian Bucur <madalin.bucur@nxp.com>; Rob Herring
-> <robh+dt@kernel.org>; Aisheng Dong <aisheng.dong@nxp.com>; Vinod Koul
-> <vkoul@kernel.org>; Grant Likely <grant.likely@arm.com>; moderated
-> list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE <linux-arm-
-> kernel@lists.infradead.org>; lkml <linux-kernel@vger.kernel.org>
-> Subject: Re: [PATCH] arm64: defconfig: Enable FSL_EDMA driver
->=20
-> On Wed, Jun 12, 2019 at 03:01:29PM -0500, Li Yang wrote:
-> > On Thu, May 9, 2019 at 10:15 PM Shawn Guo <shawnguo@kernel.org>
-> wrote:
-> > >
-> > > On Mon, Apr 22, 2019 at 01:30:56PM -0500, Li Yang wrote:
-> > > > Enables the FSL EDMA driver by default.  This also works around an
-> > > > issue that imx-i2c driver keeps deferring the probe because of the
-> > > > DMA is not ready.  And currently the DMA engine framework can not
-> > > > correctly tell if the DMA channels will truly become available
-> > > > later (it will never be available if the DMA driver is not enabled)=
-.
-> > > >
-> > > > This will cause indefinite messages like below:
-> > > > [    3.335829] imx-i2c 2180000.i2c: can't get pinctrl, bus recovery=
- not
-> supported
-> > > > [    3.344455] ina2xx 0-0040: power monitor ina220 (Rshunt =3D 1000
-> uOhm)
-> > > > [    3.350917] lm90 0-004c: 0-004c supply vcc not found, using dumm=
-y
-> regulator
-> > > > [    3.362089] imx-i2c 2180000.i2c: can't get pinctrl, bus recovery=
- not
-> supported
-> > > > [    3.370741] ina2xx 0-0040: power monitor ina220 (Rshunt =3D 1000
-> uOhm)
-> > > > [    3.377205] lm90 0-004c: 0-004c supply vcc not found, using dumm=
-y
-> regulator
-> > > > [    3.388455] imx-i2c 2180000.i2c: can't get pinctrl, bus recovery=
- not
-> supported
-> > > > .....
-> > > >
-> > > > Signed-off-by: Li Yang <leoyang.li@nxp.com>
-> > >
-> > > Applied, thanks.
-> >
-> > Hi Shawn,
-> >
-> > Is it possible to move this patch to the -fix series so that it can
-> > reach the mainline earlier?  It is having a boot failure in mainline
-> > for platforms using this device without this workaround.
->=20
-> Why would I2C device deferring cause boot failure on a platform?  I'm jus=
-t
-> trying to understand severity of the problem.
+In kdump kernel boot log, we can see that it prints the memory usage as
+below from mem_init_print_info() of mem_init(). There it free all
+memblock memory into buddy. We can see kernel used (144828K reserved)
+before this, about 144M. This is for sure, and I got the same value form
+memblock=debug kernel parameter adding.
 
-Currently the probe of imx-i2c will be retried immediately after it is defe=
-rred when the optional dependency on DMA driver is not met.  This will caus=
-e an indefinite loop of probe-defer-probe and keep printing the message as =
-shown in the commit message.
+[    2.109408] Kernel command line: BOOT_IMAGE=(hd0,gpt2)/vmlinuz-5.2.0-rc4+ ro mem_encrypt=on resume=/dev/mapper/rhel_amd--speedway--05-swap console=ttyS0,115200 earlyprintk=serial,0x6000,115200 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug transparent_hugepage=never nr_cpus=1 debug nokaslr disable_cpu_apicid=0 elfcorehdr=1899892K
+[    2.155433] Memory: 65572K/262128K available (12292K kernel code, 2047K rwdata, 3840K rodata, 2344K init, 6360K bss, 144828K reserved, 0K cma-reserved)
 
-On a further look into the imx-i2c driver, it looks like the driver need so=
-me fix too.  The requesting of dma channel is done at the very late stage o=
-f the imx-i2c probe after registering the i2c adapter.  Adding the i2c adap=
-ter triggers the probe of the i2c bus which probably immediately triggers t=
-he retry of deferred probe.  This was fine previously as requesting dma cha=
-nnel didn't trigger a defer.  But now it triggers defer after commit e1ab9a=
-468e3b1636d60cebd0a778461270dde208.  We probably should move the i2c_imx_dm=
-a_request() to the beginning of the probe as it is considered as a dependen=
-cy now.
+The free memory in buddy is 65572K, about 65M. This confuses me. I added
+below code to print the free memory, it's about 64M. It seems not
+changed. I need read code and check further.
 
-Regards,
-Leo
+[    5.775595] bhe: free:0x10304
+[    5.778612] Mem-Info:
+[    5.780923] active_anon:1818 inactive_anon:12837 isolated_anon:0
+[    5.780923]  active_file:0 inactive_file:0 isolated_file:0
+[    5.780923]  unevictable:0 dirty:0 writeback:0 unstable:0
+[    5.780923]  slab_reclaimable:1995 slab_unreclaimable:3347
+[    5.780923]  mapped:0 shmem:14662 pagetables:1 bounce:0
+[    5.780923]  free:16577 free_pcp:3 free_cma:0
+
+--- a/init/main.c
++++ b/init/main.c
+@@ -1168,6 +1168,8 @@ static noinline void __init kernel_init_freeable(void)
+ 
+        do_basic_setup();
+ 
++       pr_info("bhe: free:0x%lx\n", nr_free_pages() << (PAGE_SHIFT - 10));
++       show_mem(0, NULL);
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Above is about code debugging and analysis. From testing results, there
+are things impacting the memory usage of kdump kernel. 
+
+1)We need strip DEBUG INFO from kernel modules, otherwise it will bloat
+the initrd and its space.
+
+2)And some machines will consume more memory than other, because they own
+more pci devices or different devices and drivers. Before init process
+run, we will detect and init them, these will eat memory.
+
+With my testing, the speedway machine which has 128 cpus obvisouly consume
+more memory than one HP machine. On the HP machine, even 160M
+crashkernel memory with DEBUG INFO stripped, kdump kernel can work well.
+While 160M crashkernel doesn't satisfy speedway machine, it needs 256M.
+
+3)Some extra kernel parameters may impact memory usage. E.g in Boris's
+test, 'log_buf_len=16M' and 'debug' are added, this will cost extra
+memory.
+
+kexec -s -p /boot/vmlinuz-5.2.0-rc3+ --initrd=/boot/initrd.img-5.2.0-rc3+ --command-line="maxcpus=1 root=/dev/sda5 ro debug ignore_loglevel
+log_buf_len=16M no_console_suspend net.ifnames=0 systemd.log_target=null mem_encrypt=on kvm_amd.sev=1 nr_cpus=1 irqpoll reset_devices vga=normal
+LANG=en_US.UTF-8 earlyprintk=serial cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug
+transparent_hugepage=never disable_cpu_apicid=0"
+
+Anyway, I will continue investigating, see if I can get exact
+information from kernel printing or debugging.
+
+Thanks
+Baoquan
