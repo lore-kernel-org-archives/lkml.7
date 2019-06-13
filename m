@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2051C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B4DC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B968621721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C01220449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443407;
-	bh=XQuMiD4qxiv2oyyUYHvQPwsnFa+vAr2bhahdxHDAQr8=;
+	s=default; t=1560443412;
+	bh=U4760CROfIGrP7kVNNhjVj+d+Sn/8lEJniZaqu9pCKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2iCFducI61W2shwlrpsXgfFXUZXnTBgBdmHQNBFqBCSweGaZNveb3woramlReH5Af
-	 FseRvJnDU9Z67PsTr7Zm+Wm/TfbTILM09Y1HwmDOIZsEke+gzMAiqaSVrXASNr+Tat
-	 IV6Zhk+npMUt/dHoQ0AJUNuqA3QmSDH+/1EyatDU=
+	b=mTBjethZqRULde7sf40SPzNp6RUavVuti5Gj71LOUhm9V2NXIv1rpWok7X9IcmgFp
+	 uWEMvioiDtJG95pOU/5bzZgjrypA/1Rresrp02+zXGQ4vGMe3Qq7lBTZac+53pzzU2
+	 bFHUYp9LOxd801CUM7nXUywy+hfgZD3d3MGFhA70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388758AbfFMQ3v (ORCPT
+        id S2392409AbfFMQaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:29:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53018 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:30:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730924AbfFMIfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:35:16 -0400
+        id S1730919AbfFMIfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:35:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C46A920B7C;
-        Thu, 13 Jun 2019 08:35:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93499206E0;
+        Thu, 13 Jun 2019 08:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560414916;
-        bh=XQuMiD4qxiv2oyyUYHvQPwsnFa+vAr2bhahdxHDAQr8=;
+        s=default; t=1560414906;
+        bh=U4760CROfIGrP7kVNNhjVj+d+Sn/8lEJniZaqu9pCKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vT/GPHpIq4bi7M9/g/llhy9SXPv2h0oyxCzFziVF33VBG02AWVmWfDxcIAjt3YzUw
-         TPWkp5rZU189uRwLSuruW/0BD549bse9oFPNzNyO5I2TYUFuxAqCxsA86UXXAo4HRp
-         zc79/t04aRyDhDG1ULA3Xf5N9IXkQC5KZ5df/P4k=
+        b=lqTm3i63hCKD32/9i16F1LbaAM3HpVHFtVsYDQDry7WhwMK/yXZzJ0WAwt67LBJoL
+         R6uz63nA5vCFET5nc9V/o91rj1rcZqpcy/dB10PtRK6BTDEiyORzjcnHOil82R7Avg
+         uY76j3RHIlD+d7OpxWRNF4DmqjGOuHCWR09r2OBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yue Hu <huyue2@yulong.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Joe Perches <joe@perches.com>,
-        David Rientjes <rientjes@google.com>,
-        Dmitry Safonov <d.safonov@partner.samsung.com>,
+        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 11/81] mm/cma_debug.c: fix the break condition in cma_maxchunk_get()
-Date:   Thu, 13 Jun 2019 10:32:54 +0200
-Message-Id: <20190613075649.899197482@linuxfoundation.org>
+Subject: [PATCH 4.14 07/81] hugetlbfs: on restore reserve error path retain subpool reservation
+Date:   Thu, 13 Jun 2019 10:32:50 +0200
+Message-Id: <20190613075649.595507050@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -65,42 +66,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f0fd50504a54f5548eb666dc16ddf8394e44e4b7 ]
+[ Upstream commit 0919e1b69ab459e06df45d3ba6658d281962db80 ]
 
-If not find zero bit in find_next_zero_bit(), it will return the size
-parameter passed in, so the start bit should be compared with bitmap_maxno
-rather than cma->count.  Although getting maxchunk is working fine due to
-zero value of order_per_bit currently, the operation will be stuck if
-order_per_bit is set as non-zero.
+When a huge page is allocated, PagePrivate() is set if the allocation
+consumed a reservation.  When freeing a huge page, PagePrivate is checked.
+If set, it indicates the reservation should be restored.  PagePrivate
+being set at free huge page time mostly happens on error paths.
 
-Link: http://lkml.kernel.org/r/20190319092734.276-1-zbestahu@gmail.com
-Signed-off-by: Yue Hu <huyue2@yulong.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Dmitry Safonov <d.safonov@partner.samsung.com>
+When huge page reservations are created, a check is made to determine if
+the mapping is associated with an explicitly mounted filesystem.  If so,
+pages are also reserved within the filesystem.  The default action when
+freeing a huge page is to decrement the usage count in any associated
+explicitly mounted filesystem.  However, if the reservation is to be
+restored the reservation/use count within the filesystem should not be
+decrementd.  Otherwise, a subsequent page allocation and free for the same
+mapping location will cause the file filesystem usage to go 'negative'.
+
+Filesystem                         Size  Used Avail Use% Mounted on
+nodev                              4.0G -4.0M  4.1G    - /opt/hugepool
+
+To fix, when freeing a huge page do not adjust filesystem usage if
+PagePrivate() is set to indicate the reservation should be restored.
+
+I did not cc stable as the problem has been around since reserves were
+added to hugetlbfs and nobody has noticed.
+
+Link: http://lkml.kernel.org/r/20190328234704.27083-2-mike.kravetz@oracle.com
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
 Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/cma_debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/hugetlb.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/mm/cma_debug.c b/mm/cma_debug.c
-index 275df8b5b22e..c47ea3cfee79 100644
---- a/mm/cma_debug.c
-+++ b/mm/cma_debug.c
-@@ -58,7 +58,7 @@ static int cma_maxchunk_get(void *data, u64 *val)
- 	mutex_lock(&cma->lock);
- 	for (;;) {
- 		start = find_next_zero_bit(cma->bitmap, bitmap_maxno, end);
--		if (start >= cma->count)
-+		if (start >= bitmap_maxno)
- 			break;
- 		end = find_next_bit(cma->bitmap, bitmap_maxno, start);
- 		maxchunk = max(end - start, maxchunk);
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 741bdde54954..8ca0075a5464 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1271,12 +1271,23 @@ void free_huge_page(struct page *page)
+ 	ClearPagePrivate(page);
+ 
+ 	/*
+-	 * A return code of zero implies that the subpool will be under its
+-	 * minimum size if the reservation is not restored after page is free.
+-	 * Therefore, force restore_reserve operation.
++	 * If PagePrivate() was set on page, page allocation consumed a
++	 * reservation.  If the page was associated with a subpool, there
++	 * would have been a page reserved in the subpool before allocation
++	 * via hugepage_subpool_get_pages().  Since we are 'restoring' the
++	 * reservtion, do not call hugepage_subpool_put_pages() as this will
++	 * remove the reserved page from the subpool.
+ 	 */
+-	if (hugepage_subpool_put_pages(spool, 1) == 0)
+-		restore_reserve = true;
++	if (!restore_reserve) {
++		/*
++		 * A return code of zero implies that the subpool will be
++		 * under its minimum size if the reservation is not restored
++		 * after page is free.  Therefore, force restore_reserve
++		 * operation.
++		 */
++		if (hugepage_subpool_put_pages(spool, 1) == 0)
++			restore_reserve = true;
++	}
+ 
+ 	spin_lock(&hugetlb_lock);
+ 	clear_page_huge_active(page);
 -- 
 2.20.1
 
