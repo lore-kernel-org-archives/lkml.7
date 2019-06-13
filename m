@@ -2,325 +2,204 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 934ECC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 708B5C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67C5420449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F51520449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:07:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404546AbfFMRHk (ORCPT
+        id S2393532AbfFMRHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:07:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52128 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2393442AbfFMRHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:07:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 58BF0AE78;
-        Thu, 13 Jun 2019 17:06:56 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Thu, 13 Jun 2019 13:07:46 -0400
+Received: from mga14.intel.com ([192.55.52.115]:2176 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393381AbfFMRHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 13:07:44 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 10:07:43 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Jun 2019 10:07:41 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hbTCP-0006Jw-0S; Thu, 13 Jun 2019 20:07:41 +0300
+Date:   Thu, 13 Jun 2019 20:07:41 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Stefan Roese <sr@denx.de>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH v3 2/7] MIPS: PCI: refactor ioc3 special handling
-Date:   Thu, 13 Jun 2019 19:06:28 +0200
-Message-Id: <20190613170636.6647-3-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.13.7
-In-Reply-To: <20190613170636.6647-1-tbogendoerfer@suse.de>
-References: <20190613170636.6647-1-tbogendoerfer@suse.de>
+        Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH 2/3 v6] serial: 8250: Add MSR/MCR TIOCM conversion
+ wrapper functions
+Message-ID: <20190613170741.GD9224@smile.fi.intel.com>
+References: <20190613154542.32438-1-sr@denx.de>
+ <20190613154542.32438-2-sr@denx.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613154542.32438-2-sr@denx.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactored code to only have one ioc3 special handling for read
-access and one for write access.
+On Thu, Jun 13, 2019 at 05:45:41PM +0200, Stefan Roese wrote:
+> This patch adds wrapper functions to convert MSR <-> TIOCM and also
+> MCR <-> TIOCM. These functions are used now in serial8250_do_set_mctrl()
+> and serial8250_do_get_mctrl().
+> 
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- arch/mips/pci/pci-xtalk-bridge.c | 167 +++++++++++++++------------------------
- 1 file changed, 62 insertions(+), 105 deletions(-)
+Yes, and we may use them in the other drivers later on.
+Thanks!
 
-diff --git a/arch/mips/pci/pci-xtalk-bridge.c b/arch/mips/pci/pci-xtalk-bridge.c
-index bcf7f559789a..7b4d40354ee7 100644
---- a/arch/mips/pci/pci-xtalk-bridge.c
-+++ b/arch/mips/pci/pci-xtalk-bridge.c
-@@ -20,16 +20,50 @@
-  * Most of the IOC3 PCI config register aren't present
-  * we emulate what is needed for a normal PCI enumeration
-  */
--static u32 emulate_ioc3_cfg(int where, int size)
-+static int ioc3_cfg_rd(void *addr, int where, int size, u32 *value)
- {
--	if (size == 1 && where == 0x3d)
--		return 0x01;
--	else if (size == 2 && where == 0x3c)
--		return 0x0100;
--	else if (size == 4 && where == 0x3c)
--		return 0x00000100;
-+	u32 cf, shift, mask;
- 
--	return 0;
-+	switch (where & ~3) {
-+	case 0x00 ... 0x10:
-+	case 0x40 ... 0x44:
-+		if (get_dbe(cf, (u32 *)addr))
-+			return PCIBIOS_DEVICE_NOT_FOUND;
-+		break;
-+	case 0x3c:
-+		/* emulate sane interrupt pin value */
-+		cf = 0x00000100;
-+		break;
-+	default:
-+		cf = 0;
-+		break;
-+	}
-+	shift = (where & 3) << 3;
-+	mask = 0xffffffffU >> ((4 - size) << 3);
-+	*value = (cf >> shift) & mask;
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static int ioc3_cfg_wr(void *addr, int where, int size, u32 value)
-+{
-+	u32 cf, shift, mask, smask;
-+
-+	if ((where >= 0x14 && where < 0x40) || (where >= 0x48))
-+		return PCIBIOS_SUCCESSFUL;
-+
-+	if (get_dbe(cf, (u32 *)addr))
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+
-+	shift = ((where & 3) << 3);
-+	mask = (0xffffffffU >> ((4 - size) << 3));
-+	smask = mask << shift;
-+
-+	cf = (cf & ~smask) | ((value & mask) << shift);
-+	if (put_dbe(cf, (u32 *)addr))
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+
-+	return PCIBIOS_SUCCESSFUL;
- }
- 
- static void bridge_disable_swapping(struct pci_dev *dev)
-@@ -64,7 +98,7 @@ static int pci_conf0_read_config(struct pci_bus *bus, unsigned int devfn,
- 	int slot = PCI_SLOT(devfn);
- 	int fn = PCI_FUNC(devfn);
- 	void *addr;
--	u32 cf, shift, mask;
-+	u32 cf;
- 	int res;
- 
- 	addr = &bridge->b_type0_cfg_dev[slot].f[fn].c[PCI_VENDOR_ID];
-@@ -75,8 +109,10 @@ static int pci_conf0_read_config(struct pci_bus *bus, unsigned int devfn,
- 	 * IOC3 is broken beyond belief ...  Don't even give the
- 	 * generic PCI code a chance to look at it for real ...
- 	 */
--	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16)))
--		goto is_ioc3;
-+	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16))) {
-+		addr = &bridge->b_type0_cfg_dev[slot].f[fn].l[where >> 2];
-+		return ioc3_cfg_rd(addr, where, size, value);
-+	}
- 
- 	addr = &bridge->b_type0_cfg_dev[slot].f[fn].c[where ^ (4 - size)];
- 
-@@ -88,26 +124,6 @@ static int pci_conf0_read_config(struct pci_bus *bus, unsigned int devfn,
- 		res = get_dbe(*value, (u32 *)addr);
- 
- 	return res ? PCIBIOS_DEVICE_NOT_FOUND : PCIBIOS_SUCCESSFUL;
--
--is_ioc3:
--
--	/*
--	 * IOC3 special handling
--	 */
--	if ((where >= 0x14 && where < 0x40) || (where >= 0x48)) {
--		*value = emulate_ioc3_cfg(where, size);
--		return PCIBIOS_SUCCESSFUL;
--	}
--
--	addr = &bridge->b_type0_cfg_dev[slot].f[fn].l[where >> 2];
--	if (get_dbe(cf, (u32 *)addr))
--		return PCIBIOS_DEVICE_NOT_FOUND;
--
--	shift = ((where & 3) << 3);
--	mask = (0xffffffffU >> ((4 - size) << 3));
--	*value = (cf >> shift) & mask;
--
--	return PCIBIOS_SUCCESSFUL;
- }
- 
- static int pci_conf1_read_config(struct pci_bus *bus, unsigned int devfn,
-@@ -119,7 +135,7 @@ static int pci_conf1_read_config(struct pci_bus *bus, unsigned int devfn,
- 	int slot = PCI_SLOT(devfn);
- 	int fn = PCI_FUNC(devfn);
- 	void *addr;
--	u32 cf, shift, mask;
-+	u32 cf;
- 	int res;
- 
- 	bridge_write(bc, b_pci_cfg, (busno << 16) | (slot << 11));
-@@ -131,8 +147,10 @@ static int pci_conf1_read_config(struct pci_bus *bus, unsigned int devfn,
- 	 * IOC3 is broken beyond belief ...  Don't even give the
- 	 * generic PCI code a chance to look at it for real ...
- 	 */
--	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16)))
--		goto is_ioc3;
-+	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16))) {
-+		addr = &bridge->b_type1_cfg.c[(fn << 8) | (where & ~3)];
-+		return ioc3_cfg_rd(addr, where, size, value);
-+	}
- 
- 	addr = &bridge->b_type1_cfg.c[(fn << 8) | (where ^ (4 - size))];
- 
-@@ -144,26 +162,6 @@ static int pci_conf1_read_config(struct pci_bus *bus, unsigned int devfn,
- 		res = get_dbe(*value, (u32 *)addr);
- 
- 	return res ? PCIBIOS_DEVICE_NOT_FOUND : PCIBIOS_SUCCESSFUL;
--
--is_ioc3:
--
--	/*
--	 * IOC3 special handling
--	 */
--	if ((where >= 0x14 && where < 0x40) || (where >= 0x48)) {
--		*value = emulate_ioc3_cfg(where, size);
--		return PCIBIOS_SUCCESSFUL;
--	}
--
--	addr = &bridge->b_type1_cfg.c[(fn << 8) | where];
--	if (get_dbe(cf, (u32 *)addr))
--		return PCIBIOS_DEVICE_NOT_FOUND;
--
--	shift = ((where & 3) << 3);
--	mask = (0xffffffffU >> ((4 - size) << 3));
--	*value = (cf >> shift) & mask;
--
--	return PCIBIOS_SUCCESSFUL;
- }
- 
- static int pci_read_config(struct pci_bus *bus, unsigned int devfn,
-@@ -183,7 +181,7 @@ static int pci_conf0_write_config(struct pci_bus *bus, unsigned int devfn,
- 	int slot = PCI_SLOT(devfn);
- 	int fn = PCI_FUNC(devfn);
- 	void *addr;
--	u32 cf, shift, mask, smask;
-+	u32 cf;
- 	int res;
- 
- 	addr = &bridge->b_type0_cfg_dev[slot].f[fn].c[PCI_VENDOR_ID];
-@@ -194,8 +192,10 @@ static int pci_conf0_write_config(struct pci_bus *bus, unsigned int devfn,
- 	 * IOC3 is broken beyond belief ...  Don't even give the
- 	 * generic PCI code a chance to look at it for real ...
- 	 */
--	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16)))
--		goto is_ioc3;
-+	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16))) {
-+		addr = &bridge->b_type0_cfg_dev[slot].f[fn].l[where >> 2];
-+		return ioc3_cfg_wr(addr, where, size, value);
-+	}
- 
- 	addr = &bridge->b_type0_cfg_dev[slot].f[fn].c[where ^ (4 - size)];
- 
-@@ -210,29 +210,6 @@ static int pci_conf0_write_config(struct pci_bus *bus, unsigned int devfn,
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 
- 	return PCIBIOS_SUCCESSFUL;
--
--is_ioc3:
--
--	/*
--	 * IOC3 special handling
--	 */
--	if ((where >= 0x14 && where < 0x40) || (where >= 0x48))
--		return PCIBIOS_SUCCESSFUL;
--
--	addr = &bridge->b_type0_cfg_dev[slot].f[fn].l[where >> 2];
--
--	if (get_dbe(cf, (u32 *)addr))
--		return PCIBIOS_DEVICE_NOT_FOUND;
--
--	shift = ((where & 3) << 3);
--	mask = (0xffffffffU >> ((4 - size) << 3));
--	smask = mask << shift;
--
--	cf = (cf & ~smask) | ((value & mask) << shift);
--	if (put_dbe(cf, (u32 *)addr))
--		return PCIBIOS_DEVICE_NOT_FOUND;
--
--	return PCIBIOS_SUCCESSFUL;
- }
- 
- static int pci_conf1_write_config(struct pci_bus *bus, unsigned int devfn,
-@@ -244,7 +221,7 @@ static int pci_conf1_write_config(struct pci_bus *bus, unsigned int devfn,
- 	int fn = PCI_FUNC(devfn);
- 	int busno = bus->number;
- 	void *addr;
--	u32 cf, shift, mask, smask;
-+	u32 cf;
- 	int res;
- 
- 	bridge_write(bc, b_pci_cfg, (busno << 16) | (slot << 11));
-@@ -256,8 +233,10 @@ static int pci_conf1_write_config(struct pci_bus *bus, unsigned int devfn,
- 	 * IOC3 is broken beyond belief ...  Don't even give the
- 	 * generic PCI code a chance to look at it for real ...
- 	 */
--	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16)))
--		goto is_ioc3;
-+	if (cf == (PCI_VENDOR_ID_SGI | (PCI_DEVICE_ID_SGI_IOC3 << 16))) {
-+		addr = &bridge->b_type0_cfg_dev[slot].f[fn].l[where >> 2];
-+		return ioc3_cfg_wr(addr, where, size, value);
-+	}
- 
- 	addr = &bridge->b_type1_cfg.c[(fn << 8) | (where ^ (4 - size))];
- 
-@@ -272,28 +251,6 @@ static int pci_conf1_write_config(struct pci_bus *bus, unsigned int devfn,
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 
- 	return PCIBIOS_SUCCESSFUL;
--
--is_ioc3:
--
--	/*
--	 * IOC3 special handling
--	 */
--	if ((where >= 0x14 && where < 0x40) || (where >= 0x48))
--		return PCIBIOS_SUCCESSFUL;
--
--	addr = &bridge->b_type0_cfg_dev[slot].f[fn].l[where >> 2];
--	if (get_dbe(cf, (u32 *)addr))
--		return PCIBIOS_DEVICE_NOT_FOUND;
--
--	shift = ((where & 3) << 3);
--	mask = (0xffffffffU >> ((4 - size) << 3));
--	smask = mask << shift;
--
--	cf = (cf & ~smask) | ((value & mask) << shift);
--	if (put_dbe(cf, (u32 *)addr))
--		return PCIBIOS_DEVICE_NOT_FOUND;
--
--	return PCIBIOS_SUCCESSFUL;
- }
- 
- static int pci_write_config(struct pci_bus *bus, unsigned int devfn,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Signed-off-by: Stefan Roese <sr@denx.de>
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Yegor Yefremov <yegorslists@googlemail.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> ---
+> v6:
+> - New patch
+> 
+>  drivers/tty/serial/8250/8250.h      | 54 +++++++++++++++++++++++++++++
+>  drivers/tty/serial/8250/8250_port.c | 25 ++-----------
+>  2 files changed, 57 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
+> index ebfb0bd5bef5..793da2e510e0 100644
+> --- a/drivers/tty/serial/8250/8250.h
+> +++ b/drivers/tty/serial/8250/8250.h
+> @@ -139,6 +139,60 @@ void serial8250_rpm_put_tx(struct uart_8250_port *p);
+>  int serial8250_em485_init(struct uart_8250_port *p);
+>  void serial8250_em485_destroy(struct uart_8250_port *p);
+>  
+> +/* MCR <-> TIOCM conversion */
+> +static inline int serial8250_TIOCM_to_MCR(int tiocm)
+> +{
+> +	int mcr = 0;
+> +
+> +	if (tiocm & TIOCM_RTS)
+> +		mcr |= UART_MCR_RTS;
+> +	if (tiocm & TIOCM_DTR)
+> +		mcr |= UART_MCR_DTR;
+> +	if (tiocm & TIOCM_OUT1)
+> +		mcr |= UART_MCR_OUT1;
+> +	if (tiocm & TIOCM_OUT2)
+> +		mcr |= UART_MCR_OUT2;
+> +	if (tiocm & TIOCM_LOOP)
+> +		mcr |= UART_MCR_LOOP;
+> +
+> +	return mcr;
+> +}
+> +
+> +static inline int serial8250_MCR_to_TIOCM(int mcr)
+> +{
+> +	int tiocm = 0;
+> +
+> +	if (mcr & UART_MCR_RTS)
+> +		tiocm |= TIOCM_RTS;
+> +	if (mcr & UART_MCR_DTR)
+> +		tiocm |= TIOCM_DTR;
+> +	if (mcr & UART_MCR_OUT1)
+> +		tiocm |= TIOCM_OUT1;
+> +	if (mcr & UART_MCR_OUT2)
+> +		tiocm |= TIOCM_OUT2;
+> +	if (mcr & UART_MCR_LOOP)
+> +		tiocm |= TIOCM_LOOP;
+> +
+> +	return tiocm;
+> +}
+> +
+> +/* MSR <-> TIOCM conversion */
+> +static inline int serial8250_MSR_to_TIOCM(int msr)
+> +{
+> +	int tiocm = 0;
+> +
+> +	if (msr & UART_MSR_DCD)
+> +		tiocm |= TIOCM_CAR;
+> +	if (msr & UART_MSR_RI)
+> +		tiocm |= TIOCM_RNG;
+> +	if (msr & UART_MSR_DSR)
+> +		tiocm |= TIOCM_DSR;
+> +	if (msr & UART_MSR_CTS)
+> +		tiocm |= TIOCM_CTS;
+> +
+> +	return tiocm;
+> +}
+> +
+>  static inline void serial8250_out_MCR(struct uart_8250_port *up, int value)
+>  {
+>  	serial_out(up, UART_MCR, value);
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index 2304a84eee3b..47f0a8d01a57 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -1944,22 +1944,12 @@ unsigned int serial8250_do_get_mctrl(struct uart_port *port)
+>  {
+>  	struct uart_8250_port *up = up_to_u8250p(port);
+>  	unsigned int status;
+> -	unsigned int ret;
+>  
+>  	serial8250_rpm_get(up);
+>  	status = serial8250_modem_status(up);
+>  	serial8250_rpm_put(up);
+>  
+> -	ret = 0;
+> -	if (status & UART_MSR_DCD)
+> -		ret |= TIOCM_CAR;
+> -	if (status & UART_MSR_RI)
+> -		ret |= TIOCM_RNG;
+> -	if (status & UART_MSR_DSR)
+> -		ret |= TIOCM_DSR;
+> -	if (status & UART_MSR_CTS)
+> -		ret |= TIOCM_CTS;
+> -	return ret;
+> +	return serial8250_MSR_to_TIOCM(status);
+>  }
+>  EXPORT_SYMBOL_GPL(serial8250_do_get_mctrl);
+>  
+> @@ -1973,18 +1963,9 @@ static unsigned int serial8250_get_mctrl(struct uart_port *port)
+>  void serial8250_do_set_mctrl(struct uart_port *port, unsigned int mctrl)
+>  {
+>  	struct uart_8250_port *up = up_to_u8250p(port);
+> -	unsigned char mcr = 0;
+> +	unsigned char mcr;
+>  
+> -	if (mctrl & TIOCM_RTS)
+> -		mcr |= UART_MCR_RTS;
+> -	if (mctrl & TIOCM_DTR)
+> -		mcr |= UART_MCR_DTR;
+> -	if (mctrl & TIOCM_OUT1)
+> -		mcr |= UART_MCR_OUT1;
+> -	if (mctrl & TIOCM_OUT2)
+> -		mcr |= UART_MCR_OUT2;
+> -	if (mctrl & TIOCM_LOOP)
+> -		mcr |= UART_MCR_LOOP;
+> +	mcr = serial8250_TIOCM_to_MCR(mctrl);
+>  
+>  	mcr = (mcr & up->mcr_mask) | up->mcr_force | up->mcr;
+>  
+> -- 
+> 2.22.0
+> 
+
 -- 
-2.13.7
+With Best Regards,
+Andy Shevchenko
+
 
