@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA36C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA90C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12EBA206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E8C2063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:05:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7XqC2pW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pfgo5FLe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404703AbfFMREQ (ORCPT
+        id S2404653AbfFMRFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:04:16 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36746 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393369AbfFMREC (ORCPT
+        Thu, 13 Jun 2019 13:05:06 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39122 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404646AbfFMREN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:04:02 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n4so21630482wrs.3;
-        Thu, 13 Jun 2019 10:04:00 -0700 (PDT)
+        Thu, 13 Jun 2019 13:04:13 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z23so10884699wma.4;
+        Thu, 13 Jun 2019 10:04:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=hiwCoGuMO+HGOrtpBphtyFwrRwIt3o789paugY4guB8=;
-        b=T7XqC2pWYZ5GJe4DHzOPMuCNnFKB2oPkah3Yq8METimUsD/T2RHVp/UV1aMHxMesQ6
-         DVu0HHXJF+2HZU8HbQboGKrCLBoMMSV3AMpniU7YqTOl0OvowdPQ4/aPm7fB4S19Lf2b
-         3kSUEVDSehnkVi/D7vt6JcXwbPvqO/2H/WD1vu18UsOO83AQvyW8a2gdIw+MXCfYoWVm
-         Z55Q2urBRbs7U+z6v00PRvOcUDk98EwWgZtvfx6pZ9R13KstZyoWc5qts30MHX5tR9nt
-         WI64JqV8e7zcVrBl14QXx4FDCc9nKTYLolwE6AyWL7/Mo2igdHlsBhi2uYIOTXHajEjg
-         kV3A==
+        bh=jaUW90F2XcvyyNOiBDWBIl+rBU7N3jgUCLQ74JA8HY8=;
+        b=pfgo5FLepeaIJD+KZt2q+PesNkh2w0Am0wcy+jDy1AhaUFwS91I267moEWF7VLjNpp
+         NbLuLAPO0cu7OEm23KjEHa8iNeTbi9q/KQTnrWVh4BGjl535OF1yAsjVxPKelDNnnKd/
+         7imB/0riKzQAPOwtRr/QN7cBevz9I2lANuxwYoEZxNFvW1F9OS/9fmQHFL4V4s08PtI1
+         YMqqM97MIIsQ23eCh7ZkNH0v8nF3o5II/8IBPNweOar3BtIvCCMv+zeCkKtaegqp5Rv/
+         lB6UUxy4lxo1YyBWJsQM4NlGjb0CLyjupXaPV4PwxLnsfA1XZP7xrBBMgglW3RlkndoS
+         HJ+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=hiwCoGuMO+HGOrtpBphtyFwrRwIt3o789paugY4guB8=;
-        b=rJZd0lHAfB+Gl0JK5g/dfjpFXb5hrBP2LH8ShOzB6BvNa4UrmZQSMTQpkIKS+IMlNp
-         6cEEUzBGfCr1cuPigS8u8aZ9URCZFpatLoFQvutCHm9ADfEhkmY0L2s3+VhYNLR5Ghs/
-         bePlgIBHlpIsfzOb1FChlZpz+CKdSkC0ZPV7DELAvZoFxlJAl1PKP2dh0PeOlyDBDFcu
-         9Xo99wTM8utenF/PsVSux4G2GizRbXQsKIAB/JUB9RQIWxQzJoQ6auBXULOLLMNctuc0
-         HqzgmaH3aalOlmXhFrVatf3nR39nf3ErVl+CJ04s/LNDPXvVnq703rG7vJFmBcVCJD4H
-         wrNQ==
-X-Gm-Message-State: APjAAAUJHklH3sViz76w0Y6ULvNO90TWIY28/z/ctIauONlObh4sAIbb
-        yGwAXvsEz8Tza9UXn+DSXAw+dAPD
-X-Google-Smtp-Source: APXvYqyiACdlF0pBcbULwHQ1Mb/L0rnANUHAVYyjaYZqMvRitnCBWDdnFB/V7gQtjypjSoUAhLaiZA==
-X-Received: by 2002:a5d:4d06:: with SMTP id z6mr35027858wrt.343.1560445439539;
-        Thu, 13 Jun 2019 10:03:59 -0700 (PDT)
+        bh=jaUW90F2XcvyyNOiBDWBIl+rBU7N3jgUCLQ74JA8HY8=;
+        b=fDmqdVnwNCn7xXDLce+BOn3KsdYMOus1rIUYpP0Jppq6QBZKrdV/H9N0wU26Nx9+Ez
+         7R2x0XDuTBPleF5x7usxp7a2+oZ93jX9vGcwnhUMS7lTJuKsgRYtRxgICyw+NwpbHDy8
+         NN6SO5QgiWZ9gp6bXfR8bvvCkF10+GzJzPOssbi+b3ncN9Qa5AerkSH7UvYfgnfaRo98
+         KCTGwXlm/OJttMmYVXOndmHjur1q8xQmC+x47xrhZ10uCBuVZkdqs/TKVJ/rokCTr9w6
+         5WPpbrySQ53AVUzd9Y3JYNrbtk9aFl6xNaNlceO0mdaKyQUfHOQBnzUa2yWaW23sj4/4
+         apRw==
+X-Gm-Message-State: APjAAAVQPj0xmY0pnrwRd92V7nAc4/z/jeE1MPTCbAIC72EqxEs413Rg
+        URG/y9W8b1bJ3NjfHW2MQVlZHwBN
+X-Google-Smtp-Source: APXvYqzBVGU7YzwgN3HFU2LWObiQkan8zTDrGSZIbUFkf6vrphKatGjIZFT/5zjdkYFTgU0Ulph9rg==
+X-Received: by 2002:a1c:be0a:: with SMTP id o10mr4531286wmf.91.1560445451449;
+        Thu, 13 Jun 2019 10:04:11 -0700 (PDT)
 Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.03.58
+        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.04.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 10:03:58 -0700 (PDT)
+        Thu, 13 Jun 2019 10:04:10 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         vkuznets@redhat.com
-Subject: [PATCH 26/43] KVM: nVMX: Update vmcs12 for SYSENTER MSRs when they're written
-Date:   Thu, 13 Jun 2019 19:03:12 +0200
-Message-Id: <1560445409-17363-27-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 39/43] KVM: nVMX: Preserve last USE_MSR_BITMAPS when preparing vmcs02
+Date:   Thu, 13 Jun 2019 19:03:25 +0200
+Message-Id: <1560445409-17363-40-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
 References: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
@@ -72,65 +72,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-For L2, KVM always intercepts WRMSR to SYSENTER MSRs.  Update vmcs12 in
-the WRMSR handler so that they don't need to be (re)read from vmcs02 on
-every nested VM-Exit.
+KVM dynamically toggles the CPU_BASED_USE_MSR_BITMAPS execution control
+for nested guests based on whether or not both L0 and L1 want to pass
+through the same MSRs to L2.  Preserve the last used value from vmcs02
+so as to avoid multiple VMWRITEs to (re)set/(re)clear the bit on nested
+VM-Entry.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/nested.c | 7 ++++---
- arch/x86/kvm/vmx/vmx.c    | 6 ++++++
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 4a91a86b5f0a..68c031e2cc4d 100644
+index 32bcf777576c..14a8cfade50f 100644
 --- a/arch/x86/kvm/vmx/nested.c
 +++ b/arch/x86/kvm/vmx/nested.c
-@@ -3521,6 +3521,10 @@ static void sync_vmcs02_to_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
- 	vmcs12->guest_cs_ar_bytes = vmcs_read32(GUEST_CS_AR_BYTES);
- 	vmcs12->guest_ss_ar_bytes = vmcs_read32(GUEST_SS_AR_BYTES);
- 
-+	vmcs12->guest_sysenter_cs = vmcs_read32(GUEST_SYSENTER_CS);
-+	vmcs12->guest_sysenter_esp = vmcs_readl(GUEST_SYSENTER_ESP);
-+	vmcs12->guest_sysenter_eip = vmcs_readl(GUEST_SYSENTER_EIP);
+@@ -2047,8 +2047,18 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
+ 	 * A vmexit (to either L1 hypervisor or L0 userspace) is always needed
+ 	 * for I/O port accesses.
+ 	 */
+-	exec_control &= ~CPU_BASED_USE_IO_BITMAPS;
+ 	exec_control |= CPU_BASED_UNCOND_IO_EXITING;
++	exec_control &= ~CPU_BASED_USE_IO_BITMAPS;
 +
- 	vmcs12->guest_interruptibility_info =
- 		vmcs_read32(GUEST_INTERRUPTIBILITY_INFO);
++	/*
++	 * This bit will be computed in nested_get_vmcs12_pages, because
++	 * we do not have access to L1's MSR bitmap yet.  For now, keep
++	 * the same bit as before, hoping to avoid multiple VMWRITEs that
++	 * only set/clear this bit.
++	 */
++	exec_control &= ~CPU_BASED_USE_MSR_BITMAPS;
++	exec_control |= exec_controls_get(vmx) & CPU_BASED_USE_MSR_BITMAPS;
++
+ 	exec_controls_set(vmx, exec_control);
  
-@@ -3566,9 +3570,6 @@ static void sync_vmcs02_to_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
- 
- 	if (vmcs12->vm_exit_controls & VM_EXIT_SAVE_IA32_EFER)
- 		vmcs12->guest_ia32_efer = vcpu->arch.efer;
--	vmcs12->guest_sysenter_cs = vmcs_read32(GUEST_SYSENTER_CS);
--	vmcs12->guest_sysenter_esp = vmcs_readl(GUEST_SYSENTER_ESP);
--	vmcs12->guest_sysenter_eip = vmcs_readl(GUEST_SYSENTER_EIP);
- }
- 
- /*
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 56783060449d..ede2ac670f5b 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1831,12 +1831,18 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		break;
- #endif
- 	case MSR_IA32_SYSENTER_CS:
-+		if (is_guest_mode(vcpu))
-+			get_vmcs12(vcpu)->guest_sysenter_cs = data;
- 		vmcs_write32(GUEST_SYSENTER_CS, data);
- 		break;
- 	case MSR_IA32_SYSENTER_EIP:
-+		if (is_guest_mode(vcpu))
-+			get_vmcs12(vcpu)->guest_sysenter_eip = data;
- 		vmcs_writel(GUEST_SYSENTER_EIP, data);
- 		break;
- 	case MSR_IA32_SYSENTER_ESP:
-+		if (is_guest_mode(vcpu))
-+			get_vmcs12(vcpu)->guest_sysenter_esp = data;
- 		vmcs_writel(GUEST_SYSENTER_ESP, data);
- 		break;
- 	case MSR_IA32_BNDCFGS:
+ 	/*
 -- 
 1.8.3.1
 
