@@ -2,114 +2,162 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF06C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04B1C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 436D720673
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:42:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZ7PQjew"
+	by mail.kernel.org (Postfix) with ESMTP id 843D120673
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:42:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392929AbfFMQmh (ORCPT
+        id S1726083AbfFMQma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:42:37 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45321 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbfFMGsU (ORCPT
+        Thu, 13 Jun 2019 12:42:30 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40445 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730511AbfFMGs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 02:48:20 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m23so17351568lje.12
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 23:48:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lv9nqSLtCZiZ8ahiodoBv8WyJCmSbiyt0thoq18zE4o=;
-        b=nZ7PQjewhkNFLJJFS9CWkoOR/2SEzVmnFe8JrDQZP9WGcZpfUm4TWzaVR34kqgOkM6
-         PSejsxPi0NXyf4QlD5sX4JIbnQfXedVnig36j74X1SFYqDWGSabvXNjxjGVLIXkawcuU
-         FLxHCMmbItnJk/+HFhcv2buBYqTCBeda6PFTmID1zVJDHxvH+2FvmDkY//qUdtytA1rY
-         XAU372/eZO1vArF8Nvb3ESlmzJwhIz6vNWOMU+IhBUUih36nYQRORDh23Fhe5qPHSqz9
-         W5zZSLTxbnEjMPo5VqL3HJlKMAhbO5g/ZW2HDfLWl0duR2ldpc2FeL0NApW675/Lripg
-         kkbA==
+        Thu, 13 Jun 2019 02:48:58 -0400
+Received: by mail-pf1-f193.google.com with SMTP id p184so7894205pfp.7
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 23:48:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lv9nqSLtCZiZ8ahiodoBv8WyJCmSbiyt0thoq18zE4o=;
-        b=FzuLvKCG9ECr7y2LfWAZZPa7TCXF9BUM4Zpq2CCzwpuymtVAui3ql/Hj7HGTsqZi7I
-         SWRqJl/VOOfvnkaOSD0XeajS+8tbfjoJ/xqCa24fWpMezHVMZDYg0J0ruzFC7W3gaeyf
-         gSWCXgt29xIRYAUMFA5tMtbjyssD9SK6pr8PwhguGr0Z/9ZY54dEyCDzTN3ODiAO8084
-         vSpLfgkGMM72Zx6/wkiGtTyUFCCIKoAXDXl+d2GDtgnj6wf6AXu7cz7h039SAjciQ0MA
-         uyLG4H4UiUe8DJPBa08dRpDaDN6lTUCZUtAcxXAlJcPpqfxIF6pMZ2U3taELr9c7o/8t
-         TQYw==
-X-Gm-Message-State: APjAAAWdEWfqq8SluT/OPYpfTbOtxDhhXF5tl2vL49uk915qaocVKwF3
-        tIiuqD1zF9qyBLT09tEXQr8=
-X-Google-Smtp-Source: APXvYqy6FpZw7RE8ERzs0oPq21ly6eN+8mWADKZTvCK7LLigk9bmBzrjxoFEZnOBRpHWrUPHGL4mfA==
-X-Received: by 2002:a2e:2c07:: with SMTP id s7mr6057511ljs.44.1560408498002;
-        Wed, 12 Jun 2019 23:48:18 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.102.224])
-        by smtp.gmail.com with ESMTPSA id y18sm396934ljh.1.2019.06.12.23.48.17
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VV+hwkRWfuJlEKYhE1hDz5poWY2znmOsLTaK/SE+bvA=;
+        b=kOUn0cxOh7Yqs6ziW0ZhYjjb2t0LQC9MeY1aiGiGaaB+GKWYxMMmFIcPut3Xy82In6
+         K2loiGx6n17l/uetBE9ik6TqYuJt5MYBM+U1UYx7kGBbWFU33ZOeEPBsX07Bu2WpKYO8
+         U5Ga/54QrtgmWWfRrWw5Wn+kV7WK/rGBQcL/fKQzoTQBVwVfoPoqFnPW5iZ7ZZlYtzEM
+         2UBVheZjnHBrk6lhwgMmZO7WxGIiQef3HGc8+AURw5rqePl+pY2LBiNMhFMsTub2UUkk
+         l1I+0oUHj4zCVNUghaj5ZhjzW/QDno6wXoJo4SkKpGDMnengJ3nqsG+xXZENwnVbIANT
+         pNEw==
+X-Gm-Message-State: APjAAAVYh0UfzYnm7fumsS4BNqIDJOQVJ6owofw2azC89upLVauVvEgR
+        3QLzo2MWHgwo3OG599zPYuI=
+X-Google-Smtp-Source: APXvYqzMh2iyv/DW+QulW2gDoHdukmthpxVlfstKodVPUw40ZhhVgpuyry4Y/fdry7yB/Useu2j44Q==
+X-Received: by 2002:a63:5247:: with SMTP id s7mr11254107pgl.29.1560408537348;
+        Wed, 12 Jun 2019 23:48:57 -0700 (PDT)
+Received: from htb-2n-eng-dhcp405.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id i3sm1559973pfa.175.2019.06.12.23.48.41
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 12 Jun 2019 23:48:17 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id D702646019C; Thu, 13 Jun 2019 09:48:16 +0300 (MSK)
-Date:   Thu, 13 Jun 2019 09:48:16 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Roman Gushchin <guro@fb.com>, Dmitry Safonov <dima@arista.com>
-Subject: Re: [PATCH v2 5/6] proc: use down_read_killable mmap_sem for
- /proc/pid/map_files
-Message-ID: <20190613064816.GF23535@uranus.lan>
-References: <156007465229.3335.10259979070641486905.stgit@buzz>
- <156007493995.3335.9595044802115356911.stgit@buzz>
- <20190612231426.GA3639@gmail.com>
+        Wed, 12 Jun 2019 23:48:56 -0700 (PDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rik van Riel <riel@surriel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 0/9] x86: Concurrent TLB flushes and other improvements
+Date:   Wed, 12 Jun 2019 23:48:04 -0700
+Message-Id: <20190613064813.8102-1-namit@vmware.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612231426.GA3639@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 04:14:28PM -0700, Andrei Vagin wrote:
-> On Sun, Jun 09, 2019 at 01:09:00PM +0300, Konstantin Khlebnikov wrote:
-> > Do not stuck forever if something wrong.
-> > Killable lock allows to cleanup stuck tasks and simplifies investigation.
-> 
-> This patch breaks the CRIU project, because stat() returns EINTR instead
-> of ENOENT:
-> 
-> [root@fc24 criu]# stat /proc/self/map_files/0-0
-> stat: cannot stat '/proc/self/map_files/0-0': Interrupted system call
-> 
-> Here is one inline comment with the fix for this issue.
-> 
-> > 
-> > It seems ->d_revalidate() could return any error (except ECHILD) to
-> > abort validation and pass error as result of lookup sequence.
-> > 
-> > Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> > Reviewed-by: Roman Gushchin <guro@fb.com>
-> > Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
-> > Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-> 
-> It was nice to see all four of you in one place :).
+Currently, local and remote TLB flushes are not performed concurrently,
+which introduces unnecessary overhead - each INVLPG can take 100s of
+cycles. This patch-set allows TLB flushes to be run concurrently: first
+request the remote CPUs to initiate the flush, then run it locally, and
+finally wait for the remote CPUs to finish their work.
 
-Holymoly ;) And we all managed to miss this error code.
-Thanks, Andrew!
+In addition, there are various small optimizations to avoid unwarranted
+false-sharing and atomic operations.
+
+The proposed changes should also improve the performance of other
+invocations of on_each_cpu(). Hopefully, no one has relied on this
+behavior of on_each_cpu() that invoked functions first remotely and only
+then locally [Peter says he remembers someone might do so, but without
+further information it is hard to know how to address it].
+
+Running sysbench on dax w/emulated-pmem, write-cache disabled, and
+various mitigations (PTI, Spectre, MDS) disabled on Haswell:
+
+ sysbench fileio --file-total-size=3G --file-test-mode=rndwr \
+  --file-io-mode=mmap --threads=4 --file-fsync-mode=fdatasync run
+
+			events (avg/stddev)
+			-------------------
+  5.2-rc3:		1247669.0000/16075.39
+  +patchset:		1290607.0000/13617.56 (+3.4%)
+
+Patch 1 does small cleanup. Patches 2-5 implement the concurrent
+execution of TLB flushes. Patches 6-9 deal with false-sharing and
+unnecessary atomic operations. There is still no implementation that
+uses the concurrent TLB flushes by Xen and Hyper-V. 
+
+There are various additional possible optimizations that were sent or
+are in development (async flushes, x2apic shorthands, fewer mm_tlb_gen
+accesses, etc.), but based on Andy's feedback, they will be sent later.
+
+RFCv2 -> v1:
+* Fix comment on flush_tlb_multi [Juergen]
+* Removing async invalidation optimizations [Andy]
+* Adding KVM support [Paolo]
+
+Cc: Richard Henderson <rth@twiddle.net>
+Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+
+Nadav Amit (9):
+  smp: Remove smp_call_function() and on_each_cpu() return values
+  smp: Run functions concurrently in smp_call_function_many()
+  x86/mm/tlb: Refactor common code into flush_tlb_on_cpus()
+  x86/mm/tlb: Flush remote and local TLBs concurrently
+  x86/mm/tlb: Optimize local TLB flushes
+  KVM: x86: Provide paravirtualized flush_tlb_multi()
+  smp: Do not mark call_function_data as shared
+  x86/tlb: Privatize cpu_tlbstate
+  x86/apic: Use non-atomic operations when possible
+
+ arch/alpha/kernel/smp.c               |  19 +---
+ arch/alpha/oprofile/common.c          |   6 +-
+ arch/ia64/kernel/perfmon.c            |  12 +--
+ arch/ia64/kernel/uncached.c           |   8 +-
+ arch/x86/hyperv/mmu.c                 |   2 +
+ arch/x86/include/asm/paravirt.h       |   8 ++
+ arch/x86/include/asm/paravirt_types.h |   6 ++
+ arch/x86/include/asm/tlbflush.h       |  46 ++++----
+ arch/x86/kernel/apic/apic_flat_64.c   |   4 +-
+ arch/x86/kernel/apic/x2apic_cluster.c |   2 +-
+ arch/x86/kernel/kvm.c                 |  11 +-
+ arch/x86/kernel/paravirt.c            |   3 +
+ arch/x86/kernel/smp.c                 |   2 +-
+ arch/x86/lib/cache-smp.c              |   3 +-
+ arch/x86/mm/init.c                    |   2 +-
+ arch/x86/mm/tlb.c                     | 150 ++++++++++++++++++--------
+ arch/x86/xen/mmu_pv.c                 |   2 +
+ drivers/char/agp/generic.c            |   3 +-
+ include/linux/smp.h                   |  32 ++++--
+ kernel/smp.c                          | 141 +++++++++++-------------
+ kernel/up.c                           |   3 +-
+ 21 files changed, 272 insertions(+), 193 deletions(-)
+
+-- 
+2.20.1
+
