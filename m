@@ -2,474 +2,188 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F904C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7D1C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615CF2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ABF22082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:47:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uwar+8M0"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="MhSOA8iy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404225AbfFMQrj (ORCPT
+        id S2404236AbfFMQrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:47:39 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38862 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730256AbfFME7I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 00:59:08 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5D4x3YZ037442;
-        Wed, 12 Jun 2019 23:59:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560401943;
-        bh=NMa4uk9UyXREv+U2FENU860reiDu6LVpknylFvVeAMc=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=uwar+8M0MiSjoYVy1hRvFXbTuNiZNRO6hcip3GEBh+Z4zGRS6t6xBtFSGX1LWwMDK
-         W2xCNj6MQ/i/IR4ntls+4tTiHmKgENNYPk9t//eb0nDwnMQ0PdGI/vhjUBhFyNkFHz
-         ma5wioTNpODjP9a1nH+hLQGEjm4gKuYDYPQFLHXU=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5D4x2qL059225
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Jun 2019 23:59:02 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 12
- Jun 2019 23:59:01 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 12 Jun 2019 23:59:01 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5D4x0b3120076;
-        Wed, 12 Jun 2019 23:59:00 -0500
-Subject: Re: [PATCH v4 4/5] phy: ti: Add a new SERDES driver for TI's AM654x
- SoC
-To:     Peter Rosin <peda@axentia.se>,
+        Thu, 13 Jun 2019 12:47:42 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:17647 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbfFME5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 00:57:49 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45PWh96FsDz9v1BD;
+        Thu, 13 Jun 2019 06:57:45 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=MhSOA8iy; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id MYOM_FHLP4JJ; Thu, 13 Jun 2019 06:57:45 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45PWh95BrDz9v0vD;
+        Thu, 13 Jun 2019 06:57:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1560401865; bh=+P6drS8qQAAx9wMET+Ioeysvq3tKZ0fEutPbE6hyLGo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=MhSOA8iyqqu0tlKYwRx4p33Knq6T+T6fIH8L6Stkytdtulq46nvnFQaIfhecaykTm
+         uM0JRtD7fBixCqu6Jykt50vDZRIwXkPT7aTwwMS4omyM5BrJp1B1JfrcW2wR9gbChJ
+         fBsNFov3f/FQtlSiWKEuqJpxKCXRRzFUUzGA/9gA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7DBC48B798;
+        Thu, 13 Jun 2019 06:57:46 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id V2EWmVBVwxSd; Thu, 13 Jun 2019 06:57:46 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 026358B797;
+        Thu, 13 Jun 2019 06:57:45 +0200 (CEST)
+Subject: Re: [PATCH v2 0/4] Additional fixes on Talitos driver
+To:     Horia Geanta <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>
-References: <c357f9bc-dcf9-e8de-f879-f208e45a5b86@axentia.se>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <ac361a0c-829c-41bb-64f0-bd74bb0c0dd6@ti.com>
-Date:   Thu, 13 Jun 2019 10:27:34 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <cover.1560263641.git.christophe.leroy@c-s.fr>
+ <VI1PR0402MB34853CAF031426F4183FE29B98ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <0cb7c534-6e48-5284-899c-c0ef85c3c126@c-s.fr>
+ <VI1PR0402MB3485AD965F36709F27EFB72698ED0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <58787543-76d3-e0db-9517-ccd0f6494d85@c-s.fr>
+ <VI1PR0402MB348583D36921F9DEC4E0DA2698EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <bbfc8706-129b-b441-796a-af4ef54aba53@c-s.fr>
+Date:   Thu, 13 Jun 2019 06:57:45 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <c357f9bc-dcf9-e8de-f879-f208e45a5b86@axentia.se>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <VI1PR0402MB348583D36921F9DEC4E0DA2698EC0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
 
-On 13/06/19 4:20 AM, Peter Rosin wrote:
-> Hi!
-> 
-> [I know this has already been merged upstream, but I only just
->  now noticed the code and went to the archives to find the
->  originating mail. I hope I managed to set in-reply-to correctly...]
-> 
-> The mux handling is problematic and does not follow the rules.
-> It needs to be fixed, or you may face deadlocks. See below.
-> 
-> On 2019-04-05 11:08, Kishon Vijay Abraham I wrote:
->> Add a new SERDES driver for TI's AM654x SoC which configures
->> the SERDES only for PCIe. Support fo USB3 will be added later.
+
+Le 12/06/2019 à 15:59, Horia Geanta a écrit :
+> On 6/12/2019 8:52 AM, Christophe Leroy wrote:
 >>
->> SERDES in am654x has three input clocks (left input, externel reference
->> clock and right input) and two output clocks (left output and right
->> output) in addition to a PLL mux clock which the SERDES uses for Clock
->> Multiplier Unit (CMU refclock).
 >>
->> The PLL mux clock can select from one of the three input clocks.
->> The right output can select between left input and external reference
->> clock while the left output can select between the right input and
->> external reference clock.
+>> Le 11/06/2019 à 18:30, Horia Geanta a écrit :
+>>> On 6/11/2019 6:40 PM, Christophe Leroy wrote:
+>>>>
+>>>>
+>>>> Le 11/06/2019 à 17:37, Horia Geanta a écrit :
+>>>>> On 6/11/2019 5:39 PM, Christophe Leroy wrote:
+>>>>>> This series is the last set of fixes for the Talitos driver.
+>>>>>>
+>>>>>> We now get a fully clean boot on both SEC1 (SEC1.2 on mpc885) and
+>>>>>> SEC2 (SEC2.2 on mpc8321E) with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:
+>>>>>>
+>>>>> I am getting below failures on a sec 3.3.2 (p1020rdb) for hmac(sha384) and
+>>>>> hmac(sha512):
+>>>>
+>>>> Is that new with this series or did you already have it before ?
+>>>>
+>>> Looks like this happens with or without this series.
 >>
->> The driver has support to select PLL mux and left/right output mux as
->> specified in device tree.
+>> Found the issue, that's in
+>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=b8fbdc2bc4e71b62646031d5df5f08aafe15d5ad
 >>
->> [rogerq@ti.com: Fix boot lockup caused by accessing a structure member
->> (hw->init) allocated in stack of probe() and accessed in get_parent]
->> [rogerq@ti.com: Fix "Failed to find the parent" warnings]
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  drivers/phy/ti/Kconfig            |  12 +
->>  drivers/phy/ti/Makefile           |   1 +
->>  drivers/phy/ti/phy-am654-serdes.c | 624 ++++++++++++++++++++++++++++++
->>  3 files changed, 637 insertions(+)
->>  create mode 100644 drivers/phy/ti/phy-am654-serdes.c
+>> CONFIG_CRYPTO_DEV_TALITOS_SEC2 should be CONFIG_CRYPTO_DEV_TALITOS2 instead.
 >>
->> diff --git a/drivers/phy/ti/Kconfig b/drivers/phy/ti/Kconfig
->> index 7cdc35f8c862..6931c87235b9 100644
->> --- a/drivers/phy/ti/Kconfig
->> +++ b/drivers/phy/ti/Kconfig
->> @@ -20,6 +20,18 @@ config PHY_DM816X_USB
->>  	help
->>  	  Enable this for dm816x USB to work.
->>  
->> +config PHY_AM654_SERDES
->> +	tristate "TI AM654 SERDES support"
->> +	depends on OF && ARCH_K3 || COMPILE_TEST
->> +	depends on COMMON_CLK
->> +	select GENERIC_PHY
->> +	select MULTIPLEXER
->> +	select REGMAP_MMIO
->> +	select MUX_MMIO
->> +	help
->> +	  This option enables support for TI AM654 SerDes PHY used for
->> +	  PCIe.
->> +
->>  config OMAP_CONTROL_PHY
->>  	tristate "OMAP CONTROL PHY Driver"
->>  	depends on ARCH_OMAP2PLUS || COMPILE_TEST
->> diff --git a/drivers/phy/ti/Makefile b/drivers/phy/ti/Makefile
->> index 368de8e1548d..601bbd88f35e 100644
->> --- a/drivers/phy/ti/Makefile
->> +++ b/drivers/phy/ti/Makefile
->> @@ -6,5 +6,6 @@ obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
->>  obj-$(CONFIG_TI_PIPE3)			+= phy-ti-pipe3.o
->>  obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
->>  obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
->> +obj-$(CONFIG_PHY_AM654_SERDES)		+= phy-am654-serdes.o
->>  obj-$(CONFIG_PHY_TI_GMII_SEL)		+= phy-gmii-sel.o
->>  obj-$(CONFIG_PHY_TI_KEYSTONE_SERDES)	+= phy-keystone-serdes.o
->> diff --git a/drivers/phy/ti/phy-am654-serdes.c b/drivers/phy/ti/phy-am654-serdes.c
->> new file mode 100644
->> index 000000000000..4817c67abbbb
->> --- /dev/null
->> +++ b/drivers/phy/ti/phy-am654-serdes.c
->> @@ -0,0 +1,624 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/**
->> + * PCIe SERDES driver for AM654x SoC
->> + *
->> + * Copyright (C) 2018 - 2019 Texas Instruments Incorporated - http://www.ti.com/
->> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
->> + */
->> +
->> +#include <dt-bindings/phy/phy.h>
->> +#include <linux/clk.h>
->> +#include <linux/clk-provider.h>
->> +#include <linux/delay.h>
->> +#include <linux/module.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/mux/consumer.h>
->> +#include <linux/of_address.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/regmap.h>
->> +
->> +#define CMU_R07C		0x7c
->> +
->> +#define COMLANE_R138		0xb38
->> +#define VERSION			0x70
->> +
->> +#define COMLANE_R190		0xb90
->> +
->> +#define COMLANE_R194		0xb94
->> +
->> +#define SERDES_CTRL		0x1fd0
->> +
->> +#define WIZ_LANEXCTL_STS	0x1fe0
->> +#define TX0_DISABLE_STATE	0x4
->> +#define TX0_SLEEP_STATE		0x5
->> +#define TX0_SNOOZE_STATE	0x6
->> +#define TX0_ENABLE_STATE	0x7
->> +
->> +#define RX0_DISABLE_STATE	0x4
->> +#define RX0_SLEEP_STATE		0x5
->> +#define RX0_SNOOZE_STATE	0x6
->> +#define RX0_ENABLE_STATE	0x7
->> +
->> +#define WIZ_PLL_CTRL		0x1ff4
->> +#define PLL_DISABLE_STATE	0x4
->> +#define PLL_SLEEP_STATE		0x5
->> +#define PLL_SNOOZE_STATE	0x6
->> +#define PLL_ENABLE_STATE	0x7
->> +
->> +#define PLL_LOCK_TIME		100000	/* in microseconds */
->> +#define SLEEP_TIME		100	/* in microseconds */
->> +
->> +#define LANE_USB3		0x0
->> +#define LANE_PCIE0_LANE0	0x1
->> +
->> +#define LANE_PCIE1_LANE0	0x0
->> +#define LANE_PCIE0_LANE1	0x1
->> +
->> +#define SERDES_NUM_CLOCKS	3
->> +
->> +struct serdes_am654_clk_mux {
->> +	struct clk_hw	hw;
->> +	struct regmap	*regmap;
->> +	unsigned int	reg;
->> +	int		*table;
->> +	u32		mask;
->> +	u8		shift;
->> +	struct clk_init_data clk_data;
->> +};
->> +
->> +#define to_serdes_am654_clk_mux(_hw)	\
->> +		container_of(_hw, struct serdes_am654_clk_mux, hw)
->> +
->> +static struct regmap_config serdes_am654_regmap_config = {
->> +	.reg_bits = 32,
->> +	.val_bits = 32,
->> +	.reg_stride = 4,
->> +	.fast_io = true,
->> +};
->> +
->> +static const struct reg_field cmu_master_cdn_o = REG_FIELD(CMU_R07C, 24, 24);
->> +static const struct reg_field config_version = REG_FIELD(COMLANE_R138, 16, 23);
->> +static const struct reg_field l1_master_cdn_o = REG_FIELD(COMLANE_R190, 9, 9);
->> +static const struct reg_field cmu_ok_i_0 = REG_FIELD(COMLANE_R194, 19, 19);
->> +static const struct reg_field por_en = REG_FIELD(SERDES_CTRL, 29, 29);
->> +static const struct reg_field tx0_enable = REG_FIELD(WIZ_LANEXCTL_STS, 29, 31);
->> +static const struct reg_field rx0_enable = REG_FIELD(WIZ_LANEXCTL_STS, 13, 15);
->> +static const struct reg_field pll_enable = REG_FIELD(WIZ_PLL_CTRL, 29, 31);
->> +static const struct reg_field pll_ok = REG_FIELD(WIZ_PLL_CTRL, 28, 28);
->> +
->> +struct serdes_am654 {
->> +	struct regmap		*regmap;
->> +	struct regmap_field	*cmu_master_cdn_o;
->> +	struct regmap_field	*config_version;
->> +	struct regmap_field	*l1_master_cdn_o;
->> +	struct regmap_field	*cmu_ok_i_0;
->> +	struct regmap_field	*por_en;
->> +	struct regmap_field	*tx0_enable;
->> +	struct regmap_field	*rx0_enable;
->> +	struct regmap_field	*pll_enable;
->> +	struct regmap_field	*pll_ok;
->> +
->> +	struct device		*dev;
->> +	struct mux_control	*control;
->> +	bool			busy;
->> +	u32			type;
->> +	struct device_node	*of_node;
->> +	struct clk_onecell_data	clk_data;
->> +	struct clk		*clks[SERDES_NUM_CLOCKS];
->> +};
->> +
->> +static int serdes_am654_enable_pll(struct serdes_am654 *phy)
->> +{
->> +	int ret;
->> +	u32 val;
->> +
->> +	ret = regmap_field_write(phy->pll_enable, PLL_ENABLE_STATE);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return regmap_field_read_poll_timeout(phy->pll_ok, val, val, 1000,
->> +					      PLL_LOCK_TIME);
->> +}
->> +
->> +static void serdes_am654_disable_pll(struct serdes_am654 *phy)
->> +{
->> +	struct device *dev = phy->dev;
->> +	int ret;
->> +
->> +	ret = regmap_field_write(phy->pll_enable, PLL_DISABLE_STATE);
->> +	if (ret)
->> +		dev_err(dev, "Failed to disable PLL\n");
->> +}
->> +
->> +static int serdes_am654_enable_txrx(struct serdes_am654 *phy)
->> +{
->> +	int ret;
->> +
->> +	/* Enable TX */
->> +	ret = regmap_field_write(phy->tx0_enable, TX0_ENABLE_STATE);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Enable RX */
->> +	ret = regmap_field_write(phy->rx0_enable, RX0_ENABLE_STATE);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return 0;
->> +}
->> +
->> +static int serdes_am654_disable_txrx(struct serdes_am654 *phy)
->> +{
->> +	int ret;
->> +
->> +	/* Disable TX */
->> +	ret = regmap_field_write(phy->tx0_enable, TX0_DISABLE_STATE);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Disable RX */
->> +	ret = regmap_field_write(phy->rx0_enable, RX0_DISABLE_STATE);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return 0;
->> +}
->> +
->> +static int serdes_am654_power_on(struct phy *x)
->> +{
->> +	struct serdes_am654 *phy = phy_get_drvdata(x);
->> +	struct device *dev = phy->dev;
->> +	int ret;
->> +	u32 val;
->> +
->> +	ret = serdes_am654_enable_pll(phy);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to enable PLL\n");
->> +		return ret;
->> +	}
->> +
->> +	ret = serdes_am654_enable_txrx(phy);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to enable TX RX\n");
->> +		return ret;
->> +	}
->> +
->> +	return regmap_field_read_poll_timeout(phy->cmu_ok_i_0, val, val,
->> +					      SLEEP_TIME, PLL_LOCK_TIME);
->> +}
->> +
->> +static int serdes_am654_power_off(struct phy *x)
->> +{
->> +	struct serdes_am654 *phy = phy_get_drvdata(x);
->> +
->> +	serdes_am654_disable_txrx(phy);
->> +	serdes_am654_disable_pll(phy);
->> +
->> +	return 0;
->> +}
->> +
->> +static int serdes_am654_init(struct phy *x)
->> +{
->> +	struct serdes_am654 *phy = phy_get_drvdata(x);
->> +	int ret;
->> +
->> +	ret = regmap_field_write(phy->config_version, VERSION);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = regmap_field_write(phy->cmu_master_cdn_o, 0x1);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = regmap_field_write(phy->l1_master_cdn_o, 0x1);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return 0;
->> +}
->> +
->> +static int serdes_am654_reset(struct phy *x)
->> +{
->> +	struct serdes_am654 *phy = phy_get_drvdata(x);
->> +	int ret;
->> +
->> +	ret = regmap_field_write(phy->por_en, 0x1);
->> +	if (ret)
->> +		return ret;
->> +
->> +	mdelay(1);
->> +
->> +	ret = regmap_field_write(phy->por_en, 0x0);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return 0;
->> +}
->> +
->> +static void serdes_am654_release(struct phy *x)
->> +{
->> +	struct serdes_am654 *phy = phy_get_drvdata(x);
->> +
->> +	phy->type = PHY_NONE;
->> +	phy->busy = false;
->> +	mux_control_deselect(phy->control);
+>> Just sent a patch to fix it.
+>>
+> Thanks, I've tested it and the hmac failures go away.
 > 
-> Here you unconditionally deselect the mux, and that seems
-> dangerous. Are you *sure* that ->release may not be called
-> without a successful xlate call?
+> However, testing gets stuck.
+> Seems there is another issue lurking in the driver.
+> 
+> Used cryptodev-2.6/master with the following on top:
+> crypto: testmgr - add some more preemption points
+> 	https://patchwork.kernel.org/patch/10972337/
+> crypto: talitos - fix max key size for sha384 and sha512
+> 	https://patchwork.kernel.org/patch/10988473/
+> 
+> [...]
+> alg: skcipher: skipping comparison tests for ecb-3des-talitos because ecb(des3_ede-generic) is unavailable
+> INFO: task cryptomgr_test:314 blocked for more than 120 seconds.
+>        Not tainted 5.2.0-rc1-g905bfd415e8a #1
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> cryptomgr_test  D    0   314      2 0x00000800
+> Call Trace:
+> [e78337e0] [00000004] 0x4 (unreliable)
+> [e78338a8] [c08a6e5c] __schedule+0x20c/0x4d4
+> [e78338f8] [c08a7158] schedule+0x34/0xc8
+> [e7833908] [c08aa5ec] schedule_timeout+0x1d4/0x350
+> [e7833958] [c08a7be4] wait_for_common+0xa0/0x164
+> [e7833998] [c03a7b14] do_ahash_op+0xa4/0xc4
+> [e78339b8] [c03aba00] test_ahash_vec_cfg+0x188/0x5e4
+> [e7833aa8] [c03ac1c8] test_hash_vs_generic_impl+0x1b0/0x2b4
+> [e7833de8] [c03ac498] __alg_test_hash+0x1cc/0x2d0
+> [e7833e28] [c03a9fb4] alg_test.part.37+0x8c/0x3ac
+> [e7833ef8] [c03a54d0] cryptomgr_test+0x4c/0x54
+> [e7833f08] [c006c410] kthread+0xf8/0x124
+> [e7833f38] [c001227c] ret_from_kernel_thread+0x14/0x1c
+> 
+> addr2line on c03aba00 points to crypto/testmgr.c:1335
+> 
+>     1327)  if (cfg->finalization_type == FINALIZATION_TYPE_DIGEST ||
+>     1328)      vec->digest_error) {
+>     1329)          /* Just using digest() */
+>     1330)          ahash_request_set_callback(req, req_flags, crypto_req_done,
+>     1331)                                     &wait);
+>     1332)          ahash_request_set_crypt(req, tsgl->sgl, result, vec->psize);
+>     1333)          err = do_ahash_op(crypto_ahash_digest, req, &wait, cfg->nosimd);
+>     1334)          if (err) {
+> -> 1335)                  if (err == vec->digest_error)
+>     1336)                          return 0;
+>     1337)                  pr_err("alg: ahash: %s digest() failed on test vector %s; expected_error=%d, actual_error=%d, cfg=\"%s\"\n",
+>     1338)                         driver, vec_name, vec->digest_error, err,
+>     1339)                         cfg->name);
+>     1340)                  return err;
+>     1341)          }
+>     1342)          if (vec->digest_error) {
+>     1343)                  pr_err("alg: ahash: %s digest() unexpectedly succeeded on test vector %s; expected_error=%d, cfg=\"%s\"\n",
+>     1344)                         driver, vec_name, vec->digest_error, cfg->name);
+>     1345)                  return -EINVAL;
+>     1346)          }
+>     1347)          goto result_ready;
+>     1348)  }
+> 
+> Seems that for some reason driver does not receive the interrupt from HW,
+> thus completion callback does not run.
+> 
+> Tried with or without current patch series, no change in behaviour.
+> 
+> If you cannot reproduce and don't have any idea, I'll try the hard way
+> (git bisect).
 
-Yeah, without a successful xlate(), the consumer will never get a reference to
-the PHY and the ->release() is invoked only from phy_put() which needs a
-reference to the PHY.
-> 
-> I'm not 100% sure of that, but I have not looked at the phy
-> code before today, so it may very well be the case that this
-> is safe...
-> 
->> +}
->> +
->> +struct phy *serdes_am654_xlate(struct device *dev, struct of_phandle_args
->> +				 *args)
->> +{
->> +	struct serdes_am654 *am654_phy;
->> +	struct phy *phy;
->> +	int ret;
->> +
->> +	phy = of_phy_simple_xlate(dev, args);
->> +	if (IS_ERR(phy))
->> +		return phy;
->> +
->> +	am654_phy = phy_get_drvdata(phy);
->> +	if (am654_phy->busy)
->> +		return ERR_PTR(-EBUSY);
->> +
->> +	ret = mux_control_select(am654_phy->control, args->args[1]);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to select SERDES Lane Function\n");
->> +		return ERR_PTR(ret);
->> +	}
-> 
-> *However*
-> 
-> Here you select the mux as the last action, good, but, a mux must
-> be handled with that same care as a locking primitive, i.e.
-> successful selects must be perfectly balanced with deselects. I
-> see no guarantee of that here, since there are other failures
-> possible after the xlate call. So, being last in the function
-> does not really help. If I read the code correctly, the
-> phy core may fail if try_module_get fails in phy_get(). If that
-> ever happens, a successful call to mux_control_select is simply
-> forgotten, and the mux will be locked indefinitely.
+I cannot reproduce, both mpc885 and mpc8321e boot fine, and don't have 
+any idea at first.
 
-Good catch. While adding ->release() ops which is only invoked from phy_put,
-perhaps this was missed. Ideally it should be invoked from other places where
-there is a failure after phy_get.
+I know the SEC1 behaves that way when you submit zero-length data.
+
+Christophe
+
 > 
-> am654_phy->busy will also be set indefinitely, so you will get
-> -EBUSY and not a hard deadlock. At least here, but if the now
-> locked mux control happens to also control some other muxes
-> (probably unlikely, but if), then their consumers will potentially
-> deadlock hard. But that's just after a cursory reading, so I may
-> completely miss something...
-
-The ->busy here should prevent two consumers trying to control the same mux.
+> Thanks,
+> Horia
 > 
-> Thinking some more, the above mentioned forgotten phy problem
-> in fact looks like a generic leak in phy_get. It will simply
-> leak any and all phys where the owner module is not yet
-> available. Or, am I missing something?
-
-yes you are right. Ideally we should have invoked ->release() after phy_get()
-failures.
-> 
-> Perhaps fixing that is all that is needed to make the mux
-> select/deselect calls guaranteed to be balanced?
-
-That's correct. Thanks for reporting this.
-
-Cheers
-Kishon
