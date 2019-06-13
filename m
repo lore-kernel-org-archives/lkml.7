@@ -2,168 +2,100 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B666DC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92514C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8F42080A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:38:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ybzhhpu+"
+	by mail.kernel.org (Postfix) with ESMTP id 6A6CF206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560440344;
+	bh=X8l9b1+mtsP9NQv7VWDOxVrBKP4hI/3hilidRbcNgbs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ovtg2IDDz3t+Zi5H4q/q2kyfXdrfmL5nW/cMD8h5I1spxPCUDbt5hSH6KS0t2rNcX
+	 iQrpQOW1U+h9tC6JN1o8wYtbgGN6bSWmah8nm4dnagTSV+CukJAax/uWikukFXe8vX
+	 NpIzw9nfCQNZ6HS9ea414z0RA6+ids60zizyjiR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732256AbfFMPid (ORCPT
+        id S1731949AbfFMPjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:38:33 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:1466 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731949AbfFMJ7d (ORCPT
+        Thu, 13 Jun 2019 11:39:03 -0400
+Received: from casper.infradead.org ([85.118.1.10]:33356 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731937AbfFMJ5P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:59:33 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d021e840000>; Thu, 13 Jun 2019 02:59:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 13 Jun 2019 02:59:31 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 13 Jun 2019 02:59:31 -0700
-Received: from [10.19.65.14] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Jun
- 2019 09:59:28 +0000
-Subject: Re: [PATCH V5 6/7] i2c: tegra: fix PIO rx/tx residual transfer check
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1560250274-18499-1-git-send-email-bbiswas@nvidia.com>
- <1560250274-18499-6-git-send-email-bbiswas@nvidia.com>
- <b6b24358-36a0-af98-1b29-9a622baa9600@gmail.com>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <3899af9b-07b0-8a76-e343-82871d3eb19a@nvidia.com>
-Date:   Thu, 13 Jun 2019 02:59:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 05:57:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Zd7Y7/fVtcy9h7LRt+pgmFLEzRR3UYPAM2/1CQ/alFQ=; b=tYM5mJx45M6Wd3ewpvbLR86+W8
+        SpwhFYvZ77/1fEg0vrN5CzDDdt/+vsfic0cGQ/f7J09o3yyYkGqCdjhrFm+iw9asBDO2NQD3mykRn
+        RLnFMTe/yn9f4PfWcYypmgjkeYUmtErMwbvH5xgFK5+XI4zUyTvqNm0XZxK8Rrd2W4oo5iZYaR0t8
+        j7jmbSh1GCelXwnZIBgQNJt+VxCQ/scIVaxnx5oEAPDKDIkDLscobgmZdbHfz8IqXzeim4KLK3Hsb
+        UySdk+tcmbbpd2CAxqXL9uLfhZUZ/M8hGAES907CieN7qPt7GVKh06p2EQ+6flP4hkzojBIA/HMP8
+        n7eMhpOw==;
+Received: from 201.86.169.251.dynamic.adsl.gvt.net.br ([201.86.169.251] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbMTh-0000dd-MK; Thu, 13 Jun 2019 09:57:08 +0000
+Date:   Thu, 13 Jun 2019 06:57:02 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jerry Hoemann <jerry.hoemann@hpe.com>
+Cc:     linux@roeck-us.net, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/1] docs: watchdog: make htmldocs failed.
+Message-ID: <20190613065554.1dd69b86@coco.lan>
+In-Reply-To: <20190613000237.377-1-jerry.hoemann@hpe.com>
+References: <20190613000237.377-1-jerry.hoemann@hpe.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <b6b24358-36a0-af98-1b29-9a622baa9600@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560419972; bh=bu6PFhdzRuGZwYqZ+hVK3B1DLO4p//ihuWYhcH3V6uw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Ybzhhpu+/qkKOpkhN12f+D5btArqQfhaBZ/NT8YiFVEknM8QPYJzXABGQso5KeMYH
-         0iOwme7ANbGZMFZObYeWEpglsYSRsbeLnumsArQpDkAQ6UXgCb9hF6JKROYa+kFXkb
-         b2UtUbkVF9Ew+1DS3bhv+sVY1LtfoiWOFrH+92QcJ2KLycR2syLOD5egBs8auYtJma
-         i4zFRQJwh4cAfJkKUlzm7epqW0UcvmTkWkwzpLhe08ekTtb0TRJAr/wFlkr4DcZgFK
-         OityH7PHsuV14P0GoLQ/WkH6own9A3xKx8124ro4422HZDGQNcCMFGkFjlXtY8oJtx
-         JemuZbJ1yR9jQ==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Wed, 12 Jun 2019 18:02:36 -0600
+Jerry Hoemann <jerry.hoemann@hpe.com> escreveu:
+
+> Guenter,
+> 
+> While making htmldocs from linux-staging.git watchdog-next, the
+> build failed due what I think is a missing blank line after a header
+> separator in:
+> 
+> 	Documentation/watchdog/watchdog-parameters.rst
+> 
+> I'm a newbie w.r.t. to the .rst file formats, but adding the blank
+> lines got the "make htmldocs" to complete.
+
+Yeah, Sphinx doesn't like to see things like:
+
+------------
+foo
+
+as it will miss-interpret the <hr> tag. That usually cause a
+severe error the parser, breaking the entire build.
+
+> 
+> 
+> 
+> 
+> 
+> 
+> Jerry Hoemann (1):
+>   docs: watchdog: Fix build error.
+> 
+>  Documentation/watchdog/watchdog-parameters.rst | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
 
-On 6/12/19 6:55 AM, Dmitry Osipenko wrote:
-> 11.06.2019 13:51, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Fix expression for residual bytes(less than word) transfer
->> in I2C PIO mode RX/TX.
->>
->> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->> ---
->>   drivers/i2c/busses/i2c-tegra.c | 11 ++++++-----
->>   1 file changed, 6 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-teg=
-ra.c
->> index 4dfb4c1..0596c12 100644
->> --- a/drivers/i2c/busses/i2c-tegra.c
->> +++ b/drivers/i2c/busses/i2c-tegra.c
->> @@ -514,7 +514,8 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_=
-dev *i2c_dev)
->>   	 * If there is a partial word at the end of buf, handle it manually t=
-o
->>   	 * prevent overwriting past the end of buf
->>   	 */
->> -	if (rx_fifo_avail > 0 && buf_remaining > 0) {
->> +	if (rx_fifo_avail > 0 &&
->> +	    (buf_remaining > 0 && buf_remaining < BYTES_PER_FIFO_WORD)) {
->=20
-> The buf_remaining >=3D BYTES_PER_FIFO_WORD is not possible to happen
-> because there are three possible cases:
->=20
-> 1) buf_remaining > rx_fifo_avail * 4:
->=20
-> 	In this case rx_fifo_avail =3D 0
->=20
-> 2) buf_remaining < rx_fifo_avail * 4;
->=20
-> 	In this case buf_remaining is always < 4 because
-> 	words_to_transfer is a buf_remaining rounded down to 4
-> 	and then divided by 4. Hence:
->=20
-> 	buf_remaining -=3D (buf_remaining / 4) * 4 always results
-> 	into buf_remaining < 4.
->=20
-> 3) buf_remaining =3D=3D rx_fifo_avail * 4:
->=20
-> 	In this case rx_fifo_avail =3D 0 and buf_remaining =3D 0.
->=20
-> Case 2 should never happen and means that something gone wrong.
->=20
-Yes I now agree with you. The first condition "rx_fifo_avail > 0"=20
-failure will take care and prevent need for additional checks.
 
->>   		BUG_ON(buf_remaining > 3);
->>   		val =3D i2c_readl(i2c_dev, I2C_RX_FIFO);
->>   		val =3D cpu_to_le32(val);
->> @@ -557,11 +558,10 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c=
-_dev *i2c_dev)
->>   			words_to_transfer =3D tx_fifo_avail;
->>  =20
->>   		/*
->> -		 * Update state before writing to FIFO.  If this casues us
->> +		 * Update state before writing to FIFO.  If this causes us
->>   		 * to finish writing all bytes (AKA buf_remaining goes to 0) we
->>   		 * have a potential for an interrupt (PACKET_XFER_COMPLETE is
->> -		 * not maskable).  We need to make sure that the isr sees
->> -		 * buf_remaining as 0 and doesn't call us back re-entrantly.
->> +		 * not maskable).
->>   		 */
->>   		buf_remaining -=3D words_to_transfer * BYTES_PER_FIFO_WORD;
->>   		tx_fifo_avail -=3D words_to_transfer;
->> @@ -580,7 +580,8 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_d=
-ev *i2c_dev)
->>   	 * prevent reading past the end of buf, which could cross a page
->>   	 * boundary and fault.
->>   	 */
->> -	if (tx_fifo_avail > 0 && buf_remaining > 0) {
->> +	if (tx_fifo_avail > 0 &&
->> +	    (buf_remaining > 0 && buf_remaining < BYTES_PER_FIFO_WORD)) {
->>   		BUG_ON(buf_remaining > 3);
->>   		memcpy(&val, buf, buf_remaining);
->>   		val =3D le32_to_cpu(val);
->>
->=20
-> Same as for RX.
->=20
-Yes shall discard this patch from the next update.
-
--Thanks,
-  Bitan
-
+Thanks,
+Mauro
