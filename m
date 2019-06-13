@@ -2,131 +2,198 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF28EC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3F1C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9AE221537
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:21:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="f8QwnyQT"
+	by mail.kernel.org (Postfix) with ESMTP id CE3A12054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:22:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560457344;
+	bh=C5vZnGmq+P+OhFeXjv8+3n7GZgpJkyYf5xIBx65TSOo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AZ2WVfJlxgVB7/OXXIPm2UvCZDl6z07is774gMwh8aCrTqTSNdldTJMIN+9YJ6QCl
+	 qGcpeoruH5ymp2wj/zANgzwesRjl/pOzK2jcugZo0flPBzYexmARVddvZGa/z9QxIc
+	 7hp3oytKqVpvqFx7FhxSc/KfsGfZqU1xGCshzAJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729807AbfFMUVj (ORCPT
+        id S1729675AbfFMUWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:21:39 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41709 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729071AbfFMUVi (ORCPT
+        Thu, 13 Jun 2019 16:22:23 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45544 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbfFMUWX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:21:38 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 107so430400otj.8
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 13:21:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8C1DPfN32M3hy89DclQbm10r/6nHw68ntXJVKpP7b9Y=;
-        b=f8QwnyQT51rXgqH07uWM2kqXhbWRJNnV74LW/yRvR2x776SPj5Pfk2O+kG2AmGkO8T
-         trYSPptgpa5/GXF/WDtITF1+EbHojK5NlrUWtkmk/zSrRfZi5l9VktyZN13ffa5Hc6Ev
-         0msFAvfYWphm24CFoDY7wyxaucG4FVHRbGTisLD6oBUXsztdH3fUW9TN5VMHOpT3cvr0
-         sCPmY0lNjqi+LcWw5XMhpewNnmhVYTSePA2WSDRkeUne9k6nQVV9YwwkLBcNkm4aAYQp
-         hwiX33VeD0WOTvpFOoQcm71sdbaOX7SnxHZ9aM2nx+Itu4NnNsqFxSwSt5OwJVwaJq25
-         COoQ==
+        Thu, 13 Jun 2019 16:22:23 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j19so24109928qtr.12;
+        Thu, 13 Jun 2019 13:22:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8C1DPfN32M3hy89DclQbm10r/6nHw68ntXJVKpP7b9Y=;
-        b=NhaT63PKelC5o4/EOgExGN+AWBvZ39Q+C5B5AxymeZwReL92a+r4ZpnTYxZojAR1aW
-         NflTY6Og7QSDGBK4KSmU2voEXRc59H1G3IC/uISxp/kmVq5QRlUXr5jm8DOo/ob3nSy9
-         OrVS5uEl7Qqu6/9OEMyml2Cc5WQ6f2Clz9V4no6JwYdAioTSd1GhDY7+cIOtcCpAJXjY
-         BzlpHyI8HKStRLfoo2xTOlbnnzN54fhqkaqaTnk2QGGWz1A48k3vo+GWSb1/+6NyVCoZ
-         YlTS7NtZil1/my1fh9Bma/ItuncOdloNDK1aKiWuvr6xjFG1MpeU0Ah9VGSL9zgCE119
-         HVTA==
-X-Gm-Message-State: APjAAAVA8c5Cc/hkXKvIOF2lvfUbN7rtACHREREv7GUtD93DdNqLe5lB
-        hQ4KFa/iJI87+M1BdnWGRWIGAJwu8nlpp08Be9AArg==
-X-Google-Smtp-Source: APXvYqyjtP3QbVJvzI3dCCMhA8qeDJqydQ8D7TK+PF2b5eiWZzF3IhMkwvK4lONxsyfmaoM/M+8Dcj6PJdtpVy6CFmg=
-X-Received: by 2002:a9d:7248:: with SMTP id a8mr1406727otk.363.1560457298006;
- Thu, 13 Jun 2019 13:21:38 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PGYgAEgbagAdsu5GyWbotd9ekKgsN2P9KFLuwB0EuYg=;
+        b=QhqoztoMbgwlHt6t4o6myDyQreHCWPlOAMJ3aT2mTeEXDcvmtGWQkSmK9MDGwxxCLy
+         HNtofLDZ1a7kIsvObXT1krxn8UU4pHMsS+ADbWTbFaI4fd5Y0q3Sj/cNxmh2oM7uZXSj
+         sQ3icXiVG7+j4cGhStCWgcgoNqZ31huwu+xl+KUM2R5MZTlCf0EWuhdNuXwKhbOYxNuC
+         bE7zznYvP49EnPC1EDcicgu5lepi6txH5zx9U+HsWF5KNT/gBOBS6oV+igrMlAiFc1ql
+         JSL/piKUrrw4VjX8xhHq8pq2eTnSQaruN4RXGumgkeAYHs306x+yAriumZDF0EQiHCoa
+         JOmg==
+X-Gm-Message-State: APjAAAWbi4keTApjKO2IApnRq3bxyEQZLV0hBuJbe+xBTm5s+Bg8YG0x
+        y3HXM5QKiouIiGiAvh7lNQ==
+X-Google-Smtp-Source: APXvYqwjv0mrGiN12UMZjswyz/MsknKU4+SlFUsCqjcmrXhGitx7gMlcgdGflgeS0mNkX5YAF1j9NA==
+X-Received: by 2002:aed:2063:: with SMTP id 90mr38651901qta.307.1560457341649;
+        Thu, 13 Jun 2019 13:22:21 -0700 (PDT)
+Received: from localhost ([64.188.179.243])
+        by smtp.gmail.com with ESMTPSA id q2sm363082qkf.44.2019.06.13.13.22.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 13:22:21 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 14:22:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-omap@vger.kernel.org, adam.ford@logicpd.com,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
+ dts
+Message-ID: <20190613202220.GA4282@bogus>
+References: <20190510194229.20628-1-aford173@gmail.com>
 MIME-Version: 1.0
-References: <20190613094326.24093-1-hch@lst.de> <CAPcyv4jBdwYaiVwkhy6kP78OBAs+vJme1UTm47dX4Eq_5=JgSg@mail.gmail.com>
- <283e87e8-20b6-0505-a19b-5d18e057f008@deltatee.com>
-In-Reply-To: <283e87e8-20b6-0505-a19b-5d18e057f008@deltatee.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 13 Jun 2019 13:21:27 -0700
-Message-ID: <CAPcyv4hx=ng3SxzAWd8s_8VtAfoiiWhiA5kodi9KPc=jGmnejg@mail.gmail.com>
-Subject: Re: dev_pagemap related cleanups
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        nouveau@lists.freedesktop.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, Linux MM <linux-mm@kvack.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, linux-pci@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510194229.20628-1-aford173@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 1:18 PM Logan Gunthorpe <logang@deltatee.com> wrote=
-:
->
->
->
-> On 2019-06-13 12:27 p.m., Dan Williams wrote:
-> > On Thu, Jun 13, 2019 at 2:43 AM Christoph Hellwig <hch@lst.de> wrote:
-> >>
-> >> Hi Dan, J=C3=A9r=C3=B4me and Jason,
-> >>
-> >> below is a series that cleans up the dev_pagemap interface so that
-> >> it is more easily usable, which removes the need to wrap it in hmm
-> >> and thus allowing to kill a lot of code
-> >>
-> >> Diffstat:
-> >>
-> >>  22 files changed, 245 insertions(+), 802 deletions(-)
-> >
-> > Hooray!
-> >
-> >> Git tree:
-> >>
-> >>     git://git.infradead.org/users/hch/misc.git hmm-devmem-cleanup
-> >
-> > I just realized this collides with the dev_pagemap release rework in
-> > Andrew's tree (commit ids below are from next.git and are not stable)
-> >
-> > 4422ee8476f0 mm/devm_memremap_pages: fix final page put race
-> > 771f0714d0dc PCI/P2PDMA: track pgmap references per resource, not globa=
-lly
-> > af37085de906 lib/genalloc: introduce chunk owners
-> > e0047ff8aa77 PCI/P2PDMA: fix the gen_pool_add_virt() failure path
-> > 0315d47d6ae9 mm/devm_memremap_pages: introduce devm_memunmap_pages
-> > 216475c7eaa8 drivers/base/devres: introduce devm_release_action()
-> >
-> > CONFLICT (content): Merge conflict in tools/testing/nvdimm/test/iomap.c
-> > CONFLICT (content): Merge conflict in mm/hmm.c
-> > CONFLICT (content): Merge conflict in kernel/memremap.c
-> > CONFLICT (content): Merge conflict in include/linux/memremap.h
-> > CONFLICT (content): Merge conflict in drivers/pci/p2pdma.c
-> > CONFLICT (content): Merge conflict in drivers/nvdimm/pmem.c
-> > CONFLICT (content): Merge conflict in drivers/dax/device.c
-> > CONFLICT (content): Merge conflict in drivers/dax/dax-private.h
-> >
-> > Perhaps we should pull those out and resend them through hmm.git?
->
-> Hmm, I've been waiting for those patches to get in for a little while now=
- ;(
+On Fri, May 10, 2019 at 02:42:29PM -0500, Adam Ford wrote:
+> Currently the source code is compiled using hard-coded values
+> from CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK.  This patch allows this
+> clock divider value to be moved to the device tree and be changed
+> without having to recompile the kernel.
+> 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt b/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt
+> index cd02516a40b6..42449d07c47e 100644
+> --- a/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt
+> @@ -40,7 +40,7 @@ Required properties:
+>  Optional properties:
+>  - max-memory-bandwidth: Input memory (from main memory to dispc) bandwidth limit
+>  			in bytes per second
+> -
+> +- min-fck-pck-ratio:  Make sure that DISPC FCK is at least n x PCK
 
-Unless Andrew was going to submit as v5.2-rc fixes I think I should
-rebase / submit them on current hmm.git and then throw these cleanups
-from Christoph on top?
+Assuming this patch progresses, this needs a vendor prefix and please 
+split bindings to separate patch.
+
+>  
+>  RFBI
+>  ----
+> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+> index 4043ecb38016..bf84a8487aae 100644
+> --- a/arch/arm/boot/dts/omap3.dtsi
+> +++ b/arch/arm/boot/dts/omap3.dtsi
+> @@ -751,7 +751,7 @@
+>  			#size-cells = <1>;
+>  			ranges;
+>  
+> -			dispc@48050400 {
+> +			dispc: dispc@48050400 {
+
+Unrelated change.
+
+>  				compatible = "ti,omap3-dispc";
+>  				reg = <0x48050400 0x400>;
+>  				interrupts = <25>;
+> diff --git a/drivers/gpu/drm/omapdrm/dss/Kconfig b/drivers/gpu/drm/omapdrm/dss/Kconfig
+> index f24ebf7f61dd..d0666edcdf2a 100644
+> --- a/drivers/gpu/drm/omapdrm/dss/Kconfig
+> +++ b/drivers/gpu/drm/omapdrm/dss/Kconfig
+> @@ -102,24 +102,6 @@ config OMAP2_DSS_DSI
+>  
+>  	  See http://www.mipi.org/ for DSI specifications.
+>  
+> -config OMAP2_DSS_MIN_FCK_PER_PCK
+> -	int "Minimum FCK/PCK ratio (for scaling)"
+> -	range 0 32
+> -	default 0
+> -	help
+> -	  This can be used to adjust the minimum FCK/PCK ratio.
+> -
+> -	  With this you can make sure that DISPC FCK is at least
+> -	  n x PCK. Video plane scaling requires higher FCK than
+> -	  normally.
+> -
+> -	  If this is set to 0, there's no extra constraint on the
+> -	  DISPC FCK. However, the FCK will at minimum be
+> -	  2xPCK (if active matrix) or 3xPCK (if passive matrix).
+> -
+> -	  Max FCK is 173MHz, so this doesn't work if your PCK
+> -	  is very high.
+> -
+>  config OMAP2_DSS_SLEEP_AFTER_VENC_RESET
+>  	bool "Sleep 20ms after VENC reset"
+>  	default y
+> diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.c b/drivers/gpu/drm/omapdrm/dss/dispc.c
+> index ba82d916719c..09a130c53da2 100644
+> --- a/drivers/gpu/drm/omapdrm/dss/dispc.c
+> +++ b/drivers/gpu/drm/omapdrm/dss/dispc.c
+> @@ -198,6 +198,9 @@ struct dispc_device {
+>  
+>  	/* DISPC_CONTROL & DISPC_CONFIG lock*/
+>  	spinlock_t control_lock;
+> +
+> +	/* Optional min-fck-pck-ratio */
+> +	u32 min_fck_per_pck;
+>  };
+>  
+>  enum omap_color_component {
+> @@ -3683,15 +3686,8 @@ bool dispc_div_calc(struct dispc_device *dispc, unsigned long dispc_freq,
+>  	unsigned long pck, lck;
+>  	unsigned long lck_max;
+>  	unsigned long pckd_hw_min, pckd_hw_max;
+> -	unsigned int min_fck_per_pck;
+>  	unsigned long fck;
+>  
+> -#ifdef CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK
+> -	min_fck_per_pck = CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK;
+> -#else
+> -	min_fck_per_pck = 0;
+> -#endif
+> -
+>  	pckd_hw_min = dispc->feat->min_pcd;
+>  	pckd_hw_max = 255;
+>  
+> @@ -3723,7 +3719,7 @@ bool dispc_div_calc(struct dispc_device *dispc, unsigned long dispc_freq,
+>  			else
+>  				fck = lck;
+>  
+> -			if (fck < pck * min_fck_per_pck)
+> +			if (fck < pck * dispc->min_fck_per_pck)
+>  				continue;
+>  
+>  			if (func(lckd, pckd, lck, pck, data))
+> @@ -4826,6 +4822,8 @@ static int dispc_bind(struct device *dev, struct device *master, void *data)
+>  		}
+>  	}
+>  
+> +	of_property_read_u32(np, "min-fck-pck-ratio", &dispc->min_fck_per_pck);
+> +
+>  	r = dispc_init_gamma_tables(dispc);
+>  	if (r)
+>  		goto err_free;
+> -- 
+> 2.17.1
+> 
