@@ -2,53 +2,54 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B0AC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82ABBC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D05F7208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B71F21473
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441358;
-	bh=NdppzMid5r0anaN4f9V/2pAbCIJRpDkSOphAccyUNqM=;
+	s=default; t=1560441364;
+	bh=4rzwWjMWaDAodybALEky2I9+FJ7Gp9NqTbx/hvV9UUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s12EbFks36OBeQBHQLirNVkygvtGSyooVOC8Oyubekkgn44QZPJhlsVBxz6U3K0WZ
-	 29m+Kg88BaM1K8G3ypCQzNXUFMvdPLQKvrApg4/iSMQNgFBTFPhT6gDYrZvRfm7uCi
-	 iJIrd7+ytdjGw5fxaRghODe9SeCOD+A5dKJb8fc4=
+	b=IQ36GoVfWajhQEyS3N8U0o4/lHlwW2f0Xkl2umiHUvx6TafSAcy1mEGeRPpatqzkx
+	 FhiubzvJfciXoDKEjlbU3fZFoyPxwfSxAMs+79zYrMuefKNalQqk780H4kRxMcatid
+	 p/P6DTVRHxAeoVWvZvKkXLoppTyniqPn3Gmgs/wo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390239AbfFMPzx (ORCPT
+        id S2390206AbfFMPzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:55:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39004 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:55:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731534AbfFMIvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:51:35 -0400
+        id S1731537AbfFMIvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:51:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7B292147A;
-        Thu, 13 Jun 2019 08:51:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBBB421743;
+        Thu, 13 Jun 2019 08:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415894;
-        bh=NdppzMid5r0anaN4f9V/2pAbCIJRpDkSOphAccyUNqM=;
+        s=default; t=1560415903;
+        bh=4rzwWjMWaDAodybALEky2I9+FJ7Gp9NqTbx/hvV9UUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i9hihTwiSxJoac6erMAdOSaTWIVseA6ut5bxPnQFXL/as8imXbgzmck+7vi7N+6X0
-         qIQkR3S9LkfuaA1QCoKNqfcg4+i8QsNArvCo93tXCcokOukh5VfzaW/XKz+IEE3Dvd
-         1GCireSzGuTMitHZ+cETat4a3MyGaH+jGSYyJ+OE=
+        b=M0KGmjdHu134zB6yJILgsoe+0pyUZHcoCC8imVzBl2hM/7Vll91HMQhciT7TntEEs
+         kP3HU2hPMw/y6gbh0V2q9CQb37+PWjkw51y16ToKKFhr9cSbFTHpMhZftWFwASi6z9
+         n+1TfOMeMg+7ayCBpMkwA0TdWyOPurB/cdXWQcHM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Joachim <svenjoac@gmx.de>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dave Airlie <airlied@redhat.com>,
-        Thomas Backlund <tmb@mageia.org>
-Subject: [PATCH 5.1 153/155] Revert "drm/nouveau: add kconfig option to turn off nouveau legacy contexts. (v3)"
-Date:   Thu, 13 Jun 2019 10:34:25 +0200
-Message-Id: <20190613075701.342454408@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Takeshi Kihara <takeshi.kihara.df@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 148/155] soc: renesas: Identify R-Car M3-W ES1.3
+Date:   Thu, 13 Jun 2019 10:34:20 +0200
+Message-Id: <20190613075701.179730093@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -61,82 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[ Upstream commit 15160f6de0bba712fcea078c5ac7571fe33fcd5d ]
 
-This reverts commit 1e07d637497788971018d9e9e5a184940b1ade0f which is
-commit b30a43ac7132cdda833ac4b13dd1ebd35ace14b7 upstream.
+The Product Register of R-Car M3-W ES1.3 incorrectly identifies the SoC
+revision as ES2.1. Add a workaround to fix this.
 
-Sven reports:
-	Commit 1e07d63749 ("drm/nouveau: add kconfig option to turn off nouveau
-	legacy contexts. (v3)") has caused a build failure for me when I
-	actually tried that option (CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n):
-
-	,----
-	| Kernel: arch/x86/boot/bzImage is ready  (#1)
-	|   Building modules, stage 2.
-	|   MODPOST 290 modules
-	| ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
-	| scripts/Makefile.modpost:91: recipe for target '__modpost' failed
-	`----
-
-	Upstream does not have that problem, as commit bed2dd8421 ("drm/ttm:
-	Quick-test mmap offset in ttm_bo_mmap()") has removed the use of
-	drm_legacy_mmap from nouveau_ttm.c.  Unfortunately that commit does not
-	apply in 5.1.9.
-
-The ensuing discussion proposed a number of one-off patches, but no
-solid agreement was made, so just revert the commit for now to get
-people's systems building again.
-
-Reported-by: Sven Joachim <svenjoac@gmx.de>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Dave Airlie <airlied@redhat.com>
-Cc: Thomas Backlund <tmb@mageia.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/Kconfig       |   13 +------------
- drivers/gpu/drm/nouveau/nouveau_drm.c |    7 ++-----
- 2 files changed, 3 insertions(+), 17 deletions(-)
+ drivers/soc/renesas/renesas-soc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/gpu/drm/nouveau/Kconfig
-+++ b/drivers/gpu/drm/nouveau/Kconfig
-@@ -17,20 +17,9 @@ config DRM_NOUVEAU
- 	select INPUT if ACPI && X86
- 	select THERMAL if ACPI && X86
- 	select ACPI_VIDEO if ACPI && X86
--	help
--	  Choose this option for open-source NVIDIA support.
--
--config NOUVEAU_LEGACY_CTX_SUPPORT
--	bool "Nouveau legacy context support"
--	depends on DRM_NOUVEAU
- 	select DRM_VM
--	default y
- 	help
--	  There was a version of the nouveau DDX that relied on legacy
--	  ctx ioctls not erroring out. But that was back in time a long
--	  ways, so offer a way to disable it now. For uapi compat with
--	  old nouveau ddx this should be on by default, but modern distros
--	  should consider turning it off.
-+	  Choose this option for open-source NVIDIA support.
- 
- config NOUVEAU_PLATFORM_DRIVER
- 	bool "Nouveau (NVIDIA) SoC GPUs"
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -1094,11 +1094,8 @@ nouveau_driver_fops = {
- static struct drm_driver
- driver_stub = {
- 	.driver_features =
--		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER
--#if defined(CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT)
--		| DRIVER_KMS_LEGACY_CONTEXT
--#endif
--		,
-+		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER |
-+		DRIVER_KMS_LEGACY_CONTEXT,
- 
- 	.open = nouveau_drm_open,
- 	.postclose = nouveau_drm_postclose,
+diff --git a/drivers/soc/renesas/renesas-soc.c b/drivers/soc/renesas/renesas-soc.c
+index 4af96e668a2f..3299cf5365f3 100644
+--- a/drivers/soc/renesas/renesas-soc.c
++++ b/drivers/soc/renesas/renesas-soc.c
+@@ -335,6 +335,9 @@ static int __init renesas_soc_init(void)
+ 		/* R-Car M3-W ES1.1 incorrectly identifies as ES2.0 */
+ 		if ((product & 0x7fff) == 0x5210)
+ 			product ^= 0x11;
++		/* R-Car M3-W ES1.3 incorrectly identifies as ES2.1 */
++		if ((product & 0x7fff) == 0x5211)
++			product ^= 0x12;
+ 		if (soc->id && ((product >> 8) & 0xff) != soc->id) {
+ 			pr_warn("SoC mismatch (product = 0x%x)\n", product);
+ 			return -ENODEV;
+-- 
+2.20.1
+
 
 
