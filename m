@@ -2,115 +2,100 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9C8C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914A6C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B381C20449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443432;
-	bh=wgZYSOSAN4HOEBQQVHeUrlpqH3CZZuKEdPfnDdhlo7I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GD7GjrjGSyKm5zfHK/t+vXUOnF7V8nu18YghJWtCKMnivlRX4mHKk5h1Hdhx8YEyP
-	 aC2dr1Cu9MUm1fnKvnNmCHruErlfHDhYEYcXvYXO5FzczE62pfuOFukCvqBMmN17mx
-	 XiuKzLV3M0MtVToXELlogL9PWXlgiZ/yaLgPu284=
+	by mail.kernel.org (Postfix) with ESMTP id 658DD20449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:30:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="nC26i9JZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392547AbfFMQab (ORCPT
+        id S2392554AbfFMQag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:30:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730912AbfFMIex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:34:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2099206E0;
-        Thu, 13 Jun 2019 08:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560414892;
-        bh=wgZYSOSAN4HOEBQQVHeUrlpqH3CZZuKEdPfnDdhlo7I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cc6DAzC7rD1ud2RbPeErMJQWieF6SACgMsFiyHxqdyf1pPjGR+YCRjjuxdhwTh62z
-         b4hvqEalDVNuiLR60fv0ImxVal0YyRodeFybcL53nuJNNmGyHYxKwl13DsHB46+SRC
-         +KSe08WMsHk8e/cdeJg/lCuj5FPp4iTrfuEk2d0Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 02/81] fs/fat/file.c: issue flush after the writeback of FAT
-Date:   Thu, 13 Jun 2019 10:32:45 +0200
-Message-Id: <20190613075649.252328791@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
+        Thu, 13 Jun 2019 12:30:36 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38432 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392530AbfFMQa1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:30:27 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d18so21472422wrs.5
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 09:30:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=fbFJcCZogG4E0hVeCzNVPT+VFyUUm0Zv3ff/zggRHYY=;
+        b=nC26i9JZniQCZC/cxtHX3spCrKHdGQw/wG6eftGbeaFS50K26skje7xVYYal3QjLyy
+         hLPTDRtiG7DlPKoeF0lF9Er2i0uHz0iI2yNx+Av7Yo5iWpvLuFBDg6gl1/RPeIYTQScH
+         jm+6FxTaJ3K4otAkUwc4N3wDGrxixX0744FgmJbk7gkweXPsgWUu9UohbJ78CJAttij+
+         iq4WL7NW/oGdRcA1+xofjHY/zbBArzMk1Z87t421coV5fW0Q4O2XusJkXtXnm7A1p+EK
+         emVX2QhkmwlPGW841InmZBl/jmjOOUoF8u2cPvgoaDC9PCmj79rfozcL6jJbw5G7f5rh
+         cSSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=fbFJcCZogG4E0hVeCzNVPT+VFyUUm0Zv3ff/zggRHYY=;
+        b=Bf72k3Ta5bO5Q0pjluCGr5EupVfqLZSjR8y2oimkF6DzMLB6wcAGXPkH0tbEZtGgGo
+         B5La1lWIwqVUSenAbHJE4gRmLOeDIuQl8dVQASqVBSykMSvQACagfvwa0PHnK/l94wLk
+         +buZxYRKjmVuGQdYw2mPVPX7SGqR2pKbl5eamuVwxYHRTqAhVmf7T/XweQi8WBKEHjz9
+         OrRv94bRLTtt3gWcP0OPAZ5lhhuvmPnREMfmIIwOmg9OYsPeVDmypMKSwekMUZ84Pna5
+         6QcujJ49TgrQk4KOdbS923uGHAaEOyOBggWwaYdDK8xMrU+BELJiWpgwp78YJp2jaQml
+         +GCg==
+X-Gm-Message-State: APjAAAWZE1KTRuNPonQ0HMPikZ3E6N1cZsmqq31KzqBU9YJhEdmUoCQq
+        djI3vhVtuuT2ZVPzFrZS+iKrnQ==
+X-Google-Smtp-Source: APXvYqwNQCbkcJmm/T/NHKOZkmzfBzdL0AsrgI/bKFEd3JLelxC5l8wP46eIXBRintpzIwFqS6LM9Q==
+X-Received: by 2002:adf:fc91:: with SMTP id g17mr9205518wrr.194.1560443425582;
+        Thu, 13 Jun 2019 09:30:25 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id f1sm180193wml.28.2019.06.13.09.30.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 09:30:24 -0700 (PDT)
+Message-ID: <5d027a20.1c69fb81.fcc4f.1023@mx.google.com>
+Date:   Thu, 13 Jun 2019 09:30:24 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v4.14.125-82-ge64912eac71b
+X-Kernelci-Branch: linux-4.14.y
+X-Kernelci-Tree: stable-rc
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 4.14 00/81] 4.14.126-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bd8309de0d60838eef6fb575b0c4c7e95841cf73 ]
+stable-rc/linux-4.14.y boot: 116 boots: 0 failed, 116 passed (v4.14.125-82-=
+ge64912eac71b)
 
-fsync() needs to make sure the data & meta-data of file are persistent
-after the return of fsync(), even when a power-failure occurs later.  In
-the case of fat-fs, the FAT belongs to the meta-data of file, so we need
-to issue a flush after the writeback of FAT instead before.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.14.y/kernel/v4.14.125-82-ge64912eac71b/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
+y/kernel/v4.14.125-82-ge64912eac71b/
 
-Also bail out early when any stage of fsync fails.
+Tree: stable-rc
+Branch: linux-4.14.y
+Git Describe: v4.14.125-82-ge64912eac71b
+Git Commit: e64912eac71ba57be3613c8fcc36e316fe8aa601
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 62 unique boards, 23 SoC families, 14 builds out of 201
 
-Link: http://lkml.kernel.org/r/20190409030158.136316-1-houtao1@huawei.com
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Acked-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jan Kara <jack@suse.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fat/file.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/fs/fat/file.c b/fs/fat/file.c
-index 4724cc9ad650..62581de09bf1 100644
---- a/fs/fat/file.c
-+++ b/fs/fat/file.c
-@@ -160,12 +160,17 @@ static int fat_file_release(struct inode *inode, struct file *filp)
- int fat_file_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
- {
- 	struct inode *inode = filp->f_mapping->host;
--	int res, err;
-+	int err;
-+
-+	err = __generic_file_fsync(filp, start, end, datasync);
-+	if (err)
-+		return err;
- 
--	res = generic_file_fsync(filp, start, end, datasync);
- 	err = sync_mapping_buffers(MSDOS_SB(inode->i_sb)->fat_inode->i_mapping);
-+	if (err)
-+		return err;
- 
--	return res ? res : err;
-+	return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
- }
- 
- 
--- 
-2.20.1
-
-
-
+For more info write to <info@kernelci.org>
