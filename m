@@ -2,92 +2,69 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17741C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C717C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D20962147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:07:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560463653;
-	bh=N8wMDOzH3NR/D/vhV1x/SnhqYDyUd2czCNvXPmF+qeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=18c9Ql8BFauJJfNAVCtqqpIyeJZ26BrBe3Aovpm1DkZE2dGtdk6V7S/d0kLImPhW3
-	 iRT70br8afV5wQsrR85CslLINDz4tk9sHhu4mj4oM0kh2wWdluLxpONnRbktRGdNd1
-	 vsQvnrlst/e4yCvTG50U2NWcc69N9YhECEx0kcdE=
+	by mail.kernel.org (Postfix) with ESMTP id E044421537
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:15:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbfFMWHc (ORCPT
+        id S1728458AbfFMWPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 18:07:32 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:47094 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfFMWHc (ORCPT
+        Thu, 13 Jun 2019 18:15:00 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:32970 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727945AbfFMWO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 18:07:32 -0400
-Received: by mail-qk1-f195.google.com with SMTP id x18so400393qkn.13;
-        Thu, 13 Jun 2019 15:07:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BhWdQ+n9lb5V8igkIdjlDGkO+bOshDClHntzHo4xkx4=;
-        b=pB8ZQhLWydN7xaJSbR0D7SlL/nA6gyRv96uz10UScA+WoCvpn7fjWrqtlEFr0yZVOA
-         2stJzMuVMJg+dWmZDFI+kw3yKZCKyjGza3X9ZSKfTe/0XoaHqEbQ4uG1GRgIXIXfcfk+
-         cZH781VT2lUFcGyFEAAAh/+XLJWO5E/dRnx8mLx+HTf8eSJSfqATq6d523izP75RROJ1
-         Da8gHmb/p/rfdxl1/y/QxTR3NXJMA4/Xgmjx4wHJ1NWD1SyFzzYQF0LkUjhDurgfL4q5
-         UETq1WCB1dgUDZ2IkceOjMcUJIl1RatDFA0hoEpmDGfsp8qQkZoubz37swFV6enAYvAh
-         v4hw==
-X-Gm-Message-State: APjAAAVF7fVuQSZgobzul++G9TT1Hrw8snyz/c3/KIcxfdvmWu3mYaLT
-        pRJAVAqR+NVp5AQ2ByMJjA==
-X-Google-Smtp-Source: APXvYqzlg3l0HADoNTIkv5SXk7nuuzVo6Jw7oSlbsAolVM+MxEBgZazQrw5oWThYP2sbSY8L9PzBsg==
-X-Received: by 2002:a37:6512:: with SMTP id z18mr73992402qkb.158.1560463650992;
-        Thu, 13 Jun 2019 15:07:30 -0700 (PDT)
-Received: from localhost ([64.188.179.243])
-        by smtp.gmail.com with ESMTPSA id t8sm708240qtc.80.2019.06.13.15.07.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 15:07:30 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 16:07:29 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ran Wang <ran.wang_1@nxp.com>
-Cc:     Li Yang <leoyang.li@nxp.com>, Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Ran Wang <ran.wang_1@nxp.com>
-Subject: Re: [PATCH 2/3] Documentation: dt: binding: fsl: Add 'little-endian'
- and update Chassis define
-Message-ID: <20190613220729.GA29761@bogus>
-References: <20190517024748.15534-1-ran.wang_1@nxp.com>
- <20190517024748.15534-2-ran.wang_1@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190517024748.15534-2-ran.wang_1@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 13 Jun 2019 18:14:59 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4A67014B678E0;
+        Thu, 13 Jun 2019 15:14:59 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 15:14:56 -0700 (PDT)
+Message-Id: <20190613.151456.1482983218638838740.davem@davemloft.net>
+To:     oftedal@gmail.com
+Cc:     thuth@redhat.com, sparclinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sparc: Remove redundant copy of the LGPL-2.0
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <CALMQjD-dAX8hU6sNxDWtdxc7CddO3KDd9Fu_J74tZ-6pn5_Z5Q@mail.gmail.com>
+References: <20190527163253.27203-1-thuth@redhat.com>
+        <20190613.141247.955308190761079084.davem@davemloft.net>
+        <CALMQjD-dAX8hU6sNxDWtdxc7CddO3KDd9Fu_J74tZ-6pn5_Z5Q@mail.gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 13 Jun 2019 15:14:59 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 May 2019 10:47:47 +0800, Ran Wang wrote:
-> By default, QorIQ SoC's RCPM register block is Big Endian. But
-> there are some exceptions, such as LS1088A and LS2088A, are Little
-> Endian. So add this optional property to help identify them.
-> 
-> Actually LS2021A and other Layerscapes won't totally follow Chassis
-> 2.1, so separate them from powerpc SoC.
-> 
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> ---
->  Documentation/devicetree/bindings/soc/fsl/rcpm.txt |    8 +++++++-
->  1 files changed, 7 insertions(+), 1 deletions(-)
-> 
+From: Kjetil Oftedal <oftedal@gmail.com>
+Date: Fri, 14 Jun 2019 00:04:28 +0200
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> On 13/06/2019, David Miller <davem@davemloft.net> wrote:
+>> From: Thomas Huth <thuth@redhat.com>
+>> Date: Mon, 27 May 2019 18:32:53 +0200
+>>
+>>> We already provide the LGPL-2.0 text in LICENSES/preferred/LGPL-2.0,
+>>> so there is no need for this additional copy here.
+>>>
+>>> Signed-off-by: Thomas Huth <thuth@redhat.com>
+>>
+>> Applied.
+>>
+> 
+> Shouldn't the SPDX license identifiers in in arch/sparc/lib be adjusted to
+> reflect the original intent of LGPL licensing?
+
+Yes, can someone cook up a quick patch for me for that?
+
+Thanks.
