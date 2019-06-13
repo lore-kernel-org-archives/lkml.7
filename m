@@ -2,161 +2,213 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0317C46477
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A362DC31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC5921721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BBDE20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:47:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560462430;
+	bh=4n1W/uXnGxxpEGhU5aBleiXjCauq4g1WjiczTIARcPI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MdKYI/oyXr8o8aRnc3y8QMbGrXSPqcwTNJRojGpANpQ8Q0aHJ2wtyEvkql8DICkhF
+	 4ceKtNNJdOjz7g7bxbRG9+F07GYX2Cblc5PspJczTZH9FEiBAKIRMLmoLoaXQFshNA
+	 +ht26Vkauj4EbF1VqHkPy0qqmHLw8PzyGW+cY0bM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfFMVl1 (ORCPT
+        id S1727206AbfFMVrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 17:41:27 -0400
-Received: from mga05.intel.com ([192.55.52.43]:59455 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbfFMVl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 17:41:26 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 14:41:25 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Jun 2019 14:41:25 -0700
-Date:   Thu, 13 Jun 2019 14:42:47 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 3/3] mm/gup_benchemark: add LONGTERM_BENCHMARK test in
- gup fast path
-Message-ID: <20190613214247.GF32404@iweiny-DESK2.sc.intel.com>
-References: <1560422702-11403-1-git-send-email-kernelfans@gmail.com>
- <1560422702-11403-4-git-send-email-kernelfans@gmail.com>
+        Thu, 13 Jun 2019 17:47:08 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34138 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfFMVrI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 17:47:08 -0400
+Received: by mail-ot1-f65.google.com with SMTP id n5so693747otk.1;
+        Thu, 13 Jun 2019 14:47:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gl6ZZTlBsh27gBYwVHWMD38rM/ZtB9ahsb6olp2KOBE=;
+        b=lvVOriiELKs+oXD5zPksdigg7kAoGzFXDpywgqoTRjHjG/Q/XwvsKWZJQMFciimYSx
+         OJFVutQxmYixkmmVkQM+LyeTBFpphhBZfUuuj6tdVPCXHapRnp0P9yAz4+5mQo2FeqQ2
+         NlY6ncmkMgFg45u7r+Z7oS4mq7BwJcTplTGgqURqszU10gw0G5pVMlKHW2D5D/MScNm3
+         GaBfusjEWyeLek1eRjLfTQOkOpRvgpf5LxW68TsRTQHOH3Yq1SJUCbpeG0rxuIgBvlT1
+         hCvUgomFl4+lBwYY/cR93DDGk/24cwPMxMWmOKZejle7WjxaHYJDNCmcKzU6AGJphNBB
+         aHoA==
+X-Gm-Message-State: APjAAAUHFEPw+MYBEiui9bdDA4vRhEtO/w8PV13yACsBS07tI4Aodu+n
+        nQ2R9fV2lZyA6RAyvEun0yQYweEMQRrl9Fep4qo=
+X-Google-Smtp-Source: APXvYqyf3zKz7EdXWsEdBaJxwdzf898OLwvtezdrZXsMLG6EGXRgCWmYV94mkAIVJk9I1ndgoV5ZFTF9wTBd0bi0Uxs=
+X-Received: by 2002:a9d:6959:: with SMTP id p25mr22646198oto.118.1560462427297;
+ Thu, 13 Jun 2019 14:47:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560422702-11403-4-git-send-email-kernelfans@gmail.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <2513600.jR9RdVMSR0@kreacher> <20190613213823.GM13533@google.com>
+In-Reply-To: <20190613213823.GM13533@google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 13 Jun 2019 23:46:56 +0200
+Message-ID: <CAJZ5v0jD9Ln1+fUJHCRxRu4ZYtnesah3+cohysGr5jbxSwyrXg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: PM: Skip devices in D0 for suspend-to-idle
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 06:45:02PM +0800, Pingfan Liu wrote:
-> Introduce a GUP_LONGTERM_BENCHMARK ioctl to test longterm pin in gup fast
-> path.
-> 
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  mm/gup_benchmark.c                         | 11 +++++++++--
->  tools/testing/selftests/vm/gup_benchmark.c | 10 +++++++---
->  2 files changed, 16 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
-> index 7dd602d..83f3378 100644
-> --- a/mm/gup_benchmark.c
-> +++ b/mm/gup_benchmark.c
-> @@ -6,8 +6,9 @@
->  #include <linux/debugfs.h>
->  
->  #define GUP_FAST_BENCHMARK	_IOWR('g', 1, struct gup_benchmark)
-> -#define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
-> -#define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
-> +#define GUP_FAST_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
-> +#define GUP_LONGTERM_BENCHMARK	_IOWR('g', 3, struct gup_benchmark)
-> +#define GUP_BENCHMARK		_IOWR('g', 4, struct gup_benchmark)
+On Thu, Jun 13, 2019 at 11:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Jun 13, 2019 at 12:14:02AM +0200, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Commit d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
+> > attempted to avoid a problem with devices whose drivers want them to
+> > stay in D0 over suspend-to-idle and resume, but it did not go as far
+> > as it should with that.
+> >
+> > Namely, first of all, it is questionable to change the power state
+> > of a PCI bridge with a device in D0 under it, but that is not
+> > actively prevented from happening during system-wide PM transitions,
+> > so use the skip_bus_pm flag introduced by commit d491f2b75237 for
+> > that.
+>
+> I think it's more than questionable.  I think a bridge is *required*
+> to be in D0 if any downstream device is in D0.  Based on the PCI PM
+> spec r1.2, sec 6, table 6-1, if the bridge is not in D0, there can be
+> no PCI transactions on its secondary bus.
 
-But I really like this addition!  Thanks!
+Fair enough.
 
-But why not just add GUP_FAST_LONGTERM_BENCHMARK to the end of this list (value
-4)?  I know the user space test program is probably expected to be lock step
-with this code but it seems odd to redefine GUP_LONGTERM_BENCHMARK and
-GUP_BENCHMARK with this change.
+> > Second, the configuration of devices left in D0 (whatever the reason)
+> > during suspend-to-idle need not be changed and attempting to put them
+> > into D0 again by force may confuse some firmware, so explicitly avoid
+> > doing that.
+>
+> I don't know what to do with "may confuse some firmware"; it doesn't
+> say what firmware is affected or why, so it sort of leads to "we can
+> never touch this code because we don't know what might break."
+>
+> But IMO the first reason by itself is more than enough to keep a
+> bridge in D0 if any downstream device is in D0.
 
-Ira
+OK, so I'll replace the phrase "may confuse some firmware" with "is pointless".
 
->  
->  struct gup_benchmark {
->  	__u64 get_delta_usec;
-> @@ -53,6 +54,11 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
->  			nr = get_user_pages_fast(addr, nr, gup->flags & 1,
->  						 pages + i);
->  			break;
-> +		case GUP_FAST_LONGTERM_BENCHMARK:
-> +			nr = get_user_pages_fast(addr, nr,
-> +					(gup->flags & 1) | FOLL_LONGTERM,
-> +					 pages + i);
-> +			break;
->  		case GUP_LONGTERM_BENCHMARK:
->  			nr = get_user_pages(addr, nr,
->  					    (gup->flags & 1) | FOLL_LONGTERM,
-> @@ -96,6 +102,7 @@ static long gup_benchmark_ioctl(struct file *filep, unsigned int cmd,
->  
->  	switch (cmd) {
->  	case GUP_FAST_BENCHMARK:
-> +	case GUP_FAST_LONGTERM_BENCHMARK:
->  	case GUP_LONGTERM_BENCHMARK:
->  	case GUP_BENCHMARK:
->  		break;
-> diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/selftests/vm/gup_benchmark.c
-> index c0534e2..ade8acb 100644
-> --- a/tools/testing/selftests/vm/gup_benchmark.c
-> +++ b/tools/testing/selftests/vm/gup_benchmark.c
-> @@ -15,8 +15,9 @@
->  #define PAGE_SIZE sysconf(_SC_PAGESIZE)
->  
->  #define GUP_FAST_BENCHMARK	_IOWR('g', 1, struct gup_benchmark)
-> -#define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
-> -#define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
-> +#define GUP_FAST_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
-> +#define GUP_LONGTERM_BENCHMARK	_IOWR('g', 3, struct gup_benchmark)
-> +#define GUP_BENCHMARK		_IOWR('g', 4, struct gup_benchmark)
->  
->  struct gup_benchmark {
->  	__u64 get_delta_usec;
-> @@ -37,7 +38,7 @@ int main(int argc, char **argv)
->  	char *file = "/dev/zero";
->  	char *p;
->  
-> -	while ((opt = getopt(argc, argv, "m:r:n:f:tTLUSH")) != -1) {
-> +	while ((opt = getopt(argc, argv, "m:r:n:f:tTlLUSH")) != -1) {
->  		switch (opt) {
->  		case 'm':
->  			size = atoi(optarg) * MB;
-> @@ -54,6 +55,9 @@ int main(int argc, char **argv)
->  		case 'T':
->  			thp = 0;
->  			break;
-> +		case 'l':
-> +			cmd = GUP_FAST_LONGTERM_BENCHMARK;
-> +			break;
->  		case 'L':
->  			cmd = GUP_LONGTERM_BENCHMARK;
->  			break;
-> -- 
-> 2.7.5
-> 
+> > Fixes: d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
+> > Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >
+> > Tested on Dell XPS13 9360 with no issues.
+> >
+> > ---
+> >  drivers/pci/pci-driver.c |   47 +++++++++++++++++++++++++++++++++++------------
+> >  1 file changed, 35 insertions(+), 12 deletions(-)
+> >
+> > Index: linux-pm/drivers/pci/pci-driver.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/pci/pci-driver.c
+> > +++ linux-pm/drivers/pci/pci-driver.c
+> > @@ -524,7 +524,6 @@ static void pci_pm_default_resume_early(
+> >       pci_power_up(pci_dev);
+> >       pci_restore_state(pci_dev);
+> >       pci_pme_restore(pci_dev);
+> > -     pci_fixup_device(pci_fixup_resume_early, pci_dev);
+> >  }
+> >
+> >  /*
+> > @@ -842,18 +841,16 @@ static int pci_pm_suspend_noirq(struct d
+> >
+> >       if (pci_dev->skip_bus_pm) {
+> >               /*
+> > -              * The function is running for the second time in a row without
+> > +              * Either the device is a bridge with a child in D0 below it, or
+> > +              * the function is running for the second time in a row without
+> >                * going through full resume, which is possible only during
+> > -              * suspend-to-idle in a spurious wakeup case.  Moreover, the
+> > -              * device was originally left in D0, so its power state should
+> > -              * not be changed here and the device register values saved
+> > -              * originally should be restored on resume again.
+> > +              * suspend-to-idle in a spurious wakeup case.  The device should
+> > +              * be in D0 at this point, but if it is a bridge, it may be
+> > +              * necessary to save its state.
+> >                */
+> > -             pci_dev->state_saved = true;
+> > -     } else if (pci_dev->state_saved) {
+> > -             if (pci_dev->current_state == PCI_D0)
+> > -                     pci_dev->skip_bus_pm = true;
+> > -     } else {
+> > +             if (!pci_dev->state_saved)
+> > +                     pci_save_state(pci_dev);
+> > +     } else if (!pci_dev->state_saved) {
+> >               pci_save_state(pci_dev);
+> >               if (pci_power_manageable(pci_dev))
+> >                       pci_prepare_to_sleep(pci_dev);
+> > @@ -862,6 +859,22 @@ static int pci_pm_suspend_noirq(struct d
+> >       dev_dbg(dev, "PCI PM: Suspend power state: %s\n",
+> >               pci_power_name(pci_dev->current_state));
+> >
+> > +     if (pci_dev->current_state == PCI_D0) {
+> > +             pci_dev->skip_bus_pm = true;
+> > +             /*
+> > +              * Changing the power state of a PCI bridge with a device in D0
+> > +              * below it is questionable, so avoid doing that by setting the
+> > +              * skip_bus_pm flag for the parent bridge.
+>
+> Maybe "Per PCI PM r1.2, table 6-1, a bridge must be in D0 if any
+> downstream device is in D0"?
+
+OK
+
+> > +              */
+> > +             if (pci_dev->bus->self)
+> > +                     pci_dev->bus->self->skip_bus_pm = true;
+> > +     }
+> > +
+> > +     if (pci_dev->skip_bus_pm && !pm_suspend_via_firmware()) {
+> > +             dev_dbg(dev, "PCI PM: Skipped\n");
+> > +             goto Fixup;
+> > +     }
+> > +
+> >       pci_pm_set_unknown_state(pci_dev);
+> >
+> >       /*
+> > @@ -909,7 +922,16 @@ static int pci_pm_resume_noirq(struct de
+> >       if (dev_pm_smart_suspend_and_suspended(dev))
+> >               pm_runtime_set_active(dev);
+> >
+> > -     pci_pm_default_resume_early(pci_dev);
+> > +     /*
+> > +      * In the suspend-to-idle case, devices left in D0 during suspend will
+> > +      * stay in D0, so it is not necessary to restore or update their
+> > +      * configuration here and attempting to put them into D0 again may
+> > +      * confuse some firmware, so avoid doing that.
+> > +      */
+> > +     if (!pci_dev->skip_bus_pm || pm_suspend_via_firmware())
+> > +             pci_pm_default_resume_early(pci_dev);
+> > +
+> > +     pci_fixup_device(pci_fixup_resume_early, pci_dev);
+> >
+> >       if (pci_has_legacy_pm_support(pci_dev))
+> >               return pci_legacy_resume_early(dev);
+> > @@ -1200,6 +1222,7 @@ static int pci_pm_restore_noirq(struct d
+> >       }
+> >
+> >       pci_pm_default_resume_early(pci_dev);
+> > +     pci_fixup_device(pci_fixup_resume_early, pci_dev);
+> >
+> >       if (pci_has_legacy_pm_support(pci_dev))
+> >               return pci_legacy_resume_early(dev);
+> >
+
+I'll send a v2 shortly.
