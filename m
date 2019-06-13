@@ -2,68 +2,93 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10531C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03092C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F05215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qsu+Z8BV"
+	by mail.kernel.org (Postfix) with ESMTP id D703E20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392621AbfFMQhB (ORCPT
+        id S2392069AbfFMQhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:37:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54446 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbfFMHZT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 03:25:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=atee/ZdPPEd8Kc7wql5pRPCT+Wff4w6HVGQI7aAWhwM=; b=qsu+Z8BVRHTJPWnoQY613CKD9
-        eXGYx43YzeHeljEWLiZAPgkgkg5CDvxnmswUg91Nb9UnuKcoRJP8KGc1I/OO2f3Bvv7tCdlOlTPVk
-        LucWW/pLJ7+y/h0GG/s+8o0U2lwsM2u+gW7jlOey5g4g8CXzpf99NgthmTK35fALCUVL4aNsZBN3T
-        OPWv7XDcORpWWKSc5EbIoZXYyE1H3OwogopkyBS2pIdv6X8QJANu1eQo4jTmBCe1c/lw7UxYk4tl1
-        9nsmwdbN793S+2O4AZSg/ZAGrz2Jsid0Gy0S2JCwMyEtPJMhZGnmIs1/QgMCN19+7vYXRrHO+HoVL
-        j7j0/d6gw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbK6o-0001uE-Re; Thu, 13 Jun 2019 07:25:18 +0000
-Date:   Thu, 13 Jun 2019 00:25:18 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        palmer@sifive.com
-Subject: Re: [PATCH] MAINTAINERS: change the arch/riscv git tree to the new
- shared tree
-Message-ID: <20190613072518.GA1327@infradead.org>
-References: <20190613070721.8341-1-paul.walmsley@sifive.com>
+        Thu, 13 Jun 2019 12:37:18 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:47284 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727831AbfFMQg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:36:59 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 3CC0420A52;
+        Thu, 13 Jun 2019 18:36:57 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 248BF20163;
+        Thu, 13 Jun 2019 18:36:57 +0200 (CEST)
+Subject: Re: [PATCH v1] iopoll: Tweak readx_poll_timeout sleep range
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <helgaas@kernel.org>
+References: <c2e6af51-5676-3715-6666-c3f18df7b992@free.fr>
+ <CAK8P3a1_WvHYW243MR5-NdFm3cSt+cVGM5EJmOM8uiQMQ3vQjQ@mail.gmail.com>
+ <a732f522-5e65-3ac4-de04-802ef5455747@free.fr>
+ <CAD=FV=U+Ky1bAuAuuY+eBdTP9U3kbuH0tfwyN0Zs-iw0GNUFyQ@mail.gmail.com>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <13cb7357-0d10-fe43-bee1-b2142d01684c@free.fr>
+Date:   Thu, 13 Jun 2019 18:36:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613070721.8341-1-paul.walmsley@sifive.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <CAD=FV=U+Ky1bAuAuuY+eBdTP9U3kbuH0tfwyN0Zs-iw0GNUFyQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Jun 13 18:36:57 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 12:07:21AM -0700, Paul Walmsley wrote:
-> Palmer, with Konstantin's gracious help, set up a shared kernel.org
-> git tree for arch/riscv patches going forward.  Change the MAINTAINERS
-> file accordingly.
-> 
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
+On 13/06/2019 18:11, Doug Anderson wrote:
 
-Should you be added to the maintainers?  Is Albert still around, as
-I see a lot of people Ccing him, but never getting an answer?
+> On Thu, Jun 13, 2019 at 9:04 AM Marc Gonzalez wrote:
+>
+>> Hmmm, I expect the typical use-case to be:
+>> "HW manual states operation X completes in 100 µs.
+>> Let's call usleep_range(100, foo); before hitting the reg."
+>>
+>> And foo needs to be a "reasonable" value: big enough to be able
+>> to merge several requests, low enough not to wait too long after
+>> the HW is ready.
+>>
+>> In this case, I'd say usleep_range(100, 200); makes sense.
+>>
+>> Come to think of it, I'm not sure min=26 (or min=50) makes sense...
+>> Why wait *less* than what the user specified?
+> 
+> IIRC usleep_range() nearly always tries to sleep for the max.  My
+> recollection of the design is that you only end up with something less
+> than the max if the system was going to wake up anyway.  In such a
+> case it seems like it wouldn't be insane to go and check if the
+> condition is already true if 25% of the time has passed.  Maybe you'll
+> get lucky and you can return early.
+> 
+> Are you actually seeing problems with the / 4, or is this patch just a
+> result of code inspection?
+
+No actual issue. I just ran into a driver calling:
+
+	readl_poll_timeout(status, val, val & mask, 1, 1000);
+
+and it seemed... unwise(?) to call usleep_range(1, 1);
+
+But if, as you say, usleep_range() aims for the max, then I guess it's
+not a big deal to issue an early read or 3... Meh
+
+Regards.
