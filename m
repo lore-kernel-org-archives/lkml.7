@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B96C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D45DC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD5320449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22BFF20449
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443321;
-	bh=c83QPbgHGCydaUpDoHCRe+zaXO4fZw3FbcTAGv7QD1A=;
+	s=default; t=1560443327;
+	bh=syq1Gx9UY15BZ1F/DXaJMoqRWfqNyuoQf1lqnzj7ODI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jA2t9qvwFLAAygoV449JeqZy5/ssjPcawuJ6EBlq8FDwefB/oLSHOSXTw8ikM57R8
-	 Y44pGeYfehcTgW7HJVBTnaR0Se6BdUcXi4yWTvby0ud65FivvMfakBiifcK3ck7kB3
-	 VxlDXb4fJswFzFjRno+abXrpWy8z74rjF5ebgLhY=
+	b=JIM15L8Urvr0JTjXy8bZdLEX7HK3/bL5RBQDj1OA0/uT1QtA3F1naSZi7yGGfS+8t
+	 60XvjkBF46rlWnnMJBcHUHGZpRkhW9FuRrLcCeAFlEEQw/3p7azCgISGpJSUBO771X
+	 axQ4u42Eiltt+QoPDaxZNZ74oH3ZtzBNLz82O+Cg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730572AbfFMQ2Y (ORCPT
+        id S2392224AbfFMQ2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:28:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53522 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:28:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730950AbfFMIfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:35:55 -0400
+        id S1730943AbfFMIfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:35:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCF87206E0;
-        Thu, 13 Jun 2019 08:35:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70D5220851;
+        Thu, 13 Jun 2019 08:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560414954;
-        bh=c83QPbgHGCydaUpDoHCRe+zaXO4fZw3FbcTAGv7QD1A=;
+        s=default; t=1560414940;
+        bh=syq1Gx9UY15BZ1F/DXaJMoqRWfqNyuoQf1lqnzj7ODI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R+j5q5yl8s0vlsY/pqBefHOQ4XpyZ0bArvKTU4O1qAQR9US9gZrYra+L6rlKEp6f6
-         G5XGdDqCxxkAjA3sSBjCjSTSn8ZL0cVNAO5IDAySAi/X7NFYGqbSNzFi9BwMRWWCoW
-         BOhttVm+JusJsASorQdZVBMXjOawW8zM1ScFXypc=
+        b=HmAHqk+o2QISpn3CTT+qhPZ7tqohQ3DDd5Y+G7wTFR7o3hchoQ6eFJE1bx8h9Qt1m
+         53jlRsWWrd4WILrjPIDpeo/HCLHGYJCvCdjBxcBu4CFsNwsf71mR3Btqma0/1dwin5
+         o/gPtrNgbVD4dbUrycxKvoKk0GVHJkH989Rt93sA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-um@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 32/81] uml: fix a boot splat wrt use of cpu_all_mask
-Date:   Thu, 13 Jun 2019 10:33:15 +0200
-Message-Id: <20190613075651.523865949@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 28/81] f2fs: fix to avoid panic in dec_valid_block_count()
+Date:   Thu, 13 Jun 2019 10:33:11 +0200
+Message-Id: <20190613075651.205726912@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -63,82 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 689a58605b63173acb0a8cf954af6a8f60440c93 ]
+[ Upstream commit 5e159cd349bf3a31fb7e35c23a93308eb30f4f71 ]
 
-Memory: 509108K/542612K available (3835K kernel code, 919K rwdata, 1028K rodata, 129K init, 211K bss, 33504K reserved, 0K cma-reserved)
-NR_IRQS: 15
-clocksource: timer: mask: 0xffffffffffffffff max_cycles: 0x1cd42e205, max_idle_ns: 881590404426 ns
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 0 at kernel/time/clockevents.c:458 clockevents_register_device+0x72/0x140
-posix-timer cpumask == cpu_all_mask, using cpu_possible_mask instead
-Modules linked in:
-CPU: 0 PID: 0 Comm: swapper Not tainted 5.1.0-rc4-00048-ged79cc87302b #4
-Stack:
- 604ebda0 603c5370 604ebe20 6046fd17
- 00000000 6006fcbb 604ebdb0 603c53b5
- 604ebe10 6003bfc4 604ebdd0 9000001ca
-Call Trace:
- [<6006fcbb>] ? printk+0x0/0x94
- [<60083160>] ? clockevents_register_device+0x72/0x140
- [<6001f16e>] show_stack+0x13b/0x155
- [<603c5370>] ? dump_stack_print_info+0xe2/0xeb
- [<6006fcbb>] ? printk+0x0/0x94
- [<603c53b5>] dump_stack+0x2a/0x2c
- [<6003bfc4>] __warn+0x10e/0x13e
- [<60070320>] ? vprintk_func+0xc8/0xcf
- [<60030fd6>] ? block_signals+0x0/0x16
- [<6006fcbb>] ? printk+0x0/0x94
- [<6003c08b>] warn_slowpath_fmt+0x97/0x99
- [<600311a1>] ? set_signals+0x0/0x3f
- [<6003bff4>] ? warn_slowpath_fmt+0x0/0x99
- [<600842cb>] ? tick_oneshot_mode_active+0x44/0x4f
- [<60030fd6>] ? block_signals+0x0/0x16
- [<6006fcbb>] ? printk+0x0/0x94
- [<6007d2d5>] ? __clocksource_select+0x20/0x1b1
- [<60030fd6>] ? block_signals+0x0/0x16
- [<6006fcbb>] ? printk+0x0/0x94
- [<60083160>] clockevents_register_device+0x72/0x140
- [<60031192>] ? get_signals+0x0/0xf
- [<60030fd6>] ? block_signals+0x0/0x16
- [<6006fcbb>] ? printk+0x0/0x94
- [<60002eec>] um_timer_setup+0xc8/0xca
- [<60001b59>] start_kernel+0x47f/0x57e
- [<600035bc>] start_kernel_proc+0x49/0x4d
- [<6006c483>] ? kmsg_dump_register+0x82/0x8a
- [<6001de62>] new_thread_handler+0x81/0xb2
- [<60003571>] ? kmsg_dumper_stdout_init+0x1a/0x1c
- [<60020c75>] uml_finishsetup+0x54/0x59
+As Jungyeon reported in bugzilla:
 
-random: get_random_bytes called from init_oops_id+0x27/0x34 with crng_init=0
----[ end trace 00173d0117a88acb ]---
-Calibrating delay loop... 6941.90 BogoMIPS (lpj=34709504)
+https://bugzilla.kernel.org/show_bug.cgi?id=203209
 
-Signed-off-by: Maciej Żenczykowski <maze@google.com>
-Cc: Jeff Dike <jdike@addtoit.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc: linux-um@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
+- Overview
+When mounting the attached crafted image and running program, I got this error.
+Additionally, it hangs on sync after the this script.
 
-Signed-off-by: Richard Weinberger <richard@nod.at>
+The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
+
+- Reproduces
+cc poc_01.c
+./run.sh f2fs
+sync
+
+ kernel BUG at fs/f2fs/f2fs.h:1788!
+ RIP: 0010:f2fs_truncate_data_blocks_range+0x342/0x350
+ Call Trace:
+  f2fs_truncate_blocks+0x36d/0x3c0
+  f2fs_truncate+0x88/0x110
+  f2fs_setattr+0x3e1/0x460
+  notify_change+0x2da/0x400
+  do_truncate+0x6d/0xb0
+  do_sys_ftruncate+0xf1/0x160
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The reason is dec_valid_block_count() will trigger kernel panic due to
+inconsistent count in between inode.i_blocks and actual block.
+
+To avoid panic, let's just print debug message and set SBI_NEED_FSCK to
+give a hint to fsck for latter repairing.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+[Jaegeuk Kim: fix build warning and add unlikely]
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/kernel/time.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/f2fs.h | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/arch/um/kernel/time.c b/arch/um/kernel/time.c
-index 7f69d17de354..9b21ae892009 100644
---- a/arch/um/kernel/time.c
-+++ b/arch/um/kernel/time.c
-@@ -56,7 +56,7 @@ static int itimer_one_shot(struct clock_event_device *evt)
- static struct clock_event_device timer_clockevent = {
- 	.name			= "posix-timer",
- 	.rating			= 250,
--	.cpumask		= cpu_all_mask,
-+	.cpumask		= cpu_possible_mask,
- 	.features		= CLOCK_EVT_FEAT_PERIODIC |
- 				  CLOCK_EVT_FEAT_ONESHOT,
- 	.set_state_shutdown	= itimer_shutdown,
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 406d93b51a0b..6caae471c1a4 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1550,6 +1550,7 @@ enospc:
+ 	return -ENOSPC;
+ }
+ 
++void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...);
+ static inline void dec_valid_block_count(struct f2fs_sb_info *sbi,
+ 						struct inode *inode,
+ 						block_t count)
+@@ -1558,9 +1559,17 @@ static inline void dec_valid_block_count(struct f2fs_sb_info *sbi,
+ 
+ 	spin_lock(&sbi->stat_lock);
+ 	f2fs_bug_on(sbi, sbi->total_valid_block_count < (block_t) count);
+-	f2fs_bug_on(sbi, inode->i_blocks < sectors);
+ 	sbi->total_valid_block_count -= (block_t)count;
+ 	spin_unlock(&sbi->stat_lock);
++	if (unlikely(inode->i_blocks < sectors)) {
++		f2fs_msg(sbi->sb, KERN_WARNING,
++			"Inconsistent i_blocks, ino:%lu, iblocks:%llu, sectors:%llu",
++			inode->i_ino,
++			(unsigned long long)inode->i_blocks,
++			(unsigned long long)sectors);
++		set_sbi_flag(sbi, SBI_NEED_FSCK);
++		return;
++	}
+ 	f2fs_i_blocks_write(inode, count, false, true);
+ }
+ 
+@@ -2382,7 +2391,6 @@ static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi,
+ 
+ bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
+ 					block_t blkaddr, int type);
+-void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...);
+ static inline void verify_blkaddr(struct f2fs_sb_info *sbi,
+ 					block_t blkaddr, int type)
+ {
 -- 
 2.20.1
 
