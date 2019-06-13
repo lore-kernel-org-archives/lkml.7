@@ -2,211 +2,175 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AECCAC31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43228C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC7B2063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256B72063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:08:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393552AbfFMRH7 (ORCPT
+        id S2404578AbfFMRIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:07:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52060 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2393417AbfFMRG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:06:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BB9FDABE9;
-        Thu, 13 Jun 2019 17:06:55 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Thu, 13 Jun 2019 13:08:07 -0400
+Received: from mga03.intel.com ([134.134.136.65]:41569 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729811AbfFMRIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 13:08:06 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 10:08:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,369,1557212400"; 
+   d="scan'208";a="184684275"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga002.fm.intel.com with ESMTP; 13 Jun 2019 10:08:03 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hbTCk-0006KB-GS; Thu, 13 Jun 2019 20:08:02 +0300
+Date:   Thu, 13 Jun 2019 20:08:02 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Stefan Roese <sr@denx.de>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH v3 1/7] nvmem: core: add nvmem_device_find
-Date:   Thu, 13 Jun 2019 19:06:27 +0200
-Message-Id: <20190613170636.6647-2-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.13.7
-In-Reply-To: <20190613170636.6647-1-tbogendoerfer@suse.de>
-References: <20190613170636.6647-1-tbogendoerfer@suse.de>
+        Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH 1/3 v6] serial: mctrl_gpio: Check if GPIO property
+ exisits before requesting it
+Message-ID: <20190613170802.GE9224@smile.fi.intel.com>
+References: <20190613154542.32438-1-sr@denx.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613154542.32438-1-sr@denx.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-nvmem_device_find provides a way to search for nvmem devices with
-the help of a match function simlair to bus_find_device.
+On Thu, Jun 13, 2019 at 05:45:40PM +0200, Stefan Roese wrote:
+> This patch adds a check for the GPIOs property existence, before the
+> GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
+> support is added (2nd patch in this patch series) on x86 platforms using
+> ACPI.
+> 
+> Here Mika's comments from 2016-08-09:
+> 
+> "
+> I noticed that with v4.8-rc1 serial console of some of our Broxton
+> systems does not work properly anymore. I'm able to see output but input
+> does not work.
+> 
+> I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
+> ("tty/serial/8250: use mctrl_gpio helpers").
+> 
+> The reason why it fails is that in ACPI we do not have names for GPIOs
+> (except when _DSD is used) so we use the "idx" to index into _CRS GPIO
+> resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
+> calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
+> UART device in Broxton has following (simplified) ACPI description:
+> 
+>     Device (URT4)
+>     {
+>         ...
+>         Name (_CRS, ResourceTemplate () {
+>             GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+>                     "\\_SB.GPO0", 0x00, ResourceConsumer)
+>             {
+>                 0x003A
+>             }
+>             GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+>                     "\\_SB.GPO0", 0x00, ResourceConsumer)
+>             {
+>                 0x003D
+>             }
+>         })
+> 
+> In this case it finds the first GPIO (0x003A which happens to be RX pin
+> for that UART), turns it into GPIO which then breaks input for the UART
+> device. This also breaks systems with bluetooth connected to UART (those
+> typically have some GPIOs in their _CRS).
+> 
+> Any ideas how to fix this?
+> 
+> We cannot just drop the _CRS index lookup fallback because that would
+> break many existing machines out there so maybe we can limit this to
+> only DT enabled machines. Or alternatively probe if the property first
+> exists before trying to acquire the GPIOs (using
+> device_property_present()).
+> "
+> 
+> This patch implements the fix suggested by Mika in his statement above.
+> 
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- drivers/nvmem/core.c           | 62 ++++++++++++++++++++++--------------------
- include/linux/nvmem-consumer.h |  9 ++++++
- 2 files changed, 41 insertions(+), 30 deletions(-)
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index c7892c3da91f..29a1c937b290 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -76,36 +76,18 @@ static struct bus_type nvmem_bus_type = {
- 	.name		= "nvmem",
- };
- 
-+#if IS_ENABLED(CONFIG_OF)
- static int of_nvmem_match(struct device *dev, void *nvmem_np)
- {
- 	return dev->of_node == nvmem_np;
- }
-+#endif
- 
--static struct nvmem_device *of_nvmem_find(struct device_node *nvmem_np)
-+static int nvmem_match_name(struct device *dev, void *data)
- {
--	struct device *d;
--
--	if (!nvmem_np)
--		return NULL;
--
--	d = bus_find_device(&nvmem_bus_type, NULL, nvmem_np, of_nvmem_match);
--
--	if (!d)
--		return NULL;
-+	const char *name = data;
- 
--	return to_nvmem_device(d);
--}
--
--static struct nvmem_device *nvmem_find(const char *name)
--{
--	struct device *d;
--
--	d = bus_find_device_by_name(&nvmem_bus_type, NULL, name);
--
--	if (!d)
--		return NULL;
--
--	return to_nvmem_device(d);
-+	return sysfs_streq(name, dev_name(dev));
- }
- 
- static void nvmem_cell_drop(struct nvmem_cell *cell)
-@@ -537,13 +519,16 @@ int devm_nvmem_unregister(struct device *dev, struct nvmem_device *nvmem)
- }
- EXPORT_SYMBOL(devm_nvmem_unregister);
- 
--static struct nvmem_device *__nvmem_device_get(struct device_node *np,
--					       const char *nvmem_name)
-+static struct nvmem_device *__nvmem_device_get(void *data,
-+				int (*match)(struct device *dev, void *data))
- {
- 	struct nvmem_device *nvmem = NULL;
-+	struct device *dev;
- 
- 	mutex_lock(&nvmem_mutex);
--	nvmem = np ? of_nvmem_find(np) : nvmem_find(nvmem_name);
-+	dev = bus_find_device(&nvmem_bus_type, NULL, data, match);
-+	if (dev)
-+		nvmem = to_nvmem_device(dev);
- 	mutex_unlock(&nvmem_mutex);
- 	if (!nvmem)
- 		return ERR_PTR(-EPROBE_DEFER);
-@@ -592,7 +577,7 @@ struct nvmem_device *of_nvmem_device_get(struct device_node *np, const char *id)
- 	if (!nvmem_np)
- 		return ERR_PTR(-ENOENT);
- 
--	return __nvmem_device_get(nvmem_np, NULL);
-+	return __nvmem_device_get(nvmem_np, of_nvmem_match);
- }
- EXPORT_SYMBOL_GPL(of_nvmem_device_get);
- #endif
-@@ -618,10 +603,26 @@ struct nvmem_device *nvmem_device_get(struct device *dev, const char *dev_name)
- 
- 	}
- 
--	return __nvmem_device_get(NULL, dev_name);
-+	return __nvmem_device_get((void *)dev_name, nvmem_match_name);
- }
- EXPORT_SYMBOL_GPL(nvmem_device_get);
- 
-+/**
-+ * nvmem_device_find() - Find nvmem device with matching function
-+ *
-+ * @data: Data to pass to match function
-+ * @match: Callback function to check device
-+ *
-+ * Return: ERR_PTR() on error or a valid pointer to a struct nvmem_device
-+ * on success.
-+ */
-+struct nvmem_device *nvmem_device_find(void *data,
-+				int (*match)(struct device *dev, void *data))
-+{
-+	return __nvmem_device_get(data, match);
-+}
-+EXPORT_SYMBOL_GPL(nvmem_device_find);
-+
- static int devm_nvmem_device_match(struct device *dev, void *res, void *data)
- {
- 	struct nvmem_device **nvmem = res;
-@@ -715,7 +716,8 @@ nvmem_cell_get_from_lookup(struct device *dev, const char *con_id)
- 		if ((strcmp(lookup->dev_id, dev_id) == 0) &&
- 		    (strcmp(lookup->con_id, con_id) == 0)) {
- 			/* This is the right entry. */
--			nvmem = __nvmem_device_get(NULL, lookup->nvmem_name);
-+			nvmem = __nvmem_device_get((void *)lookup->nvmem_name,
-+						   nvmem_match_name);
- 			if (IS_ERR(nvmem)) {
- 				/* Provider may not be registered yet. */
- 				cell = ERR_CAST(nvmem);
-@@ -785,7 +787,7 @@ struct nvmem_cell *of_nvmem_cell_get(struct device_node *np, const char *id)
- 	if (!nvmem_np)
- 		return ERR_PTR(-EINVAL);
- 
--	nvmem = __nvmem_device_get(nvmem_np, NULL);
-+	nvmem = __nvmem_device_get(nvmem_np, of_nvmem_match);
- 	of_node_put(nvmem_np);
- 	if (IS_ERR(nvmem))
- 		return ERR_CAST(nvmem);
-diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
-index 8f8be5b00060..a8249b2dcaf4 100644
---- a/include/linux/nvmem-consumer.h
-+++ b/include/linux/nvmem-consumer.h
-@@ -89,6 +89,9 @@ void nvmem_del_cell_lookups(struct nvmem_cell_lookup *entries,
- int nvmem_register_notifier(struct notifier_block *nb);
- int nvmem_unregister_notifier(struct notifier_block *nb);
- 
-+struct nvmem_device *nvmem_device_find(void *data,
-+				int (*match)(struct device *dev, void *data));
-+
- #else
- 
- static inline struct nvmem_cell *nvmem_cell_get(struct device *dev,
-@@ -204,6 +207,12 @@ static inline int nvmem_unregister_notifier(struct notifier_block *nb)
- 	return -EOPNOTSUPP;
- }
- 
-+static inline struct nvmem_device *nvmem_device_find(void *data,
-+				int (*match)(struct device *dev, void *data))
-+{
-+	return NULL;
-+}
-+
- #endif /* CONFIG_NVMEM */
- 
- #if IS_ENABLED(CONFIG_NVMEM) && IS_ENABLED(CONFIG_OF)
+> Signed-off-by: Stefan Roese <sr@denx.de>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Yegor Yefremov <yegorslists@googlemail.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> ---
+> v6:
+> - No change
+> 
+> v5:
+> - Simplified the code a bit (Andy)
+> - Added gpio_str == NULL handling (Andy)
+> 
+> v4:
+> - Add missing free() calls (Johan)
+> - Added Mika's reviewed by tag
+> - Added Johan to Cc
+> 
+> v3:
+> - No change
+> 
+> v2:
+> - Include the problem description and analysis from Mika into the commit
+>   text, as suggested by Greg.
+> 
+>  drivers/tty/serial/serial_mctrl_gpio.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+> index 39ed56214cd3..65348887a749 100644
+> --- a/drivers/tty/serial/serial_mctrl_gpio.c
+> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
+> @@ -116,6 +116,19 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
+>  
+>  	for (i = 0; i < UART_GPIO_MAX; i++) {
+>  		enum gpiod_flags flags;
+> +		char *gpio_str;
+> +		bool present;
+> +
+> +		/* Check if GPIO property exists and continue if not */
+> +		gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
+> +				     mctrl_gpios_desc[i].name);
+> +		if (!gpio_str)
+> +			continue;
+> +
+> +		present = device_property_present(dev, gpio_str);
+> +		kfree(gpio_str);
+> +		if (!present)
+> +			continue;
+>  
+>  		if (mctrl_gpios_desc[i].dir_out)
+>  			flags = GPIOD_OUT_LOW;
+> -- 
+> 2.22.0
+> 
+
 -- 
-2.13.7
+With Best Regards,
+Andy Shevchenko
+
 
