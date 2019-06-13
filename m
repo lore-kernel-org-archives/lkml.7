@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC85C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA021C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4884320665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3825206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441819;
-	bh=LC8O5udZCLaZ8jZmYSRFYyGAk/b9k69zvK5jhojZ45M=;
+	s=default; t=1560441822;
+	bh=3E7zvyKMEjD+t36Er0289E2wlAmli+NDn+SyiAea6Xg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jb5XQ/ZuURW5BdwzE0R9zLG9O07r7L8RNrU8Lb+4vAQ4RNUTo/AVNgR9+A/mJAusf
-	 cjBem5EDP86/zPQpxac0QoTfdcWXtFKs/lYIPf+JJh3g4YwD7eiGE+fEtMTVv2FNle
-	 y+LYOJ+mn61nLNSpwXS/pChkjExuFp+v9snGBOfo=
+	b=rwnHa0foCxSkqtWzObkxp1avziI34ETsBCCfRLxMnYZXOE5yRwqqLwnhVSnew1GiY
+	 96crVR6fQS+89k4ysyJFOXFh4ifPoAjwa+9TwqEuGYXZe7hNfI1WfEiB78num0nmYK
+	 V8P7+G3hXm/qketDvcy2NY6kWw8CpVIPP5OGqzq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391098AbfFMQDb (ORCPT
+        id S2391102AbfFMQD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:03:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35662 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:03:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731382AbfFMIrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:47:24 -0400
+        id S1731384AbfFMIr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:47:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18F9A206BA;
-        Thu, 13 Jun 2019 08:47:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AB472147A;
+        Thu, 13 Jun 2019 08:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415643;
-        bh=LC8O5udZCLaZ8jZmYSRFYyGAk/b9k69zvK5jhojZ45M=;
+        s=default; t=1560415646;
+        bh=3E7zvyKMEjD+t36Er0289E2wlAmli+NDn+SyiAea6Xg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=buU4YLTSt5zhyrfPOigYjvq4cRy9jWVYUoktXlHP5ptStykvBShpzNyHMAjMnkxNU
-         3/8K9dy6zfkZfavbRFdYoPW/BlEoUBY66nSNCV22Hp1uaLgvOgXTSzR+4e9uz+DaY0
-         2a+Yagf7TBSe0ClsuMPulcvoHuoPGQi9XZBoROps=
+        b=HwOTAI5gbf9t8Anhy57M4YTimFM0FYz4vrJ6svCZtZaXp1WOqYWRujXQWDhvPOEuv
+         fnUh/FpLvdrgwF3mXe4g4nSbr8dtTUNUnSo+azC2Rtdl2zUwHgSqy4DBxstyoI0ano
+         5nZxPhqt600YmWg66wBZwny7JWJ7EvKid9m68Yg8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
         Keith Busch <keith.busch@intel.com>,
         Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 075/155] nvme-pci: unquiesce admin queue on shutdown
-Date:   Thu, 13 Jun 2019 10:33:07 +0200
-Message-Id: <20190613075657.179216321@linuxfoundation.org>
+Subject: [PATCH 5.1 076/155] nvme-pci: shutdown on timeout during deletion
+Date:   Thu, 13 Jun 2019 10:33:08 +0200
+Message-Id: <20190613075657.247721523@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -60,11 +60,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c8e9e9b7646ebe1c5066ddc420d7630876277eb4 ]
+[ Upstream commit 9dc1a38ef1925d23c2933c5867df816386d92ff8 ]
 
-Just like IO queues, the admin queue also will not be restarted after a
-controller shutdown. Unquiesce this queue so that we do not block
-request dispatch on a permanently disabled controller.
+We do not restart a controller in a deleting state for timeout errors.
+When in this state, unblock potential request dispatchers with failed
+completions by shutting down the controller on timeout detection.
 
 Reported-by: Yufen Yu <yuyufen@huawei.com>
 Signed-off-by: Keith Busch <keith.busch@intel.com>
@@ -75,22 +75,33 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index a90cf5d63aac..e5dcc769ab8f 100644
+index e5dcc769ab8f..372d3f4a106a 100644
 --- a/drivers/nvme/host/pci.c
 +++ b/drivers/nvme/host/pci.c
-@@ -2438,8 +2438,11 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
- 	 * must flush all entered requests to their failed completion to avoid
- 	 * deadlocking blk-mq hot-cpu notifier.
- 	 */
--	if (shutdown)
-+	if (shutdown) {
- 		nvme_start_queues(&dev->ctrl);
-+		if (dev->ctrl.admin_q && !blk_queue_dying(dev->ctrl.admin_q))
-+			blk_mq_unquiesce_queue(dev->ctrl.admin_q);
-+	}
- 	mutex_unlock(&dev->shutdown_lock);
- }
+@@ -1271,6 +1271,7 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
+ 	struct nvme_dev *dev = nvmeq->dev;
+ 	struct request *abort_req;
+ 	struct nvme_command cmd;
++	bool shutdown = false;
+ 	u32 csts = readl(dev->bar + NVME_REG_CSTS);
  
+ 	/* If PCI error recovery process is happening, we cannot reset or
+@@ -1307,12 +1308,14 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
+ 	 * shutdown, so we return BLK_EH_DONE.
+ 	 */
+ 	switch (dev->ctrl.state) {
++	case NVME_CTRL_DELETING:
++		shutdown = true;
+ 	case NVME_CTRL_CONNECTING:
+ 	case NVME_CTRL_RESETTING:
+ 		dev_warn_ratelimited(dev->ctrl.device,
+ 			 "I/O %d QID %d timeout, disable controller\n",
+ 			 req->tag, nvmeq->qid);
+-		nvme_dev_disable(dev, false);
++		nvme_dev_disable(dev, shutdown);
+ 		nvme_req(req)->flags |= NVME_REQ_CANCELLED;
+ 		return BLK_EH_DONE;
+ 	default:
 -- 
 2.20.1
 
