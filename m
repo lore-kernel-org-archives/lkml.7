@@ -2,100 +2,96 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48D5C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E37C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79CC12082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:24:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="QTzoN144"
+	by mail.kernel.org (Postfix) with ESMTP id 0E18E2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732097AbfFMPYY (ORCPT
+        id S2388817AbfFMPYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:24:24 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:15814 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726935AbfFMMQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 08:16:24 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45PjQD1pWQz9tyy4;
-        Thu, 13 Jun 2019 14:16:20 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=QTzoN144; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 0z-cPEaDw6DI; Thu, 13 Jun 2019 14:16:20 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45PjQD0l9qz9tyy2;
-        Thu, 13 Jun 2019 14:16:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1560428180; bh=YHJw7/LT6s6Mbx+WwJg4XLbpCZLDT4xzeDMMq2n+Rg4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QTzoN144cYWA0+1oy0tEOLLpGgiHUzLs1Pw44RgVC91F4I+hXIZQiAyHreTRPnoxm
-         KB0OQgeAAqSPbj8RS2x3wQCZLGMRplON74fI0kIAyTloPfE4/AGbfUn/yk7EAT+z/O
-         h0RiddMBPDaZgPAy2IYf2vvyjh7ag9XLFAe1UxFs=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6C8CB8B8E1;
-        Thu, 13 Jun 2019 14:16:21 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Y2kSGnZNBf7d; Thu, 13 Jun 2019 14:16:21 +0200 (CEST)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A5D718B8B9;
-        Thu, 13 Jun 2019 14:16:20 +0200 (CEST)
-Subject: Re: [PATCH v2 1/4] crypto: talitos - move struct talitos_edesc into
- talitos.h
-To:     Horia Geanta <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <cover.1560263641.git.christophe.leroy@c-s.fr>
- <d9b5fade242f0806a587392d31c272709949479f.1560263641.git.christophe.leroy@c-s.fr>
- <VI1PR0402MB3485C0F4CB13F8674B8B5A5598EF0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <7fb54918-4524-1e6b-dd29-46be8843577b@c-s.fr>
-Date:   Thu, 13 Jun 2019 14:16:20 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 11:24:38 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39100 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731606AbfFMMMx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 08:12:53 -0400
+Received: by mail-lf1-f68.google.com with SMTP id p24so14885117lfo.6;
+        Thu, 13 Jun 2019 05:12:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=XhtZI7k0VVvHM8QZXtOQ9F9iiJHYuRfCT1gdZGw08zI=;
+        b=bIdH2W7mljYwcHs8OZiAD5+vvOZuRYZUmdpaUB2APG2hJOCBboGwBGTg9VVf77lYF/
+         IihvK8kaFh8tUdM1cw212vTPJbeg3rrOO3RyN9r4wV5FGGIS+mNBUHiQ3G4XcLFP1alJ
+         Ldeov/NWs7X39+rX+Vqup7nKBr44+KxBqTdmcOnk9m6+jokqMRCRwNf8IFVmzF2svuRS
+         vwsX+yvfKJZOYr/pskcjZFnl9zqlcrCEXjE82lnkjsIRVe7CR6B++QFobt75JhhaU2Lw
+         rCFrV8ETNwgGecLxeTlRJC2uHTOMdMwwFZeL/I1Qnw254c46cA2N21YvFUhU131LUJnh
+         D7Ww==
+X-Gm-Message-State: APjAAAWG11i28YBKnrYuQ3B5Z0AK/kUW6NlBOknyUkx/1NsxETyStXbF
+        s4ygThTjSDkHFl2xcHuVAv0=
+X-Google-Smtp-Source: APXvYqzeODloMIOcd+0FfBvjnIDFeSvA8L7nVmwomx3tNTKhMp3bzPcTPN5wvX7jCaTILAyFYJiFGw==
+X-Received: by 2002:ac2:569c:: with SMTP id 28mr30390848lfr.147.1560427970789;
+        Thu, 13 Jun 2019 05:12:50 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id b25sm559358lff.42.2019.06.13.05.12.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Jun 2019 05:12:50 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 15:12:38 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: mfd: Add link to ROHM BD71847 Datasheet
+Message-ID: <20190613121237.GA8984@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <VI1PR0402MB3485C0F4CB13F8674B8B5A5598EF0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ROHM BD71847 PMIC datasheet was published.
+Add datasheet link for BD71847 as well.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+index d5f68ac78d15..3c421bdbffc5 100644
+--- a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+@@ -8,6 +8,8 @@ and 6 LDOs.
+ 
+ Datasheet for BD71837 is available at:
+ https://www.rohm.com/datasheet/BD71837MWV/bd71837mwv-e
++Datasheet for BD71847 is available at:
++https://www.rohm.com/datasheet/BD71847AMWV/bd71847amwv-e
+ 
+ Required properties:
+  - compatible		: Should be "rohm,bd71837" for bd71837
+-- 
+2.17.2
 
 
-Le 13/06/2019 à 14:13, Horia Geanta a écrit :
-> On 6/11/2019 5:39 PM, Christophe Leroy wrote:
->> Next patch will require struct talitos_edesc to be defined
->> earlier in talitos.c
->>
->> This patch moves it into talitos.h so that it can be used
->> from any place in talitos.c
->>
->> Fixes: 37b5e8897eb5 ("crypto: talitos - chain in buffered data for ahash on SEC1")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Again, this patch does not qualify as a fix.
-> 
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-But as I said, the following one is a fix and require that one, you told 
-me to add stable in Cc: to make it explicit it was to go into stable.
-If someone tries to merge following one into stable with taking that one 
-first, build will fail.
-
-Christophe
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
