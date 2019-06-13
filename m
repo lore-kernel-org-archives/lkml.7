@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F27EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA29C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3392082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FCEC206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:32:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfFMPcE (ORCPT
+        id S1730028AbfFMPcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:32:04 -0400
-Received: from relay.sw.ru ([185.231.240.75]:40084 "EHLO relay.sw.ru"
+        Thu, 13 Jun 2019 11:32:05 -0400
+Received: from relay.sw.ru ([185.231.240.75]:40140 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728554AbfFMKub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 06:50:31 -0400
+        id S1728558AbfFMKvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 06:51:14 -0400
 Received: from [172.16.25.12]
         by relay.sw.ru with esmtp (Exim 4.92)
         (envelope-from <aryabinin@virtuozzo.com>)
-        id 1hbNJM-0000cp-C9; Thu, 13 Jun 2019 13:50:28 +0300
-Subject: Re: [PATCH v3 2/3] x86: Use static_cpu_has in uaccess region to avoid
- instrumentation
+        id 1hbNK3-0000dR-IP; Thu, 13 Jun 2019 13:51:11 +0300
+Subject: Re: [PATCH v3 3/3] asm-generic, x86: Add bitops instrumentation for
+ KASAN
 To:     Marco Elver <elver@google.com>, peterz@infradead.org,
         dvyukov@google.com, glider@google.com, andreyknvl@google.com,
         mark.rutland@arm.com, hpa@zytor.com
@@ -33,14 +33,14 @@ Cc:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
 References: <20190531150828.157832-1-elver@google.com>
- <20190531150828.157832-3-elver@google.com>
+ <20190531150828.157832-4-elver@google.com>
 From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <d3f70d55-0308-a2e2-0f4a-1bdf6bcde544@virtuozzo.com>
-Date:   Thu, 13 Jun 2019 13:50:40 +0300
+Message-ID: <5b4babdb-dfae-4006-0608-a9f5814e89e9@virtuozzo.com>
+Date:   Thu, 13 Jun 2019 13:51:23 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190531150828.157832-3-elver@google.com>
+In-Reply-To: <20190531150828.157832-4-elver@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -52,16 +52,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 5/31/19 6:08 PM, Marco Elver wrote:
-> This patch is a pre-requisite for enabling KASAN bitops instrumentation;
-> using static_cpu_has instead of boot_cpu_has avoids instrumentation of
-> test_bit inside the uaccess region. With instrumentation, the KASAN
-> check would otherwise be flagged by objtool.
+> This adds a new header to asm-generic to allow optionally instrumenting
+> architecture-specific asm implementations of bitops.
 > 
-> For consistency, kernel/signal.c was changed to mirror this change,
-> however, is never instrumented with KASAN (currently unsupported under
-> x86 32bit).
+> This change includes the required change for x86 as reference and
+> changes the kernel API doc to point to bitops-instrumented.h instead.
+> Rationale: the functions in x86's bitops.h are no longer the kernel API
+> functions, but instead the arch_ prefixed functions, which are then
+> instrumented via bitops-instrumented.h.
 > 
+> Other architectures can similarly add support for asm implementations of
+> bitops.
+> 
+> The documentation text was derived from x86 and existing bitops
+> asm-generic versions: 1) references to x86 have been removed; 2) as a
+> result, some of the text had to be reworded for clarity and consistency.
+> 
+> Tested: using lib/test_kasan with bitops tests (pre-requisite patch).
+> 
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=198439
 > Signed-off-by: Marco Elver <elver@google.com>
-> Suggested-by: H. Peter Anvin <hpa@zytor.com>
 
 Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
