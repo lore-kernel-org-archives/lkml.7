@@ -2,87 +2,108 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B80C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5B3C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C979421721
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q/iO2g/3"
+	by mail.kernel.org (Postfix) with ESMTP id 068A721721
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:25:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560443116;
+	bh=209/mbBz0Czh2X3c3xrK4doLHxWmN09QERCSyLU8diI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=T9LlQNQ/cbyVeteM39t26RtNTcs+cE80BcrVHAJEHg89365VeQOsHEr8cmZeDmUE2
+	 b9wgZhEep8jhL/S+bLHWWK7baiOU46X5tNokGeNYK6BBIrvQkzf8maaSv5Zrs2ZrmF
+	 wZ/+VF8BW1ltZidIBcB7xrFOjHsneGaRM3SeguBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391793AbfFMQZB (ORCPT
+        id S2392184AbfFMQZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:25:01 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38720 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730984AbfFMQY6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:24:58 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f97so8382128plb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 09:24:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hDoQf8XVMWB4WIjEfgbzeZ3Sc8iH6yn9VUuCEmnDaKw=;
-        b=q/iO2g/3m+0dJFISoxCPlF7W5Fu4zwu37pr6P69r1zZkoab7K9d7LcVmNE+c356Ylh
-         jQ/X2I6FlbFLefEO7W2cB0Uc5m+csgWwoZuLgvUnImrKA1cXtztX1m4ENH/e7iHKygXv
-         pOZ+YEPAlchXUS7dW8E2lytG1MYHLHToL4avmP/yHbRRpPjhLvNubF7x5MTLYtldc80U
-         s4+E1JgsGsjTuzr4FRoaFinD6oKCINDkJTtcEcYXyh3HfAEIpbgVF0X1fN6vXO8THeWk
-         oQzgrjtFGbdCJw5Qc5vpannCM+5VPabA5X7BDUKksY8INYMsJxOD+acwjLlk4yGQYmK4
-         hM1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hDoQf8XVMWB4WIjEfgbzeZ3Sc8iH6yn9VUuCEmnDaKw=;
-        b=cpPdLlemUauGxDrMfFCr1soxZpNqvNIj5ssPebbNBBa+i6RALQO+cgZ+6gMIYdPevf
-         S7CO4CN+7w23rjmd9ehApXHy9edJceVeI+tbBqLLK81LaUQiU8KIiryptu9b7ZxgGon0
-         vj4tkOTJ+orChhzx4TMtoGY0BNbH4ZT0LHyvfE6HIjEbDxpIFUn+NbHSk7vs177NHdOQ
-         iAPrM5gCeS+GM6vxpemx1xZs7O71TIcz1T+kIJ2MTyA3qYjl+qXA+7N14oPiNOM5C3EQ
-         zeO5+Osd/FTKoV+oLvb9G9OU2heJBtqyUBnPW/JRoAESrLNL/RJyUyuv9+GzjgyN2hNW
-         1/kA==
-X-Gm-Message-State: APjAAAVi9+8VYCiqIC57nkz03XDdnbUK/fJ3Sijqb/mj3rtL9e0W+N9c
-        6cZN4wz4hg+BuvZ2u8UYax3C3wR0dlg3Lovsien3WLlx728=
-X-Google-Smtp-Source: APXvYqz2N6YseMc2JaVVByd10s1wHIsddE686w1OjgTzOcY7ejuEdMag4oB/EBVylQXKWw3u8PJ6+J5CVfKXwKUfxDE=
-X-Received: by 2002:a17:902:44f:: with SMTP id 73mr30807143ple.192.1560443098024;
- Thu, 13 Jun 2019 09:24:58 -0700 (PDT)
+        Thu, 13 Jun 2019 12:25:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730982AbfFMIgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:36:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E1112146F;
+        Thu, 13 Jun 2019 08:36:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560415011;
+        bh=209/mbBz0Czh2X3c3xrK4doLHxWmN09QERCSyLU8diI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ROEq/XTdBP8lypxXUjcni6xyWXj+TVDEQ+dWM7G/E7Ilo7SjdHbMI7sOAIVu5zOP3
+         mkCjkSf46L344mJWr7GZwk62JZ6rE+OBCDWZoAn5wXR5plPD5dD3UTD9+0nRHpI+hk
+         2/Qty7mQiDQnW8dIKmL0wPe5UAGfCWvr+rArRRyw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 54/81] ARM: dts: imx53: Specify IMX5_CLK_IPG as "ahb" clock to SDMA
+Date:   Thu, 13 Jun 2019 10:33:37 +0200
+Message-Id: <20190613075653.180304658@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
+References: <20190613075649.074682929@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190612095828.17936-1-gregkh@linuxfoundation.org>
-In-Reply-To: <20190612095828.17936-1-gregkh@linuxfoundation.org>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Fri, 14 Jun 2019 01:24:46 +0900
-Message-ID: <CAC5umyhSiOo6aN=cy09MdH3R3qpWiaqk+b-1Onrc_Byqc19dAQ@mail.gmail.com>
-Subject: Re: [PATCH] fault-inject: clean up debugfs file creation logic
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B46=E6=9C=8812=E6=97=A5(=E6=B0=B4) 18:58 Greg Kroah-Hartman <gre=
-gkh@linuxfoundation.org>:
->
-> There is no need to check the return value of a debugfs_create_file
-> call, a caller should never change what they do depending on if debugfs
-> is working properly or not, so remove the checks, simplifying the logic
-> in the file a lot.
->
-> Also fix up the error check for debugfs_create_dir() which was not
-> returning NULL for an error, but rather a error pointer.
->
-> Cc: Akinobu Mita <akinobu.mita@gmail.com>
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[ Upstream commit 28c168018e0902c67eb9c60d0fc4c8aa166c4efe ]
 
-Looks good.
+Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
+clock to determine if it needs to configure the IP block as operating
+at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
+clocks as IMX5_CLK_SDMA results in driver incorrectly thinking that
+ratio is 1:1 which results in broken SDMA funtionality. Fix the code
+to specify IMX5_CLK_AHB as "ahb" clock for SDMA, to avoid detecting
+incorrect clock ratio.
 
-Reviewed-by: Akinobu Mita <akinobu.mita@gmail.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/imx53.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index 2e516f4985e4..ddc3ce67c29a 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -676,7 +676,7 @@
+ 				reg = <0x63fb0000 0x4000>;
+ 				interrupts = <6>;
+ 				clocks = <&clks IMX5_CLK_SDMA_GATE>,
+-					 <&clks IMX5_CLK_SDMA_GATE>;
++					 <&clks IMX5_CLK_AHB>;
+ 				clock-names = "ipg", "ahb";
+ 				#dma-cells = <3>;
+ 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx53.bin";
+-- 
+2.20.1
+
+
+
