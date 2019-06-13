@@ -2,271 +2,118 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EA6C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABD4C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6129E206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79B49206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:46:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389442AbfFMPqk (ORCPT
+        id S1732714AbfFMPqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:46:40 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18159 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731784AbfFMJjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:39:39 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C3BCD401283C5328100B;
-        Thu, 13 Jun 2019 17:39:29 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Thu, 13 Jun 2019
- 17:39:18 +0800
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v4 1/3] lib: logic_pio: Use logical PIO low-level
- accessors for !CONFIG_INDIRECT_PIO
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
- <1560262374-67875-2-git-send-email-john.garry@huawei.com>
- <20190613023947.GD13533@google.com>
-CC:     <lorenzo.pieralisi@arm.com>, <arnd@arndb.de>,
-        <linux-pci@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <linux-arm-kernel@lists.infradead.org>, <will.deacon@arm.com>,
-        <wangkefeng.wang@huawei.com>, <linuxarm@huawei.com>,
-        <andriy.shevchenko@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <catalin.marinas@arm.com>
-Message-ID: <8ef228f8-97cb-e40e-ea6b-410b80a845cf@huawei.com>
-Date:   Thu, 13 Jun 2019 10:39:12 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Thu, 13 Jun 2019 11:46:50 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:40108 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731778AbfFMJfz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:35:55 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 7CEF825B7FA;
+        Thu, 13 Jun 2019 19:35:53 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id 77BFA940483; Thu, 13 Jun 2019 11:35:51 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 11:35:51 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     kishon@ti.com, geert+renesas@glider.be,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v3] phy: renesas: rcar-gen3-usb2: fix imbalance powered
+ flag
+Message-ID: <20190613093550.ytchwgeqejgrqkui@verge.net.au>
+References: <1560147835-7629-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20190613023947.GD13533@google.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560147835-7629-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/06/2019 03:39, Bjorn Helgaas wrote:
-> On Tue, Jun 11, 2019 at 10:12:52PM +0800, John Garry wrote:
->> Currently we only use logical PIO low-level accessors for when
->> CONFIG_INDIRECT_PIO is enabled.
->>
->> Otherwise we just use inb/out et all directly.
->>
+On Mon, Jun 10, 2019 at 03:23:55PM +0900, Yoshihiro Shimoda wrote:
+> The powered flag should be set for any other phys anyway. Also
+> the flag should be locked by the channel. Otherwise, after we have
+> revised the device tree for the usb phy, the following warning
+> happened during a second system suspend. And if the driver doesn't
+> lock the flag, an imbalance is possible when enabling the regulator
+> during system resume. So, this patch fixes the issues.
+> 
+> < The warning >
+> [   56.026531] unbalanced disables for USB20_VBUS0
+> [   56.031108] WARNING: CPU: 3 PID: 513 at drivers/regulator/core.c:2593 _regula
+> tor_disable+0xe0/0x1c0
+> [   56.040146] Modules linked in: rcar_du_drm rcar_lvds drm_kms_helper drm drm_p
+> anel_orientation_quirks vsp1 videobuf2_vmalloc videobuf2_dma_contig videobuf2_me
+> mops videobuf2_v4l2 videobuf2_common videodev snd_soc_rcar renesas_usbhs snd_soc
+> _audio_graph_card media snd_soc_simple_card_utils crct10dif_ce renesas_usb3 snd_
+> soc_ak4613 rcar_fcp pwm_rcar usb_dmac phy_rcar_gen3_usb3 pwm_bl ipv6
+> [   56.074047] CPU: 3 PID: 513 Comm: kworker/u16:19 Not tainted 5.2.0-rc3-00001-
+> g5f20a19 #6
+> [   56.082129] Hardware name: Renesas Salvator-X board based on r8a7795 ES2.0+ (
+> DT)
+> [   56.089524] Workqueue: events_unbound async_run_entry_fn
+> [   56.094832] pstate: 40000005 (nZcv daif -PAN -UAO)
+> [   56.099617] pc : _regulator_disable+0xe0/0x1c0
+> [   56.104054] lr : _regulator_disable+0xe0/0x1c0
+> [   56.108489] sp : ffff0000121c3ae0
+> [   56.111796] x29: ffff0000121c3ae0 x28: 0000000000000000
+> [   56.117102] x27: 0000000000000000 x26: ffff000010fe0e60
+> [   56.122407] x25: 0000000000000002 x24: 0000000000000001
+> [   56.127712] x23: 0000000000000002 x22: ffff8006f99d4000
+> [   56.133017] x21: ffff8006f99cc000 x20: ffff8006f9846800
+> [   56.138322] x19: ffff8006f9846800 x18: ffffffffffffffff
+> [   56.143626] x17: 0000000000000000 x16: 0000000000000000
+> [   56.148931] x15: ffff0000112f96c8 x14: ffff0000921c37f7
+> [   56.154235] x13: ffff0000121c3805 x12: ffff000011312000
+> [   56.159540] x11: 0000000005f5e0ff x10: ffff0000112f9f20
+> [   56.164844] x9 : ffff0000112d3018 x8 : 00000000000001ad
+> [   56.170149] x7 : 00000000ffffffcc x6 : ffff8006ff768180
+> [   56.175453] x5 : ffff8006ff768180 x4 : 0000000000000000
+> [   56.180758] x3 : ffff8006ff76ef10 x2 : ffff8006ff768180
+> [   56.186062] x1 : 3d2eccbaead8fb00 x0 : 0000000000000000
+> [   56.191367] Call trace:
+> [   56.193808]  _regulator_disable+0xe0/0x1c0
+> [   56.197899]  regulator_disable+0x40/0x78
+> [   56.201820]  rcar_gen3_phy_usb2_power_off+0x3c/0x50
+> [   56.206692]  phy_power_off+0x48/0xd8
+> [   56.210263]  usb_phy_roothub_power_off+0x30/0x50
+> [   56.214873]  usb_phy_roothub_suspend+0x1c/0x50
+> [   56.219311]  hcd_bus_suspend+0x13c/0x168
+> [   56.223226]  generic_suspend+0x4c/0x58
+> [   56.226969]  usb_suspend_both+0x1ac/0x238
+> [   56.230972]  usb_suspend+0xcc/0x170
+> [   56.234455]  usb_dev_suspend+0x10/0x18
+> [   56.238199]  dpm_run_callback.isra.6+0x20/0x68
+> [   56.242635]  __device_suspend+0x110/0x308
+> [   56.246637]  async_suspend+0x24/0xa8
+> [   56.250205]  async_run_entry_fn+0x40/0xf8
+> [   56.254210]  process_one_work+0x1e0/0x320
+> [   56.258211]  worker_thread+0x40/0x450
+> [   56.261867]  kthread+0x124/0x128
+> [   56.265094]  ret_from_fork+0x10/0x18
+> [   56.268661] ---[ end trace 86d7ec5de5c517af ]---
+> [   56.273290] phy phy-ee080200.usb-phy.10: phy poweroff failed --> -5
+> 
+> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Fixes: 549b6b55b005 ("phy: renesas: rcar-gen3-usb2: enable/disable independent irqs")
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Hi Bjorn,
-
-thanks for checking this.
-
->> It is useful to now use logical PIO accessors for all cases, so we can add
->> legality checks to accesses. Such a check would be for ensuring that the
->> PCI IO port has been IO remapped prior to the access.
->
-> IIUC, *this* patch doesn't actually add any
-
-ok, fine. I suppose that the subsequent patches in the series describe 
-the motivation.
-
-   additional checks, so no
-> need to mention that in this commit log.
->
-> One thing this patch *does* do is "#define inb logic_inb" whenever
-> PCI_IOBASE is defined (we used to do that #define only when
-> CONFIG_INDIRECT_PIO was defined).
-
-Yes, right.
-
- >  That's a pretty important change and needs to be very clear in the 
-commit log.
-
-ok
-
->
-> I'm not sure it's even safe, because CONFIG_INDIRECT_PIO depends on
-> ARM64,  but PCI_IOBASE is defined on most arches via asm-generic/io.h,
-> so this potentially affects arches other than ARM64.
-
-It would do. It would affect any arch which defines PCI_IOBASE and does 
-not have arch-specific definition of inb et all.
-
->
-> If possible, split out the cleanup patches as below and make the patch
-> that does this PCI_IOBASE change as small as possible so we can
-> evaluate that change by itself.
->
-
-Fine
-
->> Using the logical PIO accesses will add a little processing overhead, but
->> that's ok as IO port accesses are relatively slow anyway.
->>
->> Some changes are also made to stop spilling so many lines under
->> CONFIG_INDIRECT_PIO.
->
-> "Some changes are also made" is a good hint to me that this patch
-> might be able to be split up :)
->
->> Signed-off-by: John Garry <john.garry@huawei.com>
->> ---
->>  include/linux/logic_pio.h |  7 ++--
->>  lib/logic_pio.c           | 83 ++++++++++++++++++++++++++++-----------
->>  2 files changed, 63 insertions(+), 27 deletions(-)
->>
->> diff --git a/include/linux/logic_pio.h b/include/linux/logic_pio.h
->> index cbd9d8495690..06d22b2ec99f 100644
->> --- a/include/linux/logic_pio.h
->> +++ b/include/linux/logic_pio.h
->> @@ -37,7 +37,7 @@ struct logic_pio_host_ops {
->>  		     size_t dwidth, unsigned int count);
->>  };
->>
->> -#ifdef CONFIG_INDIRECT_PIO
->> +#if defined(PCI_IOBASE)
->
-> Why change the #ifdef style?  I understand these are equivalent, but
-> unless there's a movement to change from "#ifdef X" to "#if defined(X)"
-> I wouldn't bother.
-
-Not intentional. I can keep this style.
-
->
->>  u8 logic_inb(unsigned long addr);
->>  void logic_outb(u8 value, unsigned long addr);
->>  void logic_outw(u16 value, unsigned long addr);
->> @@ -102,6 +102,7 @@ void logic_outsl(unsigned long addr, const void *buffer, unsigned int count);
->>  #define outsl logic_outsl
->>  #endif
->>
->> +#if defined(CONFIG_INDIRECT_PIO)
->>  /*
->>   * We reserve 0x4000 bytes for Indirect IO as so far this library is only
->>   * used by the HiSilicon LPC Host. If needed, we can reserve a wider IO
->> @@ -109,10 +110,10 @@ void logic_outsl(unsigned long addr, const void *buffer, unsigned int count);
->>   */
->>  #define PIO_INDIRECT_SIZE 0x4000
->>  #define MMIO_UPPER_LIMIT (IO_SPACE_LIMIT - PIO_INDIRECT_SIZE)
->> -#else
->> +#else /* CONFIG_INDIRECT_PIO */
->>  #define MMIO_UPPER_LIMIT IO_SPACE_LIMIT
->>  #endif /* CONFIG_INDIRECT_PIO */
->> -
->> +#endif /* PCI_IOBASE */
->>  struct logic_pio_hwaddr *find_io_range_by_fwnode(struct fwnode_handle *fwnode);
->>  unsigned long logic_pio_trans_hwaddr(struct fwnode_handle *fwnode,
->>  			resource_size_t hw_addr, resource_size_t size);
->> diff --git a/lib/logic_pio.c b/lib/logic_pio.c
->> index feea48fd1a0d..40d9428010e1 100644
->> --- a/lib/logic_pio.c
->> +++ b/lib/logic_pio.c
->> @@ -191,7 +191,8 @@ unsigned long logic_pio_trans_cpuaddr(resource_size_t addr)
->>  	return ~0UL;
->>  }
->>
->> -#if defined(CONFIG_INDIRECT_PIO) && defined(PCI_IOBASE)
->> +#if defined(PCI_IOBASE)
->> +#if defined(CONFIG_INDIRECT_PIO)
->>  #define BUILD_LOGIC_IO(bw, type)					\
->>  type logic_in##bw(unsigned long addr)					\
->>  {									\
->> @@ -200,11 +201,11 @@ type logic_in##bw(unsigned long addr)					\
->>  	if (addr < MMIO_UPPER_LIMIT) {					\
->>  		ret = read##bw(PCI_IOBASE + addr);			\
->>  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) { \
->> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
->> +		struct logic_pio_hwaddr *range = find_io_range(addr);	\
->> +		size_t sz = sizeof(type);				\
->
-> I don't mind changing "entry" to "range" and adding "sz".  But that
-> could be done in a separate "no functional change" patch that is
-> trivial to review, which would make *this* patch smaller and easier to
-> review.
-
-ok
-
->
-> Another "no functional change" simplification patch would be to
-> replace this:
->
->   type ret = (type)~0;
->
->   if (addr < MMIO_UPPER_LIMIT) {
->     ret = read##bw(...);
->   } else if (...) {
->     if (range && range->ops)
->       ret = range->ops->in(...);
->     else
->       WARN_ON_ONCE();
->   }
->   return ret;
->
-> with this:
->
->   if (addr < MMIO_UPPER_LIMIT)
->     return read##bw(...);
->
->   if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {
->     if (range && range->ops)
->       return range->ops->in(...);
->     else
->       WARN_ON_ONCE();
->   }
->
->   return (type)~0;
->
-> Finally, I think the end result would be a little easier to read if
-> you restructured the #ifdefs like this:
->
->   #ifdef PCI_IOBASE
->   #define BUILD_LOGIC_IO(...)
->   type logic_in##bw(...)
->   {
->     if (addr < MMIO_UPPER_LIMIT)
->       return read##bw(...);
->
->   #ifdef CONFIG_INDIRECT_PIO
-
-I get your idea, but I don't think that that we can have an ifdef in 
-macros (BUILD_LOGIC_IO) like this.
-
->     if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {
->       if (range && range->ops)
-> 	return range->ops->in(...);
->       else
-> 	WARN_ON_ONCE();
->     }
->   #endif
->
->     return (type)~0;
->   }
->
-> That does mean a CONFIG_INDIRECT_PIO #ifdef in each in/out/ins/outs
-> builder, but it's more localized so I think it's easier to understand
-> that INDIRECT_PIO is just adding a new case to the default path.
-
-I'll see what I can do to improve the flow. But any change would also 
-depend on your idea in response to patch v2, to unify the 2 types of 
-logic_inb.
-
->
->> -		if (entry && entry->ops)				\
->> -			ret = entry->ops->in(entry->hostdata,		\
->> -					addr, sizeof(type));		\
->> +		if (range && range->ops)				\
->> +			ret = range->ops->in(range->hostdata, addr, sz);\
->>  		else							\
->>  			WARN_ON_ONCE(1);				\
->>  	}								\
->> @@ -216,49 +217,83 @@ void logic_out##bw(type value, unsigned long addr)			\
->>  	if (addr < MMIO_UPPER_LIMIT) {					\
->>  		write##bw(value, PCI_IOBASE + addr);			\
-
-
-thanks again
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
