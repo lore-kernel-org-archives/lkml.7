@@ -2,121 +2,106 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBF0C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67685C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 728D92147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442483;
-	bh=FqB2sW4I88mMRD+an2qENvPRlgF/xlPY1pCFRwpWm+Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DUJG1TENyncBsQatiT/kbJQD8qkgMUfgC5B73/hPkJmkTQZbmYCpeby1WIBXKgdQ/
-	 XKTqnHYrsp3cM7KVqdCw6Z1NEJ+RyQo8GGpVgrUw9uYHdusLQRaNAL7hwXLjO1ewLR
-	 hDJnpI/pJ/KMT2NgAhBz4XvH4QAr53lcs9s7LXf8=
+	by mail.kernel.org (Postfix) with ESMTP id 4A50420665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391809AbfFMQOf (ORCPT
+        id S2391653AbfFMQOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:14:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59518 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:14:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:44866 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731189AbfFMImT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:42:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7911120851;
-        Thu, 13 Jun 2019 08:42:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415339;
-        bh=FqB2sW4I88mMRD+an2qENvPRlgF/xlPY1pCFRwpWm+Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CrB8PpycpjjV7wWB0Jm5FhiNwvVZa+4Ji9+Id3W9Z3jxapIevCpL3hRq461qkwN5F
-         9bZIbJ1UXGd6pM15BJK79tkD5SYagLl9zKDWtDooJGO+oDS7gRyEEKaq4vT0KN1rax
-         CUZBkP90CbQsweYfIyp6IaVCeZXZA4IbMaFP1NvM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 089/118] PCI: rpadlpar: Fix leaked device_node references in add/remove paths
-Date:   Thu, 13 Jun 2019 10:33:47 +0200
-Message-Id: <20190613075649.034962170@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
-References: <20190613075643.642092651@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1731222AbfFMQOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:14:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CDAF367;
+        Thu, 13 Jun 2019 09:14:47 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A57A3F694;
+        Thu, 13 Jun 2019 09:14:46 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 17:14:41 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: aardvark: Fix PCI_EXP_RTCTL conf register writing
+Message-ID: <20190613161441.GA2247@e121166-lin.cambridge.arm.com>
+References: <20190522213351.21366-1-repk@triplefau.lt>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522213351.21366-1-repk@triplefau.lt>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fb26228bfc4ce3951544848555c0278e2832e618 ]
+On Wed, May 22, 2019 at 11:33:49PM +0200, Remi Pommarel wrote:
+> PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
+> should not modify other interrupts' mask (such as ISR0).
+> 
+> Fixes: 6302bf3ef78d ("PCI: Init PCIe feature bits for managed host bridge alloc")
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> ---
+> Please note that I will unlikely be able to answer any comments from May
+> 24th to June 10th.
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 134e0306ff00..27102d3b4f9c 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -451,10 +451,14 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+>  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+>  		break;
+>  
+> -	case PCI_EXP_RTCTL:
+> -		new = (new & PCI_EXP_RTCTL_PMEIE) << 3;
+> -		advk_writel(pcie, new, PCIE_ISR0_MASK_REG);
+> +	case PCI_EXP_RTCTL: {
+> +		/* Only mask/unmask PME interrupt */
+> +		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
+> +			~PCIE_MSG_PM_PME_MASK;
+> +		val |= (new & PCI_EXP_RTCTL_PMEIE) << 3;
 
-The find_dlpar_node() helper returns a device node with its reference
-incremented.  Both the add and remove paths use this helper for find the
-appropriate node, but fail to release the reference when done.
+I know you have not introduced this code but maybe we can
+take an opportunity to clarify it (that << 3 shift obfuscates
+a bit):
 
-Annotate the find_dlpar_node() helper with a comment about the incremented
-reference count and call of_node_put() on the obtained device_node in the
-add and remove paths.  Also, fixup a reference leak in the find_vio_slot()
-helper where we fail to call of_node_put() on the vdevice node after we
-iterate over its children.
+	u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
+			~PCIE_MSG_PM_PME_MASK;
 
-Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/hotplug/rpadlpar_core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+	if (new & PCI_EXP_RTCTL_PMEIE)
+		val |= PCIE_MSG_PM_PME_MASK;
 
-diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
-index e2356a9c7088..182f9e3443ee 100644
---- a/drivers/pci/hotplug/rpadlpar_core.c
-+++ b/drivers/pci/hotplug/rpadlpar_core.c
-@@ -51,6 +51,7 @@ static struct device_node *find_vio_slot_node(char *drc_name)
- 		if (rc == 0)
- 			break;
- 	}
-+	of_node_put(parent);
- 
- 	return dn;
- }
-@@ -71,6 +72,7 @@ static struct device_node *find_php_slot_pci_node(char *drc_name,
- 	return np;
- }
- 
-+/* Returns a device_node with its reference count incremented */
- static struct device_node *find_dlpar_node(char *drc_name, int *node_type)
- {
- 	struct device_node *dn;
-@@ -306,6 +308,7 @@ int dlpar_add_slot(char *drc_name)
- 			rc = dlpar_add_phb(drc_name, dn);
- 			break;
- 	}
-+	of_node_put(dn);
- 
- 	printk(KERN_INFO "%s: slot %s added\n", DLPAR_MODULE_NAME, drc_name);
- exit:
-@@ -439,6 +442,7 @@ int dlpar_remove_slot(char *drc_name)
- 			rc = dlpar_remove_pci_slot(drc_name, dn);
- 			break;
- 	}
-+	of_node_put(dn);
- 	vm_unmap_aliases();
- 
- 	printk(KERN_INFO "%s: slot %s removed\n", DLPAR_MODULE_NAME, drc_name);
--- 
-2.20.1
+	advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
+	break;
 
+Or I am not reading the code correctly ?
 
+Regardless, I need Thomas' ACK to proceed.
 
+Lorenzo
+
+> +		advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
+>  		break;
+> +	}
+>  
+>  	case PCI_EXP_RTSTA:
+>  		new = (new & PCI_EXP_RTSTA_PME) >> 9;
+> -- 
+> 2.20.1
+> 
