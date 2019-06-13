@@ -2,185 +2,169 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7ACC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92225C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2104208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3FD208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:46:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="L/Zq2yHg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389346AbfFMPp6 (ORCPT
+        id S1732533AbfFMPq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:45:58 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:13840 "EHLO mx1.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726952AbfFMPpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:45:54 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id EAAB94FF64;
-        Thu, 13 Jun 2019 17:45:50 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
-        with ESMTP id NOYkuy48Vz9J; Thu, 13 Jun 2019 17:45:45 +0200 (CEST)
-From:   Stefan Roese <sr@denx.de>
-To:     linux-serial@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yegor Yefremov <yegorslists@googlemail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: [PATCH 2/3 v6] serial: 8250: Add MSR/MCR TIOCM conversion wrapper functions
-Date:   Thu, 13 Jun 2019 17:45:41 +0200
-Message-Id: <20190613154542.32438-2-sr@denx.de>
-In-Reply-To: <20190613154542.32438-1-sr@denx.de>
-References: <20190613154542.32438-1-sr@denx.de>
+        Thu, 13 Jun 2019 11:46:29 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17146 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731789AbfFMJm5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:42:57 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d021a9f0000>; Thu, 13 Jun 2019 02:42:55 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 13 Jun 2019 02:42:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 13 Jun 2019 02:42:55 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 13 Jun
+ 2019 09:42:53 +0000
+Subject: Re: [PATCH v3 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
+To:     Sameer Pujar <spujar@nvidia.com>, <thierry.reding@gmail.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <mkumard@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1560417053-2966-1-git-send-email-spujar@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <8a71e670-7943-6bce-ba61-3f020fd9450d@nvidia.com>
+Date:   Thu, 13 Jun 2019 10:42:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1560417053-2966-1-git-send-email-spujar@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560418975; bh=NXHlTe3GaS+Cy5onlPwUV0gn1UM6F+0x2c5imipRZvo=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=L/Zq2yHgLKt0kM4/qRYcmL28PCijfoXShKeeU7UnR9fh0fOf3V1rH9Ye1R7oL3zmI
+         Xbbkp+BFBb4UfWqQ8kr5l1RgcPAmLMFW0bqafXnf2IgmwyJqvEJZEfKFguZVW7rrG0
+         +Bhg4AANFJPH+eX4x32pkt9EJcokxjB+7VHChVbAOKIRknk49SfyflTKWX6B3LffCS
+         ibib2hNQWASNeiuOwbCBwUjAH+lJbcgpNEki6qCtWL1m83ww3/dXDhVdpUG7EVVprq
+         IEzdI9/J884aAP2jw8apMeTCUyhHzUnm3x5RS84CiumO6ZRyYoliVmkdBT11sMmBSo
+         OMbBF4k2sO44Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds wrapper functions to convert MSR <-> TIOCM and also
-MCR <-> TIOCM. These functions are used now in serial8250_do_set_mctrl()
-and serial8250_do_get_mctrl().
 
-Signed-off-by: Stefan Roese <sr@denx.de>
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Yegor Yefremov <yegorslists@googlemail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
----
-v6:
-- New patch
+On 13/06/2019 10:10, Sameer Pujar wrote:
+> Add DT nodes for following devices on Tegra186 and Tegra194
+>  * ACONNECT
+>  * ADMA
+>  * AGIC
+> 
+> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> ---
+>  changes in current revision
+>   * use single address range for all APE modules
+>   * fix address range for agic
+> 
+>  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 67 ++++++++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67 ++++++++++++++++++++++++++++++++
+>  2 files changed, 134 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> index 426ac0b..b4d735e 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> @@ -1295,4 +1295,71 @@
+>  				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+>  		interrupt-parent = <&gic>;
+>  	};
+> +
+> +	aconnect@2a41000 {
 
- drivers/tty/serial/8250/8250.h      | 54 +++++++++++++++++++++++++++++
- drivers/tty/serial/8250/8250_port.c | 25 ++-----------
- 2 files changed, 57 insertions(+), 22 deletions(-)
+This address does not look correct. This appears to be the address of
+the AGIC. I think it should be 2900000, however, I also wonder if we
+should even bother with an address for the aconnect as this is just a
+bus and we don't specific a 'reg' property.
 
-diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
-index ebfb0bd5bef5..793da2e510e0 100644
---- a/drivers/tty/serial/8250/8250.h
-+++ b/drivers/tty/serial/8250/8250.h
-@@ -139,6 +139,60 @@ void serial8250_rpm_put_tx(struct uart_8250_port *p);
- int serial8250_em485_init(struct uart_8250_port *p);
- void serial8250_em485_destroy(struct uart_8250_port *p);
- 
-+/* MCR <-> TIOCM conversion */
-+static inline int serial8250_TIOCM_to_MCR(int tiocm)
-+{
-+	int mcr = 0;
-+
-+	if (tiocm & TIOCM_RTS)
-+		mcr |= UART_MCR_RTS;
-+	if (tiocm & TIOCM_DTR)
-+		mcr |= UART_MCR_DTR;
-+	if (tiocm & TIOCM_OUT1)
-+		mcr |= UART_MCR_OUT1;
-+	if (tiocm & TIOCM_OUT2)
-+		mcr |= UART_MCR_OUT2;
-+	if (tiocm & TIOCM_LOOP)
-+		mcr |= UART_MCR_LOOP;
-+
-+	return mcr;
-+}
-+
-+static inline int serial8250_MCR_to_TIOCM(int mcr)
-+{
-+	int tiocm = 0;
-+
-+	if (mcr & UART_MCR_RTS)
-+		tiocm |= TIOCM_RTS;
-+	if (mcr & UART_MCR_DTR)
-+		tiocm |= TIOCM_DTR;
-+	if (mcr & UART_MCR_OUT1)
-+		tiocm |= TIOCM_OUT1;
-+	if (mcr & UART_MCR_OUT2)
-+		tiocm |= TIOCM_OUT2;
-+	if (mcr & UART_MCR_LOOP)
-+		tiocm |= TIOCM_LOOP;
-+
-+	return tiocm;
-+}
-+
-+/* MSR <-> TIOCM conversion */
-+static inline int serial8250_MSR_to_TIOCM(int msr)
-+{
-+	int tiocm = 0;
-+
-+	if (msr & UART_MSR_DCD)
-+		tiocm |= TIOCM_CAR;
-+	if (msr & UART_MSR_RI)
-+		tiocm |= TIOCM_RNG;
-+	if (msr & UART_MSR_DSR)
-+		tiocm |= TIOCM_DSR;
-+	if (msr & UART_MSR_CTS)
-+		tiocm |= TIOCM_CTS;
-+
-+	return tiocm;
-+}
-+
- static inline void serial8250_out_MCR(struct uart_8250_port *up, int value)
- {
- 	serial_out(up, UART_MCR, value);
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 2304a84eee3b..47f0a8d01a57 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -1944,22 +1944,12 @@ unsigned int serial8250_do_get_mctrl(struct uart_port *port)
- {
- 	struct uart_8250_port *up = up_to_u8250p(port);
- 	unsigned int status;
--	unsigned int ret;
- 
- 	serial8250_rpm_get(up);
- 	status = serial8250_modem_status(up);
- 	serial8250_rpm_put(up);
- 
--	ret = 0;
--	if (status & UART_MSR_DCD)
--		ret |= TIOCM_CAR;
--	if (status & UART_MSR_RI)
--		ret |= TIOCM_RNG;
--	if (status & UART_MSR_DSR)
--		ret |= TIOCM_DSR;
--	if (status & UART_MSR_CTS)
--		ret |= TIOCM_CTS;
--	return ret;
-+	return serial8250_MSR_to_TIOCM(status);
- }
- EXPORT_SYMBOL_GPL(serial8250_do_get_mctrl);
- 
-@@ -1973,18 +1963,9 @@ static unsigned int serial8250_get_mctrl(struct uart_port *port)
- void serial8250_do_set_mctrl(struct uart_port *port, unsigned int mctrl)
- {
- 	struct uart_8250_port *up = up_to_u8250p(port);
--	unsigned char mcr = 0;
-+	unsigned char mcr;
- 
--	if (mctrl & TIOCM_RTS)
--		mcr |= UART_MCR_RTS;
--	if (mctrl & TIOCM_DTR)
--		mcr |= UART_MCR_DTR;
--	if (mctrl & TIOCM_OUT1)
--		mcr |= UART_MCR_OUT1;
--	if (mctrl & TIOCM_OUT2)
--		mcr |= UART_MCR_OUT2;
--	if (mctrl & TIOCM_LOOP)
--		mcr |= UART_MCR_LOOP;
-+	mcr = serial8250_TIOCM_to_MCR(mctrl);
- 
- 	mcr = (mcr & up->mcr_mask) | up->mcr_force | up->mcr;
- 
+> +		compatible = "nvidia,tegra210-aconnect";
+> +		clocks = <&bpmp TEGRA186_CLK_APE>,
+> +			 <&bpmp TEGRA186_CLK_APB2APE>;
+> +		clock-names = "ape", "apb2ape";
+> +		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_AUD>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x02900000 0x0 0x02900000 0x1FFFFF>;
+
+This should be 0x1fffff.
+
+> +		status = "disabled";
+> +
+> +		dma-controller@2930000 {
+> +			compatible = "nvidia,tegra186-adma";
+> +			reg = <0x02930000 0x50000>;
+> +			interrupt-parent = <&agic>;
+> +			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
+> +				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+> +			#dma-cells = <1>;
+> +			clocks = <&bpmp TEGRA186_CLK_AHUB>;
+> +			clock-names = "d_audio";
+> +			status = "disabled";
+> +		};
+> +
+> +		agic: agic@2a41000 {
+
+I think that this should also be "agic: interrupt-controller@xxxx" to
+conform with standard names. Sorry the Tegra210 version is not the best
+reference!
+
+Cheers
+Jon
+
 -- 
-2.22.0
-
+nvpublic
