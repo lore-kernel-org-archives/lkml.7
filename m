@@ -2,336 +2,150 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60FAC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D462C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78DB420866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442207;
-	bh=kICwEjmQt0KiKC4GNiNfP9mmUCDc2RXVSd/lc4kWBYs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=entNCa/IgOYj3QNwI8a5MtzI2Q3an+3E9AhRmOGuHoGEcNpiJ+O96+ElCVopqGwKy
-	 DyxwkzpJuEcC6XPuyvqUYcJVbMcD3OMhjINTVzIYfjIjo5PNiEgzTRYpcew3CqhIwu
-	 g/icSlGQcZzUxKUjyO61ehbo0KcFsywqU931lXI0=
+	by mail.kernel.org (Postfix) with ESMTP id 1BEFD20866
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391430AbfFMQKG (ORCPT
+        id S2391433AbfFMQKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:10:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33024 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:10:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:24684 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731255AbfFMIoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:44:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2391415AbfFMQKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:10:05 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41C4420851;
-        Thu, 13 Jun 2019 08:44:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415446;
-        bh=kICwEjmQt0KiKC4GNiNfP9mmUCDc2RXVSd/lc4kWBYs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rc+jxzVs6RgJjO6myD+GYD5I6/uAh6pBBcC30RFo3dA+5IR5s7Mk4k+QSVz5OgMJu
-         5m2TCWaY8OxllHB3fkmcKXhJJiW/M41TQbZjG81sE3cWm5lX+58W5X7qpEmiZjfOBA
-         3ihKz250tyHTtD5StFurLS+nD5ydmZj/0noqy2fA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phong Hoang <phong.hoang.wz@renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Hoan Nguyen An <na-hoan@jinso.co.jp>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 108/118] pwm: Fix deadlock warning when removing PWM device
-Date:   Thu, 13 Jun 2019 10:34:06 +0200
-Message-Id: <20190613075650.374493761@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
-References: <20190613075643.642092651@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id 6D35681DEB;
+        Thu, 13 Jun 2019 16:09:52 +0000 (UTC)
+Received: from treble (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 28DD919700;
+        Thu, 13 Jun 2019 16:09:49 +0000 (UTC)
+Date:   Thu, 13 Jun 2019 11:09:47 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Raphael Gault <raphael.gault@arm.com>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Julien Thierry <Julien.Thierry@arm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Subject: Re: [RFC V2 00/16] objtool: Add support for Arm64
+Message-ID: <20190613160947.vlysyfmwuo3xshsc@treble>
+References: <20190516103655.5509-1-raphael.gault@arm.com>
+ <20190516142917.nuhh6dmfiufxqzls@treble>
+ <26692833-0e5b-cfe0-0ffd-c2c2f0815935@arm.com>
+ <20190528222415.x63qw55ujm33dozb@treble>
+ <09745535-2782-fa11-ed65-3119b9455e79@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <09745535-2782-fa11-ed65-3119b9455e79@arm.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 13 Jun 2019 16:10:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 347ab9480313737c0f1aaa08e8f2e1a791235535 ]
+On Thu, Jun 13, 2019 at 04:55:31PM +0100, Raphael Gault wrote:
+> Hi Josh,
+> 
+> On 5/28/19 11:24 PM, Josh Poimboeuf wrote:
+> > On Tue, May 21, 2019 at 12:50:57PM +0000, Raphael Gault wrote:
+> > > Hi Josh,
+> > > 
+> > > Thanks for offering your help and sorry for the late answer.
+> > > 
+> > > My understanding is that a table of offsets is built by GCC, those
+> > > offsets being scaled by 4 before adding them to the base label.
+> > > I believe the offsets are stored in the .rodata section. To find the
+> > > size of that table, it is needed to find a comparison, which can be
+> > > optimized out apprently. In that case the end of the array can be found
+> > > by locating labels pointing to data behind it (which is not 100% safe).
+> > > 
+> > > On 5/16/19 3:29 PM, Josh Poimboeuf wrote:
+> > > > On Thu, May 16, 2019 at 11:36:39AM +0100, Raphael Gault wrote:
+> > > > > Noteworthy points:
+> > > > > * I still haven't figured out how to detect switch-tables on arm64. I
+> > > > > have a better understanding of them but still haven't implemented checks
+> > > > > as it doesn't look trivial at all.
+> > > > 
+> > > > Switch tables were tricky to get right on x86.  If you share an example
+> > > > (or even just a .o file) I can take a look.  Hopefully they're somewhat
+> > > > similar to x86 switch tables.  Otherwise we may want to consider a
+> > > > different approach (for example maybe a GCC plugin could help annotate
+> > > > them).
+> > > > 
+> > > 
+> > > The case which made me realize the issue is the one of
+> > > arch/arm64/kernel/module.o:apply_relocate_add:
+> > > 
+> > > ```
+> > > What seems to happen in the case of module.o is:
+> > >    334:   90000015        adrp    x21, 0 <do_reloc>
+> > > which retrieves the location of an offset in the rodata section, and a
+> > > bit later we do some extra computation with it in order to compute the
+> > > jump destination:
+> > >    3e0:   78625aa0        ldrh    w0, [x21, w2, uxtw #1]
+> > >    3e4:   10000061        adr     x1, 3f0 <apply_relocate_add+0xf8>
+> > >    3e8:   8b20a820        add     x0, x1, w0, sxth #2
+> > >    3ec:   d61f0000        br      x0
+> > > ```
+> > > 
+> > > Please keep in mind that the actual offsets might vary.
+> > > 
+> > > I'm happy to provide more details about what I have identified if you
+> > > want me to.
+> > 
+> > I get the feeling this is going to be trickier than x86 switch tables
+> > (which have already been tricky enough).
+> > 
+> > On x86, there's a .rela.rodata section which applies relocations to
+> > .rodata.  The presence of those relocations makes it relatively easy to
+> > differentiate switch tables from other read-only data.  For example, we
+> > can tell that a switch table ends when either a) there's not a text
+> > relocation or b) another switch table begins.
+> > 
+> > But with arm64 I don't see a deterministic way to do that, because the
+> > table offsets are hard-coded in .rodata, with no relocations.
+> > 
+> >  From talking with Kamalesh I got the impression that we might have a
+> > similar issue for powerpc.
+> > 
+> > So I'm beginning to think we'll need compiler help.  Like a GCC plugin
+> > that annotates at least the following switch table metadata:
+> > 
+> > - Branch instruction address
+> > - Switch table address
+> > - Switch table entry size
+> > - Switch table size
+> > 
+> > The GCC plugin could write all the above metadata into a special section
+> > which gets discarded at link time.  I can look at implementing it,
+> > though I'll be traveling for two out of the next three weeks so it may
+> > be a while before I can get to it.
+> > 
+> 
+> I am completely new to GCC plugins but I had a look and I think I found a
+> possible solution to retrieve at least part of this information using the
+> RTL representation in GCC. I can't say it will work for sure but I would be
+> happy to discuss it with you if you want.
+> Although there are still some area I need to investigate related to
+> interacting with the RTL representation and storing info into the ELF
+> I'd be interested in giving it a try, if you are okay with that.
 
-This patch fixes deadlock warning if removing PWM device
-when CONFIG_PROVE_LOCKING is enabled.
+Sounds promising.  I've been stretched thin lately with other work, and
+I'll be out again next week, so please go ahead :-)
 
-This issue can be reproceduced by the following steps on
-the R-Car H3 Salvator-X board if the backlight is disabled:
-
- # cd /sys/class/pwm/pwmchip0
- # echo 0 > export
- # ls
- device  export  npwm  power  pwm0  subsystem  uevent  unexport
- # cd device/driver
- # ls
- bind  e6e31000.pwm  uevent  unbind
- # echo e6e31000.pwm > unbind
-
-[   87.659974] ======================================================
-[   87.666149] WARNING: possible circular locking dependency detected
-[   87.672327] 5.0.0 #7 Not tainted
-[   87.675549] ------------------------------------------------------
-[   87.681723] bash/2986 is trying to acquire lock:
-[   87.686337] 000000005ea0e178 (kn->count#58){++++}, at: kernfs_remove_by_name_ns+0x50/0xa0
-[   87.694528]
-[   87.694528] but task is already holding lock:
-[   87.700353] 000000006313b17c (pwm_lock){+.+.}, at: pwmchip_remove+0x28/0x13c
-[   87.707405]
-[   87.707405] which lock already depends on the new lock.
-[   87.707405]
-[   87.715574]
-[   87.715574] the existing dependency chain (in reverse order) is:
-[   87.723048]
-[   87.723048] -> #1 (pwm_lock){+.+.}:
-[   87.728017]        __mutex_lock+0x70/0x7e4
-[   87.732108]        mutex_lock_nested+0x1c/0x24
-[   87.736547]        pwm_request_from_chip.part.6+0x34/0x74
-[   87.741940]        pwm_request_from_chip+0x20/0x40
-[   87.746725]        export_store+0x6c/0x1f4
-[   87.750820]        dev_attr_store+0x18/0x28
-[   87.754998]        sysfs_kf_write+0x54/0x64
-[   87.759175]        kernfs_fop_write+0xe4/0x1e8
-[   87.763615]        __vfs_write+0x40/0x184
-[   87.767619]        vfs_write+0xa8/0x19c
-[   87.771448]        ksys_write+0x58/0xbc
-[   87.775278]        __arm64_sys_write+0x18/0x20
-[   87.779721]        el0_svc_common+0xd0/0x124
-[   87.783986]        el0_svc_compat_handler+0x1c/0x24
-[   87.788858]        el0_svc_compat+0x8/0x18
-[   87.792947]
-[   87.792947] -> #0 (kn->count#58){++++}:
-[   87.798260]        lock_acquire+0xc4/0x22c
-[   87.802353]        __kernfs_remove+0x258/0x2c4
-[   87.806790]        kernfs_remove_by_name_ns+0x50/0xa0
-[   87.811836]        remove_files.isra.1+0x38/0x78
-[   87.816447]        sysfs_remove_group+0x48/0x98
-[   87.820971]        sysfs_remove_groups+0x34/0x4c
-[   87.825583]        device_remove_attrs+0x6c/0x7c
-[   87.830197]        device_del+0x11c/0x33c
-[   87.834201]        device_unregister+0x14/0x2c
-[   87.838638]        pwmchip_sysfs_unexport+0x40/0x4c
-[   87.843509]        pwmchip_remove+0xf4/0x13c
-[   87.847773]        rcar_pwm_remove+0x28/0x34
-[   87.852039]        platform_drv_remove+0x24/0x64
-[   87.856651]        device_release_driver_internal+0x18c/0x21c
-[   87.862391]        device_release_driver+0x14/0x1c
-[   87.867175]        unbind_store+0xe0/0x124
-[   87.871265]        drv_attr_store+0x20/0x30
-[   87.875442]        sysfs_kf_write+0x54/0x64
-[   87.879618]        kernfs_fop_write+0xe4/0x1e8
-[   87.884055]        __vfs_write+0x40/0x184
-[   87.888057]        vfs_write+0xa8/0x19c
-[   87.891887]        ksys_write+0x58/0xbc
-[   87.895716]        __arm64_sys_write+0x18/0x20
-[   87.900154]        el0_svc_common+0xd0/0x124
-[   87.904417]        el0_svc_compat_handler+0x1c/0x24
-[   87.909289]        el0_svc_compat+0x8/0x18
-[   87.913378]
-[   87.913378] other info that might help us debug this:
-[   87.913378]
-[   87.921374]  Possible unsafe locking scenario:
-[   87.921374]
-[   87.927286]        CPU0                    CPU1
-[   87.931808]        ----                    ----
-[   87.936331]   lock(pwm_lock);
-[   87.939293]                                lock(kn->count#58);
-[   87.945120]                                lock(pwm_lock);
-[   87.950599]   lock(kn->count#58);
-[   87.953908]
-[   87.953908]  *** DEADLOCK ***
-[   87.953908]
-[   87.959821] 4 locks held by bash/2986:
-[   87.963563]  #0: 00000000ace7bc30 (sb_writers#6){.+.+}, at: vfs_write+0x188/0x19c
-[   87.971044]  #1: 00000000287991b2 (&of->mutex){+.+.}, at: kernfs_fop_write+0xb4/0x1e8
-[   87.978872]  #2: 00000000f739d016 (&dev->mutex){....}, at: device_release_driver_internal+0x40/0x21c
-[   87.988001]  #3: 000000006313b17c (pwm_lock){+.+.}, at: pwmchip_remove+0x28/0x13c
-[   87.995481]
-[   87.995481] stack backtrace:
-[   87.999836] CPU: 0 PID: 2986 Comm: bash Not tainted 5.0.0 #7
-[   88.005489] Hardware name: Renesas Salvator-X board based on r8a7795 ES1.x (DT)
-[   88.012791] Call trace:
-[   88.015235]  dump_backtrace+0x0/0x190
-[   88.018891]  show_stack+0x14/0x1c
-[   88.022204]  dump_stack+0xb0/0xec
-[   88.025514]  print_circular_bug.isra.32+0x1d0/0x2e0
-[   88.030385]  __lock_acquire+0x1318/0x1864
-[   88.034388]  lock_acquire+0xc4/0x22c
-[   88.037958]  __kernfs_remove+0x258/0x2c4
-[   88.041874]  kernfs_remove_by_name_ns+0x50/0xa0
-[   88.046398]  remove_files.isra.1+0x38/0x78
-[   88.050487]  sysfs_remove_group+0x48/0x98
-[   88.054490]  sysfs_remove_groups+0x34/0x4c
-[   88.058580]  device_remove_attrs+0x6c/0x7c
-[   88.062671]  device_del+0x11c/0x33c
-[   88.066154]  device_unregister+0x14/0x2c
-[   88.070070]  pwmchip_sysfs_unexport+0x40/0x4c
-[   88.074421]  pwmchip_remove+0xf4/0x13c
-[   88.078163]  rcar_pwm_remove+0x28/0x34
-[   88.081906]  platform_drv_remove+0x24/0x64
-[   88.085996]  device_release_driver_internal+0x18c/0x21c
-[   88.091215]  device_release_driver+0x14/0x1c
-[   88.095478]  unbind_store+0xe0/0x124
-[   88.099048]  drv_attr_store+0x20/0x30
-[   88.102704]  sysfs_kf_write+0x54/0x64
-[   88.106359]  kernfs_fop_write+0xe4/0x1e8
-[   88.110275]  __vfs_write+0x40/0x184
-[   88.113757]  vfs_write+0xa8/0x19c
-[   88.117065]  ksys_write+0x58/0xbc
-[   88.120374]  __arm64_sys_write+0x18/0x20
-[   88.124291]  el0_svc_common+0xd0/0x124
-[   88.128034]  el0_svc_compat_handler+0x1c/0x24
-[   88.132384]  el0_svc_compat+0x8/0x18
-
-The sysfs unexport in pwmchip_remove() is completely asymmetric
-to what we do in pwmchip_add_with_polarity() and commit 0733424c9ba9
-("pwm: Unexport children before chip removal") is a strong indication
-that this was wrong to begin with. We should just move
-pwmchip_sysfs_unexport() where it belongs, which is right after
-pwmchip_sysfs_unexport_children(). In that case, we do not need
-separate functions anymore either.
-
-We also really want to remove sysfs irrespective of whether or not
-the chip will be removed as a result of pwmchip_remove(). We can only
-assume that the driver will be gone after that, so we shouldn't leave
-any dangling sysfs files around.
-
-This warning disappears if we move pwmchip_sysfs_unexport() to
-the top of pwmchip_remove(), pwmchip_sysfs_unexport_children().
-That way it is also outside of the pwm_lock section, which indeed
-doesn't seem to be needed.
-
-Moving the pwmchip_sysfs_export() call outside of that section also
-seems fine and it'd be perfectly symmetric with pwmchip_remove() again.
-
-So, this patch fixes them.
-
-Signed-off-by: Phong Hoang <phong.hoang.wz@renesas.com>
-[shimoda: revise the commit log and code]
-Fixes: 76abbdde2d95 ("pwm: Add sysfs interface")
-Fixes: 0733424c9ba9 ("pwm: Unexport children before chip removal")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Tested-by: Hoan Nguyen An <na-hoan@jinso.co.jp>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pwm/core.c  | 10 +++++-----
- drivers/pwm/sysfs.c | 14 +-------------
- include/linux/pwm.h |  5 -----
- 3 files changed, 6 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 1581f6ab1b1f..c45e5719ba17 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -311,10 +311,12 @@ int pwmchip_add_with_polarity(struct pwm_chip *chip,
- 	if (IS_ENABLED(CONFIG_OF))
- 		of_pwmchip_add(chip);
- 
--	pwmchip_sysfs_export(chip);
--
- out:
- 	mutex_unlock(&pwm_lock);
-+
-+	if (!ret)
-+		pwmchip_sysfs_export(chip);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(pwmchip_add_with_polarity);
-@@ -348,7 +350,7 @@ int pwmchip_remove(struct pwm_chip *chip)
- 	unsigned int i;
- 	int ret = 0;
- 
--	pwmchip_sysfs_unexport_children(chip);
-+	pwmchip_sysfs_unexport(chip);
- 
- 	mutex_lock(&pwm_lock);
- 
-@@ -368,8 +370,6 @@ int pwmchip_remove(struct pwm_chip *chip)
- 
- 	free_pwms(chip);
- 
--	pwmchip_sysfs_unexport(chip);
--
- out:
- 	mutex_unlock(&pwm_lock);
- 	return ret;
-diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-index 7c71cdb8a9d8..1c64fd8e9234 100644
---- a/drivers/pwm/sysfs.c
-+++ b/drivers/pwm/sysfs.c
-@@ -399,19 +399,6 @@ void pwmchip_sysfs_export(struct pwm_chip *chip)
- }
- 
- void pwmchip_sysfs_unexport(struct pwm_chip *chip)
--{
--	struct device *parent;
--
--	parent = class_find_device(&pwm_class, NULL, chip,
--				   pwmchip_sysfs_match);
--	if (parent) {
--		/* for class_find_device() */
--		put_device(parent);
--		device_unregister(parent);
--	}
--}
--
--void pwmchip_sysfs_unexport_children(struct pwm_chip *chip)
- {
- 	struct device *parent;
- 	unsigned int i;
-@@ -429,6 +416,7 @@ void pwmchip_sysfs_unexport_children(struct pwm_chip *chip)
- 	}
- 
- 	put_device(parent);
-+	device_unregister(parent);
- }
- 
- static int __init pwm_sysfs_init(void)
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 56518adc31dd..bd7d611d63e9 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -639,7 +639,6 @@ static inline void pwm_remove_table(struct pwm_lookup *table, size_t num)
- #ifdef CONFIG_PWM_SYSFS
- void pwmchip_sysfs_export(struct pwm_chip *chip);
- void pwmchip_sysfs_unexport(struct pwm_chip *chip);
--void pwmchip_sysfs_unexport_children(struct pwm_chip *chip);
- #else
- static inline void pwmchip_sysfs_export(struct pwm_chip *chip)
- {
-@@ -648,10 +647,6 @@ static inline void pwmchip_sysfs_export(struct pwm_chip *chip)
- static inline void pwmchip_sysfs_unexport(struct pwm_chip *chip)
- {
- }
--
--static inline void pwmchip_sysfs_unexport_children(struct pwm_chip *chip)
--{
--}
- #endif /* CONFIG_PWM_SYSFS */
- 
- #endif /* __LINUX_PWM_H */
 -- 
-2.20.1
-
-
-
+Josh
