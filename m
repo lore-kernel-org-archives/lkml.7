@@ -2,94 +2,104 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A11CC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C75BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51D1020B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20173207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:05:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="U4iRJrkg"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="TvGnXbEc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733309AbfFMPFX (ORCPT
+        id S1733276AbfFMPFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:05:23 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34592 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732446AbfFMOPw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 10:15:52 -0400
-Received: by mail-qk1-f193.google.com with SMTP id t8so9143010qkt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 07:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sbvrt5MZdKQZtIDBTdvl9Mov/hKhPttcrBddG8hlTHo=;
-        b=U4iRJrkgboqXD/9ecVEMGKPpyhkTFeK6mRiuk3Hy6ZSjwXCUQjTvFcN1/3TbP0NwfD
-         Cc0zRy15Gx4ZrC16COD805lwAeHf+qTzSuM79QtyZaBjBOLBNYC4OcekJA1r2UIVSfCF
-         d7WXvg5HrlhBXYtFb5VvFctZCG/Ixpw8iY5IcU88+E9uOEfz1mmm4oqCAf/PiZySI+WX
-         zEsdmJ64iKb2T8hzeutqLaiWHI3UhHek9Rp74I2YSN7P2KgZU/L9RdBvxkx4IV/qxmSt
-         AGAkIzRqZ8bwB2xirmaAcULCaO3AAs2Bs0nonS+DUCjHnU1NBiJuLN34fx159zgfGaVJ
-         GVgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sbvrt5MZdKQZtIDBTdvl9Mov/hKhPttcrBddG8hlTHo=;
-        b=PmG+bjeIfdXbNYrLVHfJ7PyEWq1qG4aVvqxsbb1ISYTpEnhaVsPEBDC5XJ8PejyLsS
-         vWJsVFLYgeEOJOQCKIOz8JG561eBzEXeNNqi9uZiQKUn1HzxCSFgUcey9aXKI135IPP+
-         379m0fBNWV9e1KZAF2F08MzyYQSP91L+brZsdL2qsuInS4bQyU88csoAiv+icDQbXpMQ
-         2igEd9LP3AEi9/KN4YIwY7oXY5qaZ47llm1ku18adPDJi+9F8T6szR1MWL8C7JvyBA6U
-         NGHwiLAo+qbxFhtz4BWgOy7GbH6z3DHKJ+KvP3zScziPlL64Q8kCnb64TQdpa3/4sOdi
-         eRtQ==
-X-Gm-Message-State: APjAAAXUUPMB9TGxS8GQHl/zggavTBK46bi4/Xlnel+pIhz8rYGuEB1v
-        7DzcIp9MHgmAQE82HEZjGM81cQ==
-X-Google-Smtp-Source: APXvYqwg9ItFMlhHRYGvsdkND+NywXN/99yJ/OfGCgepby4UQnidXK6DCCbLqQXc5D4yRoAVhsjoyA==
-X-Received: by 2002:a05:620a:16cc:: with SMTP id a12mr13267398qkn.256.1560435351183;
-        Thu, 13 Jun 2019 07:15:51 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::9d6b])
-        by smtp.gmail.com with ESMTPSA id t29sm2155361qtt.42.2019.06.13.07.15.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 07:15:50 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 10:15:49 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Naohiro Aota <naohiro.aota@wdc.com>
-Cc:     linux-btrfs@vger.kernel.org, David Sterba <dsterba@suse.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
-        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
-        linux-fsdevel@vger.kernel.org,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Matias =?utf-8?B?QmrDuHJsaW5n?= <mb@lightnvm.io>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH 12/19] btrfs: expire submit buffer on timeout
-Message-ID: <20190613141548.vlczaxiqqzbxgtzk@MacBook-Pro-91.local>
-References: <20190607131025.31996-1-naohiro.aota@wdc.com>
- <20190607131025.31996-13-naohiro.aota@wdc.com>
+        Thu, 13 Jun 2019 11:05:19 -0400
+Received: from mail-eopbgr70040.outbound.protection.outlook.com ([40.107.7.40]:29637
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732455AbfFMOQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 10:16:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uRCtqGzjhJOBLRtVX0V/ZgSTkU8/jdLSuxxED8NJUIc=;
+ b=TvGnXbEcjU6Lo/7/fJyphO+gcrunapqxGdLz+M17V8Za/VtKbSX2UybpfN/j0jOX9sC6Lm2xBxEh49cE0w5ymm9p5MQ2sS9TfXQk7dgCrfXyzRlkaSiH5uYLLNWjzlj4HWhvmzR09mBLA4vwuj9bks2IyeyCyk+IavPI2sL/+T0=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB4783.eurprd05.prod.outlook.com (20.176.4.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.14; Thu, 13 Jun 2019 14:16:27 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
+ 14:16:27 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        =?utf-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: dev_pagemap related cleanups
+Thread-Topic: dev_pagemap related cleanups
+Thread-Index: AQHVIcx5DdVrUhs/HUiF5V2FmmsvzKaZoY4A
+Date:   Thu, 13 Jun 2019 14:16:27 +0000
+Message-ID: <20190613141622.GE22062@mellanox.com>
+References: <20190613094326.24093-1-hch@lst.de>
+In-Reply-To: <20190613094326.24093-1-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BL0PR02CA0048.namprd02.prod.outlook.com
+ (2603:10b6:207:3d::25) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ce498060-eaaa-4cfc-43b2-08d6f009b931
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4783;
+x-ms-traffictypediagnostic: VI1PR05MB4783:
+x-microsoft-antispam-prvs: <VI1PR05MB47836CBE2730DE9B4A14468FCFEF0@VI1PR05MB4783.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 0067A8BA2A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(396003)(366004)(376002)(39860400002)(189003)(199004)(26005)(53936002)(81166006)(99286004)(52116002)(6486002)(7736002)(36756003)(305945005)(33656002)(6116002)(2906002)(6512007)(6436002)(229853002)(6506007)(478600001)(14454004)(3846002)(81156014)(8676002)(316002)(386003)(186003)(102836004)(76176011)(66446008)(486006)(2616005)(66556008)(476003)(86362001)(68736007)(54906003)(446003)(7416002)(11346002)(64756008)(1076003)(8936002)(5660300002)(71190400001)(6916009)(7116003)(71200400001)(66066001)(4326008)(66476007)(6246003)(73956011)(66946007)(256004)(25786009)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4783;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: V7MYS+Xi0yuEwrWiqQdFEyNmIo52ph6edRuO4tk6AgYuo0b1aNnoJUgJdJqY5OPp4z215xdSTIlif805KjTtwoDOCuQP1/9ok+E9ptw226a2wqHVsoDym8cU0BN91wSMfVOXKRek3zPXyZb9qhv022St0teR3Q7xiN1Ey+EgDtjktRjj7eyfPmSIEEQlR/j2pU5iBJDYEbJPX5zNx/rHf3Y9mW0Tfxat4lpIjDoEtlWlW6ETGh76wNSMBwBD+DPQwBTiiBueMm/wuC1Fj+LteWMELDHyIfiZDpZfwJ10/BIGmUIvXpKK5oEPjUqMazcbnVtK340VjdMxLPoD9di01Ku0wuSQafzVeLQ3c31x5f5B8aNtFynOUa4Gx3J12rS/WpKzcwm/1VF+kS/8oMXw9oAdlXksbr9nZCIzWk7EdFA=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3F56F1D2ECF2EA44ADBAB2BD95ADFE6F@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607131025.31996-13-naohiro.aota@wdc.com>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce498060-eaaa-4cfc-43b2-08d6f009b931
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 14:16:27.8375
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4783
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 10:10:18PM +0900, Naohiro Aota wrote:
-> It is possible to have bios stalled in the submit buffer due to some bug or
-> device problem. In such situation, btrfs stops working waiting for buffered
-> bios completions. To avoid such hang, add a worker that will cancel the
-> stalled bios after a timeout.
-> 
-
-The block layer does this with it's request timeouts right?  So it'll timeout
-and we'll get an EIO?  If that's not working then we need to fix the block
-layer.  Thanks,
-
-Josef
+T24gVGh1LCBKdW4gMTMsIDIwMTkgYXQgMTE6NDM6MDNBTSArMDIwMCwgQ2hyaXN0b3BoIEhlbGx3
+aWcgd3JvdGU6DQo+IEhpIERhbiwgSsOpcsO0bWUgYW5kIEphc29uLA0KPiANCj4gYmVsb3cgaXMg
+YSBzZXJpZXMgdGhhdCBjbGVhbnMgdXAgdGhlIGRldl9wYWdlbWFwIGludGVyZmFjZSBzbyB0aGF0
+DQo+IGl0IGlzIG1vcmUgZWFzaWx5IHVzYWJsZSwgd2hpY2ggcmVtb3ZlcyB0aGUgbmVlZCB0byB3
+cmFwIGl0IGluIGhtbQ0KPiBhbmQgdGh1cyBhbGxvd2luZyB0byBraWxsIGEgbG90IG9mIGNvZGUN
+Cg0KRG8geW91IHdhbnQgc29tZSBvZiB0aGlzIHRvIHJ1biB0aHJvdWdoIGhtbS5naXQ/IEkgc2Vl
+IG1hbnkgcGF0Y2hlcw0KdGhhdCBkb24ndCBzZWVtIHRvIGhhdmUgaW50ZXItZGVwZW5kZW5jaWVz
+Li4NCg0KVGhhbmtzLA0KSmFzb24NCg==
