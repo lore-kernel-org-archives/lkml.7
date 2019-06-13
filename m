@@ -2,161 +2,83 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5FCC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B682C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3734720896
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB63F20896
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:12:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tlOOQm+9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DinTrsuf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388147AbfFMPMO (ORCPT
+        id S1733215AbfFMPMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:12:14 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35629 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732330AbfFMPMM (ORCPT
+        Thu, 13 Jun 2019 11:12:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50584 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732286AbfFMNtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:12:12 -0400
-Received: by mail-pl1-f194.google.com with SMTP id p1so8292504plo.2
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 08:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=whmO4VHJLH3yhLw88WoBAtjYDYrD7FKUhcW2qIhfTgQ=;
-        b=tlOOQm+9yvPlQK5EZ1zeDGAddCr36NZ94jYyPKZ2ztLXivCoKRdHBC4dlDcTC1Kgyu
-         7wUgtEAItK8J1ttV38DaXqd1byZFOAlM3SOVfIhRI87d8nVKSamRrYK/633Yoc3gOwYv
-         6K1MvQl0ZwpenunM3yUjBHCbWwLtr/cArA3DdXKVRtquu4ggCw3uFe6dDA0Ox1IQ0fq6
-         8KIvoLHQL0h3iVJrtkjs+HTv3CsLOkbQysUKhYw9b7qq9+FlZ9jS4l3cEfRL+4QfkA+U
-         CdUw8GAVk/5jcOTaxtyXMQjnGWNPM/D0H8KoEd52ir+7EhvqwI7XmxhwXYfypKtPBCB2
-         +RYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=whmO4VHJLH3yhLw88WoBAtjYDYrD7FKUhcW2qIhfTgQ=;
-        b=lK5bFHWcQwobDeIWYk1lnKJzC1+GuScxEPLqA73VOhX3WU10Jf+OIXOe33g2hc4atr
-         UrPkdJVghKBc6IViEQVkHI1WvRuTrGDhYl2U3H7SYGdmah0rajieSgAu/V4nQqUwoxur
-         ElJGvXPvIQi4HRUXQQgKf4mLyhq2uH1h61VwRSzPyBDTD6f4bdL6sJNFGUZGs9e2hhwI
-         ifZ6oBA2vvIaD9lCAAkOZIDHItaHCh94kI179cU24DDQS99+7p7NQqQCan0MgCGUzVMU
-         //ARMzLuJ5d8x7CGM2QPEP5aVXruxLEsQNpvx2A3uRusi4KTTJn7tfFARCqC3NjGasTP
-         nZSw==
-X-Gm-Message-State: APjAAAUKuqObNG9ugRpNv5XHpUjZBTywf9GdMIo6ABJ6RyXaFtPrWS5O
-        Zu7D86nqMXENjf8x5CGfNMXZE0WI4xI=
-X-Google-Smtp-Source: APXvYqzoiQTYF5wmclAxV+dqIhBAbzCFcTV5+wZZW09rVWJlA/V7DDkAGzQio4XBdDOyOMf2OvBGdA==
-X-Received: by 2002:a17:902:868b:: with SMTP id g11mr85657934plo.183.1560438732172;
-        Thu, 13 Jun 2019 08:12:12 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id m24sm117215pgh.75.2019.06.13.08.12.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Jun 2019 08:12:11 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 08:12:09 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, agross@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/7] drivers: regulator: qcom_spmi: Refactor
- get_mode/set_mode
-Message-ID: <20190613151209.GB6792@builder>
-References: <20190613142157.8674-1-jeffrey.l.hugo@gmail.com>
- <20190613142239.8779-1-jeffrey.l.hugo@gmail.com>
+        Thu, 13 Jun 2019 09:49:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=K3KSbmQVJmhgaolOXqN5jC7ueDvgBWUaym2beuTKQRM=; b=DinTrsufwYtZHErmCGkaFeASA
+        aVkny4bZYVbium2ZfOuKEEE8OUINrp31PJgKc09WyfN5syWyQ4Qzkqoc+9Di1xO0MTtqT7I2bdpHb
+        ZKg1Xg5iQ4S9MAWHCVzYTlQSMheCPUDg3SXhw3EjhdpMJdzvON1dcduU4J+tvwFlFzsqBPs1TGcYR
+        bHxcRRlD7nZR3eSlt2t7jUyYXhnLsY3Q1Fpjm+CayodVN3GTNDdWoMha9z/WwcjcdUgx2DXscNCKP
+        yMkr41g4hi9aHKTWebr9a0O6qr2afDMgiqKJYGFmOkSJ3gg6Rx5N1fKcs5ocDBIt5Hz4zTUPlZFzX
+        9Wg4OiTCw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbQ68-0007xY-J5; Thu, 13 Jun 2019 13:49:00 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D892420316592; Thu, 13 Jun 2019 15:48:58 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 15:48:58 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCHv2 0/3] improve wait logic of stop_machine
+Message-ID: <20190613134858.GL3436@hirez.programming.kicks-ass.net>
+References: <20190613103510.60529-1-heiko.carstens@de.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190613142239.8779-1-jeffrey.l.hugo@gmail.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+In-Reply-To: <20190613103510.60529-1-heiko.carstens@de.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 13 Jun 07:22 PDT 2019, Jeffrey Hugo wrote:
-
-> spmi_regulator_common_get_mode and spmi_regulator_common_set_mode use
-> multi-level ifs which mirror a switch statement.  Refactor to use a switch
-> statement to make the code flow more clear.
+On Thu, Jun 13, 2019 at 12:35:07PM +0200, Heiko Carstens wrote:
+> Heiko Carstens (2):
+>   processor: remove spin_cpu_yield
+>   processor: get rid of cpu_relax_yield
 > 
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  drivers/regulator/qcom_spmi-regulator.c | 28 ++++++++++++++++---------
->  1 file changed, 18 insertions(+), 10 deletions(-)
+> Martin Schwidefsky (1):
+>   s390: improve wait logic of stop_machine
 > 
-> diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-> index fd55438c25d6..1c18fe5969b5 100644
-> --- a/drivers/regulator/qcom_spmi-regulator.c
-> +++ b/drivers/regulator/qcom_spmi-regulator.c
-> @@ -911,13 +911,14 @@ static unsigned int spmi_regulator_common_get_mode(struct regulator_dev *rdev)
->  
->  	spmi_vreg_read(vreg, SPMI_COMMON_REG_MODE, &reg, 1);
->  
-> -	if (reg & SPMI_COMMON_MODE_HPM_MASK)
-> +	switch (reg) {
-> +	case SPMI_COMMON_MODE_HPM_MASK:
->  		return REGULATOR_MODE_NORMAL;
-> -
-> -	if (reg & SPMI_COMMON_MODE_AUTO_MASK)
-> +	case SPMI_COMMON_MODE_AUTO_MASK:
->  		return REGULATOR_MODE_FAST;
-> -
-> -	return REGULATOR_MODE_IDLE;
-> +	default:
-> +		return REGULATOR_MODE_IDLE;
-> +	}
->  }
->  
->  static int
-> @@ -925,12 +926,19 @@ spmi_regulator_common_set_mode(struct regulator_dev *rdev, unsigned int mode)
->  {
->  	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
->  	u8 mask = SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
-> -	u8 val = 0;
-> +	u8 val;
->  
-> -	if (mode == REGULATOR_MODE_NORMAL)
-> +	switch (mode) {
-> +	case REGULATOR_MODE_NORMAL:
->  		val = SPMI_COMMON_MODE_HPM_MASK;
-> -	else if (mode == REGULATOR_MODE_FAST)
-> +		break;
-> +	case REGULATOR_MODE_FAST:
->  		val = SPMI_COMMON_MODE_AUTO_MASK;
-> +		break;
-> +	default:
-> +		val = 0;
-> +		break;
-> +	}
+>  arch/powerpc/include/asm/processor.h |  2 --
+>  arch/s390/include/asm/processor.h    |  7 +------
+>  arch/s390/kernel/processor.c         | 19 +++++++++++++------
+>  arch/s390/kernel/smp.c               |  2 +-
+>  include/linux/processor.h            |  9 ---------
+>  include/linux/sched.h                |  4 ----
+>  include/linux/stop_machine.h         |  1 +
+>  kernel/stop_machine.c                | 19 ++++++++++++++-----
+>  8 files changed, 30 insertions(+), 33 deletions(-)
 
-For this part:
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->  
->  	return spmi_vreg_update_bits(vreg, SPMI_COMMON_REG_MODE, val, mask);
->  }
-> @@ -1834,9 +1842,9 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
->  			}
->  		}
->  
-> -		if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_HFS430) {
+Seems sensible to me.
 
-Squash this into patch 1.
-
-Regards,
-Bjorn
-
-> +		if (vreg->set_points->count == 1) {
->  			/* since there is only one range */
-> -			range = spmi_regulator_find_range(vreg);
-> +			range = vreg->set_points->range;
->  			vreg->desc.uV_step = range->step_uV;
->  		}
->  
-> -- 
-> 2.17.1
-> 
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
