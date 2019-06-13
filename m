@@ -2,157 +2,74 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4766AC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7A9C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA352082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 215FF2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:49:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YoqZ+USS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404294AbfFMQtL (ORCPT
+        id S2404198AbfFMQtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:49:11 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:41045 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727662AbfFMEhz (ORCPT
+        Thu, 13 Jun 2019 12:49:07 -0400
+Received: from mail-qk1-f173.google.com ([209.85.222.173]:38703 "EHLO
+        mail-qk1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727778AbfFMElp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 00:37:55 -0400
-Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id BEAB014A744;
-        Thu, 13 Jun 2019 14:37:47 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hbHTl-0005bp-W0; Thu, 13 Jun 2019 14:36:49 +1000
-Date:   Thu, 13 Jun 2019 14:36:49 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190613043649.GJ14363@dread.disaster.area>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
- <20190607110426.GB12765@quack2.suse.cz>
- <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
- <20190608001036.GF14308@dread.disaster.area>
- <20190612123751.GD32656@bombadil.infradead.org>
- <20190613002555.GH14363@dread.disaster.area>
- <20190613032320.GG32656@bombadil.infradead.org>
+        Thu, 13 Jun 2019 00:41:45 -0400
+Received: by mail-qk1-f173.google.com with SMTP id a27so11898521qkk.5
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 21:41:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mail-followup-to:mime-version
+         :content-disposition:user-agent;
+        bh=Uh7QEcZOHyufjXnKgIUUP1TR4HXzFVNhNjMRmSOQ/So=;
+        b=YoqZ+USSEjvVBJNXLV9esc9fw1+C5ITKaMSyYellEYDbnDIqAyYLtQidVCeog5VnN2
+         i9RV+lHJnbEeufxRJu97ENmOYw95cnwU6YvTHr321OsjDxiWMEMIi7zMfd3DmF6vBO5K
+         vu3NUCY52osolrT/cAC9T2lwhbpEfz7MPCE38v7sQ47IIyLs/cprI6aommAUK1G3TH8a
+         k2RgO5LilXbUhAi6RtVc5uv9AnDeHiu49aaFhlGbkvTWXO6kAgqqI2pWk1lIwKOT3BXH
+         R7eERKgjyQ7m3c0K2DJy58bAGacFm+Yp6YKSC/wWaIxJDT3pO4AyZQIhV+mJ62fYU72D
+         JvGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mail-followup-to
+         :mime-version:content-disposition:user-agent;
+        bh=Uh7QEcZOHyufjXnKgIUUP1TR4HXzFVNhNjMRmSOQ/So=;
+        b=dVgfprjHMVAu/P1Wrt1l/zEtcvb9GEdRxSzwaZlQ6uFHluGFjWBGcGSTSF+cotOCmJ
+         VPPO1XlP5OatpSjs3DHj++mSSeY9aGZY78qrXA9+b3UkY42sn4wjVLKpzaf88L1IP2KH
+         APmx2D5SW1EtAv/Fu+72sdy2Fx36Pf9miUJn0AFI5hf2wiq7bHmqwwRK7o7fWSao7Wa2
+         92MZkP2/jtpQLSN6nd6x6yVTV/SlumOqeKAlDuxl4l+i8KiYeZZ4sj8Equ0Jay7Vovpz
+         6INrdYqhrsmPrteBuI5q+WLa7EM57kCNR0jfvMCnxQOBFGv7X8nOZtRCVz1qJpVn++jI
+         rWow==
+X-Gm-Message-State: APjAAAUsiwYlNe/DTGNmWLLZC55i3UEFZvA0kmg8rB4F8wm3J0YDbuNW
+        4kTXGMBFd358XkCoUni3tubpRUViHuY=
+X-Google-Smtp-Source: APXvYqwQkzmP0f5Xf6GB03DEo+j4pTSJdcvI7wjlYg9ohdlo9m0gVB4J9Tc3awuE7h1zqPgs7C2lnw==
+X-Received: by 2002:a37:b87:: with SMTP id 129mr50552087qkl.132.1560400904643;
+        Wed, 12 Jun 2019 21:41:44 -0700 (PDT)
+Received: from freebsd.route53-aws-cloud.de (ec2-3-95-91-234.compute-1.amazonaws.com. [3.95.91.234])
+        by smtp.gmail.com with ESMTPSA id d31sm1196348qta.39.2019.06.12.21.41.43
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 12 Jun 2019 21:41:44 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 06:41:42 +0200
+From:   Damian Tometzki <damian.tometzki@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Subject: linux
+Message-ID: <20190613044141.GA44572@freebsd.route53-aws-cloud.de>
+Mail-Followup-To: linux-kernel@vger.kernel.org
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190613032320.GG32656@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
-        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=VVmKscACqtQWyMykWwEA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 08:23:20PM -0700, Matthew Wilcox wrote:
-> On Thu, Jun 13, 2019 at 10:25:55AM +1000, Dave Chinner wrote:
-> > On Wed, Jun 12, 2019 at 05:37:53AM -0700, Matthew Wilcox wrote:
-> > > That's rather different from the normal meaning of 'exclusive' in the
-> > > context of locks, which is "only one user can have access to this at
-> > > a time".
-> > 
-> > Layout leases are not locks, they are a user access policy object.
-> > It is the process/fd which holds the lease and it's the process/fd
-> > that is granted exclusive access.  This is exactly the same semantic
-> > as O_EXCL provides for granting exclusive access to a block device
-> > via open(), yes?
-> 
-> This isn't my understanding of how RDMA wants this to work, so we should
-> probably clear that up before we get too far down deciding what name to
-> give it.
-> 
-> For the RDMA usage case, it is entirely possible that both process A
-> and process B which don't know about each other want to perform RDMA to
-> file F.  So there will be two layout leases active on this file at the
-> same time.  It's fine for IOs to simultaneously be active to both leases.
-
-Yes, it is.
-
-> But if the filesystem wants to move blocks around, it has to break
-> both leases.
-
-No, the _lease layer_ needs to break both leases when the filesystem
-calls break_layout().
-
-The filesystem is /completely unaware/ of whether a lease is held,
-how many leases are held, what is involved in revoking leases or
-whether they are exclusive or not. The filesystem only knows that it
-is about to perform an operation that may require a layout lease to
-be broken, so it's _asking permission_ from the layout lease layer
-whether it is OK to go ahead with the operation.
-
-See what I mean about the layout lease being an /access arbitration/
-layer? It's the layer that decides whether a modification can be
-made or not, not the filesystem. The layout lease layer tells the
-filesystem what it should do, the filesystem just has to ensure it
-adds layout breaking callouts in places that can block safely and
-are serialised to ensure operations from new layouts can't race with
-the operation that broke the existing layouts.
-
-> If Process C tries to do a write to file F without a lease, there's no
-> problem, unless a side-effect of the write would be to change the block
-> mapping,
-
-That's a side effect we cannot predict ahead of time. But it's
-also _completely irrelevant_ to the layout lease layer API and
-implementation.(*)
-
-> in which case either the leases must break first, or the write
-> must be denied.
-
-Which is exactly how I'm saying layout leases already interact with
-the filesystem: that if the lease cannot be broken, break_layout()
-returns -ETXTBSY to the filesystem, and the filesystem returns that
-to the application having made no changes at all. Layout leases are
-the policy engine, the filesystem just has to implement the
-break_layout() callouts such that layout breaking is consistent,
-correct, and robust....
-
-Cheers,
-
-Dave.
-
-(*) In the case of XFS, we don't know if a layout change will be
-necessary until we are deep inside the actual IO path and hold inode
-metadata locks. We can't block here to break the layout because IO
-completion and metadata commits need to occur to allow the
-application to release it's lease and IO completion requires that
-same inode metadata lock. i.e. if we block once we know a layout
-change needs to occur, we will deadlock the filesystem on the inode
-metadata lock.
-
-Hence the filesystem implementation dictates when the filesystem
-issues layout lease break notifications. However, these filesystem
-implementation issues do not dictate how applications interact with
-layout leases, how layout leases are managed, whether concurrent
-leases are allowed, whether leases can be broken, etc.  That's all
-managed by the layout lease layer and that's where the go/no go
-decision is made and communicated to the filesystem as the return
-value from the break_layout() call.
-
--- 
-Dave Chinner
-david@fromorbit.com
+linux
