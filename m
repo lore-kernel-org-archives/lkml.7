@@ -2,144 +2,140 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF81C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684C6C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56A9120851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429D420851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 18:28:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="crvCEGgk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="om8CHXpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbfFMS1w (ORCPT
+        id S1728702AbfFMS2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 14:27:52 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33665 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727179AbfFMS1w (ORCPT
+        Thu, 13 Jun 2019 14:28:09 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41410 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727179AbfFMS2J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 14:27:52 -0400
-Received: by mail-oi1-f194.google.com with SMTP id q186so101798oia.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:27:51 -0700 (PDT)
+        Thu, 13 Jun 2019 14:28:09 -0400
+Received: by mail-pf1-f194.google.com with SMTP id m30so11834513pff.8
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 11:28:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MQQWIXbMnO77ZtHyX2kfFVvlpzWpGkMLz/R1+ir3QOA=;
-        b=crvCEGgkqd+iu3jPAVCgc0rO9kwagRqhiuh9lqc2Ju8CbgOGid+cpJ19wpMCBIaSji
-         U8Mz0dX1Um88VCqaKkUNTGuID9Bzc63KYSiIdoNpp/7dpBf8k6fFGIdSQ7ELDhxa2lhq
-         O+Cm1rdZssbK5qGXuJrRKvIFe20o9RjF63pnvwmTOEXNE3m0kL4mYXXHPHnWB7iNGKvf
-         IRmvCqhPr54CoqyHGAWbyFjtaCU9quXmW4KMHVoz5mhnnS/xbbV6lznIglpAz1QTbisQ
-         VH8TIrLDYodoKV2w14PaLsUgipHZwL/KVe25acJc00UDmNqVKP+RWr4Mjo9Lxw4wybxj
-         3jlw==
+         :cc;
+        bh=FemmaFQaRuutEOaISPpOpqicA0l7Z+VaG2En8NxAbN8=;
+        b=om8CHXpui7NO/n4e0fAe/88mp2X04gjpzNTg0RhpC2P/3kC8OznZOg5t8HOFo+axq+
+         9EtdPAdhP1fwLKFOlb0ozVWzxlbTlMttuMpAm7drb9bLM7LmR4Ui8RCsYJDzuYTkHaut
+         oqMpurM7cd4UOxLlZ54GCkYlRHaCerc1SIOKXfte06yeQ1BpmnuUtNPMsLHbpz0j8oiG
+         GV7YDiYts/dIVzk5ezT75fSCFLQ9cYVzhOTBXA6kjQW8d5h9uSjg28VaKaRWmMZtwOFw
+         k5pGcFw3I2uOwmmrklCaIv+kLeXKcvkhfdBPOxmUulvSnPf11EOZC6Vn21Vlk+mKY0ST
+         xafQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MQQWIXbMnO77ZtHyX2kfFVvlpzWpGkMLz/R1+ir3QOA=;
-        b=LGQv2toO1pOBJnuJ9tfSUsVECbJaYKHraCDH5T3bZugUzy011lwcQjUelcaleBekk9
-         N5oSc+xAH+J9rmQXLOxppW4pIyn9o2F3hofWwcvSgkPycn+e4o00tqtcCls6klMCPkwy
-         A5akJqPYRirSfAHiixko/VqKtJ9xyE/ffHf4TNdp3EweRVR6c7Xqf/u1STfSw3YBBMML
-         1DlsIWI+DDhIs8LYIzv8VywaxyDUlfAvYcYz52Q910Cc7zQET1Mc9/3Kz8OYjjgGxJ9O
-         7XQnpoDSONIgmfuXLl2oAV+yAvmiUNW0VvgmURm1Cp7mFJqTno5lzBO5+5Ke14o4Chc2
-         K2SA==
-X-Gm-Message-State: APjAAAWlxEMWT0/XFqcT0ryB3u92i+jHWTIv0BZaJZfEgHtiBo3XrFON
-        StJAw8ppMijmjSEBe4+Jp1vbhrpoUBtJdiOzfcc4xQ==
-X-Google-Smtp-Source: APXvYqwS3UGoJsEHP8JK1xPznND3LFKZmK0TBwbTuAL+csM43V1iR6xbM76Rxv8Te4jLIHldpTP2/DzDl/DDdZFYcCo=
-X-Received: by 2002:aca:fc50:: with SMTP id a77mr4031867oii.0.1560450471426;
- Thu, 13 Jun 2019 11:27:51 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=FemmaFQaRuutEOaISPpOpqicA0l7Z+VaG2En8NxAbN8=;
+        b=sibnITR2RYwWSZFAzK8O3tb9TDbck2oYMCvuATTg5/2o7xdQ37K6/1bJffyTuVvhjP
+         BdxU1Fp1eP2SDHf6cxTS7HcL9RUSR+Hhy8nmp6aPnDRkkQvyviVbkNXnWJ8IsXQ3ExCf
+         c97VeQ/rxzn/Cxf4Gjhn8AuN1jaedamArsmVJhuE7xUYsZANKyzK7fvhsnSmt5s/mPZV
+         kVHzgyariehPwebSddsxuLF4EWDqGWU1uk+WZ23+f8om7mF6gDawPtbZ1ai5K58drZho
+         YxkpLNSlzvJ8TcFYAehvdMpZitlmD/WJeD5guqDGeGUgo1E3SEBJQQZwzV5LEka0VwuG
+         Syng==
+X-Gm-Message-State: APjAAAX3Un9jBge8S1vZwiuisVU4++as5A38ANRiblnWCetVl9qsA7lw
+        9Y+IVCawEPf+jKUUhQaw/vk6YmKyaSCO78tuaJ3jbA==
+X-Google-Smtp-Source: APXvYqzEyXLM+Bi9kJiuud+sdXFaTtb19Ij33j9D+8uEzxfp4dA+FBSnDMPfcYwuWtzPB/pWhm7FVISawXRV/tfZlU8=
+X-Received: by 2002:a62:2ec4:: with SMTP id u187mr93063583pfu.84.1560450488136;
+ Thu, 13 Jun 2019 11:28:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190613094326.24093-1-hch@lst.de>
-In-Reply-To: <20190613094326.24093-1-hch@lst.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 13 Jun 2019 11:27:39 -0700
-Message-ID: <CAPcyv4jBdwYaiVwkhy6kP78OBAs+vJme1UTm47dX4Eq_5=JgSg@mail.gmail.com>
-Subject: Re: dev_pagemap related cleanups
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
+References: <CAKwvOdn930hhHcnCA9arJ5=9SsT-6BfFC_1punmUZX2xWM-Hnw@mail.gmail.com>
+ <20190613182610.238801-1-nhuck@google.com>
+In-Reply-To: <20190613182610.238801-1-nhuck@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 13 Jun 2019 11:27:57 -0700
+Message-ID: <CAKwvOdnDw4X4odqiwqWze78BjOn04zatnU9WgOcv9Jw3RXLaPA@mail.gmail.com>
+Subject: Re: [PATCH v2] memory: tegra: Fix -Wunused-const-variable
+To:     Nathan Huckleberry <nhuck@google.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 2:43 AM Christoph Hellwig <hch@lst.de> wrote:
+On Thu, Jun 13, 2019 at 11:26 AM 'Nathan Huckleberry' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+> Changes from v1 -> v2:
+> * Moved definition of tegra124_mc_emem_regs into existing ifdef
+
+Thanks for sending the v2, LGTM.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+> --- a/drivers/memory/tegra/tegra124.c
+> +++ b/drivers/memory/tegra/tegra124.c
+> @@ -33,28 +33,6 @@
+>  #define MC_EMEM_ARB_MISC1                      0xdc
+>  #define MC_EMEM_ARB_RING1_THROTTLE             0xe0
 >
-> Hi Dan, J=C3=A9r=C3=B4me and Jason,
+> -static const unsigned long tegra124_mc_emem_regs[] = {
+> -       MC_EMEM_ARB_CFG,
+> -       MC_EMEM_ARB_OUTSTANDING_REQ,
+> -       MC_EMEM_ARB_TIMING_RCD,
+> -       MC_EMEM_ARB_TIMING_RP,
+> -       MC_EMEM_ARB_TIMING_RC,
+> -       MC_EMEM_ARB_TIMING_RAS,
+> -       MC_EMEM_ARB_TIMING_FAW,
+> -       MC_EMEM_ARB_TIMING_RRD,
+> -       MC_EMEM_ARB_TIMING_RAP2PRE,
+> -       MC_EMEM_ARB_TIMING_WAP2PRE,
+> -       MC_EMEM_ARB_TIMING_R2R,
+> -       MC_EMEM_ARB_TIMING_W2W,
+> -       MC_EMEM_ARB_TIMING_R2W,
+> -       MC_EMEM_ARB_TIMING_W2R,
+> -       MC_EMEM_ARB_DA_TURNS,
+> -       MC_EMEM_ARB_DA_COVERS,
+> -       MC_EMEM_ARB_MISC0,
+> -       MC_EMEM_ARB_MISC1,
+> -       MC_EMEM_ARB_RING1_THROTTLE
+> -};
+> -
+>  static const struct tegra_mc_client tegra124_mc_clients[] = {
+>         {
+>                 .id = 0x00,
+> @@ -1049,6 +1027,28 @@ static const struct tegra_mc_reset tegra124_mc_resets[] = {
+>  };
 >
-> below is a series that cleans up the dev_pagemap interface so that
-> it is more easily usable, which removes the need to wrap it in hmm
-> and thus allowing to kill a lot of code
->
-> Diffstat:
->
->  22 files changed, 245 insertions(+), 802 deletions(-)
+>  #ifdef CONFIG_ARCH_TEGRA_124_SOC
+> +static const unsigned long tegra124_mc_emem_regs[] = {
+> +       MC_EMEM_ARB_CFG,
+> +       MC_EMEM_ARB_OUTSTANDING_REQ,
+> +       MC_EMEM_ARB_TIMING_RCD,
+> +       MC_EMEM_ARB_TIMING_RP,
+> +       MC_EMEM_ARB_TIMING_RC,
+> +       MC_EMEM_ARB_TIMING_RAS,
+> +       MC_EMEM_ARB_TIMING_FAW,
+> +       MC_EMEM_ARB_TIMING_RRD,
+> +       MC_EMEM_ARB_TIMING_RAP2PRE,
+> +       MC_EMEM_ARB_TIMING_WAP2PRE,
+> +       MC_EMEM_ARB_TIMING_R2R,
+> +       MC_EMEM_ARB_TIMING_W2W,
+> +       MC_EMEM_ARB_TIMING_R2W,
+> +       MC_EMEM_ARB_TIMING_W2R,
+> +       MC_EMEM_ARB_DA_TURNS,
+> +       MC_EMEM_ARB_DA_COVERS,
+> +       MC_EMEM_ARB_MISC0,
+> +       MC_EMEM_ARB_MISC1,
+> +       MC_EMEM_ARB_RING1_THROTTLE
+> +};
+> +
 
-Hooray!
-
-> Git tree:
->
->     git://git.infradead.org/users/hch/misc.git hmm-devmem-cleanup
-
-I just realized this collides with the dev_pagemap release rework in
-Andrew's tree (commit ids below are from next.git and are not stable)
-
-4422ee8476f0 mm/devm_memremap_pages: fix final page put race
-771f0714d0dc PCI/P2PDMA: track pgmap references per resource, not globally
-af37085de906 lib/genalloc: introduce chunk owners
-e0047ff8aa77 PCI/P2PDMA: fix the gen_pool_add_virt() failure path
-0315d47d6ae9 mm/devm_memremap_pages: introduce devm_memunmap_pages
-216475c7eaa8 drivers/base/devres: introduce devm_release_action()
-
-CONFLICT (content): Merge conflict in tools/testing/nvdimm/test/iomap.c
-CONFLICT (content): Merge conflict in mm/hmm.c
-CONFLICT (content): Merge conflict in kernel/memremap.c
-CONFLICT (content): Merge conflict in include/linux/memremap.h
-CONFLICT (content): Merge conflict in drivers/pci/p2pdma.c
-CONFLICT (content): Merge conflict in drivers/nvdimm/pmem.c
-CONFLICT (content): Merge conflict in drivers/dax/device.c
-CONFLICT (content): Merge conflict in drivers/dax/dax-private.h
-
-Perhaps we should pull those out and resend them through hmm.git?
-
-It also turns out the nvdimm unit tests crash with this signature on
-that branch where base v5.2-rc3 passes:
-
-    BUG: kernel NULL pointer dereference, address: 0000000000000008
-    [..]
-    CPU: 15 PID: 1414 Comm: lt-libndctl Tainted: G           OE
-5.2.0-rc3+ #3399
-    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06=
-/2015
-    RIP: 0010:percpu_ref_kill_and_confirm+0x1e/0x180
-    [..]
-    Call Trace:
-     release_nodes+0x234/0x280
-     device_release_driver_internal+0xe8/0x1b0
-     bus_remove_device+0xf2/0x160
-     device_del+0x166/0x370
-     unregister_dev_dax+0x23/0x50
-     release_nodes+0x234/0x280
-     device_release_driver_internal+0xe8/0x1b0
-     unbind_store+0x94/0x120
-     kernfs_fop_write+0xf0/0x1a0
-     vfs_write+0xb7/0x1b0
-     ksys_write+0x5c/0xd0
-     do_syscall_64+0x60/0x240
-
-The crash bisects to:
-
-    d8cc8bbe108c device-dax: use the dev_pagemap internal refcount
+-- 
+Thanks,
+~Nick Desaulniers
