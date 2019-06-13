@@ -2,53 +2,54 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441D0C468B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 976D0C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E35A20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD7920665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441742;
-	bh=JqdbKrRMKVHfma50c3wbyfNhbelEP8PfbAH0vsI4tzg=;
+	s=default; t=1560441747;
+	bh=uwVshWOluPUjLM4fSWWgcdbrPcHDFtlVUyODm2FjKHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vrc2MygMLx7YVd1QB/oBKODgn47vmKpvcWb1uz+Dh1mL9AYCGk+EPEPKAwKhcjEpu
-	 fJyNuoOVzRpfFx+pzHU8mCrC8h2I/UueA74RUMHE6jR/G5RR3VmzypKfhrPTPyRtp3
-	 34jUHpY3Ikia1SNnYGLE3S2tzkrSuXNZGUNMKG7Y=
+	b=CoYZfjAHHitPQ878IASr3NhZwMm6sqyWUsmPPxtY95shGtaLcseifkmzjb7xFvQO8
+	 IgZNxk06yEEygLHUQ8qxeDaC22Krve5Ec0Eda6g0VL2iBoJGxkbq1Ft1RJDSjiZJb7
+	 MnNnOJRvKbotSwwj/VkwLYyplsUXg3RhlK7g3mFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390177AbfFMQBz (ORCPT
+        id S2390957AbfFMQC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:01:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36228 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:02:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731420AbfFMIsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:48:15 -0400
+        id S1731407AbfFMIr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:47:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 931E020851;
-        Thu, 13 Jun 2019 08:48:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6CB6206BA;
+        Thu, 13 Jun 2019 08:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415695;
-        bh=JqdbKrRMKVHfma50c3wbyfNhbelEP8PfbAH0vsI4tzg=;
+        s=default; t=1560415675;
+        bh=uwVshWOluPUjLM4fSWWgcdbrPcHDFtlVUyODm2FjKHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yIDlsu8H8g7ffd+nWtvZC27JrRpp8m+MLbojr/iowPoQROFM4hB9BJ+oARS6cbs2r
-         qYxY5tUx3ppXAlSpFdPMeDoPLMWrB26WrOYAsNtQzJLo4VjApgqtpGt1TX0OqzRv40
-         xX3HfBAHwVi6YG8bRxNaOHSY82zAyV1z3R7Ljwfc=
+        b=EOniGk+p0abkaoVyhd5how3McCv6rMLjryzrHO27OPhMcD8xG7DuZRnIgM9hFe8vX
+         /QnGSYc/MJ7RvKxiJ/MeDrLzg5M+juXpXDPWhImQuAdKbviss1kCGwAK06vQPT1X0a
+         mv+AgZL3RpBaMj9JWSOZxJaCO5m3ZgjdXrgim0eo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Georg Hofmann <georg@hofmannsweb.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Kirill Smelkov <kirr@nexedi.com>,
+        Han-Wen Nienhuys <hanwen@google.com>,
+        Jakob Unterwurzacher <jakobunt@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 068/155] watchdog: imx2_wdt: Fix set_timeout for big timeout values
-Date:   Thu, 13 Jun 2019 10:33:00 +0200
-Message-Id: <20190613075656.790952493@linuxfoundation.org>
+Subject: [PATCH 5.1 085/155] fuse: retrieve: cap requested size to negotiated max_write
+Date:   Thu, 13 Jun 2019 10:33:17 +0200
+Message-Id: <20190613075657.843759297@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -61,41 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b07e228eee69601addba98b47b1a3850569e5013 ]
+[ Upstream commit 7640682e67b33cab8628729afec8ca92b851394f ]
 
-The documentated behavior is: if max_hw_heartbeat_ms is implemented, the
-minimum of the set_timeout argument and max_hw_heartbeat_ms should be used.
-This patch implements this behavior.
-Previously only the first 7bits were used and the input argument was
-returned.
+FUSE filesystem server and kernel client negotiate during initialization
+phase, what should be the maximum write size the client will ever issue.
+Correspondingly the filesystem server then queues sys_read calls to read
+requests with buffer capacity large enough to carry request header + that
+max_write bytes. A filesystem server is free to set its max_write in
+anywhere in the range between [1*page, fc->max_pages*page]. In particular
+go-fuse[2] sets max_write by default as 64K, wheres default fc->max_pages
+corresponds to 128K. Libfuse also allows users to configure max_write, but
+by default presets it to possible maximum.
 
-Signed-off-by: Georg Hofmann <georg@hofmannsweb.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+If max_write is < fc->max_pages*page, and in NOTIFY_RETRIEVE handler we
+allow to retrieve more than max_write bytes, corresponding prepared
+NOTIFY_REPLY will be thrown away by fuse_dev_do_read, because the
+filesystem server, in full correspondence with server/client contract, will
+be only queuing sys_read with ~max_write buffer capacity, and
+fuse_dev_do_read throws away requests that cannot fit into server request
+buffer. In turn the filesystem server could get stuck waiting indefinitely
+for NOTIFY_REPLY since NOTIFY_RETRIEVE handler returned OK which is
+understood by clients as that NOTIFY_REPLY was queued and will be sent
+back.
+
+Cap requested size to negotiate max_write to avoid the problem.  This
+aligns with the way NOTIFY_RETRIEVE handler works, which already
+unconditionally caps requested retrieve size to fuse_conn->max_pages.  This
+way it should not hurt NOTIFY_RETRIEVE semantic if we return less data than
+was originally requested.
+
+Please see [1] for context where the problem of stuck filesystem was hit
+for real, how the situation was traced and for more involving patch that
+did not make it into the tree.
+
+[1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
+[2] https://github.com/hanwen/go-fuse
+
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+Cc: Han-Wen Nienhuys <hanwen@google.com>
+Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/imx2_wdt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/fuse/dev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
-index 2b52514eaa86..7e7bdcbbc741 100644
---- a/drivers/watchdog/imx2_wdt.c
-+++ b/drivers/watchdog/imx2_wdt.c
-@@ -178,8 +178,10 @@ static void __imx2_wdt_set_timeout(struct watchdog_device *wdog,
- static int imx2_wdt_set_timeout(struct watchdog_device *wdog,
- 				unsigned int new_timeout)
- {
--	__imx2_wdt_set_timeout(wdog, new_timeout);
-+	unsigned int actual;
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -1749,7 +1749,7 @@ static int fuse_retrieve(struct fuse_con
+ 	offset = outarg->offset & ~PAGE_MASK;
+ 	file_size = i_size_read(inode);
  
-+	actual = min(new_timeout, wdog->max_hw_heartbeat_ms * 1000);
-+	__imx2_wdt_set_timeout(wdog, actual);
- 	wdog->timeout = new_timeout;
- 	return 0;
- }
--- 
-2.20.1
-
+-	num = outarg->size;
++	num = min(outarg->size, fc->max_write);
+ 	if (outarg->offset > file_size)
+ 		num = 0;
+ 	else if (outarg->offset + num > file_size)
 
 
