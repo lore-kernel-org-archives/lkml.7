@@ -2,96 +2,144 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1DCC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C427BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C55B21537
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF14206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:39:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4ID1AGz"
+	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="Q7YqbkWK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbfFMWiS (ORCPT
+        id S1726817AbfFMWjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 18:38:18 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43282 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfFMWiR (ORCPT
+        Thu, 13 Jun 2019 18:39:18 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45572 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbfFMWjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 18:38:17 -0400
-Received: by mail-pl1-f194.google.com with SMTP id cl9so121837plb.10;
-        Thu, 13 Jun 2019 15:38:17 -0700 (PDT)
+        Thu, 13 Jun 2019 18:39:17 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a14so456397edv.12
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 15:39:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nBv/R182uhuCafyQYbQVEhkRbrB37kIxJPAogDFYLDo=;
-        b=C4ID1AGzLHSV4WlcejkSs+WUZYDDZRU0ceOadoCNvY5crkGII0Ax3BiBWFEJOs8hME
-         uVgrS0bHKHuYqU8df8ZqblmPhmwLmIAPEFU5ZHSxheIq/fR3jy8BhDdd/PeHjEw17kMK
-         NCqz2/0ApPegBel7QHf0YQUmUVl2+NdDeMfTJI8uVeEntD12dZqp9OsSIdhmp6S9pUS1
-         pEJ3vcXXX9oojFcIMuP7zA8Bio4TFasdMsKTY9ZvwsZqDGkYjvA8kYvQ5JOnJP0XOfgv
-         Ao9+JPkp2wbNRfh3Xgkw/ulzTy4JYtkxuUhmOHit+/SPQ63qmmDb6LzWP6peXEZKQjx6
-         qgOQ==
+        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EcPKIz/cx9BuSCY4h5Jds9dddvg3WP5b4PjiRQaCMNk=;
+        b=Q7YqbkWKog9myMLVKuEgSGV/QhFlPY8pqvqD3ElQJa5O+VupGahQ/2KWdmD42UChZU
+         wPmlxSspSryqNb5xCB8JLtGZX6vRCzXM8xY7AmfA6QICBXISxNprKepOzIgPRJ0PmKvq
+         lwOf3L9Aeaw9au+GkaXXU5HxIJQ1vxFfownqyJtqMjhF5SRbY4FdMVVh7ZLQ7hbQYj3Q
+         iidXZkXXf0qlsVYk9WxwAFcMHH4IP3leZkOYhpAmRlGBv4K+6lmx2ZeQRojQOmlcq9FK
+         mitiCFQNPcpZ74hbmAblxvrrqQFu7g6p6HGZuZiNBMXyyAAw52tc7SZA4bY0a5yZBSlR
+         Rxmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=nBv/R182uhuCafyQYbQVEhkRbrB37kIxJPAogDFYLDo=;
-        b=RpNXXmueU1cYA0Gav6XJqSRFEW27MN8dSMZ1fU3QPKfckhNEG4jbyDSfxZRsFqCq14
-         9aGOvO1GdcfqFGv4AvgNirgDhbvPfjxM92P0DgAjAMpRhh5aTGuQaRRLrKM2Z1KrMW87
-         h2PcuMIS/GRFZDSoOZweGznsJ+8a8b8vy/A86ePUNnngVYM3HS9SzIwweQ/+7zo1Nozp
-         fGprOqG4q3hcDIuLNKBj6H5yrXK+EgL+ENzogBinn4hSGJ7TSqM1Vjw/y5Mbr2knu8KS
-         jRqvx/MpQsVDfIQU2DLCMrnkN2Re5Wk9J4pFJ8Y21o4g5iOS9TAYXSwTJxvI/xuf0yAD
-         kx1g==
-X-Gm-Message-State: APjAAAW7CNpH9YSwG5novLcEv0c9H0Q9w2tq9z9qc9tTR8NTWy+V+Jds
-        9TXcCkB7LifJBL7FPcJeKRIfHQRV
-X-Google-Smtp-Source: APXvYqwOYVT2Vf4vs1Ozh4HBWLARCY8WzAVyxtWkJRoaIjWdl2aQJIHePtegseZh1ArkIRkMH0Ia0A==
-X-Received: by 2002:a17:902:22e:: with SMTP id 43mr86565994plc.272.1560465496554;
-        Thu, 13 Jun 2019 15:38:16 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p1sm693427pff.74.2019.06.13.15.38.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 15:38:15 -0700 (PDT)
-Subject: Re: [PATCH 4.14 00/81] 4.14.126-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20190613075649.074682929@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <39e4eba7-e40e-4e75-7c31-6e201980eaab@roeck-us.net>
-Date:   Thu, 13 Jun 2019 15:38:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        bh=EcPKIz/cx9BuSCY4h5Jds9dddvg3WP5b4PjiRQaCMNk=;
+        b=DvDLmbKEumJZtPrz+BuorhJO/MHoZC6v2IFsloksY/G1ZHtfm1+kF69jJBIdRj1wVM
+         4Z8HKhQh9/qLMUz8lf6mw0/hG5jN/ih3wEoD3R6eJyRE75QCrTMh0Jux1dDPqN5r1Q1Q
+         5XK/ZduDUZb6rKEsHRtusj1z+jSpgA7zeOUmyQR0YFqIL3yI8g8lKo5iHH61u1NZD7Tq
+         eJXb9kgA0BfnXUgvm05qdiutyMrFA8oobZqrddQnFOhu89NyVd3cVxRz8pMETe8jJ7sR
+         DI4DwKmeU7btU3WVtfYCjpGVrvZv0DK35++rMEuiFw5HhY/tDrOZXKKui5HXEXyepu8D
+         +vgA==
+X-Gm-Message-State: APjAAAWRONNNux0Gjqmeq8Ys4RPs9UqjeP0h1efgbYHf6bEcdFfRIXer
+        l7lHt/Za9kwc5rgkwwRHUrVChw==
+X-Google-Smtp-Source: APXvYqznp1hHyw5PYwIoh2oTLD6q+OMGquaY21fb63SmdivVnsFdvFIZnOzRxPqoidZqkL4RdKrnQw==
+X-Received: by 2002:a50:bdc2:: with SMTP id z2mr97240407edh.245.1560465555952;
+        Thu, 13 Jun 2019 15:39:15 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:8084:a0:bc00:8042:d435:a754:1f22])
+        by smtp.googlemail.com with ESMTPSA id s16sm216522eji.27.2019.06.13.15.39.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 15:39:14 -0700 (PDT)
+From:   Tom Murphy <murphyt7@tcd.ie>
+To:     iommu@lists.linux-foundation.org
+Cc:     Tom Murphy <murphyt7@tcd.ie>, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v4 0/5] iommu/amd: Convert the AMD iommu driver to the dma-iommu api
+Date:   Thu, 13 Jun 2019 23:38:55 +0100
+Message-Id: <20190613223901.9523-1-murphyt7@tcd.ie>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/19 1:32 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.126 release.
-> There are 81 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 15 Jun 2019 07:54:51 AM UTC.
-> Anything received after that time might be too late.
-> 
+Convert the AMD iommu driver to the dma-iommu api. Remove the iova
+handling and reserve region code from the AMD iommu driver.
 
-Build results:
-	total: 172 pass: 172 fail: 0
-Qemu test results:
-	total: 345 pass: 345 fail: 0
+Change-log:
+V4:
+-Rebase on top of linux-next
+-Split the removing of the unnecessary locking in the amd iommu driver into a seperate patch
+-refactor the "iommu/dma-iommu: Handle deferred devices" patch and address comments
+v3:
+-rename dma_limit to dma_mask
+-exit handle_deferred_device early if (!is_kdump_kernel())
+-remove pointless calls to handle_deferred_device
+v2:
+-Rebase on top of this series:
+ http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-iommu-ops.3
+-Add a gfp_t parameter to the iommu_ops::map function.
+-Made use of the reserve region code inside the dma-iommu api
 
-Guenter
+Tom Murphy (5):
+  iommu/amd: Remove unnecessary locking from AMD iommu driver
+  iommu: Add gfp parameter to iommu_ops::map
+  iommu/dma-iommu: Handle deferred devices
+  iommu/dma-iommu: Use the dev->coherent_dma_mask
+  iommu/amd: Convert AMD iommu driver to the dma-iommu api
+
+ drivers/iommu/Kconfig           |   1 +
+ drivers/iommu/amd_iommu.c       | 690 ++++----------------------------
+ drivers/iommu/amd_iommu_types.h |   1 -
+ drivers/iommu/arm-smmu-v3.c     |   2 +-
+ drivers/iommu/arm-smmu.c        |   2 +-
+ drivers/iommu/dma-iommu.c       |  45 ++-
+ drivers/iommu/exynos-iommu.c    |   2 +-
+ drivers/iommu/intel-iommu.c     |   2 +-
+ drivers/iommu/iommu.c           |  43 +-
+ drivers/iommu/ipmmu-vmsa.c      |   2 +-
+ drivers/iommu/msm_iommu.c       |   2 +-
+ drivers/iommu/mtk_iommu.c       |   2 +-
+ drivers/iommu/mtk_iommu_v1.c    |   2 +-
+ drivers/iommu/omap-iommu.c      |   2 +-
+ drivers/iommu/qcom_iommu.c      |   2 +-
+ drivers/iommu/rockchip-iommu.c  |   2 +-
+ drivers/iommu/s390-iommu.c      |   2 +-
+ drivers/iommu/tegra-gart.c      |   2 +-
+ drivers/iommu/tegra-smmu.c      |   2 +-
+ drivers/iommu/virtio-iommu.c    |   2 +-
+ include/linux/iommu.h           |  21 +-
+ 21 files changed, 179 insertions(+), 652 deletions(-)
+
+-- 
+2.20.1
+
