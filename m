@@ -3,67 +3,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AC8C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C76C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66070206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE6D206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730704AbfFMP2o (ORCPT
+        id S1727725AbfFMP26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:28:44 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34548 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728928AbfFML2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 07:28:05 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AB2461C04B2F61064578;
-        Thu, 13 Jun 2019 19:28:03 +0800 (CST)
-Received: from [127.0.0.1] (10.177.131.64) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 13 Jun 2019
- 19:27:54 +0800
-Subject: Re: [PATCH 1/4] x86: kdump: move reserve_crashkernel_low() into
- kexec_core.c
-To:     Dave Young <dyoung@redhat.com>
-References: <20190507035058.63992-1-chenzhou10@huawei.com>
- <20190507035058.63992-2-chenzhou10@huawei.com>
- <20190612084551.GA24575@dhcp-128-65.nay.redhat.com>
-CC:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <akpm@linux-foundation.org>, <ard.biesheuvel@linaro.org>,
-        <rppt@linux.ibm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
-        <bp@alien8.de>, <ebiederm@xmission.com>,
-        <wangkefeng.wang@huawei.com>, <linux-mm@kvack.org>,
-        <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <takahiro.akashi@linaro.org>, <horms@verge.net.au>,
-        <linux-arm-kernel@lists.infradead.org>
-From:   Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <681c9884-4b8b-be87-2d78-d5f53ab23f34@huawei.com>
-Date:   Thu, 13 Jun 2019 19:27:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Thu, 13 Jun 2019 11:28:58 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40134 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727315AbfFMP25 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 11:28:57 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a93so8309499pla.7;
+        Thu, 13 Jun 2019 08:28:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yUJJ8iqcvuJ3BPVcgtI/PQYUXpHj8gT005mFggb92XQ=;
+        b=PF3GNfhjtwVYJdzQBH96+/hxI1EhFG/gMHdHTnBfDvIBuBxpMxbseSn/0HkOCDhkDm
+         JSk0oxYKaKsLKxUgd/3HTPaasTCgDkhU1AgxMIpGAqHtTI1x6GuFenwI1rtMu4wrFYp/
+         e5tTP4UbcYIRq40/KTzyDLttdXHgGsgyzzFi7PohP5+DXHBAx4sAVAfO5aK9Vgtjlugq
+         rw9WKZ81kBEe1eNDOUBlKPLA2Y4bdDZHVp//CTmMiyCYjDqBTJm2TMbYFnoJHLOGue/N
+         kDa+luB3kqyZ1FLAQuPK3zKa9DHiO+tTFs7XSnJp0cN6/6fkNcXhQ0GUPRU1dfGn5ZZa
+         MvOA==
+X-Gm-Message-State: APjAAAWG9w8EuKdzM4hgqqU7IgAfyX2gevBs5KTJHv8nYm1GErXxf4dw
+        oZFuLsiljcNikXenlRhCP+vAZu/B
+X-Google-Smtp-Source: APXvYqw8UXQ2qB/hmtqwZrw/7powAQsjJBiHMBd48yk7lWGltCuWgtRv5qqnMMohLJcBcgyuOnD9Iw==
+X-Received: by 2002:a17:902:bd94:: with SMTP id q20mr2154027pls.307.1560439735599;
+        Thu, 13 Jun 2019 08:28:55 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id r3sm164908pgp.51.2019.06.13.08.28.54
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 08:28:54 -0700 (PDT)
+Subject: Re: [PATCH v2] RDMA/cma: Make CM response timeout and # CM retries
+ configurable
+To:     Doug Ledford <dledford@redhat.com>,
+        =?UTF-8?Q?H=c3=a5kon_Bugge?= <haakon.bugge@oracle.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        Parav Pandit <parav@mellanox.com>,
+        Steve Wise <swise@opengridcomputing.com>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190226075722.1692315-1-haakon.bugge@oracle.com>
+ <174ccd37a9ffa05d0c7c03fe80ff7170a9270824.camel@redhat.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <2c114313-01fe-6d4d-5134-592d1a7b829b@acm.org>
+Date:   Thu, 13 Jun 2019 08:28:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190612084551.GA24575@dhcp-128-65.nay.redhat.com>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <174ccd37a9ffa05d0c7c03fe80ff7170a9270824.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.131.64]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+On 6/13/19 7:25 AM, Doug Ledford wrote:
+> So, to revive this patch, what I'd like to see is some attempt to
+> actually quantify a reasonable timeout for the default backlog depth,
+> then the patch should actually change the default to that reasonable
+> timeout, and then put in the ability to adjust the timeout with some
+> sort of doc guidance on how to calculate a reasonable timeout based on
+> configured backlog depth.
 
-On 2019/6/12 16:45, Dave Young wrote:
-> Other than the comments from James, can you move the function into
-> kernel/crash_core.c, we already have some functions moved there for
-> sharing.
+How about following the approach of the SRP initiator driver? It derives 
+the CM timeout from the subnet manager timeout. The assumption behind 
+this is that in large networks the subnet manager timeout has to be set 
+higher than its default to make communication work. See also 
+srp_get_subnet_timeout().
 
-Sure.
+Bart.
 
-Thanks,
-Chen Zhou
 
