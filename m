@@ -2,119 +2,147 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 275F9C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E66BC31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB752208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:05:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o6awC/yq"
+	by mail.kernel.org (Postfix) with ESMTP id DB198208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:06:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbfFMVFh (ORCPT
+        id S1730235AbfFMVGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 17:05:37 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36941 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727274AbfFMVFh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 17:05:37 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 19so32844pfa.4;
-        Thu, 13 Jun 2019 14:05:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nGIzlfyMtWXfYkMWkeMnt3GQvr8tI9iFdtflB9NEcR0=;
-        b=o6awC/yqgP89v7ZNzJm+Vx0n0TInFJFUyczt/ABMUyhorQQGQDKQvbAfmBt2ATTh0Z
-         0ovpyLfusP6v4zOcfT+7TnPp3cgeBSCryK0nGaorfLAQ8+ynXkvwYFD5B6ljHYyOrwR8
-         H2qTa3TrFVLw6PRdQYwfY8Ag08UlwPS/JNvdoxxLdh1ObEOImmVHFQ1hWMRksGToCnBh
-         zkn59dDEATw5M9p8RFqM1o4WldRjDnie09yFqcfYvFR7C3Dy06qqAIT6/3f5HbJgH9lY
-         BV2JUyjZdCBNTwwhjS6E4V2anyayn1sJAM995XwS40QlwNC02tkCl6cfNDB7VyEZQq1J
-         hcEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nGIzlfyMtWXfYkMWkeMnt3GQvr8tI9iFdtflB9NEcR0=;
-        b=tlZf4S0cg/4+ApvZj4+y4SERg2trr1M1Cjv99I62+Vvofusf/Tr6uYfHD9nwtCardo
-         bhmZepz6wSni0W/zZdBhvI8nrP9RyQlZhKprQOnV0b97TS4N2LjSUDsQozjk4rfmzSbk
-         EF8W/6xwZWtZIOXieacDq9UeSRvCK13NCWD6pZNG28gkTvMUZDx0v8JDiFXo+z/F25UC
-         N05zqUKUwxJrYX7onkkO9Cv8M9DulyWpctMX7riBkE7q5Gm7yc6ZjBrvAyWsb1jVInAp
-         jWxVV9wcGcuUUHKjg89D78Ffd64IEN3zX48sIaXIa+ipCT7LXWcEilgyItfVk4Ep3AUc
-         buag==
-X-Gm-Message-State: APjAAAVLo0X5b7x1KiPzS0ULVuPZekfwMHUG5w8oTUFIgZ0jNg+a3kL0
-        ZlbdDledlGDVcwj+e8scpB0=
-X-Google-Smtp-Source: APXvYqwAEyjLJQfMr+GN6f4kQuA5+N8IXcoBqBcGgZCHosfwOJRCA+Nsr6KriKTTOtkhDtsF/Y4bMA==
-X-Received: by 2002:a62:3543:: with SMTP id c64mr12639125pfa.242.1560459936281;
-        Thu, 13 Jun 2019 14:05:36 -0700 (PDT)
-Received: from localhost ([123.213.206.190])
-        by smtp.gmail.com with ESMTPSA id 128sm599697pff.16.2019.06.13.14.05.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Jun 2019 14:05:35 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 06:05:33 +0900
-From:   Minwoo Im <minwoo.im.dev@gmail.com>
-To:     Minwoo Im <minwoo.im@samsung.com>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "MPT-FusionLinux.pdl@broadcom.com" <MPT-FusionLinux.pdl@broadcom.com>,
-        "sathya.prakash@broadcom.com" <sathya.prakash@broadcom.com>,
-        "chaitra.basappa@broadcom.com" <chaitra.basappa@broadcom.com>,
-        "suganath-prabu.subramani@broadcom.com" 
-        <suganath-prabu.subramani@broadcom.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        Sarah Cho <sohyeon.jo@samsung.com>,
-        Sungjun Park <sj1228.park@samsung.com>,
-        Gyeongmin Nam <gm.nam@samsung.com>,
-        Sanggwan Lee <sanggwan.lee@samsung.com>
-Subject: Re: [RFC PATCH] mpt3sas: support target smid for [abort|query] task
-Message-ID: <20190613210533.GA25375@minwooim-desktop>
-References: <CGME20190613075402epcms2p7dbd2e2f7c80bd2aef2c5dd3736393d36@epcms2p7>
- <20190613075402epcms2p7dbd2e2f7c80bd2aef2c5dd3736393d36@epcms2p7>
+        Thu, 13 Jun 2019 17:06:04 -0400
+Received: from mga04.intel.com ([192.55.52.120]:59043 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfFMVGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 17:06:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 14:06:03 -0700
+X-ExtLoop1: 1
+Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
+  by orsmga003.jf.intel.com with ESMTP; 13 Jun 2019 14:06:02 -0700
+Received: from orsmsx122.amr.corp.intel.com (10.22.225.227) by
+ ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Thu, 13 Jun 2019 14:06:02 -0700
+Received: from orsmsx102.amr.corp.intel.com ([169.254.3.187]) by
+ ORSMSX122.amr.corp.intel.com ([169.254.11.228]) with mapi id 14.03.0415.000;
+ Thu, 13 Jun 2019 14:06:02 -0700
+From:   "Yang, Fei" <fei.yang@intel.com>
+To:     John Stultz <john.stultz@linaro.org>
+CC:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        "mgautam@codeaurora.org" <mgautam@codeaurora.org>,
+        Andrzej Pietrasiewicz <andrzej.p@samsung.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Subject: RE: [PATCH] usb: gadget: f_fs: data_len used before properly set
+Thread-Topic: [PATCH] usb: gadget: f_fs: data_len used before properly set
+Thread-Index: AQHVIhpu+QIEYVtaVU6Xn558US2yDaaaBJ0A
+Date:   Thu, 13 Jun 2019 21:06:01 +0000
+Message-ID: <02E7334B1630744CBDC55DA8586225837F8A676C@ORSMSX102.amr.corp.intel.com>
+References: <1560377606-40855-1-git-send-email-fei.yang@intel.com>
+ <CALAqxLXeXt1Me_gzUFX8uBAuw_26QEOAX84324kzq7Hih1XDQw@mail.gmail.com>
+In-Reply-To: <CALAqxLXeXt1Me_gzUFX8uBAuw_26QEOAX84324kzq7Hih1XDQw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNzFjMTJhZTgtMjM4ZC00YjdhLThlZjEtZWQyMGVmYzQ2ZWI0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiSHdIbUxXQkd6ZHFnc3pScTFCdHBMaDNGZE1GcCs5T1wvZkhQeFwvUGJ1NXFUY0VSWVZUQ1kyaGZcLzMwY1VybEpXVCJ9
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190613075402epcms2p7dbd2e2f7c80bd2aef2c5dd3736393d36@epcms2p7>
-User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-06-13 16:54:02, Minwoo Im wrote:
-> We can request task management IOCTL command(MPI2_FUNCTION_SCSI_TASK_MGMT)
-> to /dev/mpt3ctl.  If the given task_type is either abort task or query
-> task, it may need a field named "Initiator Port Transfer Tag to Manage"
-> in the IU.
-> 
-> Current code does not support to check target IPTT tag from the
-> tm_request.  This patch introduces to check TaskMID given from the
-> userspace as a target tag.  We have a rule of relationship between
-> (struct request *req->tag) and smid in mpt3sas_base.c:
-> 
-> 3318 u16
-> 3319 mpt3sas_base_get_smid_scsiio(struct MPT3SAS_ADAPTER *ioc, u8 cb_idx,
-> 3320         struct scsi_cmnd *scmd)
-> 3321 {
-> 3322         struct scsiio_tracker *request = scsi_cmd_priv(scmd);
-> 3323         unsigned int tag = scmd->request->tag;
-> 3324         u16 smid;
-> 3325
-> 3326         smid = tag + 1;
-> 
-> So if we want to abort a request tagged #X, then we can pass (X + 1) to
-> this IOCTL handler.
-> 
-> Signed-off-by: Minwoo Im <minwoo.im@samsung.com>
-> ---
-
-Sorry for the duplicated patches on the same mailing list.  Please ignore
-the first two of it.
-
-Thanks,
+Pj4gVGhlIGZvbGxvd2luZyBsaW5lIG9mIGNvZGUgaW4gZnVuY3Rpb24gZmZzX2VwZmlsZV9pbyBp
+cyB0cnlpbmcgdG8gc2V0IA0KPj4gZmxhZyBpb19kYXRhLT51c2Vfc2cgaW4gY2FzZSBidWZmZXIg
+cmVxdWlyZWQgaXMgbGFyZ2VyIHRoYW4gb25lIHBhZ2UuDQo+Pg0KPj4gICAgIGlvX2RhdGEtPnVz
+ZV9zZyA9IGdhZGdldC0+c2dfc3VwcG9ydGVkICYmIGRhdGFfbGVuID4gUEFHRV9TSVpFOw0KPj4N
+Cj4+IEhvd2V2ZXIgYXQgdGhpcyBwb2ludCBvZiB0aW1lIHRoZSB2YXJpYWJsZSBkYXRhX2xlbiBo
+YXMgbm90IGJlZW4gc2V0IA0KPj4gdG8gdGhlIHByb3BlciBidWZmZXIgc2l6ZSB5ZXQuIFRoZSBj
+b25zZXF1ZW5jZSBpcyB0aGF0IGlvX2RhdGEtPnVzZV9zZyANCj4+IGlzIGFsd2F5cyBzZXQgcmVn
+YXJkbGVzcyB3aGF0IGJ1ZmZlciBzaXplIHJlYWxseSBpcywgYmVjYXVzZSB0aGUgDQo+PiBjb25k
+aXRpb24gKGRhdGFfbGVuID4gUEFHRV9TSVpFKSBpcyBlZmZlY3RpdmVseSBhbiB1bnNpZ25lZCBj
+b21wYXJpc29uIA0KPj4gYmV0d2VlbiAtRUlOVkFMIGFuZCBQQUdFX1NJWkUgd2hpY2ggd291bGQg
+YWx3YXlzIHJlc3VsdCBpbiBUUlVFLg0KPj4NCj4+IEZpeGVzOiA3NzJhN2E3MjRmNjkgKCJ1c2I6
+IGdhZGdldDogZl9mczogQWxsb3cgc2NhdHRlci1nYXRoZXIgDQo+PiBidWZmZXJzIikNCj4+IFNp
+Z25lZC1vZmYtYnk6IEZlaSBZYW5nIDxmZWkueWFuZ0BpbnRlbC5jb20+DQo+PiBDYzogc3RhYmxl
+IDxzdGFibGVAdmdlci5rZXJuZWwub3JnPg0KPg0KPiBIZXkgRmVpISBUaGFua3Mgc28gbXVjaCBm
+b3Igc2VuZGluZyB0aGlzIG91dCEgSSB3YXMgZXhjaXRlZCB0aGF0IHRoaXMgbWlnaHQgcmVzb2x2
+ZQ0KPiB0aGUgZmZzIHN0YWxscyBJJ3ZlIGJlZW4gc2VlaW5nIG9uIGR3YzMvZHdjMiBoYXJkd2Fy
+ZSwgYnV0IHdoZW4gSSBnYXZlIGl0IGEgc2hvdCwgaXQNCj4gZG9lc24ndCBzZWVtIHRvIGhlbHAu
+IEluIGZhY3QsIHJhdGhlciB0aGVuIGEgc3RhbGwsIEkgZW5kIHVwIHNlZWluZyB0aGUgZm9sbG93
+aW5nIHBhbmljOg0KPiANCj4gWyAgMzgzLjQxNTM2Ml0gVW5hYmxlIHRvIGhhbmRsZSBrZXJuZWwg
+cmVhZCBmcm9tIHVucmVhZGFibGUgbWVtb3J5IGF0IHZpcnR1YWwgYWRkcmVzcyAwMDAwMDAwMDAw
+MDAwMDE4DQo+IFsgIDM4My40MzE5MzVdIE1lbSBhYm9ydCBpbmZvOg0KPiBbICAzODMuNDMxOTM3
+XSAgIEVTUiA9IDB4OTYwMDAwMDUNCj4gWyAgMzgzLjQzMTk0MF0gICBFeGNlcHRpb24gY2xhc3Mg
+PSBEQUJUIChjdXJyZW50IEVMKSwgSUwgPSAzMiBiaXRzDQo+IFsgIDM4My40MzE5NDFdICAgU0VU
+ID0gMCwgRm5WID0gMA0KPiBbICAzODMuNDMxOTQyXSAgIEVBID0gMCwgUzFQVFcgPSAwDQo+IFsg
+IDM4My40MzE5NDNdIERhdGEgYWJvcnQgaW5mbzoNCj4gWyAgMzgzLjQzMTk0NV0gICBJU1YgPSAw
+LCBJU1MgPSAweDAwMDAwMDA1DQo+IFsgIDM4My40MzE5NDZdICAgQ00gPSAwLCBXblIgPSAwDQo+
+IFsgIDM4My40MzE5NTFdIHVzZXIgcGd0YWJsZTogNGsgcGFnZXMsIDM5LWJpdCBWQXMsIHBnZHA9
+MDAwMDAwMDBhYWUxZjAwMA0KPiBbICAzODMuNDMxOTUzXSBbMDAwMDAwMDAwMDAwMDAxOF0gcGdk
+PTAwMDAwMDAwOWYwNjQwMDMsIHB1ZD0wMDAwMDAwMDlmMDY0MDAzLCBwbWQ9MDAwMDAwMDAwMDAw
+MDAwMA0KPiBbICAzODMuNDgyNTYwXSBJbnRlcm5hbCBlcnJvcjogT29wczogOTYwMDAwMDUgWyMx
+XSBQUkVFTVBUIFNNUA0KPiBbICAzODMuNDg4MTI4XSBNb2R1bGVzIGxpbmtlZCBpbjoNCj4gWyAg
+MzgzLjQ5MTE4MV0gQ1BVOiAwIFBJRDogMzk5IENvbW06IGlycS82OS1kd2MzIFRhaW50ZWQ6IEcg
+Uw0KPiAgICAgICA1LjIuMC1yYzQtMDAwOTItZ2Y1ZjEyZjVkM2ZkZCAjMjk2IFsgIDM4My41MDEw
+MDJdIEhhcmR3YXJlIG5hbWU6IEhpS2V5OTYwIChEVCkNCj4gWyAgMzgzLjUwNDkxOF0gcHN0YXRl
+OiAyMDQwMDA4NSAobnpDdiBkYUlmICtQQU4gLVVBTykNCj4gWyAgMzgzLjUwOTcxNF0gcGMgOiBk
+bWFfZGlyZWN0X3VubWFwX3NnKzB4MzgvMHg4MA0KPiBbICAzODMuNTE0MTUxXSBsciA6IGRtYV9k
+aXJlY3RfdW5tYXBfc2crMHg1Yy8weDgwDQo+IFsgIDM4My41MTg1ODZdIHNwIDogZmZmZmZmODAx
+MWZjYmM0MA0KPiBbICAzODMuNTIxODkzXSB4Mjk6IGZmZmZmZjgwMTFmY2JjNDAgeDI4OiBmZmZm
+ZmZjMGJhZDljMTgwDQo+IFsgIDM4My41MjcxOTldIHgyNzogZmZmZmZmYzBiYWUwNTMwMCB4MjY6
+IDAwMDAwMDAwMDAwMDAwMDINCj4gWyAgMzgzLjUzMjUwNF0geDI1OiBmZmZmZmZjMGI5YTlmZDAw
+IHgyNDogMDAwMDAwMDAwMDAwMDAwMA0KPiBbICAzODMuNTM3ODA5XSB4MjM6IDAwMDAwMDAwMDAw
+MDAwMDEgeDIyOiBmZmZmZmZjMGJhZDlmYzEwDQo+IFsgIDM4My41NDMxMTRdIHgyMTogMDAwMDAw
+MDAwMDAwMDAwMiB4MjA6IDAwMDAwMDAwMDAwMDAwMDENCj4gWyAgMzgzLjU0ODQyMF0geDE5OiAw
+MDAwMDAwMDAwMDAwMDAwIHgxODogMDAwMDAwMDAwMDAwMDAwMA0KPiBbICAzODMuNTUzNzI2XSB4
+MTc6IDAwMDAwMDAwMDAwMDAwMDAgeDE2OiAwMDAwMDAwMDAwMDAwMDAwDQo+IFsgIDM4My41NTkw
+MzJdIHgxNTogMDAwMDAwMDAwMDAwMDAwMCB4MTQ6IGZmZmZmZjgwMTBlYjZhZDANCj4gWyAgMzgz
+LjU2NDMzOF0geDEzOiAwMDAwMDAwMDAwMDAwMDAwIHgxMjogMDAwMDAwMDAwMDAwMDAwMA0KPiBb
+ICAzODMuNTY5NjQzXSB4MTE6IDAwMDAwMDAwMDAwMDAwMDAgeDEwOiAwMDAwMDAwMDAwMDAwOWQw
+DQo+IFsgIDM4My41NzQ5NDldIHg5IDogZmZmZmZmODAxMWZjYmQyMCB4OCA6IGZmZmZmZmMwYjYz
+YzNhMzANCj4gWyAgMzgzLjU4MDI1NF0geDcgOiBmZmZmZmZjMGJjNTE1YzAwIHg2IDogMDAwMDAw
+MDAwMDAwMDAwNw0KPiBbICAzODMuNTg1NTYwXSB4NSA6IDAwMDAwMDAwMDAwMDAwMDEgeDQgOiAw
+MDAwMDAwMDAwMDAwMDA0DQo+IFsgIDM4My41OTA4NjVdIHgzIDogMDAwMDAwMDAwMDAwMDAwMSB4
+MiA6IDAwMDAwMDAwMDAwMDAwMDENCj4gWyAgMzgzLjU5NjE2OV0geDEgOiAwMDAwMDAwMDAwMDZi
+ZjQyIHgwIDogMDAwMDAwMDAwMDAwMDAwMA0KPiBbICAzODMuNjAxNDc3XSBDYWxsIHRyYWNlOg0K
+PiBbICAzODMuNjAzOTE2XSAgZG1hX2RpcmVjdF91bm1hcF9zZysweDM4LzB4ODANCj4gWyAgMzgz
+LjYwODAxM10gIHVzYl9nYWRnZXRfdW5tYXBfcmVxdWVzdF9ieV9kZXYrMHhiMC8weGM4DQo+IFsg
+IDM4My42MTMxNDhdICBkd2MzX2dhZGdldF9kZWxfYW5kX3VubWFwX3JlcXVlc3QuaXNyYS4xMysw
+eDc4LzB4MTUwDQo+IFsgIDM4My42MTkyMzVdICBkd2MzX2dhZGdldF9naXZlYmFjaysweDMwLzB4
+NjgNCj4gWyAgMzgzLjYyMzQxMl0gIGR3YzNfdGhyZWFkX2ludGVycnVwdCsweDY5NC8weDE0ZTAN
+Cj4gWyAgMzgzLjYyNzkzOF0gIGlycV90aHJlYWRfZm4rMHgyOC8weDc4DQo+IFsgIDM4My42MzE1
+MDZdICBpcnFfdGhyZWFkKzB4MTI0LzB4MWMwDQo+IFsgIDM4My42MzQ5OTFdICBrdGhyZWFkKzB4
+MTI4LzB4MTMwDQo+IFsgIDM4My42MzgyMTRdICByZXRfZnJvbV9mb3JrKzB4MTAvMHgxYw0KPiBb
+ICAzODMuNjQxNzg2XSBDb2RlOiAyYTAzMDNmNyBhYTA0MDNmOCA1MjgwMDAxNCBkNTAzMjAxZiAo
+Yjk0MDFhNjIpDQo+IFsgIDM4My42NDc4NzRdIC0tLVsgZW5kIHRyYWNlIGY0ODA1M2MyMDQwYzU2
+NTggXS0tLQ0KPiANCj4gRnJvbSB0aGUgbG9va3Mgb2YgaXQgdGhvdWdoLCBJIHN1c3BlY3QgeW91
+ciBmaXggaXMgYSBnb29kIG9uZSwgYW5kIG1heWJlIGl0cyBqdXN0IGhlbHBpbmcNCj4gZXhwb3Nl
+IHNvbWUgcmVsYXRlZCB1bmRlcmx5aW5nIGlzc3VlcyBpbiB0aGUgZHdjMyBkcml2ZXI/DQoNCkl0
+IGRvZXNuJ3QgZml4IHRoZSBmZnMgc3RhbGwgaXNzdWUgZm9yIG1lIGVpdGhlciwgYnV0IEkgaGF2
+ZSBub3Qgc2VlbiB0aGlzIHBhbmljIHRob3VnaC4NCg0KSXQncyBpbnRlcmVzdGluZyB0byBzZWUg
+dGhpcyBwYW5pYyBiZWNhdXNlIGRtYSB1bm1hcHBpbmcgaXMgd2hhdCBJJ20gbG9va2luZyBhdCBy
+aWdodCBub3cuDQpXaGVuIEkgc2VlIHRoZSBmZnMgc3RhbGxzLCB0aGUgcHJvYmxlbSBzZWVtcyB0
+byBiZSB0aGF0IGEgcmVhZCByZXF1ZXN0IG9mIDUxMiBieXRlcyByZXR1cm5pbmcNCnJpZ2h0IGF3
+YXkgd2l0aCBhIGJ1ZmZlciBmaWxsZWQgd2l0aCBhbGwgemVyb3MuIEFuZCB0aGF0IGlzIGhhcHBl
+bmluZyBhZnRlciBhIGJ1bmNoIG9mIHJlcXVlc3RzDQpvZiAxNjM4NCBieXRlcy4gSSdtIHN1c3Bl
+Y3RpbmcgdGhlIGRtYSBhcyB3ZWxsLCBiZWNhdXNlIHRoZSBjb21wbGV0aW9uIGludGVycnVwdCBm
+b3IgdGhpcw0KcmVxdWVzdCBvZiA1MTIgYnl0ZXMgc2VlbXMgdG8gYmUgZmlyZWQgbWlzdGFrZW5s
+eS4NCg0KSSBkb24ndCBhbHdheXMgaGF2ZSB0aW1lIHRvIHdvcmsgb24gdGhpcyBpc3N1ZSB0aG91
+Z2gsIG1pZ2h0IG5vdCB1cGRhdGUgZm9yIGEgd2hpbGUuIFBsZWFzZQ0Ka2VlcCBtZSBwb3N0ZWQg
+aWYgeW91IGZpbmQgYW55dGhpbmcuDQoNClRoYW5rcywNCi1GZWkNCg==
