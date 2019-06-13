@@ -2,197 +2,323 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDA7C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1500DC31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B5E20449
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:32:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="X+b6N9AQ"
+	by mail.kernel.org (Postfix) with ESMTP id DEBE02054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:32:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392191AbfFMQcQ (ORCPT
+        id S2392060AbfFMQcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:32:16 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33527 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730853AbfFMIRd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:17:33 -0400
-Received: by mail-ed1-f66.google.com with SMTP id i11so1947456edq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 01:17:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BQUUVEbQBU82PrsMmM0DVRQxiyyQyaOoAc/ZkL7aGuo=;
-        b=X+b6N9AQTQnv51mbGk3cs5WE9bgrZHoAhFo/kUpYWZ5C1X+XPaJBiRSZKXyXhgfLAB
-         FquWhUU5SR0q1mI/n9p3wd5IYCOydO54EL5R4arx/NUINxsBTIzuZTrrx5APCrgoL6ng
-         2M72ZA4ZKI9vl4v+mSrRECRt2QmkMtBH1G6Kk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=BQUUVEbQBU82PrsMmM0DVRQxiyyQyaOoAc/ZkL7aGuo=;
-        b=W5roHRgDMLEtNy77BYFKjbQhpLaTqaJORUTgAeEwTcIP/V7JwydrbdP62W7WJuwroX
-         +zL6PK+KB6gOa8YfYy961w4fIpFx1tU9rSZVleCs3/O3D9KgPUhnpsCwPq2AzPoNluz1
-         BZ2fpAHIpRqB0eTecGiSv2OHWP5OToK6ScArj29rO0q6p+0jKelgJ7tWqC2XOVkKprLy
-         +Phi93nGCrwPK8Chx9zy0joBxgJDbgHR0xLlNAa6aqhWriOOy9F9Ov9bZVZRj835vixE
-         D5kNTWIksTwWCGifdTeWP255Ri8tTzBPWsck/hP5kxkdRCrLtJaci9fEiqj03y7ClaWZ
-         GxkA==
-X-Gm-Message-State: APjAAAU4RxCm/CS6H/+VYNp6uKIn2FdB29fEpENLdp/7169dsWEYfx8E
-        yqRubEuNthkDlfb/jscbXu3l3g==
-X-Google-Smtp-Source: APXvYqzgj3ZvvCytyIQC8/KS9smhGXs83JUHZmiFa8ECETskNRubggCMXyfzSoJlw0thCAu3tcjhGg==
-X-Received: by 2002:a17:906:610:: with SMTP id s16mr74446842ejb.108.1560413851058;
-        Thu, 13 Jun 2019 01:17:31 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id t54sm681937edd.17.2019.06.13.01.17.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 01:17:30 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 10:17:27 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Cc:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH v2 2/2] drm/komeda: Adds komeda_kms_drop_master
-Message-ID: <20190613081727.GE23020@phenom.ffwll.local>
-Mail-Followup-To: "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        nd <nd@arm.com>
-References: <1560251589-31827-1-git-send-email-lowry.li@arm.com>
- <1560251589-31827-3-git-send-email-lowry.li@arm.com>
- <20190611123038.GC2458@phenom.ffwll.local>
- <20190612022617.GA8595@james-ThinkStation-P300>
+        Thu, 13 Jun 2019 12:32:14 -0400
+Received: from relay.sw.ru ([185.231.240.75]:34116 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730858AbfFMIUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:20:02 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hbKxa-00084e-89; Thu, 13 Jun 2019 11:19:50 +0300
+Subject: Re: [PATCH 1/3] mm: thp: make deferred split shrinker memcg aware
+To:     Yang Shi <yang.shi@linux.alibaba.com>, hannes@cmpxchg.org,
+        mhocko@suse.com, kirill.shutemov@linux.intel.com, hughd@google.com,
+        shakeelb@google.com, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1559047464-59838-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1559047464-59838-2-git-send-email-yang.shi@linux.alibaba.com>
+ <487665fe-c792-5078-292a-481f33d31d30@virtuozzo.com>
+ <f57d9c67-8e20-b430-2ca3-74fa2f31415a@linux.alibaba.com>
+ <20fe4ea6-c1c5-67bb-5c7e-2db0a9af6892@virtuozzo.com>
+ <cb1f0ecd-d127-89ec-da2f-47fba1d6ba79@linux.alibaba.com>
+ <c82f24d9-035b-e7e8-f8be-3489803a8319@virtuozzo.com>
+ <1845149e-cb25-a6be-3979-0348ece3cae0@linux.alibaba.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <a6129da4-be23-cb65-eff9-3e467308b1fa@virtuozzo.com>
+Date:   Thu, 13 Jun 2019 11:19:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612022617.GA8595@james-ThinkStation-P300>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1845149e-cb25-a6be-3979-0348ece3cae0@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 02:26:24AM +0000, james qian wang (Arm Technology China) wrote:
-> On Tue, Jun 11, 2019 at 02:30:38PM +0200, Daniel Vetter wrote:
-> > On Tue, Jun 11, 2019 at 11:13:45AM +0000, Lowry Li (Arm Technology China) wrote:
-> > > From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-> > >
-> > > The komeda internal resources (pipelines) are shared between crtcs,
-> > > and resources release by disable_crtc. This commit is working for once
-> > > user forgot disabling crtc like app quit abnomally, and then the
-> > > resources can not be used by another crtc. Adds drop_master to
-> > > shutdown the device and make sure all the komeda resources have been
-> > > released and can be used for the next usage.
-> > >
-> > > Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-> > > ---
-> > >  drivers/gpu/drm/arm/display/komeda/komeda_kms.c | 13 +++++++++++++
-> > >  1 file changed, 13 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> > > index 8543860..647bce5 100644
-> > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> > > @@ -54,11 +54,24 @@ static irqreturn_t komeda_kms_irq_handler(int irq, void *data)
-> > >  return status;
-> > >  }
-> > >
-> > > +/* Komeda internal resources (pipelines) are shared between crtcs, and resources
-> > > + * are released by disable_crtc. But if user forget disabling crtc like app quit
-> > > + * abnormally, the resources can not be used by another crtc.
-> > > + * Use drop_master to shutdown the device and make sure all the komeda resources
-> > > + * have been released, and can be used for the next usage.
-> > > + */
-> >
-> > No. If we want this, we need to implement this across drivers, not with
-> > per-vendor hacks.
-> >
-> > The kerneldoc should have been a solid hint: "Only used by vmwgfx."
-> > -Daniel
+On 10.06.2019 20:25, Yang Shi wrote:
 > 
-> Hi Daniel:
-> This drop_master is really what we want, can we update the doc and
-> add komeda as a user of this hacks like "used by vmwfgx and komeda",
-> or maybe directly promote this per-vendor hacks as an optional chip
-> function ?
-
-Still no, because it would mean different behaviour for arm/komeda
-compared to everyone else. And we really don't want this, because this
-would completely break flicker-less vt-switching.
-
-Currently the only fallback for this case is the lastclose handler, which
-atm just restores fbcon/fbdev. If you want to change/extend that to work
-without fbdev, then that's the place to do the change. And across _all_
-drm kms drivers, so that we have consistent behaviour.
-
-kms is a cross-vendor api, vendor hacks are very, very much not cool.
--Daniel
-
 > 
-> James
+> On 6/10/19 1:23 AM, Kirill Tkhai wrote:
+>> On 29.05.2019 14:25, Yang Shi wrote:
+>>>
+>>> On 5/29/19 4:14 PM, Kirill Tkhai wrote:
+>>>> On 29.05.2019 05:43, Yang Shi wrote:
+>>>>> On 5/28/19 10:42 PM, Kirill Tkhai wrote:
+>>>>>> Hi, Yang,
+>>>>>>
+>>>>>> On 28.05.2019 15:44, Yang Shi wrote:
+>>>>>>> Currently THP deferred split shrinker is not memcg aware, this may cause
+>>>>>>> premature OOM with some configuration. For example the below test would
+>>>>>>> run into premature OOM easily:
+>>>>>>>
+>>>>>>> $ cgcreate -g memory:thp
+>>>>>>> $ echo 4G > /sys/fs/cgroup/memory/thp/memory/limit_in_bytes
+>>>>>>> $ cgexec -g memory:thp transhuge-stress 4000
+>>>>>>>
+>>>>>>> transhuge-stress comes from kernel selftest.
+>>>>>>>
+>>>>>>> It is easy to hit OOM, but there are still a lot THP on the deferred
+>>>>>>> split queue, memcg direct reclaim can't touch them since the deferred
+>>>>>>> split shrinker is not memcg aware.
+>>>>>>>
+>>>>>>> Convert deferred split shrinker memcg aware by introducing per memcg
+>>>>>>> deferred split queue.  The THP should be on either per node or per memcg
+>>>>>>> deferred split queue if it belongs to a memcg.  When the page is
+>>>>>>> immigrated to the other memcg, it will be immigrated to the target
+>>>>>>> memcg's deferred split queue too.
+>>>>>>>
+>>>>>>> And, move deleting THP from deferred split queue in page free before
+>>>>>>> memcg uncharge so that the page's memcg information is available.
+>>>>>>>
+>>>>>>> Reuse the second tail page's deferred_list for per memcg list since the
+>>>>>>> same THP can't be on multiple deferred split queues.
+>>>>>>>
+>>>>>>> Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+>>>>>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>>>>>>> Cc: Michal Hocko <mhocko@suse.com>
+>>>>>>> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+>>>>>>> Cc: Hugh Dickins <hughd@google.com>
+>>>>>>> Cc: Shakeel Butt <shakeelb@google.com>
+>>>>>>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>>>>>>> ---
+>>>>>>>     include/linux/huge_mm.h    |  24 ++++++
+>>>>>>>     include/linux/memcontrol.h |   6 ++
+>>>>>>>     include/linux/mm_types.h   |   7 +-
+>>>>>>>     mm/huge_memory.c           | 182 +++++++++++++++++++++++++++++++++------------
+>>>>>>>     mm/memcontrol.c            |  20 +++++
+>>>>>>>     mm/swap.c                  |   4 +
+>>>>>>>     6 files changed, 194 insertions(+), 49 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+>>>>>>> index 7cd5c15..f6d1cde 100644
+>>>>>>> --- a/include/linux/huge_mm.h
+>>>>>>> +++ b/include/linux/huge_mm.h
+>>>>>>> @@ -250,6 +250,26 @@ static inline bool thp_migration_supported(void)
+>>>>>>>         return IS_ENABLED(CONFIG_ARCH_ENABLE_THP_MIGRATION);
+>>>>>>>     }
+>>>>>>>     +static inline struct list_head *page_deferred_list(struct page *page)
+>>>>>>> +{
+>>>>>>> +    /*
+>>>>>>> +     * Global deferred list in the second tail pages is occupied by
+>>>>>>> +     * compound_head.
+>>>>>>> +     */
+>>>>>>> +    return &page[2].deferred_list;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static inline struct list_head *page_memcg_deferred_list(struct page *page)
+>>>>>>> +{
+>>>>>>> +    /*
+>>>>>>> +     * Memcg deferred list in the second tail pages is occupied by
+>>>>>>> +     * compound_head.
+>>>>>>> +     */
+>>>>>>> +    return &page[2].memcg_deferred_list;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +extern void del_thp_from_deferred_split_queue(struct page *);
+>>>>>>> +
+>>>>>>>     #else /* CONFIG_TRANSPARENT_HUGEPAGE */
+>>>>>>>     #define HPAGE_PMD_SHIFT ({ BUILD_BUG(); 0; })
+>>>>>>>     #define HPAGE_PMD_MASK ({ BUILD_BUG(); 0; })
+>>>>>>> @@ -368,6 +388,10 @@ static inline bool thp_migration_supported(void)
+>>>>>>>     {
+>>>>>>>         return false;
+>>>>>>>     }
+>>>>>>> +
+>>>>>>> +static inline void del_thp_from_deferred_split_queue(struct page *page)
+>>>>>>> +{
+>>>>>>> +}
+>>>>>>>     #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+>>>>>>>       #endif /* _LINUX_HUGE_MM_H */
+>>>>>>> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+>>>>>>> index bc74d6a..9ff5fab 100644
+>>>>>>> --- a/include/linux/memcontrol.h
+>>>>>>> +++ b/include/linux/memcontrol.h
+>>>>>>> @@ -316,6 +316,12 @@ struct mem_cgroup {
+>>>>>>>         struct list_head event_list;
+>>>>>>>         spinlock_t event_list_lock;
+>>>>>>>     +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>>>>>> +    struct list_head split_queue;
+>>>>>>> +    unsigned long split_queue_len;
+>>>>>>> +    spinlock_t split_queue_lock;
+>>>>>>> +#endif
+>>>>>>> +
+>>>>>>>         struct mem_cgroup_per_node *nodeinfo[0];
+>>>>>>>         /* WARNING: nodeinfo must be the last member here */
+>>>>>>>     };
+>>>>>>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+>>>>>>> index 8ec38b1..405f5e6 100644
+>>>>>>> --- a/include/linux/mm_types.h
+>>>>>>> +++ b/include/linux/mm_types.h
+>>>>>>> @@ -139,7 +139,12 @@ struct page {
+>>>>>>>             struct {    /* Second tail page of compound page */
+>>>>>>>                 unsigned long _compound_pad_1;    /* compound_head */
+>>>>>>>                 unsigned long _compound_pad_2;
+>>>>>>> -            struct list_head deferred_list;
+>>>>>>> +            union {
+>>>>>>> +                /* Global THP deferred split list */
+>>>>>>> +                struct list_head deferred_list;
+>>>>>>> +                /* Memcg THP deferred split list */
+>>>>>>> +                struct list_head memcg_deferred_list;
+>>>>>> Why we need two namesakes for this list entry?
+>>>>>>
+>>>>>> For me it looks redundantly: it does not give additional information,
+>>>>>> but it leads to duplication (and we have two helpers page_deferred_list()
+>>>>>> and page_memcg_deferred_list() instead of one).
+>>>>> Yes, kind of. Actually I was also wondering if this is worth or not. My point is this may improve the code readability. We can figure out what split queue (per node or per memcg) is being manipulated just by the name of the list.
+>>>>>
+>>>>> If the most people thought this is unnecessary, I'm definitely ok to just keep one name.
+>>>>>
+>>>>>>> +            };
+>>>>>>>             };
+>>>>>>>             struct {    /* Page table pages */
+>>>>>>>                 unsigned long _pt_pad_1;    /* compound_head */
+>>>>>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>>>>>>> index 9f8bce9..0b9cfe1 100644
+>>>>>>> --- a/mm/huge_memory.c
+>>>>>>> +++ b/mm/huge_memory.c
+>>>>>>> @@ -492,12 +492,6 @@ pmd_t maybe_pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma)
+>>>>>>>         return pmd;
+>>>>>>>     }
+>>>>>>>     -static inline struct list_head *page_deferred_list(struct page *page)
+>>>>>>> -{
+>>>>>>> -    /* ->lru in the tail pages is occupied by compound_head. */
+>>>>>>> -    return &page[2].deferred_list;
+>>>>>>> -}
+>>>>>>> -
+>>>>>>>     void prep_transhuge_page(struct page *page)
+>>>>>>>     {
+>>>>>>>         /*
+>>>>>>> @@ -505,7 +499,10 @@ void prep_transhuge_page(struct page *page)
+>>>>>>>          * as list_head: assuming THP order >= 2
+>>>>>>>          */
+>>>>>>>     -    INIT_LIST_HEAD(page_deferred_list(page));
+>>>>>>> +    if (mem_cgroup_disabled())
+>>>>>>> +        INIT_LIST_HEAD(page_deferred_list(page));
+>>>>>>> +    else
+>>>>>>> +        INIT_LIST_HEAD(page_memcg_deferred_list(page));
+>>>>>>>         set_compound_page_dtor(page, TRANSHUGE_PAGE_DTOR);
+>>>>>>>     }
+>>>>>>>     @@ -2664,6 +2661,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+>>>>>>>         bool mlocked;
+>>>>>>>         unsigned long flags;
+>>>>>>>         pgoff_t end;
+>>>>>>> +    struct mem_cgroup *memcg = head->mem_cgroup;
+>>>>>>>           VM_BUG_ON_PAGE(is_huge_zero_page(page), page);
+>>>>>>>         VM_BUG_ON_PAGE(!PageLocked(page), page);
+>>>>>>> @@ -2744,17 +2742,30 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+>>>>>>>         }
+>>>>>>>           /* Prevent deferred_split_scan() touching ->_refcount */
+>>>>>>> -    spin_lock(&pgdata->split_queue_lock);
+>>>>>>> +    if (!memcg)
+>>>>>>> +        spin_lock(&pgdata->split_queue_lock);
+>>>>>>> +    else
+>>>>>>> +        spin_lock(&memcg->split_queue_lock);
+>>>>>>>         count = page_count(head);
+>>>>>>>         mapcount = total_mapcount(head);
+>>>>>>>         if (!mapcount && page_ref_freeze(head, 1 + extra_pins)) {
+>>>>>>> -        if (!list_empty(page_deferred_list(head))) {
+>>>>>>> -            pgdata->split_queue_len--;
+>>>>>>> -            list_del(page_deferred_list(head));
+>>>>>>> +        if (!memcg) {
+>>>>>>> +            if (!list_empty(page_deferred_list(head))) {
+>>>>>>> +                pgdata->split_queue_len--;
+>>>>>>> +                list_del(page_deferred_list(head));
+>>>>>>> +            }
+>>>>>>> +        } else {
+>>>>>>> +            if (!list_empty(page_memcg_deferred_list(head))) {
+>>>>>>> +                memcg->split_queue_len--;
+>>>>>>> +                list_del(page_memcg_deferred_list(head));
+>>>>>>> +            }
+>>>>>>>             }
+>>>>>>>             if (mapping)
+>>>>>>>                 __dec_node_page_state(page, NR_SHMEM_THPS);
+>>>>>>> -        spin_unlock(&pgdata->split_queue_lock);
+>>>>>>> +        if (!memcg)
+>>>>>>> +            spin_unlock(&pgdata->split_queue_lock);
+>>>>>>> +        else
+>>>>>>> +            spin_unlock(&memcg->split_queue_lock);
+>>>>>>>             __split_huge_page(page, list, end, flags);
+>>>>>>>             if (PageSwapCache(head)) {
+>>>>>>>                 swp_entry_t entry = { .val = page_private(head) };
+>>>>>>> @@ -2771,7 +2782,10 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+>>>>>>>                 dump_page(page, "total_mapcount(head) > 0");
+>>>>>>>                 BUG();
+>>>>>>>             }
+>>>>>>> -        spin_unlock(&pgdata->split_queue_lock);
+>>>>>>> +        if (!memcg)
+>>>>>>> +            spin_unlock(&pgdata->split_queue_lock);
+>>>>>>> +        else
+>>>>>>> +            spin_unlock(&memcg->split_queue_lock);
+>>>>>>>     fail:        if (mapping)
+>>>>>>>                 xa_unlock(&mapping->i_pages);
+>>>>>>>             spin_unlock_irqrestore(&pgdata->lru_lock, flags);
+>>>>>>> @@ -2791,17 +2805,40 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+>>>>>>>         return ret;
+>>>>>>>     }
+>>>>>>>     -void free_transhuge_page(struct page *page)
+>>>>>>> +void del_thp_from_deferred_split_queue(struct page *page)
+>>>>>>>     {
+>>>>>>>         struct pglist_data *pgdata = NODE_DATA(page_to_nid(page));
+>>>>>>>         unsigned long flags;
+>>>>>>> +    struct mem_cgroup *memcg = compound_head(page)->mem_cgroup;
+>>>>>>>     -    spin_lock_irqsave(&pgdata->split_queue_lock, flags);
+>>>>>>> -    if (!list_empty(page_deferred_list(page))) {
+>>>>>>> -        pgdata->split_queue_len--;
+>>>>>>> -        list_del(page_deferred_list(page));
+>>>>>>> +    /*
+>>>>>>> +     * The THP may be not on LRU at this point, e.g. the old page of
+>>>>>>> +     * NUMA migration.  And PageTransHuge is not enough to distinguish
+>>>>>>> +     * with other compound page, e.g. skb, THP destructor is not used
+>>>>>>> +     * anymore and will be removed, so the compound order sounds like
+>>>>>>> +     * the only choice here.
+>>>>>>> +     */
+>>>>>>> +    if (PageTransHuge(page) && compound_order(page) == HPAGE_PMD_ORDER) {
+>>>>>>> +        if (!memcg) {
+>>>>>>> +            spin_lock_irqsave(&pgdata->split_queue_lock, flags);
+>>>>>>> +            if (!list_empty(page_deferred_list(page))) {
+>>>>>>> +                pgdata->split_queue_len--;
+>>>>>>> +                list_del(page_deferred_list(page));
+>>>>>>> +            }
+>>>>>>> +            spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
+>>>>>>> +        } else {
+>>>>>>> +            spin_lock_irqsave(&memcg->split_queue_lock, flags);
+>>>>>>> +            if (!list_empty(page_memcg_deferred_list(page))) {
+>>>>>>> +                memcg->split_queue_len--;
+>>>>>>> +                list_del(page_memcg_deferred_list(page));
+>>>>>>> +            }
+>>>>>>> +            spin_unlock_irqrestore(&memcg->split_queue_lock, flags);
+>>>>>> Such the patterns look like a duplication of functionality, we already have
+>>>>>> in list_lru: it handles both root_mem_cgroup and all children memcg.
+>>>>> Would you please point me to some example code?
+>>>> I mean that we do almost the same in list_lru_add(): check for whether
+>>>> item is already added, find the desired list, maintain the list's len.
+>>>>
+>>>> It looks all the above we may replace with something like
+>>>>
+>>>> list_lru_add(defered_thp_lru, page_deferred_list(page))
+>>>>
+>>>> after necessary preparations (some rewriting of the rest of code is needed).
+>>> Aha, I got your point. I'm not quite familiar with that code. I took a quick loot at it, it looks the current APIs are not good enough for deferred split, which needs irqsave/irqrestore version list add/del/move/walk and page refcount bumped version walk.
+>> I missed the point about refcount bumping, could you please clarify?
 > 
-> > > +static void komeda_kms_drop_master(struct drm_device *dev,
-> > > +   struct drm_file *file_priv)
-> > > +{
-> > > +drm_atomic_helper_shutdown(dev);
-> > > +}
-> > > +
-> > >  static struct drm_driver komeda_kms_driver = {
-> > >  .driver_features = DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC |
-> > >     DRIVER_PRIME | DRIVER_HAVE_IRQ,
-> > >  .lastclose= drm_fb_helper_lastclose,
-> > >  .irq_handler= komeda_kms_irq_handler,
-> > > +.master_drop= komeda_kms_drop_master,
-> > >  .gem_free_object_unlocked= drm_gem_cma_free_object,
-> > >  .gem_vm_ops= &drm_gem_cma_vm_ops,
-> > >  .dumb_create= komeda_gem_cma_dumb_create,
-> > > --
-> > > 1.9.1
-> > >
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
-> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> The deferred_split_scan() need bump refcount for every head page when scanning the deferred split queue.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Why can't we increment refcount in isolate callback of __list_lru_walk_one() function?
+
+Kirill
