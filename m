@@ -5,55 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E36C31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89343C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA40720644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5826020644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442741;
-	bh=9KyvKUWZnBx1g14YIg5S+FWNtGtXZCZOK0xXgOx15PE=;
+	s=default; t=1560442745;
+	bh=L0FG2VR4VOV1fRc8/llvfy86neUc16LpaLeyfPVRvAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SFgV71jRziU/wUfZC29ooDIdFudcbqa3mrX6DdTFUppyaWhJib1P/5Sp+cryVu9C0
-	 mDZ4EkFVBDieA7qx251Xt3Ex2luP5v2Dwf6ne/cdxs8an5GmOaGlshJ1SW4+MxUGyM
-	 tr62gId6/t9Lw87XNMa7tGWXNVoqiZd7VLbxxRyc=
+	b=n2p4SsB6WBCurJ1DuXQz1MzA3VuIPO3MYt4thTF8mmhvVkAKpAC3hUndD3HV+Z/G6
+	 ObPxkQXbo3N6p9/vOH1Rjun+/ZTo3RO5zehtPlQGU/E90BbTO3tksTL187crJsGxM8
+	 SKkpGKNVlGIYZGozzTfwQ9ZIuzuEvxVVSqHH+heQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391845AbfFMQTA (ORCPT
+        id S2392028AbfFMQTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:19:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57560 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:19:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731103AbfFMIkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:40:07 -0400
+        id S1731106AbfFMIkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:40:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CE0021479;
-        Thu, 13 Jun 2019 08:40:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CD4E21721;
+        Thu, 13 Jun 2019 08:40:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415206;
-        bh=9KyvKUWZnBx1g14YIg5S+FWNtGtXZCZOK0xXgOx15PE=;
+        s=default; t=1560415209;
+        bh=L0FG2VR4VOV1fRc8/llvfy86neUc16LpaLeyfPVRvAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z125h0k6fpVO5rnuwkPo297j/MBP9okdd+nb2ec5ysA5EJOt/0BhWbh58UHmHfLYQ
-         sXATPWgHUVPSRWxgVfzxNOgFldFulBsuD8yOpPcHZKL2Ho3OJav6rBVDtbb8UhLg7p
-         ioGXp/E/7wGdnKWT7Mc9k3aoVqHU1B8I+snpCxw4=
+        b=QTrtC/JTJMvIPBaTd9w49lvXuZIHVrWRhx5qPwcrjyurPrSMR3Wa10HrhviwDN9b/
+         4CDko7PKELAAnwSvW0gb2DmcO+PpH+dLKdsMXbVSZLiqzcbSiowzq0Hf3Jqdp8UhNk
+         +LubwxHDn25Vrj8dyRnpVVTZl5F7K7QcCyPRrNFk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mathieu Malaterre <malat@debian.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        Borislav Petkov <bp@suse.de>,
+        Mark Rutland <mark.rutland@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 015/118] mm/slab.c: fix an infinite loop in leaks_show()
-Date:   Thu, 13 Jun 2019 10:32:33 +0200
-Message-Id: <20190613075644.535772360@linuxfoundation.org>
+Subject: [PATCH 4.19 006/118] ARM: prevent tracing IPI_CPU_BACKTRACE
+Date:   Thu, 13 Jun 2019 10:32:24 +0200
+Message-Id: <20190613075644.042643996@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -66,83 +81,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 745e10146c31b1c6ed3326286704ae251b17f663 ]
+[ Upstream commit be167862ae7dd85c56d385209a4890678e1b0488 ]
 
-"cat /proc/slab_allocators" could hang forever on SMP machines with
-kmemleak or object debugging enabled due to other CPUs running do_drain()
-will keep making kmemleak_object or debug_objects_cache dirty and unable
-to escape the first loop in leaks_show(),
+Patch series "compiler: allow all arches to enable
+CONFIG_OPTIMIZE_INLINING", v3.
 
-do {
-	set_store_user_clean(cachep);
-	drain_cpu_caches(cachep);
-	...
+This patch (of 11):
 
-} while (!is_store_user_clean(cachep));
+When function tracing for IPIs is enabled, we get a warning for an
+overflow of the ipi_types array with the IPI_CPU_BACKTRACE type as
+triggered by raise_nmi():
 
-For example,
+  arch/arm/kernel/smp.c: In function 'raise_nmi':
+  arch/arm/kernel/smp.c:489:2: error: array subscript is above array bounds [-Werror=array-bounds]
+    trace_ipi_raise(target, ipi_types[ipinr]);
 
-do_drain
-  slabs_destroy
-    slab_destroy
-      kmem_cache_free
-        __cache_free
-          ___cache_free
-            kmemleak_free_recursive
-              delete_object_full
-                __delete_object
-                  put_object
-                    free_object_rcu
-                      kmem_cache_free
-                        cache_free_debugcheck --> dirty kmemleak_object
+This is a correct warning as we actually overflow the array here.
 
-One approach is to check cachep->name and skip both kmemleak_object and
-debug_objects_cache in leaks_show().  The other is to set store_user_clean
-after drain_cpu_caches() which leaves a small window between
-drain_cpu_caches() and set_store_user_clean() where per-CPU caches could
-be dirty again lead to slightly wrong information has been stored but
-could also speed up things significantly which sounds like a good
-compromise.  For example,
+This patch raise_nmi() to call __smp_cross_call() instead of
+smp_cross_call(), to avoid calling into ftrace.  For clarification, I'm
+also adding a two new code comments describing how this one is special.
 
- # cat /proc/slab_allocators
- 0m42.778s # 1st approach
- 0m0.737s  # 2nd approach
+The warning appears to have shown up after commit e7273ff49acf ("ARM:
+8488/1: Make IPI_CPU_BACKTRACE a "non-secure" SGI"), which changed the
+number assignment from '15' to '8', but as far as I can tell has existed
+since the IPI tracepoints were first introduced.  If we decide to
+backport this patch to stable kernels, we probably need to backport
+e7273ff49acf as well.
 
-[akpm@linux-foundation.org: tweak comment]
-Link: http://lkml.kernel.org/r/20190411032635.10325-1-cai@lca.pw
-Fixes: d31676dfde25 ("mm/slab: alternative implementation for DEBUG_SLAB_LEAK")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+[yamada.masahiro@socionext.com: rebase on v5.1-rc1]
+Link: http://lkml.kernel.org/r/20190423034959.13525-2-yamada.masahiro@socionext.com
+Fixes: e7273ff49acf ("ARM: 8488/1: Make IPI_CPU_BACKTRACE a "non-secure" SGI")
+Fixes: 365ec7b17327 ("ARM: add IPI tracepoints") # v3.17
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Mathieu Malaterre <malat@debian.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Stefan Agner <stefan@agner.ch>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: Brian Norris <computersforpeace@gmail.com>
+Cc: Marek Vasut <marek.vasut@gmail.com>
+Cc: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slab.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm/include/asm/hardirq.h | 1 +
+ arch/arm/kernel/smp.c          | 6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index 018d32496e8d..46f21e73db2f 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -4326,8 +4326,12 @@ static int leaks_show(struct seq_file *m, void *p)
- 	 * whole processing.
- 	 */
- 	do {
--		set_store_user_clean(cachep);
- 		drain_cpu_caches(cachep);
-+		/*
-+		 * drain_cpu_caches() could make kmemleak_object and
-+		 * debug_objects_cache dirty, so reset afterwards.
-+		 */
-+		set_store_user_clean(cachep);
+diff --git a/arch/arm/include/asm/hardirq.h b/arch/arm/include/asm/hardirq.h
+index cba23eaa6072..7a88f160b1fb 100644
+--- a/arch/arm/include/asm/hardirq.h
++++ b/arch/arm/include/asm/hardirq.h
+@@ -6,6 +6,7 @@
+ #include <linux/threads.h>
+ #include <asm/irq.h>
  
- 		x[1] = 0;
++/* number of IPIS _not_ including IPI_CPU_BACKTRACE */
+ #define NR_IPI	7
  
+ typedef struct {
+diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+index a3ce7c5365fa..bada66ef4419 100644
+--- a/arch/arm/kernel/smp.c
++++ b/arch/arm/kernel/smp.c
+@@ -76,6 +76,10 @@ enum ipi_msg_type {
+ 	IPI_CPU_STOP,
+ 	IPI_IRQ_WORK,
+ 	IPI_COMPLETION,
++	/*
++	 * CPU_BACKTRACE is special and not included in NR_IPI
++	 * or tracable with trace_ipi_*
++	 */
+ 	IPI_CPU_BACKTRACE,
+ 	/*
+ 	 * SGI8-15 can be reserved by secure firmware, and thus may
+@@ -803,7 +807,7 @@ core_initcall(register_cpufreq_notifier);
+ 
+ static void raise_nmi(cpumask_t *mask)
+ {
+-	smp_cross_call(mask, IPI_CPU_BACKTRACE);
++	__smp_cross_call(mask, IPI_CPU_BACKTRACE);
+ }
+ 
+ void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
 -- 
 2.20.1
 
