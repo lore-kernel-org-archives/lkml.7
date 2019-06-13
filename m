@@ -2,83 +2,96 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3D8C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C34C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B011B20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55322215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:37:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sym0TmWI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392665AbfFMQhn (ORCPT
+        id S2392687AbfFMQhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:37:43 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:38240 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730636AbfFMHNo (ORCPT
+        Thu, 13 Jun 2019 12:37:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41922 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730625AbfFMHKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 03:13:44 -0400
-X-UUID: 7fb525a94b8241e492dc70d5b7f83123-20190613
-X-UUID: 7fb525a94b8241e492dc70d5b7f83123-20190613
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 140816244; Thu, 13 Jun 2019 15:13:36 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 13 Jun 2019 15:13:33 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 13 Jun 2019 15:13:33 +0800
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-CC:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <linux-wireless@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v2 1/2] mt76: mt7615: fix incorrect settings in mesh mode
-Date:   Thu, 13 Jun 2019 15:13:30 +0800
-Message-ID: <3065a01998dfa04a5d2d680e820a17cb5c110d0f.1560330906.git.ryder.lee@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <ec6ccb9ad8e083bbc960c84adcb3164a4e190c7c.1560338170.git.ryder.lee@mediatek.com>
-References: <ec6ccb9ad8e083bbc960c84adcb3164a4e190c7c.1560338170.git.ryder.lee@mediatek.com>
+        Thu, 13 Jun 2019 03:10:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=zrvKpljxrRXoMw3me5BR8AhqFJrBrP/RLB7FSk6JjTg=; b=sym0TmWILor5t14LMyRnRqvkg0
+        EOM5U4fBRbAa0sCPMtQ8ondzb4A68BVEImqRwMpoyI7tlXAKyHWV9CS8ErDRu7VWWa44KABjarLVb
+        VgqTswe7YRcNNyOeDe2IqZcFoRCNaiFQAuVnv1UlipmjTa3S4bZrtHUN4r4kgo0wdhn/oxozXDYay
+        ZTZpyhoPoVnxMUEWo6bbYN5gOkyVrsZM/6ToihFSA/GsfP9iGX8eW2cC8KZGn4tTBMUz3KVZm6Wcx
+        hl6UrDUinSCN0VsCzOGZZw7eXTSdocwgC0nh+6qPuC9EQgUJsuXWFFLvAuBkTi2uwXC7J8+CWk5NK
+        SZYOIDZw==;
+Received: from mpp-cp1-natpool-1-013.ethz.ch ([82.130.71.13] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbJs1-0004Zl-6O; Thu, 13 Jun 2019 07:10:02 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Greg Ungerer <gerg@linux-m68k.org>
+Cc:     Michal Simek <monstr@monstr.eu>,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        linux-m68k@lists.linux-m68k.org, linux-riscv@lists.infradead.org,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 17/17] riscv: add binfmt_flat support
+Date:   Thu, 13 Jun 2019 09:09:03 +0200
+Message-Id: <20190613070903.17214-18-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190613070903.17214-1-hch@lst.de>
+References: <20190613070903.17214-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 5533815261F40B873B0FE936DC543BA5DEA8548223FBF6ED8A830DDCA412B28B2000:8
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix wrong settings that will drop packets due to hardware's RX table
-searching flow.
+Just use the generic definitions.
 
-Fixes: f072c7ba2150 ("mt76: mt7615: enable support for mesh")
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/net/wireless/mediatek/mt76/mt7615/mcu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/Kconfig            | 1 +
+ arch/riscv/include/asm/Kbuild | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-index 76431d00a8ac..e82086eb8aa4 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-@@ -970,7 +970,7 @@ int mt7615_mcu_add_wtbl(struct mt7615_dev *dev, struct ieee80211_vif *vif,
- 		.rx_wtbl = {
- 			.tag = cpu_to_le16(WTBL_RX),
- 			.len = cpu_to_le16(sizeof(struct wtbl_rx)),
--			.rca1 = vif->type == NL80211_IFTYPE_STATION,
-+			.rca1 = vif->type != NL80211_IFTYPE_AP,
- 			.rca2 = 1,
- 			.rv = 1,
- 		},
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 0c4b12205632..2c19baa8d6c3 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -17,6 +17,7 @@ config RISCV
+ 	select OF
+ 	select OF_EARLY_FLATTREE
+ 	select OF_IRQ
++	select ARCH_HAS_BINFMT_FLAT
+ 	select ARCH_WANT_FRAME_POINTERS
+ 	select CLONE_BACKWARDS
+ 	select COMMON_CLK
+diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
+index 5ee646619cc3..1efaeddf1e4b 100644
+--- a/arch/riscv/include/asm/Kbuild
++++ b/arch/riscv/include/asm/Kbuild
+@@ -5,6 +5,7 @@ generic-y += compat.h
+ generic-y += device.h
+ generic-y += div64.h
+ generic-y += extable.h
++generic-y += flat.h
+ generic-y += dma.h
+ generic-y += dma-contiguous.h
+ generic-y += dma-mapping.h
 -- 
-2.18.0
+2.20.1
 
