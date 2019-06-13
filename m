@@ -2,120 +2,160 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C30C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CC1C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9FB8208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC22A21473
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:09:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="NKN6US3r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ts2Hv+zW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730280AbfFMVG5 (ORCPT
+        id S1730058AbfFMVJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 17:06:57 -0400
-Received: from mail-eopbgr800118.outbound.protection.outlook.com ([40.107.80.118]:11235
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbfFMVG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 17:06:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=kBbe3xnF9iirhIyzruNqFO4RqVTghkLCAejYhXEATUeF5iCUdDgvynJgI5/jIGqCktBxKfOr2oqxcqpkDmPYlIXeegyV0VEggu3RWfkXegYa36C9E9hs+hcFSJc1LPhnQymrceC7yENuT9NRjzmUS9siQdhK7c4rKiKfFiR1V1o=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1xcrAXfZh81hwsmV+84Zt8evX32NvIi2whAfWwnjYHw=;
- b=aDeH4r2WeEb3FZP4CyCawQqcqoB9SnnXd5Az9F7J8UJ3DefwA/ZILQiq3IJpSlrwNCAZXCfzK+s6M7JZAuBpGFWyFvMIbvqCmvkpRo8S6Ne063YlIbnndXhQ0FnsDfRfEs/OjzZ97haC7N8zopegPH1ghtaWy9+U4A4ZnyApm0o=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1xcrAXfZh81hwsmV+84Zt8evX32NvIi2whAfWwnjYHw=;
- b=NKN6US3r6k7zlYH+EeDAaPbMinkHkyokEKyeFOIVV15EuD2ASBeIC4o+Q3pAaeOCVJueYccGbFjAjgfjd6U3wmjm97qVkpEfaOvvpZYrpcZM+NVw6O826Qd8I00Br5jBmKNb/U48a1OU9gfUj9mJBjInK3qPdK07BexUHAokI0k=
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com (2603:10b6:5:169::22)
- by DM6PR21MB1258.namprd21.prod.outlook.com (2603:10b6:5:16b::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.0; Thu, 13 Jun
- 2019 21:06:54 +0000
-Received: from DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::b825:2209:d3e2:8f11]) by DM6PR21MB1242.namprd21.prod.outlook.com
- ([fe80::b825:2209:d3e2:8f11%8]) with mapi id 15.20.2008.002; Thu, 13 Jun 2019
- 21:06:54 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net] hv_netvsc: Set probe mode to sync
-Thread-Topic: [PATCH net] hv_netvsc: Set probe mode to sync
-Thread-Index: AQHVIivt+c6DSWaC7keogthN7NhgTw==
-Date:   Thu, 13 Jun 2019 21:06:53 +0000
-Message-ID: <1560459955-37900-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR19CA0022.namprd19.prod.outlook.com
- (2603:10b6:300:d4::32) To DM6PR21MB1242.namprd21.prod.outlook.com
- (2603:10b6:5:169::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c604b83b-8e4b-4976-0499-08d6f0430fbc
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1258;
-x-ms-traffictypediagnostic: DM6PR21MB1258:
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB125884F1729B6E8DA659ACF9ACEF0@DM6PR21MB1258.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0067A8BA2A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(376002)(396003)(366004)(39860400002)(189003)(199004)(2906002)(5660300002)(50226002)(478600001)(66946007)(68736007)(4744005)(36756003)(66556008)(66446008)(64756008)(66476007)(6116002)(10090500001)(14454004)(53936002)(81166006)(10290500003)(81156014)(73956011)(2201001)(25786009)(3846002)(8676002)(7736002)(6506007)(6512007)(8936002)(2501003)(4326008)(52116002)(386003)(54906003)(99286004)(52396003)(6436002)(102836004)(6392003)(7846003)(14444005)(256004)(4720700003)(66066001)(26005)(316002)(186003)(22452003)(476003)(486006)(71200400001)(2616005)(71190400001)(305945005)(6486002)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1258;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hc0emR2M+v0+sTdmpDGJu1SUoD+4vTY11qeQ3kFOxej0DJd6nKTfuVlEl5bzOKne7NJ20q5OclBFBJtsAQcKUje8SV2Z59TmI10kNw401NR0Q9KJ6ePKIr47nyBEiO5wPkQa5Ema2tlBXPqj27LOAEr9SkDfw0T8wJ7ARFcotCJNp2x0Fk+YmSR//jiWBZlTmocKXsjGPcpoQv61x1UY62oLCi6IKrV/y8NRYG7SicLWMetzVoN1kCVvejyel6ruLc1VFjQ+RvS0OB+4l0y2U29RUpSbCN3snA68+vzGrjVp4febL1ZEVJssa5Tb4jpY8MYTuZhn1oAWNKWXiK3BkVMMVAgplVIeZXOuglsffB5bRmdQKKFnOtzc4tfQ5L08EXzhu9tfP87Cgx23DajJnNDHc1cI0cDxzOppKtrYr3U=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 13 Jun 2019 17:09:10 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39095 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfFMVJK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 17:09:10 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v18so154497ljh.6;
+        Thu, 13 Jun 2019 14:09:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=895NWKCSLGYKt5EcTpBtHcyCk2/DIWTeD9tNxcMqErQ=;
+        b=Ts2Hv+zWx1lzjV2v0HuuD/I1rcFhAxdY02pPJcE03dN1wznH+jzXHgQ76ZPc9/pGCR
+         NpDRpdX5mhh/8xo3Ep8yo8jQUry91hAGNecvDdVsfbyOe4AXD8KPe/PsZkqb8s8VXjdU
+         aGutHBYWiDYuP5+fRf+XHeg9hNf6oqHLlJe0u54VxnmkE2FEpZLDMUm7k+uWPB4LObkz
+         4Knmv0JU7U9DFrCK63DGdyKSnj1h7hyEf/AOWLaW39LCN1UVQOpCpDoeh+C1oe4fOdm9
+         52X8M8f/SastbOqtsyX9NIY3W7lzWqHorc6x8UN4MLCsB2Gf6mj/sZVALseXwrHyPy+8
+         oEEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=895NWKCSLGYKt5EcTpBtHcyCk2/DIWTeD9tNxcMqErQ=;
+        b=ijFB0nLTy07DcT0Yx1ukK918pF6SisnWtcDxXfe1gpAiNGseiy6SiY6xjAKTG7qsP7
+         NU1AwRQlx7an2Ay5Xcmi1F/3bKRa3essLPWnDiOhykQq1f8mQOKfay78cIJSsfrIzNuF
+         UoFh3s+yCHkiSZYEvwLh3vqqczt19PFcgFRkpGCYwB2AIbDuyQ2graNERDYEBA6ZPeeA
+         a+zrOBzNuyMsh/5dRUXIEJpv7FlXJWK6DrCa7biuZQypXOt7/xUWQZ1OpbWbPEwPcoKU
+         wdFjCc0r2yjrIifAiD28Jos3oMwi7lib+yfFehymkCGV0Sk6592p5N3chSHiu5jxX2sX
+         axFw==
+X-Gm-Message-State: APjAAAVEjbjrOEQ8HUj6QJyMA2DsOQM61jEI1Z2z1kAppcrbwgfN8MT/
+        b3QzUNVUpP5/zrXavZ+mYk6hiSAB
+X-Google-Smtp-Source: APXvYqws74y2zldX/c06Uv3zaHV8CGb3sJfcWRFswCPHlwNa7pr4PRgYt/Ut1URmeD6eZJS/xmpJCw==
+X-Received: by 2002:a2e:6545:: with SMTP id z66mr49450292ljb.146.1560460147587;
+        Thu, 13 Jun 2019 14:09:07 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.gmail.com with ESMTPSA id k15sm183729lji.89.2019.06.13.14.09.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 14:09:06 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue granularity
+Date:   Fri, 14 Jun 2019 00:08:49 +0300
+Message-Id: <20190613210849.10382-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c604b83b-8e4b-4976-0499-08d6f0430fbc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 21:06:53.9697
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lkmlhyz@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1258
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rm9yIGJldHRlciBjb25zaXN0ZW5jeSBvZiBzeW50aGV0aWMgTklDIG5hbWVzLCB3ZSBzZXQgdGhl
-IHByb2JlIG1vZGUgdG8NClBST0JFX0ZPUkNFX1NZTkNIUk9OT1VTLiBTbyB0aGUgbmFtZXMgY2Fu
-IGJlIGFsaWduZWQgd2l0aCB0aGUgdm1idXMNCmNoYW5uZWwgb2ZmZXIgc2VxdWVuY2UuDQoNCkZp
-eGVzOiBhZjBhNTY0NmNiOGQgKCJ1c2UgdGhlIG5ldyBhc3luYyBwcm9iaW5nIGZlYXR1cmUgZm9y
-IHRoZSBoeXBlcnYgZHJpdmVycyIpDQpTaWduZWQtb2ZmLWJ5OiBIYWl5YW5nIFpoYW5nIDxoYWl5
-YW5nekBtaWNyb3NvZnQuY29tPg0KLS0tDQogZHJpdmVycy9uZXQvaHlwZXJ2L25ldHZzY19kcnYu
-YyB8IDIgKy0NCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkN
-Cg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2h5cGVydi9uZXR2c2NfZHJ2LmMgYi9kcml2ZXJz
-L25ldC9oeXBlcnYvbmV0dnNjX2Rydi5jDQppbmRleCAwM2VhNWE3Li5hZmRjYzU2IDEwMDY0NA0K
-LS0tIGEvZHJpdmVycy9uZXQvaHlwZXJ2L25ldHZzY19kcnYuYw0KKysrIGIvZHJpdmVycy9uZXQv
-aHlwZXJ2L25ldHZzY19kcnYuYw0KQEAgLTI0MDcsNyArMjQwNyw3IEBAIHN0YXRpYyBpbnQgbmV0
-dnNjX3JlbW92ZShzdHJ1Y3QgaHZfZGV2aWNlICpkZXYpDQogCS5wcm9iZSA9IG5ldHZzY19wcm9i
-ZSwNCiAJLnJlbW92ZSA9IG5ldHZzY19yZW1vdmUsDQogCS5kcml2ZXIgPSB7DQotCQkucHJvYmVf
-dHlwZSA9IFBST0JFX1BSRUZFUl9BU1lOQ0hST05PVVMsDQorCQkucHJvYmVfdHlwZSA9IFBST0JF
-X0ZPUkNFX1NZTkNIUk9OT1VTLA0KIAl9LA0KIH07DQogDQotLSANCjEuOC4zLjENCg0K
+Tegra's APB DMA engine updates words counter after each transferred burst
+of data, hence it can report transfer's residual with more fidelity which
+may be required in cases like audio playback. In particular this fixes
+audio stuttering during playback in a chromiuim web browser. The patch is
+based on the original work that was made by Ben Dooks [1]. It was tested
+on Tegra20 and Tegra30 devices.
+
+[1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+
+Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
+ 1 file changed, 28 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 79e9593815f1..c5af8f703548 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+ 	return 0;
+ }
+ 
++static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
++					      struct tegra_dma_sg_req *sg_req,
++					      struct tegra_dma_desc *dma_desc,
++					      unsigned int residual)
++{
++	unsigned long status, wcount = 0;
++
++	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
++		return residual;
++
++	if (tdc->tdma->chip_data->support_separate_wcount_reg)
++		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
++
++	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
++
++	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
++		wcount = status;
++
++	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
++		return residual - sg_req->req_len;
++
++	return residual - get_current_xferred_count(tdc, sg_req, wcount);
++}
++
+ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+ 	dma_cookie_t cookie, struct dma_tx_state *txstate)
+ {
+ 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
++	struct tegra_dma_sg_req *sg_req = NULL;
+ 	struct tegra_dma_desc *dma_desc;
+-	struct tegra_dma_sg_req *sg_req;
+ 	enum dma_status ret;
+ 	unsigned long flags;
+ 	unsigned int residual;
+@@ -838,6 +862,8 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+ 		residual = dma_desc->bytes_requested -
+ 			   (dma_desc->bytes_transferred %
+ 			    dma_desc->bytes_requested);
++		residual = tegra_dma_update_residual(tdc, sg_req, dma_desc,
++						     residual);
+ 		dma_set_residue(txstate, residual);
+ 	}
+ 
+@@ -1441,12 +1467,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 		BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
+ 		BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+ 	tdma->dma_dev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+-	/*
+-	 * XXX The hardware appears to support
+-	 * DMA_RESIDUE_GRANULARITY_BURST-level reporting, but it's
+-	 * only used by this driver during tegra_dma_terminate_all()
+-	 */
+-	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
++	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+ 	tdma->dma_dev.device_config = tegra_dma_slave_config;
+ 	tdma->dma_dev.device_terminate_all = tegra_dma_terminate_all;
+ 	tdma->dma_dev.device_tx_status = tegra_dma_tx_status;
+-- 
+2.22.0
+
