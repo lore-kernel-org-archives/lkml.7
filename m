@@ -2,66 +2,66 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B322FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2101C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87758206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AADA62063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZM8dRqd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQGrcahy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404779AbfFMREa (ORCPT
+        id S2393376AbfFMRE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:04:30 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46192 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404666AbfFMREO (ORCPT
+        Thu, 13 Jun 2019 13:04:28 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36992 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404637AbfFMREN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:04:14 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n4so21537613wrw.13;
-        Thu, 13 Jun 2019 10:04:13 -0700 (PDT)
+        Thu, 13 Jun 2019 13:04:13 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 22so10899993wmg.2;
+        Thu, 13 Jun 2019 10:04:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=falAqpBCvs4GQzGRRi3ubvRYt1F+L9WaFtV97+WAQU0=;
-        b=HZM8dRqdW1ZqtCd0d9Ya6Vh8MNY1VhCT37XqG7om/qn+W0qdjOr66vSsTakEqpl+p8
-         CPUQf6+YERIqy+5gTJFaQnWCFq3au/lvCPAKHbNvRlgFMpnlQIbKjaPPQSjoNYTqNoqm
-         AVsWiOPKLBhoHowNyhKazNC+Nbby3J49SBOgBoZgD+Ht3FV5RHMUZoog8DEfILp/vbvv
-         7IaJJnhyusNU4KbNQ5VcAUozgzw/FCmF8SlPlV7TN+NfZBg+2DDZUZVPYkEHtlGM2l4S
-         dnTGSyfv4hBBcL3zW82hnpVL9hCmiPnPln1hvrXIjZUbrJtrl12tGNi3/ZXFvjmcTDtr
-         BxHA==
+        bh=PauhBnwIydTV1dpSLJWkvku0SUxCuSsze031CqD8fkc=;
+        b=MQGrcahyhWeckWrUhfIO/5guXoUkQD30B3O3qgQym0WzPHqZXNaCFgs7WR6v0B4hMy
+         a4j5jBB2mQSpSMmTWt2QI5UdzzPfm5iC2d4MvZfAK/bv/lh67X2/1j2/WGDAQAmvFatB
+         legqnDUI4//bWtr+/KrJta2FKkFIG9FlkUmbqxXmUAaAWE8SP54etIh/xUp4PJQozWLv
+         nFXDKXjG8a0PHR5lJTMHZo/3in1fLYTbq78ZZcLiDeWHvsfMXxSM0l149z1PUgXOmjo2
+         z2VCUZNo+WtCaLxmwk4GmptM6a1oI0IK/B9Iy22Iq54/grmoBNhVrB2km46p0Pq+qZmS
+         gaug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=falAqpBCvs4GQzGRRi3ubvRYt1F+L9WaFtV97+WAQU0=;
-        b=KiXDU7/ow9dk8DP5o8E77kXXL/QTWv4b5lEJGxHfY72v9XpZ0Q+j1O7idPlCnNkqXX
-         RLph+K4RoJCtXQY0HQuPkl+hWmKwBUy3eod6aC+1qZdAttOfycduqHmm4ogT8BfFI7ms
-         87AJpYH3/GpjZ/Kye9Jqp7k1Z2c0iPmV3uTlRmILlf6MATemTsOZFtX7hr4pQ3zVX2/b
-         UH2KAOkoMFugQBLyBgT3OsFwe1LbCp4KUrjLTa0IohJnLu+DDD8ApcyY2AyVrJj1pGWM
-         3azRY2S/RedmqfW9kzMYzF0+ovcwz3RpBnWYv8CZLvFfsxX9Ftc4sy5PwvrgYTNnrqWq
-         iIYg==
-X-Gm-Message-State: APjAAAWnCM0EP4sSRjLoGaChqXfGsC8Oei+bQfS2O9RGG31jqAa8u0Nh
-        bu+MOqukV0zPPrAOcXNzjWuB/lRz
-X-Google-Smtp-Source: APXvYqwL8ZuL81zRw5ZJKMOA3ZlAsnbWgm5x85Wj5w81JRdtsllO0LHL7CD+GBnli1GxuKaekFyAvQ==
-X-Received: by 2002:adf:ce03:: with SMTP id p3mr33869433wrn.94.1560445452682;
-        Thu, 13 Jun 2019 10:04:12 -0700 (PDT)
+        bh=PauhBnwIydTV1dpSLJWkvku0SUxCuSsze031CqD8fkc=;
+        b=eMdW7ypNMrYEKjZ+Yb2bBc/uDDIDX1qYGONjaR6T5VpxIxNcsQn3/FsvcVZDyG2GV+
+         TXsXPgjy/vG/3giNgR8jBJxqsVkwyhEHxqDnSepnJM1PAeKx008sEqqzhcWvaM4vEeNX
+         +7PfvViM5g4MLL0SF8yWcbZrvLTBH+C7exSsfV+3tpiMXajDJeoDkqMj0g8LKPN2loNM
+         ukZSZxreVmhiKZUX9r6ly0GTgE6sWBLe1LJ8x/KJMtBU69yaMOqoqNRM1Gvwxuf/vmlx
+         f3GBBA9TaKTACOX+0nrwneaLs9AYGfRIqivi3VJ/dI23Mal8mCUBTfgrMtnHqPlEVdeD
+         nDYw==
+X-Gm-Message-State: APjAAAVjmcmGpjIu+N/1fP9xKBb5OAS4nM1+LOtGWl8oiCthyWWsekGu
+        rYyUFl4b/BBMg4U7GcYlLgAnSQqS
+X-Google-Smtp-Source: APXvYqwN2Wowzw2jGvmve+26R/smJ+CkKjLYTBhGqshRM6i6eZcXd+ty7keD02QZnxB/UVDFBFWhMA==
+X-Received: by 2002:a1c:7310:: with SMTP id d16mr4449701wmb.107.1560445450427;
+        Thu, 13 Jun 2019 10:04:10 -0700 (PDT)
 Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.04.11
+        by smtp.gmail.com with ESMTPSA id a10sm341856wrx.17.2019.06.13.10.04.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 10:04:12 -0700 (PDT)
+        Thu, 13 Jun 2019 10:04:09 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         vkuznets@redhat.com
-Subject: [PATCH 40/43] KVM: nVMX: Preset *DT exiting in vmcs02 when emulating UMIP
-Date:   Thu, 13 Jun 2019 19:03:26 +0200
-Message-Id: <1560445409-17363-41-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 38/43] KVM: VMX: Explicitly initialize controls shadow at VMCS allocation
+Date:   Thu, 13 Jun 2019 19:03:24 +0200
+Message-Id: <1560445409-17363-39-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
 References: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
@@ -72,38 +72,141 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-KVM dynamically toggles SECONDARY_EXEC_DESC to intercept (a subset of)
-instructions that are subject to User-Mode Instruction Prevention, i.e.
-VMCS.SECONDARY_EXEC_DESC == CR4.UMIP when emulating UMIP.  Preset the
-VMCS control when preparing vmcs02 to avoid unnecessarily VMWRITEs,
-e.g. KVM will clear VMCS.SECONDARY_EXEC_DESC in prepare_vmcs02_early()
-and then set it in vmx_set_cr4().
+Or: Don't re-initialize vmcs02's controls on every nested VM-Entry.
+
+VMWRITEs to the major VMCS controls are deceptively expensive.  Intel
+CPUs with VMCS caching (Westmere and later) also optimize away
+consistency checks on VM-Entry, i.e. skip consistency checks if the
+relevant fields have not changed since the last successful VM-Entry (of
+the cached VMCS).  Because uops are a precious commodity, uCode's dirty
+VMCS field tracking isn't as precise as software would prefer.  Notably,
+writing any of the major VMCS fields effectively marks the entire VMCS
+dirty, i.e. causes the next VM-Entry to perform all consistency checks,
+which consumes several hundred cycles.
+
+Zero out the controls' shadow copies during VMCS allocation and use the
+optimized setter when "initializing" controls.  While this technically
+affects both non-nested and nested virtualization, nested virtualization
+is the primary beneficiary as avoid VMWRITEs when prepare vmcs02 allows
+hardware to optimizie away consistency checks.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/nested.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/kvm/vmx/nested.c | 10 +++++-----
+ arch/x86/kvm/vmx/vmx.c    | 12 +++++++-----
+ arch/x86/kvm/vmx/vmx.h    |  5 -----
+ 3 files changed, 12 insertions(+), 15 deletions(-)
 
 diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 14a8cfade50f..598540ce0f52 100644
+index 47adafa42fbf..32bcf777576c 100644
 --- a/arch/x86/kvm/vmx/nested.c
 +++ b/arch/x86/kvm/vmx/nested.c
-@@ -2085,6 +2085,14 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
- 		/* VMCS shadowing for L2 is emulated for now */
- 		exec_control &= ~SECONDARY_EXEC_SHADOW_VMCS;
+@@ -2024,7 +2024,7 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
+ 	} else {
+ 		exec_control &= ~PIN_BASED_POSTED_INTR;
+ 	}
+-	pin_controls_init(vmx, exec_control);
++	pin_controls_set(vmx, exec_control);
  
-+		/*
-+		 * Preset *DT exiting when emulating UMIP, so that vmx_set_cr4()
-+		 * will not have to rewrite the controls just for this bit.
-+		 */
-+		if (!boot_cpu_has(X86_FEATURE_UMIP) && vmx_umip_emulated() &&
-+		    (vmcs12->guest_cr4 & X86_CR4_UMIP))
-+			exec_control |= SECONDARY_EXEC_DESC;
-+
- 		if (exec_control & SECONDARY_EXEC_VIRTUAL_INTR_DELIVERY)
+ 	/*
+ 	 * EXEC CONTROLS
+@@ -2049,7 +2049,7 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
+ 	 */
+ 	exec_control &= ~CPU_BASED_USE_IO_BITMAPS;
+ 	exec_control |= CPU_BASED_UNCOND_IO_EXITING;
+-	exec_controls_init(vmx, exec_control);
++	exec_controls_set(vmx, exec_control);
+ 
+ 	/*
+ 	 * SECONDARY EXEC CONTROLS
+@@ -2079,7 +2079,7 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
  			vmcs_write16(GUEST_INTR_STATUS,
  				vmcs12->guest_intr_status);
+ 
+-		secondary_exec_controls_init(vmx, exec_control);
++		secondary_exec_controls_set(vmx, exec_control);
+ 	}
+ 
+ 	/*
+@@ -2098,7 +2098,7 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
+ 		if (guest_efer != host_efer)
+ 			exec_control |= VM_ENTRY_LOAD_IA32_EFER;
+ 	}
+-	vm_entry_controls_init(vmx, exec_control);
++	vm_entry_controls_set(vmx, exec_control);
+ 
+ 	/*
+ 	 * EXIT CONTROLS
+@@ -2110,7 +2110,7 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
+ 	exec_control = vmx_vmexit_ctrl();
+ 	if (cpu_has_load_ia32_efer() && guest_efer != host_efer)
+ 		exec_control |= VM_EXIT_LOAD_IA32_EFER;
+-	vm_exit_controls_init(vmx, exec_control);
++	vm_exit_controls_set(vmx, exec_control);
+ 
+ 	/*
+ 	 * Interrupt/Exception Fields
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 1104f52d281c..6afb2bc3d0ab 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2485,6 +2485,8 @@ int alloc_loaded_vmcs(struct loaded_vmcs *loaded_vmcs)
+ 	}
+ 
+ 	memset(&loaded_vmcs->host_state, 0, sizeof(struct vmcs_host_state));
++	memset(&loaded_vmcs->controls_shadow, 0,
++		sizeof(struct vmcs_controls_shadow));
+ 
+ 	return 0;
+ 
+@@ -4040,14 +4042,14 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
+ 	vmcs_write64(VMCS_LINK_POINTER, -1ull); /* 22.3.1.5 */
+ 
+ 	/* Control */
+-	pin_controls_init(vmx, vmx_pin_based_exec_ctrl(vmx));
++	pin_controls_set(vmx, vmx_pin_based_exec_ctrl(vmx));
+ 	vmx->hv_deadline_tsc = -1;
+ 
+-	exec_controls_init(vmx, vmx_exec_control(vmx));
++	exec_controls_set(vmx, vmx_exec_control(vmx));
+ 
+ 	if (cpu_has_secondary_exec_ctrls()) {
+ 		vmx_compute_secondary_exec_control(vmx);
+-		secondary_exec_controls_init(vmx, vmx->secondary_exec_control);
++		secondary_exec_controls_set(vmx, vmx->secondary_exec_control);
+ 	}
+ 
+ 	if (kvm_vcpu_apicv_active(&vmx->vcpu)) {
+@@ -4105,10 +4107,10 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
+ 		++vmx->nmsrs;
+ 	}
+ 
+-	vm_exit_controls_init(vmx, vmx_vmexit_ctrl());
++	vm_exit_controls_set(vmx, vmx_vmexit_ctrl());
+ 
+ 	/* 22.2.1, 20.8.1 */
+-	vm_entry_controls_init(vmx, vmx_vmentry_ctrl());
++	vm_entry_controls_set(vmx, vmx_vmentry_ctrl());
+ 
+ 	vmx->vcpu.arch.cr0_guest_owned_bits = X86_CR0_TS;
+ 	vmcs_writel(CR0_GUEST_HOST_MASK, ~X86_CR0_TS);
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 6f26f3c10805..dddd36cf7c62 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -388,11 +388,6 @@ static inline u8 vmx_get_rvi(void)
+ }
+ 
+ #define BUILD_CONTROLS_SHADOW(lname, uname)				    \
+-static inline void lname##_controls_init(struct vcpu_vmx *vmx, u32 val)	    \
+-{									    \
+-	vmcs_write32(uname, val);					    \
+-	vmx->loaded_vmcs->controls_shadow.lname = val;			    \
+-}									    \
+ static inline void lname##_controls_set(struct vcpu_vmx *vmx, u32 val)	    \
+ {									    \
+ 	if (vmx->loaded_vmcs->controls_shadow.lname != val) {		    \
 -- 
 1.8.3.1
 
