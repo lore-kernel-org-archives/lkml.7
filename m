@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD37EC31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3F3C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51C2208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65ED1208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442558;
-	bh=C2G3XBftqxJ6JBS2JDLGHyQjkxPa8jx8MU6U5riIo/8=;
+	s=default; t=1560442561;
+	bh=61GBweix5UTf8kAg2xGTzl6CpAUhZk7wGiUDyCDQ2sA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GLlI9WvRfNo/az4g2DvJysrPmcRErRWqsrXFVX8k8aIAVvdWlCy3r6e05Gm3tShIT
-	 i31rHI1VAB/ABa6NMGwEpTDtU9HSjwrK8+uzWBkZVZ+DnG1gCF8dH2srd1hnU3R7lN
-	 WdBAerOGoJzJCizvRyzkqGJMMVrPZkWmQL37ZI6c=
+	b=flgHQ6jYrgAZsgEqdMXoJ5JcaiAHByrthTBt2yF8CEPfRMK3/4S9wGyYVPmMhmxrp
+	 lcaNFwtOjljmQJ82RaPDQJdV32lsH97NUWnESrw2sxZP+vguE+JhCaCaf6949D5mGG
+	 cJRLj5/6XmUssR2LL3FqkrrYRV5A4pCZxmhga/dY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391890AbfFMQP6 (ORCPT
+        id S2391897AbfFMQQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:15:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58796 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:16:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731161AbfFMIlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:41:36 -0400
+        id S1731160AbfFMIle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:41:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABFCF21479;
-        Thu, 13 Jun 2019 08:41:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1404621473;
+        Thu, 13 Jun 2019 08:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415296;
-        bh=C2G3XBftqxJ6JBS2JDLGHyQjkxPa8jx8MU6U5riIo/8=;
+        s=default; t=1560415293;
+        bh=61GBweix5UTf8kAg2xGTzl6CpAUhZk7wGiUDyCDQ2sA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=grdQjcGNX7JixlZd0PrH8YQLOJBNpp/3v7EHlV/gXvG8vALCgnvt2/R2W2g2+tTJY
-         dj8cTUXmfuK6Wnb0Ie3vrBJD+V9RwXxKWbdOeoMtA+9RSiwbm79DM0Xez6wx7d8Q1h
-         C/E7RkjKEJVJeDiZbU80EU8ywLWukKte9CQSqNrY=
+        b=PRqTWbyQP2BXLAvx7+SrCP5m940i8tdswAeGeQcWQs1cFnxuBqVuKnC4Je69jnPYK
+         bW/f09Qw+l+qbscEww78Z7be1fdxN+8XVRNwi1gzYXmQ+763nLJ8VfSDXjtg6H0sRc
+         ksYNLGU6XSJgV1plB3wpa9a0NQ4k8CICVrGUHhpI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 035/118] f2fs: fix to avoid panic in f2fs_remove_inode_page()
-Date:   Thu, 13 Jun 2019 10:32:53 +0200
-Message-Id: <20190613075645.564896849@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        linux-um@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 044/118] uml: fix a boot splat wrt use of cpu_all_mask
+Date:   Thu, 13 Jun 2019 10:33:02 +0200
+Message-Id: <20190613075646.294833490@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -60,76 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8b6810f8acfe429fde7c7dad4714692cc5f75651 ]
+[ Upstream commit 689a58605b63173acb0a8cf954af6a8f60440c93 ]
 
-As Jungyeon reported in bugzilla:
+Memory: 509108K/542612K available (3835K kernel code, 919K rwdata, 1028K rodata, 129K init, 211K bss, 33504K reserved, 0K cma-reserved)
+NR_IRQS: 15
+clocksource: timer: mask: 0xffffffffffffffff max_cycles: 0x1cd42e205, max_idle_ns: 881590404426 ns
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 0 at kernel/time/clockevents.c:458 clockevents_register_device+0x72/0x140
+posix-timer cpumask == cpu_all_mask, using cpu_possible_mask instead
+Modules linked in:
+CPU: 0 PID: 0 Comm: swapper Not tainted 5.1.0-rc4-00048-ged79cc87302b #4
+Stack:
+ 604ebda0 603c5370 604ebe20 6046fd17
+ 00000000 6006fcbb 604ebdb0 603c53b5
+ 604ebe10 6003bfc4 604ebdd0 9000001ca
+Call Trace:
+ [<6006fcbb>] ? printk+0x0/0x94
+ [<60083160>] ? clockevents_register_device+0x72/0x140
+ [<6001f16e>] show_stack+0x13b/0x155
+ [<603c5370>] ? dump_stack_print_info+0xe2/0xeb
+ [<6006fcbb>] ? printk+0x0/0x94
+ [<603c53b5>] dump_stack+0x2a/0x2c
+ [<6003bfc4>] __warn+0x10e/0x13e
+ [<60070320>] ? vprintk_func+0xc8/0xcf
+ [<60030fd6>] ? block_signals+0x0/0x16
+ [<6006fcbb>] ? printk+0x0/0x94
+ [<6003c08b>] warn_slowpath_fmt+0x97/0x99
+ [<600311a1>] ? set_signals+0x0/0x3f
+ [<6003bff4>] ? warn_slowpath_fmt+0x0/0x99
+ [<600842cb>] ? tick_oneshot_mode_active+0x44/0x4f
+ [<60030fd6>] ? block_signals+0x0/0x16
+ [<6006fcbb>] ? printk+0x0/0x94
+ [<6007d2d5>] ? __clocksource_select+0x20/0x1b1
+ [<60030fd6>] ? block_signals+0x0/0x16
+ [<6006fcbb>] ? printk+0x0/0x94
+ [<60083160>] clockevents_register_device+0x72/0x140
+ [<60031192>] ? get_signals+0x0/0xf
+ [<60030fd6>] ? block_signals+0x0/0x16
+ [<6006fcbb>] ? printk+0x0/0x94
+ [<60002eec>] um_timer_setup+0xc8/0xca
+ [<60001b59>] start_kernel+0x47f/0x57e
+ [<600035bc>] start_kernel_proc+0x49/0x4d
+ [<6006c483>] ? kmsg_dump_register+0x82/0x8a
+ [<6001de62>] new_thread_handler+0x81/0xb2
+ [<60003571>] ? kmsg_dumper_stdout_init+0x1a/0x1c
+ [<60020c75>] uml_finishsetup+0x54/0x59
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203219
+random: get_random_bytes called from init_oops_id+0x27/0x34 with crng_init=0
+---[ end trace 00173d0117a88acb ]---
+Calibrating delay loop... 6941.90 BogoMIPS (lpj=34709504)
 
-- Overview
-When mounting the attached crafted image and running program, I got this error.
-Additionally, it hangs on sync after running the program.
+Signed-off-by: Maciej Żenczykowski <maze@google.com>
+Cc: Jeff Dike <jdike@addtoit.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc: linux-um@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 
-The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
-
-- Reproduces
-cc poc_06.c
-mkdir test
-mount -t f2fs tmp.img test
-cp a.out test
-cd test
-sudo ./a.out
-sync
-
-- Messages
- kernel BUG at fs/f2fs/node.c:1183!
- RIP: 0010:f2fs_remove_inode_page+0x294/0x2d0
- Call Trace:
-  f2fs_evict_inode+0x2a3/0x3a0
-  evict+0xba/0x180
-  __dentry_kill+0xbe/0x160
-  dentry_kill+0x46/0x180
-  dput+0xbb/0x100
-  do_renameat2+0x3c9/0x550
-  __x64_sys_rename+0x17/0x20
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The reason is f2fs_remove_inode_page() will trigger kernel panic due to
-inconsistent i_blocks value of inode.
-
-To avoid panic, let's just print debug message and set SBI_NEED_FSCK to
-give a hint to fsck for latter repairing of potential image corruption.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-[Jaegeuk Kim: fix build warning and add unlikely]
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/node.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/um/kernel/time.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 19a0d83aae65..807a77518a49 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1180,8 +1180,14 @@ int f2fs_remove_inode_page(struct inode *inode)
- 		f2fs_put_dnode(&dn);
- 		return -EIO;
- 	}
--	f2fs_bug_on(F2FS_I_SB(inode),
--			inode->i_blocks != 0 && inode->i_blocks != 8);
-+
-+	if (unlikely(inode->i_blocks != 0 && inode->i_blocks != 8)) {
-+		f2fs_msg(F2FS_I_SB(inode)->sb, KERN_WARNING,
-+			"Inconsistent i_blocks, ino:%lu, iblocks:%llu",
-+			inode->i_ino,
-+			(unsigned long long)inode->i_blocks);
-+		set_sbi_flag(F2FS_I_SB(inode), SBI_NEED_FSCK);
-+	}
- 
- 	/* will put inode & node pages */
- 	err = truncate_node(&dn);
+diff --git a/arch/um/kernel/time.c b/arch/um/kernel/time.c
+index 052de4c8acb2..0c572a48158e 100644
+--- a/arch/um/kernel/time.c
++++ b/arch/um/kernel/time.c
+@@ -56,7 +56,7 @@ static int itimer_one_shot(struct clock_event_device *evt)
+ static struct clock_event_device timer_clockevent = {
+ 	.name			= "posix-timer",
+ 	.rating			= 250,
+-	.cpumask		= cpu_all_mask,
++	.cpumask		= cpu_possible_mask,
+ 	.features		= CLOCK_EVT_FEAT_PERIODIC |
+ 				  CLOCK_EVT_FEAT_ONESHOT,
+ 	.set_state_shutdown	= itimer_shutdown,
 -- 
 2.20.1
 
