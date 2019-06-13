@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3418DC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB80C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3BC120679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C7A20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441497;
-	bh=dOXVFBwfFnjr6mtGpP9lPz0BOq2tVCzrhnbNIxx+j28=;
+	s=default; t=1560441502;
+	bh=W/kGKgRpybLetFv0lIpRTCSho1IytiYJm76EEIPEbW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VIWuRTOs4gyniQAmfHBzfBDo4BcN34MNoi9u91e0O1M92BiqwhS6fLsBDnHiz3SQU
-	 2yTV6wOd4Rgvdy9lSxyHyHk3VqHlsVn6UbNGRLnhEgFHkIV3Ary5U1oVHTZVRJ06Vf
-	 PLqBoLH9Nv0bdCUXDnXz3qh6QL/vRw3c21Whus3s=
+	b=BL1rnxWlunnkXUMgFf6SLc7r8QXoPhG2nlZe1MXO99mMbg2rvJ7nULbUemzlfMQIE
+	 3/sH19PyS0WjL0kXCycYIANWLI6FgYYKcoulzWln/R2Jq5GUGRlPntu68QfFu26gmg
+	 jZmoTNNsv/Cg4vYnOVPqFp7AcuEY9kWHBRSLfOaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390234AbfFMP6D (ORCPT
+        id S2390336AbfFMP6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:58:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37972 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:58:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731500AbfFMIuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:50:24 -0400
+        id S1731494AbfFMIuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:50:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ABAC21473;
-        Thu, 13 Jun 2019 08:50:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 861C620851;
+        Thu, 13 Jun 2019 08:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415823;
-        bh=dOXVFBwfFnjr6mtGpP9lPz0BOq2tVCzrhnbNIxx+j28=;
+        s=default; t=1560415812;
+        bh=W/kGKgRpybLetFv0lIpRTCSho1IytiYJm76EEIPEbW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fIIgD+IiixlMiT9Y3mxC9YdAqaPtUBl/Plp00WPPbV8b3JWaNPAmAmvt/hkAuGNCP
-         9DJQ18N7s7tpLJVaBneDB7uDhvylxMsyWik15fEW2M3UiGoT4Un1CQJf+roQ0wvpUV
-         Z2RyFmK2MQ9blu4chl/jW2QBGuDEoultW1orxsT4=
+        b=jsGiQN3VfgCJz7KSjmJCcs3vvI/DUFyzN4vJiXDjEo7g3fbYbFy06PET4je01EFbZ
+         DKfl992DggaMjH7Ptu3+wNFmH8yzI6Qj4LJfcp8ikscSHURx0AxC4l6Pa1qDAm5wNc
+         00drT06xXiKU60PlBwOOaKclvXVrNZXeWi5R33OE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brett Creeley <brett.creeley@intel.com>,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Steven Price <steven.price@arm.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 136/155] ice: Add missing case in print_link_msg for printing flow control
-Date:   Thu, 13 Jun 2019 10:34:08 +0200
-Message-Id: <20190613075700.329220104@linuxfoundation.org>
+Subject: [PATCH 5.1 132/155] PCI: xilinx: Check for __get_free_pages() failure
+Date:   Thu, 13 Jun 2019 10:34:04 +0200
+Message-Id: <20190613075700.153103099@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -62,36 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 203a068ac9e2722e4d118116acaa3a5586f9468a ]
+[ Upstream commit 699ca30162686bf305cdf94861be02eb0cf9bda2 ]
 
-Currently we aren't checking for the ICE_FC_NONE case for the current
-flow control mode. This is causing "Unknown" to be printed for the
-current flow control method if flow control is disabled. Fix this by
-adding the case for ICE_FC_NONE to print "None".
+If __get_free_pages() fails, return -ENOMEM to avoid a NULL pointer
+dereference.
 
-Signed-off-by: Brett Creeley <brett.creeley@intel.com>
-Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Steven Price <steven.price@arm.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/controller/pcie-xilinx.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 6ec73864019c..b562476b1251 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -528,6 +528,9 @@ void ice_print_link_msg(struct ice_vsi *vsi, bool isup)
- 	case ICE_FC_RX_PAUSE:
- 		fc = "RX";
- 		break;
-+	case ICE_FC_NONE:
-+		fc = "None";
-+		break;
- 	default:
- 		fc = "Unknown";
- 		break;
+diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
+index 9bd1a35cd5d8..5bf3af3b28e6 100644
+--- a/drivers/pci/controller/pcie-xilinx.c
++++ b/drivers/pci/controller/pcie-xilinx.c
+@@ -336,14 +336,19 @@ static const struct irq_domain_ops msi_domain_ops = {
+  * xilinx_pcie_enable_msi - Enable MSI support
+  * @port: PCIe port information
+  */
+-static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
++static int xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
+ {
+ 	phys_addr_t msg_addr;
+ 
+ 	port->msi_pages = __get_free_pages(GFP_KERNEL, 0);
++	if (!port->msi_pages)
++		return -ENOMEM;
++
+ 	msg_addr = virt_to_phys((void *)port->msi_pages);
+ 	pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
+ 	pcie_write(port, msg_addr, XILINX_PCIE_REG_MSIBASE2);
++
++	return 0;
+ }
+ 
+ /* INTx Functions */
+@@ -498,6 +503,7 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+ 	struct device *dev = port->dev;
+ 	struct device_node *node = dev->of_node;
+ 	struct device_node *pcie_intc_node;
++	int ret;
+ 
+ 	/* Setup INTx */
+ 	pcie_intc_node = of_get_next_child(node, NULL);
+@@ -526,7 +532,9 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+ 			return -ENODEV;
+ 		}
+ 
+-		xilinx_pcie_enable_msi(port);
++		ret = xilinx_pcie_enable_msi(port);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	return 0;
 -- 
 2.20.1
 
