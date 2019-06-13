@@ -2,98 +2,97 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E902BC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11E8C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB0E20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A95A20851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732634AbfFMPsc (ORCPT
+        id S2389568AbfFMPsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:48:32 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:60802 "EHLO ns.iliad.fr"
+        Thu, 13 Jun 2019 11:48:30 -0400
+Received: from sauhun.de ([88.99.104.3]:38560 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731732AbfFMJTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:19:30 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id EB8E320A52;
-        Thu, 13 Jun 2019 11:19:28 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id D33D420732;
-        Thu, 13 Jun 2019 11:19:28 +0200 (CEST)
-Subject: Re: msm8996: qcom-qmp: apq8096-db820c fails to boot, reset back to
- fastboot and locks up
-To:     Paolo Pisati <p.pisati@gmail.com>
-References: <20190610134401.GA12964@harukaze>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <8cc440fd-9fd2-97a6-42e1-0a0b9c456d10@free.fr>
-Date:   Thu, 13 Jun 2019 11:19:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1731731AbfFMJT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:19:29 -0400
+Received: from localhost (p5486CF99.dip0.t-ipconnect.de [84.134.207.153])
+        by pokefinder.org (Postfix) with ESMTPSA id 7A4352C3559;
+        Thu, 13 Jun 2019 11:19:26 +0200 (CEST)
+Date:   Thu, 13 Jun 2019 11:19:26 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     alokc@codeaurora.org, andy.gross@linaro.org,
+        david.brown@linaro.org, wsa+renesas@sang-engineering.com,
+        bjorn.andersson@linaro.org, linus.walleij@linaro.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org,
+        ard.biesheuvel@linaro.org, jlhugo@gmail.com,
+        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/8] i2c: i2c-qcom-geni: Provide support for ACPI
+Message-ID: <20190613091926.GB952@kunai>
+References: <20190610084213.1052-1-lee.jones@linaro.org>
+ <20190612103453.ccet2pneairnlpcc@ninjato>
+ <20190612104011.GA4660@dell>
+ <20190612104459.gvji3qxym5s4odfq@ninjato>
+ <20190613085204.GF4660@dell>
 MIME-Version: 1.0
-In-Reply-To: <20190610134401.GA12964@harukaze>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Jun 13 11:19:28 2019 +0200 (CEST)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Fba/0zbH8Xs+Fj9o"
+Content-Disposition: inline
+In-Reply-To: <20190613085204.GF4660@dell>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/06/2019 15:44, Paolo Pisati wrote:
 
-> From time to time, my apq8096-db820c fails to boot to userspace, reset back to
-> fastboot and locks up: to easily reproduce the issue, i'm boot looping using a
-> cron job with a 1 min reboot entry on the board while leaving a "while 1; do
-> fastboot boot boot.img; done" on the host pc.
-> 
-> The issue is present in mainline up to 5.2-rc4, using defconfig and:
-> 
-> CONFIG_SCSI_UFS_QCOM=y
-> CONFIG_PHY_QCOM_QMP=y
-> CONFIG_PHY_QCOM_UFS=y
-> 
-> but was present in previous releases too (e.g. 4.14., 4.19, etc qcom-lt or
-> mainline), where it's even easier to reproduce (e.g. takes way less reboots to
-> trigger it).
-> 
-> These are the last lines printed out:
-> ...
-> [    7.407209] qcom-qmp-phy 34000.phy: Registered Qcom-QMP phy
-> [    7.448058] qcom-qmp-phy 7410000.phy: Registered Qcom-QMP phy
-> [    7.461859] ufs_qcom_phy_qmp_14nm 627000.phy: invalid resource
-> [    7.535434] qcom-qmp-phy 34000.phy: phy common block init timed-out
-> [    7.538596] phy phy-34000.phy.0: phy init failed --> -110
-> [    7.550891] qcom-pcie: probe of 600000.pcie failed with error -110
-> [    7.619008] qcom-pcie 608000.pcie: 608000.pcie supply vddpe-3v3 not found,
-> using dummy regulator
-> 
-> Log Type: B - Since Boot(Power On Reset),  D - Delta,  S - Statistic
-> S - QC_IMAGE_VERSION_STRING=BOOT.XF.1.0-00301
-> S - IMAGE_VARIANT_STRING=M8996LAB
-> S - OEM_IMAGE_VERSION_STRING=crm-ubuntu68
-> S - Boot Interface: UFS
-> S - Secure Boot: Off
-> ...
-> 
-> Full boot here: https://pastebin.ubuntu.com/p/rtjVrD3yzk/
-> 
-> Any idea what is going on? Am i doing something wrong?
+--Fba/0zbH8Xs+Fj9o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hmmm... this might be related to:
 
-https://patchwork.kernel.org/patch/10976217/
+> I contacted both of them.
+>=20
+>  Andy doesn't touch anything that isn't QUP based (8994 and older).
+>=20
+>  David doesn't deal with MSM platforms if Andy is available.=20
 
-Regards.
+That's good to know, thanks!
+
+> So I guess the decision is yours.  Seeing at this patch is pretty
+> trivial and has our ACPI expert's Ack, the decision shouldn't be a
+> difficult one.
+
+No worries, the patch will be applied. I just wanted to check if the
+listed maintainers are still there. Otherwise I need to orphan this
+driver.
+
+
+--Fba/0zbH8Xs+Fj9o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0CFRkACgkQFA3kzBSg
+KbaquBAArPmt8Fz3DGFNlnfxI6ee/fBc4huwdqsLrUXhirCq2NxTHi0g8mc1Y4O5
+js7pOOLQSqZ6cTamIqHGv7wNonZ16xhvJPexVAz8CPT9BOysmHI/Z1eBEorBqOh8
+MXkJGWXCSJ8li3yAdDLcQWKyj42zzEV7YJ/7kzEVpodSec/ufP1l34mxPNY+gVkj
+b2YAX41oX7KMQ+ix+O9dK1U/wja5costVyUNXxjLuzZBTooVShj7dnrcLuROw1ss
+I3V09OpXN7E8tF4Tq52gJ3xH1wJslMsi2GGGBFC4kKC3txfO04cuOZsLmf36Jomd
+hBFUBBQotylM32w5lshWXcPQOUWBsKlDtfK5qyAhKIeBEvs08pbqK1Lw8hFT8T7t
+6kD5Ty0cRPx5yBU0DE46FWuR60RYUqfq+bLYy4Y1O5lyCY2IdM46SMuFo6pp96lq
+GQReaFopNp4SCpNPNJCDFtoHegeEoT5JKrcjLHRV9Zg2+p4mNL2O7Epkvi+4JvzV
+p1gVvtL0/x5wVD8QWtXq8a7/IQ5oYUaULExw+WzhWD+VV4c/4JyyMNtGpCmnXCAr
+EXj+7drBHheZN7nmmrer+sEuAySjTlhhHtFvb2K735P06Etqu5YWAtm88j7FcZUU
+SaCzuSKqPQgU401V3+k5aexWOMCEN1DehlbyL+n7nQazEovGM24=
+=dLE0
+-----END PGP SIGNATURE-----
+
+--Fba/0zbH8Xs+Fj9o--
