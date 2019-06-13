@@ -2,139 +2,89 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B89C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB98C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06D08206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:37:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="CYJMshuw"
+	by mail.kernel.org (Postfix) with ESMTP id E9E9E206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:37:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560440270;
+	bh=GVf49hFCmcRRH5IPgZDm+9Q8NkzxgT1kPYT89nbbwgU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1u/JFvvXnGcpL3VTsDy/qHACK/pkr/vWYY2lypyRxqaqTE/Keps21CVyPxaOJESBe
+	 gxBrikyPT7Mt2KMBxtmNwQLPW947rjoloPeRc0qguOzJ1n3LW4FAot9lTu0qpdIi9U
+	 9syAUADLm5kZJSzISyGmW/mXj8YFiF1l7RqJAd5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbfFMPhW (ORCPT
+        id S1732006AbfFMPhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:37:22 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:62965 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732733AbfFMPhT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:37:19 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,369,1557212400"; 
-   d="scan'208";a="37402039"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Jun 2019 08:37:18 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 13 Jun 2019 08:37:16 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Thu, 13 Jun 2019 08:37:16 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AIktsP4cJ0Blel6UI4Q+F0NVGLYjA+/zCrWlpWxqb78=;
- b=CYJMshuw4WJff2zwcLVM2mkIPP6/ZgjWDKnAdMMqTWZoZo4ACk6Ng//iCz/aGkYAysK3WlptcsQ2t9YWgKU5l1R3biXO4Nn4dhn6Gxewbu413xwTXh8Losb2T9BvRP4DmMyduCWsc2Wb+fsq4ol5euPmhZgjp/CntXRGvyDeeJg=
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com (10.172.54.17) by
- MWHPR11MB1822.namprd11.prod.outlook.com (10.175.54.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.11; Thu, 13 Jun 2019 15:37:16 +0000
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::316b:7774:8db6:30ec]) by MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::316b:7774:8db6:30ec%7]) with mapi id 15.20.1987.012; Thu, 13 Jun 2019
- 15:37:16 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>
-CC:     <linux-clk@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <claudiu.beznea@gmail.com>,
-        <Claudiu.Beznea@microchip.com>
-Subject: [PATCH 3/7] clk: at91: sckc: add support to free slow clock
- osclillator
-Thread-Topic: [PATCH 3/7] clk: at91: sckc: add support to free slow clock
- osclillator
-Thread-Index: AQHVIf3gvS79G8XBBE+EsYEDTZKNnA==
-Date:   Thu, 13 Jun 2019 15:37:15 +0000
-Message-ID: <1560440205-4604-4-git-send-email-claudiu.beznea@microchip.com>
-References: <1560440205-4604-1-git-send-email-claudiu.beznea@microchip.com>
-In-Reply-To: <1560440205-4604-1-git-send-email-claudiu.beznea@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR09CA0174.eurprd09.prod.outlook.com
- (2603:10a6:800:120::28) To MWHPR11MB1549.namprd11.prod.outlook.com
- (2603:10b6:301:c::17)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 409c25a2-15dc-4d97-2a7f-08d6f01502f6
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR11MB1822;
-x-ms-traffictypediagnostic: MWHPR11MB1822:
-x-microsoft-antispam-prvs: <MWHPR11MB1822E0C9072E10B4A5A5231587EF0@MWHPR11MB1822.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:418;
-x-forefront-prvs: 0067A8BA2A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(366004)(376002)(39860400002)(396003)(189003)(199004)(14454004)(478600001)(110136005)(54906003)(256004)(68736007)(2906002)(72206003)(316002)(71200400001)(71190400001)(2501003)(36756003)(50226002)(4326008)(107886003)(25786009)(6512007)(8676002)(8936002)(81156014)(2616005)(476003)(446003)(11346002)(6436002)(6486002)(81166006)(5660300002)(66066001)(99286004)(305945005)(4744005)(53936002)(7736002)(52116002)(76176011)(66946007)(3846002)(6116002)(86362001)(486006)(66446008)(66556008)(186003)(26005)(6506007)(73956011)(386003)(102836004)(64756008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1822;H:MWHPR11MB1549.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: v1ztfQLERIFHIsBepzEBPmZfMFWkWbC6YbEsZ/4mPjxKHMRUVnDaiGWdh4rlY1Xgjqiu2zWhv+o1zTlCx0SnZs6nQFqWSzJcT9nmDWCLOxcgvE7ZZaN4U672XJ992J0lqa6geMZ4hQO82xAzn+fNyQ2qIfxddLC9LNAkp8z2095R7OJWteaPkph9RubUVCL1Eb5FTaJJe+/XlNBAkiiZiZrfhMOZBWx/Hh5AwhcytwuphaJIoNrKaiKFCX2eeiAoJVCzZpU5E6G2TWwuqAWkHVGTQ+72GXpoW7VAo2ZLGn7lwnD7gzOjGumhk1N3gJvhE5avD8Yia4WVTMbDFUMaOZg+wLqsDA0ya8G/QpAVBd6qDBuLjL0ftsulEqai4fwWKtY5v687He+9QE6ECZXDwF0YKNzeYsjzRNMHif+fF4A=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 13 Jun 2019 11:37:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727135AbfFMPhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 11:37:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A7E02080A;
+        Thu, 13 Jun 2019 15:37:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560440267;
+        bh=GVf49hFCmcRRH5IPgZDm+9Q8NkzxgT1kPYT89nbbwgU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uDnHm1StBx+nQRq0m1g9H/twrrrfEiVi0hC8aCH1S5N0Zc8HGay21dh98aIyPLML2
+         /cYshCvedsyI7rMoGeegHKKGvkNMmTfLPk39drws9i3soJUgRYhEiwX0QXcxCz8Tno
+         yhzOcoCOvptF3CaDx7C9LVVUTJd8ZQVQ7iEqZcDE=
+Date:   Thu, 13 Jun 2019 17:37:44 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     sashal@kernel.org, Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/81] 4.14.126-stable review
+Message-ID: <20190613153744.GA15226@kroah.com>
+References: <20190613075649.074682929@linuxfoundation.org>
+ <1139f9d4-1a0a-b422-276d-546e7cb1bc85@roeck-us.net>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 409c25a2-15dc-4d97-2a7f-08d6f01502f6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 15:37:15.8884
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: claudiu.beznea@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1822
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1139f9d4-1a0a-b422-276d-546e7cb1bc85@roeck-us.net>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQoNCkFk
-ZCBzdXBwb3J0IHRvIGZyZWUgc2xvdyBjbG9jayBvc2NpbGxhdG9yIHJlc291cmNlcy4NCg0KU2ln
-bmVkLW9mZi1ieTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+
-DQotLS0NCiBkcml2ZXJzL2Nsay9hdDkxL3Nja2MuYyB8IDggKysrKysrKysNCiAxIGZpbGUgY2hh
-bmdlZCwgOCBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9hdDkxL3Nj
-a2MuYyBiL2RyaXZlcnMvY2xrL2F0OTEvc2NrYy5jDQppbmRleCA0OTJiMTM5YTdjMTUuLjJhNjc3
-YzU2ZjkwMSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvY2xrL2F0OTEvc2NrYy5jDQorKysgYi9kcml2
-ZXJzL2Nsay9hdDkxL3Nja2MuYw0KQEAgLTM1NSw2ICszNTUsMTQgQEAgYXQ5MV9jbGtfcmVnaXN0
-ZXJfc2FtOXg1X3Nsb3codm9pZCBfX2lvbWVtICpzY2tjciwNCiAJcmV0dXJuIGh3Ow0KIH0NCiAN
-CitzdGF0aWMgdm9pZCBhdDkxX2Nsa191bnJlZ2lzdGVyX3NhbTl4NV9zbG93KHN0cnVjdCBjbGtf
-aHcgKmh3KQ0KK3sNCisJc3RydWN0IGNsa19zYW05eDVfc2xvdyAqc2xvd2NrID0gdG9fY2xrX3Nh
-bTl4NV9zbG93KGh3KTsNCisNCisJY2xrX2h3X3VucmVnaXN0ZXIoaHcpOw0KKwlrZnJlZShzbG93
-Y2spOw0KK30NCisNCiBzdGF0aWMgdm9pZCBfX2luaXQgYXQ5MXNhbTl4NV9zY2tjX3JlZ2lzdGVy
-KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsDQogCQkJCQkgICAgdW5zaWduZWQgaW50IHJjX29zY19z
-dGFydHVwX3VzLA0KIAkJCQkJICAgIGNvbnN0IHN0cnVjdCBjbGtfc2xvd19iaXRzICpiaXRzKQ0K
-LS0gDQoyLjcuNA0KDQo=
+On Thu, Jun 13, 2019 at 08:11:33AM -0700, Guenter Roeck wrote:
+> On 6/13/19 1:32 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.14.126 release.
+> > There are 81 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sat 15 Jun 2019 07:54:51 AM UTC.
+> > Anything received after that time might be too late.
+> > 
+> 
+> [early feedback]
+> 
+> Building mips:nlm_xlp_defconfig ... failed (and other mips builds)
+> --------------
+> Error log:
+> /opt/buildbot/slave/stable-queue-4.14/build/arch/mips/kernel/prom.c: In function 'early_init_dt_add_memory_arch':
+> /opt/buildbot/slave/stable-queue-4.14/build/arch/mips/kernel/prom.c:44:14: error: 'PHYS_ADDR_MAX' undeclared
+> 
+> The problem affects v4.14.y and all earlier branches.
+> PHYS_ADDR_MAX is indeed undeclared in those branches. It was introduced
+> with commit 1c4bc43ddfd52 ("mm/memblock: introduce PHYS_ADDR_MAX").
+
+Thanks, I've dropped the mips patch that caused this.  I'll also drop it
+from the 4.4 and 4.9 trees.
+
+Sasha, I thought you had builders set up for stuff like this?
+
+greg k-h
