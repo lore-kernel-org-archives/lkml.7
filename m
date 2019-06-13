@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9482AC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE0BC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D8421537
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F3421537
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="JTF8mvZh"
+	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="zeOE/zvh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfFMWjg (ORCPT
+        id S1727347AbfFMWjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 18:39:36 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44648 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727195AbfFMWjd (ORCPT
+        Thu, 13 Jun 2019 18:39:41 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41648 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727242AbfFMWjj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 18:39:33 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so461990edr.11
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 15:39:32 -0700 (PDT)
+        Thu, 13 Jun 2019 18:39:39 -0400
+Received: by mail-ed1-f66.google.com with SMTP id p15so486827eds.8
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 15:39:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tcd-ie.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VIfV1OsDOCOIqv6MGdwh5qyRNpWkUFsV6JcVvbdsKMU=;
-        b=JTF8mvZhJ/EJnKSb2g8yYVwCI7gY6AOBJvHEmxI98vcIdBtLCHSGqNBLdR66ae+p3N
-         Gz0InBZJxBwcsA2tjrxO7l/2SbOW9EC/J1NpN0q7ctUvhDyiy6gcYSquuay1uuRjHT0l
-         YMCpGS8YP90uVBR7O2fFjUN4fpSk/Um0odBXe4DqJz7/xdmuiw3TAlj0hxdMDoWq/uEX
-         RG3tSMQSl86NA27lig6IIG+QyQL9PoQFyZu2igpH5UvBqmMPLOASs5VkPg6T4OTwrWrD
-         sx/2LKFbOUyC2/QeLMuD34t20k1dyG1V73h2F+lWe0JPXWsoQ86NzkR4a3bo6x0/xWPW
-         M2Jw==
+        bh=EJ0KbItdu2TxPOp6NmcZ85nVQ2e5NOhr/kYDGDu9/qE=;
+        b=zeOE/zvh1TwDJgGnFD06YP/Cpej9V018Ne4naI7KcEHh0yS7cV5SkBhhiRimOFJed9
+         CIVbHgAGkVuXPgPLOfb6gwAD+YbCgwAkfIEHSsQJIerHVPctg8GdW4rUuc66fIvyLXQc
+         hKvR/5Hm+vo+vhl8Pwk60SN0iYyTrhzrChpV9xYcaMnUUwDpQTN98YCIy3dY/xF8bsik
+         ehA0vcSZDfYqkT23eQLQ0io5L+IvUuMxuREvkRBLXsfXM+IKHUEavzf30UjqPvgz/NoB
+         7cY4bUUy/3lGoZ6nsQzt1Pi0Z2M9VRpqxVv70+Ha5JbxYPs9Gi0xIP6FU1JOAMdl2dbS
+         K4tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VIfV1OsDOCOIqv6MGdwh5qyRNpWkUFsV6JcVvbdsKMU=;
-        b=RN2muSyl6cnvjUP8gIVB3/7IYXm+RL4GZGHWRnifVqvAJaom2ERMRWrXB8Evklypw6
-         M2mh/GJZ83PYonkU82KGCplwl5DvFsLBBv/+z6osVV19WclnAntPvoOsx6aYnAmJakus
-         ool+5FW6+xs5u9FNzUHdRJpJBbx6+xPYw01G4CMAV+kWmranlsxqISavsF/DGjodVAam
-         cDZPLB6b+0tXWNzXg9xezjXZLXxpbfbZg8kdAX8eYuzvuORQdg3O1HlC4mZNdoUPQ5Iu
-         j49ze3gEQOtL73d0MFgwMrZ27dQdvVPtT1ZgzUz/tuZ3+vUwsuKXAPNLVIYrek79aJqR
-         H1Kg==
-X-Gm-Message-State: APjAAAVoFgZJdJGpJYQ+zZX94lk29ym4OnAFlCm70Hc5ZzWF6yGc++57
-        fKttfFvK0pdzmTfO2YrSxjwkiw==
-X-Google-Smtp-Source: APXvYqztuOfR2YM2Du1Zdlax7/DpXIkbSCgn46ot/nG+g0htY0BBU7yj7/Fpx5Lf97ZANT/nGWWzUg==
-X-Received: by 2002:a50:a941:: with SMTP id m1mr99843943edc.157.1560465571973;
-        Thu, 13 Jun 2019 15:39:31 -0700 (PDT)
+        bh=EJ0KbItdu2TxPOp6NmcZ85nVQ2e5NOhr/kYDGDu9/qE=;
+        b=GExnvCUte+5vUX/uoSS5yfSmyR7qMB4umpCq7iBR6bU32Ea4IZV+Q0LlgFJ8WIgUD3
+         d3v/0LXdCu7u092cITT6uZhv0Kv2Qn/pb1IPbKwEDZtxD+wN7D5m5QqKUZ8jwQdZip9m
+         P1IbfqFExqgkVtLfJrjlrtV/fssEZo8nxwR/ZDlYjubqhQAEL8BKvaMivW6AqXLBhxgj
+         ZmwQTdFFADVX5DZhCszXzvds+zNdJtyWkRNViS25pnjDjbV+DdVKFaE7XKn+kDGQQB9f
+         CowWhq+uwG/7RUWW9BsHO8mwcMHs8P3gfePX9NixMdByFA5gUzb+nWx/eSPZyaOGOkKo
+         sDqA==
+X-Gm-Message-State: APjAAAU3/A42rdM/FJI4BZjWRE0a6utD1JeESiAQ70hpaJAu7N0R2HrY
+        T/o0jdQrLNK1g28pABGLo7bbWQ==
+X-Google-Smtp-Source: APXvYqx/uHASwls8eMlS/EUABG1iNxk9FfSuMbCAMjshsIltMQDse6oJS07oPnN6ZE7iiU0u7+JAvg==
+X-Received: by 2002:a05:6402:8d7:: with SMTP id d23mr55678205edz.17.1560465577935;
+        Thu, 13 Jun 2019 15:39:37 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8084:a0:bc00:8042:d435:a754:1f22])
-        by smtp.googlemail.com with ESMTPSA id s16sm216522eji.27.2019.06.13.15.39.30
+        by smtp.googlemail.com with ESMTPSA id s16sm216522eji.27.2019.06.13.15.39.36
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 15:39:31 -0700 (PDT)
+        Thu, 13 Jun 2019 15:39:37 -0700 (PDT)
 From:   Tom Murphy <murphyt7@tcd.ie>
 To:     iommu@lists.linux-foundation.org
 Cc:     Tom Murphy <murphyt7@tcd.ie>, Joerg Roedel <joro@8bytes.org>,
@@ -80,9 +80,9 @@ Cc:     Tom Murphy <murphyt7@tcd.ie>, Joerg Roedel <joro@8bytes.org>,
         linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 3/5] iommu/dma-iommu: Handle deferred devices
-Date:   Thu, 13 Jun 2019 23:38:58 +0100
-Message-Id: <20190613223901.9523-4-murphyt7@tcd.ie>
+Subject: [PATCH v4 4/5] iommu/dma-iommu: Use the dev->coherent_dma_mask
+Date:   Thu, 13 Jun 2019 23:38:59 +0100
+Message-Id: <20190613223901.9523-5-murphyt7@tcd.ie>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190613223901.9523-1-murphyt7@tcd.ie>
 References: <20190613223901.9523-1-murphyt7@tcd.ie>
@@ -93,85 +93,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Handle devices which defer their attach to the iommu in the dma-iommu api
+Use the dev->coherent_dma_mask when allocating in the dma-iommu ops api.
 
 Signed-off-by: Tom Murphy <murphyt7@tcd.ie>
 ---
- drivers/iommu/dma-iommu.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ drivers/iommu/dma-iommu.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index e64dbbcde63c..f303bbe20e51 100644
+index f303bbe20e51..082fb789e3cf 100644
 --- a/drivers/iommu/dma-iommu.c
 +++ b/drivers/iommu/dma-iommu.c
-@@ -22,6 +22,7 @@
- #include <linux/pci.h>
- #include <linux/scatterlist.h>
- #include <linux/vmalloc.h>
-+#include <linux/crash_dump.h>
- 
- struct iommu_dma_msi_page {
- 	struct list_head	list;
-@@ -351,6 +352,21 @@ static int iommu_dma_init_domain(struct iommu_domain *domain, dma_addr_t base,
- 	return iova_reserve_iommu_regions(dev, domain);
+@@ -471,7 +471,7 @@ static void __iommu_dma_unmap(struct device *dev, dma_addr_t dma_addr,
  }
  
-+static int handle_deferred_device(struct device *dev,
-+	struct iommu_domain *domain)
-+{
-+	const struct iommu_ops *ops = domain->ops;
-+
-+	if (!is_kdump_kernel())
-+		return 0;
-+
-+	if (unlikely(ops->is_attach_deferred &&
-+		ops->is_attach_deferred(domain, dev)))
-+		return iommu_attach_device(domain, dev);
-+
-+	return 0;
-+}
-+
- /**
-  * dma_info_to_prot - Translate DMA API directions and attributes to IOMMU API
-  *                    page flags.
-@@ -462,6 +478,9 @@ static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
- 	size_t iova_off = 0;
- 	dma_addr_t iova;
- 
-+	if (unlikely(handle_deferred_device(dev, domain)))
-+		return DMA_MAPPING_ERROR;
-+
- 	if (cookie->type == IOMMU_DMA_IOVA_COOKIE) {
- 		iova_off = iova_offset(&cookie->iovad, phys);
+ static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
+-		size_t size, int prot)
++		size_t size, int prot, dma_addr_t dma_mask)
+ {
+ 	struct iommu_domain *domain = iommu_get_dma_domain(dev);
+ 	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+@@ -486,7 +486,7 @@ static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
  		size = iova_align(&cookie->iovad, size + iova_off);
-@@ -583,6 +602,9 @@ static void *iommu_dma_alloc_remap(struct device *dev, size_t size,
+ 	}
  
- 	*dma_handle = DMA_MAPPING_ERROR;
+-	iova = iommu_dma_alloc_iova(domain, size, dma_get_mask(dev), dev);
++	iova = iommu_dma_alloc_iova(domain, size, dma_mask, dev);
+ 	if (!iova)
+ 		return DMA_MAPPING_ERROR;
  
-+	if (unlikely(handle_deferred_device(dev, domain)))
-+		return NULL;
-+
- 	min_size = alloc_sizes & -alloc_sizes;
- 	if (min_size < PAGE_SIZE) {
- 		min_size = PAGE_SIZE;
-@@ -715,7 +737,7 @@ static dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
+@@ -737,7 +737,7 @@ static dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
  	int prot = dma_info_to_prot(dir, coherent, attrs);
  	dma_addr_t dma_handle;
  
--	dma_handle =__iommu_dma_map(dev, phys, size, prot);
-+	dma_handle = __iommu_dma_map(dev, phys, size, prot);
+-	dma_handle = __iommu_dma_map(dev, phys, size, prot);
++	dma_handle = __iommu_dma_map(dev, phys, size, prot, dma_get_mask(dev));
  	if (!coherent && !(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
  	    dma_handle != DMA_MAPPING_ERROR)
  		arch_sync_dma_for_device(dev, phys, size, dir);
-@@ -825,6 +847,9 @@ static int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg,
- 	unsigned long mask = dma_get_seg_boundary(dev);
- 	int i;
+@@ -940,7 +940,8 @@ static dma_addr_t iommu_dma_map_resource(struct device *dev, phys_addr_t phys,
+ 		size_t size, enum dma_data_direction dir, unsigned long attrs)
+ {
+ 	return __iommu_dma_map(dev, phys, size,
+-			dma_info_to_prot(dir, false, attrs) | IOMMU_MMIO);
++			dma_info_to_prot(dir, false, attrs) | IOMMU_MMIO,
++			dma_get_mask(dev));
+ }
  
-+	if (unlikely(handle_deferred_device(dev, domain)))
-+		return 0;
-+
- 	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
- 		iommu_dma_sync_sg_for_device(dev, sg, nents, dir);
+ static void iommu_dma_unmap_resource(struct device *dev, dma_addr_t handle,
+@@ -1049,7 +1050,8 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
+ 	if (!cpu_addr)
+ 		return NULL;
+ 
+-	*handle = __iommu_dma_map(dev, page_to_phys(page), size, ioprot);
++	*handle = __iommu_dma_map(dev, page_to_phys(page), size, ioprot,
++			dev->coherent_dma_mask);
+ 	if (*handle == DMA_MAPPING_ERROR) {
+ 		__iommu_dma_free(dev, size, cpu_addr);
+ 		return NULL;
+@@ -1178,7 +1180,7 @@ static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device *dev,
+ 	if (!msi_page)
+ 		return NULL;
+ 
+-	iova = __iommu_dma_map(dev, msi_addr, size, prot);
++	iova = __iommu_dma_map(dev, msi_addr, size, prot, dma_get_mask(dev));
+ 	if (iova == DMA_MAPPING_ERROR)
+ 		goto out_free_page;
  
 -- 
 2.20.1
