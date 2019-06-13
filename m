@@ -5,55 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA03C31E4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3418DC31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9CB620679
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3BC120679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441494;
-	bh=boL3nWCzla5lT6QeNwDsvpbHGX1QWNYlDdNfDmkwvKQ=;
+	s=default; t=1560441497;
+	bh=dOXVFBwfFnjr6mtGpP9lPz0BOq2tVCzrhnbNIxx+j28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0dfVbc7idsfiik1qVHem9r3PPQZvo8GTj5OfDOmirFsJ43oWQkWj7LAzjvyKuc89S
-	 sq8USLGq19Gn6ALvLlpmbpseez3ngj1O56aqfT/bRSHQfzYRMZi/Vyl6BCvfSqgXPE
-	 iJSItWJkDFA6aAs7UN26ATd5n3Ku4ESD1XBhhiL8=
+	b=VIWuRTOs4gyniQAmfHBzfBDo4BcN34MNoi9u91e0O1M92BiqwhS6fLsBDnHiz3SQU
+	 2yTV6wOd4Rgvdy9lSxyHyHk3VqHlsVn6UbNGRLnhEgFHkIV3Ary5U1oVHTZVRJ06Vf
+	 PLqBoLH9Nv0bdCUXDnXz3qh6QL/vRw3c21Whus3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390556AbfFMP6F (ORCPT
+        id S2390234AbfFMP6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:58:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37928 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 11:58:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731499AbfFMIuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:50:21 -0400
+        id S1731500AbfFMIuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:50:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A22E720851;
-        Thu, 13 Jun 2019 08:50:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ABAC21473;
+        Thu, 13 Jun 2019 08:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415820;
-        bh=boL3nWCzla5lT6QeNwDsvpbHGX1QWNYlDdNfDmkwvKQ=;
+        s=default; t=1560415823;
+        bh=dOXVFBwfFnjr6mtGpP9lPz0BOq2tVCzrhnbNIxx+j28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QJt7VH00bWYepXfPYL1Nv8XQOVYb3fQiC8Vs7anAQRVpix7Pzue85Ec0g1lcvpPuf
-         WIm9zUOmTo7wmBJIhjMLPlsM/sI29i9bXT/SDMFljRPdpBqp2TJfxRaF8rfGvnFAo7
-         2uEXbaMRmyLtjqKn3AAcSakBz7IW/daUf4bKW+xA=
+        b=fIIgD+IiixlMiT9Y3mxC9YdAqaPtUBl/Plp00WPPbV8b3JWaNPAmAmvt/hkAuGNCP
+         9DJQ18N7s7tpLJVaBneDB7uDhvylxMsyWik15fEW2M3UiGoT4Un1CQJf+roQ0wvpUV
+         Z2RyFmK2MQ9blu4chl/jW2QBGuDEoultW1orxsT4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        stable@vger.kernel.org, Brett Creeley <brett.creeley@intel.com>,
+        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 135/155] gpio: gpio-omap: limit errata 1.101 handling to wkup domain gpios only
-Date:   Thu, 13 Jun 2019 10:34:07 +0200
-Message-Id: <20190613075700.284753913@linuxfoundation.org>
+Subject: [PATCH 5.1 136/155] ice: Add missing case in print_link_msg for printing flow control
+Date:   Thu, 13 Jun 2019 10:34:08 +0200
+Message-Id: <20190613075700.329220104@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -66,88 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 21e2118f470302f16bee7ebd1444505eadbc2c20 ]
+[ Upstream commit 203a068ac9e2722e4d118116acaa3a5586f9468a ]
 
-We need to only apply errata 1.101 handling to clear non-wakeup edge gpios
-for idle to the gpio bank(s) in the wkup domain to prevent spurious wake-up
-events.
+Currently we aren't checking for the ICE_FC_NONE case for the current
+flow control mode. This is causing "Unknown" to be printed for the
+current flow control method if flow control is disabled. Fix this by
+adding the case for ICE_FC_NONE to print "None".
 
-And we must restore what we did after idle manually as the gpio bank in
-wkup domain is not restored otherwise.
-
-Let's keep bank->saved_datain register reading separate, that's not related
-to the 1.101 errata and is used separately on restore.
-
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Russell King <rmk+kernel@armlinux.org.uk>
-Cc: Tero Kristo <t-kristo@ti.com>
-Reported-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Brett Creeley <brett.creeley@intel.com>
+Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-omap.c | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index e8bfee919a7e..fafd79438bbf 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -1453,7 +1453,10 @@ static void omap_gpio_restore_context(struct gpio_bank *bank);
- static void omap_gpio_idle(struct gpio_bank *bank, bool may_lose_context)
- {
- 	struct device *dev = bank->chip.parent;
--	u32 l1 = 0, l2 = 0;
-+	void __iomem *base = bank->base;
-+	u32 nowake;
-+
-+	bank->saved_datain = readl_relaxed(base + bank->regs->datain);
- 
- 	if (bank->funcs.idle_enable_level_quirk)
- 		bank->funcs.idle_enable_level_quirk(bank);
-@@ -1465,20 +1468,15 @@ static void omap_gpio_idle(struct gpio_bank *bank, bool may_lose_context)
- 		goto update_gpio_context_count;
- 
- 	/*
--	 * If going to OFF, remove triggering for all
-+	 * If going to OFF, remove triggering for all wkup domain
- 	 * non-wakeup GPIOs.  Otherwise spurious IRQs will be
- 	 * generated.  See OMAP2420 Errata item 1.101.
- 	 */
--	bank->saved_datain = readl_relaxed(bank->base +
--						bank->regs->datain);
--	l1 = bank->context.fallingdetect;
--	l2 = bank->context.risingdetect;
--
--	l1 &= ~bank->enabled_non_wakeup_gpios;
--	l2 &= ~bank->enabled_non_wakeup_gpios;
--
--	writel_relaxed(l1, bank->base + bank->regs->fallingdetect);
--	writel_relaxed(l2, bank->base + bank->regs->risingdetect);
-+	if (!bank->loses_context && bank->enabled_non_wakeup_gpios) {
-+		nowake = bank->enabled_non_wakeup_gpios;
-+		omap_gpio_rmw(base, bank->regs->fallingdetect, nowake, ~nowake);
-+		omap_gpio_rmw(base, bank->regs->risingdetect, nowake, ~nowake);
-+	}
- 
- 	bank->workaround_enabled = true;
- 
-@@ -1527,6 +1525,12 @@ static void omap_gpio_unidle(struct gpio_bank *bank)
- 				return;
- 			}
- 		}
-+	} else {
-+		/* Restore changes done for OMAP2420 errata 1.101 */
-+		writel_relaxed(bank->context.fallingdetect,
-+			       bank->base + bank->regs->fallingdetect);
-+		writel_relaxed(bank->context.risingdetect,
-+			       bank->base + bank->regs->risingdetect);
- 	}
- 
- 	if (!bank->workaround_enabled)
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index 6ec73864019c..b562476b1251 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -528,6 +528,9 @@ void ice_print_link_msg(struct ice_vsi *vsi, bool isup)
+ 	case ICE_FC_RX_PAUSE:
+ 		fc = "RX";
+ 		break;
++	case ICE_FC_NONE:
++		fc = "None";
++		break;
+ 	default:
+ 		fc = "Unknown";
+ 		break;
 -- 
 2.20.1
 
