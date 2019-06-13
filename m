@@ -2,199 +2,137 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EEDC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B03C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7959A2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6376B2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:25:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="bj2NYJPm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729896AbfFMUZY (ORCPT
+        id S1729961AbfFMUZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:25:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52358 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726344AbfFMUZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:25:23 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D4E9D37F43;
-        Thu, 13 Jun 2019 20:25:22 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-63.rdu2.redhat.com [10.10.112.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B476600C1;
-        Thu, 13 Jun 2019 20:25:21 +0000 (UTC)
-Message-ID: <6e586118ad154204ad2e2cf2c1391b916cb4ee54.camel@redhat.com>
-Subject: Re: [PATCH v2] RDMA/cma: Make CM response timeout and # CM retries
- configurable
-From:   Doug Ledford <dledford@redhat.com>
-To:     =?ISO-8859-1?Q?H=E5kon?= Bugge <haakon.bugge@oracle.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Parav Pandit <parav@mellanox.com>,
-        Steve Wise <swise@opengridcomputing.com>,
-        OFED mailing list <linux-rdma@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 13 Jun 2019 16:25:15 -0400
-In-Reply-To: <67B4F337-4C3A-4193-B1EF-42FD4765CBB7@oracle.com>
-References: <20190226075722.1692315-1-haakon.bugge@oracle.com>
-         <174ccd37a9ffa05d0c7c03fe80ff7170a9270824.camel@redhat.com>
-         <67B4F337-4C3A-4193-B1EF-42FD4765CBB7@oracle.com>
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-+O8VTt/oRz42SjEM1nOO"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Thu, 13 Jun 2019 16:25:56 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43833 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbfFMUZz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 16:25:55 -0400
+Received: by mail-io1-f68.google.com with SMTP id k20so749291ios.10
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 13:25:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wxJBMcBvwVkpAf1cgG4dPli24Ww6q68XEHKC5A8aObk=;
+        b=bj2NYJPmryyGgICLn1E4HRmF1agezEr1mo/1DGIrMGTjMFw2iRKv0i5eOhE8Zta66r
+         U6KFwJt4gOWZi92tahMKfmQ8UY8j/pm+wRNG67dGzNobX9JOaEDJGZJVbFDwUGqEwzg2
+         cnnWpEBl0bH0iH50UGlUHlLISbl3cSfjL8rEU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wxJBMcBvwVkpAf1cgG4dPli24Ww6q68XEHKC5A8aObk=;
+        b=qE1VbD5jFJyJj6gsN4hJNlLf9wTX0FJzdbo+ugjU9qusWCERsjIxIhQ4trqrM0elG7
+         FMuyxGsxL0+t2kmuBsDIzYRIFJzKnzrw4/tenpIvqj0QQeGpEDCkh0h2LHdbMAN5XKsr
+         3Tc+jDS+IAW64G731joEILfc0FydP/nOA7GiY8vl8MsZB9kmFfE6uVryrRSZu5NqcbIo
+         WT0Z47aR6XJ/umgie6bvlJoFEYCxtjwfnWbij6B/VUqpotln5hlQ7AD+pn+lVye5/5kW
+         w0izl8voHgbguU1azviLa6biLqXRIXVcYqUw52FQRs+Aff3PdqbYQYib8oNRnuN2f3Go
+         fz0w==
+X-Gm-Message-State: APjAAAVeGEYht1/6/7G1ePnvUf27PBtqk3+eeAqSCMHE5YEo2cKywbTx
+        D0svKdehBZHCZRdYj5/U13/EKA5Jcmb0xVVD1mHHmA==
+X-Google-Smtp-Source: APXvYqz+u/akT0s3tkUOtvxwHIrlqT8vSdlw0YMYd4SB0cK2+55b9TPncxxRXStL5TgLhYKlUMfXiQLo1cX/FwEAB+w=
+X-Received: by 2002:a6b:7e41:: with SMTP id k1mr14643948ioq.285.1560457555275;
+ Thu, 13 Jun 2019 13:25:55 -0700 (PDT)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 13 Jun 2019 20:25:23 +0000 (UTC)
+References: <20190612225431.p753mzqynxpsazb7@brauner.io> <CAHk-=wh2Khe1Lj-Pdu3o2cXxumL1hegg_1JZGJXki6cchg_Q2Q@mail.gmail.com>
+ <20190613132250.u65yawzvf4voifea@brauner.io> <871rzxwcz7.fsf@xmission.com>
+In-Reply-To: <871rzxwcz7.fsf@xmission.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 13 Jun 2019 22:25:44 +0200
+Message-ID: <CAJfpegvZwDY+zoWjDTrPpMCS01rzQgeE-_z-QtGfvcRnoamzgg@mail.gmail.com>
+Subject: Re: Regression for MS_MOVE on kernel v5.1
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 13, 2019 at 8:35 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+> Christian Brauner <christian@brauner.io> writes:
+>
+> > On Wed, Jun 12, 2019 at 06:00:39PM -1000, Linus Torvalds wrote:
+> >> On Wed, Jun 12, 2019 at 12:54 PM Christian Brauner <christian@brauner.io> wrote:
+> >> >
+> >> > The commit changes the internal logic to lock mounts when propagating
+> >> > mounts (user+)mount namespaces and - I believe - causes do_mount_move()
+> >> > to fail at:
+> >>
+> >> You mean 'do_move_mount()'.
+> >>
+> >> > if (old->mnt.mnt_flags & MNT_LOCKED)
+> >> >         goto out;
+> >> >
+> >> > If that's indeed the case we should either revert this commit (reverts
+> >> > cleanly, just tested it) or find a fix.
+> >>
+> >> Hmm.. I'm not entirely sure of the logic here, and just looking at
+> >> that commit 3bd045cc9c4b ("separate copying and locking mount tree on
+> >> cross-userns copies") doesn't make me go "Ahh" either.
+> >>
+> >> Al? My gut feel is that we need to just revert, since this was in 5.1
+> >> and it's getting reasonably late in 5.2 too. But maybe you go "guys,
+> >> don't be silly, this is easily fixed with this one-liner".
+> >
+> > David and I have been staring at that code today for a while together.
+> > I think I made some sense of it.
+> > One thing we weren't absolutely sure is if the old MS_MOVE behavior was
+> > intentional or a bug. If it is a bug we have a problem since we quite
+> > heavily rely on this...
+>
+> It was intentional.
+>
+> The only mounts that are locked in propagation are the mounts that
+> propagate together.  If you see the mounts come in as individuals you
+> can always see/manipulate/work with the underlying mount.
+>
+> I can think of only a few ways for MNT_LOCKED to become set:
+> a) unshare(CLONE_NEWNS)
+> b) mount --rclone /path/to/mnt/tree /path/to/propagation/point
+> c) mount --move /path/to/mnt/tree /path/to/propgation/point
+>
+> Nothing in the target namespace should be locked on the propgation point
+> but all of the new mounts that came across as a unit should be locked
+> together.
 
---=-+O8VTt/oRz42SjEM1nOO
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Locked together means the root of the new mount tree doesn't have
+MNT_LOCKED set, but all mounts below do have MNT_LOCKED, right?
 
-On Thu, 2019-06-13 at 18:58 +0200, H=C3=A5kon Bugge wrote:
-> > On 13 Jun 2019, at 16:25, Doug Ledford <dledford@redhat.com> wrote:
-> >=20
-> > On Tue, 2019-02-26 at 08:57 +0100, H=C3=A5kon Bugge wrote:
-> > > During certain workloads, the default CM response timeout is too
-> > > short, leading to excessive retries. Hence, make it configurable
-> > > through sysctl. While at it, also make number of CM retries
-> > > configurable.
-> > >=20
-> > > The defaults are not changed.
-> > >=20
-> > > Signed-off-by: H=C3=A5kon Bugge <haakon.bugge@oracle.com>
-> > > ---
-> > > v1 -> v2:
-> > >   * Added unregister_net_sysctl_table() in cma_cleanup()
-> > > ---
-> > > drivers/infiniband/core/cma.c | 52
-> > > ++++++++++++++++++++++++++++++---
-> > > --
-> > > 1 file changed, 45 insertions(+), 7 deletions(-)
-> >=20
-> > This has been sitting on patchworks since forever.  Presumably
-> > because
-> > Jason and I neither one felt like we really wanted it, but also
-> > couldn't justify flat refusing it.
->=20
-> I thought the agreement was to use NL and iproute2. But I haven't had
-> the capacity.
+Isn't the bug here that the root mount gets MNT_LOCKED as well?
 
-To be fair, the email thread was gone from my linux-rdma folder.  So, I
-just had to review the entry in patchworks, and there was no captured
-discussion there.  So, if the agreement was made, it must have been
-face to face some time and if I was involed, I had certainly forgotten
-by now.  But I still needed to clean up patchworks, hence my email ;-).
+>
+> Then it breaking is definitely a regression that needs to be fixed.
+>
+> I believe the problematic change as made because the new mount
+> api allows attaching floating mounts.  Or that was the plan last I
+> looked.   Those floating mounts don't have a mnt_ns so will result
+> in a NULL pointer dereference when they are attached.
 
-> >  Well, I've made up my mind, so
-> > unless Jason wants to argue the other side, I'm rejecting this
-> > patch.=20
-> > Here's why.  The whole concept of a timeout is to help recovery in
-> > a
-> > situation that overloads one end of the connection.  There is a
-> > relationship between the max queue backlog on the one host and the
-> > timeout on the other host. =20
->=20
-> If you refer to the backlog parameter in rdma_listen(), I cannot see
-> it being used at all for IB.
+Well, it's called anonymous namespace.  So there *is* an mnt_ns, and
+its lifetime is bound to the file returned by fsmount().
 
-No, not exactly.  I was more referring to heavy load causing an
-overflow in the mad packet receive processing.  We have
-IB_MAD_QP_RECV_SIZE set to 512 by default, but it can be changed at
-module load time of the ib_core module and that represents the maximum
-number of backlogged mad packets we can have waiting to be processed
-before we just drop them on the floor.  There can be other places to
-drop them too, but this is the one I was referring to.
-
-> For CX-3, which is paravirtualized wrt. MAD packets, it is the proxy
-> UD receive queue length for the PF driver that can be construed as a
-> backlog. Remember that any MAD packet being sent from a VF or the PF
-> itself, is sent to a proxy UD QP in the PF. Those packets are then
-> multiplexed out on the real QP0/1. Incoming MAD packets are
-> demultiplexed and sent once more to the proxy QP in the VF.
->=20
-> > Generally, in order for a request to get
-> > dropped and us to need to retransmit, the queue must already have a
-> > full backlog.  So, how long does it take a heavily loaded system to
-> > process a full backlog?  That, plus a fuzz for a margin of error,
-> > should be our timeout.  We shouldn't be asking users to configure
-> > it.
->=20
-> Customer configures #VMs and different workload may lead to way
-> different number of CM connections. The proxying of MAD packet
-> through the PF driver has a finite packet rate. With 64 VMs, 10.000
-> QPs on each, all going down due to a switch failing or similar, you
-> have 640.000 DREQs to be sent, and with the finite packet rate of MA
-> packets through the PF, this takes more than the current CM timeout.
-> And then you re-transmit and increase the burden of the PF proxying.
->=20
-> So, we can change the default to cope with this. But, a MAD packet is
-> unreliable, we may have transient loss. In this case, we want a short
-> timeout.
->=20
-> > However, if users change the default backlog queue on their
-> > systems,
-> > *then* it would make sense to have the users also change the
-> > timeout
-> > here, but I think guidance would be helpful.
-> >=20
-> > So, to revive this patch, what I'd like to see is some attempt to
-> > actually quantify a reasonable timeout for the default backlog
-> > depth,
-> > then the patch should actually change the default to that
-> > reasonable
-> > timeout, and then put in the ability to adjust the timeout with
-> > some
-> > sort of doc guidance on how to calculate a reasonable timeout based
-> > on
-> > configured backlog depth.
->=20
-> I can agree to this :-)
->=20
->=20
-> Thxs, H=C3=A5kon
->=20
-> > --=20
-> > Doug Ledford <dledford@redhat.com>
-> >    GPG KeyID: B826A3330E572FDD
-> >    Key fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57
-> > 2FDD
-
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Key fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57
-2FDD
-
---=-+O8VTt/oRz42SjEM1nOO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl0CsSsACgkQuCajMw5X
-L93Qnw//XiMtlCbAK0cVmGzfaTsPIhjBTzMbZp1TJB7HxlKPGgxvIkHXmZhDdqXG
-Gtm9ttKv7bmHAf0All8L9F/ZStpG4vAE3OrG0xY6c6Ru+5O9bSLIs6gMrUcj5aFH
-uKRYaIS75kvPsWD4hITaWws+mIxW/0mkn90Jz4b+aNzMfu9CrDXhASzcZtJj6UGQ
-IzHabjAzxSqqLuXwPPYyams8dBceOj8e3rmgD+k1DHV9NTlPT3wKB7oJjfvLJHRh
-2OPKBuf3u3d36s/P6dOCh6Tqg+EYrlZIP+mAR0dKXiV9xUwwQmqYINmLTMdpKny9
-j8VM8QUPWm01g60BLAB4BZszlBOW1Oi1FwN90JjfDxMB1TBlLANkX0TOz3KaCtLS
-BfUEeXzfufsN7plPHko+wHmrkmLdcwc5/9RYTJt0e+8okw8mW2VllINuHixow5Iz
-l74f+aKDsnqBqjwNgXSf+f1E35KYzz58/MJfOSeRZojGCYMXjWD61NlbN8+KsCvY
-Gp06TuAwzSUijm1NxfyQ7pDf+jZq6P+10k5I0nNCD7XiKIopbqpN5voFvZwRtPXo
-8ilP89CQ7jIKtlVcXXVS7gE3AmdzobyDPh6EAZpXXXn0OqqLCPOpMiinhD8ZFJlM
-IQdJgNUeG1PZi2ZE6y18wzghvL9RbP7Pi/1/8OgbxnAdThz3xKU=
-=clAS
------END PGP SIGNATURE-----
-
---=-+O8VTt/oRz42SjEM1nOO--
-
+Thanks,
+Miklos
