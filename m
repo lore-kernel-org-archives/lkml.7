@@ -2,172 +2,99 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C3CC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A67C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1755320851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 426172063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731879AbfFMPwV (ORCPT
+        id S2389985AbfFMPw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:52:21 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:58270 "EHLO ns.iliad.fr"
+        Thu, 13 Jun 2019 11:52:26 -0400
+Received: from relay.sw.ru ([185.231.240.75]:35994 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731649AbfFMJKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:10:42 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 84C7C20AC3;
-        Thu, 13 Jun 2019 11:10:39 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 6B7F0207ED;
-        Thu, 13 Jun 2019 11:10:39 +0200 (CEST)
-Subject: Re: [PATCH] phy: qcom-qmp: Correct READY_STATUS poll break condition
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>
-References: <20190604232443.3417-1-bjorn.andersson@linaro.org>
- <619d2559-6d88-e795-76e0-3078236933ef@free.fr>
- <20190612172501.GY4814@minitux>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <3570d880-2b76-88ae-8721-e75cf5acec4c@free.fr>
-Date:   Thu, 13 Jun 2019 11:10:39 +0200
+        id S1731641AbfFMJKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:10:12 -0400
+Received: from [172.16.25.12]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1hbLkG-0008MK-5e; Thu, 13 Jun 2019 12:10:08 +0300
+Subject: Re: [PATCH v2 1/3] fs/fuse, splice_write: Don't access pipe->buffers
+ without pipe_lock()
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <CAJfpegvAAQTAjxLcQLefvFOQDJ6ug_G8Jggt=UZci+YnNP741A@mail.gmail.com>
+ <20180717160035.9422-1-aryabinin@virtuozzo.com>
+ <b7aceb99-9631-cbcf-fdec-3abef72c949d@suse.cz>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <3fcf7f4f-a9c0-f9c8-f526-ab12e283cd43@virtuozzo.com>
+Date:   Thu, 13 Jun 2019 12:10:19 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190612172501.GY4814@minitux>
+In-Reply-To: <b7aceb99-9631-cbcf-fdec-3abef72c949d@suse.cz>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Jun 13 11:10:39 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/06/2019 19:25, Bjorn Andersson wrote:
 
-> On Wed 12 Jun 09:24 PDT 2019, Marc Gonzalez wrote:
-> 
->> On 05/06/2019 01:24, Bjorn Andersson wrote:
+
+On 6/12/19 11:57 AM, Vlastimil Babka wrote:
+> On 7/17/18 6:00 PM, Andrey Ryabinin wrote:
+>> fuse_dev_splice_write() reads pipe->buffers to determine the size of
+>> 'bufs' array before taking the pipe_lock(). This is not safe as
+>> another thread might change the 'pipe->buffers' between the allocation
+>> and taking the pipe_lock(). So we end up with too small 'bufs' array.
 >>
->>> After issuing a PHY_START request to the QMP, the hardware documentation
->>> states that the software should wait for the PCS_READY_STATUS to become 1.
->>>
->>> With the introduction of c9b589791fc1 ("phy: qcom: Utilize UFS reset
->>> controller") an additional 1ms delay was introduced between the start
->>> request and the check of the status bit. This greatly increases the
->>> chances for the hardware to actually becoming ready before the status
->>> bit is read.
->>>
->>> The result can be seen in that UFS PHY enabling is now reported as a
->>> failure in 10% of the boots on SDM845, which is a clear regression from
->>> the previous rare/occasional failure.
->>>
->>> This patch fixes the "break condition" of the poll to check for the
->>> correct state of the status bit.
->>>
->>> Unfortunately PCIe on 8996 and 8998 does not specify the mask_pcs_ready
->>> register, which means that the code checks a bit that's always 0. So the
->>> patch also fixes these, in order to not regress these targets.
->>>
->>> Cc: stable@vger.kernel.org
->>> Cc: Evan Green <evgreen@chromium.org>
->>> Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
->>> Cc: Vivek Gautam <vivek.gautam@codeaurora.org>
->>> Fixes: 73d7ec899bd8 ("phy: qcom-qmp: Add msm8998 PCIe QMP PHY support")
->>> Fixes: e78f3d15e115 ("phy: qcom-qmp: new qmp phy driver for qcom-chipsets")
->>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>> ---
->>>
->>> @Kishon, this is a regression spotted in v5.2-rc1, so please consider applying
->>> this towards v5.2.
->>>
->>>  drivers/phy/qualcomm/phy-qcom-qmp.c | 4 +++-
->>>  1 file changed, 3 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
->>> index cd91b4179b10..43abdfd0deed 100644
->>> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
->>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
->>> @@ -1074,6 +1074,7 @@ static const struct qmp_phy_cfg msm8996_pciephy_cfg = {
->>>  
->>>  	.start_ctrl		= PCS_START | PLL_READY_GATE_EN,
->>>  	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
->>> +	.mask_pcs_ready		= PHYSTATUS,
->>>  	.mask_com_pcs_ready	= PCS_READY,
->>>  
->>>  	.has_phy_com_ctrl	= true,
->>> @@ -1253,6 +1254,7 @@ static const struct qmp_phy_cfg msm8998_pciephy_cfg = {
->>>  
->>>  	.start_ctrl             = SERDES_START | PCS_START,
->>>  	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
->>> +	.mask_pcs_ready		= PHYSTATUS,
->>>  	.mask_com_pcs_ready	= PCS_READY,
->>>  };
->>>  
->>> @@ -1547,7 +1549,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
->>>  	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
->>>  	mask = cfg->mask_pcs_ready;
->>>  
->>> -	ret = readl_poll_timeout(status, val, !(val & mask), 1,
->>> +	ret = readl_poll_timeout(status, val, val & mask, 1,
->>>  				 PHY_INIT_COMPLETE_TIMEOUT);
->>>  	if (ret) {
->>>  		dev_err(qmp->dev, "phy initialization timed-out\n");
+>> Move the bufs allocations inside pipe_lock()/pipe_unlock() to fix this.
 >>
->> Your patch made me realize that:
->> msm8998_pciephy_cfg.has_phy_com_ctrl = false
->> thus
->> msm8998_pciephy_cfg.mask_com_pcs_ready is useless, AFAICT.
+>> Fixes: dd3bb14f44a6 ("fuse: support splice() writing to fuse device")
+>> Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+>> Cc: <stable@vger.kernel.org>
 > 
-> While 8998 has a COM block, it does (among other things) not have a
-> ready bit. So afaict has_phy_com_ctrl = false is correct.
+> BTW, why don't we need to do the same in fuse_dev_splice_read()?
+> 
 
-Pfff... Working blind without the HPG sucks...
+do_splice() already takes the pipe_lock() before calling ->splice_read()
 
-> The addition of mask_pcs_ready is part of resolving the regression in
-> 5.2, so I suggest that we remove mask_com_pcs_ready separately.
-
-I agree that it should be done separately.
-I'll send a patch on top of yours.
-
->> (I copied msm8996_pciephy_cfg for msm8998_pciephy_cfg)
+> Thanks,
+> Vlastimil
+> 
+>> ---
+>>  fs/fuse/dev.c | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
 >>
->> Does msm8996_pciephy_cfg really need both mask_pcs_ready AND
->> mask_com_pcs_ready?
+>> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+>> index c6b88fa85e2e..702592cce546 100644
+>> --- a/fs/fuse/dev.c
+>> +++ b/fs/fuse/dev.c
+>> @@ -1944,12 +1944,15 @@ static ssize_t fuse_dev_splice_write(struct pipe_inode_info *pipe,
+>>  	if (!fud)
+>>  		return -EPERM;
+>>  
+>> +	pipe_lock(pipe);
+>> +
+>>  	bufs = kmalloc_array(pipe->buffers, sizeof(struct pipe_buffer),
+>>  			     GFP_KERNEL);
+>> -	if (!bufs)
+>> +	if (!bufs) {
+>> +		pipe_unlock(pipe);
+>>  		return -ENOMEM;
+>> +	}
+>>  
+>> -	pipe_lock(pipe);
+>>  	nbuf = 0;
+>>  	rem = 0;
+>>  	for (idx = 0; idx < pipe->nrbufs && rem < len; idx++)
+>>
 > 
-> 8996 has a COM block and it contains both the control bits and the
-> status bits, so that looks correct.
-
-Thanks for checking.
-
->> I'll test your patch tomorrow.
-> 
-> I appreciate that.
-
-Here are my observations for a 8998 board:
-
-1) If I apply only the readl_poll_timeout() fix (not the mask_pcs_ready fixup)
-qcom_pcie_probe() fails with a timeout in phy_init.
-=> this is in line with your regression analysis.
-
-2) Your patch also fixes a long-standing bug in UFS init whereby sending
-lots of information to the console during phy init would lead to an
-incorrectly diagnosed time-out.
-
-Good stuff!
-
-Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-
-Regards.
