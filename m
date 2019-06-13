@@ -2,99 +2,99 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7D0C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E29B4C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40DE220665
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442461;
-	bh=EBdM+xYkn1wZU7C8dtQzzjr5qG+cyR7BfkJ6Nr4mO6s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ggz/aL0R5SYJ8zA483I0PXssjo4CyxhA/D2mlLUdbmcOpEPpO1annwbTr3kX48RyE
-	 tLBTA0aCIjk4vqDyWuDbaGDnHxC0bbVdgagT0kxvLuGWicEdIoiiH88M5njGxxbaHp
-	 piwBfwcWuF+qf782G2VEMrsaMHQeiSN9tLjwqO3k=
+	by mail.kernel.org (Postfix) with ESMTP id B797320665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:14:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Dww8Mp6D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391655AbfFMQOT (ORCPT
+        id S2390707AbfFMQOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:14:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731193AbfFMIm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:42:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EACA72063F;
-        Thu, 13 Jun 2019 08:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415347;
-        bh=EBdM+xYkn1wZU7C8dtQzzjr5qG+cyR7BfkJ6Nr4mO6s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u+GXWYH9ZujW0J7ZNiFqpj392HhDW09bqCPlGBcdwMnTyEb0zspZLwsFWwsCDFkYC
-         n5RiioCRqdVFRovbR/Q/AbeJzZdMnTo2BBx6/muVm/6C+0yVTsrnA0IEvOaUa0zu+Y
-         mPzkWK9LX0dJ9C7UpwoV9RW290H0No5lZ8n7GM0k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kabir Sahane <x0153567@ti.com>,
-        "Andrew F. Davis" <afd@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 092/118] ARM: OMAP2+: pm33xx-core: Do not Turn OFF CEFUSE as PPA may be using it
-Date:   Thu, 13 Jun 2019 10:33:50 +0200
-Message-Id: <20190613075649.240969830@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
-References: <20190613075643.642092651@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 13 Jun 2019 12:14:18 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:36704 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731197AbfFMImb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:42:31 -0400
+Received: by mail-yb1-f193.google.com with SMTP id b22so5966451yba.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 01:42:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zjpXrdhZdWSVnzo1hcCmpdYCRukSqJAaG4+HlfSu5wc=;
+        b=Dww8Mp6DzN1GHQieAdQBJBXrZ6Dx9lwUFAyjoSpdOPjDv5aHFyXKPRFuPFDadk3F4N
+         PlAxkpCqcbhb6+yKQ3k3gDZlgZ8ltdDU3HqW0ffCqnxdaRQN/wD1YadQA77Sbb051t1M
+         u3hZk++QD/VFEeZiQvaXESGohxYVWpUChsQd0zFYnswawNr2oKOBEv9Rc5HGkHPQ3Rs6
+         wP+KYkzy8EYouMLVbEHXfV8pMIxqWa3daudYkLkiEWCCTSBX6kXfjntbprtvsFputU3m
+         DNZBzUHcvlxbDEeq+ZdSCnZORxSBGGAQFGxDcZryNZn+8w1MabKJ9e5hOwV6uOAdegLT
+         n3XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zjpXrdhZdWSVnzo1hcCmpdYCRukSqJAaG4+HlfSu5wc=;
+        b=OQrDt6cX1qbPheTe2E65rCHAG1Wws0+2pcih2wHwMJt4KqiGKByVqVZXIjnfwAgQlq
+         Sqaruwgb+jqKOuEzYYWjR5YaYmxODj7vb8I92w27eAxifpYIBGFvEDTzgX/uRPPWxu0x
+         9laoLPSwQ1nRKSX5xHs0bgscj+ug+OqkMZzp0HwRdMYKQjS/I/gxKxraTGWlS/tXfdmi
+         5pq2vmSE0qO1xI8QX9YIkySifGrfk+GNPmKnguAB62XrvGbBQHIVO6KPbCNHSmzBDpmL
+         klMxfi8br/jD7fqcZzznd6jLwlkpIl8JAuMfb4gGaKHc4khrGu8CxFgQTSaJRhc4ofPX
+         5MWA==
+X-Gm-Message-State: APjAAAUhVkzsjBzF2sonDHqUkvc2NZ/rRDsXsfv5fYFcZmHCSMoDGgWG
+        ptdYoihs9179a3gDY1P3Es2sOA==
+X-Google-Smtp-Source: APXvYqw6HbzBIcjkNiK7Q0GLBBoGGfFaDqjTHwqIkqQaT8YYX/nxFXa9ac5Nsx5wzsq/aODUxFvBaA==
+X-Received: by 2002:a25:320b:: with SMTP id y11mr14886649yby.92.1560415350170;
+        Thu, 13 Jun 2019 01:42:30 -0700 (PDT)
+Received: from [172.20.10.3] (mobile-166-172-57-221.mycingular.net. [166.172.57.221])
+        by smtp.gmail.com with ESMTPSA id 84sm769447ywp.45.2019.06.13.01.42.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 01:42:29 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: fix memory leak of UNIX domain socket inode
+To:     Eric Biggers <ebiggers@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+111cb28d9f583693aefa@syzkaller.appspotmail.com>
+References: <0000000000005bc340058983fe8e@google.com>
+ <20190612215843.91294-1-ebiggers@kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c8afa475-8ed9-e8ee-c66a-270bea7efad5@kernel.dk>
+Date:   Thu, 13 Jun 2019 02:40:13 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612215843.91294-1-ebiggers@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 72aff4ecf1cb85a3c6e6b42ccbda0bc631b090b3 ]
+On 6/12/19 3:58 PM, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> Opening and closing an io_uring instance leaks a UNIX domain socket
+> inode.  This is because the ->file of the io_uring instance's internal
+> UNIX domain socket is set to point to the io_uring file, but then
+> sock_release() sees the non-NULL ->file and assumes the inode reference
+> is held by the file so doesn't call iput().  That's not the case here,
+> since the reference is still meant to be held by the socket; the actual
+> inode of the io_uring file is different.
+> 
+> Fix this leak by NULL-ing out ->file before releasing the socket.
 
-This area is used to store keys by HSPPA in case of AM438x SOC. Leave it
-active.
+Thanks, applied.
 
-Signed-off-by: Kabir Sahane <x0153567@ti.com>
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/mach-omap2/pm33xx-core.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/mach-omap2/pm33xx-core.c b/arch/arm/mach-omap2/pm33xx-core.c
-index f4971e4a86b2..ca7026958d42 100644
---- a/arch/arm/mach-omap2/pm33xx-core.c
-+++ b/arch/arm/mach-omap2/pm33xx-core.c
-@@ -51,10 +51,12 @@ static int amx3_common_init(void)
- 
- 	/* CEFUSE domain can be turned off post bootup */
- 	cefuse_pwrdm = pwrdm_lookup("cefuse_pwrdm");
--	if (cefuse_pwrdm)
--		omap_set_pwrdm_state(cefuse_pwrdm, PWRDM_POWER_OFF);
--	else
-+	if (!cefuse_pwrdm)
- 		pr_err("PM: Failed to get cefuse_pwrdm\n");
-+	else if (omap_type() != OMAP2_DEVICE_TYPE_GP)
-+		pr_info("PM: Leaving EFUSE power domain active\n");
-+	else
-+		omap_set_pwrdm_state(cefuse_pwrdm, PWRDM_POWER_OFF);
- 
- 	return 0;
- }
 -- 
-2.20.1
-
-
+Jens Axboe
 
