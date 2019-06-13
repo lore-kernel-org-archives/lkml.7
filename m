@@ -2,100 +2,100 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53A6C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10219C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DDE12147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 22:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA552147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:01:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560466860;
+	bh=1ycc5XhBbegExJr3IT+ebLCLz63PQBCaXSPNuxaDnaM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dWvhJQWWHitDUbgt0w6H4O7tenygUD8QThtDnXOgPNBvR4w1jU6c4M0SwEIZDgc8z
+	 w5NCqGIMriH9JSktTrNPtsHEi7MMc/wUxNtl5Ppm3mDaj3ER0NcLO+mwhTk5M4GUnY
+	 7iU0D4E4hj936SrzAXpge4Q23ClexAWEF0fn0xxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbfFMW5Y (ORCPT
+        id S1726989AbfFMXA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 18:57:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60506 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727202AbfFMW5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 18:57:23 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 62426308624A;
-        Thu, 13 Jun 2019 22:57:23 +0000 (UTC)
-Received: from gimli.home (ovpn-116-190.phx2.redhat.com [10.3.116.190])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 918061001B17;
-        Thu, 13 Jun 2019 22:57:20 +0000 (UTC)
-Subject: [PATCH 2/2] PCI/IOV: Assume SR-IOV VFs support extended config
- space.
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     linux-pci@vger.kernel.org
-Cc:     KarimAllah Ahmed <karahmed@amazon.de>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Hao Zheng <yinhe@linux.alibaba.com>, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, nanhai.zou@linux.alibaba.com,
-        quan.xu0@linux.alibaba.com, ashok.raj@intel.com,
-        keith.busch@intel.com, mike.campin@intel.com
-Date:   Thu, 13 Jun 2019 16:57:20 -0600
-Message-ID: <156046664016.29869.16676461736240878900.stgit@gimli.home>
-In-Reply-To: <156046609596.29869.5839964168034189416.stgit@gimli.home>
-References: <156046609596.29869.5839964168034189416.stgit@gimli.home>
-User-Agent: StGit/0.19-dirty
+        Thu, 13 Jun 2019 19:00:59 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43610 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbfFMXA6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 19:00:58 -0400
+Received: by mail-qt1-f193.google.com with SMTP id z24so350767qtj.10;
+        Thu, 13 Jun 2019 16:00:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=G79DWXHKgxClAySaL1um3UbwoRauIDKIz2yJHIv30Gg=;
+        b=qeqSo8GoNLE+dKxQc0f4MEpZMTcLL9+LP7UBBJiYrAhyuFsDpW5l0ouqOjP/UEFT5C
+         c0JKQn/kqkWJyaOC651hFs8lKhX1WO9L3XYgQM0JVwXZaY36/9OKYnMvepduKLuVYP0v
+         srjk89QueGX4aKA28IJ3bC1BUlCYXyRMlNFPLVPgZv/w7dJXRYxe6yk4zfnZ/eImJzKW
+         YtmiYczWGuhVYkAgluJRTgHZ0npRfgoyLgEGMYASeGndk1YS39RtmPtGeQPd356h/RPP
+         cbWtcT2tgPywR0OcV8LImOqlJGLj1WTaHXbN4GyIfgAMrc76Zd3jtR0i64NhgzNEIOT0
+         W/WA==
+X-Gm-Message-State: APjAAAVLsqPaGd0fmWALH8fTj7DpInaaGmzLgV8kiBvBdGTiypDahXdE
+        zxUiVqSaU5JyWUXOiJIRUQ==
+X-Google-Smtp-Source: APXvYqwO8MrRxA4IbLmzYlI+M/YrQOnAWJYgHuPsnvehk+Nb8nAc5Jq4q/qt4ywjdBg+E8zmH8NyaQ==
+X-Received: by 2002:a0c:aff8:: with SMTP id t53mr5602907qvc.47.1560466857634;
+        Thu, 13 Jun 2019 16:00:57 -0700 (PDT)
+Received: from localhost ([64.188.179.243])
+        by smtp.gmail.com with ESMTPSA id n5sm655080qta.29.2019.06.13.16.00.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 16:00:56 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 17:00:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 1/2] dt-bindings: imx-ocotp: Add fusable-node property
+Message-ID: <20190613230055.GA19296@bogus>
+References: <20190520032020.7920-1-peng.fan@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 13 Jun 2019 22:57:23 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520032020.7920-1-peng.fan@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SR-IOV specification requires both PFs and VFs to implement a PCIe
-capability.  Generally this is sufficient to assume extended config
-space is present, but we generally also perform additional tests to
-make sure the extended config space is reachable and not simply an
-alias of standard config space.  For a VF to exist extended config
-space must be accessible on the PF, therefore we can also assume it to
-be accessible on the VF.  This enables a micro performance
-optimization previously implemented in commit 975bb8b4dc93 ("PCI/IOV:
-Use VF0 cached config space size for other VFs") to speed up probing
-of VFs.
+On Mon, May 20, 2019 at 03:06:35AM +0000, Peng Fan wrote:
+> Introduce fusable-node property for i.MX OCOTP driver.
+> The property will only be used by Firmware(eg. U-Boot) to
+> runtime disable the nodes.
+> 
+> Take i.MX6ULL for example, there are several parts that only
+> have limited modules enabled controlled by OCOTP fuse. It is
+> not flexible to provide several dts for the serval parts, instead
+> we could provide one device tree and let Firmware to runtime disable
+> the device tree nodes for those modules that are disable(fused).
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+> 
+> Currently NXP vendor use U-Boot to set status to disabled for devices
+> that could not function,
+> https://source.codeaurora.org/external/imx/uboot-imx/tree/arch/arm/mach-imx/mx6/module_fuse.c?h=imx_v2018.03_4.14.98_2.0.0_ga#n149
+> But this approach is will not work if kernel dts node path changed.
 
-Cc: KarimAllah Ahmed <karahmed@amazon.de>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Hao Zheng <yinhe@linux.alibaba.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
----
- drivers/pci/probe.c |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Why would the path change? The DT should be stable.
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index a3a3c6b28343..439244ff8f09 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1561,6 +1561,21 @@ int pci_cfg_space_size(struct pci_dev *dev)
- 	u32 status;
- 	u16 class;
- 
-+#ifdef CONFIG_PCI_IOV
-+	/*
-+	 * Per the SR-IOV specification (rev 1.1, sec 3.5), VFs are required to
-+	 * implement a PCIe capability and therefore must implement extended
-+	 * config space.  We can skip the NO_EXTCFG test below and the
-+	 * reachability/aliasing test in pci_cfg_space_size_ext() by virtue of
-+	 * the fact that the SR-IOV capability on the PF resides in extended
-+	 * config space and must be accessible and non-aliased to have enabled
-+	 * support for this VF.  This is a micro performance optimization for
-+	 * systems supporting many VFs.
-+	 */
-+	if (dev->is_virtfn)
-+		return PCI_CFG_SPACE_EXP_SIZE;
-+#endif
-+
- 	if (dev->bus->bus_flags & PCI_BUS_FLAGS_NO_EXTCFG)
- 		return PCI_CFG_SPACE_SIZE;
- 
-
+Rob
