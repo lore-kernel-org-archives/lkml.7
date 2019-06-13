@@ -2,97 +2,112 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11E8C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42665C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A95A20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160BA20851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:48:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FJ8biDWx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389568AbfFMPsa (ORCPT
+        id S1726653AbfFMPs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:48:30 -0400
-Received: from sauhun.de ([88.99.104.3]:38560 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731731AbfFMJT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 05:19:29 -0400
-Received: from localhost (p5486CF99.dip0.t-ipconnect.de [84.134.207.153])
-        by pokefinder.org (Postfix) with ESMTPSA id 7A4352C3559;
-        Thu, 13 Jun 2019 11:19:26 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 11:19:26 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, andy.gross@linaro.org,
-        david.brown@linaro.org, wsa+renesas@sang-engineering.com,
-        bjorn.andersson@linaro.org, linus.walleij@linaro.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org,
-        ard.biesheuvel@linaro.org, jlhugo@gmail.com,
-        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/8] i2c: i2c-qcom-geni: Provide support for ACPI
-Message-ID: <20190613091926.GB952@kunai>
-References: <20190610084213.1052-1-lee.jones@linaro.org>
- <20190612103453.ccet2pneairnlpcc@ninjato>
- <20190612104011.GA4660@dell>
- <20190612104459.gvji3qxym5s4odfq@ninjato>
- <20190613085204.GF4660@dell>
+        Thu, 13 Jun 2019 11:48:29 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52409 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731612AbfFMJUT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 05:20:19 -0400
+Received: by mail-wm1-f68.google.com with SMTP id s3so9377936wms.2
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 02:20:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kotA5N9EoUxhGkMwLE3/QhHcmiICXj1ka23TDvB3rSM=;
+        b=FJ8biDWxyeoMYEpxvOrTcrucGhSnQZXA9kUvxSyUo6V4DerOufEcXA7Z1ssTQwCwpS
+         bsMvySOAoDvKrrCgCPIAOT9GsWHNT1Lp06Gmqoh0hYboenGzdtTEFPxoJI7TkX5RvpFv
+         Qcvq3eguvfL78hi5YEQeX5T+wEB4ZO5EMX3tN5H0VT6SIwcmPEmdzNfEDwT0AphM03M/
+         US3ZxjNlsuUuoZTu9OUJOUVj6a7Y5rBQuqnHbssIC91vYa45GPMIhTkUZ6g4Gi+1DhR9
+         DEx4zragsgMC8MkmxzjP2O2ZA9dE/1drWvrKZd1Z4kNecJK8UGR90l/mp7hMMVCxo5jS
+         lkwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kotA5N9EoUxhGkMwLE3/QhHcmiICXj1ka23TDvB3rSM=;
+        b=s5qdMHFBDL6ecwlxPTrkDd46wY07BL0kvtWhpeWnwA32OeDlV2JRBW+qp0g1swWYLA
+         0GLvc3baUsBHQC+dhpFQHWQit0riE4K5Z7lUr1qG2s/koEiPrD9AwkFzPKgqs06YlVWu
+         /suKGDXkEhN1CsXD26ihEmQSXKWBs6HdbH/zx3Z2rs04cYJSZ7N5JCV2bWduoE0O2YzF
+         n6dnvrNwQXdKEFsu2scsbXW1Npl/ctDqzkNeLP3aAW2OPxqrZwaVO3mE4I5hrDbB1VZk
+         u8YDshX4qRhhyTcK+p5RHCCUFk9feUXN4A8U1V0EL9aJufz5mkj48JbvnTSiqJ4zfHxX
+         ygiA==
+X-Gm-Message-State: APjAAAUMRBXLPI6N1t4+OS3j2+ME95G/7x5420Ufcmhis995SKwkuGAB
+        KI4hsqiKpUt5sxvD9fee0a0cOclg5NW/IXWfwNZtpA==
+X-Google-Smtp-Source: APXvYqyF4beCFeHK+yRlaCF2vVGkbOQNCZTufPhtT/Uyk+odeT53Xmpq+5vVT2nuqZWItux6aLxsRUiBbqTIUkv7Yv8=
+X-Received: by 2002:a1c:6c08:: with SMTP id h8mr2990087wmc.62.1560417618124;
+ Thu, 13 Jun 2019 02:20:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Fba/0zbH8Xs+Fj9o"
-Content-Disposition: inline
-In-Reply-To: <20190613085204.GF4660@dell>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190612144218.26149-1-colin.king@canonical.com>
+In-Reply-To: <20190612144218.26149-1-colin.king@canonical.com>
+From:   Maxime Jourdan <mjourdan@baylibre.com>
+Date:   Thu, 13 Jun 2019 11:20:07 +0200
+Message-ID: <CAMO6naxDNmsqUVgAJ2uMBsQPUjsYK6zLhgubNfeEB-GEdD7sOw@mail.gmail.com>
+Subject: Re: [PATCH][next] staging: media: meson: remove redundant
+ initialization of mpeg12
+To:     Colin King <colin.king@canonical.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-media@lists.freedesktop.org,
+        linux-amlogic@lists.infradead.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Colin,
+On Wed, Jun 12, 2019 at 4:42 PM Colin King <colin.king@canonical.com> wrote:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> The pointer mpeg12 is being initialized however that value is never
+> read and mpeg12 is being re-assigned almost immediately afterwards.
+> Remove the redundant initialization.
+>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/staging/media/meson/vdec/codec_mpeg12.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/staging/media/meson/vdec/codec_mpeg12.c b/drivers/staging/media/meson/vdec/codec_mpeg12.c
+> index 5398fbf7ce20..48869cc3d973 100644
+> --- a/drivers/staging/media/meson/vdec/codec_mpeg12.c
+> +++ b/drivers/staging/media/meson/vdec/codec_mpeg12.c
+> @@ -63,7 +63,7 @@ static void codec_mpeg12_recycle(struct amvdec_core *core, u32 buf_idx)
+>  static int codec_mpeg12_start(struct amvdec_session *sess)
+>  {
+>         struct amvdec_core *core = sess->core;
+> -       struct codec_mpeg12 *mpeg12 = sess->priv;
+> +       struct codec_mpeg12 *mpeg12;
+>         int ret;
+>
+>         mpeg12 = kzalloc(sizeof(*mpeg12), GFP_KERNEL);
+> --
+> 2.20.1
+>
 
---Fba/0zbH8Xs+Fj9o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for the patch.
 
-
-> I contacted both of them.
->=20
->  Andy doesn't touch anything that isn't QUP based (8994 and older).
->=20
->  David doesn't deal with MSM platforms if Andy is available.=20
-
-That's good to know, thanks!
-
-> So I guess the decision is yours.  Seeing at this patch is pretty
-> trivial and has our ACPI expert's Ack, the decision shouldn't be a
-> difficult one.
-
-No worries, the patch will be applied. I just wanted to check if the
-listed maintainers are still there. Otherwise I need to orphan this
-driver.
-
-
---Fba/0zbH8Xs+Fj9o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0CFRkACgkQFA3kzBSg
-KbaquBAArPmt8Fz3DGFNlnfxI6ee/fBc4huwdqsLrUXhirCq2NxTHi0g8mc1Y4O5
-js7pOOLQSqZ6cTamIqHGv7wNonZ16xhvJPexVAz8CPT9BOysmHI/Z1eBEorBqOh8
-MXkJGWXCSJ8li3yAdDLcQWKyj42zzEV7YJ/7kzEVpodSec/ufP1l34mxPNY+gVkj
-b2YAX41oX7KMQ+ix+O9dK1U/wja5costVyUNXxjLuzZBTooVShj7dnrcLuROw1ss
-I3V09OpXN7E8tF4Tq52gJ3xH1wJslMsi2GGGBFC4kKC3txfO04cuOZsLmf36Jomd
-hBFUBBQotylM32w5lshWXcPQOUWBsKlDtfK5qyAhKIeBEvs08pbqK1Lw8hFT8T7t
-6kD5Ty0cRPx5yBU0DE46FWuR60RYUqfq+bLYy4Y1O5lyCY2IdM46SMuFo6pp96lq
-GQReaFopNp4SCpNPNJCDFtoHegeEoT5JKrcjLHRV9Zg2+p4mNL2O7Epkvi+4JvzV
-p1gVvtL0/x5wVD8QWtXq8a7/IQ5oYUaULExw+WzhWD+VV4c/4JyyMNtGpCmnXCAr
-EXj+7drBHheZN7nmmrer+sEuAySjTlhhHtFvb2K735P06Etqu5YWAtm88j7FcZUU
-SaCzuSKqPQgU401V3+k5aexWOMCEN1DehlbyL+n7nQazEovGM24=
-=dLE0
------END PGP SIGNATURE-----
-
---Fba/0zbH8Xs+Fj9o--
+Acked-by: Maxime Jourdan <mjourdan@baylibre.com>
