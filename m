@@ -7,47 +7,55 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F2CC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C17FC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB58215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70F6F20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442662;
-	bh=mbqrXAitbexzm8M6vlarDFvT00EESUXBIBpAk6Pf+Sw=;
+	s=default; t=1560442667;
+	bh=K58WltlMNhs1+FZaQsfXOufacxo/p5eUMRzFey6WUos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D9SD/mK5B3JZ/ahWDWvI4iLTEmEgBG97EiHmBDKHhoH999lVB37y2415pLg6QDHNh
-	 ctf9Z4ZUA7gf5c14f2Rz4KXE+XiA7SpaB19JZkADBHgf5DIsfiEZKBafKH0MyKn26R
-	 Bxad04KZZQJ3b+v4+KFo6u3Z7Vm1uWeUQ9KaVA6Y=
+	b=FcnLeXlyW+JrrkafMA/PNJujDF1ROlt4nh6FT/JRyvhIdqcAdyEURcKRIiRrVGCeK
+	 1jbrnb1co2E495Y94Diucgk/zd1yATGDuVEU7ZoYA4ugecPT1Q2d4RasoxKcEY+y1A
+	 WNUEqAwbBEQrPbNS86Olj2SqCQvf53P7yoSvi7jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388638AbfFMQRl (ORCPT
+        id S2403841AbfFMQRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:17:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58202 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:17:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731134AbfFMIku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:40:50 -0400
+        id S1731129AbfFMIkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:40:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74B862147A;
-        Thu, 13 Jun 2019 08:40:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D51B21473;
+        Thu, 13 Jun 2019 08:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415250;
-        bh=mbqrXAitbexzm8M6vlarDFvT00EESUXBIBpAk6Pf+Sw=;
+        s=default; t=1560415244;
+        bh=K58WltlMNhs1+FZaQsfXOufacxo/p5eUMRzFey6WUos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mUIjfLvpp5fmLZIHz9oIuijgastmADWPOTH+3pi2vPAyiKbiIXx7b+s2y9GX9RTNO
-         PtzK/PAwxQMkg5PAphvf3r64FvaIpLhxbfGPB7o7wN1Aqb5/2l86rPqmci4+QyOTD7
-         on8CJhiyiVdJAC6jhSltoX7rQL2AHpYjr4Vb97ms=
+        b=CWSr9YyvsDXmprJCIOY4n0AzFRhmECkDZ7PNFkFxYwwkYrWpcqymeH5XhH4CiLo2B
+         1+Zo25oBbL0+2q+udaNIRBJwF1w5kkZ6McLJhLqGwir1GlL/mJZ2w9TpRpevrA+o5R
+         BwMjOueVnkEGerle86psnttkYamY23Hhsw8AjMoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 057/118] misc: pci_endpoint_test: Fix test_reg_bar to be updated in pci_endpoint_test
-Date:   Thu, 13 Jun 2019 10:33:15 +0200
-Message-Id: <20190613075647.084348894@linuxfoundation.org>
+        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        James Smart <james.smart@broadcom.com>,
+        Bart Van Assche <bart.vanassche@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>
+Subject: [PATCH 4.19 055/118] blk-mq: move cancel of requeue_work into blk_mq_release
+Date:   Thu, 13 Jun 2019 10:33:13 +0200
+Message-Id: <20190613075646.936104246@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -60,36 +68,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8f220664570e755946db1282f48e07f26e1f2cb4 ]
+[ Upstream commit fbc2a15e3433058582e5635aabe48a3011a644a8 ]
 
-commit 834b90519925 ("misc: pci_endpoint_test: Add support for
-PCI_ENDPOINT_TEST regs to be mapped to any BAR") while adding
-test_reg_bar in order to map PCI_ENDPOINT_TEST regs to be mapped to any
-BAR failed to update test_reg_bar in pci_endpoint_test, resulting in
-test_reg_bar having invalid value when used outside probe.
+With holding queue's kobject refcount, it is safe for driver
+to schedule requeue. However, blk_mq_kick_requeue_list() may
+be called after blk_sync_queue() is done because of concurrent
+requeue activities, then requeue work may not be completed when
+freeing queue, and kernel oops is triggered.
 
-Fix it.
+So moving the cancel of requeue_work into blk_mq_release() for
+avoiding race between requeue and freeing queue.
 
-Fixes: 834b90519925 ("misc: pci_endpoint_test: Add support for PCI_ENDPOINT_TEST regs to be mapped to any BAR")
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: James Smart <james.smart@broadcom.com>
+Cc: Bart Van Assche <bart.vanassche@wdc.com>
+Cc: linux-scsi@vger.kernel.org,
+Cc: Martin K . Petersen <martin.petersen@oracle.com>,
+Cc: Christoph Hellwig <hch@lst.de>,
+Cc: James E . J . Bottomley <jejb@linux.vnet.ibm.com>,
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Tested-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/pci_endpoint_test.c | 1 +
- 1 file changed, 1 insertion(+)
+ block/blk-core.c | 1 -
+ block/blk-mq.c   | 2 ++
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 896e2df9400f..fd33a3b9c66f 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -662,6 +662,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 	data = (struct pci_endpoint_test_data *)ent->driver_data;
- 	if (data) {
- 		test_reg_bar = data->test_reg_bar;
-+		test->test_reg_bar = test_reg_bar;
- 		test->alignment = data->alignment;
- 		irq_type = data->irq_type;
- 	}
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 33488b1426b7..6eed5d84c2ef 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -411,7 +411,6 @@ void blk_sync_queue(struct request_queue *q)
+ 		struct blk_mq_hw_ctx *hctx;
+ 		int i;
+ 
+-		cancel_delayed_work_sync(&q->requeue_work);
+ 		queue_for_each_hw_ctx(q, hctx, i)
+ 			cancel_delayed_work_sync(&hctx->run_work);
+ 	} else {
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 4e563ee462cb..70d839b9c3b0 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2465,6 +2465,8 @@ void blk_mq_release(struct request_queue *q)
+ 	struct blk_mq_hw_ctx *hctx;
+ 	unsigned int i;
+ 
++	cancel_delayed_work_sync(&q->requeue_work);
++
+ 	/* hctx kobj stays in hctx */
+ 	queue_for_each_hw_ctx(q, hctx, i) {
+ 		if (!hctx)
 -- 
 2.20.1
 
