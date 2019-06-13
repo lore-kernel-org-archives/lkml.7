@@ -2,188 +2,119 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C3FC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F4AC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604332147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88DC421537
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 20:57:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F0WKFhMF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7h3UqwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbfFMU4p (ORCPT
+        id S1730106AbfFMU5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 16:56:45 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37706 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfFMU4o (ORCPT
+        Thu, 13 Jun 2019 16:57:15 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35946 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfFMU5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:56:44 -0400
-Received: by mail-lf1-f68.google.com with SMTP id d11so173235lfb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 13:56:42 -0700 (PDT)
+        Thu, 13 Jun 2019 16:57:14 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r7so25047pfl.3;
+        Thu, 13 Jun 2019 13:57:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/OG/AEL4164lJz8oHfLDPcpe5DZqMPpDHCdPhPKS91Q=;
-        b=F0WKFhMFhS2BegVZPSNsLwWkxX9SY6SiLQByGCQ7xPVNbqBlv/KXU5Md2Vw0LJpS+s
-         EAvlaksvmAlhwmDu+i63jx5U7ie2HMS7bZUiuJgPbucGIUJUYZsrEXioMrPkiYlgWXg5
-         iO4WhOn1R5CfLvWDuK9CKIoaDHPFETvf5BvOU=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BtC4BilPXcpmyt5suyyuknm5yJ5dekLmfPkwrs0lDyo=;
+        b=l7h3UqwPRUzXunatj9GeXQPagkIYS3fwPOzBdCg/FeZym4FFgbeee+e49LZY/o05i1
+         66vKspp5NxgejbL0BNJe8VkcyIxSqUiU66casxh9LHTF8qVAe0HFMZfWf6WLKMQ0PRYk
+         h4pmMm3xDISqXvKKJWliqCs44hikm5sdOD/8tuqVdfIAtZJNNsSOyTR9JU6tC3sZ1qfS
+         cJclzg8aeltLnXtRe0DIKLqIJpBOEqFnrqc4TiJk1sYgkI8n9lW7763/VgY1XHzpActZ
+         Lap0/XwdCjvlRl6gtWrcLN1s2f4wkEnert1VB4eGE1K5lgPYGppzkV1pom0dsy7KwLUQ
+         KgrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/OG/AEL4164lJz8oHfLDPcpe5DZqMPpDHCdPhPKS91Q=;
-        b=Mwjji1l8pE1KaL6SC/LDC+dGejB4pUh/oQJoaqwhemD+dUtOZXaBQLbC8Ouua12qAV
-         H3O9RCZBfGg8xS5K2APJ+EYa+PWPHXwddQSdgUCmto3WNv566KvEzER5zqwcH+ck0kd1
-         HPEiIeO+sNLyojoXytUTQ6RgJ9G/ckflCBDmReMgdJb22EBhJt7jYdpx7zV0hp/3vKlr
-         /HoYYtVLJo+ZWjczSgk1ooFtkN6YwWOx4nC+DrLy+XM6GqoVT9iu4kITqVGWiOT191Wb
-         LfmtMnQ9kCFlkYGJhDKXxBZLuuPaQVgWFOzL3LPyLYo8R+ADvwKbJg4rguobXHd7zNi1
-         il5w==
-X-Gm-Message-State: APjAAAXn8YrlsO8CLX2SbgUgMskdDiJIubrFLHeR//mOoTf4m1DTcZD/
-        X8ak38a5Y2odJOrnuq1WJzHvlLhvis4=
-X-Google-Smtp-Source: APXvYqyGXBziqRN40ixYsqsq1pz3weAKtYNrUHTN7kTSEW/MG8bQDfIoJMOSpJaKD8zcUYSVH25NRA==
-X-Received: by 2002:a19:22d8:: with SMTP id i207mr42972371lfi.97.1560459401892;
-        Thu, 13 Jun 2019 13:56:41 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id i2sm177988ljc.96.2019.06.13.13.56.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 13:56:40 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id v24so86443ljg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 13:56:40 -0700 (PDT)
-X-Received: by 2002:a2e:6313:: with SMTP id x19mr40028599ljb.25.1560459400047;
- Thu, 13 Jun 2019 13:56:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BtC4BilPXcpmyt5suyyuknm5yJ5dekLmfPkwrs0lDyo=;
+        b=uTEU2+4N9DUOTWM6n4e3/VE+McahGYvqCJ+WuBMxx6tqvh1yad2OHpljqzEleQwY2d
+         aYGVxnNRmqQhaYWr2UUDAHI0AZoaUAqK0gakJMW3dWCMzu/b1tO77y82BimvH9/3s7gH
+         tnv6T1Ncjpcxf3yHKIS+WgSEFtgSEBFfEWY+7Jtycf3Hl4fLAs2NSo8Q2aDriOsi7gCE
+         m0c16qAsdcy0ikG20eKkffi8bycgo5SrFNPc79Aq/LGB00Rafx3k7XHFaz8nHd/UGNDV
+         VFBVIcAKS04JHbM71GTnZDkIdJYAM9ZLRu4uEK7Jj/pb1r5WWl+cg1xYdQtqiJPTqQ2z
+         9wdA==
+X-Gm-Message-State: APjAAAUV3BlMmpH4kGAa3WF2tfMZus3gsFGUOlSV8EBSovHihxV4LF1k
+        RMndW/vrrmQTWpY6odh+90U=
+X-Google-Smtp-Source: APXvYqy93JdU6sSS6VvlFU4kJ7BzPMps3N225NBRvnJzsev5WERcIO26vy82EyoAiVeTvxaQiUPAmg==
+X-Received: by 2002:a63:6b07:: with SMTP id g7mr33523317pgc.325.1560459433726;
+        Thu, 13 Jun 2019 13:57:13 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::2:e034])
+        by smtp.gmail.com with ESMTPSA id m2sm620992pgq.48.2019.06.13.13.57.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 13:57:12 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 13:57:11 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>
+Subject: Re: [PATCH 2/9] objtool: Fix ORC unwinding in non-JIT BPF generated
+ code
+Message-ID: <20190613205710.et5fywop4gfalsa6@ast-mbp.dhcp.thefacebook.com>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <99c22bbd79e72855f4bc9049981602d537a54e70.1560431531.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-References: <20190607210528.248042-1-evgreen@chromium.org> <797d3c44-cf30-678d-2622-6bd4a2e89b70@collabora.com>
-In-Reply-To: <797d3c44-cf30-678d-2622-6bd4a2e89b70@collabora.com>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Thu, 13 Jun 2019 13:56:03 -0700
-X-Gmail-Original-Message-ID: <CAE=gft427=fMGatFUkkOHpBvJa3n=Usi09aToqu=69bJZ_0uTQ@mail.gmail.com>
-Message-ID: <CAE=gft427=fMGatFUkkOHpBvJa3n=Usi09aToqu=69bJZ_0uTQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: Expose resume result via sysfs
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        Rajat Jain <rajatja@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <99c22bbd79e72855f4bc9049981602d537a54e70.1560431531.git.jpoimboe@redhat.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 9:37 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Evan,
->
-> On 7/6/19 23:05, Evan Green wrote:
-> > For ECs that support it, the EC returns the number of slp_s0
-> > transitions and whether or not there was a timeout in the resume
-> > response. Expose the last resume result to usermode via sysfs so
-> > that usermode can detect and report S0ix timeouts.
->
-> Looks more for a debugfs attribute instead of sysfs?
->
-> I'd prefer have it in debugfs unless you have a good reason. As you probably
-> know I'm not a big fan of having private interfaces and I'd like to maintain the
-> minimum needed in sysfs.
+On Thu, Jun 13, 2019 at 08:20:59AM -0500, Josh Poimboeuf wrote:
+> Objtool currently ignores ___bpf_prog_run() because it doesn't
+> understand the jump table.  This results in the ORC unwinder not being
+> able to unwind through non-JIT BPF code.
+> 
+> Luckily, the BPF jump table resembles a GCC switch jump table, which
+> objtool already knows how to read.
+> 
+> Add generic support for reading any static local jump table array named
+> "jump_table", and rename the BPF variable accordingly, so objtool can
+> generate ORC data for ___bpf_prog_run().
+> 
+> Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+> Reported-by: Song Liu <songliubraving@fb.com>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+>  kernel/bpf/core.c     |  5 ++---
+>  tools/objtool/check.c | 16 ++++++++++++++--
+>  2 files changed, 16 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> index 7c473f208a10..aa546ef7dbdc 100644
+> --- a/kernel/bpf/core.c
+> +++ b/kernel/bpf/core.c
+> @@ -1299,7 +1299,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+>  {
+>  #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
+>  #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
+> -	static const void *jumptable[256] = {
+> +	static const void *jump_table[256] = {
 
-That seems fine with me. It's easy enough to move it from debugfs to
-sysfs later if needed, but much more difficult to go the other way.
-I'll spin it for debugfs.
+Nack to the change like above and to patches 8 and 9.
+Everyone has different stylistic preferences.
+My preference is to keep things as they are.
 
->
-> >
-> > Signed-off-by: Evan Green <evgreen@chromium.org>
-> > ---
-> >
-> > Enric, I'm not sure if this conflicts with your giant refactoring.
-> > I can rebase this on your series, but patchwork doesn't have patch
-> > 2 of your series, so you'd have to point me to a tree.
-> >
->
-> Probably, but it's fine for now, so don't worry about it. The refactoring still
-> needs more reviews from other people.
+Please respin the rest. We'll take it via bpf tree.
 
-Ok. I'll base it on linux-next.
-
->
-> > ---
-> >  drivers/mfd/cros_ec.c                   |  6 +++++-
-> >  drivers/platform/chrome/cros_ec_sysfs.c | 17 +++++++++++++++++
-> >  include/linux/mfd/cros_ec.h             |  1 +
-> >  3 files changed, 23 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
-> > index bd2bcdd4718b..64a2d3adc729 100644
-> > --- a/drivers/mfd/cros_ec.c
-> > +++ b/drivers/mfd/cros_ec.c
-> > @@ -110,12 +110,16 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
-> >
-> >       /* For now, report failure to transition to S0ix with a warning. */
-> >       if (ret >= 0 && ec_dev->host_sleep_v1 &&
-> > -         (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
-> > +         (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME)) {
-> > +             ec_dev->last_resume_result =
-> > +                     buf.u.resp1.resume_response.sleep_transitions;
-> > +
-> >               WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
-> >                         EC_HOST_RESUME_SLEEP_TIMEOUT,
-> >                         "EC detected sleep transition timeout. Total slp_s0 transitions: %d",
-> >                         buf.u.resp1.resume_response.sleep_transitions &
-> >                         EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
-> > +     }
-> >
-> >       return ret;
-> >  }
-> > diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
-> > index 3edb237bf8ed..2deca98c7a7a 100644
-> > --- a/drivers/platform/chrome/cros_ec_sysfs.c
-> > +++ b/drivers/platform/chrome/cros_ec_sysfs.c
-> > @@ -308,18 +308,35 @@ static ssize_t kb_wake_angle_store(struct device *dev,
-> >       return count;
-> >  }
-> >
-> > +/* Last resume result */
-> > +static ssize_t last_resume_result_show(struct device *dev,
-> > +                                    struct device_attribute *attr, char *buf)
-> > +{
-> > +     struct cros_ec_dev *ec = to_cros_ec_dev(dev);
-> > +     int ret;
-> > +
-> > +     ret = scnprintf(buf,
-> > +                     PAGE_SIZE,
-> > +                     "0x%x\n",
-> > +                     ec->ec_dev->last_resume_result);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> >  /* Module initialization */
-> >
-> >  static DEVICE_ATTR_RW(reboot);
-> >  static DEVICE_ATTR_RO(version);
-> >  static DEVICE_ATTR_RO(flashinfo);
-> >  static DEVICE_ATTR_RW(kb_wake_angle);
-> > +static DEVICE_ATTR_RO(last_resume_result);
-> >
->
-> The attribute should be documented in
->
-> Documentation/ABI/testing/sysfs-class-chromeos
->
-> or
->
-> Documentation/ABI/testing/debugfs-cros-ec ; yes I know this file does not exist,
-> but we should add it :-)
-
-Ok. Thanks for taking a look.
--Evan
