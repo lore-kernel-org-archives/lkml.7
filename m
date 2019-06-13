@@ -2,33 +2,35 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3E7C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F1FC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C522206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A78B206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 15:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbfFMP2n (ORCPT
+        id S1730947AbfFMP2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 11:28:43 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18165 "EHLO huawei.com"
+        Thu, 13 Jun 2019 11:28:47 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33758 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728927AbfFML2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 07:28:08 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6D86DE8FDE300608686F;
-        Thu, 13 Jun 2019 19:27:48 +0800 (CST)
-Received: from [127.0.0.1] (10.177.131.64) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 13 Jun 2019
- 19:27:43 +0800
-Subject: Re: [PATCH 0/4] support reserving crashkernel above 4G on arm64 kdump
+        id S1727014AbfFML1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 07:27:12 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3EE9C84A0E22CFC1DCFB;
+        Thu, 13 Jun 2019 19:27:10 +0800 (CST)
+Received: from [127.0.0.1] (10.177.131.64) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 13 Jun 2019
+ 19:26:59 +0800
+Subject: Re: [PATCH 1/4] x86: kdump: move reserve_crashkernel_low() into
+ kexec_core.c
 To:     James Morse <james.morse@arm.com>
 References: <20190507035058.63992-1-chenzhou10@huawei.com>
- <51995efd-8469-7c15-0d5e-935b63fe2d9f@arm.com>
+ <20190507035058.63992-2-chenzhou10@huawei.com>
+ <6585f047-063c-6d6c-4967-1d8a472f30f4@arm.com>
 CC:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
         <akpm@linux-foundation.org>, <ard.biesheuvel@linaro.org>,
         <rppt@linux.ibm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
@@ -38,12 +40,12 @@ CC:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
         <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
         <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>
 From:   Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <638a5d22-8d51-8d63-2d8a-a38bbb8fb1d6@huawei.com>
-Date:   Thu, 13 Jun 2019 19:27:40 +0800
+Message-ID: <4716a864-9560-f198-5899-9a5dee1fac20@huawei.com>
+Date:   Thu, 13 Jun 2019 19:26:54 +0800
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
  Thunderbird/45.7.1
 MIME-Version: 1.0
-In-Reply-To: <51995efd-8469-7c15-0d5e-935b63fe2d9f@arm.com>
+In-Reply-To: <6585f047-063c-6d6c-4967-1d8a472f30f4@arm.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.177.131.64]
@@ -53,73 +55,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi James,
 
+Thanks for your review.
 
-On 2019/6/6 0:32, James Morse wrote:
-> Hi!
+On 2019/6/6 0:29, James Morse wrote:
+> Hello,
 > 
 > On 07/05/2019 04:50, Chen Zhou wrote:
->> We use crashkernel=X to reserve crashkernel below 4G, which will fail
->> when there is no enough memory. Currently, crashkernel=Y@X can be used
->> to reserve crashkernel above 4G, in this case, if swiotlb or DMA buffers
->> are requierd, capture kernel will boot failure because of no low memory.
+>> In preparation for supporting reserving crashkernel above 4G
+>> in arm64 as x86_64 does, move reserve_crashkernel_low() into
+>> kexec/kexec_core.c.
 > 
->> When crashkernel is reserved above 4G in memory, kernel should reserve
->> some amount of low memory for swiotlb and some DMA buffers. So there may
->> be two crash kernel regions, one is below 4G, the other is above 4G.
 > 
-> This is a good argument for supporting the 'crashkernel=...,low' version.
-> What is the 'crashkernel=...,high' version for?
+>> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+>> index 905dae8..9ee33b6 100644
+>> --- a/arch/x86/kernel/setup.c
+>> +++ b/arch/x86/kernel/setup.c
+>> @@ -463,59 +460,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+>>  # define CRASH_ADDR_HIGH_MAX	MAXMEM
+>>  #endif
+>>  
+>> -static int __init reserve_crashkernel_low(void)
+>> -{
+>> -#ifdef CONFIG_X86_64
 > 
-> Wouldn't it be simpler to relax the ARCH_LOW_ADDRESS_LIMIT if we see 'crashkernel=...,low'
-> in the kernel cmdline?
+> The behaviour of this #ifdef has disappeared, won't 32bit x86 now try and reserve a chunk
+> of unnecessary 'low' memory?
 > 
-> I don't see what the 'crashkernel=...,high' variant is giving us, it just complicates the
-> flow of reserve_crashkernel().
-> 
-> If we called reserve_crashkernel_low() at the beginning of reserve_crashkernel() we could
-> use crashk_low_res.end to change some limit variable from ARCH_LOW_ADDRESS_LIMIT to
-> memblock_end_of_DRAM().
-> I think this is a simpler change that gives you what you want.
+> [...]
 
-According to your suggestions, we should do like this:
-1. call reserve_crashkernel_low() at the beginning of reserve_crashkernel()
-2. mark the low region as 'nomap'
-3. use crashk_low_res.end to change some limit variable from ARCH_LOW_ADDRESS_LIMIT to
-memblock_end_of_DRAM()
-4. rename crashk_low_res as "Crash kernel (low)" for arm64
-5. add an 'linux,low-memory-range' node in DT
-
-Do i understand correctly?
+At present, reserve_crashkernel_low() is called only when reserving crashkernel above 4G, so i deleted
+this #ifdef.
+If we called reserve_crashkernel_low() at the beginning of reserve_crashkernel(), i need to add it back.
 
 > 
 > 
->> Then
->> Crash dump kernel reads more than one crash kernel regions via a dtb
->> property under node /chosen,
->> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
+>> @@ -579,9 +523,13 @@ static void __init reserve_crashkernel(void)
+>>  		return;
+>>  	}
+>>  
+>> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+>> -		memblock_free(crash_base, crash_size);
+>> -		return;
+>> +	if (crash_base >= (1ULL << 32)) {
+>> +		if (reserve_crashkernel_low()) {
+>> +			memblock_free(crash_base, crash_size);
+>> +			return;
+>> +		}
+>> +
+>> +		insert_resource(&iomem_resource, &crashk_low_res);
 > 
-> Won't this break if your kdump kernel doesn't know what the extra parameters are?
-> Or if it expects two ranges, but only gets one? These DT properties should be treated as
-> ABI between kernel versions, we can't really change it like this.
 > 
-> I think the 'low' region is an optional-extra, that is never mapped by the first kernel. I
-> think the simplest thing to do is to add an 'linux,low-memory-range' that we
-> memblock_add() after memblock_cap_memory_range() has been called.
-> If its missing, or the new kernel doesn't know what its for, everything keeps working.
+> Previously reserve_crashkernel_low() was #ifdefed to do nothing if !CONFIG_X86_64, I don't
+> see how 32bit is skipping this reservation...
 > 
 > 
->> Besides, we need to modify kexec-tools:
->>   arm64: support more than one crash kernel regions(see [1])
+>>  	}
+>>  
+>>  	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
+>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>> index b9b1bc5..096ad63 100644
+>> --- a/include/linux/kexec.h
+>> +++ b/include/linux/kexec.h
+>> @@ -63,6 +63,10 @@
+>>  
+>>  #define KEXEC_CORE_NOTE_NAME	CRASH_CORE_NOTE_NAME
+>>  
+>> +#ifndef CRASH_ALIGN
+>> +#define CRASH_ALIGN SZ_128M
+>> +#endif
 > 
->> I post this patch series about one month ago. The previous changes and
->> discussions can be retrived from:
-> 
-> Ah, this wasn't obvious as you've stopped numbering the series. Please label the next one
-> 'v6' so that we can describe this as 'v5'. (duplicate numbering would be even more confusing!)
-> 
-ok.
+> Why 128M? Wouldn't we rather each architecture tells us its minimum alignment?
 
+Yeah, each architecture should tells us its minimum alignment. I added this default size to
+fix compiling error on some architecture which didn't define it. I will add x86_64 and arm64
+restriction on reserve_crashkernel_low() and delete this define.
+
+> 
+> 
+>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+>> index d714044..3492abd 100644
+>> --- a/kernel/kexec_core.c
+>> +++ b/kernel/kexec_core.c
+>> @@ -39,6 +39,8 @@
+>>  #include <linux/compiler.h>
+>>  #include <linux/hugetlb.h>
+>>  #include <linux/frame.h>
+>> +#include <linux/memblock.h>
+>> +#include <linux/swiotlb.h>
+>>  
+>>  #include <asm/page.h>
+>>  #include <asm/sections.h>
+>> @@ -96,6 +98,60 @@ int kexec_crash_loaded(void)
+>>  }
+>>  EXPORT_SYMBOL_GPL(kexec_crash_loaded);
+>>  
+>> +int __init reserve_crashkernel_low(void)
+>> +{
+>> +	unsigned long long base, low_base = 0, low_size = 0;
+>> +	unsigned long total_low_mem;
+>> +	int ret;
+>> +
+>> +	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+>> +
+>> +	/* crashkernel=Y,low */
+>> +	ret = parse_crashkernel_low(boot_command_line, total_low_mem,
+>> +			&low_size, &base);
+>> +	if (ret) {
+>> +		/*
+>> +		 * two parts from lib/swiotlb.c:
+>> +		 * -swiotlb size: user-specified with swiotlb= or default.
+>> +		 *
+>> +		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
+>> +		 * to 8M for other buffers that may need to stay low too. Also
+>> +		 * make sure we allocate enough extra low memory so that we
+>> +		 * don't run out of DMA buffers for 32-bit devices.
+>> +		 */
+>> +		low_size = max(swiotlb_size_or_default() + (8UL << 20),
+> 
+> SZ_8M?
+> 
+>> +				256UL << 20);
+> 
+> SZ_256M?
+> 
+
+There is compiling warning "warning: comparison of distinct pointer types lacks a cast" if just use
+SZ_8M or SZ_256M. We need cast swiotlb_size_or_default() to type int,so i kept the old as in x86_64.
+
+> 
+>> +	} else {
+>> +		/* passed with crashkernel=0,low ? */
+>> +		if (!low_size)
+>> +			return 0;
+>> +	}
+>> +
+>> +	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+>> +	if (!low_base) {
+>> +		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+>> +		       (unsigned long)(low_size >> 20));
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	ret = memblock_reserve(low_base, low_size);
+>> +	if (ret) {
+>> +		pr_err("%s: Error reserving crashkernel low memblock.\n",
+>> +				__func__);
+>> +		return ret;
+>> +	}
+>> +
+>> +	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
+>> +		(unsigned long)(low_size >> 20),
+>> +		(unsigned long)(low_base >> 20),
+>> +		(unsigned long)(total_low_mem >> 20));
+>> +
+>> +	crashk_low_res.start = low_base;
+>> +	crashk_low_res.end   = low_base + low_size - 1;
+>> +
+>> +	return 0;
+>> +}
+> 
 > 
 > Thanks,
 > 
