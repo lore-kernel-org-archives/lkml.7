@@ -2,131 +2,144 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBE3C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EECC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5D12175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2815E20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfFMRqt (ORCPT
+        id S1726968AbfFMRsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:46:49 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:11945 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725852AbfFMRqt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:46:49 -0400
-X-UUID: 1bc9fbe28e904bcf97072f05f18c0602-20190614
-X-UUID: 1bc9fbe28e904bcf97072f05f18c0602-20190614
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 795620865; Fri, 14 Jun 2019 01:46:41 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 14 Jun 2019 01:46:39 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 14 Jun 2019 01:46:39 +0800
-Message-ID: <1560447999.15814.15.camel@mtksdccf07>
-Subject: Re: [PATCH v3] kasan: add memory corruption identification for
- software tag-based mode
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-CC:     Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Vasily Gorbik" <gor@linux.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        <kasan-dev@googlegroups.com>, <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Date:   Fri, 14 Jun 2019 01:46:39 +0800
-In-Reply-To: <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
-References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
-         <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Thu, 13 Jun 2019 13:48:01 -0400
+Received: from mga05.intel.com ([192.55.52.43]:46949 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725852AbfFMRsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 13:48:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 10:48:00 -0700
+X-ExtLoop1: 1
+Received: from enagarix-mobl.amr.corp.intel.com (HELO [10.251.15.213]) ([10.251.15.213])
+  by orsmga004.jf.intel.com with ESMTP; 13 Jun 2019 10:47:59 -0700
+Subject: Re: [PATCH] x86/mm: Create an SME workarea in the kernel for early
+ encryption
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>
+References: <d565e0c8e9867132c75648fe67416c3f51a0efbd.1560346329.git.thomas.lendacky@amd.com>
+ <053ded24-eb70-0e88-5e0c-312ea93a6fd0@intel.com>
+ <42f8b183-caae-9147-4021-3dee3462c0db@amd.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <a4bdf881-50f2-78eb-066a-816e532af149@intel.com>
+Date:   Thu, 13 Jun 2019 10:47:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 73E573334F60FA682523A92B528AE4E79ADB9EB515874F36690B616CC9E25A672000:8
-X-MTK:  N
+In-Reply-To: <42f8b183-caae-9147-4021-3dee3462c0db@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-13 at 15:27 +0300, Andrey Ryabinin wrote:
+On 6/12/19 10:46 AM, Lendacky, Thomas wrote:
+> On 6/12/19 10:00 AM, Dave Hansen wrote:
+>> On 6/12/19 6:32 AM, Lendacky, Thomas wrote:
+>>> Create a section for SME in the vmlinux.lds.S.  Position it after "_end"
+>>> so that the memory will be reclaimed during boot and, since it is all
+>>> zeroes, it compresses well. 
+>>
+>> I don't think I realized that things after _end get reclaimed.  Do we do
+>> that at the same spot that we do init data or somewhere else?
 > 
-> On 6/13/19 11:13 AM, Walter Wu wrote:
-> > This patch adds memory corruption identification at bug report for
-> > software tag-based mode, the report show whether it is "use-after-free"
-> > or "out-of-bound" error instead of "invalid-access" error.This will make
-> > it easier for programmers to see the memory corruption problem.
-> > 
-> > Now we extend the quarantine to support both generic and tag-based kasan.
-> > For tag-based kasan, the quarantine stores only freed object information
-> > to check if an object is freed recently. When tag-based kasan reports an
-> > error, we can check if the tagged addr is in the quarantine and make a
-> > good guess if the object is more like "use-after-free" or "out-of-bound".
-> > 
-> 
-> 
-> We already have all the information and don't need the quarantine to make such guess.
-> Basically if shadow of the first byte of object has the same tag as tag in pointer than it's out-of-bounds,
-> otherwise it's use-after-free.
-> 
-> In pseudo-code it's something like this:
-> 
-> u8 object_tag = *(u8 *)kasan_mem_to_shadow(nearest_object(cacche, page, access_addr));
-> 
-> if (access_addr_tag == object_tag && object_tag != KASAN_TAG_INVALID)
-> 	// out-of-bounds
-> else
-> 	// use-after-free
+> I was looking at the start of setup_arch() in arch/x86/kernel/setup.c,
+> where there's a memblock_reserve() done for the kernel (it reserves from
+> _text to __bss_stop, not all the way to _end, and later the brk area
+> is reserved). At that point, my take was that the memory outside the
+> reserved area is now available (and there's a comment below that to that
+> effect, also), so the .sme section would basically be discarded and
+> re-claimed for general page usage.
 
-Thanks your explanation.
-I see, we can use it to decide corruption type.
-But some use-after-free issues, it may not have accurate free-backtrace.
-Unfortunately in that situation, free-backtrace is the most important.
-please see below example
+This seems awfully subtle.  This would be the only section treated this
+way because, as you note, even the '.brk' area ends up getting
+memblock_reserve()'d.  Also, this odd property is not commented on at all.
 
-In generic KASAN, it gets accurate free-backrace(ptr1).
-In tag-based KASAN, it gets wrong free-backtrace(ptr2). It will make
-programmer misjudge, so they may not believe tag-based KASAN.
-So We provide this patch, we hope tag-based KASAN bug report is the same
-accurate with generic KASAN.
+That's not the end of the world.  But, if we're going to do this, it
+seems like we need to move the:
 
----
-    ptr1 = kmalloc(size, GFP_KERNEL);
-    ptr1_free(ptr1);
+	/* Sections to be discarded /*
 
-    ptr2 = kmalloc(size, GFP_KERNEL);
-    ptr2_free(ptr2);
+comment to up above your new area.  It also seems like we need something
+explicit in there near __bss_stop saying:
 
-    ptr1[size] = 'x';  //corruption here
+	/*
+   	 * Everything between _text and here is automatically reserved
+	 * in setup_arch().  Everything after here must either have its
+	 * own memblock_reserve(), or it will be treated as available
+	 * memory and freed at boot.
+	 */
 
+Actually, I wonder if we should add a symbol called
+'__end_of_kernel_reserve' and use *that* instead of __bss_stop in
+setup_arch().
 
-static noinline void ptr1_free(char* ptr)
-{
-    kfree(ptr);
-}
-static noinline void ptr2_free(char* ptr)
-{
-    kfree(ptr);
-}
----
-
+After I say all that...  Why can't you just stick your data in a normal,
+vanilla __init variable?  Wouldn't that be a lot less subtle?
 
