@@ -7,56 +7,54 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE54C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF92C31E49
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE1C20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51FF020644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:19:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560442753;
-	bh=GMMhEBQqoTUu+BF0xAPw2aTLHKkZ751ERrQQfXbOvTw=;
+	s=default; t=1560442756;
+	bh=6q88L9A9Pa+jImBbwyhfW8ejATVgHZx6mAgVsB1hBF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qM1F9+nqxdr3fdIs7Ew/FCXaoGNDgbA01DkEQXjNd7+B3SmMojHrxzRDmgg/VBryo
-	 V8G7UhyJcMfdfFmGWQh6sklVtEGrMzSOjTT/jcyxNZwyGJDLSpQvNmAzJIusvHgVTM
-	 e0wc1VoYnY22IkEzaBMVVIKWgk4RVZfKZFYf9dvc=
+	b=KPjP1KxU0S4eRFQB466PdXlF2g772FDUCyo7R/71WyYn7eJa6BjloVObAytf8x78S
+	 ptQMtInXjDox4QlCza4D2wPMuj6kHiJ2lX0V7pujwtPXNgTitLMvovO6zARTymVw0Z
+	 JjhTo9W3vpzGuurUHw4h5VYnIc00Gu30QxfxzHEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392064AbfFMQTM (ORCPT
+        id S2392053AbfFMQTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:19:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57386 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:19:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731095AbfFMIj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:39:57 -0400
+        id S1731096AbfFMIj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:39:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBF8920851;
-        Thu, 13 Jun 2019 08:39:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7533F21473;
+        Thu, 13 Jun 2019 08:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415196;
-        bh=GMMhEBQqoTUu+BF0xAPw2aTLHKkZ751ERrQQfXbOvTw=;
+        s=default; t=1560415199;
+        bh=6q88L9A9Pa+jImBbwyhfW8ejATVgHZx6mAgVsB1hBF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wd1/2o6Rh4txx/oh3kGY/hsd8iX1+u+5wYc2V3G/3JHsBv+djdyxLvw/8Pttb4f7w
-         6uBxbJUcBJ10x1+wzTthoGzNAIk1w8iIed+KmqCUEb58dT4OcKC+ReYGh3yFyXAkEw
-         Rx/Hj1X/WJa1otAuP4NZoxAA4h1jEVSibQ750enM=
+        b=j2k/Ygn47LobrPAwMJyikelZymuoh+UyqngzVqNqynjowBGYNHv+GQij1UzIbtXnB
+         n2+KjNo27cEMwlPLUCUzNWEHxTOF/ADFPWMNZcx37GUtCzetf/YKSQ44LdQAqTC0r1
+         JpnqFDWXdmlpFjIjET/oqjeG6Rs/r2F/1utnzJA8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Steven Price <steven.price@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will.deacon@arm.com>,
-        Guan Xuetao <gxt@pku.edu.cn>,
+        stable@vger.kernel.org, Yue Hu <huyue2@yulong.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Laura Abbott <labbott@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 4.19 011/118] initramfs: free initrd memory if opening /initrd.image fails
-Date:   Thu, 13 Jun 2019 10:32:29 +0200
-Message-Id: <20190613075644.324291518@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 012/118] mm/cma.c: fix the bitmap status to show failed allocation reason
+Date:   Thu, 13 Jun 2019 10:32:30 +0200
+Message-Id: <20190613075644.385271316@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
 References: <20190613075643.642092651@linuxfoundation.org>
@@ -69,85 +67,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 54c7a8916a887f357088f99e9c3a7720cd57d2c8 ]
+[ Upstream commit 2b59e01a3aa665f751d1410b99fae9336bd424e1 ]
 
-Patch series "initramfs tidyups".
+Currently one bit in cma bitmap represents number of pages rather than
+one page, cma->count means cma size in pages. So to find available pages
+via find_next_zero_bit()/find_next_bit() we should use cma size not in
+pages but in bits although current free pages number is correct due to
+zero value of order_per_bit. Once order_per_bit is changed the bitmap
+status will be incorrect.
 
-I've spent some time chasing down behavior in initramfs and found
-plenty of opportunity to improve the code.  A first stab on that is
-contained in this series.
+The size input in cma_debug_show_areas() is not correct.  It will
+affect the available pages at some position to debug the failure issue.
 
-This patch (of 7):
+This is an example with order_per_bit = 1
 
-We free the initrd memory for all successful or error cases except for the
-case where opening /initrd.image fails, which looks like an oversight.
+Before this change:
+[    4.120060] cma: number of available pages: 1@93+4@108+7@121+7@137+7@153+7@169+7@185+7@201+3@213+3@221+3@229+3@237+3@245+3@253+3@261+3@269+3@277+3@285+3@293+3@301+3@309+3@317+3@325+19@333+15@369+512@512=> 638 free of 1024 total pages
 
-Steven said:
+After this change:
+[    4.143234] cma: number of available pages: 2@93+8@108+14@121+14@137+14@153+14@169+14@185+14@201+6@213+6@221+6@229+6@237+6@245+6@253+6@261+6@269+6@277+6@285+6@293+6@301+6@309+6@317+6@325+38@333+30@369=> 252 free of 1024 total pages
 
-: This also changes the behaviour when CONFIG_INITRAMFS_FORCE is enabled
-: - specifically it means that the initrd is freed (previously it was
-: ignored and never freed).  But that seems like reasonable behaviour and
-: the previous behaviour looks like another oversight.
+Obviously the bitmap status before is incorrect.
 
-Link: http://lkml.kernel.org/r/20190213174621.29297-3-hch@lst.de
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Steven Price <steven.price@arm.com>
-Acked-by: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>	[arm64]
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>	[m68k]
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Guan Xuetao <gxt@pku.edu.cn>
+Link: http://lkml.kernel.org/r/20190320060829.9144-1-zbestahu@gmail.com
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Laura Abbott <labbott@redhat.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- init/initramfs.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ mm/cma.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/init/initramfs.c b/init/initramfs.c
-index f6f4a1e4cd54..cd5fb00fcb54 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -612,13 +612,12 @@ static int __init populate_rootfs(void)
- 		printk(KERN_INFO "Trying to unpack rootfs image as initramfs...\n");
- 		err = unpack_to_rootfs((char *)initrd_start,
- 			initrd_end - initrd_start);
--		if (!err) {
--			free_initrd();
-+		if (!err)
- 			goto done;
--		} else {
--			clean_rootfs();
--			unpack_to_rootfs(__initramfs_start, __initramfs_size);
--		}
-+
-+		clean_rootfs();
-+		unpack_to_rootfs(__initramfs_start, __initramfs_size);
-+
- 		printk(KERN_INFO "rootfs image is not initramfs (%s)"
- 				"; looks like an initrd\n", err);
- 		fd = ksys_open("/initrd.image",
-@@ -632,7 +631,6 @@ static int __init populate_rootfs(void)
- 				       written, initrd_end - initrd_start);
+diff --git a/mm/cma.c b/mm/cma.c
+index 6ce6e22f82d9..476dfe13a701 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -371,23 +371,26 @@ err:
+ #ifdef CONFIG_CMA_DEBUG
+ static void cma_debug_show_areas(struct cma *cma)
+ {
+-	unsigned long next_zero_bit, next_set_bit;
++	unsigned long next_zero_bit, next_set_bit, nr_zero;
+ 	unsigned long start = 0;
+-	unsigned int nr_zero, nr_total = 0;
++	unsigned long nr_part, nr_total = 0;
++	unsigned long nbits = cma_bitmap_maxno(cma);
  
- 			ksys_close(fd);
--			free_initrd();
- 		}
- 	done:
- 		/* empty statement */;
-@@ -642,9 +640,9 @@ static int __init populate_rootfs(void)
- 			initrd_end - initrd_start);
- 		if (err)
- 			printk(KERN_EMERG "Initramfs unpacking failed: %s\n", err);
--		free_initrd();
- #endif
+ 	mutex_lock(&cma->lock);
+ 	pr_info("number of available pages: ");
+ 	for (;;) {
+-		next_zero_bit = find_next_zero_bit(cma->bitmap, cma->count, start);
+-		if (next_zero_bit >= cma->count)
++		next_zero_bit = find_next_zero_bit(cma->bitmap, nbits, start);
++		if (next_zero_bit >= nbits)
+ 			break;
+-		next_set_bit = find_next_bit(cma->bitmap, cma->count, next_zero_bit);
++		next_set_bit = find_next_bit(cma->bitmap, nbits, next_zero_bit);
+ 		nr_zero = next_set_bit - next_zero_bit;
+-		pr_cont("%s%u@%lu", nr_total ? "+" : "", nr_zero, next_zero_bit);
+-		nr_total += nr_zero;
++		nr_part = nr_zero << cma->order_per_bit;
++		pr_cont("%s%lu@%lu", nr_total ? "+" : "", nr_part,
++			next_zero_bit);
++		nr_total += nr_part;
+ 		start = next_zero_bit + nr_zero;
  	}
-+	free_initrd();
- 	flush_delayed_fput();
- 	/*
- 	 * Try loading default modules from initramfs.  This gives
+-	pr_cont("=> %u free of %lu total pages\n", nr_total, cma->count);
++	pr_cont("=> %lu free of %lu total pages\n", nr_total, cma->count);
+ 	mutex_unlock(&cma->lock);
+ }
+ #else
 -- 
 2.20.1
 
