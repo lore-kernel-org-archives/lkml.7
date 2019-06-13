@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98FAC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E598C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADEAF20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D802920644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443178;
-	bh=qGO+q+JsVVgwAlTKu7uvOt2zufFjhDx4vTWoTvVnsxg=;
+	s=default; t=1560443183;
+	bh=kE+uGtDQKW1Jj3Yciy+XjTzpwYjBRNkMuTsYOVYmenw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Q+Qrij9oWCwVFL++JguIVffOBj2lUD03OG9Eex7OBg/ygayIbLW8cO802hooaezM
-	 yQgEz+OoOoIc0RuJ6/6Q0YRNK5U8EtCxQJ7l4pPltKKgJJz+UTmUIYQ7IpQ/H1StGK
-	 Q6aNRfb11ZTRDx7DqWdIKGyZV+ANnlP4yrNiJSig=
+	b=YvcUOT2zNQTRCywrPO8wvkm4+mQ86nrxLJaAght7CJBciC3RgPVNz0oi62woxVXbM
+	 emCOYTtvKXoedVOjbhWEV00Ps2zq2KzM+bnPYdXIAWTMzaw1rBBxWdIwWDuViLCo9j
+	 aMF7SvLcgEaAtg/4znAchh4EvIoK+hKbC8hb45Pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391390AbfFMQ0R (ORCPT
+        id S2392319AbfFMQ0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:26:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53868 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:26:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730965AbfFMIgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:36:21 -0400
+        id S1730962AbfFMIgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:36:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3054F20851;
-        Thu, 13 Jun 2019 08:36:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D267E2146F;
+        Thu, 13 Jun 2019 08:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560414980;
-        bh=qGO+q+JsVVgwAlTKu7uvOt2zufFjhDx4vTWoTvVnsxg=;
+        s=default; t=1560414975;
+        bh=kE+uGtDQKW1Jj3Yciy+XjTzpwYjBRNkMuTsYOVYmenw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VuD4INgJ/MsgRbikhMK5kz0X+OqvO/91E9qk+fYObuFPpDCoawj8xaYotyj0nw4l4
-         TTQLlhxgbEIWVzQ5767sq3JJqU+5hi17zDUgtFpboiKLsu0m61iOBoyIP3Lkzu9sF2
-         vJB8xdsEoRbwpLGPs8Xq4SYmV2S6nEWY4vm9kn/8=
+        b=YJF8EQjxvxnY+pm7Z5kkmz5OGnbSDaCGb+/QCmpgo+DmSUFrmILasfw4Ku8U5Obfw
+         ddGp295kVnLiz9fK6c5jkthrZ1BbrnLp13jHgVeFUjHnUgDDoblo0zmoKHCLxeM4UI
+         u/8764xMoLQPKchf2MDIJeO8dL8dheWNZYw0lxVk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        stable@vger.kernel.org, Binbin Wu <binbin.wu@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 19/81] mfd: twl6040: Fix device init errors for ACCCTL register
-Date:   Thu, 13 Jun 2019 10:33:02 +0200
-Message-Id: <20190613075650.502042297@linuxfoundation.org>
+Subject: [PATCH 4.14 17/81] mfd: intel-lpss: Set the device in reset state when init
+Date:   Thu, 13 Jun 2019 10:33:00 +0200
+Message-Id: <20190613075650.334771159@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -61,60 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 48171d0ea7caccf21c9ee3ae75eb370f2a756062 ]
+[ Upstream commit dad06532292d77f37fbe831a02948a593500f682 ]
 
-I noticed that we can get a -EREMOTEIO errors on at least omap4 duovero:
+In virtualized setup, when system reboots due to warm
+reset interrupt storm is seen.
 
-twl6040 0-004b: Failed to write 2d = 19: -121
+Call Trace:
+<IRQ>
+dump_stack+0x70/0xa5
+__report_bad_irq+0x2e/0xc0
+note_interrupt+0x248/0x290
+? add_interrupt_randomness+0x30/0x220
+handle_irq_event_percpu+0x54/0x80
+handle_irq_event+0x39/0x60
+handle_fasteoi_irq+0x91/0x150
+handle_irq+0x108/0x180
+do_IRQ+0x52/0xf0
+common_interrupt+0xf/0xf
+</IRQ>
+RIP: 0033:0x76fc2cfabc1d
+Code: 24 28 bf 03 00 00 00 31 c0 48 8d 35 63 77 0e 00 48 8d 15 2e
+94 0e 00 4c 89 f9 49 89 d9 4c 89 d3 e8 b8 e2 01 00 48 8b 54 24 18
+<48> 89 ef 48 89 de 4c 89 e1 e8 d5 97 01 00 84 c0 74 2d 48 8b 04
+24
+RSP: 002b:00007ffd247c1fc0 EFLAGS: 00000293 ORIG_RAX: ffffffffffffffda
+RAX: 0000000000000000 RBX: 00007ffd247c1ff0 RCX: 000000000003d3ce
+RDX: 0000000000000000 RSI: 00007ffd247c1ff0 RDI: 000076fc2cbb6010
+RBP: 000076fc2cded010 R08: 00007ffd247c2210 R09: 00007ffd247c22a0
+R10: 000076fc29465470 R11: 0000000000000000 R12: 00007ffd247c1fc0
+R13: 000076fc2ce8e470 R14: 000076fc27ec9960 R15: 0000000000000414
+handlers:
+[<000000000d3fa913>] idma64_irq
+Disabling IRQ #27
 
-And then any following register access will produce errors.
+To avoid interrupt storm, set the device in reset state
+before bringing out the device from reset state.
 
-There 2d offset above is register ACCCTL that gets written on twl6040
-powerup. With error checking added to the related regcache_sync() call,
-the -EREMOTEIO error is reproducable on twl6040 powerup at least
-duovero.
+Changelog v2:
+- correct the subject line by adding "mfd: "
 
-To fix the error, we need to wait until twl6040 is accessible after the
-powerup. Based on tests on omap4 duovero, we need to wait over 8ms after
-powerup before register write will complete without failures. Let's also
-make sure we warn about possible errors too.
-
-Note that we have twl6040_patch[] reg_sequence with the ACCCTL register
-configuration and regcache_sync() will write the new value to ACCCTL.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Binbin Wu <binbin.wu@intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/twl6040.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/mfd/intel-lpss.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
-index dd19f17a1b63..2b8c479dbfa6 100644
---- a/drivers/mfd/twl6040.c
-+++ b/drivers/mfd/twl6040.c
-@@ -322,8 +322,19 @@ int twl6040_power(struct twl6040 *twl6040, int on)
- 			}
- 		}
+diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
+index 40e8d9b59d07..b5c4f8f974aa 100644
+--- a/drivers/mfd/intel-lpss.c
++++ b/drivers/mfd/intel-lpss.c
+@@ -273,6 +273,9 @@ static void intel_lpss_init_dev(const struct intel_lpss *lpss)
+ {
+ 	u32 value = LPSS_PRIV_SSP_REG_DIS_DMA_FIN;
  
-+		/*
-+		 * Register access can produce errors after power-up unless we
-+		 * wait at least 8ms based on measurements on duovero.
-+		 */
-+		usleep_range(10000, 12000);
++	/* Set the device in reset state */
++	writel(0, lpss->priv + LPSS_PRIV_RESETS);
 +
- 		/* Sync with the HW */
--		regcache_sync(twl6040->regmap);
-+		ret = regcache_sync(twl6040->regmap);
-+		if (ret) {
-+			dev_err(twl6040->dev, "Failed to sync with the HW: %i\n",
-+				ret);
-+			goto out;
-+		}
+ 	intel_lpss_deassert_reset(lpss);
  
- 		/* Default PLL configuration after power up */
- 		twl6040->pll = TWL6040_SYSCLK_SEL_LPPLL;
+ 	intel_lpss_set_remap_addr(lpss);
 -- 
 2.20.1
 
