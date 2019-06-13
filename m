@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E598C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617D9C31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D802920644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 368892147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443183;
-	bh=kE+uGtDQKW1Jj3Yciy+XjTzpwYjBRNkMuTsYOVYmenw=;
+	s=default; t=1560443187;
+	bh=V4eMEYHwbofiKkxkA3V3kHxUOdCXyPa4yfpH7qHKo4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YvcUOT2zNQTRCywrPO8wvkm4+mQ86nrxLJaAght7CJBciC3RgPVNz0oi62woxVXbM
-	 emCOYTtvKXoedVOjbhWEV00Ps2zq2KzM+bnPYdXIAWTMzaw1rBBxWdIwWDuViLCo9j
-	 aMF7SvLcgEaAtg/4znAchh4EvIoK+hKbC8hb45Pw=
+	b=uHAem/MAiEzPUE+beP3AiXhSAdNgVvq1Hce/eh04BYgDb9JszAilefmEGzf2H+qa5
+	 N/a8uPTOe+siSa0KIsOUic1xTf7L5xpYQ6KiYgN/BptyKezINV4cFK891SiFilM8rH
+	 1lCfCrrxsfXUNVmUMoA4UJNl2itNack2d8P4Cdo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392319AbfFMQ0W (ORCPT
+        id S2392329AbfFMQ0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:26:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53800 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:26:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730962AbfFMIgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:36:16 -0400
+        id S1730960AbfFMIgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:36:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D267E2146F;
-        Thu, 13 Jun 2019 08:36:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 433622146F;
+        Thu, 13 Jun 2019 08:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560414975;
-        bh=kE+uGtDQKW1Jj3Yciy+XjTzpwYjBRNkMuTsYOVYmenw=;
+        s=default; t=1560414972;
+        bh=V4eMEYHwbofiKkxkA3V3kHxUOdCXyPa4yfpH7qHKo4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YJF8EQjxvxnY+pm7Z5kkmz5OGnbSDaCGb+/QCmpgo+DmSUFrmILasfw4Ku8U5Obfw
-         ddGp295kVnLiz9fK6c5jkthrZ1BbrnLp13jHgVeFUjHnUgDDoblo0zmoKHCLxeM4UI
-         u/8764xMoLQPKchf2MDIJeO8dL8dheWNZYw0lxVk=
+        b=Uzwtm1a2W2O9VqLDgrE8nz1QwF06ZCxr3fXAP82lhCI2ER2WERL1S5Y8y83oIQUdT
+         RrJ83c3pTXcqW/R43MVmwhY3eUdJsCT57WPEKJy0Xd0zrs8wCkyNS1N/PO1SqiLVZx
+         hxlXMtbYPxmONIw69NW4Wy5olmop2EUY4kMlX2EQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Binbin Wu <binbin.wu@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Daniel Gomez <dagmcr@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 17/81] mfd: intel-lpss: Set the device in reset state when init
-Date:   Thu, 13 Jun 2019 10:33:00 +0200
-Message-Id: <20190613075650.334771159@linuxfoundation.org>
+Subject: [PATCH 4.14 16/81] mfd: tps65912-spi: Add missing of table registration
+Date:   Thu, 13 Jun 2019 10:32:59 +0200
+Message-Id: <20190613075650.266229836@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075649.074682929@linuxfoundation.org>
 References: <20190613075649.074682929@linuxfoundation.org>
@@ -62,68 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dad06532292d77f37fbe831a02948a593500f682 ]
+[ Upstream commit 9e364e87ad7f2c636276c773d718cda29d62b741 ]
 
-In virtualized setup, when system reboots due to warm
-reset interrupt storm is seen.
+MODULE_DEVICE_TABLE(of, <of_match_table> should be called to complete DT
+OF mathing mechanism and register it.
 
-Call Trace:
-<IRQ>
-dump_stack+0x70/0xa5
-__report_bad_irq+0x2e/0xc0
-note_interrupt+0x248/0x290
-? add_interrupt_randomness+0x30/0x220
-handle_irq_event_percpu+0x54/0x80
-handle_irq_event+0x39/0x60
-handle_fasteoi_irq+0x91/0x150
-handle_irq+0x108/0x180
-do_IRQ+0x52/0xf0
-common_interrupt+0xf/0xf
-</IRQ>
-RIP: 0033:0x76fc2cfabc1d
-Code: 24 28 bf 03 00 00 00 31 c0 48 8d 35 63 77 0e 00 48 8d 15 2e
-94 0e 00 4c 89 f9 49 89 d9 4c 89 d3 e8 b8 e2 01 00 48 8b 54 24 18
-<48> 89 ef 48 89 de 4c 89 e1 e8 d5 97 01 00 84 c0 74 2d 48 8b 04
-24
-RSP: 002b:00007ffd247c1fc0 EFLAGS: 00000293 ORIG_RAX: ffffffffffffffda
-RAX: 0000000000000000 RBX: 00007ffd247c1ff0 RCX: 000000000003d3ce
-RDX: 0000000000000000 RSI: 00007ffd247c1ff0 RDI: 000076fc2cbb6010
-RBP: 000076fc2cded010 R08: 00007ffd247c2210 R09: 00007ffd247c22a0
-R10: 000076fc29465470 R11: 0000000000000000 R12: 00007ffd247c1fc0
-R13: 000076fc2ce8e470 R14: 000076fc27ec9960 R15: 0000000000000414
-handlers:
-[<000000000d3fa913>] idma64_irq
-Disabling IRQ #27
+Before this patch:
+modinfo drivers/mfd/tps65912-spi.ko | grep alias
+alias:          spi:tps65912
 
-To avoid interrupt storm, set the device in reset state
-before bringing out the device from reset state.
+After this patch:
+modinfo drivers/mfd/tps65912-spi.ko | grep alias
+alias:          of:N*T*Cti,tps65912C*
+alias:          of:N*T*Cti,tps65912
+alias:          spi:tps65912
 
-Changelog v2:
-- correct the subject line by adding "mfd: "
-
-Signed-off-by: Binbin Wu <binbin.wu@intel.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mfd/tps65912-spi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
-index 40e8d9b59d07..b5c4f8f974aa 100644
---- a/drivers/mfd/intel-lpss.c
-+++ b/drivers/mfd/intel-lpss.c
-@@ -273,6 +273,9 @@ static void intel_lpss_init_dev(const struct intel_lpss *lpss)
+diff --git a/drivers/mfd/tps65912-spi.c b/drivers/mfd/tps65912-spi.c
+index 3bd75061f777..f78be039e463 100644
+--- a/drivers/mfd/tps65912-spi.c
++++ b/drivers/mfd/tps65912-spi.c
+@@ -27,6 +27,7 @@ static const struct of_device_id tps65912_spi_of_match_table[] = {
+ 	{ .compatible = "ti,tps65912", },
+ 	{ /* sentinel */ }
+ };
++MODULE_DEVICE_TABLE(of, tps65912_spi_of_match_table);
+ 
+ static int tps65912_spi_probe(struct spi_device *spi)
  {
- 	u32 value = LPSS_PRIV_SSP_REG_DIS_DMA_FIN;
- 
-+	/* Set the device in reset state */
-+	writel(0, lpss->priv + LPSS_PRIV_RESETS);
-+
- 	intel_lpss_deassert_reset(lpss);
- 
- 	intel_lpss_set_remap_addr(lpss);
 -- 
 2.20.1
 
