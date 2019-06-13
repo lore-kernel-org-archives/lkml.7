@@ -7,58 +7,56 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BBAC31E49
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C505DC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E9C520866
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9A620851
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560441993;
-	bh=2wol2PuCFvjV0G0iPAMvNKKiMoTyf9ad8KlBzdEMfJc=;
+	s=default; t=1560442007;
+	bh=DauZ1dZsajBuY1y4EhU7kcsZhNdUjqC0GJmgfMcq2oo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uSqBmvELiAWnqopgOJOQP0CQctPDqiWoDrcPa98OsqT/TY7Viz5dzNMikMF7j8qIR
-	 yPYDndufXOSFVyflCeC949Xjx8rFggOydiA/ucITI6vmw01MS5bolOt0MTSsPPtLf9
-	 JEPa7u9oLJszLIdjhY7mSV+qDW1zO8AuLD5dGPro=
+	b=Qcxf0TrF/itrzIIsHKZIgB/8YI4oGBPaMAxie4PqFxnDO6NKl45/vP8xFQGPNwbmQ
+	 5sTRvnGeXD3pAs5Hmg8yPINKKHy5UcqeLJ5x4SkjoA9uD9RyB21aiWwEU1n3j2Kj6L
+	 m+RbqSGRx9sMeT115LeJUgBnphk7zRdUdVSs74KM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391309AbfFMQGc (ORCPT
+        id S2391354AbfFMQGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:06:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34702 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:06:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731321AbfFMIqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 04:46:03 -0400
+        id S1731311AbfFMIpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 04:45:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05E722173C;
-        Thu, 13 Jun 2019 08:46:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2036820851;
+        Thu, 13 Jun 2019 08:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560415562;
-        bh=2wol2PuCFvjV0G0iPAMvNKKiMoTyf9ad8KlBzdEMfJc=;
+        s=default; t=1560415549;
+        bh=DauZ1dZsajBuY1y4EhU7kcsZhNdUjqC0GJmgfMcq2oo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bPQ7vCUfYIi5ne5OASvYhuWY8/9EIMqlW5lTRmjbSOQ3XieExPiESrHa2wWH5ksjs
-         H0mbuNFGsUmHHdt8JlTpGlbPx+glKDiR5LuAEASUXQp0+g8Q42fDk7VIOQJ/WqPZx1
-         UjOv3roAM5iaJuLp3AikZQmxwcgfnw1XAiVG8Ccw=
+        b=IX2AGhMkMmz5Vr9gItfEnYLyVrptkxSfKsaNQLEBDv+lC6SdZOzus7GFqmc8coxZI
+         bT4NUSte7dc2QpuNrMHv1eWf0q2HCUzhQxxwulF4ClipL/NZeS8QdXTm4UC0qTwLVT
+         AyZ8AWQVW2KSjYg1raTTIqbgx6mCsWh9pF7wKeUI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Steven Price <steven.price@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Russell King <linux@armlinux.org.uk>,
+        Will Deacon <will.deacon@arm.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 012/155] mm/hmm: select mmu notifier when selecting HMM
-Date:   Thu, 13 Jun 2019 10:32:04 +0200
-Message-Id: <20190613075653.438871567@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH 5.1 017/155] initramfs: free initrd memory if opening /initrd.image fails
+Date:   Thu, 13 Jun 2019 10:32:09 +0200
+Message-Id: <20190613075653.729085755@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
 References: <20190613075652.691765927@linuxfoundation.org>
@@ -71,48 +69,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 734fb89968900b5c5f8edd5038bd4cdeab8c61d2 ]
+[ Upstream commit 54c7a8916a887f357088f99e9c3a7720cd57d2c8 ]
 
-To avoid random config build issue, select mmu notifier when HMM is
-selected.  In any cases when HMM get selected it will be by users that
-will also wants the mmu notifier.
+Patch series "initramfs tidyups".
 
-Link: http://lkml.kernel.org/r/20190403193318.16478-2-jglisse@redhat.com
-Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-Acked-by: Balbir Singh <bsingharora@gmail.com>
-Cc: Ralph Campbell <rcampbell@nvidia.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Souptick Joarder <jrdr.linux@gmail.com>
+I've spent some time chasing down behavior in initramfs and found
+plenty of opportunity to improve the code.  A first stab on that is
+contained in this series.
+
+This patch (of 7):
+
+We free the initrd memory for all successful or error cases except for the
+case where opening /initrd.image fails, which looks like an oversight.
+
+Steven said:
+
+: This also changes the behaviour when CONFIG_INITRAMFS_FORCE is enabled
+: - specifically it means that the initrd is freed (previously it was
+: ignored and never freed).  But that seems like reasonable behaviour and
+: the previous behaviour looks like another oversight.
+
+Link: http://lkml.kernel.org/r/20190213174621.29297-3-hch@lst.de
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Steven Price <steven.price@arm.com>
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>	[arm64]
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>	[m68k]
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Guan Xuetao <gxt@pku.edu.cn>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ init/initramfs.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 25c71eb8a7db..2e6d24d783f7 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -694,12 +694,12 @@ config DEV_PAGEMAP_OPS
+diff --git a/init/initramfs.c b/init/initramfs.c
+index 4749e1115eef..c322e1099f43 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -612,13 +612,12 @@ static int __init populate_rootfs(void)
+ 		printk(KERN_INFO "Trying to unpack rootfs image as initramfs...\n");
+ 		err = unpack_to_rootfs((char *)initrd_start,
+ 			initrd_end - initrd_start);
+-		if (!err) {
+-			free_initrd();
++		if (!err)
+ 			goto done;
+-		} else {
+-			clean_rootfs();
+-			unpack_to_rootfs(__initramfs_start, __initramfs_size);
+-		}
++
++		clean_rootfs();
++		unpack_to_rootfs(__initramfs_start, __initramfs_size);
++
+ 		printk(KERN_INFO "rootfs image is not initramfs (%s)"
+ 				"; looks like an initrd\n", err);
+ 		fd = ksys_open("/initrd.image",
+@@ -632,7 +631,6 @@ static int __init populate_rootfs(void)
+ 				       written, initrd_end - initrd_start);
  
- config HMM
- 	bool
-+	select MMU_NOTIFIER
- 	select MIGRATE_VMA_HELPER
- 
- config HMM_MIRROR
- 	bool "HMM mirror CPU page table into a device page table"
- 	depends on ARCH_HAS_HMM
--	select MMU_NOTIFIER
- 	select HMM
- 	help
- 	  Select HMM_MIRROR if you want to mirror range of the CPU page table of a
+ 			ksys_close(fd);
+-			free_initrd();
+ 		}
+ 	done:
+ 		/* empty statement */;
+@@ -642,9 +640,9 @@ static int __init populate_rootfs(void)
+ 			initrd_end - initrd_start);
+ 		if (err)
+ 			printk(KERN_EMERG "Initramfs unpacking failed: %s\n", err);
+-		free_initrd();
+ #endif
+ 	}
++	free_initrd();
+ 	flush_delayed_fput();
+ 	return 0;
+ }
 -- 
 2.20.1
 
