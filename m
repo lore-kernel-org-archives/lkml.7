@@ -2,125 +2,178 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B88EC31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC9EC31E45
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A8920644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54D220644
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 21:00:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Fy/10pN7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CXaGzb14"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730302AbfFMVAW (ORCPT
+        id S1730340AbfFMVAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 17:00:22 -0400
-Received: from mail-eopbgr690057.outbound.protection.outlook.com ([40.107.69.57]:62518
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727274AbfFMVAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 17:00:21 -0400
+        Thu, 13 Jun 2019 17:00:39 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:42589 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730173AbfFMVAj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 17:00:39 -0400
+Received: by mail-ua1-f68.google.com with SMTP id a97so84626uaa.9
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 14:00:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=43Y+ljpMHEkz8Ps88oMGjbyWINN0702zEF4jEqjUSJE=;
- b=Fy/10pN7sJF/ujp949NtApFWSJx4WrjyofPmEZuvT/OFUD6uNkP2aHMi+aPxuUqkw1umyLX4eIOpx8RtWOXuPsFlNWYv5Mwcz87w6s5Poa7DDT6yT2yx+eSVlBwm29zsK8i8XFsUcQSFB8cO6za4Xtg+c0JVowpU9GboNmuzYyM=
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
- SN6PR12MB2816.namprd12.prod.outlook.com (52.135.107.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.17; Thu, 13 Jun 2019 21:00:19 +0000
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::69b5:19ac:b63d:2b82]) by SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::69b5:19ac:b63d:2b82%3]) with mapi id 15.20.1965.017; Thu, 13 Jun 2019
- 21:00:19 +0000
-From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/8] EDAC/amd64: Fix number of DIMMs and Chip Select
- bases/masks on Family17h
-Thread-Topic: [PATCH 1/8] EDAC/amd64: Fix number of DIMMs and Chip Select
- bases/masks on Family17h
-Thread-Index: AQHVGArj49LndWtr30OrnYGuWE2J2aaZsAoAgAB1UyA=
-Date:   Thu, 13 Jun 2019 21:00:19 +0000
-Message-ID: <SN6PR12MB263988EC0AC99DA2D29B21F3F8EF0@SN6PR12MB2639.namprd12.prod.outlook.com>
-References: <20190531234501.32826-1-Yazen.Ghannam@amd.com>
- <20190531234501.32826-2-Yazen.Ghannam@amd.com>
- <20190613135822.GC11598@zn.tnic>
-In-Reply-To: <20190613135822.GC11598@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Yazen.Ghannam@amd.com; 
-x-originating-ip: [165.204.84.11]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3cd21270-c5a9-44dd-7a6f-08d6f0422495
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2816;
-x-ms-traffictypediagnostic: SN6PR12MB2816:
-x-microsoft-antispam-prvs: <SN6PR12MB281680FDFC0734E7B9115B7CF8EF0@SN6PR12MB2816.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0067A8BA2A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(376002)(346002)(39860400002)(396003)(189003)(199004)(13464003)(11346002)(6246003)(4326008)(86362001)(76176011)(68736007)(26005)(99286004)(229853002)(186003)(3846002)(2906002)(25786009)(6436002)(6116002)(478600001)(6506007)(74316002)(7696005)(53546011)(72206003)(102836004)(33656002)(66066001)(316002)(476003)(53936002)(486006)(76116006)(66556008)(66946007)(71200400001)(73956011)(71190400001)(66446008)(5660300002)(8936002)(256004)(81156014)(66476007)(8676002)(55016002)(52536014)(9686003)(305945005)(6916009)(14454004)(7736002)(81166006)(64756008)(14444005)(54906003)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2816;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: PBPPuR/35s3TvhNcS6GJfIledwcTCeNzppDIQfrTSfvO79iuHxABgc9gEWPn3lD1VmGaeI7p4h6ADV8CZbQQkBIR9AM2NWw/X4EARGHTXN2yEMypKQZGW9wUi9hC7+o/F1d+gp3jMB9KWPOC7s4+rlhyeY1zCXf970ynBKv4zjqhiFyqSIByr7NwNNToN4QRDtzMiveum2Tg0yCP7iR3USSuIuKKP/PAPWrOnTmDPgjBESov5+BJG6Zyz8zL75NZWY8lrurUcabq+ui5AI6PIZcxbLtNz6VFrcgr6kxpECROtxV7glqsuctOy69cJqZuaYXtBozjJY9/hl9+Z0wRhhPTFfK/XZ8IMsZk8eeD7wE3V24FtgacVQnjwYY9dW8bNPpktOXuwJ6orGhLtHbF+gRul/14qkMFgtrPfC+Z10Q=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ANvjNrcE6QQq73dnlL+mZyHS0xmMxjzetcJMdK2W1jQ=;
+        b=CXaGzb143DooLWuwJbQV6crBWgqXBWrbK4+440tGPl1wKAyG8snXREUHW1cU4JZmsm
+         FByj4Hbh/N7MYr7J1mbnB5t09OsVMCB1N4NOkq7QEs9SD5IFkvvlk2kM4aqXonR4pgZ7
+         0hbbny8wK43pD9gCj8eWhwnzsqv2xTicEtM7Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ANvjNrcE6QQq73dnlL+mZyHS0xmMxjzetcJMdK2W1jQ=;
+        b=Ld+Luvcz48V1iRV2FmOy9lug7Sak5yVU8uWVCuRu24dST1WM09wKxh1maceIB5FnPv
+         iLYE+34GVC5Y5feyGc78lxm1bluh2LzZfe7oGIWXQy0ZRIb8uUOSnS/SzwmI+Ng212pQ
+         VpOI6yLYvWLHnIgKb3aaCkkNCVZ2+wfZitSOtmCbD6LK5b5LLCZDcp3C62sgTyClhtnI
+         5fAlGphZ6uB589wsY1j0AxGXe5xs00pw8JGjY6OWJIQE94DJe/bIKRmU8fzgZtkqn6PO
+         +53SgYLhgN3z8sprEV/XjPIt4Ya79exSwsvWynQEzTPEykvPo3yJ1jg7Q9Muq0GJoE8M
+         eVFQ==
+X-Gm-Message-State: APjAAAWfXlaqOZ1tDVRVVtJuboQFDh/rzNNBWN+RFoD1g6cP5y/+CxeT
+        PRikXWLKq2bZl5r4cKa03nLoWKbHjby0engfjhNcpeJc2V0=
+X-Google-Smtp-Source: APXvYqzlG0QFlUSsjLJYtq2bSsXOqJPxL2qmav8y+XGpEorpyChcZ6aWL5jxAoS7c6ipQTO+UOtbuYWiPAgZ4BuXj/Q=
+X-Received: by 2002:ab0:3d2:: with SMTP id 76mr17494821uau.12.1560459637540;
+ Thu, 13 Jun 2019 14:00:37 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3cd21270-c5a9-44dd-7a6f-08d6f0422495
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2019 21:00:19.0768
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yghannam@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2816
+References: <20190611040350.90064-1-dbasehore@chromium.org>
+ <20190611040350.90064-3-dbasehore@chromium.org> <CAL_JsqLM1CikZ8+NPjLk2CEW-z9vPynZpVG20x0jsa7hVq0LvA@mail.gmail.com>
+ <CAGAzgsoWGqf0JQPNyRFnv2xZTMxje6idce7Dy5FZzuxj30mQyw@mail.gmail.com> <CAL_Jsq+9K764hFT6GG=4paumGaxOUbnts4VJvTZ9a8Y-YPWdhg@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+9K764hFT6GG=4paumGaxOUbnts4VJvTZ9a8Y-YPWdhg@mail.gmail.com>
+From:   "dbasehore ." <dbasehore@chromium.org>
+Date:   Thu, 13 Jun 2019 14:00:26 -0700
+Message-ID: <CAGAzgsrNhumP2DEOff34cZ3UY=CV-EG1RM06Uf_tX3gdUMeSQg@mail.gmail.com>
+Subject: Re: [PATCH 2/5] dt-bindings: display/panel: Expand rotation documentation
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCb3Jpc2xhdiBQZXRrb3YgPGJw
-QGFsaWVuOC5kZT4NCj4gU2VudDogVGh1cnNkYXksIEp1bmUgMTMsIDIwMTkgODo1OCBBTQ0KPiBU
-bzogR2hhbm5hbSwgWWF6ZW4gPFlhemVuLkdoYW5uYW1AYW1kLmNvbT4NCj4gQ2M6IGxpbnV4LWVk
-YWNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggMS84XSBFREFDL2FtZDY0OiBGaXggbnVtYmVyIG9mIERJTU1zIGFuZCBD
-aGlwIFNlbGVjdCBiYXNlcy9tYXNrcyBvbiBGYW1pbHkxN2gNCj4gDQo+IE9uIEZyaSwgTWF5IDMx
-LCAyMDE5IGF0IDExOjQ1OjExUE0gKzAwMDAsIEdoYW5uYW0sIFlhemVuIHdyb3RlOg0KPiA+IEZy
-b206IFlhemVuIEdoYW5uYW0gPHlhemVuLmdoYW5uYW1AYW1kLmNvbT4NCj4gPg0KPiA+IC4uLmJl
-Y2F1c2UgQU1EIEZhbWlseSAxN2ggc3lzdGVtcyBzdXBwb3J0IDIgRElNTXMsIDQgQ1MgYmFzZXMs
-IGFuZCAyIENTDQo+ID4gbWFza3MgcGVyIGNoYW5uZWwuDQo+ID4NCj4gPiBGaXhlczogMDdlZDgy
-ZWY5M2Q2ICgiRURBQywgYW1kNjQ6IEFkZCBGYW0xN2ggZGVidWcgb3V0cHV0IikNCj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBZYXplbiBHaGFubmFtIDx5YXplbi5naGFubmFtQGFtZC5jb20+DQo+ID4gLS0t
-DQo+ID4gIGRyaXZlcnMvZWRhYy9hbWQ2NF9lZGFjLmMgfCA1ICsrKystDQo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2VkYWMvYW1kNjRfZWRhYy5jIGIvZHJpdmVycy9lZGFjL2FtZDY0X2VkYWMu
-Yw0KPiA+IGluZGV4IDg3MzQzN2JlODZkOS4uOWZhMmYyMDVmMDVjIDEwMDY0NA0KPiA+IC0tLSBh
-L2RyaXZlcnMvZWRhYy9hbWQ2NF9lZGFjLmMNCj4gPiArKysgYi9kcml2ZXJzL2VkYWMvYW1kNjRf
-ZWRhYy5jDQo+ID4gQEAgLTgxMCw3ICs4MTAsNyBAQCBzdGF0aWMgdm9pZCBkZWJ1Z19kaXNwbGF5
-X2RpbW1fc2l6ZXNfZGYoc3RydWN0IGFtZDY0X3B2dCAqcHZ0LCB1OCBjdHJsKQ0KPiA+DQo+ID4g
-IAllZGFjX3ByaW50ayhLRVJOX0RFQlVHLCBFREFDX01DLCAiVU1DJWQgY2hpcCBzZWxlY3RzOlxu
-IiwgY3RybCk7DQo+ID4NCj4gPiAtCWZvciAoZGltbSA9IDA7IGRpbW0gPCA0OyBkaW1tKyspIHsN
-Cj4gPiArCWZvciAoZGltbSA9IDA7IGRpbW0gPCAyOyBkaW1tKyspIHsNCj4gPiAgCQlzaXplMCA9
-IDA7DQo+ID4gIAkJY3MwID0gZGltbSAqIDI7DQo+ID4NCj4gPiBAQCAtOTQyLDYgKzk0Miw5IEBA
-IHN0YXRpYyB2b2lkIHByZXBfY2hpcF9zZWxlY3RzKHN0cnVjdCBhbWQ2NF9wdnQgKnB2dCkNCj4g
-PiAgCX0gZWxzZSBpZiAocHZ0LT5mYW0gPT0gMHgxNSAmJiBwdnQtPm1vZGVsID09IDB4MzApIHsN
-Cj4gPiAgCQlwdnQtPmNzZWxzWzBdLmJfY250ID0gcHZ0LT5jc2Vsc1sxXS5iX2NudCA9IDQ7DQo+
-ID4gIAkJcHZ0LT5jc2Vsc1swXS5tX2NudCA9IHB2dC0+Y3NlbHNbMV0ubV9jbnQgPSAyOw0KPiA+
-ICsJfSBlbHNlIGlmIChwdnQtPmZhbSA+PSAweDE3KSB7DQo+ID4gKwkJcHZ0LT5jc2Vsc1swXS5i
-X2NudCA9IHB2dC0+Y3NlbHNbMV0uYl9jbnQgPSA0Ow0KPiA+ICsJCXB2dC0+Y3NlbHNbMF0ubV9j
-bnQgPSBwdnQtPmNzZWxzWzFdLm1fY250ID0gMjsNCj4gDQo+IEkgZ3Vlc3MgaXQgaXMgYWJvdXQg
-dGltZSB0aGF0IGZ1bmN0aW9uIGdldHMgdHVybmVkIGludG8gYSBzd2l0Y2gtY2FzZSBzbw0KPiB0
-aGF0IHRoZSBhc3NpZ25tZW50IGxpbmVzIGRvIG5vdCBnZXQgZHVwbGljYXRlZC4NCj4gDQoNCk9r
-YXksIEknbGwgd3JpdGUgdXAgYSBwYXRjaCBmb3IgdGhhdC4NCg0KRG8geW91IGhhdmUgYW55IHRp
-cHMgb24gaG93IHRvIGhhbmRsZSBpdD8gSSdtIHRoaW5raW5nIGl0IG1heSBiZSB0cmlja3kgYmVj
-YXVzZSBvZiB0aGUgcmFuZ2VzIGFuZCBtdWx0aXBsZSB2YXJpYWJsZXMuDQoNClRoYW5rcywNCllh
-emVuDQo=
+On Thu, Jun 13, 2019 at 5:52 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, Jun 11, 2019 at 4:02 PM dbasehore . <dbasehore@chromium.org> wrote:
+> >
+> > On Tue, Jun 11, 2019 at 8:25 AM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Mon, Jun 10, 2019 at 10:03 PM Derek Basehore <dbasehore@chromium.org> wrote:
+> > > >
+> > > > This adds to the rotation documentation to explain how drivers should
+> > > > use the property and gives an example of the property in a devicetree
+> > > > node.
+> > > >
+> > > > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> > > > ---
+> > > >  .../bindings/display/panel/panel.txt          | 32 +++++++++++++++++++
+> > > >  1 file changed, 32 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/display/panel/panel.txt b/Documentation/devicetree/bindings/display/panel/panel.txt
+> > > > index e2e6867852b8..f35d62d933fc 100644
+> > > > --- a/Documentation/devicetree/bindings/display/panel/panel.txt
+> > > > +++ b/Documentation/devicetree/bindings/display/panel/panel.txt
+> > > > @@ -2,3 +2,35 @@ Common display properties
+> > > >  -------------------------
+> > > >
+> > > >  - rotation:    Display rotation in degrees counter clockwise (0,90,180,270)
+> > > > +
+> > > > +Property read from the device tree using of of_drm_get_panel_orientation
+> > >
+> > > Don't put kernel specifics into bindings.
+> >
+> > Will remove that. I'll clean up the documentation to indicate that
+> > this binding creates a panel orientation property unless the rotation
+> > is handled in the Timing Controller on the panel if that sounds fine.
+>
+> Even if the timing ctrlr handles it, don't you still need to know what
+> the native orientation is?
+
+Not really. For all intents and purposes, the orientation of the panel
+has changed.
+
+>
+> > > > +
+> > > > +The panel driver may apply the rotation at the TCON level, which will
+> > >
+> > > What's TCON? Something Mediatek specific IIRC.
+> >
+> > The TCON is the Timing controller, which is on the panel. Every panel
+> > has one. I'll add to the doc that the TCON is in the panel, etc.
+> >
+> > >
+> > > > +make the panel look like it isn't rotated to the kernel and any other
+> > > > +software.
+> > > > +
+> > > > +If not, a panel orientation property should be added through the SoC
+> > > > +vendor DRM code using the drm_connector_init_panel_orientation_property
+> > > > +function.
+> > >
+> > > The 'rotation' property should be defined purely based on how the
+> > > panel is mounted relative to a device's orientation. If the display
+> > > pipeline has some ability to handle rotation, that's a feature of the
+> > > display pipeline and not the panel.
+> >
+> > This is how the panel orientation property is already handled in the
+> > kernel. See drivers/gpu/drm/i915/vlv_dsi.c for more details.
+>
+> The point is your description is all about the kernel. This is a
+> binding which is not kernel specific.
+
+Ah, I see. I thought you were saying what the implementation should be.
+
+>
+> > > > +
+> > > > +Example:
+> > >
+> > > This file is a collection of common properties. It shouldn't have an
+> > > example especially as this example is mostly non-common properties.
+> >
+> > Just copied one of our DTS entries that uses the property. I'll remove
+> > everything under compatible except for rotation and status.
+>
+> Just remove the example or add what you want to the "boe,himax8279d8p"
+> binding doc. We are moving towards examples being compiled and
+> validated, so incomplete ones won't work.
+
+Ok, will do.
+
+>
+> Rob
+
+Thanks for the quick reviews.
