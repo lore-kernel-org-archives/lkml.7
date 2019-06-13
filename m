@@ -2,98 +2,62 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4965C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1504C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE3620644
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:38:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560443912;
-	bh=47OI/WHldkELOJjKlPRNovd4Yofv6MNP01TzR/J0npI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Two2Et1BALxaem8+HnYV+evAtga110C6dbblt3ItzInWeB+mgnQ1MF+v/N4AH8Qn3
-	 xaBvoTgirS9XnfNPLKiDfYDzpW4wTY2jVDDZVzf7J9XHywkzpRxunGU5qaWeh71aEp
-	 rIymgCZVuCes2ulCI8QMwLrgy+7SY9OMpu6QhVz8=
+	by mail.kernel.org (Postfix) with ESMTP id D445821743
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 16:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392634AbfFMQia (ORCPT
+        id S2392739AbfFMQif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 12:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57062 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 12:38:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:46240 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727146AbfFMQi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 12:38:28 -0400
-Received: from localhost (unknown [131.107.160.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EBC021721;
-        Thu, 13 Jun 2019 16:38:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560443907;
-        bh=47OI/WHldkELOJjKlPRNovd4Yofv6MNP01TzR/J0npI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lihu3Zlw0OB/9SSzFrAE+wWU36whQ9I/K+rZDmeIeBbDu1A0G2K1owAQrTVl84Qzk
-         irQa+StqXFK8K4GgR/Ijo6LsxPSbAU6HBSU5lWF+QhBnulj+XEMXIb0M/z0IzJ5ckZ
-         17FS/YjkyITACL97QCtopfnoie56W/jMyEy6oDjA=
-Date:   Thu, 13 Jun 2019 12:38:27 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.14 00/81] 4.14.126-stable review
-Message-ID: <20190613163827.GJ1513@sasha-vm>
-References: <20190613075649.074682929@linuxfoundation.org>
- <1139f9d4-1a0a-b422-276d-546e7cb1bc85@roeck-us.net>
- <20190613153744.GA15226@kroah.com>
+        id S1727146AbfFMQib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:38:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB24E367;
+        Thu, 13 Jun 2019 09:38:30 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 664303F694;
+        Thu, 13 Jun 2019 09:38:28 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 17:38:26 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     joro@8bytes.org, m.szyprowski@samsung.com, kgene@kernel.org,
+        krzk@kernel.org, robin.murphy@arm.com, agross@kernel.org,
+        david.brown@linaro.org, robdclark@gmail.com, heiko@sntech.de,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 02/10] iommu/io-pgtable: convert to SPDX license tags
+Message-ID: <20190613163826.GE18966@fuggles.cambridge.arm.com>
+References: <20190613162703.986-1-tiny.windzz@gmail.com>
+ <20190613162703.986-2-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190613153744.GA15226@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190613162703.986-2-tiny.windzz@gmail.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 05:37:44PM +0200, Greg Kroah-Hartman wrote:
->On Thu, Jun 13, 2019 at 08:11:33AM -0700, Guenter Roeck wrote:
->> On 6/13/19 1:32 AM, Greg Kroah-Hartman wrote:
->> > This is the start of the stable review cycle for the 4.14.126 release.
->> > There are 81 patches in this series, all will be posted as a response
->> > to this one.  If anyone has any issues with these being applied, please
->> > let me know.
->> >
->> > Responses should be made by Sat 15 Jun 2019 07:54:51 AM UTC.
->> > Anything received after that time might be too late.
->> >
->>
->> [early feedback]
->>
->> Building mips:nlm_xlp_defconfig ... failed (and other mips builds)
->> --------------
->> Error log:
->> /opt/buildbot/slave/stable-queue-4.14/build/arch/mips/kernel/prom.c: In function 'early_init_dt_add_memory_arch':
->> /opt/buildbot/slave/stable-queue-4.14/build/arch/mips/kernel/prom.c:44:14: error: 'PHYS_ADDR_MAX' undeclared
->>
->> The problem affects v4.14.y and all earlier branches.
->> PHYS_ADDR_MAX is indeed undeclared in those branches. It was introduced
->> with commit 1c4bc43ddfd52 ("mm/memblock: introduce PHYS_ADDR_MAX").
->
->Thanks, I've dropped the mips patch that caused this.  I'll also drop it
->from the 4.4 and 4.9 trees.
->
->Sasha, I thought you had builders set up for stuff like this?
+On Thu, Jun 13, 2019 at 12:26:55PM -0400, Yangtao Li wrote:
+> Updates license to use SPDX-License-Identifier.
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  drivers/iommu/io-pgtable.c | 13 +------------
+>  1 file changed, 1 insertion(+), 12 deletions(-)
 
-Yes, and apparently I was naive thinking that
-'allmodconfig'/'allyesconfig' would catch these, but that's not the
-case.
+Acked-by: Will Deacon <will.deacon@arm.com>
 
---
-Thanks,
-Sasha
+Will
