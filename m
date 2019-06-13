@@ -2,125 +2,251 @@ Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50481C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2C9C31E4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 213542053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:15:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3372053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 17:15:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CFM+cxWo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQ3kU5lR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393706AbfFMRPz (ORCPT
+        id S2393697AbfFMRPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 13:15:55 -0400
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:35207 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728745AbfFLVs1 (ORCPT
+        Thu, 13 Jun 2019 13:15:52 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39983 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729146AbfFMRPu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 12 Jun 2019 17:48:27 -0400
-Received: by mail-qk1-f202.google.com with SMTP id u128so14871453qka.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2019 14:48:27 -0700 (PDT)
+        Thu, 13 Jun 2019 13:15:50 -0400
+Received: by mail-qt1-f196.google.com with SMTP id a15so23429306qtn.7;
+        Thu, 13 Jun 2019 10:15:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc
-         :content-transfer-encoding;
-        bh=Nvc8GP9MwpE1zr8t87gJ0fcpzOb0fXOQ5uqc0xW6/0Q=;
-        b=CFM+cxWoFmc9yDaNAE7a83xL7QFc9YTm1d3r0nGLutm/L7bwWMBMO/aYW9Ra3qxdIg
-         DMoSKbZYPeOkVh4OZ3+668Tk2w5UmyTTlkms1/5jmALJ7X+IObkO8Y5KjoEewfwX9Y6l
-         VBpfeqgLaz9T5oEt0oI6y/GAYj3vNyxCEFokMn3QdfbjONa3EkMiAuIKq6cpUYxvKHy4
-         ox3tNpown9wxbafp0LInWBMQ9cPPxXkDLJ+RRWZMV+7123cYpGR8fexyAbfcJArrXKwv
-         7datDbOhW8PT5e76rXmxX+ezn2jyGWHURYaH2J2CuDXNhDAuMUtaAlR/LJVIqj81itfg
-         qScg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1CQuHfghSCdZuNpHw09x3H5koLSD51doFuuveLUNnkM=;
+        b=DQ3kU5lR7F8W613x3qyMlaSBzoyloCT6L6OYuLxcBrULJmk5820N6qYpEsgJj/g2FZ
+         gM8Pre6XzbO8sI8ihw/wBUF4FhC8LGP0siS0xfvbsRrELhBg25uVqjMXIKuhKkYw6Zn4
+         WDmaBADhoPl2HNhpJK5cBr5yN7hnDajdQpg+usBUIo03fp5i+pa5QLG//31dvujsitRk
+         8Ii2IzI5G7CjhEmYS555yFzregjR65WaF6HgCAmSlrToLwxYaiQbgEqUJVB8kRDGR8Ic
+         qVX7x9Pwe45zawkl2tVjr/N/CGT04oWyk90povNQP+GH1Xv4wkym4pZHOK7wB//TjaHH
+         8fPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
-         :content-transfer-encoding;
-        bh=Nvc8GP9MwpE1zr8t87gJ0fcpzOb0fXOQ5uqc0xW6/0Q=;
-        b=ZqJMyKWop3MZH0b5kXSzMU47qh2BSuh5tCdWfVt0/EjfiUx4kq6JhUakLPq+nWt1Ll
-         ytgndyJoMX+cfAV+3GpQ/NcrsL0zuj+vzEzX+MzSq3wS7R12DJl0s5x7x2tp1v/PJ4Df
-         zWw0hLGx5lJF6YhegapZfU7aUs4tpGxBuhw7I/SUZ9MWPy8T5ncxongz3J8kjbZEGlzr
-         EeL3TBL1jfYmvTxXJbRTgD196QCFEjYLqWG9WyXBwATm7bIrE0PNmvg2ebHZuYiJSkS1
-         3l6YXZmqbs+bg5Q82mL8SOAzn4ZXW/0vaRdiAdNaak4IuWblW3IKr4zOxbfAEl6427ND
-         e8mg==
-X-Gm-Message-State: APjAAAVcK8Tl2YDQuMnusSzIVFZYtkd5bZdTD8gPI1UPlSmNmf3tYSbD
-        s4e4V6qMCB0zlvXrCIz4aFrIDxfXYQgiz3rr9+qMOXIGRRJC4QzFVgZM1mSYvPmFxLG/KdbeLxJ
-        l/YbI1Sv5BaCVyc1aiGmHWsISJlhEh5tVFwVUIBeoGQoEpT18SFwpeKtx/tJLlP2H7es=
-X-Google-Smtp-Source: APXvYqzJMmozSfx8Q7fCQKl2L3GsUVSJaTVVNbazAW0PNFqqQSITm9ChmjEnGQZnnfUdU/X3pecvZB1HbQ==
-X-Received: by 2002:ac8:1087:: with SMTP id a7mr58423448qtj.141.1560376106489;
- Wed, 12 Jun 2019 14:48:26 -0700 (PDT)
-Date:   Wed, 12 Jun 2019 14:48:20 -0700
-Message-Id: <20190612214823.251491-1-fengc@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-Subject: [PATCH v4 0/3] Improve the dma-buf tracking
-From:   Chenbo Feng <fengc@google.com>
-To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     Sumit Semwal <sumit.semwal@linaro.org>, kernel-team@android.com
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1CQuHfghSCdZuNpHw09x3H5koLSD51doFuuveLUNnkM=;
+        b=gRKCzWYuSzeH69pkzxvSr7hz2IQWsLV9GXrvmMdKW+0F3YcTjWAVG7t2nsUtGQ5a+y
+         1kpTOBRoTAvGq6I1dLKQyS2zjlhTVmYn8TZIcXSmjjJTHh21BIny4wgl/NLr+8Hua1uK
+         e7CW2lS9vRocOYH8/TywuIPQ2d13x8LSu2YvXEdWTn9dq5wCQQe0HUmtq1Kbts30dD9a
+         tApYkqDX/kShY03MCGLmkY2E+cWnO5kHaXC9aXGgbhI28ugliKckr/+ISHtcJh8pFMpu
+         J4aQsv/ALVQErqZWv8BO/uCfOyOL5RfaPAJI739gMqLwuQ0nFO/ouCeSeNVA80xnh6TY
+         iq3w==
+X-Gm-Message-State: APjAAAXxuNt2w+TXA/JoofPOs5D83db13LgBVWciAEBnZ9gGpn1UWoaf
+        fCPuoFsrjJY+tznoLwFZGlxoLaBlvIzOa/uTvdU=
+X-Google-Smtp-Source: APXvYqzWuIKSICuQgciL0RG/eDKoAgI37Sn1VKoyyv2dDtyO0u7hwVl3+n8MMWR10xYI4YyiYoEth8BaNpJbbS/M7bM=
+X-Received: by 2002:ac8:2d56:: with SMTP id o22mr26211735qta.171.1560446149184;
+ Thu, 13 Jun 2019 10:15:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190613132433.17213-1-afabre@cloudflare.com>
+In-Reply-To: <20190613132433.17213-1-afabre@cloudflare.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 13 Jun 2019 10:15:38 -0700
+Message-ID: <CAEf4BzYp0ZtbojxP++GYsc097RpoLBb08Aj7NM0s+GoM7RpvXg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: sk_storage: Fix out of bounds memory access
+To:     Arthur Fabre <afabre@cloudflare.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, all dma-bufs share the same anonymous inode. While we can count
-how many dma-buf fds or mappings a process has, we can't get the size of
-the backing buffers or tell if two entries point to the same dma-buf. And
-in debugfs, we can get a per-buffer breakdown of size and reference count,
-but can't tell which processes are actually holding the references to each
-buffer.
+On Thu, Jun 13, 2019 at 8:16 AM Arthur Fabre <afabre@cloudflare.com> wrote:
+>
+> bpf_sk_storage maps use multiple spin locks to reduce contention.
+> The number of locks to use is determined by the number of possible CPUs.
+> With only 1 possible CPU, bucket_log == 0, and 2^0 = 1 locks are used.
+>
+> When updating elements, the correct lock is determined with hash_ptr().
+> Calling hash_ptr() with 0 bits is undefined behavior, as it does:
+>
+> x >> (64 - bits)
+>
+> Using the value results in an out of bounds memory access.
+> In my case, this manifested itself as a page fault when raw_spin_lock_bh()
+> is called later, when running the self tests:
+>
+> ./tools/testing/selftests/bpf/test_verifier 773 775
+>
+> [   16.366342] BUG: unable to handle page fault for address: ffff8fe7a66f93f8
+> [   16.367139] #PF: supervisor write access in kernel mode
+> [   16.367751] #PF: error_code(0x0002) - not-present page
+> [   16.368323] PGD 35a01067 P4D 35a01067 PUD 0
+> [   16.368796] Oops: 0002 [#1] SMP PTI
+> [   16.369175] CPU: 0 PID: 189 Comm: test_verifier Not tainted 5.2.0-rc2+ #10
+> [   16.369960] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> [   16.371021] RIP: 0010:_raw_spin_lock_bh (/home/afabre/linux/./include/trace/events/initcall.h:48)
+> [ 16.371571] Code: 02 00 00 31 c0 ba ff 00 00 00 3e 0f b1 17 75 01 c3 e9 82 12 5f ff 66 90 65 81 05 ad 14 6f 41 00 02 00 00 31 c0 ba 01 00 00 00 <3e> 0f b1 17 75 01 c3 89 c6 e9 f0 02 5f ff b8 00 02 00 00 3e 0f c1
+> All code
+> ========
+>    0:   02 00                   add    (%rax),%al
+>    2:   00 31                   add    %dh,(%rcx)
+>    4:   c0 ba ff 00 00 00 3e    sarb   $0x3e,0xff(%rdx)
+>    b:   0f b1 17                cmpxchg %edx,(%rdi)
+>    e:   75 01                   jne    0x11
+>   10:   c3                      retq
+>   11:   e9 82 12 5f ff          jmpq   0xffffffffff5f1298
+>   16:   66 90                   xchg   %ax,%ax
+>   18:   65 81 05 ad 14 6f 41    addl   $0x200,%gs:0x416f14ad(%rip)        # 0x416f14d0
+>   1f:   00 02 00 00
+>   23:   31 c0                   xor    %eax,%eax
+>   25:   ba 01 00 00 00          mov    $0x1,%edx
+>   2a:   3e 0f b1 17             cmpxchg %edx,%ds:*(%rdi)                <-- trapping instruction
+>   2e:   75 01                   jne    0x31
+>   30:   c3                      retq
+>   31:   89 c6                   mov    %eax,%esi
+>   33:   e9 f0 02 5f ff          jmpq   0xffffffffff5f0328
+>   38:   b8 00 02 00 00          mov    $0x200,%eax
+>   3d:   3e                      ds
+>   3e:   0f                      .byte 0xf
+>   3f:   c1                      .byte 0xc1
+>
+> Code starting with the faulting instruction
+> ===========================================
+>    0:   3e 0f b1 17             cmpxchg %edx,%ds:(%rdi)
+>    4:   75 01                   jne    0x7
+>    6:   c3                      retq
+>    7:   89 c6                   mov    %eax,%esi
+>    9:   e9 f0 02 5f ff          jmpq   0xffffffffff5f02fe
+>    e:   b8 00 02 00 00          mov    $0x200,%eax
+>   13:   3e                      ds
+>   14:   0f                      .byte 0xf
+>   15:   c1                      .byte 0xc1
+> [   16.373398] RSP: 0018:ffffa759809d3be0 EFLAGS: 00010246
+> [   16.373954] RAX: 0000000000000000 RBX: ffff8fe7a66f93f0 RCX: 0000000000000040
+> [   16.374645] RDX: 0000000000000001 RSI: ffff8fdaf9f0d180 RDI: ffff8fe7a66f93f8
+> [   16.375338] RBP: ffff8fdaf9f0d180 R08: ffff8fdafba2c320 R09: ffff8fdaf9f0d0c0
+> [   16.376028] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8fdafa346700
+> [   16.376719] R13: ffff8fe7a66f93f8 R14: ffff8fdaf9f0d0c0 R15: 0000000000000001
+> [   16.377413] FS:  00007fda724c0740(0000) GS:ffff8fdafba00000(0000) knlGS:0000000000000000
+> [   16.378204] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   16.378763] CR2: ffff8fe7a66f93f8 CR3: 0000000139d1c006 CR4: 0000000000360ef0
+> [   16.379453] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   16.380144] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   16.380864] Call Trace:
+> [   16.381112] selem_link_map (/home/afabre/linux/./include/linux/compiler.h:221 /home/afabre/linux/net/core/bpf_sk_storage.c:243)
+> [   16.381476] sk_storage_update (/home/afabre/linux/net/core/bpf_sk_storage.c:355 /home/afabre/linux/net/core/bpf_sk_storage.c:414)
+> [   16.381888] bpf_sk_storage_get (/home/afabre/linux/net/core/bpf_sk_storage.c:760 /home/afabre/linux/net/core/bpf_sk_storage.c:741)
+> [   16.382285] ___bpf_prog_run (/home/afabre/linux/kernel/bpf/core.c:1447)
+> [   16.382679] ? __bpf_prog_run32 (/home/afabre/linux/kernel/bpf/core.c:1603)
+> [   16.383074] ? alloc_file_pseudo (/home/afabre/linux/fs/file_table.c:232)
+> [   16.383486] ? kvm_clock_get_cycles (/home/afabre/linux/arch/x86/kernel/kvmclock.c:98)
+> [   16.383906] ? ktime_get (/home/afabre/linux/kernel/time/timekeeping.c:265 /home/afabre/linux/kernel/time/timekeeping.c:369 /home/afabre/linux/kernel/time/timekeeping.c:754)
+> [   16.384243] ? bpf_test_run (/home/afabre/linux/net/bpf/test_run.c:47)
+> [   16.384613] ? bpf_prog_test_run_skb (/home/afabre/linux/net/bpf/test_run.c:313)
+> [   16.385065] ? security_capable (/home/afabre/linux/security/security.c:696 (discriminator 19))
+> [   16.385460] ? __do_sys_bpf (/home/afabre/linux/kernel/bpf/syscall.c:2072 /home/afabre/linux/kernel/bpf/syscall.c:2848)
+> [   16.385854] ? __handle_mm_fault (/home/afabre/linux/mm/memory.c:3507 /home/afabre/linux/mm/memory.c:3532 /home/afabre/linux/mm/memory.c:3666 /home/afabre/linux/mm/memory.c:3897 /home/afabre/linux/mm/memory.c:4021)
+> [   16.386273] ? __dentry_kill (/home/afabre/linux/fs/dcache.c:595)
+> [   16.386652] ? do_syscall_64 (/home/afabre/linux/arch/x86/entry/common.c:301)
+> [   16.387031] ? entry_SYSCALL_64_after_hwframe (/home/afabre/linux/./include/trace/events/initcall.h:10 /home/afabre/linux/./include/trace/events/initcall.h:10)
+> [   16.387541] Modules linked in:
+> [   16.387846] CR2: ffff8fe7a66f93f8
+> [   16.388175] ---[ end trace 891cf27b5b9c9cc6 ]---
+> [   16.388628] RIP: 0010:_raw_spin_lock_bh (/home/afabre/linux/./include/trace/events/initcall.h:48)
+> [ 16.389089] Code: 02 00 00 31 c0 ba ff 00 00 00 3e 0f b1 17 75 01 c3 e9 82 12 5f ff 66 90 65 81 05 ad 14 6f 41 00 02 00 00 31 c0 ba 01 00 00 00 <3e> 0f b1 17 75 01 c3 89 c6 e9 f0 02 5f ff b8 00 02 00 00 3e 0f c1
+> All code
+> ========
+>    0:   02 00                   add    (%rax),%al
+>    2:   00 31                   add    %dh,(%rcx)
+>    4:   c0 ba ff 00 00 00 3e    sarb   $0x3e,0xff(%rdx)
+>    b:   0f b1 17                cmpxchg %edx,(%rdi)
+>    e:   75 01                   jne    0x11
+>   10:   c3                      retq
+>   11:   e9 82 12 5f ff          jmpq   0xffffffffff5f1298
+>   16:   66 90                   xchg   %ax,%ax
+>   18:   65 81 05 ad 14 6f 41    addl   $0x200,%gs:0x416f14ad(%rip)        # 0x416f14d0
+>   1f:   00 02 00 00
+>   23:   31 c0                   xor    %eax,%eax
+>   25:   ba 01 00 00 00          mov    $0x1,%edx
+>   2a:   3e 0f b1 17             cmpxchg %edx,%ds:*(%rdi)                <-- trapping instruction
+>   2e:   75 01                   jne    0x31
+>   30:   c3                      retq
+>   31:   89 c6                   mov    %eax,%esi
+>   33:   e9 f0 02 5f ff          jmpq   0xffffffffff5f0328
+>   38:   b8 00 02 00 00          mov    $0x200,%eax
+>   3d:   3e                      ds
+>   3e:   0f                      .byte 0xf
+>   3f:   c1                      .byte 0xc1
+>
+> Code starting with the faulting instruction
+> ===========================================
+>    0:   3e 0f b1 17             cmpxchg %edx,%ds:(%rdi)
+>    4:   75 01                   jne    0x7
+>    6:   c3                      retq
+>    7:   89 c6                   mov    %eax,%esi
+>    9:   e9 f0 02 5f ff          jmpq   0xffffffffff5f02fe
+>    e:   b8 00 02 00 00          mov    $0x200,%eax
+>   13:   3e                      ds
+>   14:   0f                      .byte 0xf
+>   15:   c1                      .byte 0xc1
+> [   16.390899] RSP: 0018:ffffa759809d3be0 EFLAGS: 00010246
+> [   16.391410] RAX: 0000000000000000 RBX: ffff8fe7a66f93f0 RCX: 0000000000000040
+> [   16.392102] RDX: 0000000000000001 RSI: ffff8fdaf9f0d180 RDI: ffff8fe7a66f93f8
+> [   16.392795] RBP: ffff8fdaf9f0d180 R08: ffff8fdafba2c320 R09: ffff8fdaf9f0d0c0
+> [   16.393481] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8fdafa346700
+> [   16.394169] R13: ffff8fe7a66f93f8 R14: ffff8fdaf9f0d0c0 R15: 0000000000000001
+> [   16.394870] FS:  00007fda724c0740(0000) GS:ffff8fdafba00000(0000) knlGS:0000000000000000
+> [   16.395641] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   16.396193] CR2: ffff8fe7a66f93f8 CR3: 0000000139d1c006 CR4: 0000000000360ef0
+> [   16.396876] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   16.397557] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   16.398246] Kernel panic - not syncing: Fatal exception in interrupt
+> [   16.399067] Kernel Offset: 0x3ce00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+> [   16.400098] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+>
+> Signed-off-by: Arthur Fabre <afabre@cloudflare.com>
+> Fixes: 6ac99e8f23d4 ("bpf: Introduce bpf sk local storage")
+> ---
+>  net/core/bpf_sk_storage.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
+> index f40e3d35fd9c..7ae0686c5418 100644
+> --- a/net/core/bpf_sk_storage.c
+> +++ b/net/core/bpf_sk_storage.c
+> @@ -90,7 +90,13 @@ struct bpf_sk_storage {
+>  static struct bucket *select_bucket(struct bpf_sk_storage_map *smap,
+>                                     struct bpf_sk_storage_elem *selem)
+>  {
+> -       return &smap->buckets[hash_ptr(selem, smap->bucket_log)];
+> +       /* hash_ptr is undefined behavior with 0 bits */
+> +       int bucket = 0;
+> +       if (smap->bucket_log != 0) {
+> +               bucket = hash_ptr(selem, smap->bucket_log);
+> +       }
 
-To resolve the issue above and provide better method for userspace to track
-the dma-buf usage across different processes, the following changes are
-proposed in dma-buf kernel side. First of all, replace the singleton inode
-inside the dma-buf subsystem with a mini-filesystem, and assign each
-dma-buf a unique inode out of this filesystem.  With this change, calling
-stat(2) on each entry gives the caller a unique ID (st_ino), the buffer's
-size (st_size), and even the number of pages assigned to each dma-buffer.
-Secoundly, add the inode information to /sys/kernel/debug/dma_buf/bufinfo
-so in the case where a buffer is mmap()ed into a process=E2=80=99s address =
-space
-but all remaining fds have been closed, we can still get the dma-buf
-information and try to accociate it with the process by searching the
-proc/pid/maps and looking for the corresponding inode number exposed in
-dma-buf debug fs. Thirdly, created an ioctl to assign names to dma-bufs
-which lets userspace assign short names (e.g., "CAMERA") to buffers. This
-information can be extremely helpful for tracking and accounting shared
-buffers based on their usage and original purpose. Last but not least, add
-dma-buf information to /proc/pid/fdinfo by adding a show_fdinfo() handler
-to dma_buf_file_operations. The handler will print the file_count and name
-of each buffer.
+Would it be better instead to make sure that bucket_log is always at
+least 1? Having bucket_log as zero can bite us in the future again.
 
-Change in v2:
-* Add a check to prevent changing dma-buf name when it is attached to
-  devices.
-* Fixed some compile warnings
-
-Change in v3:
-* Removed the GET_DMA_BUF_NAME ioctls, add the dma_buf pointer to dentry
-  d_fsdata so the name can be displayed in proc/pid/maps and
-  proc/pid/map_files.
-
-Change in v3:
-* Updated the commit message and added some comments for the
-  DMA_BUF_SET_NAME iotcl
-
-Greg Hackmann (3):
-  dma-buf: give each buffer a full-fledged inode
-  dma-buf: add DMA_BUF_{GET,SET}_NAME ioctls
-  dma-buf: add show_fdinfo handler
-
- drivers/dma-buf/dma-buf.c    | 122 +++++++++++++++++++++++++++++++++--
- include/linux/dma-buf.h      |   5 +-
- include/uapi/linux/dma-buf.h |   3 +
- include/uapi/linux/magic.h   |   1 +
- 4 files changed, 124 insertions(+), 7 deletions(-)
-
---=20
-2.21.0.1020.gf2820cf01a-goog
-
+> +
+> +       return &smap->buckets[bucket];
+>  }
+>
+>  static int omem_charge(struct sock *sk, unsigned int size)
+> --
+> 2.20.1
+>
