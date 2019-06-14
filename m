@@ -2,148 +2,219 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BE1C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE01C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4852920850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F49820850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:19:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="SN7BCSJ2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bLymlhl3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbfFNNSl (ORCPT
+        id S1728082AbfFNNTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:18:41 -0400
-Received: from mail.efficios.com ([167.114.142.138]:34932 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727913AbfFNNSl (ORCPT
+        Fri, 14 Jun 2019 09:19:42 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38772 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727913AbfFNNTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:18:41 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 5DE3825101D;
-        Fri, 14 Jun 2019 09:18:39 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id RJkSqrXB2sYD; Fri, 14 Jun 2019 09:18:39 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id EA71D251018;
-        Fri, 14 Jun 2019 09:18:38 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com EA71D251018
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1560518319;
-        bh=/v2WHP0/4YyzHUmChvFO66kw0sHLDO7c/iZQSMDPn+0=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=SN7BCSJ2tIIDUvDAz7igtpSNX52BaE4Lxpu6EQVXKUJpfKeGSfWn+z1n7D9DbuYQS
-         WsMoY+jt8wMGZGvqw9zYgR08jY83zl3JDouHkERV7/SEnwBqYjEHNnQEMugVBoYZjP
-         gvmpEYtGTDGROMIdr1AiYB57B8eb5TTuUHcUC9nTxyafRz28yK6Xa7qfUvIwrt1MAO
-         ukrlyWUiqD/kcVn94v1QDF1M78Cr+zbHFQzZx17OxnWqzza3omEQp0CAaERzmmC5bz
-         BKwBgl6Ejv4H/bRYgy4sz/OvyOTpH5wDMlcmCfDqsV0sOFjXQ9Gm3jk0raVFqDJDjK
-         UdEIBC4aXlKAg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id xK7b3jYpLBEk; Fri, 14 Jun 2019 09:18:38 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id CF34325100F;
-        Fri, 14 Jun 2019 09:18:38 -0400 (EDT)
-Date:   Fri, 14 Jun 2019 09:18:38 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <1779359826.3226.1560518318701.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87d0jguxdk.fsf@oldenburg2.str.redhat.com>
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <802638054.3032.1560506584705.JavaMail.zimbra@efficios.com> <87ftocwkei.fsf@oldenburg2.str.redhat.com> <1635690189.3049.1560507249693.JavaMail.zimbra@efficios.com> <87tvcsv1pk.fsf@oldenburg2.str.redhat.com> <1190407525.3131.1560516910936.JavaMail.zimbra@efficios.com> <1085273942.3137.1560517301721.JavaMail.zimbra@efficios.com> <87d0jguxdk.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
- and thread creation (v10)
+        Fri, 14 Jun 2019 09:19:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=J27b+HrlctMzcBwFIcA+Fda937PR3Aw4zcivd7d9+UI=; b=bLymlhl3W46V0GdF77FYVHhqZb
+        fOoDaDU3o7LR/EN8DoFEjda8u2W8HILBZOqJYlwb4K8+AdK9uaRK99WklFqCR6GUw5IfBrAhSjMzR
+        jNk8l5LnEFd7+3hofHl/+8WfRX9oDmsl0A/EQoEROP7mlGqR6ZGtPCLXzSLUJMLoaGvghudrjaDrJ
+        dp6N5LQNtMFHZoa/i8nqd3FEgbKQmBMxWr2r2kRYDM+tgpza25AGOjptXaeChq3WW8vidR/PZO/Ku
+        BghMnb8Wx/tXIGSY5cTuS48kQ3BV5cXPxWi0gC7HRyTVABcdmgeUtz9LSL/iQmr9w57qMMBZqGwo8
+        /MXfEiNA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbm6x-0007w5-1o; Fri, 14 Jun 2019 13:19:19 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F03D820245B51; Fri, 14 Jun 2019 15:19:16 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 15:19:16 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Christian =?iso-8859-1?Q?K=F6nig?= 
+        <ckoenig.leichtzumerken@gmail.com>
+Cc:     daniel@ffwll.ch, l.stach@pengutronix.de,
+        linux+etnaviv@armlinux.org.uk, christian.gmeiner@gmail.com,
+        yuq825@gmail.com, eric@anholt.net, thellstrom@vmware.com,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        etnaviv@lists.freedesktop.org, lima@lists.freedesktop.org
+Subject: Re: [PATCH 3/6] drm/gem: use new ww_mutex_(un)lock_for_each macros
+Message-ID: <20190614131916.GQ3436@hirez.programming.kicks-ass.net>
+References: <20190614124125.124181-1-christian.koenig@amd.com>
+ <20190614124125.124181-4-christian.koenig@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
-Thread-Index: XZwhQyoKRjgOfzBSfSbrgHMVjax/Lw==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190614124125.124181-4-christian.koenig@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 14, 2019, at 3:09 PM, Florian Weimer fweimer@redhat.com wrote:
-
-> * Mathieu Desnoyers:
+On Fri, Jun 14, 2019 at 02:41:22PM +0200, Christian König wrote:
+> Use the provided macros instead of implementing deadlock handling on our own.
 > 
->> But my original issue remains: if I define a variable called __rseq_handled
->> within either the main executable or the preloaded library, it overshadows
->> the libc one:
->>
->> efficios@compudjdev:~/test/libc-sym$ ./a
->> __rseq_handled main: 0 0x56135fd5102c
->> __rseq_abi.cpu_id main: 29 0x7fcbeca6d5a0
->> efficios@compudjdev:~/test/libc-sym$ LD_PRELOAD=./s.so ./a
->> __rseq_handled s.so: 0 0x558f70aeb02c
->> __rseq_abi.cpu_id s.so: -1 0x7fdca78b7760
->> __rseq_handled main: 0 0x558f70aeb02c
->> __rseq_abi.cpu_id main: 27 0x7fdca78b7760
->>
->> Which is unexpected.
+> Signed-off-by: Christian König <christian.koenig@amd.com>
+> ---
+>  drivers/gpu/drm/drm_gem.c | 49 ++++++++++-----------------------------
+>  1 file changed, 12 insertions(+), 37 deletions(-)
 > 
-> Why is this unexpected?  It has to be this way if the main program uses
-> a copy relocation of __rseq_handled.  As long as there is just one
-> address across the entire program and ld.so initializes the copy of the
-> variable that is actually used, everything will be fine.
+> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
+> index 50de138c89e0..6e4623d3bee2 100644
+> --- a/drivers/gpu/drm/drm_gem.c
+> +++ b/drivers/gpu/drm/drm_gem.c
+> @@ -1307,51 +1307,26 @@ int
+>  drm_gem_lock_reservations(struct drm_gem_object **objs, int count,
+>  			  struct ww_acquire_ctx *acquire_ctx)
+>  {
+> -	int contended = -1;
+> +	struct ww_mutex *contended;
+>  	int i, ret;
+>  
+>  	ww_acquire_init(acquire_ctx, &reservation_ww_class);
+>  
+> -retry:
+> -	if (contended != -1) {
+> -		struct drm_gem_object *obj = objs[contended];
+> -
+> -		ret = ww_mutex_lock_slow_interruptible(&obj->resv->lock,
+> -						       acquire_ctx);
+> -		if (ret) {
+> -			ww_acquire_done(acquire_ctx);
+> -			return ret;
+> -		}
+> -	}
+> -
+> -	for (i = 0; i < count; i++) {
+> -		if (i == contended)
+> -			continue;
+> -
+> -		ret = ww_mutex_lock_interruptible(&objs[i]->resv->lock,
+> -						  acquire_ctx);
+> -		if (ret) {
+> -			int j;
+> -
+> -			for (j = 0; j < i; j++)
+> -				ww_mutex_unlock(&objs[j]->resv->lock);
+> -
+> -			if (contended != -1 && contended >= i)
+> -				ww_mutex_unlock(&objs[contended]->resv->lock);
+> -
+> -			if (ret == -EDEADLK) {
+> -				contended = i;
+> -				goto retry;
+> -			}
+> -
+> -			ww_acquire_done(acquire_ctx);
+> -			return ret;
+> -		}
+> -	}
 
-Here is a printout of the __rseq_handled address observed by ld.so, it
-does not match:
+I note all the sites you use this on are simple idx iterators; so how
+about something like so:
 
-LD_PRELOAD=./s.so ./a
-elf: __rseq_handled addr: 7f501c98a140
-__rseq_handled s.so: 0 0x55817a88d02c
-__rseq_abi.cpu_id s.so: -1 0x7f501c983760
-__rseq_handled main: 0 0x55817a88d02c
-__rseq_abi.cpu_id main: 27 0x7f501c983760
-
-This is with the following in a.c:
-
-#include <stdio.h>
-#include <linux/rseq.h>
-
-__thread struct rseq __rseq_abi
-__attribute__ ((tls_model ("initial-exec"))) = {
-	.cpu_id = -1,
-};
-int __rseq_handled;
-
-int main()
+int ww_mutex_unlock_all(int count, void *data, struct ww_mutex *(*func)(int, void *))
 {
-	fprintf(stderr, "__rseq_handled main: %d %p\n", __rseq_handled, &__rseq_handled);
-	fprintf(stderr, "__rseq_abi.cpu_id main: %d %p\n", __rseq_abi.cpu_id, &__rseq_abi);
+	int i;
+
+	for (i = 0; i < count; i++) {
+		lock = func(i, data);
+		ww_mutex_unlock(lock);
+	}
+}
+
+int ww_mutex_lock_all(int count, struct ww_acquire_context *acquire_ctx, bool intr,
+		      void *data, struct ww_mutex *(*func)(int, void *))
+{
+	int i, ret, contended = -1;
+	struct ww_mutex *lock;
+
+retry:
+	if (contended != -1) {
+		lock = func(contended, data);
+		if (intr)
+			ret = ww_mutex_lock_slow_interruptible(lock, acquire_ctx);
+		else
+			ret = ww_mutex_lock_slow(lock, acquire_ctx), 0;
+
+		if (ret) {
+			ww_acquire_done(acquire_ctx);
+			return ret;
+		}
+	}
+
+	for (i = 0; i < count; i++) {
+		if (i == contended)
+			continue;
+
+		lock = func(i, data);
+		if (intr)
+			ret = ww_mutex_lock_interruptible(lock, acquire_ctx);
+		else
+			ret = ww_mutex_lock(lock, acquire_ctx), 0;
+
+		if (ret) {
+			ww_mutex_unlock_all(i, data, func);
+			if (contended > i) {
+				lock = func(contended, data);
+				ww_mutex_unlock(lock);
+			}
+
+			if (ret == -EDEADLK) {
+				contended = i;
+				goto retry;
+			}
+
+			ww_acquire_done(acquire_ctx);
+			return ret;
+		}
+	}
+
+	ww_acquire_done(acquire_ctx);
 	return 0;
 }
 
-As we can see, the state of __rseq_handled observed by the preloaded
-lib and the program is "0", but should really be "1". This can be
-explained by ld.so not using the same address as the rest of the
-program, but how can we fix that ?
+> +	ww_mutex_lock_for_each(for (i = 0; i < count; i++),
+> +			       &objs[i]->resv->lock, contended, ret, true,
+> +			       acquire_ctx)
+> +		if (ret)
+> +			goto error;
 
-Thanks,
+which then becomes:
 
-Mathieu
+struct ww_mutex *gem_ww_mutex_func(int i, void *data)
+{
+	struct drm_gem_object **objs = data;
+	return &objs[i]->resv->lock;
+}
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+	ret = ww_mutex_lock_all(count, acquire_ctx, true, objs, gem_ww_mutex_func);
+
+>  	ww_acquire_done(acquire_ctx);
+>  
+>  	return 0;
+> +
+> +error:
+> +	ww_mutex_unlock_for_each(for (i = 0; i < count; i++),
+> +				 &objs[i]->resv->lock, contended);
+> +	ww_acquire_done(acquire_ctx);
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL(drm_gem_lock_reservations);
+>  
+> -- 
+> 2.17.1
+> 
