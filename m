@@ -2,160 +2,223 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.2 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3F0C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A564C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D525C21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 664D721773
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:10:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nGWAB+CO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qAJ/cGYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbfFNTKF (ORCPT
+        id S1726294AbfFNTKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 15:10:05 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44268 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbfFNTKE (ORCPT
+        Fri, 14 Jun 2019 15:10:22 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44499 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfFNTKV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 15:10:04 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n2so2044556pgp.11
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 12:10:04 -0700 (PDT)
+        Fri, 14 Jun 2019 15:10:21 -0400
+Received: by mail-io1-f68.google.com with SMTP id s7so8027140iob.11
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 12:10:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6lqY9qj3FXvhL7X9FVCyVKf2cgudUiUC+bfdYqXqJGI=;
-        b=nGWAB+COOBn9dBGJOKudwxLl47G+Wjd0XYP9j9MypIG0IlGsdC4zR8kCZ968KGFC8d
-         wsmF1jw3sTo3pvrUBj/IQ1XBBaYfM7v9lmx9IMFHVBBDbChmr6hBF/Abb3pr9gafYlEZ
-         J6D1ZtmOxqPiE2VHTueKPcHzaa9cMzBfzVSAruOrGOaKHCEcNsn8A0SYL9kvHBpTKtrH
-         x7AJ49cWSSGmfh1zXp/QIaFLSwJwQfh+zUZsz15UeX/9EW6Rzrcc+5PgNxlLd1nXQE3+
-         zW4Keh32+wFPOXQ9Vd54TtLxOYz4Rsw9CqSGZT3pIqblUd4hHICBp/ErvzQ0ei+u3nUg
-         dSxQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w0I3Z4/wykFceLcnHYGRYFdVs0dZ0k9LRu5iTius9Iw=;
+        b=qAJ/cGYyzVyAEOG3i3Ky/3nD3AJOpT6GcN5/eDRCy23jKvtMdn1X+j1LJg5CoUiWX+
+         IkfuIgFQVxDE1QZP5SlzgTjHzAMj6FByxlhCzxqxJ6uh2o5ZxNC2xQ7q/wNhiAQ+zscB
+         G6QsDOdkMUvWaPV8X3xf9DsRm6AZL7FPnxtSNzrSmo5WC2jlgNw7npOyouoFsfsaT9oz
+         2uujIDz+6kNihtxlQABGR2tMUopkztR/VEIqKgeQOmzwTIgm7tnCzv+pg2h9lFR5YLej
+         CsmV3ceXTRRfWLTpbg2pHroVmciXcrlZY+Ug8H68Ij3FCiqiLQ2+fWah8oxhbqvAL06D
+         NNXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6lqY9qj3FXvhL7X9FVCyVKf2cgudUiUC+bfdYqXqJGI=;
-        b=HsfEPOBgk/GvnNxx3/lE1JqDCDEGUH5aXnoJ8d1ZQsish1s2/dxDMwLj5G73cEYDKN
-         ISvWsE0iAje0bzqh4QMXZ3x9itBaQl8038y0t4Abb4njujMKD3VAwSUx0DCOksAgicWZ
-         rbGbDiUBztnDfS+B9fyLkjM1h7C4iXyjTEwtRWdBmw0Tw4pJBTop0Y2PHFJA/jUclhWu
-         NWoCHpPHOBQ92hzAMFoSutU4kwItOebxjqSnnklDgphLzuKq20eiqy5a1c6HLEIqq/9s
-         698Xav3WVdUBBLNjj/0S7e09oJpbQe0slrrd8BgZIkNDNC4v3bkSTPOkhCODHBzecKhg
-         9EtQ==
-X-Gm-Message-State: APjAAAWY9GSr3lbj4+88t7WndSxvP394kkRw78+pdb6W5n25f+uWxWwD
-        6C1H/ffiY3kHMpSzDslkxyEf5329sKnNAw==
-X-Google-Smtp-Source: APXvYqzhOnQwTfs+iDSGdltJmmDXV4ZTX5Vx1XafZKS1r8efkdns+RLWJpHjxTOHA4rF+IUpqUyLdQ==
-X-Received: by 2002:a63:c10d:: with SMTP id w13mr1699713pgf.28.1560539402988;
-        Fri, 14 Jun 2019 12:10:02 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
-        by smtp.gmail.com with ESMTPSA id w132sm3479366pfd.78.2019.06.14.12.10.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 12:10:02 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 12:09:57 -0700
-From:   Benson Leung <bleung@google.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Enrico Granata <egranata@google.com>,
-        Ting Shen <phoenixshen@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Guenter Roeck <groeck@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        linux-input@vger.kernel.org,
-        Colin Ian King <colin.king@canonical.com>,
-        gwendal@chromium.org, Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] Input: cros_ec_keyb: mask out extra flags in event_type
-Message-ID: <20190614190957.GA243443@google.com>
-References: <20190614065438.142867-1-phoenixshen@chromium.org>
- <CAPR809sASD=MrQkJULVBgc_iqiPKE2xr8eUR0d4qymQkLUYRaw@mail.gmail.com>
- <20190614185533.GA142889@dtor-ws>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w0I3Z4/wykFceLcnHYGRYFdVs0dZ0k9LRu5iTius9Iw=;
+        b=rr4A8fU1XItOQRMT9khIcAadv20ar2Ipj6WuAvJ6zlx173TJTmTd2SJYMNUxuhFJ1G
+         BO85WwMoYNiNNg0/tmCWL4ZnZ1BScb55LDyccwoXuHkwkUnbHd7UlLEHyswbNCe7CVnU
+         d1MVvrIx7glQcYh/cz6A2DmvuGtGIXPrOwyMCLoGScfd2fQO1AE0POy+chUCrZWbF+nU
+         UkOzN3SW5puKKiO/xF+zP4HKb3UxS0tjPbhRBeyJiJ/jaJRkevTsYF747jdbjQTE9aYE
+         VlSXpzicCJaqG/6vVW9kNdjHgI8a9nQ+wR4dBMM/xcKI5+vq9YjA+Syo1hxDSj4YkgVY
+         7CvA==
+X-Gm-Message-State: APjAAAXIkY0Qv1AqHuPg/wiod/V8NQNeNJMFyMtNBDWPstz3GT1ByQ68
+        7bS4aCdiPddwUS0dGn1vDucEd15lb4H7ls1zjqKTag==
+X-Google-Smtp-Source: APXvYqzEVYGlHoZkWrye3rY6TtV0y/Qte0ID7jOxNQlVQIw5+ehT5paV7AFYmOyokxxPC/d+hbQWI8uD+4RTYNGDKms=
+X-Received: by 2002:a5d:8506:: with SMTP id q6mr1794969ion.41.1560539420401;
+ Fri, 14 Jun 2019 12:10:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
-Content-Disposition: inline
-In-Reply-To: <20190614185533.GA142889@dtor-ws>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190601082722.44543-1-irogers@google.com> <5084acfa-59a4-996f-bb1d-69fbbac01b87@linux.intel.com>
+In-Reply-To: <5084acfa-59a4-996f-bb1d-69fbbac01b87@linux.intel.com>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Fri, 14 Jun 2019 12:10:08 -0700
+Message-ID: <CABPqkBRDzZnofavMC0gYoRQ3iawe19qqGwufdRQJVyjr4E7xrg@mail.gmail.com>
+Subject: Re: [PATCH] perf cgroups: Don't rotate events for cgroups unnecessarily
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 13, 2019 at 9:13 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>
+>
+>
+> On 6/1/2019 4:27 AM, Ian Rogers wrote:
+> > Currently perf_rotate_context assumes that if the context's nr_events !=
+> > nr_active a rotation is necessary for perf event multiplexing. With
+> > cgroups, nr_events is the total count of events for all cgroups and
+> > nr_active will not include events in a cgroup other than the current
+> > task's. This makes rotation appear necessary for cgroups when it is not.
+> >
+> > Add a perf_event_context flag that is set when rotation is necessary.
+> > Clear the flag during sched_out and set it when a flexible sched_in
+> > fails due to resources.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >   include/linux/perf_event.h |  5 +++++
+> >   kernel/events/core.c       | 42 +++++++++++++++++++++++---------------
+> >   2 files changed, 30 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> > index 15a82ff0aefe..7ab6c251aa3d 100644
+> > --- a/include/linux/perf_event.h
+> > +++ b/include/linux/perf_event.h
+> > @@ -747,6 +747,11 @@ struct perf_event_context {
+> >       int                             nr_stat;
+> >       int                             nr_freq;
+> >       int                             rotate_disable;
+> > +     /*
+> > +      * Set when nr_events != nr_active, except tolerant to events not
+> > +      * needing to be active due to scheduling constraints, such as cgroups.
+> > +      */
+> > +     int                             rotate_necessary;
+>
+> It looks like the rotate_necessary is only useful for cgroup and cpuctx.
+> Why not move it to struct perf_cpu_context and under #ifdef
+> CONFIG_CGROUP_PERF?
+> And rename it cgrp_rotate_necessary?
+>
+I am not sure I see the point here. What I'd like to see is a uniform
+signal for rotation needed in per-task, per-cpu or per-cgroup modes.
+Ian's patch does that. It does make it a lot more efficient in cgroup
+mode, by avoiding unnecessary rotations, and does not alter/improve
+on any of the other two modes.
 
---UlVJffcvxoiEqYs2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Dmitry,
-
-On Fri, Jun 14, 2019 at 11:55:33AM -0700, Dmitry Torokhov wrote:
-> On Fri, Jun 14, 2019 at 11:27:03AM -0700, Enrico Granata wrote:
-> > On Thu, Jun 13, 2019 at 11:54 PM Ting Shen <phoenixshen@chromium.org> w=
-rote:
-> > >
-> > > http://crosreview.com/1341159 added a EC_MKBP_HAS_MORE_EVENTS flag to
-> > > the event_type field, the receiver side should mask out this extra bi=
-t when
-> > > processing the event.
-> > >
-> > > Signed-off-by: Ting Shen <phoenixshen@chromium.org>
-> >=20
-> > Reviewed-by: Enrico Granata <egranata@google.com>
->=20
-> EC_MKBP_EVENT_TYPE_MASK is not in Linus' tree. It would be better to
-> merge this path through whatever tree that is bringing in that
-> definition.
->=20
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-Yup, this looks like it's coming in through Lee's MFD tree, a series from
-Gwendal to update cros_ec_commands.h.
-
-784dd15c930f mfd: cros_ec: Fix event processing API
-
-That commit is in the immutable branch for v5.3 here:
- git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-cros-v5.3
-
-I'd recommend the chrome-platform tree since we'll be pulling in that IB too
-for some other refactoring Enric is working on.
-
-Thanks,
-Benson
-
->=20
-> Thanks.
->=20
-> --=20
-> Dmitry
-
---=20
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
-
---UlVJffcvxoiEqYs2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXQPxBQAKCRBzbaomhzOw
-wjbnAP9f8fuB3qp/BLcnKIDCaVJuUkXv7kRFVev0gUsyOwWh+gD9GYkTyM0et9Iq
-t823F3GYAzo2PQLkdpuRbESWLoCW1wU=
-=Lfmp
------END PGP SIGNATURE-----
-
---UlVJffcvxoiEqYs2--
+> Thanks,
+> Kan
+>
+> >       refcount_t                      refcount;
+> >       struct task_struct              *task;
+> >
+> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > index abbd4b3b96c2..41ae424b9f1d 100644
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -2952,6 +2952,12 @@ static void ctx_sched_out(struct perf_event_context *ctx,
+> >       if (!ctx->nr_active || !(is_active & EVENT_ALL))
+> >               return;
+> >
+> > +     /*
+> > +      * If we had been multiplexing, no rotations are necessary now no events
+> > +      * are active.
+> > +      */
+> > +     ctx->rotate_necessary = 0;
+> > +
+> >       perf_pmu_disable(ctx->pmu);
+> >       if (is_active & EVENT_PINNED) {
+> >               list_for_each_entry_safe(event, tmp, &ctx->pinned_active, active_list)
+> > @@ -3325,6 +3331,15 @@ static int flexible_sched_in(struct perf_event *event, void *data)
+> >                       sid->can_add_hw = 0;
+> >       }
+> >
+> > +     /*
+> > +      * If the group wasn't scheduled then set that multiplexing is necessary
+> > +      * for the context. Note, this won't be set if the event wasn't
+> > +      * scheduled due to event_filter_match failing due to the earlier
+> > +      * return.
+> > +      */
+> > +     if (event->state == PERF_EVENT_STATE_INACTIVE)
+> > +             sid->ctx->rotate_necessary = 1;
+> > +
+> >       return 0;
+> >   }
+> >
+> > @@ -3690,24 +3705,17 @@ ctx_first_active(struct perf_event_context *ctx)
+> >   static bool perf_rotate_context(struct perf_cpu_context *cpuctx)
+> >   {
+> >       struct perf_event *cpu_event = NULL, *task_event = NULL;
+> > -     bool cpu_rotate = false, task_rotate = false;
+> > -     struct perf_event_context *ctx = NULL;
+> > +     struct perf_event_context *task_ctx = NULL;
+> > +     int cpu_rotate, task_rotate;
+> >
+> >       /*
+> >        * Since we run this from IRQ context, nobody can install new
+> >        * events, thus the event count values are stable.
+> >        */
+> >
+> > -     if (cpuctx->ctx.nr_events) {
+> > -             if (cpuctx->ctx.nr_events != cpuctx->ctx.nr_active)
+> > -                     cpu_rotate = true;
+> > -     }
+> > -
+> > -     ctx = cpuctx->task_ctx;
+> > -     if (ctx && ctx->nr_events) {
+> > -             if (ctx->nr_events != ctx->nr_active)
+> > -                     task_rotate = true;
+> > -     }
+> > +     cpu_rotate = cpuctx->ctx.rotate_necessary;
+> > +     task_ctx = cpuctx->task_ctx;
+> > +     task_rotate = task_ctx ? task_ctx->rotate_necessary : 0;
+> >
+> >       if (!(cpu_rotate || task_rotate))
+> >               return false;
+> > @@ -3716,7 +3724,7 @@ static bool perf_rotate_context(struct perf_cpu_context *cpuctx)
+> >       perf_pmu_disable(cpuctx->ctx.pmu);
+> >
+> >       if (task_rotate)
+> > -             task_event = ctx_first_active(ctx);
+> > +             task_event = ctx_first_active(task_ctx);
+> >       if (cpu_rotate)
+> >               cpu_event = ctx_first_active(&cpuctx->ctx);
+> >
+> > @@ -3724,17 +3732,17 @@ static bool perf_rotate_context(struct perf_cpu_context *cpuctx)
+> >        * As per the order given at ctx_resched() first 'pop' task flexible
+> >        * and then, if needed CPU flexible.
+> >        */
+> > -     if (task_event || (ctx && cpu_event))
+> > -             ctx_sched_out(ctx, cpuctx, EVENT_FLEXIBLE);
+> > +     if (task_event || (task_ctx && cpu_event))
+> > +             ctx_sched_out(task_ctx, cpuctx, EVENT_FLEXIBLE);
+> >       if (cpu_event)
+> >               cpu_ctx_sched_out(cpuctx, EVENT_FLEXIBLE);
+> >
+> >       if (task_event)
+> > -             rotate_ctx(ctx, task_event);
+> > +             rotate_ctx(task_ctx, task_event);
+> >       if (cpu_event)
+> >               rotate_ctx(&cpuctx->ctx, cpu_event);
+> >
+> > -     perf_event_sched_in(cpuctx, ctx, current);
+> > +     perf_event_sched_in(cpuctx, task_ctx, current);
+> >
+> >       perf_pmu_enable(cpuctx->ctx.pmu);
+> >       perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+> >
