@@ -2,85 +2,93 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED020C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22011C31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C10B12082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B3B2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:44:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RU+fVwU0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uX+dN39E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbfFNLoT (ORCPT
+        id S1727643AbfFNLob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 07:44:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56532 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfFNLoT (ORCPT
+        Fri, 14 Jun 2019 07:44:31 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41555 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727164AbfFNLoa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 07:44:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=N2usWe+DF5bPKJZPBYT2JLd/gE3UHs5gaod0EYiWn0I=; b=RU+fVwU0SYHwiXwH3G6btplv7
-        94vsmIFwwr6JKRMHE8Vhsf9s3IPtIBAKx3bYr8fllCl7dNM2KjaU2Ck39tgmbkvDsQj9tLDetB/7k
-        n8pTUI9EtYfOM5vyiXCkqsn4+lCUBNvcqBpDENJ/5TSplSzFREpI++eQsfzY3W1GhxU1+D8KK3Csd
-        ZdIXoyKpcc3MvU/d1a35GmWl6W15jux52vcYY18wyhJbBn9lte1Zdk9V2ot6MDtwmvqZUVEXBwifJ
-        Rsc+A4k4vJUkGYzEbn4jotLhBC2vQkoiOPF6BiRXn6iIMcaaM+IXMl4ahCy7+hlaNyO0xvo6roEMl
-        GU/cB+sbg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbkcs-0005tV-Fc; Fri, 14 Jun 2019 11:44:11 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D3C9020A15636; Fri, 14 Jun 2019 13:44:08 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 13:44:08 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 44/62] x86/mm: Set KeyIDs in encrypted VMAs for MKTME
-Message-ID: <20190614114408.GD3436@hirez.programming.kicks-ass.net>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-45-kirill.shutemov@linux.intel.com>
+        Fri, 14 Jun 2019 07:44:30 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so2182539wrm.8;
+        Fri, 14 Jun 2019 04:44:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nfOL/QEZKCqwjy4s7vi3c4DFfSxvD/93w3BZ2MZj8Vk=;
+        b=uX+dN39E3i0FIlS5Q321OQ/Ml+GopVkhaRtA0MOAhayeHrvd5so3euF27cf7H/Z5Ei
+         GIqhyq/D9j1Nxkqn43pH1JIlHBQsWCfBcp7RBiLSX/3mKx6JWVaZZ9HHsD/rYwk6Ogar
+         2bH5E/jYfTzaBsB7sEPA2q+Qgy45fLc0uQ4JSrZLBQMs45zYLbTGt79Hzh/KjBtvJIe4
+         S5HzMUt9HyOKba9ccuFk2Xhc+hlcsIZfsvAyCvxWsXr3ADCe6WfetwaRr4QeOREkV6lA
+         Pe3p+ISTmpo1cIvUho0yivmqAdaqJF8duYIu84mIjn3HUQSAJgYJ5e7ixUVkCsFZg62L
+         qlpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nfOL/QEZKCqwjy4s7vi3c4DFfSxvD/93w3BZ2MZj8Vk=;
+        b=eGHkm6CvRfEVwQ3FhRgtST/xZar29f1vW2PhzbA+2dExgtkLToLnwEsiDUWhCAbSPc
+         rIs2W/pzInHyPlXydVF45tPatU1ComCzuOV07+2qje88vLskCip1E7iJFAtQ4rwFMoeG
+         9QaQYJcvigI/foT8d8EpHQ5sxIBS6jrJQAihOxbZOlTB7zPQc9WTbIVcYm4T3A/lEfS3
+         oeKQVLRiGwK8WPrpHew2zGe/8KRM2FW11HweMe+n/MjLCxtE+cz832Gt0Fis/NLbU3zl
+         x2dtf5ZdDHM+9Y4sq5djbDjrenXmjuAIMxrx4bB2ZzojcjoN71aN862UEfJSaOjIHjxJ
+         C8iw==
+X-Gm-Message-State: APjAAAUnH7Sf6XU2Vgl19xMRecE3fhzF3SgUaXQ9TVktgBn7SlLu/F6F
+        LVbgzMDKgbNIbcMqQIPR9Qs=
+X-Google-Smtp-Source: APXvYqzC0NHfeSRCuYRGy3eWWyCg/1pEvAHwAwn0YSXciR+vsSOL8YcgVHefJ+T3cMLSWpKuQXikbg==
+X-Received: by 2002:a5d:6b12:: with SMTP id v18mr65017972wrw.306.1560512668442;
+        Fri, 14 Jun 2019 04:44:28 -0700 (PDT)
+Received: from localhost.localdomain ([185.107.117.129])
+        by smtp.gmail.com with ESMTPSA id b14sm2955592wro.5.2019.06.14.04.44.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 04:44:27 -0700 (PDT)
+From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, josef@toxicpanda.com,
+        dennis@kernel.org
+Cc:     Pavel Begunkov <asml.silence@gmail.com>
+Subject: [PATCH 0/2] Fix misuse of blk_rq_stats in blk-iolatency
+Date:   Fri, 14 Jun 2019 14:44:11 +0300
+Message-Id: <cover.1560510935.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508144422.13171-45-kirill.shutemov@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 05:44:04PM +0300, Kirill A. Shutemov wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> MKTME architecture requires the KeyID to be placed in PTE bits 51:46.
-> To create an encrypted VMA, place the KeyID in the upper bits of
-> vm_page_prot that matches the position of those PTE bits.
-> 
-> When the VMA is assigned a KeyID it is always considered a KeyID
-> change. The VMA is either going from not encrypted to encrypted,
-> or from encrypted with any KeyID to encrypted with any other KeyID.
-> To make the change safely, remove the user pages held by the VMA
-> and unlink the VMA's anonymous chain.
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-This does not look like a transformation that preserves content; is
-mprotect() still a suitable name?
+There are implicit assumptions about struct blk_rq_stats, which make
+it's very easy to misuse. The first patch fixes consequences, and the
+second employs type-system to prevent recurrences.
+
+
+Pavel Begunkov (2):
+  blk-iolatency: Fix zero mean in previous stats
+  blk-stats: Introduce explicit stat staging buffers
+
+ block/blk-iolatency.c     | 60 ++++++++++++++++++++++++++++++---------
+ block/blk-stat.c          | 48 +++++++++++++++++++++++--------
+ block/blk-stat.h          |  9 ++++--
+ include/linux/blk_types.h |  6 ++++
+ 4 files changed, 94 insertions(+), 29 deletions(-)
+
+-- 
+2.22.0
+
