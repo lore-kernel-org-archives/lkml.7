@@ -2,100 +2,76 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570DCC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3E5C31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E90F2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:10:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JeHvFDZ1"
+	by mail.kernel.org (Postfix) with ESMTP id 6FFC82133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:10:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfFNLKW (ORCPT
+        id S1727427AbfFNLKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 07:10:22 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37582 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbfFNLKW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 07:10:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=k3YqewRln6/e39DRE9WtzDLs69QdBQzUJmMwD/K+784=; b=JeHvFDZ1XZKf46UtJbklNv329
-        zxPeWCBBT5gHiRXg0qHfYMSShJ50q81UGDkAeJE9FcWdO/SCjEYz3JU8UXpLuU6uc6PFP2XpRNvK+
-        nNlwp9bUo/kdsuC6AFfbgd7HXZDFHpn1xHrafeJJR6SixQoH6Nv/Wtx4oVvAw3fTufghLgtkrBv9j
-        an8WKxT5Gswm8hfhSGYfbnRS0eDamGKTp/8YlAej/fobLDGjuVhLGjjzF9kfoI0Mgn60AM8/k+9Lk
-        sCp4omDUt0XNmJ7wkPr4sjPSGb6D1rRg8Rh2ep/EJpIlClSa65BB1JGUsIn20Gch0banuMTPifR/I
-        sDKPR1LCQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbk62-00073a-5e; Fri, 14 Jun 2019 11:10:14 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E916520A28B1F; Fri, 14 Jun 2019 13:10:12 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 13:10:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 19/62] x86/mm: Handle encrypted memory in
- page_to_virt() and __pa()
-Message-ID: <20190614111012.GZ3436@hirez.programming.kicks-ass.net>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-20-kirill.shutemov@linux.intel.com>
+        Fri, 14 Jun 2019 07:10:55 -0400
+Received: from latin.grep.be ([46.4.76.168]:42671 "EHLO latin.grep.be"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727262AbfFNLKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 07:10:54 -0400
+X-Greylist: delayed 2218 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Jun 2019 07:10:53 EDT
+Received: from [105.227.108.147] (helo=gangtai.home.grep.be)
+        by latin.grep.be with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <w@uter.be>)
+        id 1hbjWp-0000YE-NR; Fri, 14 Jun 2019 12:33:52 +0200
+Received: from wouter by gangtai.home.grep.be with local (Exim 4.92)
+        (envelope-from <w@uter.be>)
+        id 1hbjWh-0003hH-Vl; Fri, 14 Jun 2019 12:33:43 +0200
+Date:   Fri, 14 Jun 2019 12:33:43 +0200
+From:   Wouter Verhelst <w@uter.be>
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     Roman Stratiienko <roman.stratiienko@globallogic.com>,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>,
+        linux-block@vger.kernel.org, axboe@kernel.dkn.org
+Subject: Re: [PATCH 2/2] nbd: add support for nbd as root device
+Message-ID: <20190614103343.GB11340@grep.be>
+References: <20190612163144.18486-1-roman.stratiienko@globallogic.com>
+ <20190612163144.18486-2-roman.stratiienko@globallogic.com>
+ <20190613135241.aghcrrz7rg2au3bw@MacBook-Pro-91.local>
+ <CAODwZ7v=RSsmVj5GjcvGn2dn+ejLRBHZ79x-+S9DrX4GoXuVaQ@mail.gmail.com>
+ <20190613145535.tdesq3y2xy6ycpw7@MacBook-Pro-91.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190508144422.13171-20-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20190613145535.tdesq3y2xy6ycpw7@MacBook-Pro-91.local>
+X-Speed: Gates' Law: Every 18 months, the speed of software halves.
+Organization: none
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 05:43:39PM +0300, Kirill A. Shutemov wrote:
-> Per-KeyID direct mappings require changes into how we find the right
-> virtual address for a page and virt-to-phys address translations.
-> 
-> page_to_virt() definition overwrites default macros provided by
-> <linux/mm.h>.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> ---
->  arch/x86/include/asm/page.h    | 3 +++
->  arch/x86/include/asm/page_64.h | 2 +-
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/page.h b/arch/x86/include/asm/page.h
-> index 39af59487d5f..aff30554f38e 100644
-> --- a/arch/x86/include/asm/page.h
-> +++ b/arch/x86/include/asm/page.h
-> @@ -72,6 +72,9 @@ static inline void copy_user_page(void *to, void *from, unsigned long vaddr,
->  extern bool __virt_addr_valid(unsigned long kaddr);
->  #define virt_addr_valid(kaddr)	__virt_addr_valid((unsigned long) (kaddr))
->  
-> +#define page_to_virt(x) \
-> +	(__va(PFN_PHYS(page_to_pfn(x))) + page_keyid(x) * direct_mapping_size)
-> +
->  #endif	/* __ASSEMBLY__ */
+On Thu, Jun 13, 2019 at 10:55:36AM -0400, Josef Bacik wrote:
+> Also I mean that there are a bunch of different nbd servers out there.  We have
+> our own here at Facebook, qemu has one, IIRC there's a ceph one.
 
-So this is the bit that makes patch 13 make sense. It would've been nice
-to have that called out in the Changelog or something.
+I can't claim to know about the Facebook one of course, but the qemu one
+uses the same handshake protocol as anyone else. The ceph ones that I've
+seen do too (but there are various implementations of that, so...).
+
+> They all have their own connection protocols.  The beauty of NBD is
+> that it doesn't have to know about that part, it just does the block
+> device part, and I'd really rather leave it that way.  Thanks,
+
+Sure.
+
+OTOH, there is definitely also a benefit to using the same handshake
+protocol everywhere, for interoperability reasons.
+
+-- 
+To the thief who stole my anti-depressants: I hope you're happy
+
+  -- seen somewhere on the Internet on a photo of a billboard
