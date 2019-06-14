@@ -2,84 +2,73 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20558C46477
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAB5C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB2B21473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D1720851
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:27:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726028AbfFNF00 (ORCPT
+        id S1726094AbfFNF11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 01:26:26 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:61337 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725767AbfFNF0Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 01:26:25 -0400
-X-UUID: e7243e1b967d415297b93d470f28f072-20190614
-X-UUID: e7243e1b967d415297b93d470f28f072-20190614
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <jjian.zhou@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 390729238; Fri, 14 Jun 2019 13:26:17 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 14 Jun 2019 13:26:16 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 14 Jun 2019 13:26:15 +0800
-From:   Jjian Zhou <jjian.zhou@mediatek.com>
-To:     <ulf.hansson@linaro.org>, <chaotian.jing@mediatek.com>,
-        <matthias.bgg@gmail.com>, <linux-mmc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <yong.mao@mediatek.com>, <srv_heupstream@mediatek.com>,
-        jjian zhou <jjian.zhou@mediatek.com>
-Subject: [PATCH 2/2] mmc: mediatek: fix SDIO IRQ detection issue
-Date:   Fri, 14 Jun 2019 13:26:10 +0800
-Message-ID: <1560489970-30467-2-git-send-email-jjian.zhou@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1560489970-30467-1-git-send-email-jjian.zhou@mediatek.com>
-References: <1560489970-30467-1-git-send-email-jjian.zhou@mediatek.com>
+        Fri, 14 Jun 2019 01:27:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:55028 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725767AbfFNF11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 01:27:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 937E2367;
+        Thu, 13 Jun 2019 22:27:26 -0700 (PDT)
+Received: from [10.162.41.168] (p8cg001049571a15.blr.arm.com [10.162.41.168])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CC353F246;
+        Thu, 13 Jun 2019 22:27:22 -0700 (PDT)
+Subject: Re: [PATCH] mm/vmalloc: Check absolute error return from
+ vmap_[p4d|pud|pmd|pte]_range()
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Roman Penyaev <rpenyaev@suse.de>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <1560413551-17460-1-git-send-email-anshuman.khandual@arm.com>
+ <7cc6a46c50c2008bfb968c5e48af5a49@suse.de>
+ <406afc57-5a77-a77c-7f71-df1e6837dae1@arm.com>
+ <20190613153141.GJ32656@bombadil.infradead.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <4b5c0b18-c670-3631-f47f-3f80bae8fe4b@arm.com>
+Date:   Fri, 14 Jun 2019 10:57:42 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <20190613153141.GJ32656@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: jjian zhou <jjian.zhou@mediatek.com>
 
-If cmd19 timeout or response crcerr occurs during execute_tuning(),
-it need invoke msdc_reset_hw(). Otherwise SDIO IRQ can't be detected.
 
-Signed-off-by: jjian zhou <jjian.zhou@mediatek.com>
-Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-Signed-off-by: Yong Mao <yong.mao@mediatek.com>
----
- drivers/mmc/host/mtk-sd.c | 2 ++
- 1 file changed, 2 insertions(+)
+On 06/13/2019 09:01 PM, Matthew Wilcox wrote:
+> On Thu, Jun 13, 2019 at 08:51:17PM +0530, Anshuman Khandual wrote:
+>> acceptable ? What we have currently is wrong where vmap_pmd_range() could
+>> just wrap EBUSY as ENOMEM and send up the call chain.
+> 
+> It's not wrong.  We do it in lots of places.  Unless there's a caller
+> which really needs to know the difference, it's often better than
+> returning the "real error".
 
-diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-index 29992ae..df8f09d 100644
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -1031,6 +1031,8 @@ static void msdc_request_done(struct msdc_host *host, struct mmc_request *mrq)
- 	msdc_track_cmd_data(host, mrq->cmd, mrq->data);
- 	if (mrq->data)
- 		msdc_unprepare_data(host, mrq);
-+	if (host->error)
-+		msdc_reset_hw(host);
- 	mmc_request_done(host->mmc, mrq);
- }
-
---
-1.9.1
-
+I can understand the fact that because there are no active users of this
+return code, the current situation has been alright. But then I fail to
+understand how can EBUSY be made ENOMEM and let the caller to think that
+vmap_page_rage() failed because of lack of memory when it is clearly not
+the case. It is really surprising how it can be acceptable inside kernel
+(init_mm) page table functions which need to be thorough enough.
