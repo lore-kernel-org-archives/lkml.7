@@ -2,113 +2,169 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15251C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C166AC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF9821537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9138D2173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560523967;
-	bh=iaMwC5vxzH51A+db2IQS+SUQpNZS/nq8vyQQFk6NyFY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EpRlNpu4HJalYeolGYM3+oLM5pM7h7Jtr4ZcFGgH8y59rJgsNl73/eEPVbPyzXtdK
-	 qSXXMQ0xnVP0KBoCMeogHHiphQqgWK1nGijLdElWxS2IiTo/XdYYJcrGdXL2XalnZZ
-	 8yA2KsHREZktVwXiy/adnR+nnyogmXqecTGTZ5No=
+	s=default; t=1560523987;
+	bh=xXLXuR+L8hhQa1ErD+u0rcoh9h0mBsxWabprP9kW9MI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EWAdZjxmGzCerv/pkzuXShgJL7GPfGLv9eLwiDCuT04UBvP+PryRZlDwfJYIKQPv7
+	 iftMhJdyhTdJ5wOriAgnMhByr10RlbGTzgs08YUUaRN/fDxXgTPj3vaj+dpEHuLdbM
+	 iDxsgojpeSg8yGkFbJYXl+97snwqtpcNyaB21y2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfFNOwq (ORCPT
+        id S1728882AbfFNOxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:52:46 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41463 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbfFNOwq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:52:46 -0400
-Received: by mail-pl1-f195.google.com with SMTP id s24so1120866plr.8;
-        Fri, 14 Jun 2019 07:52:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0HRENCM8//S+WGvQP1amFcQvEAKniYiMn7pbWKjyBdY=;
-        b=TyVTGaOw5AtNg2y27QJA4f/taFVIo21wtfv0z2WUTclnFvohafgQjLOdGAtM5sZjXW
-         adxtI18hJyHbxrjCmeTqI5/YcDHRTN18D/p+P3g7LxhBb9i/TZyjFv5ovj/yGzc9KUQA
-         MbczNKRAp+ZOOgSP68Ob/KUtH/hvR53lN3fW4o5r3g0E2lgB3/KxZiKdQN+lhgVbdz5C
-         UT+VL8iM+atG9nsnoEHBJwMm4lJ/iMsWfeLI/K00ZPAV5JToGPU8DtMi885Y5RptlX8k
-         LSahdR7G3TjPGrSvg49LHEn6jf5N8lKBY2/FfkBq0ZysPLQoLvgJCeuCLpz9r+ImsZe9
-         orgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0HRENCM8//S+WGvQP1amFcQvEAKniYiMn7pbWKjyBdY=;
-        b=YeR4xRiQW7zsFPzxKafQarps5nbTaITtNACzQ6Q4ym7IquI4uku8CGS11HfpMt7qPH
-         EszQdQZ+Ebb2d0uzZh6Ok0PaIhrWnihzYbFfEOfIEWFl6CQ7TgbRBsmFIGPHhTQXMAH2
-         AAYckEgKPYMwJavTRDTkC5bFDuT59VliL5YhaebgGgO73SluK+VJlYbEsQae72H27v88
-         LdJIjZjeGEp8dnQmveUtRT9XlU//5U6UQIYHiLeEd137ajnOls6kFe8h3WSubyC6CLEn
-         E/QrzijDeVsVpyOp/DS8x3/e0Ipe0RhTMZ7P1Ai/eaOfeCtrk9jOU/xkQ0u3M5eWualE
-         jRZQ==
-X-Gm-Message-State: APjAAAVOVK2RlgwVsemhMBWIGJO2nfj3lcEpZ0t891rKjfI4X2x/Lc2E
-        WePWi8I8Ve1Pe4Ya/GOyLtw=
-X-Google-Smtp-Source: APXvYqyFUmlEREi/X57+HY4aEPz63qUPvrk2aqLcRGoJiiT/qF11K4eFgDz2Y3M6c8EbIuSjXZEhcw==
-X-Received: by 2002:a17:902:8f81:: with SMTP id z1mr27307623plo.290.1560523965030;
-        Fri, 14 Jun 2019 07:52:45 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:180::1:b330])
-        by smtp.gmail.com with ESMTPSA id v64sm3706012pfv.172.2019.06.14.07.52.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 07:52:44 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 07:52:39 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Quentin Monnet <quentin.monnet@netronome.com>
-Cc:     axboe@kernel.dk, newella@fb.com, clm@fb.com, josef@toxicpanda.com,
-        dennisz@fb.com, lizefan@huawei.com, hannes@cmpxchg.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        kernel-team@fb.com, cgroups@vger.kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, bpf@vger.kernel.org
-Subject: Re: [PATCH 10/10] blkcg: implement BPF_PROG_TYPE_IO_COST
-Message-ID: <20190614145239.GA538958@devbig004.ftw2.facebook.com>
-References: <20190614015620.1587672-1-tj@kernel.org>
- <20190614015620.1587672-11-tj@kernel.org>
- <e4d1df7b-66bb-061a-8ecb-ff1e5be3ab1d@netronome.com>
+        Fri, 14 Jun 2019 10:53:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728272AbfFNOxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:53:06 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E35872173C;
+        Fri, 14 Jun 2019 14:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560523985;
+        bh=xXLXuR+L8hhQa1ErD+u0rcoh9h0mBsxWabprP9kW9MI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wk/1a4shWxNb0N1kY/k/UaqXtQEShtWb2wrMVi6jUYzhWtd/6z8tKQrLCEehTBjkV
+         R2+kOEa/LD4aQEKDgGDxy2BNF5fk8xXRdVl7rjbHpb6Iy8bSon9qs9Rvs7em8b86ro
+         WWbH3PUw3t8OP6hKhg8PNzM0SLcRKPAcSRepSB6E=
+Received: by mail-qk1-f173.google.com with SMTP id s22so1807517qkj.12;
+        Fri, 14 Jun 2019 07:53:04 -0700 (PDT)
+X-Gm-Message-State: APjAAAUHuY/WPABBbVO8I889v6MQt93RYcq4+x9bfNvEbhI7aZuUtWKC
+        Ch8VopGzF/kHt4YjCHyEhVBL2HG0LrZZRQq11g==
+X-Google-Smtp-Source: APXvYqzCzbjmjEqoh/p0P1ONf9SWsDRWOXpqAjANf0PIAA9ZEPQPgEKQ4Fa+P/aQgf5tr5TAK/wuQsBfgtzZ/HtFS+4=
+X-Received: by 2002:a05:620a:13d1:: with SMTP id g17mr21296388qkl.121.1560523984156;
+ Fri, 14 Jun 2019 07:53:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e4d1df7b-66bb-061a-8ecb-ff1e5be3ab1d@netronome.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190614081650.11880-1-daniel.baluta@nxp.com> <20190614081650.11880-3-daniel.baluta@nxp.com>
+In-Reply-To: <20190614081650.11880-3-daniel.baluta@nxp.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 14 Jun 2019 08:52:51 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJKgMB1PNA33gmFju4AQTc2WaSBoOGQExVaGd9LZRmk_g@mail.gmail.com>
+Message-ID: <CAL_JsqJKgMB1PNA33gmFju4AQTc2WaSBoOGQExVaGd9LZRmk_g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: arm: fsl: Add DSP IPC binding support
+To:     Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Daniel Baluta <daniel.baluta@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Oleksij Rempel <o.rempel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Quentin.
+On Fri, Jun 14, 2019 at 2:15 AM <daniel.baluta@nxp.com> wrote:
+>
+> From: Daniel Baluta <daniel.baluta@nxp.com>
+>
+> DSP IPC is the layer that allows the Host CPU to communicate
+> with DSP firmware.
+> DSP is part of some i.MX8 boards (e.g i.MX8QM, i.MX8QXP)
+>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  .../bindings/arm/freescale/fsl,dsp.yaml       | 43 +++++++++++++++++++
 
-On Fri, Jun 14, 2019 at 12:32:09PM +0100, Quentin Monnet wrote:
-> Please make sure to update the documentation and bash
-> completion when adding the new type to bpftool. You
-> probably want something like the diff below.
+bindings/dsp/...
 
-Thank you so much.  Will incorporate them.  Just in case, while it's
-noted in the head message, I lost the RFC marker while prepping this
-patch.  It isn't yet clear whether we'd really need custom cost
-functions and this patch is included more as a proof of concept.  If
-it turns out that this is beneficial enough, the followings need to be
-answered.
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml b/Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml
+> new file mode 100644
+> index 000000000000..16d9df1d397b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-* Is block ioctl the right mechanism to attach these programs?
+The preference is to dual license new bindings: GPL-2.0 OR BSD-2-Clause
 
-* Are there more parameters that need to be exposed to the programs?
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/freescale/fsl,dsp.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP i.MX IPC DSP driver
 
-* It'd be great to have efficient access to per-blockdev and
-  per-blockdev-cgroup-pair storages available to these programs so
-  that they can keep track of history.  What'd be the best of way of
-  doing that considering the fact that these programs will be called
-  per each IO and the overhead can add up quickly?
+This isn't a driver.
 
-Thanks.
+> +
+> +maintainers:
+> +  - Daniel Baluta <daniel.baluta@nxp.com>
+> +
+> +description: |
+> +  IPC communication layer between Host CPU and DSP on NXP i.MX8 platforms
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - fsl,imx-dsp
 
--- 
-tejun
+You can have a fallback, but it needs SoC specific compatible(s).
+
+> +
+> +  mboxes:
+> +    description:
+> +      List of phandle of 2 MU channels for TXDB, 2 MU channels for RXDB
+> +      (see mailbox/fsl,mu.txt)
+> +    maxItems: 1
+
+Should be 4?
+
+> +
+> +  mbox-names
+> +    description:
+> +      Mailboxes names
+> +    allOf:
+> +      - $ref: "/schemas/types.yaml#/definitions/string"
+
+No need for this, '*-names' already has a defined type.
+
+> +      - enum: [ "txdb0", "txdb1", "rxdb0", "rxdb1" ]
+
+Should be an 'items' list with 4 entries?
+
+> +required:
+> +  - compatible
+> +  - mboxes
+> +  - mbox-names
+
+This seems incomplete. How does one boot the DSP? Load firmware? No
+resources that Linux has to manage. Shared memory?
+
+> +
+> +examples:
+> +  - |
+> +    dsp {
+> +      compatbile = "fsl,imx-dsp";
+> +      mbox-names = "txdb0", "txdb1", "rxdb0", "rxdb1";
+> +      mboxes = <&lsio_mu13 2 0 &lsio_mu13 2 1 &lsio_mu13 3 0 &lsio_mu13 3 1>;
+
+mboxes = <&lsio_mu13 2 0>, <&lsio_mu13 2 1>, <&lsio_mu13 3 0>, <&lsio_mu13 3 1>;
+
+> +    };
+> --
+> 2.17.1
+>
