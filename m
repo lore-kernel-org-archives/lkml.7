@@ -2,105 +2,115 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84027C31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45523C31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3CE21537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E644208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfFNC0o (ORCPT
+        id S1726707AbfFNC2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 22:26:44 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:47019 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726283AbfFNC0n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 22:26:43 -0400
-X-UUID: c99698b1d3e04bd8a8ead6e2c9b27021-20190614
-X-UUID: c99698b1d3e04bd8a8ead6e2c9b27021-20190614
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1399065455; Fri, 14 Jun 2019 10:26:35 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 14 Jun 2019 10:26:34 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 14 Jun 2019 10:26:34 +0800
-Message-ID: <1560479194.16718.5.camel@mtksdaap41>
-Subject: Re: [PATCH v3, 10/27] drm/mediatek: split DISP_REG_CONFIG_DSI_SEL
- setting into another use case
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>, <bibby.hsieh@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Fri, 14 Jun 2019 10:26:34 +0800
-In-Reply-To: <1559734986-7379-11-git-send-email-yongqiang.niu@mediatek.com>
-References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1559734986-7379-11-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 13 Jun 2019 22:28:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46804 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbfFNC2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 22:28:52 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 41B3EC057E9F;
+        Fri, 14 Jun 2019 02:28:51 +0000 (UTC)
+Received: from treble (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3543D5ED44;
+        Fri, 14 Jun 2019 02:28:50 +0000 (UTC)
+Date:   Thu, 13 Jun 2019 21:28:48 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>
+Subject: Re: [PATCH 7/9] x86/unwind/orc: Fall back to using frame pointers
+ for generated code
+Message-ID: <20190614022848.ly4vlgsz6fa4bcbl@treble>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <4f536ec4facda97406273a22a4c2677f7cb22148.1560431531.git.jpoimboe@redhat.com>
+ <20190613220054.tmonrgfdeie2kl74@ast-mbp.dhcp.thefacebook.com>
+ <20190614013051.6gnwduy4dsygbamj@treble>
+ <20190614014244.st7fbr6areazmyrb@ast-mbp.dhcp.thefacebook.com>
+ <20190614015848.todgfogryjn573nd@treble>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190614015848.todgfogryjn573nd@treble>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 14 Jun 2019 02:28:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Bibby:
-
-Hi, Yongqiang:
-
-On Wed, 2019-06-05 at 19:42 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+On Thu, Jun 13, 2019 at 08:58:48PM -0500, Josh Poimboeuf wrote:
+> On Thu, Jun 13, 2019 at 06:42:45PM -0700, Alexei Starovoitov wrote:
+> > On Thu, Jun 13, 2019 at 08:30:51PM -0500, Josh Poimboeuf wrote:
+> > > On Thu, Jun 13, 2019 at 03:00:55PM -0700, Alexei Starovoitov wrote:
+> > > > > @@ -392,8 +402,16 @@ bool unwind_next_frame(struct unwind_state *state)
+> > > > >  	 * calls and calls to noreturn functions.
+> > > > >  	 */
+> > > > >  	orc = orc_find(state->signal ? state->ip : state->ip - 1);
+> > > > > -	if (!orc)
+> > > > > -		goto err;
+> > > > > +	if (!orc) {
+> > > > > +		/*
+> > > > > +		 * As a fallback, try to assume this code uses a frame pointer.
+> > > > > +		 * This is useful for generated code, like BPF, which ORC
+> > > > > +		 * doesn't know about.  This is just a guess, so the rest of
+> > > > > +		 * the unwind is no longer considered reliable.
+> > > > > +		 */
+> > > > > +		orc = &orc_fp_entry;
+> > > > > +		state->error = true;
+> > > > 
+> > > > That seems fragile.
+> > > 
+> > > I don't think so.  The unwinder has sanity checks to make sure it
+> > > doesn't go off the rails.  And it works just fine.  The beauty is that
+> > > it should work for all generated code (not just BPF).
+> > > 
+> > > > Can't we populate orc_unwind tables after JIT ?
+> > > 
+> > > As I mentioned it would introduce a lot more complexity.  For each JIT
+> > > function, BPF would have to tell ORC the following:
+> > > 
+> > > - where the BPF function lives
+> > > - how big the stack frame is
+> > > - where RBP and other callee-saved regs are on the stack
+> > 
+> > that sounds like straightforward addition that ORC should have anyway.
+> > right now we're not using rbp in the jit-ed code,
+> > but one day we definitely will.
+> > Same goes for r12. It's reserved right now for 'strategic use'.
+> > We've been thinking to add another register to bpf isa.
+> > It will map to r12 on x86. arm64 and others have plenty of regs to use.
+> > The programs are getting bigger and register spill/fill starting to
+> > become a performance concern. Extra register will give us more room.
 > 
-> Here is two modifition in this patch:
-> 1.bls->dpi0 and rdma1->dsi are differen usecase,
-> Split DISP_REG_CONFIG_DSI_SEL setting into anther usecase
-> 2.remove DISP_REG_CONFIG_DPI_SEL setting, DPI_SEL_IN_BLS is 0 and
-> this is same with hardware defautl setting,
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index 717609d..1bbabe6 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -401,10 +401,9 @@ static void mtk_ddp_sout_sel(void __iomem *config_regs,
->  	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
->  		writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
->  			       config_regs + DISP_REG_CONFIG_OUT_SEL);
+> With CONFIG_FRAME_POINTER, RBP isn't available.  If you look at all the
+> code in the entire kernel you'll notice that BPF JIT is pretty much the
+> only one still clobbering it.
 
-You move 2 register setting out of the path from BLS to DPI0, does this
-path still work? Please make sure that all modification could work on
-all supported SoC.
+Hm.  If you wanted to eventually use R12 for other purposes, there might
+be a way to abstract BPF_REG_FP such that it doesn't actually need a
+dedicated register.  The BPF program's frame pointer will always be a
+certain constant offset away from RBP (real frame pointer), so accesses
+to BPF_REG_FP could still be based on RBP, but with an offset added to
+it.
 
-Regards,
-CK
-
-> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
->  		writel_relaxed(DSI_SEL_IN_RDMA,
->  			       config_regs + DISP_REG_CONFIG_DSI_SEL);
-> -		writel_relaxed(DPI_SEL_IN_BLS,
-> -			       config_regs + DISP_REG_CONFIG_DPI_SEL);
->  	}
->  }
->  
-
-
+-- 
+Josh
