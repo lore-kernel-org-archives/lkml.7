@@ -2,108 +2,117 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2710C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7061CC31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96D9D21473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45FF52183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:14:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560546891;
+	bh=wQlzv9GXi+d6YxFDj5qp88AVZygc6aohbfVT4AQR70Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gYS2XHlX6YNXwhGyqyoej8NJTkN4R/iBJSbEA/RGJD/KG0F0Wpp/QcSAmgf6K4Va+
+	 8GOjIXPTXF5XIePws7b4keQydfETR+10bDYceOe/qokt4O2cwjew9L45faecn/4nJ+
+	 Fz0N59O+gPZGRW9YqVTID5aJqU+iifhDB0qJu46M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfFNVLc (ORCPT
+        id S1726598AbfFNVOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 17:11:32 -0400
-Received: from sauhun.de ([88.99.104.3]:57162 "EHLO pokefinder.org"
+        Fri, 14 Jun 2019 17:14:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725808AbfFNVLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 17:11:32 -0400
-Received: from localhost (p5486CF81.dip0.t-ipconnect.de [84.134.207.129])
-        by pokefinder.org (Postfix) with ESMTPSA id E3A492CF690;
-        Fri, 14 Jun 2019 23:11:29 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 23:11:29 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Bitan Biswas <bbiswas@nvidia.com>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-Subject: Re: [PATCH V3] i2c: busses: tegra: Add suspend-resume support
-Message-ID: <20190614211129.GG17899@ninjato>
-References: <1559885867-10190-1-git-send-email-bbiswas@nvidia.com>
+        id S1726252AbfFNVOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 17:14:49 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D0D921473;
+        Fri, 14 Jun 2019 21:14:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560546889;
+        bh=wQlzv9GXi+d6YxFDj5qp88AVZygc6aohbfVT4AQR70Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ks0AHcQ3CMMcp8lXmC5Q1q+mNRhg76nx20zz7WGQfrHmET+emzaWoOodcXQ82HPjk
+         /Q0wzICC14gHKtUH/c0hiVkAbFD6SklBQgeWeDifIfILXybbVlrUgOA2LE9404heew
+         9zZ4/WlS27thwm4E7UDC674PGe7hBqVr8gYg2J1U=
+Date:   Fri, 14 Jun 2019 16:14:47 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-pci@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org,
+        "Srivatsa S . Bhat" <srivatsa@csail.mit.edu>
+Subject: Re: [PATCH v5] docs: power: convert docs to ReST and rename to *.rst
+Message-ID: <20190614211447.GU13533@google.com>
+References: <7dc94cb4-ebf1-22ab-29c9-fcb2b875a9ac@csail.mit.edu>
+ <72d1f8f360d395958dd0b49165fc51b58801f57e.1560420621.git.mchehab+samsung@kernel.org>
+ <20190614143631.7c99719f@lwn.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iAL9S67WQOXgEPD9"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1559885867-10190-1-git-send-email-bbiswas@nvidia.com>
+In-Reply-To: <20190614143631.7c99719f@lwn.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 14, 2019 at 02:36:31PM -0600, Jonathan Corbet wrote:
+> On Thu, 13 Jun 2019 07:10:36 -0300
+> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> 
+> > Convert the PM documents to ReST, in order to allow them to
+> > build with Sphinx.
+> > 
+> > The conversion is actually:
+> >   - add blank lines and identation in order to identify paragraphs;
+> >   - fix tables markups;
+> >   - add some lists markups;
+> >   - mark literal blocks;
+> >   - adjust title markups.
+> > 
+> > At its new index.rst, let's add a :orphan: while this is not linked to
+> > the main index.rst file, in order to avoid build warnings.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > Acked-by: Mark Brown <broonie@kernel.org>
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Acked-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
+> 
+> So I can't apply this one due to conflicts in include/linux/pci.h.  Bjorn,
+> perhaps the easiest thing is for you to take this one through your tree?
 
---iAL9S67WQOXgEPD9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK, I applied this to pci/docs for v5.3.  I applied this entire patch,
+but if you would prefer that I only apply the PCI-related parts, let
+me know and I'll split those out.
 
-On Thu, Jun 06, 2019 at 10:37:47PM -0700, Bitan Biswas wrote:
-> Post suspend I2C registers have power on reset values. Before any
-> transfer initialize I2C registers to prevent I2C transfer timeout
-> and implement suspend and resume callbacks needed. Fix below errors
-> post suspend:
->=20
-> 1) Tegra I2C transfer timeout during jetson tx2 resume:
->=20
-> [   27.520613] pca953x 1-0074: calling pca953x_resume+0x0/0x1b0 @ 2939, p=
-arent: i2c-1
-> [   27.633623] tegra-i2c 3160000.i2c: i2c transfer timed out
-> [   27.639162] pca953x 1-0074: Unable to sync registers 0x3-0x5. -110
-> [   27.645336] pca953x 1-0074: Failed to sync GPIO dir registers: -110
-> [   27.651596] PM: dpm_run_callback(): pca953x_resume+0x0/0x1b0 returns -=
-110
-> [   27.658375] pca953x 1-0074: pca953x_resume+0x0/0x1b0 returned -110 aft=
-er 127152 usecs
-> [   27.666194] PM: Device 1-0074 failed to resume: error -110
->=20
-> 2) Tegra I2C transfer timeout error on jetson Xavier post resume.
->=20
-> Remove i2c bus lock-unlock calls in resume callback as i2c_mark_adapter_*
-> (suspended-resumed) help ensure i2c core calls from client are not
-> executed before i2c-tegra resume.
->=20
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
-
-Applied to for-next, thanks!
-
-Without a maintainer ack, this is an exception this time. Should we add
-Dmitry as another maintainer or reviewer at least?
-
-
---iAL9S67WQOXgEPD9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0EDYEACgkQFA3kzBSg
-KbatyRAAq25OtkV3cyL//wLtpPgiZySC7XMTWyb09F1aXkX69Iz9IQdZYmIhMc4d
-Ro1OEv1h2R4sS+iN6LAVWyjyA2VyYKYTPmu8ap64AcEulRgW8RRXYOByMc/6ZuNn
-PSVJhy3yTyyPaFugZBrKtd1I6pwZ0RIzaDkgFIBYYRmP9vZzKU2k0LowgNlUcatp
-3rJUMfmZtsZgTWEinbIGTJO6qW9joHdB320mGaS2rEoAVZDu4HNBV/+y9AZzstXT
-/2I5iXRp+/YCDhy0nek0X8joT5WMFMUwaCY9nGmkZ8eLEi0SNW/7f1u/zRlRgNEf
-BLsnphrzIsTaDUIfvs4+hv9Pe34lBZPuhMGnxw55jQePhcOSbIdHIWkhlYQ+56k6
-LraTrKh0NuYSV9kPbaTB8CI2bT/BZ3cXpseMUSuaYNVBRjaUDWNe+f4YT33corgx
-RCLdIRvmnRcIRkIoJit/zAO6rPvCeLsjOc6msSkwdDulAKkX8A7O//6X1zJbwkS7
-B22J0WMP12JUCx7Wis4DVYcZFs+5PKSbKe+0woRavBltd6DmRD5M/ilYt3l59yci
-L7EgB3lYyS7CLjd74tpqJ+XW+DNe5nX4ssrwDFMK5KPWYvOjCWxjC3Qq7jMyVWTA
-77GMA8UB+dLdyvNXpi5Kozgy7ud46IXWtg8gihcUIVd5HEU9Mco=
-=SrVB
------END PGP SIGNATURE-----
-
---iAL9S67WQOXgEPD9--
+Bjorn
