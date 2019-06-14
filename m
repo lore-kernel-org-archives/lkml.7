@@ -2,124 +2,103 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CA9C31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD80C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C492821473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FD920850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:19:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YDO9pFM8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726071AbfFNFPj (ORCPT
+        id S1725858AbfFNFT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 01:15:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:54888 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725801AbfFNFPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 01:15:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 29721367;
-        Thu, 13 Jun 2019 22:15:37 -0700 (PDT)
-Received: from [10.162.41.168] (p8cg001049571a15.blr.arm.com [10.162.41.168])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B446E3F246;
-        Thu, 13 Jun 2019 22:15:25 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH] mm: Generalize and rename notify_page_fault() as
- kprobe_page_fault()
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Fri, 14 Jun 2019 01:19:26 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46763 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfFNFT0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 01:19:26 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 81so664704pfy.13
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 22:19:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nskhfJQuIY7GF0zjhR2dKbT25UZTtER3vtr2UfHLkl0=;
+        b=YDO9pFM8Osq93VSo2f3tLfUq86JpUfsiv1X1siRWgaiWymHC7MRXwP56QUxsFHRv3H
+         SKCzR0zRWWIU5aRmc/2nEN3bRodhtEo4Zx4gbF9YAeLAQ7MkrR9ImCkLSMhntm06ER6o
+         kwKZQJszlo4xYiui9CzoeVonWOJLucEs1S7dw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nskhfJQuIY7GF0zjhR2dKbT25UZTtER3vtr2UfHLkl0=;
+        b=aWF84iEzgOayENmCuZCR4CBpWBLJzOq6eU3YPGnIgj6P7nuWONrPes9MAYXNnr3BV2
+         ltj8F7782F3tJ2ZLKbjXarhNWiiRotAvnEm4tUYS70bsn/A9xpLMaIdwA8gg4iAqG1AB
+         dbs0qhsQHcHTuMbnw99OLqmNZwj7hr7mXYB+fCRLJcId9NoBjbY8AHxGrbkRFAfK/+oS
+         Sl/VfJSlf8cZXPDqEeJvDRE4tQxRbTIadL1Ta2bUqeeGfeEw8PJqrFSExzbbdtYfcWYF
+         XBsEYBYfi38CEQ6pLytb1S0uvWi8z6lpnI4Gxhexeu5VvYzvT2pv/2i7988jJJ8ONzCA
+         6NhQ==
+X-Gm-Message-State: APjAAAWvwBM8JDX2wGJ7NBfxAWDwvG5CZCUcdjBh4Yt+CaKFZYg1Wc0n
+        vHvjXcJ+iNEPxUBrfDR8421qtg==
+X-Google-Smtp-Source: APXvYqxrnfq+JKGiO2MZ5LrxEthLtuHyFKWQHWwvD7llZNQrcCIKzBfSJFqibnh9dhqVgmZUEBd3tQ==
+X-Received: by 2002:a63:4c:: with SMTP id 73mr32496569pga.134.1560489565544;
+        Thu, 13 Jun 2019 22:19:25 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d7sm1472339pfn.89.2019.06.13.22.19.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 13 Jun 2019 22:19:24 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 22:19:23 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>
-References: <1560420444-25737-1-git-send-email-anshuman.khandual@arm.com>
- <20190613130408.3091869d8e50d0524157523f@linux-foundation.org>
-Message-ID: <c3316aca-2005-e092-80f6-ebd7652bd04f@arm.com>
-Date:   Fri, 14 Jun 2019 10:45:44 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 5/5] x86/vsyscall: Change the default vsyscall mode to
+ xonly
+Message-ID: <201906132218.E923F38F@keescook>
+References: <cover.1560198181.git.luto@kernel.org>
+ <25fd7036cefca16c68ecd990e05e05a8ad8fe8b2.1560198181.git.luto@kernel.org>
+ <201906101344.018BE4C5C1@keescook>
+ <CALCETrUYNavL8pu4jQqJjoT=PdeRyjeoLDn=0r7h=2XsHDMezQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190613130408.3091869d8e50d0524157523f@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrUYNavL8pu4jQqJjoT=PdeRyjeoLDn=0r7h=2XsHDMezQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 06/14/2019 01:34 AM, Andrew Morton wrote:
-> On Thu, 13 Jun 2019 15:37:24 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+On Thu, Jun 13, 2019 at 12:14:50PM -0700, Andy Lutomirski wrote:
+> On Mon, Jun 10, 2019 at 1:44 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Mon, Jun 10, 2019 at 01:25:31PM -0700, Andy Lutomirski wrote:
+> > > The use case for full emulation over xonly is very esoteric.  Let's
+> > > change the default to the safer xonly mode.
+> >
+> > Perhaps describe the esoteric cases here (and maybe in the Kconfig help
+> > text)? That should a user determine if they actually need it. (What
+> > would the failure under xonly look like for someone needing emulate?)
 > 
->> Architectures which support kprobes have very similar boilerplate around
->> calling kprobe_fault_handler(). Use a helper function in kprobes.h to unify
->> them, based on the x86 code.
->>
->> This changes the behaviour for other architectures when preemption is
->> enabled. Previously, they would have disabled preemption while calling the
->> kprobe handler. However, preemption would be disabled if this fault was
->> due to a kprobe, so we know the fault was not due to a kprobe handler and
->> can simply return failure.
->>
->> This behaviour was introduced in the commit a980c0ef9f6d ("x86/kprobes:
->> Refactor kprobes_fault() like kprobe_exceptions_notify()")
->>
->> ...
->>
->> --- a/arch/arm/mm/fault.c
->> +++ b/arch/arm/mm/fault.c
->> @@ -30,28 +30,6 @@
->>  
->>  #ifdef CONFIG_MMU
->>  
->> -#ifdef CONFIG_KPROBES
->> -static inline int notify_page_fault(struct pt_regs *regs, unsigned int fsr)
+> I added it to the Kconfig text.
 > 
-> Some architectures make this `static inline'.  Others make it
-> `nokprobes_inline', others make it `static inline __kprobes'.  The
-> latter seems weird - why try to put an inline function into
-> .kprobes.text?
-> 
-> So..  what's the best thing to do here?  You chose `static
-> nokprobe_inline' - is that the best approach, if so why?  Does
-> kprobe_page_fault() actually need to be inlined?
+> Right now, the failure will just be a segfault.  I could add some
+> logic so that it would log "invalid read to vsyscall page -- fix your
+> userspace or boot with vsyscall=emulate".  Do you think that's
+> important?
 
-Matthew had suggested that (nokprobe_-inline) based on current x86
-implementation. But every architecture already had an inlined definition
-which I did not want to deviate from.
+I think it would be a friendly way to help anyone wondering why
+something suddenly started segfaulting, yeah. Just a pr_warn_once() or
+something (not a WARN() since it's "intentionally" reachable by
+userspace).
 
-> 
-> Also, some architectures had notify_page_fault returning int, others
-> bool.  You chose bool and that seems appropriate and all callers are OK
-> with that.
-
-I would believe so. No one has complained yet :)
+-- 
+Kees Cook
