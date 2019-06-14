@@ -2,85 +2,129 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1576CC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D751C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D4C21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA9220644
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:19:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QUTkAVVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbfFNTPg (ORCPT
+        id S1726108AbfFNTTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 15:15:36 -0400
-Received: from emh01.mail.saunalahti.fi ([62.142.5.107]:43764 "EHLO
-        emh01.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbfFNTPf (ORCPT
+        Fri, 14 Jun 2019 15:19:06 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39871 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbfFNTTG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 15:15:35 -0400
-Received: from darkstar.musicnaut.iki.fi (85-76-83-177-nat.elisa-mobile.fi [85.76.83.177])
-        by emh01.mail.saunalahti.fi (Postfix) with ESMTP id 3F9C720347;
-        Fri, 14 Jun 2019 22:15:33 +0300 (EEST)
-Date:   Fri, 14 Jun 2019 22:15:33 +0300
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Mathieu Malaterre <malat@debian.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] powerpc: enable a 30-bit ZONE_DMA for 32-bit pmac
-Message-ID: <20190614191532.GC27145@darkstar.musicnaut.iki.fi>
-References: <20190613082446.18685-1-hch@lst.de>
- <CA+7wUswMtpVCoX0H5eF=GUY8jWDAEWa9Z223tKiKHiL69hhHtQ@mail.gmail.com>
+        Fri, 14 Jun 2019 15:19:06 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j2so2001126pfe.6;
+        Fri, 14 Jun 2019 12:19:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pdZCIoYkfFDkgl8kzCeEDsmfwf1PzfJjurY0dcIItS4=;
+        b=QUTkAVVYi2/skfDf6DBwJ5ENDmGC5fkUGoIzzRYyJcxiUDpYts3JcnatvfK8vBf3tU
+         CqYYiiXbTApyLk9CX1cVLHy6wXRLUjiDUqB2eIIjqqvRaFX6baWP3RUKlceXwmkNexHY
+         c1MvmgAPBHTIL85FuASAGvveDfcILX6IjI4VuNNYPQ/tJ+KCw7v5Hz9NdoFMDso0w686
+         pMa5R8NNf4EyojnwyA32cYSc/6Ht7kBFrDqxHRP37lx5bmjSrkuPSvkltwfBor3Pa9Zc
+         Gg0q8UhPQtvSNgQcriQoUVXtv9ZE4g38zZ8I83YFSKE2/CFE5ij/g24dUH5cTrAd/8zt
+         gThw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pdZCIoYkfFDkgl8kzCeEDsmfwf1PzfJjurY0dcIItS4=;
+        b=GDHA7EE51g3HxxF3NkZsBIEKmC3O2igHwedv07yNJqjjrCuYYRfMLrAD11nKTn9Bxx
+         9dDfaGSRYXUBsaMorgFXkYS2CNRAUkx6SqWZmOkWXdwgWR5nhuQHQ+WHlgFgscFM6BOG
+         9GDSipUj+t+WgsKTc9SIXE22BvH/uSECcNAdhRPwbzLYV6x3pdBBKGNXwuCW4Ad0A/qr
+         5/7U1WijVRJ5XM2PRCg3WPX3Rg/O8DvyFx6GQjA3jthE//yYuCLLcnC42NNb04yfhU7A
+         wYIaTLFATqpD6Kx+zrhK05W742+iCTzUY00Xn5Dh9IPcnKS0Z0FJRaF2NHRmaPFGMib9
+         +JZA==
+X-Gm-Message-State: APjAAAUxFmhzeIVAKuAj0N0jAyGT6rrW2nYozJLMocdx7cHXNATbwi+e
+        l23ecMKbzVcQesMdNkJTAqw=
+X-Google-Smtp-Source: APXvYqxEOlGI5oHrg4Xwdaz3mx7Yaq5Z51fHqlcWxHxcVFoODI2RRu8Vlox2N5WVZSNoC9ph2K9N1Q==
+X-Received: by 2002:a63:441c:: with SMTP id r28mr37334130pga.255.1560539944980;
+        Fri, 14 Jun 2019 12:19:04 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id o20sm3209780pgj.70.2019.06.14.12.19.03
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 12:19:04 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 12:19:02 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Benson Leung <bleung@google.com>
+Cc:     Enrico Granata <egranata@google.com>,
+        Ting Shen <phoenixshen@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Guenter Roeck <groeck@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        linux-input@vger.kernel.org,
+        Colin Ian King <colin.king@canonical.com>,
+        gwendal@chromium.org, Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] Input: cros_ec_keyb: mask out extra flags in event_type
+Message-ID: <20190614191902.GA150432@dtor-ws>
+References: <20190614065438.142867-1-phoenixshen@chromium.org>
+ <CAPR809sASD=MrQkJULVBgc_iqiPKE2xr8eUR0d4qymQkLUYRaw@mail.gmail.com>
+ <20190614185533.GA142889@dtor-ws>
+ <20190614190957.GA243443@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+7wUswMtpVCoX0H5eF=GUY8jWDAEWa9Z223tKiKHiL69hhHtQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190614190957.GA243443@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Fri, Jun 14, 2019 at 09:24:16AM +0200, Mathieu Malaterre wrote:
-> On Thu, Jun 13, 2019 at 10:27 AM Christoph Hellwig <hch@lst.de> wrote:
-> > With the strict dma mask checking introduced with the switch to
-> > the generic DMA direct code common wifi chips on 32-bit powerbooks
-> > stopped working.  Add a 30-bit ZONE_DMA to the 32-bit pmac builds
-> > to allow them to reliably allocate dma coherent memory.
-> >
-> > Fixes: 65a21b71f948 ("powerpc/dma: remove dma_nommu_dma_supported")
-> > Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> >  arch/powerpc/include/asm/page.h         | 7 +++++++
-> >  arch/powerpc/mm/mem.c                   | 3 ++-
-> >  arch/powerpc/platforms/powermac/Kconfig | 1 +
-> >  3 files changed, 10 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
-> > index b8286a2013b4..0d52f57fca04 100644
-> > --- a/arch/powerpc/include/asm/page.h
-> > +++ b/arch/powerpc/include/asm/page.h
-> > @@ -319,6 +319,13 @@ struct vm_area_struct;
-> >  #endif /* __ASSEMBLY__ */
-> >  #include <asm/slice.h>
-> >
-> > +/*
-> > + * Allow 30-bit DMA for very limited Broadcom wifi chips on many powerbooks.
+On Fri, Jun 14, 2019 at 12:09:57PM -0700, Benson Leung wrote:
+> Hi Dmitry,
 > 
-> nit: would it be possible to mention explicit reference to b43-legacy.
-> Using b43 on my macmini g4 never showed those symptoms (using
-> 5.2.0-rc2+)
+> On Fri, Jun 14, 2019 at 11:55:33AM -0700, Dmitry Torokhov wrote:
+> > On Fri, Jun 14, 2019 at 11:27:03AM -0700, Enrico Granata wrote:
+> > > On Thu, Jun 13, 2019 at 11:54 PM Ting Shen <phoenixshen@chromium.org> wrote:
+> > > >
+> > > > http://crosreview.com/1341159 added a EC_MKBP_HAS_MORE_EVENTS flag to
+> > > > the event_type field, the receiver side should mask out this extra bit when
+> > > > processing the event.
+> > > >
+> > > > Signed-off-by: Ting Shen <phoenixshen@chromium.org>
+> > > 
+> > > Reviewed-by: Enrico Granata <egranata@google.com>
+> > 
+> > EC_MKBP_EVENT_TYPE_MASK is not in Linus' tree. It would be better to
+> > merge this path through whatever tree that is bringing in that
+> > definition.
+> > 
+> > Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> 
+> Yup, this looks like it's coming in through Lee's MFD tree, a series from
+> Gwendal to update cros_ec_commands.h.
+> 
+> 784dd15c930f mfd: cros_ec: Fix event processing API
+> 
+> That commit is in the immutable branch for v5.3 here:
+>  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-cros-v5.3
+> 
+> I'd recommend the chrome-platform tree since we'll be pulling in that IB too
+> for some other refactoring Enric is working on.
 
-According to Wikipedia Mac mini G4 is limited to 1 GB RAM, so that's
-why you don't see the issue.
+Yeah, I'm fine with this going through chrome-platform.
 
-A.
+Thanks.
+
+-- 
+Dmitry
