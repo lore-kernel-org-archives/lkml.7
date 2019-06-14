@@ -2,87 +2,95 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC91C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CDBC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9C99217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:57:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X0jCDx7F"
+	by mail.kernel.org (Postfix) with ESMTP id 131632168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:58:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbfFNU5p (ORCPT
+        id S1726305AbfFNU6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:57:45 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40568 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbfFNU5n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:57:43 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a93so1471018pla.7
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 13:57:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Crq0nDZF9tOeX0bWwwm0JRIq5ybVrhhnr25YAZ6ufIk=;
-        b=X0jCDx7F0SrYSQdEhdgb8qtSIoOnS+O7rIM5pCHI2fzNeLRWb108SwXatySqbdvLpu
-         31wimHCq0BfcZCJIuWKv72X85SwLepwhMHxfqweuLbERfguUyRKocQW8zk+uteukHNJJ
-         qYg7rZeaw8z2Nq9dskFhmlQWvR64rxNvdGmqqOIgm5WjjET3HzwOk4D7Px/2kN+IdBMH
-         nT/IyyZbK7+X0ShOX+WB4iH4XGr+dZjq7477rgnyrCOYUAsjN8thUGBFtvJAA2P87JJA
-         p5ntvIPO26V2ikr3/Qn3nEpT3oRhNTYmOL5QJvq17c5XUSfrQ28D81lxnUgl0FCa7AXm
-         pgrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Crq0nDZF9tOeX0bWwwm0JRIq5ybVrhhnr25YAZ6ufIk=;
-        b=N97CDEXvOjmf/RFd7QHBgTivvWTGzGpW7VfP4bAY3Dh0kHjCkRUrk9yw3gB4IsDzGm
-         tAZGuXgkxdeEC8gAGLj7B5DPDDA0XDJWDKMKZA2IW/MQFI+SnL359Fxa5gzjg13wikwV
-         seAU/YQ/miSqXEqFtLlG+Eom34syUI5keuduP1TJs+il3BY8hN83eQgvYfQD9tdYuNDU
-         4EmFDmqw2dtZm8QfgStoX7ONDkLBel1CpLy1cLnaNqSGc3qmWbwiD+ekEy8k85x6W9ia
-         Rm4S2LuNYII1w8WemwMFtFCSKgjtpaZk5erlXttwe/wWbLGjXe4XSNjuQUPz+DwE1PkK
-         8EhQ==
-X-Gm-Message-State: APjAAAUlnAcGOS5ECGviZ+Y9Wl6XVgitKALcpppZBKLvQV8BuD9DxqM6
-        Kk0MH8vJpcCOfDjxdLbF3UVV9h679dRyJYymW0bS3g==
-X-Google-Smtp-Source: APXvYqwc12Gjg3q9skOSADw86B+Ig7PVBJGMfmcIkBRi2fZRrjHVaP8V/as5dS2/3dv3WOPL1q50QL9DYJC3q6qfCg8=
-X-Received: by 2002:a17:902:b696:: with SMTP id c22mr91154189pls.119.1560545862866;
- Fri, 14 Jun 2019 13:57:42 -0700 (PDT)
+        Fri, 14 Jun 2019 16:58:44 -0400
+Received: from sauhun.de ([88.99.104.3]:56984 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfFNU6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:58:44 -0400
+Received: from localhost (p5486CF81.dip0.t-ipconnect.de [84.134.207.129])
+        by pokefinder.org (Postfix) with ESMTPSA id 0F1022CF690;
+        Fri, 14 Jun 2019 22:58:42 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 22:58:41 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH REPOST v8 1/3] dt-bindings: i2c: extend existing opencore
+ bindings.
+Message-ID: <20190614205841.GC17899@ninjato>
+References: <1559369475-15374-1-git-send-email-sagar.kadam@sifive.com>
+ <1559369475-15374-2-git-send-email-sagar.kadam@sifive.com>
 MIME-Version: 1.0
-References: <20190614171713.89262-1-nhuck@google.com> <CAKwvOd=jFYn=7NGPD8UDx3_g30qD+40bCjzmWJJSzmb6pNUusQ@mail.gmail.com>
-In-Reply-To: <CAKwvOd=jFYn=7NGPD8UDx3_g30qD+40bCjzmWJJSzmb6pNUusQ@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 14 Jun 2019 13:57:31 -0700
-Message-ID: <CAKwvOdnrvfthPcmnducqyOpbkFAQq+25eDXgehf_aWMAG=7CRg@mail.gmail.com>
-Subject: Re: [PATCH] wl18xx: Fix Wunused-const-variable
-To:     Nathan Huckleberry <nhuck@google.com>, eliad@wizery.com,
-        arik@wizery.com
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QRj9sO5tAVLaXnSD"
+Content-Disposition: inline
+In-Reply-To: <1559369475-15374-2-git-send-email-sagar.kadam@sifive.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 1:54 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
-> Looking at drivers/net/wireless/ti/wl18xx/main.c, there 4 globally
-> declared `struct ieee80211_iface_limit` but as your patch notes, only
-> 2 are used.  The thing is, their uses are in a `struct
-> ieee80211_iface_limit []`.
 
-Sorry, that's not quite right; it's not a  `struct
-ieee80211_iface_limit []` but a `struct ieee80211_iface_combination
-[]`.  No idea what other values we'd put to add these limits to the
-array.
--- 
-Thanks,
-~Nick Desaulniers
+--QRj9sO5tAVLaXnSD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Jun 01, 2019 at 11:41:13AM +0530, Sagar Shrikant Kadam wrote:
+> Reformatted compatibility strings to one valid combination on
+> each line.
+> Add FU540-C000 specific device tree bindings to already available
+> i2-ocores file. This device is available on
+> HiFive Unleashed Rev A00 board. Move interrupt under optional
+> property list as this can be optional.
+>=20
+> The FU540-C000 SoC from sifive, has an Opencore's I2C block
+> reimplementation.
+>=20
+> The DT compatibility string for this IP is present in HDL and available a=
+t.
+> https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/device=
+s/i2c/I2C.scala#L73
+>=20
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+
+Applied to for-next, thanks!
+
+
+--QRj9sO5tAVLaXnSD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0ECoAACgkQFA3kzBSg
+Kbao1Q/7Bww4MUaBPH3+ZywBjlJ45ehCw3ulD5lfN/Avf0GJLLlm2qGIm/BSe9/x
+V80NkEuQC1ythfVxiq+edDN+Wy5yFtsKLhkjbKzgwYTsoMBx0AbHTjXujIGo03+t
+iIg2/9I/Arq+u/5g+HCDk0/4asDMVMBJVa3bniKbClWfuJ7ggWH/UbmOGXfelX7I
+HpaokQT/+D8sdtibkIdt4/rgvos/3h8NC4h2CTFywsBu+A62xwiMGpORJ1yWubto
+xfr6uu6Rme7if+pyvu5Oxy/FV+UJshX6+6qSI/wvJnrQx1gh/GcKr6Pz7OLk9Pvw
+BNgMy5MCLRfMCUUScrCZgjFiGFkZ4vrebE2sJ1+DW7gGPnDrsSatN0oxpn/r4Abn
+OI4HsSjxtFZWcBz54prvGIzXYc+9bJcACgyeJRPVEDdvVGZDX3Mg5teIgbJbt9iD
+CHp8DMgfdThiIr1cYn9ORF2miTXCaWs735qjM/8QckH4Bfd6cfoDIn5KDjo/1Th5
+E6aQBheFFaq85DV74R/sdXXbpRQhrVBj/Cz3SgXhgj66ooHtdVBpNdXeSDon54XG
+5v+LQrcexKmF0NlEFlyqeaajxnaB0kJQnXBzz1iqeg5Tkk/Gho70zFFUYhw4OFUM
+F4hXCxq7vwHamFM6W68gMEcY0vPh/QqpNNYiSjWoEKn+PR3ZTt0=
+=fkzZ
+-----END PGP SIGNATURE-----
+
+--QRj9sO5tAVLaXnSD--
