@@ -2,118 +2,136 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F00E5C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5AFC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C64F32133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:38:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TiKrOZty"
+	by mail.kernel.org (Postfix) with ESMTP id EBE7D2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbfFNMiC (ORCPT
+        id S1727934AbfFNMiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:38:02 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36239 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfFNMiB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:38:01 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r7so1404818pfl.3;
-        Fri, 14 Jun 2019 05:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=811RVFyTr6F8u8h7/A4hNm78OD+rFY8gNrRGiFGCcyc=;
-        b=TiKrOZtyl9+vWpiT5YYolR6ngPiktA5IY0pwmwXKG0SFnY+UrnqWD913FONkLs4cOD
-         wtANWRUeFKygUVRAKReZkNJBdtRS+/U9cHjoAmVaEMXfRadFQxLW6BbLkPIeieU4NVfF
-         gy5jKPdvd0qQhLaS1j98zfnCTOc+Fr+L6PYveSJS+AlhM2tVtUldhM5Ffedc0xXl4cJi
-         qcgzr7qgit2RJLWx+13isHKFM39Ow33I2wz/GsDco8re4SljjGt+5tWuCHawC51MQebK
-         /oqdhRHanTzAFs7Iqw6nCWYONSWkyS/fBEE3dwquBcap40JJeYmh1tRwuEOmk6utG0VJ
-         i2FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=811RVFyTr6F8u8h7/A4hNm78OD+rFY8gNrRGiFGCcyc=;
-        b=enQEFBEQdo4bJ3s6oF9ATgmCHhU6x0WCL5F/o2EpPsdw+h30RBxawqxUZJMh/ryYiC
-         YGVw/ZxuGb/vQNrZXXTOjvSK9qYvzh5eLSXMIK8K9HbCeXCoorINstGlwQeR40mQC5Ho
-         oR0nBAjcJH+ybEp0Zo7ZWDeCC/j98gZBzj/8mOofr5rkOWA/o/SHOKCQgTp4Af+wAmVJ
-         3ZK7pwaxHHejixBEZb79iJnLmbZG2YsnmfmMFI1ALEI1mWLAOS6WTTiV4lf+cu/7oOXG
-         t34Jy6CiDp0+NdLQu9Q3BNdlXo3wdXOik4ES8sgzE2fDxKVdLQvXSMfdvSGrOOIKjZk7
-         /etw==
-X-Gm-Message-State: APjAAAWZ8E6RDOT6FRD1VpjemKhc1f2zaNk2BJktuPNZL2Nlatv4aN+Q
-        dQbttXF0p6oonz5yWLtk7Bqnoz4Y
-X-Google-Smtp-Source: APXvYqzzSc73CYWprv76l28hLngz0aYVGIWZv6m9dj1x4KjW1GW04Z3NedfaC2mRPEFVMV8fvqnSKw==
-X-Received: by 2002:a17:90a:bb8a:: with SMTP id v10mr11109361pjr.78.1560515881083;
-        Fri, 14 Jun 2019 05:38:01 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a21sm4272797pfi.27.2019.06.14.05.37.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 05:37:59 -0700 (PDT)
-Subject: Re: [PATCH v10 3/3] watchdog: make the device time out at
- open_deadline when open_timeout is used
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc:     "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Esben Haabendal <esben@haabendal.dk>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
-References: <20190605140628.618-1-rasmus.villemoes@prevas.dk>
- <20190605140628.618-4-rasmus.villemoes@prevas.dk>
- <20190607183827.GA32475@roeck-us.net>
- <56280052-9437-9813-a24e-125abb876762@prevas.dk>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <e63a0468-656f-0a8d-45a8-5236c42942b1@roeck-us.net>
-Date:   Fri, 14 Jun 2019 05:37:57 -0700
+        Fri, 14 Jun 2019 08:38:07 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:39624 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727544AbfFNMiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:38:06 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 8613C20A5C;
+        Fri, 14 Jun 2019 14:38:03 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 379C620564;
+        Fri, 14 Jun 2019 14:38:03 +0200 (CEST)
+Subject: Re: [PATCH v1] phy: qcom-qmp: Raise qcom_qmp_phy_enable() polling
+ delay
+To:     Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Kishon Vijay Abraham <kishon@ti.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <92d97c68-d226-6290-37d6-f46f42ea604b@free.fr>
+ <a3a50cf5-083a-5aa8-e77c-6feb2f2fd866@codeaurora.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <134f4648-682e-5fed-60e7-bc25985dd7e9@free.fr>
+Date:   Fri, 14 Jun 2019 14:38:02 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <56280052-9437-9813-a24e-125abb876762@prevas.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <a3a50cf5-083a-5aa8-e77c-6feb2f2fd866@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Fri Jun 14 14:38:03 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/14/19 1:41 AM, Rasmus Villemoes wrote:
-> On 07/06/2019 20.38, Guenter Roeck wrote:
->> On Wed, Jun 05, 2019 at 02:06:44PM +0000, Rasmus Villemoes wrote:
->>> When the watchdog device is not open by userspace, the kernel takes
->>> care of pinging it. When the open_timeout feature is in use, we should
->>> ensure that the hardware fires close to open_timeout seconds after the
->>> kernel has assumed responsibility for the device.
->>>
->>> To do this, simply reuse the logic that is already in place for
->>> ensuring the same thing when userspace is responsible for regularly
->>> pinging the device:
->>>
->>> - When watchdog_active(wdd), this patch doesn't change anything.
->>>
->>> - When !watchdoc_active(wdd), the "virtual timeout" should be taken to
->>
->> s/watchdoc_active/watchdog_active/
->>
->> otherwise
->>
->> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
++ Doug (who is familiar with usleep_range quirks)
+
+On 14/06/2019 11:50, Vivek Gautam wrote:
+
+> On 6/13/2019 5:02 PM, Marc Gonzalez wrote:
 > 
-> Thanks! Wim, can you fix up if/when applying, or do you prefer I resend?
+>> readl_poll_timeout() calls usleep_range() to sleep between reads.
+>> usleep_range() doesn't work efficiently for tiny values.
+>>
+>> Raise the polling delay in qcom_qmp_phy_enable() to bring it in line
+>> with the delay in qcom_qmp_phy_com_init().
+>>
+>> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+>> ---
+>> Vivek, do you remember why you didn't use the same delay value in
+>> qcom_qmp_phy_enable) and qcom_qmp_phy_com_init() ?
 > 
+> phy_qcom_init() thingy came from the PCIE phy driver from downstream
+> msm-3.18 PCIE did something as below:
 
-I made the change when applying the patch to my watchdog-next branch,
-and Wim usually picks up patches from there, so we should be good.
+FWIW and IMO, drivers/pci/host/pci-msm.c is a good example of how not to write
+a device driver. It's huge (7000+ lines) because it handles multiple platforms
+via ifdefs, and lumps everything together (phy, core IP, SoC specific glue)
+in a single file.
 
-Thanks,
-Guenter
+> -----
+> do {
+>          if (pcie_phy_is_ready(dev))
+>                  break;
+>          retries++;
+>          usleep_range(REFCLK_STABILIZATION_DELAY_US_MIN,
+>                                   REFCLK_STABILIZATION_DELAY_US_MAX);
+> } while (retries < PHY_READY_TIMEOUT_COUNT);
+> 
+> REFCLK_STABILIZATION_DELAY_US_MIN/MAX ==> 1000/1005
+> PHY_READY_TIMEOUT_COUNT ==> 10
+> -----
 
+https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/drivers/pci/host/pci-msm.c?h=LE.UM.1.3.r3.25#n4624
+
+https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/drivers/pci/host/pci-msm.c?h=LE.UM.1.3.r3.25#n1721
+
+readl_relaxed(dev->phy + PCIE_N_PCS_STATUS(dev->rc_idx, dev->common_phy)) & BIT(6)
+is equivalent to:
+the check in qcom_qmp_phy_enable()
+
+readl_relaxed(dev->phy + PCIE_COM_PCS_READY_STATUS) & 0x1
+is equivalent to:
+the check in qcom_qmp_phy_com_init()
+
+I'll take a closer look, using some printks, to narrow down the run-time
+execution path.
+
+> phy_enable() from the usb phy driver from downstream.
+>   /* Wait for PHY initialization to be done */
+>   do {
+>           if (readl_relaxed(phy->base +
+>                   phy->phy_reg[USB3_PHY_PCS_STATUS]) & PHYSTATUS)
+>                   usleep_range(1, 2);
+> else
+> break;
+>   } while (--init_timeout_usec);
+> 
+> init_timeout_usec ==> 1000
+> -----
+> USB never had a COM_PHY status bit.
+> 
+> So clearly the resolutions were different.
+> 
+> Does this change solve an issue at hand?
+
+The issue is usleep_range() being misused ^_^
+
+Although usleep_range() takes unsigned longs as parameters, it is
+not appropriate over the entire 0-2^64 range.
+
+a) It should not be used with tiny values, because the cost of programming
+the timer interrupt, and processing the resulting IRQ would dominate.
+
+b) It should not be used with large values (above 2000000/HZ) because
+msleep() is more efficient, and is acceptable for these ranges.
+
+Regards.
