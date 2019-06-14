@@ -2,158 +2,105 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B62C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B47C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2915A21473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0939821473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:28:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tXIvJrLT"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="coDrCP2b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbfFNM1v (ORCPT
+        id S1727887AbfFNM2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:27:51 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44131 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727777AbfFNM1s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:27:48 -0400
-Received: by mail-lj1-f193.google.com with SMTP id k18so2175665ljc.11;
-        Fri, 14 Jun 2019 05:27:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k0QRDXLHUntxOov7zrayFNvinwKPTFOzvVDJZpJssAo=;
-        b=tXIvJrLTtd0fKEFBWbapSx/XhIgzyWMKMVSi8DJz19bpqqEc9DGRLaV9ZOhF+vXRme
-         0NSfsmWlHItyo9ypwszqm49k7rivvv2lMI+VU8Dl7DgUXmVYYecRuGRgs+dXEDfAf7+1
-         kY9grNndKXLh8EwpTkJuNIP4OGZ9Gp5GtBZ67G8UQexVZthJBxIvXWcWHpTDaLvKZvNr
-         5apddKLqIehHzt+lU4Ycgwq1yU2ZJDV/UCo3noUeAG4n7DLnjzVMWo8gRm5v46jqbHd7
-         0LQ65jl2ZCxiGdV+XyNHKZ4Z8pUEUKAxT/JPAq3QW4ITVyFG80Z1ViZIllsdZrJAIwgp
-         zA9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k0QRDXLHUntxOov7zrayFNvinwKPTFOzvVDJZpJssAo=;
-        b=ZsUiDrzdvpa/YbkgW8PIt3DVbsPqPfPkOr0ScJHHJOl2KHWpJz+yYxf2aX9riTR5rg
-         2gT0q8zt/rXl60Qz8y9HzoR2RX3z69Ea5M6S1nEJ5AIA31i92sswSFGgNakMInRUMaSr
-         wmLsGrJVAzFIXOEYskrNoMmoGQW9zQueAkn7Y8845TFoQyjzz6nHlNmV+9qKIXe4ncj1
-         WnWkNDeGhvTsd3u8v0p6UG0O5W5tQ+aoYb8dKl3xQE/WgaxYkrgj2xJUzvbkJ2ZYLm3J
-         nHqM74F/2dwMkZXI36cudgdARk9+m0tjtmiohM+3VxowpQZMYQmnz9VpEZikoLbZe7u8
-         CqEg==
-X-Gm-Message-State: APjAAAVYn+hipXBp2gMBdQyskju1ARqCoZnYXRgH+P0qabUbTYXC70Gp
-        1GfC1CeBfxdul9uXqeWKugLyjzCNjURk3p9IuHA=
-X-Google-Smtp-Source: APXvYqzbXK8JHzAnv53oPJ62nUc83fkXffrgUkMyteZ/yr3Rwt4+r4Pzv7+Y+xrxdQ/u+mSg5m5FhnmjOv3EoYULcas=
-X-Received: by 2002:a2e:63c4:: with SMTP id s65mr40810611lje.211.1560515266728;
- Fri, 14 Jun 2019 05:27:46 -0700 (PDT)
+        Fri, 14 Jun 2019 08:28:00 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:57020 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727627AbfFNM17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:27:59 -0400
+Received: from zn.tnic (p200300EC2F097F00E4D2751AE9C0507E.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:7f00:e4d2:751a:e9c0:507e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5AD7F1EC0513;
+        Fri, 14 Jun 2019 14:27:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560515277;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=3Dy5G9geV+OkhxNXR/2joBt7M8itcKEaeTEPUiWK5cg=;
+        b=coDrCP2bmVeuJSnmN/3W1oNa3Ql8JVRkfq/B3SEv8X7Mt8ixHO4pNBKAn6hXX1SpDg9Whc
+        VQdicFzEmmL1yWiUr5lt28jde3a9JheUd+Zte6rR8ZPjMTk3qMr0E8zGDqD/CXKODn1Cie
+        V7K3UcEvAPAfA4wnGPnsM/wTAWpVNWw=
+Date:   Fri, 14 Jun 2019 14:27:50 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [RFC PATCH 2/3] x86/cpufeatures: Combine word 11 and 12 into new
+ scattered features word 11
+Message-ID: <20190614122749.GE2586@zn.tnic>
+References: <1560459064-195037-1-git-send-email-fenghua.yu@intel.com>
+ <1560459064-195037-3-git-send-email-fenghua.yu@intel.com>
+ <20190614114410.GD2586@zn.tnic>
 MIME-Version: 1.0
-References: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com> <1560513063-24995-3-git-send-email-robert.chiras@nxp.com>
-In-Reply-To: <1560513063-24995-3-git-send-email-robert.chiras@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 14 Jun 2019 09:27:49 -0300
-Message-ID: <CAOMZO5BAborMvk=4cgreWKX6rJjK-237me98dM1dDV53oUnExQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/panel: Add support for Raydium RM67191 panel driver
-To:     Robert Chiras <robert.chiras@nxp.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190614114410.GD2586@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+On Fri, Jun 14, 2019 at 01:44:10PM +0200, Borislav Petkov wrote:
+> On Thu, Jun 13, 2019 at 01:51:03PM -0700, Fenghua Yu wrote:
+> > It's a waste for the four X86_FEATURE_CQM_* features to occupy two
+> > pure feature bits words. To better utilize feature words, re-define
+> > word 11 to host scattered features and move the four X86_FEATURE_CQM_*
+> > features into word 11. More scattered features can be added in word 11
+> > in the future.
+> > 
+> > KVM doesn't support resctrl now. So it's safe to move the
+> > X86_FEATURE_CQM_* features to scattered features word 11 for KVM.
+> > 
+> > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> 
+> ...
+> 
+> > diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> > index 9a327d5b6d1f..d78a61408243 100644
+> > --- a/arch/x86/kvm/cpuid.h
+> > +++ b/arch/x86/kvm/cpuid.h
+> > @@ -47,8 +47,6 @@ static const struct cpuid_reg reverse_cpuid[] = {
+> >  	[CPUID_8000_0001_ECX] = {0x80000001, 0, CPUID_ECX},
+> >  	[CPUID_7_0_EBX]       = {         7, 0, CPUID_EBX},
+> >  	[CPUID_D_1_EAX]       = {       0xd, 1, CPUID_EAX},
+> > -	[CPUID_F_0_EDX]       = {       0xf, 0, CPUID_EDX},
+> > -	[CPUID_F_1_EDX]       = {       0xf, 1, CPUID_EDX},
+> 
+> I think you're going to have to change those to:
+> 
+>         [CPUID_LNX_4]         = {         0, 0, 0},
+>         [CPUID_7_1_EAX]       = {         7, 1, CPUID_EAX },
+> 
+> instead of removing them because kvm is basically hardcoding the feature
+> words and then bitches when array elements in the middle get removed:
 
-On Fri, Jun 14, 2019 at 8:52 AM Robert Chiras <robert.chiras@nxp.com> wrote:
+Alternatively - and what I think is the better solution - would be to
+remove those BUILD_BUG_ONs in x86_feature_cpuid and filter out the
+Linux-defined leafs dynamically. This way the array won't have holes in
+it.
 
-> --- /dev/null
-> +++ b/drivers/gpu/drm/panel/panel-raydium-rm67191.c
-> @@ -0,0 +1,730 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * i.MX drm driver - Raydium MIPI-DSI panel driver
-> + *
-> + * Copyright (C) 2017 NXP
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
+-- 
+Regards/Gruss,
+    Boris.
 
-No need for this text as you are using SPDX tag.
-
-> +static int color_format_from_dsi_format(enum mipi_dsi_pixel_format format)
-> +{
-> +       switch (format) {
-> +       case MIPI_DSI_FMT_RGB565:
-> +               return 0x55;
-> +       case MIPI_DSI_FMT_RGB666:
-> +       case MIPI_DSI_FMT_RGB666_PACKED:
-> +               return 0x66;
-> +       case MIPI_DSI_FMT_RGB888:
-> +               return 0x77;
-
-Could you use defines for these magic 0x55, 0x66 and 0x77 numbers?
-
-> +static int rad_panel_prepare(struct drm_panel *panel)
-> +{
-> +       struct rad_panel *rad = to_rad_panel(panel);
-> +
-> +       if (rad->prepared)
-> +               return 0;
-> +
-> +       if (rad->reset) {
-> +               gpiod_set_value(rad->reset, 0);
-> +               usleep_range(5000, 10000);
-> +               gpiod_set_value(rad->reset, 1);
-> +               usleep_range(20000, 25000);
-
-This does not look correct.
-
-The correct way to do a reset with gpiod API is:
-
- gpiod_set_value(rad->reset, 1);
-
-delay
-
-gpiod_set_value(rad->reset, 0);
-
-I don't have the datasheet for the RM67191 panel, but I assume the
-reset GPIO is active low.
-
-Since you inverted the polarity in the dts and inside the driver, you
-got it right by accident.
-
-You could also consider using gpiod_set_value_cansleep() variant
-instead because the GPIO reset could be provided by an I2C GPIO
-expander, for example.
-
-Also, when sleeping for more than 10ms, msleep is a better fit as per
-Documentation/timers/timers-howto.txt.
-
-> +       if (rad->reset) {
-> +               gpiod_set_value(rad->reset, 0);
-> +               usleep_range(15000, 17000);
-> +               gpiod_set_value(rad->reset, 1);
-> +       }
-
-Another reset?
+Good mailing practices for 400: avoid top-posting and trim the reply.
