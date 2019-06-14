@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FB4C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3CEC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97E52133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D1A12133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbfFNFqJ (ORCPT
+        id S1726346AbfFNFqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 01:46:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44208 "EHLO mx1.suse.de"
+        Fri, 14 Jun 2019 01:46:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44204 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725852AbfFNFqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725843AbfFNFqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Jun 2019 01:46:09 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0084DADF1;
+        by mx1.suse.de (Postfix) with ESMTP id 038FEAEB8;
         Fri, 14 Jun 2019 05:46:07 +0000 (UTC)
 From:   Juergen Gross <jgross@suse.com>
 To:     xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
@@ -30,9 +30,9 @@ Cc:     Juergen Gross <jgross@suse.com>,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Stefano Stabellini <sstabellini@kernel.org>
-Subject: [PATCH v3 3/3] xen/swiotlb: remember having called xen_create_contiguous_region()
-Date:   Fri, 14 Jun 2019 07:46:04 +0200
-Message-Id: <20190614054604.30101-4-jgross@suse.com>
+Subject: [PATCH v3 2/3] xen/swiotlb: simplify range_straddles_page_boundary()
+Date:   Fri, 14 Jun 2019 07:46:03 +0200
+Message-Id: <20190614054604.30101-3-jgross@suse.com>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20190614054604.30101-1-jgross@suse.com>
 References: <20190614054604.30101-1-jgross@suse.com>
@@ -41,70 +41,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of always calling xen_destroy_contiguous_region() in case the
-memory is DMA-able for the used device, do so only in case it has been
-made DMA-able via xen_create_contiguous_region() before.
-
-This will avoid a lot of xen_destroy_contiguous_region() calls for
-64-bit capable devices.
-
-As the memory in question is owned by swiotlb-xen the PG_owner_priv_1
-flag of the first allocated page can be used for remembering.
+range_straddles_page_boundary() is open coding several macros from
+include/xen/page.h. Use those instead. Additionally there is no need
+to have check_pages_physically_contiguous() as a separate function as
+it is used only once, so merge it into range_straddles_page_boundary().
 
 Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 ---
-V2: add PG_xen_remapped alias for PG_owner_priv_1 (Boris Ostrovsky)
-    only clear page flag in case of sane conditions (Jan Beulich)
-V3: use TestClearPageXenRemapped() (Jan Beulich)
----
- drivers/xen/swiotlb-xen.c  | 4 +++-
- include/linux/page-flags.h | 4 ++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/xen/swiotlb-xen.c | 28 ++++++----------------------
+ 1 file changed, 6 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index 37ddcfcfbb21..ceb681cf64bb 100644
+index 50fd7de54969..37ddcfcfbb21 100644
 --- a/drivers/xen/swiotlb-xen.c
 +++ b/drivers/xen/swiotlb-xen.c
-@@ -322,6 +322,7 @@ xen_swiotlb_alloc_coherent(struct device *hwdev, size_t size,
- 			xen_free_coherent_pages(hwdev, size, ret, (dma_addr_t)phys, attrs);
- 			return NULL;
- 		}
-+		SetPageXenRemapped(virt_to_page(ret));
- 	}
- 	memset(ret, 0, size);
- 	return ret;
-@@ -346,7 +347,8 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
- 	size = 1UL << (order + XEN_PAGE_SHIFT);
+@@ -83,34 +83,18 @@ static inline dma_addr_t xen_virt_to_bus(void *address)
+ 	return xen_phys_to_bus(virt_to_phys(address));
+ }
  
- 	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
--		     range_straddles_page_boundary(phys, size)))
-+		     range_straddles_page_boundary(phys, size)) &&
-+	    TestClearPageXenRemapped(virt_to_page(vaddr)))
- 		xen_destroy_contiguous_region(phys, order);
+-static int check_pages_physically_contiguous(unsigned long xen_pfn,
+-					     unsigned int offset,
+-					     size_t length)
++static inline int range_straddles_page_boundary(phys_addr_t p, size_t size)
+ {
+-	unsigned long next_bfn;
+-	int i;
+-	int nr_pages;
++	unsigned long next_bfn, xen_pfn = XEN_PFN_DOWN(p);
++	unsigned int i, nr_pages = XEN_PFN_UP(xen_offset_in_page(p) + size);
  
- 	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 9f8712a4b1a5..fc503a47e7db 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -152,6 +152,8 @@ enum pageflags {
- 	PG_savepinned = PG_dirty,
- 	/* Has a grant mapping of another (foreign) domain's page. */
- 	PG_foreign = PG_owner_priv_1,
-+	/* Remapped by swiotlb-xen. */
-+	PG_xen_remapped = PG_owner_priv_1,
+ 	next_bfn = pfn_to_bfn(xen_pfn);
+-	nr_pages = (offset + length + XEN_PAGE_SIZE-1) >> XEN_PAGE_SHIFT;
  
- 	/* SLOB */
- 	PG_slob_free = PG_private,
-@@ -329,6 +331,8 @@ PAGEFLAG(Pinned, pinned, PF_NO_COMPOUND)
- 	TESTSCFLAG(Pinned, pinned, PF_NO_COMPOUND)
- PAGEFLAG(SavePinned, savepinned, PF_NO_COMPOUND);
- PAGEFLAG(Foreign, foreign, PF_NO_COMPOUND);
-+PAGEFLAG(XenRemapped, xen_remapped, PF_NO_COMPOUND)
-+	TESTCLEARFLAG(XenRemapped, xen_remapped, PF_NO_COMPOUND)
+-	for (i = 1; i < nr_pages; i++) {
++	for (i = 1; i < nr_pages; i++)
+ 		if (pfn_to_bfn(++xen_pfn) != ++next_bfn)
+-			return 0;
+-	}
+-	return 1;
+-}
++			return 1;
  
- PAGEFLAG(Reserved, reserved, PF_NO_COMPOUND)
- 	__CLEARPAGEFLAG(Reserved, reserved, PF_NO_COMPOUND)
+-static inline int range_straddles_page_boundary(phys_addr_t p, size_t size)
+-{
+-	unsigned long xen_pfn = XEN_PFN_DOWN(p);
+-	unsigned int offset = p & ~XEN_PAGE_MASK;
+-
+-	if (offset + size <= XEN_PAGE_SIZE)
+-		return 0;
+-	if (check_pages_physically_contiguous(xen_pfn, offset, size))
+-		return 0;
+-	return 1;
++	return 0;
+ }
+ 
+ static int is_xen_swiotlb_buffer(dma_addr_t dma_addr)
 -- 
 2.16.4
 
