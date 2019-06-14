@@ -2,80 +2,129 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 067F5C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B52C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C84FF21473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:51:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560491481;
-	bh=HupSjd11yAvr6+RX4xhnU6neJDD0iJF4+UlTvBQNwEk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Yl0Kz3qxutmaJvB1q3QK/vqHf+e2TJlBAyhvOZMmWY62hQYGyFVFbWBTTAr8YaHsb
-	 KIm0gIoMqkezCinE+7YbPl6OdUhNNDjahUbFiuBE42oG21ObG9ExLqIePQNiu8Iuxt
-	 SNsZlcWXpAFYrroYdwwyzmhV2dfYsXKMM8ZeQnPA=
+	by mail.kernel.org (Postfix) with ESMTP id 79C9F20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:54:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bOnuHxO8";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Q1sGLGHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbfFNFvU (ORCPT
+        id S1726184AbfFNFyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 01:51:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725801AbfFNFvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 01:51:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 14 Jun 2019 01:54:39 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59714 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfFNFyi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 01:54:38 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 782F860909; Fri, 14 Jun 2019 05:54:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560491676;
+        bh=wd1M0evBIXLEcGJx9iw3rlVbAxOCmtJoFg2feFLTumI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=bOnuHxO8vepWrGxy5wP0hMkl/8iRkQ6gb+h6IQ12M7loZUuxZRddpRhAciAGH/8MA
+         P+k2GbzqrJRMRiTFRr/zTMtT2zr2AE7SArtWjGKwQx+UjmDMIPlCcxdqeSFAYgBsYn
+         OY3USkRnR3WlbVrgBCedBeGlRZJBMeTDyCd4v9PI=
+Received: from [10.131.117.43] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C8BF2133D;
-        Fri, 14 Jun 2019 05:51:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560491479;
-        bh=HupSjd11yAvr6+RX4xhnU6neJDD0iJF4+UlTvBQNwEk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AhdSwqtQpHMw0xMfNzElbO6e0pjwiuj0cekBujQcwZ63+oigWTsHnWQM22JcUFm3A
-         jvJSW4APsFCT+RcEW8RHxvNqbCo8RRkhv2j87eDJrDn5XvSueu2DUdKXVn6hLk9l7q
-         2QKKdQII6dXiUI1Hp3IiYQGD/H91CkhwY4LYPQaA=
-Date:   Fri, 14 Jun 2019 07:51:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 000/155] 5.1.10-stable review
-Message-ID: <20190614055116.GE27319@kroah.com>
-References: <20190613075652.691765927@linuxfoundation.org>
- <1526e84e-a087-452c-7f00-ff7f70de0cf4@roeck-us.net>
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 254356079C;
+        Fri, 14 Jun 2019 05:54:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560491675;
+        bh=wd1M0evBIXLEcGJx9iw3rlVbAxOCmtJoFg2feFLTumI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Q1sGLGHqf3Og6g5QfKfG4218AP0shAWBRRrGCeuKdQJBYFYQQ/S/aPj6MOLclGqJ5
+         KfHv4VOLijzIkPbNk0r6sDct0BGaiOvf5sl9xTqTkwSFeVR26QSejf2TOJ6fKEGnok
+         sgNekPch6PEJN8RCCUSSNLedhogOCiYDnRe9dgoU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 254356079C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [RFC v2 01/11] OPP: Don't overwrite rounded clk rate
+To:     Viresh Kumar <viresh.kumar@linaro.org>, swboyd@chromium.org,
+        vincent.guittot@linaro.org, mturquette@baylibre.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-scsi@vger.kernel.org, ulf.hansson@linaro.org,
+        dianders@chromium.org, rafael@kernel.org
+References: <20190320094918.20234-1-rnayak@codeaurora.org>
+ <20190320094918.20234-2-rnayak@codeaurora.org>
+ <20190611105432.x3nzqiib35t6mvyg@vireshk-i7>
+ <c173a57d-a4de-99f7-e8d8-28a7612f4ca3@codeaurora.org>
+ <20190612082506.m735bsk7bjijf2yg@vireshk-i7>
+ <20190613095419.lfjeko7nmxtix2n4@vireshk-i7>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <b29c1754-d719-4d7b-806f-9ea25a8b528f@codeaurora.org>
+Date:   Fri, 14 Jun 2019 11:24:28 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1526e84e-a087-452c-7f00-ff7f70de0cf4@roeck-us.net>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190613095419.lfjeko7nmxtix2n4@vireshk-i7>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 01:03:08PM -0700, Guenter Roeck wrote:
-> On 6/13/19 1:31 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.1.10 release.
-> > There are 155 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sat 15 Jun 2019 07:54:40 AM UTC.
-> > Anything received after that time might be too late.
-> > 
+
+> Now, the request to change the frequency starts from cpufreq
+> governors, like schedutil when they calls:
 > 
-> Build results:
-> 	total: 159 pass: 159 fail: 0
-> Qemu test results:
-> 	total: 354 pass: 354 fail: 0
+> __cpufreq_driver_target(policy, 599 MHz, CPUFREQ_RELATION_L);
+> 
+> CPUFREQ_RELATION_L means: lowest frequency at or above target. And so
+> I would expect the frequency to get set to 600MHz (if we look at clock
+> driver) or 700MHz (if we look at OPP table). I think we should decide
+> this thing from the OPP table only as that's what the platform guys
+> want us to use. So, we should end up with 700 MHz.
+> 
+> Then we land into dev_pm_opp_set_rate(), which does this (which is
+> code copied from earlier version of cpufreq-dt driver):
 
-Great, thanks for testing and letting me know.
+so before we land into dev_pm_opp_set_rate() from a __cpufreq_driver_target()
+I guess we do have a cpufreq driver callback that gets called in between?
+which is either .target_index or .target
 
-greg k-h
+In case of .target_index, the cpufreq core looks for a OPP index
+and we would land up with 700Mhz i guess, so we are good.
+
+In case of .target though the 'relation' CPUFREQ_RELATION_L does get passed over
+to the cpufreq driver which I am guessing is expected to handle it in some way to
+make sure the target frequency set is not less than whats requested? instead of
+simply passing the requested frequency over to dev_pm_opp_set_rate()?
+
+Looking at all the existing cpufreq drivers upstream, while most support .target_index
+the 3 which do support .target seem to completely ignore this 'relation' input that's
+passed to them.
+
+drivers/cpufreq/cppc_cpufreq.c:	.target = cppc_cpufreq_set_target,
+drivers/cpufreq/cpufreq-nforce2.c:	.target = nforce2_target,
+drivers/cpufreq/pcc-cpufreq.c:	.target = pcc_cpufreq_target,
+
+> This kind of behavior (introduced by this patch) is important for
+> other devices which want to run at the nearest frequency to target
+> one, but not for CPUs/GPUs. So, we need to tag these IO devices
+> separately, maybe from DT ? So we select the closest match instead of
+> most optimal one.
+
+yes we do need some way to distinguish between CPU/GPU devices and other
+IO devices. CPU/GPU can always run at fmax for a given voltage, that's not true
+for IO devices and I don't see how we can satisfy both cases without
+clearly knowing if we are serving a processor or an IO device, unless the
+higher layers (cpufreq/devfreq) are able to handle this somehow without
+expecting the OPP layer to handle the differences.
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
