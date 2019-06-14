@@ -2,759 +2,254 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5582C31E4E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F421C31E4F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F7120866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516672173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:32:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=birdec.tech header.i=@birdec.tech header.b="i3Ts/BZd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikN9b9uD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbfFNW2w (ORCPT
+        id S1726219AbfFNWcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 18:28:52 -0400
-Received: from host.euro-space.net ([87.117.239.2]:51878 "EHLO
-        host.euro-space.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbfFNW2w (ORCPT
+        Fri, 14 Jun 2019 18:32:04 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:39848 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfFNWcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 18:28:52 -0400
-X-Greylist: delayed 4305 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Jun 2019 18:28:48 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=birdec.tech
-        ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:Cc:From:References:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=6La/5dULud0ut0vUkllEdQRlci1MhOsDmT+MMElZ6OM=; b=i3Ts/BZdPj9RmQ/X0sAHEPpwBm
-        L1qz+WEmW6LT2VvrAIFmCGDMMkKITzqJvtcHH3wAUc8/JiZuSEVnm/qu0XwbdGXjYNaA95S0HSSj4
-        xIv/+Zj1/AvngF5PfbLl1aLqp5RkI7hCMnOEubn92JeRRcj1IMrtYQFO0f9QT5/YzFEYGJMnHHDeq
-        e0XGTXhKu92U/0xImfrej6DjqFYhjgizkOSpQ7NkaaTOlZIvfpBOWLKG8+zIxGPr4s4XRGJKMZpgr
-        sP0QXueJxQ0hWTWMO5xG3M18XqTkSYLOVPdO8v2fJ4LfD0xOK8CbznhJRRoGPtqZosLu5Lx1fcfxy
-        K1owFGUw==;
-Received: from x5f70b78f.dyn.telefonica.de ([95.112.183.143]:56450 helo=[192.168.1.2])
-        by host.euro-space.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <kmarinushkin@birdec.tech>)
-        id 1hbtZD-0004CT-1w; Fri, 14 Jun 2019 22:16:59 +0100
-Subject: Re: [PATCH v1 2/4] ASoC: Add codec driver for ST TDA7802
-To:     Thomas Preston <thomas.preston@codethink.co.uk>
-References: <20190611174909.12162-1-thomas.preston@codethink.co.uk>
- <20190611174909.12162-3-thomas.preston@codethink.co.uk>
-From:   Kirill Marinushkin <kmarinushkin@birdec.tech>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Annaliese McDermond <nh6z@nh6z.net>,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <1ac9e607-f1b3-d32e-b87f-d54325923417@birdec.tech>
-Date:   Fri, 14 Jun 2019 23:17:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101
- Thunderbird/52.4.0
+        Fri, 14 Jun 2019 18:32:04 -0400
+Received: by mail-qk1-f195.google.com with SMTP id i125so2713891qkd.6;
+        Fri, 14 Jun 2019 15:32:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rgCpxQhKgcPxKhW1zrmoJ7xR10La2/Y/NCUBA1QHYKg=;
+        b=ikN9b9uDtTN2fuFFRirNtEKSGBtekPBwAtjcFoeDYo/n4GIpdxNrzEGxoDEveSyn8q
+         RvkLP2zVpnhR+bG0cWFd7Tb6iIth3zBxO+iwVI2/QLxamk1wZu7clV00s0UkOQUCz/Fb
+         j3PChAdTCsFcY9tPY8KCPwsoJI7wVqN3kuzQSMxjrHDJTI69ORMqUq9bnvspSjB24Zz1
+         9rCTA/XbPCIIAQ97NmBee5gYHRCHzhfxx/tA2HAk3+2y9F9HVBnMvXzOg/AldoUDnKBA
+         rElPQB/qGT9+XRCAOzJ1+8nqVrO93GSbS0YOViSaszr12PN4+VRaObPuTAL6wKcBOn8P
+         AITg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rgCpxQhKgcPxKhW1zrmoJ7xR10La2/Y/NCUBA1QHYKg=;
+        b=Jruzngf9Oa7Mpu5e83gMr+wd2rYWiOKg5mbB50oDHLV0sXzdCQsqJQhTu/VsHzQIiA
+         u5/Ne3J0844X/NUOePWpYlEh2RFakrnny/8FlXJIEVa7r0jENeLmepE5iRQdj9FryUN0
+         XW5l3c8b5+Af9d+hmcnC5604CYfhd1TAnIg7Ktzry6iQIhCY5iOCEE9Vd0Vhf+dUNvIq
+         YtgVLiicGFyhs4BgGFIAs8tyDK46a5qA/g28dhHjpKFJbLP+zmVky3T1XHRmW8LMqhae
+         A+GgmY9HyM5y4Pc/C3Vy7Kd8gi76khQpbRsakmoPXNsCg6VYKgga3FiJorH3nMZLH64j
+         u6QA==
+X-Gm-Message-State: APjAAAWv4R/19XfQANNkdsdEARzn6Q9upR74GVovdggBYuEsGA34/onf
+        1dtVfpctSKFbuz/FQPDZiXVS7awBS0lnmMi6mr4=
+X-Google-Smtp-Source: APXvYqxRdVKeHpuHoTUPPVHtYPrH6D+wdvvqXiopjY5+9iDYXwZhVjB0bYX6Tkeyh1IghaRBHtdk0PKTOp+7Id11Ct0=
+X-Received: by 2002:ae9:eb53:: with SMTP id b80mr49509306qkg.172.1560551522210;
+ Fri, 14 Jun 2019 15:32:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190611174909.12162-3-thomas.preston@codethink.co.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - host.euro-space.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - birdec.tech
-X-Get-Message-Sender-Via: host.euro-space.net: authenticated_id: kmarinushkin@birdec.tech
-X-Authenticated-Sender: host.euro-space.net: kmarinushkin@birdec.tech
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+References: <20190614093728.622-1-afabre@cloudflare.com>
+In-Reply-To: <20190614093728.622-1-afabre@cloudflare.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 14 Jun 2019 15:31:51 -0700
+Message-ID: <CAEf4BzZNO8Px2BRcs5WMxfrfRaekxF=_fz_p2A+eL94L0DrfQg@mail.gmail.com>
+Subject: Re: [PATCH v2 bpf-next] bpf: sk_storage: Fix out of bounds memory access
+To:     Arthur Fabre <afabre@cloudflare.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/11/19 19:49, Thomas Preston wrote:
-> Add an I2C based codec driver for ST TDA7802 amplifier. By default, the
-> amplifier supports 4 audio channels but can support up to 16 with
-> multiple devices. Input is configurable for I2S or TDM.
-> 
-> The unified device properties API is used to get board-specific config from
-> device tree / ACPI.
-> 
-> Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
-> Cc: Patrick Glaser <pglaser@tesla.com>
-> Cc: Rob Duncan <rduncan@tesla.com>
-> Cc: Nate Case <ncase@tesla.com>
+On Fri, Jun 14, 2019 at 2:45 AM Arthur Fabre <afabre@cloudflare.com> wrote:
+>
+> bpf_sk_storage maps use multiple spin locks to reduce contention.
+> The number of locks to use is determined by the number of possible CPUs.
+> With only 1 possible CPU, bucket_log == 0, and 2^0 = 1 locks are used.
+>
+> When updating elements, the correct lock is determined with hash_ptr().
+> Calling hash_ptr() with 0 bits is undefined behavior, as it does:
+>
+> x >> (64 - bits)
+>
+> Using the value results in an out of bounds memory access.
+> In my case, this manifested itself as a page fault when raw_spin_lock_bh()
+> is called later, when running the self tests:
+>
+> ./tools/testing/selftests/bpf/test_verifier 773 775
+>
+> [   16.366342] BUG: unable to handle page fault for address: ffff8fe7a66f93f8
+> [   16.367139] #PF: supervisor write access in kernel mode
+> [   16.367751] #PF: error_code(0x0002) - not-present page
+> [   16.368323] PGD 35a01067 P4D 35a01067 PUD 0
+> [   16.368796] Oops: 0002 [#1] SMP PTI
+> [   16.369175] CPU: 0 PID: 189 Comm: test_verifier Not tainted 5.2.0-rc2+ #10
+> [   16.369960] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> [   16.371021] RIP: 0010:_raw_spin_lock_bh (/home/afabre/linux/./include/trace/events/initcall.h:48)
+> [ 16.371571] Code: 02 00 00 31 c0 ba ff 00 00 00 3e 0f b1 17 75 01 c3 e9 82 12 5f ff 66 90 65 81 05 ad 14 6f 41 00 02 00 00 31 c0 ba 01 00 00 00 <3e> 0f b1 17 75 01 c3 89 c6 e9 f0 02 5f ff b8 00 02 00 00 3e 0f c1
+> All code
+> ========
+>    0:   02 00                   add    (%rax),%al
+>    2:   00 31                   add    %dh,(%rcx)
+>    4:   c0 ba ff 00 00 00 3e    sarb   $0x3e,0xff(%rdx)
+>    b:   0f b1 17                cmpxchg %edx,(%rdi)
+>    e:   75 01                   jne    0x11
+>   10:   c3                      retq
+>   11:   e9 82 12 5f ff          jmpq   0xffffffffff5f1298
+>   16:   66 90                   xchg   %ax,%ax
+>   18:   65 81 05 ad 14 6f 41    addl   $0x200,%gs:0x416f14ad(%rip)        # 0x416f14d0
+>   1f:   00 02 00 00
+>   23:   31 c0                   xor    %eax,%eax
+>   25:   ba 01 00 00 00          mov    $0x1,%edx
+>   2a:   3e 0f b1 17             cmpxchg %edx,%ds:*(%rdi)                <-- trapping instruction
+>   2e:   75 01                   jne    0x31
+>   30:   c3                      retq
+>   31:   89 c6                   mov    %eax,%esi
+>   33:   e9 f0 02 5f ff          jmpq   0xffffffffff5f0328
+>   38:   b8 00 02 00 00          mov    $0x200,%eax
+>   3d:   3e                      ds
+>   3e:   0f                      .byte 0xf
+>   3f:   c1                      .byte 0xc1
+>
+> Code starting with the faulting instruction
+> ===========================================
+>    0:   3e 0f b1 17             cmpxchg %edx,%ds:(%rdi)
+>    4:   75 01                   jne    0x7
+>    6:   c3                      retq
+>    7:   89 c6                   mov    %eax,%esi
+>    9:   e9 f0 02 5f ff          jmpq   0xffffffffff5f02fe
+>    e:   b8 00 02 00 00          mov    $0x200,%eax
+>   13:   3e                      ds
+>   14:   0f                      .byte 0xf
+>   15:   c1                      .byte 0xc1
+> [   16.373398] RSP: 0018:ffffa759809d3be0 EFLAGS: 00010246
+> [   16.373954] RAX: 0000000000000000 RBX: ffff8fe7a66f93f0 RCX: 0000000000000040
+> [   16.374645] RDX: 0000000000000001 RSI: ffff8fdaf9f0d180 RDI: ffff8fe7a66f93f8
+> [   16.375338] RBP: ffff8fdaf9f0d180 R08: ffff8fdafba2c320 R09: ffff8fdaf9f0d0c0
+> [   16.376028] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8fdafa346700
+> [   16.376719] R13: ffff8fe7a66f93f8 R14: ffff8fdaf9f0d0c0 R15: 0000000000000001
+> [   16.377413] FS:  00007fda724c0740(0000) GS:ffff8fdafba00000(0000) knlGS:0000000000000000
+> [   16.378204] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   16.378763] CR2: ffff8fe7a66f93f8 CR3: 0000000139d1c006 CR4: 0000000000360ef0
+> [   16.379453] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   16.380144] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   16.380864] Call Trace:
+> [   16.381112] selem_link_map (/home/afabre/linux/./include/linux/compiler.h:221 /home/afabre/linux/net/core/bpf_sk_storage.c:243)
+> [   16.381476] sk_storage_update (/home/afabre/linux/net/core/bpf_sk_storage.c:355 /home/afabre/linux/net/core/bpf_sk_storage.c:414)
+> [   16.381888] bpf_sk_storage_get (/home/afabre/linux/net/core/bpf_sk_storage.c:760 /home/afabre/linux/net/core/bpf_sk_storage.c:741)
+> [   16.382285] ___bpf_prog_run (/home/afabre/linux/kernel/bpf/core.c:1447)
+> [   16.382679] ? __bpf_prog_run32 (/home/afabre/linux/kernel/bpf/core.c:1603)
+> [   16.383074] ? alloc_file_pseudo (/home/afabre/linux/fs/file_table.c:232)
+> [   16.383486] ? kvm_clock_get_cycles (/home/afabre/linux/arch/x86/kernel/kvmclock.c:98)
+> [   16.383906] ? ktime_get (/home/afabre/linux/kernel/time/timekeeping.c:265 /home/afabre/linux/kernel/time/timekeeping.c:369 /home/afabre/linux/kernel/time/timekeeping.c:754)
+> [   16.384243] ? bpf_test_run (/home/afabre/linux/net/bpf/test_run.c:47)
+> [   16.384613] ? bpf_prog_test_run_skb (/home/afabre/linux/net/bpf/test_run.c:313)
+> [   16.385065] ? security_capable (/home/afabre/linux/security/security.c:696 (discriminator 19))
+> [   16.385460] ? __do_sys_bpf (/home/afabre/linux/kernel/bpf/syscall.c:2072 /home/afabre/linux/kernel/bpf/syscall.c:2848)
+> [   16.385854] ? __handle_mm_fault (/home/afabre/linux/mm/memory.c:3507 /home/afabre/linux/mm/memory.c:3532 /home/afabre/linux/mm/memory.c:3666 /home/afabre/linux/mm/memory.c:3897 /home/afabre/linux/mm/memory.c:4021)
+> [   16.386273] ? __dentry_kill (/home/afabre/linux/fs/dcache.c:595)
+> [   16.386652] ? do_syscall_64 (/home/afabre/linux/arch/x86/entry/common.c:301)
+> [   16.387031] ? entry_SYSCALL_64_after_hwframe (/home/afabre/linux/./include/trace/events/initcall.h:10 /home/afabre/linux/./include/trace/events/initcall.h:10)
+> [   16.387541] Modules linked in:
+> [   16.387846] CR2: ffff8fe7a66f93f8
+> [   16.388175] ---[ end trace 891cf27b5b9c9cc6 ]---
+> [   16.388628] RIP: 0010:_raw_spin_lock_bh (/home/afabre/linux/./include/trace/events/initcall.h:48)
+> [ 16.389089] Code: 02 00 00 31 c0 ba ff 00 00 00 3e 0f b1 17 75 01 c3 e9 82 12 5f ff 66 90 65 81 05 ad 14 6f 41 00 02 00 00 31 c0 ba 01 00 00 00 <3e> 0f b1 17 75 01 c3 89 c6 e9 f0 02 5f ff b8 00 02 00 00 3e 0f c1
+> All code
+> ========
+>    0:   02 00                   add    (%rax),%al
+>    2:   00 31                   add    %dh,(%rcx)
+>    4:   c0 ba ff 00 00 00 3e    sarb   $0x3e,0xff(%rdx)
+>    b:   0f b1 17                cmpxchg %edx,(%rdi)
+>    e:   75 01                   jne    0x11
+>   10:   c3                      retq
+>   11:   e9 82 12 5f ff          jmpq   0xffffffffff5f1298
+>   16:   66 90                   xchg   %ax,%ax
+>   18:   65 81 05 ad 14 6f 41    addl   $0x200,%gs:0x416f14ad(%rip)        # 0x416f14d0
+>   1f:   00 02 00 00
+>   23:   31 c0                   xor    %eax,%eax
+>   25:   ba 01 00 00 00          mov    $0x1,%edx
+>   2a:   3e 0f b1 17             cmpxchg %edx,%ds:*(%rdi)                <-- trapping instruction
+>   2e:   75 01                   jne    0x31
+>   30:   c3                      retq
+>   31:   89 c6                   mov    %eax,%esi
+>   33:   e9 f0 02 5f ff          jmpq   0xffffffffff5f0328
+>   38:   b8 00 02 00 00          mov    $0x200,%eax
+>   3d:   3e                      ds
+>   3e:   0f                      .byte 0xf
+>   3f:   c1                      .byte 0xc1
+>
+> Code starting with the faulting instruction
+> ===========================================
+>    0:   3e 0f b1 17             cmpxchg %edx,%ds:(%rdi)
+>    4:   75 01                   jne    0x7
+>    6:   c3                      retq
+>    7:   89 c6                   mov    %eax,%esi
+>    9:   e9 f0 02 5f ff          jmpq   0xffffffffff5f02fe
+>    e:   b8 00 02 00 00          mov    $0x200,%eax
+>   13:   3e                      ds
+>   14:   0f                      .byte 0xf
+>   15:   c1                      .byte 0xc1
+> [   16.390899] RSP: 0018:ffffa759809d3be0 EFLAGS: 00010246
+> [   16.391410] RAX: 0000000000000000 RBX: ffff8fe7a66f93f0 RCX: 0000000000000040
+> [   16.392102] RDX: 0000000000000001 RSI: ffff8fdaf9f0d180 RDI: ffff8fe7a66f93f8
+> [   16.392795] RBP: ffff8fdaf9f0d180 R08: ffff8fdafba2c320 R09: ffff8fdaf9f0d0c0
+> [   16.393481] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8fdafa346700
+> [   16.394169] R13: ffff8fe7a66f93f8 R14: ffff8fdaf9f0d0c0 R15: 0000000000000001
+> [   16.394870] FS:  00007fda724c0740(0000) GS:ffff8fdafba00000(0000) knlGS:0000000000000000
+> [   16.395641] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   16.396193] CR2: ffff8fe7a66f93f8 CR3: 0000000139d1c006 CR4: 0000000000360ef0
+> [   16.396876] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   16.397557] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   16.398246] Kernel panic - not syncing: Fatal exception in interrupt
+> [   16.399067] Kernel Offset: 0x3ce00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+> [   16.400098] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+>
+
+I think the bug is pretty clear without this detailed example, I'd
+remove it from commit message.
+
+> Force the minimum number of locks to two.
+>
+> Signed-off-by: Arthur Fabre <afabre@cloudflare.com>
+> Fixes: 6ac99e8f23d4 ("bpf: Introduce bpf sk local storage")
 > ---
->  sound/soc/codecs/Kconfig   |   6 +
->  sound/soc/codecs/Makefile  |   2 +
->  sound/soc/codecs/tda7802.c | 580 +++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 588 insertions(+)
->  create mode 100644 sound/soc/codecs/tda7802.c
-> 
-> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-> index e730d47ac85b..1d30c2333cb1 100644
-> --- a/sound/soc/codecs/Kconfig
-> +++ b/sound/soc/codecs/Kconfig
-> @@ -176,6 +176,7 @@ config SND_SOC_ALL_CODECS
->  	select SND_SOC_TAS5720 if I2C
->  	select SND_SOC_TAS6424 if I2C
->  	select SND_SOC_TDA7419 if I2C
-> +	select SND_SOC_TDA7802 if I2C
->  	select SND_SOC_TFA9879 if I2C
->  	select SND_SOC_TLV320AIC23_I2C if I2C
->  	select SND_SOC_TLV320AIC23_SPI if SPI_MASTER
-> @@ -1078,6 +1079,11 @@ config SND_SOC_TDA7419
->  	depends on I2C
->  	select REGMAP_I2C
->  
-> +config SND_SOC_TDA7802
-> +	tristate "ST TDA7802 audio processor"
-> +	depends on I2C
-> +	select REGMAP_I2C
-> +
->  config SND_SOC_TFA9879
->  	tristate "NXP Semiconductors TFA9879 amplifier"
->  	depends on I2C
-> diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-> index aa7720a7a0aa..fc3fc672bc4b 100644
-> --- a/sound/soc/codecs/Makefile
-> +++ b/sound/soc/codecs/Makefile
-> @@ -187,6 +187,7 @@ snd-soc-tas571x-objs := tas571x.o
->  snd-soc-tas5720-objs := tas5720.o
->  snd-soc-tas6424-objs := tas6424.o
->  snd-soc-tda7419-objs := tda7419.o
-> +snd-soc-tda7802-objs := tda7802.o
->  snd-soc-tfa9879-objs := tfa9879.o
->  snd-soc-tlv320aic23-objs := tlv320aic23.o
->  snd-soc-tlv320aic23-i2c-objs := tlv320aic23-i2c.o
-> @@ -460,6 +461,7 @@ obj-$(CONFIG_SND_SOC_TAS571X)	+= snd-soc-tas571x.o
->  obj-$(CONFIG_SND_SOC_TAS5720)	+= snd-soc-tas5720.o
->  obj-$(CONFIG_SND_SOC_TAS6424)	+= snd-soc-tas6424.o
->  obj-$(CONFIG_SND_SOC_TDA7419)	+= snd-soc-tda7419.o
-> +obj-$(CONFIG_SND_SOC_TDA7802)	+= snd-soc-tda7802.o
->  obj-$(CONFIG_SND_SOC_TFA9879)	+= snd-soc-tfa9879.o
->  obj-$(CONFIG_SND_SOC_TLV320AIC23)	+= snd-soc-tlv320aic23.o
->  obj-$(CONFIG_SND_SOC_TLV320AIC23_I2C)	+= snd-soc-tlv320aic23-i2c.o
-> diff --git a/sound/soc/codecs/tda7802.c b/sound/soc/codecs/tda7802.c
-> new file mode 100644
-> index 000000000000..38ca52de85f0
-> --- /dev/null
-> +++ b/sound/soc/codecs/tda7802.c
-> @@ -0,0 +1,580 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * tda7802.c  --  codec driver for ST TDA7802
-> + *
-> + * Copyright (C) 2016-2019 Tesla Motors, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of the
-> + * License, or (at your option) any later version.
-> + *
-> + */
-> +
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/of_device.h>
-> +#include <linux/module.h>
-> +#include <linux/i2c.h>
-> +#include <linux/delay.h>
-> +#include <linux/regmap.h>
-> +#include <linux/string.h>
-> +#include <sound/soc.h>
-> +
-> +enum tda7802_type {
-> +	tda7802_base,
-> +};
-> +
-> +#define I2C_BUS				   4
-> +
-> +#define CHANNELS_PER_AMP		   4
-> +#define MAX_NUM_AMPS			   4
-> +
-> +#define ENABLE_DELAY_MS			   10
-> +
-> +#define TDA7802_IB0			   0x00
-> +#define TDA7802_IB1			   0x01
-> +#define TDA7802_IB2			   0x02
-> +#define TDA7802_IB3			   0x03
-> +#define TDA7802_IB4			   0x04
-> +#define TDA7802_IB5			   0x05
-> +
-> +#define TDA7802_DB0			   0x10
-> +#define TDA7802_DB1			   0x11
-> +#define TDA7802_DB2			   0x12
-> +#define TDA7802_DB3			   0x13
-> +#define TDA7802_DB4			   0x14
-> +#define TDA7802_DB5			   0x15
-> +
-> +#define IB0_CH4_TRISTATE_ON		   (1 << 7)
-> +#define IB0_CH3_TRISTATE_ON		   (1 << 6)
-> +#define IB0_CH2_TRISTATE_ON		   (1 << 5)
-> +#define IB0_CH1_TRISTATE_ON		   (1 << 4)
-> +#define IB0_CH4_HIGH_EFF		   (0 << 3)
-> +#define IB0_CH4_CLASS_AB		   (1 << 3)
-> +#define IB0_CH3_HIGH_EFF		   (0 << 2)
-> +#define IB0_CH3_CLASS_AB		   (1 << 2)
-> +#define IB0_CH2_HIGH_EFF		   (0 << 0)
-> +#define IB0_CH2_CLASS_AB		   (1 << 1)
-> +#define IB0_CH1_HIGH_EFF		   (0 << 0)
-> +#define IB0_CH1_CLASS_AB		   (1 << 0)
-> +
-> +#define IB1_REAR_IMPEDANCE_2_OHM	   (0 << 7)
-> +#define IB1_REAR_IMPEDANCE_4_OHM	   (1 << 7)
-> +#define IB1_LONG_DIAG_TIMING_x1		   (0 << 5)
-> +#define IB1_LONG_DIAG_TIMING_x2		   (1 << 5)
-> +#define IB1_LONG_DIAG_TIMING_x4		   (2 << 5)
-> +#define IB1_LONG_DIAG_TIMING_x8		   (3 << 5)
-> +#define IB1_GAIN_CH13_GV1		   (0 << 3)
-> +#define IB1_GAIN_CH13_GV2		   (1 << 3)
-> +#define IB1_GAIN_CH13_GV3		   (2 << 3)
-> +#define IB1_GAIN_CH13_GV4		   (3 << 3)
-> +#define IB1_GAIN_CH24_GV1		   (0 << 1)
-> +#define IB1_GAIN_CH24_GV2		   (1 << 1)
-> +#define IB1_GAIN_CH24_GV3		   (2 << 1)
-> +#define IB1_GAIN_CH24_GV4		   (3 << 1)
-> +#define IB1_DIGITAL_GAIN_BOOST		   (1 << 0)
-> +
-> +#define IB2_MUTE_TIME_1_MS		   (0 << 5)
-> +#define IB2_MUTE_TIME_5_MS		   (1 << 5)
-> +#define IB2_MUTE_TIME_11_MS		   (2 << 5)
-> +#define IB2_MUTE_TIME_23_MS		   (3 << 5)
-> +#define IB2_MUTE_TIME_46_MS		   (4 << 5)
-> +#define IB2_MUTE_TIME_92_MS		   (5 << 5)
-> +#define IB2_MUTE_TIME_185_MS		   (6 << 5)
-> +#define IB2_MUTE_TIME_371_MS		   (7 << 5)
-> +#define IB2_CH13_UNMUTED		   (1 << 4)
-> +#define IB2_CH24_UNMUTED		   (1 << 3)
-> +#define IB2_DIGITAL_MUTE_DISABLED	   (1 << 2)
-> +#define IB2_AUTOMUTE_THRESHOLD_5V3	   (0 << 1)
-> +#define IB2_AUTOMUTE_THRESHOLD_7V3	   (1 << 1)
-> +#define IB2_FRONT_IMPEDANCE_2_OHM	   (0 << 0)
-> +#define IB2_FRONT_IMPEDANCE_4_OHM	   (1 << 0)
-> +
-> +#define IB3_SAMPLE_RATE_44_KHZ		   (0 << 6)
-> +#define IB3_SAMPLE_RATE_48_KHZ		   (1 << 6)
-> +#define IB3_SAMPLE_RATE_96_KHZ		   (2 << 6)
-> +#define IB3_SAMPLE_RATE_192_KHZ		   (3 << 6)
-> +#define IB3_FORMAT_I2S			   (0 << 3)
-> +#define IB3_FORMAT_TDM4			   (1 << 3)
-> +#define IB3_FORMAT_TDM8_DEV1		   (2 << 3)
-> +#define IB3_FORMAT_TDM8_DEV2		   (3 << 3)
-> +#define IB3_FORMAT_TDM16_DEV1		   (4 << 3)
-> +#define IB3_FORMAT_TDM16_DEV2		   (5 << 3)
-> +#define IB3_FORMAT_TDM16_DEV3		   (6 << 3)
-> +#define IB3_FORMAT_TDM16_DEV4		   (7 << 3)
-> +#define IB3_I2S_FRAME_PERIOD_64		   (0 << 2)
-> +#define IB3_I2S_FRAME_PERIOD_50		   (1 << 2)
-> +#define IB3_PLL_CLOCK_DITHER_ENABLE	   (1 << 1)
-> +#define IB3_HIGH_PASS_FILTER_ENABLE	   (1 << 0)
 
-More unused defines - do you want them?
+Thanks for fixing this!
 
-> +
-> +static const u8 IB3_FORMAT[4][4] = {
-> +	/* 1x amp, 4 channels */
-> +	{ IB3_FORMAT_TDM4 },
-> +	/* 2x amp, 8 channels */
-> +	{ IB3_FORMAT_TDM8_DEV1,
-> +		IB3_FORMAT_TDM8_DEV2 },
-> +	/* 3x amp not supported */
-> +	{ },
-> +	/* 4x amp, 16 channels */
-> +	{ IB3_FORMAT_TDM16_DEV1,
-> +		IB3_FORMAT_TDM16_DEV2,
-> +		IB3_FORMAT_TDM16_DEV3,
-> +		IB3_FORMAT_TDM16_DEV4 },
-> +};
-> +
-> +#define IB4_NOISE_GATE_DISABLE		   (1 << 7)
-> +#define IB4_SHORT_FAULT_ON_CDDIAG_YES	   (0 << 6)
-> +#define IB4_SHORT_FAULT_ON_CDDIAG_NO	   (1 << 6)
-> +#define IB4_OFFSET_ON_CDDIAG_YES	   (0 << 5)
-> +#define IB4_OFFSET_ON_CDDIAG_NO		   (1 << 5)
-> +#define IB4_AC_DIAG_CURRENT_THRESHOLD_HIGH (0 << 4)
-> +#define IB4_AC_DIAG_CURRENT_THRESHOLD_LOW  (1 << 4)
-> +#define IB4_AC_DIAG_ENABLE		   (1 << 3)
-> +#define IB4_CH13_DIAG_MODE_SPEAKER	   (0 << 2)
-> +#define IB4_CH13_DIAG_MODE_BOOSTER	   (1 << 2)
-> +#define IB4_CH24_DIAG_MODE_SPEAKER	   (0 << 1)
-> +#define IB4_CH24_DIAG_MODE_BOOSTER	   (1 << 1)
-> +#define IB4_DIAG_MODE_ENABLE		   (1 << 0)
-> +
-> +#define IB5_TEMP_WARNING_ON_CDDIAG_TW1	   (0 << 5)
-> +#define IB5_TEMP_WARNING_ON_CDDIAG_TW2	   (1 << 5)
-> +#define IB5_TEMP_WARNING_ON_CDDIAG_TW3	   (2 << 5)
-> +#define IB5_TEMP_WARNING_ON_CDDIAG_TW4	   (3 << 5)
-> +#define IB5_TEMP_WARNING_ON_CDDIAG_NONE	   (4 << 5)
-> +#define IB5_CLIP_DETECT_FRONT_1PC	   (0 << 3)
-> +#define IB5_CLIP_DETECT_FRONT_5PC	   (1 << 3)
-> +#define IB5_CLIP_DETECT_FRONT_10PC	   (2 << 3)
-> +#define IB5_CLIP_DETECT_FRONT_NONE	   (3 << 3)
-> +#define IB5_CLIP_DETECT_REAR_1PC	   (0 << 1)
-> +#define IB5_CLIP_DETECT_REAR_5PC	   (1 << 1)
-> +#define IB5_CLIP_DETECT_REAR_10PC	   (2 << 1)
-> +#define IB5_CLIP_DETECT_REAR_NONE	   (3 << 1)
-> +#define IB5_AMPLIFIER_ON		   (1 << 0)
-> +
-> +#define DB0_STARTUP_DIAG_STATUS		   0x40
-> +
-> +#define DUMP_NUM_BLOCK			   6
-> +#define DUMP_NUM_REGS			   (DUMP_NUM_BLOCK * 2)
-> +
-> +struct tda7802_priv {
-> +	struct i2c_client *i2c;
-> +	struct regmap *regmap;
-> +	struct regulator *enable_reg;
-> +	const char *diag_mode_ch13, *diag_mode_ch24;
-> +	u8 gain_ch13, gain_ch24;
-> +};
-> +
-> +static bool tda7802_readable_reg(struct device *dev, unsigned int reg)
-> +{
-> +	switch (reg) {
-> +	case TDA7802_IB0 ... TDA7802_IB5:`
-Oh, I didn't know it is possible to use such `...` syntax in switch cases. This
-is interesting!
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-> +	case TDA7802_DB0 ... TDA7802_DB5:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static bool tda7802_writeable_reg(struct device *dev, unsigned int reg)
-> +{
-> +	switch (reg) {
-> +	case TDA7802_IB0 ... TDA7802_IB5:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static const struct regmap_config tda7802_regmap_config = {
-> +	.val_bits      = 8,
-> +	.reg_bits      = 8,
-> +	.max_register  = TDA7802_DB5,
-> +	.use_single_read = 1,
-> +	.use_single_write = 1,
-> +
-> +	.readable_reg  = tda7802_readable_reg,
-> +	.writeable_reg = tda7802_writeable_reg,
 
-Maybe add default values?
-
-> +};
-> +
-> +#ifdef DEBUG
-> +static int tda7802_dump_regs(struct tda7802_priv *tda7802)
-> +{
-> +	u8 regs[DUMP_NUM_REGS];
-> +	const char *prefix;
-> +	int err = 0;
-> +
-> +	prefix = kasprintf(GFP_KERNEL, "%s ", dev_name(&tda7802->i2c->dev));
-> +	if (!prefix)
-> +		return -ENOMEM;
-> +
-> +	err = regmap_bulk_read(tda7802->regmap, TDA7802_IB0, &regs[0],
-> +			DUMP_NUM_BLOCK);
-> +	if (err < 0)
-> +		goto cleanup_dump_regs;
-> +
-> +	err = regmap_bulk_read(tda7802->regmap, TDA7802_DB0,
-> +			&regs[DUMP_NUM_BLOCK], DUMP_NUM_BLOCK);
-> +	if (err < 0)
-> +		goto cleanup_dump_regs;
-> +
-> +	print_hex_dump_bytes(prefix, DUMP_PREFIX_NONE, &regs[0], DUMP_NUM_REGS);
-> +
-> +cleanup_dump_regs:
-> +	kfree(prefix);
-> +	return err;
-> +}
-> +#else
-> +static int tda7802_dump_regs(struct tda7802_priv *tda7802)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
-> +static int tda7802_dai_startup(struct snd_pcm_substream *substream,
-> +			       struct snd_soc_dai *dai)
-> +{
-> +	struct tda7802_priv *tda7802 =
-> +		snd_soc_component_get_drvdata(dai->component);
-> +	struct device *dev = dai->dev;
-> +	u8 data[6] = { 0 };
-> +	int err;
-> +
-> +	dev_dbg(dev, "%s\n", __func__);
-> +
-> +	/* enable the device */
-> +	err = regulator_enable(tda7802->enable_reg);
-> +	if (err < 0) {
-> +		dev_err(dev, "Could not enable (startup).\n");
-> +		return err;
-> +	}
-> +	msleep(ENABLE_DELAY_MS);
-> +
-> +	/* All channels out of tri-state mode, all channels in Standard Class
-> +	 * AB mode (not High-efficiency)
-> +	 */
-> +	data[0] = IB0_CH4_CLASS_AB | IB0_CH3_CLASS_AB | IB0_CH2_CLASS_AB |
-> +		IB0_CH1_CLASS_AB;
-> +
-> +	/* Rear channel load impedance set to 2-Ohm, default diagnostic timing,
-> +	 * GV1 gain on all channels (default), no digital gain increase
-> +	 */
-> +	data[1] = IB1_REAR_IMPEDANCE_2_OHM | IB1_LONG_DIAG_TIMING_x1;
-> +	switch (tda7802->gain_ch13) {
-> +	case 4:
-> +		data[1] |= IB1_GAIN_CH13_GV4;
-> +		break;
-> +	case 3:
-> +		data[1] |= IB1_GAIN_CH13_GV3;
-> +		break;
-> +	case 2:
-> +		data[1] |= IB1_GAIN_CH13_GV2;
-> +		break;
-> +	default:
-> +		dev_err(dev, "Unknown gain for channel 1,3 %d, setting to 1\n",
-> +				tda7802->gain_ch13);
-> +	case 1:
-> +		data[1] |= IB1_GAIN_CH13_GV1;
-> +		break;
-> +	}
-> +	switch (tda7802->gain_ch24) {
-> +	case 4:
-> +		data[1] |= IB1_GAIN_CH24_GV4;
-> +		break;
-> +	case 3:
-> +		data[1] |= IB1_GAIN_CH24_GV3;
-> +		break;
-> +	case 2:
-> +		data[1] |= IB1_GAIN_CH24_GV2;
-> +		break;
-> +	default:
-> +		dev_err(dev, "Unknown gain for channel 2,4 %d, setting to 1\n",
-> +				tda7802->gain_ch24);
-> +	case 1:
-> +		data[1] |= IB1_GAIN_CH24_GV1;
-> +		break;
-> +	}
-> +
-> +	/* Mute timing 1.45ms, all channels un-muted, digital mute enabled,
-> +	 * 5.3V undervoltage threshold, front-channel load impedance set to
-> +	 * 2-Ohms
-> +	 */
-> +	data[2] = IB2_MUTE_TIME_1_MS | IB2_CH13_UNMUTED | IB2_CH24_UNMUTED |
-> +		IB2_AUTOMUTE_THRESHOLD_5V3 | IB2_FRONT_IMPEDANCE_2_OHM> +
-> +	/* Don't set IB3 here, we should set it in set_tdm_slot
-> +	 * data[3] = 0;
-> +	 */
-> +
-> +	/* Noise gating enabled, short and offset info on CD-Diag (fault) pin,
-> +	 * diagnostics disabled. Default to speaker.
-> +	 */
-> +	if (strcmp(tda7802->diag_mode_ch13, "Booster") == 0)
-> +		data[4] |= IB4_CH13_DIAG_MODE_BOOSTER;
-> +	else
-> +		data[4] |= IB4_CH13_DIAG_MODE_SPEAKER;
-> +
-> +	if (strcmp(tda7802->diag_mode_ch24, "Booster") == 0)
-> +		data[4] |= IB4_CH24_DIAG_MODE_BOOSTER;
-> +	else
-> +		data[4] |= IB4_CH24_DIAG_MODE_SPEAKER;
-> +
-> +	/* Temperature warning on diag pin set to TW1 (highest setting), clip
-> +	 * detection set to 1% on all channels
-> +	 */
-> +	data[5] = IB5_TEMP_WARNING_ON_CDDIAG_TW1 | IB5_CLIP_DETECT_FRONT_1PC |
-> +		IB5_CLIP_DETECT_REAR_1PC,
-
-Would be nicer to have `;` in the end of the line, instead of `,`
-
-> +
-> +	err = regmap_bulk_write(tda7802->regmap, TDA7802_IB0, data,
-> +			ARRAY_SIZE(data));
-> +	if (err < 0) {
-> +		dev_err(dev, "Cannot configure amp %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void tda7802_dai_shutdown(struct snd_pcm_substream *substream,
-> +				 struct snd_soc_dai *dai)
-> +{
-> +	struct tda7802_priv *tda7802 =
-> +		snd_soc_component_get_drvdata(dai->component);
-> +	struct device *dev = dai->dev;
-> +	int err;
-> +
-> +	dev_dbg(dev, "%s\n", __func__);
-> +
-> +	err = regulator_disable(tda7802->enable_reg);
-> +	if (err < 0)
-> +		dev_err(dev, "Could not disable (shutdown)\n");
-> +}
-> +
-> +static int tda7802_digital_mute(struct snd_soc_dai *dai, int mute)
-> +{
-> +	struct device *dev = dai->dev;
-> +	int err;
-> +
-> +	dev_dbg(dev, "%s mute=%d\n", __func__, mute);
-> +
-> +	if (mute) {
-> +		/* digital mute */
-> +		err = snd_soc_component_update_bits(dai->component, TDA7802_IB2,
-> +				IB2_DIGITAL_MUTE_DISABLED,
-> +				~IB2_DIGITAL_MUTE_DISABLED);
-
-In such situations, the last argument is usually `0`, not `~(mask)`
-
-> +		if (err < 0)
-> +			dev_err(dev, "Cannot mute amp %d\n", err);
-
-I think you want to `return err` here, right?
-
-> +
-> +		/* amp off */
-> +		err = snd_soc_component_update_bits(dai->component, TDA7802_IB5,
-> +				IB5_AMPLIFIER_ON, ~IB5_AMPLIFIER_ON);
-> +		if (err < 0)
-> +			dev_err(dev, "Cannot amp off %d\n", err);
-> +
-> +	} else {
-> +		/* amp on */
-> +		err = snd_soc_component_update_bits(dai->component, TDA7802_IB5,
-> +				IB5_AMPLIFIER_ON, IB5_AMPLIFIER_ON);
-> +		if (err < 0)
-> +			dev_err(dev, "Cannot amp on %d\n", err);
-> +
-> +		/* digital unmute */
-> +		err = snd_soc_component_update_bits(dai->component, TDA7802_IB2,
-> +				IB2_DIGITAL_MUTE_DISABLED,
-> +				IB2_DIGITAL_MUTE_DISABLED);
-> +		if (err < 0)
-> +			dev_err(dev, "Cannot unmute amp %d\n", err);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int tda7802_set_tdm_slot(struct snd_soc_dai *dai, unsigned int tx_mask,
-> +		unsigned int rx_mask, int slots, int slot_width)
-> +{
-> +	struct tda7802_priv *tda7802 =
-> +		snd_soc_component_get_drvdata(dai->component);
-> +	int width_index, slot_index, ret;
-> +	struct device *dev = dai->dev;
-> +	u8 data;
-> +
-> +	if (!(slots == 4 || slots == 8 || slots == 16)) {
-> +		dev_err(dev, "Failed to set %d slots, supported: 4, 8, 16\n",
-> +				slots);
-> +		return -ENOTSUPP;
-> +	}
-> +	width_index = (slots / 4) - 1;
-> +
-> +	switch (tx_mask) {
-> +	case 0x000f:
-> +		slot_index = 0;
-> +		break;
-> +	case 0x00f0:
-> +		slot_index = 1;
-> +		break;
-> +	case 0x0f00:
-> +		slot_index = 2;
-> +		break;
-> +	case 0xf000:
-> +		slot_index = 3;
-> +		break;
-> +	default:
-> +		/* must be contigious nibble */
-> +		dev_err(dev, "Failed to set tx_mask %08x\n", tx_mask);
-> +		return -ENOTSUPP;
-> +	}
-> +
-> +	/* 48kHz sample rate, TDM configuration, 64-bit I2S frame period, PLL
-> +	 * clock dither disabled, high-pass filter enabled (blocks DC output)
-> +	 */
-> +	data = IB3_SAMPLE_RATE_48_KHZ | IB3_FORMAT[width_index][slot_index] |
-> +		IB3_I2S_FRAME_PERIOD_64 | IB3_HIGH_PASS_FILTER_ENABLE;
-> +	ret = snd_soc_component_write(dai->component, TDA7802_IB3, data);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to write IB3 config %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	tda7802_dump_regs(tda7802);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct snd_soc_dai_ops tda7802_dai_ops = {
-> +	.startup      = tda7802_dai_startup,
-> +	.shutdown     = tda7802_dai_shutdown,
-> +	.digital_mute = tda7802_digital_mute,
-> +	.set_tdm_slot = tda7802_set_tdm_slot,
-> +};
-> +
-> +static struct snd_soc_dai_driver tda7802_dai_driver = {
-> +	.name = "tda7802",
-> +	.playback = {
-> +		.stream_name  = "Playback",
-> +		.channels_min = 4,
-> +		.channels_max = 4,
-> +		.rates	      = SNDRV_PCM_RATE_48000,
-> +		.formats      = SNDRV_PCM_FMTBIT_S32_LE,
-> +	},
-> +	.ops = &tda7802_dai_ops,
-> +};
-> +
-> +/* read device tree or ACPI properties from device */
-> +static int tda7802_read_properties(struct tda7802_priv *tda7802)
-> +{
-> +	struct device *dev = &tda7802->i2c->dev;
-> +	int err = 0;
-> +
-> +	tda7802->enable_reg = devm_regulator_get(dev, "enable");
-> +	if (IS_ERR(tda7802->enable_reg)) {
-> +		dev_err(dev, "Failed to get enable regulator\n");
-> +		return PTR_ERR(tda7802->enable_reg);
-> +	}
-> +
-> +	err = device_property_read_u8(dev, "st,gain-ch13", &tda7802->gain_ch13);
-> +	if (err < 0)
-> +		dev_err(dev, "Failed to read gain, channel 1,3 %d\n", err);
-> +
-> +	err = device_property_read_u8(dev, "st,gain-ch24", &tda7802->gain_ch24);
-> +	if (err < 0)
-> +		dev_err(dev, "Failed to read gain, channel 2,4 %d\n", err);
-> +
-> +	err = device_property_read_string(dev, "st,diagnostic-mode-ch13",
-> +			&tda7802->diag_mode_ch13);
-
-Why is diagnostic mode in dtb? Looks like it should be configurable on the
-run-time, so a module parameter would be a more proper place for it
-
-> +	if (err < 0)
-> +		dev_err(dev, "Failed to read diagnostic mode, channel 1,3 %d\n",
-> +				err);
-> +
-> +	err = device_property_read_string(dev, "st,diagnostic-mode-ch24",
-> +			&tda7802->diag_mode_ch24);
-> +	if (err < 0)
-> +		dev_err(dev, "Failed to read diagnostic mode, channel 2,4 %d\n",
-> +				err);
-> +
-> +	return err;
-> +}
-> +
-> +static const struct snd_soc_component_driver tda7802_component_driver;
-> +
-> +static int tda7802_i2c_probe(struct i2c_client *i2c,
-> +			     const struct i2c_device_id *id)
-> +{
-> +	struct device *dev = &i2c->dev;
-> +	struct tda7802_priv *tda7802;
-> +	int status, err, err2;
-> +
-> +	dev_dbg(dev, "%s addr=0x%02hx, id %p\n", __func__, i2c->addr, id);
-> +
-> +	tda7802 = devm_kmalloc(dev, sizeof(*tda7802), GFP_KERNEL);
-> +	if (!tda7802)
-> +		return -ENOMEM;
-> +
-> +	i2c_set_clientdata(i2c, tda7802);
-> +	tda7802->i2c = i2c;
-> +
-> +	err = tda7802_read_properties(tda7802);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	tda7802->regmap = devm_regmap_init_i2c(tda7802->i2c,
-> +			&tda7802_regmap_config);
-> +	if (IS_ERR(tda7802->regmap))
-> +		return PTR_ERR(tda7802->regmap);
-> +
-> +	/* Enable and verify the connection */
-> +	err = regulator_enable(tda7802->enable_reg);
-> +	if (err < 0) {
-> +		dev_err(dev, "Failed to enable (init)\n");
-> +		return err;
-> +	}
-> +	msleep(ENABLE_DELAY_MS);
-> +
-> +	err = regmap_read(tda7802->regmap, TDA7802_DB1, &status);
-> +
-> +	/* always disable the regulator, even if the read fails */
-> +	err2 = regulator_disable(tda7802->enable_reg);
-> +	if (err2 < 0) {
-> +		dev_err(dev, "Failed to disable (init)\n");
-> +		return err2;
-> +	}
-> +	/* now check for regmap_read errors */
-> +	if (err < 0) {
-> +		dev_err(dev, "Could not read from device\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	err = devm_snd_soc_register_component(dev, &tda7802_component_driver,
-> +			&tda7802_dai_driver, 1);
-> +	if (err < 0)
-> +		dev_err(dev, "Failed to register codec: %d\n", err);
-> +	return err;
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id tda7802_of_match[] = {
-> +	{ .compatible = "st,tda7802" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, tda7802_of_match);
-> +#endif
-> +
-> +static const struct i2c_device_id tda7802_i2c_id[] = {
-> +	{ "tda7802", tda7802_base },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(i2c, tda7802_i2c_id);
-> +
-> +static struct i2c_driver tda7802_i2c_driver = {
-> +	.driver = {
-> +		.name  = "tda7802-codec",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = of_match_ptr(tda7802_of_match),
-> +	},
-> +	.probe	  = tda7802_i2c_probe,
-> +	.id_table = tda7802_i2c_id,
-> +};
-> +module_i2c_driver(tda7802_i2c_driver);
-> +
-> +MODULE_DESCRIPTION("ASoC ST TDA7802 driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Rob Duncan <rduncan@tesla.com>");
-> +MODULE_AUTHOR("Thomas Preston <thomas.preston@codethink.co.uk>");
-> 
+>  net/core/bpf_sk_storage.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
+> index f40e3d35fd9c..94c7f77ecb6b 100644
+> --- a/net/core/bpf_sk_storage.c
+> +++ b/net/core/bpf_sk_storage.c
+> @@ -634,7 +634,8 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union bpf_attr *attr)
+>                 return ERR_PTR(-ENOMEM);
+>         bpf_map_init_from_attr(&smap->map, attr);
+>
+> -       smap->bucket_log = ilog2(roundup_pow_of_two(num_possible_cpus()));
+> +       /* Use at least 2 buckets, select_bucket() is undefined behavior with 1 bucket */
+> +       smap->bucket_log = max_t(u32, 1, ilog2(roundup_pow_of_two(num_possible_cpus())));
+>         nbuckets = 1U << smap->bucket_log;
+>         cost = sizeof(*smap->buckets) * nbuckets + sizeof(*smap);
+>
+> --
+> 2.20.1
+>
