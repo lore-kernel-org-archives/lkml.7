@@ -2,214 +2,236 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20304C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4247CC31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD9CA217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:49:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="Egwi3XNQ"
+	by mail.kernel.org (Postfix) with ESMTP id 1B4A9217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbfFNQtz (ORCPT
+        id S1726494AbfFNQul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:49:55 -0400
-Received: from mx.kolabnow.com ([95.128.36.42]:16012 "EHLO mx.kolabnow.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbfFNQtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:49:55 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by ext-mx-out001.mykolab.com (Postfix) with ESMTP id AC7E2299;
-        Fri, 14 Jun 2019 18:49:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:message-id:date:date:subject:subject
-        :from:from:received:received:received; s=dkim20160331; t=
-        1560530992; x=1562345393; bh=LIwM9+9dIB18u+6tFJEox7KnVEIbAhaN9hk
-        yl/cMLRc=; b=Egwi3XNQAxx7dDzMNX1XL4gQLSuDNwfnmaviMbNzC+yP2/nJ6k4
-        xp0cQ3Pp8rMUajbUGIePrvotrcUiH9HFs5Da86wUOUg0uic/Wc4PzJcLN0FvBsLa
-        /H5qYywdEHgIDdBjbMQrYrH2MB/BEmmrJTZj/86lgBeQKoMmUmEnUBVXqaDKOurg
-        1K5FOnIL1+5dRBR0bMNC5e+rdSUpQ4wZgl/nI2dYymxzBiV7gtFbAQuy22aYf/K2
-        fFecvX+/Lt9OP2JQ1zxKjgavkjcI5TZnti6jouRmtKa0I0TjVUjc0SSZr+uaZ5Rg
-        xhVhdt5NgQswMDqHqqFOX9gygSIYWiu09UhD9aXd1MP5d+7sSutsCrGBtfQBnZHY
-        mQs+3jpMBy6olxrnkSsODYd+QYuR/kM4/uuSF9zJqHC4fySvu1wKZilQ1k08ON82
-        hmn76LKNLxRAuSlNiXA52VSO+6OyXL9YBgo39Vj5vR1Jatr2TgRRb2vW3LtAMNcZ
-        nvXj5qcjMOy+ig59AmHdiZgqxpiiT4D0ZsVqTMuF2rOefYZsalWS/SxmIVQkJC9j
-        KLTaAb0KiwdYSlk5N5a+RVyTIXnL1/rGoPWCXAHHU1OKVdMk/uDBdMfUmbVa84Kl
-        xR+6WwJfympI884LEaIJfXfPRfrCOPsbLoewXVOkl/j0Wgjt6YZ6qo58=
-X-Virus-Scanned: amavisd-new at mykolab.com
-Received: from mx.kolabnow.com ([127.0.0.1])
-        by localhost (ext-mx-out001.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id QOVTgGi62AZn; Fri, 14 Jun 2019 18:49:52 +0200 (CEST)
-Received: from int-mx003.mykolab.com (unknown [10.9.13.3])
-        by ext-mx-out001.mykolab.com (Postfix) with ESMTPS id F41D01E2;
-        Fri, 14 Jun 2019 18:49:51 +0200 (CEST)
-Received: from ext-subm001.mykolab.com (unknown [10.9.6.1])
-        by int-mx003.mykolab.com (Postfix) with ESMTPS id 9496E2AB8;
-        Fri, 14 Jun 2019 18:49:51 +0200 (CEST)
-From:   Federico Vaga <federico.vaga@vaga.pv.it>
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     corbet@lwn.net, linux-doc@vger.kernel.org, keescook@chromium.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: stop suggesting strlcpy
-Date:   Fri, 14 Jun 2019 18:49:50 +0200
-Message-ID: <2414416.tHVI2ZYGNv@harkonnen>
-In-Reply-To: <20190613162548.19792-1-steve@sk2.org>
-References: <20190613162548.19792-1-steve@sk2.org>
+        Fri, 14 Jun 2019 12:50:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40292 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725802AbfFNQul (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 12:50:41 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5EGlac5048300
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 12:50:40 -0400
+Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t4easb3t7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 12:50:39 -0400
+Received: from localhost
+        by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Fri, 14 Jun 2019 17:50:38 +0100
+Received: from b03cxnp08028.gho.boulder.ibm.com (9.17.130.20)
+        by e35.co.us.ibm.com (192.168.1.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 14 Jun 2019 17:50:34 +0100
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5EGoX7q29753776
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 16:50:33 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8ABC36E050;
+        Fri, 14 Jun 2019 16:50:33 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1493E6E04C;
+        Fri, 14 Jun 2019 16:50:30 +0000 (GMT)
+Received: from [9.199.60.77] (unknown [9.199.60.77])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 14 Jun 2019 16:50:30 +0000 (GMT)
+Subject: Re: [PATCH -next] mm/hotplug: skip bad PFNs from pfn_to_online_page()
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Oscar Salvador <osalvador@suse.de>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        jmoyer <jmoyer@redhat.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+References: <1560366952-10660-1-git-send-email-cai@lca.pw>
+ <CAPcyv4hn0Vz24s5EWKr39roXORtBTevZf7dDutH+jwapgV3oSw@mail.gmail.com>
+ <CAPcyv4iuNYXmF0-EMP8GF5aiPsWF+pOFMYKCnr509WoAQ0VNUA@mail.gmail.com>
+ <1560376072.5154.6.camel@lca.pw> <87lfy4ilvj.fsf@linux.ibm.com>
+ <20190614153535.GA9900@linux>
+ <c3f2c05d-e42f-c942-1385-664f646ddd33@linux.ibm.com>
+ <CAPcyv4j_QQB8SrhTqL2mnEEHGYCg4H7kYanChiww35k0fwNv8Q@mail.gmail.com>
+ <24fcb721-5d50-2c34-f44b-69281c8dd760@linux.ibm.com>
+ <CAPcyv4ixq6aRQLdiMAUzQ-eDoA-hGbJQ6+_-K-nZzhXX70m1+g@mail.gmail.com>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Date:   Fri, 14 Jun 2019 22:20:14 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <CAPcyv4ixq6aRQLdiMAUzQ-eDoA-hGbJQ6+_-K-nZzhXX70m1+g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061416-0012-0000-0000-000017444A92
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011261; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01217923; UDB=6.00640496; IPR=6.00999044;
+ MB=3.00027312; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-14 16:50:36
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061416-0013-0000-0000-000057B1CDDD
+Message-Id: <6cbef0c5-1ce8-91ac-3396-902a9bf95716@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=27 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906140136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In data Thursday, June 13, 2019 6:25:48 PM CEST, Stephen Kitt ha scritto:
-> Since strlcpy is deprecated, the documentation shouldn't suggest using
-> it. This patch fixes the examples to use strscpy instead. It also uses
-> sizeof instead of underlying constants as far as possible, to simplify
-> future changes to the corresponding data structures.
+On 6/14/19 10:06 PM, Dan Williams wrote:
+> On Fri, Jun 14, 2019 at 9:26 AM Aneesh Kumar K.V
+> <aneesh.kumar@linux.ibm.com> wrote:
+>>
+>> On 6/14/19 9:52 PM, Dan Williams wrote:
+>>> On Fri, Jun 14, 2019 at 9:18 AM Aneesh Kumar K.V
+>>> <aneesh.kumar@linux.ibm.com> wrote:
+>>>>
+>>>> On 6/14/19 9:05 PM, Oscar Salvador wrote:
+>>>>> On Fri, Jun 14, 2019 at 02:28:40PM +0530, Aneesh Kumar K.V wrote:
+>>>>>> Can you check with this change on ppc64.  I haven't reviewed this series yet.
+>>>>>> I did limited testing with change . Before merging this I need to go
+>>>>>> through the full series again. The vmemmap poplulate on ppc64 needs to
+>>>>>> handle two translation mode (hash and radix). With respect to vmemap
+>>>>>> hash doesn't setup a translation in the linux page table. Hence we need
+>>>>>> to make sure we don't try to setup a mapping for a range which is
+>>>>>> arleady convered by an existing mapping.
+>>>>>>
+>>>>>> diff --git a/arch/powerpc/mm/init_64.c b/arch/powerpc/mm/init_64.c
+>>>>>> index a4e17a979e45..15c342f0a543 100644
+>>>>>> --- a/arch/powerpc/mm/init_64.c
+>>>>>> +++ b/arch/powerpc/mm/init_64.c
+>>>>>> @@ -88,16 +88,23 @@ static unsigned long __meminit vmemmap_section_start(unsigned long page)
+>>>>>>      * which overlaps this vmemmap page is initialised then this page is
+>>>>>>      * initialised already.
+>>>>>>      */
+>>>>>> -static int __meminit vmemmap_populated(unsigned long start, int page_size)
+>>>>>> +static bool __meminit vmemmap_populated(unsigned long start, int page_size)
+>>>>>>     {
+>>>>>>        unsigned long end = start + page_size;
+>>>>>>        start = (unsigned long)(pfn_to_page(vmemmap_section_start(start)));
+>>>>>>
+>>>>>> -    for (; start < end; start += (PAGES_PER_SECTION * sizeof(struct page)))
+>>>>>> -            if (pfn_valid(page_to_pfn((struct page *)start)))
+>>>>>> -                    return 1;
+>>>>>> +    for (; start < end; start += (PAGES_PER_SECTION * sizeof(struct page))) {
+>>>>>>
+>>>>>> -    return 0;
+>>>>>> +            struct mem_section *ms;
+>>>>>> +            unsigned long pfn = page_to_pfn((struct page *)start);
+>>>>>> +
+>>>>>> +            if (pfn_to_section_nr(pfn) >= NR_MEM_SECTIONS)
+>>>>>> +                    return 0;
+>>>>>
+>>>>> I might be missing something, but is this right?
+>>>>> Having a section_nr above NR_MEM_SECTIONS is invalid, but if we return 0 here,
+>>>>> vmemmap_populate will go on and populate it.
+>>>>
+>>>> I should drop that completely. We should not hit that condition at all.
+>>>> I will send a final patch once I go through the full patch series making
+>>>> sure we are not breaking any ppc64 details.
+>>>>
+>>>> Wondering why we did the below
+>>>>
+>>>> #if defined(ARCH_SUBSECTION_SHIFT)
+>>>> #define SUBSECTION_SHIFT (ARCH_SUBSECTION_SHIFT)
+>>>> #elif defined(PMD_SHIFT)
+>>>> #define SUBSECTION_SHIFT (PMD_SHIFT)
+>>>> #else
+>>>> /*
+>>>>     * Memory hotplug enabled platforms avoid this default because they
+>>>>     * either define ARCH_SUBSECTION_SHIFT, or PMD_SHIFT is a constant, but
+>>>>     * this is kept as a backstop to allow compilation on
+>>>>     * !ARCH_ENABLE_MEMORY_HOTPLUG archs.
+>>>>     */
+>>>> #define SUBSECTION_SHIFT 21
+>>>> #endif
+>>>>
+>>>> why not
+>>>>
+>>>> #if defined(ARCH_SUBSECTION_SHIFT)
+>>>> #define SUBSECTION_SHIFT (ARCH_SUBSECTION_SHIFT)
+>>>> #else
+>>>> #define SUBSECTION_SHIFT  SECTION_SHIFT
+>>
+>> That should be SECTION_SIZE_SHIFT
+>>
+>>>> #endif
+>>>>
+>>>> ie, if SUBSECTION is not supported by arch we have one sub-section per
+>>>> section?
+>>>
+>>> A couple comments:
+>>>
+>>> The only reason ARCH_SUBSECTION_SHIFT exists is because PMD_SHIFT on
+>>> PowerPC was a non-constant value. However, I'm planning to remove the
+>>> distinction in the next rev of the patches. Jeff rightly points out
+>>> that having a variable subsection size per arch will lead to
+>>> situations where persistent memory namespaces are not portable across
+>>> archs. So I plan to just make SUBSECTION_SHIFT 21 everywhere.
+>>>
+>>
+>>
+>> persistent memory namespaces are not portable across archs because they
+>> have PAGE_SIZE dependency.
 > 
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
+> We can fix that by reserving mem_map capacity assuming the smallest
+> PAGE_SIZE across archs.
+> 
+>> Then we have dependencies like the page size
+>> with which we map the vmemmap area.
+> 
+> How does that lead to cross-arch incompatibility? Even on a single
+> arch the vmemmap area will be mapped with 2MB pages for 128MB aligned
+> spans of pmem address space and 4K pages for subsections.
 
-Acked-by: Federico Vaga <federico.vaga@vaga.pv.it>
+I am not sure I understood that details. On ppc64 vmemmap can be mapped 
+by either 16M, 2M, 64K depending on the translation mode (hash or 
+radix). Doesn't that imply our reserve area size will vary between these 
+configs? I was thinking we should let the arch pick the largest value as 
+alignment and align things based on that. Otherwise if you align the 
+vmemmap/altmap area to 2M and we move to a platform that map the vmemmap 
+area using 16MB pagesize we fail right? In other words if you want to 
+build a portable pmem region, we have to configure these alignment 
+correctly.
 
-
-> ---
->  Documentation/hid/hid-transport.txt                         | 6 +++---
->  Documentation/i2c/instantiating-devices                     | 2 +-
->  Documentation/i2c/upgrading-clients                         | 4 ++--
->  Documentation/kernel-hacking/locking.rst                    | 6 +++---
->  Documentation/translations/it_IT/kernel-hacking/locking.rst | 6 +++---
->  5 files changed, 12 insertions(+), 12 deletions(-)
-> 
-> diff --git a/Documentation/hid/hid-transport.txt
-> b/Documentation/hid/hid-transport.txt index 3dcba9fd4a3a..4f41d67f1b4b
-> 100644
-> --- a/Documentation/hid/hid-transport.txt
-> +++ b/Documentation/hid/hid-transport.txt
-> @@ -194,9 +194,9 @@ with HID core:
->  		goto err_<...>;
->  	}
-> 
-> -	strlcpy(hid->name, <device-name-src>, 127);
-> -	strlcpy(hid->phys, <device-phys-src>, 63);
-> -	strlcpy(hid->uniq, <device-uniq-src>, 63);
-> +	strscpy(hid->name, <device-name-src>, sizeof(hid->name));
-> +	strscpy(hid->phys, <device-phys-src>, sizeof(hid->phys));
-> +	strscpy(hid->uniq, <device-uniq-src>, sizeof(hid->uniq));
-> 
->  	hid->ll_driver = &custom_ll_driver;
->  	hid->bus = <device-bus>;
-> diff --git a/Documentation/i2c/instantiating-devices
-> b/Documentation/i2c/instantiating-devices index 0d85ac1935b7..8bc7d99133e3
-> 100644
-> --- a/Documentation/i2c/instantiating-devices
-> +++ b/Documentation/i2c/instantiating-devices
-> @@ -137,7 +137,7 @@ static int usb_hcd_nxp_probe(struct platform_device
-> *pdev) (...)
->  	i2c_adap = i2c_get_adapter(2);
->  	memset(&i2c_info, 0, sizeof(struct i2c_board_info));
-> -	strlcpy(i2c_info.type, "isp1301_nxp", I2C_NAME_SIZE);
-> +	strscpy(i2c_info.type, "isp1301_nxp", sizeof(i2c_info.type));
->  	isp1301_i2c_client = i2c_new_probed_device(i2c_adap, &i2c_info,
->  						   
-normal_i2c, NULL);
->  	i2c_put_adapter(i2c_adap);
-> diff --git a/Documentation/i2c/upgrading-clients
-> b/Documentation/i2c/upgrading-clients index ccba3ffd6e80..96392cc5b5c7
-> 100644
-> --- a/Documentation/i2c/upgrading-clients
-> +++ b/Documentation/i2c/upgrading-clients
-> @@ -43,7 +43,7 @@ static int example_attach(struct i2c_adapter *adap, int
-> addr, int kind) example->client.adapter = adap;
-> 
->  	i2c_set_clientdata(&state->i2c_client, state);
-> -	strlcpy(client->i2c_client.name, "example", I2C_NAME_SIZE);
-> +	strscpy(client->i2c_client.name, "example",
-> sizeof(client->i2c_client.name));
-> 
->  	ret = i2c_attach_client(&state->i2c_client);
->  	if (ret < 0) {
-> @@ -138,7 +138,7 @@ can be removed:
->  -	example->client.flags   = 0;
->  -	example->client.adapter = adap;
->  -
-> --	strlcpy(client->i2c_client.name, "example", I2C_NAME_SIZE);
-> +-	strscpy(client->i2c_client.name, "example",
-> sizeof(client->i2c_client.name));
-> 
->  The i2c_set_clientdata is now:
-> 
-> diff --git a/Documentation/kernel-hacking/locking.rst
-> b/Documentation/kernel-hacking/locking.rst index 519673df0e82..dc698ea456e0
-> 100644
-> --- a/Documentation/kernel-hacking/locking.rst
-> +++ b/Documentation/kernel-hacking/locking.rst
-> @@ -451,7 +451,7 @@ to protect the cache and all the objects within it.
-> Here's the code:: if ((obj = kmalloc(sizeof(*obj), GFP_KERNEL)) == NULL)
-> return -ENOMEM;
-> 
-> -            strlcpy(obj->name, name, sizeof(obj->name));
-> +            strscpy(obj->name, name, sizeof(obj->name));
->              obj->id = id;
->              obj->popularity = 0;
-> 
-> @@ -660,7 +660,7 @@ Here is the code::
->       }
-> 
->      @@ -63,6 +94,7 @@
-> -             strlcpy(obj->name, name, sizeof(obj->name));
-> +             strscpy(obj->name, name, sizeof(obj->name));
->               obj->id = id;
->               obj->popularity = 0;
->      +        obj->refcnt = 1; /* The cache holds a reference */
-> @@ -774,7 +774,7 @@ the lock is no longer used to protect the reference
-> count itself. }
-> 
->      @@ -94,7 +76,7 @@
-> -             strlcpy(obj->name, name, sizeof(obj->name));
-> +             strscpy(obj->name, name, sizeof(obj->name));
->               obj->id = id;
->               obj->popularity = 0;
->      -        obj->refcnt = 1; /* The cache holds a reference */
-> diff --git a/Documentation/translations/it_IT/kernel-hacking/locking.rst
-> b/Documentation/translations/it_IT/kernel-hacking/locking.rst index
-> 0ef31666663b..5fd8a1abd2be 100644
-> --- a/Documentation/translations/it_IT/kernel-hacking/locking.rst
-> +++ b/Documentation/translations/it_IT/kernel-hacking/locking.rst
-> @@ -468,7 +468,7 @@ e tutti gli oggetti che contiene. Ecco il codice::
->              if ((obj = kmalloc(sizeof(*obj), GFP_KERNEL)) == NULL)
->                      return -ENOMEM;
-> 
-> -            strlcpy(obj->name, name, sizeof(obj->name));
-> +            strscpy(obj->name, name, sizeof(obj->name));
->              obj->id = id;
->              obj->popularity = 0;
-> 
-> @@ -678,7 +678,7 @@ Ecco il codice::
->       }
-> 
->      @@ -63,6 +94,7 @@
-> -             strlcpy(obj->name, name, sizeof(obj->name));
-> +             strscpy(obj->name, name, sizeof(obj->name));
->               obj->id = id;
->               obj->popularity = 0;
->      +        obj->refcnt = 1; /* The cache holds a reference */
-> @@ -792,7 +792,7 @@ contatore stesso.
->       }
-> 
->      @@ -94,7 +76,7 @@
-> -             strlcpy(obj->name, name, sizeof(obj->name));
-> +             strscpy(obj->name, name, sizeof(obj->name));
->               obj->id = id;
->               obj->popularity = 0;
->      -        obj->refcnt = 1; /* The cache holds a reference */
+Also the label area storage is completely hidden in firmware right? So 
+the portability will be limited to platforms that support same firmware?
 
 
+> 
+>> Why not let the arch
+>> arch decide the SUBSECTION_SHIFT and default to one subsection per
+>> section if arch is not enabled to work with subsection.
+> 
+> Because that keeps the implementation from ever reaching a point where
+> a namespace might be able to be moved from one arch to another. If we
+> can squash these arch differences then we can have a common tool to
+> initialize namespaces outside of the kernel. The one wrinkle is
+> device-dax that wants to enforce the mapping size, but I think we can
+> have a module-option compatibility override for that case for the
+> admin to say "yes, I know this namespace is defined for 2MB x86 pages,
+> but I want to force enable it with 64K pages on PowerPC"
+
+But then you can't say I want to enable this with 16M pages on PowerPC.
+But I understood what you are suggesting here.
+
+-aneesh
 
 
