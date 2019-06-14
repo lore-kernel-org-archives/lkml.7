@@ -2,69 +2,78 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DADC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996CDC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E1621537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AF6B20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:28:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+8uMKYN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725868AbfFNE0S (ORCPT
+        id S1725944AbfFNE2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 00:26:18 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:33422 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfFNE0R (ORCPT
+        Fri, 14 Jun 2019 00:28:25 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35628 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfFNE2Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 00:26:17 -0400
-Received: from [222.129.53.81] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <aaron.ma@canonical.com>)
-        id 1hbdn3-0003dc-NI; Fri, 14 Jun 2019 04:26:14 +0000
-From:   Aaron Ma <aaron.ma@canonical.com>
-Subject: Re: [PATCH 1/2] Input: synaptics-rmi4 - clear irqs before set irqs
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Cheiny@synaptics.com, aduggan@synaptics.com,
-        benjamin.tissoires@redhat.com
-References: <20190220164200.31044-1-aaron.ma@canonical.com>
- <20190609165551.GB90002@dtor-ws>
- <7da443d0-f433-c5a5-5194-707362eb2ee5@canonical.com>
- <20190611173545.GE143729@dtor-ws>
-Openpgp: preference=signencrypt
-Autocrypt: addr=aaron.ma@canonical.com; prefer-encrypt=mutual; keydata=
- mQENBFffeLkBCACi4eE4dPsgWN6B9UDOVcAvb5QgU/hRG6yS0I1lGKQv4KA+bke0c5g8clbO
- 9gIlIl2bityfA9NzBsDik4Iei3AxMbFyxv9keMwcOFQBIOZF0P3f05qjxftF8P+yp9QTV4hp
- BkFzsXzWRgXN3r8hU8wqZybepF4B1C83sm2kQ5A5N0AUGbZli9i2G+/VscG9sWfLy8T7f4YW
- MjmlijCjoV6k29vsmTWQPZ7EApNpvR5BnZQPmQWzkkr0lNXlsKcyLgefQtlwg6drK4fe4wz0
- ouBIHJEiXE1LWK1hUzkCUASra4WRwKk1Mv/NLLE/aJRqEvF2ukt3uVuM77RWfl7/H/v5ABEB
- AAG0IUFhcm9uIE1hIDxhYXJvbi5tYUBjYW5vbmljYWwuY29tPokBNwQTAQgAIQUCV994uQIb
- AwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDNxCzQfVU6ntJ9B/9aVy0+RkLqF9QpLmw+
- LAf1m3Fd+4ZarPTerqDqkLla3ekYhbrEtlI1mYuB5f+gtrIjmcW27gacHdslKB9YwaL8B4ZB
- GJKhcrntLg4YPzYUnXZkHHTv1hMw7fBYw82cBT+EbG0Djh6Po6Ihqyr3auHhfFcp1PZH4Mtq
- 6hN5KaDZzF/go+tRF5e4bn61Nhdue7mrhFSlfkzLG2ehHWmRV+S91ksH81YDFnazK0sRINBx
- V1S8ts3WJ2f1AbgmnDlbK3c/AfI5YxnIHn/x2ZdXj1P/wn7DgZHmpMy5DMuk0gN34NLUPLA/
- cHeKoBAF8emugljiKecKBpMTLe8FrVOxbkrauQENBFffeLkBCACweKP3Wx+gK81+rOUpuQ00
- sCyKzdtMuXXJ7oL4GzYHbLfJq+F+UHpQbytVGTn3R5+Y61v41g2zTYZooaC+Hs1+ixf+buG2
- +2LZjPSELWPNzH9lsKNlCcEvu1XhyyHkBDbnFFHWlUlql3nSXMo//dOTG/XGKaEaZUxjCLUC
- 8ehLc16DJDvdXsPwWhHrCH/4k92F6qQ14QigBMsl75jDTDJMEYgRYEBT1D/bwxdIeoN1BfIG
- mYgf059RrWax4SMiJtVDSUuDOpdwoEcZ0FWesRfbFrM+k/XKiIbjMZSvLunA4FIsOdWYOob4
- Hh0rsm1G+fBLYtT+bE26OWpQ/lSn4TdhABEBAAGJAR8EGAEIAAkFAlffeLkCGwwACgkQzcQs
- 0H1VOp6p5Af/ap5EVuP1AhFdPD3pXLNrUUt72W3cuAOjXyss43qFC2YRjGfktrizsDjQU46g
- VKoD6EW9XUPgvYM+k8BJEoXDLhHWnCnMKlbHP3OImxzLRhF4kdlnLicz1zKRcessQatRpJgG
- NIiD+eFyh0CZcWBO1BB5rWikjO/idicHao2stFdaBmIeXvhT9Xp6XNFEmzOmfHps+kKpWshY
- 9LDAU0ERBNsW4bekOCa/QxfqcbZYRjrVQvya0EhrPhq0bBpzkIL/7QSBMcdv6IajTlHnLARF
- nAIofCEKeEl7+ksiRapL5Nykcbt4dldE3sQWxIybC94SZ4inENKw6I8RNpigWm0R5w==
-Message-ID: <189fc7c3-d0f7-a25e-9d4d-446b095e853f@canonical.com>
-Date:   Fri, 14 Jun 2019 12:26:07 +0800
+        Fri, 14 Jun 2019 00:28:24 -0400
+Received: by mail-pf1-f195.google.com with SMTP id d126so607899pfd.2;
+        Thu, 13 Jun 2019 21:28:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MynhCFGpqGZRdy/9WKV4HLYAsGzpq7c+1tDJnUMvrZU=;
+        b=J+8uMKYNoOLsfTiXqiLyLoLc/SKcQPM9blclrSKHTa0mZt/o49S/fk3/09YAF0ROEa
+         5Fv4UtfTdD83CaoDMEDg28fReb4uBw4/f12GFNABPDwG3oIERxrH1z3ULZh3CJMJwNdc
+         wuLzQhDgAtBx6RXjVnrZZ988vY5Nw/duo20whUJ7ylu9nMGXnT31WWcCdffxG4P5292L
+         fo8iPsU42wHFZbIKukXN1Gbk3siox/m6nCcpXRwwJLTQuedQMw+lNnOaJBR5gtYhnTGL
+         QKQiq96f0gyj/c0Ox3mBO1fKNPCWw9PeG5rKydU9F+azg1wu2+jv65NguR+3AzuXOmAL
+         ouYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MynhCFGpqGZRdy/9WKV4HLYAsGzpq7c+1tDJnUMvrZU=;
+        b=guoR9syc+U2MPGIlXIBHuS6ctgWVotrOGzSv8cKKHU9N2BvW/ludaXMkiq02cVaYCI
+         t4Ji89My9Mg+YCnKRQODMZuqk/0/gRP/pd7p0c5dx+L0RV6QerhNrg93uuUsNiaIjrz2
+         KOrb8dL/i5Vx4telc3i8Az1soEWidpcfTCQxZUAhVr3U3/qcOR2xUksb/UWviteHFPqL
+         vhGndzVZ7aX8Gk80HpZhYB/SPHtSk2aD6H749kfl1OFu0LWn1CqiA8DorUJ+RwT+h/De
+         rsJHHFGaxovy0AwABlbCJmANBhId8y+7LHkkcoGZzg1OC1D3VyXdqq6cykGtTjh5Ncrn
+         T3wQ==
+X-Gm-Message-State: APjAAAVjrNSIKX93pnIA6DxgBUqjUq3YRtZ7SzMrHSzuGfxvuEmiWiCV
+        YcMP+xkwuso4FKcbp2ffbGCcqoh6
+X-Google-Smtp-Source: APXvYqw+BQOi0FiBUnJ45W4DRoySNDYogOjvGRoUpm9jvDMkGgZVHjWDY/OaqrJs1zI9Ok5sN774OQ==
+X-Received: by 2002:a17:90a:30e4:: with SMTP id h91mr8614183pjb.37.1560486503596;
+        Thu, 13 Jun 2019 21:28:23 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
+        by smtp.gmail.com with ESMTPSA id s7sm1287340pgm.8.2019.06.13.21.28.22
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 21:28:22 -0700 (PDT)
+Subject: Re: [PATCH net v2] tcp: avoid creating multiple req socks with the
+ same tuples
+To:     maowenan <maowenan@huawei.com>, Eric Dumazet <edumazet@google.com>
+Cc:     David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190612035715.166676-1-maowenan@huawei.com>
+ <CANn89iJH6ZBH774SNrd2sUd_A5OBniiUVX=HBq6H4PXEW4cjwQ@mail.gmail.com>
+ <6de5d6d8-e481-8235-193e-b12e7f511030@huawei.com>
+ <a674e90e-d06f-cb67-604f-30cb736d7c72@huawei.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <6aa69ab5-ed81-6a7f-2b2b-214e44ff0ada@gmail.com>
+Date:   Thu, 13 Jun 2019 21:28:21 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190611173545.GE143729@dtor-ws>
+In-Reply-To: <a674e90e-d06f-cb67-604f-30cb736d7c72@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -73,51 +82,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/19 1:35 AM, Dmitry Torokhov wrote:
-> On Tue, Jun 11, 2019 at 12:55:58AM +0800, Aaron Ma wrote:
->> On 6/10/19 12:55 AM, Dmitry Torokhov wrote:
->>> Hi Aaron,
->>>
->>> On Wed, Feb 20, 2019 at 05:41:59PM +0100, Aaron Ma wrote:
->>>> rmi4 got spam data after S3 resume on some ThinkPads.
->>>> Then TrackPoint lost when be detected by psmouse.
->>>> Clear irqs status before set irqs will make TrackPoint back.
->>> Could you please give me an idea as to what this spam data is?
->>>
->> It should be some data 0 during suspend/resume.
->> Actually I don't know how these data 0 is produced.
->> Not all synaptics touchpads have this issue.
->>
->>> In F03 probe we clear all pending data before enabling the function,
->> Yes we did, but not after resume.
-> Yes, I understand that. The question I was asking: if we add code
-> consuming all pending data to f03->suspend(), similarly to what we are
-> doing at probe time, will it fix the issue with trackstick losing
-> synchronization and attempting disconnect?
+
+
+On 6/13/19 9:19 PM, maowenan wrote:
+> 
+> 
+> @Eric, for this issue I only want to check TCP_NEW_SYN_RECV sk, is it OK like below?
+>  +       if (!osk && sk->sk_state == TCP_NEW_SYN_RECV)
+>  +               reqsk = __inet_lookup_established(sock_net(sk), &tcp_hashinfo,
+>  +                                                       sk->sk_daddr, sk->sk_dport,
+>  +                                                       sk->sk_rcv_saddr, sk->sk_num,
+>  +                                                       sk->sk_bound_dev_if, sk->sk_bound_dev_if);
+>  +       if (unlikely(reqsk)) {
 > 
 
-I just do some test via adding code in suspend or resume.
-But they didn't work out.
+Not enough.
 
->>> maybe the same needs to be done on resume, instead of changing the way
->>> we handle IRQ bits?
->> This patch is supposed to clear irq status like it in fn probe. Not
->> changing IRQ bits.
-> What I meant is changing how we enable IRQ bits. I would really prefer
-> we did not lose IRQ state for other functions when we enable interrupts
-> for given function.
-> 
+If we have many cpus here, there is a chance another cpu has inserted a request socket, then
+replaced it by an ESTABLISH socket for the same 4-tuple.
 
-Not only F03 with problem, F12 too which is touchpad .
-User verified this patch fixes problem of F12 too.
-Clear IRQ status before enable IRQ should be safe.
+We need to take the per bucket spinlock much sooner.
 
-Or we can add code before enable IRQ in F03/F12.
-
-Thanks,
-Aaron
-
-> Thanks.
-> 
-> -- Dmitry
-> 
+And this is fine, all what matters is that we do no longer grab the listener spinlock.
