@@ -2,178 +2,246 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100B8C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8AFC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB18F21851
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFD021850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:56:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UFuRkObg"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="YyK74lzR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbfFNV40 (ORCPT
+        id S1726773AbfFNV4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 17:56:26 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39935 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfFNV4X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 17:56:23 -0400
-Received: by mail-wr1-f67.google.com with SMTP id x4so3980071wrt.6
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 14:56:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZUPwJUWb0cbPi64d5io+sp15yAFvJIw1A1ix9PCZafU=;
-        b=UFuRkObgNzYFwkt84alkzE67Ng+0R2XzLo4vP2JpNTFgbYISojn8Uu+Kfycq0ktWVl
-         gVg21S3+EjWzndp45P3C3+ivhSs153czVuVOuSNEp6uXneVtYOVuzoH797In3/zCSJzc
-         R+5HM8GjF8E2IqbYkOfurXPtrgfMpX4JDqofLYgXY9vOsEzJFhnK7tPiKVf2oBeXoqrK
-         ajcHR09x0A8xfd9UXz3pVfuwxvhDUvTRY9YzN3uBBqdOO2I3LPZkzREWkZN9N3VlTNut
-         HQU0IawlCkYTzBK+ZKzVB9QjiHuZD1H4X5cM3n43VYVOVvyOmdIoxCMeHGD2ZNyCtqum
-         dfzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZUPwJUWb0cbPi64d5io+sp15yAFvJIw1A1ix9PCZafU=;
-        b=Qniq9QxVtYV7UchVk7XnUlYMXiOyJxsyWmJXCcQ/pjMiCjIN49qDbSZHphuYn4ko1F
-         Kkb085AiwA+xDnGYRNCGAYdmTaAJJLW1niz1CFQFQJlyI2Vo7SPQmlYOjtgxFg4SEvZF
-         sPj45zmjjVJiwBfZXe8d3YrVRLLNawYK38JSZS27TAwuNRxmiHh40Y4ikkCwHBab4lfl
-         tM0lx8Qx+ISVnRL+gfdJzDpxt6yDL3lqP1NAx9qNLtVFjsZxVJKuI2i+tOyQ2i6BWnSd
-         WGq9Rva3X7ZbfEW+mi5JEbvWJ3/7We4+U0YPbIuPB+ernD19lyVc6Xu9xzXlOhqT/KvA
-         F1CQ==
-X-Gm-Message-State: APjAAAUyctL9vhoZ4hKRd1re+lbPwyOYVFHNzz1cZFPkXICWSm71phQL
-        o8AJttoBUCCCt9GltdJSzSU4eQzSu1fT7TS1ufUJ
-X-Google-Smtp-Source: APXvYqxXIRasRWwFTy04OtRS6QvArITc4ngBSutBNoLD3rNRbqUTl9hhlJYOHWVORGjTVi5ytNq4jGXIKAWHioDZzTQ=
-X-Received: by 2002:a05:6000:146:: with SMTP id r6mr53178621wrx.237.1560549380946;
- Fri, 14 Jun 2019 14:56:20 -0700 (PDT)
+        Fri, 14 Jun 2019 17:56:32 -0400
+Received: from mail-eopbgr810090.outbound.protection.outlook.com ([40.107.81.90]:42157
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726473AbfFNV43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 17:56:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=WLvSQARfoy1u/+erGfKsviybtL8YPk6UH4CjKYif1q8gMSEq5mm5lWuBp+Q3NMSdK0/OM84LCBcwTEz4lxtPjo6NDS8svsuav71dlCHZSu4UGyGCnU8xFuEjC5QVMvT+XFuniiV/Gk/cbJd0p9an807wSdyALovujdNjKyEpws0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=chULK0c+AIEHkiHpIOBNyooirRhG5cz/+fXrY1OeQ5Q=;
+ b=aXxWkzP1B3Fl0ovjxwlt0JX509/VQsps8wpf58/lj13VqCJ1zmSaNawWfVaGDKf61qoZugA0GTGZRRr2z9J+CEiqM8PJMHwbFK45zlL577ckDFUBhL1nNLlBMqhp2a0qXJt+LnPTbOZWH3kla9PJw6u8srrUXklAitT83TS8YsI=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=chULK0c+AIEHkiHpIOBNyooirRhG5cz/+fXrY1OeQ5Q=;
+ b=YyK74lzR7E/aeoktnrJ7W0MagiirZWxieqb5GqRGvlTPEqvaMvM/XcVz1/p476AcAihWKsW4KHq+FvGsWa5ohNB5rTFlWkNPyIWO9p4vKM+cUqd9GPj75gXuzMstZ3O7Dm8db01ogcBjA/8gccsTl8/ybF0se+hC5Ao0UXtRHhA=
+Received: from BL0PR2101MB1348.namprd21.prod.outlook.com
+ (2603:10b6:208:92::22) by BL0PR2101MB1091.namprd21.prod.outlook.com
+ (2603:10b6:207:37::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.1; Fri, 14 Jun
+ 2019 21:56:24 +0000
+Received: from BL0PR2101MB1348.namprd21.prod.outlook.com
+ ([fe80::ec20:70a:433e:a052]) by BL0PR2101MB1348.namprd21.prod.outlook.com
+ ([fe80::ec20:70a:433e:a052%2]) with mapi id 15.20.2008.007; Fri, 14 Jun 2019
+ 21:56:24 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>
+CC:     "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: RE: [PATCH 2/2] hv_balloon: Reorganize the probe function
+Thread-Topic: [PATCH 2/2] hv_balloon: Reorganize the probe function
+Thread-Index: AQHVIuDsvIeorl+TakinvZrlEfDGAKabr1Kw
+Date:   Fri, 14 Jun 2019 21:56:24 +0000
+Message-ID: <BL0PR2101MB13487B8D2A157AA7FCFD159DD7EE0@BL0PR2101MB1348.namprd21.prod.outlook.com>
+References: <1560537692-37400-1-git-send-email-decui@microsoft.com>
+ <1560537692-37400-2-git-send-email-decui@microsoft.com>
+In-Reply-To: <1560537692-37400-2-git-send-email-decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-14T21:56:21.9387171Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=fb391304-eed6-45c4-a296-25ce2c9f2395;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8a9a3d6e-0110-4da8-b64f-08d6f1132516
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BL0PR2101MB1091;
+x-ms-traffictypediagnostic: BL0PR2101MB1091:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <BL0PR2101MB1091A81178F7520FDD326014D7EE0@BL0PR2101MB1091.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0068C7E410
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(376002)(136003)(366004)(396003)(189003)(199004)(6116002)(2906002)(66446008)(4326008)(86362001)(3846002)(66556008)(6436002)(66946007)(305945005)(64756008)(74316002)(76116006)(73956011)(71200400001)(66476007)(478600001)(7736002)(2201001)(2501003)(71190400001)(25786009)(6506007)(10290500003)(6246003)(8990500004)(5660300002)(52536014)(14444005)(1511001)(66066001)(486006)(446003)(110136005)(186003)(11346002)(53936002)(229853002)(22452003)(81156014)(102836004)(52396003)(8936002)(33656002)(476003)(76176011)(256004)(99286004)(54906003)(6636002)(9686003)(81166006)(68736007)(316002)(26005)(14454004)(7696005)(10090500001)(55016002)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR2101MB1091;H:BL0PR2101MB1348.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pvcwX835tfKZ/EyTZPHGbbDoZDdx0iOsivMpksGC1lnnVoqwykxEGeIHOvMnwNJAbX3DMX6/IEzlh4ZvrzRiTUDJfZFwCHZzHn0+QuRMyfoU+aVu7Mg3SPsMqWWG104Vx1kzCoRQBxPYfAd7s8uy67Fk/NWJcq55BXIY+z4iTqAgm3yzykgAzB2CAnNo4oB17AojpSbrePTp8gSg4aSr82mfjkYdYxlxclbIk22vgd7VHxfGm3T53AGOWtkAfCNBEWLiVN6Xhhx+hBZla+Leoe0hv9Tv4QdcZV32+IfyUCw1sLsyaOgvmSU0Gj/obCyOLdMuMoTgMT7Kvnb/ZgnwPUQXMzolbc1iTkQdJxIFGJg+cHYEhUY00adCByNh+NrCY6vYzZbzhlXKONYRhj0ba1UzEBzIwUlgUPTlVOzxEU4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1560507893-42553-1-git-send-email-john.garry@huawei.com>
- <CAErSpo6jRVDaVvH+9XvzUoEUbHi9_6u+5PcVGVDAmre6Qd0WeQ@mail.gmail.com>
- <CAErSpo6qaMc1O7vgcuCwdDbe4QBcOw83wd7PbuUVS+7GDPgK9Q@mail.gmail.com> <82840955-6365-0b95-6d69-8a2f7c7880af@huawei.com>
-In-Reply-To: <82840955-6365-0b95-6d69-8a2f7c7880af@huawei.com>
-From:   Bjorn Helgaas <bhelgaas@google.com>
-Date:   Fri, 14 Jun 2019 16:56:08 -0500
-Message-ID: <CAErSpo5cqJCZjt6QqMNZ6_n=G-_WxFeERnsESOMxsdr1P-6JLg@mail.gmail.com>
-Subject: Re: [PATCH v2] bus: hisi_lpc: Don't use devm_kzalloc() to allocate
- logical PIO range
-To:     John Garry <john.garry@huawei.com>
-Cc:     xuwei5@huawei.com, linuxarm@huawei.com, arm@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>,
-        "zhichang.yuan" <zhichang.yuan02@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a9a3d6e-0110-4da8-b64f-08d6f1132516
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 21:56:24.6660
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mikelley@ntdev.microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 8:47 AM John Garry <john.garry@huawei.com> wrote:
-> On 14/06/2019 14:23, Bjorn Helgaas wrote:
-> > On Fri, Jun 14, 2019 at 8:20 AM Bjorn Helgaas <bhelgaas@google.com> wrote:
-> >> On Fri, Jun 14, 2019 at 5:26 AM John Garry <john.garry@huawei.com> wrote:
-> >>>
-> >>> If, after registering a logical PIO range, the driver probe later fails,
-> >>> the logical PIO range memory will be released automatically.
-> >>>
-> >>> This causes an issue, in that the logical PIO range is not unregistered
-> >>> (that is not supported) and the released range memory may be later
-> >>> referenced
-> >>>
-> >>> Allocate the logical PIO range with kzalloc() to avoid this potential
-> >>> issue.
-> >>>
-> >>> Fixes: adf38bb0b5956 ("HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings")
-> >>> Signed-off-by: John Garry <john.garry@huawei.com>
-> >>> ---
-> >>>
-> >>> Change to v1:
-> >>> - add comment, as advised by Joe Perches
-> >>>
-> >>> diff --git a/drivers/bus/hisi_lpc.c b/drivers/bus/hisi_lpc.c
-> >>> index 19d7b6ff2f17..5f0130a693fe 100644
-> >>> --- a/drivers/bus/hisi_lpc.c
-> >>> +++ b/drivers/bus/hisi_lpc.c
-> >>> @@ -599,7 +599,8 @@ static int hisi_lpc_probe(struct platform_device *pdev)
-> >>>         if (IS_ERR(lpcdev->membase))
-> >>>                 return PTR_ERR(lpcdev->membase);
-> >>>
-> >>> -       range = devm_kzalloc(dev, sizeof(*range), GFP_KERNEL);
-> >>> +       /* Logical PIO may reference 'range' memory even if the probe fails */
-> >>> +       range = kzalloc(sizeof(*range), GFP_KERNEL);
-> >>
-> >> This doesn't feel like the correct way to fix this.  If the probe
-> >> fails, everything done by the probe should be undone, including the
-> >> allocation and registration of "range".  I don't know what the best
-> >> mechanism is, but I'm skeptical about this one.
->
-> I understand your concern.
->
-> For the logical PIO framework, it was written to match what was done
-> originally for PCI IO port management in pci_register_io_range(), cf
-> https://elixir.bootlin.com/linux/v4.4.180/source/drivers/of/address.c#L691
->
-> That is, no method to unregister ranges. As such, it leaks IO port
-> ranges. I can come up with a few guesses why the original PCI IO port
-> management author did not add an unregistration method.
-
-I think that was written before the era of support for hot-pluggable
-host bridges and loadable drivers for them.
-
-> Anyway, we can work on adding support to unregister regions, at least at
-> probe time. It may become more tricky to do this once the host children
-> have probed and are accessing the IO port regions.
-
-I think we *do* need support for unregistering regions because we do
-claim to support hot-pluggable host bridges, and the I/O port regions
-below them should go away when the host bridge does.
-
-Could you just move the logic_pio_register_range() call farther down
-in hisi_lpc_probe()?  IIUC, once logic_pio_register_range() returns,
-an inb() with the right port number will try to access that port, so
-we should be prepared for that, i.e., maybe this in the wrong order to
-begin with?
-
-> But, for now, I would like to get this simple fix added to mainline and
-> backported.
-
-OK, I don't really like code that looks "obviously wrong" but has
-extenuating circumstances that need explanation because it sows
-confusion and can get copied elsewhere.  But I'm just kibbitzing here
-since I don't maintain this, so it's up to you.
-
-> FYI, there should be no possible further memory leak for continuously
-> probing the driver.
-
-That's good.
-
-You might consider a subject line that includes key words like "avoid
-use-after-free" or some similar higher-level description that tells
-the reader *why* this change is important.
-
-Bjorn
-
-> >>>         if (!range)
-> >>>                 return -ENOMEM;
-> >>>
-> >>> @@ -610,6 +611,7 @@ static int hisi_lpc_probe(struct platform_device *pdev)
-> >>>         ret = logic_pio_register_range(range);
-> >>>         if (ret) {
-> >>>                 dev_err(dev, "register IO range failed (%d)!\n", ret);
-> >>> +               kfree(range);
-> >>>                 return ret;
-> >>>         }
-> >>>         lpcdev->io_host = range;
-> >>> --
-> >>> 2.17.1
-> >>>
-> >
-> > .
-> >
->
->
+RnJvbTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT4gIFNlbnQ6IEZyaWRheSwgSnVu
+ZSAxNCwgMjAxOSAxMTo0MyBBTQ0KPiANCj4gTW92ZSB0aGUgY29kZSB0aGF0IG5lZ290aWF0ZXMg
+d2l0aCB0aGUgaG9zdCB0byBhIG5ldyBmdW5jdGlvbg0KPiBiYWxsb29uX2Nvbm5lY3RfdnNwKCkg
+YW5kIGltcHJvdmUgdGhlIGVycm9yIGhhbmRsaW5nLg0KPiANCj4gVGhpcyBtYWtlcyB0aGUgY29k
+ZSBtb3JlIHJlYWRhYmxlIGFuZCBwYXZlcyB0aGUgd2F5IGZvciB0aGUNCj4gc3VwcG9ydCBvZiBo
+aWJlcm5hdGlvbiBpbiBmdXR1cmUuDQo+IA0KPiBNYWtlcyBubyByZWFsIGxvZ2ljIGNoYW5nZSBo
+ZXJlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNv
+bT4NCj4gLS0tDQo+ICBkcml2ZXJzL2h2L2h2X2JhbGxvb24uYyB8IDEyNCArKysrKysrKysrKysr
+KysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgNjYgaW5zZXJ0
+aW9ucygrKSwgNTggZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9odi9o
+dl9iYWxsb29uLmMgYi9kcml2ZXJzL2h2L2h2X2JhbGxvb24uYw0KPiBpbmRleCAxMzM4MWVhM2Uz
+ZTcuLjExMWVhMzU5OTY1OSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9odi9odl9iYWxsb29uLmMN
+Cj4gKysrIGIvZHJpdmVycy9odi9odl9iYWxsb29uLmMNCj4gQEAgLTE1NzQsNTAgKzE1NzQsMTgg
+QEAgc3RhdGljIHZvaWQgYmFsbG9vbl9vbmNoYW5uZWxjYWxsYmFjayh2b2lkICpjb250ZXh0KQ0K
+PiANCj4gIH0NCj4gDQo+IC1zdGF0aWMgaW50IGJhbGxvb25fcHJvYmUoc3RydWN0IGh2X2Rldmlj
+ZSAqZGV2LA0KPiAtCQkJY29uc3Qgc3RydWN0IGh2X3ZtYnVzX2RldmljZV9pZCAqZGV2X2lkKQ0K
+PiArc3RhdGljIGludCBiYWxsb29uX2Nvbm5lY3RfdnNwKHN0cnVjdCBodl9kZXZpY2UgKmRldikN
+Cj4gIHsNCj4gLQlpbnQgcmV0Ow0KPiAtCXVuc2lnbmVkIGxvbmcgdDsNCj4gIAlzdHJ1Y3QgZG1f
+dmVyc2lvbl9yZXF1ZXN0IHZlcnNpb25fcmVxOw0KPiAgCXN0cnVjdCBkbV9jYXBhYmlsaXRpZXMg
+Y2FwX21zZzsNCj4gLQ0KPiAtI2lmZGVmIENPTkZJR19NRU1PUllfSE9UUExVRw0KPiAtCWRvX2hv
+dF9hZGQgPSBob3RfYWRkOw0KPiAtI2Vsc2UNCj4gLQlkb19ob3RfYWRkID0gZmFsc2U7DQo+IC0j
+ZW5kaWYNCj4gKwl1bnNpZ25lZCBsb25nIHQ7DQo+ICsJaW50IHJldDsNCj4gDQo+ICAJcmV0ID0g
+dm1idXNfb3BlbihkZXYtPmNoYW5uZWwsIGRtX3Jpbmdfc2l6ZSwgZG1fcmluZ19zaXplLCBOVUxM
+LCAwLA0KPiAtCQkJYmFsbG9vbl9vbmNoYW5uZWxjYWxsYmFjaywgZGV2KTsNCj4gLQ0KPiArCQkJ
+IGJhbGxvb25fb25jaGFubmVsY2FsbGJhY2ssIGRldik7DQo+ICAJaWYgKHJldCkNCj4gIAkJcmV0
+dXJuIHJldDsNCj4gDQo+IC0JZG1fZGV2aWNlLmRldiA9IGRldjsNCj4gLQlkbV9kZXZpY2Uuc3Rh
+dGUgPSBETV9JTklUSUFMSVpJTkc7DQo+IC0JZG1fZGV2aWNlLm5leHRfdmVyc2lvbiA9IERZTk1F
+TV9QUk9UT0NPTF9WRVJTSU9OX1dJTjg7DQo+IC0JaW5pdF9jb21wbGV0aW9uKCZkbV9kZXZpY2Uu
+aG9zdF9ldmVudCk7DQo+IC0JaW5pdF9jb21wbGV0aW9uKCZkbV9kZXZpY2UuY29uZmlnX2V2ZW50
+KTsNCj4gLQlJTklUX0xJU1RfSEVBRCgmZG1fZGV2aWNlLmhhX3JlZ2lvbl9saXN0KTsNCj4gLQlz
+cGluX2xvY2tfaW5pdCgmZG1fZGV2aWNlLmhhX2xvY2spOw0KPiAtCUlOSVRfV09SSygmZG1fZGV2
+aWNlLmJhbGxvb25fd3JrLndyaywgYmFsbG9vbl91cCk7DQo+IC0JSU5JVF9XT1JLKCZkbV9kZXZp
+Y2UuaGFfd3JrLndyaywgaG90X2FkZF9yZXEpOw0KPiAtCWRtX2RldmljZS5ob3N0X3NwZWNpZmll
+ZF9oYV9yZWdpb24gPSBmYWxzZTsNCj4gLQ0KPiAtCWRtX2RldmljZS50aHJlYWQgPQ0KPiAtCQkg
+a3RocmVhZF9ydW4oZG1fdGhyZWFkX2Z1bmMsICZkbV9kZXZpY2UsICJodl9iYWxsb29uIik7DQo+
+IC0JaWYgKElTX0VSUihkbV9kZXZpY2UudGhyZWFkKSkgew0KPiAtCQlyZXQgPSBQVFJfRVJSKGRt
+X2RldmljZS50aHJlYWQpOw0KPiAtCQlnb3RvIHByb2JlX2Vycm9yMTsNCj4gLQl9DQo+IC0NCj4g
+LSNpZmRlZiBDT05GSUdfTUVNT1JZX0hPVFBMVUcNCj4gLQlzZXRfb25saW5lX3BhZ2VfY2FsbGJh
+Y2soJmh2X29ubGluZV9wYWdlKTsNCj4gLQlyZWdpc3Rlcl9tZW1vcnlfbm90aWZpZXIoJmh2X21l
+bW9yeV9uYik7DQo+IC0jZW5kaWYNCj4gLQ0KPiAtCWh2X3NldF9kcnZkYXRhKGRldiwgJmRtX2Rl
+dmljZSk7DQo+ICAJLyoNCj4gIAkgKiBJbml0aWF0ZSB0aGUgaGFuZCBzaGFrZSB3aXRoIHRoZSBo
+b3N0IGFuZCBuZWdvdGlhdGUNCj4gIAkgKiBhIHZlcnNpb24gdGhhdCB0aGUgaG9zdCBjYW4gc3Vw
+cG9ydC4gV2Ugc3RhcnQgd2l0aCB0aGUNCj4gQEAgLTE2MzMsMTYgKzE2MDEsMTUgQEAgc3RhdGlj
+IGludCBiYWxsb29uX3Byb2JlKHN0cnVjdCBodl9kZXZpY2UgKmRldiwNCj4gIAlkbV9kZXZpY2Uu
+dmVyc2lvbiA9IHZlcnNpb25fcmVxLnZlcnNpb24udmVyc2lvbjsNCj4gDQo+ICAJcmV0ID0gdm1i
+dXNfc2VuZHBhY2tldChkZXYtPmNoYW5uZWwsICZ2ZXJzaW9uX3JlcSwNCj4gLQkJCQlzaXplb2Yo
+c3RydWN0IGRtX3ZlcnNpb25fcmVxdWVzdCksDQo+IC0JCQkJKHVuc2lnbmVkIGxvbmcpTlVMTCwN
+Cj4gLQkJCQlWTV9QS1RfREFUQV9JTkJBTkQsIDApOw0KPiArCQkJICAgICAgIHNpemVvZihzdHJ1
+Y3QgZG1fdmVyc2lvbl9yZXF1ZXN0KSwNCj4gKwkJCSAgICAgICAodW5zaWduZWQgbG9uZylOVUxM
+LCBWTV9QS1RfREFUQV9JTkJBTkQsIDApOw0KPiAgCWlmIChyZXQpDQo+IC0JCWdvdG8gcHJvYmVf
+ZXJyb3IyOw0KPiArCQlnb3RvIG91dDsNCj4gDQo+ICAJdCA9IHdhaXRfZm9yX2NvbXBsZXRpb25f
+dGltZW91dCgmZG1fZGV2aWNlLmhvc3RfZXZlbnQsIDUqSFopOw0KPiAgCWlmICh0ID09IDApIHsN
+Cj4gIAkJcmV0ID0gLUVUSU1FRE9VVDsNCj4gLQkJZ290byBwcm9iZV9lcnJvcjI7DQo+ICsJCWdv
+dG8gb3V0Ow0KPiAgCX0NCj4gDQo+ICAJLyoNCj4gQEAgLTE2NTAsOCArMTYxNyw4IEBAIHN0YXRp
+YyBpbnQgYmFsbG9vbl9wcm9iZShzdHJ1Y3QgaHZfZGV2aWNlICpkZXYsDQo+ICAJICogZmFpbCB0
+aGUgcHJvYmUgZnVuY3Rpb24uDQo+ICAJICovDQo+ICAJaWYgKGRtX2RldmljZS5zdGF0ZSA9PSBE
+TV9JTklUX0VSUk9SKSB7DQo+IC0JCXJldCA9IC1FVElNRURPVVQ7DQo+IC0JCWdvdG8gcHJvYmVf
+ZXJyb3IyOw0KPiArCQlyZXQgPSAtRVBST1RPOw0KPiArCQlnb3RvIG91dDsNCj4gIAl9DQo+IA0K
+PiAgCXByX2luZm8oIlVzaW5nIER5bmFtaWMgTWVtb3J5IHByb3RvY29sIHZlcnNpb24gJXUuJXVc
+biIsDQo+IEBAIC0xNjg0LDE2ICsxNjUxLDE1IEBAIHN0YXRpYyBpbnQgYmFsbG9vbl9wcm9iZShz
+dHJ1Y3QgaHZfZGV2aWNlICpkZXYsDQo+ICAJY2FwX21zZy5tYXhfcGFnZV9udW1iZXIgPSAtMTsN
+Cj4gDQo+ICAJcmV0ID0gdm1idXNfc2VuZHBhY2tldChkZXYtPmNoYW5uZWwsICZjYXBfbXNnLA0K
+PiAtCQkJCXNpemVvZihzdHJ1Y3QgZG1fY2FwYWJpbGl0aWVzKSwNCj4gLQkJCQkodW5zaWduZWQg
+bG9uZylOVUxMLA0KPiAtCQkJCVZNX1BLVF9EQVRBX0lOQkFORCwgMCk7DQo+ICsJCQkgICAgICAg
+c2l6ZW9mKHN0cnVjdCBkbV9jYXBhYmlsaXRpZXMpLA0KPiArCQkJICAgICAgICh1bnNpZ25lZCBs
+b25nKU5VTEwsIFZNX1BLVF9EQVRBX0lOQkFORCwgMCk7DQo+ICAJaWYgKHJldCkNCj4gLQkJZ290
+byBwcm9iZV9lcnJvcjI7DQo+ICsJCWdvdG8gb3V0Ow0KPiANCj4gIAl0ID0gd2FpdF9mb3JfY29t
+cGxldGlvbl90aW1lb3V0KCZkbV9kZXZpY2UuaG9zdF9ldmVudCwgNSpIWik7DQo+ICAJaWYgKHQg
+PT0gMCkgew0KPiAgCQlyZXQgPSAtRVRJTUVET1VUOw0KPiAtCQlnb3RvIHByb2JlX2Vycm9yMjsN
+Cj4gKwkJZ290byBvdXQ7DQo+ICAJfQ0KPiANCj4gIAkvKg0KPiBAQCAtMTcwMSwyMyArMTY2Nyw2
+NSBAQCBzdGF0aWMgaW50IGJhbGxvb25fcHJvYmUoc3RydWN0IGh2X2RldmljZSAqZGV2LA0KPiAg
+CSAqIGZhaWwgdGhlIHByb2JlIGZ1bmN0aW9uLg0KPiAgCSAqLw0KPiAgCWlmIChkbV9kZXZpY2Uu
+c3RhdGUgPT0gRE1fSU5JVF9FUlJPUikgew0KPiAtCQlyZXQgPSAtRVRJTUVET1VUOw0KPiAtCQln
+b3RvIHByb2JlX2Vycm9yMjsNCj4gKwkJcmV0ID0gLUVQUk9UTzsNCj4gKwkJZ290byBvdXQ7DQo+
+ICAJfQ0KPiANCj4gKwlyZXR1cm4gMDsNCj4gK291dDoNCj4gKwl2bWJ1c19jbG9zZShkZXYtPmNo
+YW5uZWwpOw0KPiArCXJldHVybiByZXQ7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBpbnQgYmFsbG9v
+bl9wcm9iZShzdHJ1Y3QgaHZfZGV2aWNlICpkZXYsDQo+ICsJCQkgY29uc3Qgc3RydWN0IGh2X3Zt
+YnVzX2RldmljZV9pZCAqZGV2X2lkKQ0KPiArew0KPiArCWludCByZXQ7DQo+ICsNCj4gKyNpZmRl
+ZiBDT05GSUdfTUVNT1JZX0hPVFBMVUcNCj4gKwlkb19ob3RfYWRkID0gaG90X2FkZDsNCj4gKyNl
+bHNlDQo+ICsJZG9faG90X2FkZCA9IGZhbHNlOw0KPiArI2VuZGlmDQo+ICsJZG1fZGV2aWNlLmRl
+diA9IGRldjsNCj4gKwlkbV9kZXZpY2Uuc3RhdGUgPSBETV9JTklUSUFMSVpJTkc7DQo+ICsJZG1f
+ZGV2aWNlLm5leHRfdmVyc2lvbiA9IERZTk1FTV9QUk9UT0NPTF9WRVJTSU9OX1dJTjg7DQo+ICsJ
+aW5pdF9jb21wbGV0aW9uKCZkbV9kZXZpY2UuaG9zdF9ldmVudCk7DQo+ICsJaW5pdF9jb21wbGV0
+aW9uKCZkbV9kZXZpY2UuY29uZmlnX2V2ZW50KTsNCj4gKwlJTklUX0xJU1RfSEVBRCgmZG1fZGV2
+aWNlLmhhX3JlZ2lvbl9saXN0KTsNCj4gKwlzcGluX2xvY2tfaW5pdCgmZG1fZGV2aWNlLmhhX2xv
+Y2spOw0KPiArCUlOSVRfV09SSygmZG1fZGV2aWNlLmJhbGxvb25fd3JrLndyaywgYmFsbG9vbl91
+cCk7DQo+ICsJSU5JVF9XT1JLKCZkbV9kZXZpY2UuaGFfd3JrLndyaywgaG90X2FkZF9yZXEpOw0K
+PiArCWRtX2RldmljZS5ob3N0X3NwZWNpZmllZF9oYV9yZWdpb24gPSBmYWxzZTsNCj4gKw0KPiAr
+I2lmZGVmIENPTkZJR19NRU1PUllfSE9UUExVRw0KPiArCXNldF9vbmxpbmVfcGFnZV9jYWxsYmFj
+aygmaHZfb25saW5lX3BhZ2UpOw0KPiArCXJlZ2lzdGVyX21lbW9yeV9ub3RpZmllcigmaHZfbWVt
+b3J5X25iKTsNCj4gKyNlbmRpZg0KPiArDQo+ICsJaHZfc2V0X2RydmRhdGEoZGV2LCAmZG1fZGV2
+aWNlKTsNCj4gKw0KPiArCXJldCA9IGJhbGxvb25fY29ubmVjdF92c3AoZGV2KTsNCj4gKwlpZiAo
+cmV0ICE9IDApDQo+ICsJCXJldHVybiByZXQ7DQo+ICsNCj4gIAlkbV9kZXZpY2Uuc3RhdGUgPSBE
+TV9JTklUSUFMSVpFRDsNCj4gLQlsYXN0X3Bvc3RfdGltZSA9IGppZmZpZXM7DQoNCkkgd2FzIGN1
+cmlvdXMgYWJvdXQgdGhlIGFib3ZlIGRlbGV0aW9uLiAgQnV0IEkgZ3Vlc3MgdGhlIGxpbmUNCmlz
+IG5vdCBuZWVkZWQgYXMgdGhlIHRpbWVfYWZ0ZXIoKSBjaGVjayBpbiBwb3N0X3N0YXR1cygpIHNo
+b3VsZA0KaGFuZGxlIGFuIGluaXRpYWwgdmFsdWUgb2YgMCBmb3IgbGFzdF9wb3N0X3RpbWUganVz
+dCBmaW5lLg0KDQo+ICsNCj4gKwlkbV9kZXZpY2UudGhyZWFkID0NCj4gKwkJIGt0aHJlYWRfcnVu
+KGRtX3RocmVhZF9mdW5jLCAmZG1fZGV2aWNlLCAiaHZfYmFsbG9vbiIpOw0KPiArCWlmIChJU19F
+UlIoZG1fZGV2aWNlLnRocmVhZCkpIHsNCj4gKwkJcmV0ID0gUFRSX0VSUihkbV9kZXZpY2UudGhy
+ZWFkKTsNCj4gKwkJZ290byBwcm9iZV9lcnJvcjsNCj4gKwl9DQoNCkp1c3QgYW4gb2JzZXJ2YXRp
+b246ICB0aGlzIHRocmVhZCBjcmVhdGlvbiBub3cgaGFwcGVucyBhdCB0aGUgZW5kIG9mIHRoZQ0K
+cHJvYmluZyBwcm9jZXNzLiAgQnV0IHRoYXQncyBnb29kLCBiZWNhdXNlIGluIHRoZSBvbGQgY29k
+ZSwgdGhlIHRocmVhZA0Kd2FzIHN0YXJ0ZWQgYW5kIGNvdWxkIHJ1biBiZWZvcmUgdGhlIHByb3Rv
+Y29sIHZlcnNpb24gaGFkIGJlZW4NCm5lZ290aWF0ZWQuICBTbyBJJ2xsIGFzc3VtZSB5b3VyIGNo
+YW5nZSBoZXJlIGlzIGludGVudGlvbmFsLg0KDQo+IA0KPiAgCXJldHVybiAwOw0KPiANCj4gLXBy
+b2JlX2Vycm9yMjoNCj4gK3Byb2JlX2Vycm9yOg0KPiArCXZtYnVzX2Nsb3NlKGRldi0+Y2hhbm5l
+bCk7DQo+ICAjaWZkZWYgQ09ORklHX01FTU9SWV9IT1RQTFVHDQo+ICsJdW5yZWdpc3Rlcl9tZW1v
+cnlfbm90aWZpZXIoJmh2X21lbW9yeV9uYik7DQoNCkhtbW0uIEV2aWRlbnRseSB0aGUgYWJvdmUg
+Y2xlYW51cCB3YXMgbWlzc2luZyBpbiB0aGUNCm9sZCBjb2RlLg0KDQo+ICAJcmVzdG9yZV9vbmxp
+bmVfcGFnZV9jYWxsYmFjaygmaHZfb25saW5lX3BhZ2UpOw0KPiAgI2VuZGlmDQo+IC0Ja3RocmVh
+ZF9zdG9wKGRtX2RldmljZS50aHJlYWQpOw0KPiAtDQo+IC1wcm9iZV9lcnJvcjE6DQo+IC0Jdm1i
+dXNfY2xvc2UoZGV2LT5jaGFubmVsKTsNCj4gIAlyZXR1cm4gcmV0Ow0KPiAgfQ0KPiANCj4gQEAg
+LTE3MzQsMTEgKzE3NDIsMTEgQEAgc3RhdGljIGludCBiYWxsb29uX3JlbW92ZShzdHJ1Y3QgaHZf
+ZGV2aWNlICpkZXYpDQo+ICAJY2FuY2VsX3dvcmtfc3luYygmZG0tPmJhbGxvb25fd3JrLndyayk7
+DQo+ICAJY2FuY2VsX3dvcmtfc3luYygmZG0tPmhhX3dyay53cmspOw0KPiANCj4gLQl2bWJ1c19j
+bG9zZShkZXYtPmNoYW5uZWwpOw0KPiAgCWt0aHJlYWRfc3RvcChkbS0+dGhyZWFkKTsNCj4gKwl2
+bWJ1c19jbG9zZShkZXYtPmNoYW5uZWwpOw0KDQpQcmVzdW1hYmx5IHRoaXMgaXMgYW4gaW50ZW50
+aW9uYWwgb3JkZXJpbmcgY2hhbmdlIGFzIHdlbGwuDQpUaGUga3RocmVhZCBzaG91bGQgYmUgc3Rv
+cHBlZCBiZWZvcmUgY2xvc2luZyB0aGUgY2hhbm5lbC4NCg0KPiAgI2lmZGVmIENPTkZJR19NRU1P
+UllfSE9UUExVRw0KPiAtCXJlc3RvcmVfb25saW5lX3BhZ2VfY2FsbGJhY2soJmh2X29ubGluZV9w
+YWdlKTsNCj4gIAl1bnJlZ2lzdGVyX21lbW9yeV9ub3RpZmllcigmaHZfbWVtb3J5X25iKTsNCj4g
+KwlyZXN0b3JlX29ubGluZV9wYWdlX2NhbGxiYWNrKCZodl9vbmxpbmVfcGFnZSk7DQoNCkFuZCB5
+b3UndmUgY2hhbmdlZCB0aGUgb3JkZXJpbmcgb2YgdGhlc2Ugc3RlcHMgc28gdGhleSBhcmUNCnRo
+ZSBpbnZlcnNlIG9mIHdoZW4gdGhleSBhcmUgc2V0IHVwLiAgQWxzbyBhIGdvb2QgY2xlYW51cCAu
+Li4uDQoNCj4gICNlbmRpZg0KPiAgCXNwaW5fbG9ja19pcnFzYXZlKCZkbV9kZXZpY2UuaGFfbG9j
+aywgZmxhZ3MpOw0KPiAgCWxpc3RfZm9yX2VhY2hfZW50cnlfc2FmZShoYXMsIHRtcCwgJmRtLT5o
+YV9yZWdpb25fbGlzdCwgbGlzdCkgew0KPiAtLQ0KPiAyLjE5LjENCg0KUmV2aWV3ZWQtYnk6IE1p
+Y2hhZWwgS2VsbGV5IDxtaWtlbGxleUBtaWNyb3NvZnQuY29tPg0K
