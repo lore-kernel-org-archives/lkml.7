@@ -2,129 +2,64 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7560C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8EDC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 888EC20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:42:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="TGQMgCeE"
+	by mail.kernel.org (Postfix) with ESMTP id 81A1C20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725864AbfFNGll (ORCPT
+        id S1726175AbfFNGnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 02:41:41 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:11042 "EHLO pegase1.c-s.fr"
+        Fri, 14 Jun 2019 02:43:43 -0400
+Received: from verein.lst.de ([213.95.11.211]:44484 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725822AbfFNGll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 02:41:41 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45Q9xb0JbMz9v16n;
-        Fri, 14 Jun 2019 08:41:39 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=TGQMgCeE; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 6GDuRjF6niS5; Fri, 14 Jun 2019 08:41:38 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45Q9xZ6N62z9v16l;
-        Fri, 14 Jun 2019 08:41:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1560494498; bh=FrwEFL562hO53reJv49dWHRcAR33QjLuPY2auIynv5Y=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=TGQMgCeEwwOTTZU0KTBbDhxpFsu9REbBfhngWWIv/I3/9Sghonv7Db6kG4vgQnZj/
-         PK4NrL+MC5ulLXTmEtXw5jKslzKAOg7vZzlSp2OJX/lAIJkyroXq4v8ig6XmJC7qRz
-         LXAZt4NqqJ2qqNeh2lWMo34jS0n4FN2RVUvh19lk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C1EBC8B77A;
-        Fri, 14 Jun 2019 08:41:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id JZIzUdbAlMWf; Fri, 14 Jun 2019 08:41:39 +0200 (CEST)
-Received: from PO15451.localdomain (po15451.idsi0.si.c-s.fr [172.25.230.107])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A4A468B775;
-        Fri, 14 Jun 2019 08:41:39 +0200 (CEST)
-Received: by po16838vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 9FE7A68D77; Fri, 14 Jun 2019 06:41:39 +0000 (UTC)
-Message-Id: <d66fe12d1dbe29ceba26b7208664f277c7fbf3a9.1560494348.git.christophe.leroy@c-s.fr>
-In-Reply-To: <04852442b540e73be0a20e13f69ab8427fd102e0.1560494348.git.christophe.leroy@c-s.fr>
-References: <04852442b540e73be0a20e13f69ab8427fd102e0.1560494348.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 02/10] powerpc/8xx: drop verify_patch()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, oss@buserror.net
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 14 Jun 2019 06:41:39 +0000 (UTC)
+        id S1725780AbfFNGnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 02:43:43 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id D916768B02; Fri, 14 Jun 2019 08:43:13 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 08:43:13 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 18/22] mm: mark DEVICE_PUBLIC as broken
+Message-ID: <20190614064313.GM7246@lst.de>
+References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-19-hch@lst.de> <20190613194430.GY22062@mellanox.com> <a27251ad-a152-f84d-139d-e1a3bf01c153@nvidia.com> <20190613195819.GA22062@mellanox.com> <20190614004314.GD783@iweiny-DESK2.sc.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614004314.GD783@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-verify_patch() has been opted out since many years, and
-the comment suggests it doesn't work. So drop it.
+On Thu, Jun 13, 2019 at 05:43:15PM -0700, Ira Weiny wrote:
+> <sigh>  yes but the earlier patch:
+> 
+> [PATCH 03/22] mm: remove hmm_devmem_add_resource
+> 
+> Removes the only place type is set to MEMORY_DEVICE_PUBLIC.
+> 
+> So I think it is ok.  Frankly I was wondering if we should remove the public
+> type altogether but conceptually it seems ok.  But I don't see any users of it
+> so...  should we get rid of it in the code rather than turning the config off?
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/platforms/8xx/micropatch.c | 40 ---------------------------------
- 1 file changed, 40 deletions(-)
-
-diff --git a/arch/powerpc/platforms/8xx/micropatch.c b/arch/powerpc/platforms/8xx/micropatch.c
-index 33a9042fca80..7bbaf9914f32 100644
---- a/arch/powerpc/platforms/8xx/micropatch.c
-+++ b/arch/powerpc/platforms/8xx/micropatch.c
-@@ -707,43 +707,3 @@ void __init cpm_load_patch(cpm8xx_t *cp)
- 
- #endif /* some variation of the I2C/SPI patch was selected */
- }
--
--/*
-- *  Take this entire routine out, since no one calls it and its
-- * logic is suspect.
-- */
--
--#if 0
--void
--verify_patch(volatile immap_t *immr)
--{
--	volatile uint		*dp;
--	volatile cpm8xx_t	*commproc;
--	int i;
--
--	commproc = (cpm8xx_t *)&immr->im_cpm;
--
--	printk("cp_rccr %x\n", commproc->cp_rccr);
--	commproc->cp_rccr = 0;
--
--	dp = (uint *)(commproc->cp_dpmem);
--	for (i=0; i<(sizeof(patch_2000)/4); i++)
--		if (*dp++ != patch_2000[i]) {
--			printk("patch_2000 bad at %d\n", i);
--			dp--;
--			printk("found 0x%X, wanted 0x%X\n", *dp, patch_2000[i]);
--			break;
--		}
--
--	dp = (uint *)&(commproc->cp_dpmem[0x0f00]);
--	for (i=0; i<(sizeof(patch_2f00)/4); i++)
--		if (*dp++ != patch_2f00[i]) {
--			printk("patch_2f00 bad at %d\n", i);
--			dp--;
--			printk("found 0x%X, wanted 0x%X\n", *dp, patch_2f00[i]);
--			break;
--		}
--
--	commproc->cp_rccr = 0x0009;
--}
--#endif
--- 
-2.13.3
-
+That was my original idea.  But then again Jerome spent a lot of effort
+putting hooks for it all over the mm and it would seem a little root
+to just rip this out ASAP.  I'll give it some more time, but it it doesn't
+get used after a few more kernel releases we should nuke it.
