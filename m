@@ -2,232 +2,125 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2AAC31E4E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDFDC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B632173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52AEB2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:57:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dZhdIjz6"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="LcvpPyUl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfFNU4f (ORCPT
+        id S1726473AbfFNU5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:56:35 -0400
-Received: from mail-vs1-f73.google.com ([209.85.217.73]:46535 "EHLO
-        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbfFNU4f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:56:35 -0400
-Received: by mail-vs1-f73.google.com with SMTP id 129so1289999vsx.13
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 13:56:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=Hqmj3KOC0/+HjkeOr+Ogn5rNBLGqrlC9HeVJX7PS6ro=;
-        b=dZhdIjz6vd/juH05RY6nTEp3Gekt5QdITEMcM/F6AViqk+XXSTlKvbdBrKqIlSCskF
-         Z4SyOTM8Ia1UY7hdXBMpwXAKy0VpV2zqJYs3P+nbTdYA426dFSmwevqQI3AJPjt+iOh4
-         X2Wv1S8yIgYH78W20GV9ldZej/yQ+odKeD0lx5g6115rUxmPUJ2yoEgB+J0uMdmoEGWs
-         7GERveOOVs/hQpzzhh68dDy1gqFIpCfnIeUkQMkhA7Cl1im3WmqF8X/yqCy6+y03vSwW
-         pN9onzrhtU3N0DQGj/CsKSbE3fXeCNldbUboxGoSkcFo6C7CtDkl3p+cBR47bXvMCCx1
-         Rvog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=Hqmj3KOC0/+HjkeOr+Ogn5rNBLGqrlC9HeVJX7PS6ro=;
-        b=uDPvsNqOQ54hOIjEQmDuzRYghs1OSeew/FxkeYavAhheJGnahRncDerq6lbVqgwXCB
-         x2a3CxOkSIgjiWentZme9HIurglrTpXK2gxET4WWyv+/8sDsplD2EOVBFEE7iHCXaNCE
-         GFBB4wDMbH1fO+WvYQ+LKPkwsNP6vUp38iNL1wRhq7cYAUvGVwpNdriccMppsbcGJc7k
-         XmoujA6j48aO/zcgBOx8B3T7CPe+Yr/8d3lTSFKT/ABwxwy3kSjkUfhq3I4zOWrqZPYE
-         C+h9VuXlJCbMHMOgyNUpVmPegPJKoqSlALHNKk2/4rbKw/FAhHz9eV8fHACbJGRX8C0l
-         gQ/g==
-X-Gm-Message-State: APjAAAX0FkAlJd9Jau59pAwtj/CKpRESWmIIO7KLFZbX9QwlTH4vVz53
-        XTV7jTosPED/NAZAyz0gl7SKI6ohnA==
-X-Google-Smtp-Source: APXvYqxQhQhf9yxGq2PhF5E9pperHshypElSemxeBdUJpiSfFj9fwgtnqfs1uCnvecZSAUJvLAOXMq7ELw==
-X-Received: by 2002:ac5:c2d2:: with SMTP id i18mr1919912vkk.36.1560545794002;
- Fri, 14 Jun 2019 13:56:34 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 13:56:23 -0700
-In-Reply-To: <CAKwvOdmq2og84Ja6eNpiNdZd_ArxJ+=4a6_q_c2OgwX3Z+93NQ@mail.gmail.com>
-Message-Id: <20190614205623.128201-1-nhuck@google.com>
-Mime-Version: 1.0
-References: <CAKwvOdmq2og84Ja6eNpiNdZd_ArxJ+=4a6_q_c2OgwX3Z+93NQ@mail.gmail.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH] drm/msm/dpu: Fix Wunused-const-variable
-From:   Nathan Huckleberry <nhuck@google.com>
-To:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch
-Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Nathan Huckleberry <nhuck@google.com>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 14 Jun 2019 16:57:02 -0400
+Received: from mail-eopbgr710094.outbound.protection.outlook.com ([40.107.71.94]:6160
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725809AbfFNU5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:57:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=sjYcMrvmmrQ7/f8D77CR1WuoSf5zLN3wTVX4kwKGuY6m+rcxvuRTBBkC6M1vV0T5ZZSPgHOnrgE+0gYZe9Dl4TfUeRWM/4Z8zYpKtIZ2IcUVXelTXK7sJ0sBwnZkHZjThAaA974V+8R3J4yVGZKND2pZZTWt8wNDVscSqBQ+u5o=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LmfOtzyYWqnXIj9uQmg//i58SVuDotkk6P5iMP4YSg4=;
+ b=GmuKjnbaF0rfZBPJi3KPK47lvO5oQHx57eFWWVlgFK7zql0kslNHP/xMfMeIHO+7TKQoOYewiJKbkJHCdPpwdBL0WVyHZWkbBNYG57nMiL5KgdvCMEOvocPZYKCgnodeSXthTXqmHt6bTgSRalwZO2CmvzVfUvfqtyMACQT8cP8=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LmfOtzyYWqnXIj9uQmg//i58SVuDotkk6P5iMP4YSg4=;
+ b=LcvpPyUl9xizch5CbXDYSqWh3bXsLo52uYsVmHeFEwEoFVbloAZjT++t4DBMd3HXurRyzVfikZ8JlShFkWgzXQ5tSdqPmzCm1XGXrpWLae1qnweJw9hYMzg3/9z39druPdtV0QSYnzCRA+BkYQ0Pt/l3eOJqiNsHD3O1VmrPiS8=
+Received: from BL0PR2101MB1348.namprd21.prod.outlook.com
+ (2603:10b6:208:92::22) by BL0PR2101MB1075.namprd21.prod.outlook.com
+ (2603:10b6:207:37::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.1; Fri, 14 Jun
+ 2019 20:56:57 +0000
+Received: from BL0PR2101MB1348.namprd21.prod.outlook.com
+ ([fe80::ec20:70a:433e:a052]) by BL0PR2101MB1348.namprd21.prod.outlook.com
+ ([fe80::ec20:70a:433e:a052%2]) with mapi id 15.20.2008.007; Fri, 14 Jun 2019
+ 20:56:57 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>
+CC:     "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: RE: [PATCH 1/2] hv_balloon: Use a static page for the balloon_up send
+ buffer
+Thread-Topic: [PATCH 1/2] hv_balloon: Use a static page for the balloon_up
+ send buffer
+Thread-Index: AQHVIuDkOmV0qWRnFkKsFEp6e9leVqaboWbw
+Date:   Fri, 14 Jun 2019 20:56:57 +0000
+Message-ID: <BL0PR2101MB13483325CF3D57CBAF578691D7EE0@BL0PR2101MB1348.namprd21.prod.outlook.com>
+References: <1560537692-37400-1-git-send-email-decui@microsoft.com>
+In-Reply-To: <1560537692-37400-1-git-send-email-decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-14T20:56:54.2477622Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0f3f3e3a-4dc5-423f-8203-d240c39c407d;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7ad6fd25-f9be-456f-d12d-08d6f10ad6aa
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BL0PR2101MB1075;
+x-ms-traffictypediagnostic: BL0PR2101MB1075:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <BL0PR2101MB10755403F856763D6DFE4D74D7EE0@BL0PR2101MB1075.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:345;
+x-forefront-prvs: 0068C7E410
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(366004)(376002)(136003)(39860400002)(199004)(189003)(2906002)(6116002)(3846002)(558084003)(186003)(26005)(68736007)(8936002)(10090500001)(1511001)(8676002)(476003)(486006)(446003)(2201001)(52536014)(5660300002)(86362001)(11346002)(256004)(71200400001)(71190400001)(76116006)(73956011)(66946007)(66476007)(66556008)(64756008)(66446008)(14454004)(6636002)(22452003)(110136005)(74316002)(8990500004)(33656002)(4326008)(99286004)(54906003)(6246003)(55016002)(6436002)(25786009)(102836004)(53936002)(9686003)(316002)(52396003)(478600001)(81166006)(81156014)(66066001)(7736002)(305945005)(229853002)(7696005)(10290500003)(2501003)(6506007)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR2101MB1075;H:BL0PR2101MB1348.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ktdeuZ9EZWUc4oxfn8tyMbRSwBZ+NHdcV8b/c5ov+wNr1ubsC8bh6zJgbxqV36QTUH/VeWfXe8A1ZYL+4Sb00ctqoExl4IvzWIEIg73mNmp2wEyrPj+6+saWicqH7xqhqrfw9BFuXasv/06g89elUj+FRRyZikpj4PWKCJjUCUcHKwMuHbNFh9txjtDEurNv4wffZdFHEnPRRuHtAIiDLRGGXPco1geR/h0W6ADMfsSKoXFSGhb3YMIaq3Or0S1H5oencDnWr5urhZk7/0TVLRUqc0GIRkOgFvlTz2p0Ig8OjWKgW+pi2uhFLG8LgAfkey/s1S6ZNpQirm9jQE5itj91HJGe/fKEQw+PK1e5MIbphh3iLGc8D2gu2giYpuSEeONxP60kJV9On1NO8P2cJ4ee50cE+JVvR6clJ+FDn/s=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ad6fd25-f9be-456f-d12d-08d6f10ad6aa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 20:56:57.1348
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mikelley@ntdev.microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang produces the following warning
-
-drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c:477:32: warning: unused
-variable 'dpu_format_map_tile' [-Wunused-const-variable] static const
-struct dpu_format dpu_format_map_tile[] = { ^
-
-drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c:602:32: warning: unused
-variable 'dpu_format_map_p010' [-Wunused-const-variable] static const
-struct dpu_format dpu_format_map_p010[] = { ^
-
-drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c:610:32: warning: unused
-variable 'dpu_format_map_p010_ubwc' [-Wunused-const-variable] static
-const struct dpu_format dpu_format_map_p010_ubwc[] = { ^
-
-drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c:619:32: warning: unused
-variable 'dpu_format_map_tp10_ubwc' [-Wunused-const-variable] static
-const struct dpu_format dpu_format_map_tp10_ubwc[] = { ^
-
-Removing the unimplemented modifiers that cause the warning.
-
-Cc: clang-built-linux@googlegroups.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/528
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c | 110 --------------------
- 1 file changed, 110 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
-index 0440696b5bad..d28520faf157 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c
-@@ -470,90 +470,6 @@ static const struct dpu_format dpu_format_map[] = {
- 		DPU_FETCH_LINEAR, 3),
- };
- 
--/*
-- * A5x tile formats tables:
-- * These tables hold the A5x tile formats supported.
-- */
--static const struct dpu_format dpu_format_map_tile[] = {
--	INTERLEAVED_RGB_FMT_TILED(BGR565,
--		0, COLOR_5BIT, COLOR_6BIT, COLOR_5BIT,
--		C2_R_Cr, C0_G_Y, C1_B_Cb, 0, 3,
--		false, 2, 0,
--		DPU_FETCH_UBWC, 1, DPU_TILE_HEIGHT_TILED),
--
--	INTERLEAVED_RGB_FMT_TILED(ARGB8888,
--		COLOR_8BIT, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
--		C3_ALPHA, C2_R_Cr, C0_G_Y, C1_B_Cb, 4,
--		true, 4, 0,
--		DPU_FETCH_UBWC, 1, DPU_TILE_HEIGHT_TILED),
--
--	INTERLEAVED_RGB_FMT_TILED(ABGR8888,
--		COLOR_8BIT, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
--		C3_ALPHA, C1_B_Cb, C0_G_Y, C2_R_Cr, 4,
--		true, 4, 0,
--		DPU_FETCH_UBWC, 1, DPU_TILE_HEIGHT_TILED),
--
--	INTERLEAVED_RGB_FMT_TILED(XBGR8888,
--		COLOR_8BIT, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
--		C2_R_Cr, C0_G_Y, C1_B_Cb, C3_ALPHA, 4,
--		false, 4, 0,
--		DPU_FETCH_UBWC, 1, DPU_TILE_HEIGHT_TILED),
--
--	INTERLEAVED_RGB_FMT_TILED(RGBA8888,
--		COLOR_8BIT, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
--		C2_R_Cr, C0_G_Y, C1_B_Cb, C3_ALPHA, 4,
--		true, 4, 0,
--		DPU_FETCH_UBWC, 1, DPU_TILE_HEIGHT_TILED),
--
--	INTERLEAVED_RGB_FMT_TILED(BGRA8888,
--		COLOR_8BIT, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
--		C1_B_Cb, C0_G_Y, C2_R_Cr, C3_ALPHA, 4,
--		true, 4, 0,
--		DPU_FETCH_UBWC, 1, DPU_TILE_HEIGHT_TILED),
--
--	INTERLEAVED_RGB_FMT_TILED(BGRX8888,
--		COLOR_8BIT, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
--		C1_B_Cb, C0_G_Y, C2_R_Cr, C3_ALPHA, 4,
--		false, 4, 0,
--		DPU_FETCH_UBWC, 1, DPU_TILE_HEIGHT_TILED),
--
--	INTERLEAVED_RGB_FMT_TILED(XRGB8888,
--		COLOR_8BIT, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
--		C3_ALPHA, C2_R_Cr, C0_G_Y, C1_B_Cb, 4,
--		false, 4, 0,
--		DPU_FETCH_UBWC, 1, DPU_TILE_HEIGHT_TILED),
--
--	INTERLEAVED_RGB_FMT_TILED(RGBX8888,
--		COLOR_8BIT, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
--		C2_R_Cr, C0_G_Y, C1_B_Cb, C3_ALPHA, 4,
--		false, 4, 0,
--		DPU_FETCH_UBWC, 1, DPU_TILE_HEIGHT_TILED),
--
--	INTERLEAVED_RGB_FMT_TILED(ABGR2101010,
--		COLOR_8BIT, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
--		C2_R_Cr, C0_G_Y, C1_B_Cb, C3_ALPHA, 4,
--		true, 4, DPU_FORMAT_FLAG_DX,
--		DPU_FETCH_UBWC, 1, DPU_TILE_HEIGHT_TILED),
--
--	INTERLEAVED_RGB_FMT_TILED(XBGR2101010,
--		COLOR_8BIT, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
--		C2_R_Cr, C0_G_Y, C1_B_Cb, C3_ALPHA, 4,
--		true, 4, DPU_FORMAT_FLAG_DX,
--		DPU_FETCH_UBWC, 1, DPU_TILE_HEIGHT_TILED),
--
--	PSEUDO_YUV_FMT_TILED(NV12,
--		0, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
--		C1_B_Cb, C2_R_Cr,
--		DPU_CHROMA_420, DPU_FORMAT_FLAG_YUV,
--		DPU_FETCH_UBWC, 2, DPU_TILE_HEIGHT_NV12),
--
--	PSEUDO_YUV_FMT_TILED(NV21,
--		0, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
--		C2_R_Cr, C1_B_Cb,
--		DPU_CHROMA_420, DPU_FORMAT_FLAG_YUV,
--		DPU_FETCH_UBWC, 2, DPU_TILE_HEIGHT_NV12),
--};
--
- /*
-  * UBWC formats table:
-  * This table holds the UBWC formats supported.
-@@ -599,32 +515,6 @@ static const struct dpu_format dpu_format_map_ubwc[] = {
- 		DPU_FETCH_UBWC, 4, DPU_TILE_HEIGHT_NV12),
- };
- 
--static const struct dpu_format dpu_format_map_p010[] = {
--	PSEUDO_YUV_FMT_LOOSE(NV12,
--		0, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
--		C1_B_Cb, C2_R_Cr,
--		DPU_CHROMA_420, (DPU_FORMAT_FLAG_YUV | DPU_FORMAT_FLAG_DX),
--		DPU_FETCH_LINEAR, 2),
--};
--
--static const struct dpu_format dpu_format_map_p010_ubwc[] = {
--	PSEUDO_YUV_FMT_LOOSE_TILED(NV12,
--		0, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
--		C1_B_Cb, C2_R_Cr,
--		DPU_CHROMA_420, (DPU_FORMAT_FLAG_YUV | DPU_FORMAT_FLAG_DX |
--				DPU_FORMAT_FLAG_COMPRESSED),
--		DPU_FETCH_UBWC, 4, DPU_TILE_HEIGHT_NV12),
--};
--
--static const struct dpu_format dpu_format_map_tp10_ubwc[] = {
--	PSEUDO_YUV_FMT_TILED(NV12,
--		0, COLOR_8BIT, COLOR_8BIT, COLOR_8BIT,
--		C1_B_Cb, C2_R_Cr,
--		DPU_CHROMA_420, (DPU_FORMAT_FLAG_YUV | DPU_FORMAT_FLAG_DX |
--				DPU_FORMAT_FLAG_COMPRESSED),
--		DPU_FETCH_UBWC, 4, DPU_TILE_HEIGHT_NV12),
--};
--
- /* _dpu_get_v_h_subsample_rate - Get subsample rates for all formats we support
-  *   Note: Not using the drm_format_*_subsampling since we have formats
-  */
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+RnJvbTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT4gIFNlbnQ6IEZyaWRheSwgSnVu
+ZSAxNCwgMjAxOSAxMTo0MiBBTQ0KPiANCj4gSXQncyB1bm5lY2Vzc2FyeSB0byBkeW5hbWljYWxs
+eSBhbGxvY2F0ZSB0aGUgYnVmZmVyLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogRGV4dWFuIEN1aSA8
+ZGVjdWlAbWljcm9zb2Z0LmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2h2L2h2X2JhbGxvb24uYyB8
+IDE5ICsrKystLS0tLS0tLS0tLS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
+KyksIDE1IGRlbGV0aW9ucygtKQ0KPiANCg0KUmV2aWV3ZWQtYnk6IE1pY2hhZWwgS2VsbGV5IDxt
+aWtlbGxleUBtaWNyb3NvZnQuY29tPg0K
