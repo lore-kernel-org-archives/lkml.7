@@ -2,191 +2,127 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FEBC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA3BC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 526512133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9053208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbfFNKii (ORCPT
+        id S1727179AbfFNKiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:38:38 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:34159 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbfFNKii (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:38:38 -0400
-X-Originating-IP: 37.177.88.254
-Received: from uno.localdomain (unknown [37.177.88.254])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 3EA8240007;
-        Fri, 14 Jun 2019 10:38:26 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 12:39:40 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 5/7] [media] marvell-ccic/mmp: add devicetree support
-Message-ID: <20190614103940.4dg43fo7dmbwnpfs@uno.localdomain>
-References: <20190528090731.10341-1-lkundrak@v3.sk>
- <20190528090731.10341-6-lkundrak@v3.sk>
+        Fri, 14 Jun 2019 06:38:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:59062 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727141AbfFNKix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 06:38:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 473812B;
+        Fri, 14 Jun 2019 03:38:53 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F2CF63F246;
+        Fri, 14 Jun 2019 03:40:35 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 11:38:50 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [RFC] Disable lockref on arm64
+Message-ID: <20190614103850.GG10659@fuggles.cambridge.arm.com>
+References: <20190506061100.GA8465@dc5-eodlnx05.marvell.com>
+ <20190506181039.GA2875@brain-police>
+ <20190518042424.GA28517@dc5-eodlnx05.marvell.com>
+ <CAKv+Gu9U9z3iAuz4V1c5zTHuz1As8FSNGY-TJon4OLErB8ts8Q@mail.gmail.com>
+ <20190522160417.GF7876@fuggles.cambridge.arm.com>
+ <20190612040933.GA18848@dc5-eodlnx05.marvell.com>
+ <20190612093151.GA11554@brain-police>
+ <20190614070914.GA21961@dc5-eodlnx05.marvell.com>
+ <20190614095846.GC10506@fuggles.cambridge.arm.com>
+ <CAKv+Gu_Kdq=UPijjA84FpmO=ZsdEO9EyyF7GeOQ+WmfqtO_hMg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="afhe6fv3nxwqv4st"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190528090731.10341-6-lkundrak@v3.sk>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAKv+Gu_Kdq=UPijjA84FpmO=ZsdEO9EyyF7GeOQ+WmfqtO_hMg@mail.gmail.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Ard,
 
---afhe6fv3nxwqv4st
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+On Fri, Jun 14, 2019 at 12:24:54PM +0200, Ard Biesheuvel wrote:
+> On Fri, 14 Jun 2019 at 11:58, Will Deacon <will.deacon@arm.com> wrote:
+> > On Fri, Jun 14, 2019 at 07:09:26AM +0000, Jayachandran Chandrasekharan Nair wrote:
+> > > x86 added a arch-specific fast refcount implementation - and the commit
+> > > specifically notes that it is faster than cmpxchg based code[1].
+> > >
+> > > There seems to be an ongoing effort to move over more and more subsystems
+> > > from atomic_t to refcount_t(e.g.[2]), specifically because refcount_t on
+> > > x86 is fast enough and you get some error checking atomic_t that does not
+> > > have.
+> >
+> > Correct, but there are also some cases that are only caught by
+> > REFCOUNT_FULL.
+> >
+> Yes, but do note that my arm64 implementation catches
+> increment-from-zero as well.
 
-On Tue, May 28, 2019 at 11:07:29AM +0200, Lubomir Rintel wrote:
-> The platform data is actually not used anywhere (along with the CSI
-> support) and should be safe to remove.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
->
-> ---
-> Changes since v1:
-> - s/This are/These are/ in a comment
->
->  .../media/platform/marvell-ccic/mmp-driver.c  | 36 ++++++++++++++-----
->  1 file changed, 27 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/media/platform/marvell-ccic/mmp-driver.c
-> index 8f1d2a972bc9..54c2dd8c29d8 100644
-> --- a/drivers/media/platform/marvell-ccic/mmp-driver.c
-> +++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
-> @@ -19,6 +19,8 @@
->  #include <media/v4l2-device.h>
->  #include <linux/platform_data/media/mmp-camera.h>
->  #include <linux/device.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  #include <linux/gpio.h>
->  #include <linux/io.h>
-> @@ -196,6 +198,9 @@ static void mmpcam_calc_dphy(struct mcam_camera *mcam)
->  	struct device *dev = &cam->pdev->dev;
->  	unsigned long tx_clk_esc;
->
-> +	if (!pdata)
-> +		return;
-> +
+Ok, so it's just the silly racy cases that are problematic?
 
-This seems a bit of an hack to me. The caller knows the mcam->bus_type
-and should not try to calc_dphy() if the bus type is not CSI2_DPHY.
-What do you think?
+> > > Do you think Ard's patch needs changes before it can be considered? I
+> > > can take a look at that.
+> >
+> > I would like to see how it performs if we keep the checking inline, yes.
+> > I suspect Ard could spin this in short order.
+> 
+> Moving the post checks before the stores you mean? That shouldn't be
+> too difficult, I suppose, but it will certainly cost performance.
 
->  	/*
->  	 * If CSI2_DPHY3 is calculated dynamically,
->  	 * pdata->lane_clk should be already set
-> @@ -314,10 +319,6 @@ static int mmpcam_probe(struct platform_device *pdev)
->  	struct mmp_camera_platform_data *pdata;
->  	int ret;
->
-> -	pdata = pdev->dev.platform_data;
-> -	if (!pdata)
-> -		return -ENODEV;
-> -
->  	cam = devm_kzalloc(&pdev->dev, sizeof(*cam), GFP_KERNEL);
->  	if (cam == NULL)
->  		return -ENOMEM;
-> @@ -330,17 +331,29 @@ static int mmpcam_probe(struct platform_device *pdev)
->  	mcam->calc_dphy = mmpcam_calc_dphy;
->  	mcam->dev = &pdev->dev;
->  	mcam->use_smbus = 0;
-> -	mcam->mclk_src = pdata->mclk_src;
-> -	mcam->mclk_div = pdata->mclk_div;
-> -	mcam->bus_type = pdata->bus_type;
-> -	mcam->dphy = pdata->dphy;
-> +	pdata = pdev->dev.platform_data;
-> +	if (pdata) {
-> +		mcam->mclk_src = pdata->mclk_src;
-> +		mcam->mclk_div = pdata->mclk_div;
-> +		mcam->bus_type = pdata->bus_type;
-> +		mcam->dphy = pdata->dphy;
-> +		mcam->lane = pdata->lane;
-> +	} else {
-> +		/*
-> +		 * These are values that used to be hardcoded in mcam-core and
-> +		 * work well on a OLPC XO 1.75 with a parallel bus sensor.
-> +		 * If it turns out other setups make sense, the values should
-> +		 * be obtained from the device tree.
-> +		 */
-> +		mcam->mclk_src = 3;
-> +		mcam->mclk_div = 2;
+That's what I'd like to assess, since the major complaint seems to be the
+use of cmpxchg() as opposed to inline branching.
 
-I see these only used in mcam_enable_mipi(). Am I wrong?
+> > > > Whatever we do, I prefer to keep REFCOUNT_FULL the default option for arm64,
+> > > > so if we can't keep the semantics when we remove the cmpxchg, you'll need to
+> > > > opt into this at config time.
+> > >
+> > > Only arm64 and arm selects REFCOUNT_FULL in the default config. So please
+> > > reconsider this! This is going to slow down arm64 vs. other archs and it
+> > > will become worse when more code adopts refcount_t.
+> >
+> > Maybe, but faced with the choice between your micro-benchmark results and
+> > security-by-default for people using the arm64 Linux kernel, I really think
+> > that's a no-brainer. I'm well aware that not everybody agrees with me on
+> > that.
+> 
+> I think the question whether the benchmark is valid is justified, but
+> otoh, we are obsessed with hackbench which is not that representative
+> of a real workload either. It would be better to discuss these changes
+> in the context of known real-world use cases where refcounts are a
+> true bottleneck.
 
-Thanks
-   j
+I wasn't calling into question the validity of the benchmark (I really have
+no clue about that), but rather that you can't have your cake and eat it.
+Faced with the choice, I'd err on the security side because it's far easier
+to explain to somebody that the default is full mitigation at a cost than it
+is to explain why a partial mitigation is acceptable (and in the end it's
+often subjective because people have different thresholds).
 
-> +	}
->  	if (mcam->bus_type == V4L2_MBUS_CSI2_DPHY) {
->  		cam->mipi_clk = devm_clk_get(mcam->dev, "mipi");
->  		if ((IS_ERR(cam->mipi_clk) && mcam->dphy[2] == 0))
->  			return PTR_ERR(cam->mipi_clk);
->  	}
->  	mcam->mipi_enabled = false;
-> -	mcam->lane = pdata->lane;
->  	mcam->chip_id = MCAM_ARMADA610;
->  	mcam->buffer_mode = B_DMA_sg;
->  	strscpy(mcam->bus_info, "platform:mmp-camera", sizeof(mcam->bus_info));
-> @@ -475,6 +488,10 @@ static int mmpcam_resume(struct platform_device *pdev)
->
->  #endif
->
-> +static const struct of_device_id mmpcam_of_match[] = {
-> +	{ .compatible = "marvell,mmp2-ccic", },
-> +	{},
-> +};
->
->  static struct platform_driver mmpcam_driver = {
->  	.probe		= mmpcam_probe,
-> @@ -485,6 +502,7 @@ static struct platform_driver mmpcam_driver = {
->  #endif
->  	.driver = {
->  		.name	= "mmp-camera",
-> +		.of_match_table = of_match_ptr(mmpcam_of_match),
->  	}
->  };
->
-> --
-> 2.21.0
->
+> Also, I'd like to have Kees's view on the gap between REFCOUNT_FULL
+> and the fast version on arm64. I'm not convinced the cases we are not
+> covering are such a big deal.
 
---afhe6fv3nxwqv4st
-Content-Type: application/pgp-signature; name="signature.asc"
+Fair enough, but if the conclusion is that it's not a big deal then we
+should just remove REFCOUNT_FULL altogether, because it's the choice that
+is the problem here.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0DeWsACgkQcjQGjxah
-VjyN0w//eJaACnLIgd74jgfWMgGJrJO2ESYgEtFE/sPAVC2bg9CM93nN3/ucTwcd
-EM0efN3gDbUiL3pBvVD9Nqlpqd9CZOjZJxKT2bPSJvsTNG+zXgaf1Iu1imj4kPEw
-zfBr37DzBb5ldvcMv/VgOef4K0OtQIvXTZ2IxndL5jjj9n0qtTnWtMkIxwprRtjR
-2sX+quTJcKJqGQHx6thTM4TPIvgFCaSHpq/ivsKRTF9PnC9S7ij82GDKG8F/HJoi
-xCaLdbEw1SE+CYz65L2ze6TttX+YeWHfZT1ciLTmbE3f0idr897PaRL0Bo9mhc/x
-SOCv0VyxuOhNwO1lMfKiXwWuEnjmIyo6tv4tcFn8Az48YbTjYacEsiRwcPLrSV2/
-AX0N/zISxiPeOvESiNFZzRfhj4nx30DjMTVR0jRFWi2HtzbXBlcTBkH547yI7WlR
-Wir1fstvC3aY7AXeFlZ6efJNPsRgHRojaSbQoFGfebMgw00aust2fOAkJS4opEda
-e0OvH4IY0wgX6tJKauv2M/RNqhzmjPybtgcfwHYjktNjaaP5Rt8MxfeBRCHDMGxF
-FjxEEnzQMX4KIJSk86V24qbcEUehSkbkcy2yySKvRTsqules6CNeEVaLtRZtnr1L
-5es8YRDqM+q0IW7Obbf40CC9DNqkgGrWrjV7EviNStJ/2T7cQQc=
-=Dnfz
------END PGP SIGNATURE-----
-
---afhe6fv3nxwqv4st--
+Will
