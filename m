@@ -2,98 +2,94 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055F9C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD73C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF798208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:15:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="MwtAFV5y"
+	by mail.kernel.org (Postfix) with ESMTP id 4E20C208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:16:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbfFNMPp (ORCPT
+        id S1727817AbfFNMQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:15:45 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44723 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbfFNMPm (ORCPT
+        Fri, 14 Jun 2019 08:16:05 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:37706 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727573AbfFNMQF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:15:42 -0400
-Received: by mail-qk1-f195.google.com with SMTP id p144so1461713qke.11
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 05:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NyPPbZhNfqDmfzBJP+Zyu4+7by3zecVFnafl9bsTygQ=;
-        b=MwtAFV5yKDZjuENka2cZ5Jk7AlcHqmJVvy0inE9n2UrHXv6Yj8vPyzIczqRRsPQB27
-         BXZNXoSJ2asYEv3DXU1qY1m8POHEK2cReZLmvV9kMpkk91hs9Vc0TXy9slEzlW9pJTqq
-         wYCQXJcJCzP7MLDmYZmoG+lIP5lo7ndpiazZx78N76/6QelZ8XrgRTgM1yZ4tLP41Xgf
-         dwAKdY8Qi5IZhJxvLiYYSqAnBTNJ3KiUU0r6bPbzaxmVkLxiZgFT6DHx8/jm7J1zAC/S
-         Lov76Ss/4eSiZYZBiWTtqVxluPsPVup5ZjZbQs+Sp5IG4CdrCrILC0OPRiH5mxo+Udxq
-         VpbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NyPPbZhNfqDmfzBJP+Zyu4+7by3zecVFnafl9bsTygQ=;
-        b=ht3y7c/ecWaBgkvlTed6SeXZ+HBnVOQuct53de3DE8IrWmQt0+ZFXX9tNyjtRX8fxe
-         Xtp6rixikJ0bRiPLo3xJVKivtRPdiH6u8MpoM6dofHbRniwVfhdT7mvkAO9FSbvWoxU/
-         HSLxYSDPtSU++bW8EhxWAIjEEHiLmoZRmn4FyAbSWJDlfR2u/Yi1jv6ebY1tu3Tr3dG6
-         2q2HnF8fAAYZJFSC4jVkGeM163d66llyis+uqbOuQ24f96L+R++K43Z7sihGPCXQIxqr
-         dX9EwFl243rUV9L5/M2WBs4aVeJunXyn+EYXtkPKMLmdRZXAuqT406aRM7bYxXAaBwyl
-         /5kA==
-X-Gm-Message-State: APjAAAWkI+VQbJMQ3C8OPDlQRn3M7WRSjEMf6EJHATBlIfGt4ssBUtgR
-        pz+oqi7CZQAsdUkV45eU/Htw2w==
-X-Google-Smtp-Source: APXvYqySndvqdRYK4kC/2Q6riAnaWd2ljn8NHp1bqjNlFAW1l2MJtgQLIQJYpItdU3dRO8CgSWdUEw==
-X-Received: by 2002:a37:be41:: with SMTP id o62mr64866623qkf.356.1560514541702;
-        Fri, 14 Jun 2019 05:15:41 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id y6sm1334495qki.67.2019.06.14.05.15.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 05:15:41 -0700 (PDT)
-Message-ID: <1560514539.5154.20.camel@lca.pw>
-Subject: Re: LTP hugemmap05 test case failure on arm64 with linux-next
- (next-20190613)
-From:   Qian Cai <cai@lca.pw>
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Fri, 14 Jun 2019 08:15:39 -0400
-In-Reply-To: <20190614102017.GC10659@fuggles.cambridge.arm.com>
-References: <1560461641.5154.19.camel@lca.pw>
-         <20190614102017.GC10659@fuggles.cambridge.arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 14 Jun 2019 08:16:05 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hbl7g-0002bC-Mi; Fri, 14 Jun 2019 14:16:00 +0200
+Date:   Fri, 14 Jun 2019 14:16:00 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+cc:     Arnd Bergmann <arnd@arndb.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>
+Subject: Re: [PATCH v6 00/19] Unify vDSOs across more architectures
+In-Reply-To: <d96667d5-e43b-d33a-fbd0-5acfb4904316@arm.com>
+Message-ID: <alpine.DEB.2.21.1906141413070.1722@nanos.tec.linutronix.de>
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com> <CAK8P3a11DE0sXteZoaP_N=mDhx3tXitGKddn1ogtFqJBYO-SCA@mail.gmail.com> <d96667d5-e43b-d33a-fbd0-5acfb4904316@arm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-14 at 11:20 +0100, Will Deacon wrote:
-> Hi Qian,
-> 
-> On Thu, Jun 13, 2019 at 05:34:01PM -0400, Qian Cai wrote:
-> > LTP hugemmap05 test case [1] could not exit itself properly and then degrade
-> > the
-> > system performance on arm64 with linux-next (next-20190613). The bisection
-> > so
-> > far indicates,
+On Tue, 4 Jun 2019, Vincenzo Frascino wrote:
+> On 31/05/2019 09:46, Arnd Bergmann wrote:
+> > One open question I touched in my review is whether we want to
+> > have a vdso version of clock_getres() in all architectures or not.
+> > I'd prefer to leave it out because there is very little advantage to
+> > it over the system call (the results don't change at runtime and
+> > can easily be cached by libc if performance ever matters), and
+> > it takes up a small amount of memory for the implementation.
 > > 
-> > BAD:  30bafbc357f1 Merge remote-tracking branch 'arm64/for-next/core'
-> > GOOD: 0c3d124a3043 Merge remote-tracking branch 'arm64-fixes/for-next/fixes'
 > 
-> Did you finish the bisection in the end? Also, what config are you using
-> (you usually have something fairly esoteric ;)?
+> I thought about it and I ended up with what proposed in this patchset mainly for
+> symmetry across all the architectures since in the end they use the same common
+> code.
+> 
+> It seems also that there is some performance impact (i.e.):
+> 
+> clock-getres-monotonic:    libc(system call): 296 nsec/call
+> clock-getres-monotonic:    libc(vdso): 5 nsec/call
 
-No, it is still running.
+clock_getres() is usually not a hot path operation.
 
-https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config
+> I agree with you though when you say that caching it in the libc is a
+> possibility to overcome the performance impact.
+> 
+> > We shouldn't just need it for consistency because all callers
+> > would require implementing a fallback to the system call
+> > anyway, to deal with old kernels.
+
+libc has the fallback already. Let's aim for 1:1 replacement of the
+architecture code first and then add the extra bits in separate patches.
+
+Thanks,
+
+	tglx
