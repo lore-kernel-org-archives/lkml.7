@@ -2,128 +2,109 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2FEC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1019C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4638D2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:24:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OmQBp9cd"
+	by mail.kernel.org (Postfix) with ESMTP id 8F1762133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:24:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbfFNNYE (ORCPT
+        id S1728094AbfFNNYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:24:04 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39856 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbfFNNYE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:24:04 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x4so2536815wrt.6
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:24:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tWjSiEtdMO12OoUCtL1vHglcHoug/gXBV+OlmolHQRY=;
-        b=OmQBp9cdMxiYMKC7DBZXYCLvxIKQrlLPcAjj/mfYJ1TovAdeKZLYNKY8Nf5g7JfmNm
-         H7ynExTFF9qmk5kYuZUrLMFID0DF5jXarU9D9C2Iw7EKKiunk/dv397VC868NTGR7iET
-         rUF7f7HF4Jf09qDukf7bvCLtD49gFKXRtoueEFc9L1+hGSetQizBACUs1NAfBgIWPhzF
-         N/8nuqMafjmaz0F7lB9pcwVGpI+viPDDCg+dHG2WSQc1VLOUPOrsvfxqSO8OhXqnsUh2
-         6nTy7xTKzd+PFd4PXJv3B4h6APUyN06f8/kkpkPoCNikj16bknsyrhp7YRDqTId2kKBi
-         yXMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tWjSiEtdMO12OoUCtL1vHglcHoug/gXBV+OlmolHQRY=;
-        b=M69J6SxjwIVCGlLoGn5GukulMnFAANcKCuQct6knvZtV9fMUX80Nzk/xO6q7e7yu9T
-         GZ6712bCY4HtiaTSpx3puFgsgqs6m8cFeoQRhimqzkQrnKwQ6yenlfkPJ1bX798qlpXf
-         EEhacLWoKu6EbtrXY5w982MCepepooJ80Pqs51hmgiCfmDj0DwbWEe5MCj73rM2wvdca
-         tN/REvwrhjpr1EFgLSSj6jyIhN8weOnB+vSOnx28zo74ApCicbJUxKvDPFZdmlouGqqT
-         UljqPMNJigOZ6I305hmc92WlQjyEvfT4G/rDPx4IBygff7HVX3bLg49pz0yQVoidX06G
-         iDPg==
-X-Gm-Message-State: APjAAAWruizCi8fRVC3M4XGS6ZNphCjdNQqzWRA8Q6TmTqh962XL4008
-        HfQESqa38JSrsInLvEZ+FXwnuuJmTwEQ6f2fM6kP
-X-Google-Smtp-Source: APXvYqzXlvfKtJ/LoBOlv3ZXoIzEEDMUzxMsdNZbc6a7gE9y3XvfZal6S/12iZGSKWEeg9fpflU8nW9EOJ/nkdzwz1E=
-X-Received: by 2002:adf:9d81:: with SMTP id p1mr15138460wre.294.1560518642613;
- Fri, 14 Jun 2019 06:24:02 -0700 (PDT)
+        Fri, 14 Jun 2019 09:24:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40634 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727729AbfFNNYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:24:37 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E82FD31628E1;
+        Fri, 14 Jun 2019 13:24:31 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (dhcp-192-180.str.redhat.com [10.33.192.180])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 918A339C3;
+        Fri, 14 Jun 2019 13:24:25 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v10)
+References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com>
+        <802638054.3032.1560506584705.JavaMail.zimbra@efficios.com>
+        <87ftocwkei.fsf@oldenburg2.str.redhat.com>
+        <1635690189.3049.1560507249693.JavaMail.zimbra@efficios.com>
+        <87tvcsv1pk.fsf@oldenburg2.str.redhat.com>
+        <1190407525.3131.1560516910936.JavaMail.zimbra@efficios.com>
+        <1085273942.3137.1560517301721.JavaMail.zimbra@efficios.com>
+        <87d0jguxdk.fsf@oldenburg2.str.redhat.com>
+        <1779359826.3226.1560518318701.JavaMail.zimbra@efficios.com>
+Date:   Fri, 14 Jun 2019 15:24:24 +0200
+In-Reply-To: <1779359826.3226.1560518318701.JavaMail.zimbra@efficios.com>
+        (Mathieu Desnoyers's message of "Fri, 14 Jun 2019 09:18:38 -0400
+        (EDT)")
+Message-ID: <87wohoti47.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-References: <1560507893-42553-1-git-send-email-john.garry@huawei.com> <CAErSpo6jRVDaVvH+9XvzUoEUbHi9_6u+5PcVGVDAmre6Qd0WeQ@mail.gmail.com>
-In-Reply-To: <CAErSpo6jRVDaVvH+9XvzUoEUbHi9_6u+5PcVGVDAmre6Qd0WeQ@mail.gmail.com>
-From:   Bjorn Helgaas <bhelgaas@google.com>
-Date:   Fri, 14 Jun 2019 08:23:51 -0500
-Message-ID: <CAErSpo6qaMc1O7vgcuCwdDbe4QBcOw83wd7PbuUVS+7GDPgK9Q@mail.gmail.com>
-Subject: Re: [PATCH v2] bus: hisi_lpc: Don't use devm_kzalloc() to allocate
- logical PIO range
-To:     John Garry <john.garry@huawei.com>
-Cc:     xuwei5@huawei.com, linuxarm@huawei.com, arm@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>,
-        "zhichang.yuan" <zhichang.yuan02@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 14 Jun 2019 13:24:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[try another address for Zhichang; first one bounced]
+* Mathieu Desnoyers:
 
-On Fri, Jun 14, 2019 at 8:20 AM Bjorn Helgaas <bhelgaas@google.com> wrote:
+> ----- On Jun 14, 2019, at 3:09 PM, Florian Weimer fweimer@redhat.com wrote:
 >
-> [+cc Zhichang, logic_pio author]
+>> * Mathieu Desnoyers:
+>> 
+>>> But my original issue remains: if I define a variable called __rseq_handled
+>>> within either the main executable or the preloaded library, it overshadows
+>>> the libc one:
+>>>
+>>> efficios@compudjdev:~/test/libc-sym$ ./a
+>>> __rseq_handled main: 0 0x56135fd5102c
+>>> __rseq_abi.cpu_id main: 29 0x7fcbeca6d5a0
+>>> efficios@compudjdev:~/test/libc-sym$ LD_PRELOAD=./s.so ./a
+>>> __rseq_handled s.so: 0 0x558f70aeb02c
+>>> __rseq_abi.cpu_id s.so: -1 0x7fdca78b7760
+>>> __rseq_handled main: 0 0x558f70aeb02c
+>>> __rseq_abi.cpu_id main: 27 0x7fdca78b7760
+>>>
+>>> Which is unexpected.
+>> 
+>> Why is this unexpected?  It has to be this way if the main program uses
+>> a copy relocation of __rseq_handled.  As long as there is just one
+>> address across the entire program and ld.so initializes the copy of the
+>> variable that is actually used, everything will be fine.
 >
-> On Fri, Jun 14, 2019 at 5:26 AM John Garry <john.garry@huawei.com> wrote:
-> >
-> > If, after registering a logical PIO range, the driver probe later fails,
-> > the logical PIO range memory will be released automatically.
-> >
-> > This causes an issue, in that the logical PIO range is not unregistered
-> > (that is not supported) and the released range memory may be later
-> > referenced
-> >
-> > Allocate the logical PIO range with kzalloc() to avoid this potential
-> > issue.
-> >
-> > Fixes: adf38bb0b5956 ("HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings")
-> > Signed-off-by: John Garry <john.garry@huawei.com>
-> > ---
-> >
-> > Change to v1:
-> > - add comment, as advised by Joe Perches
-> >
-> > diff --git a/drivers/bus/hisi_lpc.c b/drivers/bus/hisi_lpc.c
-> > index 19d7b6ff2f17..5f0130a693fe 100644
-> > --- a/drivers/bus/hisi_lpc.c
-> > +++ b/drivers/bus/hisi_lpc.c
-> > @@ -599,7 +599,8 @@ static int hisi_lpc_probe(struct platform_device *pdev)
-> >         if (IS_ERR(lpcdev->membase))
-> >                 return PTR_ERR(lpcdev->membase);
-> >
-> > -       range = devm_kzalloc(dev, sizeof(*range), GFP_KERNEL);
-> > +       /* Logical PIO may reference 'range' memory even if the probe fails */
-> > +       range = kzalloc(sizeof(*range), GFP_KERNEL);
+> Here is a printout of the __rseq_handled address observed by ld.so, it
+> does not match:
 >
-> This doesn't feel like the correct way to fix this.  If the probe
-> fails, everything done by the probe should be undone, including the
-> allocation and registration of "range".  I don't know what the best
-> mechanism is, but I'm skeptical about this one.
->
-> >         if (!range)
-> >                 return -ENOMEM;
-> >
-> > @@ -610,6 +611,7 @@ static int hisi_lpc_probe(struct platform_device *pdev)
-> >         ret = logic_pio_register_range(range);
-> >         if (ret) {
-> >                 dev_err(dev, "register IO range failed (%d)!\n", ret);
-> > +               kfree(range);
-> >                 return ret;
-> >         }
-> >         lpcdev->io_host = range;
-> > --
-> > 2.17.1
-> >
+> LD_PRELOAD=./s.so ./a
+> elf: __rseq_handled addr: 7f501c98a140
+> __rseq_handled s.so: 0 0x55817a88d02c
+> __rseq_abi.cpu_id s.so: -1 0x7f501c983760
+> __rseq_handled main: 0 0x55817a88d02c
+> __rseq_abi.cpu_id main: 27 0x7f501c983760
+
+Where do you print the address?  Before or after the self-relocation of
+the dynamic loader?  The address is only correct after self-relocation.
+
+Thanks,
+Florian
