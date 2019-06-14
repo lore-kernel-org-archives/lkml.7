@@ -2,118 +2,144 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C22C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9750C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D39B420850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C81F20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:34:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EpsswAWp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfFNMcS (ORCPT
+        id S1727772AbfFNMey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:32:18 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45494 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727544AbfFNMcS (ORCPT
+        Fri, 14 Jun 2019 08:34:54 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38374 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbfFNMex (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:32:18 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5ECVgGK022932
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 08:32:16 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t49bxds3h-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 08:32:16 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Fri, 14 Jun 2019 13:32:14 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 14 Jun 2019 13:32:13 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5ECWCY448890010
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Jun 2019 12:32:12 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C47E42041;
-        Fri, 14 Jun 2019 12:32:12 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E20E94204D;
-        Fri, 14 Jun 2019 12:32:10 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 14 Jun 2019 12:32:10 +0000 (GMT)
-Date:   Fri, 14 Jun 2019 18:02:10 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Eiichi Tsukata <devel@etsukata.com>
-Cc:     rostedt@goodmis.org, mingo@redhat.com, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] tracing/uprobe: Fix obsolete comment on
- trace_uprobe_create()
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20190614074026.8045-1-devel@etsukata.com>
- <20190614074026.8045-2-devel@etsukata.com>
+        Fri, 14 Jun 2019 08:34:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8zcrmpxMTcFzomBktwD/Lbw3zoalWjEgM0thr5hfWlc=; b=EpsswAWp0F1OGy8+g+3HlkkvV
+        PEEF/0Ryd+wBb81VkRJhMpJBV2T1YpKPTmdooRQt3i1rDEQsM5KRBOsUjxx/LcWrpIORm/H709q+L
+        plNo/BT3PCfcGvIrVUvErYQAwEy3lejpzVkXP7rsE4pTup0+J4jAoZVAmg21RuesHiPDogfHvzBxo
+        AtmIEEfPhTWLfD3iBeOuparYVUWy8UmDrDwwPLPHW5JL4ujl1p+Ch9+Op504B6k76SRphjMkvGf8d
+        35jVdse6nQLxa0Vr4PGK6X0lPNdxWO+k0IDOOLdcIko2+Tn+PBgy7jsVyUR24DHaiZq3ZWgnOvF6e
+        uaiT3UQ+w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hblPg-0007iR-Vy; Fri, 14 Jun 2019 12:34:37 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BAE8520259523; Fri, 14 Jun 2019 14:34:35 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 14:34:35 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] perf/x86/intel: Use is_visible callback for default group
+Message-ID: <20190614123435.GM3436@hirez.programming.kicks-ass.net>
+References: <20190512155518.21468-1-jolsa@kernel.org>
+ <20190512155518.21468-10-jolsa@kernel.org>
+ <20190513093545.GM2623@hirez.programming.kicks-ass.net>
+ <20190524132152.GB26617@krava>
+ <20190614102017.GA4325@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190614074026.8045-2-devel@etsukata.com>
+In-Reply-To: <20190614102017.GA4325@krava>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19061412-0028-0000-0000-0000037A4B9F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061412-0029-0000-0000-0000243A4869
-Message-Id: <20190614123210.GB16523@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906140105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Eiichi Tsukata <devel@etsukata.com> [2019-06-14 16:40:26]:
-
-> Commit 0597c49c69d5 ("tracing/uprobes: Use dyn_event framework for
-> uprobe events") cleaned up the usage of trace_uprobe_create(), and the
-> function has been no longer used for removing uprobe/uretprobe.
+On Fri, Jun 14, 2019 at 12:20:17PM +0200, Jiri Olsa wrote:
+> On Fri, May 24, 2019 at 03:21:52PM +0200, Jiri Olsa wrote:
 > 
-
-Agree
-
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-
-> Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-> ---
->  kernel/trace/trace_uprobe.c | 2 --
->  1 file changed, 2 deletions(-)
+> SNIP
 > 
-> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> index 7dc8ee55cf84..7860e3f59fad 100644
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -426,8 +426,6 @@ static int register_trace_uprobe(struct trace_uprobe *tu)
->  /*
->   * Argument syntax:
->   *  - Add uprobe: p|r[:[GRP/]EVENT] PATH:OFFSET [FETCHARGS]
-> - *
-> - *  - Remove uprobe: -:[GRP/]EVENT
->   */
->  static int trace_uprobe_create(int argc, const char **argv)
->  {
-> -- 
-> 2.21.0
-> 
+> ping
 
--- 
-Thanks and Regards
-Srikar Dronamraju
+Well, it looks about right; but last time you asked if someone could
+test, and I've no idea. I don't think I have any testboxes that are
+affected by this stuff.
 
+I can just merge it I suppose, we'll see if anybody complains :-)
+
+> > ---
+> > It's preffered to use group's is_visible callback, so
+> > we do not need to use condition attribute assignment.
+> > 
+> > Cc: Stephane Eranian <eranian@google.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  arch/x86/events/intel/core.c | 15 ++++++++++++---
+> >  1 file changed, 12 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> > index 85afe7e98c7d..cfd61b71136d 100644
+> > --- a/arch/x86/events/intel/core.c
+> > +++ b/arch/x86/events/intel/core.c
+> > @@ -4386,7 +4386,7 @@ static DEVICE_ATTR(allow_tsx_force_abort, 0644,
+> >  
+> >  static struct attribute *intel_pmu_attrs[] = {
+> >  	&dev_attr_freeze_on_smi.attr,
+> > -	NULL, /* &dev_attr_allow_tsx_force_abort.attr.attr */
+> > +	&dev_attr_allow_tsx_force_abort.attr,
+> >  	NULL,
+> >  };
+> >  
+> > @@ -4414,6 +4414,15 @@ exra_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+> >  	return x86_pmu.version >= 2 ? attr->mode : 0;
+> >  }
+> >  
+> > +static umode_t
+> > +default_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+> > +{
+> > +	if (attr == &dev_attr_allow_tsx_force_abort.attr)
+> > +		return x86_pmu.flags & PMU_FL_TFA ? attr->mode : 0;
+> > +
+> > +	return attr->mode;
+> > +}
+> > +
+> >  static struct attribute_group group_events_td  = {
+> >  	.name = "events",
+> >  };
+> > @@ -4450,7 +4459,8 @@ static struct attribute_group group_format_extra_skl = {
+> >  };
+> >  
+> >  static struct attribute_group group_default = {
+> > -	.attrs = intel_pmu_attrs,
+> > +	.attrs      = intel_pmu_attrs,
+> > +	.is_visible = default_is_visible,
+> >  };
+> >  
+> >  static const struct attribute_group *attr_update[] = {
+> > @@ -4973,7 +4983,6 @@ __init int intel_pmu_init(void)
+> >  			x86_pmu.get_event_constraints = tfa_get_event_constraints;
+> >  			x86_pmu.enable_all = intel_tfa_pmu_enable_all;
+> >  			x86_pmu.commit_scheduling = intel_tfa_commit_scheduling;
+> > -			intel_pmu_attrs[1] = &dev_attr_allow_tsx_force_abort.attr;
+> >  		}
+> >  
+> >  		pr_cont("Skylake events, ");
+> > -- 
+> > 2.20.1
+> > 
