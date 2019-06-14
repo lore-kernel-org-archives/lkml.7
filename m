@@ -2,150 +2,133 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 087D8C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F27D4C31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC4CD2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAE052133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:40:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="dKcaYIc8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbfFNOjy (ORCPT
+        id S1728912AbfFNOk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:39:54 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:52451 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728374AbfFNOj1 (ORCPT
+        Fri, 14 Jun 2019 10:40:27 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:37211 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728210AbfFNOk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:39:27 -0400
-Received: from localhost.localdomain (aaubervilliers-681-1-81-150.w90-88.abo.wanadoo.fr [90.88.23.150])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id BC3AB24000E;
-        Fri, 14 Jun 2019 14:39:09 +0000 (UTC)
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH v6 0/5] HEVC/H.265 stateless support for V4L2 and Cedrus
-Date:   Fri, 14 Jun 2019 16:38:32 +0200
-Message-Id: <20190614143837.15605-1-paul.kocialkowski@bootlin.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 14 Jun 2019 10:40:26 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5EEeDX21735706
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 14 Jun 2019 07:40:13 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5EEeDX21735706
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1560523213;
+        bh=MTIomEjR0QGw2Y/B1esgMdBm8zLW2TjMINe9+/UbZw8=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=dKcaYIc8B3jJkXC26NehlU+BlKN/18Sn83o6rZT+Sgw0mA6B21TVcF3xeJu9xqNt2
+         LfszzEOdPOz2Ub7jkKtA1C9L1gPkForhBSv1j04JzzyHDnDovgEFpRASi9MagWMQ0R
+         OZpgbiqpQxXQu5CHeK/T6C3/blbi4xw3aZbhhjj6TYhKZtvjLQfOaEBTV6J2SoOw7B
+         2CtOKJrPTvdeZmo76nvX7VmG+oW3MGAD93Q8lSULAPl6tikwyaAEex6K95ibsGYFO2
+         nbKitfAqr+BrmYxOMPIMnkgM4PfThQdVM/ibfQJ2MDTJvVCcbY9yFQE8d4PaaJj80J
+         6noge/6ltFrFg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5EEeCAi1735701;
+        Fri, 14 Jun 2019 07:40:12 -0700
+Date:   Fri, 14 Jun 2019 07:40:12 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Andrey Ryabinin <tipbot@zytor.com>
+Message-ID: <tip-f3176ec9420de0c385023afa3e4970129444ac2f@git.kernel.org>
+Cc:     bp@alien8.de, linux-kernel@vger.kernel.org, mingo@kernel.org,
+        dvyukov@google.com, tglx@linutronix.de, kirill@shutemov.name,
+        stable@vger.kernel.org, aryabinin@virtuozzo.com, glider@google.com,
+        hpa@zytor.com
+Reply-To: hpa@zytor.com, glider@google.com, stable@vger.kernel.org,
+          aryabinin@virtuozzo.com, kirill@shutemov.name,
+          tglx@linutronix.de, mingo@kernel.org, dvyukov@google.com,
+          linux-kernel@vger.kernel.org, bp@alien8.de
+In-Reply-To: <20190614143149.2227-1-aryabinin@virtuozzo.com>
+References: <20190614143149.2227-1-aryabinin@virtuozzo.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/kasan: Fix boot with 5-level paging and KASAN
+Git-Commit-ID: f3176ec9420de0c385023afa3e4970129444ac2f
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is early support for HEVC/H.265 stateless decoding in V4L2,
-including both definitions and driver support for the Cedrus VPU
-driver, which concerns Allwinner devices.
+Commit-ID:  f3176ec9420de0c385023afa3e4970129444ac2f
+Gitweb:     https://git.kernel.org/tip/f3176ec9420de0c385023afa3e4970129444ac2f
+Author:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+AuthorDate: Fri, 14 Jun 2019 17:31:49 +0300
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Fri, 14 Jun 2019 16:37:30 +0200
 
-A specific pixel format is introduced for the HEVC slice format and
-controls are provided to pass the bitstream metadata to the decoder.
-Some bitstream extensions are intentionally not supported at this point.
+x86/kasan: Fix boot with 5-level paging and KASAN
 
-Since this is the first proposal for stateless HEVC/H.265 support in
-V4L2, reviews and comments about the controls definitions are
-particularly welcome.
+Since commit d52888aa2753 ("x86/mm: Move LDT remap out of KASLR region on
+5-level paging") kernel doesn't boot with KASAN on 5-level paging machines.
+The bug is actually in early_p4d_offset() and introduced by commit
+12a8cc7fcf54 ("x86/kasan: Use the same shadow offset for 4- and 5-level paging")
 
-On the Cedrus side, the H.265 implementation covers frame pictures
-with both uni-directional and bi-direction prediction modes (P/B
-slices). Field pictures (interleaved), scaling lists and 10-bit output
-are not supported at this point.
+early_p4d_offset() tries to convert pgd_val(*pgd) value to a physical
+address. This doesn't make sense because pgd_val() already contains the
+physical address.
 
-This series is based upon the following series:
-* media: cedrus: Add H264 decoding support
+It did work prior to commit d52888aa2753 because the result of
+"__pa_nodebug(pgd_val(*pgd)) & PTE_PFN_MASK" was the same as "pgd_val(*pgd)
+& PTE_PFN_MASK". __pa_nodebug() just set some high bits which were masked
+out by applying PTE_PFN_MASK.
 
-Changes since v5:
-* Rebased atop latest next media tree;
-* Moved to flags instead of u8 fields;
-* Added padding to ensure 64-bit alignment
-  (tested with GDB on 32 and 64-bit architectures);
-* Reworked cedrus H.265 driver support a bit for flags;
-* Split off codec-specific control validation and init;
-* Added HEVC controls fields cleanup at std_validate to allow reliable
-  control comparison with memcmp;
-* Fixed various misc reported mistakes.
+After the change of the PAGE_OFFSET offset in commit d52888aa2753
+__pa_nodebug(pgd_val(*pgd)) started to return a value with more high bits
+set and PTE_PFN_MASK wasn't enough to mask out all of them. So it returns a
+wrong not even canonical address and crashes on the attempt to dereference
+it.
 
-Changes since v4:
-* Rebased atop latest H.254 series.
+Switch back to pgd_val() & PTE_PFN_MASK to cure the issue.
 
-Changes since v3:
-* Updated commit messages;
-* Updated CID base to avoid conflicts;
-* Used cpu_to_le32 for packed le32 data;
-* Fixed misc minor issues in the drive code;
-* Made it clear in the docs that the API will evolve;
-* Made the pixfmt private and split commits about it.
+Fixes: 12a8cc7fcf54 ("x86/kasan: Use the same shadow offset for 4- and 5-level paging")
+Reported-by: Kirill A. Shutemov <kirill@shutemov.name>
+Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: kasan-dev@googlegroups.com
+Cc: stable@vger.kernel.org
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20190614143149.2227-1-aryabinin@virtuozzo.com
 
-Changes since v2:
-* Moved headers to non-public API;
-* Added H265 capability for A64 and H5;
-* Moved docs to ext-ctrls-codec.rst;
-* Mentionned sections of the spec in the docs;
-* Added padding to control structures for 32-bit alignment;
-* Made write function use void/size in bytes;
-* Reduced the number of arguments to helpers when possible;
-* Removed PHYS_OFFSET since we already set PFN_OFFSET;
-* Added comments where suggested;
-* Moved to timestamp for references instead of index;
-* Fixed some style issues reported by checkpatch.
+---
+ arch/x86/mm/kasan_init_64.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes since v1:
-* Added a H.265 capability to whitelist relevant platforms;
-* Switched over to tags instead of buffer indices in the DPB
-* Declared variable in their reduced scope as suggested;
-* Added the H.265/HEVC spec to the biblio;
-* Used in-doc references to the spec and the required APIs;
-* Removed debugging leftovers.
-
-Cheers!
-
-Paul Kocialkowski (5):
-  media: v4l2-ctrls: Split off MPEG-2 controls validation
-  media: v4l2-ctrls: Split off MPEG-2 controls initialization
-  media: v4l: Add definitions for the HEVC slice controls
-  media: pixfmt: Document the HEVC slice pixel format
-  media: cedrus: Add HEVC/H.265 decoding support
-
- Documentation/media/uapi/v4l/biblio.rst       |   9 +
- .../media/uapi/v4l/ext-ctrls-codec.rst        | 474 +++++++++++++-
- .../media/uapi/v4l/pixfmt-compressed.rst      |  21 +
- .../media/uapi/v4l/vidioc-queryctrl.rst       |  18 +
- .../media/videodev2.h.rst.exceptions          |   3 +
- drivers/media/v4l2-core/v4l2-ctrls.c          | 231 +++++--
- drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
- drivers/staging/media/sunxi/cedrus/Makefile   |   2 +-
- drivers/staging/media/sunxi/cedrus/cedrus.c   |  31 +-
- drivers/staging/media/sunxi/cedrus/cedrus.h   |  18 +
- .../staging/media/sunxi/cedrus/cedrus_dec.c   |   9 +
- .../staging/media/sunxi/cedrus/cedrus_h265.c  | 616 ++++++++++++++++++
- .../staging/media/sunxi/cedrus/cedrus_hw.c    |   4 +
- .../staging/media/sunxi/cedrus/cedrus_regs.h  | 271 ++++++++
- .../staging/media/sunxi/cedrus/cedrus_video.c |  10 +
- include/media/hevc-ctrls.h                    | 197 ++++++
- include/media/v4l2-ctrls.h                    |   7 +
- 17 files changed, 1860 insertions(+), 62 deletions(-)
- create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_h265.c
- create mode 100644 include/media/hevc-ctrls.h
-
--- 
-2.21.0
-
+diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
+index 8dc0fc0b1382..296da58f3013 100644
+--- a/arch/x86/mm/kasan_init_64.c
++++ b/arch/x86/mm/kasan_init_64.c
+@@ -199,7 +199,7 @@ static inline p4d_t *early_p4d_offset(pgd_t *pgd, unsigned long addr)
+ 	if (!pgtable_l5_enabled())
+ 		return (p4d_t *)pgd;
+ 
+-	p4d = __pa_nodebug(pgd_val(*pgd)) & PTE_PFN_MASK;
++	p4d = pgd_val(*pgd) & PTE_PFN_MASK;
+ 	p4d += __START_KERNEL_map - phys_base;
+ 	return (p4d_t *)p4d + p4d_index(addr);
+ }
