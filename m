@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5ABC31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A96C31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F038321537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C2021537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560477921;
-	bh=v011GIG/t5ZaXvEx9NySWNY2NJf/f+duYj9J8PZo/Xk=;
+	s=default; t=1560477926;
+	bh=9hWFtFJP1Qf+CQwCwYPXVeipfvjeqFybNbfoQK5Nuho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oUmyE6YZIzjGtPro/JOZqHqbyFh6lCvmdztbJFw/y7yTI4NbDdAivax6tsfIjaY4V
-	 h2U9gTGQ59QvHMvQBDSg3IftzeyeLbYvTT1aWGhgaDgGYfR7QCxQUIHsGvocxDheNS
-	 JHEKPIf4mrQha5SceoZ/JKUbwzUW1VyTmgHhTcz4=
+	b=Wo/2JNdu+wJcpWAjtQzr+YbIaxIA4Ld5ELeMV6bd0OyKAmzsgTl0rP6xQXZ6L8N+F
+	 YcDFgdMpzh+QBa7dkNaPQhWd00zBZChUkt887rtrf7JF8qzlXwqCDC6ehYzJacggYU
+	 0uru1ORYiPwD+3Q3Audu1C5YWsb/arOZtTbmx7zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfFNCFT (ORCPT
+        id S1727493AbfFNCFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 22:05:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52872 "EHLO
+        Thu, 13 Jun 2019 22:05:24 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52862 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfFNCE2 (ORCPT
+        with ESMTP id S1726283AbfFNCE2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 13 Jun 2019 22:04:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,18 +34,18 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Or9XljXz69uTGyYQPRz8jwIVQ5PR6SHB3PqwsHFkAuc=; b=hQptfnFMawDH+MQx/kN9cjVWM9
-        BQufiKlbiZdiN98dH4niY5ZYN39Wth2Rva9nq4mGtqNRxi+2rFRuGoajAtIeaUEvhh4EXD/H21gIq
-        jrQaHB2ObPqXOlmFrz34M/paBh53kjNMOVYIm+OCK3an7k7nj28h1NlNr/DIu8+KR4hfKlUcKd2/D
-        Zbfa9ssHcC+uydeWUdNCiZfE/PzPGrVxN79sYKtOKv0HninHvDYeQr25SIn35B5StGapaeTK+Buzt
-        7w8MnS8QtUjZo/HJaoqMc/hWjEGRz2RKL9AdmPsRp6WoCL6DrFPut+GyoX8pqdSjpH3jM8pLCVE2+
-        WXFURwKw==;
+        bh=dNrIccKnV6SyCCvCWjjZHRIxHwGzsNAFrwoB2MJ2zQE=; b=CE+V2O43jQjdUOo+U3ubgE8uf4
+        Xv7UR8ytZKtx7ilwxBD+eIgpDJ+8kfXvFkt2BOulgkjHgQlz2+sfMH2Eq8ou1QZuCfD0FgRvIyc6h
+        eDZtKGVelIclGs9tc+bfTfc2AaGuTTOy5gLwYiKatXcu8yMQKT1UYWVnaR15vehiEUP72o0tCVsVM
+        auZ5msDB828mTy+IP4k0eTWSmGudnkz0IPQQzCuKpTCORmLzApTHzlHJz3LCG5O8b5dV2VVMv3KzU
+        1FfXODejCdvHea6GBEJs5wCwLQnvBnjUS4+WVzroLxDS9+78tynfwfsflu84LY/XALf0k0ZIiulYx
+        bN88agBg==;
 Received: from 201.86.169.251.dynamic.adsl.gvt.net.br ([201.86.169.251] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbbZr-0000EE-Dv; Fri, 14 Jun 2019 02:04:27 +0000
+        id 1hbbZr-0000E5-D1; Fri, 14 Jun 2019 02:04:27 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hbbZo-0002oG-0A; Thu, 13 Jun 2019 23:04:24 -0300
+        id 1hbbZn-0002no-QM; Thu, 13 Jun 2019 23:04:23 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -53,9 +53,9 @@ Cc:     Mauro Carvalho Chehab <mchehab@s-opensource.com>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 12/14] doc-rst: add ABI documentation to the admin-guide book
-Date:   Thu, 13 Jun 2019 23:04:18 -0300
-Message-Id: <9da2a7f6ff57d9d53dcbb964eb310f7956522870.1560477540.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 05/14] scripts: add an script to parse the ABI files
+Date:   Thu, 13 Jun 2019 23:04:11 -0300
+Message-Id: <196fb3c497546f923bf5d156c3fddbe74a4913bc.1560477540.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560477540.git.mchehab+samsung@kernel.org>
 References: <cover.1560477540.git.mchehab+samsung@kernel.org>
@@ -68,305 +68,238 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 
-As we don't want a generic Sphinx extension to execute commands,
-change the one proposed to Markus to call the abi_book.pl
-script.
+Add a script to parse the Documentation/ABI files and produce
+an output with all entries inside an ABI (sub)directory.
 
-Use a script to parse the Documentation/ABI directory and output
-it at the admin-guide.
+Right now, it outputs its contents on ReST format. It shouldn't
+be hard to make it produce other kind of outputs, since the ABI
+file parser is implemented in separate than the output generator.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/admin-guide/abi-obsolete.rst |  10 ++
- Documentation/admin-guide/abi-removed.rst  |   4 +
- Documentation/admin-guide/abi-stable.rst   |  13 ++
- Documentation/admin-guide/abi-testing.rst  |  19 +++
- Documentation/admin-guide/abi.rst          |  11 ++
- Documentation/admin-guide/index.rst        |   1 +
- Documentation/conf.py                      |   2 +-
- Documentation/sphinx/kernel_abi.py         | 155 +++++++++++++++++++++
- 8 files changed, 214 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/admin-guide/abi-obsolete.rst
- create mode 100644 Documentation/admin-guide/abi-removed.rst
- create mode 100644 Documentation/admin-guide/abi-stable.rst
- create mode 100644 Documentation/admin-guide/abi-testing.rst
- create mode 100644 Documentation/admin-guide/abi.rst
- create mode 100644 Documentation/sphinx/kernel_abi.py
+ scripts/get_abi.pl | 212 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 212 insertions(+)
+ create mode 100755 scripts/get_abi.pl
 
-diff --git a/Documentation/admin-guide/abi-obsolete.rst b/Documentation/admin-guide/abi-obsolete.rst
-new file mode 100644
-index 000000000000..cda9168445a5
+diff --git a/scripts/get_abi.pl b/scripts/get_abi.pl
+new file mode 100755
+index 000000000000..f7c9944a833c
 --- /dev/null
-+++ b/Documentation/admin-guide/abi-obsolete.rst
-@@ -0,0 +1,10 @@
-+ABI obsolete symbols
-+====================
++++ b/scripts/get_abi.pl
+@@ -0,0 +1,212 @@
++#!/usr/bin/perl
 +
-+Documents interfaces that are still remaining in the kernel, but are
-+marked to be removed at some later point in time.
++use strict;
++use Pod::Usage;
++use Getopt::Long;
++use File::Find;
++use Fcntl ':mode';
 +
-+The description of the interface will document the reason why it is
-+obsolete and when it can be expected to be removed.
++my $help;
++my $man;
++my $debug;
 +
-+.. kernel-abi:: $srctree/Documentation/ABI/obsolete
-diff --git a/Documentation/admin-guide/abi-removed.rst b/Documentation/admin-guide/abi-removed.rst
-new file mode 100644
-index 000000000000..497978fc9632
---- /dev/null
-+++ b/Documentation/admin-guide/abi-removed.rst
-@@ -0,0 +1,4 @@
-+ABI removed symbols
-+===================
++GetOptions(
++	"debug|d+" => \$debug,
++	'help|?' => \$help,
++	man => \$man
++) or pod2usage(2);
 +
-+.. kernel-abi:: $srctree/Documentation/ABI/removed
-diff --git a/Documentation/admin-guide/abi-stable.rst b/Documentation/admin-guide/abi-stable.rst
-new file mode 100644
-index 000000000000..7495d7a35048
---- /dev/null
-+++ b/Documentation/admin-guide/abi-stable.rst
-@@ -0,0 +1,13 @@
-+ABI stable symbols
-+==================
++pod2usage(1) if $help;
++pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 +
-+Documents the interfaces that the developer has defined to be stable.
++pod2usage(2) if (scalar @ARGV != 1);
 +
-+Userspace programs are free to use these interfaces with no
-+restrictions, and backward compatibility for them will be guaranteed
-+for at least 2 years.
++my ($prefix) = @ARGV;
 +
-+Most interfaces (like syscalls) are expected to never change and always
-+be available.
++require Data::Dumper if ($debug);
 +
-+.. kernel-abi:: $srctree/Documentation/ABI/stable
-diff --git a/Documentation/admin-guide/abi-testing.rst b/Documentation/admin-guide/abi-testing.rst
-new file mode 100644
-index 000000000000..5c886fc50b9e
---- /dev/null
-+++ b/Documentation/admin-guide/abi-testing.rst
-@@ -0,0 +1,19 @@
-+ABI testing symbols
-+===================
++my %data;
 +
-+Documents interfaces that are felt to be stable,
-+as the main development of this interface has been completed.
++#
++# Displays an error message, printing file name and line
++#
++sub parse_error($$$$) {
++	my ($file, $ln, $msg, $data) = @_;
 +
-+The interface can be changed to add new features, but the
-+current interface will not break by doing this, unless grave
-+errors or security problems are found in them.
++	print STDERR "file $file#$ln: $msg at\n\t$data";
++}
 +
-+Userspace programs can start to rely on these interfaces, but they must
-+be aware of changes that can occur before these interfaces move to
-+be marked stable.
++#
++# Parse an ABI file, storing its contents at %data
++#
++sub parse_abi {
++	my $file = $File::Find::name;
 +
-+Programs that use these interfaces are strongly encouraged to add their
-+name to the description of these interfaces, so that the kernel
-+developers can easily notify them if any changes occur.
++	my $mode = (stat($file))[2];
++	return if ($mode & S_IFDIR);
++	return if ($file =~ m,/README,);
 +
-+.. kernel-abi:: $srctree/Documentation/ABI/testing
-diff --git a/Documentation/admin-guide/abi.rst b/Documentation/admin-guide/abi.rst
-new file mode 100644
-index 000000000000..3b9645c77469
---- /dev/null
-+++ b/Documentation/admin-guide/abi.rst
-@@ -0,0 +1,11 @@
-+=====================
-+Linux ABI description
-+=====================
++	my $name = $file;
++	$name =~ s,.*/,,;
 +
-+.. toctree::
-+   :maxdepth: 1
++	my $type = $file;
++	$type =~ s,.*/(.*)/.*,$1,;
 +
-+   abi-stable
-+   abi-testing
-+   abi-obsolete
-+   abi-removed
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 8001917ee012..20c3020fd73c 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -16,6 +16,7 @@ etc.
-    README
-    kernel-parameters
-    devices
-+   abi
- 
- This section describes CPU vulnerabilities and their mitigations.
- 
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index 7ace3f8852bd..598256fb5c98 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -34,7 +34,7 @@ needs_sphinx = '1.3'
- # Add any Sphinx extension module names here, as strings. They can be
- # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
- # ones.
--extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain', 'kfigure', 'sphinx.ext.ifconfig']
-+extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain', 'kfigure', 'sphinx.ext.ifconfig', 'kernel_abi']
- 
- # The name of the math extension changed on Sphinx 1.4
- if (major == 1 and minor > 3) or (major > 1):
-diff --git a/Documentation/sphinx/kernel_abi.py b/Documentation/sphinx/kernel_abi.py
-new file mode 100644
-index 000000000000..32ce90775d96
---- /dev/null
-+++ b/Documentation/sphinx/kernel_abi.py
-@@ -0,0 +1,155 @@
-+# -*- coding: utf-8; mode: python -*-
-+u"""
-+    kernel-abi
-+    ~~~~~~~~~~
++	my $what;
++	my $new_what;
++	my $tag;
++	my $ln;
 +
-+    Implementation of the ``kernel-abi`` reST-directive.
++	print STDERR "Opening $file\n" if ($debug > 1);
++	open IN, $file;
++	while(<IN>) {
++		$ln++;
++		if (m/^(\S+):\s*(.*)/i) {
++			my $new_tag = lc($1);
++			my $content = $2;
 +
-+    :copyright:  Copyright (C) 2016  Markus Heiser
-+    :copyright:  Copyright (C) 2016  Mauro Carvalho Chehab
-+    :license:    GPL Version 2, June 1991 see Linux/COPYING for details.
++			if (!($new_tag =~ m/(what|date|kernelversion|contact|description|users)/)) {
++				if ($tag eq "description") {
++					$data{$what}->{$tag} .= "\n$content";;
++					$data{$what}->{$tag} =~ s/\n+$//;
++					next;
++				} else {
++					parse_error($file, $ln, "tag '$tag' is invalid", $_);
++				}
++			}
 +
-+    The ``kernel-abi`` (:py:class:`KernelCmd`) directive calls the
-+    scripts/get_abi.pl script to parse the Kernel ABI files.
++			if ($new_tag =~ m/what/) {
++				if ($tag =~ m/what/) {
++					$what .= ", " . $content;
++				} else {
++					$what = $content;
++					$new_what = 1;
++				}
++				$tag = $new_tag;
++				next;
++			}
 +
-+    Overview of directive's argument and options.
++			$tag = $new_tag;
 +
-+    .. code-block:: rst
++			if ($new_what) {
++				$new_what = 0;
 +
-+        .. kernel-abi:: <ABI directory location>
-+            :debug:
++				$data{$what}->{type} = $type;
++				$data{$what}->{file} = $name;
++				print STDERR "\twhat: $what\n" if ($debug > 1);
++			}
 +
-+    The argument ``<ABI directory location>`` is required. It contains the
-+    location of the ABI files to be parsed.
++			if (!$what) {
++				parse_error($file, $ln, "'What:' should come first:", $_);
++				next;
++			}
++			$data{$what}->{$tag} = $content;
++			next;
++		}
 +
-+    ``debug``
-+      Inserts a code-block with the *raw* reST. Sometimes it is helpful to see
-+      what reST is generated.
++		# Silently ignore any headers before the database
++		next if (!$tag);
 +
-+"""
++		if (m/^\s*(.*)/) {
++			$data{$what}->{$tag} .= "\n$1";
++			$data{$what}->{$tag} =~ s/\n+$//;
++			next;
++		}
 +
-+import sys
-+import os
-+from os import path
-+import subprocess
++		# Everything else is error
++		parse_error($file, $ln, "Unexpected line:", $_);
++	}
++	close IN;
++}
 +
-+from sphinx.ext.autodoc import AutodocReporter
++# Outputs the output on ReST format
++sub output_rest {
++	foreach my $what (sort keys %data) {
++		my $type = $data{$what}->{type};
++		my $file = $data{$what}->{file};
 +
-+from docutils import nodes
-+from docutils.parsers.rst import Directive, directives
-+from docutils.statemachine import ViewList
-+from docutils.utils.error_reporting import ErrorString
++		my $w = $what;
++		$w =~ s/([\(\)\_\-\*\=\^\~\\])/\\$1/g;
++
++		print "$w\n\n";
++		print "- defined on file $file (type: $type)\n\n::\n\n";
++
++		my $desc = $data{$what}->{description};
++		$desc =~ s/^\s+//;
++
++		# Remove title markups from the description, as they won't work
++		$desc =~ s/\n[\-\*\=\^\~]+\n/\n/g;
++
++		# put everything inside a code block
++		$desc =~ s/\n/\n /g;
 +
 +
-+__version__  = '1.0'
++		if (!($desc =~ /^\s*$/)) {
++			print " $desc\n\n";
++		} else {
++			print " DESCRIPTION MISSING\n\n";
++		}
++	}
++}
 +
-+# We can't assume that six is installed
-+PY3 = sys.version_info[0] == 3
-+PY2 = sys.version_info[0] == 2
-+if PY3:
-+    # pylint: disable=C0103, W0622
-+    unicode     = str
-+    basestring  = str
++#
++# Parses all ABI files located at $prefix dir
++#
++find({wanted =>\&parse_abi, no_chdir => 1}, $prefix);
 +
-+def setup(app):
++print STDERR Data::Dumper->Dump([\%data], [qw(*data)]) if ($debug);
 +
-+    app.add_directive("kernel-abi", KernelCmd)
-+    return dict(
-+        version = __version__
-+        , parallel_read_safe = True
-+        , parallel_write_safe = True
-+    )
++#
++# Outputs an ReST file with the ABI contents
++#
++output_rest
 +
-+class KernelCmd(Directive):
 +
-+    u"""KernelABI (``kernel-abi``) directive"""
++__END__
 +
-+    required_arguments = 1
-+    optional_arguments = 0
-+    has_content = False
-+    final_argument_whitespace = True
++=head1 NAME
 +
-+    option_spec = {
-+        "debug"     : directives.flag
-+    }
++abi_book.pl - parse the Linux ABI files and produce a ReST book.
 +
-+    def warn(self, message, **replace):
-+        replace["fname"]   = self.state.document.current_source
-+        replace["line_no"] = replace.get("line_no", self.lineno)
-+        message = ("%(fname)s:%(line_no)s: [kernel-abi WARN] : " + message) % replace
-+        self.state.document.settings.env.app.warn(message, prefix="")
++=head1 SYNOPSIS
 +
-+    def run(self):
++B<abi_book.pl> [--debug] <ABI_DIR>]
 +
-+        doc = self.state.document
-+        if not doc.settings.file_insertion_enabled:
-+            raise self.warning("docutils: file insertion disabled")
++=head1 OPTIONS
 +
-+        env = doc.settings.env
-+        cwd = path.dirname(doc.current_source)
-+        cmd = "get_abi.pl rest --dir "
-+        cmd += self.arguments[0]
++=over 8
 +
-+        srctree = path.abspath(os.environ["srctree"])
++=item B<--debug>
 +
-+        fname = cmd
++Put the script in verbose mode, useful for debugging. Can be called multiple
++times, to increase verbosity.
 +
-+        # extend PATH with $(srctree)/scripts
-+        path_env = os.pathsep.join([
-+            srctree + os.sep + "scripts",
-+            os.environ["PATH"]
-+        ])
-+        shell_env = os.environ.copy()
-+        shell_env["PATH"]    = path_env
-+        shell_env["srctree"] = srctree
++=item B<--help>
 +
-+        lines = self.runCmd(cmd, shell=True, cwd=cwd, env=shell_env)
-+        nodeList = self.nestedParse(lines, fname)
-+        return nodeList
++Prints a brief help message and exits.
 +
-+    def runCmd(self, cmd, **kwargs):
-+        u"""Run command ``cmd`` and return it's stdout as unicode."""
++=item B<--man>
 +
-+        try:
-+            proc = subprocess.Popen(
-+                cmd
-+                , stdout = subprocess.PIPE
-+                , stderr = subprocess.PIPE
-+                , universal_newlines = True
-+                , **kwargs
-+            )
-+            out, err = proc.communicate()
-+            if err:
-+                self.warn(err)
-+            if proc.returncode != 0:
-+                raise self.severe(
-+                    u"command '%s' failed with return code %d"
-+                    % (cmd, proc.returncode)
-+                )
-+        except OSError as exc:
-+            raise self.severe(u"problems with '%s' directive: %s."
-+                              % (self.name, ErrorString(exc)))
-+        return unicode(out)
++Prints the manual page and exits.
 +
-+    def nestedParse(self, lines, fname):
-+        content = ViewList()
-+        node    = nodes.section()
++=back
 +
-+        if "debug" in self.options:
-+            code_block = "\n\n.. code-block:: rst\n    :linenos:\n"
-+            for l in lines.split("\n"):
-+                code_block += "\n    " + l
-+            lines = code_block + "\n\n"
++=head1 DESCRIPTION
 +
-+        for c, l in enumerate(lines.split("\n")):
-+            content.append(l, fname, c)
++Parse the Linux ABI files from ABI DIR (usually located at Documentation/ABI)
++and produce a ReST book containing the Linux ABI.
 +
-+        buf  = self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter
-+        self.state.memo.title_styles  = []
-+        self.state.memo.section_level = 0
-+        self.state.memo.reporter      = AutodocReporter(content, self.state.memo.reporter)
-+        try:
-+            self.state.nested_parse(content, 0, node, match_titles=1)
-+        finally:
-+            self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter = buf
-+        return node.children
++=head1 BUGS
++
++Report bugs to Mauro Carvalho Chehab <mchehab@s-opensource.com>
++
++=head1 COPYRIGHT
++
++Copyright (c) 2016 by Mauro Carvalho Chehab <mchehab@s-opensource.com>.
++
++License GPLv2: GNU GPL version 2 <http://gnu.org/licenses/gpl.html>.
++
++This is free software: you are free to change and redistribute it.
++There is NO WARRANTY, to the extent permitted by law.
++
++=cut
 -- 
 2.21.0
 
