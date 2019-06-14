@@ -2,104 +2,88 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A70BC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB4EC31E4E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57922184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560547033;
-	bh=3qZBnSeXO8K4oYa3/N25KQYrBFfoH3IDbPh/Ayhnk1s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TtLjdMLW0rkBrcJJh1YqE/J5f8/ArzaZshlcXidB1fkepeM6OeClv057si5UMHQWy
-	 ZYoSSBQaEbB49MlcELNzo4NPl5+PErml2jlFEOegpUHfsTX1Z65Au6K1pFWkbIsvBY
-	 I7vNyZrHW7Ofv2OyE/waM0T7xvXP0je1r1FpR2M8=
+	by mail.kernel.org (Postfix) with ESMTP id 0C5BC2184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfFNVRL (ORCPT
+        id S1726984AbfFNVRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 17:17:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60176 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 17:17:17 -0400
+Received: from sauhun.de ([88.99.104.3]:57224 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726349AbfFNVRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 17:17:11 -0400
-Received: from localhost (unknown [131.107.159.134])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CEBA2184B;
-        Fri, 14 Jun 2019 21:17:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560547030;
-        bh=3qZBnSeXO8K4oYa3/N25KQYrBFfoH3IDbPh/Ayhnk1s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wSQKJ/fpvZ2VNMj+Ci4k6VkUSRmnCwxH0B3QSi4pAXHaafCyjkLk5Ay1FlTE8nu4t
-         G9JhtzPQKgDEUCIAmnZTe5zgfu4bvGevKrkwx5eb89dokUpJIBwpcuH1xlDk/nCpvt
-         xMI4C4u1OBkryDfNx63vmnnkfSFUTeuK+DAqJlh4=
-Date:   Fri, 14 Jun 2019 17:17:10 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>
-Subject: Re: [PATCH v6 18/19] x86: Add support for generic vDSO
-Message-ID: <20190614211710.GQ1513@sasha-vm>
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
- <20190530141531.43462-19-vincenzo.frascino@arm.com>
- <BYAPR21MB1221D54FCEC97509EEF7395CD7180@BYAPR21MB1221.namprd21.prod.outlook.com>
- <alpine.DEB.2.21.1906141313150.1722@nanos.tec.linutronix.de>
+        id S1725944AbfFNVRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 17:17:17 -0400
+Received: from localhost (p5486CF81.dip0.t-ipconnect.de [84.134.207.129])
+        by pokefinder.org (Postfix) with ESMTPSA id 620092CF690;
+        Fri, 14 Jun 2019 23:17:14 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 23:17:14 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     alokc@codeaurora.org, agross@kernel.org, david.brown@linaro.org,
+        wsa+renesas@sang-engineering.com, bjorn.andersson@linaro.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org,
+        ard.biesheuvel@linaro.org, jlhugo@gmail.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.or
+Subject: Re: [PATCH v4 1/6] i2c: i2c-qcom-geni: Provide support for ACPI
+Message-ID: <20190614211713.GH17899@ninjato>
+References: <20190612142654.9639-1-lee.jones@linaro.org>
+ <20190612142654.9639-2-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="k+G3HLlWI7eRTl+h"
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1906141313150.1722@nanos.tec.linutronix.de>
+In-Reply-To: <20190612142654.9639-2-lee.jones@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 01:15:23PM +0200, Thomas Gleixner wrote:
->On Thu, 30 May 2019, Michael Kelley wrote:
->> Vincenzo -- these changes for Hyper-V are a subset of a larger patch set
->> I have that moves all of the Hyper-V clock/timer code into a separate
->> clocksource driver in drivers/clocksource, with an include file in
->> includes/clocksource.  That new include file should be able to work
->> instead of your new mshyperv-tsc.h.  It also has the benefit of being
->> ISA neutral, so it will work with my in-progress patch set to support
->> Linux on Hyper-V on ARM64.  See https://lkml.org/lkml/2019/5/27/231
->> for the new clocksource driver patch set.
->
->Grrr. That's queued in hyperv-next for whatever reasons.
 
-I queue up our future pull requests there to give them some soaking in
--next.
+--k+G3HLlWI7eRTl+h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->Sasha, can you please provide me the branch to pull from so I can have a
->common base for all the various changes floating around?
+On Wed, Jun 12, 2019 at 03:26:49PM +0100, Lee Jones wrote:
+> Add a match table to allow automatic probing of ACPI device
+> QCOM0220.  Ignore clock attainment errors.  Set default clock
+> frequency value.
+>=20
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-I'll send you a unified pull request for these changes.
+Applied to for-next, thanks!
 
---
-Thanks,
-Sasha
+Alok, are you still there? Your ack is missed here...
+
+
+--k+G3HLlWI7eRTl+h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0EDtkACgkQFA3kzBSg
+KbYERA//fln0PxCO8MCvKtu91PRMaykG6c6IGBWT1XinpcUskkxv2dlJL5qb4I+s
+LTRaz0L8MqIxk2vkdTYe0unh38Horq/07c26+SjP/NSqj7PAzSFXLOjtd2f6xRDd
+T6cbUsRpQN4+qRWqR3hfKRIGmNwZmbUNLTtAVJ4S+Vx+PGOlvX2RweicbI65gRLJ
++3oZ0iQI+mNA7TGv8Dn32SMkevbGYyXBQW4+ff2hR4lUGYRyG/sGB/izNhmqLyni
+Pt5MYDHtZo2JnLfennHKAX5r4nhdDLic+EHjr6sKym1TR+IHwwpApExsRuwsRB2p
+Mvp3zi5+3QGqq4LaDdsgtYtE9HaKNSbklaIwolEHNqbk2vECz/Dyrq0gZK2OjSzN
+/bCiuUNlbQprEnXJ06Z0/1sS/Rm1hiuYrr9Foqk8q/e7rT5ghbud+IyFf3k0ZKBK
+D3y5T+2v/qSU5LOFDXpIG+t+pVL8OActa3Rp5W8mE3t3fJWcjXYVQ06TJv77iSPk
+ErpEL3zpZ7CE5VaHOVwKEgULEgDJTEdYBW1OKA2hPmwWpQdEwaTMjDmfSpnwkMQ6
+oN+MQRNWaFHKjjLANO9iU00j0KnmX48ZdNifcHXKsDtHQbXmKq/s8P556rV/Pysv
+sjLOU5HNDvGLDFt6sMRKKEMFKKZP+jqZqkjQSaoQQ638v1n18ng=
+=BNzG
+-----END PGP SIGNATURE-----
+
+--k+G3HLlWI7eRTl+h--
