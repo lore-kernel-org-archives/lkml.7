@@ -2,91 +2,153 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DF8C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D92C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F13AF20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4093020866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:28:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="NzGe0lBZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbfFNO22 (ORCPT
+        id S1728545AbfFNO2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:28:28 -0400
-Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:39040 "EHLO
-        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728074AbfFNO22 (ORCPT
+        Fri, 14 Jun 2019 10:28:42 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36456 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728290AbfFNO2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:28:28 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 263333F418;
-        Fri, 14 Jun 2019 16:28:20 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id DlDNnNT6usmD; Fri, 14 Jun 2019 16:28:19 +0200 (CEST)
-Received: from localhost (h-41-252.A163.priv.bahnhof.se [46.59.41.252])
-        (Authenticated sender: mb547485)
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 523023F348;
-        Fri, 14 Jun 2019 16:28:18 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 16:28:16 +0200
-From:   Fredrik Noring <noring@nocrew.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     laurentiu.tudor@nxp.com, hch@lst.de, stern@rowland.harvard.edu,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        marex@denx.de, leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
-        robin.murphy@arm.com, JuergenUrban@gmx.de
-Subject: Re: [PATCH v7 3/5] usb: host: ohci-sm501: init genalloc for local
- memory
-Message-ID: <20190614142816.GA2574@sx9>
-References: <20190529102843.13174-1-laurentiu.tudor@nxp.com>
- <20190529102843.13174-4-laurentiu.tudor@nxp.com>
- <20190605214622.GA22254@roeck-us.net>
- <20190611133223.GA30054@roeck-us.net>
- <20190611172654.GA2602@sx9>
- <20190611190343.GA18459@roeck-us.net>
- <20190613134033.GA2489@sx9>
- <bdfd2178-9e3c-dc15-6aa1-ec1f1fbcb191@roeck-us.net>
- <20190613153414.GA909@sx9>
- <3f2164cd-7655-b7cc-ec57-d8751886728c@roeck-us.net>
+        Fri, 14 Jun 2019 10:28:41 -0400
+Received: by mail-wm1-f66.google.com with SMTP id u8so2555168wmm.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 07:28:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gJhQ1swIhwsziMzQ39z2HtlgHPGl8G/dIf/ljZ3Elzc=;
+        b=NzGe0lBZPlBdzTofmXIqrp22eBCKs83VYeCnTK1eLSFKeAtWNjdsyZ2C+eNgP34v6z
+         egu+yF4BKK1a/sX3NPASmkynDghdKukYbeAAArjve9Vm9PVY37mF1MlfL6i7cnC4S/jk
+         0jlTWuGX3rjIy7t9ZjO+eB1yi8wAYgeGDeHIDst0kFOxPIx1gWQC3mqbmK/Z0JzH8lOh
+         15Q/Ju47sxgD5mGMCu2/Jq0peO7YPgQHySPoTjD3MDzwE8D6Ab+JiHN4+eYCfR9qeC1z
+         ou79yxXjD2bH/FKleRdybm5V1f34MAS6rLu1cvz+J6VpQVOpJ7u3D0PYOLlSoNPlkZpK
+         Dp0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gJhQ1swIhwsziMzQ39z2HtlgHPGl8G/dIf/ljZ3Elzc=;
+        b=Pa2SxJ41a5BL528/S1KAbofZ/hfXYnb2INpIM/l/fupbfc5W9chBuvcVy805U/YSTY
+         E9KYnht+xoAY+NLjGMvIIYTTDedJjnmEYSZ2o/QkgpG6FLc8KVEm3ZMW3w4EX1fC9wzv
+         Nb/CThTeipZVYwdaxI1QEh41SKnyn4Cb+stKX5waC+G9BcTYv/IKQB3kOyLWUSjr9Tcu
+         ND7trZ1xmKZR6P+84bh1rtFmbq+E24jZmPam3UW7/SqaptTbCJjryV/oFI7W3C5iVdCw
+         u7q7w2PSWZbO36NLVEu5w3SZg7d4Gpljy9grxUF2wl+iu2utm0inYuytolQ1NdAqn8LZ
+         ynhQ==
+X-Gm-Message-State: APjAAAUSeOG4GlUKzU9u178bnd4D8xIUZl36oOSII17+h8u3m/KKaBbR
+        C5yd/HO03b3+AMXGmgXle1dz1A==
+X-Google-Smtp-Source: APXvYqzSaBn/LW5PNl3Fw68CoiWJ8zHyUfbFM0QEo1S/tMx9V8OOACrj70RsjtKYpezFPjq9p2+eYw==
+X-Received: by 2002:a1c:208c:: with SMTP id g134mr8349611wmg.112.1560522519747;
+        Fri, 14 Jun 2019 07:28:39 -0700 (PDT)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id f2sm4990720wrq.48.2019.06.14.07.28.37
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 07:28:38 -0700 (PDT)
+Subject: Re: [PATCH] x86/hyperv: Disable preemption while setting
+ reenlightenment vector
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Prasanna Panchamukhi <panchamukhi@arista.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Cathy Avery <cavery@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>,
+        Mohammed Gamal <mmorsy@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devel@linuxdriverproject.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, x86@kernel.org
+References: <20190611212003.26382-1-dima@arista.com>
+ <8736kff6q3.fsf@vitty.brq.redhat.com>
+ <20190614082807.GV3436@hirez.programming.kicks-ass.net>
+ <877e9o7a4e.fsf@vitty.brq.redhat.com>
+ <cb9e1645-98c2-4341-d6da-4effa4f57fb1@arista.com>
+ <20190614122726.GL3436@hirez.programming.kicks-ass.net>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <d0ea735e-487e-8205-9415-8708a686ede9@arista.com>
+Date:   Fri, 14 Jun 2019 15:28:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190614122726.GL3436@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3f2164cd-7655-b7cc-ec57-d8751886728c@roeck-us.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter,
 
-> You are right, the patch below fixes the problem. I did not get the warning
-> with order==5. Nevertheless, I also tested with order==8; that works as well.
+
+On 6/14/19 1:27 PM, Peter Zijlstra wrote:
+> On Fri, Jun 14, 2019 at 12:50:51PM +0100, Dmitry Safonov wrote:
+>> On 6/14/19 11:08 AM, Vitaly Kuznetsov wrote:
+>>> Peter Zijlstra <peterz@infradead.org> writes:
+>>>
+>>>> @@ -182,7 +182,7 @@ void set_hv_tscchange_cb(void (*cb)(void))
+>>>>  	struct hv_reenlightenment_control re_ctrl = {
+>>>>  		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
+>>>>  		.enabled = 1,
+>>>> -		.target_vp = hv_vp_index[smp_processor_id()]
+>>>> +		.target_vp = hv_vp_index[raw_smp_processor_id()]
+>>>>  	};
+>>>>  	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
+>>>>  
+>>>
+>>> Yes, this should do, thanks! I'd also suggest to leave a comment like
+>>> 	/* 
+>>>          * This function can get preemted and migrate to a different CPU
+>>> 	 * but this doesn't matter. We just need to assign
+>>> 	 * reenlightenment notification to some online CPU. In case this
+>>>          * CPU goes offline, hv_cpu_die() will re-assign it to some
+>>>  	 * other online CPU.
+>>> 	 */
+>>
+>> What if the cpu goes down just before wrmsrl()?
+>> I mean, hv_cpu_die() will reassign another cpu, but this thread will be
+>> resumed on some other cpu and will write cpu number which is at that
+>> moment already down?
+>>
+>> (probably I miss something)
+>>
+>> And I presume it's guaranteed that during hv_cpu_die() no other cpu may
+>> go down:
+>> :	new_cpu = cpumask_any_but(cpu_online_mask, cpu);
+>> :	re_ctrl.target_vp = hv_vp_index[new_cpu];
+>> :	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
 > 
-> Thanks a lot for tracking this down!
+> Then cpus_read_lock() is the right interface, not preempt_disable().
+> 
+> I know you probably can't change the HV interface, but I'm thinking its
+> rather daft you have to specify a CPU at all for this. The HV can just
+> pick one and send the notification there, who cares.
 
-You are welcome, and thanks for your report!
+Heh, I thought cpus_read_lock() is more "internal" api and
+preempt_diable() is prefered ;-)
 
-This patch series needs some redesign, I think, because the problem you
-reported would come back if one attaches two or more devices to the
-system. Local memory devices are typically memory constrained and so it
-has to be used efficiently. I believe there are four kinds of alignments
-to consider when memory is allocated in the pool:
+Will send v2 with the suggested comment and cpus_read_lock().
 
-	- 256 bytes for the host controller communication area (HCCA);
-	- 32 bytes for the general transfer descriptors (TDs);
-	- 16 bytes for the endpoint descriptors (EDs);
-	- buffer alignment for data.
-
-Using the greatest common alignment for all is clearly an undesirable
-regression. The TDs and EDs could have their own subpools, perhaps, as
-they are abundant. There is only one instance of the HCCA.
-
-As mentioned, the USB subsystem could be improved to properly report
-allocation failures, and the logic to retry allocations could be more
-efficient by avoiding polling loops.
-
-Fredrik
+-- 
+          Dima
