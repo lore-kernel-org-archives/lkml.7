@@ -2,133 +2,150 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CA1C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A586BC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D3B21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:59:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=azazel.net header.i=@azazel.net header.b="EJlBGeh1"
+	by mail.kernel.org (Postfix) with ESMTP id 831DA2177E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:00:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfFNJ7d (ORCPT
+        id S1727348AbfFNKA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:59:33 -0400
-Received: from kadath.azazel.net ([81.187.231.250]:41598 "EHLO
-        kadath.azazel.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfFNJ7c (ORCPT
+        Fri, 14 Jun 2019 06:00:27 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:56833 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfFNKA0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:59:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=azazel.net;
-         s=20190108; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=+SqYUowZr52aqAdLPxRNaayVXCYX/FhSATpPUJOhNrw=; b=EJlBGeh1c7hJ9Ws6hHNTKAepg/
-        tgaD0qi533U8Qu9foxsKUShJesrorJjYJNOgEqDWQUtG4vFR2Zb03OMDqWK8TdZGxhLCGQGwebKd8
-        pq+euhq83cOJHmesuPoikyW7vzgsJP6jLvfXKVlIiDF4Ec4+o65kLduKheMcXMmWK869T85lagj2z
-        3SniQ/Gz3ePrx+6k1+aKnO8JqJ/ZCHPTA3fNoNj66ncUYCeka+uEifFIKagcD4N2XBXCgmWTMyRRG
-        7+sQ9vjH/WVuydB0MbDhki5nfmw8j4yc0+64HNCYqYf7yqbvNSNFeyLjkAlcqHR28qOg779JYaLeF
-        DQsVL/0A==;
-Received: from kadath.azazel.net ([2001:8b0:135f:bcd1:e2cb:4eff:fedf:e608] helo=azazel.net)
-        by kadath.azazel.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <jeremy@azazel.net>)
-        id 1hbizT-0006xV-OC; Fri, 14 Jun 2019 10:59:23 +0100
-Date:   Fri, 14 Jun 2019 10:59:22 +0100
-From:   Jeremy Sowden <jeremy@azazel.net>
-To:     Steffen Klassert <steffen.klassert@secunet.com>, g@azazel.net
-Cc:     Young Xiao <92siuyang@gmail.com>, herbert@gondor.apana.org.au,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] af_key: Fix memory leak in key_notify_policy.
-Message-ID: <20190614095922.k5yzeyew2zhrfp7e@azazel.net>
-References: <1560500786-572-1-git-send-email-92siuyang@gmail.com>
- <20190614085346.GN17989@gauss3.secunet.de>
+        Fri, 14 Jun 2019 06:00:26 -0400
+X-Originating-IP: 37.177.88.254
+Received: from uno.localdomain (unknown [37.177.88.254])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id CD4C9C0002;
+        Fri, 14 Jun 2019 10:00:20 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 12:01:33 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>,
+        Libin Yang <lbyang@marvell.com>,
+        Albert Wang <twang13@marvell.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v5 03/10] [media] marvell-ccic: don't generate EOF on
+ parallel bus
+Message-ID: <20190614100133.euxhdaktlemnd2ep@uno.localdomain>
+References: <20190505140031.9636-1-lkundrak@v3.sk>
+ <20190505140031.9636-4-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="okvcvc2i7gz2dbyk"
+        protocol="application/pgp-signature"; boundary="mmzrrql2dydy5u5w"
 Content-Disposition: inline
-In-Reply-To: <20190614085346.GN17989@gauss3.secunet.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:8b0:135f:bcd1:e2cb:4eff:fedf:e608
-X-SA-Exim-Mail-From: jeremy@azazel.net
-X-SA-Exim-Scanned: No (on kadath.azazel.net); SAEximRunCond expanded to false
+In-Reply-To: <20190505140031.9636-4-lkundrak@v3.sk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---okvcvc2i7gz2dbyk
-Content-Type: text/plain; charset=us-ascii
+--mmzrrql2dydy5u5w
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 
-On 2019-06-14, at 10:53:46 +0200, Steffen Klassert wrote:
-> On Fri, Jun 14, 2019 at 04:26:26PM +0800, Young Xiao wrote:
-> > We leak the allocated out_skb in case pfkey_xfrm_policy2msg() fails.
-> > Fix this by freeing it on error.
-> >
-> > Signed-off-by: Young Xiao <92siuyang@gmail.com>
-> > ---
-> >  net/key/af_key.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/net/key/af_key.c b/net/key/af_key.c
-> > index 4af1e1d..ec414f6 100644
-> > --- a/net/key/af_key.c
-> > +++ b/net/key/af_key.c
-> > @@ -2443,6 +2443,7 @@ static int key_pol_get_resp(struct sock *sk, struct xfrm_policy *xp, const struc
-> >  	}
-> >  	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
-> >  	if (err < 0)
-> > +		kfree_skb(out_skb);
-> >  		goto out;
->
-> Did you test this?
->
-> You need to add braces, otherwise 'goto out' will happen unconditionally.
->
-> >
-> >  	out_hdr = (struct sadb_msg *) out_skb->data;
-> > @@ -2695,6 +2696,7 @@ static int dump_sp(struct xfrm_policy *xp, int dir, int count, void *ptr)
-> >
-> >  	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
-> >  	if (err < 0)
-> > +		kfree_skb(out_skb);
-> >  		return err;
->
-> Same here.
+Hi Lubomir,
 
-There's already a patch for this:
+On Sun, May 05, 2019 at 04:00:24PM +0200, Lubomir Rintel wrote:
+> The commit 05fed81625bf ("[media] marvell-ccic: add MIPI support for
+> marvell-ccic driver") that claimed to add CSI2 turned on C0_EOF_VSYNC for
+> parallel bus without a very good explanation.
+>
+> That broke camera on OLPC XO-1.75 which precisely uses a sensor on a
+> parallel bus. Revert that chunk.
+>
+> Tested on an OLPC XO-1.75.
+>
+> Fixes: 05fed81625bf755cc67c5864cdfd18b69ea828d1
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/klassert/ipsec.git/commit/?id=7c80eb1c7e2b8420477fbc998971d62a648035d9
+Use the proper fixes format here
+Fixes: 05fed81625bf ("[media] marvell-ccic: add MIPI support for marvell-ccic driver")
 
-J.
+I have this simple entry in my git config:
 
---okvcvc2i7gz2dbyk
+[pretty]
+	fixes = Fixes: %h (\"%s\")
+
+With
+        abbrev=12
+
+in the [core] section.
+
+You can now
+$git show 05fed81625bf755cc67c5864cdfd18b69ea828d1 --pretty=fixes
+
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  drivers/media/platform/marvell-ccic/mcam-core.c | 6 ------
+>  1 file changed, 6 deletions(-)
+>
+> diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
+> index d97f39bde9bd6..d24e5b7a3bc52 100644
+> --- a/drivers/media/platform/marvell-ccic/mcam-core.c
+> +++ b/drivers/media/platform/marvell-ccic/mcam-core.c
+> @@ -792,12 +792,6 @@ static void mcam_ctlr_image(struct mcam_camera *cam)
+>  	 * Make sure it knows we want to use hsync/vsync.
+>  	 */
+>  	mcam_reg_write_mask(cam, REG_CTRL0, C0_SIF_HVSYNC, C0_SIFM_MASK);
+> -	/*
+> -	 * This field controls the generation of EOF(DVP only)
+> -	 */
+> -	if (cam->bus_type != V4L2_MBUS_CSI2_DPHY)
+> -		mcam_reg_set_bit(cam, REG_CTRL0,
+> -				C0_EOF_VSYNC | C0_VEDGE_CTRL);
+
+This change seems in facts unrelated to the original patch. As you
+remove all usages of C0_EOF_VSYNC and C0_VEDGE_CTRL you can drop their
+definition in mcam-core.h.
+
+As I've said, the change seems unrelated to CSI-2 support and could
+probably be salfey dropped, but pay attention, you're also dropping
+C0_VEDGE_CTRL, which seems to enable VSYNC detection on the signal
+falling edge. Is this intentional ?
+
+Thanks
+   j
+
+>  }
+>
+>
+> --
+> 2.21.0
+>
+
+--mmzrrql2dydy5u5w
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEZ8d+2N/NBLDbUxIF0Z7UzfnX9sMFAl0Db/kACgkQ0Z7UzfnX
-9sO+dg//X5IBarNnBL4+mJo1PVkihtoJNZib7SkyNpJjU74rQ5lfILTPWBKkxOHD
-LFQt62krPp/IUE328UQthubS8BbJWSDJ7BF9HUtHlme2nZoxjgfPxvn3EvAkhQTn
-DjoeP9hOrRgn1ufCqU09n+drVOl/tTxOZIuGK4XT0j0Ycp4PpW3fPng3gs5x4eNS
-YPrLZU51nOU46GQW8b60BSgoG5h2YytLwJ4kicaJGjZxhZZOtKycrX5oc5YnnU8Z
-ki7zUF/eU5Hni231wjhJBLs8uNTtll7g8Nl8oYogDlCo1EwFukScqS9dPXev7SKZ
-4W9Xm8xP2aHAGvylJJhvFpqQ/gR5U9MkXr+gmc6uachuiZrbp3zCDyKgYt+hxZG9
-lnLjLKxNm4Bc+Wwn38BvoBcg03q850BEUGdfANpM1l/aFS+va27MFGX0wnWFsVfV
-ChOS0BfrqrOwpvLFUjFN7Ojvli+9Qs+KWiwHzp7dJFltnntif1J8i27T6v0cjQBL
-irphre+3e96UgilQ/1+ygZQi/h4SwQzt8yEfGXo3Gx8sGb7VSaYS43oW3jzhH4Rm
-WgQWyFnlzbUtaz/SZMXvj5vUaQhTUjpVHG/Ws5vkEE+ED7CGdu0r4J1j0+EfLQOi
-TJPyklntEQv4rzJHQK18+InPJgQ7HTox2Yft8rfjEZ2dSa2R6UI=
-=Llij
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0DcH0ACgkQcjQGjxah
+VjyxcRAAoBs1nLSqKz9dDuh1ExoER+gBlhUSp11xMqI770WvPzLLiSgVImxYpd3f
+JfLjOEzypnmiitZ8+V6+erHY0uTNnQaVgeaZpkLSe+uLBNqxzcMioFWoxBEgPDSq
+Uo1GYLMJ/bXEb2gmgH2/5EOjLME6fGyOlsUbU//ft0eAvOmS8qTA3z1cmvpRfume
+a+e2qav1MUXZ5EoImgWSSjn6YS8Epr96uKWg+lmoYzUaSuFJ8MvY7dc9Cq+yn5lz
+EVDCHkA7JMvfA6j1sbiPMwN+kB1QCKp8c2+IfQFQAo2A/M7MyYOl9oz45YOkqNKL
+Ub6olMo3EN6ZRePt2ooFLOuUJNLwnbgB4g4TQ8QlNW1dMrT0D2eRZw01sw6Sh6Qu
+xqmfrf9Jgjei1epV1/8KPNBUOTs/tr/AJGn00SSgpd/TcSnXTguPGZbkhvxs/1Un
+8A2pF8y1pR8l3FDbGkwWg1HzcbReyVrPmpTG2F+Z72SGAVsDDmOfapRi9++1owNf
+DTNjRshLw2fjmjFvrTgdyKEPJ7ENv1I57CLC7OdkdPf4uISeXfvuMkU2OIgP5j9x
+3Wf2WGumaR8U1uMQy98V5JYJzA+pNKhgzSlK6TWQQDCdpUt+LwlWFVjv4LmT1EQ/
+BnSdMDXuA1rBQ32TtrBIqVk9oDOrk51uXGuo5c48wz7htS8Tu4M=
+=DOfD
 -----END PGP SIGNATURE-----
 
---okvcvc2i7gz2dbyk--
+--mmzrrql2dydy5u5w--
