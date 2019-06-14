@@ -2,86 +2,123 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AECC31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6353EC31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 780AA20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:44:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560473084;
-	bh=EDQ95EW5SOC9CqwmmSlrOSqcZXu5epBSz2LwhJ51RsE=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=JhXiqTRGcR8L/m7BfWk0M3jACNIAo2x2hhq4IIGWtF5XMIT/kqsyacBAnh7xIgrjY
-	 KI+BPeAzhpjhIBzX8Fada3kl2ZWFrRhyx+LnkKM2pVMX9sHic50I0rHZ74vaKyuyV+
-	 jsptbUYv9N0ZcOBSDcGaSXSo3bFRMfF0D3GLNfHY=
+	by mail.kernel.org (Postfix) with ESMTP id 3E74320B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfFNAom (ORCPT
+        id S1727213AbfFNAqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 20:44:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43440 "EHLO mail.kernel.org"
+        Thu, 13 Jun 2019 20:46:02 -0400
+Received: from mga11.intel.com ([192.55.52.93]:18675 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbfFNAom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 20:44:42 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 122CF20850;
-        Fri, 14 Jun 2019 00:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560473081;
-        bh=EDQ95EW5SOC9CqwmmSlrOSqcZXu5epBSz2LwhJ51RsE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=c80Q5/lekP2rmRhnNkDvIip0YnTzMcr3kk6FxMzABjF3BhM4kwYlGBFLThGBImN+K
-         zd/SZb9HkIyNBI/XyRt/+vZ3lKMBB+t8z/XQvTsNvh/jQ5tk0oYNXYUbtsTrHENZf0
-         NZXVBm/fXugw3TOIXpT8txfi80FJLf4rF/E/HjPA=
-Subject: Re: [PATCH 5.1 000/155] 5.1.10-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190613075652.691765927@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <91e6c918-5c9d-a036-c207-dea6091bf3fd@kernel.org>
-Date:   Thu, 13 Jun 2019 18:44:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1725778AbfFNAqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 20:46:02 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 17:46:01 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga007.fm.intel.com with ESMTP; 13 Jun 2019 17:46:00 -0700
+Date:   Thu, 13 Jun 2019 17:46:00 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     Cedric Xing <cedric.xing@intel.com>,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
+        jarkko.sakkinen@linux.intel.com, luto@kernel.org,
+        jmorris@namei.org, serge@hallyn.com, paul@paul-moore.com,
+        eparis@parisplace.org, jethro@fortanix.com, dave.hansen@intel.com,
+        tglx@linutronix.de, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, nhorman@redhat.com,
+        pmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
+        bp@alien8.de, josh@joshtriplett.org, kai.huang@intel.com,
+        rientjes@google.com, william.c.roberts@intel.com,
+        philip.b.tricca@intel.com
+Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
+ SELinux
+Message-ID: <20190614004600.GF18385@linux.intel.com>
+References: <cover.1560131039.git.cedric.xing@intel.com>
+ <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
+ <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
+ <20190611220243.GB3416@linux.intel.com>
+ <8d99d8fb-a921-286a-8cf0-cd522e09b37c@tycho.nsa.gov>
 MIME-Version: 1.0
-In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8d99d8fb-a921-286a-8cf0-cd522e09b37c@tycho.nsa.gov>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/19 2:31 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.1.10 release.
-> There are 155 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, Jun 13, 2019 at 01:02:17PM -0400, Stephen Smalley wrote:
+> On 6/11/19 6:02 PM, Sean Christopherson wrote:
+> >On Tue, Jun 11, 2019 at 09:40:25AM -0400, Stephen Smalley wrote:
+> >>I haven't looked at this code closely, but it feels like a lot of
+> >>SGX-specific logic embedded into SELinux that will have to be repeated or
+> >>reused for every security module.  Does SGX not track this state itself?
+> >
+> >SGX does track equivalent state.
+> >
+> >There are three proposals on the table (I think):
+> >
+> >   1. Require userspace to explicitly specificy (maximal) enclave page
+> >      permissions at build time.  The enclave page permissions are provided
+> >      to, and checked by, LSMs at enclave build time.
+> >
+> >      Pros: Low-complexity kernel implementation, straightforward auditing
+> >      Cons: Sullies the SGX UAPI to some extent, may increase complexity of
+> >            SGX2 enclave loaders.
+> >
+> >   2. Pre-check LSM permissions and dynamically track mappings to enclave
+> >      pages, e.g. add an SGX mprotect() hook to restrict W->X and WX
+> >      based on the pre-checked permissions.
+> >
+> >      Pros: Does not impact SGX UAPI, medium kernel complexity
+> >      Cons: Auditing is complex/weird, requires taking enclave-specific
+> >            lock during mprotect() to query/update tracking.
+> >
+> >   3. Implement LSM hooks in SGX to allow LSMs to track enclave regions
+> >      from cradle to grave, but otherwise defer everything to LSMs.
+> >
+> >      Pros: Does not impact SGX UAPI, maximum flexibility, precise auditing
+> >      Cons: Most complex and "heaviest" kernel implementation of the three,
+> >            pushes more SGX details into LSMs.
+> >
+> >My RFC series[1] implements #1.  My understanding is that Andy (Lutomirski)
+> >prefers #2.  Cedric's RFC series implements #3.
+> >
+> >Perhaps the easiest way to make forward progress is to rule out the
+> >options we absolutely *don't* want by focusing on the potentially blocking
+> >issue with each option:
+> >
+> >   #1 - SGX UAPI funkiness
+> >
+> >   #2 - Auditing complexity, potential enclave lock contention
+> >
+> >   #3 - Pushing SGX details into LSMs and complexity of kernel implementation
+> >
+> >
+> >[1] https://lkml.kernel.org/r/20190606021145.12604-1-sean.j.christopherson@intel.com
 > 
-> Responses should be made by Sat 15 Jun 2019 07:54:40 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.10-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> Given the complexity tradeoff, what is the clear motivating example for why
+> #1 isn't the obvious choice? That the enclave loader has no way of knowing a
+> priori whether the enclave will require W->X or WX?  But aren't we better
+> off requiring enclaves to be explicitly marked as needing such so that we
+> can make a more informed decision about whether to load them in the first
+> place?
 
-Compiled and booted on my test system. No dmesg regressions.
-
-thanks,
--- Shuah
+Andy and/or Cedric, can you please weigh in with a concrete (and practical)
+use case that will break if we go with #1?  The auditing issues for #2/#3
+are complex to say the least...
