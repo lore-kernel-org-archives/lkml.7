@@ -2,156 +2,120 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6090C31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3811AC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8AD2173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:22:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Pf/t4wPN"
+	by mail.kernel.org (Postfix) with ESMTP id 1732E21841
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:23:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725981AbfFNQWl (ORCPT
+        id S1726063AbfFNQXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:22:41 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33022 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbfFNQWk (ORCPT
+        Fri, 14 Jun 2019 12:23:07 -0400
+Received: from outgoing19.flk.host-h.net ([197.242.87.53]:56909 "EHLO
+        outgoing19.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfFNQXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:22:40 -0400
-Received: by mail-oi1-f194.google.com with SMTP id q186so2408607oia.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 09:22:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yUJ36e2jf7ofvUZMfMQksFI5zeohGaN69gBiudrs7ZQ=;
-        b=Pf/t4wPNKlA6LPs6IE0E4wSi22sJptLx7xtCYfgS+hi2uLi+YmXWGVMFVjMqT/pHin
-         3Sq0DbM9kLfL1SbB/3kptFxfDPCI+TPgWEYr1ZhJ1oJwIw1v+EoZSCPgFNDZQzVYX4Lr
-         2O/D91YQ//vHVGdpuMdDYLmb46Wi1vu3M4Cl1/gLXm9iIRNs/rYYl1SNW6JMGIBBbCri
-         wnRV2hN8ILY7xmhQvs3isFMqLWQbSxD7bf5xY4C2+H9Xf8GDcv8serIT2Is1BLLoRgWt
-         6qsSSO3IfVb4gyfmVkGjLEjX7GEJQUHc17+vZfFZNZaTqwS8B/FF6UglP68Vf6+nZUOP
-         /d3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yUJ36e2jf7ofvUZMfMQksFI5zeohGaN69gBiudrs7ZQ=;
-        b=Jqiwpl77y+LMrT/Oa5FQdx0oBapVgLCt5iJnSwTutv60xnp/kBkkNyyD+NR7QYGWDJ
-         6m/LKChVuO04B1pa8Vd9wbWvqEajNdMUUyg0H0d2MlgGnS4Q55l0vqTXMCgkuTusuvZh
-         fazpe+W+kcYji0+XdTMzDDfKaFSlbQyHbNOzmYcctEXZTlK+Ry72ThlxaCYY/oBqT9DA
-         u+2XpXSCulG5TXhZJ0uCeqI/cLUurqfcd3mOv1EstSK0rs/rKYYcaIRW3tqoPQjeaqdt
-         3/8tNhQDkJC98rfRFH7NlpHA1J7lJ/e0HO6Km6sGfCI0yFLljIKNpDSCeigH1/hCOWnK
-         HYhA==
-X-Gm-Message-State: APjAAAUmc+X3UOCfM7GtIOWXDY65f07ZUHksSabgHMxUVTzReNRchuWD
-        Yx6RGYSxjTT+vd8eo9YK/RRw8H0M6ba67p1+Knq427UfvmE=
-X-Google-Smtp-Source: APXvYqyp2XTEh+/XfnwmiJdtynxT4ccw6FS0jzhQTeNBXLuonzWWAL9Kcvo3Hm8UjH32DPDaYYmWTbDfTj0f+BKN8e0=
-X-Received: by 2002:aca:ec82:: with SMTP id k124mr2277796oih.73.1560529360068;
- Fri, 14 Jun 2019 09:22:40 -0700 (PDT)
+        Fri, 14 Jun 2019 12:23:06 -0400
+Received: from www31.flk1.host-h.net ([188.40.1.173])
+        by antispam5-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.89)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1hboyi-0002i4-Tv; Fri, 14 Jun 2019 18:23:02 +0200
+Received: from roundcubeweb1.flk1.host-h.net ([138.201.244.33] helo=webmail9.konsoleh.co.za)
+        by www31.flk1.host-h.net with esmtpa (Exim 4.84_2)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1hboye-0007ST-Gf; Fri, 14 Jun 2019 18:22:56 +0200
 MIME-Version: 1.0
-References: <1560366952-10660-1-git-send-email-cai@lca.pw> <CAPcyv4hn0Vz24s5EWKr39roXORtBTevZf7dDutH+jwapgV3oSw@mail.gmail.com>
- <CAPcyv4iuNYXmF0-EMP8GF5aiPsWF+pOFMYKCnr509WoAQ0VNUA@mail.gmail.com>
- <1560376072.5154.6.camel@lca.pw> <87lfy4ilvj.fsf@linux.ibm.com>
- <20190614153535.GA9900@linux> <c3f2c05d-e42f-c942-1385-664f646ddd33@linux.ibm.com>
-In-Reply-To: <c3f2c05d-e42f-c942-1385-664f646ddd33@linux.ibm.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 14 Jun 2019 09:22:29 -0700
-Message-ID: <CAPcyv4j_QQB8SrhTqL2mnEEHGYCg4H7kYanChiww35k0fwNv8Q@mail.gmail.com>
-Subject: Re: [PATCH -next] mm/hotplug: skip bad PFNs from pfn_to_online_page()
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     Oscar Salvador <osalvador@suse.de>, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        jmoyer <jmoyer@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 14 Jun 2019 18:22:55 +0200
+From:   Justin Swartz <justin.swartz@risingedge.co.za>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: rockchip: add display nodes for rk322x
+Organization: Rising Edge Consulting (Pty) Ltd.
+In-Reply-To: <1854794.0zkvb3x0FP@phil>
+References: <20190613101305.30491-1-justin.swartz@risingedge.co.za>
+ <1854794.0zkvb3x0FP@phil>
+Message-ID: <9e2b1e26bedfd30e9295d64865819c99@risingedge.co.za>
+X-Sender: justin.swartz@risingedge.co.za
+User-Agent: Roundcube Webmail/1.2.3
+X-Authenticated-Sender: justin.swartz@risingedge.co.za
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25480/Fri Jun 14 10:12:45 2019)
+X-Originating-IP: 188.40.1.173
+X-SpamExperts-Domain: risingedge.co.za
+X-SpamExperts-Username: 
+Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.05)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0aEcKiGOen0TgGQo14QTNxSpSDasLI4SayDByyq9LIhVr0JQmSUYAAuW
+ O3sRX9p2S0TNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
+ mAX8Bxy/iUu0ThNZg0jxJtcVJProrT987X1VDPOqN+OoDzRTdku7DidYUZdNf38Sp7Of4wP429AA
+ f49baR+f3He7jw4SoVhmTJ/3eP9ORQWVx8ds1M4qmk3/bYr2p8zbg4Paoa3pNVQ0zl7t/+UfQLYB
+ qEPnp1U88kqVD8AM2G81dFO0E3gi+MOI1foZYzDggRXhpvoPtF3cVkniFXU3qJSqpdJudO6+rkiw
+ E5i8Wl78Q18OeOfsy4h7jF1Uv9lnibl3vcBqVmvQB4A18ad0DLTuA47GFMxRMKMMweQrmH6eQvWp
+ DWTULXV1jJ5bfceEJeNruLKdflVX7oFNsdEJmBWjbvtlAwK809YKuz/mg2lBMt3xu9nbye2CdJLN
+ jSo1M+TSg3TNDI3/M5s9/ot3ko3rrae7IifWc6pL546YUVQwaYLh3di89W/ji5iahyCgJgyv93tC
+ 61cbiLYl3RCqADG/Ryndzp4OfbK7c6EqHwlqvaI+zok/BsKQK4gft4+8sY8CNaDDoRMm0CGce/eR
+ NtlfJySsZ2eS9qGTagUdlCnL4IjEaJi/Te03jgZkriNJs+0XIAXn1Ie+HcHl8lOi8gnN+VQO0b1v
+ xxohqsS9Q4vjfJZCa/7ru+hcV3qy2r6xT6/ToAAJ7pkQGcMvuOIaxlHt0+FCc1pvcmHgLAF+EhY3
+ a9HVLrEqCQymRpkPmbqFsDBc6VdTgr76BrtpImVjH1OXbaW1Jv61sDnMyufskMA9nxtZ9pIksMRC
+ ciEOsBpiAOoh+1qN2rbgvDZlJzPY/RdmiK0Zdwcq7WqJxp4Gp2qnVW06BkjrfxpqPrbH09M+m4Wp
+ RRDP6YzwkAPgQJbWosiwuQOYUcnYOSO7mW1OBrz96gclqEeyvm/wFZzBrxWl4RF0S4vtpJPL5i9k
+ NMFAXPUoooAOejJ9oJ3w7xlWZuM7jUXIESohoO51xWmU8epLuQ6AlI64+tPy8xM9qWPEX9Stl4rj
+ MDcWV8dcwmItP+eLAc3RVz4KjqXB2lFLCYn9TDvfbJbimDcSbTO4QszeNHk15VolAGHS5rCXQKDy
+ G9IFICpfYwbtmVFtzX/1jFBp21i62SsUn3KsaNY+4eSGHfTOXf670dxTbCnoHvieMS+4ayUpOtEh
+ dxekWDmK9g==
+X-Report-Abuse-To: spam@antispammaster.host-h.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 9:18 AM Aneesh Kumar K.V
-<aneesh.kumar@linux.ibm.com> wrote:
->
-> On 6/14/19 9:05 PM, Oscar Salvador wrote:
-> > On Fri, Jun 14, 2019 at 02:28:40PM +0530, Aneesh Kumar K.V wrote:
-> >> Can you check with this change on ppc64.  I haven't reviewed this series yet.
-> >> I did limited testing with change . Before merging this I need to go
-> >> through the full series again. The vmemmap poplulate on ppc64 needs to
-> >> handle two translation mode (hash and radix). With respect to vmemap
-> >> hash doesn't setup a translation in the linux page table. Hence we need
-> >> to make sure we don't try to setup a mapping for a range which is
-> >> arleady convered by an existing mapping.
-> >>
-> >> diff --git a/arch/powerpc/mm/init_64.c b/arch/powerpc/mm/init_64.c
-> >> index a4e17a979e45..15c342f0a543 100644
-> >> --- a/arch/powerpc/mm/init_64.c
-> >> +++ b/arch/powerpc/mm/init_64.c
-> >> @@ -88,16 +88,23 @@ static unsigned long __meminit vmemmap_section_start(unsigned long page)
-> >>    * which overlaps this vmemmap page is initialised then this page is
-> >>    * initialised already.
-> >>    */
-> >> -static int __meminit vmemmap_populated(unsigned long start, int page_size)
-> >> +static bool __meminit vmemmap_populated(unsigned long start, int page_size)
-> >>   {
-> >>      unsigned long end = start + page_size;
-> >>      start = (unsigned long)(pfn_to_page(vmemmap_section_start(start)));
-> >>
-> >> -    for (; start < end; start += (PAGES_PER_SECTION * sizeof(struct page)))
-> >> -            if (pfn_valid(page_to_pfn((struct page *)start)))
-> >> -                    return 1;
-> >> +    for (; start < end; start += (PAGES_PER_SECTION * sizeof(struct page))) {
-> >>
-> >> -    return 0;
-> >> +            struct mem_section *ms;
-> >> +            unsigned long pfn = page_to_pfn((struct page *)start);
-> >> +
-> >> +            if (pfn_to_section_nr(pfn) >= NR_MEM_SECTIONS)
-> >> +                    return 0;
-> >
-> > I might be missing something, but is this right?
-> > Having a section_nr above NR_MEM_SECTIONS is invalid, but if we return 0 here,
-> > vmemmap_populate will go on and populate it.
->
-> I should drop that completely. We should not hit that condition at all.
-> I will send a final patch once I go through the full patch series making
-> sure we are not breaking any ppc64 details.
->
-> Wondering why we did the below
->
-> #if defined(ARCH_SUBSECTION_SHIFT)
-> #define SUBSECTION_SHIFT (ARCH_SUBSECTION_SHIFT)
-> #elif defined(PMD_SHIFT)
-> #define SUBSECTION_SHIFT (PMD_SHIFT)
-> #else
-> /*
->   * Memory hotplug enabled platforms avoid this default because they
->   * either define ARCH_SUBSECTION_SHIFT, or PMD_SHIFT is a constant, but
->   * this is kept as a backstop to allow compilation on
->   * !ARCH_ENABLE_MEMORY_HOTPLUG archs.
->   */
-> #define SUBSECTION_SHIFT 21
-> #endif
->
-> why not
->
-> #if defined(ARCH_SUBSECTION_SHIFT)
-> #define SUBSECTION_SHIFT (ARCH_SUBSECTION_SHIFT)
-> #else
-> #define SUBSECTION_SHIFT  SECTION_SHIFT
-> #endif
->
-> ie, if SUBSECTION is not supported by arch we have one sub-section per
-> section?
+Hi Heiko,
 
-A couple comments:
+On 2019-06-14 11:15, Heiko Stuebner wrote:
 
-The only reason ARCH_SUBSECTION_SHIFT exists is because PMD_SHIFT on
-PowerPC was a non-constant value. However, I'm planning to remove the
-distinction in the next rev of the patches. Jeff rightly points out
-that having a variable subsection size per arch will lead to
-situations where persistent memory namespaces are not portable across
-archs. So I plan to just make SUBSECTION_SHIFT 21 everywhere.
+> Hi Justin,
+> 
+> Am Donnerstag, 13. Juni 2019, 12:13:04 CEST schrieb Justin Swartz:
+> 
+>> Add display_subsystem, hdmi_phy, vop, and hdmi device nodes plus
+>> a few hdmi pinctrl entries to allow for HDMI output.
+>> 
+>> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+> 
+> Overall looks good, but in combination with the clock-patch you posted,
+> I'd really prefer if we could try a slightly different approach.
+> 
+> Hard register-level settings in the clock driver look bad and tend to
+> cause problems later on, so I've adapted things a bit in [0] (untested)
+> and would be glad if you could give it a try on actual hardware.
+
+I can confirm that your approach works properly here.
+
+> The hdmiphy itself is a clock-provider for its pll and therefore the
+> assigned-clock* properties into the hdmi controller, as the phy needs
+> to probe before trying to set clocks.
+> But in theory this should achieve the same result of reparenting the
+> system's hdmiphy clock to the actual output of the phy-pll.
+> 
+> I've also moved the iommu-cells fix to a separate commit.
+> 
+> Please test, thanks
+> Heiko
+> 
+> [0] https://github.com/mmind/linux-rockchip/commits/wip/rk3229-hdmi
+
+Thanks
+Justin
