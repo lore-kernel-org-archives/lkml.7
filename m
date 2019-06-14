@@ -2,97 +2,90 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DD8C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E29CC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 613B621473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F97F2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:53:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbfFNUui convert rfc822-to-8bit (ORCPT
+        id S1726743AbfFNUxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:50:38 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45522 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbfFNUui (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:50:38 -0400
-Received: by mail-ed1-f67.google.com with SMTP id a14so5246096edv.12
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 13:50:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=lh0n1D7R2t0Y0d+wEjcTMFEBGes1xmgH+/nCCWSCn40=;
-        b=tR362/5tKErWjWbTpcFHaFtocbfLlsbvtAcjS6roSR4asEYei4p4bPnwOGbcTu4Jbz
-         5jT1zAFEbB6w/X7ZgyWJjPeoQd/01zFrQ09f2rpt7Dx0xjUSLVopulFNxDRcgCHhmg9u
-         EAkWvZqE8tc3zqgwXz7FZlBGxlWkwq+M96ONQw0jUWNEFhgZtKjAkTp/RUq8EeHh9hWQ
-         s+JV0We+nI082ggbJ6tJWU0LqOZuUaJYKE4dO79h/RLmaPbX77jxBfQabRgXZI/5/c6u
-         XcC9VIo8EpkLRerAMqrhDl1sv+G+Z7ODLsAwupn7n+/54Dnk2CLVd2KK5rDEI7I/Mj/z
-         6sag==
-X-Gm-Message-State: APjAAAWXAmQpMzEceCTzDHJ9Ywwu3YZTRhAt41djopUNSOhaG02CJ3tg
-        /Hjk5mHAIZm8W4YN2ex0a0t9rg==
-X-Google-Smtp-Source: APXvYqw5ig+HTGJdDvIEyeCTt+dMoTZfjl/YqoKuroUVvyIcNYyXmfL0k5ThxMse9XKZpDPvdkdRJA==
-X-Received: by 2002:a50:b4cb:: with SMTP id x11mr34441028edd.284.1560545436484;
-        Fri, 14 Jun 2019 13:50:36 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([2a00:7660:6da:443::2])
-        by smtp.gmail.com with ESMTPSA id u26sm1128548edf.91.2019.06.14.13.50.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 13:50:35 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id B6F021804AF; Fri, 14 Jun 2019 22:50:34 +0200 (CEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     axboe@kernel.dk, newella@fb.com, clm@fb.com, josef@toxicpanda.com,
-        dennisz@fb.com, lizefan@huawei.com, hannes@cmpxchg.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        kernel-team@fb.com, cgroups@vger.kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, bpf@vger.kernel.org, Josef Bacik <jbacik@fb.com>
-Subject: Re: [PATCH 08/10] blkcg: implement blk-ioweight
-In-Reply-To: <20190614150924.GB538958@devbig004.ftw2.facebook.com>
-References: <20190614015620.1587672-1-tj@kernel.org> <20190614015620.1587672-9-tj@kernel.org> <87pnngbbti.fsf@toke.dk> <20190614150924.GB538958@devbig004.ftw2.facebook.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Fri, 14 Jun 2019 22:50:34 +0200
-Message-ID: <87blyzc2n9.fsf@toke.dk>
+        Fri, 14 Jun 2019 16:53:24 -0400
+Received: from sauhun.de ([88.99.104.3]:56910 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726126AbfFNUxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:53:24 -0400
+Received: from localhost (p5486CF81.dip0.t-ipconnect.de [84.134.207.129])
+        by pokefinder.org (Postfix) with ESMTPSA id D46602CF690;
+        Fri, 14 Jun 2019 22:53:22 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 22:53:22 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     pierre-yves.mordret@st.com, marc.w.gonzalez@free.fr,
+        fabien.dessenne@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] i2c: i2c-stm32f7: fix the get_irq error cases
+Message-ID: <20190614205322.GA17899@ninjato>
+References: <1558020594-1498-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
+Content-Disposition: inline
+In-Reply-To: <1558020594-1498-1-git-send-email-fabrice.gasnier@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tejun Heo <tj@kernel.org> writes:
 
-> Hello, Toke.
->
-> On Fri, Jun 14, 2019 at 02:17:45PM +0200, Toke Høiland-Jørgensen wrote:
->> One question: How are equal-weight cgroups scheduled relative to each
->> other? Or requests from different processes within a single cgroup for
->> that matter? FIFO? Round-robin? Something else?
->
-> Once each cgroup got their hierarchical weight and current vtime for
-> the period, they don't talk to each other.  Each is expected to do the
-> right thing on their own.  When the period ends, the timer looks at
-> how the device is performing, how much each used and so on and then
-> make necessary adjustments.  So, there's no direct cross-cgroup
-> synchronization.  Each is throttled to their target level
-> independently.
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Right, makes sense.
+Hi Fabrice,
 
-> Within a single cgroup, the IOs are FIFO. When an IO has enough vtime
-> credit, it just passes through. When it doesn't, it always waits
-> behind any other IOs which are already waiting.
+> +		return irq_event ? irq_event : -ENODEV;
 
-OK. Is there any fundamental reason why requests from individual
-processes could not be interleaved? Or does it just not give the same
-benefits in an IO request context as it does for network packets?
+Maybe -ENOENT instead of -ENODEV? I mean you have a dev_err there, so
+the driver core should probably also complain?
 
-Thanks for the explanations! :)
+You could also shorten the ternary operator to:
 
--Toke
+	return irq_event ? : -E<whatyouprefer>;
+
+However, both are minor nits. If you prefer to keep the patch as is,
+fine with me.
+
+Regards,
+
+   Wolfram
+
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0ECT4ACgkQFA3kzBSg
+KbaP8xAAiUUQ1YDf9eeO9qQ5B7FKo7kXJ7iUA/RbGjfpC5zhjsoVgb7DdHvc7npe
+PSrQ21fAXNJtFz4N1CcQ6A38C2/IYZ+A2NnmwNyzMhqL5W5Ah2gPl6UP7S6USF4J
+4NnHw0/0eeH7/i+F13uiVGJudC+MVesWYPZgOBq9GGqgwxp7IztsjSOliBDRkC6c
+6RtdlqXD0UfUt60sxIJz/Oy+SYRKc0V78KUeybe7+fT5gisBfF3E1Zs3OZFieupk
+BIRuhXDNBQUTb7Cy387Zh4Im2uEzUb1qBIqC3azfJhNVyMm9fyiFGgysXNhkgEJ5
+1CKiXadTzhYJQJUpxNDmYQcmk8t/cM69R9NKBXou8XCeutIbe4BA6myz0U0hz1Np
+E7iBJ//LJpXAptZErq3n2VzDFHKKFWn4hyIJKI7LOZIdO2t/I/6wzJPMKxHJSOTv
+soWDgPcS/D1to1Glq4+CPqwNicEXLm5q1H18UE0SjBskFaGwCwyjNFAvwwjmhJ4f
+73uuuJBC3Oq2W/JqnYY+IFcue4GO/VS6ZughqW8iebSmwaoArzN00L844leXDkHN
+0dBGj3bT/lcLrR+d7jLsWeHt4t6J0dTJAkIxBivl+dK2nta7NMalnqp6cFp/nHfY
+R8KQhpWqlKhaoFGQzW1XiLNlKq+ZPC4MGq3h3thFOc9Z4lo96KA=
+=VE/8
+-----END PGP SIGNATURE-----
+
+--Dxnq1zWXvFF0Q93v--
