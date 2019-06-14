@@ -2,113 +2,127 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C27C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2847C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227DE217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0D821773
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:03:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="fvSF4UnS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbfFNKCM (ORCPT
+        id S1727561AbfFNKDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:02:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59352 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727498AbfFNKCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:02:10 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 057EB3087930;
-        Fri, 14 Jun 2019 10:02:10 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-116-252.ams2.redhat.com [10.36.116.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 58EA85D9C3;
-        Fri, 14 Jun 2019 10:02:04 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        "mike.travis@hpe.com" <mike.travis@hpe.com>
-Subject: [PATCH v1 6/6] drivers/base/memory.c: Get rid of find_memory_block_hinted()
-Date:   Fri, 14 Jun 2019 12:01:14 +0200
-Message-Id: <20190614100114.311-7-david@redhat.com>
-In-Reply-To: <20190614100114.311-1-david@redhat.com>
-References: <20190614100114.311-1-david@redhat.com>
+        Fri, 14 Jun 2019 06:03:07 -0400
+Received: from mail.efficios.com ([167.114.142.138]:33086 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727197AbfFNKDH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 06:03:07 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id B2F3A251338;
+        Fri, 14 Jun 2019 06:03:05 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id aGDopCXhabIV; Fri, 14 Jun 2019 06:03:05 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 455F4251331;
+        Fri, 14 Jun 2019 06:03:05 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 455F4251331
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1560506585;
+        bh=Hu2sfywP1wr/V2iml0Iwu3DskdZlle9a1sk8RIwPbAc=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=fvSF4UnSVmbjIlv9Khoar4edqsd+o8saf61h4OK1+vIa0MgvAEnu/UKIG6N0a3apx
+         tiA7uuHAHRZy4dE8/w6aFGS05JUYkzKpfU/Hp0sUR8dLGa1RTyvIoc1RcI+Zqs8uww
+         EhYjeSssh2WOJo4xfeApdEIr7FfjxCje1SFA8lyywbM541+2WbLuP8fp/9665+tgwf
+         upU2nGhuAZzX4ZgGUyxKMvD1Gy32eTP5WwAiGaTvDqWB9L8AurGI/iNK96XYEqjGr8
+         x870WRvXafGceB05ZQ0JHYiemFDLtNq8m2mtALm2Yrm9zKcaFGc6IoKaFgaHfxL6kx
+         dzXk3iMwytTeQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id LKwutttasM3j; Fri, 14 Jun 2019 06:03:05 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 1BD4A251327;
+        Fri, 14 Jun 2019 06:03:05 -0400 (EDT)
+Date:   Fri, 14 Jun 2019 06:03:04 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     carlos <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>
+Cc:     Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <802638054.3032.1560506584705.JavaMail.zimbra@efficios.com>
+In-Reply-To: <914051741.43025.1560348011775.JavaMail.zimbra@efficios.com>
+References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <87muj2k4ov.fsf@oldenburg2.str.redhat.com> <1528929896.22217.1559326257155.JavaMail.zimbra@efficios.com> <87o93d4lqb.fsf@oldenburg2.str.redhat.com> <117220011.27079.1559663870037.JavaMail.zimbra@efficios.com> <87wohzorj0.fsf@oldenburg2.str.redhat.com> <c16c9785-7f8c-430b-a4df-a53e47bf1600@redhat.com> <914051741.43025.1560348011775.JavaMail.zimbra@efficios.com>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
+ and thread creation (v10)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 14 Jun 2019 10:02:10 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
+Thread-Index: 6rG93gdkMSoHS5ZP168diTIrRPG9C+LZilEL
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No longer needed, let's remove it.
+----- On Jun 12, 2019, at 4:00 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: "mike.travis@hpe.com" <mike.travis@hpe.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/base/memory.c  | 12 +++---------
- include/linux/memory.h |  2 --
- 2 files changed, 3 insertions(+), 11 deletions(-)
+> ----- On Jun 10, 2019, at 4:43 PM, carlos carlos@redhat.com wrote:
+> 
+>> On 6/6/19 7:57 AM, Florian Weimer wrote:
+>>> Let me ask the key question again: Does it matter if code observes the
+>>> rseq area first without kernel support, and then with kernel support?
+>>> If we don't expect any problems immediately, we do not need to worry
+>>> much about the constructor ordering right now.  I expect that over time,
+>>> fixing this properly will become easier.
+>> 
+>> I just wanted to chime in and say that splitting this into:
+>> 
+>> * Ownership (__rseq_handled)
+>> 
+>> * Initialization (__rseq_abi)
+>> 
+>> Makes sense to me.
+>> 
+>> I agree we need an answer to this question of ownership but not yet
+>> initialized, to owned and initialized.
+>> 
+>> I like the idea of having __rseq_handled in ld.so.
+> 
+> Very good, so I'll implement this approach. Sorry for the delayed
+> feedback, I am traveling this week.
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 4f2e2f3b3d78..42e5a7493fe8 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -606,14 +606,6 @@ static struct memory_block *find_memory_block_by_id(unsigned long block_id,
- 	return to_memory_block(dev);
- }
- 
--struct memory_block *find_memory_block_hinted(struct mem_section *section,
--					      struct memory_block *hint)
--{
--	unsigned long block_id = base_memory_block_id(__section_nr(section));
--
--	return find_memory_block_by_id(block_id, hint);
--}
--
- /*
-  * For now, we have a linear search to go find the appropriate
-  * memory_block corresponding to a particular phys_index. If
-@@ -624,7 +616,9 @@ struct memory_block *find_memory_block_hinted(struct mem_section *section,
-  */
- struct memory_block *find_memory_block(struct mem_section *section)
- {
--	return find_memory_block_hinted(section, NULL);
-+	unsigned long block_id = base_memory_block_id(__section_nr(section));
-+
-+	return find_memory_block_by_id(block_id, hint);
- }
- 
- static struct attribute *memory_memblk_attrs[] = {
-diff --git a/include/linux/memory.h b/include/linux/memory.h
-index b3b388775a30..02e633f3ede0 100644
---- a/include/linux/memory.h
-+++ b/include/linux/memory.h
-@@ -116,8 +116,6 @@ void remove_memory_block_devices(unsigned long start, unsigned long size);
- extern int memory_dev_init(void);
- extern int memory_notify(unsigned long val, void *v);
- extern int memory_isolate_notify(unsigned long val, void *v);
--extern struct memory_block *find_memory_block_hinted(struct mem_section *,
--							struct memory_block *);
- extern struct memory_block *find_memory_block(struct mem_section *);
- typedef int (*walk_memory_blocks_func_t)(struct memory_block *, void *);
- extern int walk_memory_blocks(unsigned long start, unsigned long size,
+I had issues with cases where application or LD_PRELOAD library also
+define the __rseq_handled symbol. They appear not to see the same
+address as the one initialized by ld.so.
+
+I tried using the GL() macro in ld.so to set __rseq_handled, but it's
+the wrong address compared to what the preload lib and application observe.
+
+Any thoughts on how to solve this ?
+
+Thanks,
+
+Mathieu
+
 -- 
-2.21.0
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
