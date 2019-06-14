@@ -2,134 +2,119 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40F7C31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235AAC31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC7BE208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:30:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560479459;
-	bh=gME1O9+RvWA/tYTnG9DRWZo8JxD0NaeYDRgUxG+BNKI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uOeI9aeE6QyjIV2GTUOuT1WcSLa0kNDuB2QhS9QD9HQOkFvEKIykbO66FrcjVeg/g
-	 9ojZ5ThXE9TvdRcl8GBrIU7UCiRZ47m0f3GPPwazWvcaxvYAoH5pAyglBZjDxKTaJh
-	 eqB2HXQZOSHZsmFx2FESFPmFpm7yUXJa8pPWcjCo=
+	by mail.kernel.org (Postfix) with ESMTP id E8A50208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:31:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ENiikzv7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725906AbfFNCa6 (ORCPT
+        id S1726788AbfFNCbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 22:30:58 -0400
-Received: from mail-lf1-f49.google.com ([209.85.167.49]:44322 "EHLO
-        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbfFNCa5 (ORCPT
+        Thu, 13 Jun 2019 22:31:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56850 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfFNCbM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 22:30:57 -0400
-Received: by mail-lf1-f49.google.com with SMTP id r15so581436lfm.11
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 19:30:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=54SzfXIM0CUZELnkDPId2LFnAOP2eMm66mZYeVaiMIc=;
-        b=b6wus35DaLhs8FFeq7PNRZ3hYyz4oMdypJnhTcMZaFiSx3caRk6yJHOkFLmXfc68gQ
-         FYnDbGsYmvinxpLwPoM2+Xa2pga+BkCWG8bI9aaj+MagRJ3SZ/YT13ZFs5CQZvlGQwk+
-         z315q1qxQWAhXJ4qm5Fc+0jzeL3t3lDjn2XKM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=54SzfXIM0CUZELnkDPId2LFnAOP2eMm66mZYeVaiMIc=;
-        b=DVbB1StfOZ+gDgVL71hEp/Z529VV6Z37WC3TnxxoG0lA/4+g36Y0wCRnnt7bYlCvOM
-         oX/68M8FV8I9AqMDnuU10zNJpgCrhyQGwY7o5AoYFlR751q3CqT8a07ZA8tK9DtRZyY+
-         nrV67i2QXIeAqP2IcQPQ/FILP7o/DC3bFrJoK7IIf/R707SegTW+pT/FlMxDK+zir0io
-         y2Td7eJCbd6n1o7EI5SPF6obYUq90xacE37GbzMtyEI/cw2dAryIDo4twVw3dVjeAk8U
-         mY2s7yoF+lrf60nF/zp3WNfWjoH7c6dSLgS1aw0kdqzsbPefe5PmQ/bPtuBPTknU1l+t
-         aBfA==
-X-Gm-Message-State: APjAAAUxhk9B2WL4Y3l5FLvoeT28ZOyJ60lMh/0dSNEd73IzKUaZQor4
-        UcogK7cdzFjrFOR1aBL7h/yneceXcbg=
-X-Google-Smtp-Source: APXvYqwM1Z04Al5ApsQTY3oW68puVl4ygevmZNOXJy6eWLxzeAlc2MwyTNp/LY11QofUFVGKEaKF9w==
-X-Received: by 2002:ac2:54a6:: with SMTP id w6mr6820947lfk.108.1560479455192;
-        Thu, 13 Jun 2019 19:30:55 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id i23sm306683ljb.7.2019.06.13.19.30.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 19:30:53 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id k18so704892ljc.11
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 19:30:53 -0700 (PDT)
-X-Received: by 2002:a2e:9ec9:: with SMTP id h9mr11450885ljk.90.1560479452914;
- Thu, 13 Jun 2019 19:30:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
- <20190611011737.GA28701@kmo-pixel> <20190611043336.GB14363@dread.disaster.area>
- <20190612162144.GA7619@kmo-pixel> <20190612230224.GJ14308@dread.disaster.area>
- <20190613183625.GA28171@kmo-pixel> <20190613235524.GK14363@dread.disaster.area>
-In-Reply-To: <20190613235524.GK14363@dread.disaster.area>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 13 Jun 2019 16:30:36 -1000
-X-Gmail-Original-Message-ID: <CAHk-=wj3SQjfHHvE_CNrQAYS2p7bsC=OXEc156cHA_ujyaG0NA@mail.gmail.com>
-Message-ID: <CAHk-=wj3SQjfHHvE_CNrQAYS2p7bsC=OXEc156cHA_ujyaG0NA@mail.gmail.com>
-Subject: Re: pagecache locking (was: bcachefs status update) merged)
+        Thu, 13 Jun 2019 22:31:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+7wuYVOL+KJLLZqVsK5P8paT7js/8q2t5FmzFZkLtIs=; b=ENiikzv7M66hoOdASWgKZV1A0
+        rJK5psvvRbGVSGGyq2u76HQ0+ghuJReMB1GMbXkJHt5z8ePNmyi1/hdZDsjH3mXarUHdhpimSMjoM
+        Eo5tLSG9C1Ur4S4+1bNnYwiyPrj97STAqU2aHaIQRwsjw6fM6hLz/kyP8jauG67FXvTUc5TedeNCP
+        svVbpzU8jJOYHfoct4Hi43JwxrDsxO3My6EWca+6zLisl3fGYLkB8geveNSrbXx4RVYLLfMrxJvO4
+        klnCQks4Kovj2mzLBFnp/hawIDHAWCK32ZvscGHxlSexEz54emMO4w/SU0PsCRVjWghHyNtUJ6dT+
+        Gg+QtRtrA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbbzf-0001q2-Se; Fri, 14 Jun 2019 02:31:07 +0000
+Date:   Thu, 13 Jun 2019 19:31:07 -0700
+From:   Matthew Wilcox <willy@infradead.org>
 To:     Dave Chinner <david@fromorbit.com>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Ira Weiny <ira.weiny@intel.com>,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190614023107.GK32656@bombadil.infradead.org>
+References: <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
+ <20190607110426.GB12765@quack2.suse.cz>
+ <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
+ <20190608001036.GF14308@dread.disaster.area>
+ <20190612123751.GD32656@bombadil.infradead.org>
+ <20190613002555.GH14363@dread.disaster.area>
+ <20190613152755.GI32656@bombadil.infradead.org>
+ <20190613211321.GC32404@iweiny-DESK2.sc.intel.com>
+ <20190613234530.GK22901@ziepe.ca>
+ <20190614020921.GM14363@dread.disaster.area>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614020921.GM14363@dread.disaster.area>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 1:56 PM Dave Chinner <david@fromorbit.com> wrote:
->
-> That said, the page cache is still far, far slower than direct IO,
+On Fri, Jun 14, 2019 at 12:09:21PM +1000, Dave Chinner wrote:
+> On Thu, Jun 13, 2019 at 08:45:30PM -0300, Jason Gunthorpe wrote:
+> > On Thu, Jun 13, 2019 at 02:13:21PM -0700, Ira Weiny wrote:
+> > > On Thu, Jun 13, 2019 at 08:27:55AM -0700, Matthew Wilcox wrote:
+> > > > On Thu, Jun 13, 2019 at 10:25:55AM +1000, Dave Chinner wrote:
+> > > > > e.g. Process A has an exclusive layout lease on file F. It does an
+> > > > > IO to file F. The filesystem IO path checks that Process A owns the
+> > > > > lease on the file and so skips straight through layout breaking
+> > > > > because it owns the lease and is allowed to modify the layout. It
+> > > > > then takes the inode metadata locks to allocate new space and write
+> > > > > new data.
+> > > > > 
+> > > > > Process B now tries to write to file F. The FS checks whether
+> > > > > Process B owns a layout lease on file F. It doesn't, so then it
+> > > > > tries to break the layout lease so the IO can proceed. The layout
+> > > > > breaking code sees that process A has an exclusive layout lease
+> > > > > granted, and so returns -ETXTBSY to process B - it is not allowed to
+> > > > > break the lease and so the IO fails with -ETXTBSY.
+> > > > 
+> > > > This description doesn't match the behaviour that RDMA wants either.
+> > > > Even if Process A has a lease on the file, an IO from Process A which
+> > > > results in blocks being freed from the file is going to result in the
+> > > > RDMA device being able to write to blocks which are now freed (and
+> > > > potentially reallocated to another file).
+> > > 
+> > > I don't understand why this would not work for RDMA?  As long as the layout
+> > > does not change the page pins can remain in place.
+> > 
+> > Because process A had a layout lease (and presumably a MR) and the
+> > layout was still modified in way that invalidates the RDMA MR.
+> 
+> The lease holder is allowed to modify the mapping it has a lease
+> over. That's necessary so lease holders can write data into
+> unallocated space in the file. The lease is there to prevent third
+> parties from modifying the layout without the lease holder being
+> informed and taking appropriate action to allow that 3rd party
+> modification to occur.
+> 
+> If the lease holder modifies the mapping in a way that causes it's
+> own internal state to screw up, then that's a bug in the lease
+> holder application.
 
-Bullshit, Dave.
-
-You've made that claim before, and it's been complete bullshit before
-too, and I've called you out on it then too.
-
-Why do you continue to make this obviously garbage argument?
-
-The key word in the "page cache" name is "cache".
-
-Caches work, Dave. Anybody who thinks caches don't work is
-incompetent. 99% of all filesystem accesses are cached, and they never
-do any IO at all, and the page cache handles them beautifully.
-
-When you say that the page cache is slower than direct IO, it's
-because you don't even see or care about the *fast* case. You only get
-involved once there is actual IO to be done.
-
-So you're making that statement without taking into account all the
-cases that you don't see, and that you don't care about, because the
-page cache has already handled them for you, and done so much better
-than DIO can do or ever _will_ do.
-
-Is direct IO faster when you *know* it's not cached, and shouldn't be
-cached? Sure. But that/s actually quite rare.
-
-How often do you use non-temporal stores when you do non-IO
-programming? Approximately never, perhaps? Because caches work.
-
-And no, SSD's haven't made caches irrelevant. Not doing IO at all is
-still orders of magnitude faster than doing IO. And it's not clear
-nvdimms will either.
-
-So stop with the stupid and dishonest argument already, where you
-ignore the effects of caching.
-
-                Linus
+Sounds like the lease semantics aren't the right ones for the longterm
+GUP users then.  The point of the longterm GUP is so the pages can be
+written to, and if the filesystem is going to move the pages around when
+they're written to, that just won't work.
