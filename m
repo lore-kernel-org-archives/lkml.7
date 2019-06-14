@@ -4,123 +4,172 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3641C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C1CC31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7A28217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C592A2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:09:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VeS3CU0G"
+	dkim=pass (1024-bit key) header.d=mobiveil.co.in header.i=@mobiveil.co.in header.b="BFQ7n7Zx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfFNHDD (ORCPT
+        id S1726063AbfFNHJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:03:03 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46807 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfFNHDC (ORCPT
+        Fri, 14 Jun 2019 03:09:07 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:32862 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfFNHJG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:03:02 -0400
-Received: by mail-io1-f68.google.com with SMTP id i10so3412465iol.13
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 00:03:02 -0700 (PDT)
+        Fri, 14 Jun 2019 03:09:06 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h10so1296382ljg.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 00:09:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=mobiveil.co.in; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/e9SMaz1f2hGhr+Y7ePFxQlAt1pAXhkHDxZGScVnsP0=;
-        b=VeS3CU0GVfEu7mUzCPUp6p8noRpmTbKdsRVKGt5bZ4jZnOSQhpuqS+ezrT+pak6Dc4
-         wCCOwBgDRwBJPwMdJdXl9ISTJZgvJVhwnxtLKKyovc07NM/cjyPDPQsrrEtSfVvR1bDA
-         IAuZZgXXVBUlis5movc1J9Nxn7jJoc9wK1V2yrB0jG32i+tZ9ii9CKS4mszok4ieLBvk
-         Rk1EBY/iZaFkhvgzNS3AsIW2B6tVwziphPKYyJbMNQQs5ynzTSn874Hu8rrAePxMF/c4
-         UpbX4ImEi2jtEVWL0lAhtd8KupAEgjqL/1GHGIjqMO0WgUSDYfVw0w6ecfBdH+3Par36
-         fWYA==
+        bh=yxfyM6IErwzUuZQc4rX6nb5MYVBMEiaUIJAOhGRqMq4=;
+        b=BFQ7n7ZxnDJCfw3InVQV8Lykl7mTzTO/uKjfT68koQImu8DCSUAFvWIamSHmM+uW7E
+         GZVxCsJcMdhXyWOdvsBS8286msfvR4ZWO78pNH0mqpSacM6BftYDWL1xMkdIh7w9MiX3
+         3tb2/ogsbdl7Lw2YtiCBHiD3UaatAaBTKNvM0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/e9SMaz1f2hGhr+Y7ePFxQlAt1pAXhkHDxZGScVnsP0=;
-        b=CQrirEk94jY+YxAqB5UbliRK8dtCgqCu3R4CKit99q2467hakdBgH/24/6hIh0sXEj
-         jsp6eXMgsoXRH9bJ2wl5e6WlIG7k/sML0CDTr2aAfjL6MF284z9gMlrNxEbV+4t/KleK
-         XdBqLtUqcNdmk8r9W6Obq/bzpXsbIbKjnL/muhy8sIPS0pYx2Fx9hna4Gqu+Hq+KrpDv
-         a5J2U9bTEASAIFK4JUgmN7NpyFIJUW2+Kp2OpSIcM6forXmbdqy2ghF2x1ryq44oeAcX
-         JKYMikW4H9+Y7k/S039b2FQ32tc2mYvfJx8Dqf3E/1Pdvw93lLtGRCF45T2iEou5WOXu
-         vsxQ==
-X-Gm-Message-State: APjAAAVPxHiNP3Zt5fFaAlefv8gs9sgGvLHHUFKrXPFb2pM0OFqA6Tvm
-        0QzY3/nC5nSvRCK9eRGuTl4rSL8TGfbLpQt2Ag5oFg==
-X-Google-Smtp-Source: APXvYqy6ncGT/KFf173rk/8qVGA0xxyZvKYmkEWhVq/Wy6GUm3QlOI5jun6ArLYaraXYK9V3vC277oAE7HAUOelPlDY=
-X-Received: by 2002:a5e:820a:: with SMTP id l10mr5570290iom.283.1560495781891;
- Fri, 14 Jun 2019 00:03:01 -0700 (PDT)
+        bh=yxfyM6IErwzUuZQc4rX6nb5MYVBMEiaUIJAOhGRqMq4=;
+        b=SeA1hWKtxGEsZnVCNCsOBNvNNBQIBjDiGqDclEa7df29UH0Bfm4kTi/08IFRTHVQun
+         gcSO27BPHiETwLr6PIoL3pF8v0xpJ+w9Ilv7v5rwq3T6WjiprOqkplY47wZlKH5684Qs
+         E3U+GggHD0d1xY0TZYqN8SBebDSwkfggJaqAQrh29OFxOK2r1mWqJk3XRJuQ8e/UtUVW
+         WID2l3YV+T2khMiOXedWfa5ZSBYEnA1V6c1QfP/gpKfPcbBhSRW0XxVBk1SGGg4C1eob
+         4fz0sGMuiXOIkYYfQwcXo3t4LVbBOipfz/uwSjl63U6g2DGDLvxUshNMv+724oQ5VwgP
+         WUjg==
+X-Gm-Message-State: APjAAAVJX3PlSEh5MS9YD1m+a2s1eKkxioHKOZhRm/9FtMH5RC3Keyf4
+        fwyVw14IR5gQaiv4ru/f4jbut6sXW7H25hgDxpohOygEUAPDz+uma41s35knlDx1soNuVGdXaZI
+        soxgTNFksv4Wm4jtF5latURaRPG0sCs0RUg==
+X-Google-Smtp-Source: APXvYqygzgKoulB56EW6IgCZUnp+so8s8umG4AYyfJaRVIp1tDhleNADbz8MqdlwR5Bohv/3k4ORVDx+UFQFAkoJJWU=
+X-Received: by 2002:a2e:760f:: with SMTP id r15mr34139345ljc.18.1560496143737;
+ Fri, 14 Jun 2019 00:09:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190614025932.533-1-f.fainelli@gmail.com>
-In-Reply-To: <20190614025932.533-1-f.fainelli@gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 14 Jun 2019 09:02:49 +0200
-Message-ID: <CAKv+Gu8U1=Yxo7Mw6WsJbe82sRpjAq91HGW5XJi77ee+=BkGeA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: Allow user selection of ARM64_MODULE_PLTS
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-arm-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" 
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com> <20190412083635.33626-11-Zhiqiang.Hou@nxp.com>
+ <20190612150819.GD15747@redmoon>
+In-Reply-To: <20190612150819.GD15747@redmoon>
+From:   Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+Date:   Fri, 14 Jun 2019 12:38:51 +0530
+Message-ID: <CAKnKUHFMH6=ox=qdaUR1kNEhETDCVyu3jQZEj+taEbbMRBRuYA@mail.gmail.com>
+Subject: Re: [PATCHv5 10/20] PCI: mobiveil: Fix the INTx process errors
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Jun 2019 at 04:59, Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> Make ARM64_MODULE_PLTS a selectable Kconfig symbol, since some people
-> might have very big modules spilling out of the dedicated module area
-> into vmalloc. Help text is copied from the ARM 32-bit counterpart.
->
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  arch/arm64/Kconfig | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 697ea0510729..36befe987b73 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -1418,8 +1418,20 @@ config ARM64_SVE
->           KVM in the same kernel image.
->
->  config ARM64_MODULE_PLTS
-> -       bool
-> +       bool "Use PLTs to allow module memory to spill over into vmalloc area"
->         select HAVE_MOD_ARCH_SPECIFIC
-> +       help
-> +         Allocate PLTs when loading modules so that jumps and calls whose
-> +         targets are too far away for their relative offsets to be encoded
-> +         in the instructions themselves can be bounced via veneers in the
-> +         module's PLT. This allows modules to be allocated in the generic
-> +         vmalloc area after the dedicated module memory area has been
-> +         exhausted. The modules will use slightly more memory, but after
-> +         rounding up to page size, the actual memory footprint is usually
-> +         the same.
-> +
-> +         Disabling this is usually safe for small single-platform
-> +         configurations. If unsure, say y.
->
+Hi Lorenzo and Hou Zhiqiang
+ PAB_INTP_AMBA_MISC_STAT does have other status in the higher bits, it
+should have been masked before checking for the status
 
-I don't mind adding this, but it makes sense to add an explanation why
-KASLR enables this. E.g.,
+Acked-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
 
-"""
-When running with address space randomization (KASLR), the module
-region itself may be too far away for ordinary relative jumps and
-calls, and so in that case, module PLTs are required and cannot be
-disabled.
-"""
-
->  config ARM64_PSEUDO_NMI
->         bool "Support for NMI-like interrupts"
-> --
-> 2.17.1
+On Wed, Jun 12, 2019 at 8:38 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
 >
+> On Fri, Apr 12, 2019 at 08:36:12AM +0000, Z.q. Hou wrote:
+> > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> >
+> > In the loop block, there is not code to update the loop key,
+> > this patch updates the loop key by re-read the INTx status
+> > register.
+> >
+> > This patch also add the clearing of the handled INTx status.
+> >
+> > Note: Need MV to test this fix.
+>
+> This means INTX were never tested and current code handling them is,
+> AFAICS, an infinite loop which is very very bad.
+>
+> This is a gross bug and must be fixed as soon as possible.
+>
+> I want Karthikeyan ACK and Tested-by on this patch.
+>
+> Lorenzo
+>
+> > Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
+> > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> > Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> > ---
+> > V5:
+> >  - Corrected and retouched the subject and changelog.
+> >
+> >  drivers/pci/controller/pcie-mobiveil.c | 13 +++++++++----
+> >  1 file changed, 9 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> > index 4ba458474e42..78e575e71f4d 100644
+> > --- a/drivers/pci/controller/pcie-mobiveil.c
+> > +++ b/drivers/pci/controller/pcie-mobiveil.c
+> > @@ -361,6 +361,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+> >       /* Handle INTx */
+> >       if (intr_status & PAB_INTP_INTX_MASK) {
+> >               shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+> > +             shifted_status &= PAB_INTP_INTX_MASK;
+> >               shifted_status >>= PAB_INTX_START;
+> >               do {
+> >                       for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
+> > @@ -372,12 +373,16 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+> >                                       dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n",
+> >                                                           bit);
+> >
+> > -                             /* clear interrupt */
+> > -                             csr_writel(pcie,
+> > -                                        shifted_status << PAB_INTX_START,
+> > +                             /* clear interrupt handled */
+> > +                             csr_writel(pcie, 1 << (PAB_INTX_START + bit),
+> >                                          PAB_INTP_AMBA_MISC_STAT);
+> >                       }
+> > -             } while ((shifted_status >> PAB_INTX_START) != 0);
+> > +
+> > +                     shifted_status = csr_readl(pcie,
+> > +                                                PAB_INTP_AMBA_MISC_STAT);
+> > +                     shifted_status &= PAB_INTP_INTX_MASK;
+> > +                     shifted_status >>= PAB_INTX_START;
+> > +             } while (shifted_status != 0);
+> >       }
+> >
+> >       /* read extra MSI status register */
+> > --
+> > 2.17.1
+> >
+
+
+
+-- 
+Thanks,
+Regards,
+Karthikeyan Mitran
+
+-- 
+Mobiveil INC., CONFIDENTIALITY NOTICE: This e-mail message, including any 
+attachments, is for the sole use of the intended recipient(s) and may 
+contain proprietary confidential or privileged information or otherwise be 
+protected by law. Any unauthorized review, use, disclosure or distribution 
+is prohibited. If you are not the intended recipient, please notify the 
+sender and destroy all copies and the original message.
