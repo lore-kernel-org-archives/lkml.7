@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE643C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BC7C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F2321473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88DF02084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544734;
-	bh=6BVu7bzRZMrsY8cN3BN2v7SQDyHq/7qlDh9aorjpeaA=;
+	s=default; t=1560544739;
+	bh=sZsDlbJphL6qfeqNsC1sf4lQZa9MU/GVetAs3TUPfmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ruP1Q/mudDvIKU7Mprny0Euv2/wYgylIpqQJAFw463XTtoJeT04qQMZz2oJVyxjAC
-	 0IYhVXvMJDpwDETbDakE0EdjFeReiQHQDYXywodh4FByJbAYaoGqWQ/ANJwUcb8kYi
-	 4Hmn7XQc22gwg+pzMMf7w3oH6ubROE3suZHvyRzw=
+	b=P5fIdpjodCmUTPkWZ9+BrsLvExkwvfvbnMIKfJ/788a2wpxlf5XcNsbG+VkjS/sWp
+	 vNUa+XnyB8UtkDn4feIgkeGPchOIlUrdm8EQ5OYHlTKWvCNcLd/7uqkFqjj13yRFLB
+	 n8u47UbhyeErrNP6DR70cYD2WOrrFvrMHd6wmV9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728382AbfFNUis (ORCPT
+        id S1728406AbfFNUi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:38:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50744 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:38:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726637AbfFNU3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:29:00 -0400
+        id S1726627AbfFNU27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:28:59 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 936222186A;
-        Fri, 14 Jun 2019 20:28:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9FAE21841;
+        Fri, 14 Jun 2019 20:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1560544139;
-        bh=6BVu7bzRZMrsY8cN3BN2v7SQDyHq/7qlDh9aorjpeaA=;
+        bh=sZsDlbJphL6qfeqNsC1sf4lQZa9MU/GVetAs3TUPfmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E+y5V9i5WqXOqxR+WSvWNw3HoAyso9XLO96nZ3mt/XWRWMP2Ujh/rxqFUx0uSifzP
-         mErsImUWUq1woEa9HSTduCirQWRH6wgPu/ZTr2Ym4OMkqIffEJMCn0x3/dYZk2myu6
-         Mney8H36tpjSFz9+oqkzEbe9x14wMOjg5etyZ1yo=
+        b=cKLqhieBhIS4960tan2/sFaDIBCmTLvrK2T5eZWV11bwOI9AEMXwCq4seu+AKm+lE
+         J4oQkZ5lrCQmtzioCrlU1l3oK6wP4rJy6xh0B7lASlVNdq7OfoqbjTx1o18jZKRbey
+         GDK9lNxqNXAegJG3VpN0idCn1XOltsAI0HZHLwxA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chengguang Xu <cgxu519@gmx.com>, Wu Hao <hao.wu@intel.com>,
-        Alan Tull <atull@kernel.org>,
+Cc:     Scott Wood <swood@redhat.com>, Wu Hao <hao.wu@intel.com>,
+        Moritz Fischer <mdf@kernel.org>, Alan Tull <atull@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-fpga@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 17/59] fpga: dfl: expand minor range when registering chrdev region
-Date:   Fri, 14 Jun 2019 16:28:01 -0400
-Message-Id: <20190614202843.26941-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 15/59] fpga: dfl: afu: Pass the correct device to dma_mapping_error()
+Date:   Fri, 14 Jun 2019 16:27:59 -0400
+Message-Id: <20190614202843.26941-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
 References: <20190614202843.26941-1-sashal@kernel.org>
@@ -60,47 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@gmx.com>
+From: Scott Wood <swood@redhat.com>
 
-[ Upstream commit de9a7f6f5f1967d275311cca9163b4a3ffe9b0ae ]
+[ Upstream commit 13069847a475b60069918dc9971f5adb42811ce3 ]
 
-Actually, total amount of available minor number
-for a single major is MINORMASK + 1. So expand
-minor range when registering chrdev region.
+dma_mapping_error() was being called on a different device struct than
+what was passed to map/unmap.  Besides rendering the error checking
+ineffective, it caused a debug splat with CONFIG_DMA_API_DEBUG.
 
-Signed-off-by: Chengguang Xu <cgxu519@gmx.com>
+Signed-off-by: Scott Wood <swood@redhat.com>
 Acked-by: Wu Hao <hao.wu@intel.com>
+Acked-by: Moritz Fischer <mdf@kernel.org>
 Acked-by: Alan Tull <atull@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/fpga/dfl.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/fpga/dfl-afu-dma-region.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-index c25217cde5ca..4b66aaa32b5a 100644
---- a/drivers/fpga/dfl.c
-+++ b/drivers/fpga/dfl.c
-@@ -322,7 +322,7 @@ static void dfl_chardev_uinit(void)
- 	for (i = 0; i < DFL_FPGA_DEVT_MAX; i++)
- 		if (MAJOR(dfl_chrdevs[i].devt)) {
- 			unregister_chrdev_region(dfl_chrdevs[i].devt,
--						 MINORMASK);
-+						 MINORMASK + 1);
- 			dfl_chrdevs[i].devt = MKDEV(0, 0);
- 		}
- }
-@@ -332,8 +332,8 @@ static int dfl_chardev_init(void)
- 	int i, ret;
- 
- 	for (i = 0; i < DFL_FPGA_DEVT_MAX; i++) {
--		ret = alloc_chrdev_region(&dfl_chrdevs[i].devt, 0, MINORMASK,
--					  dfl_chrdevs[i].name);
-+		ret = alloc_chrdev_region(&dfl_chrdevs[i].devt, 0,
-+					  MINORMASK + 1, dfl_chrdevs[i].name);
- 		if (ret)
- 			goto exit;
- 	}
+diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-region.c
+index e18a786fc943..cd68002ac097 100644
+--- a/drivers/fpga/dfl-afu-dma-region.c
++++ b/drivers/fpga/dfl-afu-dma-region.c
+@@ -399,7 +399,7 @@ int afu_dma_map_region(struct dfl_feature_platform_data *pdata,
+ 				    region->pages[0], 0,
+ 				    region->length,
+ 				    DMA_BIDIRECTIONAL);
+-	if (dma_mapping_error(&pdata->dev->dev, region->iova)) {
++	if (dma_mapping_error(dfl_fpga_pdata_to_parent(pdata), region->iova)) {
+ 		dev_err(&pdata->dev->dev, "failed to map for dma\n");
+ 		ret = -EFAULT;
+ 		goto unpin_pages;
 -- 
 2.20.1
 
