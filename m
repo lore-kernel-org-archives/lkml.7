@@ -2,91 +2,162 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C97C31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9A8C31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF27208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82BCF20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:54:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t69ygudK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q7HSY7Ej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725906AbfFNCuD (ORCPT
+        id S1726824AbfFNCym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 22:50:03 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41606 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbfFNCuC (ORCPT
+        Thu, 13 Jun 2019 22:54:42 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41754 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfFNCyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 22:50:02 -0400
-Received: by mail-pf1-f195.google.com with SMTP id m30so457368pff.8
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 19:50:02 -0700 (PDT)
+        Thu, 13 Jun 2019 22:54:40 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 83so642694pgg.8
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 19:54:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+        h=date:from:to:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=Gt/SvG7yRtKmiEMzK1FJXFm1wfYI/ZfBKJY7bniNfw0=;
-        b=t69ygudK4onHNkRftxENnMyaFh8fdIivsMy6XkYJOsbAxe53KcP8W2UWVupaCBHCqJ
-         QWBO8UUP6jES+xjT2YwaT/YuqZKI92fYIfkmq425dclZ3WogxMlUeEvZviEmVBSU/w0n
-         XFyvkrSI/QSLaDq+ZYD//QUBdFTf0J0uuk/fFfbRsDtDwo1D/YtHrepuNWAt6JxdgH9H
-         /sroemESdRdVmnX2ImmUMmjBkYo9nbJ26Sfdes4gbBX+BGwbq0+TsCAA6RHlabYz6Ymh
-         sbzzpOqyPTNXNhBu4aBps0QVvR6p2sn3sdrxaLIUpOMkR6r9dabYNjAgPmpRdEE+u1X7
-         4CHg==
+        bh=jZ4MKy9YxFUhqGFBTxUT54NN/xTa5W9Uj5g9ozrgptI=;
+        b=Q7HSY7EjZQGQ9Ik/MhnqXQKFZ1HJLMJYroXRmjlLJiKzhIVleX5aslqolb/ew30xaM
+         Wlm4fqGahygpGiVioY9RFEeyY1d5cCDRkirAEY6Nir+L3ntcgAykS0q0HyR7rjMxFQKt
+         PSm2n/0Pz7jPoONTlL9bnN/g77+Ncx2kXJTFuZvo0fEt2g1ZDosIw8KfVOvsmJ18AA52
+         6YCZXFvpoQKFTVkaTO0ZHO+Jg2gQcniXTRAEYAHfudN2UBJoKzZaPVd+HBg0xQd2txIA
+         tqqgWB+zASyZW4n+gKDOSYmDg72ygT17Iy5bziFmZGFA89UNW3Ig+U4xGdRwe84irubg
+         eLBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=Gt/SvG7yRtKmiEMzK1FJXFm1wfYI/ZfBKJY7bniNfw0=;
-        b=psRXvSJi9gV71+P9QUivsTo8Ayar3HLxkt2i1VwMnf/9YwUi/DHF2+6ADAJRDSoczK
-         A2gRcBQwd9vhrGqJFl2ca62H/UneAKl11YiipWmV3FzE9DvRyFvtgq4rwhGyvj0x3YYK
-         tYk327zF+ZcIySkBUM0DNlI44Y8OA/EXHMHeCmryXCBZbhFCqgUW6PXRLu8VkyN9B6Gg
-         lKjjN2o4/MMRAH+KfqO21H2BwCZCrk9hH5VH/8RS9ABO5jmMnzqBzotpJs4CuSr4LdS7
-         dKlHcPwpA4HS7M5ejioTS15vToIAbTMNCqBOm8yjTMgp9tCYGDzlH/C8yqx7lqYyftun
-         b9lg==
-X-Gm-Message-State: APjAAAUo6VJuVbRBsJMXUNI3ESU/AH8DJgphfaUfAXLlopCsaGxFAg9q
-        9B8QqtW1f7q0qJy1IjwToZU=
-X-Google-Smtp-Source: APXvYqwUelCjdI/iBziKOHq8go5RgcYaj2UuHVhGitmfIpf2x4+NIcK1Gd/L6mXFGf10Am2WanFStA==
-X-Received: by 2002:a63:ec42:: with SMTP id r2mr34433065pgj.262.1560480602071;
-        Thu, 13 Jun 2019 19:50:02 -0700 (PDT)
-Received: from localhost ([175.223.34.99])
-        by smtp.gmail.com with ESMTPSA id a22sm1027270pfn.173.2019.06.13.19.50.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 19:50:01 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 11:49:57 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: nouveau: DRM: GPU lockup - switching to software fbcon
-Message-ID: <20190614024957.GA9645@jagdpanzerIV>
+        bh=jZ4MKy9YxFUhqGFBTxUT54NN/xTa5W9Uj5g9ozrgptI=;
+        b=UOymInCtT3j6NkLL9e2lZaeONbDwVfLthCuecWs7PAAcdwgg+/5wv6pS3QNFxHwPfX
+         3rh60Rrc/rmYN+qiy/1eZNQdP6/ByRsXpTN1RQhlkTicXKjztamEW4noUZwQyq6yZYQq
+         2TzpfXg8m3nYmtajJGMI4iybSqwoFgIzi9nPAhoujpmT/XRjSCQ+LL3SUvx1gXPEHUy/
+         hcXa5XTLtTy2wVEZgf7UwYgvhl1tN7GahOZe6MWCv/f9GBssEcKfuB3sZ28ZWZDQ3ock
+         MEpkSQz+i68SzwhDqmoQ8u1SnNMeQC+JLg0rGwLrWk1oZbXtOBYTNioHAQYDq07OGDgt
+         pQtA==
+X-Gm-Message-State: APjAAAWjbNaDf1eNYEUU0nEcKIRYUbAFiEOD61CW8wn5mtCqY04YPNUu
+        7hriudnYeGrneXnw4cCMH+c=
+X-Google-Smtp-Source: APXvYqybA+iWIZjbf7ta+ltJQot2TZ9pQmvj4Z1cPVeC9gfppYWgN4MB4WNMREeDrSs9w+LaH36aiQ==
+X-Received: by 2002:aa7:921a:: with SMTP id 26mr52507472pfo.99.1560480879482;
+        Thu, 13 Jun 2019 19:54:39 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.89.153])
+        by smtp.gmail.com with ESMTPSA id p3sm1096076pgh.90.2019.06.13.19.54.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 19:54:38 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 08:24:34 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [Patch v2 1/3] staging: rtl8723bs: hal: sdio_halinit: fix comparison
+ to true/false is error prone
+Message-ID: <20190614025433.GA3419@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.0 (2019-05-25)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.2.0-rc4-next-20190613
+fix below issues reported by checkpatch
 
-dmesg
+CHECK: Using comparison to false is error prone
+CHECK: Using comparison to true is error prone
 
- nouveau 0000:01:00.0: DRM: GPU lockup - switching to software fbcon
- nouveau 0000:01:00.0: fifo: SCHED_ERROR 0a [CTXSW_TIMEOUT]
- nouveau 0000:01:00.0: fifo: runlist 0: scheduled for recovery
- nouveau 0000:01:00.0: fifo: channel 5: killed
- nouveau 0000:01:00.0: fifo: engine 6: scheduled for recovery
- nouveau 0000:01:00.0: fifo: engine 0: scheduled for recovery
- nouveau 0000:01:00.0: firefox[476]: channel 5 killed!
- nouveau 0000:01:00.0: firefox[476]: failed to idle channel 5 [firefox[476]]
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+----
+changes in v2:      send proper patch without corruption
+----
+---
+ drivers/staging/rtl8723bs/hal/sdio_halinit.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-It lockups several times a day. Twice in just one hour today.
-Can we fix this?
+diff --git a/drivers/staging/rtl8723bs/hal/sdio_halinit.c b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+index 3c65a9c..4db3211 100644
+--- a/drivers/staging/rtl8723bs/hal/sdio_halinit.c
++++ b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+@@ -26,7 +26,7 @@ static u8 CardEnable(struct adapter *padapter)
+ 
+ 
+ 	rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
+-	if (bMacPwrCtrlOn == false) {
++	if (!bMacPwrCtrlOn) {
+ 		/*  RSV_CTRL 0x1C[7:0] = 0x00 */
+ 		/*  unlock ISO/CLK/Power control register */
+ 		rtw_write8(padapter, REG_RSV_CTRL, 0x0);
+@@ -127,7 +127,7 @@ u8 _InitPowerOn_8723BS(struct adapter *padapter)
+ 
+ 	/*  only cmd52 can be used before power on(card enable) */
+ 	ret = CardEnable(padapter);
+-	if (ret == false) {
++	if (!ret) {
+ 		RT_TRACE(
+ 			_module_hci_hal_init_c_,
+ 			_drv_emerg_,
+@@ -838,7 +838,7 @@ static u32 rtl8723bs_hal_init(struct adapter *padapter)
+ 
+ /* 	SIC_Init(padapter); */
+ 
+-	if (pwrctrlpriv->reg_rfoff == true)
++	if (pwrctrlpriv->reg_rfoff)
+ 		pwrctrlpriv->rf_pwrstate = rf_off;
+ 
+ 	/*  2010/08/09 MH We need to check if we need to turnon or off RF after detecting */
+@@ -1081,7 +1081,7 @@ static void CardDisableRTL8723BSdio(struct adapter *padapter)
+ 	ret = false;
+ 	rtw_hal_set_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
+ 	ret = HalPwrSeqCmdParsing(padapter, PWR_CUT_ALL_MSK, PWR_FAB_ALL_MSK, PWR_INTF_SDIO_MSK, rtl8723B_card_disable_flow);
+-	if (ret == false) {
++	if (!ret) {
+ 		DBG_8192C(KERN_ERR "%s: run CARD DISABLE flow fail!\n", __func__);
+ 	}
+ }
+@@ -1091,9 +1091,9 @@ static u32 rtl8723bs_hal_deinit(struct adapter *padapter)
+ 	struct dvobj_priv *psdpriv = padapter->dvobj;
+ 	struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
+ 
+-	if (padapter->hw_init_completed == true) {
+-		if (adapter_to_pwrctl(padapter)->bips_processing == true) {
+-			if (padapter->netif_up == true) {
++	if (padapter->hw_init_completed) {
++		if (adapter_to_pwrctl(padapter)->bips_processing) {
++			if (padapter->netif_up) {
+ 				int cnt = 0;
+ 				u8 val8 = 0;
+ 
+@@ -1387,7 +1387,7 @@ static s32 _ReadAdapterInfo8723BS(struct adapter *padapter)
+ 	RT_TRACE(_module_hci_hal_init_c_, _drv_info_, ("+_ReadAdapterInfo8723BS\n"));
+ 
+ 	/*  before access eFuse, make sure card enable has been called */
+-	if (padapter->hw_init_completed == false)
++	if (!padapter->hw_init_completed)
+ 		_InitPowerOn_8723BS(padapter);
+ 
+ 
+@@ -1404,7 +1404,7 @@ static s32 _ReadAdapterInfo8723BS(struct adapter *padapter)
+ 	_ReadPROMContent(padapter);
+ 	_InitOtherVariable(padapter);
+ 
+-	if (padapter->hw_init_completed == false) {
++	if (!padapter->hw_init_completed) {
+ 		rtw_write8(padapter, 0x67, 0x00); /*  for BT, Switch Ant control to BT */
+ 		CardDisableRTL8723BSdio(padapter);/* for the power consumption issue,  wifi ko module is loaded during booting, but wifi GUI is off */
+ 	}
+-- 
+2.7.4
 
-	-ss
