@@ -2,118 +2,104 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21C2C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A29E8C31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D7F20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:24:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WLambb/V"
+	by mail.kernel.org (Postfix) with ESMTP id 7B42120850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbfFNMYM (ORCPT
+        id S1727868AbfFNMYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:24:12 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44693 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfFNMYM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:24:12 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r15so1584487lfm.11;
-        Fri, 14 Jun 2019 05:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=o4Nl8rjY2UzCouAOHPI/9INbLAzUgRaKqvtMbrkxiws=;
-        b=WLambb/Vy6vYSOJ9jXU5eoOBs/rxyVa0+iG3a+RAAWyIuZobL2o1aDDlXtLJCmJQjA
-         5V24joWsquKYP5GyQ1X8cda41MAWkdyARRj7ERRc7E/KI4bTstKdAvFkTQsZe/KMJO0X
-         zkiX4BEdyZEgVyCOFjUPOf2X1jK8CyZpvDrz433VQD0clF0fMYDyWlBISdYaXZ90GG4H
-         +5NUF8qv4Sa5VXP8uNKYDcUpXYayjzIGTqrWlmJrrM4s0PnN/pT5SyOWYz4WVAfbZrOZ
-         vy3F9ipID7w1lvwMFIyruBjmeJXqsyV1G4yWpnIMpHSE0byeLXW2k5AKZUT02v8F+uGT
-         YdcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=o4Nl8rjY2UzCouAOHPI/9INbLAzUgRaKqvtMbrkxiws=;
-        b=RW+WQYMNZ/zjtBHJFxATSm/ePvgfTtAAvEA/wTttM/o0TRyEmt1srSKfoEezwebRCF
-         Z3nceusLFfWyzuJbmh40uWib/tet6I258Fkk7s86mB+5Wm4JTBoKnZfKFq25ExFk/lB6
-         PzvMlEa3Cqntq8E8+SkPgoysSP8EVjcxWNa+96Ck9tOpsaSRlT/x/TL7uen4dMxUOwk1
-         Rkx4oG533fci9XYHaUmunwX8CgPiOBG23Y447e9zpA0zy1U69AiF875RX7KtXUCTj6Qx
-         sARAUktB+MWudzHY58IN7ApMILUHUmxn8t9I8WupI4k0gfZutUvva6sS3tT1nHpSRUpb
-         WjbA==
-X-Gm-Message-State: APjAAAWS0pLWh7/jJCa6q0Myu4Q3J5zzy1K2p5fGEKUkoqrfbFWA3sz9
-        IyzgFubcjJ8zzjGPm8+Q6fH2LyD7
-X-Google-Smtp-Source: APXvYqzOMXpsfHkDgK1K1A9K/9ExirOTklRHlG8QbOcQAjHjs/mt/qh4wUF+bfWc+gB1lFtdb4GJoA==
-X-Received: by 2002:a19:5e4e:: with SMTP id z14mr30643718lfi.11.1560515049076;
-        Fri, 14 Jun 2019 05:24:09 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id 24sm629708ljs.63.2019.06.14.05.24.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 05:24:08 -0700 (PDT)
-Subject: Re: [PATCH 1/2] clocksource: tegra: Use rating when registering clock
- source
-To:     Thierry Reding <thierry.reding@gmail.com>,
+        Fri, 14 Jun 2019 08:24:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:32980 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727634AbfFNMYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:24:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 957F83EF;
+        Fri, 14 Jun 2019 05:24:42 -0700 (PDT)
+Received: from [192.168.1.18] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C78263F246;
+        Fri, 14 Jun 2019 05:24:39 -0700 (PDT)
+Subject: Re: [PATCH v6 03/19] kernel: Unify update_vsyscall implementation
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190614104747.19712-1-thierry.reding@gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8ff5d2da-907e-611c-ec82-bbe50197c2f4@gmail.com>
-Date:   Fri, 14 Jun 2019 15:24:07 +0300
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
+ <20190530141531.43462-4-vincenzo.frascino@arm.com>
+ <alpine.DEB.2.21.1906141307430.1722@nanos.tec.linutronix.de>
+ <a69e48a2-575d-255c-2653-d3e99b7ba760@arm.com>
+ <alpine.DEB.2.21.1906141416100.1722@nanos.tec.linutronix.de>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <9371eabc-ed74-3db8-794c-44c37ada2163@arm.com>
+Date:   Fri, 14 Jun 2019 13:25:21 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190614104747.19712-1-thierry.reding@gmail.com>
+In-Reply-To: <alpine.DEB.2.21.1906141416100.1722@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.06.2019 13:47, Thierry Reding пишет:
-> From: Thierry Reding <treding@nvidia.com>
+On 6/14/19 1:19 PM, Thomas Gleixner wrote:
+> On Fri, 14 Jun 2019, Vincenzo Frascino wrote:
+>> On 6/14/19 12:10 PM, Thomas Gleixner wrote:
+>>> On Thu, 30 May 2019, Vincenzo Frascino wrote:
+>>>> +
+>>>> +	if (__arch_use_vsyscall(vdata)) {
+>>>> +		vdata[CS_HRES_COARSE].cycle_last	=
+>>>> +						tk->tkr_mono.cycle_last;
+>>>> +		vdata[CS_HRES_COARSE].mask		=
+>>>> +						tk->tkr_mono.mask;
+>>>> +		vdata[CS_HRES_COARSE].mult		=
+>>>> +						tk->tkr_mono.mult;
+>>>
+>>> These line breaks make it really hard to read. Can you fold in the patch
+>>> below please?
+>>>
+>>
+>> Thanks for this. I will do it in v7.
 > 
-> The rating is parameterized depending on SoC generation to make sure it
-> takes precedence on implementations where the architected timer can't be
-> used. This rating is already used for the clock event device. Use the
-> same rating for the clock source to be consistent.
+> Talking about v7. I'd like to get this into 5.3. That means you'd have to
+> rebase it on
 > 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  drivers/clocksource/timer-tegra.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git hyperv-next
 > 
-> diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
-> index f6a8eb0d7322..e6608141cccb 100644
-> --- a/drivers/clocksource/timer-tegra.c
-> +++ b/drivers/clocksource/timer-tegra.c
-> @@ -318,7 +318,7 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
->  	sched_clock_register(tegra_read_sched_clock, 32, TIMER_1MHz);
->  
->  	ret = clocksource_mmio_init(timer_reg_base + TIMERUS_CNTR_1US,
-> -				    "timer_us", TIMER_1MHz, 300, 32,
-> +				    "timer_us", TIMER_1MHz, rating, 32,
->  				    clocksource_mmio_readl_up);
->  	if (ret)
->  		pr_err("failed to register clocksource: %d\n", ret);
+> to avoid the hyperv conflict. I'll sort this out with the hyperv folks how
+> I can get these bits as a base for a tip branch which holds all the vdso
+> pieces.
+>
+
+Ok, I will rebase and test the patches against the hyperv-next branch. Could you
+please let me know when all the bits are sorted?
+
+> Thanks,
+> 
+> 	tglx
 > 
 
-Looks good. Although, could you please clarify whether arch-timer stops on T210 when CPU
-enters deepest (powerdown) idle state? I'm starting to lose track a bit already. Because
-if arch-timer stops in the deepest idle state, then it's a bit odd that Joseph didn't add
-the clocksource for T210 in the first place and v5.1 probably shouldn't work well because
-of that already.
+-- 
+Regards,
+Vincenzo
