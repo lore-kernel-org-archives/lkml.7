@@ -2,113 +2,148 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7056CC31E4E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9FCC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43CDC2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF4F2184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GLuFpb0B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bn1uTT9N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfFNVr4 (ORCPT
+        id S1726494AbfFNVtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 17:47:56 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:44734 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfFNVr4 (ORCPT
+        Fri, 14 Jun 2019 17:49:31 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43397 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfFNVta (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 17:47:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=wzC8vZgSSQGb7hN6P1xIMe6bYH9lHcYisu8r8AFK2H8=; b=GLuFpb0BZX74mB1qgZFze5uUYQ
-        3P8Du3lWi/2YkIOnz2jLM1PhWDDThgyCfbZCBTrIwj4W5wwp3xpyme/BPDgRAUuk+Ifmi2KYbzQHR
-        abY1CjdU2lhhmdaUMVvIMujYE3Y2W9DABEs1YysMaOjiLvNEU2sITk0nceFSoLVO5uJ9Gs9dxwGIR
-        zLkkNMVFYmHRAcuhK4EXNfEDi+Jifq/dcKtMwqUeTn2b/f7SH1tsAY88np4aVK6HCXuvNgMhALdyN
-        PkClyOQ8Oez3rHrfOSR2uJFB4OBBwBXWlhQpAMuNVejBsNjblJ/tWPSfSWmnnbVgR07pe9wg0ubWv
-        xRZjSAVw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbu35-0004Jy-1t; Fri, 14 Jun 2019 21:47:51 +0000
-To:     LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
-Cc:     Bjorn Andersson <bjorn.andersson@sonymobile.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next] soc: qcom: fix QCOM_AOSS_QMP dependency and build
- errors
-Message-ID: <6d97f8dc-f980-7825-4aa6-27f56b25bc3a@infradead.org>
-Date:   Fri, 14 Jun 2019 14:47:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 17:49:30 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 16so3776690ljv.10;
+        Fri, 14 Jun 2019 14:49:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Qrq7bOdVmDw17MlBZJ7Vd00iMTb4xybgawnbUy2H72A=;
+        b=bn1uTT9Nevw3W6y+y5HuXvq9Fu6GMV1xnAOr6mKOB25yeYREKMNqap4B0rLpIk6Lcq
+         z7Dr4bNQSAcYLq2nQN0GMR2Bp6XZ2D2FCsTTq+sf5JdXS+Ykf0UMaElROiDh3nebxfAh
+         ZBEKVMVExT1chp3GI7QisjbxWHS+9HQqaiiLpsNQDDbzDBN3sIPtJU30ry2aTEPf1pUy
+         cWYLPq2CQPPkzsmj7qkbRhMqnCjyYSXZxthZn9XxRK3RvyG+UctZ8HYFKXglp77AS8ZK
+         WXB/xfCT/JB9Rky0AqZVKc1Bn7gLf4b2bdWGe3pl7Nw+gHMpkFVhjC6l39B+T7QKBk3J
+         6dhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Qrq7bOdVmDw17MlBZJ7Vd00iMTb4xybgawnbUy2H72A=;
+        b=c0iGombDgYfcxVu0qnFz1Tesx6J4mkxZr/mM/nWAa8EeO1iJBx2rd9tsdroJr6w+Oe
+         fbr3aFRPEeb27okXZB116itw4Lg3mLuI0o2TUFRkjPFVzibMDJFpK9tqLLf+E0xwFbFd
+         j0tT5Posfu//35bVSiCrQEEq70LtJhPdfGXNiojPVwgG1eLRIKh3s1ogauxxAeDQAjmR
+         EsPA+JErccN8+rJxnJsGLJxt5WJ59zsdNQqj2eoASIgkLYMjEnV6B1gSfyD0U0ZXwwIA
+         hd6r+B1ZC3kUA/BtybfOYBY/5ulHIuqNKIM4mrYjDJMb/hRmZXjs5UWx37Vj3kV3AXqq
+         UhHA==
+X-Gm-Message-State: APjAAAVbQPmI7HbTabEjVnXlPnFDMRVnDIqQ2BLKUeeB/VhqrxmPB+Qp
+        ll8YnS5SXsLJN68WkLk/YKE=
+X-Google-Smtp-Source: APXvYqxTw2K6vRdQwnrF8czdgDPe7mREpeNG2XKDI7lOMIKgocUvEqKbem/tnEylfJxhg7VPpKmiDg==
+X-Received: by 2002:a2e:5d92:: with SMTP id v18mr44428002lje.9.1560548968827;
+        Fri, 14 Jun 2019 14:49:28 -0700 (PDT)
+Received: from localhost.localdomain ([5.164.217.122])
+        by smtp.gmail.com with ESMTPSA id 137sm783792ljj.46.2019.06.14.14.49.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 14:49:27 -0700 (PDT)
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Jean Delvare <jdelvare@suse.com>,
+        Peter Korsgaard <peter.korsgaard@barco.com>,
+        Peter Rosin <peda@axentia.se>
+Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] i2c: mux-gpio: Use "mux" con_id to find channel GPIOs
+Date:   Sat, 15 Jun 2019 00:47:49 +0300
+Message-Id: <20190614214748.2389-1-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+Recent patch - ("i2c: mux/i801: Switch to use descriptor passing")
+altered the i2c-mux-gpio driver to use the GPIO-descriptor
+based interface to find and request the GPIOs then being utilized
+to select and deselect the channels of GPIO-driven i2c-muxes. Even
+though the proposed modification was correct for the platform_data-based
+systems, it was invalid for the OF-based ones and caused the kernel
+to crash at the driver probe procedure. There were two problems with
+that modification. First of all the gpiod_count() and gpiod_get_index()
+were called with NULL con_id. Due to this the methods couldn't find
+the "mux-gpios" OF-properties and returned the -ENOENT error. Secondly
+the return value of gpiod_count() wasn't checked for being negative,
+which in case of an error caused the driver to crash. This patch
+is intended to fix the described problems.
 
-Fix Kconfig warning and subsequent build errors that are caused
-when PM_GENERIC_DOMAINS=y but CONFIG_PM is not set/enabled.
-
-WARNING: unmet direct dependencies detected for PM_GENERIC_DOMAINS
-  Depends on [n]: PM [=n]
-  Selected by [m]:
-  - QCOM_AOSS_QMP [=m] && (ARCH_QCOM || COMPILE_TEST [=y]) && MAILBOX [=y] && COMMON_CLK [=y]
-
-Fixes these build errors:
-
-../drivers/base/power/domain.c: In function ‘genpd_queue_power_off_work’:
-../drivers/base/power/domain.c:485:13: error: ‘pm_wq’ undeclared (first use in this function)
-  queue_work(pm_wq, &genpd->power_off_work);
-../drivers/base/power/domain.c:485:13: note: each undeclared identifier is reported only once for each function it appears in
-../drivers/base/power/domain.c: In function ‘genpd_dev_pm_qos_notifier’:
-../drivers/base/power/domain.c:675:25: error: ‘struct dev_pm_info’ has no member named ‘ignore_children’
-   if (!dev || dev->power.ignore_children)
-../drivers/base/power/domain.c: In function ‘rtpm_status_str’:
-../drivers/base/power/domain.c:2754:16: error: ‘struct dev_pm_info’ has no member named ‘runtime_error’
-  if (dev->power.runtime_error)
-../drivers/base/power/domain.c:2756:21: error: ‘struct dev_pm_info’ has no member named ‘disable_depth’
-  else if (dev->power.disable_depth)
-../drivers/base/power/domain.c:2758:21: error: ‘struct dev_pm_info’ has no member named ‘runtime_status’
-  else if (dev->power.runtime_status < ARRAY_SIZE(status_lookup))
-../drivers/base/power/domain.c:2759:31: error: ‘struct dev_pm_info’ has no member named ‘runtime_status’
-   p = status_lookup[dev->power.runtime_status];
-../drivers/base/power/domain_governor.c: In function ‘default_suspend_ok’:
-../drivers/base/power/domain_governor.c:82:17: error: ‘struct dev_pm_info’ has no member named ‘ignore_children’
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>
-Cc: David Brown <david.brown@linaro.org>
+Fixes: - ("i2c: mux/i801: Switch to use descriptor passing")
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Peter Rosin <peda@axentia.se>
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/soc/qcom/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-i801.c    |  2 +-
+ drivers/i2c/muxes/i2c-mux-gpio.c | 10 +++++-----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
---- linux-next-20190614.orig/drivers/soc/qcom/Kconfig
-+++ linux-next-20190614/drivers/soc/qcom/Kconfig
-@@ -8,7 +8,7 @@ config QCOM_AOSS_QMP
- 	tristate "Qualcomm AOSS Driver"
- 	depends on ARCH_QCOM || COMPILE_TEST
- 	depends on MAILBOX
--	depends on COMMON_CLK
-+	depends on COMMON_CLK && PM
- 	select PM_GENERIC_DOMAINS
- 	help
- 	  This driver provides the means of communicating with and controlling
-
+diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+index a377d94968af..ec54b5b4f1a1 100644
+--- a/drivers/i2c/busses/i2c-i801.c
++++ b/drivers/i2c/busses/i2c-i801.c
+@@ -1276,7 +1276,7 @@ static int i801_add_mux(struct i801_priv *priv)
+ 	for (i = 0; i < mux_config->n_gpios; i++) {
+ 		lookup->table[i].chip_label = mux_config->gpio_chip;
+ 		lookup->table[i].chip_hwnum = mux_config->gpios[i];
+-		lookup->table[i].con_id = NULL;
++		lookup->table[i].con_id = "mux";
+ 	}
+ 	gpiod_add_lookup_table(lookup);
+ 	priv->lookup = lookup;
+diff --git a/drivers/i2c/muxes/i2c-mux-gpio.c b/drivers/i2c/muxes/i2c-mux-gpio.c
+index b9578f668fb2..1ea097dc8d5d 100644
+--- a/drivers/i2c/muxes/i2c-mux-gpio.c
++++ b/drivers/i2c/muxes/i2c-mux-gpio.c
+@@ -130,10 +130,10 @@ static int i2c_mux_gpio_probe(struct platform_device *pdev)
+ 			sizeof(mux->data));
+ 	}
+ 
+-	ngpios = gpiod_count(&pdev->dev, NULL);
+-	if (!ngpios) {
+-		dev_err(&pdev->dev, "no gpios provided\n");
+-		return -EINVAL;
++	ngpios = gpiod_count(&pdev->dev, "mux");
++	if (ngpios <= 0) {
++		dev_err(&pdev->dev, "no valid gpios provided\n");
++		return ngpios ?: -EINVAL;
+ 	}
+ 	mux->ngpios = ngpios;
+ 
+@@ -173,7 +173,7 @@ static int i2c_mux_gpio_probe(struct platform_device *pdev)
+ 			flag = GPIOD_OUT_HIGH;
+ 		else
+ 			flag = GPIOD_OUT_LOW;
+-		gpiod = devm_gpiod_get_index(&pdev->dev, NULL, i, flag);
++		gpiod = devm_gpiod_get_index(&pdev->dev, "mux", i, flag);
+ 		if (IS_ERR(gpiod)) {
+ 			ret = PTR_ERR(gpiod);
+ 			goto alloc_failed;
+-- 
+2.21.0
 
