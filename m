@@ -2,130 +2,109 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 109CBC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB41C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC1921841
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:33:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YNTWic+1"
+	by mail.kernel.org (Postfix) with ESMTP id 992F821848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:34:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfFNQda (ORCPT
+        id S1726138AbfFNQeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:33:30 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35224 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbfFNQd3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:33:29 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c6so2948215wml.0;
-        Fri, 14 Jun 2019 09:33:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fFqxIRcGH8oZzLwiEq09xzWUQlnGrozgrNZLPkvhIj4=;
-        b=YNTWic+1630gnNTb8Sch4/BCNM++THosM5ESxK7efvK/NDqX1sXG4qNMCR5f5rC1nd
-         n8QoPEdC1SHcx6nrTfTfubnsLaC7ny7AtItLgAGfU/TO02I7g9RT1kd2I1IW+T2/mu6i
-         MV029DbEAYFmZR8tXvdtpd0uyW4verAT15QQTJeznWlLfI5+aXkZnl2/Zv7T3kDoxtzQ
-         4aI/vsNRAEM7Wym4D892XSVxXOrjiQogg2yJWUMZzdcZNLK6IS+vjMioakjvaVS/RXrW
-         /gRQCdbIWWW31q7fRau0RSX1yqM2cdgqSZmLL2Me1dtzHXB13BViKgWORjzqDoDOxP+v
-         RuTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fFqxIRcGH8oZzLwiEq09xzWUQlnGrozgrNZLPkvhIj4=;
-        b=lRT5+UX9r8GP9SOId7z68ykoNkgBBATBY20lgfSelipQJBtv/Fkj5Cc1F4OoMd+Yeo
-         6hI4Og1sXiArOIGl+HCIm/BVbk3yVoKYNlvrWxdMhbWuXePUBxPNDycv4oVR8QLX+T/X
-         7h16SWQzJ6n8Q1OgsNXvXVXhzkYZZZrcOeP9nVHq46Cc41iCYiz3mNpgOH3L4oXQaLB1
-         IlqSLnaNmeCZ/EBcDEGHSJQFZKdMx6Wo6KP1ZoHzAbh5fh/85yPdZCB03N/1ia0uzJO1
-         NIUIJlX1Hccfvc0jbW8uL7yBp29FIJNSmKMvgSYDY3iju27j6ZE7J+1t9r3BVfcwCUMj
-         wnkA==
-X-Gm-Message-State: APjAAAVeKV8o/UAnCslFq1GErASCLadhPceXg2PaUIPnpplXNEhrC/dX
-        VUTiQYNchPUHzYVEZEcPI4A=
-X-Google-Smtp-Source: APXvYqz0OZbvPa2/1qYozLjynroXmsbH+4PiBzYOo8j3wFczAh/yCK9MUv672sSvaRrw7qPIY0NPgg==
-X-Received: by 2002:a1c:452:: with SMTP id 79mr8895726wme.149.1560530007368;
-        Fri, 14 Jun 2019 09:33:27 -0700 (PDT)
-Received: from smtp.gmail.com (1.77.115.89.rev.vodafone.pt. [89.115.77.1])
-        by smtp.gmail.com with ESMTPSA id y6sm2864580wrp.12.2019.06.14.09.33.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 09:33:26 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 13:33:19 -0300
-From:   Melissa Wen <melissa.srw@gmail.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Barry Song <21cnbao@gmail.com>
-Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: [PATCH v2 3/3] staging: iio: ad7150: clean up of comments
-Message-ID: <a88f36a998eb3fc91cc70bc8fc76e3614706cdbe.1560529045.git.melissa.srw@gmail.com>
-References: <cover.1560529045.git.melissa.srw@gmail.com>
+        Fri, 14 Jun 2019 12:34:18 -0400
+Received: from mga02.intel.com ([134.134.136.20]:49731 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725808AbfFNQeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 12:34:17 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 09:34:16 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga008.fm.intel.com with ESMTP; 14 Jun 2019 09:34:16 -0700
+Date:   Fri, 14 Jun 2019 09:34:16 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        vkuznets@redhat.com
+Subject: Re: [PATCH 42/43] KVM: VMX: Leave preemption timer running when it's
+ disabled
+Message-ID: <20190614163416.GH12191@linux.intel.com>
+References: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
+ <1560445409-17363-43-git-send-email-pbonzini@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1560529045.git.melissa.srw@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1560445409-17363-43-git-send-email-pbonzini@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-General cleaning of comments to remove useless information or improve
-description.
+On Thu, Jun 13, 2019 at 07:03:28PM +0200, Paolo Bonzini wrote:
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
+> 
+> VMWRITEs to the major VMCS controls, pin controls included, are
+> deceptively expensive.  CPUs with VMCS caching (Westmere and later) also
+> optimize away consistency checks on VM-Entry, i.e. skip consistency
+> checks if the relevant fields have not changed since the last successful
+> VM-Entry (of the cached VMCS).  Because uops are a precious commodity,
+> uCode's dirty VMCS field tracking isn't as precise as software would
+> prefer.  Notably, writing any of the major VMCS fields effectively marks
+> the entire VMCS dirty, i.e. causes the next VM-Entry to perform all
+> consistency checks, which consumes several hundred cycles.
+> 
+> As it pertains to KVM, toggling PIN_BASED_VMX_PREEMPTION_TIMER more than
+> doubles the latency of the next VM-Entry (and again when/if the flag is
+> toggled back).  In a non-nested scenario, running a "standard" guest
+> with the preemption timer enabled, toggling the timer flag is uncommon
+> but not rare, e.g. roughly 1 in 10 entries.  Disabling the preemption
+> timer can change these numbers due to its use for "immediate exits",
+> even when explicitly disabled by userspace.
+> 
+> Nested virtualization in particular is painful, as the timer flag is set
+> for the majority of VM-Enters, but prepare_vmcs02() initializes vmcs02's
+> pin controls to *clear* the flag since its the timer's final state isn't
+> known until vmx_vcpu_run().  I.e. the majority of nested VM-Enters end
+> up unnecessarily writing pin controls *twice*.
+> 
+> Rather than toggle the timer flag in pin controls, set the timer value
+> itself to the largest allowed value to put it into a "soft disabled"
+> state, and ignore any spurious preemption timer exits.
+> 
+> Sadly, the timer is a 32-bit value and so theoretically it can fire
+> before the head death of the universe, i.e. spurious exits are possible.
 
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
----
- drivers/staging/iio/cdc/ad7150.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+s/head/heat
 
-diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
-index 7d56f10a19ed..51d6b52bce8b 100644
---- a/drivers/staging/iio/cdc/ad7150.c
-+++ b/drivers/staging/iio/cdc/ad7150.c
-@@ -163,7 +163,8 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
- 	return -EINVAL;
- }
- 
--/* lock should be held */
-+/* state_lock should be held to ensure consistent state*/
-+
- static int ad7150_write_event_params(struct iio_dev *indio_dev,
- 				     unsigned int chan,
- 				     enum iio_event_type type,
-@@ -479,10 +480,6 @@ static const struct iio_chan_spec ad7150_channels[] = {
- 	AD7150_CAPACITANCE_CHAN(1)
- };
- 
--/*
-- * threshold events
-- */
--
- static irqreturn_t ad7150_event_handler(int irq, void *private)
- {
- 	struct iio_dev *indio_dev = private;
-@@ -571,10 +568,6 @@ static const struct iio_info ad7150_info = {
- 	.write_event_value = &ad7150_write_event_value,
- };
- 
--/*
-- * device probe and remove
-- */
--
- static int ad7150_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
--- 
-2.20.1
+> But because KVM does *not* save the timer value on VM-Exit and because
+> the timer runs at a slower rate than the TSC, the maximuma timer value
 
+s/maximuma/maximum
+
+> is still sufficiently large for KVM's purposes.  E.g. on a modern CPU
+> with a timer that runs at 1/32 the frequency of a 2.4ghz constant-rate
+> TSC, the timer will fire after ~55 seconds of *uninterrupted* guest
+> execution.  In other words, spurious VM-Exits are effectively only
+> possible if the *host* is tickless on the logical CPU, the guest is
+> not using the preemption timer, and the guest is not generating VM-Exits
+> for *any* other reason.
+> 
+> To be safe from bad/weird hardware, disable the preemption timer if its
+> maximum delay is less than ten seconds.  Ten seconds is mostly arbitrary
+> and was selected in no small part because it's a nice round number.
+> For simplicity and paranoia, fall back to __kvm_request_immediate_exit()
+> if the preemption timer is disabled by KVM or userspace.  Previously
+> KVM continued to use the preemption timer to force immediate exits even
+> when the timer was disabled by userspace.  Now that KVM leaves the timer
+> running instead of truly disabling it, allow userspace to kill it
+> entirely in the unlikely event the timer (or KVM) malfunctions.
+> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
