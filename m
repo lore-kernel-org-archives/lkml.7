@@ -2,153 +2,122 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70911C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C546C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7E12183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560547837;
-	bh=ZxDW8K6J+radmhN5Vs7dffyGWwY56OXzv8PYXR/lauo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nZcOISdQ6lbpPS8vwsQ4vOdgp7XKPO5/wZ05Ug1GI02Xz3Rr3FexTw9LqOb9MS8+o
-	 LjqBfPu74Xy/wotIvSYRgt/DSOpztwOw4r46X1MVIYbOSwqE3e39tvj9VHJoF8BUh2
-	 +ZHKNBqASMak0NqCgzeQgshslEj6jBXHH0F3K+1U=
+	by mail.kernel.org (Postfix) with ESMTP id DD32420850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:36:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbfFNVag (ORCPT
+        id S1726389AbfFNVgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 17:30:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbfFNVaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 17:30:35 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E908206BB;
-        Fri, 14 Jun 2019 21:30:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560547834;
-        bh=ZxDW8K6J+radmhN5Vs7dffyGWwY56OXzv8PYXR/lauo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D/zHigl6AEHgfKDfYaQUw48nJ0lJIJi63bv2MJ+d8wmz+4j43FfzZUkMaIGPzY7VV
-         n+W7xyxXoFe8ifSY15/YHLd5tqvHKjYOYq243asXrG4VkaF+IKjYq4SNTJiVqGGVD3
-         isDi+ABOK/k1Q25bBsPQ+LT1tqvlis8g776GBz60=
-Date:   Fri, 14 Jun 2019 16:30:33 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Linas Vepstas <linasvepstas@gmail.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        "Manoj N. Kumar" <manoj@linux.ibm.com>,
-        "Matthew R. Ochs" <mrochs@linux.ibm.com>,
-        Uma Krishnan <ukrishn@linux.ibm.com>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Subject: Re: [PATCH v4 19/28] docs: powerpc: convert docs to ReST and rename
- to *.rst
-Message-ID: <20190614213033.GV13533@google.com>
-References: <cover.1560361364.git.mchehab+samsung@kernel.org>
- <63560c1ee7174952e148a353840a17969fe0be2d.1560361364.git.mchehab+samsung@kernel.org>
- <20190614143635.3aff154d@lwn.net>
+        Fri, 14 Jun 2019 17:36:14 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:32973 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfFNVgN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 17:36:13 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so3973684wru.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 14:36:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=bCvKwbWJesvWCy0sKuZ4V0I/xR2OhzdiNEAy87dgHgM=;
+        b=AjPXFC2pW4DWQx+QYIgvHV9fR93dv/DkRQODLVHcHudlfy+vveJ2PUdRkR7JoswGTv
+         sxgjrZJpdunKBtE2ibOnXrP/yBm9n4ZIBb84jlQ1yn+1jH0WeX8B71qoMoigOuPrDyUC
+         pi+GG9DZNU7dHQeheAxVLMPSllcFvkNWaI23gc8vW0aFffCl/oLCXU5VK/Z+CbrQ/6q1
+         0EIY8/1huEtqmkDD26mwNzy8ZQw137iFw2cMWRWibbAvGbUYZTioDqEmJw2izV5WD/Y/
+         j6y9wU4znG0TqNe3NWXCssEIyZrUa2GxWU6r0nqLAyKcaTdX83J7bF6ytRRo2BkwvY9V
+         sasQ==
+X-Gm-Message-State: APjAAAVRgc40FG5IdpbwqjpXgxoW9LOd3BuW2EcqoASE2reDS0CZnTLy
+        yYDbtLSOAefLLVPhQCYs+E41GA==
+X-Google-Smtp-Source: APXvYqyaz9SMMAfY94vjBsF6aHQAfX+3a3A9OUyl0nhTjKgPhD32zJqRx7RQJvJahMVOLtJk25eU4Q==
+X-Received: by 2002:a5d:500d:: with SMTP id e13mr3847025wrt.337.1560548171165;
+        Fri, 14 Jun 2019 14:36:11 -0700 (PDT)
+Received: from vitty.brq.redhat.com (ip-78-102-201-117.net.upcbroadband.cz. [78.102.201.117])
+        by smtp.gmail.com with ESMTPSA id y6sm2905993wma.6.2019.06.14.14.36.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 14:36:10 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Dmitry Safonov <dima@arista.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Prasanna Panchamukhi <panchamukhi@arista.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Cathy Avery <cavery@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        "Michael Kelley \(EOSG\)" <Michael.H.Kelley@microsoft.com>,
+        Mohammed Gamal <mmorsy@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devel@linuxdriverproject.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] x86/hyperv: Disable preemption while setting reenlightenment vector
+In-Reply-To: <cb9e1645-98c2-4341-d6da-4effa4f57fb1@arista.com>
+References: <20190611212003.26382-1-dima@arista.com> <8736kff6q3.fsf@vitty.brq.redhat.com> <20190614082807.GV3436@hirez.programming.kicks-ass.net> <877e9o7a4e.fsf@vitty.brq.redhat.com> <cb9e1645-98c2-4341-d6da-4effa4f57fb1@arista.com>
+Date:   Fri, 14 Jun 2019 23:36:09 +0200
+Message-ID: <87sgsb6e9i.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614143635.3aff154d@lwn.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 02:36:35PM -0600, Jonathan Corbet wrote:
-> On Wed, 12 Jun 2019 14:52:55 -0300
-> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-> 
-> > Convert docs to ReST and add them to the arch-specific
-> > book.
-> > 
-> > The conversion here was trivial, as almost every file there
-> > was already using an elegant format close to ReST standard.
-> > 
-> > The changes were mostly to mark literal blocks and add a few
-> > missing section title identifiers.
-> > 
-> > One note with regards to "--": on Sphinx, this can't be used
-> > to identify a list, as it will format it badly. This can be
-> > used, however, to identify a long hyphen - and "---" is an
-> > even longer one.
-> > 
-> > At its new index.rst, let's add a :orphan: while this is not linked to
-> > the main index.rst file, in order to avoid build warnings.
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> > Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com> # cxl
-> 
-> This one fails to apply because ...
-> 
-> [...]
-> 
-> > diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI/pci-error-recovery.rst
-> > index 83db42092935..acc21ecca322 100644
-> > --- a/Documentation/PCI/pci-error-recovery.rst
-> > +++ b/Documentation/PCI/pci-error-recovery.rst
-> > @@ -403,7 +403,7 @@ That is, the recovery API only requires that:
-> >  .. note::
-> >  
-> >     Implementation details for the powerpc platform are discussed in
-> > -   the file Documentation/powerpc/eeh-pci-error-recovery.txt
-> > +   the file Documentation/powerpc/eeh-pci-error-recovery.rst
-> >  
-> >     As of this writing, there is a growing list of device drivers with
-> >     patches implementing error recovery. Not all of these patches are in
-> > @@ -422,3 +422,24 @@ That is, the recovery API only requires that:
-> >     - drivers/net/cxgb3
-> >     - drivers/net/s2io.c
-> >     - drivers/net/qlge
-> > +
-> > +>>> As of this writing, there is a growing list of device drivers with
-> > +>>> patches implementing error recovery. Not all of these patches are in
-> > +>>> mainline yet. These may be used as "examples":
-> > +>>>
-> > +>>> drivers/scsi/ipr
-> > +>>> drivers/scsi/sym53c8xx_2
-> > +>>> drivers/scsi/qla2xxx
-> > +>>> drivers/scsi/lpfc
-> > +>>> drivers/next/bnx2.c
-> > +>>> drivers/next/e100.c
-> > +>>> drivers/net/e1000
-> > +>>> drivers/net/e1000e
-> > +>>> drivers/net/ixgb
-> > +>>> drivers/net/ixgbe
-> > +>>> drivers/net/cxgb3
-> > +>>> drivers/net/s2io.c
-> > +>>> drivers/net/qlge  
-> 
-> ...of this, which has the look of a set of conflict markers that managed
-> to get committed...?
+Dmitry Safonov <dima@arista.com> writes:
 
-I don't see these conflict markers in my local branch or in
-linux-next (next-20190614).
+> On 6/14/19 11:08 AM, Vitaly Kuznetsov wrote:
+>> Peter Zijlstra <peterz@infradead.org> writes:
+>> 
+>>> @@ -182,7 +182,7 @@ void set_hv_tscchange_cb(void (*cb)(void))
+>>>  	struct hv_reenlightenment_control re_ctrl = {
+>>>  		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
+>>>  		.enabled = 1,
+>>> -		.target_vp = hv_vp_index[smp_processor_id()]
+>>> +		.target_vp = hv_vp_index[raw_smp_processor_id()]
+>>>  	};
+>>>  	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
+>>>  
+>> 
+>> Yes, this should do, thanks! I'd also suggest to leave a comment like
+>> 	/* 
+>>          * This function can get preemted and migrate to a different CPU
+>> 	 * but this doesn't matter. We just need to assign
+>> 	 * reenlightenment notification to some online CPU. In case this
+>>          * CPU goes offline, hv_cpu_die() will re-assign it to some
+>>  	 * other online CPU.
+>> 	 */
+>
+> What if the cpu goes down just before wrmsrl()?
+> I mean, hv_cpu_die() will reassign another cpu, but this thread will be
+> resumed on some other cpu and will write cpu number which is at that
+> moment already down?
+>
 
-Let me know if I need to do something.
+Right you are, we need to guarantee wrmsr() happens before the CPU gets
+a chance to go offline: we don't save the cpu number anywhere, we just
+read it with rdmsr() in hv_cpu_die().
 
-Bjorn
+>
+> And I presume it's guaranteed that during hv_cpu_die() no other cpu may
+> go down:
+> :	new_cpu = cpumask_any_but(cpu_online_mask, cpu);
+> :	re_ctrl.target_vp = hv_vp_index[new_cpu];
+> :	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
+
+I *think* I got convinced that CPUs don't go offline simultaneously when
+I was writing this.
+
+-- 
+Vitaly
