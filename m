@@ -2,105 +2,75 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6532C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C88C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB45D2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAF732133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:01:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cSm5PBNC"
+	dkim=pass (1024-bit key) header.d=megamailservers.eu header.i=@megamailservers.eu header.b="ajU78w1w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbfFNL5B (ORCPT
+        id S1727607AbfFNMBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 07:57:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33744 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbfFNL5B (ORCPT
+        Fri, 14 Jun 2019 08:01:03 -0400
+Received: from mail200c50.megamailservers.eu ([91.136.10.210]:53218 "EHLO
+        mail193c50.megamailservers.eu" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727054AbfFNMBC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 07:57:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sguVOcCD8xzkuKBxAXbNwLoTIO2Bzo3Eiksza5G7pQs=; b=cSm5PBNCt4M8uJZY1qjBxCUXr
-        H5O87c2TUu73yBZbv+rbeId9QKYO7rcOoardZx9weKhgS+3hIMIFgLL4gq0VjjQ41UCQ0DZTJEvBE
-        v9L26qxOd+/i6m3ddYrH901cECMuXIRsttSXQbJ/ac3UCFB6SWlLjHy/J0weQblA0TThiRJPQeWkB
-        rU+VGSfcBuXDneU9uteMmYGcC+aTCn5DvWUt2neAkStNKIfgqTFlWpBFp4a4oUAtJ7MonQrarCOB8
-        l1CAdU/xZhFdBlq06gHnV/SuU6BN5256YqvNgiiialsn3ZXhyRUV73I2u1viT0U+EGpE+8IZxyp4+
-        NfcckPLsg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbkp7-0003dw-4X; Fri, 14 Jun 2019 11:56:49 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A68CE20A29B4F; Fri, 14 Jun 2019 13:56:47 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 13:56:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 49/62] mm, x86: export several MKTME variables
-Message-ID: <20190614115647.GI3436@hirez.programming.kicks-ass.net>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-50-kirill.shutemov@linux.intel.com>
+        Fri, 14 Jun 2019 08:01:02 -0400
+X-Authenticated-User: wbauer@tmo.at
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megamailservers.eu;
+        s=maildub; t=1560513626;
+        bh=HVZyoYyM61MSoHgSx0nqGlz+bAaRv7VaJl1ZVD0l7EQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ajU78w1wwJXOsrObkFi8VAXW/WsL43zrnS4Q7KteFPeBY/mMtWffDon6bjG7w11kf
+         RNhzXQyl546v0ZkiEi/EDiKYWAC7muILlzoiN3TxCuVFbajvZ+aoCzcw9SquVE6WEo
+         0fMOpfWoJ3JuK9PneHum9bTA2fYohVJgQRrJWwL0=
+Feedback-ID: wbauer@tmo.at
+Received: from linux-lf90.site (217-149-172-93.nat.highway.telekom.at [217.149.172.93])
+        (authenticated bits=0)
+        by mail193c50.megamailservers.eu (8.14.9/8.13.1) with ESMTP id x5EC0NHa004834;
+        Fri, 14 Jun 2019 12:00:25 +0000
+From:   Wolfgang Bauer <wbauer@tmo.at>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jiri Kosina <jikos@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] HID: input: fix a4tech horizontal wheel custom usage
+Date:   Fri, 14 Jun 2019 14:00:13 +0200
+Message-ID: <2514994.ymxK7X2f37@linux-lf90.site>
+User-Agent: KMail/4.14.10 (Linux/4.12.14-lp151.28.20-default; KDE/4.14.38; x86_64; ; )
+In-Reply-To: <CAO-hwJLAiC1o-kZ5epZHtO2GK+zc5x28pYbZH-XsY4yAuBmHWw@mail.gmail.com>
+References: <20190611121320.30267-1-nsaenzjulienne@suse.de> <CAO-hwJLAiC1o-kZ5epZHtO2GK+zc5x28pYbZH-XsY4yAuBmHWw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508144422.13171-50-kirill.shutemov@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-CTCH-RefID: str=0001.0A0B0214.5D038C5A.001F,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+X-CTCH-VOD: Unknown
+X-CTCH-Spam: Unknown
+X-CTCH-Score: 0.000
+X-CTCH-Rules: 
+X-CTCH-Flags: 0
+X-CTCH-ScoreCust: 0.000
+X-CSC:  0
+X-CHA:  v=2.3 cv=PM8hB8iC c=1 sm=1 tr=0 a=G5og7FbuazVw68zQRAv8gg==:117
+        a=G5og7FbuazVw68zQRAv8gg==:17 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+        a=kj9zAlcOel0A:10 a=1oJP67jkp3AA:10 a=ZZnuYtJkoWoA:10
+        a=W0sgn5rJMnlEUb_Bpn4A:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 05:44:09PM +0300, Kirill A. Shutemov wrote:
-> From: Kai Huang <kai.huang@linux.intel.com>
-> 
-> KVM needs those variables to get/set memory encryption mask.
-> 
-> Signed-off-by: Kai Huang <kai.huang@linux.intel.com>
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> ---
->  arch/x86/mm/mktme.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
-> index df70651816a1..12f4266cf7ea 100644
-> --- a/arch/x86/mm/mktme.c
-> +++ b/arch/x86/mm/mktme.c
-> @@ -7,13 +7,16 @@
->  
->  /* Mask to extract KeyID from physical address. */
->  phys_addr_t mktme_keyid_mask;
-> +EXPORT_SYMBOL_GPL(mktme_keyid_mask);
->  /*
->   * Number of KeyIDs available for MKTME.
->   * Excludes KeyID-0 which used by TME. MKTME KeyIDs start from 1.
->   */
->  int mktme_nr_keyids;
-> +EXPORT_SYMBOL_GPL(mktme_nr_keyids);
->  /* Shift of KeyID within physical address. */
->  int mktme_keyid_shift;
-> +EXPORT_SYMBOL_GPL(mktme_keyid_shift);
->  
->  DEFINE_STATIC_KEY_FALSE(mktme_enabled_key);
->  EXPORT_SYMBOL_GPL(mktme_enabled_key);
+I tested linux-next (20190612) meanwhile as well.
+My mouse wheel doesn't work with that kernel, this patch fixes it.
 
-NAK, don't export variables. Who owns the values, who enforces this?
+Kind Regards,
+Wolfgang
+
