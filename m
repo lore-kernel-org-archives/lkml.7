@@ -2,79 +2,97 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42EBC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 191D1C31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD4DD2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59CD21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:43:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="QR/Frpj4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbfFNNnE (ORCPT
+        id S1728353AbfFNNnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:43:04 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:38068 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728069AbfFNNnC (ORCPT
+        Fri, 14 Jun 2019 09:43:46 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41550 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727979AbfFNNnq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:43:02 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hbmTS-0005an-I9; Fri, 14 Jun 2019 15:42:34 +0200
-Date:   Fri, 14 Jun 2019 15:42:33 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dmitry Safonov <dima@arista.com>
-cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv4 07/28] posix-timers/timens: Take into account clock
- offsets
-In-Reply-To: <20190612192628.23797-8-dima@arista.com>
-Message-ID: <alpine.DEB.2.21.1906141538240.1722@nanos.tec.linutronix.de>
-References: <20190612192628.23797-1-dima@arista.com> <20190612192628.23797-8-dima@arista.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 14 Jun 2019 09:43:46 -0400
+Received: by mail-qt1-f196.google.com with SMTP id 33so2463452qtr.8
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:43:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aXm35D07rUjPalP4CfdXm4RG5Oa6TLe+BWj9APerSEg=;
+        b=QR/Frpj4TG8mlIKMQ8x4IzLOAFOk25NuIc41EaC9lVa+w/n88BtrrXCtofyiOLcBhQ
+         Ezeq0yN2wzhUdN1vU2w1zT+V527yXqLZF/+MLPfVmTNAtX7P4rRVe0DL2RGw1IGwvkhj
+         0KDirUSeO28izbosQHeBo0cYVQuorCRyA8FkTx4KP3ZVVmk2W76yy5ocUMvKbrVs7f5E
+         G+deGxfel0FA+FY110QfZw7k7b3xnpeyMTNzP4c19Tm8CffN2A/jkYI/34ElKabeYW5I
+         b0HU2seMrkx9Fzxz2rqbfqxlowdUUvCJuIQL/eGCkPMU4cK5IaFV7RZmAMvH+obj+Kr1
+         xdzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aXm35D07rUjPalP4CfdXm4RG5Oa6TLe+BWj9APerSEg=;
+        b=cG7gfM4MYP7XPANjZe1B8QXKPN6YqNYbuLR5vz1DzlCGMcQ790RP8i5LLlBWdM646L
+         WxDHqo5UTPd+rivkPeiMFG/8yoPTkao31Bey52oQnKpLOS40VlU0GIKF0FJSFpg23umX
+         oMnjuAky5PrvdYdDFqDSgrwOfcU2WXc1zg5U7416l6arlNPThF/zabklS33c/sgfTKvI
+         SJvxEF2JV/YQGGFSz+9MK+vr7pAbmzA+5ogCLXjWEzCe+mZPxLR49dycmt0zpijF/jwH
+         t4wsVO6/rmwQ3QyOzlpcU4zIRvUOBhfCb4hUMPvetuLENpFjUc9NKuW/YkNpc0ZuzUYK
+         zPUA==
+X-Gm-Message-State: APjAAAWe4l9gdCcVyffxObNUTlidPUuX0DF2nM13b/uJO29T9+JkRmdD
+        iSM0AIImPlPMmWs6FlTUrhSTOg==
+X-Google-Smtp-Source: APXvYqwz2/lYE4zseDXYhlp0RL/XY7Q0dZxV33vLDM4hSXrLx92LsZ3CWxcDYpnpK2WqRaqGxcv0MA==
+X-Received: by 2002:a0c:ba97:: with SMTP id x23mr8397472qvf.133.1560519825110;
+        Fri, 14 Jun 2019 06:43:45 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::a658])
+        by smtp.gmail.com with ESMTPSA id s64sm1507782qkb.56.2019.06.14.06.43.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 06:43:44 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 09:43:43 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
+        axboe@kernel.dk, jack@suse.cz, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 3/8] blkcg: implement REQ_CGROUP_PUNT
+Message-ID: <20190614134342.rtm4iwxgzbsueyfg@MacBook-Pro-91.local>
+References: <20190614003350.1178444-1-tj@kernel.org>
+ <20190614003350.1178444-4-tj@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614003350.1178444-4-tj@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Jun 2019, Dmitry Safonov wrote:
-
-> Subject: posix-timers/timens: Take into account clock offsets
-
-Please avoid that '/timens' appendix. It's not really a new subsystem or
-subfunction of posix-timers.
-
-posix-timers: Add time namespace support to common_timer_set()
-
-> From: Andrei Vagin <avagin@gmail.com>
+On Thu, Jun 13, 2019 at 05:33:45PM -0700, Tejun Heo wrote:
+> When a shared kthread needs to issue a bio for a cgroup, doing so
+> synchronously can lead to priority inversions as the kthread can be
+> trapped waiting for that cgroup.  This patch implements
+> REQ_CGROUP_PUNT flag which makes submit_bio() punt the actual issuing
+> to a dedicated per-blkcg work item to avoid such priority inversions.
 > 
-> Wire timer_settime() syscall into time namespace virtualization.
+> This will be used to fix priority inversions in btrfs compression and
+> should be generally useful as we grow filesystem support for
+> comprehensive IO control.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Cc: Chris Mason <clm@fb.com>
 
-Please explain why this only affects common_timer_set() and not any other
-incarnation along with an explanation why only ABSTIME timers need to be
-converted.
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 
 Thanks,
 
-	tglx
+Josef
