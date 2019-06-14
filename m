@@ -2,489 +2,121 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CB7C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB0BC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F36E2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE2C208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:40:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NqXdVm1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfFNKjw (ORCPT
+        id S1727597AbfFNKkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:39:52 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:36076 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726784AbfFNKjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:39:15 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 539C4200E7C;
-        Fri, 14 Jun 2019 12:39:13 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9710D200E7F;
-        Fri, 14 Jun 2019 12:39:08 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6EE5F402DD;
-        Fri, 14 Jun 2019 18:39:02 +0800 (SGT)
-From:   Yangbo Lu <yangbo.lu@nxp.com>
-To:     netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
+        Fri, 14 Jun 2019 06:40:20 -0400
+Received: from mail-eopbgr10051.outbound.protection.outlook.com ([40.107.1.51]:47842
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726931AbfFNKkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 06:40:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tU6UMKygDXTyhPtQhhaWcowdl9X2b4kaHu1DeoXO+70=;
+ b=NqXdVm1lh0awjs5w3Y5/S5wdpa8yh5lq3NI8E9bfRQGvmc4ERJ50TMF8L7B0z2LjT7OEjkTGAPSRVrruT8LhDNhLq23OoWqkt52sm87yk6eQ//IznX+7qIP6VbFCDmDvEQjjD5e6NfphqmSgDsZG9WKebDctRwHGXBG5wPt1HEo=
+Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com (10.169.132.138) by
+ VI1PR0401MB2543.eurprd04.prod.outlook.com (10.168.66.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.12; Fri, 14 Jun 2019 10:40:14 +0000
+Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com
+ ([fe80::3408:f7f9:7f82:c67c]) by VI1PR0401MB2237.eurprd04.prod.outlook.com
+ ([fe80::3408:f7f9:7f82:c67c%7]) with mapi id 15.20.1987.013; Fri, 14 Jun 2019
+ 10:40:14 +0000
+From:   "Y.b. Lu" <yangbo.lu@nxp.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
         Richard Cochran <richardcochran@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v2, 2/6] dpaa2-ptp: reuse ptp_qoriq driver
-Date:   Fri, 14 Jun 2019 18:40:51 +0800
-Message-Id: <20190614104055.43998-3-yangbo.lu@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190614104055.43998-1-yangbo.lu@nxp.com>
-References: <20190614104055.43998-1-yangbo.lu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Shawn Guo <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH 1/6] ptp: add QorIQ PTP support for DPAA2
+Thread-Topic: [PATCH 1/6] ptp: add QorIQ PTP support for DPAA2
+Thread-Index: AQHVHztS7fz1CkTI/EyG9roH6EAQXaaU3AqAgAKPkpCAAJZvgIAC+lZw
+Date:   Fri, 14 Jun 2019 10:40:13 +0000
+Message-ID: <VI1PR0401MB223763F5537C0E5F3A9C33DAF8EE0@VI1PR0401MB2237.eurprd04.prod.outlook.com>
+References: <20190610032108.5791-1-yangbo.lu@nxp.com>
+ <20190610032108.5791-2-yangbo.lu@nxp.com> <20190610130601.GD8247@lunn.ch>
+ <VI1PR0401MB2237247525AB5DB5B5F275A8F8EC0@VI1PR0401MB2237.eurprd04.prod.outlook.com>
+ <20190612131049.GC23615@lunn.ch>
+In-Reply-To: <20190612131049.GC23615@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yangbo.lu@nxp.com; 
+x-originating-ip: [92.121.36.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f583ea9e-1f55-4931-6763-08d6f0b4af10
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0401MB2543;
+x-ms-traffictypediagnostic: VI1PR0401MB2543:
+x-microsoft-antispam-prvs: <VI1PR0401MB2543C4FE3D70B048930FD9B8F8EE0@VI1PR0401MB2543.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0068C7E410
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(136003)(366004)(376002)(39860400002)(199004)(189003)(13464003)(3846002)(6116002)(5660300002)(6436002)(76176011)(52536014)(9686003)(55016002)(229853002)(256004)(6246003)(53936002)(99286004)(76116006)(102836004)(73956011)(66946007)(64756008)(53546011)(66476007)(6506007)(66556008)(7736002)(478600001)(66446008)(66066001)(7696005)(86362001)(8936002)(26005)(486006)(11346002)(71190400001)(71200400001)(446003)(476003)(54906003)(6916009)(305945005)(186003)(4326008)(25786009)(14454004)(68736007)(33656002)(2906002)(74316002)(81156014)(81166006)(8676002)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2543;H:VI1PR0401MB2237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: tGS5RpKA5PpoXDR/4bOew20p0nEJZTzBygC3+9K6chodcj24aA031+LCv1hTGwfCxV4d8sDoWVpV4+HPpKfal8pGaoeS6y8tFq5WfK7ejm4CwuShaqzkWIUcFCwN8eBeXOvYTtLoUY/FKuBSLykQCw/Kci6YtYYM+2nEx1eXGPnj9y4E4uTOu2Nie881eXFrHYLxBUAZIvbkGDvSYkIekjG3p8Itv2dibM01OHDIHgyt+8vDpShbCjJNm90nEYDhO9pNHN97UdCYayjYhylwqsk7z7Z7IaQ2So3WGNbzRaVFtgOqXimdgPXJME22RMMJxnk72yxj41AKEHFHnFDuwT35E9J520dyshbovWILIFcQYIJwIcMe0EfQUaOiHv8IJiVcDiRXAmrkcOkHDxyrFjXiEly8rnEE0vr0ciYnu9E=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f583ea9e-1f55-4931-6763-08d6f0b4af10
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 10:40:14.0070
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yangbo.lu@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2543
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Although dpaa2-ptp.c driver is a fsl_mc_driver which
-is using MC APIs for register accessing, it's same IP
-block with eTSEC/DPAA/ENETC 1588 timer.
-This patch is to convert to reuse ptp_qoriq driver by
-using register ioremap and dropping related MC APIs.
-However the interrupts could only be handled by MC which
-fires MSIs to ARM cores. So the interrupt enabling and
-handling still rely on MC APIs.
-
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
----
-Changes for v2:
-	- None.
----
- drivers/net/ethernet/freescale/dpaa2/Kconfig     |   3 +-
- drivers/net/ethernet/freescale/dpaa2/dpaa2-ptp.c | 160 +++++------------------
- drivers/net/ethernet/freescale/dpaa2/dprtc-cmd.h |  13 --
- drivers/net/ethernet/freescale/dpaa2/dprtc.c     | 120 -----------------
- drivers/net/ethernet/freescale/dpaa2/dprtc.h     |  20 ---
- 5 files changed, 34 insertions(+), 282 deletions(-)
-
-diff --git a/drivers/net/ethernet/freescale/dpaa2/Kconfig b/drivers/net/ethernet/freescale/dpaa2/Kconfig
-index 8bd3847..fbef282 100644
---- a/drivers/net/ethernet/freescale/dpaa2/Kconfig
-+++ b/drivers/net/ethernet/freescale/dpaa2/Kconfig
-@@ -10,8 +10,7 @@ config FSL_DPAA2_ETH
- 
- config FSL_DPAA2_PTP_CLOCK
- 	tristate "Freescale DPAA2 PTP Clock"
--	depends on FSL_DPAA2_ETH
--	imply PTP_1588_CLOCK
-+	depends on FSL_DPAA2_ETH && PTP_1588_CLOCK_QORIQ
- 	default y
- 	help
- 	  This driver adds support for using the DPAA2 1588 timer module
-diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-ptp.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-ptp.c
-index 9b150db..6c57e17 100644
---- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-ptp.c
-+++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-ptp.c
-@@ -5,114 +5,14 @@
-  */
- 
- #include <linux/module.h>
--#include <linux/slab.h>
--#include <linux/ptp_clock_kernel.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
- #include <linux/fsl/mc.h>
-+#include <linux/fsl/ptp_qoriq.h>
- 
- #include "dpaa2-ptp.h"
- 
--struct ptp_dpaa2_priv {
--	struct fsl_mc_device *ptp_mc_dev;
--	struct ptp_clock *clock;
--	struct ptp_clock_info caps;
--	u32 freq_comp;
--};
--
--/* PTP clock operations */
--static int ptp_dpaa2_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
--{
--	struct ptp_dpaa2_priv *ptp_dpaa2 =
--		container_of(ptp, struct ptp_dpaa2_priv, caps);
--	struct fsl_mc_device *mc_dev = ptp_dpaa2->ptp_mc_dev;
--	struct device *dev = &mc_dev->dev;
--	u64 adj;
--	u32 diff, tmr_add;
--	int neg_adj = 0;
--	int err = 0;
--
--	if (ppb < 0) {
--		neg_adj = 1;
--		ppb = -ppb;
--	}
--
--	tmr_add = ptp_dpaa2->freq_comp;
--	adj = tmr_add;
--	adj *= ppb;
--	diff = div_u64(adj, 1000000000ULL);
--
--	tmr_add = neg_adj ? tmr_add - diff : tmr_add + diff;
--
--	err = dprtc_set_freq_compensation(mc_dev->mc_io, 0,
--					  mc_dev->mc_handle, tmr_add);
--	if (err)
--		dev_err(dev, "dprtc_set_freq_compensation err %d\n", err);
--	return err;
--}
--
--static int ptp_dpaa2_adjtime(struct ptp_clock_info *ptp, s64 delta)
--{
--	struct ptp_dpaa2_priv *ptp_dpaa2 =
--		container_of(ptp, struct ptp_dpaa2_priv, caps);
--	struct fsl_mc_device *mc_dev = ptp_dpaa2->ptp_mc_dev;
--	struct device *dev = &mc_dev->dev;
--	s64 now;
--	int err = 0;
--
--	err = dprtc_get_time(mc_dev->mc_io, 0, mc_dev->mc_handle, &now);
--	if (err) {
--		dev_err(dev, "dprtc_get_time err %d\n", err);
--		return err;
--	}
--
--	now += delta;
--
--	err = dprtc_set_time(mc_dev->mc_io, 0, mc_dev->mc_handle, now);
--	if (err)
--		dev_err(dev, "dprtc_set_time err %d\n", err);
--	return err;
--}
--
--static int ptp_dpaa2_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
--{
--	struct ptp_dpaa2_priv *ptp_dpaa2 =
--		container_of(ptp, struct ptp_dpaa2_priv, caps);
--	struct fsl_mc_device *mc_dev = ptp_dpaa2->ptp_mc_dev;
--	struct device *dev = &mc_dev->dev;
--	u64 ns;
--	u32 remainder;
--	int err = 0;
--
--	err = dprtc_get_time(mc_dev->mc_io, 0, mc_dev->mc_handle, &ns);
--	if (err) {
--		dev_err(dev, "dprtc_get_time err %d\n", err);
--		return err;
--	}
--
--	ts->tv_sec = div_u64_rem(ns, 1000000000, &remainder);
--	ts->tv_nsec = remainder;
--	return err;
--}
--
--static int ptp_dpaa2_settime(struct ptp_clock_info *ptp,
--			     const struct timespec64 *ts)
--{
--	struct ptp_dpaa2_priv *ptp_dpaa2 =
--		container_of(ptp, struct ptp_dpaa2_priv, caps);
--	struct fsl_mc_device *mc_dev = ptp_dpaa2->ptp_mc_dev;
--	struct device *dev = &mc_dev->dev;
--	u64 ns;
--	int err = 0;
--
--	ns = ts->tv_sec * 1000000000ULL;
--	ns += ts->tv_nsec;
--
--	err = dprtc_set_time(mc_dev->mc_io, 0, mc_dev->mc_handle, ns);
--	if (err)
--		dev_err(dev, "dprtc_set_time err %d\n", err);
--	return err;
--}
--
--static const struct ptp_clock_info ptp_dpaa2_caps = {
-+static const struct ptp_clock_info dpaa2_ptp_caps = {
- 	.owner		= THIS_MODULE,
- 	.name		= "DPAA2 PTP Clock",
- 	.max_adj	= 512000,
-@@ -121,21 +21,22 @@ static const struct ptp_clock_info ptp_dpaa2_caps = {
- 	.n_per_out	= 3,
- 	.n_pins		= 0,
- 	.pps		= 1,
--	.adjfreq	= ptp_dpaa2_adjfreq,
--	.adjtime	= ptp_dpaa2_adjtime,
--	.gettime64	= ptp_dpaa2_gettime,
--	.settime64	= ptp_dpaa2_settime,
-+	.adjfine	= ptp_qoriq_adjfine,
-+	.adjtime	= ptp_qoriq_adjtime,
-+	.gettime64	= ptp_qoriq_gettime,
-+	.settime64	= ptp_qoriq_settime,
- };
- 
- static int dpaa2_ptp_probe(struct fsl_mc_device *mc_dev)
- {
- 	struct device *dev = &mc_dev->dev;
--	struct ptp_dpaa2_priv *ptp_dpaa2;
--	u32 tmr_add = 0;
-+	struct ptp_qoriq *ptp_qoriq;
-+	struct device_node *node;
-+	void __iomem *base;
- 	int err;
- 
--	ptp_dpaa2 = devm_kzalloc(dev, sizeof(*ptp_dpaa2), GFP_KERNEL);
--	if (!ptp_dpaa2)
-+	ptp_qoriq = devm_kzalloc(dev, sizeof(*ptp_qoriq), GFP_KERNEL);
-+	if (!ptp_qoriq)
- 		return -ENOMEM;
- 
- 	err = fsl_mc_portal_allocate(mc_dev, 0, &mc_dev->mc_io);
-@@ -154,30 +55,33 @@ static int dpaa2_ptp_probe(struct fsl_mc_device *mc_dev)
- 		goto err_free_mcp;
- 	}
- 
--	ptp_dpaa2->ptp_mc_dev = mc_dev;
-+	ptp_qoriq->dev = dev;
- 
--	err = dprtc_get_freq_compensation(mc_dev->mc_io, 0,
--					  mc_dev->mc_handle, &tmr_add);
--	if (err) {
--		dev_err(dev, "dprtc_get_freq_compensation err %d\n", err);
-+	node = of_find_compatible_node(NULL, NULL, "fsl,dpaa2-ptp");
-+	if (!node) {
-+		err = -ENODEV;
- 		goto err_close;
- 	}
- 
--	ptp_dpaa2->freq_comp = tmr_add;
--	ptp_dpaa2->caps = ptp_dpaa2_caps;
-+	dev->of_node = node;
- 
--	ptp_dpaa2->clock = ptp_clock_register(&ptp_dpaa2->caps, dev);
--	if (IS_ERR(ptp_dpaa2->clock)) {
--		err = PTR_ERR(ptp_dpaa2->clock);
-+	base = of_iomap(node, 0);
-+	if (!base) {
-+		err = -ENOMEM;
- 		goto err_close;
- 	}
- 
--	dpaa2_phc_index = ptp_clock_index(ptp_dpaa2->clock);
-+	err = ptp_qoriq_init(ptp_qoriq, base, &dpaa2_ptp_caps);
-+	if (err)
-+		goto err_unmap;
- 
--	dev_set_drvdata(dev, ptp_dpaa2);
-+	dpaa2_phc_index = ptp_qoriq->phc_index;
-+	dev_set_drvdata(dev, ptp_qoriq);
- 
- 	return 0;
- 
-+err_unmap:
-+	iounmap(base);
- err_close:
- 	dprtc_close(mc_dev->mc_io, 0, mc_dev->mc_handle);
- err_free_mcp:
-@@ -188,11 +92,13 @@ static int dpaa2_ptp_probe(struct fsl_mc_device *mc_dev)
- 
- static int dpaa2_ptp_remove(struct fsl_mc_device *mc_dev)
- {
--	struct ptp_dpaa2_priv *ptp_dpaa2;
- 	struct device *dev = &mc_dev->dev;
-+	struct ptp_qoriq *ptp_qoriq;
-+
-+	ptp_qoriq = dev_get_drvdata(dev);
- 
--	ptp_dpaa2 = dev_get_drvdata(dev);
--	ptp_clock_unregister(ptp_dpaa2->clock);
-+	dpaa2_phc_index = -1;
-+	ptp_qoriq_free(ptp_qoriq);
- 
- 	dprtc_close(mc_dev->mc_io, 0, mc_dev->mc_handle);
- 	fsl_mc_portal_free(mc_dev->mc_io);
-diff --git a/drivers/net/ethernet/freescale/dpaa2/dprtc-cmd.h b/drivers/net/ethernet/freescale/dpaa2/dprtc-cmd.h
-index 9af4ac7..dd74aa9 100644
---- a/drivers/net/ethernet/freescale/dpaa2/dprtc-cmd.h
-+++ b/drivers/net/ethernet/freescale/dpaa2/dprtc-cmd.h
-@@ -17,24 +17,11 @@
- #define DPRTC_CMDID_CLOSE			DPRTC_CMD(0x800)
- #define DPRTC_CMDID_OPEN			DPRTC_CMD(0x810)
- 
--#define DPRTC_CMDID_SET_FREQ_COMPENSATION	DPRTC_CMD(0x1d1)
--#define DPRTC_CMDID_GET_FREQ_COMPENSATION	DPRTC_CMD(0x1d2)
--#define DPRTC_CMDID_GET_TIME			DPRTC_CMD(0x1d3)
--#define DPRTC_CMDID_SET_TIME			DPRTC_CMD(0x1d4)
--
- #pragma pack(push, 1)
- struct dprtc_cmd_open {
- 	__le32 dprtc_id;
- };
- 
--struct dprtc_get_freq_compensation {
--	__le32 freq_compensation;
--};
--
--struct dprtc_time {
--	__le64 time;
--};
--
- #pragma pack(pop)
- 
- #endif /* _FSL_DPRTC_CMD_H */
-diff --git a/drivers/net/ethernet/freescale/dpaa2/dprtc.c b/drivers/net/ethernet/freescale/dpaa2/dprtc.c
-index c13e09b..1ae303e 100644
---- a/drivers/net/ethernet/freescale/dpaa2/dprtc.c
-+++ b/drivers/net/ethernet/freescale/dpaa2/dprtc.c
-@@ -72,123 +72,3 @@ int dprtc_close(struct fsl_mc_io *mc_io,
- 
- 	return mc_send_command(mc_io, &cmd);
- }
--
--/**
-- * dprtc_set_freq_compensation() - Sets a new frequency compensation value.
-- *
-- * @mc_io:		Pointer to MC portal's I/O object
-- * @cmd_flags:		Command flags; one or more of 'MC_CMD_FLAG_'
-- * @token:		Token of DPRTC object
-- * @freq_compensation:	The new frequency compensation value to set.
-- *
-- * Return:	'0' on Success; Error code otherwise.
-- */
--int dprtc_set_freq_compensation(struct fsl_mc_io *mc_io,
--				u32 cmd_flags,
--				u16 token,
--				u32 freq_compensation)
--{
--	struct dprtc_get_freq_compensation *cmd_params;
--	struct fsl_mc_command cmd = { 0 };
--
--	cmd.header = mc_encode_cmd_header(DPRTC_CMDID_SET_FREQ_COMPENSATION,
--					  cmd_flags,
--					  token);
--	cmd_params = (struct dprtc_get_freq_compensation *)cmd.params;
--	cmd_params->freq_compensation = cpu_to_le32(freq_compensation);
--
--	return mc_send_command(mc_io, &cmd);
--}
--
--/**
-- * dprtc_get_freq_compensation() - Retrieves the frequency compensation value
-- *
-- * @mc_io:		Pointer to MC portal's I/O object
-- * @cmd_flags:		Command flags; one or more of 'MC_CMD_FLAG_'
-- * @token:		Token of DPRTC object
-- * @freq_compensation:	Frequency compensation value
-- *
-- * Return:	'0' on Success; Error code otherwise.
-- */
--int dprtc_get_freq_compensation(struct fsl_mc_io *mc_io,
--				u32 cmd_flags,
--				u16 token,
--				u32 *freq_compensation)
--{
--	struct dprtc_get_freq_compensation *rsp_params;
--	struct fsl_mc_command cmd = { 0 };
--	int err;
--
--	cmd.header = mc_encode_cmd_header(DPRTC_CMDID_GET_FREQ_COMPENSATION,
--					  cmd_flags,
--					  token);
--
--	err = mc_send_command(mc_io, &cmd);
--	if (err)
--		return err;
--
--	rsp_params = (struct dprtc_get_freq_compensation *)cmd.params;
--	*freq_compensation = le32_to_cpu(rsp_params->freq_compensation);
--
--	return 0;
--}
--
--/**
-- * dprtc_get_time() - Returns the current RTC time.
-- *
-- * @mc_io:	Pointer to MC portal's I/O object
-- * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
-- * @token:	Token of DPRTC object
-- * @time:	Current RTC time.
-- *
-- * Return:	'0' on Success; Error code otherwise.
-- */
--int dprtc_get_time(struct fsl_mc_io *mc_io,
--		   u32 cmd_flags,
--		   u16 token,
--		   uint64_t *time)
--{
--	struct dprtc_time *rsp_params;
--	struct fsl_mc_command cmd = { 0 };
--	int err;
--
--	cmd.header = mc_encode_cmd_header(DPRTC_CMDID_GET_TIME,
--					  cmd_flags,
--					  token);
--
--	err = mc_send_command(mc_io, &cmd);
--	if (err)
--		return err;
--
--	rsp_params = (struct dprtc_time *)cmd.params;
--	*time = le64_to_cpu(rsp_params->time);
--
--	return 0;
--}
--
--/**
-- * dprtc_set_time() - Updates current RTC time.
-- *
-- * @mc_io:	Pointer to MC portal's I/O object
-- * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
-- * @token:	Token of DPRTC object
-- * @time:	New RTC time.
-- *
-- * Return:	'0' on Success; Error code otherwise.
-- */
--int dprtc_set_time(struct fsl_mc_io *mc_io,
--		   u32 cmd_flags,
--		   u16 token,
--		   uint64_t time)
--{
--	struct dprtc_time *cmd_params;
--	struct fsl_mc_command cmd = { 0 };
--
--	cmd.header = mc_encode_cmd_header(DPRTC_CMDID_SET_TIME,
--					  cmd_flags,
--					  token);
--	cmd_params = (struct dprtc_time *)cmd.params;
--	cmd_params->time = cpu_to_le64(time);
--
--	return mc_send_command(mc_io, &cmd);
--}
-diff --git a/drivers/net/ethernet/freescale/dpaa2/dprtc.h b/drivers/net/ethernet/freescale/dpaa2/dprtc.h
-index fe19618..c2d508b 100644
---- a/drivers/net/ethernet/freescale/dpaa2/dprtc.h
-+++ b/drivers/net/ethernet/freescale/dpaa2/dprtc.h
-@@ -22,24 +22,4 @@ int dprtc_close(struct fsl_mc_io *mc_io,
- 		u32 cmd_flags,
- 		u16 token);
- 
--int dprtc_set_freq_compensation(struct fsl_mc_io *mc_io,
--				u32 cmd_flags,
--				u16 token,
--				u32 freq_compensation);
--
--int dprtc_get_freq_compensation(struct fsl_mc_io *mc_io,
--				u32 cmd_flags,
--				u16 token,
--				u32 *freq_compensation);
--
--int dprtc_get_time(struct fsl_mc_io *mc_io,
--		   u32 cmd_flags,
--		   u16 token,
--		   uint64_t *time);
--
--int dprtc_set_time(struct fsl_mc_io *mc_io,
--		   u32 cmd_flags,
--		   u16 token,
--		   uint64_t time);
--
- #endif /* __FSL_DPRTC_H */
--- 
-2.7.4
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmRyZXcgTHVubiA8YW5kcmV3
+QGx1bm4uY2g+DQo+IFNlbnQ6IDIwMTnE6jbUwjEyyNUgMjE6MTENCj4gVG86IFkuYi4gTHUgPHlh
+bmdiby5sdUBueHAuY29tPg0KPiBDYzogbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgRGF2aWQgUyAu
+IE1pbGxlciA8ZGF2ZW1AZGF2ZW1sb2Z0Lm5ldD47DQo+IFJpY2hhcmQgQ29jaHJhbiA8cmljaGFy
+ZGNvY2hyYW5AZ21haWwuY29tPjsgUm9iIEhlcnJpbmcNCj4gPHJvYmgrZHRAa2VybmVsLm9yZz47
+IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47DQo+IGRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzZdIHB0cDogYWRk
+IFFvcklRIFBUUCBzdXBwb3J0IGZvciBEUEFBMg0KPiANCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvcHRwL0tjb25maWcgYi9kcml2ZXJzL3B0cC9LY29uZmlnIGluZGV4DQo+ID4gPiA+IDli
+OGZlZTUuLmIxYjQ1NGYgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2RyaXZlcnMvcHRwL0tjb25maWcN
+Cj4gPiA+ID4gKysrIGIvZHJpdmVycy9wdHAvS2NvbmZpZw0KPiA+ID4gPiBAQCAtNDQsNyArNDQs
+NyBAQCBjb25maWcgUFRQXzE1ODhfQ0xPQ0tfRFRFDQo+ID4gPiA+DQo+ID4gPiA+ICBjb25maWcg
+UFRQXzE1ODhfQ0xPQ0tfUU9SSVENCj4gPiA+ID4gIAl0cmlzdGF0ZSAiRnJlZXNjYWxlIFFvcklR
+IDE1ODggdGltZXIgYXMgUFRQIGNsb2NrIg0KPiA+ID4gPiAtCWRlcGVuZHMgb24gR0lBTkZBUiB8
+fCBGU0xfRFBBQV9FVEggfHwgRlNMX0VORVRDIHx8DQo+IEZTTF9FTkVUQ19WRg0KPiA+ID4gPiAr
+CWRlcGVuZHMgb24gR0lBTkZBUiB8fCBGU0xfRFBBQV9FVEggfHwgRlNMX0RQQUEyX0VUSCB8fA0K
+PiA+ID4gRlNMX0VORVRDIHx8DQo+ID4gPiA+ICtGU0xfRU5FVENfVkYNCj4gPiA+ID4gIAlkZXBl
+bmRzIG9uIFBUUF8xNTg4X0NMT0NLDQo+ID4gPg0KPiA+ID4gSGkgWWFuZ2JvDQo+ID4gPg0KPiA+
+ID4gQ291bGQgQ09NUElMRV9URVNUIGFsc28gYmUgYWRkZWQ/DQo+ID4NCj4gPiBbWS5iLiBMdV0g
+Q09NUElMRV9URVNUIGlzIHVzdWFsbHkgZm9yIG90aGVyIEFSQ0hzIGJ1aWxkIGNvdmVyYWdlLg0K
+PiA+IERvIHlvdSB3YW50IG1lIHRvIGFwcGVuZCBpdCBhZnRlciB0aGVzZSBFdGhlcm5ldCBkcml2
+ZXIgZGVwZW5kZW5jaWVzPw0KPiANCj4gSGlpIFkuYi4gTHUNCj4gDQo+IE5vcm1hbGx5LCBkcml2
+ZXJzIGxpa2UgdGhpcyBzaG91bGQgYmUgYWJsZSB0byBjb21waWxlIGluZGVwZW5kZW50IG9mIHRo
+ZSBNQUMNCj4gZHJpdmVyLiBTbyB5b3Ugc2hvdWxkIGJlIGFibGUgdG8gYWRkIENPTVBJTEVfVEVT
+VCBoZXJlLg0KDQpbWS5iLiBMdV0gVGhhbmtzIEFuZHJldy4gSSBoYWQgc2VudCBvdXQgdjIgd2l0
+aCB0aGUgY2hhbmdlLg0KDQo+IA0KPiAgICAgQW5kcmV3DQo=
