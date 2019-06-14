@@ -2,111 +2,151 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA00C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C877C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C1421848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:52:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="milTqAIR"
+	by mail.kernel.org (Postfix) with ESMTP id 4078D21848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560534780;
+	bh=yNYwqeSTSPwIiEd4eYb8uNZq/cfje8/TcJ0O9vDkwOw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=q1qHUavsJKK45Rvb+4EsAl3I5IVCz/R8QD3jod87CNhaUKcT/gvyJt73r3pjTfx6I
+	 hR92GetCYfWPUs6oFM5e4aszTY1OKesqZYKnT6WiZxUjiHA1NoB7R7Y6g/WtTWH+wV
+	 zOOdDVzVp9G5W8H0uZTSaKBWVSIWB/uhOj9IMh6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727301AbfFNRwv (ORCPT
+        id S1727216AbfFNRwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 13:52:51 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35492 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727257AbfFNRwr (ORCPT
+        Fri, 14 Jun 2019 13:52:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38622 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726649AbfFNRwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 13:52:47 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j19so3468158otq.2;
-        Fri, 14 Jun 2019 10:52:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZWIf587I0I/IIO3dm5/wm1By4rJHZ+H19lkvJnydh20=;
-        b=milTqAIRSdQkbg+N9Pa3KMpKvZDfQHcxJqP+24UT886LqQASMh+9tLPsoFbHhkmLhM
-         cDxD3zdC3MY2sIYyeHmGdAUsx+NFQ3DMOxErlCmNTGLs4jp3ms2nc7iV4Nud4UChVh7h
-         TQXphH1ZouQfXp6NWtHXjye70r/2+/r0JMHTP17p5y4XqqpzmR8lxUnUQ9yyN+936YhH
-         aiI8aaxRrF9lByfeoFT40ulwJ8loD7sqcBFPxNdEmKA+prvMQmhB8OmTCzJI8WK894ke
-         BbG0hi0dj8xIusdAwL1e3pS7KhE+ur14WbclFJCX78gaF0bPW7tLl3Lhio8wy+6YvRFI
-         50hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZWIf587I0I/IIO3dm5/wm1By4rJHZ+H19lkvJnydh20=;
-        b=jZXlXQtzuBOW+Su7L8RPo21bkgvQqmM8tgcge/4kviWZupeI0yO4YCuzWdz6y8l7Cs
-         xRUfRTFopFVp4zqzMKsNuqXnmsfb6KRE87KtOdYQWxQNeWU10+blDzx5dDzEwd6GOjzB
-         T8ndlsQDj3t/NEhM2OtmmZz6lwaDdV6ABVsljiPwi69WWHP/rlvpwCKKHnE0zc4vRH+8
-         DS/0y7O+oDkXy4IMVTFrlTYADZ/B3KjMAIkYcPG3DMHjg6q4bmhhY6s2yvnuKlsj8Xb8
-         QRjkTadI1ly3CMXE12VnfrXMlWzPfGsGhpprGkRFCeAtmiKCXUA3vzmxaKg6M6BFBpr8
-         ozJQ==
-X-Gm-Message-State: APjAAAXNw7ozXL7sgIW6XxKNFeevI6Iqn+y+kfrqtah+cnqvliHlIQ3J
-        69C3BuXC7hB2Txm3d5TPEpS2I/yhBITOkPis+gToD4Et
-X-Google-Smtp-Source: APXvYqzvCvm1eY5/2Sub7G3piT3spKXBEzftR3A6CCDw+d0ELK+Uz06CI/iqOgvM9+lOQptFqtfBk0NYnRxHxBrpOPg=
-X-Received: by 2002:a9d:5911:: with SMTP id t17mr393254oth.159.1560534766509;
- Fri, 14 Jun 2019 10:52:46 -0700 (PDT)
+        Fri, 14 Jun 2019 13:52:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=3v0sS61wq796LTjrCIGlnUicOjJQzGAsiyF19M1EX2c=; b=u/ESh3f65BSLRXkZ+AXmBNxjNC
+        gnrwrngtlWnKOr3vhuLTSXY9/fdw9r+AL/Rav1M8w9/KFYKl52HJA8vdrptJG26xi+f+9PYiWHGQu
+        YDj+hpvXJ9lIwYb4dqevFJxcU/dt+uyGZmLfQNHEaIFYlba6LLlmVsnqR99Y3n9PSvz94scfvfG4y
+        oigeSHE4XLskhNbhaRES1Yr55THnSNML14iy4zlbHY6MK2OUK2dbsXEoOSTOqYOM+l3aoa5sUtoPB
+        +iMhUs+h2lHmCIluqwEkAhQDVR+0mKFQDTxEqUJ/b2iMlupvWjfkuhi7OiC6uUj4aGAIMl0fPzUcl
+        h1JLhJAg==;
+Received: from 177.133.85.52.dynamic.adsl.gvt.net.br ([177.133.85.52] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbqNO-0000PZ-JI; Fri, 14 Jun 2019 17:52:34 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hbqNL-0002Ou-TC; Fri, 14 Jun 2019 14:52:31 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 08/16] scripts/get_abi.pl: represent what in tables
+Date:   Fri, 14 Jun 2019 14:52:22 -0300
+Message-Id: <8a1ae200b2ccdc04811a11cececeaad16c020556.1560534648.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <3b8d7c64f887ddea01df3c4eeabc745c8ec45406.1560534648.git.mchehab+samsung@kernel.org>
+References: <3b8d7c64f887ddea01df3c4eeabc745c8ec45406.1560534648.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-References: <20190612221549.28399-1-prsriva02@gmail.com> <20190612221549.28399-3-prsriva02@gmail.com>
- <1560455980.4805.57.camel@linux.ibm.com> <1560509860.4171.13.camel@linux.ibm.com>
- <1560521651.4072.7.camel@linux.ibm.com>
-In-Reply-To: <1560521651.4072.7.camel@linux.ibm.com>
-From:   prakhar srivastava <prsriva02@gmail.com>
-Date:   Fri, 14 Jun 2019 10:52:35 -0700
-Message-ID: <CAEFn8qL-Fumt82oZ6-J-dWA29ztLLraJ6iXc7+du=vNtyBQO4g@mail.gmail.com>
-Subject: Re: [PATCH V8 2/3] Define a new ima template field buf
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        thiago Jung Bauermann <bauerman@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 7:14 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
->
-> > > > diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-> > > > index 993d0f1915ff..c8591406c0e2 100644
-> > > > --- a/security/integrity/ima/ima_init.c
-> > > > +++ b/security/integrity/ima/ima_init.c
-> > > > @@ -50,7 +50,7 @@ static int __init ima_add_boot_aggregate(void)
-> > > >   struct ima_template_entry *entry;
-> > > >   struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
-> > > >   struct ima_event_data event_data = {iint, NULL, boot_aggregate_name,
-> > > > -                                     NULL, 0, NULL};
-> > > > +                                     NULL, 0, NULL, NULL, 0};
-> > >
-> > > here, don't belong in this patch.  It belongs in "IMA: support for per
-> > > policy rule template formats", in case it should ever be backported.
-> > >  Please post this as a separate patch, that will be squashed with
-> > > "IMA: support for per policy rule template formats".
-> >
-> > My mistake.  I should have picked up Thaigo's "ima: Use designated
-> > initializers for struct ima_event_data".  Please drop these changes
-> > instead.
->
-> Sorry for the confusion.  I just pushed out Thiago's patch.
->
-Just to clarify:
-- no split up of patch is needed.
-- only formatting needs to cleaned up.
+Several entries at the ABI have multiple What: with the same
+description.
 
-Apologies for the formatting issues, my editor switches back to
-tab as 4 chars.
+Instead of showing those symbols as sections, let's show them
+as tables. That makes easier to read on the final output,
+and avoid too much recursion at Sphinx parsing.
 
-Thanks,
-Prakhar Srivastava
-> thanks,
->
-> Mimi
->
+We need to put file references at the end, as we don't want
+non-file tables to be mangled with other entries.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ scripts/get_abi.pl | 41 ++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 36 insertions(+), 5 deletions(-)
+
+diff --git a/scripts/get_abi.pl b/scripts/get_abi.pl
+index ecf6b91df7c4..7d454e359d25 100755
+--- a/scripts/get_abi.pl
++++ b/scripts/get_abi.pl
+@@ -193,16 +193,19 @@ sub parse_abi {
+ #
+ # Outputs the book on ReST format
+ #
++
+ sub output_rest {
+-	foreach my $what (sort keys %data) {
++	foreach my $what (sort {
++				($data{$a}->{type} eq "File") cmp ($data{$b}->{type} eq "File") ||
++				$a cmp $b
++			       } keys %data) {
+ 		my $type = $data{$what}->{type};
+ 		my $file = $data{$what}->{file};
++		my $filepath = $data{$what}->{filepath};
+ 
+ 		my $w = $what;
+ 		$w =~ s/([\(\)\_\-\*\=\^\~\\])/\\$1/g;
+ 
+-		my $bar = $w;
+-		$bar =~ s/./-/g;
+ 
+ 		foreach my $p (@{$data{$what}->{label}}) {
+ 			my ($content, $label) = @{$p};
+@@ -222,9 +225,37 @@ sub output_rest {
+ 			last;
+ 		}
+ 
+-		print "$w\n$bar\n\n";
+ 
+-		print "- defined on file $file (type: $type)\n\n" if ($type ne "File");
++		$filepath =~ s,.*/(.*/.*),\1,;;
++		$filepath =~ s,[/\-],_,g;;
++		my $fileref = "abi_file_".$filepath;
++
++		if ($type eq "File") {
++			my $bar = $w;
++			$bar =~ s/./-/g;
++
++			print ".. _$fileref:\n\n";
++			print "$w\n$bar\n\n";
++		} else {
++			my @names = split /\s*,\s*/,$w;
++
++			my $len = 0;
++
++			foreach my $name (@names) {
++				$len = length($name) if (length($name) > $len);
++			}
++
++			print "What:\n\n";
++
++			print "+-" . "-" x $len . "-+\n";
++			foreach my $name (@names) {
++				printf "| %s", $name . " " x ($len - length($name)) . " |\n";
++				print "+-" . "-" x $len . "-+\n";
++			}
++			print "\n";
++		}
++
++		print "Defined on file :ref:`$file <$fileref>`\n\n" if ($type ne "File");
+ 
+ 		my $desc = $data{$what}->{description};
+ 		$desc =~ s/^\s+//;
+-- 
+2.21.0
+
