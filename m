@@ -2,173 +2,150 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55697C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E757FC31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E81320851
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B535F20851
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OLRYJWbo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oltx8mxA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbfFNN3U (ORCPT
+        id S1728235AbfFNN3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:29:20 -0400
-Received: from mail-eopbgr80082.outbound.protection.outlook.com ([40.107.8.82]:40717
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727737AbfFNN3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:29:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C5l0eTiCXHxR4pHpa1CzyJNPzzs0FbIQx0VVcf3f+yY=;
- b=OLRYJWboKLn4a85fwq2FClY9gVZFhs3POVB1+BtpEyrUmSlwrFVKVL0kophrfAU/j4ZQdzOTWx2L5YSpwZGV09RP0QcpwUoFrgk7nldiaym+Gywpntnt3nl2sph2IPzg15fMBcY1vlNdLpfzaYoYKhwgM/Hro3L8f6A6fiqRmRA=
-Received: from VI1PR04MB5967.eurprd04.prod.outlook.com (20.178.123.141) by
- VI1PR04MB5405.eurprd04.prod.outlook.com (20.178.121.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Fri, 14 Jun 2019 13:29:14 +0000
-Received: from VI1PR04MB5967.eurprd04.prod.outlook.com
- ([fe80::3dd4:5031:dc06:1fd7]) by VI1PR04MB5967.eurprd04.prod.outlook.com
- ([fe80::3dd4:5031:dc06:1fd7%7]) with mapi id 15.20.1965.018; Fri, 14 Jun 2019
- 13:29:14 +0000
-From:   Robert Chiras <robert.chiras@nxp.com>
-To:     "festevam@gmail.com" <festevam@gmail.com>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sam@ravnborg.org" <sam@ravnborg.org>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "airlied@linux.ie" <airlied@linux.ie>
-Subject: Re: [EXT] Re: [PATCH 2/2] drm/panel: Add support for Raydium RM67191
- panel driver
-Thread-Topic: [EXT] Re: [PATCH 2/2] drm/panel: Add support for Raydium RM67191
- panel driver
-Thread-Index: AQHVIqdzFTZPTbEojEKDO3NY8aRErKabE9mAgAARJ4A=
-Date:   Fri, 14 Jun 2019 13:29:14 +0000
-Message-ID: <1560518953.9328.31.camel@nxp.com>
-References: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com>
-         <1560513063-24995-3-git-send-email-robert.chiras@nxp.com>
-         <CAOMZO5BAborMvk=4cgreWKX6rJjK-237me98dM1dDV53oUnExQ@mail.gmail.com>
-In-Reply-To: <CAOMZO5BAborMvk=4cgreWKX6rJjK-237me98dM1dDV53oUnExQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=robert.chiras@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b87de7a8-16ef-47d9-df58-08d6f0cc4b34
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5405;
-x-ms-traffictypediagnostic: VI1PR04MB5405:
-x-microsoft-antispam-prvs: <VI1PR04MB5405823370614FBA2628D863E3EE0@VI1PR04MB5405.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0068C7E410
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(346002)(366004)(136003)(376002)(199004)(189003)(8676002)(54906003)(44832011)(1411001)(68736007)(86362001)(99286004)(64756008)(66946007)(73956011)(66556008)(66446008)(66476007)(478600001)(76116006)(81166006)(7416002)(305945005)(14444005)(8936002)(256004)(76176011)(66066001)(7736002)(14454004)(2501003)(81156014)(2906002)(1730700003)(6506007)(53546011)(6246003)(103116003)(186003)(6512007)(26005)(1361003)(316002)(5660300002)(6116002)(2351001)(6486002)(50226002)(36756003)(476003)(2616005)(102836004)(11346002)(25786009)(446003)(3846002)(229853002)(5640700003)(486006)(71190400001)(71200400001)(6916009)(6436002)(4326008)(53936002)(99106002)(2004002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5405;H:VI1PR04MB5967.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2MVYUqXYn6op9/Lbh21HunQ1VW/rvBfhSN+CWJTDSFRfPHNMINTGgw30Tz3o6+RlZrFAzLO0pFTKLRffEBwSRmbZJRG+WkpFmfVjTGFMyPpudNJGcdquo3XvswLuIRuypxau/IzKQvbF+uCFniudsdFgWJP+x9STaAEL2B0pNlGpTc+pl/RRAEw+NPfD9ZDrfQLO56DA9n4qjtiPe0u00pbvPt37iptYCizwOYU5ZKJvE6LipkPCgAjNNs9PSlk5BN+UYb3RZ0Z3baLTHxl5bRsPbxG1NPRvfH6f7o3IZ1S4w0jwJcFuCbt77mMekoUkFzhIAwnKQClyvZ7Cn0PNFJPVBXQ8J1D6Z6MlYskiojFENO1c54l/cEuZ3qPWZq5cBg86WivjE+D8T5b6viQJgqTwHr+i33hJEMloyr77p5s=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6B40518580B34A4591C8D937481773BE@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 14 Jun 2019 09:29:24 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:32942 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727916AbfFNN3W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:29:22 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y17so1773044lfe.0;
+        Fri, 14 Jun 2019 06:29:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Yb2rk4m18t9kDveritMkKbXhIs8G2QRg5Je/FAjvrOs=;
+        b=Oltx8mxAr5seRIF3UG+ilvyHqb6I9aM2y7inkEae4g/YIVojiSG/n3CBhHRqEqGxR8
+         iIQnkfZJypm/QFkcxnSE7qGc23QsZsYC74EcxXA9GyOHrolr9GbEXCWv7zMi+xeRLPmt
+         +dbRWhAVJm+5hV2W6YneW7UoMiqUBEiMyOJb7a9YrjieSUwEe2u1iwayXIyhy0YI0OiC
+         K+XeLiRbxU9IeR950isqE8V1ylM7uHh6XnVxv6FQSC+w5lXCL1kw+id6+hZ0YKY9olti
+         pHyLEiBpwsqx8Wcnpfp+G+Q2KWmG/7W4ygRAFPfxbKYRPoKc6WcBJDpr6NqgCZliailj
+         YAQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Yb2rk4m18t9kDveritMkKbXhIs8G2QRg5Je/FAjvrOs=;
+        b=iEjJYN43wQFro81KX1/OAzhiorykle26rwr8n2ckliiO03b3d52/C/c4yASKu7JYgU
+         8OTlY4/9Of+4inWts9RZyLG52nRHgua1PcIWIlN7I+KhzOo7aii6mctz+PYrKcvzxOeO
+         /XiG5xTsOGK/1k6AThpJKX8A5cJzDbRx8vU3CraiacGE6ZpEZw52xwK4f93PFwnTEO/I
+         vc+QCZ3lDyuksYBRJEcJofXB6qYzCOWOThcxtqHQd5tjth/fyOiotWgzbyIF08SBhYnm
+         bpzYiTHMktWeQPF3gX7ZRUWzF1QBrv2jQup7yOYKPlLkKf6APFqPHc8x0jWkNQvxpiSZ
+         2S6w==
+X-Gm-Message-State: APjAAAUPsEcDCWduZhTeq0aYY8h497p1HEi6BQBzu8IYAitorb1yHY8Z
+        KcjfSkEkjjuL9hhoXO0XcKrjoEsW
+X-Google-Smtp-Source: APXvYqyaSPvtMJFokOQ1+CoDRMOmEsVR6NVWqYadY6jo4yoYFlXEd5hokGr/WfeDzvltjf9A2zPnkA==
+X-Received: by 2002:ac2:494f:: with SMTP id o15mr19472105lfi.84.1560518959432;
+        Fri, 14 Jun 2019 06:29:19 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id e8sm544915lfc.27.2019.06.14.06.29.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 06:29:18 -0700 (PDT)
+Subject: Re: [PATCH 1/2] clocksource: tegra: Use rating when registering clock
+ source
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190614104747.19712-1-thierry.reding@gmail.com>
+ <8ff5d2da-907e-611c-ec82-bbe50197c2f4@gmail.com>
+ <20190614132253.GE15526@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <3c339341-e77a-38aa-702a-1aef6c229eed@gmail.com>
+Date:   Fri, 14 Jun 2019 16:29:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b87de7a8-16ef-47d9-df58-08d6f0cc4b34
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 13:29:14.3505
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: robert.chiras@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5405
+In-Reply-To: <20190614132253.GE15526@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRmFiaW8sDQoNCk9uIFZpLCAyMDE5LTA2LTE0IGF0IDA5OjI3IC0wMzAwLCBGYWJpbyBFc3Rl
-dmFtIHdyb3RlOg0KPiBIaSBSb2JlcnQsDQo+IA0KPiBPbiBGcmksIEp1biAxNCwgMjAxOSBhdCA4
-OjUyIEFNIFJvYmVydCBDaGlyYXMgPHJvYmVydC5jaGlyYXNAbnhwLmNvbT4NCj4gd3JvdGU6DQo+
-IA0KPiA+IA0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFu
-ZWwvcGFuZWwtcmF5ZGl1bS1ybTY3MTkxLmMNCj4gPiBAQCAtMCwwICsxLDczMCBAQA0KPiA+ICsv
-LyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+ICsvKg0KPiA+ICsgKiBpLk1Y
-IGRybSBkcml2ZXIgLSBSYXlkaXVtIE1JUEktRFNJIHBhbmVsIGRyaXZlcg0KPiA+ICsgKg0KPiA+
-ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTcgTlhQDQo+ID4gKyAqDQo+ID4gKyAqIFRoaXMgcHJvZ3Jh
-bSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3INCj4gPiAr
-ICogbW9kaWZ5IGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExp
-Y2Vuc2UNCj4gPiArICogYXMgcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRp
-b247IGVpdGhlciB2ZXJzaW9uIDINCj4gPiArICogb2YgdGhlIExpY2Vuc2UsIG9yIChhdCB5b3Vy
-IG9wdGlvbikgYW55IGxhdGVyIHZlcnNpb24uDQo+ID4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBkaXN0
-cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVsLA0KPiA+ICsgKiBidXQg
-V0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBv
-Zg0KPiA+ICsgKiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBV
-UlBPU0UuwqDCoFNlZSB0aGUNCj4gPiArICogR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9y
-IG1vcmUgZGV0YWlscy4NCj4gTm8gbmVlZCBmb3IgdGhpcyB0ZXh0IGFzIHlvdSBhcmUgdXNpbmcg
-U1BEWCB0YWcuDQo+IA0KPiA+IA0KPiA+ICtzdGF0aWMgaW50IGNvbG9yX2Zvcm1hdF9mcm9tX2Rz
-aV9mb3JtYXQoZW51bSBtaXBpX2RzaV9waXhlbF9mb3JtYXQNCj4gPiBmb3JtYXQpDQo+ID4gK3sN
-Cj4gPiArwqDCoMKgwqDCoMKgwqBzd2l0Y2ggKGZvcm1hdCkgew0KPiA+ICvCoMKgwqDCoMKgwqDC
-oGNhc2UgTUlQSV9EU0lfRk1UX1JHQjU2NToNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgcmV0dXJuIDB4NTU7DQo+ID4gK8KgwqDCoMKgwqDCoMKgY2FzZSBNSVBJX0RTSV9GTVRf
-UkdCNjY2Og0KPiA+ICvCoMKgwqDCoMKgwqDCoGNhc2UgTUlQSV9EU0lfRk1UX1JHQjY2Nl9QQUNL
-RUQ6DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAweDY2Ow0KPiA+
-ICvCoMKgwqDCoMKgwqDCoGNhc2UgTUlQSV9EU0lfRk1UX1JHQjg4ODoNCj4gPiArwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIDB4Nzc7DQo+IENvdWxkIHlvdSB1c2UgZGVmaW5l
-cyBmb3IgdGhlc2UgbWFnaWMgMHg1NSwgMHg2NiBhbmQgMHg3NyBudW1iZXJzPw0KVGhvc2UgbWFn
-aWMgbnVtYmVycyBtZWFuIGV4YWN0bHkgd2hhdCB0aGVpciBjYXNlIHN0YXRlbWVudHMgYXJlLiBU
-aGV5DQpjb21lIGZyb20gdGhlIHBhbmVsIGRvY3VtZW50YXRpb24uIEkgdGhvdWdodCB0aGF0IHRo
-ZSBhbHJlYWR5IGV4aXN0aW5nDQpkZWZpbmVzIChNSVBJX0RTSV9GTVRfKSBhcmUgc2VsZiBleHBs
-YW5hdG9yeSBoZXJlLCBzbyB1c2luZyBkZWZpbmVzDQpzZWVtZWQgcmVkdW5kYW50IGZvciBtZS4g
-QnV0LCBpZiB5b3UgdGhpbmsgdGhhdCB1c2luZyBkZWZpbmVzIGZvciB0aGVtDQppcyBiZXR0ZXIs
-IEkgY2FuIGRvIHRoYXQuDQo+IA0KPiA+IA0KPiA+ICtzdGF0aWMgaW50IHJhZF9wYW5lbF9wcmVw
-YXJlKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQ0KPiA+ICt7DQo+ID4gK8KgwqDCoMKgwqDCoMKg
-c3RydWN0IHJhZF9wYW5lbCAqcmFkID0gdG9fcmFkX3BhbmVsKHBhbmVsKTsNCj4gPiArDQo+ID4g
-K8KgwqDCoMKgwqDCoMKgaWYgKHJhZC0+cHJlcGFyZWQpDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoHJldHVybiAwOw0KPiA+ICsNCj4gPiArwqDCoMKgwqDCoMKgwqBpZiAocmFk
-LT5yZXNldCkgew0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBncGlvZF9zZXRf
-dmFsdWUocmFkLT5yZXNldCwgMCk7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oHVzbGVlcF9yYW5nZSg1MDAwLCAxMDAwMCk7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoGdwaW9kX3NldF92YWx1ZShyYWQtPnJlc2V0LCAxKTsNCj4gPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgdXNsZWVwX3JhbmdlKDIwMDAwLCAyNTAwMCk7DQo+IFRoaXMgZG9l
-cyBub3QgbG9vayBjb3JyZWN0Lg0KPiANCj4gVGhlIGNvcnJlY3Qgd2F5IHRvIGRvIGEgcmVzZXQg
-d2l0aCBncGlvZCBBUEkgaXM6DQo+IA0KPiDCoGdwaW9kX3NldF92YWx1ZShyYWQtPnJlc2V0LCAx
-KTsNCj4gDQo+IGRlbGF5DQo+IA0KPiBncGlvZF9zZXRfdmFsdWUocmFkLT5yZXNldCwgMCk7DQo+
-IA0KPiBJIGRvbid0IGhhdmUgdGhlIGRhdGFzaGVldCBmb3IgdGhlIFJNNjcxOTEgcGFuZWwsIGJ1
-dCBJIGFzc3VtZSB0aGUNCj4gcmVzZXQgR1BJTyBpcyBhY3RpdmUgbG93Lg0KPiANCj4gU2luY2Ug
-eW91IGludmVydGVkIHRoZSBwb2xhcml0eSBpbiB0aGUgZHRzIGFuZCBpbnNpZGUgdGhlIGRyaXZl
-ciwgeW91DQo+IGdvdCBpdCByaWdodCBieSBhY2NpZGVudC4NClRoZSBHUElPIGlzIGFjdGl2ZSBo
-aWdoLCBhbmQgdGhlIGFib3ZlIHNlcXVlbmNlIHdhcyByZWNlaXZlZCBmcm9tIHRoZQ0KcGFuZWwg
-dmVuZG9yIGluIHRoZSBmb2xsb3dpbmcgZm9ybToNCglTRVRfUkVTRVRfUElOKDEpOw0KCU1ERUxB
-WSgxMCk7DQoJU0VUX1JFU0VUX1BJTigwKTsNCglNREVMQVkoNSk7DQoJU0VUX1JFU0VUX1BJTigx
-KTsNCglNREVMQVkoMjApOw0KSSBnb3QgcmlkIG9mIHRoZSBmaXJzdCB0cmFuc2l0aW9uIHRvIGhp
-Z2ggc2luY2Ugc2VlbWVkIHJlZHVuZGFudC4NCkFsc28sIGFjY29yZGluZyB0byB0aGUgbWFudWFs
-IHJlZmVyZW5jZSwgdGhlIFJTVEIgcGluIG5lZWRzIHRvIGJlDQphY3RpdmUgaGlnaCB3aGlsZSBv
-cGVyYXRpbmcgdGhlIGRpc3BsYXkuDQo+IA0KPiBZb3UgY291bGQgYWxzbyBjb25zaWRlciB1c2lu
-ZyBncGlvZF9zZXRfdmFsdWVfY2Fuc2xlZXAoKSB2YXJpYW50DQo+IGluc3RlYWQgYmVjYXVzZSB0
-aGUgR1BJTyByZXNldCBjb3VsZCBiZSBwcm92aWRlZCBieSBhbiBJMkMgR1BJTw0KPiBleHBhbmRl
-ciwgZm9yIGV4YW1wbGUuDQpUaGFua3MsIHdpbGwgdXNlIHRoaXMgaW4gdGhlIG5leHQgcmV2aXNp
-b24uDQo+IA0KPiBBbHNvLCB3aGVuIHNsZWVwaW5nIGZvciBtb3JlIHRoYW4gMTBtcywgbXNsZWVw
-IGlzIGEgYmV0dGVyIGZpdCBhcyBwZXINCj4gRG9jdW1lbnRhdGlvbi90aW1lcnMvdGltZXJzLWhv
-d3RvLnR4dC4NCk9LLCBJIHdpbGwgdXNlIG1zbGVlcC4gVGhhdCBkb2N1bWVudGF0aW9uIHJlY29t
-bWVuZHMgdXNpbmcgdXNsZWVwX3JhbmdlDQpmb3Igc2xlZXBzIDwyMG0sIGJ1dCBhbHNvIHVzaW5n
-IG1zbGVlcCBmb3IgPjEwbXMgKHNvIEkgZm9sbG93ZWQgdGhlDQpyZWNvbWVuZGF0aW9ucyBmcm9t
-IHVzbGVlcF9yYW5nZSkNCj4gDQo+ID4gDQo+ID4gK8KgwqDCoMKgwqDCoMKgaWYgKHJhZC0+cmVz
-ZXQpIHsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZ3Bpb2Rfc2V0X3ZhbHVl
-KHJhZC0+cmVzZXQsIDApOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB1c2xl
-ZXBfcmFuZ2UoMTUwMDAsIDE3MDAwKTsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgZ3Bpb2Rfc2V0X3ZhbHVlKHJhZC0+cmVzZXQsIDEpOw0KPiA+ICvCoMKgwqDCoMKgwqDCoH0N
-Cj4gQW5vdGhlciByZXNldD8NClllcy4gVGhpcyBpcyB0cmlja3ksIHNpbmNlIHRoaXMgR1BJTyBp
-cyBzaGFyZWQgYmV0d2VlbiB0aGUgRFNJDQpjb250cm9sbGVyIGFuZCB0b3VjaCBjb250cm9sbGVy
-LiBUaGUgQW5kcm9pZCBndXlzIG5lZWRzIHRoZSB0b3VjaA0KY29udHJvbGxlciB0byBiZSBhY3Rp
-dmUsIHdoaWxlIHRoZSBkaXNwbGF5IGNhbiBiZSB0dXJuZWQgb2ZmLiBTbyB0aGlzDQppcyB3aHks
-IGFmdGVyIHRoZSBkaXNwbGF5IGlzIHR1cm5lZCBvZmYsIHRoZSByZXNldCBwaW4gaXMgcHV0IGJh
-Y2sgdG8NCkhJR0ggaW4gb3JkZXIgdG8ga2VlcCB0aGUgdG91Y2ggd29ya2luZy4NCg==
+14.06.2019 16:22, Thierry Reding пишет:
+> On Fri, Jun 14, 2019 at 03:24:07PM +0300, Dmitry Osipenko wrote:
+>> 14.06.2019 13:47, Thierry Reding пишет:
+>>> From: Thierry Reding <treding@nvidia.com>
+>>>
+>>> The rating is parameterized depending on SoC generation to make sure it
+>>> takes precedence on implementations where the architected timer can't be
+>>> used. This rating is already used for the clock event device. Use the
+>>> same rating for the clock source to be consistent.
+>>>
+>>> Signed-off-by: Thierry Reding <treding@nvidia.com>
+>>> ---
+>>>  drivers/clocksource/timer-tegra.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
+>>> index f6a8eb0d7322..e6608141cccb 100644
+>>> --- a/drivers/clocksource/timer-tegra.c
+>>> +++ b/drivers/clocksource/timer-tegra.c
+>>> @@ -318,7 +318,7 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
+>>>  	sched_clock_register(tegra_read_sched_clock, 32, TIMER_1MHz);
+>>>  
+>>>  	ret = clocksource_mmio_init(timer_reg_base + TIMERUS_CNTR_1US,
+>>> -				    "timer_us", TIMER_1MHz, 300, 32,
+>>> +				    "timer_us", TIMER_1MHz, rating, 32,
+>>>  				    clocksource_mmio_readl_up);
+>>>  	if (ret)
+>>>  		pr_err("failed to register clocksource: %d\n", ret);
+>>>
+>>
+>> Looks good. Although, could you please clarify whether arch-timer stops on T210 when CPU
+>> enters deepest (powerdown) idle state? I'm starting to lose track a bit already. Because
+>> if arch-timer stops in the deepest idle state, then it's a bit odd that Joseph didn't add
+>> the clocksource for T210 in the first place and v5.1 probably shouldn't work well because
+>> of that already.
+> 
+> Yes, the architected timer doesn't work across an SC7 (which is what the
+> deepest idle state is called on Tegra210) transition, hence why we can't
+> use it as a suspend clocksource. I actually sent out a patch to do that,
+> earlier.
+> 
+> And yes, it's entirely possible that v5.1 doesn't work in this regard,
+> but we're not noticing that because we don't have suspend/resume support
+> for Tegra210 anyway. There are a couple of missing pieces that we need
+> in order to make it work.
+> 
+> This change in particular is only going to affect the CPU idle state
+> (CC7). Since the architected timer doesn't survive that either, we need
+> the Tegra timer to be preferred over the architected timer for normal
+> operation.
+> 
+> All of these issues go away on Tegra186 and later, where the architected
+> timer is in an always-on partition and has a PLL that remains on during
+> SC7 (and CC7).
+
+Thank you very much for the clarification. But then what about the
+sched_clock? I suppose sched_clock will suffer on T210 as well and it's
+a bit trickier case because apparently arch-timer always wins since it
+has a higher precision. I guess the best solution will be to just bail
+out from arch-timer's driver probe in a case of T210.
+
+if (of_machine_is_compatible("nvidia,tegra210"))
+	return 0.
