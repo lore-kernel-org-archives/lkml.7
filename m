@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97278C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6E0C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6184C21850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E23B9217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544148;
-	bh=mviNZkUOj5d7dJprZYjsl+zsMc9FLFgp6LYFtzTF3J4=;
+	s=default; t=1560544155;
+	bh=LI+O4mpeVa+XcNrWeBK/V2fe9YOgS5dNGYuxLgKcJlw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ppdXwmJp6PJ7di/qiJLHFGFN+nnSdvZZB6hA9teaCXMfiayWLxrqa8q1Zj110/70x
-	 JEpJBv4pod7PjuPMp12kxw/0lgx05nRtKiGf+xCo2cwXiz2/1riFgnkCxLF2ht9Pnv
-	 sWj1mX1fzDyvTPrYf9mtXJrKdAxv0fmZnUwYZ+t8=
+	b=eyhAbeRjNvZTob2uTLBL6aD3zKoI0HjtsCweTQGPcPXM6A4JY2WnJveCQJizHYMPa
+	 wZxxlK4f/VpyRXwbQCn2V6MmUPWEcXSuZAZggY7xyEQ1tw8CCCcL/xRcezBf+6N7wR
+	 zE75xC6bXzBPyW8sNJNgp7opOJ4C1Z1thLHtvlUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfFNU3G (ORCPT
+        id S1726264AbfFNU3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:29:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50684 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:29:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbfFNU27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:28:59 -0400
+        id S1726429AbfFNU3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:29:02 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E7D62184C;
-        Fri, 14 Jun 2019 20:28:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0086921873;
+        Fri, 14 Jun 2019 20:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544138;
-        bh=mviNZkUOj5d7dJprZYjsl+zsMc9FLFgp6LYFtzTF3J4=;
+        s=default; t=1560544142;
+        bh=LI+O4mpeVa+XcNrWeBK/V2fe9YOgS5dNGYuxLgKcJlw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mip8Lu5nbXp9W4wHyXBDTDDEcfpj9vZ5S5odIoJA+iIWZop4FwkPTsD080JRZ8R2G
-         X4r+s7JsX6PvYghT0L3C6MthbMzECORQ5FGIJDThJ/ahiKAXOQwfuYl7AAcdz/GTOB
-         VbMpOI4FtdgM6xrSlKfykPkYAWKGUwhiH4ahrSlw=
+        b=kv/s5JClfLMML1SSXEAfZeWBDzc8/nhKDm+QiWbUN2H7eH7EjxPqopDbQvOAvf6NS
+         cEfHCKWIjK5Xh9IsV5goscbOsnkuqPHKYMGSbxxMaelSujDAk+s1BoVT11sOLdCKS+
+         /hv/TiDWSyFpqIBXZWo0iFsR3yhCmvjldK2vIUBE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>, Alan Tull <atull@kernel.org>,
-        Moritz Fischer <mdf@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-fpga@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 14/59] fpga: stratix10-soc: fix use-after-free on s10_init()
-Date:   Fri, 14 Jun 2019 16:27:58 -0400
-Message-Id: <20190614202843.26941-14-sashal@kernel.org>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 21/59] IB/rdmavt: Fix alloc_qpn() WARN_ON()
+Date:   Fri, 14 Jun 2019 16:28:05 -0400
+Message-Id: <20190614202843.26941-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
 References: <20190614202843.26941-1-sashal@kernel.org>
@@ -62,52 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-[ Upstream commit f5dd87326fefe42a4b1a4b1a1a695060c33a88d6 ]
+[ Upstream commit 2abae62a26a265129b364d8c1ef3be55e2c01309 ]
 
-The refcount of fw_np has already been decreased by of_find_matching_node()
-so it shouldn't be used anymore.
-This patch adds an of_node_get() before of_find_matching_node() to avoid
-the use-after-free problem.
+The qpn allocation logic has a WARN_ON() that intends to detect the use of
+an index that will introduce bits in the lower order bits of the QOS bits
+in the QPN.
 
-Fixes: e7eef1d7633a ("fpga: add intel stratix10 soc fpga manager driver")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Alan Tull <atull@kernel.org>
-Cc: Moritz Fischer <mdf@kernel.org>
-Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc: linux-fpga@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Moritz Fischer <mdf@kernel.org>
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Acked-by: Alan Tull <atull@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Unfortunately, it has the following bugs:
+- it misfires when wrapping QPN allocation for non-QOS
+- it doesn't correctly detect low order QOS bits (despite the comment)
+
+The WARN_ON() should not be applied to non-QOS (qos_shift == 1).
+
+Additionally, it SHOULD test the qpn bits per the table below:
+
+2 data VLs:   [qp7, qp6, qp5, qp4, qp3, qp2, qp1] ^
+              [  0,   0,   0,   0,   0,   0, sc0],  qp bit 1 always 0*
+3-4 data VLs: [qp7, qp6, qp5, qp4, qp3, qp2, qp1] ^
+              [  0,   0,   0,   0,   0, sc1, sc0], qp bits [21] always 0
+5-8 data VLs: [qp7, qp6, qp5, qp4, qp3, qp2, qp1] ^
+              [  0,   0,   0,   0, sc2, sc1, sc0] qp bits [321] always 0
+
+Fix by qualifying the warning for qos_shift > 1 and producing the correct
+mask to insure the above bits are zero without generating a superfluous
+warning.
+
+Fixes: 501edc42446e ("IB/rdmavt: Correct warning during QPN allocation")
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/fpga/stratix10-soc.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/infiniband/sw/rdmavt/qp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
-index 13851b3d1c56..215d33789c74 100644
---- a/drivers/fpga/stratix10-soc.c
-+++ b/drivers/fpga/stratix10-soc.c
-@@ -507,12 +507,16 @@ static int __init s10_init(void)
- 	if (!fw_np)
- 		return -ENODEV;
- 
-+	of_node_get(fw_np);
- 	np = of_find_matching_node(fw_np, s10_of_match);
--	if (!np)
-+	if (!np) {
-+		of_node_put(fw_np);
- 		return -ENODEV;
-+	}
- 
- 	of_node_put(np);
- 	ret = of_platform_populate(fw_np, s10_of_match, NULL, NULL);
-+	of_node_put(fw_np);
- 	if (ret)
- 		return ret;
+diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
+index a34b9a2a32b6..a77436ee5ff7 100644
+--- a/drivers/infiniband/sw/rdmavt/qp.c
++++ b/drivers/infiniband/sw/rdmavt/qp.c
+@@ -594,7 +594,8 @@ static int alloc_qpn(struct rvt_dev_info *rdi, struct rvt_qpn_table *qpt,
+ 			offset = qpt->incr | ((offset & 1) ^ 1);
+ 		}
+ 		/* there can be no set bits in low-order QoS bits */
+-		WARN_ON(offset & (BIT(rdi->dparms.qos_shift) - 1));
++		WARN_ON(rdi->dparms.qos_shift > 1 &&
++			offset & ((BIT(rdi->dparms.qos_shift - 1) - 1) << 1));
+ 		qpn = mk_qpn(qpt, map, offset);
+ 	}
  
 -- 
 2.20.1
