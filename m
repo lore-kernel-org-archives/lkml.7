@@ -2,229 +2,148 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D37C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BE1C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8640208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4852920850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:18:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="SN7BCSJ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfFNNRw (ORCPT
+        id S1728214AbfFNNSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:17:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53132 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727913AbfFNNRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:17:51 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6B8B3356EA;
-        Fri, 14 Jun 2019 13:17:40 +0000 (UTC)
-Received: from [10.36.116.67] (ovpn-116-67.ams2.redhat.com [10.36.116.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7366A54696;
-        Fri, 14 Jun 2019 13:17:28 +0000 (UTC)
-Subject: Re: [PATCH v8 23/29] vfio: VFIO_IOMMU_CACHE_INVALIDATE
-To:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
-        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
-        "vincent.stehle@arm.com" <vincent.stehle@arm.com>
-References: <20190526161004.25232-1-eric.auger@redhat.com>
- <20190526161004.25232-24-eric.auger@redhat.com>
- <A2975661238FB949B60364EF0F2C257439EFB432@SHSMSX104.ccr.corp.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <8d36cf34-a89b-6587-08e9-99242e2f34dc@redhat.com>
-Date:   Fri, 14 Jun 2019 15:17:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 14 Jun 2019 09:18:41 -0400
+Received: from mail.efficios.com ([167.114.142.138]:34932 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727913AbfFNNSl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:18:41 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 5DE3825101D;
+        Fri, 14 Jun 2019 09:18:39 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id RJkSqrXB2sYD; Fri, 14 Jun 2019 09:18:39 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id EA71D251018;
+        Fri, 14 Jun 2019 09:18:38 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com EA71D251018
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1560518319;
+        bh=/v2WHP0/4YyzHUmChvFO66kw0sHLDO7c/iZQSMDPn+0=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=SN7BCSJ2tIIDUvDAz7igtpSNX52BaE4Lxpu6EQVXKUJpfKeGSfWn+z1n7D9DbuYQS
+         WsMoY+jt8wMGZGvqw9zYgR08jY83zl3JDouHkERV7/SEnwBqYjEHNnQEMugVBoYZjP
+         gvmpEYtGTDGROMIdr1AiYB57B8eb5TTuUHcUC9nTxyafRz28yK6Xa7qfUvIwrt1MAO
+         ukrlyWUiqD/kcVn94v1QDF1M78Cr+zbHFQzZx17OxnWqzza3omEQp0CAaERzmmC5bz
+         BKwBgl6Ejv4H/bRYgy4sz/OvyOTpH5wDMlcmCfDqsV0sOFjXQ9Gm3jk0raVFqDJDjK
+         UdEIBC4aXlKAg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id xK7b3jYpLBEk; Fri, 14 Jun 2019 09:18:38 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id CF34325100F;
+        Fri, 14 Jun 2019 09:18:38 -0400 (EDT)
+Date:   Fri, 14 Jun 2019 09:18:38 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <1779359826.3226.1560518318701.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87d0jguxdk.fsf@oldenburg2.str.redhat.com>
+References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <802638054.3032.1560506584705.JavaMail.zimbra@efficios.com> <87ftocwkei.fsf@oldenburg2.str.redhat.com> <1635690189.3049.1560507249693.JavaMail.zimbra@efficios.com> <87tvcsv1pk.fsf@oldenburg2.str.redhat.com> <1190407525.3131.1560516910936.JavaMail.zimbra@efficios.com> <1085273942.3137.1560517301721.JavaMail.zimbra@efficios.com> <87d0jguxdk.fsf@oldenburg2.str.redhat.com>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
+ and thread creation (v10)
 MIME-Version: 1.0
-In-Reply-To: <A2975661238FB949B60364EF0F2C257439EFB432@SHSMSX104.ccr.corp.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 14 Jun 2019 13:17:51 +0000 (UTC)
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
+Thread-Index: XZwhQyoKRjgOfzBSfSbrgHMVjax/Lw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Liu,
+----- On Jun 14, 2019, at 3:09 PM, Florian Weimer fweimer@redhat.com wrote:
 
-On 6/14/19 2:38 PM, Liu, Yi L wrote:
-> Hi Eric,
+> * Mathieu Desnoyers:
 > 
->> From: Eric Auger [mailto:eric.auger@redhat.com]
->> Sent: Monday, May 27, 2019 12:10 AM
->> Subject: [PATCH v8 23/29] vfio: VFIO_IOMMU_CACHE_INVALIDATE
+>> But my original issue remains: if I define a variable called __rseq_handled
+>> within either the main executable or the preloaded library, it overshadows
+>> the libc one:
 >>
->> From: "Liu, Yi L" <yi.l.liu@linux.intel.com>
+>> efficios@compudjdev:~/test/libc-sym$ ./a
+>> __rseq_handled main: 0 0x56135fd5102c
+>> __rseq_abi.cpu_id main: 29 0x7fcbeca6d5a0
+>> efficios@compudjdev:~/test/libc-sym$ LD_PRELOAD=./s.so ./a
+>> __rseq_handled s.so: 0 0x558f70aeb02c
+>> __rseq_abi.cpu_id s.so: -1 0x7fdca78b7760
+>> __rseq_handled main: 0 0x558f70aeb02c
+>> __rseq_abi.cpu_id main: 27 0x7fdca78b7760
 >>
->> When the guest "owns" the stage 1 translation structures,  the host IOMMU driver
->> has no knowledge of caching structure updates unless the guest invalidation
->> requests are trapped and passed down to the host.
->>
->> This patch adds the VFIO_IOMMU_CACHE_INVALIDATE ioctl with aims at
->> propagating guest stage1 IOMMU cache invalidations to the host.
->>
->> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
->> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>
->> ---
->> v6 -> v7:
->> - Use iommu_capsule struct
->> - renamed vfio_iommu_for_each_dev into vfio_iommu_lookup_dev
->>   due to checkpatch error related to for_each_dev suffix
->>
->> v2 -> v3:
->> - introduce vfio_iommu_for_each_dev back in this patch
->>
->> v1 -> v2:
->> - s/TLB/CACHE
->> - remove vfio_iommu_task usage
->> - commit message rewording
->> ---
->>  drivers/vfio/vfio_iommu_type1.c | 55 +++++++++++++++++++++++++++++++++
->>  include/uapi/linux/vfio.h       | 13 ++++++++
->>  2 files changed, 68 insertions(+)
->>
->> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
->> index b2d609d6fe83..6fda4fbc9bfa 100644
->> --- a/drivers/vfio/vfio_iommu_type1.c
->> +++ b/drivers/vfio/vfio_iommu_type1.c
->> @@ -120,6 +120,34 @@ struct vfio_regions {
->>  #define IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)	\
->>  					(!list_empty(&iommu->domain_list))
->>
->> +struct domain_capsule {
->> +	struct iommu_domain *domain;
->> +	void *data;
->> +};
->> +
->> +/* iommu->lock must be held */
->> +static int
->> +vfio_iommu_lookup_dev(struct vfio_iommu *iommu,
->> +		      int (*fn)(struct device *dev, void *data),
->> +		      void *data)
->> +{
->> +	struct domain_capsule dc = {.data = data};
->> +	struct vfio_domain *d;
->> +	struct vfio_group *g;
->> +	int ret = 0;
->> +
->> +	list_for_each_entry(d, &iommu->domain_list, next) {
->> +		dc.domain = d->domain;
->> +		list_for_each_entry(g, &d->group_list, next) {
->> +			ret = iommu_group_for_each_dev(g->iommu_group,
->> +						       &dc, fn);
->> +			if (ret)
->> +				break;
->> +		}
->> +	}
->> +	return ret;
->> +}
->> +
->>  static int put_pfn(unsigned long pfn, int prot);
->>
->>  /*
->> @@ -1795,6 +1823,15 @@ vfio_attach_pasid_table(struct vfio_iommu *iommu,
->>  	return ret;
->>  }
->>
->> +static int vfio_cache_inv_fn(struct device *dev, void *data) {
->> +	struct domain_capsule *dc = (struct domain_capsule *)data;
->> +	struct vfio_iommu_type1_cache_invalidate *ustruct =
->> +		(struct vfio_iommu_type1_cache_invalidate *)dc->data;
->> +
->> +	return iommu_cache_invalidate(dc->domain, dev, &ustruct->info); }
->> +
->>  static long vfio_iommu_type1_ioctl(void *iommu_data,
->>  				   unsigned int cmd, unsigned long arg)  { @@ -
->> 1881,6 +1918,24 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
->>  	} else if (cmd == VFIO_IOMMU_DETACH_PASID_TABLE) {
->>  		vfio_detach_pasid_table(iommu);
->>  		return 0;
->> +	} else if (cmd == VFIO_IOMMU_CACHE_INVALIDATE) {
->> +		struct vfio_iommu_type1_cache_invalidate ustruct;
->> +		int ret;
->> +
->> +		minsz = offsetofend(struct vfio_iommu_type1_cache_invalidate,
->> +				    info);
->> +
->> +		if (copy_from_user(&ustruct, (void __user *)arg, minsz))
->> +			return -EFAULT;
->> +
->> +		if (ustruct.argsz < minsz || ustruct.flags)
+>> Which is unexpected.
 > 
-> May remove the flags field?
-> 
->> +			return -EINVAL;
->> +
->> +		mutex_lock(&iommu->lock);
->> +		ret = vfio_iommu_lookup_dev(iommu, vfio_cache_inv_fn,
->> +					    &ustruct);
->> +		mutex_unlock(&iommu->lock);
->> +		return ret;
->>  	}
->>
->>  	return -ENOTTY;
->> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h index
->> 4316dd8cb5b5..055aa9b9745a 100644
->> --- a/include/uapi/linux/vfio.h
->> +++ b/include/uapi/linux/vfio.h
->> @@ -785,6 +785,19 @@ struct vfio_iommu_type1_attach_pasid_table {
->>   */
->>  #define VFIO_IOMMU_DETACH_PASID_TABLE	_IO(VFIO_TYPE, VFIO_BASE + 23)
->>
->> +/**
->> + * VFIO_IOMMU_CACHE_INVALIDATE - _IOWR(VFIO_TYPE, VFIO_BASE + 24,
->> + *			struct vfio_iommu_type1_cache_invalidate)
->> + *
->> + * Propagate guest IOMMU cache invalidation to the host.
->> + */
->> +struct vfio_iommu_type1_cache_invalidate {
->> +	__u32   argsz;
->> +	__u32   flags;
-> 
-> Looks like there is no more usage on "flags". is it?
+> Why is this unexpected?  It has to be this way if the main program uses
+> a copy relocation of __rseq_handled.  As long as there is just one
+> address across the entire program and ld.so initializes the copy of the
+> variable that is actually used, everything will be fine.
 
-Agreed. However all the other vfio structs embed it.
-vfio_iommu_type1_dma_unmap (VFIO_IOMMU_UNMAP_DMA) or
-vfio_iommu_type1_info (VFIO_IOMMU_GET_INFO) also feature it and do not
-use it either if I am not wrong.
+Here is a printout of the __rseq_handled address observed by ld.so, it
+does not match:
 
-So I guess flags is a common pattern for the API and somehow allows to
-extend the API if needed. So I would be inclined to keep it, no?
+LD_PRELOAD=./s.so ./a
+elf: __rseq_handled addr: 7f501c98a140
+__rseq_handled s.so: 0 0x55817a88d02c
+__rseq_abi.cpu_id s.so: -1 0x7f501c983760
+__rseq_handled main: 0 0x55817a88d02c
+__rseq_abi.cpu_id main: 27 0x7f501c983760
 
-Thanks
+This is with the following in a.c:
 
-Eric
-> 
-> Regards,
-> Yi Liu
-> 
->> +	struct iommu_cache_invalidate_info info; };
->> +#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE, VFIO_BASE + 24)
->> +
->>  /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
->>
->>  /*
->> --
->> 2.20.1
-> 
+#include <stdio.h>
+#include <linux/rseq.h>
+
+__thread struct rseq __rseq_abi
+__attribute__ ((tls_model ("initial-exec"))) = {
+	.cpu_id = -1,
+};
+int __rseq_handled;
+
+int main()
+{
+	fprintf(stderr, "__rseq_handled main: %d %p\n", __rseq_handled, &__rseq_handled);
+	fprintf(stderr, "__rseq_abi.cpu_id main: %d %p\n", __rseq_abi.cpu_id, &__rseq_abi);
+	return 0;
+}
+
+As we can see, the state of __rseq_handled observed by the preloaded
+lib and the program is "0", but should really be "1". This can be
+explained by ld.so not using the same address as the rest of the
+program, but how can we fix that ?
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
