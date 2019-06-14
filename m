@@ -2,30 +2,29 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E87C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A51C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43D12177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A891B2177E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfFNSRn (ORCPT
+        id S1726370AbfFNSRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:17:43 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18617 "EHLO huawei.com"
+        Fri, 14 Jun 2019 14:17:17 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18576 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726429AbfFNSRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:17:21 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 65C475463CF33BAB43D3;
-        Sat, 15 Jun 2019 02:17:18 +0800 (CST)
+        id S1725951AbfFNSRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 14:17:15 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 575A9499F4040C8D4004;
+        Sat, 15 Jun 2019 02:17:13 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 15 Jun
- 2019 02:17:11 +0800
+ 2019 02:17:02 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     <chao@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <devel@driverdev.osuosl.org>
@@ -34,12 +33,10 @@ CC:     LKML <linux-kernel@vger.kernel.org>,
         Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
         Fang Wei <fangwei1@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [RFC PATCH 6/8] staging: erofs: introduce LZ4 decompression inplace
-Date:   Sat, 15 Jun 2019 02:16:17 +0800
-Message-ID: <20190614181619.64905-7-gaoxiang25@huawei.com>
+Subject: [RFC PATCH 0/8] staging: erofs: decompression inplace approach
+Date:   Sat, 15 Jun 2019 02:16:11 +0800
+Message-ID: <20190614181619.64905-1-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190614181619.64905-1-gaoxiang25@huawei.com>
-References: <20190614181619.64905-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.140.130.215]
@@ -49,9 +46,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-compressed data will be usually loaded into last pages of
-the extent (the last page for 4k) for in-place decompression
-(more specifically, in-place IO), as ilustration below,
+Hi,
+
+After working on for more than half a year, the detail of erofs decompression
+inplace is almost determined and ready for linux-next.
+
+Currently, inplace IO is used if the whole compressed data is used
+in order to reduce compressed pages extra memory overhead and an extra
+memcpy (the only one memcpy) will be used for each inplace IO since
+temporary buffer is needed to keep decompressing safe for inplace IO.
+
+However, most of lz-based decompression algorithms support decompression
+inplace by their algorithm designs, such as LZ4, LZO, etc.
+
+If iend - oend margin is large enough, decompression inplace can be done
+in the same buffer safely, as illustrated below:
 
          start of compressed logical extent
            |                          end of this logical extent
@@ -67,90 +76,107 @@ the extent (the last page for 4k) for in-place decompression
                                        oend     iend
            op                        ip
 
-Therefore, it's possible to do decompression inplace (thus no
-memcpy at all) if the margin is sufficient and safe enough [1],
-and it can be implemented only for fixed-size output compression
-compared with fixed-size input compression.
+Fixed-size output compression can make the full use of this feature
+to reduce memory overhead and avoid extra memcpy compared with fixed-size
+input compression since iend is strictly not less than oend for fixed-size
+output compression with inplace IO to last pages.
 
-No memcpy for most of in-place IO (about 99% of enwik9) after
-decompression inplace is implemented and sequential read will
-be improved of course (see the following patch for test results).
+In addition, erofs compression indexes have been improved as well by
+introducing compacted compression indexes.
 
-[1] https://github.com/lz4/lz4/commit/b17f578a919b7e6b078cede2d52be29dd48c8e8c
-    https://github.com/lz4/lz4/commit/5997e139f53169fa3a1c1b4418d2452a90b01602
+These two techniques all benefit sequential read (on x86_64, 710.8MiB/s
+-> 755.4MiB/s; on Kirin980, 725MiB/s -> 812MiB/s) therefore erofs
+could have similar sequential read performance against ext4 in a larger
+CR range on high-spend SSD / NVMe devices as well.
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- drivers/staging/erofs/compress.h     |  1 +
- drivers/staging/erofs/decompressor.c | 21 ++++++++++++++++++---
- drivers/staging/erofs/erofs_fs.h     |  3 ++-
- 3 files changed, 21 insertions(+), 4 deletions(-)
+However, note that it is _cpu vs storage device_ balance, there is no
+absolute performance conclusion for all on-market combinations.
 
-diff --git a/drivers/staging/erofs/compress.h b/drivers/staging/erofs/compress.h
-index ebeccb1f4eae..c43aa3374d28 100644
---- a/drivers/staging/erofs/compress.h
-+++ b/drivers/staging/erofs/compress.h
-@@ -17,6 +17,7 @@ enum {
- };
- 
- struct z_erofs_decompress_req {
-+	struct super_block *sb;
- 	struct page **in, **out;
- 
- 	unsigned short pageofs_out;
-diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
-index 4f644bdea0bc..727bae6a3cb0 100644
---- a/drivers/staging/erofs/decompressor.c
-+++ b/drivers/staging/erofs/decompressor.c
-@@ -14,6 +14,9 @@
- #endif
- 
- #define LZ4_MAX_DISTANCE_PAGES	DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE)
-+#ifndef LZ4_DECOMPRESS_INPLACE_MARGIN
-+#define LZ4_DECOMPRESS_INPLACE_MARGIN(srcsize)  (((srcsize) >> 8) + 32)
-+#endif
- 
- struct z_erofs_decompressor {
- 	/*
-@@ -131,9 +134,21 @@ static int lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
- 	copied = false;
- 	inlen = rq->inputsize - inputmargin;
- 	if (rq->inplace_io) {
--		src = generic_copy_inplace_data(rq, src, inputmargin);
--		inputmargin = 0;
--		copied = true;
-+		const uint oend = (rq->pageofs_out +
-+				   rq->outputsize) & ~PAGE_MASK;
-+		const uint nr = PAGE_ALIGN(rq->pageofs_out +
-+					   rq->outputsize) >> PAGE_SHIFT;
-+
-+		if (rq->partial_decoding ||
-+		    !(EROFS_SB(rq->sb)->requirements &
-+		      EROFS_REQUIREMENT_LZ4_0PADDING) ||
-+		    rq->out[nr - 1] != rq->in[0] ||
-+		    rq->inputsize - oend <
-+		      LZ4_DECOMPRESS_INPLACE_MARGIN(inlen)) {
-+			src = generic_copy_inplace_data(rq, src, inputmargin);
-+			inputmargin = 0;
-+			copied = true;
-+		}
- 	}
- 
- 	ret = LZ4_decompress_safe_partial(src + inputmargin, out,
-diff --git a/drivers/staging/erofs/erofs_fs.h b/drivers/staging/erofs/erofs_fs.h
-index a05139f1df60..353322a3206c 100644
---- a/drivers/staging/erofs/erofs_fs.h
-+++ b/drivers/staging/erofs/erofs_fs.h
-@@ -21,7 +21,8 @@
-  * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
-  * incompatible with this kernel version.
-  */
--#define EROFS_ALL_REQUIREMENTS  0
-+#define EROFS_REQUIREMENT_LZ4_0PADDING	0x00000001
-+#define EROFS_ALL_REQUIREMENTS		EROFS_REQUIREMENT_LZ4_0PADDING
- 
- struct erofs_super_block {
- /*  0 */__le32 magic;           /* in the little endian */
+At last, this is RFC patch v1, which means it is not suitable for
+merging soon... I'm still working on it, testing its stability
+these days and hope these patches get merged for 5.3 LTS
+(if 5.3 is a LTS version).
+
+The series is based on staging-next with the following patches, which
+can be merged in advance:
+ [PATCH v3 1/2] staging: erofs: add requirements field in superblock
+ [PATCH v2 2/2] staging: erofs: rename data_mapping_mode to datamode
+
+
+
+Test images:
+ name                       size                 CR
+ enwik9                     1000000000           1.00
+ enwik9_4k.squashfs.img      621211648           1.61
+ enwik9_4k.erofs.img         558133248           1.79
+ enwik9_8k.squashfs.img      556191744           1.80
+ enwik9_16k.squashfs.img     502661120           1.99
+ enwik9_128k.squashfs.img    398204928           2.51
+
+Test Environment:
+CPU: Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz (4 cores, 8 threads)
+DDR: 8G
+SSD: INTEL SSDPEKKF360G7H
+Kernel: Linux 5.2-rc3+ (with lz4-1.8.3 algorithm)
+
+Test configuration:
+squashfs:
+CONFIG_SQUASHFS=y
+CONFIG_SQUASHFS_FILE_DIRECT=y
+CONFIG_SQUASHFS_DECOMP_MULTI_PERCPU=y
+CONFIG_SQUASHFS_LZ4=y
+CONFIG_SQUASHFS_4K_DEVBLK_SIZE=y
+erofs:
+CONFIG_EROFS_FS_USE_VM_MAP_RAM=y
+CONFIG_EROFS_FS_ZIP=y
+CONFIG_EROFS_FS_CLUSTER_PAGE_LIMIT=1
+CONFIG_EROFS_FS_ZIP_CACHE_BIPOLAR=y
+
+with intel_pstate=disable,
+     8 cpus on at 1801000 scaling_{min,max}_freq,
+     userspace scaling_governor
+
+Sequential read results (MiB/s):
+                           1      2      3      4      5      avg
+ enwik9_4k.ext4.img        767    770    738    726    724    745
+ enwik9_4k.erofs.img       756    745    770    746    760    755.4
+ enwik9_4k.squashfs.img    90.3   83.0   94.3   90.7   92.6   90.18
+ enwik9_8k.squashfs.img    111    108    110    108    110    109.4
+ enwik9_16k.squashfs.img   158    163    146    165    174    161.2
+ enwik9_128k.squashfs.img  324    314    262    262    296    291.6
+
+
+Thanks,
+Gao Xiang
+
+Gao Xiang (8):
+  staging: erofs: add compacted ondisk compression indexes
+  staging: erofs: add compacted compression indexes support
+  staging: erofs: move per-CPU buffers implementation to utils.c
+  staging: erofs: move stagingpage operations to compress.h
+  staging: erofs: introduce generic decompression backend
+  staging: erofs: introduce LZ4 decompression inplace
+  staging: erofs: switch to new decompression backend
+  staging: erofs: integrate decompression inplace
+
+ drivers/staging/erofs/Makefile        |   2 +-
+ drivers/staging/erofs/compress.h      |  62 ++++
+ drivers/staging/erofs/data.c          |   4 +-
+ drivers/staging/erofs/decompressor.c  | 321 ++++++++++++++++++
+ drivers/staging/erofs/erofs_fs.h      |  60 +++-
+ drivers/staging/erofs/inode.c         |  12 +-
+ drivers/staging/erofs/internal.h      |  58 +++-
+ drivers/staging/erofs/unzip_vle.c     | 368 ++------------------
+ drivers/staging/erofs/unzip_vle.h     |  38 +--
+ drivers/staging/erofs/unzip_vle_lz4.c | 229 -------------
+ drivers/staging/erofs/utils.c         |  12 +
+ drivers/staging/erofs/zmap.c          | 462 ++++++++++++++++++++++++++
+ 12 files changed, 996 insertions(+), 632 deletions(-)
+ create mode 100644 drivers/staging/erofs/compress.h
+ create mode 100644 drivers/staging/erofs/decompressor.c
+ delete mode 100644 drivers/staging/erofs/unzip_vle_lz4.c
+ create mode 100644 drivers/staging/erofs/zmap.c
+
 -- 
 2.17.1
 
