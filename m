@@ -2,213 +2,130 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956B4C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A26DC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5214F21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4386C2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:48:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="NAHpzhGX"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="u17c7vkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbfFNOro (ORCPT
+        id S1728798AbfFNOs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:47:44 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46313 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728934AbfFNOrn (ORCPT
+        Fri, 14 Jun 2019 10:48:27 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:44502 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728219AbfFNOs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:47:43 -0400
-Received: by mail-ed1-f67.google.com with SMTP id d4so3822259edr.13
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 07:47:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d8nVVuvnHsmvk1d0kUURiumam/C7DIvw1DDJ0lOcbU4=;
-        b=NAHpzhGXzxQ0niZ/4BWf6AG8C7DK+4x3UafTtP24z/KSVwDcHxZOJWMWPkDDh1X2FA
-         5hBGxyhxPcZqYh0g78osiTDMLeAfmAj+ZnNGgOC77XwrBofd3Pq/fezXSSqgiiQqPuI2
-         sOas2pYPCGTpSsc//e4MFq2Mga/+zOqOJpmYg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=d8nVVuvnHsmvk1d0kUURiumam/C7DIvw1DDJ0lOcbU4=;
-        b=tA95elA/wWMueOueXn6ItYeqnChgKLNvW7s0ul2uzW9uBeFky7LftoxiDGV9Fs0WVq
-         +ByuZkBDBuDbsO+JiYryau03a9Xuh8zyY2E7DHzUm0gyxLHOoPaA1xFAOfY4FHiPA3sX
-         MzHVnGoLuiZt0W9NakFq7eNT5lLrlElmXt55FwWN2DXiJPsgrHBNdOFfYNAY+An640TM
-         GCS7y2pOCkTGDnWg0JFFqYSPqhpN5EYRo0ta4Z1ns71pEGpWWKxUU2r0SMpG+P22tKAj
-         aSI+8b/sKFtOaxonAVqgOOQL2gDP+CcnNGoxgIQDzcUHDo7x8y252LrNd3bCoRX7Wdzm
-         bPbw==
-X-Gm-Message-State: APjAAAUBEOs8GG0IjhWHY/n1yisZlXw3QgGzRJvXlyPBrNzJVWIuLJP0
-        2vO2GqQHBHN1wzrsfBOQhlXuig==
-X-Google-Smtp-Source: APXvYqzdCp6F1hxUyRMSuiQvQJM1/dCmISnLrE6y1EtpbLtmiXPpE8t7ndRFrI6NCVDtrkae8rrfpg==
-X-Received: by 2002:a50:8465:: with SMTP id 92mr25270539edp.151.1560523661264;
-        Fri, 14 Jun 2019 07:47:41 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id e33sm944489eda.83.2019.06.14.07.47.39
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 07:47:40 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 16:47:38 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Fri, 14 Jun 2019 10:48:26 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190614144825euoutp01a5c73a1c9b2e474ad607b8ddb7718ff2~oGAq-0z9q0194201942euoutp01a
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 14:48:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190614144825euoutp01a5c73a1c9b2e474ad607b8ddb7718ff2~oGAq-0z9q0194201942euoutp01a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1560523705;
+        bh=KbnWEYsgqMns3fL1M6bl1WXvL0vvlacarWBlX2so54A=;
+        h=From:Subject:To:Cc:Date:References:From;
+        b=u17c7vknApsshx78VtoHa92DcoTtt2IZwmtq/UlDVTUB5kYKwl4mVkZRgWJJ5aUL4
+         EOv2RAeXCPaF3ojqnEMDNU79R8O9bbkpW2bApSvydSIpl7xfgvne6Rs+5CAd5qrHxY
+         nWCPZcMo4C2dEEs4r2IhRM2fiM5uZ9DSbHVg/q5w=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190614144824eucas1p28ce4a766238335181118b38c84e7adf9~oGAqZwRvZ1842218422eucas1p2w;
+        Fri, 14 Jun 2019 14:48:24 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 74.96.04325.8B3B30D5; Fri, 14
+        Jun 2019 15:48:24 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190614144823eucas1p1f6d5ed1905350e9933f4d7fec0a3419f~oGApS6j7R3210832108eucas1p1V;
+        Fri, 14 Jun 2019 14:48:23 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190614144823eusmtrp175a283449c6243ce6a6c4150a43377d9~oGApDaKRT2548325483eusmtrp1J;
+        Fri, 14 Jun 2019 14:48:23 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-d8-5d03b3b8da7f
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 32.AE.04140.7B3B30D5; Fri, 14
+        Jun 2019 15:48:23 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190614144822eusmtip18c6f39ce9009c2c74240f5194e9a9ae9~oGAoz5tG92907529075eusmtip1F;
+        Fri, 14 Jun 2019 14:48:22 +0000 (GMT)
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 2/3] video: fbdev: intelfb: return -ENOMEM on
+ framebuffer_alloc() failure
+To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 19/20] drm: rcar-du: crtc: Register GAMMA_LUT properties
-Message-ID: <20190614144738.GY23020@phenom.ffwll.local>
-Mail-Followup-To: Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
- <20190606142220.1392-20-jacopo+renesas@jmondi.org>
- <20190607120304.GH7593@pendragon.ideasonboard.com>
- <20190614081507.3ky4pcyijjxnr7mp@uno.localdomain>
- <20190614084251.GW23020@phenom.ffwll.local>
- <20190614092745.wznk3iv5dgehmjsb@uno.localdomain>
+Cc:     Maik Broemme <mbroemme@libmpq.org>
+Message-ID: <a659cb04-b16c-a3a0-30f4-b2f90b0d7196@samsung.com>
+Date:   Fri, 14 Jun 2019 16:48:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614092745.wznk3iv5dgehmjsb@uno.localdomain>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnleLIzCtJLcpLzFFi42LZduznOd0dm5ljDSY+Fra48vU9m8WJvg+s
+        Fpd3zWGz+HWSyYHF4/rPG0we97uPM3l83iQXwBzFZZOSmpNZllqkb5fAlXHv4lzGghNsFU86
+        DzI1MF5g7WLk5JAQMJG4/6+FrYuRi0NIYAWjRPvTPewQzhdGiUlrJrJAOJ8ZJaY0LmCEaXm/
+        +QJU1XJGiY/H77GBJIQE3jJKrG5TArHZBKwkJravAmrg4BAWiJb4N8cLJCwikCCxYvoMsDCz
+        gJrE9UXVIGFeATuJQ12XmEBsFgFVid6v25lBbFGBCIn7xzawQtQISpyc+YQFxGYWEJe49WQ+
+        E4QtL7H97RxmkHMkBD6zSez60soCcaeLxK2tPUwQtrDEq+Nb2CFsGYnTk3tYIBrWMUr87XgB
+        1b2dUWL55H9sEFXWEoePX2SFuFRTYv0ufYiwo8S5I5tZQMISAnwSN94KQhzBJzFp23RmiDCv
+        REebEES1msSGZRvYYNZ27VzJDGF7SFy+OZdlAqPiLCSvzULy2iwkr81CuGEBI8sqRvHU0uLc
+        9NRi47zUcr3ixNzi0rx0veT83E2MwGRy+t/xrzsY9/1JOsQowMGoxMM7o485Vog1say4MvcQ
+        owQHs5II7zxroBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeaoYH0UIC6YklqdmpqQWpRTBZJg5O
+        qQZGP+dFx87cVe/2Ln99m/ekmJrOF4N7OxslI+xk/E/Puh5w9RGXy4x3VX01bHM3+GuWqdzb
+        KDv1mekKRZ9nZ11fsqYemR2gyC0rsv2Ki9X66VpNZ5qZNQJEek3OHCt5ffHMVf7Op/KbNmXn
+        tZZpNcU/SiivTA+O2TUtcON2xRl3zhxPYQtv+eytxFKckWioxVxUnAgAk1mLPiIDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42I5/e/4Xd3tm5ljDRrbeSyufH3PZnGi7wOr
+        xeVdc9gsfp1kcmDxuP7zBpPH/e7jTB6fN8kFMEfp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZ
+        WOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZdy7OJex4ARbxZPOg0wNjBdYuxg5OSQETCTeb77A
+        3sXIxSEksJRR4suzjyxdjBxACRmJ4+vLIGqEJf5c62KDqHnNKPH7YAdYM5uAlcTE9lWMIPXC
+        AtES/+Z4gYRFBBIknr6ezwYSZhZQk7i+qBokzCtgJ3Go6xITiM0ioCrR+3U7M4gtKhAhceb9
+        ChaIGkGJkzOfgNnMAuoSf+ZdYoawxSVuPZnPBGHLS2x/O4d5AqPALCQts5C0zELSMgtJywJG
+        llWMIqmlxbnpucVGesWJucWleel6yfm5mxiBsbDt2M8tOxi73gUfYhTgYFTi4Z3RxxwrxJpY
+        VlyZe4hRgoNZSYR3njVQiDclsbIqtSg/vqg0J7X4EKMp0EMTmaVEk/OBcZpXEm9oamhuYWlo
+        bmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoFxB8cOpog0E0+OuM4p4q6yL70c+zo+
+        LdTaueT+6QlqyqICa7nYHZgn6a59v9IlbevEOf0PmH4eN39wdp7OjLbf5z8U7xFY5vp+8/3H
+        4VN29Oo8KPM49OaF+dIzB/a9m/Ln65S0Hcv0bfIfmiip83pG6+0MWsRSyp+gUpoz14ax58/K
+        RWbcF//bKbEUZyQaajEXFScCALvnrPmbAgAA
+X-CMS-MailID: 20190614144823eucas1p1f6d5ed1905350e9933f4d7fec0a3419f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190614144823eucas1p1f6d5ed1905350e9933f4d7fec0a3419f
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190614144823eucas1p1f6d5ed1905350e9933f4d7fec0a3419f
+References: <CGME20190614144823eucas1p1f6d5ed1905350e9933f4d7fec0a3419f@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 11:27:45AM +0200, Jacopo Mondi wrote:
-> Hi Daniel,
-> 
-> On Fri, Jun 14, 2019 at 10:42:51AM +0200, Daniel Vetter wrote:
-> > On Fri, Jun 14, 2019 at 10:15:52AM +0200, Jacopo Mondi wrote:
-> > > Hi Laurent,
-> > >    thanks for review
-> > >
-> > > On Fri, Jun 07, 2019 at 03:03:04PM +0300, Laurent Pinchart wrote:
-> > > > Hi Jacopo,
-> > > >
-> > > > Thank you for the patch.
-> > > >
-> > > > On Thu, Jun 06, 2019 at 04:22:19PM +0200, Jacopo Mondi wrote:
-> > > > > Enable the GAMMA_LUT KMS property using the framework helpers to
-> > > > > register the proeprty and the associated gamma table size maximum size.
-> > > > >
-> > > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > > > ---
-> > > > >  drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 3 +++
-> > > > >  1 file changed, 3 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> > > > > index e6d3df37c827..c920fb5dba65 100644
-> > > > > --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> > > > > +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> > > > > @@ -1207,6 +1207,9 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
-> > > > >  	    rcdu->cmms[swindex]) {
-> > > > >  		rcrtc->cmm = rcdu->cmms[swindex];
-> > > > >  		rgrp->cmms_mask |= BIT(hwindex % 2);
-> > > > > +
-> > > > > +		drm_mode_crtc_set_gamma_size(crtc, CMM_GAMMA_LUT_SIZE);
-> > > > > +		drm_crtc_enable_color_mgmt(crtc, 0, false, CMM_GAMMA_LUT_SIZE);
-> > > >
-> > > > This change looks good, but you also need to add support for legacy API.
-> > > > According to the function's documentation,
-> > > >
-> > > >  * Drivers should use drm_atomic_helper_legacy_gamma_set() to implement the
-> > > >  * legacy &drm_crtc_funcs.gamma_set callback.
-> > > >
-> > >
-> > > Drivers 'shuld' or drivers 'shall' ?
-> > > Isn't this required only to support the 'legacy APIs' ? Do we want that?
-> >
-> > You're calling drm_mode_crtc_set_gamma_size, which is only useful for the
-> > legacy ioctls. should here = assuming your hw supports something that
-> > legacy gamma ioctl can use. Feel free to patch up the docs.
-> 
-> Oh, I see. I should either leave the old API alone without calling
-> drm_mode_crtc_set_gamma_size(), or set the .gamma_set callback to
-> point to drm_atomic_helper_legacy_gamma_set(), which translates the
-> old gamma table interface to a blob property and attach it to a crtc
-> state which is then commited and applied through the atomic helpers.
-> 
-> So I would change the doc to prescribe that if the driver intends to
-> support the legacy SETGAMMA/GETGAMMA IOCTLs it should declare the
-> gamma table size with drm_mode_crtc_set_gamma_size() first, and set
-> the .gamma_set crtc callback to drm_atomic_helper_legacy_gamma_set(),
-> which translates the legacy interface to a GAMMA_LUT property blob
-> and commit it.
-> 
-> If that works, I'll make a small patch to the documentation in v2.
+Fix error code from -ENODEV to -ENOMEM.
 
-Not quite what I meant: You should support the legacy gamma ioctl, if your
-gamma ramp can be squared into support that. Which generally means yes.
-We've been thinking about just wiring this all up by default, but there's
-some drivers who use a 256 entry legacy gamma ramp (for backwards compat
-with old X11 userspace), but advertise much bigger tables through the new
-ioctl. So it's not quite as simple.
+Cc: Maik Broemme <mbroemme@libmpq.org>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+---
+ drivers/video/fbdev/intelfb/intelfbdrv.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-But except if you have some really strange hw there's just no good reason
-not to support the old legacy ioctl. We also don't just support the new
-atomic ioctl on new drivers, they all still support the older interfaces.
-This is the same.
-
-That's what I meant should be clarified if it's not yet clear in docs,
-plus maybe a new todo entry in Documentation/gpu/todo.rst.
--Daniel
-
-> 
-> Thanks
->   j
-> 
-> 
-> > -Daniel
-> >
-> > >
-> > > Thanks
-> > >    j
-> > >
-> > > > >  	}
-> > > > >
-> > > > >  	drm_crtc_helper_add(crtc, &crtc_helper_funcs);
-> > > > >
-> > > >
-> > > > --
-> > > > Regards,
-> > > >
-> > > > Laurent Pinchart
-> >
-> >
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
-
-
-
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Index: b/drivers/video/fbdev/intelfb/intelfbdrv.c
+===================================================================
+--- a/drivers/video/fbdev/intelfb/intelfbdrv.c
++++ b/drivers/video/fbdev/intelfb/intelfbdrv.c
+@@ -493,7 +493,7 @@ static int intelfb_pci_register(struct p
+ 	info = framebuffer_alloc(sizeof(struct intelfb_info), &pdev->dev);
+ 	if (!info) {
+ 		ERR_MSG("Could not allocate memory for intelfb_info.\n");
+-		return -ENODEV;
++		return -ENOMEM;
+ 	}
+ 	if (fb_alloc_cmap(&info->cmap, 256, 1) < 0) {
+ 		ERR_MSG("Could not allocate cmap for intelfb_info.\n");
