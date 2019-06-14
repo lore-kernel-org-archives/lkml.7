@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C70FC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C35C31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66092080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE8112080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544348;
-	bh=jhQqnymgbcED4Wg31HonswJM/vkpXR8hme/VKMnjuzU=;
+	s=default; t=1560544355;
+	bh=JjzFXO4qP7nYQI2ah0S+iAhpPM4RS2h2iJ0W7Oj8TWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HCpMAnqh4tOCcqTTgZZfbtM8nJhyObp/YoQzQGwkJnu1x/Ps9eOubCq40hQuIkqdo
-	 EFezbMedCY7bvBst63kriCc4XFLGBwXpdSylcsMLkD4hGSgb77IY9n2v5RDKkLE51X
-	 3cIfcgmcZJEroCePBbepj+Czq5Fi7/6s0FkKZySM=
+	b=YWG6kClfCCXBhMuGvq++jQHmSTMpDQCTOAgtuZAnFw9jwErQLWLzRW+StZh5Ry+8g
+	 eKenQPLlKPnradVFNliCGIkfcA/vIwUj61aJ/W4ZkcXHCwM3jHp24haIQVLhBgQCGN
+	 fm+aX4x9ELvdq+SH3WEgu3Ak2UP8GKrVCNZmWvhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbfFNUc1 (ORCPT
+        id S1727836AbfFNUan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:32:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54368 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:30:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727876AbfFNUap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:30:45 -0400
+        id S1726807AbfFNUak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:30:40 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C413F21880;
-        Fri, 14 Jun 2019 20:30:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C68F2184C;
+        Fri, 14 Jun 2019 20:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544244;
-        bh=jhQqnymgbcED4Wg31HonswJM/vkpXR8hme/VKMnjuzU=;
+        s=default; t=1560544240;
+        bh=JjzFXO4qP7nYQI2ah0S+iAhpPM4RS2h2iJ0W7Oj8TWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mHZNJYVv1PfHpZE+nzDd3MLZxnQRyp+dkNpYQLEIhYbaDsLOzT7dU9gl4Mj0I3Hpf
-         n5SxjHPNtiobe80lL/Z32slZnasfBUnJ+Kdubqh85YrAl+HY6Q8IHzTXXnh0o3nNKN
-         FmnCp5oTKVKcTqrVvTQQeqW4XrKAztrJ5PQsCbYc=
+        b=LsTocb4u02umPk+Bn5ZmUjfIQrSsOK2UPyY3MM5Wo7ROwiqqdmxmDuPbKVGKuMYHA
+         Ls5yjEsk1s9X+kwNKJp6gHa4c4n23DxiQ3jRhiFFvL98TRbrutN5nkRa1zWXiAQDDI
+         HrlNqgiQkFhZfdMk9RuFoKjaguXBlo673JRfUnho=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Young Xiao <92siuyang@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 10/18] sparc: perf: fix updated event period in response to PERF_EVENT_IOC_PERIOD
-Date:   Fri, 14 Jun 2019 16:30:26 -0400
-Message-Id: <20190614203037.27910-10-sashal@kernel.org>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/18] IB/hfi1: Insure freeze_work work_struct is canceled on shutdown
+Date:   Fri, 14 Jun 2019 16:30:21 -0400
+Message-Id: <20190614203037.27910-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614203037.27910-1-sashal@kernel.org>
 References: <20190614203037.27910-1-sashal@kernel.org>
@@ -59,43 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Young Xiao <92siuyang@gmail.com>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-[ Upstream commit 56cd0aefa475079e9613085b14a0f05037518fed ]
+[ Upstream commit 6d517353c70bb0818b691ca003afdcb5ee5ea44e ]
 
-The PERF_EVENT_IOC_PERIOD ioctl command can be used to change the
-sample period of a running perf_event. Consequently, when calculating
-the next event period, the new period will only be considered after the
-previous one has overflowed.
+By code inspection, the freeze_work is never canceled.
 
-This patch changes the calculation of the remaining event ticks so that
-they are offset if the period has changed.
+Fix by adding a cancel_work_sync in the shutdown path to insure it is no
+longer running.
 
-See commit 3581fe0ef37c ("ARM: 7556/1: perf: fix updated event period in
-response to PERF_EVENT_IOC_PERIOD") for details.
-
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 7724105686e7 ("IB/hfi1: add driver files")
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/kernel/perf_event.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/infiniband/hw/hfi1/chip.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/sparc/kernel/perf_event.c b/arch/sparc/kernel/perf_event.c
-index 71e7f77f6776..84a80cd004eb 100644
---- a/arch/sparc/kernel/perf_event.c
-+++ b/arch/sparc/kernel/perf_event.c
-@@ -889,6 +889,10 @@ static int sparc_perf_event_set_period(struct perf_event *event,
- 	s64 period = hwc->sample_period;
- 	int ret = 0;
+diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
+index d30b3b908621..85db856047a9 100644
+--- a/drivers/infiniband/hw/hfi1/chip.c
++++ b/drivers/infiniband/hw/hfi1/chip.c
+@@ -9620,6 +9620,7 @@ void hfi1_quiet_serdes(struct hfi1_pportdata *ppd)
  
-+	/* The period may have been changed by PERF_EVENT_IOC_PERIOD */
-+	if (unlikely(period != hwc->last_period))
-+		left = period - (hwc->last_period - left);
-+
- 	if (unlikely(left <= -period)) {
- 		left = period;
- 		local64_set(&hwc->period_left, left);
+ 	/* disable the port */
+ 	clear_rcvctrl(dd, RCV_CTRL_RCV_PORT_ENABLE_SMASK);
++	cancel_work_sync(&ppd->freeze_work);
+ }
+ 
+ static inline int init_cpu_counters(struct hfi1_devdata *dd)
 -- 
 2.20.1
 
