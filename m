@@ -2,187 +2,178 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E899C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9341CC31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE7420644
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:04:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="St0by6Bq"
+	by mail.kernel.org (Postfix) with ESMTP id 7960E20644
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:04:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfFNSEi (ORCPT
+        id S1727571AbfFNSEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:04:38 -0400
-Received: from mail-eopbgr80123.outbound.protection.outlook.com ([40.107.8.123]:46388
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        Fri, 14 Jun 2019 14:04:47 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33018 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726305AbfFNSEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:04:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LECnJZEsal1Pq84BtcOe/D4UqrqE85B+/KpYnhrFXZI=;
- b=St0by6BqWkwrQcsJ67WLhNewyMMTZQD5VTcj1fjh+zh8rlTIG3Xeeflvel10xUJiiFRbZqGC2Yu4/WnT/sUrnv2luGo33ffpV/Ay0BuWCzwuXIlSRCxsB/AufN7ox/YC2l6cYsP6s8D9pPKhRC6shQzLnHV0Nw3ImePbXWabPtA=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3323.eurprd02.prod.outlook.com (52.134.65.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Fri, 14 Jun 2019 18:04:33 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::49ac:3a71:a3ec:d6bf]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::49ac:3a71:a3ec:d6bf%5]) with mapi id 15.20.1987.010; Fri, 14 Jun 2019
- 18:04:33 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Serge Semin <fancer.lancer@gmail.com>
-CC:     Peter Korsgaard <peter.korsgaard@barco.com>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/3] i2c-mux-gpio: Unpin the platform-specific GPIOs
- request code
-Thread-Topic: [PATCH v2 2/3] i2c-mux-gpio: Unpin the platform-specific GPIOs
- request code
-Thread-Index: AQHU+72dy7EDmo3k6EmkNrf+93yZ3aaUQGEAgAdlaACAABnvgA==
-Date:   Fri, 14 Jun 2019 18:04:33 +0000
-Message-ID: <fb96ba56-4754-a962-ceea-4fd50ee59c69@axentia.se>
-References: <20190425232028.9333-1-fancer.lancer@gmail.com>
- <20190425232028.9333-3-fancer.lancer@gmail.com>
- <783250dd-87c0-b3cc-0e90-7978605a9b07@axentia.se>
- <20190614163134.zs5xyuqvp25ahbng@mobilestation>
-In-Reply-To: <20190614163134.zs5xyuqvp25ahbng@mobilestation>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR0401CA0073.eurprd04.prod.outlook.com
- (2603:10a6:3:19::41) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 11d99de9-9c10-4d9d-b1bf-08d6f0f2c113
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3323;
-x-ms-traffictypediagnostic: DB3PR0202MB3323:
-x-microsoft-antispam-prvs: <DB3PR0202MB3323BBCCDE8C375D1A1086ABBCEE0@DB3PR0202MB3323.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0068C7E410
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(136003)(396003)(376002)(366004)(346002)(199004)(189003)(52314003)(71190400001)(66066001)(65956001)(65806001)(2906002)(74482002)(31686004)(4326008)(229853002)(6486002)(54906003)(14454004)(58126008)(25786009)(6246003)(68736007)(256004)(26005)(14444005)(11346002)(2616005)(36756003)(446003)(5024004)(186003)(6916009)(71200400001)(6116002)(3846002)(65826007)(5660300002)(486006)(476003)(305945005)(7736002)(52116002)(64126003)(73956011)(66946007)(102836004)(81166006)(99286004)(66476007)(508600001)(53546011)(6506007)(386003)(76176011)(6436002)(53936002)(31696002)(86362001)(6512007)(66446008)(64756008)(66556008)(81156014)(8676002)(8936002)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3323;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: jhB15HxpHvjYcotksUaQ/9l9UaUNg+De/69tQgYAljWfSCBfOP7Ey2Sy0/52ifP8a0bn5foTKpXpob5eZwDkDtOpAKXmOnSAbg5IoC8W3/3h/9XSavc9LlKQCupHanMBVJKMipWrrmyvE/7oqdDiY3N56Eo9MnPRjhlWzSCMbQC1gFjvEnA0BhYW8Abb20JQ2olwxVrPltb3HJH71Qys2T+DtYEDdF6y6sPU1PjlBTWrG90KThDjqT8Q0qGHmHMRDVqJJoMPvXKNW9D59vxb5ZtpN6cexthKW10m1AHq2f8CovTh41/zfeyB1iYUeLpHywRAIswuugxXIgEO8pJP/x3686f6DNIoFTihu0YPDwd00WpMkAW0kgv6lOGHlwjyPrySyI0BkQySbBWo82NwMlTHPmr1LU/8ifqgC6fKCOI=
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <08FE068E0DDD4D4BA3CCFA48B999AAE3@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1726305AbfFNSEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 14:04:46 -0400
+Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 73E668B10894AC780E1D;
+        Fri, 14 Jun 2019 19:04:45 +0100 (IST)
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.154)
+ by smtpsuk.huawei.com (10.201.108.43) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 14 Jun 2019 19:04:34 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <zohar@linux.ibm.com>, <dmitry.kasatkin@huawei.com>,
+        <mjg59@google.com>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH v4 10/14] ima: load parser digests and execute the parser at boot time
+Date:   Fri, 14 Jun 2019 19:55:09 +0200
+Message-ID: <20190614175513.27097-11-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190614175513.27097-1-roberto.sassu@huawei.com>
+References: <20190614175513.27097-1-roberto.sassu@huawei.com>
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11d99de9-9c10-4d9d-b1bf-08d6f0f2c113
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 18:04:33.4877
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: peda@axentia.se
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3323
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-14 18:31, Serge Semin wrote:
-> Hello Peter,
->=20
-> On Sun, Jun 09, 2019 at 09:34:54PM +0000, Peter Rosin wrote:
->> On 2019-04-26 01:20, Serge Semin wrote:
->>> The GPIOs request loop can be safely moved to a separate function.
->>> First of all it shall improve the code readability. Secondly the
->>> initialization loop at this point is used for both of- and
->>> platform_data-based initialization paths, but it will be changed in
->>> the next patch, so by isolating the code we'll simplify the future
->>> work.
->>
->> This patch is just preparatory for patch 3/3, as I see it. And since
->> I'm not really fond of the end result after patch 3/3, I'm going to
->> sum up my issues here, instead of trying do it piecemeal in the two
->> patches.
->>
->> Linus and Jean, for your convenience, link to this patch series [1].
->>
->> While I agree with the goal (to use the more flexible gpiod functions
->> to get at the gpio descriptors), the cost is too high when the init
->> code for platform and OF is basically completely separated. I much
->> prefer the approach taken by Linus [2], which instead converts the
->> platform interface and its single user to use gpio descriptors instead
->> of the legacy gpio interface. The i2c-mux-gpio code then has the
->> potential to take a unified approach to the given gpio descriptors,
->> wherever they are originating from, which is much nicer than the
->> code-fork in this series.
->>
->> I also think it is pretty pointless to first split the code into
->> platform and OF paths, just so that the next patch (from Linus) can
->> unify the two paths again. I'd like to skip the intermediate step.
->>
->> So, I'm hoping for the following to happen.
->> 1. Sergey sends a revised patch for patch 1/3.
->> 2. I put the patch on the for-next branch.
->> 3. Linus rebases his patch on top of that (while thinking about
->>    the questions raised by Sergey).
->> 4. Sergey tests the result, I and Jean review it, then possibly
->>    go back to 3.
->> 5. I put the patch on the for-next branch.
->>
->> Is that ok? Or is someone insisting that we take a detour?
->>
->=20
-> The series was intended to add the gpiod support to the i2c-mux-gpio driv=
-er
-> (see the cover letter of the series). So the last patch is the most valua=
-ble
-> one. Without it the whole series is nothing but a small readability impro=
-vement.
-> So it is pointless to merge the first patch only.
+Digest lists should be uploaded to IMA as soon as possible, otherwise file
+digests would appear in the measurement list or access would be denied if
+appraisal is in enforcing mode.
 
-Agreed on all points, except perhaps for the "refuse" part below and
-that the readability improvement of patch 1/3 is perhaps not all that
-pointless.
+This patch adds a call to ima_load_parser_digest_list() in
+integrity_load_keys(), so that the function is executed when rootfs becomes
+available, before the init process is executed.
 
-> Anyway since you refuse to add the last patch and the first patch is actu=
-ally
-> pointless without the rest of the series, and I would have to spend my ti=
-me to
-> resubmit the v3 of the first patch anyway, it was much easier to test the
-> current version of the Linus' patch and make it working for OF-based plat=
-forms.
-> Additionally the Linus' patch also reaches the main goal of this patchset=
-.
+ima_load_parser_digest_list() loads a compact list containing the digests
+of the parser and the shared libraries. This list is measured and
+appraised depending on the current IMA policy. Then, the function executes
+the parser executable with the User-Mode-Helper (UMH).
 
-I'm very pleased that you do not feel totally put off, and are willing
-to help even if we end up storing your series in /dev/null. Kudos!
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+---
+ security/integrity/iint.c                |  1 +
+ security/integrity/ima/Kconfig           | 15 +++++++++
+ security/integrity/ima/ima_digest_list.c | 42 ++++++++++++++++++++++++
+ security/integrity/integrity.h           |  8 +++++
+ 4 files changed, 66 insertions(+)
 
-> I don't know what would be the appropriate way to send the updated versio=
-n of
-> the Linus' patch. So I just attached the v4 of it to this email. Shall I =
-better
-> send it in reply to the Linus' patch series?
+diff --git a/security/integrity/iint.c b/security/integrity/iint.c
+index e12c4900510f..de73baccc847 100644
+--- a/security/integrity/iint.c
++++ b/security/integrity/iint.c
+@@ -213,6 +213,7 @@ void __init integrity_load_keys(void)
+ {
+ 	ima_load_x509();
+ 	evm_load_x509();
++	ima_load_parser_digest_list();
+ }
+ 
+ static int __init integrity_fs_init(void)
+diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+index b3a7b46d21cf..c1bb9fedeccc 100644
+--- a/security/integrity/ima/Kconfig
++++ b/security/integrity/ima/Kconfig
+@@ -307,3 +307,18 @@ config IMA_DIGEST_LIST
+ 	   of accessed files are found in one of those lists, no new entries are
+ 	   added to the measurement list, and access to the file is granted if
+ 	   appraisal is in enforcing mode.
++
++config IMA_PARSER_DIGEST_LIST_PATH
++	string "Path of the parser digest list"
++	depends on IMA_DIGEST_LIST
++	default "/etc/ima/digest_lists/compact-upload_digest_lists"
++	help
++	   This option defines the path of the digest list containing the
++	   digest of the parser.
++
++config IMA_PARSER_BINARY_PATH
++	string "Path of the parser binary"
++	depends on IMA_DIGEST_LIST
++	default "/usr/bin/upload_digest_lists"
++	help
++	   This option defines the path of the parser binary.
+diff --git a/security/integrity/ima/ima_digest_list.c b/security/integrity/ima/ima_digest_list.c
+index 3aaa26d6e8e3..532aaf5145ae 100644
+--- a/security/integrity/ima/ima_digest_list.c
++++ b/security/integrity/ima/ima_digest_list.c
+@@ -240,3 +240,45 @@ struct ima_digest *ima_digest_allow(struct ima_digest *digest, int action)
+ 
+ 	return digest;
+ }
++
++/********************
++ * Parser execution *
++ ********************/
++static void ima_exec_parser(void)
++{
++	char *argv[2] = {NULL}, *envp[1] = {NULL};
++
++	argv[0] = (char *)CONFIG_IMA_PARSER_BINARY_PATH;
++	call_usermodehelper(argv[0], argv, envp, UMH_WAIT_PROC);
++}
++
++void __init ima_load_parser_digest_list(void)
++{
++	void *datap;
++	loff_t size;
++	int ret;
++
++	if (!(ima_digest_list_actions & ima_policy_flag))
++		return;
++
++	ima_set_parser(current);
++	ret = kernel_read_file_from_path(CONFIG_IMA_PARSER_DIGEST_LIST_PATH,
++					 &datap, &size, 0, READING_DIGEST_LIST);
++	ima_set_parser(NULL);
++
++	if (ret < 0) {
++		if (ret != -ENOENT)
++			pr_err("Unable to open file: %s (%d)",
++			       CONFIG_IMA_PARSER_DIGEST_LIST_PATH, ret);
++		return;
++	}
++
++	ret = ima_parse_compact_list(size, datap);
++
++	vfree(datap);
++
++	if (ret < 0)
++		return;
++
++	ima_exec_parser();
++}
+diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
+index 1a9bff2e01ec..8c4cf5127a8b 100644
+--- a/security/integrity/integrity.h
++++ b/security/integrity/integrity.h
+@@ -213,6 +213,14 @@ static inline void evm_load_x509(void)
+ }
+ #endif
+ 
++#ifdef CONFIG_IMA_DIGEST_LIST
++void __init ima_load_parser_digest_list(void);
++#else
++static inline void ima_load_parser_digest_list(void)
++{
++}
++#endif
++
+ #ifdef CONFIG_INTEGRITY_AUDIT
+ /* declarations */
+ void integrity_audit_msg(int audit_msgno, struct inode *inode,
+-- 
+2.17.1
 
-I get the impression that you have already done the work? In that case,
-how I would proceed would depend on how big the difference is. If it's
-just a few one-liners here and there, I think I would make a detailed
-review comment so that it is easy for Linus to incorporate the needed
-changes. If it's anything even remotely complex I would post an
-incremental patch. Of course, the former does not exclude the latter,
-but I do think an incremental patch is better than a repost.
-
-Thanks again!
-
-Cheers,
-Peter
