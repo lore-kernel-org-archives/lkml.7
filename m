@@ -2,124 +2,61 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A30C31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E802EC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1872133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:30:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="uLnFCrat"
+	by mail.kernel.org (Postfix) with ESMTP id CAFA92133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:32:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbfFNJak (ORCPT
+        id S1726930AbfFNJcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:30:40 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:40427 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfFNJak (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:30:40 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5E9SDmZ1626959
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 14 Jun 2019 02:28:13 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5E9SDmZ1626959
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560504494;
-        bh=8ovtBRuZ0q8GIqCVFE0Skn79qdS+yqXGPq1xONZOsDw=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=uLnFCratGXjhc7DxN/+6K+HriiKU8DO2JkCt+8Ylz1udjr4vbHqPo7jSPe+qOlFv+
-         XZ+s/9pRawXJmV8iST+m7AgYz5j8K1gdpR6Hz0qARVE3/yMUEp2RoFEf3jo8Vfl3yY
-         eAqaeoMPcL0ON3NkuwatnhITWjb3Z1r+QtMz1QEcd1VOOnysJpL/h8V5CIMlVHyIHS
-         L51DDoZ+plQtFAFqyT2MrDUp1ZPanF3NlNZoYkiJsXqogWrSUycoppm2Q1IHWnn5Hi
-         vDLXNR3DmyQOhM4b6dlFfqAogn418gYmvpYSc3u0lCCcO5PrZRNdSRZ7hJjmZjKTTa
-         HiPSxD4ZjdlUw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5E9SD5k1626956;
-        Fri, 14 Jun 2019 02:28:13 -0700
-Date:   Fri, 14 Jun 2019 02:28:13 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Rajneesh Bhardwaj <tipbot@zytor.com>
-Message-ID: <tip-e32d045cd4ba06b59878323e434bad010e78e658@git.kernel.org>
-Cc:     peterz@infradead.org, rajneesh.bhardwaj@linux.intel.com,
-        linux-kernel@vger.kernel.org, dave.hansen@linux.intel.com,
-        linux-pm@vger.kernel.org, mingo@kernel.org,
-        kan.liang@linux.intel.com, qiuxu.zhuo@intel.com,
-        andriy.shevchenko@linux.intel.com, bp@alien8.de,
-        srinivas.pandruvada@linux.intel.com, tglx@linutronix.de,
-        hpa@zytor.com, lenb@kernel.org
-Reply-To: rajneesh.bhardwaj@linux.intel.com, peterz@infradead.org,
-          linux-kernel@vger.kernel.org, dave.hansen@linux.intel.com,
-          linux-pm@vger.kernel.org, mingo@kernel.org,
-          kan.liang@linux.intel.com, qiuxu.zhuo@intel.com,
-          andriy.shevchenko@linux.intel.com, bp@alien8.de,
-          srinivas.pandruvada@linux.intel.com, tglx@linutronix.de,
-          hpa@zytor.com, lenb@kernel.org
-In-Reply-To: <20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com>
-References: <20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/cpu] x86/cpu: Add Ice Lake NNPI to Intel family
-Git-Commit-ID: e32d045cd4ba06b59878323e434bad010e78e658
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 14 Jun 2019 05:32:48 -0400
+Received: from verein.lst.de ([213.95.11.211]:45475 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726083AbfFNJcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 05:32:48 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id F075D227A82; Fri, 14 Jun 2019 11:32:18 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 11:32:18 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Greg Ungerer <gerg@snapgear.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: Re: linux-next: manual merge of the akpm-current tree with the
+ m68knommu tree
+Message-ID: <20190614093218.GA17214@lst.de>
+References: <20190614190606.559dc8dc@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190614190606.559dc8dc@canb.auug.org.au>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e32d045cd4ba06b59878323e434bad010e78e658
-Gitweb:     https://git.kernel.org/tip/e32d045cd4ba06b59878323e434bad010e78e658
-Author:     Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-AuthorDate: Thu, 6 Jun 2019 06:54:19 +0530
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 13 Jun 2019 19:37:42 +0200
+On Fri, Jun 14, 2019 at 07:06:06PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the akpm-current tree got a conflict in:
+> 
+>   fs/binfmt_flat.c
+> 
+> between commit:
+> 
+>   6071ecd874ac ("binfmt_flat: add endianess annotations")
+> 
+> from the m68knommu tree and commit:
+> 
+>   db543c385059 ("fs/binfmt_flat.c: remove set but not used variable 'inode'")
 
-x86/cpu: Add Ice Lake NNPI to Intel family
-
-Add the CPUID model number of Ice Lake Neural Network Processor for Deep
-Learning Inference (ICL-NNPI) to the Intel family list. Ice Lake NNPI uses
-model number 0x9D and this will be documented in a future version of Intel
-Software Development Manual.
-
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@suse.de
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com
-
----
- arch/x86/include/asm/intel-family.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 9f15384c504a..087de5d3b93a 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -53,6 +53,7 @@
- #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
- 
- #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
-+#define INTEL_FAM6_ICELAKE_NNPI		0x9D
- 
- /* "Small Core" Processors (Atom) */
- 
+Maybe this should better be added to the maintainer tree as well..
