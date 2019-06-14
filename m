@@ -2,76 +2,194 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A448AC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54391C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A6322173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BD9D2173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:47:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GwDR1FXV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfFNPpY (ORCPT
+        id S1725837AbfFNPrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:45:24 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:33267 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbfFNPpX (ORCPT
+        Fri, 14 Jun 2019 11:47:51 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37621 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfFNPrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:45:23 -0400
-Received: from [192.168.1.110] ([77.4.92.40]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MD9nd-1hkMym2NO5-0098ca; Fri, 14 Jun 2019 17:45:21 +0200
-Subject: Re: Help with reviewing dosfstools patches
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
-        util-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190614102513.4uwsu2wkigg3pimq@pali>
- <ae5097ee-12af-2807-d48c-4274b4fc856d@metux.net>
-Organization: metux IT consult
-Message-ID: <9e81aa56-358a-71e1-edc1-50781062f3a4@metux.net>
-Date:   Fri, 14 Jun 2019 17:45:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Fri, 14 Jun 2019 11:47:51 -0400
+Received: by mail-qt1-f193.google.com with SMTP id y57so3001543qtk.4
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 08:47:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=K6R7y2QZXFFrk7CRLcrrpeFMHRpnzu2Damor0UJTfJo=;
+        b=GwDR1FXVA1Sjn2AtU4PZQEEGR9bejpe+ebab3xc6k3EgoGJHTFtjs39IzrFq5/34Ip
+         H9DtAvsvYLJDLuUkeTRKRS1OpitS6Jx/sEUx4Z+rmQk0hqbyX3iMSvkWX/0l1rd1sGXU
+         zvWGlmhxtjrQ0jC75DKe07psf2kxkmqhZGnIfAiNmNc4UrvKs5rurwKs6nqKIdjK5/Mh
+         sCuNCsya+CR+LeKmhgFdIzjR8rZIPVgSDK+FEWYqsJCpBSCvVqH//SlyZ7QMoPgcTGtZ
+         V+0u2vYTUzjB+1lyf/zYJkAJ1PQwAfME4kqn9lwCHCExuUFhDUsGFNHW703QiFNEoSGu
+         J64Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K6R7y2QZXFFrk7CRLcrrpeFMHRpnzu2Damor0UJTfJo=;
+        b=bn+4edsgCiCYPI6MyjIfbCsK21kKABAguttjHI89MWqFF+pCaQ1YUin7w7tvrM51e5
+         /jRqaf3lQFF/OS+aNpF2SOKw168K1uT+sPBgNDZ0Yz+Cu0PURLmRxdZRlwfiVicV7Te3
+         F4Ru2AIYK6vvSkW1jMRz+OzPUhdUxHZ4z16qA6oMpW+H+4Z5bngNpLiczqrB9xqK2bMB
+         5abh0RP8CAUkY8akx38kWRzUQFnTO6lXybNMqfhi4l4iyCK2WA9uJJg1SHD+0ykVKUzD
+         PhH7VGc2ldr6vrr29erel2u8PBUm6xnwQIqLt67JoruKJ+f8lfGJIiqe4aH3c5xLfI3A
+         H7uQ==
+X-Gm-Message-State: APjAAAWxq8olmuWzzCj8hCj3WwvVPVZZ9t5RRlHZvTaCZLQcx9EDjtkb
+        NDkTuKznfcyYkcFN/KysH+0=
+X-Google-Smtp-Source: APXvYqzsBaaym0moS4V+AO4Kd5ODrNmpUYgYJ2YxtdUPya1tCGUKVJE/TXvR3DhG5mu1WbbiA9dqrg==
+X-Received: by 2002:ac8:5141:: with SMTP id h1mr45815485qtn.15.1560527269329;
+        Fri, 14 Jun 2019 08:47:49 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (179-240-172-117.3g.claro.net.br. [179.240.172.117])
+        by smtp.gmail.com with ESMTPSA id 34sm2046839qtq.59.2019.06.14.08.47.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 08:47:48 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 37B2741149; Fri, 14 Jun 2019 12:47:44 -0300 (-03)
+Date:   Fri, 14 Jun 2019 12:47:44 -0300
+To:     John Garry <john.garry@huawei.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, tmricht@linux.ibm.com,
+        brueckner@linux.ibm.com, kan.liang@linux.intel.com,
+        ben@decadent.org.uk, mathieu.poirier@linaro.org,
+        mark.rutland@arm.com, will.deacon@arm.com,
+        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
+        linux-arm-kernel@lists.infradead.org, zhangshaokun@hisilicon.com
+Subject: Re: [PATCH v2 1/5] perf pmu: Fix uncore PMU alias list for ARM64
+Message-ID: <20190614154744.GH1402@kernel.org>
+References: <1560521283-73314-1-git-send-email-john.garry@huawei.com>
+ <1560521283-73314-2-git-send-email-john.garry@huawei.com>
+ <20190614144656.GF1402@kernel.org>
+ <275d1699-23a3-f06b-3fad-750784318cc1@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <ae5097ee-12af-2807-d48c-4274b4fc856d@metux.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:qac5b9bV7zvSd7iQ4X0pCft/q2EJPLi7mfSiZbmTpE0sPDGhAC1
- VRNMAmKV36VozMyK3rWKT7sjIpddFXl8+8x2CHvrKhpMbxmYzvl1NoVwe571TmeQEecoPdd
- DovXLwbrtAq9WZLC19n+ZGnf3x/CaScxt6QLWiVlIAiPBzjVWmrfKAxWf0pmdnqSlv6YL4w
- 6DvyI6Ff0MTUYJXdgdC8Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wjdDE5rA/mI=:gEuP1f7JUa24CM5jb4oOe+
- sD2m3zN9pW1yiixDOZ+/BJ5JIiHUV92VLznT91iaUp9iTozKGSTvf33nVmAhwSUQUDNMFrLou
- 1SKVnufEN40n5extwnYZ80cr1GG4JBZ4TD+ZwFFw0E7amq1OiGoQbV/aP/hFD0P7AvitkEwfK
- +XocfTWUMhz+pWh9taQMupi9XRo/vBiypNXHxw3FJUO0CEjUDUOrt/20l9D8z3fnhym/2cjRE
- QcUof+png9r7t2Hbc3J4IL+Jygn+oqmmG7thzGEA4KM7dymvY393GSPE9jvAXOcUMoGyqii6v
- zRnP7HEORP7tOFtgtz3Ubx2OAvAr8OXrDgUqmzB5iN4I40+rywJMzOpN4cA2y/DRtDEaYh/Y9
- DinhCpaBT9A4Q2gaj0D6IUFzBhs0IjJNzW1carOcebqe+u5GUyK4PnEYDT3U8Vekn4oauv+iH
- z+3qoV8hm7swc73sB7s+TmXbSDbAreprvWtGZNuFddY9wszKgoC1xbUPR9JeO6R1r4QGzSee4
- ucHRPC5pdAJSpd+bTB3g6shDdEH9MYuj+e8EwHK0s+cUMoEKPLKEDzZeUvT+zilPMfiU9qpCw
- B1kveLg4HX62JhFUcQhpFBMTvRzmsP6LLy8qQxJwjz+ZanHfCUx0t9lZzWQA3D025WBVjWB9I
- SjLhPmnFmQX9yZ6i24fwR354nhbPOguOXE3Gl2YVC268xO2zMaMRkiT4IuxOtUQB6l/4BWFBX
- vbTqY8ANnKyjH2TUx/IU3zaxRR3S9TYqDWTHGoPokFtgOCLZm9+dBJW/7M8=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <275d1699-23a3-f06b-3fad-750784318cc1@huawei.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.06.19 16:20, Enrico Weigelt, metux IT consult wrote:
+Em Fri, Jun 14, 2019 at 04:04:26PM +0100, John Garry escreveu:
+> On 14/06/2019 15:46, Arnaldo Carvalho de Melo wrote:
+> > Em Fri, Jun 14, 2019 at 10:07:59PM +0800, John Garry escreveu:
+> > > In commit 292c34c10249 ("perf pmu: Fix core PMU alias list for X86
+> > > platform"), we fixed the issue of CPU events being aliased to uncore
+> > > events.
+> > > 
+> > > Fix this same issue for ARM64, since the said commit left the (broken)
+> > > behaviour untouched for ARM64.
+> > 
+> > So I added:
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: 292c34c10249 ("perf pmu: Fix core PMU alias list for X86 platform")
+> > 
+> > So that the stable trees get this fix and add it to the versions where
+> > it should have been together with the x86 fix, ok?
+> 
+> Hi Arnaldo,
+> 
+> I have a slight hesitation about this qualifying for the stable.
+> 
+> It's fixing uncore pmu aliasing for arm64. But this series is also the first
+> to introduce any actual arm64 uncore pmu aliases.
 
-<snip>
+I'm not talking about the whole series, just the first patch, the one
+you said should've been done together with the equivalent fix for x86.
 
-Currently working through your branches. Smells like they really deserve
-a rebase and signed-off lines.
-
-
---mtx
+- Arnaldo
+ 
+> Thanks,
+> John
+> 
+> > 
+> > - Arnaldo
+> > 
+> > > Signed-off-by: John Garry <john.garry@huawei.com>
+> > > ---
+> > >  tools/perf/util/pmu.c | 28 ++++++++++++----------------
+> > >  1 file changed, 12 insertions(+), 16 deletions(-)
+> > > 
+> > > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> > > index f2eff272279b..7e7299fee550 100644
+> > > --- a/tools/perf/util/pmu.c
+> > > +++ b/tools/perf/util/pmu.c
+> > > @@ -709,9 +709,7 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
+> > >  {
+> > >  	int i;
+> > >  	struct pmu_events_map *map;
+> > > -	struct pmu_event *pe;
+> > >  	const char *name = pmu->name;
+> > > -	const char *pname;
+> > > 
+> > >  	map = perf_pmu__find_map(pmu);
+> > >  	if (!map)
+> > > @@ -722,28 +720,26 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
+> > >  	 */
+> > >  	i = 0;
+> > >  	while (1) {
+> > > +		const char *cpu_name = is_arm_pmu_core(name) ? name : "cpu";
+> > > +		struct pmu_event *pe = &map->table[i++];
+> > > +		const char *pname = pe->pmu ? pe->pmu : cpu_name;
+> > > 
+> > > -		pe = &map->table[i++];
+> > >  		if (!pe->name) {
+> > >  			if (pe->metric_group || pe->metric_name)
+> > >  				continue;
+> > >  			break;
+> > >  		}
+> > > 
+> > > -		if (!is_arm_pmu_core(name)) {
+> > > -			pname = pe->pmu ? pe->pmu : "cpu";
+> > > -
+> > > -			/*
+> > > -			 * uncore alias may be from different PMU
+> > > -			 * with common prefix
+> > > -			 */
+> > > -			if (pmu_is_uncore(name) &&
+> > > -			    !strncmp(pname, name, strlen(pname)))
+> > > -				goto new_alias;
+> > > +		/*
+> > > +		 * uncore alias may be from different PMU
+> > > +		 * with common prefix
+> > > +		 */
+> > > +		if (pmu_is_uncore(name) &&
+> > > +		    !strncmp(pname, name, strlen(pname)))
+> > > +			goto new_alias;
+> > > 
+> > > -			if (strcmp(pname, name))
+> > > -				continue;
+> > > -		}
+> > > +		if (strcmp(pname, name))
+> > > +			continue;
+> > > 
+> > >  new_alias:
+> > >  		pr_err("%s new_alias name=%s pe->name=%s\n", __func__, name, pe->name);
+> > > --
+> > > 2.17.1
+> > 
+> 
 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+
+- Arnaldo
