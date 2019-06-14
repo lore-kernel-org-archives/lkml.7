@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3605BC31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C124C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6B72184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26A92184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbfFNRzY (ORCPT
+        id S1727705AbfFNRz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 13:55:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:39624 "EHLO foss.arm.com"
+        Fri, 14 Jun 2019 13:55:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:39640 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727611AbfFNRzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 13:55:22 -0400
+        id S1727639AbfFNRzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 13:55:23 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3124DCFC;
-        Fri, 14 Jun 2019 10:55:21 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 677D53EF;
+        Fri, 14 Jun 2019 10:55:22 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1358C3F718;
-        Fri, 14 Jun 2019 10:55:19 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 64BB33F718;
+        Fri, 14 Jun 2019 10:55:21 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        suzuki.poulose@arm.com, linux-usb@vger.kernel.org,
-        Oliver Neukum <oneukum@suse.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH v2 19/28] drivers: Introduce bus_find_device_by_devt() helper
-Date:   Fri, 14 Jun 2019 18:54:14 +0100
-Message-Id: <1560534863-15115-20-git-send-email-suzuki.poulose@arm.com>
+        suzuki.poulose@arm.com, Bjorn Helgaas <bhelgaas@google.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH v2 20/28] drivers: Introduce bus_find_next_device() helper
+Date:   Fri, 14 Jun 2019 18:54:15 +0100
+Message-Id: <1560534863-15115-21-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
 References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
@@ -43,92 +42,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a wrapper to bus_find_device() to search for a device
-by the device type, reusing the generic match function.
-Also convert the existing users to make use of the new helper.
+Add a wrapper for bus_find_device() to find the next devices
+on the given bus from the "start" device. Also convert the existing
+users to make use of the new helper.
 
-Cc: linux-usb@vger.kernel.org
-Cc: Oliver Neukum <oneukum@suse.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/intel_th/core.c | 10 +---------
- drivers/usb/core/devio.c          |  8 +-------
- include/linux/device.h            | 12 ++++++++++++
- 3 files changed, 14 insertions(+), 16 deletions(-)
+ drivers/pci/probe.c      |  7 +------
+ drivers/scsi/scsi_proc.c |  9 ++-------
+ include/linux/device.h   | 10 ++++++++++
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/hwtracing/intel_th/core.c b/drivers/hwtracing/intel_th/core.c
-index 5592289..d5c1821 100644
---- a/drivers/hwtracing/intel_th/core.c
-+++ b/drivers/hwtracing/intel_th/core.c
-@@ -789,12 +789,6 @@ static int intel_th_populate(struct intel_th *th)
- 	return 0;
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index f9ef7ad..3504695 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -64,11 +64,6 @@ static struct resource *get_pci_domain_busn_res(int domain_nr)
+ 	return &r->res;
  }
  
--static int match_devt(struct device *dev, const void *data)
+-static int find_anything(struct device *dev, const void *data)
 -{
--	dev_t devt = (dev_t)(unsigned long)(void *)data;
--	return dev->devt == devt;
+-	return 1;
 -}
 -
- static int intel_th_output_open(struct inode *inode, struct file *file)
- {
- 	const struct file_operations *fops;
-@@ -802,9 +796,7 @@ static int intel_th_output_open(struct inode *inode, struct file *file)
+ /*
+  * Some device drivers need know if PCI is initiated.
+  * Basically, we think PCI is not initiated when there
+@@ -79,7 +74,7 @@ int no_pci_devices(void)
  	struct device *dev;
- 	int err;
+ 	int no_devices;
  
--	dev = bus_find_device(&intel_th_bus, NULL,
--			      (void *)(unsigned long)inode->i_rdev,
--			      match_devt);
-+	dev = bus_find_device_by_devt(&intel_th_bus, inode->i_rdev);
- 	if (!dev || !dev->driver)
- 		return -ENODEV;
- 
-diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
-index 7bd7de7..4e83623 100644
---- a/drivers/usb/core/devio.c
-+++ b/drivers/usb/core/devio.c
-@@ -947,17 +947,11 @@ static int parse_usbdevfs_streams(struct usb_dev_state *ps,
- 	return ret;
+-	dev = bus_find_device(&pci_bus_type, NULL, NULL, find_anything);
++	dev = bus_find_next_device(&pci_bus_type, NULL);
+ 	no_devices = (dev == NULL);
+ 	put_device(dev);
+ 	return no_devices;
+diff --git a/drivers/scsi/scsi_proc.c b/drivers/scsi/scsi_proc.c
+index c074631..5b31322 100644
+--- a/drivers/scsi/scsi_proc.c
++++ b/drivers/scsi/scsi_proc.c
+@@ -372,15 +372,10 @@ static ssize_t proc_scsi_write(struct file *file, const char __user *buf,
+ 	return err;
  }
  
--static int match_devt(struct device *dev, const void *data)
+-static int always_match(struct device *dev, const void *data)
 -{
--	return dev->devt == (dev_t)(unsigned long)(void *)data;
+-	return 1;
 -}
 -
- static struct usb_device *usbdev_lookup_by_devt(dev_t devt)
+ static inline struct device *next_scsi_device(struct device *start)
  {
- 	struct device *dev;
- 
--	dev = bus_find_device(&usb_bus_type, NULL,
--			      (void *) (unsigned long) devt, match_devt);
-+	dev = bus_find_device_by_devt(&usb_bus_type, devt);
- 	if (!dev)
- 		return NULL;
- 	return to_usb_device(dev);
+-	struct device *next = bus_find_device(&scsi_bus_type, start, NULL,
+-					      always_match);
++	struct device *next = bus_find_next_device(&scsi_bus_type, start);
++
+ 	put_device(start);
+ 	return next;
+ }
 diff --git a/include/linux/device.h b/include/linux/device.h
-index 576d84f..3c244ac 100644
+index 3c244ac..1c137ab 100644
 --- a/include/linux/device.h
 +++ b/include/linux/device.h
-@@ -213,6 +213,18 @@ bus_find_device_by_fwnode(struct bus_type *bus, const struct fwnode_handle *fwno
- 	return bus_find_device(bus, NULL, fwnode, device_match_fwnode);
+@@ -225,6 +225,16 @@ static inline struct device *bus_find_device_by_devt(struct bus_type *bus,
+ 	return bus_find_device(bus, NULL, &devt, device_match_devt);
  }
  
 +/**
-+ * bus_find_device_by_devt : device iterator for locating a particular device
-+ * matching the device type.
-+ * @bus: bus type
-+ * @devt: device type of the device to match.
++ * bus_find_next_device - Find the next device after a given device in a
++ * given bus.
 + */
-+static inline struct device *bus_find_device_by_devt(struct bus_type *bus,
-+						     dev_t devt)
++static inline struct device *
++bus_find_next_device(struct bus_type *bus,struct device *cur)
 +{
-+	return bus_find_device(bus, NULL, &devt, device_match_devt);
++	return bus_find_device(bus, cur, NULL, device_match_any);
 +}
 +
  struct device *subsys_find_device_by_id(struct bus_type *bus, unsigned int id,
