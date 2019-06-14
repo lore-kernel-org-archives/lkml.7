@@ -2,99 +2,79 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DCBC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC34C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E6121537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560520528;
-	bh=lx29tlqAuaVeeTpHAGAyie4v7VVjd5N0QwIzLnn3vXw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1ZDzgBn1q2rS5FVUBWnLL/j/aoxyFH3fI84NkCIg8TkYIU6R5ttQE1sUQtc5yJd/C
-	 UcZBoXXgNcFIjRMAtF+Qw0/2swzdH/fkdvwroOWyl2FO0Xf5Ub2guwRUUu1Pob1THN
-	 Sv4MosXWRxXsaKD4BmwiCkNkIGTEuk5+ZvIdV66A=
+	by mail.kernel.org (Postfix) with ESMTP id B7E5D2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbfFNNz1 (ORCPT
+        id S1728543AbfFNNz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:55:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47870 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 09:55:57 -0400
+Received: from mga12.intel.com ([192.55.52.136]:27712 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727382AbfFNNzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:55:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727382AbfFNNz5 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:55:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 06:55:56 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 14 Jun 2019 06:55:56 -0700
+Received: from [10.254.88.254] (kliang2-mobl.ccr.corp.intel.com [10.254.88.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7043D20850;
-        Fri, 14 Jun 2019 13:55:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560520524;
-        bh=lx29tlqAuaVeeTpHAGAyie4v7VVjd5N0QwIzLnn3vXw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zgB3gLXV3hSmed6kVh+AzNNMVm7LjSp5FQD93hDfx2rPVaKz1FSmXrC5nP42YlIF8
-         rU3F+fa+ISzujXFUuZWkf5SL55ZH3CHXR2sE26rM5C9feHMAhJ/d4o03fyvYUXZZpk
-         L3iiqWMu5RdwJ4E3747pH6ZlNfsrSOLOKoWDVpAM=
-Date:   Fri, 14 Jun 2019 15:55:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.1 000/155] 5.1.10-stable review
-Message-ID: <20190614135522.GA6498@kroah.com>
-References: <20190613075652.691765927@linuxfoundation.org>
- <80f289fa-2a01-7a88-eedf-82534ef265be@nvidia.com>
+        by linux.intel.com (Postfix) with ESMTPS id 557FF5803E4;
+        Fri, 14 Jun 2019 06:55:55 -0700 (PDT)
+Subject: Re: [PATCH] perf vendor events: Add Icelake V1.00 event file
+To:     Haiyan Song <haiyanx.song@intel.com>, acme@kernel.org,
+        jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20190614014805.30111-1-haiyanx.song@intel.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <e62a12f1-a81d-8fe2-65b2-90a43dce4497@linux.intel.com>
+Date:   Fri, 14 Jun 2019 09:55:54 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <80f289fa-2a01-7a88-eedf-82534ef265be@nvidia.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190614014805.30111-1-haiyanx.song@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 11:28:12AM +0100, Jon Hunter wrote:
-> 
-> On 13/06/2019 09:31, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.1.10 release.
-> > There are 155 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sat 15 Jun 2019 07:54:40 AM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.10-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.1:
->     12 builds:	12 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     32 tests:	32 pass, 0 fail
-> 
-> Linux version:	5.1.10-rc2-gb7eabc3862b8
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
-> 
 
-Wonderful, thanks for testing all of these and letting me know.
 
-greg k-h
+On 6/13/2019 9:48 PM, Haiyan Song wrote:
+> diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+> index d6984a3017e0..f8357a79641a 100644
+> --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
+> +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+> @@ -33,4 +33,5 @@ GenuineIntel-6-25,v2,westmereep-sp,core
+>   GenuineIntel-6-2F,v2,westmereex,core
+>   GenuineIntel-6-55-[01234],v1,skylakex,core
+>   GenuineIntel-6-55-[56789ABCDEF],v1,cascadelakex,core
+> +GenuineIntel-6-7E,v1,icelake,core
+>   AuthenticAMD-23-[[:xdigit:]]+,v1,amdfam17h,core
+
+Hi Haiyan,
+
+I forgot to mention that we just added more Ice Lake model number.
+You may want to add the support for Ice Lake Desktop as well.
+
+     GenuineIntel-6-7D,v1,icelake,core
+
+The rest looks good to me.
+
+Thanks,
+Kan
