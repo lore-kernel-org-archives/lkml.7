@@ -2,263 +2,114 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15047C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F8BC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBEBA208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB8B208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:15:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="znSzzWUD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbfFNMOb (ORCPT
+        id S1727703AbfFNMPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:14:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:60702 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727544AbfFNMOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:14:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7972B2B;
-        Fri, 14 Jun 2019 05:14:30 -0700 (PDT)
-Received: from [192.168.1.18] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F11DD3F246;
-        Fri, 14 Jun 2019 05:14:27 -0700 (PDT)
-Subject: Re: [PATCH v6 03/19] kernel: Unify update_vsyscall implementation
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
- <20190530141531.43462-4-vincenzo.frascino@arm.com>
- <alpine.DEB.2.21.1906141307430.1722@nanos.tec.linutronix.de>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <a69e48a2-575d-255c-2653-d3e99b7ba760@arm.com>
-Date:   Fri, 14 Jun 2019 13:15:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 08:15:31 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38208 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbfFNMPb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:15:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4508jy29+aun7N2LGIzBHEHdPpOHU7DfASwN5eoEnJ0=; b=znSzzWUDWHtxTeSgjW/Fm4G9b
+        I0fEYjCe6xbhDAdqQtncGNa7JPgPEedhGzQZEmkIJUL0jsptzXyvy/BM7k+T2GipSP5waiKTIz4cp
+        FdK4P3MeaT9AODHnmT90Abzm+kAOhgPUSMxh5fFPrRDGUtSAlguTcAc6N/onnUBjsQCcgNm27oU7M
+        oJC+jqsSKBHSg4/lQ5lvGNvKBDQa+ZYvQ2XYniMOnwc9/JiksBCPrd1dx0Z+MLEIcRMVIuGtFOSRI
+        rSu0GIJ8PDZaiYJzZD9mXB6ZSPNeTG+fp/ksjm6PY/z69c2wRCwth07eu0Ff4g0l/rE9yCGsMPSuE
+        GcTXZV0aQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbl6z-0007bG-Ai; Fri, 14 Jun 2019 12:15:17 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0A24120A29B57; Fri, 14 Jun 2019 14:15:15 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 14:15:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH, RFC 00/62] Intel MKTME enabling
+Message-ID: <20190614121514.GK3436@hirez.programming.kicks-ass.net>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1906141307430.1722@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
-
-On 6/14/19 12:10 PM, Thomas Gleixner wrote:
-> On Thu, 30 May 2019, Vincenzo Frascino wrote:
->> +
->> +	if (__arch_use_vsyscall(vdata)) {
->> +		vdata[CS_HRES_COARSE].cycle_last	=
->> +						tk->tkr_mono.cycle_last;
->> +		vdata[CS_HRES_COARSE].mask		=
->> +						tk->tkr_mono.mask;
->> +		vdata[CS_HRES_COARSE].mult		=
->> +						tk->tkr_mono.mult;
+On Wed, May 08, 2019 at 05:43:20PM +0300, Kirill A. Shutemov wrote:
+> = Intro =
 > 
-> These line breaks make it really hard to read. Can you fold in the patch
-> below please?
+> The patchset brings enabling of Intel Multi-Key Total Memory Encryption.
+> It consists of changes into multiple subsystems:
 > 
+>  * Core MM: infrastructure for allocation pages, dealing with encrypted VMAs
+>    and providing API setup encrypted mappings.
 
-Thanks for this. I will do it in v7.
+That wasn't eye-bleeding bad. With exception of the refcounting; that
+looks like something that can easily go funny without people noticing.
 
-> Thanks,
+>  * arch/x86: feature enumeration, program keys into hardware, setup
+>    page table entries for encrypted pages and more.
+
+That seemed incomplete (pageattr seems to be a giant hole).
+
+>  * Key management service: setup and management of encryption keys.
+>  * DMA/IOMMU: dealing with encrypted memory on IO side.
+
+Just minor nits, someone else would have to look at this.
+
+>  * KVM: interaction with virtualization side.
+
+You really want to limit the damage random modules can do. They have no
+business writing to the mktme variables.
+
+>  * Documentation: description of APIs and usage examples.
+
+Didn't bother with those; if the Changelogs are inadequate to make sense
+of the patches documentation isn't the right place to fix things.
+
+> The patchset is huge. This submission aims to give view to the full picture and
+> get feedback on the overall design. The patchset will be split into more
+> digestible pieces later.
 > 
-> 	tglx
-> 8<-----------
-> --- a/kernel/vdso/vsyscall.c
-> +++ b/kernel/vdso/vsyscall.c
-> @@ -11,6 +11,66 @@
->  #include <vdso/helpers.h>
->  #include <vdso/vsyscall.h>
->  
-> +static inline void udpate_vdata(struct vdso_data *vdata, struct timekeeper *tk)
-> +{
-> +	struct vdso_timestamp *vdso_ts;
-> +	u64 nsec;
-> +
-> +	vdata[CS_HRES_COARSE].cycle_last	= tk->tkr_mono.cycle_last;
-> +	vdata[CS_HRES_COARSE].mask		= tk->tkr_mono.mask;
-> +	vdata[CS_HRES_COARSE].mult		= tk->tkr_mono.mult;
-> +	vdata[CS_HRES_COARSE].shift		= tk->tkr_mono.shift;
-> +	vdata[CS_RAW].cycle_last		= tk->tkr_raw.cycle_last;
-> +	vdata[CS_RAW].mask			= tk->tkr_raw.mask;
-> +	vdata[CS_RAW].mult			= tk->tkr_raw.mult;
-> +	vdata[CS_RAW].shift			= tk->tkr_raw.shift;
-> +
-> +	/* CLOCK_REALTIME */
-> +	vdso_ts		=  &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME];
-> +	vdso_ts->sec	= tk->xtime_sec;
-> +	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec;
-> +
-> +	/* CLOCK_MONOTONIC */
-> +	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC];
-> +	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
-> +
-> +	nsec = tk->tkr_mono.xtime_nsec;
-> +	nsec += ((u64)tk->wall_to_monotonic.tv_nsec << tk->tkr_mono.shift);
-> +	while (nsec >= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift)) {
-> +		nsec -= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift);
-> +		vdso_ts->sec++;
-> +	}
-> +	vdso_ts->nsec	= nsec;
-> +
-> +	/* CLOCK_MONOTONIC_RAW */
-> +	vdso_ts		= &vdata[CS_RAW].basetime[CLOCK_MONOTONIC_RAW];
-> +	vdso_ts->sec	= tk->raw_sec;
-> +	vdso_ts->nsec	= tk->tkr_raw.xtime_nsec;
-> +
-> +	/* CLOCK_BOOTTIME */
-> +	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_BOOTTIME];
-> +	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
-> +	nsec = tk->tkr_mono.xtime_nsec;
-> +	nsec += ((u64)(tk->wall_to_monotonic.tv_nsec +
-> +		       ktime_to_ns(tk->offs_boot)) << tk->tkr_mono.shift);
-> +	while (nsec >= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift)) {
-> +		nsec -= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift);
-> +		vdso_ts->sec++;
-> +	}
-> +	vdso_ts->nsec	= nsec;
-> +
-> +	/* CLOCK_TAI */
-> +	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_TAI];
-> +	vdso_ts->sec	= tk->xtime_sec + (s64)tk->tai_offset;
-> +	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec;
-> +
-> +	/*
-> +	 * Read without the seqlock held by clock_getres().
-> +	 * Note: No need to have a second copy.
-> +	 */
-> +	WRITE_ONCE(vdata[CS_HRES_COARSE].hrtimer_res, hrtimer_resolution);
-> +}
-> +
->  void update_vsyscall(struct timekeeper *tk)
->  {
->  	struct vdso_data *vdata = __arch_get_k_vdso_data();
-> @@ -32,92 +92,23 @@ void update_vsyscall(struct timekeeper *
->  	vdata[CS_RAW].clock_mode		= __arch_get_clock_mode(tk);
->  
->  	/* CLOCK_REALTIME_COARSE */
-> -	vdso_ts			=
-> -			&vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME_COARSE];
-> -	vdso_ts->sec		= tk->xtime_sec;
-> -	vdso_ts->nsec		= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
-> +	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME_COARSE];
-> +	vdso_ts->sec	= tk->xtime_sec;
-> +	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
-> +
->  	/* CLOCK_MONOTONIC_COARSE */
-> -	vdso_ts			=
-> -			&vdata[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC_COARSE];
-> -	vdso_ts->sec		= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
-> -	nsec			= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
-> -	nsec			= nsec + tk->wall_to_monotonic.tv_nsec;
-> +	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC_COARSE];
-> +	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
-> +	nsec		= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
-> +	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
->  	while (nsec >= NSEC_PER_SEC) {
->  		nsec = nsec - NSEC_PER_SEC;
->  		vdso_ts->sec++;
->  	}
-> -	vdso_ts->nsec		= nsec;
-> +	vdso_ts->nsec	= nsec;
->  
-> -	if (__arch_use_vsyscall(vdata)) {
-> -		vdata[CS_HRES_COARSE].cycle_last	=
-> -						tk->tkr_mono.cycle_last;
-> -		vdata[CS_HRES_COARSE].mask		=
-> -						tk->tkr_mono.mask;
-> -		vdata[CS_HRES_COARSE].mult		=
-> -						tk->tkr_mono.mult;
-> -		vdata[CS_HRES_COARSE].shift		=
-> -						tk->tkr_mono.shift;
-> -		vdata[CS_RAW].cycle_last		=
-> -						tk->tkr_raw.cycle_last;
-> -		vdata[CS_RAW].mask			=
-> -						tk->tkr_raw.mask;
-> -		vdata[CS_RAW].mult			=
-> -						tk->tkr_raw.mult;
-> -		vdata[CS_RAW].shift			=
-> -						tk->tkr_raw.shift;
-> -		/* CLOCK_REALTIME */
-> -		vdso_ts			=
-> -			&vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME];
-> -		vdso_ts->sec		= tk->xtime_sec;
-> -		vdso_ts->nsec		= tk->tkr_mono.xtime_nsec;
-> -		/* CLOCK_MONOTONIC */
-> -		vdso_ts			=
-> -			&vdata[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC];
-> -		vdso_ts->sec		= tk->xtime_sec +
-> -					  tk->wall_to_monotonic.tv_sec;
-> -		nsec			= tk->tkr_mono.xtime_nsec;
-> -		nsec			= nsec +
-> -					  ((u64)tk->wall_to_monotonic.tv_nsec <<
-> -					  tk->tkr_mono.shift);
-> -		while (nsec >= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift)) {
-> -			nsec = nsec -
-> -			       (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift);
-> -			vdso_ts->sec++;
-> -		}
-> -		vdso_ts->nsec		= nsec;
-> -		/* CLOCK_MONOTONIC_RAW */
-> -		vdso_ts			=
-> -			&vdata[CS_RAW].basetime[CLOCK_MONOTONIC_RAW];
-> -		vdso_ts->sec		= tk->raw_sec;
-> -		vdso_ts->nsec		= tk->tkr_raw.xtime_nsec;
-> -		/* CLOCK_BOOTTIME */
-> -		vdso_ts			=
-> -			&vdata[CS_HRES_COARSE].basetime[CLOCK_BOOTTIME];
-> -		vdso_ts->sec		= tk->xtime_sec +
-> -					  tk->wall_to_monotonic.tv_sec;
-> -		nsec			= tk->tkr_mono.xtime_nsec;
-> -		nsec			= nsec +
-> -					  ((u64)(tk->wall_to_monotonic.tv_nsec +
-> -					  ktime_to_ns(tk->offs_boot)) <<
-> -					  tk->tkr_mono.shift);
-> -		while (nsec >= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift)) {
-> -			nsec = nsec -
-> -				(((u64)NSEC_PER_SEC) << tk->tkr_mono.shift);
-> -			vdso_ts->sec++;
-> -		}
-> -		vdso_ts->nsec		= nsec;
-> -		/* CLOCK_TAI */
-> -		vdso_ts			=
-> -			&vdata[CS_HRES_COARSE].basetime[CLOCK_TAI];
-> -		vdso_ts->sec		= tk->xtime_sec + (s64)tk->tai_offset;
-> -		vdso_ts->nsec		= tk->tkr_mono.xtime_nsec;
-> -
-> -		/*
-> -		 * Read without the seqlock held by clock_getres().
-> -		 * Note: No need to have a second copy.
-> -		 */
-> -		WRITE_ONCE(vdata[CS_HRES_COARSE].hrtimer_res, hrtimer_resolution);
-> -	}
-> +	if (__arch_use_vsyscall(vdata))
-> +		update_vdata(vdata, tk);
->  
->  	__arch_update_vsyscall(vdata, tk);
->  
-> 
+> Please review. Any feedback is welcome.
 
--- 
-Regards,
-Vincenzo
+I still can't tell if this is worth the complexity :-/
+
+Yes, there's a lot of words, but it doesn't mean anything to me, that
+is, nothing here makes me want to build my kernel with this 'feature'
+enabled.
+
+
