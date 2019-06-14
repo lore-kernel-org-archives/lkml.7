@@ -2,232 +2,204 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E6DC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF67DC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC6F521473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73EA21473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:04:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FIaY2gVV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e8ez7ksV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbfFNND6 (ORCPT
+        id S1728161AbfFNNES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:03:58 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45243 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbfFNND5 (ORCPT
+        Fri, 14 Jun 2019 09:04:18 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35033 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbfFNNER (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:03:57 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f9so2422356wre.12
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:03:56 -0700 (PDT)
+        Fri, 14 Jun 2019 09:04:17 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c6so2271504wml.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:04:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LsSlDp/7P2gKHSobW4kAiT5KQveExkz9spvrJMOu8vo=;
-        b=FIaY2gVV7TlZhW/J9D5Zo1kBIjh9a5ex2aH7GX315wkyNDa5ADeR6rzNKa9mRQt8OS
-         VjDK3t0Gkd7WPkERvxQLhLYOki1P6BKM9stQH7prGv1jEp8n1TKDND2p4vi6qldeVCPo
-         OEOr5nh2VFBKYhSPWU3ZWFxPMJ3y8ZM0BiRpqZLJ94qqpT2//TgvD151/XByxHlwHwkQ
-         pp+7MlBJDG3lBf6iGkKD/5gBr1FphR02senAcSGmT+WLzpJF+NhoMfZ1VJFGP5gifleS
-         iy1SFLKF1peS3roohAO269sXUZj/4p1wHU+C1Bdg5cSJOty5GXzgSGhr91bZT8tdXpEt
-         9VPg==
+        d=gmail.com; s=20161025;
+        h=reply-to:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=0NGjcl1PhlTmlQBKEhNO/pymQvOq38RKXeHujLyAlas=;
+        b=e8ez7ksVhiJ18DJ65ZpwPSf6E9BocN6yFfNcjCot3noqD1yJPBKEJ1x2p4y9BeqO76
+         kYAiI9jaXE/GtuEOuwDJOvJhjdipBns58hum/Li41XJED4CzNY8MA44B9wq1AghrLR6g
+         RCddSFxRhZo5paQ2OnFAngFDuf6PGlmSzzTKX957UySWGMgYdoHS+sCiORaDLDifGKCu
+         h7MYZzqAIO5y4xj1Zs2o9FfCAobAIhSdD6G7Cs6KqfPeYYLE+EFPc9d9nzhyuIXrKsC3
+         4RmYsRuTMgEa4HhNmuOoNmHtjm7xkCeWy62+Mcikj0JtZ3W55V5VkTBX9Izp9b9iR8zT
+         PD3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
          :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=LsSlDp/7P2gKHSobW4kAiT5KQveExkz9spvrJMOu8vo=;
-        b=dofwHxUjWK4SWbGT8poYBxi+AKJWRYN/nFfU1vEm+1YQ7RBZD391tbEMWWwaC0STpx
-         ESHT+JdZeL6p8NTihBOwBtW6VIw5fC9KxiisD+PFbkfCZZ4Yg3pa1nU0sI1EOT8EvYc+
-         WNt7GrEzuadgirdzd3aYp2Ph/5PGfgiQkESAOVh8FAqKpMlo3bHhc7hATiLYGrkwz1kq
-         Fmo3x0XRyLQCZyE7WkkkWfS8myLPhhbtLAYhGkrrWn3JFVS6Bo2pveOBovb53FFjOHmz
-         IJhOFb2lAl7msEl9kab4vveoNPtgMVXeaZYIlScZlsNPJpFLJWzNTjzGgYfeA8jz1ku8
-         GqSg==
-X-Gm-Message-State: APjAAAVMdRrm8lOE5G5nKTaVQ4p9VsUxzUmZfZdufMq9V24sdUfZRE0H
-        FBpKUYXZpXcL6kKJZqIhul3GVQ==
-X-Google-Smtp-Source: APXvYqzVJZpzCns4PqkC9Ov5lZR6QhtdqSO6rCsOx+so4AeGO/eIwtWZjCVz6K1K/sXiogq5T3uHwQ==
-X-Received: by 2002:a5d:6ad2:: with SMTP id u18mr14244915wrw.63.1560517435052;
-        Fri, 14 Jun 2019 06:03:55 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id h90sm7424557wrh.15.2019.06.14.06.03.53
+         :content-transfer-encoding:content-language;
+        bh=0NGjcl1PhlTmlQBKEhNO/pymQvOq38RKXeHujLyAlas=;
+        b=ewbI+HczHIOunIJ7s6XDWk93j1M+5SisNXpZZvBXJAqXZjw3hscuPR3br7OoE21zaC
+         Y5Of/CDzHDQHh65kCx693/UswNWvyDIK8PxIDY2nbs+VOwnXEnpSDVeH/TFaLKFU3z7F
+         ROM5uO3uuqx6niS5Pekp5NyCJAUxdSE7gafCltHoD2HU0Wuy1eNfLn3jlH76po3ddV1L
+         wBZTagiy/PktslCK8nmv3ReEXYsgJz71kc6QF//59gcdeELUFvGzh/SYbwi1oOYpCuWY
+         AmzyH2hNqtuLNkZvFPAJUL9/9Zz9iyxIxt6PLuvkISnjdMesf63ZnS8vDOLDQa/wskpg
+         RxgQ==
+X-Gm-Message-State: APjAAAXQtQ150XmXKAyJNnNIWMz2CMaBM71xrRZmYwNQXfJYrZHuzcD0
+        3SR0usi9izEzoV26vzt0vRg=
+X-Google-Smtp-Source: APXvYqyu4Oawg6gRA3/hOdjcOUIRQ961xVeRRP8AdU9F+i/cmxi57BsGq+perAWgZZ29rrFSv/9Jew==
+X-Received: by 2002:a05:600c:1008:: with SMTP id c8mr8148825wmc.133.1560517455555;
+        Fri, 14 Jun 2019 06:04:15 -0700 (PDT)
+Received: from ?IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7? ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
+        by smtp.gmail.com with ESMTPSA id v3sm1815533wmh.31.2019.06.14.06.04.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 06:03:54 -0700 (PDT)
-Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Fix multiple thermal zones
- conflict in rk3399.dtsi
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
-        manivannan.sadhasivam@linaro.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Randy Li <ayaka@soulik.info>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Rockchip SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC support" 
-        <linux-rockchip@lists.infradead.org>, dianders@chromium.org,
-        robin.murphy@arm.com
-References: <20190604165802.7338-1-daniel.lezcano@linaro.org>
- <5188064.YWmxIpmbGp@phil>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <55b9018e-672e-522b-d0a0-c5655be0f353@linaro.org>
-Date:   Fri, 14 Jun 2019 15:03:52 +0200
+        Fri, 14 Jun 2019 06:04:14 -0700 (PDT)
+Reply-To: christian.koenig@amd.com
+Subject: Re: [PATCH 1/6] locking: add ww_mutex_(un)lock_for_each helpers
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     daniel@ffwll.ch, l.stach@pengutronix.de,
+        linux+etnaviv@armlinux.org.uk, christian.gmeiner@gmail.com,
+        yuq825@gmail.com, eric@anholt.net, thellstrom@vmware.com,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        etnaviv@lists.freedesktop.org, lima@lists.freedesktop.org
+References: <20190614124125.124181-1-christian.koenig@amd.com>
+ <20190614124125.124181-2-christian.koenig@amd.com>
+ <20190614125641.GO3436@hirez.programming.kicks-ass.net>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
+Message-ID: <dce0c3c0-fd10-4d40-5815-cf91ddcc2d13@gmail.com>
+Date:   Fri, 14 Jun 2019 15:04:13 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <5188064.YWmxIpmbGp@phil>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190614125641.GO3436@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/06/2019 11:35, Heiko Stuebner wrote:
-> Hi Daniel,
-> 
-> Am Dienstag, 4. Juni 2019, 18:57:57 CEST schrieb Daniel Lezcano:
->> Currently the common thermal zones definitions for the rk3399 assumes
->> multiple thermal zones are supported by the governors. This is not the
->> case and each thermal zone has its own governor instance acting
->> individually without collaboration with other governors.
+Am 14.06.19 um 14:56 schrieb Peter Zijlstra:
+> On Fri, Jun 14, 2019 at 02:41:20PM +0200, Christian König wrote:
+>> The ww_mutex implementation allows for detection deadlocks when multiple
+>> threads try to acquire the same set of locks in different order.
 >>
->> As the cooling device for the CPU and the GPU thermal zones is the
->> same, each governors take different decisions for the same cooling
->> device leading to conflicting instructions and an erratic behavior.
+>> The problem is that handling those deadlocks was the burden of the user of
+>> the ww_mutex implementation and at least some users didn't got that right
+>> on the first try.
 >>
->> As the cooling-maps is about to become an optional property, let's
->> remove the cpu cooling device map from the GPU thermal zone.
+>> I'm not a big fan of macros, but it still better then implementing the same
+>> logic at least halve a dozen times. So this patch adds two macros to lock
+>> and unlock multiple ww_mutex instances with the necessary deadlock handling.
 >>
->> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> Signed-off-by: Christian König <christian.koenig@amd.com>
 >> ---
->>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 ---------
->>  1 file changed, 9 deletions(-)
+>>   include/linux/ww_mutex.h | 75 ++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 75 insertions(+)
 >>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> index 196ac9b78076..e1357e0f60f7 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> @@ -821,15 +821,6 @@
->>  					type = "critical";
->>  				};
->>  			};
->> -
->> -			cooling-maps {
->> -				map0 {
->> -					trip = <&gpu_alert0>;
->> -					cooling-device =
->> -						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> -						<&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> -				};
->> -			};
->>  		};
->>  	};
-> 
-> my knowledge of the thermal framework is not that big, but what about the
-> rk3399-devices which further detail the cooling-maps like rk3399-gru-kevin
-> and the rk3399-nanopc-t4 with its fan-handling in the cooling-maps?
+>> diff --git a/include/linux/ww_mutex.h b/include/linux/ww_mutex.h
+>> index 3af7c0e03be5..a0d893b5b114 100644
+>> --- a/include/linux/ww_mutex.h
+>> +++ b/include/linux/ww_mutex.h
+>> @@ -369,4 +369,79 @@ static inline bool ww_mutex_is_locked(struct ww_mutex *lock)
+>>   	return mutex_is_locked(&lock->base);
+>>   }
+>>   
+>> +/**
+>> + * ww_mutex_unlock_for_each - cleanup after error or contention
+>> + * @loop: for loop code fragment iterating over all the locks
+>> + * @pos: code fragment returning the currently handled lock
+>> + * @contended: the last contended ww_mutex or NULL or ERR_PTR
+>> + *
+>> + * Helper to make cleanup after error or lock contention easier.
+>> + * First unlock the last contended lock and then all other locked ones.
+>> + */
+>> +#define ww_mutex_unlock_for_each(loop, pos, contended)	\
+>> +	if (!IS_ERR(contended)) {			\
+>> +		if (contended)				\
+>> +			ww_mutex_unlock(contended);	\
+>> +		contended = (pos);			\
+>> +		loop {					\
+>> +			if (contended == (pos))		\
+>> +				break;			\
+>> +			ww_mutex_unlock(pos);		\
+>> +		}					\
+>> +	}
+>> +
+>> +/**
+>> + * ww_mutex_lock_for_each - implement ww_mutex deadlock handling
+>> + * @loop: for loop code fragment iterating over all the locks
+>> + * @pos: code fragment returning the currently handled lock
+>> + * @contended: ww_mutex pointer variable for state handling
+>> + * @ret: int variable to store the return value of ww_mutex_lock()
+>> + * @intr: If true ww_mutex_lock_interruptible() is used
+>> + * @ctx: ww_acquire_ctx pointer for the locking
+>> + *
+>> + * This macro implements the necessary logic to lock multiple ww_mutex
+>> + * instances. Lock contention with backoff and re-locking is handled by the
+>> + * macro so that the loop body only need to handle other errors and
+>> + * successfully acquired locks.
+>> + *
+>> + * With the @loop and @pos code fragment it is possible to apply this logic
+>> + * to all kind of containers (array, list, tree, etc...) holding multiple
+>> + * ww_mutex instances.
+>> + *
+>> + * @contended is used to hold the current state we are in. -ENOENT is used to
+>> + * signal that we are just starting the handling. -EDEADLK means that the
+>> + * current position is contended and we need to restart the loop after locking
+>> + * it. NULL means that there is no contention to be handled. Any other value is
+>> + * the last contended ww_mutex.
+>> + */
+>> +#define ww_mutex_lock_for_each(loop, pos, contended, ret, intr, ctx)	\
+>> +	for (contended = ERR_PTR(-ENOENT); ({				\
+>> +		__label__ relock, next;					\
+>> +		ret = -ENOENT;						\
+>> +		if (contended == ERR_PTR(-ENOENT))			\
+>> +			contended = NULL;				\
+>> +		else if (contended == ERR_PTR(-EDEADLK))		\
+>> +			contended = (pos);				\
+>> +		else							\
+>> +			goto next;					\
+>> +		loop {							\
+>> +			if (contended == (pos))	{			\
+>> +				contended = NULL;			\
+>> +				continue;				\
+>> +			}						\
+>> +relock:									\
+>> +			ret = !(intr) ? ww_mutex_lock(pos, ctx) :	\
+>> +				ww_mutex_lock_interruptible(pos, ctx);	\
+>> +			if (ret == -EDEADLK) {				\
+>> +				ww_mutex_unlock_for_each(loop, pos,	\
+>> +							 contended);	\
+>> +				contended = ERR_PTR(-EDEADLK);		\
+>> +				goto relock;				\
+>> +			}						\
+>> +			break;						\
+>> +next:									\
+>> +			continue;					\
+>> +		}							\
+>> +	}), ret != -ENOENT;)
+>> +
+> Yea gawds, that's eyebleeding bad, even for macros :/
 
-The rk3399-gru-kevin is correct.
+Yeah, I actually don't like it that much either.
 
-The rk3399-nanopc-t4 is not correct because the cpu and the gpu are
-sharing the same cooling device (the fan). There are different
-configurations:
+But we have at least 8 implementations of this and I'm going to add 
+number 9 rather soon.
 
-1. The cpu cooling device for the CPU and the fan for the GPU
+> It also breaks with pretty much all other *for_each*() macros in
+> existence by not actually including the loop itself but farming that out
+> to an argument statement (@loop), suggesting these really should not be
+> called for_each.
 
-2. Different trip points on the CPU thermal zone, eg. one to for the CPU
-cooling device and another one for the fan.
+How about ww_mutex_lock_multiple? If not feel free to suggest anything.
 
-There are some variant for the above. If this board is not on battery,
-you may want to give priority to the throughput, so activate the fan
-first and then cool down the CPU. Or if you are on battery, you may want
-to invert the trip points.
+Also I'm open to suggestions how to approach that differently, but my 
+other tries (callback functions mostly) just somehow suck badly as well.
 
-In any case, it is not possible to share the same cooling device for
-different thermal zones.
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Thanks,
+Christian.
