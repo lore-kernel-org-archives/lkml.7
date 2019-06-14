@@ -2,153 +2,85 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0D6C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED020C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B62502082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C10B12082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:44:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Y3h8Ywzm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RU+fVwU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727622AbfFNLoU (ORCPT
+        id S1727599AbfFNLoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 07:44:20 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:50340 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727164AbfFNLoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Jun 2019 07:44:19 -0400
-Received: from zn.tnic (p200300EC2F097F00C4A032B92937AA15.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:7f00:c4a0:32b9:2937:aa15])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B6C931EC0911;
-        Fri, 14 Jun 2019 13:44:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560512657;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xJiQKds9daYcI0Rz9VfC2JJuBX2EaMYu3LKFjb/Vmt8=;
-        b=Y3h8YwzmAsMfAXptgAnqTVOPSzAl9/VINGz0CSBifu/eP9U3pm83e90vQopVh8I56isnSS
-        IkuKgFzIs8v26TjBxk7LO6FX4Jf3d3f4hWyfPo7K/yKjByUwiYMxS2KgkccREJTyzTD3KC
-        8NTQ3PofI+luXdUl8ayPBfauJH6PPp8=
-Date:   Fri, 14 Jun 2019 13:44:10 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [RFC PATCH 2/3] x86/cpufeatures: Combine word 11 and 12 into new
- scattered features word 11
-Message-ID: <20190614114410.GD2586@zn.tnic>
-References: <1560459064-195037-1-git-send-email-fenghua.yu@intel.com>
- <1560459064-195037-3-git-send-email-fenghua.yu@intel.com>
+Received: from bombadil.infradead.org ([198.137.202.133]:56532 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfFNLoT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 07:44:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=N2usWe+DF5bPKJZPBYT2JLd/gE3UHs5gaod0EYiWn0I=; b=RU+fVwU0SYHwiXwH3G6btplv7
+        94vsmIFwwr6JKRMHE8Vhsf9s3IPtIBAKx3bYr8fllCl7dNM2KjaU2Ck39tgmbkvDsQj9tLDetB/7k
+        n8pTUI9EtYfOM5vyiXCkqsn4+lCUBNvcqBpDENJ/5TSplSzFREpI++eQsfzY3W1GhxU1+D8KK3Csd
+        ZdIXoyKpcc3MvU/d1a35GmWl6W15jux52vcYY18wyhJbBn9lte1Zdk9V2ot6MDtwmvqZUVEXBwifJ
+        Rsc+A4k4vJUkGYzEbn4jotLhBC2vQkoiOPF6BiRXn6iIMcaaM+IXMl4ahCy7+hlaNyO0xvo6roEMl
+        GU/cB+sbg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbkcs-0005tV-Fc; Fri, 14 Jun 2019 11:44:11 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D3C9020A15636; Fri, 14 Jun 2019 13:44:08 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 13:44:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH, RFC 44/62] x86/mm: Set KeyIDs in encrypted VMAs for MKTME
+Message-ID: <20190614114408.GD3436@hirez.programming.kicks-ass.net>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+ <20190508144422.13171-45-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1560459064-195037-3-git-send-email-fenghua.yu@intel.com>
+In-Reply-To: <20190508144422.13171-45-kirill.shutemov@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 01:51:03PM -0700, Fenghua Yu wrote:
-> It's a waste for the four X86_FEATURE_CQM_* features to occupy two
-> pure feature bits words. To better utilize feature words, re-define
-> word 11 to host scattered features and move the four X86_FEATURE_CQM_*
-> features into word 11. More scattered features can be added in word 11
-> in the future.
+On Wed, May 08, 2019 at 05:44:04PM +0300, Kirill A. Shutemov wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> KVM doesn't support resctrl now. So it's safe to move the
-> X86_FEATURE_CQM_* features to scattered features word 11 for KVM.
+> MKTME architecture requires the KeyID to be placed in PTE bits 51:46.
+> To create an encrypted VMA, place the KeyID in the upper bits of
+> vm_page_prot that matches the position of those PTE bits.
 > 
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> When the VMA is assigned a KeyID it is always considered a KeyID
+> change. The VMA is either going from not encrypted to encrypted,
+> or from encrypted with any KeyID to encrypted with any other KeyID.
+> To make the change safely, remove the user pages held by the VMA
+> and unlink the VMA's anonymous chain.
 
-...
-
-> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-> index 9a327d5b6d1f..d78a61408243 100644
-> --- a/arch/x86/kvm/cpuid.h
-> +++ b/arch/x86/kvm/cpuid.h
-> @@ -47,8 +47,6 @@ static const struct cpuid_reg reverse_cpuid[] = {
->  	[CPUID_8000_0001_ECX] = {0x80000001, 0, CPUID_ECX},
->  	[CPUID_7_0_EBX]       = {         7, 0, CPUID_EBX},
->  	[CPUID_D_1_EAX]       = {       0xd, 1, CPUID_EAX},
-> -	[CPUID_F_0_EDX]       = {       0xf, 0, CPUID_EDX},
-> -	[CPUID_F_1_EDX]       = {       0xf, 1, CPUID_EDX},
-
-I think you're going to have to change those to:
-
-        [CPUID_LNX_4]         = {         0, 0, 0},
-        [CPUID_7_1_EAX]       = {         7, 1, CPUID_EAX },
-
-instead of removing them because kvm is basically hardcoding the feature
-words and then bitches when array elements in the middle get removed:
-
-In file included from ./include/linux/export.h:45,
-                 from ./include/linux/linkage.h:7,
-                 from ./include/linux/preempt.h:10,
-                 from ./include/linux/hardirq.h:5,
-                 from ./include/linux/kvm_host.h:10,
-                 from arch/x86/kvm/x86.c:22:
-In function ‘x86_feature_cpuid’,
-    inlined from ‘guest_cpuid_get_register’ at arch/x86/kvm/cpuid.h:71:33,
-    inlined from ‘guest_cpuid_has’ at arch/x86/kvm/cpuid.h:100:8,
-    inlined from ‘kvm_get_msr_common’ at arch/x86/kvm/x86.c:2804:8:
-./include/linux/compiler.h:345:38: error: call to ‘__compiletime_assert_62’ declared with attribute error: BUILD_BUG_ON failed: x86_leaf >= ARRAY_SIZE(reverse_cpuid)
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-                                      ^
-./include/linux/compiler.h:326:4: note: in definition of macro ‘__compiletime_assert’
-    prefix ## suffix();    \
-    ^~~~~~
-./include/linux/compiler.h:345:2: note: in expansion of macro ‘_compiletime_assert’
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-  ^~~~~~~~~~~~~~~~~~~
-./include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
- #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                     ^~~~~~~~~~~~~~~~~~
-./include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
-  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-  ^~~~~~~~~~~~~~~~
-arch/x86/kvm/cpuid.h:62:2: note: in expansion of macro ‘BUILD_BUG_ON’
-  BUILD_BUG_ON(x86_leaf >= ARRAY_SIZE(reverse_cpuid));
-  ^~~~~~~~~~~~
-./include/linux/compiler.h:345:38: error: call to ‘__compiletime_assert_63’ declared with attribute error: BUILD_BUG_ON failed: reverse_cpuid[x86_leaf].function == 0
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-                                      ^
-./include/linux/compiler.h:326:4: note: in definition of macro ‘__compiletime_assert’
-    prefix ## suffix();    \
-    ^~~~~~
-./include/linux/compiler.h:345:2: note: in expansion of macro ‘_compiletime_assert’
-  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-  ^~~~~~~~~~~~~~~~~~~
-./include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
- #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                     ^~~~~~~~~~~~~~~~~~
-./include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
-  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-  ^~~~~~~~~~~~~~~~
-arch/x86/kvm/cpuid.h:63:2: note: in expansion of macro ‘BUILD_BUG_ON’
-  BUILD_BUG_ON(reverse_cpuid[x86_leaf].function == 0);
-  ^~~~~~~~~~~~
-make[2]: *** [scripts/Makefile.build:278: arch/x86/kvm/x86.o] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [scripts/Makefile.build:489: arch/x86/kvm] Error 2
-make[1]: *** Waiting for unfinished jobs....
-make: *** [Makefile:1071: arch/x86] Error 2
-make: *** Waiting for unfinished jobs....
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+This does not look like a transformation that preserves content; is
+mprotect() still a suitable name?
