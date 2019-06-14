@@ -2,374 +2,290 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6B9C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3E7C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A69D2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAEC72183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:42:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="BhflzRvk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUSh6qm3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbfFNQlC (ORCPT
+        id S1726094AbfFNQmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:41:02 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:57090 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725808AbfFNQlC (ORCPT
+        Fri, 14 Jun 2019 12:42:01 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33956 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbfFNQmA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:41:02 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id DE0FDC2295;
-        Fri, 14 Jun 2019 16:41:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1560530461; bh=iueo8gxwYJtBx4iMnrqFdzGZ5RRP386gk1czBYdaGCY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=BhflzRvku2CPl1FmpVpMny/wDZcH9j32myZFQ51dCWK/BuShl5MitJKqWusLf1gwF
-         lJkmPiQex+YeEMrB1TkwgKxKf7IV1OdTaHDyjS39iSJ1csWnaPun/ZI4TfxyTl0nlg
-         1xaEHFI+L5CxkmlBUrKVfmHou1IvV+f28y7JDiFTUuhbbHiJ3uWBn5jwvbh8j3JUMt
-         B1qx4g8GG7fHSYri3OOJtSNOiRrCartTB+O28qhJbLwlCptdOcewZc63T+UCdi6fMg
-         P4oUNo+EpZllO9pe1TOI7zMnZED4YhiK88nFGhNEhvqy5QqFjTuO9ElWX4h2SXTOez
-         T3fDckgQQBESQ==
-Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.8.58])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 54564A0057;
-        Fri, 14 Jun 2019 16:40:58 +0000 (UTC)
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     linux-snps-arc@lists.infradead.org,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Jason Baron <jbaron@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-arch@vger.kernel.org,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH] ARC: ARCv2: jump label: implement jump label patching
-Date:   Fri, 14 Jun 2019 19:40:49 +0300
-Message-Id: <20190614164049.31626-1-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 14 Jun 2019 12:42:00 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y198so2198661lfa.1;
+        Fri, 14 Jun 2019 09:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6k6lYkzsQAZ/wO+Z6taNnrfa8/r9v0TyRuTT8h4ykCI=;
+        b=AUSh6qm3af5d0ndrL+qmwsOiotqORMfo+QZNW7vKyhOuLWV6m/JPsWTPZ9YyVs3LWC
+         w5AVVTLsKLbNgcoI+LCTxpUkX+JAiK7B85nit26U7BfEXc4cTPyr1dCsJ9jXMwGNxQMO
+         5TNoVSG6b6X186vaIf5kOwwTaBFnvnTPI4BQRJOsjX9JEnBWo6NOw2axMsSZ61jFnDAa
+         pl/spa7mC21TQpEKlw2ncGutBDFBUODNpHFBkhsJGWC03BgjV7joI5J9fPJXNnxqCshq
+         xQugTDpAo99SlZd/0ujWXc6m1lktoP8qAUMkJnN5OZCADTg2H8guYSwIJoAzwur4aEwc
+         T3tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6k6lYkzsQAZ/wO+Z6taNnrfa8/r9v0TyRuTT8h4ykCI=;
+        b=qfqHtI+5gOd8rWmQXNwp/lIeZ0Na6GGI+9h/gjYKJ0nMuDGyWqlw7en4CbcHQGxpE1
+         h81LpQ4XCGfGO3PHfEwES5L8TVedQXPjxgfxwyFtdgrQYL24mhMKdWLeAoOSqUwm7HOe
+         xHU/QkLgGt5w2UKGKVTVnFzXTrE5twd6AfEslHq6gwK50fzbK23yq9sY3arPAnGs+Q9T
+         iIkkEqm9QxEcv1sB92nKGI+pJvb9ZhBEhQwMjlbKjejc2LVeY3ck/XjwiDNAShuCrm5A
+         1DddkrdAnq7BdYt/LIXpmPP/7XLKSVPq8TojW6vVWx3MfqmeFWaX4OzToYmNK/ocb9Ph
+         k4qQ==
+X-Gm-Message-State: APjAAAVeWBmMb+fAsvbadnCx3qhI5duVV0BFg5P/umNdMEMpdgxk25xJ
+        s3odw7SPuxEBcwSHyq1yAbOYi5vh
+X-Google-Smtp-Source: APXvYqylQtZkSBxwbidnNi/eilDXOEow7VGpIVlbewz6VQYdy+BUk0+FkvHLP3GPXAgXKj71610xFg==
+X-Received: by 2002:a05:6512:15a:: with SMTP id m26mr4775595lfo.71.1560530517119;
+        Fri, 14 Jun 2019 09:41:57 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id p15sm679286lji.80.2019.06.14.09.41.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 09:41:56 -0700 (PDT)
+Subject: Re: [PATCH 2/2] rtc: tegra: Implement suspend clock source
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190614104747.19712-1-thierry.reding@gmail.com>
+ <20190614104747.19712-2-thierry.reding@gmail.com>
+ <5a00bccf-6542-51bd-9030-99a59f14f2f9@gmail.com>
+ <20190614134110.GF15526@ulmo>
+ <d9b65fd9-ecad-b241-a0d6-251a648488aa@gmail.com>
+ <20190614141400.GI15526@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <3c6ac621-bc2a-c9c8-64fc-531be7dd323d@gmail.com>
+Date:   Fri, 14 Jun 2019 19:41:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190614141400.GI15526@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement jump label patching for ARC. Jump labels provide
-an interface to generate dynamic branches using
-self-modifying code.
+14.06.2019 17:14, Thierry Reding пишет:
+> On Fri, Jun 14, 2019 at 04:49:44PM +0300, Dmitry Osipenko wrote:
+>> 14.06.2019 16:41, Thierry Reding пишет:
+>>> On Fri, Jun 14, 2019 at 03:01:13PM +0300, Dmitry Osipenko wrote:
+>>>> 14.06.2019 13:47, Thierry Reding пишет:
+>>>>> From: Thierry Reding <treding@nvidia.com>
+>>>>>
+>>>>> The suspend clock source for Tegra210 and earlier is currently
+>>>>> implemented in the Tegra timer driver. However, the suspend clock source
+>>>>> code accesses registers that are part of the RTC hardware block, so both
+>>>>> can step on each others' toes. In practice this isn't an issue, but
+>>>>> there is no reason why the RTC driver can't implement the clock source,
+>>>>> so move the code over to the tegra-rtc driver.
+>>>>>
+>>>>> Signed-off-by: Thierry Reding <treding@nvidia.com>
+>>>>> ---
+>>>>>  drivers/clocksource/timer-tegra.c | 44 -------------------------------
+>>>>>  drivers/rtc/rtc-tegra.c           | 42 +++++++++++++++++++++++++++++
+>>>>>  2 files changed, 42 insertions(+), 44 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
+>>>>> index e6608141cccb..87eac618924d 100644
+>>>>> --- a/drivers/clocksource/timer-tegra.c
+>>>>> +++ b/drivers/clocksource/timer-tegra.c
+>>>>> @@ -21,10 +21,6 @@
+>>>>>  
+>>>>>  #include "timer-of.h"
+>>>>>  
+>>>>> -#define RTC_SECONDS		0x08
+>>>>> -#define RTC_SHADOW_SECONDS	0x0c
+>>>>> -#define RTC_MILLISECONDS	0x10
+>>>>> -
+>>>>>  #define TIMERUS_CNTR_1US	0x10
+>>>>>  #define TIMERUS_USEC_CFG	0x14
+>>>>>  #define TIMERUS_CNTR_FREEZE	0x4c
+>>>>> @@ -164,34 +160,6 @@ static struct delay_timer tegra_delay_timer = {
+>>>>>  };
+>>>>>  #endif
+>>>>>  
+>>>>> -static struct timer_of suspend_rtc_to = {
+>>>>> -	.flags = TIMER_OF_BASE | TIMER_OF_CLOCK,
+>>>>> -};
+>>>>> -
+>>>>> -/*
+>>>>> - * tegra_rtc_read - Reads the Tegra RTC registers
+>>>>> - * Care must be taken that this function is not called while the
+>>>>> - * tegra_rtc driver could be executing to avoid race conditions
+>>>>> - * on the RTC shadow register
+>>>>> - */
+>>>>> -static u64 tegra_rtc_read_ms(struct clocksource *cs)
+>>>>> -{
+>>>>> -	void __iomem *reg_base = timer_of_base(&suspend_rtc_to);
+>>>>> -
+>>>>> -	u32 ms = readl_relaxed(reg_base + RTC_MILLISECONDS);
+>>>>> -	u32 s = readl_relaxed(reg_base + RTC_SHADOW_SECONDS);
+>>>>> -
+>>>>> -	return (u64)s * MSEC_PER_SEC + ms;
+>>>>> -}
+>>>>> -
+>>>>> -static struct clocksource suspend_rtc_clocksource = {
+>>>>> -	.name	= "tegra_suspend_timer",
+>>>>> -	.rating	= 200,
+>>>>> -	.read	= tegra_rtc_read_ms,
+>>>>> -	.mask	= CLOCKSOURCE_MASK(32),
+>>>>> -	.flags	= CLOCK_SOURCE_IS_CONTINUOUS | CLOCK_SOURCE_SUSPEND_NONSTOP,
+>>>>> -};
+>>>>> -
+>>>>>  static inline unsigned int tegra_base_for_cpu(int cpu, bool tegra20)
+>>>>>  {
+>>>>>  	if (tegra20) {
+>>>>> @@ -385,15 +353,3 @@ static int __init tegra20_init_timer(struct device_node *np)
+>>>>>  	return tegra_init_timer(np, true, rating);
+>>>>>  }
+>>>>>  TIMER_OF_DECLARE(tegra20_timer, "nvidia,tegra20-timer", tegra20_init_timer);
+>>>>> -
+>>>>> -static int __init tegra20_init_rtc(struct device_node *np)
+>>>>> -{
+>>>>> -	int ret;
+>>>>> -
+>>>>> -	ret = timer_of_init(np, &suspend_rtc_to);
+>>>>> -	if (ret)
+>>>>> -		return ret;
+>>>>> -
+>>>>> -	return clocksource_register_hz(&suspend_rtc_clocksource, 1000);
+>>>>> -}
+>>>>> -TIMER_OF_DECLARE(tegra20_rtc, "nvidia,tegra20-rtc", tegra20_init_rtc);
+>>>>> diff --git a/drivers/rtc/rtc-tegra.c b/drivers/rtc/rtc-tegra.c
+>>>>> index 8fa1b3febf69..6da54264a27a 100644
+>>>>> --- a/drivers/rtc/rtc-tegra.c
+>>>>> +++ b/drivers/rtc/rtc-tegra.c
+>>>>> @@ -6,6 +6,7 @@
+>>>>>   */
+>>>>>  
+>>>>>  #include <linux/clk.h>
+>>>>> +#include <linux/clocksource.h>
+>>>>>  #include <linux/delay.h>
+>>>>>  #include <linux/init.h>
+>>>>>  #include <linux/io.h>
+>>>>> @@ -52,8 +53,15 @@ struct tegra_rtc_info {
+>>>>>  	struct clk *clk;
+>>>>>  	int irq; /* alarm and periodic IRQ */
+>>>>>  	spinlock_t lock;
+>>>>> +
+>>>>> +	struct clocksource clksrc;
+>>>>>  };
+>>>>>  
+>>>>> +static struct tegra_rtc_info *to_tegra_rtc(struct clocksource *clksrc)
+>>>>> +{
+>>>>> +	return container_of(clksrc, struct tegra_rtc_info, clksrc);
+>>>>> +}
+>>>>> +
+>>>>>  /*
+>>>>>   * RTC hardware is busy when it is updating its values over AHB once every
+>>>>>   * eight 32 kHz clocks (~250 us). Outside of these updates the CPU is free to
+>>>>> @@ -268,6 +276,17 @@ static const struct rtc_class_ops tegra_rtc_ops = {
+>>>>>  	.alarm_irq_enable = tegra_rtc_alarm_irq_enable,
+>>>>>  };
+>>>>>  
+>>>>> +static u64 tegra_rtc_read_ms(struct clocksource *clksrc)
+>>>>> +{
+>>>>> +	struct tegra_rtc_info *info = to_tegra_rtc(clksrc);
+>>>>> +	u32 ms, s;
+>>>>> +
+>>>>> +	ms = readl_relaxed(info->base + TEGRA_RTC_REG_MILLI_SECONDS);
+>>>>> +	s = readl_relaxed(info->base + TEGRA_RTC_REG_SHADOW_SECONDS);
+>>>>> +
+>>>>> +	return (u64)s * MSEC_PER_SEC + ms;
+>>>>> +}
+>>>>> +
+>>>>>  static const struct of_device_id tegra_rtc_dt_match[] = {
+>>>>>  	{ .compatible = "nvidia,tegra20-rtc", },
+>>>>>  	{}
+>>>>> @@ -339,6 +358,28 @@ static int tegra_rtc_probe(struct platform_device *pdev)
+>>>>>  		goto disable_clk;
+>>>>>  	}
+>>>>>  
+>>>>> +	/*
+>>>>> +	 * The Tegra RTC is the only reliable clock source that persists
+>>>>> +	 * across an SC7 transition (VDD_CPU and VDD_CORE off) on Tegra210
+>>>>> +	 * and earlier. Starting with Tegra186, the ARM v8 architected timer
+>>>>> +	 * is in an always on power partition and its reference clock keeps
+>>>>> +	 * running during SC7. Therefore, we technically don't need to have
+>>>>> +	 * the RTC register as a clock source on Tegra186 and later, but it
+>>>>> +	 * doesn't hurt either, so we just register it unconditionally here.
+>>>>> +	 */
+>>>>> +	info->clksrc.name = "tegra_rtc";
+>>>>> +	info->clksrc.rating = 200;
+>>>>> +	info->clksrc.read = tegra_rtc_read_ms;
+>>>>> +	info->clksrc.mask = CLOCKSOURCE_MASK(32);
+>>>>
+>>>> Hm.. shouldn't this be CLOCKSOURCE_MASK(52)? Given that there are 32 bits for seconds and
+>>>> 10bits for milliseconds.
+>>>
+>>> Did you mean to say CLOCKSOURCE_MASK(42)? Yeah, that's probably better
+>>> here.
+>>
+>> Yes, 42 :)
+> 
+> I'm wondering if that could perhaps be a little problematic because
+> we're not actually using all of the 10 bits for the milliseconds. So the
+> maximum value that we can return is:
+> 
+> 	4294967296 * 1000 + 999 = 4294967296999
+> 
+> However, the maximum value for a 42 bit mask is:
+> 
+> 	2^42 - 1 = 4398046511103
+> 
+> That mask is only used in order to wrap around in delta computations. So
+> I can imagine a situation where we'd end up with a wrong value in the
+> delta. I suppose this can only really happen if the two samples are very
+> far apart in time, so maybe this isn't worth worrying about.
 
-This allows us to implement conditional branches where
-changing branch direction is expensive but branch selection
-is basically 'free'
+I'm a bit puzzled now. Looks problematic that wraparound will happen unexpectedly for
+the timekeeping. Although please bare in mind that I'm not expert in the area of
+timekeeping, actually I know very little about it.
 
-This implementation uses 32-bit NOP and BRANCH instructions
-which forced to be aligned by 4 to guarantee that they don't
-cross L1 cache line and can be update atomically.
+Maybe tegra_rtc_read_ms() should track wraparound case itself and return a
+monotonically incrementing value?
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
- arch/arc/Kconfig                  |   8 ++
- arch/arc/include/asm/jump_label.h |  68 ++++++++++++
- arch/arc/kernel/Makefile          |   1 +
- arch/arc/kernel/jump_label.c      | 168 ++++++++++++++++++++++++++++++
- 4 files changed, 245 insertions(+)
- create mode 100644 arch/arc/include/asm/jump_label.h
- create mode 100644 arch/arc/kernel/jump_label.c
+static u64 tegra_rtc_read_ms(struct clocksource *clksrc)
+{
+	struct tegra_rtc_info *info = to_tegra_rtc(clksrc);
+	u64 ms, s, now;
 
-diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
-index c781e45d1d99..b1313e016c54 100644
---- a/arch/arc/Kconfig
-+++ b/arch/arc/Kconfig
-@@ -47,6 +47,7 @@ config ARC
- 	select OF_EARLY_FLATTREE
- 	select PCI_SYSCALL if PCI
- 	select PERF_USE_VMALLOC if ARC_CACHE_VIPT_ALIASING
-+	select HAVE_ARCH_JUMP_LABEL if ISA_ARCV2 && !CPU_ENDIAN_BE32
- 
- config ARCH_HAS_CACHE_LINE_SIZE
- 	def_bool y
-@@ -529,6 +530,13 @@ config ARC_DW2_UNWIND
- config ARC_DBG_TLB_PARANOIA
- 	bool "Paranoia Checks in Low Level TLB Handlers"
- 
-+config ARC_DBG_STATIC_KEYS
-+	bool "Paranoid checks in Static Keys code"
-+	depends on JUMP_LABEL
-+	select STATIC_KEYS_SELFTEST
-+	help
-+	  Enable paranoid checks and self-test of both ARC-specific and generic
-+	  part of static-keys-related code.
- endif
- 
- config ARC_BUILTIN_DTB_NAME
-diff --git a/arch/arc/include/asm/jump_label.h b/arch/arc/include/asm/jump_label.h
-new file mode 100644
-index 000000000000..8971d0608f2c
---- /dev/null
-+++ b/arch/arc/include/asm/jump_label.h
-@@ -0,0 +1,68 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_ARC_JUMP_LABEL_H
-+#define _ASM_ARC_JUMP_LABEL_H
-+
-+#ifndef __ASSEMBLY__
-+
-+#include <linux/types.h>
-+
-+#define JUMP_LABEL_NOP_SIZE 4
-+
-+/*
-+ * To make atomic update of patched instruction available we need to guarantee
-+ * that this instruction doesn't cross L1 cache line boundary.
-+ *
-+ * As of today we simply align instruction which can be patched by 4 byte using
-+ * ".balign 4" directive. In that case patched instruction is aligned with one
-+ * 16-bit NOP_S if this is required.
-+ * However 'align by 4' directive is much stricter than it actually required.
-+ * It's enough that our 32-bit instruction don't cross l1 cache line boundary
-+ * which can be achieved by using ".bundle_align_mode" directive. That will save
-+ * us from adding useless NOP_S padding in most of the cases.
-+ *
-+ * TODO: switch to ".bundle_align_mode" directive using whin it will be
-+ * supported by ARC toolchain.
-+ */
-+
-+static __always_inline bool arch_static_branch(struct static_key *key,
-+					       bool branch)
-+{
-+	asm_volatile_goto(".balign 4			\n"
-+		 "1:					\n"
-+		 "nop					\n"
-+		 ".pushsection __jump_table, \"aw\"	\n"
-+		 ".word 1b, %l[l_yes], %c0		\n"
-+		 ".popsection				\n"
-+		 : : "i" (&((char *)key)[branch]) : : l_yes);
-+
-+	return false;
-+l_yes:
-+	return true;
-+}
-+
-+static __always_inline bool arch_static_branch_jump(struct static_key *key,
-+						    bool branch)
-+{
-+	asm_volatile_goto(".balign 4			\n"
-+		 "1:					\n"
-+		 "b %l[l_yes]				\n"
-+		 ".pushsection __jump_table, \"aw\"	\n"
-+		 ".word 1b, %l[l_yes], %c0		\n"
-+		 ".popsection				\n"
-+		 : : "i" (&((char *)key)[branch]) : : l_yes);
-+
-+	return false;
-+l_yes:
-+	return true;
-+}
-+
-+typedef u32 jump_label_t;
-+
-+struct jump_entry {
-+	jump_label_t code;
-+	jump_label_t target;
-+	jump_label_t key;
-+};
-+
-+#endif  /* __ASSEMBLY__ */
-+#endif
-diff --git a/arch/arc/kernel/Makefile b/arch/arc/kernel/Makefile
-index 2dc5f4296d44..307f74156d99 100644
---- a/arch/arc/kernel/Makefile
-+++ b/arch/arc/kernel/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_ARC_EMUL_UNALIGNED) 	+= unaligned.o
- obj-$(CONFIG_KGDB)			+= kgdb.o
- obj-$(CONFIG_ARC_METAWARE_HLINK)	+= arc_hostlink.o
- obj-$(CONFIG_PERF_EVENTS)		+= perf_event.o
-+obj-$(CONFIG_JUMP_LABEL)		+= jump_label.o
- 
- obj-$(CONFIG_ARC_FPU_SAVE_RESTORE)	+= fpu.o
- CFLAGS_fpu.o   += -mdpfp
-diff --git a/arch/arc/kernel/jump_label.c b/arch/arc/kernel/jump_label.c
-new file mode 100644
-index 000000000000..93e3bc84288f
---- /dev/null
-+++ b/arch/arc/kernel/jump_label.c
-@@ -0,0 +1,168 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/kernel.h>
-+#include <linux/jump_label.h>
-+
-+#include "asm/cacheflush.h"
-+
-+#define JUMPLABEL_ERR	"ARC: jump_label: ERROR: "
-+
-+/* Halt system on fatal error to make debug easier */
-+#define arc_jl_fatal(format...)						\
-+({									\
-+	pr_err(JUMPLABEL_ERR format);					\
-+	BUG();								\
-+})
-+
-+static inline u32 arc_gen_nop(void)
-+{
-+	/* 1x 32bit NOP in middle endian */
-+	return 0x7000264a;
-+}
-+
-+static inline bool cross_l1_cache_line(void *addr, int len)
-+{
-+	unsigned long a = (unsigned long)addr;
-+
-+	return (a >> L1_CACHE_SHIFT) != ((a + len - 1) >> L1_CACHE_SHIFT);
-+}
-+
-+/*
-+ * ARCv2 'Branch unconditionally' instruction:
-+ * 00000ssssssssss1SSSSSSSSSSNRtttt
-+ * s S[n:0] lower bits signed immediate (number is bitfield size)
-+ * S S[m:n+1] upper bits signed immediate (number is bitfield size)
-+ * t S[24:21] upper bits signed immediate (branch unconditionally far)
-+ * N N <.d> delay slot mode
-+ * R R Reserved
-+ */
-+static inline u32 arc_gen_branch(jump_label_t pc, jump_label_t target)
-+{
-+	u32 instruction_l, instruction_r;
-+	u32 pcl = pc & GENMASK(31, 2);
-+	u32 u_offset = target - pcl;
-+	u32 s, S, t;
-+
-+	/*
-+	 * Offset in 32-bit branch instruction must to fit into s25.
-+	 * Something is terribly broken if we get such huge offset within one
-+	 * function.
-+	 */
-+	if ((s32)u_offset < -16777216 || (s32)u_offset > 16777214)
-+		arc_jl_fatal("gen branch with offset (%d) not fit in s25\n",
-+			     (s32)u_offset);
-+
-+	/*
-+	 * All instructions are aligned by 2 bytes so we should never get offset
-+	 * here which is not 2 bytes aligned.
-+	 */
-+	if (u_offset & 0x1)
-+		arc_jl_fatal("gen branch with offset (%d) unaligned to 2 bytes\n",
-+			     (s32)u_offset);
-+
-+	s = (u_offset >> 1)  & GENMASK(9, 0);
-+	S = (u_offset >> 11) & GENMASK(9, 0);
-+	t = (u_offset >> 21) & GENMASK(3, 0);
-+
-+	/* 00000ssssssssss1 */
-+	instruction_l = (s << 1) | 0x1;
-+	/* SSSSSSSSSSNRtttt */
-+	instruction_r = (S << 6) | t;
-+
-+	return (instruction_r << 16) | (instruction_l & GENMASK(15, 0));
-+}
-+
-+void arch_jump_label_transform(struct jump_entry *entry,
-+			       enum jump_label_type type)
-+{
-+	jump_label_t *instr_addr = (jump_label_t *)entry->code;
-+	u32 instr;
-+
-+	/*
-+	 * Atomic update of patched instruction is only available if this
-+	 * instruction doesn't cross L1 cache line boundary. You can read about
-+	 * the way we achieve this in arc/include/asm/jump_label.h
-+	 */
-+	if (cross_l1_cache_line(instr_addr, JUMP_LABEL_NOP_SIZE))
-+		arc_jl_fatal("instruction (addr %px) cross L1 cache line",
-+			     instr_addr);
-+
-+	if (type == JUMP_LABEL_JMP)
-+		instr = arc_gen_branch(entry->code, entry->target);
-+	else
-+		instr = arc_gen_nop();
-+
-+	WRITE_ONCE(*instr_addr, instr);
-+	flush_icache_range(entry->code, entry->code + JUMP_LABEL_NOP_SIZE);
-+}
-+
-+void arch_jump_label_transform_static(struct jump_entry *entry,
-+				      enum jump_label_type type)
-+{
-+	/*
-+	 * We use only one NOP type (1x, 4 byte) in arch_static_branch, so
-+	 * there's no need to patch an identical NOP over the top of it here.
-+	 * The generic code calls 'arch_jump_label_transform' if the NOP needs
-+	 * to be replaced by a branch, so 'arch_jump_label_transform_static' is
-+	 * newer called with type other than JUMP_LABEL_NOP.
-+	 */
-+	BUG_ON(type != JUMP_LABEL_NOP);
-+}
-+
-+#ifdef CONFIG_ARC_DBG_STATIC_KEYS
-+#define SELFTEST_MSG	"ARC: instruction generation self-test: "
-+
-+struct arc_gen_branch_testdata {
-+	jump_label_t pc;
-+	jump_label_t target_address;
-+	u32 expected_instr;
-+};
-+
-+static __init int branch_gen_test(struct arc_gen_branch_testdata *test_data)
-+{
-+	u32 instr_got;
-+
-+	instr_got = arc_gen_branch(test_data->pc, test_data->target_address);
-+	if (instr_got != test_data->expected_instr) {
-+		pr_err(SELFTEST_MSG "FAIL:\n arc_gen_branch(0x%08x, 0x%08x) != 0x%08x, got 0x%08x\n",
-+		       test_data->pc, test_data->target_address,
-+		       test_data->expected_instr, instr_got);
-+
-+		return -EFAULT;
-+	}
-+
-+	return 0;
-+}
-+
-+static __init int instr_gen_test(void)
-+{
-+	int i, ret;
-+
-+	struct arc_gen_branch_testdata test_data[] = {
-+		{0x90007548, 0x90007514, 0xffcf07cd}, /* tiny (-52) offs */
-+		{0x9000c9c0, 0x9000c782, 0xffcf05c3}, /* tiny (-574) offs */
-+		{0x9000cc1c, 0x9000c782, 0xffcf0367}, /* tiny (-1178) offs */
-+		{0x9009dce0, 0x9009d106, 0xff8f0427}, /* small (-3034) offs */
-+		{0x9000f5de, 0x90007d30, 0xfc0f0755}, /* big  (-30892) offs */
-+		{0x900a2444, 0x90035f64, 0xc9cf0321}, /* huge (-443616) offs */
-+		{0x90007514, 0x9000752c, 0x00000019}, /* tiny (+24) offs */
-+		{0x9001a578, 0x9001a77a, 0x00000203}, /* tiny (+514) offs */
-+		{0x90031ed8, 0x90032634, 0x0000075d}, /* tiny (+1884) offs */
-+		{0x9008c7f2, 0x9008d3f0, 0x00400401}, /* small (+3072) offs */
-+		{0x9000bb38, 0x9003b340, 0x17c00009}, /* big  (+194568) offs */
-+		{0x90008f44, 0x90578d80, 0xb7c2063d}  /* huge (+5701180) offs */
-+	};
-+
-+	for (i = 0; i < ARRAY_SIZE(test_data); i++) {
-+		ret = branch_gen_test(&test_data[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	pr_info(SELFTEST_MSG "OK\n");
-+
-+	return 0;
-+}
-+early_initcall(instr_gen_test);
-+
-+#endif /* CONFIG_ARC_STATIC_KEYS_DEBUG */
--- 
-2.21.0
+	ms = readl_relaxed(info->base + TEGRA_RTC_REG_MILLI_SECONDS);
+	s = readl_relaxed(info->base + TEGRA_RTC_REG_SHADOW_SECONDS);
 
+	now = s * MSEC_PER_SEC + ms;
+
+	if (now < info->last)
+		info->ms_cnt += 0x3e8000003e8ull - info->last + now;
+	else
+		info->ms_cnt += now - info->last;
+
+	info->last = now;
+
+	return info->ms_cnt;
+}
+
+and then simply CLOCKSOURCE_MASK(64).
