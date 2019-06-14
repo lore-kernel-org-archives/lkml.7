@@ -2,184 +2,167 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE04C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24455C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1499021841
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFFD52173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IcGT9d46"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qIH+M8u6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbfFNTtM (ORCPT
+        id S1726052AbfFNT4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 15:49:12 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34472 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbfFNTtK (ORCPT
+        Fri, 14 Jun 2019 15:56:45 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42841 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbfFNT4p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 15:49:10 -0400
-Received: by mail-io1-f65.google.com with SMTP id k8so8438949iot.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 12:49:09 -0700 (PDT)
+        Fri, 14 Jun 2019 15:56:45 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x17so3715360wrl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 12:56:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XggeDQFBfdb+3YPzkLYpmWXYVa5T1jw4aJqqW4WiNOA=;
-        b=IcGT9d468pa+P0C/mZsnm+76M4esye5WR1AG3Fs9hpOA1WazPNvMyCaPZ3GV5rPiya
-         2KtHsM/4gjym/ah4xhtbpliypu1e+PnUiCZaokJrszASKUXSrgbr/PvxzanFGEsmifBY
-         s5ANW07qb8ca6ORspZf9tviVpZiVXhdNV5GMs=
+        bh=tkfIkc5EEziIC8JttuF44VEsntcOdSTSm668OicBieA=;
+        b=qIH+M8u6ZHF56mysF2rv7LgxnEGFYR951cqj5/ufPiitDHFKDiSzyDgKT0UHHa7Rtw
+         dCXyZoQ6PxgjU7i8iacuMREE1//5Vxt/sdt6LkWWPiUaLa9Wz4tVFuXy8BYpCscurA4B
+         +BFnfpmmTNMht6wpoSgG+h+cw9fRpSX+PYwNQOEQ3eAaBm/QcK6prEkZ/YDSnHqTx8Ij
+         HIztDKPZmech4lNjF6gFc9Y38nNiOgwnw5Vx28LAx6Rgf8d0OQziAe8/XsJbFo0do1i1
+         5bF8GfolMUILyUmsiSsazQMP4VdVln41Tu2/oJcriwLdUKKtyvakmU4ae1CRgzDAuDbh
+         YjIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XggeDQFBfdb+3YPzkLYpmWXYVa5T1jw4aJqqW4WiNOA=;
-        b=M6Xb864SNm5zaq5rX9EvUqru9rlYUbyAvOP4HmnhBmVBDVxSG0I+rDjNMDOhXP/9SI
-         qQUhQPnAXhAMb/T96qzkDM7dFDReYsxGx76KZfG92UPHO5EgdHnT14Ai4fPIS1mJT7gw
-         4CMHPDUyIWcfSEIvtEvstZIFvIbqjImIXCSAylNS+kh6CaC4utSVa5dZ6XPUpd5448Wn
-         LEJCk/vO3YrAZ5tQOtq6uYAVlEEmpn4NjqDNb9ItVwwrNdUJrYcHvm2i/U+dIQXnnmKp
-         Cp0Dm1fzBoqhQa7z9Bqr5XBNZNNkTmRREYXh/aRouigCe76ayJrZ4VjcOCciL74iK48n
-         ClyQ==
-X-Gm-Message-State: APjAAAUqUSuIUCdYD3kyq4IKc9C5+dHD5g+WPqS9kyPchQhCFyxtdBnB
-        RYEd0S5hohzevROOE+p8UgITNMl6t0Y0+A==
-X-Google-Smtp-Source: APXvYqyE7eru/RE1iSZF7KO0qV8mLZ2lVU1qwdUdCbJMgemExUEXY/hklfZPRXfgsLUdwHut7+rSFw==
-X-Received: by 2002:a02:a90a:: with SMTP id n10mr54237065jam.61.1560541748599;
-        Fri, 14 Jun 2019 12:49:08 -0700 (PDT)
-Received: from localhost ([2620:15c:183:200:33ce:f5cf:f863:d3a6])
-        by smtp.gmail.com with ESMTPSA id n17sm3128185iog.63.2019.06.14.12.49.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 12:49:08 -0700 (PDT)
-From:   Fletcher Woodruff <fletcherw@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ben Zhang <benzh@chromium.org>, Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        Ross Zwisler <zwisler@chromium.org>,
-        alsa-devel@alsa-project.org,
-        Fletcher Woodruff <fletcherw@chromium.org>
-Subject: [PATCH v7 4/4] ASoC: rt5677: handle concurrent interrupts
-Date:   Fri, 14 Jun 2019 13:48:54 -0600
-Message-Id: <20190614194854.208436-5-fletcherw@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190614194854.208436-1-fletcherw@chromium.org>
-References: <20190614194854.208436-1-fletcherw@chromium.org>
+        bh=tkfIkc5EEziIC8JttuF44VEsntcOdSTSm668OicBieA=;
+        b=GFvyr74uVXK2pTSYyM5e/P+P6Jja4mR8j0oy8qf87/hZd3bhOuGhFy7CbndJHUbmk1
+         zRU5nOMmQoq4D0+SR4TsOyU8RyweudRi3k1lkVh5aKKlMkvYvm4HNWszF50LwFKK2iYk
+         i9WnaYhwEQwzoQiBd7yEov61UwL01ZUl6Dz3CTXXT+2b/lsAttVdh2xMb09Uhoy+S2/U
+         DW2UjPN9cuPObGyPtL0//oJ2HtQnSBq0Ix/lVDKJKFNbg5C7OqmJip69r46I5ICOcFE/
+         dXXpV2VMxYMQc0K06kiKSrzn0bZqfNn2AY9d38sciSFet1Pf3iNbW81hg7MQqaXQ1BL8
+         wDGw==
+X-Gm-Message-State: APjAAAVP959nYreHTdU9ph3VnepQzxFviD7HyndHl0TWGqViQzlnR3Vy
+        c5Lcs0rjhwydgV4tr4OjP9mxBwHw
+X-Google-Smtp-Source: APXvYqz4dnTX5FOuo1+mrF9OWokv0GO2DjUQU5Onl8cJM/+eoB8LwPhxf3ttG4o9SNRjq4RoASQQQg==
+X-Received: by 2002:a5d:6389:: with SMTP id p9mr52574643wru.297.1560542202338;
+        Fri, 14 Jun 2019 12:56:42 -0700 (PDT)
+Received: from debian64.daheim (pD9E29824.dip0.t-ipconnect.de. [217.226.152.36])
+        by smtp.gmail.com with ESMTPSA id a19sm2447233wmm.46.2019.06.14.12.56.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 12:56:41 -0700 (PDT)
+Received: from localhost.daheim ([127.0.0.1] helo=debian64.localnet)
+        by debian64.daheim with esmtp (Exim 4.92)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1hbsJU-0007ny-CJ; Fri, 14 Jun 2019 21:56:40 +0200
+From:   Christian Lamparter <chunkeey@gmail.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Axtens <dja@axtens.net>,
+        Pawel Dembicki <paweldembicki@gmail.com>,
+        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc: Enable kernel XZ compression option on PPC_85xx
+Date:   Fri, 14 Jun 2019 21:56:40 +0200
+Message-ID: <4407251.g26ZO3zR3C@debian64>
+In-Reply-To: <f988951c-3077-ab19-81eb-560418468d14@c-s.fr>
+References: <20190603164115.27471-1-paweldembicki@gmail.com> <87ftodempa.fsf@concordia.ellerman.id.au> <f988951c-3077-ab19-81eb-560418468d14@c-s.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Zhang <benzh@chromium.org>
+On Friday, June 14, 2019 12:06:48 PM CEST Christophe Leroy wrote:
+>=20
+> Le 13/06/2019 =E0 13:42, Michael Ellerman a =E9crit :
+> > Daniel Axtens <dja@axtens.net> writes:
+> >> Pawel Dembicki <paweldembicki@gmail.com> writes:
+> >>
+> >>> Enable kernel XZ compression option on PPC_85xx. Tested with
+> >>> simpleImage on TP-Link TL-WDR4900 (Freescale P1014 processor).
+> >>>
+> >>> Suggested-by: Christian Lamparter <chunkeey@gmail.com>
+> >>> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+> >>> ---
+> >>>   arch/powerpc/Kconfig | 2 +-
+> >>>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> >>> index 8c1c636308c8..daf4cb968922 100644
+> >>> --- a/arch/powerpc/Kconfig
+> >>> +++ b/arch/powerpc/Kconfig
+> >>> @@ -196,7 +196,7 @@ config PPC
+> >>>   	select HAVE_IOREMAP_PROT
+> >>>   	select HAVE_IRQ_EXIT_ON_IRQ_STACK
+> >>>   	select HAVE_KERNEL_GZIP
+> >>> -	select HAVE_KERNEL_XZ			if PPC_BOOK3S || 44x
+> >>> +	select HAVE_KERNEL_XZ			if PPC_BOOK3S || 44x || PPC_85xx
+> >>
+> >> (I'm not super well versed in the compression stuff, so apologies if
+> >> this is a dumb question.) If it's this simple, is there any reason we
+> >> can't turn it on generally, or convert it to a blacklist of platforms
+> >> known not to work?
+> >=20
+> > For some platforms enabling XZ requires that your u-boot has XZ support,
+> > and I'm not very clear on when that support landed in u-boot and what
+> > boards have it. And there are boards out there with old/custom u-boots
+> > that effectively can't be updated.
+>=20
+> I don't think that it has anything to do with u-boot.
+> AFAIK, today's mainline U-boot only supports GZIP (by default) and the=20
+> following optional ones: LZO, LZMA, LZ4.
+>=20
+> If we want to set additional compression types for u-boot, it is not=20
+> enough to select HAVE_KERNEL_XXXX, we also have to update uImage=20
+> generation scripts.
+>=20
+> See the series I sent some time ago:=20
+> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=3D104153
+> I'll resent it without bzip2 as today's uboot doesn't support bzip2 anymo=
+re.
+>=20
+> >=20
+> > But as a server guy I don't really know the details of all that very
+> > well. So if someone tells me that we should enable XZ for everything, or
+> > as you say just black list some platforms, then that's fine by me.
+> >=20
+>=20
+> I guess we first need to understand how this is used.
+>=20
 
-The rt5677 driver writes to the IRQ control register within the IRQ
-handler in order to flip the polarity of the interrupts that have been
-signalled.  If an interrupt fires in the interval between the
-regmap_read and the regmap_write, it will not trigger a new call to
-rt5677_irq.
+to add to the confusion:
 
-Add a bounded loop to rt5677_irq that keeps checking interrupts until
-none are seen, so that any interrupts that are signalled in that
-interval are correctly handled.
+The powerpc arch is sort of special since it has the various targets have
+different arch/powerpc/boot/wrapper for everyone unfamiliar (people from
+ARM or other targets,) please look at:=20
 
-Signed-off-by: Ben Zhang <benzh@chromium.org>
-Signed-off-by: Fletcher Woodruff <fletcherw@chromium.org>
----
- sound/soc/codecs/rt5677.c | 67 ++++++++++++++++++++++++---------------
- 1 file changed, 42 insertions(+), 25 deletions(-)
+https://www.kernel.org/doc/Documentation/powerpc/bootwrapper.txt
 
-diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
-index 87466ee222ee59..e88766e34ddb1d 100644
---- a/sound/soc/codecs/rt5677.c
-+++ b/sound/soc/codecs/rt5677.c
-@@ -5072,38 +5072,55 @@ static const struct rt5677_irq_desc rt5677_irq_descs[] = {
- static irqreturn_t rt5677_irq(int unused, void *data)
- {
- 	struct rt5677_priv *rt5677 = data;
--	int ret = 0, i, reg_irq, virq;
-+	int ret = 0, loop, i, reg_irq, virq;
- 	bool irq_fired = false;
- 
- 	mutex_lock(&rt5677->irq_lock);
--	/* Read interrupt status */
--	ret = regmap_read(rt5677->regmap, RT5677_IRQ_CTRL1, &reg_irq);
--	if (ret) {
--		pr_err("rt5677: failed reading IRQ status: %d\n", ret);
--		goto exit;
--	}
- 
--	for (i = 0; i < RT5677_IRQ_NUM; i++) {
--		if (reg_irq & rt5677_irq_descs[i].status_mask) {
--			irq_fired = true;
--			virq = irq_find_mapping(rt5677->domain, i);
--			if (virq)
--				handle_nested_irq(virq);
--
--			/* Clear the interrupt by flipping the polarity of the
--			 * interrupt source line that fired
--			 */
--			reg_irq ^= rt5677_irq_descs[i].polarity_mask;
-+	/*
-+	 * Loop to handle interrupts until the last i2c read shows no pending
-+	 * irqs. The interrupt line is shared by multiple interrupt sources.
-+	 * After the regmap_read() below, a new interrupt source line may
-+	 * become high before the regmap_write() finishes, so there isn't a
-+	 * rising edge on the shared interrupt line for the new interrupt. Thus,
-+	 * the loop is needed to avoid missing irqs.
-+	 *
-+	 * A safeguard of 20 loops is used to avoid hanging in the irq handler
-+	 * if there is something wrong with the interrupt status update. The
-+	 * interrupt sources here are audio jack plug/unplug events which
-+	 * shouldn't happen at a high frequency for a long period of time.
-+	 * Empirically, more than 3 loops have never been seen.
-+	 */
-+	for (loop = 0; loop < 20; loop++) {
-+		/* Read interrupt status */
-+		ret = regmap_read(rt5677->regmap, RT5677_IRQ_CTRL1, &reg_irq);
-+		if (ret) {
-+			pr_err("rt5677: failed reading IRQ status: %d\n", ret);
-+			goto exit;
- 		}
--	}
- 
--	if (!irq_fired)
--		goto exit;
-+		irq_fired = false;
-+		for (i = 0; i < RT5677_IRQ_NUM; i++) {
-+			if (reg_irq & rt5677_irq_descs[i].status_mask) {
-+				irq_fired = true;
-+				virq = irq_find_mapping(rt5677->domain, i);
-+				if (virq)
-+					handle_nested_irq(virq);
-+
-+				/* Clear the interrupt by flipping the polarity
-+				 * of the interrupt source line that fired
-+				 */
-+				reg_irq ^= rt5677_irq_descs[i].polarity_mask;
-+			}
-+		}
-+		if (!irq_fired)
-+			goto exit;
- 
--	ret = regmap_write(rt5677->regmap, RT5677_IRQ_CTRL1, reg_irq);
--	if (ret) {
--		pr_err("rt5677: failed updating IRQ status: %d\n", ret);
--		goto exit;
-+		ret = regmap_write(rt5677->regmap, RT5677_IRQ_CTRL1, reg_irq);
-+		if (ret) {
-+			pr_err("rt5677: failed updating IRQ status: %d\n", ret);
-+			goto exit;
-+		}
- 	}
- exit:
- 	mutex_unlock(&rt5677->irq_lock);
--- 
-2.22.0.410.gd8fdbe21b5-goog
+and see that this is very different from ARM, MIPS, x86, etc.
+
+I think the cuImage*, dtbImage*, simpleImage, etc... wouldn't
+be affected if the kernel is compressed by XZ, as in they should
+still boot fine, altough XZ takes a bit longer to unpack of course.
+
+However, for the uImage this could spell a problem, however "HAVE_KERNEL_XZ"
+does not automatically entail that the wrapper script from above
+compresses the generated uimage with LZMAd/xz. Instead this is controlled
+by init/Kconfig and the "Kernel compression mode" setting there.=20
+And currently that defaults to CONFIG_KERNEL_GZIP. So the wrapper script
+currently gzipped uImages unless the target config overwrites it to
+something else (and the target has the right=20
+HAVE_KERNEL_XZ/BZIP2/LZMA/LZO/LZ4/... as well).
+
+Regards,
+Christian
+
 
