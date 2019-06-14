@@ -2,106 +2,105 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DC1C31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235BCC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59162175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8312175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:34:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560526461;
+	bh=CXgMQwIEu2sR8oeBNdgl4DGDfkxUfmcuwhPt0mVBcug=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=jGrEEpGkbxsG2omX5Qw7sNlcQobxO1Qjc7pzpb0WA6vCAI8d+O0Ya/aqD7QCa7mLW
+	 j3MDjnvVvbmopoJqGnWNVC3oSfKSXY6Aa+5svvwEtVwsaVfpw/EPvmAds62wg003wO
+	 BRXh87WHR225dL+xjWNEnS8ucgwZKg96lF/HG1Nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfFNPdW (ORCPT
+        id S1726686AbfFNPeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:33:22 -0400
-Received: from mga18.intel.com ([134.134.136.126]:64871 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbfFNPdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:33:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 08:33:20 -0700
-X-ExtLoop1: 1
-Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by fmsmga001.fm.intel.com with ESMTP; 14 Jun 2019 08:33:20 -0700
-Message-ID: <cf0d1470e95e0a8b88742651d06601a53d6655c1.camel@intel.com>
-Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
- function
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Date:   Fri, 14 Jun 2019 08:25:16 -0700
-In-Reply-To: <ea5e333f-8cd6-8396-635f-a9dc580d5364@intel.com>
-References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
-         <20190606200926.4029-4-yu-cheng.yu@intel.com>
-         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
-         <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
-         <20190607174336.GM3436@hirez.programming.kicks-ass.net>
-         <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
-         <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
-         <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
-         <25281DB3-FCE4-40C2-BADB-B3B05C5F8DD3@amacapital.net>
-         <e26f7d09376740a5f7e8360fac4805488b2c0a4f.camel@intel.com>
-         <3f19582d-78b1-5849-ffd0-53e8ca747c0d@intel.com>
-         <5aa98999b1343f34828414b74261201886ec4591.camel@intel.com>
-         <0665416d-9999-b394-df17-f2a5e1408130@intel.com>
-         <5c8727dde9653402eea97bfdd030c479d1e8dd99.camel@intel.com>
-         <ac9a20a6-170a-694e-beeb-605a17195034@intel.com>
-         <328275c9b43c06809c9937c83d25126a6e3efcbd.camel@intel.com>
-         <92e56b28-0cd4-e3f4-867b-639d9b98b86c@intel.com>
-         <1b961c71d30e31ecb22da2c5401b1a81cb802d86.camel@intel.com>
-         <ea5e333f-8cd6-8396-635f-a9dc580d5364@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 14 Jun 2019 11:34:19 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46289 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfFNPeT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 11:34:19 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 81so1671905pfy.13;
+        Fri, 14 Jun 2019 08:34:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=VcqZSTfOOTG7AMnLIvNFLJiYzNUQ9IggEtYnxRQLLCw=;
+        b=cX1rNV+2kByelj3aRHal2nkMvSEybh2ne3gjRKQLyq/psOp4P4W36nJUxqHca+Bcve
+         fa0/6Y6jBxg1+c2KzvqvaUmqscKgM0K6hZVYuIEfPhKes95rL4OM7rqA/iMZw3a2+BIc
+         j5pLf6/GVjAccFAWx9DrACLVYTFy/GnZAjj+/N/W834r2sAefVBySJt65wBc4yF8ImNc
+         ut5GQnHNKOxecBWoTEy4T1OMtJb/P6W4WIR8J0fVTFau7rD7GCJPUFz22twflA/Gk+1O
+         Weu0lVEqZs+tuJ2/U4Wd6R6VzdmfNLOdxQ+ICzXgGdNgbNKeA7jsuBjygxHdU274ySeu
+         UjYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=VcqZSTfOOTG7AMnLIvNFLJiYzNUQ9IggEtYnxRQLLCw=;
+        b=X/g4ydHGBHJjb0V4ZQ4KQTwhaF2Gt33ewHXStA9RGNPyBi+8GOHSunatjumTbAFf/b
+         m9eabllpafpaWUD0RgY7zFhgNKOeij9GpwWqoxSC63ZP4MUOBHRHkXeRcwE6keX7ctrT
+         /jo8VGs9oyuQ0lQByWAy7kcXfOCu9uupzZ6AShPAqR6/PNp+i1vH71ei/4HjTEqRF/Iq
+         2Y3GNId2PVJO2wpygxTTcy5bf9MaFSNsM7P7A7Uh36nKv4dCha7y83s/Hvq3iQwdPrPC
+         kfWi01iKNTBy8HkpXxrd6oOEWW0fXe6+sK2OyZlHR/lhXK0rUqjsmyyhHpICos614IL6
+         96CA==
+X-Gm-Message-State: APjAAAWK3yKB6txhi0Dyw7inuj3eY61tjGbnyXxRMCf5NLaRk2oEIbP2
+        mowBRVdfzPzQ+W88HPofSws=
+X-Google-Smtp-Source: APXvYqwb9cE5Z3QlVQVAVj601wOklPNy1XyRHzrFQZIGofhht1ieXqlLTiZ979Kxs19wgO9U4MB4AA==
+X-Received: by 2002:a63:4d17:: with SMTP id a23mr5115988pgb.22.1560526458229;
+        Fri, 14 Jun 2019 08:34:18 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:180::1:b330])
+        by smtp.gmail.com with ESMTPSA id y19sm3039003pfe.150.2019.06.14.08.34.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 08:34:17 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 08:34:13 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     dsterba@suse.cz, dsterba@suse.com, clm@fb.com,
+        josef@toxicpanda.com, axboe@kernel.dk, jack@suse.cz,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH 7/8] Btrfs: use REQ_CGROUP_PUNT for worker thread
+ submitted bios
+Message-ID: <20190614153413.GD538958@devbig004.ftw2.facebook.com>
+References: <20190614003350.1178444-1-tj@kernel.org>
+ <20190614003350.1178444-8-tj@kernel.org>
+ <20190614151524.GZ3563@twin.jikos.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190614151524.GZ3563@twin.jikos.cz>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-10 at 15:59 -0700, Dave Hansen wrote:
-> On 6/10/19 3:40 PM, Yu-cheng Yu wrote:
-> > Ok, we will go back to do_mmap() with MAP_PRIVATE, MAP_NORESERVE and
-> > VM_DONTDUMP.  The bitmap will cover only 48-bit address space.
+Hello, David.
+
+On Fri, Jun 14, 2019 at 05:15:24PM +0200, David Sterba wrote:
+> fs/btrfs/inode.c: In function ‘cow_file_range_async’:
+> fs/btrfs/inode.c:1278:4: error: implicit declaration of function ‘css_get’; did you mean ‘css_put’? [-Werror=implicit-function-declaration]
+>  1278 |    css_get(blkcg_css);
+>       |    ^~~~~~~
+>       |    css_put
 > 
-> Could you make sure to discuss the downsides of only doing a 48-bit
-> address space?
+> I don't have CONFIG_CGROUPS enabled in the testing kernel so this probably
+> needs a wrapper so the ifdef is not in the middle of the function.
 
-The downside is that we cannot load legacy lib's above 48-bit address space, but
-currently ld-linux does not do that.  Should ld-linux do that in the future,
-dlopen() fails.  Considering CRIU migration, we probably need to do this anyway?
+Yeah, got a bunch of kbuild warnings last night.  I'll fix them up and
+send v2 patchset.
 
-> What are the reasons behind and implications of VM_DONTDUMP?
+Thanks.
 
-The bitmap is very big.
-
-In GDB, it should be easy to tell why a control-protection fault occurred
-without the bitmap.
-
-Yu-cheng
+-- 
+tejun
