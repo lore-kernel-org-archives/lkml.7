@@ -2,173 +2,128 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1F0C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2FEC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 988C02133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4638D2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:24:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/ZYFKjr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OmQBp9cd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfFNNW7 (ORCPT
+        id S1728062AbfFNNYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:22:59 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38005 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727737AbfFNNW6 (ORCPT
+        Fri, 14 Jun 2019 09:24:04 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39856 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727787AbfFNNYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:22:58 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s15so2323088wmj.3;
-        Fri, 14 Jun 2019 06:22:55 -0700 (PDT)
+        Fri, 14 Jun 2019 09:24:04 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x4so2536815wrt.6
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:24:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ySmWvTMy24JYMEY2fm0WrThoqAo/IopZvxmjJBqJZKs=;
-        b=U/ZYFKjryZbd5Pvj2EN9qdY2Q/DJOV9rgtn/doU6na1X5BrtZ2+CQ4JGoPnvcNJthN
-         eAVTvwzM0t+a6d+rz3SKoHyQwnQqbPBPjoG19lcpgxtGuBkf5s2JGByIOdRahZCiynfr
-         nrsiRSwKGVmDKO8gCVh7lOVqTfkffwBnfM6qYVaqffiyyEcZxNRR27O9MBvypbhU93LK
-         GBNXArMzs413uRIPwy3bQJ9ks7BN9kzjkK9mE44s56Ro3SCRGEX2LlBF+lqcJlld44s5
-         LvXPX8HUxYeAOP65mb0EyLT2X0d87aTWAWmJhMY7XZcq11YorGwYfcfJMp+ITzVdHAfz
-         jGGg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tWjSiEtdMO12OoUCtL1vHglcHoug/gXBV+OlmolHQRY=;
+        b=OmQBp9cdMxiYMKC7DBZXYCLvxIKQrlLPcAjj/mfYJ1TovAdeKZLYNKY8Nf5g7JfmNm
+         H7ynExTFF9qmk5kYuZUrLMFID0DF5jXarU9D9C2Iw7EKKiunk/dv397VC868NTGR7iET
+         rUF7f7HF4Jf09qDukf7bvCLtD49gFKXRtoueEFc9L1+hGSetQizBACUs1NAfBgIWPhzF
+         N/8nuqMafjmaz0F7lB9pcwVGpI+viPDDCg+dHG2WSQc1VLOUPOrsvfxqSO8OhXqnsUh2
+         6nTy7xTKzd+PFd4PXJv3B4h6APUyN06f8/kkpkPoCNikj16bknsyrhp7YRDqTId2kKBi
+         yXMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ySmWvTMy24JYMEY2fm0WrThoqAo/IopZvxmjJBqJZKs=;
-        b=WvBe7TiiEh6vRzlWULKvsgTlv19sascK/s/slNe4FxScofWSuepH8R+tUELJZpgF3l
-         WCInDXU1L6Mw8VdHNxUOIMPam+7wyTDKwaAgCgA7d0mUKhBcW8ogGGc7il+t68ypeNCN
-         YmxfnTxbr8vc1cTq/RPsl9nRaIioc3oHUM49HHgL+evM/vH2ZM0psr57w/vOOEyGq91P
-         gBvQYSNawDKVDixUlRpGu8+D6TRIWddKA2YXGwROJmHz8RQsqiW2fLASsCkyQy64wQAX
-         1kSepxDiUwT+JAyPL8JQSyymutkcmuJR3HfVwbkv81sK9mmE8IeE+sbiHgyC06vnjGGM
-         vMyA==
-X-Gm-Message-State: APjAAAU2llACIDHyfsDKYMP8xVvP5KmA5c3qwmztfMJ5L1UDp0y0S0Pv
-        wwQamIy1nuEH/Ff6DEBmSpi6VCgj
-X-Google-Smtp-Source: APXvYqzxbMKSDsq5jqg0ihigtY5gH+Ed50D7d0BUG542gKPZJB7z8t4zcB1xzmvSqbdISBkp4vyW3w==
-X-Received: by 2002:a1c:c305:: with SMTP id t5mr7812376wmf.163.1560518574909;
-        Fri, 14 Jun 2019 06:22:54 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id z5sm2735022wrh.16.2019.06.14.06.22.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 06:22:54 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 15:22:53 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] clocksource: tegra: Use rating when registering
- clock source
-Message-ID: <20190614132253.GE15526@ulmo>
-References: <20190614104747.19712-1-thierry.reding@gmail.com>
- <8ff5d2da-907e-611c-ec82-bbe50197c2f4@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tWjSiEtdMO12OoUCtL1vHglcHoug/gXBV+OlmolHQRY=;
+        b=M69J6SxjwIVCGlLoGn5GukulMnFAANcKCuQct6knvZtV9fMUX80Nzk/xO6q7e7yu9T
+         GZ6712bCY4HtiaTSpx3puFgsgqs6m8cFeoQRhimqzkQrnKwQ6yenlfkPJ1bX798qlpXf
+         EEhacLWoKu6EbtrXY5w982MCepepooJ80Pqs51hmgiCfmDj0DwbWEe5MCj73rM2wvdca
+         tN/REvwrhjpr1EFgLSSj6jyIhN8weOnB+vSOnx28zo74ApCicbJUxKvDPFZdmlouGqqT
+         UljqPMNJigOZ6I305hmc92WlQjyEvfT4G/rDPx4IBygff7HVX3bLg49pz0yQVoidX06G
+         iDPg==
+X-Gm-Message-State: APjAAAWruizCi8fRVC3M4XGS6ZNphCjdNQqzWRA8Q6TmTqh962XL4008
+        HfQESqa38JSrsInLvEZ+FXwnuuJmTwEQ6f2fM6kP
+X-Google-Smtp-Source: APXvYqzXlvfKtJ/LoBOlv3ZXoIzEEDMUzxMsdNZbc6a7gE9y3XvfZal6S/12iZGSKWEeg9fpflU8nW9EOJ/nkdzwz1E=
+X-Received: by 2002:adf:9d81:: with SMTP id p1mr15138460wre.294.1560518642613;
+ Fri, 14 Jun 2019 06:24:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="idY8LE8SD6/8DnRI"
-Content-Disposition: inline
-In-Reply-To: <8ff5d2da-907e-611c-ec82-bbe50197c2f4@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1560507893-42553-1-git-send-email-john.garry@huawei.com> <CAErSpo6jRVDaVvH+9XvzUoEUbHi9_6u+5PcVGVDAmre6Qd0WeQ@mail.gmail.com>
+In-Reply-To: <CAErSpo6jRVDaVvH+9XvzUoEUbHi9_6u+5PcVGVDAmre6Qd0WeQ@mail.gmail.com>
+From:   Bjorn Helgaas <bhelgaas@google.com>
+Date:   Fri, 14 Jun 2019 08:23:51 -0500
+Message-ID: <CAErSpo6qaMc1O7vgcuCwdDbe4QBcOw83wd7PbuUVS+7GDPgK9Q@mail.gmail.com>
+Subject: Re: [PATCH v2] bus: hisi_lpc: Don't use devm_kzalloc() to allocate
+ logical PIO range
+To:     John Garry <john.garry@huawei.com>
+Cc:     xuwei5@huawei.com, linuxarm@huawei.com, arm@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>,
+        "zhichang.yuan" <zhichang.yuan02@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[try another address for Zhichang; first one bounced]
 
---idY8LE8SD6/8DnRI
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jun 14, 2019 at 03:24:07PM +0300, Dmitry Osipenko wrote:
-> 14.06.2019 13:47, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > From: Thierry Reding <treding@nvidia.com>
-> >=20
-> > The rating is parameterized depending on SoC generation to make sure it
-> > takes precedence on implementations where the architected timer can't be
-> > used. This rating is already used for the clock event device. Use the
-> > same rating for the clock source to be consistent.
-> >=20
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+On Fri, Jun 14, 2019 at 8:20 AM Bjorn Helgaas <bhelgaas@google.com> wrote:
+>
+> [+cc Zhichang, logic_pio author]
+>
+> On Fri, Jun 14, 2019 at 5:26 AM John Garry <john.garry@huawei.com> wrote:
+> >
+> > If, after registering a logical PIO range, the driver probe later fails,
+> > the logical PIO range memory will be released automatically.
+> >
+> > This causes an issue, in that the logical PIO range is not unregistered
+> > (that is not supported) and the released range memory may be later
+> > referenced
+> >
+> > Allocate the logical PIO range with kzalloc() to avoid this potential
+> > issue.
+> >
+> > Fixes: adf38bb0b5956 ("HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings")
+> > Signed-off-by: John Garry <john.garry@huawei.com>
 > > ---
-> >  drivers/clocksource/timer-tegra.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/ti=
-mer-tegra.c
-> > index f6a8eb0d7322..e6608141cccb 100644
-> > --- a/drivers/clocksource/timer-tegra.c
-> > +++ b/drivers/clocksource/timer-tegra.c
-> > @@ -318,7 +318,7 @@ static int __init tegra_init_timer(struct device_no=
-de *np, bool tegra20,
-> >  	sched_clock_register(tegra_read_sched_clock, 32, TIMER_1MHz);
-> > =20
-> >  	ret =3D clocksource_mmio_init(timer_reg_base + TIMERUS_CNTR_1US,
-> > -				    "timer_us", TIMER_1MHz, 300, 32,
-> > +				    "timer_us", TIMER_1MHz, rating, 32,
-> >  				    clocksource_mmio_readl_up);
-> >  	if (ret)
-> >  		pr_err("failed to register clocksource: %d\n", ret);
-> >=20
->=20
-> Looks good. Although, could you please clarify whether arch-timer stops o=
-n T210 when CPU
-> enters deepest (powerdown) idle state? I'm starting to lose track a bit a=
-lready. Because
-> if arch-timer stops in the deepest idle state, then it's a bit odd that J=
-oseph didn't add
-> the clocksource for T210 in the first place and v5.1 probably shouldn't w=
-ork well because
-> of that already.
-
-Yes, the architected timer doesn't work across an SC7 (which is what the
-deepest idle state is called on Tegra210) transition, hence why we can't
-use it as a suspend clocksource. I actually sent out a patch to do that,
-earlier.
-
-And yes, it's entirely possible that v5.1 doesn't work in this regard,
-but we're not noticing that because we don't have suspend/resume support
-for Tegra210 anyway. There are a couple of missing pieces that we need
-in order to make it work.
-
-This change in particular is only going to affect the CPU idle state
-(CC7). Since the architected timer doesn't survive that either, we need
-the Tegra timer to be preferred over the architected timer for normal
-operation.
-
-All of these issues go away on Tegra186 and later, where the architected
-timer is in an always-on partition and has a PLL that remains on during
-SC7 (and CC7).
-
-Thierry
-
---idY8LE8SD6/8DnRI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Dn6kACgkQ3SOs138+
-s6GWiBAAkYEeolDw2tllrVQFDf/ZmeLxHHy6pAh9DsxdalcYjpX8Twg1q3rUnVut
-beWoisjLjgGnPeEDpATd8Gth0SK4dF65dVsNlhzJR/o+VhZ60XWrCQTvGWtnK0p+
-IPfLDwHebxymb/d7iYfNde8mWXSvT4kFjcgx0g3H3c3lVRlWgTqqCmzMuV2EbbUT
-fspE5pSsn5dce8E81ncb98medX7BNEHPZId0QsCnebZG6d2O5VWNkvn2fJSPMvor
-SckKEY4E4zmth55mSxmJoIW3oZlwRpU34DvhyxocyfvLxEu7dz4co4w59oFPInpc
-QUXifr71D0IcwUqvT9I8Q+AAsXMuhG01zBv7s/VmHrN5t6t02QBE0OScHHkoaiWI
-jxcpKOJsfMbVt7z4ot7jcq7TbXPANsisZjBlYPbDtVzx4qfRd0qhrkuvI0ha3Abs
-+0x9aLCwhMmS5JqHPCnkcD2+1tviLwqL5D6oRMWFUBDQbRsYD312sdSQx0cNlImU
-tPYrSusbKmoh9gJKeRIMgHkA2kITLeM7VqwQOWNsow9fF2BJ6yjU99+ynfZN+qKs
-1rJgZkkV2XE7yCMemQeZaNSHguL+7hdk2vAWdxWEwXjCLruv5iN4k6U+UOMPStJS
-C1Nbqt6h9/NjkT/6iSKsZhW3lx/nMqnYEJg6Nt+2G/hmJnsL+F0=
-=DrMZ
------END PGP SIGNATURE-----
-
---idY8LE8SD6/8DnRI--
+> >
+> > Change to v1:
+> > - add comment, as advised by Joe Perches
+> >
+> > diff --git a/drivers/bus/hisi_lpc.c b/drivers/bus/hisi_lpc.c
+> > index 19d7b6ff2f17..5f0130a693fe 100644
+> > --- a/drivers/bus/hisi_lpc.c
+> > +++ b/drivers/bus/hisi_lpc.c
+> > @@ -599,7 +599,8 @@ static int hisi_lpc_probe(struct platform_device *pdev)
+> >         if (IS_ERR(lpcdev->membase))
+> >                 return PTR_ERR(lpcdev->membase);
+> >
+> > -       range = devm_kzalloc(dev, sizeof(*range), GFP_KERNEL);
+> > +       /* Logical PIO may reference 'range' memory even if the probe fails */
+> > +       range = kzalloc(sizeof(*range), GFP_KERNEL);
+>
+> This doesn't feel like the correct way to fix this.  If the probe
+> fails, everything done by the probe should be undone, including the
+> allocation and registration of "range".  I don't know what the best
+> mechanism is, but I'm skeptical about this one.
+>
+> >         if (!range)
+> >                 return -ENOMEM;
+> >
+> > @@ -610,6 +611,7 @@ static int hisi_lpc_probe(struct platform_device *pdev)
+> >         ret = logic_pio_register_range(range);
+> >         if (ret) {
+> >                 dev_err(dev, "register IO range failed (%d)!\n", ret);
+> > +               kfree(range);
+> >                 return ret;
+> >         }
+> >         lpcdev->io_host = range;
+> > --
+> > 2.17.1
+> >
