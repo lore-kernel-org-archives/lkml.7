@@ -2,69 +2,88 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB643C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD236C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 983C52133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EDF52133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:11:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfFNHKj (ORCPT
+        id S1726329AbfFNHLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:10:39 -0400
-Received: from mail.thorsis.com ([92.198.35.195]:45998 "EHLO mail.thorsis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfFNHKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:10:39 -0400
-X-Greylist: delayed 486 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Jun 2019 03:10:38 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.thorsis.com (Postfix) with ESMTP id 9275A477B;
-        Fri, 14 Jun 2019 09:05:39 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
-Received: from mail.thorsis.com ([127.0.0.1])
-        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id n4hKxe5O_F5z; Fri, 14 Jun 2019 09:05:39 +0200 (CEST)
-Received: by mail.thorsis.com (Postfix, from userid 109)
-        id BE7913DD3; Fri, 14 Jun 2019 09:05:37 +0200 (CEST)
-From:   Alexander Dahl <ada@thorsis.com>
-To:     linux-leds@vger.kernel.org
-Cc:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/9] Multicolor Framework update
-Date:   Fri, 14 Jun 2019 09:02:23 +0200
-Message-ID: <55737098.K72IVJ5cDM@ada>
-In-Reply-To: <20190523190820.29375-1-dmurphy@ti.com>
-References: <20190523190820.29375-1-dmurphy@ti.com>
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Fri, 14 Jun 2019 03:11:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58006 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725837AbfFNHLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 03:11:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 76117B015;
+        Fri, 14 Jun 2019 07:11:41 +0000 (UTC)
+From:   Jiri Slaby <jslaby@suse.cz>
+To:     axboe@kernel.dk
+Cc:     linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        linux-ide@vger.kernel.org
+Subject: [RFC 1/3] ata: Documentation, fix function names
+Date:   Fri, 14 Jun 2019 09:11:38 +0200
+Message-Id: <20190614071140.6233-1-jslaby@suse.cz>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dan,
+ata_qc_prep no longer exists, there are ata_bmdma_qc_prep and
+ata_bmdma_dumb_qc_prep instead. And most drivers do not use them, so
+reword the paragraph.
 
-Am Donnerstag, 23. Mai 2019, 14:08:11 CEST schrieb Dan Murphy:
->   leds: multicolor: Add sysfs interface definition
->   dt: bindings: Add multicolor class dt bindings documention
->   documention: leds: Add multicolor class documentation
->   dt-bindings: leds: Add multicolor ID to the color ID  list
->   leds: Add multicolor ID to the color ID list
->   leds: multicolor: Introduce a multicolor class definition
->   dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
->   leds: lp50xx: Add the LP50XX family of the RGB LED driver
->   leds: Update the lp55xx to use the multi color framework
+ata_qc_issue_prot was renamed to ata_sff_qc_issue. ->tf_load is now
+->sff_tf_load. Fix them.
 
-While not having much experience with the implementation of the LED subsystem, 
-I've had a short look at those. Curious question: would it be possible to take 
-three gpio-leds and group those together to one multicolor-led? I know at 
-least one board, where things are wired up like this, see e.g. 
-at91-sama5d27_som1_ek.dts
+And fix spelling supercede -> supersede.
 
-Greets
-Alex
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-ide@vger.kernel.org
+---
+ Documentation/driver-api/libata.rst | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/driver-api/libata.rst b/Documentation/driver-api/libata.rst
+index 70e180e6b93d..c2ee38098e85 100644
+--- a/Documentation/driver-api/libata.rst
++++ b/Documentation/driver-api/libata.rst
+@@ -254,19 +254,19 @@ High-level taskfile hooks
+     int (*qc_issue) (struct ata_queued_cmd *qc);
+ 
+ 
+-Higher-level hooks, these two hooks can potentially supercede several of
++Higher-level hooks, these two hooks can potentially supersede several of
+ the above taskfile/DMA engine hooks. ``->qc_prep`` is called after the
+ buffers have been DMA-mapped, and is typically used to populate the
+-hardware's DMA scatter-gather table. Most drivers use the standard
+-:c:func:`ata_qc_prep` helper function, but more advanced drivers roll their
+-own.
++hardware's DMA scatter-gather table. Some drivers use the standard
++:c:func:`ata_bmdma_qc_prep` and :c:func:`ata_bmdma_dumb_qc_prep` helper
++functions, but more advanced drivers roll their own.
+ 
+ ``->qc_issue`` is used to make a command active, once the hardware and S/G
+ tables have been prepared. IDE BMDMA drivers use the helper function
+-:c:func:`ata_qc_issue_prot` for taskfile protocol-based dispatch. More
++:c:func:`ata_sff_qc_issue` for taskfile protocol-based dispatch. More
+ advanced drivers implement their own ``->qc_issue``.
+ 
+-:c:func:`ata_qc_issue_prot` calls ``->tf_load()``, ``->bmdma_setup()``, and
++:c:func:`ata_sff_qc_issue` calls ``->sff_tf_load()``, ``->bmdma_setup()``, and
+ ``->bmdma_start()`` as necessary to initiate a transfer.
+ 
+ Exception and probe handling (EH)
+-- 
+2.22.0
 
