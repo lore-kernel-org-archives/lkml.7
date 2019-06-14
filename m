@@ -2,68 +2,107 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DF5C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3F4C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938212177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93D562175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:32:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="atDCfPz3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbfFNPbn (ORCPT
+        id S1726637AbfFNPcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:31:43 -0400
-Received: from mga02.intel.com ([134.134.136.20]:45628 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbfFNPbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:31:42 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 08:31:41 -0700
-X-ExtLoop1: 1
-Received: from mdumitrx-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.32.245])
-  by fmsmga006.fm.intel.com with ESMTP; 14 Jun 2019 08:31:37 -0700
-Date:   Fri, 14 Jun 2019 18:31:36 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Andrey Pronin <apronin@chromium.org>,
-        linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: Re: [PATCH 7/8] tpm: add sysfs attributes for tpm2
-Message-ID: <20190614153136.GF11241@linux.intel.com>
-References: <20190613180931.65445-1-swboyd@chromium.org>
- <20190613180931.65445-8-swboyd@chromium.org>
+        Fri, 14 Jun 2019 11:32:08 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44318 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfFNPcH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 11:32:07 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k18so2801171ljc.11;
+        Fri, 14 Jun 2019 08:32:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GcqXQfqn90yOgwxpieyhK7oJ0+aumlHQ0634Nn5J4Kw=;
+        b=atDCfPz3yHekwYhj4lxblgLO9VqoIo8enhnrXl5IOQjptNffqOHulgaokeINr9ij6A
+         zeXQ0m1S0Ioopw66Vw1JSh/45sSBGILm0jbXuDvjf7MwZdPWA5fvv2rA3XFacLDgQhJ2
+         C3xadlyjmRIFt688FtHLKr8TzOxs+nGQbZe992YqytLyIBoHzCD6lLvrmW+jnTPFh8NP
+         HtDjHwtkq+P8oxkppl24onW5QZujZX8sSh+5d/IFQdXlznax5Oj3V+e9+vXlxJ5v7jC2
+         NfZz6zTKubVwwRDLy87Ek/7rjWx+womQPUGpLw4jRPikrr6wtrR1ui0+q3KYCXLw49Lf
+         uAjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GcqXQfqn90yOgwxpieyhK7oJ0+aumlHQ0634Nn5J4Kw=;
+        b=mIACwlLq4FmNied0gM3TD/IR5XO8z/MFvh5CSwphJniQ2WGgha7bJGT/qCGdLqoaur
+         F2/eO0Ybujr2ncA95TbzJthves2pidL9x6sqSBTDnBDlLgg8eCi/2NEXLrxpULnh+WkT
+         cJEIV9ASxwPuJIE3EyjXfscHJvi7BSqRD7IKNRdagW2TsKGuW7Arkd9WdmnNd0yMq5N0
+         q4zjbLiroKHO+OxGsRp2grY6WafJW6AswaZTFGqoaVBNe9ge6U5EzXuvp/SwvOrjqk4/
+         DYC1Obj8TURMsojd0RKF/n4F4rcusyGnkg6cjkSn4gj0fwcbMwmTDdYOj01Xdy2Z0ZV8
+         91Hg==
+X-Gm-Message-State: APjAAAWDFJh2YESWWV4JIWUEVWRAUu9EdpYezmzyd3D1qPHHn4hGh4ZP
+        oCHbWcTDlwww4Vdmnj7ZV9PTNcTYcXoJzXnmFTI=
+X-Google-Smtp-Source: APXvYqy2q4R1NoVMU3Bs13d6spTKthxrJFzD1KeNaQlccuA4qR72SixDpeARjEfKwq3cVtYZmI6m5Ube96wir0uXDWo=
+X-Received: by 2002:a2e:86d1:: with SMTP id n17mr28267616ljj.58.1560526325382;
+ Fri, 14 Jun 2019 08:32:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613180931.65445-8-swboyd@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1560431531.git.jpoimboe@redhat.com> <4f536ec4facda97406273a22a4c2677f7cb22148.1560431531.git.jpoimboe@redhat.com>
+ <20190613220054.tmonrgfdeie2kl74@ast-mbp.dhcp.thefacebook.com>
+ <20190614013051.6gnwduy4dsygbamj@treble> <20190614014244.st7fbr6areazmyrb@ast-mbp.dhcp.thefacebook.com>
+ <20190614015848.todgfogryjn573nd@treble> <20190614022848.ly4vlgsz6fa4bcbl@treble>
+ <20190614045037.zinbi2sivthcfrtg@treble> <20190614060006.na6nfl6shawsyj3i@ast-mbp.dhcp.thefacebook.com>
+ <20190614133004.gopjz64vbqmbbzqn@treble>
+In-Reply-To: <20190614133004.gopjz64vbqmbbzqn@treble>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Fri, 14 Jun 2019 08:31:53 -0700
+Message-ID: <CAADnVQLp+Eq3fz6u+Q3_2UxDwdn1hKESwS5O856BabJE4wfPJw@mail.gmail.com>
+Subject: Re: [PATCH 7/9] x86/unwind/orc: Fall back to using frame pointers for
+ generated code
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:09:30AM -0700, Stephen Boyd wrote:
-> From: Andrey Pronin <apronin@chromium.org>
-> 
-> Add sysfs attributes in TPM2.0 case for:
->  - TPM_PT_PERMANENT flags
->  - TPM_PT_STARTUP_CLEAR flags
->  - lockout-related properties
-> 
-> Signed-off-by: Andrey Pronin <apronin@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
+On Fri, Jun 14, 2019 at 6:34 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> On Thu, Jun 13, 2019 at 11:00:09PM -0700, Alexei Starovoitov wrote:
+> > > +   if (src_reg == BPF_REG_FP) {
+> > > +           /*
+> > > +            * If the value was copied from RBP (real frame pointer),
+> > > +            * adjust it to the BPF program's frame pointer value.
+> > > +            *
+> > > +            * add dst, -40
+> > > +            */
+> > > +           EMIT4(add_1mod(0x48, dst_reg), 0x83, add_1reg(0xC0, dst_reg),
+> > > +                 0xD8);
+> > > +   }
+> > > +
+> >
+> > That won't work. Any register can point to a stack.
+>
+> Right, but if the stack pointer comes from BPF_REG_FP then won't the
+> above correct it?  Then if the pointer gets passed around to other
+> registers it will have the correct value.  Or did I miss your point?
 
-You can use /dev/tpm0 for this from user space.
-
-/Jarkko
+At the beginning of the program frame pointer is bpf_reg_fp,
+but later it can be in any register. It can be spilled into stack.
+Some math done on it and that adjusted pointer passed into
+another jited function.
+It's perfectly fine for one bpf program to modify stack of
+another bpf program. The verifier checks the safety bounds, etc.
