@@ -2,222 +2,91 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AE4C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DF8C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85D320866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F13AF20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:28:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbfFNO2Q (ORCPT
+        id S1728428AbfFNO22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:28:16 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:59679 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728074AbfFNO2Q (ORCPT
+        Fri, 14 Jun 2019 10:28:28 -0400
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:39040 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728074AbfFNO22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:28:16 -0400
-Received: from localhost (aaubervilliers-681-1-81-150.w90-88.abo.wanadoo.fr [90.88.23.150])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 853B724001B;
-        Fri, 14 Jun 2019 14:28:11 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 16:28:10 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Chen-Yu Tsai <wens@csie.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bhushan Shah <bshah@mykolab.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?utf-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [PATCH v10 02/11] drm/sun4i: dsi: Update start value in video
- start delay
-Message-ID: <20190614142810.hbdaikbk7immwzc3@flea>
-References: <20190520090318.27570-1-jagan@amarulasolutions.com>
- <20190520090318.27570-3-jagan@amarulasolutions.com>
- <20190523203754.2lhi37veeh4rwiy3@flea>
- <CAMty3ZBvJ-7Ndq7NSfNMSFX=8hjYVhYsdA=nfyw5mMxOf6vW1Q@mail.gmail.com>
- <20190530104242.d6ktwv7lip27vc3x@flea>
- <CAMty3ZCwS4BS5Lig4O8G3dE3RbJu6m1Ux3-ZS4rT-cPEAjXSFw@mail.gmail.com>
+        Fri, 14 Jun 2019 10:28:28 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 263333F418;
+        Fri, 14 Jun 2019 16:28:20 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id DlDNnNT6usmD; Fri, 14 Jun 2019 16:28:19 +0200 (CEST)
+Received: from localhost (h-41-252.A163.priv.bahnhof.se [46.59.41.252])
+        (Authenticated sender: mb547485)
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 523023F348;
+        Fri, 14 Jun 2019 16:28:18 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 16:28:16 +0200
+From:   Fredrik Noring <noring@nocrew.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     laurentiu.tudor@nxp.com, hch@lst.de, stern@rowland.harvard.edu,
+        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        marex@denx.de, leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
+        robin.murphy@arm.com, JuergenUrban@gmx.de
+Subject: Re: [PATCH v7 3/5] usb: host: ohci-sm501: init genalloc for local
+ memory
+Message-ID: <20190614142816.GA2574@sx9>
+References: <20190529102843.13174-1-laurentiu.tudor@nxp.com>
+ <20190529102843.13174-4-laurentiu.tudor@nxp.com>
+ <20190605214622.GA22254@roeck-us.net>
+ <20190611133223.GA30054@roeck-us.net>
+ <20190611172654.GA2602@sx9>
+ <20190611190343.GA18459@roeck-us.net>
+ <20190613134033.GA2489@sx9>
+ <bdfd2178-9e3c-dc15-6aa1-ec1f1fbcb191@roeck-us.net>
+ <20190613153414.GA909@sx9>
+ <3f2164cd-7655-b7cc-ec57-d8751886728c@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="a3khzv2iihcafqjz"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAMty3ZCwS4BS5Lig4O8G3dE3RbJu6m1Ux3-ZS4rT-cPEAjXSFw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <3f2164cd-7655-b7cc-ec57-d8751886728c@roeck-us.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Guenter,
 
---a3khzv2iihcafqjz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> You are right, the patch below fixes the problem. I did not get the warning
+> with order==5. Nevertheless, I also tested with order==8; that works as well.
+> 
+> Thanks a lot for tracking this down!
 
-On Thu, Jun 13, 2019 at 01:34:04PM +0530, Jagan Teki wrote:
-> On Fri, May 31, 2019 at 12:23 AM Maxime Ripard
-> <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Fri, May 24, 2019 at 03:55:42PM +0530, Jagan Teki wrote:
-> > > On Fri, May 24, 2019 at 2:07 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > >
-> > > > On Mon, May 20, 2019 at 02:33:09PM +0530, Jagan Teki wrote:
-> > > > > start value in video start delay computation done in below commit
-> > > > > is as per the legacy bsp drivers/video/sunxi/legacy..
-> > > > > "drm/sun4i: dsi: Change the start delay calculation"
-> > > > > (sha1: da676c6aa6413d59ab0a80c97bbc273025e640b2)
-> > > > >
-> > > > > This existing start delay computation gives start value of 35,
-> > > > > for "bananapi,s070wv20-ct16" panel timings which indeed trigger
-> > > > > panel flip_done timed out as:
-> > > > >
-> > > > >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
-> > > > >  [CRTC:46:crtc-0] vblank wait timed out
-> > > > >  Modules linked in:
-> > > > >  CPU: 0 PID: 31 Comm: kworker/0:1 Tainted: G        W         5.1.0-next-20190514-00025-gf928bc7cc146 #15
-> > > > >  Hardware name: Allwinner sun8i Family
-> > > > >  Workqueue: events deferred_probe_work_func
-> > > > >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
-> > > > >  [<c010b76c>] (show_stack) from [<c0688c90>] (dump_stack+0x84/0x98)
-> > > > >  [<c0688c90>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
-> > > > >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
-> > > > >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
-> > > > >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
-> > > > >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
-> > > > >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
-> > > > >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
-> > > > >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c0411cb0>] (drm_fb_helper_pan_display+0xac/0x1d0)
-> > > > >  [<c0411cb0>] (drm_fb_helper_pan_display) from [<c03a4e84>] (fb_pan_display+0xcc/0x134)
-> > > > >  [<c03a4e84>] (fb_pan_display) from [<c03b1214>] (bit_update_start+0x14/0x30)
-> > > > >  [<c03b1214>] (bit_update_start) from [<c03afe94>] (fbcon_switch+0x3d8/0x4e0)
-> > > > >  [<c03afe94>] (fbcon_switch) from [<c03ec930>] (redraw_screen+0x174/0x238)
-> > > > >  [<c03ec930>] (redraw_screen) from [<c03aceb4>] (fbcon_prepare_logo+0x3c4/0x400)
-> > > > >  [<c03aceb4>] (fbcon_prepare_logo) from [<c03ad2b8>] (fbcon_init+0x3c8/0x5ac)
-> > > > >  [<c03ad2b8>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
-> > > > >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
-> > > > >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
-> > > > >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
-> > > > >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
-> > > > >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
-> > > > >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
-> > > > >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
-> > > > >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
-> > > > >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
-> > > > >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
-> > > > >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
-> > > > >  [<c043f060>] (sun4i_drv_bind) from [<c044b5b0>] (try_to_bring_up_master+0x164/0x1a0)
-> > > > >  [<c044b5b0>] (try_to_bring_up_master) from [<c044b680>] (__component_add+0x94/0x140)
-> > > > >  [<c044b680>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
-> > > > >  [<c0445e1c>] (sun6i_dsi_probe) from [<c0452f0c>] (platform_drv_probe+0x48/0x9c)
-> > > > >  [<c0452f0c>] (platform_drv_probe) from [<c04512e4>] (really_probe+0x1dc/0x2c8)
-> > > > >  [<c04512e4>] (really_probe) from [<c0451530>] (driver_probe_device+0x60/0x160)
-> > > > >  [<c0451530>] (driver_probe_device) from [<c044f7bc>] (bus_for_each_drv+0x74/0xb8)
-> > > > >  [<c044f7bc>] (bus_for_each_drv) from [<c0451094>] (__device_attach+0xd0/0x13c)
-> > > > >  [<c0451094>] (__device_attach) from [<c045048c>] (bus_probe_device+0x84/0x8c)
-> > > > >  [<c045048c>] (bus_probe_device) from [<c0450918>] (deferred_probe_work_func+0x64/0x90)
-> > > > >  [<c0450918>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
-> > > > >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
-> > > > >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
-> > > > >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-> > > > >  Exception stack(0xde539fb0 to 0xde539ff8)
-> > > > >  9fa0:                                     00000000 00000000 00000000 00000000
-> > > > >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> > > > >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > > > >  ---[ end trace 755e10f62b83f396 ]---
-> > > > >  Console: switching to colour frame buffer device 100x30
-> > > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
-> > > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
-> > > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
-> > > > >
-> > > > > But the expected start delay value is 1 which is confirmed from
-> > > > > new bsp [2].
-> > > >
-> > > > If you're saying that the "legacy" link (second one) is the new BSP.
-> > >
-> > > Will update, thanks.
-> > >
-> > > >
-> > > > > The important and unclear note on legacy and new bsp codes [1] [2]
-> > > > > is both use similar start computation initially but it later reassign
-> > > > > it to 1 in new bsp.
-> > > >
-> > > > Then start_delay is never reassigned to 1 in that link, and is clamped
-> > > > between 8 and 100 as the code that you are removing is doing.
-> > >
-> > > Please see the link one more please
-> > > https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/lowlevel_sun8iw5/de_dsi.c#L807
-> > >
-> > > >
-> > > > > Unfortunately we don't have any evidence or documentation for this
-> > > > > reassignment to 1 in new bsp, but it is working with all supported
-> > > > > panels in A33, A64.
-> > > >
-> > > > No, it's not. That was added to fix a panel that is supported today.
-> > >
-> > > No, I have see this in A33, A64. and these are controller drivers
-> > > right, if it panel fix and it should be part of panel driver isn't
-> > > it?
-> >
-> > I'm not sure to follow that argument. You're submitting that fix to
-> > allow other panels to work, right? So surely, some issues that can be
-> > found using a given panel might not be solely fixed in the panel driver.
->
-> I'm not sure I understand this. I have been verifying different panels
-> to check across. and this change literally in BSP and the BSP code is
-> using this based on the logs confirmation. all the logs and working
-> conditions shows that the fix would required in dsi.
+You are welcome, and thanks for your report!
 
-You were saying that your fix was working with all supported panels in
-A33, A64. That's simply not true, since at least one of mine will be
-broken by this.
+This patch series needs some redesign, I think, because the problem you
+reported would come back if one attaches two or more devices to the
+system. Local memory devices are typically memory constrained and so it
+has to be used efficiently. I believe there are four kinds of alignments
+to consider when memory is allocated in the pool:
 
-You can say that it fixes all the panels *you* have, but it's
-certainly not all of them.
+	- 256 bytes for the host controller communication area (HCCA);
+	- 32 bytes for the general transfer descriptors (TDs);
+	- 16 bytes for the endpoint descriptors (EDs);
+	- buffer alignment for data.
 
-> > > We can even see the same in pin64 longsleep kernel and others.
-> > >
-> > > https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/lowlevel_sun8iw5/de_dsi.c#L807
-> > > https://github.com/longsleep/linux-pine64/blob/pine64-hacks-1.2/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L730
-> >
-> > Yeah, and both of these have the legacy driver part with the clamping
-> > too.
->
-> Yes, both legacy has clamping, but not using.
+Using the greatest common alignment for all is clearly an undesirable
+regression. The TDs and EDs could have their own subpools, perhaps, as
+they are abundant. There is only one instance of the HCCA.
 
-See the links above, they are being used.
+As mentioned, the USB subsystem could be improved to properly report
+allocation failures, and the logic to retry allocations could be more
+efficient by avoiding polling loops.
 
-> they used it in new version driver which I'm referring above.
-
-I'm sorry, but I just don't get what you're saying. The links
-mentionned above are clearly showing that it's being used, while the
-other, !legacy, driver doesn't have them anymore. So it seems to be
-exactly the opposite of what you're saying.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---a3khzv2iihcafqjz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQOu+gAKCRDj7w1vZxhR
-xeICAP9bscO2OzZpeTsX1UHuejD6i26icTCf2TtPbIuLT/CCWwD+PGyv7+pgLVUc
-xsARYab0Evb5q3kHfDemst50OYC1kAo=
-=dvqQ
------END PGP SIGNATURE-----
-
---a3khzv2iihcafqjz--
+Fredrik
