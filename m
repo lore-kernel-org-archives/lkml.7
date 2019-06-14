@@ -2,148 +2,126 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405B6C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EA4C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9E820866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E0920866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbfFNNiW (ORCPT
+        id S1728320AbfFNNip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:38:22 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:38041 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727808AbfFNNiW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:38:22 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hbmOy-0005NV-SL; Fri, 14 Jun 2019 15:37:57 +0200
-Date:   Fri, 14 Jun 2019 15:37:56 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dmitry Safonov <dima@arista.com>
-cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv4 06/28] timerfd/timens: Take into account ns clock
- offsets
-In-Reply-To: <20190612192628.23797-7-dima@arista.com>
-Message-ID: <alpine.DEB.2.21.1906141534090.1722@nanos.tec.linutronix.de>
-References: <20190612192628.23797-1-dima@arista.com> <20190612192628.23797-7-dima@arista.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 14 Jun 2019 09:38:45 -0400
+Received: from mga14.intel.com ([192.55.52.115]:37599 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727808AbfFNNip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:38:45 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 06:38:44 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga003.jf.intel.com with ESMTP; 14 Jun 2019 06:38:41 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hbmPg-0007Ry-BM; Fri, 14 Jun 2019 16:38:40 +0300
+Date:   Fri, 14 Jun 2019 16:38:40 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Jack Ping CHNG <jack.ping.chng@linux.intel.com>
+Cc:     kernel-janitors@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Enrico Weigelt <lkml@metux.net>,
+        Himanshu Jha <himanshujha199640@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] drivers: Provide devm_platform_ioremap_resource_byname()
+Message-ID: <20190614133840.GN9224@smile.fi.intel.com>
+References: <39e46643-d799-94b7-4aa5-d6d99d738f99@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <39e46643-d799-94b7-4aa5-d6d99d738f99@web.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Jun 2019, Dmitry Safonov wrote:
++Cc: Jack Ping, who did internally the same
+
+On Fri, Jun 14, 2019 at 03:26:25PM +0200, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Fri, 14 Jun 2019 15:15:14 +0200
+> 
+> The functions “platform_get_resource_byname” and “devm_ioremap_resource”
+> are called together in 181 source files.
+> This implementation detail can be determined also with the help
+> of the semantic patch language (Coccinelle software).
+> 
+> Wrap these two calls into another helper function.
+> Thus a local variable does not need to be declared for a resource
+> structure pointer before and a redundant argument can be omitted
+> for the resource type.
+
+This one makes sense.
+Though I'm not sure Greg will see your message.
+
+Rafael, maybe you can apply this one?
+
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 > ---
->  fs/timerfd.c                   |  3 +++
->  include/linux/time_namespace.h | 18 ++++++++++++++++++
->  kernel/time_namespace.c        | 27 +++++++++++++++++++++++++++
->  3 files changed, 48 insertions(+)
-
-Again, please split that into:
-
-   1) Introduce the new function
-
-   2) Make use of it
-
-> diff --git a/fs/timerfd.c b/fs/timerfd.c
-> index 6a6fc8aa1de7..9b0c2f65e7e8 100644
-> --- a/fs/timerfd.c
-> +++ b/fs/timerfd.c
-> @@ -26,6 +26,7 @@
->  #include <linux/syscalls.h>
->  #include <linux/compat.h>
->  #include <linux/rcupdate.h>
-> +#include <linux/time_namespace.h>
->  
->  struct timerfd_ctx {
->  	union {
-> @@ -196,6 +197,8 @@ static int timerfd_setup(struct timerfd_ctx *ctx, int flags,
->  	}
->  
->  	if (texp != 0) {
-> +		if (flags & TFD_TIMER_ABSTIME)
-> +			texp = timens_ktime_to_host(clockid, texp);
->  		if (isalarm(ctx)) {
->  			if (flags & TFD_TIMER_ABSTIME)
->  				alarm_start(&ctx->t.alarm, texp);
-> diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
-> index 1dda8af6b9fe..d32b55fad953 100644
-> --- a/include/linux/time_namespace.h
-> +++ b/include/linux/time_namespace.h
-> @@ -56,6 +56,19 @@ static inline void timens_add_boottime(struct timespec64 *ts)
->                  *ts = timespec64_add(*ts, ns_offsets->boottime);
+>  drivers/base/platform.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index 4d1729853d1a..c1f19a479dd7 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -97,6 +97,24 @@ void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev,
+>  	return devm_ioremap_resource(&pdev->dev, res);
 >  }
->  
-> +ktime_t do_timens_ktime_to_host(clockid_t clockid, ktime_t tim,
-> +				struct timens_offsets *offsets);
-> +static inline ktime_t timens_ktime_to_host(clockid_t clockid, ktime_t tim)
+>  EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource);
+> +
+> +/**
+> + * devm_platform_ioremap_resource_byname
+> + * Call devm_ioremap_resource() for a platform device
+> + *
+> + * @pdev: platform device to use both for memory resource lookup as well as
+> + *        resource management
+> + * @name: resource name
+> + */
+> +void __iomem *devm_platform_ioremap_resource_byname(struct platform_device *pdev,
+> +						    const char *name)
 > +{
-> +	struct timens_offsets *offsets = current->nsproxy->time_ns->offsets;
+> +	struct resource *res;
 > +
-> +	if (!offsets) /* fast-path for the root time namespace */
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+> +	return devm_ioremap_resource(&pdev->dev, res);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource_byname);
+>  #endif /* CONFIG_HAS_IOMEM */
+> 
+>  /**
+> --
+> 2.22.0
+> 
 
-Can you please avoid tail comments. They break the reading flow. Aside of
-that I don't see the value of documenting the obvious.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> +ktime_t do_timens_ktime_to_host(clockid_t clockid, ktime_t tim, struct timens_offsets *ns_offsets)
 
-Please line break the arguments
-
-ktime_t do_timens_ktime_to_host(clockid_t clockid, ktime_t tim,
-				struct timens_offsets *ns_offsets)
-
-> +{
-> +	ktime_t koff;
-> +
-> +	switch (clockid) {
-> +	case CLOCK_MONOTONIC:
-> +		koff = timespec64_to_ktime(ns_offsets->monotonic);
-> +		break;
-> +	case CLOCK_BOOTTIME:
-> +	case CLOCK_BOOTTIME_ALARM:
-> +		koff = timespec64_to_ktime(ns_offsets->boottime);
-> +		break;
-> +	default:
-> +		return tim;
-> +	}
-> +
-> +	/* tim - off has to be in [0, KTIME_MAX) */
-
-Please be more elaborate why the below conditions can happen at all.
-
-> +	if (tim < koff)
-> +		tim = 0;
-> +	else if (KTIME_MAX - tim < -koff)
-> +		tim = KTIME_MAX;
-> +	else
-> +		tim = ktime_sub(tim, koff);
-
-Thanks,
-
-	tglx
