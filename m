@@ -2,145 +2,97 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AEBC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 770D6C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F762177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9872177E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:16:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LCEDsL+9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="odTDkmau"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725993AbfFNSQP (ORCPT
+        id S1726083AbfFNSQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:16:15 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:40891 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbfFNSQP (ORCPT
+        Fri, 14 Jun 2019 14:16:20 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36384 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbfFNSQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:16:15 -0400
-Received: by mail-pf1-f201.google.com with SMTP id z1so2336848pfb.7
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 11:16:15 -0700 (PDT)
+        Fri, 14 Jun 2019 14:16:20 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f21so1994857pgi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 11:16:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=b6DNMW7ju1QuwEJuOCkPftjguZ67YDFfeRj9euEw5FE=;
-        b=LCEDsL+9tDZLeLXZyYDgO0JsGOheHPdb/buNpwapdVddiULtuK0nXPOeoapk2O9gkc
-         G0sDsCwj2k2OI6hJF2dsHVyqSlb+jA7LDSKjohVLMRozw/am+gzYMKgWhRwjaAcSyuXD
-         YvkOvIbImpSyMq8RncfaghH5wqZXyRXGFy/x+yNoyZn1LQpPKpJTiwj5Xao/bp/9zD09
-         2eywAq5r+jzWCNtCvjJRL7Us7KLhM4xuxerC5FNdyLQn37DSgJpQnvFtN3oWsBzhoFKi
-         6n2bBQWsr+TGzssntlByzgT0PmsmiPKd/8gmgUeNabokjzvgrlRy/xGBrgHSTbu3TzqI
-         1C5g==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PbI2AaJV5OGbUvXuaZ8xvq+0MioqIy25hz3zwSGI/6I=;
+        b=odTDkmauhKoEk4o2w9rUx7xDRZL74iqtmVgU8sRqDb9hGIIRB+hByQ77yPQaHA3sWr
+         nEpafjGXO1rDrrX7axNprXRtBDBp+8Mnyd+mUJ/gQFhAhxVQPxkUZR8SQALKM5Qm1p9e
+         SzE4bc9/hmNKtW6tCcMRK33iBeEB8W5Is1XGsfm1/PfsTEVebo7Ov3SGS4GwRVDxwFUD
+         mV0d0uKD/afxvsfh4sEYSozzhL7N3TdcmzKBpbDQ9FLtCkkmi/JWT+8fXaIw4D7McVkw
+         immnUy+JAhYUeiT6vR9+KAmJZvl20FUodTy/G1usu7tABeCwOUEup2bEk7sQN5uJIdAj
+         kDbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=b6DNMW7ju1QuwEJuOCkPftjguZ67YDFfeRj9euEw5FE=;
-        b=ZjwsKh742bEZjezPpxb7EeYZBt15wjefXZLC9wfW4FvSrRpzilom62He/SSCwJs1oH
-         Si/sWqvShA4ha5r8LK1wcBpztdDiA1HKE9wmIPNZ2dc9vdk5JkT16YUeMseKyjOwMjDr
-         Bvwn+a+jmocouUxhWBP/TKRCtwy8fF0akZBSUoSSEXhyrm1jl07Ap/xL/Epj829DzQjX
-         HQ0f2+MUXgFSJ5prIZBFPFTaLV4UTdB6JqqwRX7DRowBwqsCmu1iDGpqTDGFquAxIPt1
-         04ExEwJmo3nMj2y0wZ0kWj1dRf2BuPSkefXmz0Ryrs3J+d0BmRwUG6NJzVjmIQbi1UfW
-         DYVw==
-X-Gm-Message-State: APjAAAViNgwTPZkOAZ0UuyQv78CkmMlsZxPxutKuj+1B18pso6PZfUQR
-        o/Sq+DiquqCzH4k0BUndb+PyPdXYzQ==
-X-Google-Smtp-Source: APXvYqz+I33l4X0PevCoKdBcBkV/EBnsh8yHM+WYyAtKrJaIyDH6vB/8SfzS97i5346++HiloYuetB88QQ==
-X-Received: by 2002:a63:d512:: with SMTP id c18mr15175899pgg.239.1560536174587;
- Fri, 14 Jun 2019 11:16:14 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 11:16:04 -0700
-Message-Id: <20190614181604.112297-1-nhuck@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH] timer_list: Fix Wunused-const-variable
-From:   Nathan Huckleberry <nhuck@google.com>
-To:     john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Nathan Huckleberry <nhuck@google.com>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PbI2AaJV5OGbUvXuaZ8xvq+0MioqIy25hz3zwSGI/6I=;
+        b=FtgSnm15BiTfhwXJhf3NzplCyX/8XWLg4kHKAnEnqB6PiY9jUwa7PWqnemlu5R91E0
+         QkGxTbszjs4nd/MFBApZ9jsa1Zkeas+1+EguC4i+ZKcwOS9LHJ2jCPe3AHqGVmwh126O
+         Dh4NB0hQp+dVQPz8klRuUp3iolkbU4AcWR5742X9wfJAWyZwyakWQFAKs6Cti6R21buL
+         ijbBYVsGTNBVi9IsSq+hVLRst1NrYKp7MCV1b+NR4n3x7bVFA46E3qW1x4brAakCW+aY
+         moKI4i/rTHWw/nu7qGm/vqEb2YEAoBCa1vCGIVxL+aH7xIPgWVdd6kD72j8X3OSzc9Qi
+         038g==
+X-Gm-Message-State: APjAAAW2NxWePU7MVcOAuHma2LQpTD3gf2CYwL+nDp+rbFIQrGhoBs0F
+        NUTSse2cIdPkA+b32apr6k4=
+X-Google-Smtp-Source: APXvYqyDzmF1i7RpE0aPWt4rZMw6ybxepLHW8Tdd6Msq/cJjXorHOukm3EmsuOJgiXF3AypKN9M7jQ==
+X-Received: by 2002:a17:90a:de0e:: with SMTP id m14mr12446159pjv.36.1560536179510;
+        Fri, 14 Jun 2019 11:16:19 -0700 (PDT)
+Received: from ahmlpt0706 ([106.222.0.33])
+        by smtp.gmail.com with ESMTPSA id u97sm3514804pjb.26.2019.06.14.11.16.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 11:16:18 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 23:46:06 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     groeck@google.com, linux-kernel@vger.kernel.org,
+        groeck@chromium.org, adurbin@chromium.org, dlaurie@chromium.org
+Subject: Re: [PATCH] gsmi: replace printk with relevant dev_<level>
+Message-ID: <20190614181606.GA4448@ahmlpt0706>
+References: <20190613185705.GA16951@ahmlpt0706>
+ <20190614060919.GA7271@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614060919.GA7271@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang produced the following warning when using allnoconfig
+On Fri, Jun 14, 2019 at 08:09:19AM +0200, Greg KH wrote:
+> On Fri, Jun 14, 2019 at 12:27:05AM +0530, Saiyam Doshi wrote:
+> > Replace printk() with dev_* macros for logging consistency.
+> > In process of replacing printk with dev_err, dev_info etc.,
+> > removed unnecessary "out of memory" debug message.
+> 
+> That is multiple things done in the same patch, please break this up
+> into a patch series, only doing one "logical" thing per patch.
 
-kernel/time/timer_list.c:361:36: warning: unused variable
-'timer_list_sops' [-Wunused-const-variable]
-   static const struct seq_operations timer_list_sops = {
+Agreed. I could have broken it into patch set.
 
-Code reliant on CONFIG_PROC_FS is not in ifdef guard.
-Created ifdef guard around proc_fs specific code.
+> Note, generic cleanup patches like this are tough to get done in the
+> "real" part of the kernel, I strongly recommend you start out in
+> drivers/staging/ where these types of changes are welcomed.  Get
+> experience there and then move out into other areas of the kernel if you
+> want to, that way you don't annoy developers/maintainers with basic
+> errors like this.
+> 
+> good luck!
 
-Cc: clang-built-linux@googlegroups.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/534
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
----
- kernel/time/timer_list.c | 36 +++++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
-
-diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
-index 98ba50dcb1b2..acb326f5f50a 100644
---- a/kernel/time/timer_list.c
-+++ b/kernel/time/timer_list.c
-@@ -282,23 +282,6 @@ static inline void timer_list_header(struct seq_file *m, u64 now)
- 	SEQ_printf(m, "\n");
- }
- 
--static int timer_list_show(struct seq_file *m, void *v)
--{
--	struct timer_list_iter *iter = v;
--
--	if (iter->cpu == -1 && !iter->second_pass)
--		timer_list_header(m, iter->now);
--	else if (!iter->second_pass)
--		print_cpu(m, iter->cpu, iter->now);
--#ifdef CONFIG_GENERIC_CLOCKEVENTS
--	else if (iter->cpu == -1 && iter->second_pass)
--		timer_list_show_tickdevices_header(m);
--	else
--		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
--#endif
--	return 0;
--}
--
- void sysrq_timer_list_show(void)
- {
- 	u64 now = ktime_to_ns(ktime_get());
-@@ -317,6 +300,24 @@ void sysrq_timer_list_show(void)
- 	return;
- }
- 
-+#ifdef CONFIG_PROC_FS
-+static int timer_list_show(struct seq_file *m, void *v)
-+{
-+	struct timer_list_iter *iter = v;
-+
-+	if (iter->cpu == -1 && !iter->second_pass)
-+		timer_list_header(m, iter->now);
-+	else if (!iter->second_pass)
-+		print_cpu(m, iter->cpu, iter->now);
-+#ifdef CONFIG_GENERIC_CLOCKEVENTS
-+	else if (iter->cpu == -1 && iter->second_pass)
-+		timer_list_show_tickdevices_header(m);
-+	else
-+		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
-+#endif
-+	return 0;
-+}
-+
- static void *move_iter(struct timer_list_iter *iter, loff_t offset)
- {
- 	for (; offset; offset--) {
-@@ -376,3 +377,4 @@ static int __init init_timer_list_procfs(void)
- 	return 0;
- }
- __initcall(init_timer_list_procfs);
-+#endif
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+Noted. Thanks Greg for feedback and suggestion.
