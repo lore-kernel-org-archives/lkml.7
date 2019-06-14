@@ -2,123 +2,152 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6353EC31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10501C31E49
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E74320B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED4120850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:46:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="kQ2GFJNi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbfFNAqC (ORCPT
+        id S1727248AbfFNAqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 20:46:02 -0400
-Received: from mga11.intel.com ([192.55.52.93]:18675 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbfFNAqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 20:46:02 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 17:46:01 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Jun 2019 17:46:00 -0700
-Date:   Thu, 13 Jun 2019 17:46:00 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     Cedric Xing <cedric.xing@intel.com>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
-        jarkko.sakkinen@linux.intel.com, luto@kernel.org,
-        jmorris@namei.org, serge@hallyn.com, paul@paul-moore.com,
-        eparis@parisplace.org, jethro@fortanix.com, dave.hansen@intel.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, nhorman@redhat.com,
-        pmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
-        bp@alien8.de, josh@joshtriplett.org, kai.huang@intel.com,
-        rientjes@google.com, william.c.roberts@intel.com,
-        philip.b.tricca@intel.com
-Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
- SELinux
-Message-ID: <20190614004600.GF18385@linux.intel.com>
-References: <cover.1560131039.git.cedric.xing@intel.com>
- <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
- <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
- <20190611220243.GB3416@linux.intel.com>
- <8d99d8fb-a921-286a-8cf0-cd522e09b37c@tycho.nsa.gov>
+        Thu, 13 Jun 2019 20:46:54 -0400
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:38822 "EHLO
+        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725778AbfFNAqx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 20:46:53 -0400
+Received: from pps.filterd (m0122333.ppops.net [127.0.0.1])
+        by mx0a-00190b01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5E0gObF017019;
+        Fri, 14 Jun 2019 01:46:20 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=jan2016.eng;
+ bh=QEm53Dc4Fmq5I94pF3I1VW9A99lM4x3o6RgZU3TFGhI=;
+ b=kQ2GFJNivoCLSkgGXwxBemQXKp7vrVADmvaxFplAmIy3dEb5le+lC0WhhSjjZQdY9Dnj
+ lh+ghXNJS2hgQs6Jv4nscw2zMios4rSrTx8FR1gPX0AjYvs7L+Vh/Kup+EYtXUN9qael
+ dzNCKuE9PsNbaESToffDVdFaw0/csK5t+W8zf5VPSlT1fo/hLrC28OtZfa72oh9Fklmz
+ GQct3kbP0SfZXrwxQMpAOwZBjP2YWv2Xh0s2xDSKND6ZWsoUk9VEZY6oEvOELHM+roZH
+ zpoSzjRpxfx/1kMa11gBaINy4O2cG0DwTUTtqF5e8SXRiK0QxnvgjLkvAfZkq3jnoJMP eg== 
+Received: from prod-mail-ppoint2 (prod-mail-ppoint2.akamai.com [184.51.33.19] (may be forged))
+        by mx0a-00190b01.pphosted.com with ESMTP id 2t3mapjgh2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jun 2019 01:46:19 +0100
+Received: from pps.filterd (prod-mail-ppoint2.akamai.com [127.0.0.1])
+        by prod-mail-ppoint2.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x5E0WhhZ003866;
+        Thu, 13 Jun 2019 20:46:18 -0400
+Received: from email.msg.corp.akamai.com ([172.27.123.31])
+        by prod-mail-ppoint2.akamai.com with ESMTP id 2t08bxh9km-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jun 2019 20:46:13 -0400
+Received: from usma1ex-cas4.msg.corp.akamai.com (172.27.123.57) by
+ usma1ex-dag1mb6.msg.corp.akamai.com (172.27.123.65) with Microsoft SMTP
+ Server (TLS) id 15.0.1473.3; Thu, 13 Jun 2019 20:45:21 -0400
+Received: from igorcastle.kendall.corp.akamai.com (172.29.170.135) by
+ usma1ex-cas4.msg.corp.akamai.com (172.27.123.57) with Microsoft SMTP Server
+ id 15.0.1473.3 via Frontend Transport; Thu, 13 Jun 2019 17:45:21 -0700
+Received: by igorcastle.kendall.corp.akamai.com (Postfix, from userid 29659)
+        id 5170C62BDF; Thu, 13 Jun 2019 20:45:21 -0400 (EDT)
+From:   Igor Lubashev <ilubashe@akamai.com>
+To:     Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>,
+        <linux-security-module@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, Igor Lubashev <ilubashe@akamai.com>
+Subject: [RFC PATCH 1/1] security: add SECURE_KEEP_FSUID to preserve fsuid/fsgid across execve
+Date:   Thu, 13 Jun 2019 20:44:47 -0400
+Message-ID: <1560473087-27754-2-git-send-email-ilubashe@akamai.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1560473087-27754-1-git-send-email-ilubashe@akamai.com>
+References: <1560473087-27754-1-git-send-email-ilubashe@akamai.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8d99d8fb-a921-286a-8cf0-cd522e09b37c@tycho.nsa.gov>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=867
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906140003
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=909 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906140005
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 01:02:17PM -0400, Stephen Smalley wrote:
-> On 6/11/19 6:02 PM, Sean Christopherson wrote:
-> >On Tue, Jun 11, 2019 at 09:40:25AM -0400, Stephen Smalley wrote:
-> >>I haven't looked at this code closely, but it feels like a lot of
-> >>SGX-specific logic embedded into SELinux that will have to be repeated or
-> >>reused for every security module.  Does SGX not track this state itself?
-> >
-> >SGX does track equivalent state.
-> >
-> >There are three proposals on the table (I think):
-> >
-> >   1. Require userspace to explicitly specificy (maximal) enclave page
-> >      permissions at build time.  The enclave page permissions are provided
-> >      to, and checked by, LSMs at enclave build time.
-> >
-> >      Pros: Low-complexity kernel implementation, straightforward auditing
-> >      Cons: Sullies the SGX UAPI to some extent, may increase complexity of
-> >            SGX2 enclave loaders.
-> >
-> >   2. Pre-check LSM permissions and dynamically track mappings to enclave
-> >      pages, e.g. add an SGX mprotect() hook to restrict W->X and WX
-> >      based on the pre-checked permissions.
-> >
-> >      Pros: Does not impact SGX UAPI, medium kernel complexity
-> >      Cons: Auditing is complex/weird, requires taking enclave-specific
-> >            lock during mprotect() to query/update tracking.
-> >
-> >   3. Implement LSM hooks in SGX to allow LSMs to track enclave regions
-> >      from cradle to grave, but otherwise defer everything to LSMs.
-> >
-> >      Pros: Does not impact SGX UAPI, maximum flexibility, precise auditing
-> >      Cons: Most complex and "heaviest" kernel implementation of the three,
-> >            pushes more SGX details into LSMs.
-> >
-> >My RFC series[1] implements #1.  My understanding is that Andy (Lutomirski)
-> >prefers #2.  Cedric's RFC series implements #3.
-> >
-> >Perhaps the easiest way to make forward progress is to rule out the
-> >options we absolutely *don't* want by focusing on the potentially blocking
-> >issue with each option:
-> >
-> >   #1 - SGX UAPI funkiness
-> >
-> >   #2 - Auditing complexity, potential enclave lock contention
-> >
-> >   #3 - Pushing SGX details into LSMs and complexity of kernel implementation
-> >
-> >
-> >[1] https://lkml.kernel.org/r/20190606021145.12604-1-sean.j.christopherson@intel.com
-> 
-> Given the complexity tradeoff, what is the clear motivating example for why
-> #1 isn't the obvious choice? That the enclave loader has no way of knowing a
-> priori whether the enclave will require W->X or WX?  But aren't we better
-> off requiring enclaves to be explicitly marked as needing such so that we
-> can make a more informed decision about whether to load them in the first
-> place?
+Many kernel interfaces require real and/or effective root uid instead
+of relying solely of capabilities. An executable that uses such
+interfaces has to be set-uid-root or be executed by a thread with
+effective root uid. Presently, fsuid and saved uid will reset to the
+effective uid during execve. As a result, it is not possible to
+execute a binary such that it has effective root uid but retains
+fsuid/fsgid of the actual user. Retaining fsuid/fsgid of the actual
+user could be required if the executable needs to access the
+filesystem. It may also be desired from the security perspective of
+delegating the minimal set of privileges.
 
-Andy and/or Cedric, can you please weigh in with a concrete (and practical)
-use case that will break if we go with #1?  The auditing issues for #2/#3
-are complex to say the least...
+Setting SECURE_KEEP_FSUID bit ensures that the current fsuid/fsgiud is
+retained by execve.
+
+Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
+---
+ include/uapi/linux/securebits.h | 10 +++++++++-
+ security/commoncap.c            |  9 +++++++--
+ 2 files changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/include/uapi/linux/securebits.h b/include/uapi/linux/securebits.h
+index d6d98877ff1a..6c20b2287d6f 100644
+--- a/include/uapi/linux/securebits.h
++++ b/include/uapi/linux/securebits.h
+@@ -52,10 +52,18 @@
+ #define SECBIT_NO_CAP_AMBIENT_RAISE_LOCKED \
+ 			(issecure_mask(SECURE_NO_CAP_AMBIENT_RAISE_LOCKED))
+ 
++/* When set, execve does not reset fsuid/fsgid to euid/egid */
++#define SECURE_KEEP_FSUID		8
++#define SECURE_KEEP_FSUID_LOCKED	9  /* make bit-8 immutable */
++
++#define SECBIT_KEEP_FSUID	 (issecure_mask(SECURE_KEEP_FSUID))
++#define SECBIT_KEEP_FSUID_LOCKED (issecure_mask(SECURE_KEEP_FSUID_LOCKED))
++
+ #define SECURE_ALL_BITS		(issecure_mask(SECURE_NOROOT) | \
+ 				 issecure_mask(SECURE_NO_SETUID_FIXUP) | \
+ 				 issecure_mask(SECURE_KEEP_CAPS) | \
+-				 issecure_mask(SECURE_NO_CAP_AMBIENT_RAISE))
++				 issecure_mask(SECURE_NO_CAP_AMBIENT_RAISE) | \
++				 issecure_mask(SECURE_KEEP_FSUID))
+ #define SECURE_ALL_LOCKS	(SECURE_ALL_BITS << 1)
+ 
+ #endif /* _UAPI_LINUX_SECUREBITS_H */
+diff --git a/security/commoncap.c b/security/commoncap.c
+index c0b9664ee49e..e4de823a1d4e 100644
+--- a/security/commoncap.c
++++ b/security/commoncap.c
+@@ -847,8 +847,13 @@ int cap_bprm_set_creds(struct linux_binprm *bprm)
+ 						   old->cap_permitted);
+ 	}
+ 
+-	new->suid = new->fsuid = new->euid;
+-	new->sgid = new->fsgid = new->egid;
++	new->suid = new->euid;
++	new->sgid = new->egid;
++
++	if (!issecure(SECURE_KEEP_FSUID)) {
++		new->fsuid = new->euid;
++		new->fsgid = new->egid;
++	}
+ 
+ 	/* File caps or setid cancels ambient. */
+ 	if (has_fcap || is_setid)
+-- 
+2.7.4
+
