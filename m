@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF2FC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80752C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D612183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 518242184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:44:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="jcBZ6YMl"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="rlf58sMS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfFNQoH (ORCPT
+        id S1726457AbfFNQoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:44:07 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42775 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725859AbfFNQoG (ORCPT
+        Fri, 14 Jun 2019 12:44:12 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42625 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbfFNQoK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:44:06 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so1783495pff.9
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 09:44:05 -0700 (PDT)
+        Fri, 14 Jun 2019 12:44:10 -0400
+Received: by mail-pl1-f194.google.com with SMTP id go2so1237547plb.9
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 09:44:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7rjQuB296hfp4qUoq+6jTshGIZnt17kv/able4oYgNY=;
-        b=jcBZ6YMltICKDAXDCZu7yT0KHax9GStXh55CAzwxRtyM1XcvrLR4OeHIh+melge7j8
-         8KlHTIWZZj09dAZONDclCazGOwpGX2wsWeiBI2/Z76lDWhXgfMlFtFx+bCcmcR6e1w2a
-         il57TilFvp/301Ukd0ea7ssDIf2cdSg9z35GI=
+        bh=Non2BoMSGZisQGcDqDX68GAJtDt89o/Y1pHahHZtkpw=;
+        b=rlf58sMSEWIwoOxw02uP0n9MWyrboVK4lgcIbkTGWCNuEqHmEw5+ENdEnc8yUBy6YL
+         xa/7xTOfw1ZONqMy2w3bDcUqg1fLro2oBI55f6/OjyxCUGqfHeNcHerAQ18EUyWzTARQ
+         ssBd0pQ5ionYtuuJrkkeGT/Sqks/rUU0lQpEI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7rjQuB296hfp4qUoq+6jTshGIZnt17kv/able4oYgNY=;
-        b=YsPDpg2lyd7l/QrTrv2yY2oyC8QCM4lNRS5IOWlTTXf76O382BPkaj9sh/oy/c5ui9
-         83Dlk07V+wfMQN6j7BHQBrZYoEyRd+cTDOJ/YAnv8v5sG5a5v7MeWNUDSC+Km9wuvkyn
-         /vQP5+d6F9CYGCmtW+2C5BjHkaf737dX4IsVDXQINQq6rvBsIebyYrPDTG2GjH9ndyAo
-         g7Ytcl7wwfUHkKtTAWzY+OWiT+xutT1lDs4acFmafLZ/NY98sYfJ7QPafEBXsN/w+8DJ
-         hb1INzq+XAOQ2IcwyGqnQqDBUYz77LHn1HyYMI3C/DeAKfwXzqXaxQl4RdPepG64xzCP
-         IWVQ==
-X-Gm-Message-State: APjAAAWEh7E2NNq9UC+EObAg5LDvU5q+rAEKFBnNT4A7nSbjHwWRP3/i
-        mzy6QIFnZJ0WDmMyiSFPlnSdJg==
-X-Google-Smtp-Source: APXvYqxP0WmrTVw50rx/FytEhR6NAKnXMvz/RCUMoTAx8wmz1g6jzNa4s+rIzY3i9D8U4EzfOzGmgg==
-X-Received: by 2002:a17:90a:b00b:: with SMTP id x11mr12178417pjq.120.1560530645251;
-        Fri, 14 Jun 2019 09:44:05 -0700 (PDT)
+        bh=Non2BoMSGZisQGcDqDX68GAJtDt89o/Y1pHahHZtkpw=;
+        b=clKYwJFJl2+0CYTspTiMlsLuMKMdtPYc/LQ9K4y+xzTifD9aQscbjvwGxQUBi+pq3C
+         xbDHYjp6HsjMhnywUVX56KGAAzh1ZprUzBjmUcb4KRv1VzHQL+mbPIP6WpjJ9ZqqPH/2
+         BnWQxXg5l3oacRPm+dhRTqAXr6PLvxrV5ZKcCQkKzYyvFJc9vSUg+R1003cxOUOuc0b0
+         Fz3n+0P0POnsdbBaKlZ570kxRcvunrWFrzospBkueEzIBOKMevHB+m7f+s7Ijognar6h
+         lKFvhxMtg+aJdnPs7r5K4eNVtnbCcqY9m78PLjUH1IQnk8V+JolSCZu4LKfzNzmWHe5K
+         ec/Q==
+X-Gm-Message-State: APjAAAU6Y8Gknd/Q0fHxIun1rrY1guIQz08b9fKGJKAfFQiQ0s+Tq9JK
+        nHqPrwFgLcEBjkrRh6fAM8Wr/iKLc08=
+X-Google-Smtp-Source: APXvYqw1QUf2Sqj4sT+KEQY5pTkiZm664fbyXbkXHmgQeP2NDpkJ5pMLTivt3XLzm0hRDnHdWl7B9g==
+X-Received: by 2002:a17:902:7086:: with SMTP id z6mr11655193plk.196.1560530649787;
+        Fri, 14 Jun 2019 09:44:09 -0700 (PDT)
 Received: from localhost.localdomain ([115.97.180.18])
-        by smtp.gmail.com with ESMTPSA id 85sm1639583pfv.130.2019.06.14.09.44.01
+        by smtp.gmail.com with ESMTPSA id 85sm1639583pfv.130.2019.06.14.09.44.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 09:44:04 -0700 (PDT)
+        Fri, 14 Jun 2019 09:44:08 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         David Airlie <airlied@linux.ie>,
@@ -64,9 +64,9 @@ To:     Maxime Ripard <maxime.ripard@bootlin.com>,
 Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
         linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 6/9] dt-bindings: sun6i-dsi: Add R40 MIPI-DSI compatible (w/ A64 fallback)
-Date:   Fri, 14 Jun 2019 22:13:21 +0530
-Message-Id: <20190614164324.9427-7-jagan@amarulasolutions.com>
+Subject: [PATCH v2 7/9] dt-bindings: sun6i-dsi: Add R40 DPHY compatible (w/ A31 fallback)
+Date:   Fri, 14 Jun 2019 22:13:22 +0530
+Message-Id: <20190614164324.9427-8-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20190614164324.9427-1-jagan@amarulasolutions.com>
 References: <20190614164324.9427-1-jagan@amarulasolutions.com>
@@ -77,10 +77,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MIPI DSI controller on Allwinner R40 is similar on
-the one on A64 like doesn't associate any DSI_SCLK gating.
+The MIPI DSI PHY controller on Allwinner R40 is similar
+on the one on A31.
 
-So, add R40 compatible and append A64 compatible as fallback.
+Add R40 compatible and append A31 compatible as fallback.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
@@ -88,17 +88,17 @@ Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-index d0ce51fea103..438f1f999aeb 100644
+index 438f1f999aeb..b7ad1be33008 100644
 --- a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
 +++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-@@ -13,6 +13,7 @@ Required properties:
+@@ -40,6 +40,7 @@ Required properties:
    - compatible: value must be one of:
-     * allwinner,sun6i-a31-mipi-dsi
-     * allwinner,sun50i-a64-mipi-dsi
-+    * allwinner,sun8i-r40-mipi-dsi, allwinner,sun50i-a64-mipi-dsi
+     * allwinner,sun6i-a31-mipi-dphy
+     * allwinner,sun50i-a64-mipi-dphy, allwinner,sun6i-a31-mipi-dphy
++    * allwinner,sun8i-r40-mipi-dphy, allwinner,sun6i-a31-mipi-dphy
    - reg: base address and size of memory-mapped region
-   - interrupts: interrupt associated to this IP
    - clocks: phandles to the clocks feeding the DSI encoder
+     * bus: the DSI interface clock
 -- 
 2.18.0.321.gffc6fa0e3
 
