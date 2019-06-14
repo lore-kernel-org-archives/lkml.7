@@ -2,197 +2,242 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB10EC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E075C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634B720866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA45A2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:49:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="jlnoPumk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IxJRP9SI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbfFNNtp (ORCPT
+        id S1729260AbfFNNtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:49:45 -0400
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:54272 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728659AbfFNNtm (ORCPT
+        Fri, 14 Jun 2019 09:49:51 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34037 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728369AbfFNNtt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:49:42 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 6E12E2E0DEB;
-        Fri, 14 Jun 2019 16:49:38 +0300 (MSK)
-Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 39Vphjpq6N-nbaKmusr;
-        Fri, 14 Jun 2019 16:49:38 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1560520178; bh=qVDq0D9OO4glvmHjwdsfU4Vr8j6/j6nCy0HmZ0dRLo4=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=jlnoPumk7gJZI0ixDYV80/1/L6jVlKxHcakmFwA55RM19Np4dp3x3nHB7tZx65BSN
-         cC6djB3PALQntHVktvwxg3d+FOTzSX/GenBSGQ3CLnGcxGVUP3/WB0UAbB5qu08f6M
-         QXyRbBPhR/uNk9srWi9FuZUWcw7b101Ny6j/WqZY=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:a1b1:2ca9:8cc0:4c56])
-        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id uQaJmBDJhz-nbgScMef;
-        Fri, 14 Jun 2019 16:49:37 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH] drivers/ata: print trim features at device initialization
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-References: <155989287898.1506.14253954112551051148.stgit@buzz>
- <yq1wohxib7t.fsf@oracle.com>
- <eebfb1cc-f6d0-580e-1d56-2af0f481a92f@yandex-team.ru>
- <048ed77f-8faa-fb67-c6bc-10d953f52f89@yandex-team.ru>
- <1560116241.3324.19.camel@HansenPartnership.com>
- <b554c428-417e-5fef-1776-87a4db1d674a@yandex-team.ru>
- <1560206933.3698.27.camel@HansenPartnership.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <cd91b050-cbc6-7c3b-f9f8-91c0760668e6@yandex-team.ru>
-Date:   Fri, 14 Jun 2019 16:49:37 +0300
+        Fri, 14 Jun 2019 09:49:49 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y198so1820242lfa.1;
+        Fri, 14 Jun 2019 06:49:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Bx0oK5iXDXAR0ACHKVc3wkvY2oc5wIxpV3aMMzcLoWk=;
+        b=IxJRP9SIWSFqDuzRlmodYsVoykZppSz5c4MwdiXpmbrSEYoOYKbrNWQo7kX54C8M/y
+         +vOLErSIt1cJU/Muq+d9DOdaC1bxFSt8lR9Is1nhb8fIsuJlSLC9J7PLVqYnmBiaxSID
+         XSOW+fmCa5cWbR2aXGueawVcmRsnBGfUZ20jGAkpJR4Fo4R2TNk09EtMgrjr9QWA5nta
+         fEzXtG/KkXW81LAVMdskL7VReCgtXn8Nl/AKTGljiGcqjx0Qjcv6cTex5VSqMD85KDud
+         B9iSMIxW8xhPTumsV2qTIoDrm4pYpDAqtTm7RbHYbyFWiEjHvdDW0myjQ+8Oy9dLiw7Y
+         Plyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Bx0oK5iXDXAR0ACHKVc3wkvY2oc5wIxpV3aMMzcLoWk=;
+        b=BphidraXCtC6dETC2N2vS+3kMZ380x53xSXkhfl1Fa60ffZPDpELxJX88OiWZlBF+Z
+         067LHCH3HAEHJ695QWa2ikwxupweXmX/6uOHLJwf12Lnrhpx+yaQBA+4m8ZV3g/zPWRR
+         esRhaQBv6TF9S2GlLBcoKjoLYg7HzTxRaVEoGYjKjoPcjn++zxpXE58I8KzAxRSAXVQM
+         F6/lL0+PdxdbfqCcYDTuA22Ejt1ZpdFdDT19aWPQ9s1axLza7drTpcSuSsQvo3lqbx4Z
+         U4pYYUd5YU9qedXWXZLtvQzeHshDkEi5fUfBskAdhYdxhxAKw0h5Io0tx38GBzYvxBFw
+         WN/A==
+X-Gm-Message-State: APjAAAUHO90ztHBWej6WboinO6yOEADHcW3ohDLJy5SOhNYN49xlm6pH
+        wlU3tRH2+X1g32wF0NgfBqRGKZhH
+X-Google-Smtp-Source: APXvYqwKS9/E7DpuXAU81U6CB3YYhLKCUfQ9+07i9WPwAlNNxVs3ioDZO6RllpBUElOLbvtiTrjyBw==
+X-Received: by 2002:a19:9f84:: with SMTP id i126mr48172391lfe.142.1560520185830;
+        Fri, 14 Jun 2019 06:49:45 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id q7sm664113ljc.45.2019.06.14.06.49.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 06:49:45 -0700 (PDT)
+Subject: Re: [PATCH 2/2] rtc: tegra: Implement suspend clock source
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190614104747.19712-1-thierry.reding@gmail.com>
+ <20190614104747.19712-2-thierry.reding@gmail.com>
+ <5a00bccf-6542-51bd-9030-99a59f14f2f9@gmail.com>
+ <20190614134110.GF15526@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d9b65fd9-ecad-b241-a0d6-251a648488aa@gmail.com>
+Date:   Fri, 14 Jun 2019 16:49:44 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <1560206933.3698.27.camel@HansenPartnership.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190614134110.GF15526@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11.06.2019 1:48, James Bottomley wrote:
-> On Mon, 2019-06-10 at 10:49 +0300, Konstantin Khlebnikov wrote:
->> On 10.06.2019 0:37, James Bottomley wrote:
->>> On Sat, 2019-06-08 at 17:13 +0300, Konstantin Khlebnikov wrote:
->>>>> On 08.06.2019 11:25, Christoph Hellwig wrote:> On Fri, Jun 07,
->>>>> 2019
->>>>> at 10:34:39AM +0300, Konstantin Khlebnikov wrote:
->>>>>    >
->>>>>    > Do we really need to spam dmesg with even more ATA
->>>>> crap?  What
->>>>> about
->>>>>    > a sysfs file that can be read on demand instead?
->>>>>    >
->>>>>
->>>>> Makes sense.
->>>>>
->>>>> Trim state is exposed for ata_device:
->>>>> /sys/class/ata_device/devX.Y/trim
->>>>> but there is no link from scsi device to ata device so they
->>>>> hard to match.
->>>>>
->>>>> I'll think about it.
->>>>
->>>> Nope. There is no obvious way to link scsi device with
->>>> ata_device. ata_device is built on top of "transport_class" and
->>>> "attribute_container". This some extremely over engineered sysfs
->>>> framework used only in ata/scsi. I don't want to touch this.
+14.06.2019 16:41, Thierry Reding пишет:
+> On Fri, Jun 14, 2019 at 03:01:13PM +0300, Dmitry Osipenko wrote:
+>> 14.06.2019 13:47, Thierry Reding пишет:
+>>> From: Thierry Reding <treding@nvidia.com>
 >>>
->>> You don't need to know any of that.  The problem is actually when
->>> the ata transport classes were first created, the devices weren't
->>> properly parented.  What should have happened, like every other
->>> transport class, is that the devices should have descended down to
->>> the scsi device as the leaf in an integrated fashion.  Instead,
->>> what we seem to have is three completely separate trees.
+>>> The suspend clock source for Tegra210 and earlier is currently
+>>> implemented in the Tegra timer driver. However, the suspend clock source
+>>> code accesses registers that are part of the RTC hardware block, so both
+>>> can step on each others' toes. In practice this isn't an issue, but
+>>> there is no reason why the RTC driver can't implement the clock source,
+>>> so move the code over to the tegra-rtc driver.
 >>>
->>> So if you look at a SAS device, you see from the pci device:
+>>> Signed-off-by: Thierry Reding <treding@nvidia.com>
+>>> ---
+>>>  drivers/clocksource/timer-tegra.c | 44 -------------------------------
+>>>  drivers/rtc/rtc-tegra.c           | 42 +++++++++++++++++++++++++++++
+>>>  2 files changed, 42 insertions(+), 44 deletions(-)
 >>>
->>> host2/port-2:0/end_device-2:0/target2:0:0/2:0:0:0/block/sdb/sdb1
->>>
->>> But if you look at a SATA device, you see three separate paths:
->>>
->>> ata3/host3/target3\:0\:0/3\:0\:0\:0/block/sda/sda1
->>> ata3/link3/dev3.0/ata_device/dev3.0
->>> ata3/ata_port/ata3
->>>
->>> Instead of an integrated tree
->>>
->>> Unfortunately, this whole thing is unfixable now.  If I integrate
->>> the tree properly, the separate port and link directories will get
->>> subsumed and we won't be able to recover them with judicious
->>> linking so scripts relying on them will break.  The best we can
->>> probably do is add additional links with what we have.
->>>
->>> To follow the way we usually do it, there should be a link from the
->>> ata device to the scsi target, but that wouldn't help you find the
->>> "trim" files, so it sounds like you want a link from the scsi
->>> device to the ata device, which would?
+>>> diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
+>>> index e6608141cccb..87eac618924d 100644
+>>> --- a/drivers/clocksource/timer-tegra.c
+>>> +++ b/drivers/clocksource/timer-tegra.c
+>>> @@ -21,10 +21,6 @@
+>>>  
+>>>  #include "timer-of.h"
+>>>  
+>>> -#define RTC_SECONDS		0x08
+>>> -#define RTC_SHADOW_SECONDS	0x0c
+>>> -#define RTC_MILLISECONDS	0x10
+>>> -
+>>>  #define TIMERUS_CNTR_1US	0x10
+>>>  #define TIMERUS_USEC_CFG	0x14
+>>>  #define TIMERUS_CNTR_FREEZE	0x4c
+>>> @@ -164,34 +160,6 @@ static struct delay_timer tegra_delay_timer = {
+>>>  };
+>>>  #endif
+>>>  
+>>> -static struct timer_of suspend_rtc_to = {
+>>> -	.flags = TIMER_OF_BASE | TIMER_OF_CLOCK,
+>>> -};
+>>> -
+>>> -/*
+>>> - * tegra_rtc_read - Reads the Tegra RTC registers
+>>> - * Care must be taken that this function is not called while the
+>>> - * tegra_rtc driver could be executing to avoid race conditions
+>>> - * on the RTC shadow register
+>>> - */
+>>> -static u64 tegra_rtc_read_ms(struct clocksource *cs)
+>>> -{
+>>> -	void __iomem *reg_base = timer_of_base(&suspend_rtc_to);
+>>> -
+>>> -	u32 ms = readl_relaxed(reg_base + RTC_MILLISECONDS);
+>>> -	u32 s = readl_relaxed(reg_base + RTC_SHADOW_SECONDS);
+>>> -
+>>> -	return (u64)s * MSEC_PER_SEC + ms;
+>>> -}
+>>> -
+>>> -static struct clocksource suspend_rtc_clocksource = {
+>>> -	.name	= "tegra_suspend_timer",
+>>> -	.rating	= 200,
+>>> -	.read	= tegra_rtc_read_ms,
+>>> -	.mask	= CLOCKSOURCE_MASK(32),
+>>> -	.flags	= CLOCK_SOURCE_IS_CONTINUOUS | CLOCK_SOURCE_SUSPEND_NONSTOP,
+>>> -};
+>>> -
+>>>  static inline unsigned int tegra_base_for_cpu(int cpu, bool tegra20)
+>>>  {
+>>>  	if (tegra20) {
+>>> @@ -385,15 +353,3 @@ static int __init tegra20_init_timer(struct device_node *np)
+>>>  	return tegra_init_timer(np, true, rating);
+>>>  }
+>>>  TIMER_OF_DECLARE(tegra20_timer, "nvidia,tegra20-timer", tegra20_init_timer);
+>>> -
+>>> -static int __init tegra20_init_rtc(struct device_node *np)
+>>> -{
+>>> -	int ret;
+>>> -
+>>> -	ret = timer_of_init(np, &suspend_rtc_to);
+>>> -	if (ret)
+>>> -		return ret;
+>>> -
+>>> -	return clocksource_register_hz(&suspend_rtc_clocksource, 1000);
+>>> -}
+>>> -TIMER_OF_DECLARE(tegra20_rtc, "nvidia,tegra20-rtc", tegra20_init_rtc);
+>>> diff --git a/drivers/rtc/rtc-tegra.c b/drivers/rtc/rtc-tegra.c
+>>> index 8fa1b3febf69..6da54264a27a 100644
+>>> --- a/drivers/rtc/rtc-tegra.c
+>>> +++ b/drivers/rtc/rtc-tegra.c
+>>> @@ -6,6 +6,7 @@
+>>>   */
+>>>  
+>>>  #include <linux/clk.h>
+>>> +#include <linux/clocksource.h>
+>>>  #include <linux/delay.h>
+>>>  #include <linux/init.h>
+>>>  #include <linux/io.h>
+>>> @@ -52,8 +53,15 @@ struct tegra_rtc_info {
+>>>  	struct clk *clk;
+>>>  	int irq; /* alarm and periodic IRQ */
+>>>  	spinlock_t lock;
+>>> +
+>>> +	struct clocksource clksrc;
+>>>  };
+>>>  
+>>> +static struct tegra_rtc_info *to_tegra_rtc(struct clocksource *clksrc)
+>>> +{
+>>> +	return container_of(clksrc, struct tegra_rtc_info, clksrc);
+>>> +}
+>>> +
+>>>  /*
+>>>   * RTC hardware is busy when it is updating its values over AHB once every
+>>>   * eight 32 kHz clocks (~250 us). Outside of these updates the CPU is free to
+>>> @@ -268,6 +276,17 @@ static const struct rtc_class_ops tegra_rtc_ops = {
+>>>  	.alarm_irq_enable = tegra_rtc_alarm_irq_enable,
+>>>  };
+>>>  
+>>> +static u64 tegra_rtc_read_ms(struct clocksource *clksrc)
+>>> +{
+>>> +	struct tegra_rtc_info *info = to_tegra_rtc(clksrc);
+>>> +	u32 ms, s;
+>>> +
+>>> +	ms = readl_relaxed(info->base + TEGRA_RTC_REG_MILLI_SECONDS);
+>>> +	s = readl_relaxed(info->base + TEGRA_RTC_REG_SHADOW_SECONDS);
+>>> +
+>>> +	return (u64)s * MSEC_PER_SEC + ms;
+>>> +}
+>>> +
+>>>  static const struct of_device_id tegra_rtc_dt_match[] = {
+>>>  	{ .compatible = "nvidia,tegra20-rtc", },
+>>>  	{}
+>>> @@ -339,6 +358,28 @@ static int tegra_rtc_probe(struct platform_device *pdev)
+>>>  		goto disable_clk;
+>>>  	}
+>>>  
+>>> +	/*
+>>> +	 * The Tegra RTC is the only reliable clock source that persists
+>>> +	 * across an SC7 transition (VDD_CPU and VDD_CORE off) on Tegra210
+>>> +	 * and earlier. Starting with Tegra186, the ARM v8 architected timer
+>>> +	 * is in an always on power partition and its reference clock keeps
+>>> +	 * running during SC7. Therefore, we technically don't need to have
+>>> +	 * the RTC register as a clock source on Tegra186 and later, but it
+>>> +	 * doesn't hurt either, so we just register it unconditionally here.
+>>> +	 */
+>>> +	info->clksrc.name = "tegra_rtc";
+>>> +	info->clksrc.rating = 200;
+>>> +	info->clksrc.read = tegra_rtc_read_ms;
+>>> +	info->clksrc.mask = CLOCKSOURCE_MASK(32);
 >>
->> Yes, I'm talking about link from scsi device to leaf ata_device node.
->>
->> In libata scsi_device has one to one relation with ata_device.
->> So making link like /sys/class/block/sda/device/ata_device should be
->> possible easy.
->> But I haven't found implicit reference from struct ata_device to
->> ata_device in sysfs.
+>> Hm.. shouldn't this be CLOCKSOURCE_MASK(52)? Given that there are 32 bits for seconds and
+>> 10bits for milliseconds.
 > 
-> If that's all you want, it is pretty simple modulo the fact we can only
-> get at the tdev, not the lower transport device, which is what you
-> want, but at least it's linear from the symlink.
-> 
-> The attached patch should do this.
-> 
-> Now I see this for my non-sas device:
-> 
-> # ls -l /sys/class/scsi_device/3\:0\:0\:0/device/ata_device
-> lrwxrwxrwx 1 root root 0 Jun 10 13:39 /sys/class/scsi_device/3:0:0:0/device/ata_device -> ../../../link3/dev3.0
+> Did you mean to say CLOCKSOURCE_MASK(42)? Yeah, that's probably better
+> here.
 
-I've tried this too. Such link is not very useful,
-because attribute 'trim' is deeper and suffix path isn't constant:
-
-/sys/class/block/sda/device/ata_device/ata_device/dev1.0/trim
-
-while I expect something like
-
-/sys/class/block/sda/device/ata_device/trim
-
-> 
-> James
-> 
-> ---
-> 
-> diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-> index 391ac0503dc0..b644336a6d65 100644
-> --- a/drivers/ata/libata-scsi.c
-> +++ b/drivers/ata/libata-scsi.c
-> @@ -4576,7 +4576,20 @@ void ata_scsi_scan_host(struct ata_port *ap, int sync)
->   			sdev = __scsi_add_device(ap->scsi_host, channel, id, 0,
->   						 NULL);
->   			if (!IS_ERR(sdev)) {
-> +				int r;
-> +
->   				dev->sdev = sdev;
-> +				/* this is a sysfs stupidity: we don't
-> +				 * care if the link actually gets
-> +				 * created: there's no error handling
-> +				 * for failure and we continue on
-> +				 * regardless, but we have to discard
-> +				 * the return value like this to
-> +				 * defeat unused result checking */
-> +				r = sysfs_create_link(&sdev->sdev_gendev.kobj,
-> +						      &dev->tdev.kobj,
-> +						      "ata_device");
-> +				(void)r;
->   				scsi_device_put(sdev);
->   			} else {
->   				dev->sdev = NULL;
-> @@ -4703,6 +4716,7 @@ static void ata_scsi_remove_dev(struct ata_device *dev)
->   		ata_dev_info(dev, "detaching (SCSI %s)\n",
->   			     dev_name(&sdev->sdev_gendev));
->   
-> +		sysfs_remove_link(&sdev->sdev_gendev.kobj, "ata_device");
->   		scsi_remove_device(sdev);
->   		scsi_device_put(sdev);
->   	}
-> 
+Yes, 42 :)
