@@ -2,130 +2,213 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A7EC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 956B4C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 044A42133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5214F21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UNVz0eKI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="NAHpzhGX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbfFNOri (ORCPT
+        id S1729006AbfFNOro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:47:38 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:44297 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728233AbfFNOri (ORCPT
+        Fri, 14 Jun 2019 10:47:44 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46313 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728934AbfFNOrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:47:38 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190614144736euoutp0174e16fa3161083ec70fe5c628fba1640~oF-9xpi4j3148231482euoutp01i
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 14:47:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190614144736euoutp0174e16fa3161083ec70fe5c628fba1640~oF-9xpi4j3148231482euoutp01i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1560523656;
-        bh=vg+p7zFanCSl59yGXY1FnQrt4BBpQ9tRwbXks+s9a6E=;
-        h=From:Subject:To:Cc:Date:References:From;
-        b=UNVz0eKIrTACreITW2rj3dlOXmVE6+9N+ayNEIL0zRXBtVbdUBuzNrCCHzpnIwb4l
-         MR+y/J9htxNEAxZBb5Gb+vIesBrGxX0FxXMHQYlvEYLKuiJl+IYO+aa7ia8UUoCGr7
-         KXdd8DCT2axob+TE/2EsHP5MT9wcgHIqQxarqHXA=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190614144736eucas1p1ebd03828cac1313ee6e22643239db5b8~oF-9aNJpH0266602666eucas1p1j;
-        Fri, 14 Jun 2019 14:47:36 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 52.86.04325.883B30D5; Fri, 14
-        Jun 2019 15:47:36 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190614144735eucas1p2f71313b752ae4ea841ddd4ea502fd79f~oF-8OTpdS2290822908eucas1p2k;
-        Fri, 14 Jun 2019 14:47:35 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190614144734eusmtrp1a401b19e4b67fc9ef5457d24e0ff6682~oF-7_0lfM2548325483eusmtrp1E;
-        Fri, 14 Jun 2019 14:47:34 +0000 (GMT)
-X-AuditID: cbfec7f5-b75ff700000010e5-66-5d03b3889aec
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id AC.8E.04140.683B30D5; Fri, 14
-        Jun 2019 15:47:34 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190614144734eusmtip2c8392ac0206644617e2e70c76871a259~oF-7tv3032993929939eusmtip2L;
-        Fri, 14 Jun 2019 14:47:34 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 1/3] video: fbdev: s3c-fb: return -ENOMEM on
- framebuffer_alloc() failure
-To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Fri, 14 Jun 2019 10:47:43 -0400
+Received: by mail-ed1-f67.google.com with SMTP id d4so3822259edr.13
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 07:47:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=d8nVVuvnHsmvk1d0kUURiumam/C7DIvw1DDJ0lOcbU4=;
+        b=NAHpzhGXzxQ0niZ/4BWf6AG8C7DK+4x3UafTtP24z/KSVwDcHxZOJWMWPkDDh1X2FA
+         5hBGxyhxPcZqYh0g78osiTDMLeAfmAj+ZnNGgOC77XwrBofd3Pq/fezXSSqgiiQqPuI2
+         sOas2pYPCGTpSsc//e4MFq2Mga/+zOqOJpmYg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=d8nVVuvnHsmvk1d0kUURiumam/C7DIvw1DDJ0lOcbU4=;
+        b=tA95elA/wWMueOueXn6ItYeqnChgKLNvW7s0ul2uzW9uBeFky7LftoxiDGV9Fs0WVq
+         +ByuZkBDBuDbsO+JiYryau03a9Xuh8zyY2E7DHzUm0gyxLHOoPaA1xFAOfY4FHiPA3sX
+         MzHVnGoLuiZt0W9NakFq7eNT5lLrlElmXt55FwWN2DXiJPsgrHBNdOFfYNAY+An640TM
+         GCS7y2pOCkTGDnWg0JFFqYSPqhpN5EYRo0ta4Z1ns71pEGpWWKxUU2r0SMpG+P22tKAj
+         aSI+8b/sKFtOaxonAVqgOOQL2gDP+CcnNGoxgIQDzcUHDo7x8y252LrNd3bCoRX7Wdzm
+         bPbw==
+X-Gm-Message-State: APjAAAUBEOs8GG0IjhWHY/n1yisZlXw3QgGzRJvXlyPBrNzJVWIuLJP0
+        2vO2GqQHBHN1wzrsfBOQhlXuig==
+X-Google-Smtp-Source: APXvYqzdCp6F1hxUyRMSuiQvQJM1/dCmISnLrE6y1EtpbLtmiXPpE8t7ndRFrI6NCVDtrkae8rrfpg==
+X-Received: by 2002:a50:8465:: with SMTP id 92mr25270539edp.151.1560523661264;
+        Fri, 14 Jun 2019 07:47:41 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id e33sm944489eda.83.2019.06.14.07.47.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 07:47:40 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 16:47:38 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
+        koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Cc:     Jingoo Han <jingoohan1@gmail.com>
-Message-ID: <bbf32fbc-b4bc-39fc-e8dd-db9f0cd0d83f@samsung.com>
-Date:   Fri, 14 Jun 2019 16:47:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+Subject: Re: [PATCH 19/20] drm: rcar-du: crtc: Register GAMMA_LUT properties
+Message-ID: <20190614144738.GY23020@phenom.ffwll.local>
+Mail-Followup-To: Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
+        koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
+ <20190606142220.1392-20-jacopo+renesas@jmondi.org>
+ <20190607120304.GH7593@pendragon.ideasonboard.com>
+ <20190614081507.3ky4pcyijjxnr7mp@uno.localdomain>
+ <20190614084251.GW23020@phenom.ffwll.local>
+ <20190614092745.wznk3iv5dgehmjsb@uno.localdomain>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRjG++9cdhxOjlPxxS7SKKEgrQwaGVIRNPCLHxSjMDfzMJduyua8
-        ZKAk6FpDM1PntJyBOVe0ecHLCsMlHktUIrFIRDMpzWbBFBHU8niU/PZ7n/d9+D8P/ClMUkmE
-        UWptDqPTKjOlpAjvGlwbPWHswJJPvvGRsvGV36TMvlwnlA2V/yFkH90N5AVc3mudEsqn77MC
-        ua/9UDx2TXQ+jclU5zK6qFiFKN3Y3SrM7iPyBx6zeDEawU3IjwL6DLTUWAQmJKIktB1BrbNs
-        Z1hG8KmexfjBh6B5cZXYtVQ8txD8ogXB+JBXwC0ktBfBWE04xyR9DirLHMiEKCqIvgauhQxO
-        DqYVYK+1II4x+ii4S5q3WUzHgmd2UsgxvqU/Wq3GOA6hr8L0oIvgbwLhXd0czntD4ctco4Dn
-        cOj2NmwHBdpHQuNs5063y1Be3yTkOQh+sp07fACGq8w4b3iJYMM4v+PuRtBStUnyVzHwlv1A
-        cA0w+hg43VG8fBGWNqeEnAx0AHz2BvIhAuBhVy3Gy2Iwlkr46whwPXORu8+aelsxnuXQMe/E
-        H6DD1j3VrHuqWfdUs/7PYEO4A4UyBr1GxeijtUxepF6p0Ru0qsibWZp2tPVRhjfZlR7Ut57q
-        QTSFpP5iSzmWLCGUufoCjQcBhUmDxU9itiRxmrLgNqPLStEZMhm9B+2ncGmouHDfzHUJrVLm
-        MBkMk83odrcCyi+sGJ0eYWxrE4ljVRG5hTaz/BtbNGUH/2F5/UycOUTnmPAZ7rgX816bl1S3
-        nCn9P0ZLD4YUxh1JHWhKYBon4zHN35LWpwsJN5IS2QrrWXVPwK/qpOT8MUaxflc87pPP9H9v
-        iO63NSM6o9IX9X6jbbXI+1Vhv/LK0fZitq1UfemeFNenK08dx3R65T+PgPCNJAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42I5/e/4Pd22zcyxBtPW6Vtc+fqezWLFl5ns
-        Fif6PrBaXN41h82BxWPnrLvsHve7jzN5fN4kF8AcpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFn
-        ZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJfRsX0le8E+1oojc4+zNDCeZeli5OSQEDCR6F89
-        g7WLkYtDSGApo0TDqXfMXYwcQAkZiePryyBqhCX+XOtig6h5zShxovk5K0iCTcBKYmL7KkaQ
-        emGBKIkNL7NBwiICCRJPX89nA7GZBVQldjUvZQSxeQXsJA49us0OYrMAxad8n8oMYosKREic
-        eb+CBaJGUOLkzCcsEL3qEn/mXWKGsMUlbj2ZzwRhy0tsfzuHeQKjwCwkLbOQtMxC0jILScsC
-        RpZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgfGw7djPLTsYu94FH2IU4GBU4uGd0cccK8Sa
-        WFZcmXuIUYKDWUmEd541UIg3JbGyKrUoP76oNCe1+BCjKdBDE5mlRJPzgbGaVxJvaGpobmFp
-        aG5sbmxmoSTO2yFwMEZIID2xJDU7NbUgtQimj4mDU6qB8eSMKcIh3GHvioXm78zy3cx5+VdY
-        2gaN9MJN5w/zpr8QTrouWqFqbO5dXjmn9Nw+9tXablUT1sulONcs6C791fB9k8rrL4eljr5q
-        kNI4Pz1Wb0e95vZrjq+DD13VnHh5vlbEGTWzpZ8r3HbvsLvY7rec/8aVjhd+62pYe+ZkiN9V
-        e1y85I9brhJLcUaioRZzUXEiABylbRydAgAA
-X-CMS-MailID: 20190614144735eucas1p2f71313b752ae4ea841ddd4ea502fd79f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190614144735eucas1p2f71313b752ae4ea841ddd4ea502fd79f
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190614144735eucas1p2f71313b752ae4ea841ddd4ea502fd79f
-References: <CGME20190614144735eucas1p2f71313b752ae4ea841ddd4ea502fd79f@eucas1p2.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614092745.wznk3iv5dgehmjsb@uno.localdomain>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix error code from -ENOENT to -ENOMEM.
+On Fri, Jun 14, 2019 at 11:27:45AM +0200, Jacopo Mondi wrote:
+> Hi Daniel,
+> 
+> On Fri, Jun 14, 2019 at 10:42:51AM +0200, Daniel Vetter wrote:
+> > On Fri, Jun 14, 2019 at 10:15:52AM +0200, Jacopo Mondi wrote:
+> > > Hi Laurent,
+> > >    thanks for review
+> > >
+> > > On Fri, Jun 07, 2019 at 03:03:04PM +0300, Laurent Pinchart wrote:
+> > > > Hi Jacopo,
+> > > >
+> > > > Thank you for the patch.
+> > > >
+> > > > On Thu, Jun 06, 2019 at 04:22:19PM +0200, Jacopo Mondi wrote:
+> > > > > Enable the GAMMA_LUT KMS property using the framework helpers to
+> > > > > register the proeprty and the associated gamma table size maximum size.
+> > > > >
+> > > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > > > ---
+> > > > >  drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 3 +++
+> > > > >  1 file changed, 3 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> > > > > index e6d3df37c827..c920fb5dba65 100644
+> > > > > --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> > > > > +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> > > > > @@ -1207,6 +1207,9 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
+> > > > >  	    rcdu->cmms[swindex]) {
+> > > > >  		rcrtc->cmm = rcdu->cmms[swindex];
+> > > > >  		rgrp->cmms_mask |= BIT(hwindex % 2);
+> > > > > +
+> > > > > +		drm_mode_crtc_set_gamma_size(crtc, CMM_GAMMA_LUT_SIZE);
+> > > > > +		drm_crtc_enable_color_mgmt(crtc, 0, false, CMM_GAMMA_LUT_SIZE);
+> > > >
+> > > > This change looks good, but you also need to add support for legacy API.
+> > > > According to the function's documentation,
+> > > >
+> > > >  * Drivers should use drm_atomic_helper_legacy_gamma_set() to implement the
+> > > >  * legacy &drm_crtc_funcs.gamma_set callback.
+> > > >
+> > >
+> > > Drivers 'shuld' or drivers 'shall' ?
+> > > Isn't this required only to support the 'legacy APIs' ? Do we want that?
+> >
+> > You're calling drm_mode_crtc_set_gamma_size, which is only useful for the
+> > legacy ioctls. should here = assuming your hw supports something that
+> > legacy gamma ioctl can use. Feel free to patch up the docs.
+> 
+> Oh, I see. I should either leave the old API alone without calling
+> drm_mode_crtc_set_gamma_size(), or set the .gamma_set callback to
+> point to drm_atomic_helper_legacy_gamma_set(), which translates the
+> old gamma table interface to a blob property and attach it to a crtc
+> state which is then commited and applied through the atomic helpers.
+> 
+> So I would change the doc to prescribe that if the driver intends to
+> support the legacy SETGAMMA/GETGAMMA IOCTLs it should declare the
+> gamma table size with drm_mode_crtc_set_gamma_size() first, and set
+> the .gamma_set crtc callback to drm_atomic_helper_legacy_gamma_set(),
+> which translates the legacy interface to a GAMMA_LUT property blob
+> and commit it.
+> 
+> If that works, I'll make a small patch to the documentation in v2.
 
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
- drivers/video/fbdev/s3c-fb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Not quite what I meant: You should support the legacy gamma ioctl, if your
+gamma ramp can be squared into support that. Which generally means yes.
+We've been thinking about just wiring this all up by default, but there's
+some drivers who use a 256 entry legacy gamma ramp (for backwards compat
+with old X11 userspace), but advertise much bigger tables through the new
+ioctl. So it's not quite as simple.
 
-Index: b/drivers/video/fbdev/s3c-fb.c
-===================================================================
---- a/drivers/video/fbdev/s3c-fb.c
-+++ b/drivers/video/fbdev/s3c-fb.c
-@@ -1191,7 +1191,7 @@ static int s3c_fb_probe_win(struct s3c_f
- 				   palette_size * sizeof(u32), sfb->dev);
- 	if (!fbinfo) {
- 		dev_err(sfb->dev, "failed to allocate framebuffer\n");
--		return -ENOENT;
-+		return -ENOMEM;
- 	}
- 
- 	windata = sfb->pdata->win[win_no];
+But except if you have some really strange hw there's just no good reason
+not to support the old legacy ioctl. We also don't just support the new
+atomic ioctl on new drivers, they all still support the older interfaces.
+This is the same.
+
+That's what I meant should be clarified if it's not yet clear in docs,
+plus maybe a new todo entry in Documentation/gpu/todo.rst.
+-Daniel
+
+> 
+> Thanks
+>   j
+> 
+> 
+> > -Daniel
+> >
+> > >
+> > > Thanks
+> > >    j
+> > >
+> > > > >  	}
+> > > > >
+> > > > >  	drm_crtc_helper_add(crtc, &crtc_helper_funcs);
+> > > > >
+> > > >
+> > > > --
+> > > > Regards,
+> > > >
+> > > > Laurent Pinchart
+> >
+> >
+> >
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+
+
+
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
