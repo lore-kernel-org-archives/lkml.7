@@ -2,175 +2,164 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A246C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF30C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21B5B208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 500BB2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:45:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ESWZ4uf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfFNKoP (ORCPT
+        id S1727446AbfFNKpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:44:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:59374 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727018AbfFNKoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:44:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A7262B;
-        Fri, 14 Jun 2019 03:44:14 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D936F3F246;
-        Fri, 14 Jun 2019 03:45:55 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 11:43:59 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-Cc:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv5 10/20] PCI: mobiveil: Fix the INTx process errors
-Message-ID: <20190614104351.GA29955@e121166-lin.cambridge.arm.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-11-Zhiqiang.Hou@nxp.com>
- <20190612150819.GD15747@redmoon>
- <CAKnKUHFMH6=ox=qdaUR1kNEhETDCVyu3jQZEj+taEbbMRBRuYA@mail.gmail.com>
+        Fri, 14 Jun 2019 06:45:19 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45055 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbfFNKpQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 06:45:16 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r16so1976560wrl.11
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 03:45:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1ZO2she5ppWx2Q8JyWUBWFFhbTM0LwZQEDphClt9pDw=;
+        b=ESWZ4uf2DPrhUI+Ux6Pq+ahq6nSiNhZTG8jYcSeneUseGmW75Zj5cES9mKbeDCc6p9
+         rkH9TUYVfFL8T/oqamNBaMdVxz75eLQzbKBMZsyVDT7wiDKSChDULETjtxBqhwuFndPw
+         TZUm26glTE4gMvaJXCT3sjc0RyDuL/6P+RLnKIIgn0BT2T8n4RttoCuuoNLtt1CoROik
+         GuMF+wa/HsH+5732vb8HNOIViJR0mR03XSmuet05ieZmyyFHu2BpUG1BuSUiBN1tDmRq
+         mwldgK0Wp8YJ7vBeg+ehpeG7x1JwT6Bh82aUhVFtz+iLGSW0YravjoQxptNj1fUDc193
+         Ooxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1ZO2she5ppWx2Q8JyWUBWFFhbTM0LwZQEDphClt9pDw=;
+        b=YoMnfW+MICIXJjAH2eTn1rXwezCiFx/RiZAKybYxuNtqL48u3mIecnSoKHwiRG49oM
+         vm/xKdt30muXRcEDHVWmiVQZy30Pds1dTQY+8ExfPsnRYdFPo84nqxerX5xYpfzLRhAD
+         a4cT7Jy43qoxftopD2Yal5ZD1fAjOw00cTIHD1viiUyy9IiVQcueDcbGMka8nmxaUeam
+         NvV6IHRySlezLvBBIMPoKq2AVTdEYMH+oz68REf6tUDjQ7F47OQab5tstFKbsr36G/7Z
+         KnT6eyX11g7sor7OC9NwivDbILSTQdHTEcB0WjtOrar/Fs3kJwmOsYQnJ043d0hOLZV3
+         SivQ==
+X-Gm-Message-State: APjAAAXC19qAiWs7K7LSprWZDadmeNgR8V2IUv1VIsCRgw9lYo42P18H
+        EkflPttPL0rqYR01+A0OQ7I=
+X-Google-Smtp-Source: APXvYqzdB/X7weMKQijAxhOggcNp+q++NTTj+4iEV8DKP91I/m3WEyO8E6DpxM49YTDL0DdPfjL5Mw==
+X-Received: by 2002:adf:c5c1:: with SMTP id v1mr45897548wrg.129.1560509114552;
+        Fri, 14 Jun 2019 03:45:14 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id d10sm3746676wrp.74.2019.06.14.03.45.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 03:45:14 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] clocksource: Add suspend clocksource sysfs attribute
+Date:   Fri, 14 Jun 2019 12:45:10 +0200
+Message-Id: <20190614104510.19360-2-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190614104510.19360-1-thierry.reding@gmail.com>
+References: <20190614104510.19360-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKnKUHFMH6=ox=qdaUR1kNEhETDCVyu3jQZEj+taEbbMRBRuYA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 12:38:51PM +0530, Karthikeyan Mitran wrote:
-> Hi Lorenzo and Hou Zhiqiang
->  PAB_INTP_AMBA_MISC_STAT does have other status in the higher bits, it
-> should have been masked before checking for the status
+From: Thierry Reding <treding@nvidia.com>
 
-You are the maintainer for this driver, so if there is something to be
-changed you must post a patch to that extent, I do not understand what
-the above means, write the code to fix it, I won't do it.
+Allow the currently selected suspend clocksource to be inspected via
+sysfs. The suspend clocksource can also be set using this attribute,
+which can be useful for debugging.
 
-I am getting a bit annoyed with this Mobiveil driver so either you guys
-sort this out or I will have to remove it from the kernel.
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ kernel/time/clocksource.c | 53 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 52 insertions(+), 1 deletion(-)
 
-> Acked-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index 467b36d2f9f8..d963bcecbc96 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -489,7 +489,8 @@ static void __clocksource_suspend_select(struct clocksource *cs)
+ 	}
+ 
+ 	/* Pick the best rating. */
+-	if (!suspend_clocksource || cs->rating > suspend_clocksource->rating)
++	if (!suspend_clocksource || cs->rating > suspend_clocksource->rating ||
++	    (suspend_clocksource->flags & CLOCK_SOURCE_SUSPEND_NONSTOP) == 0)
+ 		suspend_clocksource = cs;
+ }
+ 
+@@ -1172,10 +1173,60 @@ static ssize_t available_clocksource_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(available_clocksource);
+ 
++static ssize_t suspend_clocksource_show(struct device *dev,
++					struct device_attribute *attr,
++					char *buf)
++{
++	struct clocksource *clksrc = suspend_clocksource;
++	ssize_t count = 0;
++
++	if (clksrc)
++		count += snprintf(buf, PAGE_SIZE, "%s\n", clksrc->name);
++
++	return count;
++}
++
++static ssize_t suspend_clocksource_store(struct device *dev,
++					 struct device_attribute *attr,
++					 const char *buf, size_t count)
++{
++	struct clocksource *cs;
++	char name[CS_NAME_LEN];
++	ssize_t ret;
++
++	ret = sysfs_get_uname(buf, name, count);
++	if (ret < 0)
++		return ret;
++
++	mutex_lock(&clocksource_mutex);
++
++	if (strlen(name) > 0) {
++		cs = clocksource_lookup(name);
++		if (cs) {
++			if (!(cs->flags & CLOCK_SOURCE_SUSPEND_NONSTOP))
++				pr_warn("using non-persistent clocksource %s for suspend\n",
++					cs->name);
++
++			suspend_clocksource = cs;
++		} else {
++			ret = -ENODEV;
++		}
++	} else {
++		clocksource_suspend_select(false);
++	}
++
++	mutex_unlock(&clocksource_mutex);
++
++	return ret ? ret : count;
++}
++
++static DEVICE_ATTR_RW(suspend_clocksource);
++
+ static struct attribute *clocksource_attrs[] = {
+ 	&dev_attr_current_clocksource.attr,
+ 	&dev_attr_unbind_clocksource.attr,
+ 	&dev_attr_available_clocksource.attr,
++	&dev_attr_suspend_clocksource.attr,
+ 	NULL
+ };
+ ATTRIBUTE_GROUPS(clocksource);
+-- 
+2.21.0
 
-Ok I assume this means you tested it but according to what you
-say above, are there still issues with this code path ? Should
-we update the patch ?
-
-Moreover:
-
-https://kernelnewbies.org/PatchCulture
-
-Please read it and never top-post.
-
-Thanks,
-Lorenzo
-
-> On Wed, Jun 12, 2019 at 8:38 PM Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com> wrote:
-> >
-> > On Fri, Apr 12, 2019 at 08:36:12AM +0000, Z.q. Hou wrote:
-> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > >
-> > > In the loop block, there is not code to update the loop key,
-> > > this patch updates the loop key by re-read the INTx status
-> > > register.
-> > >
-> > > This patch also add the clearing of the handled INTx status.
-> > >
-> > > Note: Need MV to test this fix.
-> >
-> > This means INTX were never tested and current code handling them is,
-> > AFAICS, an infinite loop which is very very bad.
-> >
-> > This is a gross bug and must be fixed as soon as possible.
-> >
-> > I want Karthikeyan ACK and Tested-by on this patch.
-> >
-> > Lorenzo
-> >
-> > > Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
-> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> > > Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> > > ---
-> > > V5:
-> > >  - Corrected and retouched the subject and changelog.
-> > >
-> > >  drivers/pci/controller/pcie-mobiveil.c | 13 +++++++++----
-> > >  1 file changed, 9 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> > > index 4ba458474e42..78e575e71f4d 100644
-> > > --- a/drivers/pci/controller/pcie-mobiveil.c
-> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
-> > > @@ -361,6 +361,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
-> > >       /* Handle INTx */
-> > >       if (intr_status & PAB_INTP_INTX_MASK) {
-> > >               shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-> > > +             shifted_status &= PAB_INTP_INTX_MASK;
-> > >               shifted_status >>= PAB_INTX_START;
-> > >               do {
-> > >                       for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
-> > > @@ -372,12 +373,16 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
-> > >                                       dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n",
-> > >                                                           bit);
-> > >
-> > > -                             /* clear interrupt */
-> > > -                             csr_writel(pcie,
-> > > -                                        shifted_status << PAB_INTX_START,
-> > > +                             /* clear interrupt handled */
-> > > +                             csr_writel(pcie, 1 << (PAB_INTX_START + bit),
-> > >                                          PAB_INTP_AMBA_MISC_STAT);
-> > >                       }
-> > > -             } while ((shifted_status >> PAB_INTX_START) != 0);
-> > > +
-> > > +                     shifted_status = csr_readl(pcie,
-> > > +                                                PAB_INTP_AMBA_MISC_STAT);
-> > > +                     shifted_status &= PAB_INTP_INTX_MASK;
-> > > +                     shifted_status >>= PAB_INTX_START;
-> > > +             } while (shifted_status != 0);
-> > >       }
-> > >
-> > >       /* read extra MSI status register */
-> > > --
-> > > 2.17.1
-> > >
-> 
-> 
-> 
-> -- 
-> Thanks,
-> Regards,
-> Karthikeyan Mitran
-> 
-> -- 
-> Mobiveil INC., CONFIDENTIALITY NOTICE: This e-mail message, including any 
-> attachments, is for the sole use of the intended recipient(s) and may 
-> contain proprietary confidential or privileged information or otherwise be 
-> protected by law. Any unauthorized review, use, disclosure or distribution 
-> is prohibited. If you are not the intended recipient, please notify the 
-> sender and destroy all copies and the original message.
