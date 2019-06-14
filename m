@@ -2,181 +2,175 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715E3C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19271C31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404ED2080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:17:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RLrsNPT/"
+	by mail.kernel.org (Postfix) with ESMTP id EFE1B20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfFNIRc (ORCPT
+        id S1726581AbfFNISZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 04:17:32 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44538 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfFNIRa (ORCPT
+        Fri, 14 Jun 2019 04:18:25 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:37557 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfFNISZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 04:17:30 -0400
-Received: by mail-lf1-f67.google.com with SMTP id r15so1082149lfm.11
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 01:17:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sYZceYw/PBvRSxvmCoPk9kiBr948sZ4CFzmxWCPNjiY=;
-        b=RLrsNPT/uaaAfFbVFaeqZ6JSPheqCUq74WDZJocy/VXfonejDDi21W3KH/jUcNDYit
-         uFjYoUzJhvbyvDe6ImPVkmAIf0sWV0aajwDBxm1DxLInFjAvbcMbi5RidfsPjVZrMffs
-         Zg+N5N/SfwdpXzQeNbaoZttXLU3LyrWuOVWSUD/HN+icQi3UAq7i4EQoY2e7fRWAKS2G
-         DTsOw5eHbsCdluVPpPOXyDWc9Cz/smTVsS+OkRpIHcajmkoMv6Zwg3xxiKhhxMbLvAUE
-         ADOPKegxUfDNG+Bdd3FC2qU8XzWIx16DnlzPqgQA9ybWXYaKidIR61Rwg9y4sX2RXm2T
-         7/AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sYZceYw/PBvRSxvmCoPk9kiBr948sZ4CFzmxWCPNjiY=;
-        b=UlkA0nfYeiQE9eUDCJPnMZZvtZZpN+5gMcKf5FMxEaop8RyJcqxAreXt9RhTpfJt6e
-         j3NR3j7/71VUVL+BAM/wCZVbZVMCGDEuu5V1KDBLOFp2Sxt/ICK8UgmyyZmN2M0bPRfu
-         qVxE9wmqVjlKgezIV3p2rECKUHPbcohdT0HySFv2Ip08h8OoAuS5bFlrJ8lR681d/r2R
-         YNMl87H0Z/iAK9AcEUar5/L/5SiGJ4TT/YMfMf86BvfIDb+UIEQ1G6rk7vWChWSrk0K+
-         GNFFXzoBMmqRu2FwFDZwdUZz4xLnPtjZxPhNnVqP7RqQmhuS9QG82rxOaIJiKb1ylCUH
-         EpoQ==
-X-Gm-Message-State: APjAAAWTUAXVs8ljonyNdc5CwjvagUgu3Zn+B2o3w8oq7StzpjxLnAC3
-        9cDFWBWgQCf08PhHJnBly4m+nOOWEfelY9NVUkPkBw==
-X-Google-Smtp-Source: APXvYqwlbCDwuNlvWWLAMVDCvRG6Cs9rwpyMyT1zYYedGWIAKIWp5RRw1PxqPMLnhghF9xZ+PIVYSTL3bBt2hmIi3WQ=
-X-Received: by 2002:ac2:50c4:: with SMTP id h4mr34300421lfm.61.1560500248037;
- Fri, 14 Jun 2019 01:17:28 -0700 (PDT)
+        Fri, 14 Jun 2019 04:18:25 -0400
+X-Originating-IP: 37.177.88.254
+Received: from uno.localdomain (unknown [37.177.88.254])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 3EF2DE0005;
+        Fri, 14 Jun 2019 08:18:07 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 10:19:13 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 20/20] drm: rcar-du: kms: Update CMM in atomic commit tail
+Message-ID: <20190614081913.n5yxpotto5fzl7sh@uno.localdomain>
+References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
+ <20190606142220.1392-21-jacopo+renesas@jmondi.org>
+ <20190607120633.GI7593@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-References: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
- <d803283e-5e69-5deb-fe94-3f2e45fb95af@schaufler-ca.com> <1560470593.4805.109.camel@linux.ibm.com>
-In-Reply-To: <1560470593.4805.109.camel@linux.ibm.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Fri, 14 Jun 2019 13:47:16 +0530
-Message-ID: <CAFA6WYOZOrv5D6261z-bwCP6+6ORzH3PcZz89Sfn=yts0dkvTg@mail.gmail.com>
-Subject: Re: [RFC 0/7] Introduce TEE based Trusted Keys support
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>, keyrings@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jens Wiklander <jens.wiklander@linaro.org>, corbet@lwn.net,
-        dhowells@redhat.com, jejb@linux.ibm.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        jmorris@namei.org, serge@hallyn.com,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        tee-dev@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cvgh7guoqqbi6mcf"
+Content-Disposition: inline
+In-Reply-To: <20190607120633.GI7593@pendragon.ideasonboard.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Mimi for your comments.
 
-On Fri, 14 Jun 2019 at 05:33, Mimi Zohar <zohar@linux.ibm.com> wrote:
+--cvgh7guoqqbi6mcf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Laurent,
+
+On Fri, Jun 07, 2019 at 03:06:33PM +0300, Laurent Pinchart wrote:
+> Hi Jacopo,
 >
-> On Thu, 2019-06-13 at 09:40 -0700, Casey Schaufler wrote:
-> > On 6/13/2019 3:30 AM, Sumit Garg wrote:
-> > > Add support for TEE based trusted keys where TEE provides the functionality
-> > > to seal and unseal trusted keys using hardware unique key. Also, this is
-> > > an alternative in case platform doesn't possess a TPM device.
-> > >
-> > > This series also adds some TEE features like:
+> Thank you for the patch.
+>
+> On Thu, Jun 06, 2019 at 04:22:20PM +0200, Jacopo Mondi wrote:
+> > Update CMM settings at in the atomic commit tail helper method.
 > >
-> > Please expand the acronym TEE on first use. That will
-> > help people who don't work with it on a daily basis
-> > understand what you're going on about.
->
-> Thanks, Casey.
->
-> "[6/7] doc: keys: Document usage of TEE based Trusted Keys" refers to
-> the kernel tee documentation, but that documentation is limited to
-> userspace interaction with the tee.
->
-
-Thanks for pointing this out. I will update documentation to include
-TEE bus approach and communication apis for kernel clients.
-
-BTW, the interface is similar as with user-space. Only difference is
-instead of IOCTL's from user-space, there are wrapper apis to
-communicate with TEE.
-
-Also, in case someone is interested to learn about TEE technology,
-this webinar [1] could be one of starting points.
-
-> A trusted key is a random number generated and sealed(encrypted) by
-> the TPM, so that only the TPM may unseal it.  The sealing key never
-> leaves the TPM.  The sealed, trusted key may be exported to userspace.
-
-Understood.
-
->  In the tee case, can the "sealing" key ever leave the tee?
-
-No, the "sealing" key never leaves TEE. Its basically a Hardware
-Unique Key (HUK) tied to a particular SoC.
-
->  Can the
-> sealed, trusted key, exported to userspace, be unsealed by the tee?
-
-You mean using user-space interface to TEE? If yes, then answer is
-"no" as user-space can't communicate with this TEE service as its
-accessible to kernel clients only (see patch [2]).
-
-In case you meant loading exported trusted key blob via "keyctl", then
-"yes" this driver can unseal the trusted key. Have a look at examples
-I have listed in documentation patch [3]. Also, this approach works
-well across power cycles too.
-
->  Are the tee security protections similar to those of the TPM?  How do
-> they compare?
->
-
-Let me try to compare both environments. Regarding TEE, I will refer
-to OP-TEE [4] as one of its implementation.
-
-TPM:
-
-1. External hardware.
-2. Sealing key resides inside TPM.
-3. Communicates via SPI, I2C etc.
-
-OP-TEE:
-
-1. On chip, trusted execution environment enforced via ARM TrustZone.
-2. Sealing key is unique to a particular SoC provided by secure fuses,
-secure crypto engine etc.
-3. Communicates via Secure Monitor Calls (SMCs [5]).
-
-[1] https://globalplatform.org/resource-publication/webinar-an-introduction-to-tee-technology/
-[2] [RFC 3/7] tee: add private login method for kernel clients
-[3] [RFC 6/7] doc: keys: Document usage of TEE based Trusted Keys
-[4] https://optee.readthedocs.io/general/about.html
-[5] http://infocenter.arm.com/help/topic/com.arm.doc.den0028b/ARM_DEN0028B_SMC_Calling_Convention.pdf
-
-
--Sumit
-
-> Mimi
->
+> > The CMM is updated with new gamma values provided to the driver
+> > in the GAMMA_LUT blob property.
 > >
-> > >
-> > > Patch #1, #2 enables support for registered kernel shared memory with TEE.
-> > >
-> > > Patch #3 enables support for private kernel login method required for
-> > > cases like trusted keys where we don't wan't user-space to directly access
-> > > TEE service to retrieve trusted key contents.
-> > >
-> > > Rest of the patches from #4 to #7 adds support for TEE based trusted keys.
-> > >
-> > > This patch-set has been tested with OP-TEE based pseudo TA which can be
-> > > found here [1].
-> > >
-> > > Looking forward to your valuable feedback/suggestions.
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 36 +++++++++++++++++++++++++++
+> >  1 file changed, 36 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> > index 5a910a04e1d9..29a2020a46b5 100644
+> > --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> > @@ -21,6 +21,7 @@
+> >  #include <linux/of_platform.h>
+> >  #include <linux/wait.h>
+> >
+> > +#include "rcar_cmm.h"
+> >  #include "rcar_du_crtc.h"
+> >  #include "rcar_du_drv.h"
+> >  #include "rcar_du_encoder.h"
+> > @@ -367,6 +368,38 @@ rcar_du_fb_create(struct drm_device *dev, struct drm_file *file_priv,
+> >   * Atomic Check and Update
+> >   */
+> >
+> > +static void rcar_du_atomic_commit_update_cmm(struct drm_crtc *crtc,
+> > +					     struct drm_crtc_state *old_state)
+> > +{
+> > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> > +	struct rcar_cmm_config cmm_config = {};
+> > +
+> > +	if (!rcrtc->cmm || !crtc->state->color_mgmt_changed)
+> > +		return;
+> > +
+> > +	if (!crtc->state->gamma_lut) {
+> > +		cmm_config.lut.enable = false;
+> > +		rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> > +
+> > +		return;
+> > +	}
+> > +
+> > +	cmm_config.lut.enable = true;
+> > +	cmm_config.lut.table = (struct drm_color_lut *)
+> > +			       crtc->state->gamma_lut->data;
+> > +
+> > +	/* Set LUT table size to 0 if entries should not be updated. */
+> > +	if (!old_state->gamma_lut ||
+> > +	    (old_state->gamma_lut->base.id !=
+> > +	    crtc->state->gamma_lut->base.id))
+> > +		cmm_config.lut.size = crtc->state->gamma_lut->length
+> > +				    / sizeof(cmm_config.lut.table[0]);
 >
+> Do you need to call rcar_cmm_setup() at all in this case ?
+>
+
+Do you mean in case the lut.size field is set to 0 ?
+I considered it useful when the CMM has to be re-enabled without
+updateing the LUT table entries? It is not required in your opinion?
+
+Thanks
+   j
+
+> > +	else
+> > +		cmm_config.lut.size = 0;
+> > +
+> > +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> > +}
+> > +
+> >  static int rcar_du_atomic_check(struct drm_device *dev,
+> >  				struct drm_atomic_state *state)
+> >  {
+> > @@ -409,6 +442,9 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
+> >  			rcdu->dpad1_source = rcrtc->index;
+> >  	}
+> >
+> > +	for_each_old_crtc_in_state(old_state, crtc, crtc_state, i)
+> > +		rcar_du_atomic_commit_update_cmm(crtc, crtc_state);
+> > +
+> >  	/* Apply the atomic update. */
+> >  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
+> >  	drm_atomic_helper_commit_planes(dev, old_state,
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+
+--cvgh7guoqqbi6mcf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0DWIEACgkQcjQGjxah
+VjzwpQ//WMAXXg0Iqe84pOeR3FpXuQ4vkqCDArzdNFG5VcdNm4npoe6ZnjnSy7Ae
+dPhB8oQVdcRmjmGbNvre5amsEmxONrfcGwiyzCJhoW8T28sztdv0LGzSoTHV6ejt
+0xY2qG02Ek0UPOWwiCMzvfxCK+hJEbXEukD31pDOoVc1EoB3P7FEI1NLe5MJZVKD
+Encdf+0v8nCnbrRG2oWCvBp3CJy5UuBLbu+EuAr6rawekdHYulJCjtolDqKQO7jr
+fPMR5vfNm2MsWr7em2vdeI2O/zmPw5ixIWyauAz4Kzz2CC+7elXSFona/gMYpry0
+xKKJso48zJ3NcZlwjDhXDtKuu5vE21r4qmvVmxGFFphxGdXIIudOWqIUo+0N+2Jr
+fQKK7HpGK4XsG7Vv/lJkgDEntZYBRj99QqE+2u0fzbAryUv9Sl//RlHBxUZRGdl7
+Vbp3QdCgJZvS7qGsR6s1dMi5lCfWbiP8k3nQGb7MaW1hWmjTeUSswSCdorOxWSfZ
+y4SVNfGKP7g+gWaeBZidUrDiveV8hz8RaB3a84LTPC0UYd78VYJLHUwmgKGtd1Ti
+ipIfzhCoY8UcHJn/3EiiuiQJMd4tiw6b/vkB79fdPp8lMTDlAaglS3uPSW1REsAc
+OS0k2lCyh+L/sW0um5QPM8DeLUa3psCuDgzi0u043tLe1pqFnDk=
+=jqfj
+-----END PGP SIGNATURE-----
+
+--cvgh7guoqqbi6mcf--
