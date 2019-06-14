@@ -2,121 +2,101 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED560C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B68C0C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C103320866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830C72168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:45:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTLc22d+"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="CmA0VwwE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbfFNNos (ORCPT
+        id S1728356AbfFNNpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:44:48 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39077 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbfFNNos (ORCPT
+        Fri, 14 Jun 2019 09:45:06 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45204 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727382AbfFNNpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:44:48 -0400
-Received: by mail-ed1-f67.google.com with SMTP id m10so3582337edv.6;
-        Fri, 14 Jun 2019 06:44:46 -0700 (PDT)
+        Fri, 14 Jun 2019 09:45:05 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j19so2439051qtr.12
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:45:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FyXT1/kbK0Pc0+G6zGZqye5FjmJZlP77pOonEO/PaPQ=;
-        b=KTLc22d+VHdXQX9yTHxxeZAKtARZ/ECZeI8Z+jiZgBfad0n3CwWYhhZglbRBJI+gcq
-         /EbAZfHMUJDvxkK1SDjadK8v69gz1WzZ9in05yZ+MTOAonOXYCimuSmuqGBcIwPtB3MO
-         VdQiNupNkxbgQaTcFAFq0VFESHr7WPE0G/p/5t+s15VmKyqHeVIm7YLZ1OnGwe0FUhw4
-         DJDNryNbIjkjXP9m/XXHxkkC30iZjaeqpqaJhaQDY+hPjJgVgnfZ1Ftq0c1z6xBYefLs
-         F02wlMEyaWx6gw/ZtrTafxwV0lMSLL29SZ7q3lD7Ia84KhwxIaOO0eUfVlju0RvKyTzR
-         dwvQ==
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OoE9TTwZ2oX4l67lO4UKKcsLXQImUKGP20eXDpNCJrQ=;
+        b=CmA0VwwEqJigtFceHJxQeYm3whQH2/+4pEJ/T/TOOR81IIrusYRBFbvLnkk2d8y9zK
+         n1zgsO3A3KhD6bJjzcoi53PSKIjlVu7yoeqsxOpjp0j0dLgQPuSs84L29BAT52XfCqPT
+         0l9Luwh6m1xaqa5JgO0hohC6Kgb3fA6L1z+xJnvYDCe1p1/uQVjEmDenWKlttKNMi694
+         O2zTv0sNHEM8H6IXKqNLita+OS5cAnoiCLwBMN8+xxSjPZvbkjNWrxPhgBUR84mn84bD
+         iTnsipFfh1WbMAjWOuKPoxmuL5PsSVfcthoirTwInDvf05QM2YmJfPADbHinscIK24+J
+         HwiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FyXT1/kbK0Pc0+G6zGZqye5FjmJZlP77pOonEO/PaPQ=;
-        b=cR36R51wqbZsxIxos7hSGYu6pkTsEqDhIbxLvHXGk7BNabq1YbOEzZvsQT0dPS1owU
-         WqktvObca587vpv3hvH03Ai20aWl6N5KsdhNQOjAfEBWKCD1dGQIYT2l3o1k+R8jQnip
-         ud3U8W2M4gVh6PncoySi3/JzrAnWNbVF2BYY+c8Ele1abVomffDkc2VHMV1eijEO2R3H
-         YlhOrOjVrIssGsofjchGj6JMITk9F7xWn2oIZSNr7+JofQR9zueKNluOPEq8B3SnQKXU
-         V6o432/77g61A4rnN53LNISK17MnoKn6U0VGdtBGD0JZsGRo7ZTPuGeE2KyhmQ5ZZiBn
-         lIDA==
-X-Gm-Message-State: APjAAAVlJ3cloju1PAm0HpTumzA/kzFThnr6hCY8momIs3TZgr4fuBEd
-        6GAbyRkzfS8ADSRYReQ4mENiC6oTCXXNRi0/gIw=
-X-Google-Smtp-Source: APXvYqyS7dvDPfKGWqFi8rhkMR2nmF7A7n7GP/bNJ2bxTRiaVtMdcYXXV3XZ1yOe+WxfGspubCcyJKhSVkzEO54Hrso=
-X-Received: by 2002:a17:906:951:: with SMTP id j17mr56132952ejd.174.1560519885436;
- Fri, 14 Jun 2019 06:44:45 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OoE9TTwZ2oX4l67lO4UKKcsLXQImUKGP20eXDpNCJrQ=;
+        b=Y51VafQMFaKdf0n06LYysuvZWsDV8E5i6nxxzugQ6t1I5qhUUgoH3xVzzmECMlwree
+         8otG70jlg840NUe/JYVXvingQ4VLYAUzph9aTCSCZYIPxgkWPDtQF0p/mLcSb3mSrJ2X
+         EWNcYJv2QrzKzPlL/t/AvGgZRQzNfdRoDTBCdPfYT6gcMUD/8xLBKPJVvLscr/xgbBpo
+         +5xIKX60AYWgY0yqUtSm2KNIz/RLUgZkGblJtvAkkr7R4mcMSnzvMoapDpNb07tezvGs
+         iob5zGNVNf7v+UqRs2GLeH16AXu7OKY4UwCW5AK5gSv9krloxBACuqhiPvuRvmz/b1jf
+         XmMA==
+X-Gm-Message-State: APjAAAVkFHOCmvjWEAcPfiGTrV2liBlinxU/I448biHCICrSSiiy/7Al
+        S0Wt0OauDaDdMmTGd/DAkFPGqLTwCYPh2BRe
+X-Google-Smtp-Source: APXvYqzK0goCeSYPjF5bhIPBakUW9p6CVwC+vyGH1n/OjNW5KJjnzAEtFGiENd0PQTCzCI2Gq26ImQ==
+X-Received: by 2002:ac8:374b:: with SMTP id p11mr77934298qtb.316.1560519904543;
+        Fri, 14 Jun 2019 06:45:04 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::a658])
+        by smtp.gmail.com with ESMTPSA id c30sm1843863qta.25.2019.06.14.06.45.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 06:45:03 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 09:45:02 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
+        axboe@kernel.dk, jack@suse.cz, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 4/8] Btrfs: stop using btrfs_schedule_bio()
+Message-ID: <20190614134501.cjnrsb5n6jtteqex@MacBook-Pro-91.local>
+References: <20190614003350.1178444-1-tj@kernel.org>
+ <20190614003350.1178444-5-tj@kernel.org>
 MIME-Version: 1.0
-References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com> <20190612212748.32246-1-jeffrey.l.hugo@gmail.com>
-In-Reply-To: <20190612212748.32246-1-jeffrey.l.hugo@gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 14 Jun 2019 06:44:31 -0700
-Message-ID: <CAF6AEGvAkCqNXg-NwxfpYJteWs6hfBnOb0yJN6vQOnmMck-HDQ@mail.gmail.com>
-Subject: Re: [PATCH v6 3/5] arm64: dts: qcom: Add Lenovo Miix 630
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>, jikos@kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614003350.1178444-5-tj@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 10:17 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->
-> This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
-> functionality includes USB (host), microSD-card, keyboard, and trackpad.
->
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
+On Thu, Jun 13, 2019 at 05:33:46PM -0700, Tejun Heo wrote:
+> From: Chris Mason <clm@fb.com>
+> 
+> btrfs_schedule_bio() hands IO off to a helper thread to do the actual
+> submit_bio() call.  This has been used to make sure async crc and
+> compression helpers don't get stuck on IO submission.  To maintain good
+> performance, over time the IO submission threads duplicated some IO
+> scheduler characteristics such as high and low priority IOs and they
+> also made some ugly assumptions about request allocation batch sizes.
+> 
+> All of this cost at least one extra context switch during IO submission,
+> and doesn't fit well with the modern blkmq IO stack.  So, this commit stops
+> using btrfs_schedule_bio().  We may need to adjust the number of async
+> helper threads for crcs and compression, but long term it's a better
+> path.
+> 
+> Signed-off-by: Chris Mason <clm@fb.com>
 
-[snip]
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-> new file mode 100644
-> index 000000000000..407c6a32911c
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-> @@ -0,0 +1,30 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
-> +
-> +/dts-v1/;
-> +
-> +#include "msm8998-clamshell.dtsi"
-> +
-> +/ {
-> +       model = "Lenovo Miix 630";
-> +       compatible = "lenovo,miix-630", "qcom,msm8998";
-> +};
+Thanks,
 
-
-So, I'm not sure if there is some precedent for this (but maybe we
-haven't really had this problem before).. but as I mentioned on
-#arch64-laptops, I think we should put vendor/product/board-id strings
-from SMBIOS table in the dts files.  That could be used by grub to
-find the correct dtb file to load in a generic way.  (Ie, look for a
-match of all three strings, and maybe fallback to a match on just
-vendor+product??)
-
-At any rate, how the strings are used can be refined later.  But I
-think we should include the strings from the beginning for anything
-that is booting via UEFI.  It's perhaps more useful than the
-compatible string.
-
-BR,
--R
+Josef
