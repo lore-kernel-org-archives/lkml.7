@@ -2,95 +2,152 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CDBC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28F8C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 131632168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A41FF2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:58:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t+C/+5N1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbfFNU6o (ORCPT
+        id S1727017AbfFNU6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:58:44 -0400
-Received: from sauhun.de ([88.99.104.3]:56984 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfFNU6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:58:44 -0400
-Received: from localhost (p5486CF81.dip0.t-ipconnect.de [84.134.207.129])
-        by pokefinder.org (Postfix) with ESMTPSA id 0F1022CF690;
-        Fri, 14 Jun 2019 22:58:42 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 22:58:41 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
-        andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH REPOST v8 1/3] dt-bindings: i2c: extend existing opencore
- bindings.
-Message-ID: <20190614205841.GC17899@ninjato>
-References: <1559369475-15374-1-git-send-email-sagar.kadam@sifive.com>
- <1559369475-15374-2-git-send-email-sagar.kadam@sifive.com>
+        Fri, 14 Jun 2019 16:58:47 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46451 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfFNU6p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:58:45 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 81so2102224pfy.13;
+        Fri, 14 Jun 2019 13:58:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Xq4ZMKmqaYESp+y/yJJJP8yO0vJ9LIM89P2olkrziRk=;
+        b=t+C/+5N1BeFF0+8rA+KyhTRzSjhvhsOZcJrTvQXMr5WlSBGoIt/6KaEULswU39rYbL
+         jN6F1y5z7P0gOqPXmMrC0z5Fd+mFOPHkpOABh/6vWy10SoS9cpgo3nvRx6S6l3IYC7FZ
+         Fwe+c2wfbO0ppAsuwkfV6/N9L85bqc/PlhBFEirifKfo07LrOjvTI5U06tYykJeZKR2T
+         fTAV3dpF3nRcPGi9IK2cr5htjIWYV+nbOTYMzvTkN9I0aKSlr7JWFLiNogysBtpcTVXJ
+         hmBLwzHOYPNKDw0zCIkJYwku/Gcdtqf7lYBSmuDcP9XV45MFiMUWLlTXd9+CWrJcUb7Q
+         lX3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Xq4ZMKmqaYESp+y/yJJJP8yO0vJ9LIM89P2olkrziRk=;
+        b=aRpMT8P1ptBFKjEGBdtx6kGezUPLuvBqXmpWn3DRqklDzDYTlloimQPc7eMXWNDh1O
+         x/WkKbmxMY0ayG+9Yah36pXUGXepkiX0WNS0xDBpPo6k1QfbuJO5+rxvvzMqCFtdcXZZ
+         DgiilVLHgIVdQCRI/hrRRtBOV1cY79mp6UquglpcMai0IMUCcP8gSs8QTGv3Ej+6mhmP
+         Q90nZgjCQJON3MVeQcrc+sgC/o3s5dEJPnXVCmVoSSdObw/MnQ8U0zLkNqgiZIN2/rkU
+         ktktPQO/LZsPRwVuj9BBnO5Z0BOXxLQnqY8DEWut+lK37l35fM9isXKLB18R6yEyYPRt
+         LsKw==
+X-Gm-Message-State: APjAAAXgxLRUknPmdnKugvKzAfQp23D/IjGB++6dEKhsyqbR3E27+etr
+        FRsMqB40JY2HvRqW+PZREJ4=
+X-Google-Smtp-Source: APXvYqyfietE6hYnW8A2nm9Oi7jLNJHkHCuwiYicck1X2QlqdRn7NU8fr62322sbEDeDmYSqFm8jqQ==
+X-Received: by 2002:a63:6142:: with SMTP id v63mr38145069pgb.309.1560545924079;
+        Fri, 14 Jun 2019 13:58:44 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:6345])
+        by smtp.gmail.com with ESMTPSA id l2sm3340105pgs.33.2019.06.14.13.58.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 13:58:43 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 13:58:42 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v2 2/5] objtool: Fix ORC unwinding in non-JIT BPF
+ generated code
+Message-ID: <20190614205841.s4utbpurntpr6aiq@ast-mbp.dhcp.thefacebook.com>
+References: <cover.1560534694.git.jpoimboe@redhat.com>
+ <c0add777a2e0207c1474ce99baa492a7ce3502d6.1560534694.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="QRj9sO5tAVLaXnSD"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1559369475-15374-2-git-send-email-sagar.kadam@sifive.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c0add777a2e0207c1474ce99baa492a7ce3502d6.1560534694.git.jpoimboe@redhat.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 14, 2019 at 12:56:41PM -0500, Josh Poimboeuf wrote:
+> Objtool currently ignores ___bpf_prog_run() because it doesn't
+> understand the jump table.  This results in the ORC unwinder not being
+> able to unwind through non-JIT BPF code.
+> 
+> Luckily, the BPF jump table resembles a GCC switch jump table, which
+> objtool already knows how to read.
+> 
+> Add generic support for reading any static local jump table array named
+> "jump_table", and rename the BPF variable accordingly, so objtool can
+> generate ORC data for ___bpf_prog_run().
+> 
+> Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+> Reported-by: Song Liu <songliubraving@fb.com>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  kernel/bpf/core.c     |  5 ++---
+>  tools/objtool/check.c | 16 ++++++++++++++--
+>  2 files changed, 16 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> index 7c473f208a10..aa546ef7dbdc 100644
+> --- a/kernel/bpf/core.c
+> +++ b/kernel/bpf/core.c
+> @@ -1299,7 +1299,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+>  {
+>  #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
+>  #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
+> -	static const void *jumptable[256] = {
+> +	static const void *jump_table[256] = {
+>  		[0 ... 255] = &&default_label,
+>  		/* Now overwrite non-defaults ... */
+>  		BPF_INSN_MAP(BPF_INSN_2_LBL, BPF_INSN_3_LBL),
+> @@ -1315,7 +1315,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+>  #define CONT_JMP ({ insn++; goto select_insn; })
+>  
+>  select_insn:
+> -	goto *jumptable[insn->code];
+> +	goto *jump_table[insn->code];
+>  
+>  	/* ALU */
+>  #define ALU(OPCODE, OP)			\
+> @@ -1558,7 +1558,6 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+>  		BUG_ON(1);
+>  		return 0;
+>  }
+> -STACK_FRAME_NON_STANDARD(___bpf_prog_run); /* jump table */
+>  
+>  #define PROG_NAME(stack_size) __bpf_prog_run##stack_size
+>  #define DEFINE_BPF_PROG_RUN(stack_size) \
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index 172f99195726..8341c2fff14f 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -18,6 +18,8 @@
+>  
+>  #define FAKE_JUMP_OFFSET -1
+>  
+> +#define JUMP_TABLE_SYM_PREFIX "jump_table."
 
---QRj9sO5tAVLaXnSD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+since external tool will be looking at it should it be named 
+"bpf_jump_table." to avoid potential name conflicts?
+Or even more unique name?
+Like "bpf_interpreter_jump_table." ?
 
-On Sat, Jun 01, 2019 at 11:41:13AM +0530, Sagar Shrikant Kadam wrote:
-> Reformatted compatibility strings to one valid combination on
-> each line.
-> Add FU540-C000 specific device tree bindings to already available
-> i2-ocores file. This device is available on
-> HiFive Unleashed Rev A00 board. Move interrupt under optional
-> property list as this can be optional.
->=20
-> The FU540-C000 SoC from sifive, has an Opencore's I2C block
-> reimplementation.
->=20
-> The DT compatibility string for this IP is present in HDL and available a=
-t.
-> https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/device=
-s/i2c/I2C.scala#L73
->=20
-> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-
-Applied to for-next, thanks!
-
-
---QRj9sO5tAVLaXnSD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0ECoAACgkQFA3kzBSg
-Kbao1Q/7Bww4MUaBPH3+ZywBjlJ45ehCw3ulD5lfN/Avf0GJLLlm2qGIm/BSe9/x
-V80NkEuQC1ythfVxiq+edDN+Wy5yFtsKLhkjbKzgwYTsoMBx0AbHTjXujIGo03+t
-iIg2/9I/Arq+u/5g+HCDk0/4asDMVMBJVa3bniKbClWfuJ7ggWH/UbmOGXfelX7I
-HpaokQT/+D8sdtibkIdt4/rgvos/3h8NC4h2CTFywsBu+A62xwiMGpORJ1yWubto
-xfr6uu6Rme7if+pyvu5Oxy/FV+UJshX6+6qSI/wvJnrQx1gh/GcKr6Pz7OLk9Pvw
-BNgMy5MCLRfMCUUScrCZgjFiGFkZ4vrebE2sJ1+DW7gGPnDrsSatN0oxpn/r4Abn
-OI4HsSjxtFZWcBz54prvGIzXYc+9bJcACgyeJRPVEDdvVGZDX3Mg5teIgbJbt9iD
-CHp8DMgfdThiIr1cYn9ORF2miTXCaWs735qjM/8QckH4Bfd6cfoDIn5KDjo/1Th5
-E6aQBheFFaq85DV74R/sdXXbpRQhrVBj/Cz3SgXhgj66ooHtdVBpNdXeSDon54XG
-5v+LQrcexKmF0NlEFlyqeaajxnaB0kJQnXBzz1iqeg5Tkk/Gho70zFFUYhw4OFUM
-F4hXCxq7vwHamFM6W68gMEcY0vPh/QqpNNYiSjWoEKn+PR3ZTt0=
-=fkzZ
------END PGP SIGNATURE-----
-
---QRj9sO5tAVLaXnSD--
