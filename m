@@ -2,122 +2,103 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDE9C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7802AC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A788F2177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:51:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W4N6jtac"
+	by mail.kernel.org (Postfix) with ESMTP id 57CB5208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:52:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfFNJvk (ORCPT
+        id S1727244AbfFNJwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:51:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37232 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfFNJvk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:51:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eyC03vikXiwWfawO7Qlmx4pYoHpj/VV0tTc9G1eO/2M=; b=W4N6jtac4NDjjqmz5HnAxAouh
-        InHuflpblor7GHBWlLRdnNuT+ez7uTV5koHf3E14IuTEfmEj/L809EEQc/yLOHQhar2VHzWpgkzh3
-        Buzls+HHqkjXm+FiA2UAibkmrYNt/auf+rnYm7aG+UhusetsJSmeKWZPpMQsrISdsaQzoYGHdoOpM
-        qOjcb8wb2uhGYCWSjf/EFgVFzgUH3MUxM2i/Z9TcGfc/a1WdFwvDL8Ouem6Ou5YMjsU3X2yaVOmOL
-        /cSIaAAlXxDZz1t8vlgF14JmpQeGTd/ZoREYDN4MZvmXwoqSU/OoAxEiQdENGWRIwoEawlIZ0ZyLK
-        ItPRrqLYA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbirt-0000GE-T3; Fri, 14 Jun 2019 09:51:34 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1254E20A26CE6; Fri, 14 Jun 2019 11:51:32 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 11:51:32 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 18/62] x86/mm: Implement syncing per-KeyID direct
- mappings
-Message-ID: <20190614095131.GY3436@hirez.programming.kicks-ass.net>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-19-kirill.shutemov@linux.intel.com>
+        Fri, 14 Jun 2019 05:52:31 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:38468 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726900AbfFNJwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 05:52:31 -0400
+Received: from we0305.dip.tu-dresden.de ([141.76.177.49] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hbisk-0004H9-GQ; Fri, 14 Jun 2019 11:52:26 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Jianqun Xu <jay.xu@rock-chips.com>
+Cc:     mark.rutland@arm.com, robh+dt@kernel.org, zhangzj@rock-chips.com,
+        manivannan.sadhasivam@linaro.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] arm64: dts: rockchip: add core dtsi file for RK3399Pro SoCs
+Date:   Fri, 14 Jun 2019 11:52:25 +0200
+Message-ID: <3309819.J5kelTtX6q@phil>
+In-Reply-To: <20190530000848.28106-1-jay.xu@rock-chips.com>
+References: <20190529074752.19388-1-jay.xu@rock-chips.com> <20190530000848.28106-1-jay.xu@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508144422.13171-19-kirill.shutemov@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 05:43:38PM +0300, Kirill A. Shutemov wrote:
-> For MKTME we use per-KeyID direct mappings. This allows kernel to have
-> access to encrypted memory.
-> 
-> sync_direct_mapping() sync per-KeyID direct mappings with a canonical
-> one -- KeyID-0.
-> 
-> The function tracks changes in the canonical mapping:
->  - creating or removing chunks of the translation tree;
->  - changes in mapping flags (i.e. protection bits);
->  - splitting huge page mapping into a page table;
->  - replacing page table with a huge page mapping;
-> 
-> The function need to be called on every change to the direct mapping:
-> hotplug, hotremove, changes in permissions bits, etc.
+Hi Jianqun,
 
-And yet I don't see anything in pageattr.c.
-
-Also, this seems like an expensive scheme; if you know where the changes
-where, a more fine-grained update would be faster.
-
-> The function is nop until MKTME is enabled.
+Am Donnerstag, 30. Mai 2019, 02:08:48 CEST schrieb Jianqun Xu:
+> This patch adds core dtsi file for Rockchip RK3399Pro SoCs,
+> include rk3399.dtsi. Also enable pciei0/pcie_phy for AP to
+> talk to NPU part inside SoC.
 > 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+
+could you add the necessary pinctrl entry, as suggested by Manivannan?
+
+Thanks
+Heiko
+
 > ---
->  arch/x86/include/asm/mktme.h |   6 +
->  arch/x86/mm/init_64.c        |  10 +
->  arch/x86/mm/mktme.c          | 441 +++++++++++++++++++++++++++++++++++
->  3 files changed, 457 insertions(+)
+> changes since v2:
+> - only enable pcie0 and pcie_phy nodes, thanks for Heiko and manivannan
+> 
+> changes since v1:
+> - remove dfi and dmc
+> 
+>  arch/arm64/boot/dts/rockchip/rk3399pro.dtsi | 22 +++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+> new file mode 100644
+> index 000000000000..bb5ebf6608b9
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399pro.dtsi
+> @@ -0,0 +1,22 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +// Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd.
+> +
+> +#include "rk3399.dtsi"
+> +
+> +/ {
+> +	compatible = "rockchip,rk3399pro";
+> +};
+> +
+> +/* Default to enabled since AP talk to NPU part over pcie */
+> +&pcie_phy {
+> +	status = "okay";
+> +};
+> +
+> +/* Default to enabled since AP talk to NPU part over pcie */
+> +&pcie0 {
+> +	ep-gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>;
+> +	num-lanes = <4>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie_clkreqn_cpm>;
+> +	status = "okay";
+> +};
+> 
 
 
-> @@ -1247,6 +1254,7 @@ void mark_rodata_ro(void)
->  	unsigned long text_end = PFN_ALIGN(&__stop___ex_table);
->  	unsigned long rodata_end = PFN_ALIGN(&__end_rodata);
->  	unsigned long all_end;
-> +	int ret;
->  
->  	printk(KERN_INFO "Write protecting the kernel read-only data: %luk\n",
->  	       (end - start) >> 10);
-> @@ -1280,6 +1288,8 @@ void mark_rodata_ro(void)
->  	free_kernel_image_pages((void *)text_end, (void *)rodata_start);
->  	free_kernel_image_pages((void *)rodata_end, (void *)_sdata);
->  
-> +	ret = sync_direct_mapping();
-> +	WARN_ON(ret);
->  	debug_checkwx();
->  }
->  
 
-If you'd done pageattr, the above would not be needed.
+
