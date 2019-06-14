@@ -2,151 +2,90 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2889CC31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A081C31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE4872168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:24:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="kK6Kk2II"
+	by mail.kernel.org (Postfix) with ESMTP id 37719208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:24:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfFNDYD (ORCPT
+        id S1726797AbfFNDYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 23:24:03 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47627 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfFNDYC (ORCPT
+        Thu, 13 Jun 2019 23:24:44 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42507 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfFNDYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 23:24:02 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 4F0E9886BF
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 15:23:59 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1560482639;
-        bh=AbZqhinaeDDXdEDPzuAuewpZ+Ugz4DonDu2l7bEltmo=;
-        h=From:To:CC:Subject:Date:References;
-        b=kK6Kk2IISGYuLBUAa5ZgFnskmSHT+XwHWmucjvXoPGeMKvahtzFTF9c+R3FxvPLIS
-         fzq/PYJVIGdfkyJAZWJq32eiGNUJ4wWUewlPLQlYpOyoeijEsmlDH6gOlXvw5sdeaf
-         DLuLVteoGXBnNmWmdXhtocnZ6wQYK1Ac6ydDwYEVHmcnG8eq5V2sdoLPoEaCKlhr5m
-         gd8pcxHEEKDWtOEJa/8jhL+CYF4QzW4xyP5f2n8UvYHIyhEABhxrM+vYtvTvpfshDb
-         gzv6wiBhfe58E4StnYwtgyJYU9BOOsZhSJri9fQMSeE4Ok+e20Q8HLbxaVj2w0RA2w
-         suJUd3UtKXIWQ==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d03134f0000>; Fri, 14 Jun 2019 15:23:59 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Fri, 14 Jun 2019 15:23:58 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Fri, 14 Jun 2019 15:23:58 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "vigneshr@ti.com" <vigneshr@ti.com>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>
-CC:     "sr@denx.de" <sr@denx.de>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mtd: cfi_cmdset_0002: dynamically determine the max
- sectors
-Thread-Topic: [PATCH] mtd: cfi_cmdset_0002: dynamically determine the max
- sectors
-Thread-Index: AQHVEDI+CoqUJR97jEy7wwMr7iI19Q==
-Date:   Fri, 14 Jun 2019 03:23:57 +0000
-Message-ID: <8e80d911f0dd4759b3edc72fb76530d6@svr-chch-ex1.atlnz.lc>
-References: <20190522000628.13073-1-chris.packham@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 13 Jun 2019 23:24:44 -0400
+Received: by mail-ed1-f65.google.com with SMTP id z25so1302554edq.9;
+        Thu, 13 Jun 2019 20:24:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2AfQZDv35ufBp3E88y1iMFldBKX1WcqrUozmSOVMRmA=;
+        b=oq3OWHrk+TxK0de+YgduayRtaOPWWIyvnXnKegfxVwALeToWtfGehQvGsiWruJGeL5
+         4UpcGylzr8wjY26071CTLpAbU+P8Xt7BYTM/X59XSZ48oQgHcH6qUFQXLhPoAcKd70wL
+         Ueka7V5RKMq+aencEEXctMol3mQb7fzR03kKDcA8k+PpxjXd+2/XUWQs9WWSUzx5RgtB
+         Uh0apItdwyWUtSEpUYjpOYg+QrwO1yjvFWssJFMSo8ISs6usCo/eNm9HwsKnd/XgOdJh
+         AEYd0dS9XzeL0GTYaPTZ+I0ZBrWnzcTqBoLESXMLieNxO77EET6x0ebZgJXd68jBToZX
+         FgVw==
+X-Gm-Message-State: APjAAAXRyR6TxOdPCuqT7muhWidCvdJ/3Ukljx6pVCnVYi6f7R1v/3VL
+        pkqlthOEHvfCrF/0GfgunvlGOtFz8dg=
+X-Google-Smtp-Source: APXvYqz/d6MpViCFkUo8aKztq1VgveNFch476c7m90mDd4fBmTqa5cov0d4a+KPquN9ghZTtnvSneg==
+X-Received: by 2002:a17:906:fae0:: with SMTP id lu32mr57234942ejb.283.1560482682227;
+        Thu, 13 Jun 2019 20:24:42 -0700 (PDT)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com. [209.85.221.44])
+        by smtp.gmail.com with ESMTPSA id p15sm334111ejb.6.2019.06.13.20.24.41
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 20:24:41 -0700 (PDT)
+Received: by mail-wr1-f44.google.com with SMTP id x17so866639wrl.9;
+        Thu, 13 Jun 2019 20:24:41 -0700 (PDT)
+X-Received: by 2002:adf:fc85:: with SMTP id g5mr62039461wrr.324.1560482681552;
+ Thu, 13 Jun 2019 20:24:41 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190613185241.22800-1-jagan@amarulasolutions.com> <20190613185241.22800-5-jagan@amarulasolutions.com>
+In-Reply-To: <20190613185241.22800-5-jagan@amarulasolutions.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Fri, 14 Jun 2019 11:24:29 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67eNu31pQExMTxAki1Wp4tdqRH87Oh+1j4Cb0cuK8pQRQ@mail.gmail.com>
+Message-ID: <CAGb2v67eNu31pQExMTxAki1Wp4tdqRH87Oh+1j4Cb0cuK8pQRQ@mail.gmail.com>
+Subject: Re: [PATCH 4/9] drm/sun4i: tcon_top: Use clock name index macros
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula@amarulasolutions.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,=0A=
-=0A=
-I think this may have got lost in the change of maintainer for mtd.=0A=
-=0A=
-On 22/05/19 12:06 PM, Chris Packham wrote:=0A=
-> Because PPB unlocking unlocks the whole chip cfi_ppb_unlock() needs to=0A=
-> remember the locked status for each sector so it can re-lock the=0A=
-> unaddressed sectors. Dynamically calculate the maximum number of sectors=
-=0A=
-> rather than using a hardcoded value that is too small for larger chips.=
-=0A=
-> =0A=
-> Tested with Spansion S29GL01GS11TFI flash device.=0A=
-> =0A=
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
-> ---=0A=
->   drivers/mtd/chips/cfi_cmdset_0002.c | 13 ++++++++-----=0A=
->   1 file changed, 8 insertions(+), 5 deletions(-)=0A=
-> =0A=
-> diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_=
-cmdset_0002.c=0A=
-> index c8fa5906bdf9..a1a7d334aa82 100644=0A=
-> --- a/drivers/mtd/chips/cfi_cmdset_0002.c=0A=
-> +++ b/drivers/mtd/chips/cfi_cmdset_0002.c=0A=
-> @@ -2533,8 +2533,6 @@ struct ppb_lock {=0A=
->   	int locked;=0A=
->   };=0A=
->   =0A=
-> -#define MAX_SECTORS			512=0A=
-> -=0A=
->   #define DO_XXLOCK_ONEBLOCK_LOCK		((void *)1)=0A=
->   #define DO_XXLOCK_ONEBLOCK_UNLOCK	((void *)2)=0A=
->   #define DO_XXLOCK_ONEBLOCK_GETLOCK	((void *)3)=0A=
-> @@ -2633,6 +2631,7 @@ static int __maybe_unused cfi_ppb_unlock(struct mtd=
-_info *mtd, loff_t ofs,=0A=
->   	int i;=0A=
->   	int sectors;=0A=
->   	int ret;=0A=
-> +	int max_sectors;=0A=
->   =0A=
->   	/*=0A=
->   	 * PPB unlocking always unlocks all sectors of the flash chip.=0A=
-> @@ -2640,7 +2639,11 @@ static int __maybe_unused cfi_ppb_unlock(struct mt=
-d_info *mtd, loff_t ofs,=0A=
->   	 * first check the locking status of all sectors and save=0A=
->   	 * it for future use.=0A=
->   	 */=0A=
-> -	sect =3D kcalloc(MAX_SECTORS, sizeof(struct ppb_lock), GFP_KERNEL);=0A=
-> +	max_sectors =3D 0;=0A=
-> +	for (i =3D 0; i < mtd->numeraseregions; i++)=0A=
-> +		max_sectors +=3D regions[i].numblocks;=0A=
-> +=0A=
-> +	sect =3D kcalloc(max_sectors, sizeof(struct ppb_lock), GFP_KERNEL);=0A=
->   	if (!sect)=0A=
->   		return -ENOMEM;=0A=
->   =0A=
-> @@ -2689,9 +2692,9 @@ static int __maybe_unused cfi_ppb_unlock(struct mtd=
-_info *mtd, loff_t ofs,=0A=
->   		}=0A=
->   =0A=
->   		sectors++;=0A=
-> -		if (sectors >=3D MAX_SECTORS) {=0A=
-> +		if (sectors >=3D max_sectors) {=0A=
->   			printk(KERN_ERR "Only %d sectors for PPB locking supported!\n",=0A=
-> -			       MAX_SECTORS);=0A=
-> +			       max_sectors);=0A=
->   			kfree(sect);=0A=
->   			return -EINVAL;=0A=
->   		}=0A=
-> =0A=
-=0A=
+On Fri, Jun 14, 2019 at 2:54 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+>
+> TCON TOP mux blocks in R40 are registering clock using
+> tcon top clock index numbers.
+>
+> Right now the code is using, real numbers start with 0, but
+> we have proper macros that defined these name index numbers.
+>
+> Use the existing macros, instead of real numbers for more
+> code readability.
+>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+
+However, you might want to rename the clock first, then switch to
+using the index macros?
