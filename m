@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439D1C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD18DC31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21ADE2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00852183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbfFNSAp (ORCPT
+        id S1727522AbfFNSAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:00:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54207 "EHLO mx1.redhat.com"
+        Fri, 14 Jun 2019 14:00:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37034 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726838AbfFNSAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:00:41 -0400
+        id S1726762AbfFNSAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 14:00:43 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AC306316290D;
-        Fri, 14 Jun 2019 18:00:35 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id EACA330832F4;
+        Fri, 14 Jun 2019 18:00:42 +0000 (UTC)
 Received: from treble.redhat.com (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 52A2D5D9E2;
-        Fri, 14 Jun 2019 18:00:33 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1CE865D982;
+        Fri, 14 Jun 2019 18:00:40 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
@@ -38,112 +38,88 @@ Cc:     linux-kernel@vger.kernel.org,
         David Laight <David.Laight@ACULAB.COM>,
         Thomas Gleixner <tglx@linutronix.de>,
         Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v2 2/5] objtool: Fix ORC unwinding in non-JIT BPF generated code
-Date:   Fri, 14 Jun 2019 12:56:41 -0500
-Message-Id: <c0add777a2e0207c1474ce99baa492a7ce3502d6.1560534694.git.jpoimboe@redhat.com>
+Subject: [PATCH v2 5/5] x86/unwind/orc: Fall back to using frame pointers for generated code
+Date:   Fri, 14 Jun 2019 12:56:44 -0500
+Message-Id: <43cce8f734cf8ae1fcd10ea14d67c028c73b1540.1560534694.git.jpoimboe@redhat.com>
 In-Reply-To: <cover.1560534694.git.jpoimboe@redhat.com>
 References: <cover.1560534694.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 14 Jun 2019 18:00:40 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 14 Jun 2019 18:00:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Objtool currently ignores ___bpf_prog_run() because it doesn't
-understand the jump table.  This results in the ORC unwinder not being
-able to unwind through non-JIT BPF code.
+The ORC unwinder can't unwind through BPF JIT generated code because
+there are no ORC entries associated with the code.
 
-Luckily, the BPF jump table resembles a GCC switch jump table, which
-objtool already knows how to read.
-
-Add generic support for reading any static local jump table array named
-"jump_table", and rename the BPF variable accordingly, so objtool can
-generate ORC data for ___bpf_prog_run().
+If an ORC entry isn't available, try to fall back to frame pointers.  If
+BPF and other generated code always do frame pointer setup (even with
+CONFIG_FRAME_POINTERS=n) then this will allow ORC to unwind through most
+generated code despite there being no corresponding ORC entries.
 
 Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
 Reported-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/bpf/core.c     |  5 ++---
- tools/objtool/check.c | 16 ++++++++++++++--
- 2 files changed, 16 insertions(+), 5 deletions(-)
+ arch/x86/kernel/unwind_orc.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 7c473f208a10..aa546ef7dbdc 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -1299,7 +1299,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
- {
- #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
- #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
--	static const void *jumptable[256] = {
-+	static const void *jump_table[256] = {
- 		[0 ... 255] = &&default_label,
- 		/* Now overwrite non-defaults ... */
- 		BPF_INSN_MAP(BPF_INSN_2_LBL, BPF_INSN_3_LBL),
-@@ -1315,7 +1315,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
- #define CONT_JMP ({ insn++; goto select_insn; })
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 33b66b5c5aec..72b997eaa1fc 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -82,9 +82,9 @@ static struct orc_entry *orc_find(unsigned long ip);
+  * But they are copies of the ftrace entries that are static and
+  * defined in ftrace_*.S, which do have orc entries.
+  *
+- * If the undwinder comes across a ftrace trampoline, then find the
++ * If the unwinder comes across a ftrace trampoline, then find the
+  * ftrace function that was used to create it, and use that ftrace
+- * function's orc entrie, as the placement of the return code in
++ * function's orc entry, as the placement of the return code in
+  * the stack will be identical.
+  */
+ static struct orc_entry *orc_ftrace_find(unsigned long ip)
+@@ -128,6 +128,16 @@ static struct orc_entry null_orc_entry = {
+ 	.type = ORC_TYPE_CALL
+ };
  
- select_insn:
--	goto *jumptable[insn->code];
-+	goto *jump_table[insn->code];
- 
- 	/* ALU */
- #define ALU(OPCODE, OP)			\
-@@ -1558,7 +1558,6 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
- 		BUG_ON(1);
- 		return 0;
- }
--STACK_FRAME_NON_STANDARD(___bpf_prog_run); /* jump table */
- 
- #define PROG_NAME(stack_size) __bpf_prog_run##stack_size
- #define DEFINE_BPF_PROG_RUN(stack_size) \
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 172f99195726..8341c2fff14f 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -18,6 +18,8 @@
- 
- #define FAKE_JUMP_OFFSET -1
- 
-+#define JUMP_TABLE_SYM_PREFIX "jump_table."
++/* Fake frame pointer entry -- used as a fallback for generated code */
++static struct orc_entry orc_fp_entry = {
++	.type		= ORC_TYPE_CALL,
++	.sp_reg		= ORC_REG_BP,
++	.sp_offset	= 16,
++	.bp_reg		= ORC_REG_PREV_SP,
++	.bp_offset	= -16,
++	.end		= 0,
++};
 +
- struct alternative {
- 	struct list_head list;
- 	struct instruction *insn;
-@@ -997,6 +999,7 @@ static struct rela *find_switch_table(struct objtool_file *file,
- 	struct instruction *orig_insn = insn;
- 	struct section *rodata_sec;
- 	unsigned long table_offset;
-+	struct symbol *sym;
+ static struct orc_entry *orc_find(unsigned long ip)
+ {
+ 	static struct orc_entry *orc;
+@@ -392,8 +402,16 @@ bool unwind_next_frame(struct unwind_state *state)
+ 	 * calls and calls to noreturn functions.
+ 	 */
+ 	orc = orc_find(state->signal ? state->ip : state->ip - 1);
+-	if (!orc)
+-		goto err;
++	if (!orc) {
++		/*
++		 * As a fallback, try to assume this code uses a frame pointer.
++		 * This is useful for generated code, like BPF, which ORC
++		 * doesn't know about.  This is just a guess, so the rest of
++		 * the unwind is no longer considered reliable.
++		 */
++		orc = &orc_fp_entry;
++		state->error = true;
++	}
  
- 	/*
- 	 * Backward search using the @first_jump_src links, these help avoid
-@@ -1035,9 +1038,18 @@ static struct rela *find_switch_table(struct objtool_file *file,
- 
- 		/*
- 		 * Make sure the .rodata address isn't associated with a
--		 * symbol.  gcc jump tables are anonymous data.
-+		 * symbol.  GCC jump tables are anonymous data.
-+		 *
-+		 * Also support C jump tables which are in the same format as
-+		 * switch jump tables.  Each jump table should be a static
-+		 * local const array named "jump_table" for objtool to
-+		 * recognize it.  Note: GCC will add a numbered suffix to the
-+		 * ELF symbol name, like "jump_table.12345", which it does for
-+		 * all static local variables.
- 		 */
--		if (find_symbol_containing(rodata_sec, table_offset))
-+		sym = find_symbol_containing(rodata_sec, table_offset);
-+		if (sym && strncmp(sym->name, JUMP_TABLE_SYM_PREFIX,
-+				   strlen(JUMP_TABLE_SYM_PREFIX)))
- 			continue;
- 
- 		rodata_rela = find_rela_by_dest(rodata_sec, table_offset);
+ 	/* End-of-stack check for kernel threads: */
+ 	if (orc->sp_reg == ORC_REG_UNDEFINED) {
 -- 
 2.20.1
 
