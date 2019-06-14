@@ -2,123 +2,117 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3CFC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07250C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB29D20851
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A2920851
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:58:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pcbjuSre"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cNTJS08p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbfFND5m (ORCPT
+        id S1726187AbfFND6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 23:57:42 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36422 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbfFND5l (ORCPT
+        Thu, 13 Jun 2019 23:58:02 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41065 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfFND6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 23:57:41 -0400
-Received: by mail-ed1-f66.google.com with SMTP id k21so1442005edq.3
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 20:57:40 -0700 (PDT)
+        Thu, 13 Jun 2019 23:58:01 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c2so918642wrm.8;
+        Thu, 13 Jun 2019 20:58:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gDNeDNC6IhsxAfX1pCDhnGOlsLviHqkXzki8BiuCzfE=;
-        b=pcbjuSreld4Y706hdj8M6kKp4kLTEsk7/zmxxGr/PyJ4Q63Evk+mFr05ZIUVlmh+xk
-         +0sSwQJsJ3jl8VYasKac8A3nGlVpbTvobhzfAiK9jP8FOJMCcOUv8sOB66NZKQ2jc1ck
-         GvR1DksaU4g55K+AlRMkee6MvlDCf7T7s4cjPBY5LeQTIxuG1Ff18gGqyPfQJUkqLLbq
-         INWo7KBa6PX+s490TnOJjOoqdA+X/uqRhysLgQWo1Fsn7nqPJy+Pgx/UrGrn4Pw5b9jD
-         R3nbCobM8hgSagh2KXO9ItEJz9DkEBVoe3ICfHdk6TImZ5kG7CFqaccEAYkebncKR1Ao
-         klMQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=uwDYUfNCDx2fc22MYxlEMUfeH43G6/A1w9YTtwp2O8o=;
+        b=cNTJS08pTE9SEPqFUodQMBq/Hj7duJI8Zr4Ew0SOhr+J0VnJE7BDBAByAU2aUWo6RE
+         cJRxBZ/Ou3cK+1gMzSkxXtENB0pu1e59Uc1vjsbiF/MfLX4yJoIvApS8VtUGaGbIr4SK
+         SSZwcbudnheS4q9QhtjCqiyMEed5HmSTd4uTbTryQzBqwcAp3xqjoKfZpFel5hn+mXJM
+         YUjkDPu0Usvx6IcEfpG0N4yBcq8JeOajaqlOj737GrDwQVD3nlTvgM++V85GmJVhkbgM
+         CNJhz4BFmiLrTa6sxr3yyM4LC8f5t9wO3NqEVXXJ3DHvmj7EbbKdSvmsYobGd1Wgypml
+         0I4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gDNeDNC6IhsxAfX1pCDhnGOlsLviHqkXzki8BiuCzfE=;
-        b=XKhHMRgYuNqf5qTnzRNUqoX56TrTnGjmffTi1Q3ngG3eA2aj0P7pqPgOQv1Ye3Fw3f
-         eF/++JSTEAt4mnWoaIcoSWuO2b9F2ywmqkisGg2S6FwmFM0jRlHQyVCF/EzsKcWKOPJ5
-         uz4d80cwvU0kCIJoqojTylAh0ZxXvj2r9p9I4QSLeBBWI+T0ZZ27AlKI5slfWzuuPVyM
-         S6tXZbUrNUYWSxOoGzzIYgvT1AfP9DYQcBrmXpPNguK72zl4gZ+qeDQzE2lS37LlFAmc
-         POOUNZ+MOFwHachhsUJsmJc9PQ7nPQ84XXvukdKBjIV/xBu+0FVulBN/9XrmtoaHf5Hr
-         htOA==
-X-Gm-Message-State: APjAAAVGu+HEtfmP9QvpQ+SSizjEy7BDhw6V4CtuQhPduvavGydkLlgO
-        09KNK0ck+HPnXvNv4t4osmg=
-X-Google-Smtp-Source: APXvYqzJURQRQFhk+6yXhETpK9HjQuPFeyc8sNjYHpDFcm1C735qDO8j/cj2/Vadm8ArJoVnhREYtQ==
-X-Received: by 2002:a50:ac24:: with SMTP id v33mr72538475edc.30.1560484660031;
-        Thu, 13 Jun 2019 20:57:40 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id m19sm332256eje.30.2019.06.13.20.57.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 20:57:39 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 20:57:36 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Amelie Delaunay <amelie.delaunay@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] mfd: stmfx: Fix macro definition spelling
-Message-ID: <20190614035736.GA57346@archlinux-epyc>
-References: <20190511012301.2661-1-natechancellor@gmail.com>
- <20190513073059.GH4319@dell>
- <20190514183900.GA7559@archlinux-i9>
- <20190514185404.GP4319@dell>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uwDYUfNCDx2fc22MYxlEMUfeH43G6/A1w9YTtwp2O8o=;
+        b=T/pWPWRIj4wkwskvQu9ZK7iphwtOQUkCwd8VtqejO6ZxDRGNuKTP7l4FE5utCBUt8w
+         /SIzjv6iTNp0qBqE6pGlxJ7PVzaazqbHazi/CHiIOd1Lt1Tj1g5mD5pRguxvB1NFFuKy
+         rA88RGwi/2irez7rBUy1YhYupSuM0ob9rdoE7voolnnHyTYmZF8Ti4OseK1jM3Mse3G5
+         EBi9UhpXrhFsNA46lyRzVYvsr+z4HbBrsOn+p6hnb//Phz2d6DC8LaaKfCMVPnJoVpOh
+         IOwZ3Anmdz+LtlMnIUnrdAoy5n5lgOM8+dr0SYSmdqPBz/HI6z39CK3cf1hKYSnY8cJH
+         21RQ==
+X-Gm-Message-State: APjAAAWb5AUS9hLQLfZhDs3Gm8zehdQV1BUcYOf4whvnNnWZ7ffEWqYm
+        lzcsidf1SNmrO2HSva42Alu754SEwYG70EcL31k=
+X-Google-Smtp-Source: APXvYqzVVsuxOItdPfuVmbf8Pq7kj1cON92Rhjm8GlttyUt6YygwE7reL5byAOMboxnj7/kzmjHwk+RnoOHon8Ejuj8=
+X-Received: by 2002:adf:b64b:: with SMTP id i11mr11657992wre.205.1560484679581;
+ Thu, 13 Jun 2019 20:57:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514185404.GP4319@dell>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <1558358244-35832-1-git-send-email-mowendugu@gmail.com> <20190604112905.1f16232c@x1.home>
+In-Reply-To: <20190604112905.1f16232c@x1.home>
+From:   =?UTF-8?B?54us5a2k6LSl?= <mowendugu@gmail.com>
+Date:   Fri, 14 Jun 2019 11:57:48 +0800
+Message-ID: <CAAPrRyRP5MPKH+o6J7H-jRtG8mLVD6-VoBmT8mFL_=Wv5ST1wQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] PCI/IOV: Fix VF0 cached config space size for other VFs
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Quan Xu <quan.xu0@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 07:54:04PM +0100, Lee Jones wrote:
-> On Tue, 14 May 2019, Nathan Chancellor wrote:
-> 
-> > On Mon, May 13, 2019 at 08:30:59AM +0100, Lee Jones wrote:
-> > > On Fri, 10 May 2019, Nathan Chancellor wrote:
-> > > 
-> > > > Clang warns:
-> > > > 
-> > > > In file included from drivers/mfd/stmfx.c:13:
-> > > > include/linux/mfd/stmfx.h:7:9: warning: 'MFD_STMFX_H' is used as a
-> > > > header guard here, followed by #define of a different macro
-> > > > [-Wheader-guard]
-> > > > 
-> > > > Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
-> > > > Link: https://github.com/ClangBuiltLinux/linux/issues/475
-> > > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > > > ---
-> > > >  include/linux/mfd/stmfx.h | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > Applied, thanks.
-> > > 
-> > 
-> > Hi Lee,
-> > 
-> > Thanks for picking it up. It seems this didn't make it into your MFD
-> > pull request for 5.2, was that intentional? It would be nice to avoid
-> > this warning.
-> 
-> Hmm... no it was not intentional.  Not sure what happened there.
-> 
-> I will pick it up for the -rcs.
+Alex Williamson <alex.williamson@redhat.com> =E4=BA=8E2019=E5=B9=B46=E6=9C=
+=885=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=881:29=E5=86=99=E9=81=93=EF=
+=BC=9A
+>
+> On Mon, 20 May 2019 21:17:24 +0800
+> Hao Zheng <mowendugu@gmail.com> wrote:
+>
+> > Set the pcie_cap field before getting the config space size for
+> > other VFs. Otherwise, the config space size of other VFs are error
+> > set to 256, while the size of VF0 is 4096.
+> >
+> > Signed-off-by: Hao Zheng <mowendugu@gmail.com>
+> > Signed-off-by: Quan Xu <quan.xu0@gmail.com>
+> > ---
+> >  drivers/pci/iov.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > index 3aa115e..239fad1 100644
+> > --- a/drivers/pci/iov.c
+> > +++ b/drivers/pci/iov.c
+> > @@ -133,6 +133,7 @@ static void pci_read_vf_config_common(struct pci_de=
+v *virtfn)
+> >       pci_read_config_word(virtfn, PCI_SUBSYSTEM_ID,
+> >                            &physfn->sriov->subsystem_device);
+> >
+> > +     set_pcie_port_type(virtfn);
+> >       physfn->sriov->cfg_size =3D pci_cfg_space_size(virtfn);
+> >  }
+> >
+>
+> This results in set_pci_port_type() being called multiple times on
+> VF0.  Why not simply delay calling pci_read_vf_config_common() until
+> after pci_setup_device()?  Here's the alternate approach:
+>
+> https://lore.kernel.org/linux-pci/155966918965.10361.16228304474160813310=
+.stgit@gimli.home/
 
-Hi Lee,
+I get it. This is a better approach. Thank you for your advice!
+>
+> Thanks,
+> Alex
 
-Have you picked this up yet? I don't see it in -next or your public
-tree.
 
-Cheers,
-Nathan
+
+--=20
+Best Regards!
