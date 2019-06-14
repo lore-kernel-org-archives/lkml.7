@@ -2,90 +2,81 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=AC_FROM_MANY_DOTS,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 195E6C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617DEC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1AB521473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F1ED21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:57:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbfFNIxt (ORCPT
+        id S1726552AbfFNI5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 04:53:49 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:58022 "EHLO a.mx.secunet.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbfFNIxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 04:53:49 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id 7A72A201DA;
-        Fri, 14 Jun 2019 10:53:47 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id uXX0zk-f0Pkv; Fri, 14 Jun 2019 10:53:47 +0200 (CEST)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id 1539F200AC;
-        Fri, 14 Jun 2019 10:53:47 +0200 (CEST)
-Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
- (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Jun 2019
- 10:53:47 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id B08F33180B3C;
- Fri, 14 Jun 2019 10:53:46 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 10:53:46 +0200
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     Young Xiao <92siuyang@gmail.com>
-CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] af_key: Fix memory leak in key_notify_policy.
-Message-ID: <20190614085346.GN17989@gauss3.secunet.de>
-References: <1560500786-572-1-git-send-email-92siuyang@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1560500786-572-1-git-send-email-92siuyang@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+        Fri, 14 Jun 2019 04:57:04 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42390 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfFNI5E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 04:57:04 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hbi15-0001Cd-L7; Fri, 14 Jun 2019 08:57:00 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     jikos@kernel.org, benjamin.tissoires@redhat.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] HID: multitouch: Add pointstick support for ALPS Touchpad
+Date:   Fri, 14 Jun 2019 16:56:55 +0800
+Message-Id: <20190614085655.8255-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 04:26:26PM +0800, Young Xiao wrote:
-> We leak the allocated out_skb in case pfkey_xfrm_policy2msg() fails.
-> Fix this by freeing it on error.
-> 
-> Signed-off-by: Young Xiao <92siuyang@gmail.com>
-> ---
->  net/key/af_key.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/net/key/af_key.c b/net/key/af_key.c
-> index 4af1e1d..ec414f6 100644
-> --- a/net/key/af_key.c
-> +++ b/net/key/af_key.c
-> @@ -2443,6 +2443,7 @@ static int key_pol_get_resp(struct sock *sk, struct xfrm_policy *xp, const struc
->  	}
->  	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
->  	if (err < 0)
-> +		kfree_skb(out_skb);
->  		goto out;
+There's a new ALPS touchpad/pointstick combo device that requires
+MT_CLS_WIN_8_DUAL to make its pointsitck work as a mouse.
 
-Did you test this?
+The device can be found on HP ZBook 17 G5.
 
-You need to add braces, otherwise 'goto out' will happen unconditionally.
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/hid/hid-ids.h        | 1 +
+ drivers/hid/hid-multitouch.c | 4 ++++
+ 2 files changed, 5 insertions(+)
 
->  
->  	out_hdr = (struct sadb_msg *) out_skb->data;
-> @@ -2695,6 +2696,7 @@ static int dump_sp(struct xfrm_policy *xp, int dir, int count, void *ptr)
->  
->  	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
->  	if (err < 0)
-> +		kfree_skb(out_skb);
->  		return err;
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index eac0c54c5970..5311c62aeb88 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -80,6 +80,7 @@
+ #define HID_DEVICE_ID_ALPS_U1_DUAL_3BTN_PTP	0x1220
+ #define HID_DEVICE_ID_ALPS_U1		0x1215
+ #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
++#define HID_DEVICE_ID_ALPS_1222		0x1222
+ 
+ 
+ #define USB_VENDOR_ID_AMI		0x046b
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 5df5dd56ecc8..b603c14d043b 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -1776,6 +1776,10 @@ static const struct hid_device_id mt_devices[] = {
+ 		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+ 			USB_VENDOR_ID_ALPS_JP,
+ 			HID_DEVICE_ID_ALPS_U1_DUAL_3BTN_PTP) },
++	{ .driver_data = MT_CLS_WIN_8_DUAL,
++		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
++			USB_VENDOR_ID_ALPS_JP,
++			HID_DEVICE_ID_ALPS_1222) },
+ 
+ 	/* Lenovo X1 TAB Gen 2 */
+ 	{ .driver_data = MT_CLS_WIN_8_DUAL,
+-- 
+2.17.1
 
-Same here.
