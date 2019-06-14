@@ -2,117 +2,190 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC3BC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD44C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2CD020866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECB4C2173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:46:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560519988;
+	bh=C1QqzkSGsgW1tzZ2lxcc+e/a+M066ODx4f38vcKbNfY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KAW1hirA8+Lp9cL2H3v+bwXwcTNKlz7zy3LnfkWTUx3X1AtkbjEWp5onWDDPidPoQ
+	 ujMK6fDaczp+i5bmbQaVGlp2ws4PKQxa/22Y/wI7eJF21bT3w2Dtyo4b8x3wd6YJFv
+	 q8mor2xmxW4hYMCAbWDckIDwRwXDJb/VVYhVQQ2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbfFNNpY (ORCPT
+        id S1728312AbfFNNq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:45:24 -0400
-Received: from mga14.intel.com ([192.55.52.115]:37988 "EHLO mga14.intel.com"
+        Fri, 14 Jun 2019 09:46:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727382AbfFNNpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:45:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 06:45:23 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 14 Jun 2019 06:45:23 -0700
-Received: from [10.254.88.254] (kliang2-mobl.ccr.corp.intel.com [10.254.88.254])
+        id S1727382AbfFNNqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:46:25 -0400
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 5C0FE5803E4;
-        Fri, 14 Jun 2019 06:45:22 -0700 (PDT)
-Subject: Re: [RFC] perf/x86/intel: Disable check_msr for real hw
-To:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kan Liang <kan.liang@intel.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        David Carrillo-Cisneros <davidcc@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Tom Vaden <tom.vaden@hpe.com>
-References: <20190614112853.GC4325@krava>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <aafc5b7c-220e-dfab-c49d-d9e75a4efa87@linux.intel.com>
-Date:   Fri, 14 Jun 2019 09:45:21 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 476B521773;
+        Fri, 14 Jun 2019 13:46:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560519984;
+        bh=C1QqzkSGsgW1tzZ2lxcc+e/a+M066ODx4f38vcKbNfY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=INKAlwLlkoCsziy0QNv8NggxmsWgek3kA3LHo1N93hu/fHQGmv4cdLDP5g6wq0VIZ
+         Ui0SwD/wUCJulHXKcPxZDzMp6935NhUtJNujh4gkAhx2n+0EKgkJmZeXDXtG+HWRBl
+         k/HuhE/9XM6hD0wEcOvVhDXOb63diU+kLaLy9lT0=
+Received: by mail-lj1-f169.google.com with SMTP id k18so2437440ljc.11;
+        Fri, 14 Jun 2019 06:46:24 -0700 (PDT)
+X-Gm-Message-State: APjAAAXwp1frcNESM/EgbAJJAA8s17lU6Cz5PJxmX9xeUaXqld0tSgo9
+        10khlNbGKn2ErrBkbonzeTvaKpU7Xmb5YamVo+w=
+X-Google-Smtp-Source: APXvYqxMnNY9t6ni23gqc8ErDGEd2aZymUgvy7IJa4NdtozaFp6o6xWF9vefa9r2soNzWOaylDjJUhVqSimw6/1rbvY=
+X-Received: by 2002:a2e:3008:: with SMTP id w8mr14338419ljw.13.1560519982531;
+ Fri, 14 Jun 2019 06:46:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190614112853.GC4325@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CGME20190614095327eucas1p19b6e522efa15c8fd21c51f3900e376e9@eucas1p1.samsung.com>
+ <20190614095309.24100-1-l.luba@partner.samsung.com> <20190614095309.24100-9-l.luba@partner.samsung.com>
+ <CAJKOXPehO2pKrTKMO4YRwDMaPPngmeWG9WF=kMuBG+=P1ix3NA@mail.gmail.com> <6f86228d-8409-a835-20ba-ad20464379dd@partner.samsung.com>
+In-Reply-To: <6f86228d-8409-a835-20ba-ad20464379dd@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 14 Jun 2019 15:46:11 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPcsNe+PEszGAS+YyGH3qqQdELXnwhD+x=+9POrZziCOpw@mail.gmail.com>
+Message-ID: <CAJKOXPcsNe+PEszGAS+YyGH3qqQdELXnwhD+x=+9POrZziCOpw@mail.gmail.com>
+Subject: Re: [PATCH v10 08/13] drivers: memory: add DMC driver for Exynos5422
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
+        willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 14 Jun 2019 at 15:41, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> Hi Krzysztof,
+>
+> On 6/14/19 2:58 PM, Krzysztof Kozlowski wrote:
+> > On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+> >>
+> >> This patch adds driver for Exynos5422 Dynamic Memory Controller.
+> >> The driver provides support for dynamic frequency and voltage scaling for
+> >> DMC and DRAM. It supports changing timings of DRAM running with different
+> >> frequency. There is also an algorithm to calculate timigns based on
+> >> memory description provided in DT.
+> >> The patch also contains needed MAINTAINERS file update.
+> >>
+> >> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> >> ---
+> >>   MAINTAINERS                             |    8 +
+> >>   drivers/memory/samsung/Kconfig          |   17 +
+> >>   drivers/memory/samsung/Makefile         |    1 +
+> >>   drivers/memory/samsung/exynos5422-dmc.c | 1262 +++++++++++++++++++++++
+> >>   4 files changed, 1288 insertions(+)
+> >>   create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
+> >>
+> >> diff --git a/MAINTAINERS b/MAINTAINERS
+> >> index 57f496cff999..6ffccfd95351 100644
+> >> --- a/MAINTAINERS
+> >> +++ b/MAINTAINERS
+> >> @@ -3470,6 +3470,14 @@ S:       Maintained
+> >>   F:     drivers/devfreq/exynos-bus.c
+> >>   F:     Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+> >>
+> >> +DMC FREQUENCY DRIVER FOR SAMSUNG EXYNOS5422
+> >
+> > Eh, more comments from my side.
+> > "For the hard of thinking, this list is meant to remain in alphabetical order."
+> OK
+> >
+> >> +M:     Lukasz Luba <l.luba@partner.samsung.com>
+> >> +L:     linux-pm@vger.kernel.org
+> >> +L:     linux-samsung-soc@vger.kernel.org
+> >> +S:     Maintained
+> >> +F:     drivers/memory/samsung/exynos5422-dmc.c
+> >> +F:     Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> >> +
+> >>   BUSLOGIC SCSI DRIVER
+> >>   M:     Khalid Aziz <khalid@gonehiking.org>
+> >>   L:     linux-scsi@vger.kernel.org
+> >> diff --git a/drivers/memory/samsung/Kconfig b/drivers/memory/samsung/Kconfig
+> >> index 79ce7ea58903..c93baa029654 100644
+> >> --- a/drivers/memory/samsung/Kconfig
+> >> +++ b/drivers/memory/samsung/Kconfig
+> >> @@ -5,6 +5,23 @@ config SAMSUNG_MC
+> >>            Support for the Memory Controller (MC) devices found on
+> >>            Samsung Exynos SoCs.
+> >>
+> >> +config ARM_EXYNOS5422_DMC
+> >
+> > Why you added prefix of ARM to CONFIG think none of other Exynos
+> > Kconfig options follow such convention (except devfreq).
+> In the previous versions the driver was in drivers/devfreq/,
+> that's why they have this prefix.
+> >
+> >> +       tristate "ARM EXYNOS5422 Dynamic Memory Controller driver"
+> >> +       depends on ARCH_EXYNOS
+> >> +       select DDR
+> >
+> > In general select should be used only for non-visible symbols and DDR
+> > is visible. Use depends.
+> OK
+> >
+> >> +       select PM_DEVFREQ
+> >
+> > This definitely cannot be select. You do not select entire subsystem
+> > because some similar driver was chosen.
+> So I will use depends int this case
+> >
+> >> +       select DEVFREQ_GOV_SIMPLE_ONDEMAND
+> >> +       select DEVFREQ_GOV_USERSPACE
+> >
+> > I think only simple_ondemand is needed. Is userspace governor
+> > necessary for working? Or actually maybe both could be skipped?
+> >
+> Actually we can skip both governors from here.
+>
+> >> +       select PM_DEVFREQ_EVENT
+> >
+> > Again, depends.
+> OK
+>
+> There are these 4 options which the driver depends on:
+>          depends on ARCH_EXYNOS
+>          depends on DDR
+>          depends on PM_DEVFREQ
+>          depends on PM_DEVFREQ_EVENT
+>
+> Should I merged them into one, two lines? like below:
+> a)
+> depends on (ARCH_EXYNOS && DDR && PM_DEVFREQ && PM_DEVFREQ_EVENT)
+> b) grouped into two sets
+> depends on (ARCH_EXYNOS && DDR)
+> depends on (PM_DEVFREQ && PM_DEVFREQ_EVENT)
+> c) grouped by pm_devfreq only
+> depends on ARCH_EXYNOS
+> depends on DDR
+> depends on (PM_DEVFREQ && PM_DEVFREQ_EVENT)
 
+I like the third option... although I would be also happy to see
+COMPILE_TEST (probably with IOMEM). You need to check which
+dependencies are still necessary for COMPILE_TEST.
 
-On 6/14/2019 7:28 AM, Jiri Olsa wrote:
-> hi,
-> the HPE server can do POST tracing and have enabled LBR
-> tracing during the boot, which makes check_msr fail falsly.
-> 
-> It looks like check_msr code was added only to check on guests
-> MSR access, would it be then ok to disable check_msr for real
-> hardware? (as in patch below)
-
-Yes, the check_msr patch was to fix a bug report in guest.
-I didn't get similar bug report for real hardware.
-I think it should be OK to disable it for real hardware.
-
-Thanks,
-Kan
-
-> 
-> We could also check if LBR tracing is enabled and make
-> appropriate checks, but this change is simpler ;-)
-> 
-> ideas? thanks,
-> jirka
-> 
-> 
-> ---
->   arch/x86/events/intel/core.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 71001f005bfe..1194ae7e1992 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -20,6 +20,7 @@
->   #include <asm/intel-family.h>
->   #include <asm/apic.h>
->   #include <asm/cpu_device_id.h>
-> +#include <asm/hypervisor.h>
->   
->   #include "../perf_event.h"
->   
-> @@ -4050,6 +4051,13 @@ static bool check_msr(unsigned long msr, u64 mask)
->   {
->   	u64 val_old, val_new, val_tmp;
->   
-> +	/*
-> +	 * Disable the check for real HW, so we don't
-> +	 * mess up with potentionaly enabled regs.
-> +	 */
-> +	if (hypervisor_is_type(X86_HYPER_NATIVE))
-> +		return true;
-> +
->   	/*
->   	 * Read the current value, change it and read it back to see if it
->   	 * matches, this is needed to detect certain hardware emulators
-> 
+Best regards,
+Krzysztof
