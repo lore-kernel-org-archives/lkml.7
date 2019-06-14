@@ -2,126 +2,127 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EA4C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F06F1C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E0920866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3ED620866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:39:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="bmoEbTEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbfFNNip (ORCPT
+        id S1728325AbfFNNjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:38:45 -0400
-Received: from mga14.intel.com ([192.55.52.115]:37599 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727808AbfFNNip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:38:45 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 06:38:44 -0700
-X-ExtLoop1: 1
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga003.jf.intel.com with ESMTP; 14 Jun 2019 06:38:41 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hbmPg-0007Ry-BM; Fri, 14 Jun 2019 16:38:40 +0300
-Date:   Fri, 14 Jun 2019 16:38:40 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Jack Ping CHNG <jack.ping.chng@linux.intel.com>
-Cc:     kernel-janitors@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Enrico Weigelt <lkml@metux.net>,
-        Himanshu Jha <himanshujha199640@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] drivers: Provide devm_platform_ioremap_resource_byname()
-Message-ID: <20190614133840.GN9224@smile.fi.intel.com>
-References: <39e46643-d799-94b7-4aa5-d6d99d738f99@web.de>
+        Fri, 14 Jun 2019 09:39:13 -0400
+Received: from mail.efficios.com ([167.114.142.138]:41242 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727808AbfFNNjN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:39:13 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id A563B251635;
+        Fri, 14 Jun 2019 09:39:11 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id GnCFb0jxdTlM; Fri, 14 Jun 2019 09:39:11 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 3112D25162D;
+        Fri, 14 Jun 2019 09:39:11 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3112D25162D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1560519551;
+        bh=g11SeW4F7paEUETkOqOR7pC/7HcUtfs8xDR7RV9Lcyc=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=bmoEbTEoy8FbWGZKWm4OIDeztip9KPC7WHuudiL4/WygRNBbB7MHLq6cp/Q82/u6s
+         MZIRFg9ankQrHB1IzwB0XutT1gJsfq6AbpKOJKLnxO6d2R2CG6Ip36uB8VWPKzR8tl
+         ekw891XGCbzwWZuE0IGxHiJARWkEVrp8Oges+tXqhNN7+jmCWR+/WaiU1mj2l0iG9H
+         i5JJ5gPseoFn5cp5Py420JTHRMp/OnxxyDNLeWQ1xEkbMDtS5/J9FMaSCCaACvg6zA
+         MoMmMPoqcmd/uqWeo24R6bn/rV/DTXW1kLtdZDyl2G+Prz6V9YKvKfw3Sa1On3BbqL
+         j9mOh7xxX9GqQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id A4nfGl2sb7Zt; Fri, 14 Jun 2019 09:39:11 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 176B2251626;
+        Fri, 14 Jun 2019 09:39:11 -0400 (EDT)
+Date:   Fri, 14 Jun 2019 09:39:10 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     Florian Weimer <fweimer@redhat.com>, carlos <carlos@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <1503067753.3387.1560519550939.JavaMail.zimbra@efficios.com>
+In-Reply-To: <69a53ec2ce184af29c4cae58e0b2fb57@AcuMS.aculab.com>
+References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <802638054.3032.1560506584705.JavaMail.zimbra@efficios.com> <87ftocwkei.fsf@oldenburg2.str.redhat.com> <1635690189.3049.1560507249693.JavaMail.zimbra@efficios.com> <87tvcsv1pk.fsf@oldenburg2.str.redhat.com> <1190407525.3131.1560516910936.JavaMail.zimbra@efficios.com> <1085273942.3137.1560517301721.JavaMail.zimbra@efficios.com> <69a53ec2ce184af29c4cae58e0b2fb57@AcuMS.aculab.com>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
+ and thread creation (v10)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <39e46643-d799-94b7-4aa5-d6d99d738f99@web.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
+Thread-Index: AdUitTFqJqb3c4uCSB28nMsheH09dGcCn4Ez
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Cc: Jack Ping, who did internally the same
+----- On Jun 14, 2019, at 3:29 PM, David Laight David.Laight@ACULAB.COM wrote:
 
-On Fri, Jun 14, 2019 at 03:26:25PM +0200, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Fri, 14 Jun 2019 15:15:14 +0200
+> From: Mathieu Desnoyers
+>> Sent: 14 June 2019 14:02
+> ...
+>> But my original issue remains: if I define a variable called __rseq_handled
+>> within either the main executable or the preloaded library, it overshadows
+>> the libc one:
 > 
-> The functions “platform_get_resource_byname” and “devm_ioremap_resource”
-> are called together in 181 source files.
-> This implementation detail can be determined also with the help
-> of the semantic patch language (Coccinelle software).
+> 1) That is the was elf symbol resolution is required to work.
+>   Otherwise variables like 'errno' (non-thread safe form) wouldn't work.
 > 
-> Wrap these two calls into another helper function.
-> Thus a local variable does not need to be declared for a resource
-> structure pointer before and a redundant argument can be omitted
-> for the resource type.
+> 2) Don't do it then :-)
+>   Names starting with __ will be reserved (probably 'for the implementation').
+> 
+> The real 'fun' starts because, under some circumstances, looking up a symbol as:
+>	foo = dlsym(lib_handle, "foo");
+> Can find the data item instead of the function!
+> Usually it works (even when foo is global data) because 'lib_handle' refers
+> to a different symbol table.
+> But it can go horribly wrong.
 
-This one makes sense.
-Though I'm not sure Greg will see your message.
+I was setting __rseq_handled too soon, before re-relocation of the dynamic linker.
+I moved the initialization after re-relocation and it works fine now.
 
-Rafael, maybe you can apply this one?
+The purpose of __rseq_handled is to allow early adopter libraries and applications
+to define their own global instance of the symbol, and check whether the libc
+they are linked against handle rseq registration or not.
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+libc specifies the layout of that variable (an integer). The dynamic linker
+chooses one of those instances so it's used in the global symbol table of the
+program. The important thing is that all libraries agree on that global symbol.
+Of course this is not compatible with libraries compiled with forced "hidden"
+symbols only.
 
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> ---
->  drivers/base/platform.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index 4d1729853d1a..c1f19a479dd7 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -97,6 +97,24 @@ void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev,
->  	return devm_ioremap_resource(&pdev->dev, res);
->  }
->  EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource);
-> +
-> +/**
-> + * devm_platform_ioremap_resource_byname
-> + * Call devm_ioremap_resource() for a platform device
-> + *
-> + * @pdev: platform device to use both for memory resource lookup as well as
-> + *        resource management
-> + * @name: resource name
-> + */
-> +void __iomem *devm_platform_ioremap_resource_byname(struct platform_device *pdev,
-> +						    const char *name)
-> +{
-> +	struct resource *res;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
-> +	return devm_ioremap_resource(&pdev->dev, res);
-> +}
-> +EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource_byname);
->  #endif /* CONFIG_HAS_IOMEM */
-> 
->  /**
-> --
-> 2.22.0
-> 
+Thanks,
+
+Mathieu
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
