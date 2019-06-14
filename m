@@ -2,114 +2,187 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F8BC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F3AC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDB8B208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C868D208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:15:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="znSzzWUD"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="dan6Bv2y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbfFNMPb (ORCPT
+        id S1727814AbfFNMPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:15:31 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38208 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfFNMPb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:15:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4508jy29+aun7N2LGIzBHEHdPpOHU7DfASwN5eoEnJ0=; b=znSzzWUDWHtxTeSgjW/Fm4G9b
-        I0fEYjCe6xbhDAdqQtncGNa7JPgPEedhGzQZEmkIJUL0jsptzXyvy/BM7k+T2GipSP5waiKTIz4cp
-        FdK4P3MeaT9AODHnmT90Abzm+kAOhgPUSMxh5fFPrRDGUtSAlguTcAc6N/onnUBjsQCcgNm27oU7M
-        oJC+jqsSKBHSg4/lQ5lvGNvKBDQa+ZYvQ2XYniMOnwc9/JiksBCPrd1dx0Z+MLEIcRMVIuGtFOSRI
-        rSu0GIJ8PDZaiYJzZD9mXB6ZSPNeTG+fp/ksjm6PY/z69c2wRCwth07eu0Ff4g0l/rE9yCGsMPSuE
-        GcTXZV0aQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbl6z-0007bG-Ai; Fri, 14 Jun 2019 12:15:17 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0A24120A29B57; Fri, 14 Jun 2019 14:15:15 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 14:15:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 00/62] Intel MKTME enabling
-Message-ID: <20190614121514.GK3436@hirez.programming.kicks-ass.net>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+        Fri, 14 Jun 2019 08:15:41 -0400
+Received: from mail-eopbgr690077.outbound.protection.outlook.com ([40.107.69.77]:61147
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727217AbfFNMPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:15:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B1qLZHAxoIPgDaN0R9PTRMroJWY9G3IFTnpk5jMBBas=;
+ b=dan6Bv2yT0KCPeE+EgLoZff6n8zX+573P9vMhDaS6MJYQShPC2wU99lDcYiUQX46rZo3qklQgotZWHsOEw4PeFOLxQGWrmQHACoNAVGQlia7M9eiAwhDsRUmLycx3gnG2aNNTCs8BJ039eiklO08ZGphqHBiBtOk8DsL2q5vQxE=
+Received: from CH2PR02MB6088.namprd02.prod.outlook.com (52.132.228.94) by
+ CH2PR02MB6104.namprd02.prod.outlook.com (52.132.228.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.12; Fri, 14 Jun 2019 12:15:25 +0000
+Received: from CH2PR02MB6088.namprd02.prod.outlook.com
+ ([fe80::d109:38a2:f2d5:b351]) by CH2PR02MB6088.namprd02.prod.outlook.com
+ ([fe80::d109:38a2:f2d5:b351%7]) with mapi id 15.20.1965.017; Fri, 14 Jun 2019
+ 12:15:25 +0000
+From:   Vishal Sagar <vsagar@xilinx.com>
+To:     Joe Perches <joe@perches.com>, Hyun Kwon <hyunk@xilinx.com>,
+        Vishal Sagar <vishal.sagar@xilinx.com>
+CC:     Hyun Kwon <hyunk@xilinx.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michal Simek <michals@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>
+Subject: RE: [PATCH 2/2] media: v4l: xilinx: Add Xilinx UHD-SDI Rx Subsystem
+ driver
+Thread-Topic: [PATCH 2/2] media: v4l: xilinx: Add Xilinx UHD-SDI Rx Subsystem
+ driver
+Thread-Index: AQHVGt1y9b6kdvITzkGymcoGfLMXzqaaMmUAgAAHbgCAAOVkwA==
+Date:   Fri, 14 Jun 2019 12:15:24 +0000
+Message-ID: <CH2PR02MB60885E9B81D89073BC451FC9A7EE0@CH2PR02MB6088.namprd02.prod.outlook.com>
+References: <1559656556-79174-1-git-send-email-vishal.sagar@xilinx.com>
+         <1559656556-79174-3-git-send-email-vishal.sagar@xilinx.com>
+         <20190613220507.GA2473@smtp.xilinx.com>
+ <39e6c0f7d7529da9906a17450a8bcdf416297520.camel@perches.com>
+In-Reply-To: <39e6c0f7d7529da9906a17450a8bcdf416297520.camel@perches.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vsagar@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 04d08cf7-2b67-406c-a44c-08d6f0c1fb0b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CH2PR02MB6104;
+x-ms-traffictypediagnostic: CH2PR02MB6104:
+x-microsoft-antispam-prvs: <CH2PR02MB6104E6109DA90640F102DBB6A7EE0@CH2PR02MB6104.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0068C7E410
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(366004)(39860400002)(346002)(376002)(199004)(189003)(13464003)(64756008)(316002)(53936002)(68736007)(14454004)(486006)(55016002)(76176011)(74316002)(256004)(476003)(6436002)(229853002)(81156014)(66556008)(66476007)(66946007)(3846002)(6116002)(8676002)(76116006)(9686003)(446003)(81166006)(11346002)(73956011)(107886003)(8936002)(66066001)(86362001)(4326008)(102836004)(66446008)(478600001)(6506007)(7736002)(25786009)(186003)(52536014)(6246003)(7696005)(33656002)(5660300002)(110136005)(26005)(2906002)(54906003)(71190400001)(71200400001)(305945005)(99286004)(6636002)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6104;H:CH2PR02MB6088.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Bhfp81peb5f47bl+Plj3rbPscpOjVDgBBv+dyqFPkfnSWwxwj34BqxtnkY+q+Rnmn3lrWlad2oj/cBgt1Y53QGZQ+7HiSfx2iefiuO8y9uru4Eev54QQ/S5y0TYCwbpa0TxA3cMSHDTh+c/9MVyO4WUR68bnyHRqVSxf4KixqgE82J86MpK4yL458V4WR/a4gWBXlHlCvh71DoRGc/gv6G/SlkKP16kXEwXE5tEyj2K1DlFzz+JKH6W5cW1HFV0PuvlJN36KAavlFHU3svu3ZmQyOO794uFc9XwM0PVBhyGjGDbQBDIfKzAuEguP97YEAedOBjmmFQK8eW6RGDBpP+dObJYKTwUSmz69Fp+hUJBVHCmG1ZZQ0yrBcqbZiw+P83nV+L8Ux7GEyT6QiILrCgJGvVOB753SGRyGH9Kuh6E=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04d08cf7-2b67-406c-a44c-08d6f0c1fb0b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 12:15:24.8683
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vsagar@xilinx.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 05:43:20PM +0300, Kirill A. Shutemov wrote:
-> = Intro =
-> 
-> The patchset brings enabling of Intel Multi-Key Total Memory Encryption.
-> It consists of changes into multiple subsystems:
-> 
->  * Core MM: infrastructure for allocation pages, dealing with encrypted VMAs
->    and providing API setup encrypted mappings.
+Hi Joe,
 
-That wasn't eye-bleeding bad. With exception of the refcounting; that
-looks like something that can easily go funny without people noticing.
+Thanks for reviewing.=20
 
->  * arch/x86: feature enumeration, program keys into hardware, setup
->    page table entries for encrypted pages and more.
+> -----Original Message-----
+> From: linux-media-owner@vger.kernel.org [mailto:linux-media-
+> owner@vger.kernel.org] On Behalf Of Joe Perches
+> Sent: Friday, June 14, 2019 4:02 AM
+> To: Hyun Kwon <hyunk@xilinx.com>; Vishal Sagar <vishal.sagar@xilinx.com>
+> Cc: Hyun Kwon <hyunk@xilinx.com>; Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com>; Mauro Carvalho Chehab
+> <mchehab@kernel.org>; Michal Simek <michals@xilinx.com>; Rob Herring
+> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; linux-
+> kernel@vger.kernel.org; linux-media@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; devicetree@vger.kernel.org; Dinesh Kumar
+> <dineshk@xilinx.com>; Sandip Kothari <sandipk@xilinx.com>
+> Subject: Re: [PATCH 2/2] media: v4l: xilinx: Add Xilinx UHD-SDI Rx Subsys=
+tem
+> driver
+>=20
+> EXTERNAL EMAIL
+>=20
+> On Thu, 2019-06-13 at 15:05 -0700, Hyun Kwon wrote:
+> > On Tue, 2019-06-04 at 06:55:56 -0700, Vishal Sagar wrote:
+>=20
+> trivia:
+>=20
+> > > diff --git a/drivers/media/platform/xilinx/xilinx-sdirxss.c
+> b/drivers/media/platform/xilinx/xilinx-sdirxss.c
+> []
+> > > +static int xsdirx_get_stream_properties(struct xsdirxss_state *state=
+)
+> > > +{
+> []
+> > > +   if (valid & XSDIRX_ST352_VALID_DS1_MASK) {
+> > > +           payload =3D xsdirxss_read(core, XSDIRX_ST352_DS1_REG);
+> > > +           byte1 =3D (payload >> XST352_PAYLOAD_BYTE1_SHIFT) &
+> > > +                           XST352_PAYLOAD_BYTE_MASK;
+>=20
+> Is XST352_PAYLOAD_BYTE_MASK correct ?
+> Should it be XST352_PAYLOAD_BYTE1_MASK ?
+>=20
 
-That seemed incomplete (pageattr seems to be a giant hole).
+I had thought of it to be a generic mask to extract a byte out of 4 bytes i=
+n a ST352 packet.
+Hence named it as XST352_PAYLOAD_BYTE_MASK
 
->  * Key management service: setup and management of encryption keys.
->  * DMA/IOMMU: dealing with encrypted memory on IO side.
+> > > +           active_luma =3D (payload &
+> XST352_BYTE3_ACT_LUMA_COUNT_MASK) >>
+> > > +                           XST352_BYTE3_ACT_LUMA_COUNT_OFFSET;
+> > > +           pic_type =3D (payload & XST352_BYTE2_PIC_TYPE_MASK) >>
+> > > +                           XST352_BYTE2_PIC_TYPE_OFFSET;
+> > > +           framerate =3D (payload >> XST352_BYTE2_FPS_SHIFT) &
+> > > +                           XST352_BYTE2_FPS_MASK;
+> > > +           tscan =3D (payload & XST352_BYTE2_TS_TYPE_MASK) >>
+> > > +                           XST352_BYTE2_TS_TYPE_OFFSET;
+> >
+> > Please align consistently throughout the patch. I believe the checkpatc=
+h
+> > --strict warns on these.
+>=20
+> I believe not.
+>=20
+> Another possibility would be to use a macro like:
+>=20
+> #define mask_and_shift(val, type)       \
+>         ((val) & (XST352_ ## type ## _MASK)) >> (XST352_ ## type ## _OFFS=
+ET))
+>=20
+> > > +           sampling =3D (payload & XST352_BYTE3_COLOR_FORMAT_MASK) >=
+>
+> > > +                      XST352_BYTE3_COLOR_FORMAT_OFFSET;
+>=20
+> So these could be something like:
+>=20
+>                 sampling =3D mask_and_shift(payload, BYTE3_COLOR_FORMAT);
+>=20
 
-Just minor nits, someone else would have to look at this.
+This looks like a good way. I will modify this in v2.=20
+I will also modify the XST352_PAYLOAD_BYTE_MASK to=20
+XST352_PAYLOAD_BYTE1_MASK so that this aligns with the macro.
 
->  * KVM: interaction with virtualization side.
-
-You really want to limit the damage random modules can do. They have no
-business writing to the mktme variables.
-
->  * Documentation: description of APIs and usage examples.
-
-Didn't bother with those; if the Changelogs are inadequate to make sense
-of the patches documentation isn't the right place to fix things.
-
-> The patchset is huge. This submission aims to give view to the full picture and
-> get feedback on the overall design. The patchset will be split into more
-> digestible pieces later.
-> 
-> Please review. Any feedback is welcome.
-
-I still can't tell if this is worth the complexity :-/
-
-Yes, there's a lot of words, but it doesn't mean anything to me, that
-is, nothing here makes me want to build my kernel with this 'feature'
-enabled.
-
+Regards
+Vishal Sagar
 
