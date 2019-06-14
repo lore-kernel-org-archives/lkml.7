@@ -6,51 +6,52 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC71C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6E2C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E07CF208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD08E20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725836AbfFNGYB (ORCPT
+        id S1725852AbfFNGZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 02:24:01 -0400
-Received: from verein.lst.de ([213.95.11.211]:44352 "EHLO newverein.lst.de"
+        Fri, 14 Jun 2019 02:25:24 -0400
+Received: from verein.lst.de ([213.95.11.211]:44359 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbfFNGYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 02:24:00 -0400
+        id S1725774AbfFNGZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 02:25:23 -0400
 Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 50BC268B02; Fri, 14 Jun 2019 08:23:31 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 08:23:31 +0200
+        id 844DF68B02; Fri, 14 Jun 2019 08:24:55 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 08:24:55 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     John Hubbard <jhubbard@nvidia.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
 Cc:     Christoph Hellwig <hch@lst.de>,
         Dan Williams <dan.j.williams@intel.com>,
         =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
-Message-ID: <20190614062331.GG7246@lst.de>
-References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-6-hch@lst.de> <d83280b5-8cca-3b28-1727-58a70648e2b9@nvidia.com>
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 06/22] mm: factor out a devm_request_free_mem_region
+ helper
+Message-ID: <20190614062455.GH7246@lst.de>
+References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-7-hch@lst.de> <20190613191626.GR22062@mellanox.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d83280b5-8cca-3b28-1727-58a70648e2b9@nvidia.com>
+In-Reply-To: <20190613191626.GR22062@mellanox.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 06:47:57PM -0700, John Hubbard wrote:
-> On 6/13/19 2:43 AM, Christoph Hellwig wrote:
-> > noveau is currently using this through an odd hmm wrapper, and I plan
-> 
->   "nouveau"
+On Thu, Jun 13, 2019 at 07:16:35PM +0000, Jason Gunthorpe wrote:
+> I wonder if IORES_DESC_DEVICE_PRIVATE_MEMORY should be a function
+> argument?
 
-Meh, I keep misspelling that name.  I've already fixed it up a few times
-for this series along.
-
+No.  The only reason to use this function is to allocate the fake
+physical address space for the device private memory case.  If you'd
+deal with real resources you'd use the normal resource allocator.
