@@ -2,81 +2,100 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1565C31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9815EC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A533221721
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:39:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560519579;
-	bh=Y9e8BPwQcdb80AN8VW8j1pzpc5iVMsJFKb9NKumFQ4U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RTYq/sA9wAYaYeKGZphcPrVeETQlVMS0JQEC0alZPMWUFHIsjHEuXOpQpznZA0MpG
-	 wrlZv2XIi8erVxisrsb3/yszLdtVDJ8Mkz8Xi0apGjG4Om55GVcoeGXi0gGMT1M0dG
-	 p26dUIIWffDtaYsMLbc9nuU5jBgg70aHNLlXj2iY=
+	by mail.kernel.org (Postfix) with ESMTP id 728D320866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbfFNNji (ORCPT
+        id S1728387AbfFNNjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:39:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728198AbfFNNjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:39:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50F29208CA;
-        Fri, 14 Jun 2019 13:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560519576;
-        bh=Y9e8BPwQcdb80AN8VW8j1pzpc5iVMsJFKb9NKumFQ4U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LjJOUOh9kLdXl0MqFNsMulbhCS2jVnCY8eJL1zesUaaB//AAddTzkfTi278j7JE9d
-         Rk+dXayu8+8z3XxjTfCZ+QixtQ4gykj5aeoWuScfLj0C1B3eGXMUPG8NPQL/8JPWbg
-         gqPFubhRWEK3wHmcQrUYSGlAjXy/TlqoiiYgbmpM=
-Date:   Fri, 14 Jun 2019 15:39:33 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 05/14] scripts: add an script to parse the ABI files
-Message-ID: <20190614133933.GA1076@kroah.com>
-References: <cover.1560477540.git.mchehab+samsung@kernel.org>
- <196fb3c497546f923bf5d156c3fddbe74a4913bc.1560477540.git.mchehab+samsung@kernel.org>
- <87r27wuwc3.fsf@intel.com>
+        Fri, 14 Jun 2019 09:39:45 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:59919 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728033AbfFNNjp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:39:45 -0400
+Received: from [192.168.1.110] ([77.4.92.40]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MPGJf-1i0txJ0cqj-00PaAc; Fri, 14 Jun 2019 15:39:16 +0200
+Subject: Re: [PATCH] RDMA/ucma: Use struct_size() helper
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190604154222.GA8938@embeddedor>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <f8d5dcb8-b665-b34e-3869-a720fd6f6899@metux.net>
+Date:   Fri, 14 Jun 2019 15:39:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87r27wuwc3.fsf@intel.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190604154222.GA8938@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:TyNnlCCne/1Ppqq1bYzrL6JZCGHTih8twwaASqDhXeiIa4I/XSy
+ E4A5ttx7aDQau/tjbadApxfoHDkB2T5svbpfYmr2W8BDkQmSjf7XrAGtU0wUdN6Xf0fIStk
+ U1SZ4C1VYX6rqqrwrAhfKxnXOV0Vat/fWVGmPYYWYML9wvys0/hMQIEDEAohZDrX+eM1WUq
+ SgdCBw244hyQ6AhSu0XFg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UjmK0ABtvNc=:XVKD2tvTEcA8JMRMpy0Htt
+ FURTKxjfIGc/KkFmVsLJL0pScwNlBoH84DzLmULSbZNiLfW1j1/U75nqxHMCw69r0koF1x3NS
+ 1eOgDwYx3Idh3WZ2EQ1Wd1tbRW9LnBjC5loBJUOODwdcM7zjrsUezonaxWaD0vNqABE3CcgvB
+ J0wsyqs1s3bmCmDroBEY0xKHLzcX3vIWczdBBSehV3oAd405VzXE0gLx7J75vjVSPfDrVu3TK
+ l/ffJmemx9p/ynRX8CGMKVp0s4UmVHoo1gqtD2z6WuqxNP+yzGb+rfHEkAdKpQuDhNOmJ2YR1
+ n/kX+yH/FcuffTYoFAfOM1oY2enBt+x3eXGrFu3uVI16Hb4fYVfuScp+znSCkaBB+6FdQ/tgh
+ eiIUKrd//XE5EjjGNEvkziApCl31uZzfQvd+ejQhi4Pv3bLPetHK0F5+zxTDWyuWPFJJK5Fvk
+ r6fw/pbY1edstTcVAE28wqQf2FfhPBpNHnybutpCq+HT+gdNt6OXBw6Gg05EOjLOdB9jGbDRt
+ FAkdvtxDU5p2XQmP5bLi8Q+1QqcvYnfGQZsRGM1xowbyneNrUcEQ0MEaolXO3lW/4gwUlpZlZ
+ mCJCuLIWh2NCvvxfMnwBjIKnj5HTFsQ/3YZuPJvmkA4Iqs8Yih2UuV/DQDCnRWorQPBfA/qXK
+ +Kfl/PJDPO4+ipXO0xLOwaxBGKarddEpf2hX+t4IERfWhMZWoNETaeGuKHLT4srg++GNHhSpV
+ W7x+rhROLzGd68qKQcywrBgTBr0Q+EYZt7HtwXa4OG7RTXM0evzPtFpIt/Q=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 04:31:56PM +0300, Jani Nikula wrote:
-> On Thu, 13 Jun 2019, Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-> > From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-> >
-> > Add a script to parse the Documentation/ABI files and produce
-> > an output with all entries inside an ABI (sub)directory.
-> >
-> > Right now, it outputs its contents on ReST format. It shouldn't
-> > be hard to make it produce other kind of outputs, since the ABI
-> > file parser is implemented in separate than the output generator.
-> 
-> Hum, or just convert the ABI files to rst directly.
+On 04.06.19 17:42, Gustavo A. R. Silva wrote:
 
-And what would that look like?
+Hi,
 
-thanks,
+<snip>
 
-greg k-h
+> diff --git a/drivers/infiniband/core/ucma.c b/drivers/infiniband/core/ucma.c
+> index 140a338a135f..cbe460076611 100644
+> --- a/drivers/infiniband/core/ucma.c
+> +++ b/drivers/infiniband/core/ucma.c
+> @@ -951,8 +951,7 @@ static ssize_t ucma_query_path(struct ucma_context *ctx,
+>  		}
+>  	}
+>  
+> -	if (copy_to_user(response, resp,
+> -			 sizeof(*resp) + (i * sizeof(struct ib_path_rec_data))))
+> +	if (copy_to_user(response, resp, struct_size(resp, path_data, i)))
+>  		ret = -EFAULT;
+
+have you already considered further reducing the boilerplate by putting
+this into it's own helper macro, so it finally would look like this ?
+
++	if (copy_to_user_structs(response, resp, resp, path_data, i)))
+>  		ret = -EFAULT;
+
+You've posted similar patches that also affected things like kzalloc().
+Maybe for those it would be better candidates for putting everything
+into its own helper macro ? (I've already got that on my 2do list, but
+not sure whether maintainers really like to be bothered with those
+kind of patches ;-)).
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
