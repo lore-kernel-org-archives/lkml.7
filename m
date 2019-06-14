@@ -2,120 +2,113 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709DFC31E50
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD377C31E50
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C33217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:48:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tMJMO2yt"
+	by mail.kernel.org (Postfix) with ESMTP id 9EF142070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfFNXsp (ORCPT
+        id S1726444AbfFNXy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 19:48:45 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43922 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfFNXso (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 19:48:44 -0400
-Received: by mail-io1-f68.google.com with SMTP id k20so9320565ios.10;
-        Fri, 14 Jun 2019 16:48:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=wpT38r5a880Nz5EpPnP8p2gTTuHwmcJYFjVOC4ylZcM=;
-        b=tMJMO2ytWK26Y3fK7EbaPOgDtYckw2mzDmUma4M7GZ6d5B6xAFfJHZ+CO/BcFrauXb
-         T7nIZE5HTiElEUrplL94Sc1aMsKCRjFSxIYwns/ska89pIPKO+wxMths5tdhbs+NXB0R
-         t/lfJpE/qUMr+ZklWfZHMdaxuWh+uHgX5jh26hpTYxXKagnUkZ8TKXWwdULwy3qju4dU
-         KV3n7fMuYdWD846OeXr/A9snLt/JBvG5wWP4mVu6JKcKwr9io6bQVml0HGX84np6qtQ+
-         6VRl6pJKDpgZQkV6QOanJDTKePx3HUwDVBd/VLQd6yJbEfxBZXenS8vNAi272jZyMwTo
-         5WGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wpT38r5a880Nz5EpPnP8p2gTTuHwmcJYFjVOC4ylZcM=;
-        b=GFruPQIcQ3h5xOIpgOHGCCIMQJNs3G2nO3Cxl8S6Mm9vARaFCenEhRdHJKGJGvt6Di
-         +7SFNJJR4rukcbBkTOvPVEjDJGMfl703MbN/0I5RDA2bCGfZm9u8EBJ7K4NGLeMRPc1d
-         65KVCr7R6ZO8XYvkuJ8UtYGelE2w5aBGBifL6MnF6qvoVrRXNT5A89WEPr1k62Io2DHI
-         4eq+33/gqv/j8Q6kXmuggDP3aMesK43xJY5h/vZNeoxx/Tud0yEJ6rtr/urCZHqSBoW9
-         euhzCpR6KzFQIGFrqa1JCEHiZTnLowUbZkQaqHabjtY1u64q/aGYnPID1oroiSRg7aTr
-         30Nw==
-X-Gm-Message-State: APjAAAV+vurf8qYCLTtueI4mkxoej2fe5XUVNtpJzZodFkKW0Oxarh9a
-        MvH1DW0BJdeqO2RTi007yw==
-X-Google-Smtp-Source: APXvYqxMpzZoYdSsD/XNMNJdtE6+/IEP+XHknfiQgq15et56Ewxg+b/Uw8Sj027M59gzDqAkNon6cw==
-X-Received: by 2002:a5e:cb06:: with SMTP id p6mr35269477iom.79.1560556123396;
-        Fri, 14 Jun 2019 16:48:43 -0700 (PDT)
-Received: from Test-Virtual-Machine.mshome.net (d24-141-106-246.home.cgocable.net. [24.141.106.246])
-        by smtp.gmail.com with ESMTPSA id x22sm3799352ioh.87.2019.06.14.16.48.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 16:48:42 -0700 (PDT)
-Received: by Test-Virtual-Machine.mshome.net (Postfix, from userid 1000)
-        id 0686060EFA; Fri, 14 Jun 2019 19:48:41 -0400 (EDT)
-From:   Branden Bonaby <brandonbonaby94@gmail.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     Branden Bonaby <brandonbonaby94@gmail.com>,
-        linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: storvsc: Add ability to change scsi queue depth
-Date:   Fri, 14 Jun 2019 19:48:22 -0400
-Message-Id: <20190614234822.5193-1-brandonbonaby94@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 14 Jun 2019 19:54:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42892 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725981AbfFNXyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 19:54:25 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BAE9F3083391;
+        Fri, 14 Jun 2019 23:54:24 +0000 (UTC)
+Received: from treble (ovpn-112-39.rdu2.redhat.com [10.10.112.39])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E62DF60CA3;
+        Fri, 14 Jun 2019 23:54:20 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 18:54:17 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     X86 ML <x86@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@aculab.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v2 4/5] x86/bpf: Fix 64-bit JIT frame pointer usage
+Message-ID: <20190614235417.7oagddee75xo7otp@treble>
+References: <cover.1560534694.git.jpoimboe@redhat.com>
+ <178097de8c1bd6a877342304f3469eac4067daa4.1560534694.git.jpoimboe@redhat.com>
+ <20190614210555.q4ictql3tzzjio4r@ast-mbp.dhcp.thefacebook.com>
+ <20190614211916.jnxakyfwilcv6r57@treble>
+ <CAADnVQJ0dmxYTnaQC1UiSo7MhcTy2KRWJWJKw4jyxFWby-JgRg@mail.gmail.com>
+ <20190614231311.gfeb47rpjoholuov@treble>
+ <CAADnVQKOjvhpMQqjHvF-oX2U99WRCi+repgqmt6hiSObovxoaQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAADnVQKOjvhpMQqjHvF-oX2U99WRCi+repgqmt6hiSObovxoaQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 14 Jun 2019 23:54:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding functionality to allow the SCSI queue depth to be changed,
-by utilizing the "scsi_change_queue_depth" function.
+On Fri, Jun 14, 2019 at 04:23:41PM -0700, Alexei Starovoitov wrote:
+> On Fri, Jun 14, 2019 at 4:13 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > On Fri, Jun 14, 2019 at 02:27:30PM -0700, Alexei Starovoitov wrote:
+> > > On Fri, Jun 14, 2019 at 2:19 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > > >
+> > > > On Fri, Jun 14, 2019 at 02:05:56PM -0700, Alexei Starovoitov wrote:
+> > > > > Have you tested it ?
+> > > > > I really doubt, since in my test both CONFIG_UNWINDER_ORC and
+> > > > > CONFIG_UNWINDER_FRAME_POINTER failed to unwind through such odd frame.
+> > > >
+> > > > Hm, are you seeing selftest failures?  They seem to work for me.
+> > > >
+> > > > > Here is much simple patch that I mentioned in the email yesterday,
+> > > > > but you failed to listen instead of focusing on perceived 'code readability'.
+> > > > >
+> > > > > It makes one proper frame and both frame and orc unwinders are happy.
+> > > >
+> > > > I'm on my way out the door and I just skimmed it, but it looks fine.
+> > > >
+> > > > Some of the code and patch description look familiar, please be sure to
+> > > > give me proper credit.
+> > >
+> > > credit means something positive.
+> >
+> > So you only give credit for *good* stolen code.  I must have missed that
+> > section of the kernel patch guidelines.
+> 
+> what are you talking about?
+> you've posted one bad patch. I pointed out multiple issues in it.
+> Then proposed another bad idea. I pointed out another set of issues.
+> Than David proposed yet another idea that you've implemented
+> and claimed that it's working when it was not.
+> Then I got fed up with this thread and fix it for real by reverting
+> that old commit that I mentioned way earlier.
+> https://patchwork.ozlabs.org/patch/1116307/
+> Where do you see your code or ideas being used?
+> I see none.
 
-Signed-off-by: Branden Bonaby <brandonbonaby94@gmail.com>
----
- drivers/scsi/storvsc_drv.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Obviously I wasn't referring to this new whitewashed patch for which I
+wasn't even on Cc, despite being one of the people (along with Peter Z)
+who convinced you that there was a problem to begin with.
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index 8472de1007ff..719ca9906fc2 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -387,6 +387,7 @@ enum storvsc_request_type {
- 
- static int storvsc_ringbuffer_size = (128 * 1024);
- static u32 max_outstanding_req_per_channel;
-+static int storvsc_change_queue_depth(struct scsi_device *sdev, int queue_depth);
- 
- static int storvsc_vcpus_per_sub_channel = 4;
- 
-@@ -1711,6 +1712,7 @@ static struct scsi_host_template scsi_driver = {
- 	.dma_boundary =		PAGE_SIZE-1,
- 	.no_write_same =	1,
- 	.track_queue_depth =	1,
-+	.change_queue_depth =	storvsc_change_queue_depth,
- };
- 
- enum {
-@@ -1917,6 +1919,15 @@ static int storvsc_probe(struct hv_device *device,
- 	return ret;
- }
- 
-+/* Change a scsi target's queue depth */
-+static int storvsc_change_queue_depth(struct scsi_device *sdev, int queue_depth)
-+{
-+	if (queue_depth > scsi_driver.can_queue){
-+		queue_depth = scsi_driver.can_queue;
-+	}
-+	return scsi_change_queue_depth(sdev, queue_depth);
-+}
-+
- static int storvsc_remove(struct hv_device *dev)
- {
- 	struct storvsc_device *stor_device = hv_get_drvdata(dev);
+The previous patch you posted has my patch description, push/pop and
+comment changes, with no credit:
+
+https://lkml.kernel.org/r/20190614210555.q4ictql3tzzjio4r@ast-mbp.dhcp.thefacebook.com
+
 -- 
-2.17.1
-
+Josh
