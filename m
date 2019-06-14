@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C124C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10129C31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26A92184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC522183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:55:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfFNRz1 (ORCPT
+        id S1727722AbfFNRz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 13:55:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:39640 "EHLO foss.arm.com"
+        Fri, 14 Jun 2019 13:55:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:39694 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727639AbfFNRzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 13:55:23 -0400
+        id S1727700AbfFNRz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 13:55:27 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 677D53EF;
-        Fri, 14 Jun 2019 10:55:22 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67A60D6E;
+        Fri, 14 Jun 2019 10:55:27 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 64BB33F718;
-        Fri, 14 Jun 2019 10:55:21 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 64D113F718;
+        Fri, 14 Jun 2019 10:55:26 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        suzuki.poulose@arm.com, Bjorn Helgaas <bhelgaas@google.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH v2 20/28] drivers: Introduce bus_find_next_device() helper
-Date:   Fri, 14 Jun 2019 18:54:15 +0100
-Message-Id: <1560534863-15115-21-git-send-email-suzuki.poulose@arm.com>
+        suzuki.poulose@arm.com, Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH v2 24/28] drivers: Introduce driver_find_device_by_fwnode() helper
+Date:   Fri, 14 Jun 2019 18:54:19 +0100
+Message-Id: <1560534863-15115-25-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
 References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
@@ -42,90 +42,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a wrapper for bus_find_device() to find the next devices
-on the given bus from the "start" device. Also convert the existing
-users to make use of the new helper.
+Add a wrapper to driver_find_device() to search for a device
+by the fwnode pointer, reusing the generic match function.
+Also convert the existing users to make use of the new helper.
 
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Joerg Roedel <joro@8bytes.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/pci/probe.c      |  7 +------
- drivers/scsi/scsi_proc.c |  9 ++-------
- include/linux/device.h   | 10 ++++++++++
- 3 files changed, 13 insertions(+), 13 deletions(-)
+ drivers/iommu/arm-smmu-v3.c |  9 ++-------
+ drivers/iommu/arm-smmu.c    |  9 ++-------
+ include/linux/device.h      | 13 +++++++++++++
+ 3 files changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index f9ef7ad..3504695 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -64,11 +64,6 @@ static struct resource *get_pci_domain_busn_res(int domain_nr)
- 	return &r->res;
- }
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index d787856..6b956a03 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -2023,16 +2023,11 @@ arm_smmu_iova_to_phys(struct iommu_domain *domain, dma_addr_t iova)
  
--static int find_anything(struct device *dev, const void *data)
+ static struct platform_driver arm_smmu_driver;
+ 
+-static int arm_smmu_match_node(struct device *dev, const void *data)
 -{
--	return 1;
+-	return dev->fwnode == data;
 -}
 -
- /*
-  * Some device drivers need know if PCI is initiated.
-  * Basically, we think PCI is not initiated when there
-@@ -79,7 +74,7 @@ int no_pci_devices(void)
- 	struct device *dev;
- 	int no_devices;
- 
--	dev = bus_find_device(&pci_bus_type, NULL, NULL, find_anything);
-+	dev = bus_find_next_device(&pci_bus_type, NULL);
- 	no_devices = (dev == NULL);
- 	put_device(dev);
- 	return no_devices;
-diff --git a/drivers/scsi/scsi_proc.c b/drivers/scsi/scsi_proc.c
-index c074631..5b31322 100644
---- a/drivers/scsi/scsi_proc.c
-+++ b/drivers/scsi/scsi_proc.c
-@@ -372,15 +372,10 @@ static ssize_t proc_scsi_write(struct file *file, const char __user *buf,
- 	return err;
- }
- 
--static int always_match(struct device *dev, const void *data)
--{
--	return 1;
--}
--
- static inline struct device *next_scsi_device(struct device *start)
+ static
+ struct arm_smmu_device *arm_smmu_get_by_fwnode(struct fwnode_handle *fwnode)
  {
--	struct device *next = bus_find_device(&scsi_bus_type, start, NULL,
--					      always_match);
-+	struct device *next = bus_find_next_device(&scsi_bus_type, start);
-+
- 	put_device(start);
- 	return next;
+-	struct device *dev = driver_find_device(&arm_smmu_driver.driver, NULL,
+-						fwnode, arm_smmu_match_node);
++	struct device *dev = driver_find_device_by_fwnode(&arm_smmu_driver.driver,
++							  fwnode);
+ 	put_device(dev);
+ 	return dev ? dev_get_drvdata(dev) : NULL;
+ }
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 3af579a..0d63a9e 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -1419,16 +1419,11 @@ static bool arm_smmu_capable(enum iommu_cap cap)
+ 	}
+ }
+ 
+-static int arm_smmu_match_node(struct device *dev, const void *data)
+-{
+-	return dev->fwnode == data;
+-}
+-
+ static
+ struct arm_smmu_device *arm_smmu_get_by_fwnode(struct fwnode_handle *fwnode)
+ {
+-	struct device *dev = driver_find_device(&arm_smmu_driver.driver, NULL,
+-						fwnode, arm_smmu_match_node);
++	struct device *dev = driver_find_device_by_fwnode(&arm_smmu_driver.driver,
++							  fwnode);
+ 	put_device(dev);
+ 	return dev ? dev_get_drvdata(dev) : NULL;
  }
 diff --git a/include/linux/device.h b/include/linux/device.h
-index 3c244ac..1c137ab 100644
+index f929671..2cf49f7 100644
 --- a/include/linux/device.h
 +++ b/include/linux/device.h
-@@ -225,6 +225,16 @@ static inline struct device *bus_find_device_by_devt(struct bus_type *bus,
- 	return bus_find_device(bus, NULL, &devt, device_match_devt);
+@@ -450,6 +450,19 @@ driver_find_device_by_of_node(struct device_driver *drv,
+ 	return driver_find_device(drv, NULL, np, device_match_of_node);
  }
  
 +/**
-+ * bus_find_next_device - Find the next device after a given device in a
-+ * given bus.
++ * driver_find_device_by_fwnode- device iterator for locating a particular device
++ * by fwnode pointer.
++ * @driver: the driver we're iterating
++ * @fwnode: fwnode pointer to match.
 + */
 +static inline struct device *
-+bus_find_next_device(struct bus_type *bus,struct device *cur)
++driver_find_device_by_fwnode(struct device_driver *drv,
++			     const struct fwnode_handle *fwnode)
 +{
-+	return bus_find_device(bus, cur, NULL, device_match_any);
++	return driver_find_device(drv, NULL, fwnode, device_match_fwnode);
 +}
 +
- struct device *subsys_find_device_by_id(struct bus_type *bus, unsigned int id,
- 					struct device *hint);
- int bus_for_each_drv(struct bus_type *bus, struct device_driver *start,
+ void driver_deferred_probe_add(struct device *dev);
+ int driver_deferred_probe_check_state(struct device *dev);
+ 
 -- 
 2.7.4
 
