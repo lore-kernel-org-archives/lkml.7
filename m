@@ -2,105 +2,77 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235BCC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E93C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB8312175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:34:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560526461;
-	bh=CXgMQwIEu2sR8oeBNdgl4DGDfkxUfmcuwhPt0mVBcug=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=jGrEEpGkbxsG2omX5Qw7sNlcQobxO1Qjc7pzpb0WA6vCAI8d+O0Ya/aqD7QCa7mLW
-	 j3MDjnvVvbmopoJqGnWNVC3oSfKSXY6Aa+5svvwEtVwsaVfpw/EPvmAds62wg003wO
-	 BRXh87WHR225dL+xjWNEnS8ucgwZKg96lF/HG1Nc=
+	by mail.kernel.org (Postfix) with ESMTP id 05F972175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:35:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfFNPeT (ORCPT
+        id S1726801AbfFNPfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:34:19 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46289 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbfFNPeT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:34:19 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 81so1671905pfy.13;
-        Fri, 14 Jun 2019 08:34:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=VcqZSTfOOTG7AMnLIvNFLJiYzNUQ9IggEtYnxRQLLCw=;
-        b=cX1rNV+2kByelj3aRHal2nkMvSEybh2ne3gjRKQLyq/psOp4P4W36nJUxqHca+Bcve
-         fa0/6Y6jBxg1+c2KzvqvaUmqscKgM0K6hZVYuIEfPhKes95rL4OM7rqA/iMZw3a2+BIc
-         j5pLf6/GVjAccFAWx9DrACLVYTFy/GnZAjj+/N/W834r2sAefVBySJt65wBc4yF8ImNc
-         ut5GQnHNKOxecBWoTEy4T1OMtJb/P6W4WIR8J0fVTFau7rD7GCJPUFz22twflA/Gk+1O
-         Weu0lVEqZs+tuJ2/U4Wd6R6VzdmfNLOdxQ+ICzXgGdNgbNKeA7jsuBjygxHdU274ySeu
-         UjYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=VcqZSTfOOTG7AMnLIvNFLJiYzNUQ9IggEtYnxRQLLCw=;
-        b=X/g4ydHGBHJjb0V4ZQ4KQTwhaF2Gt33ewHXStA9RGNPyBi+8GOHSunatjumTbAFf/b
-         m9eabllpafpaWUD0RgY7zFhgNKOeij9GpwWqoxSC63ZP4MUOBHRHkXeRcwE6keX7ctrT
-         /jo8VGs9oyuQ0lQByWAy7kcXfOCu9uupzZ6AShPAqR6/PNp+i1vH71ei/4HjTEqRF/Iq
-         2Y3GNId2PVJO2wpygxTTcy5bf9MaFSNsM7P7A7Uh36nKv4dCha7y83s/Hvq3iQwdPrPC
-         kfWi01iKNTBy8HkpXxrd6oOEWW0fXe6+sK2OyZlHR/lhXK0rUqjsmyyhHpICos614IL6
-         96CA==
-X-Gm-Message-State: APjAAAWK3yKB6txhi0Dyw7inuj3eY61tjGbnyXxRMCf5NLaRk2oEIbP2
-        mowBRVdfzPzQ+W88HPofSws=
-X-Google-Smtp-Source: APXvYqwb9cE5Z3QlVQVAVj601wOklPNy1XyRHzrFQZIGofhht1ieXqlLTiZ979Kxs19wgO9U4MB4AA==
-X-Received: by 2002:a63:4d17:: with SMTP id a23mr5115988pgb.22.1560526458229;
-        Fri, 14 Jun 2019 08:34:18 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:180::1:b330])
-        by smtp.gmail.com with ESMTPSA id y19sm3039003pfe.150.2019.06.14.08.34.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 08:34:17 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 08:34:13 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     dsterba@suse.cz, dsterba@suse.com, clm@fb.com,
-        josef@toxicpanda.com, axboe@kernel.dk, jack@suse.cz,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH 7/8] Btrfs: use REQ_CGROUP_PUNT for worker thread
- submitted bios
-Message-ID: <20190614153413.GD538958@devbig004.ftw2.facebook.com>
-References: <20190614003350.1178444-1-tj@kernel.org>
- <20190614003350.1178444-8-tj@kernel.org>
- <20190614151524.GZ3563@twin.jikos.cz>
+        Fri, 14 Jun 2019 11:35:00 -0400
+Received: from verein.lst.de ([213.95.11.211]:47942 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbfFNPfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 11:35:00 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id DF91968AFE; Fri, 14 Jun 2019 17:34:28 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 17:34:28 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH 12/16] staging/comedi: mark as broken
+Message-ID: <20190614153428.GA10008@lst.de>
+References: <20190614134726.3827-1-hch@lst.de> <20190614134726.3827-13-hch@lst.de> <20190614140239.GA7234@kroah.com> <20190614144857.GA9088@lst.de> <20190614153032.GD18049@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190614151524.GZ3563@twin.jikos.cz>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190614153032.GD18049@kroah.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, David.
-
-On Fri, Jun 14, 2019 at 05:15:24PM +0200, David Sterba wrote:
-> fs/btrfs/inode.c: In function ‘cow_file_range_async’:
-> fs/btrfs/inode.c:1278:4: error: implicit declaration of function ‘css_get’; did you mean ‘css_put’? [-Werror=implicit-function-declaration]
->  1278 |    css_get(blkcg_css);
->       |    ^~~~~~~
->       |    css_put
+On Fri, Jun 14, 2019 at 05:30:32PM +0200, Greg KH wrote:
+> On Fri, Jun 14, 2019 at 04:48:57PM +0200, Christoph Hellwig wrote:
+> > On Fri, Jun 14, 2019 at 04:02:39PM +0200, Greg KH wrote:
+> > > Perhaps a hint as to how we can fix this up?  This is the first time
+> > > I've heard of the comedi code not handling dma properly.
+> > 
+> > It can be fixed by:
+> > 
+> >  a) never calling virt_to_page (or vmalloc_to_page for that matter)
+> >     on dma allocation
+> >  b) never remapping dma allocation with conflicting cache modes
+> >     (no remapping should be doable after a) anyway).
 > 
-> I don't have CONFIG_CGROUPS enabled in the testing kernel so this probably
-> needs a wrapper so the ifdef is not in the middle of the function.
+> Ok, fair enough, have any pointers of drivers/core code that does this
+> correctly?  I can put it on my todo list, but might take a week or so...
 
-Yeah, got a bunch of kbuild warnings last night.  I'll fix them up and
-send v2 patchset.
-
-Thanks.
-
--- 
-tejun
+Just about everyone else.  They just need to remove the vmap and
+either do one large allocation, or live with the fact that they need
+helpers to access multiple array elements instead of one net vmap,
+which most of the users already seem to do anyway, with just a few
+using the vmap (which might explain why we didn't see blowups yet).
