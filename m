@@ -2,248 +2,138 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497E6C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED1FC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A182073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B18832073F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbfFNHbA (ORCPT
+        id S1726405AbfFNHb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:31:00 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:50955 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725858AbfFNHbA (ORCPT
+        Fri, 14 Jun 2019 03:31:57 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:54640 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725846AbfFNHb4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:31:00 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id bgflhW4t15qKabgfohKiUw; Fri, 14 Jun 2019 09:30:57 +0200
-Subject: Re: [PATCH 4/4] media: docs: create vimc documentation
-To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, helen.koike@collabora.com,
-        kernel@collabora.com, lkcamp@lists.libreplanetbr.org,
-        linux-kernel@vger.kernel.org
-References: <20190613150616.19336-1-andrealmeid@collabora.com>
- <20190613150616.19336-5-andrealmeid@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <4359daf5-4a0c-64b4-46ad-75eba4e9016f@xs4all.nl>
-Date:   Fri, 14 Jun 2019 09:30:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 14 Jun 2019 03:31:56 -0400
+Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 4FFEC1AD6C8;
+        Fri, 14 Jun 2019 17:31:51 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hbgfl-0007DD-JD; Fri, 14 Jun 2019 17:30:53 +1000
+Date:   Fri, 14 Jun 2019 17:30:53 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: pagecache locking (was: bcachefs status update) merged)
+Message-ID: <20190614073053.GQ14363@dread.disaster.area>
+References: <20190610191420.27007-1-kent.overstreet@gmail.com>
+ <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
+ <20190611011737.GA28701@kmo-pixel>
+ <20190611043336.GB14363@dread.disaster.area>
+ <20190612162144.GA7619@kmo-pixel>
+ <20190612230224.GJ14308@dread.disaster.area>
+ <20190613183625.GA28171@kmo-pixel>
+ <20190613235524.GK14363@dread.disaster.area>
+ <CAHk-=wj3SQjfHHvE_CNrQAYS2p7bsC=OXEc156cHA_ujyaG0NA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190613150616.19336-5-andrealmeid@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfJHfANkmbWcf/XPPcs5gIJktZc8rJJNzs+iu5+Ag9RH0QrsKy78MhinbGsEJNMrAqPFutGUCMdTPl4FshpPeAPTTgweB2Nku/YMWr4tTh6miecyqjUYy
- 2LsEXIayRo73USnLiEgcCZmDE/qx16vNsaicmdTaiE13FaSHJOY5ZkF6v9De8n6CjCdRVO6ve3v7XFKgLFld8DUHdq9ZHzG2A+Xr7lGb+zseOnQr/bFEnxbG
- P4kI1r8Mt7YO4HbNVe2ICSBpOFX0KVQ5zZX2JtPARxhBTH50DwjMvYZ1luoL77dWMm05s/q/hYbQIP81oFc6m+NswRdwtQIPyAf6RuaBoos7dNXXwEpohYlX
- YmiLF/mUcQxWC1ORqkdQUvNk70FPBjajvV/hS/D6bcB87MCxbbU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wj3SQjfHHvE_CNrQAYS2p7bsC=OXEc156cHA_ujyaG0NA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
+        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
+        a=7-415B0cAAAA:8 a=N7bZJnSf5Z-prqCgXwgA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi André,
-
-Thanks for working one this, very nice to have this documentation.
-
-Some comments below:
-
-On 6/13/19 5:06 PM, André Almeida wrote:
-> Create vimc documentation file to explain it basics features, it's
-> topology, how to configure it and to document vimc's subdevices.
+On Thu, Jun 13, 2019 at 04:30:36PM -1000, Linus Torvalds wrote:
+> On Thu, Jun 13, 2019 at 1:56 PM Dave Chinner <david@fromorbit.com> wrote:
+> >
+> > That said, the page cache is still far, far slower than direct IO,
 > 
-> Signed-off-by: André Almeida <andrealmeid@collabora.com>
-> Suggested-by: Helen Koike <helen.koike@collabora.com>
-> ---
->  Documentation/media/v4l-drivers/index.rst |  1 +
->  Documentation/media/v4l-drivers/vimc.dot  | 22 +++++
->  Documentation/media/v4l-drivers/vimc.rst  | 98 +++++++++++++++++++++++
->  3 files changed, 121 insertions(+)
->  create mode 100644 Documentation/media/v4l-drivers/vimc.dot
->  create mode 100644 Documentation/media/v4l-drivers/vimc.rst
+> Bullshit, Dave.
 > 
-> diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
-> index 33a055907258..c4c78a28654c 100644
-> --- a/Documentation/media/v4l-drivers/index.rst
-> +++ b/Documentation/media/v4l-drivers/index.rst
-> @@ -64,5 +64,6 @@ For more details see the file COPYING in the source distribution of Linux.
->  	si476x
->  	soc-camera
->  	uvcvideo
-> +	vimc
->  	vivid
->  	zr364xx
-> diff --git a/Documentation/media/v4l-drivers/vimc.dot b/Documentation/media/v4l-drivers/vimc.dot
-> new file mode 100644
-> index 000000000000..57863a13fa39
-> --- /dev/null
-> +++ b/Documentation/media/v4l-drivers/vimc.dot
-> @@ -0,0 +1,22 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +digraph board {
-> +	rankdir=TB
-> +	n00000001 [label="{{} | Sensor A\n/dev/v4l-subdev0 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
-> +	n00000001:port0 -> n00000005:port0 [style=bold]
-> +	n00000001:port0 -> n0000000b [style=bold]
-> +	n00000003 [label="{{} | Sensor B\n/dev/v4l-subdev1 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
-> +	n00000003:port0 -> n00000008:port0 [style=bold]
-> +	n00000003:port0 -> n0000000f [style=bold]
-> +	n00000005 [label="{{<port0> 0} | Debayer A\n/dev/v4l-subdev2 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-> +	n00000005:port1 -> n00000017:port0
-> +	n00000008 [label="{{<port0> 0} | Debayer B\n/dev/v4l-subdev3 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-> +	n00000008:port1 -> n00000017:port0 [style=dashed]
-> +	n0000000b [label="Raw Capture 0\n/dev/video0", shape=box, style=filled, fillcolor=yellow]
-> +	n0000000f [label="Raw Capture 1\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
-> +	n00000013 [label="RGB/YUV Input\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
-> +	n00000013 -> n00000017:port0 [style=dashed]
-> +	n00000017 [label="{{<port0> 0} | Scaler\n/dev/v4l-subdev4 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-> +	n00000017:port1 -> n0000001a [style=bold]
-> +	n0000001a [label="RGB/YUV Capture\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
-> +}
-> diff --git a/Documentation/media/v4l-drivers/vimc.rst b/Documentation/media/v4l-drivers/vimc.rst
-> new file mode 100644
-> index 000000000000..bd98c55a0025
-> --- /dev/null
-> +++ b/Documentation/media/v4l-drivers/vimc.rst
-> @@ -0,0 +1,98 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +The Virtual Media Controller Driver (vimc)
-> +==========================================
-> +
-> +The Vimc driver emulates the V4L2 API and the Media API as well. Its goal is to
+> You've made that claim before, and it's been complete bullshit before
+> too, and I've called you out on it then too.
 
-Vimc -> vimc
+Yes, your last run of insulting rants on this topic resulted in me
+pointing out your CoC violations because you were unable to listen
+or discuss the subject matter in a civil manner. And you've started
+right where you left off last time....
 
-It doesn't emulate these APIs, it emulates complex video hardware using these APIs.
-
-> +emulate complex devices and topologies. In the actual state, it has a capture
-
-Drop 'In the actual state, '.
-
-> +device and three subdevices: sensor, debayer and scaler.
-> +
-> +Topology
-> +--------
-> +
-> +The topology is hardcoded, although you could modify it on vimc-core and
-
-on -> in
-
-> +recompile the driver to achieve your own topology. This is the default topology:
-> +
-> +.. _vimc_topology_graph:
-> +
-> +.. kernel-figure:: vimc.dot
-> +    :alt:   vimc.dot
-> +    :align: center
-> +
-> +    Media pipeline graph on Vimc
-> +
-> +Configuring the topology
-> +~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +Each subdevice will come with its default configuration (pixelformat, height,
-> +width, ...). One needs to configure the topology in order to match the
-> +configuration on each linked subdevice to stream frames through the pipeline.
-> +If the configuration doesn't match, the stream will fail. The ``v4l2-utils``
-> +is a bundle of user-space applications, that comes with ``media-ctl`` and
-> +``v4l2-clt`` that can be used in combination to configure. This sequence of
-
-v4l2-clt -> v4l2-ctl
-
-in combination to configure -> to configure the vimc configuration.
-
-> +commands fits for the default topology:
-> +
-> +.. code-block:: bash
-> +
-> +        media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
-> +        media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
-> +        media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
-> +        media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
-> +        v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
-> +        v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
-> +        v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
-> +
-> +Subdevices
-> +----------
-> +
-> +Subdevices define the behavior of an entity in the topology. Depending on the
-> +subdevice, the entity can have multiple pads of type source or sink.
-> +
-> +vimc-sensor:
-> +	Generates images in several formats using video test pattern generator.
-> +	Exposes:
-> +
-> +	* 1 Pad source
-> +
-> +vimc-debayer:
-> +	Transforms images in bayer format into a non-bayer format.
-> +	Exposes:
-> +
-> +	* 1 Pad sink
-> +	* 1 Pad source
-> +
-> +vimc-scaler:
-> +	Multiplies the size of the image by 9 (this value can be configured,
-> +        see at `Modules options`_).
-
-It's a bit ambiguous: I assume you mean that the images is scaled up by a
-factor of 3? So 640x480 becomes 1920x1440?
-
-> +	Exposes:
-> +
-> +	* 1 Pad sink
-> +	* 1 Pad source
-> +
-> +vimc-capture:
-> +	Exposes node /dev/videoX to allow userspace to capture the stream.
-> +	Exposes:
-> +
-> +	* 1 Pad sink
-> +	* 1 Pad source
-> +
-> +Modules options
-
-Modules -> Module
-
-> +---------------
-> +
-> +Vimc has a few module parameters to configure the driver. You should pass
-> +those arguments to each subdevice, not for the Vimc module. For example::
-
-for the -> to the
-
-> +
-> +        vimc_subvice.param=value
-
-subvice -> subdevice
-
-> +
-> +* ``vimc_scaler.sca_mult=<unsigned int>``
-> +
-> +        Image size multiplier factor to be used to multiply both width and
-> +        height, so the image size will be ``sca_mult^2`` bigger than the
-> +        original one. Currently, only supports scaling up (the default value
-> +        is 3).
-> +
-> +* ``vimc_debayer.deb_mean_win_size=<unsigned int>``
-> +
-> +        Window size to calculate the mean. Note: the window size needs to be an
-> +        odd number, as the main pixel stays in the center of the window,
-> +        otherwise the next odd number is considered (the default value is 3).
+> Why do you continue to make this obviously garbage argument?
 > 
+> The key word in the "page cache" name is "cache".
+> 
+> Caches work, Dave.
 
-Regards,
+Yes, they do, I see plenty of cases where the page cache works just
+fine because it is still faster than most storage. But that's _not
+what I said_.
 
-	Hans
+Indeed, you haven't even bothered to ask me to clarify what I was
+refering to in the statement you quoted. IOWs, you've taken _one
+single statement_ I made from a huge email about complexities in
+dealing with IO concurency, the page cache and architectural flaws n
+the existing code, quoted it out of context, fabricated a completely
+new context and started ranting about how I know nothing about how
+caches or the page cache work.
+
+Not very professional but, unfortunately, an entirely predictable
+and _expected_ response.
+
+Linus, nobody can talk about direct IO without you screaming and
+tossing all your toys out of the crib. If you can't be civil or you
+find yourself writing a some condescending "caching 101" explanation
+to someone who has spent the last 15+ years working with filesystems
+and caches, then you're far better off not saying anything.
+
+---
+
+So, in the interests of further _civil_ discussion, let me clarify
+my statement for you: for a highly concurrent application that is
+crunching through bulk data on large files on high throughput
+storage, the page cache is still far, far slower than direct IO.
+
+Which comes back to this statement you made:
+
+> Is direct IO faster when you *know* it's not cached, and shouldn't
+> be cached? Sure. But that/s actually quite rare. 
+
+This is where I think you get the wrong end of the stick, Linus.
+
+The world I work in has a significant proportion of applications
+where the data set is too large to be cached effectively or is
+better cached by the application than the kernel. IOWs, data being
+cached efficiently by the page cache is the exception rather than
+the rule. Hence, they use direct IO because it is faster than the
+page cache. This is common in applications like major enterprise
+databases, HPC apps, data mining/analysis applications, etc. and
+there's an awful lot of the world that runs on these apps....
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
