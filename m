@@ -2,183 +2,127 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC013C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69789C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 885D521841
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:40:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560534042;
-	bh=picnxEZ2Wx6Xt/xYCo+RIPwm3gjIvkVmQnAkykkOUfg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VRvbvQSmpeI9zJoVAF1QvV3WcLPXTAMrNWwhIwopPJFypa3Q8w19Gpzth8izxGzM/
-	 kI28E9aQ/ggoWIVRAhcEHNvtXrgMZYUZ7xsVIFASWHnQ1rSwDVup2vKv9vp6gn54Qq
-	 MoQV+/JiZ6FnUy/PYAH2LQpYYxYdanCS0/HI7YTs=
+	by mail.kernel.org (Postfix) with ESMTP id 4B22A217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfFNRkl (ORCPT
+        id S1726494AbfFNRlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 13:40:41 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34414 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbfFNRkk (ORCPT
+        Fri, 14 Jun 2019 13:41:20 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47218 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726082AbfFNRlT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 13:40:40 -0400
-Received: by mail-qt1-f193.google.com with SMTP id m29so3450033qtu.1;
-        Fri, 14 Jun 2019 10:40:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wPpnwqyMUwz4SjcLvux0hAtQhIO7tvhlsaBTqk5BtFQ=;
-        b=aeOLEXhAUBlKVEX6xUuNUcJiPqFBUt5wPo1E48xyyyjUYISE1QJIkjclf1ZplcQKXb
-         vNPYaWwouLzTrQ7LLxf2RH9dZTbHxQkHc8TcblDcwyHB8bqllXKhDZ29SEeNsAmCx+QB
-         se+XSIZwk4niInJsxsgKnA86AehhoONbwz5NhrvnqFpBcOnM7XTFvtNarcZuLnGu3HNE
-         tYrX45x1j5CR6annID1xEvRXrpe7FNAPnfUo35d9Jv4fbqZvvDCzBtptqW+78+VIgtV+
-         49B/FhEP0FpUZQBQai68BEwBbXu8vWq95JJCN4/Hfc/lbXhE1X79ajyhe+LGotePXWNu
-         yr4A==
-X-Gm-Message-State: APjAAAV/46fiPy+TqHknOpcS53CptU1fxPptDgjGvUG4S7DTytTl3LyV
-        88TWhS1wlfzFM0LEW3cyDQ==
-X-Google-Smtp-Source: APXvYqxo44A52mZTtb6SOTHwe53kddQe2wYjOh2ybh83i+aLF200ttNmY0LQpx9l952MRTesaOIZBw==
-X-Received: by 2002:ad4:43e3:: with SMTP id f3mr9527578qvu.108.1560534039177;
-        Fri, 14 Jun 2019 10:40:39 -0700 (PDT)
-Received: from localhost ([64.188.179.243])
-        by smtp.gmail.com with ESMTPSA id f25sm2592067qta.81.2019.06.14.10.40.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 10:40:38 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 11:40:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com
-Subject: Re: [PATCH v2 4/6] dt-bindings: display: bridge: Add ICN6211
- MIPI-DSI to RGB converter bridge
-Message-ID: <20190614174036.GA31068@bogus>
-References: <20190524104317.20287-1-jagan@amarulasolutions.com>
- <20190524104317.20287-2-jagan@amarulasolutions.com>
+        Fri, 14 Jun 2019 13:41:19 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5EHaflD045564;
+        Fri, 14 Jun 2019 13:40:42 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t4ehrmetu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jun 2019 13:40:42 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5EHdUO1029699;
+        Fri, 14 Jun 2019 17:40:43 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma01wdc.us.ibm.com with ESMTP id 2t1qcty05s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jun 2019 17:40:43 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5EHeeTL17236386
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 17:40:40 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7C4B16E04C;
+        Fri, 14 Jun 2019 17:40:40 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D6FEA6E050;
+        Fri, 14 Jun 2019 17:40:37 +0000 (GMT)
+Received: from [9.199.60.77] (unknown [9.199.60.77])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 14 Jun 2019 17:40:37 +0000 (GMT)
+Subject: Re: [PATCH -next] mm/hotplug: skip bad PFNs from pfn_to_online_page()
+To:     Jeff Moyer <jmoyer@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Oscar Salvador <osalvador@suse.de>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+References: <1560366952-10660-1-git-send-email-cai@lca.pw>
+ <CAPcyv4hn0Vz24s5EWKr39roXORtBTevZf7dDutH+jwapgV3oSw@mail.gmail.com>
+ <CAPcyv4iuNYXmF0-EMP8GF5aiPsWF+pOFMYKCnr509WoAQ0VNUA@mail.gmail.com>
+ <1560376072.5154.6.camel@lca.pw> <87lfy4ilvj.fsf@linux.ibm.com>
+ <20190614153535.GA9900@linux>
+ <c3f2c05d-e42f-c942-1385-664f646ddd33@linux.ibm.com>
+ <CAPcyv4j_QQB8SrhTqL2mnEEHGYCg4H7kYanChiww35k0fwNv8Q@mail.gmail.com>
+ <24fcb721-5d50-2c34-f44b-69281c8dd760@linux.ibm.com>
+ <CAPcyv4ixq6aRQLdiMAUzQ-eDoA-hGbJQ6+_-K-nZzhXX70m1+g@mail.gmail.com>
+ <16108dac-a4ca-aa87-e3b0-a79aebdcfafd@linux.ibm.com>
+ <x49ef3wytzz.fsf@segfault.boston.devel.redhat.com>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Message-ID: <4e912883-4a85-6579-0779-6c366ccee407@linux.ibm.com>
+Date:   Fri, 14 Jun 2019 23:10:36 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190524104317.20287-2-jagan@amarulasolutions.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <x49ef3wytzz.fsf@segfault.boston.devel.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=27 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906140142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 04:13:15PM +0530, Jagan Teki wrote:
-> ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
-> It has a flexible configuration of MIPI DSI signal input
-> and produce RGB565, RGB666, RGB888 output format.
+On 6/14/19 10:38 PM, Jeff Moyer wrote:
+> "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com> writes:
 > 
-> Add dt-bingings for it.
+>> On 6/14/19 10:06 PM, Dan Williams wrote:
+>>> On Fri, Jun 14, 2019 at 9:26 AM Aneesh Kumar K.V
+>>> <aneesh.kumar@linux.ibm.com> wrote:
+>>
+>>>> Why not let the arch
+>>>> arch decide the SUBSECTION_SHIFT and default to one subsection per
+>>>> section if arch is not enabled to work with subsection.
+>>>
+>>> Because that keeps the implementation from ever reaching a point where
+>>> a namespace might be able to be moved from one arch to another. If we
+>>> can squash these arch differences then we can have a common tool to
+>>> initialize namespaces outside of the kernel. The one wrinkle is
+>>> device-dax that wants to enforce the mapping size,
+>>
+>> The fsdax have a much bigger issue right? The file system block size
+>> is the same as PAGE_SIZE and we can't make it portable across archs
+>> that support different PAGE_SIZE?
 > 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
->  .../display/bridge/chipone,icn6211.txt        | 78 +++++++++++++++++++
->  1 file changed, 78 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+> File system blocks are not tied to page size.  They can't be *bigger*
+> than the page size currently, but they can be smaller.
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
-> new file mode 100644
-> index 000000000000..53a9848ef8b6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
-> @@ -0,0 +1,78 @@
-> +Chipone ICN6211 MIPI-DSI to RGB Converter Bridge
-> +
-> +ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
-> +It has a flexible configuration of MIPI DSI signal input
-> +and produce RGB565, RGB666, RGB888 output format.
-> +
-> +Required properties for RGB:
-> +- compatible: must be "chipone,icn6211"
-> +- reg: the virtual channel number of a DSI peripheral
-> +- reset-gpios: a GPIO phandle for the reset pin
-> +
-> +The device node can contain following 'port' child nodes,
-> +according to the OF graph bindings defined in [1]:
-> +  0: DSI Input, not required, if the bridge is DSI controlled
-> +  1: RGB Output, mandatory
-> +
-> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Example:
-> +
-> +	panel {
-> +		compatible = "bananapi,s070wv20-ct16", "simple-panel";
 
-'simple-panel' is not a valid compatible string.
 
-> +		enable-gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PB7 */
-> +		backlight = <&backlight>;
-> +
-> +		port {
-> +			panel_out_bridge: endpoint {
-> +				remote-endpoint = <&bridge_out_panel>;
-> +			};
-> +		};
-> +	};
-> +
-> +&dsi {
-> +	vcc-dsi-supply = <&reg_dcdc1>;		/* VCC-DSI */
-> +	status = "okay";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		dsi_out: port@0 {
-> +			reg = <0>;
-> +
-> +			dsi_out_bridge: endpoint {
-> +				remote-endpoint = <&bridge_out_dsi>;
-> +			};
-> +		};
-> +	};
-> +
-> +	bridge@0 {
-> +		compatible = "chipone,icn6211";
-> +		reg = <0>;
-> +		reset-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* LCD-RST: PL5 */
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			bridge_in: port@0 {
-> +				reg = <0>;
-> +
-> +				bridge_out_dsi: endpoint {
-> +					remote-endpoint = <&dsi_out_bridge>;
-> +				};
-> +			};
-> +
-> +			bridge_out: port@1 {
-> +				reg = <1>;
-> +
-> +				bridge_out_panel: endpoint {
-> +					remote-endpoint = <&panel_out_bridge>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 2.18.0.321.gffc6fa0e3
+ppc64 page size is 64K.
+
+> Still, I don't see that as an arugment against trying to make the
+> namespaces work across architectures.  Consider a user who only has
+> sector mode namespaces.  We'd like that to work if at all possible.
 > 
+
+agreed. I was trying to list out the challenges here.
+
+-aneesh
+
