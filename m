@@ -2,234 +2,111 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 226BAC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA887C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFDE221721
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:46:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560520002;
-	bh=sL/15lE2CkcpsfLA/Y/ogwWSKvknIF4LPwsicElD/Cc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tb9BWRKog80w0LavPuLYzEB8yVEOUxVcQVfdetbLea8+t/zo7/tN8pGecxxjOfvTH
-	 UcHt8ub1TVtnlLl+6wAgpf46a7l0pDGAuEaWFqhoDUG18lc3IFUebN7nYhpZfm4m1T
-	 TbUabyhcacY5db1U2LzcCAkrI0dbakt/RbueHXxw=
+	by mail.kernel.org (Postfix) with ESMTP id 7FA1D20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:47:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="WP5wmVF8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbfFNNqk (ORCPT
+        id S1728401AbfFNNrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:46:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728413AbfFNNqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:46:30 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F59A2173C;
-        Fri, 14 Jun 2019 13:46:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560519989;
-        bh=sL/15lE2CkcpsfLA/Y/ogwWSKvknIF4LPwsicElD/Cc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L21uOtE8a+XtwCd+cr3GUKY55QPh+Yd8DncwuG95JcD288nh60fWgfsOwgl53PAdB
-         zSS6NT2ZCrnb+C8upZYfCvKMNc8Dhcyea3erWRT0WnbUtJ++dLv6ZjAQho0KnIlA3Y
-         /76OTcdlX3W97baE2bRNOYMJ3/ZksxDAz3I/CE7o=
-From:   Jeff Layton <jlayton@kernel.org>
-To:     linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org
-Cc:     akpm@linux-foundation.org, idryomov@gmail.com, zyan@redhat.com,
-        sage@redhat.com, agruenba@redhat.com
-Subject: [PATCH 2/3] ceph: don't NULL terminate virtual xattr strings
-Date:   Fri, 14 Jun 2019 09:46:24 -0400
-Message-Id: <20190614134625.6870-3-jlayton@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190614134625.6870-1-jlayton@kernel.org>
-References: <20190614134625.6870-1-jlayton@kernel.org>
+        Fri, 14 Jun 2019 09:47:16 -0400
+Received: from mail.efficios.com ([167.114.142.138]:43596 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727898AbfFNNrP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:47:15 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 76B3B2517E2;
+        Fri, 14 Jun 2019 09:47:14 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id E1TuGgOUa87X; Fri, 14 Jun 2019 09:47:14 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 19F7F2517DB;
+        Fri, 14 Jun 2019 09:47:14 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 19F7F2517DB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1560520034;
+        bh=81EpfFNjP6SvW3w5jVIET8nZSw4QEAdPUWyGh9rrrk0=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=WP5wmVF8o+loCPX8mYQM0wAdEPJvADvYrEjChO39wLC+vtYpIZxQuRACD3Kgpe7Zq
+         yhLb+4GcQ7C1oJH+sDD40TqSWG3P42Q+5Pcc8M28ejSkaIRm0sg+t465+rlB++q6Gn
+         m1uywQpEaIDmT3u+1QZqmeKgaI5D30aIo2kFFsg+8ey0ccxACsRsz2ozANcftu/sUn
+         jB+oiHAEw5jFqmOTTOXQk/CMPgmyamBGMz5xOaH7UYn8J7FY2v6qHyeh+fBLZo3JK2
+         MXBEtnwG5IJbvsUUqMouiENJR5j9pJ68XHzbGN8JAzxgrFje6wyjfArbPkO+mMVa/W
+         UdJlAmp2tJ4nw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id j3nKT3CEgr1y; Fri, 14 Jun 2019 09:47:14 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id EF45F2517D4;
+        Fri, 14 Jun 2019 09:47:13 -0400 (EDT)
+Date:   Fri, 14 Jun 2019 09:47:13 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <26171199.3391.1560520033825.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87imt8tha5.fsf@oldenburg2.str.redhat.com>
+References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <1190407525.3131.1560516910936.JavaMail.zimbra@efficios.com> <1085273942.3137.1560517301721.JavaMail.zimbra@efficios.com> <87d0jguxdk.fsf@oldenburg2.str.redhat.com> <1779359826.3226.1560518318701.JavaMail.zimbra@efficios.com> <87wohoti47.fsf@oldenburg2.str.redhat.com> <189377747.3315.1560519247118.JavaMail.zimbra@efficios.com> <87imt8tha5.fsf@oldenburg2.str.redhat.com>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
+ and thread creation (v10)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
+Thread-Index: wOBWzLotZbvRJLIS40uVtgojXXE/sQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The convention with xattrs is to not NULL terminate string data in the
-value. Have ceph use snprintf_noterm to populate virtual xattrs.
+----- On Jun 14, 2019, at 3:42 PM, Florian Weimer fweimer@redhat.com wrote:
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/ceph/xattr.c | 44 +++++++++++++++++++++++---------------------
- 1 file changed, 23 insertions(+), 21 deletions(-)
+> * Mathieu Desnoyers:
+> 
+>> +  /* Publicize rseq registration ownership.  This must be performed
+>> +     after rtld re-relocation, before invoking constructors of
+>> +     preloaded libraries.  */
+>> +  rseq_init ();
+> 
+> Please add a comment that IFUNC resolvers do not see the initialized
+> value.  I think this is okay because we currently do not support access
+> to extern variables in IFUNC resolvers.
 
-diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-index 6621d27e64f5..a1cd9613be98 100644
---- a/fs/ceph/xattr.c
-+++ b/fs/ceph/xattr.c
-@@ -71,13 +71,13 @@ static size_t ceph_vxattrcb_layout(struct ceph_inode_info *ci, char *val,
- 	down_read(&osdc->lock);
- 	pool_name = ceph_pg_pool_name_by_id(osdc->osdmap, pool);
- 	if (pool_name) {
--		len = snprintf(buf, sizeof(buf),
-+		len = snprintf_noterm(buf, sizeof(buf),
- 		"stripe_unit=%u stripe_count=%u object_size=%u pool=",
- 		ci->i_layout.stripe_unit, ci->i_layout.stripe_count,
- 	        ci->i_layout.object_size);
- 		total_len = len + strlen(pool_name);
- 	} else {
--		len = snprintf(buf, sizeof(buf),
-+		len = snprintf_noterm(buf, sizeof(buf),
- 		"stripe_unit=%u stripe_count=%u object_size=%u pool=%lld",
- 		ci->i_layout.stripe_unit, ci->i_layout.stripe_count,
- 	        ci->i_layout.object_size, (unsigned long long)pool);
-@@ -115,19 +115,19 @@ static size_t ceph_vxattrcb_layout(struct ceph_inode_info *ci, char *val,
- static size_t ceph_vxattrcb_layout_stripe_unit(struct ceph_inode_info *ci,
- 					       char *val, size_t size)
- {
--	return snprintf(val, size, "%u", ci->i_layout.stripe_unit);
-+	return snprintf_noterm(val, size, "%u", ci->i_layout.stripe_unit);
- }
- 
- static size_t ceph_vxattrcb_layout_stripe_count(struct ceph_inode_info *ci,
- 						char *val, size_t size)
- {
--	return snprintf(val, size, "%u", ci->i_layout.stripe_count);
-+	return snprintf_noterm(val, size, "%u", ci->i_layout.stripe_count);
- }
- 
- static size_t ceph_vxattrcb_layout_object_size(struct ceph_inode_info *ci,
- 					       char *val, size_t size)
- {
--	return snprintf(val, size, "%u", ci->i_layout.object_size);
-+	return snprintf_noterm(val, size, "%u", ci->i_layout.object_size);
- }
- 
- static size_t ceph_vxattrcb_layout_pool(struct ceph_inode_info *ci,
-@@ -142,9 +142,10 @@ static size_t ceph_vxattrcb_layout_pool(struct ceph_inode_info *ci,
- 	down_read(&osdc->lock);
- 	pool_name = ceph_pg_pool_name_by_id(osdc->osdmap, pool);
- 	if (pool_name)
--		ret = snprintf(val, size, "%s", pool_name);
-+		ret = snprintf_noterm(val, size, "%s", pool_name);
- 	else
--		ret = snprintf(val, size, "%lld", (unsigned long long)pool);
-+		ret = snprintf_noterm(val, size, "%lld",
-+					(unsigned long long)pool);
- 	up_read(&osdc->lock);
- 	return ret;
- }
-@@ -155,7 +156,7 @@ static size_t ceph_vxattrcb_layout_pool_namespace(struct ceph_inode_info *ci,
- 	int ret = 0;
- 	struct ceph_string *ns = ceph_try_get_string(ci->i_layout.pool_ns);
- 	if (ns) {
--		ret = snprintf(val, size, "%.*s", (int)ns->len, ns->str);
-+		ret = snprintf_noterm(val, size, "%.*s", (int)ns->len, ns->str);
- 		ceph_put_string(ns);
- 	}
- 	return ret;
-@@ -166,49 +167,50 @@ static size_t ceph_vxattrcb_layout_pool_namespace(struct ceph_inode_info *ci,
- static size_t ceph_vxattrcb_dir_entries(struct ceph_inode_info *ci, char *val,
- 					size_t size)
- {
--	return snprintf(val, size, "%lld", ci->i_files + ci->i_subdirs);
-+	return snprintf_noterm(val, size, "%lld", ci->i_files + ci->i_subdirs);
- }
- 
- static size_t ceph_vxattrcb_dir_files(struct ceph_inode_info *ci, char *val,
- 				      size_t size)
- {
--	return snprintf(val, size, "%lld", ci->i_files);
-+	return snprintf_noterm(val, size, "%lld", ci->i_files);
- }
- 
- static size_t ceph_vxattrcb_dir_subdirs(struct ceph_inode_info *ci, char *val,
- 					size_t size)
- {
--	return snprintf(val, size, "%lld", ci->i_subdirs);
-+	return snprintf_noterm(val, size, "%lld", ci->i_subdirs);
- }
- 
- static size_t ceph_vxattrcb_dir_rentries(struct ceph_inode_info *ci, char *val,
- 					 size_t size)
- {
--	return snprintf(val, size, "%lld", ci->i_rfiles + ci->i_rsubdirs);
-+	return snprintf_noterm(val, size, "%lld",
-+				ci->i_rfiles + ci->i_rsubdirs);
- }
- 
- static size_t ceph_vxattrcb_dir_rfiles(struct ceph_inode_info *ci, char *val,
- 				       size_t size)
- {
--	return snprintf(val, size, "%lld", ci->i_rfiles);
-+	return snprintf_noterm(val, size, "%lld", ci->i_rfiles);
- }
- 
- static size_t ceph_vxattrcb_dir_rsubdirs(struct ceph_inode_info *ci, char *val,
- 					 size_t size)
- {
--	return snprintf(val, size, "%lld", ci->i_rsubdirs);
-+	return snprintf_noterm(val, size, "%lld", ci->i_rsubdirs);
- }
- 
- static size_t ceph_vxattrcb_dir_rbytes(struct ceph_inode_info *ci, char *val,
- 				       size_t size)
- {
--	return snprintf(val, size, "%lld", ci->i_rbytes);
-+	return snprintf_noterm(val, size, "%lld", ci->i_rbytes);
- }
- 
- static size_t ceph_vxattrcb_dir_rctime(struct ceph_inode_info *ci, char *val,
- 				       size_t size)
- {
--	return snprintf(val, size, "%lld.%09ld", ci->i_rctime.tv_sec,
-+	return snprintf_noterm(val, size, "%lld.%09ld", ci->i_rctime.tv_sec,
- 			ci->i_rctime.tv_nsec);
- }
- 
-@@ -221,7 +223,7 @@ static bool ceph_vxattrcb_dir_pin_exists(struct ceph_inode_info *ci)
- static size_t ceph_vxattrcb_dir_pin(struct ceph_inode_info *ci, char *val,
-                                     size_t size)
- {
--	return snprintf(val, size, "%d", (int)ci->i_dir_pin);
-+	return snprintf_noterm(val, size, "%d", (int)ci->i_dir_pin);
- }
- 
- /* quotas */
-@@ -241,20 +243,20 @@ static bool ceph_vxattrcb_quota_exists(struct ceph_inode_info *ci)
- static size_t ceph_vxattrcb_quota(struct ceph_inode_info *ci, char *val,
- 				  size_t size)
- {
--	return snprintf(val, size, "max_bytes=%llu max_files=%llu",
-+	return snprintf_noterm(val, size, "max_bytes=%llu max_files=%llu",
- 			ci->i_max_bytes, ci->i_max_files);
- }
- 
- static size_t ceph_vxattrcb_quota_max_bytes(struct ceph_inode_info *ci,
- 					    char *val, size_t size)
- {
--	return snprintf(val, size, "%llu", ci->i_max_bytes);
-+	return snprintf_noterm(val, size, "%llu", ci->i_max_bytes);
- }
- 
- static size_t ceph_vxattrcb_quota_max_files(struct ceph_inode_info *ci,
- 					    char *val, size_t size)
- {
--	return snprintf(val, size, "%llu", ci->i_max_files);
-+	return snprintf_noterm(val, size, "%llu", ci->i_max_files);
- }
- 
- /* snapshots */
-@@ -266,7 +268,7 @@ static bool ceph_vxattrcb_snap_btime_exists(struct ceph_inode_info *ci)
- static size_t ceph_vxattrcb_snap_btime(struct ceph_inode_info *ci, char *val,
- 				       size_t size)
- {
--	return snprintf(val, size, "%lld.%09ld", ci->i_snap_btime.tv_sec,
-+	return snprintf_noterm(val, size, "%lld.%09ld", ci->i_snap_btime.tv_sec,
- 			ci->i_snap_btime.tv_nsec);
- }
- 
+Do IFUNC resolvers happen to observe the __rseq_handled address that
+was internal to ld.so ?
+
+If so, we could simply initialize __rseq_handled twice: early before calling
+IFUNC resolvers, and after ld.so re-relocation.
+
+Thanks,
+
+Mathieu
+
+
 -- 
-2.21.0
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
