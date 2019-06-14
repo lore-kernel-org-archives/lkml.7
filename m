@@ -2,246 +2,172 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8AFC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA956C31E4E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFD021850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7D22184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:58:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="YyK74lzR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6yLi+nh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfFNV4c (ORCPT
+        id S1726635AbfFNV6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 17:56:32 -0400
-Received: from mail-eopbgr810090.outbound.protection.outlook.com ([40.107.81.90]:42157
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726473AbfFNV43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 17:56:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=WLvSQARfoy1u/+erGfKsviybtL8YPk6UH4CjKYif1q8gMSEq5mm5lWuBp+Q3NMSdK0/OM84LCBcwTEz4lxtPjo6NDS8svsuav71dlCHZSu4UGyGCnU8xFuEjC5QVMvT+XFuniiV/Gk/cbJd0p9an807wSdyALovujdNjKyEpws0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=chULK0c+AIEHkiHpIOBNyooirRhG5cz/+fXrY1OeQ5Q=;
- b=aXxWkzP1B3Fl0ovjxwlt0JX509/VQsps8wpf58/lj13VqCJ1zmSaNawWfVaGDKf61qoZugA0GTGZRRr2z9J+CEiqM8PJMHwbFK45zlL577ckDFUBhL1nNLlBMqhp2a0qXJt+LnPTbOZWH3kla9PJw6u8srrUXklAitT83TS8YsI=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=chULK0c+AIEHkiHpIOBNyooirRhG5cz/+fXrY1OeQ5Q=;
- b=YyK74lzR7E/aeoktnrJ7W0MagiirZWxieqb5GqRGvlTPEqvaMvM/XcVz1/p476AcAihWKsW4KHq+FvGsWa5ohNB5rTFlWkNPyIWO9p4vKM+cUqd9GPj75gXuzMstZ3O7Dm8db01ogcBjA/8gccsTl8/ybF0se+hC5Ao0UXtRHhA=
-Received: from BL0PR2101MB1348.namprd21.prod.outlook.com
- (2603:10b6:208:92::22) by BL0PR2101MB1091.namprd21.prod.outlook.com
- (2603:10b6:207:37::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.1; Fri, 14 Jun
- 2019 21:56:24 +0000
-Received: from BL0PR2101MB1348.namprd21.prod.outlook.com
- ([fe80::ec20:70a:433e:a052]) by BL0PR2101MB1348.namprd21.prod.outlook.com
- ([fe80::ec20:70a:433e:a052%2]) with mapi id 15.20.2008.007; Fri, 14 Jun 2019
- 21:56:24 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
+        Fri, 14 Jun 2019 17:58:50 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34255 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfFNV6u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 17:58:50 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y198so2718302lfa.1;
+        Fri, 14 Jun 2019 14:58:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xxGu6CJPBGoL/dbTAjrQA1DoihdFeXBSa3YpyIkyJT4=;
+        b=h6yLi+nhVF/VAdQ2zqX0arqlj6tyh5yrcySN5HknKhZGOjEwiBkWZX7NjCZOM7u2Ef
+         vNM1tmEH2VbvyWGZIGWFfFqBub9pCX/6kbzZiwM9aljPNqYXZ+4Upm88MSfPClpGzLZC
+         g66sNiWkUFURPlBiUE3YX7HuOT7FSsPDJgsZSpBFl43MU3ajJpqHzXOfWL1ZOlq8Gn3O
+         3MMQJa1veRx0jllCTLHIp725Of1XMU/3lpmYWDwb1foYK+VgvfpITd/PmbQJrrNe3aha
+         eH4tu8XOw+FDPmRfgwsCcMWEzxlyuITvDpksfnxsko0EhBr+XBwx3TSWpM5ilFpb3q//
+         ljng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xxGu6CJPBGoL/dbTAjrQA1DoihdFeXBSa3YpyIkyJT4=;
+        b=OndJXZyAifzBV9zIEbnKYvhU9BphoQ9kNTg5tGOnK1/YtQnLNuOIT6IgQwL9s535tI
+         O+d/99wCHwUCBTnTddtAcaVOJ/pkfaF8LbrbgCLmfzkVyfEBl+YJ5KuVFXn7b8eD0uRQ
+         wbmEeL6bz2LmD9Z47gqYgc4+qDk56fQ+5ykcgDKd5pVGc/Z9fJ4LGlbCdKPMjPdTRSd5
+         FL0G8+WR17cSh/vMpNHCw3KFIeq80YcnsT/7zsTlVIOR6SI3gc8J7zYeEcx/oTDSpbhs
+         yydQZ14UvjewPCMAvZZplSdj5RetwTC2b3TZMAySE4k7jZMMVgfF3PSSw2T2QCi44V+r
+         BaDA==
+X-Gm-Message-State: APjAAAVFChBB7iMcdE4upZvS+dbKE7WMLfl2jICSylvY8I4+ldInulma
+        lhuXL2DxYUb6fkzGCOgOO38=
+X-Google-Smtp-Source: APXvYqxxKspRlwzxhtlUC/Niqid8Giv0llcz0pjr2zBnppSAIQcNaASJpkWDWB/Y/gL9p6D3mm3TIw==
+X-Received: by 2002:ac2:5467:: with SMTP id e7mr25581014lfn.23.1560549527979;
+        Fri, 14 Jun 2019 14:58:47 -0700 (PDT)
+Received: from mobilestation ([5.164.217.122])
+        by smtp.gmail.com with ESMTPSA id t7sm781898ljd.5.2019.06.14.14.58.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 14:58:47 -0700 (PDT)
+Date:   Sat, 15 Jun 2019 00:58:45 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Peter Rosin <peda@axentia.se>
+Cc:     Peter Korsgaard <peter.korsgaard@barco.com>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>
-CC:     "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
-Subject: RE: [PATCH 2/2] hv_balloon: Reorganize the probe function
-Thread-Topic: [PATCH 2/2] hv_balloon: Reorganize the probe function
-Thread-Index: AQHVIuDsvIeorl+TakinvZrlEfDGAKabr1Kw
-Date:   Fri, 14 Jun 2019 21:56:24 +0000
-Message-ID: <BL0PR2101MB13487B8D2A157AA7FCFD159DD7EE0@BL0PR2101MB1348.namprd21.prod.outlook.com>
-References: <1560537692-37400-1-git-send-email-decui@microsoft.com>
- <1560537692-37400-2-git-send-email-decui@microsoft.com>
-In-Reply-To: <1560537692-37400-2-git-send-email-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-14T21:56:21.9387171Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=fb391304-eed6-45c4-a296-25ce2c9f2395;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8a9a3d6e-0110-4da8-b64f-08d6f1132516
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BL0PR2101MB1091;
-x-ms-traffictypediagnostic: BL0PR2101MB1091:
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <BL0PR2101MB1091A81178F7520FDD326014D7EE0@BL0PR2101MB1091.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0068C7E410
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(376002)(136003)(366004)(396003)(189003)(199004)(6116002)(2906002)(66446008)(4326008)(86362001)(3846002)(66556008)(6436002)(66946007)(305945005)(64756008)(74316002)(76116006)(73956011)(71200400001)(66476007)(478600001)(7736002)(2201001)(2501003)(71190400001)(25786009)(6506007)(10290500003)(6246003)(8990500004)(5660300002)(52536014)(14444005)(1511001)(66066001)(486006)(446003)(110136005)(186003)(11346002)(53936002)(229853002)(22452003)(81156014)(102836004)(52396003)(8936002)(33656002)(476003)(76176011)(256004)(99286004)(54906003)(6636002)(9686003)(81166006)(68736007)(316002)(26005)(14454004)(7696005)(10090500001)(55016002)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR2101MB1091;H:BL0PR2101MB1348.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: pvcwX835tfKZ/EyTZPHGbbDoZDdx0iOsivMpksGC1lnnVoqwykxEGeIHOvMnwNJAbX3DMX6/IEzlh4ZvrzRiTUDJfZFwCHZzHn0+QuRMyfoU+aVu7Mg3SPsMqWWG104Vx1kzCoRQBxPYfAd7s8uy67Fk/NWJcq55BXIY+z4iTqAgm3yzykgAzB2CAnNo4oB17AojpSbrePTp8gSg4aSr82mfjkYdYxlxclbIk22vgd7VHxfGm3T53AGOWtkAfCNBEWLiVN6Xhhx+hBZla+Leoe0hv9Tv4QdcZV32+IfyUCw1sLsyaOgvmSU0Gj/obCyOLdMuMoTgMT7Kvnb/ZgnwPUQXMzolbc1iTkQdJxIFGJg+cHYEhUY00adCByNh+NrCY6vYzZbzhlXKONYRhj0ba1UzEBzIwUlgUPTlVOzxEU4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Jean Delvare <jdelvare@suse.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/3] i2c-mux-gpio: Unpin the platform-specific GPIOs
+ request code
+Message-ID: <20190614215844.2ueoqadvj5dqbaua@mobilestation>
+References: <20190425232028.9333-1-fancer.lancer@gmail.com>
+ <20190425232028.9333-3-fancer.lancer@gmail.com>
+ <783250dd-87c0-b3cc-0e90-7978605a9b07@axentia.se>
+ <20190614163134.zs5xyuqvp25ahbng@mobilestation>
+ <fb96ba56-4754-a962-ceea-4fd50ee59c69@axentia.se>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a9a3d6e-0110-4da8-b64f-08d6f1132516
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 21:56:24.6660
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mikelley@ntdev.microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1091
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fb96ba56-4754-a962-ceea-4fd50ee59c69@axentia.se>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT4gIFNlbnQ6IEZyaWRheSwgSnVu
-ZSAxNCwgMjAxOSAxMTo0MyBBTQ0KPiANCj4gTW92ZSB0aGUgY29kZSB0aGF0IG5lZ290aWF0ZXMg
-d2l0aCB0aGUgaG9zdCB0byBhIG5ldyBmdW5jdGlvbg0KPiBiYWxsb29uX2Nvbm5lY3RfdnNwKCkg
-YW5kIGltcHJvdmUgdGhlIGVycm9yIGhhbmRsaW5nLg0KPiANCj4gVGhpcyBtYWtlcyB0aGUgY29k
-ZSBtb3JlIHJlYWRhYmxlIGFuZCBwYXZlcyB0aGUgd2F5IGZvciB0aGUNCj4gc3VwcG9ydCBvZiBo
-aWJlcm5hdGlvbiBpbiBmdXR1cmUuDQo+IA0KPiBNYWtlcyBubyByZWFsIGxvZ2ljIGNoYW5nZSBo
-ZXJlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNv
-bT4NCj4gLS0tDQo+ICBkcml2ZXJzL2h2L2h2X2JhbGxvb24uYyB8IDEyNCArKysrKysrKysrKysr
-KysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgNjYgaW5zZXJ0
-aW9ucygrKSwgNTggZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9odi9o
-dl9iYWxsb29uLmMgYi9kcml2ZXJzL2h2L2h2X2JhbGxvb24uYw0KPiBpbmRleCAxMzM4MWVhM2Uz
-ZTcuLjExMWVhMzU5OTY1OSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9odi9odl9iYWxsb29uLmMN
-Cj4gKysrIGIvZHJpdmVycy9odi9odl9iYWxsb29uLmMNCj4gQEAgLTE1NzQsNTAgKzE1NzQsMTgg
-QEAgc3RhdGljIHZvaWQgYmFsbG9vbl9vbmNoYW5uZWxjYWxsYmFjayh2b2lkICpjb250ZXh0KQ0K
-PiANCj4gIH0NCj4gDQo+IC1zdGF0aWMgaW50IGJhbGxvb25fcHJvYmUoc3RydWN0IGh2X2Rldmlj
-ZSAqZGV2LA0KPiAtCQkJY29uc3Qgc3RydWN0IGh2X3ZtYnVzX2RldmljZV9pZCAqZGV2X2lkKQ0K
-PiArc3RhdGljIGludCBiYWxsb29uX2Nvbm5lY3RfdnNwKHN0cnVjdCBodl9kZXZpY2UgKmRldikN
-Cj4gIHsNCj4gLQlpbnQgcmV0Ow0KPiAtCXVuc2lnbmVkIGxvbmcgdDsNCj4gIAlzdHJ1Y3QgZG1f
-dmVyc2lvbl9yZXF1ZXN0IHZlcnNpb25fcmVxOw0KPiAgCXN0cnVjdCBkbV9jYXBhYmlsaXRpZXMg
-Y2FwX21zZzsNCj4gLQ0KPiAtI2lmZGVmIENPTkZJR19NRU1PUllfSE9UUExVRw0KPiAtCWRvX2hv
-dF9hZGQgPSBob3RfYWRkOw0KPiAtI2Vsc2UNCj4gLQlkb19ob3RfYWRkID0gZmFsc2U7DQo+IC0j
-ZW5kaWYNCj4gKwl1bnNpZ25lZCBsb25nIHQ7DQo+ICsJaW50IHJldDsNCj4gDQo+ICAJcmV0ID0g
-dm1idXNfb3BlbihkZXYtPmNoYW5uZWwsIGRtX3Jpbmdfc2l6ZSwgZG1fcmluZ19zaXplLCBOVUxM
-LCAwLA0KPiAtCQkJYmFsbG9vbl9vbmNoYW5uZWxjYWxsYmFjaywgZGV2KTsNCj4gLQ0KPiArCQkJ
-IGJhbGxvb25fb25jaGFubmVsY2FsbGJhY2ssIGRldik7DQo+ICAJaWYgKHJldCkNCj4gIAkJcmV0
-dXJuIHJldDsNCj4gDQo+IC0JZG1fZGV2aWNlLmRldiA9IGRldjsNCj4gLQlkbV9kZXZpY2Uuc3Rh
-dGUgPSBETV9JTklUSUFMSVpJTkc7DQo+IC0JZG1fZGV2aWNlLm5leHRfdmVyc2lvbiA9IERZTk1F
-TV9QUk9UT0NPTF9WRVJTSU9OX1dJTjg7DQo+IC0JaW5pdF9jb21wbGV0aW9uKCZkbV9kZXZpY2Uu
-aG9zdF9ldmVudCk7DQo+IC0JaW5pdF9jb21wbGV0aW9uKCZkbV9kZXZpY2UuY29uZmlnX2V2ZW50
-KTsNCj4gLQlJTklUX0xJU1RfSEVBRCgmZG1fZGV2aWNlLmhhX3JlZ2lvbl9saXN0KTsNCj4gLQlz
-cGluX2xvY2tfaW5pdCgmZG1fZGV2aWNlLmhhX2xvY2spOw0KPiAtCUlOSVRfV09SSygmZG1fZGV2
-aWNlLmJhbGxvb25fd3JrLndyaywgYmFsbG9vbl91cCk7DQo+IC0JSU5JVF9XT1JLKCZkbV9kZXZp
-Y2UuaGFfd3JrLndyaywgaG90X2FkZF9yZXEpOw0KPiAtCWRtX2RldmljZS5ob3N0X3NwZWNpZmll
-ZF9oYV9yZWdpb24gPSBmYWxzZTsNCj4gLQ0KPiAtCWRtX2RldmljZS50aHJlYWQgPQ0KPiAtCQkg
-a3RocmVhZF9ydW4oZG1fdGhyZWFkX2Z1bmMsICZkbV9kZXZpY2UsICJodl9iYWxsb29uIik7DQo+
-IC0JaWYgKElTX0VSUihkbV9kZXZpY2UudGhyZWFkKSkgew0KPiAtCQlyZXQgPSBQVFJfRVJSKGRt
-X2RldmljZS50aHJlYWQpOw0KPiAtCQlnb3RvIHByb2JlX2Vycm9yMTsNCj4gLQl9DQo+IC0NCj4g
-LSNpZmRlZiBDT05GSUdfTUVNT1JZX0hPVFBMVUcNCj4gLQlzZXRfb25saW5lX3BhZ2VfY2FsbGJh
-Y2soJmh2X29ubGluZV9wYWdlKTsNCj4gLQlyZWdpc3Rlcl9tZW1vcnlfbm90aWZpZXIoJmh2X21l
-bW9yeV9uYik7DQo+IC0jZW5kaWYNCj4gLQ0KPiAtCWh2X3NldF9kcnZkYXRhKGRldiwgJmRtX2Rl
-dmljZSk7DQo+ICAJLyoNCj4gIAkgKiBJbml0aWF0ZSB0aGUgaGFuZCBzaGFrZSB3aXRoIHRoZSBo
-b3N0IGFuZCBuZWdvdGlhdGUNCj4gIAkgKiBhIHZlcnNpb24gdGhhdCB0aGUgaG9zdCBjYW4gc3Vw
-cG9ydC4gV2Ugc3RhcnQgd2l0aCB0aGUNCj4gQEAgLTE2MzMsMTYgKzE2MDEsMTUgQEAgc3RhdGlj
-IGludCBiYWxsb29uX3Byb2JlKHN0cnVjdCBodl9kZXZpY2UgKmRldiwNCj4gIAlkbV9kZXZpY2Uu
-dmVyc2lvbiA9IHZlcnNpb25fcmVxLnZlcnNpb24udmVyc2lvbjsNCj4gDQo+ICAJcmV0ID0gdm1i
-dXNfc2VuZHBhY2tldChkZXYtPmNoYW5uZWwsICZ2ZXJzaW9uX3JlcSwNCj4gLQkJCQlzaXplb2Yo
-c3RydWN0IGRtX3ZlcnNpb25fcmVxdWVzdCksDQo+IC0JCQkJKHVuc2lnbmVkIGxvbmcpTlVMTCwN
-Cj4gLQkJCQlWTV9QS1RfREFUQV9JTkJBTkQsIDApOw0KPiArCQkJICAgICAgIHNpemVvZihzdHJ1
-Y3QgZG1fdmVyc2lvbl9yZXF1ZXN0KSwNCj4gKwkJCSAgICAgICAodW5zaWduZWQgbG9uZylOVUxM
-LCBWTV9QS1RfREFUQV9JTkJBTkQsIDApOw0KPiAgCWlmIChyZXQpDQo+IC0JCWdvdG8gcHJvYmVf
-ZXJyb3IyOw0KPiArCQlnb3RvIG91dDsNCj4gDQo+ICAJdCA9IHdhaXRfZm9yX2NvbXBsZXRpb25f
-dGltZW91dCgmZG1fZGV2aWNlLmhvc3RfZXZlbnQsIDUqSFopOw0KPiAgCWlmICh0ID09IDApIHsN
-Cj4gIAkJcmV0ID0gLUVUSU1FRE9VVDsNCj4gLQkJZ290byBwcm9iZV9lcnJvcjI7DQo+ICsJCWdv
-dG8gb3V0Ow0KPiAgCX0NCj4gDQo+ICAJLyoNCj4gQEAgLTE2NTAsOCArMTYxNyw4IEBAIHN0YXRp
-YyBpbnQgYmFsbG9vbl9wcm9iZShzdHJ1Y3QgaHZfZGV2aWNlICpkZXYsDQo+ICAJICogZmFpbCB0
-aGUgcHJvYmUgZnVuY3Rpb24uDQo+ICAJICovDQo+ICAJaWYgKGRtX2RldmljZS5zdGF0ZSA9PSBE
-TV9JTklUX0VSUk9SKSB7DQo+IC0JCXJldCA9IC1FVElNRURPVVQ7DQo+IC0JCWdvdG8gcHJvYmVf
-ZXJyb3IyOw0KPiArCQlyZXQgPSAtRVBST1RPOw0KPiArCQlnb3RvIG91dDsNCj4gIAl9DQo+IA0K
-PiAgCXByX2luZm8oIlVzaW5nIER5bmFtaWMgTWVtb3J5IHByb3RvY29sIHZlcnNpb24gJXUuJXVc
-biIsDQo+IEBAIC0xNjg0LDE2ICsxNjUxLDE1IEBAIHN0YXRpYyBpbnQgYmFsbG9vbl9wcm9iZShz
-dHJ1Y3QgaHZfZGV2aWNlICpkZXYsDQo+ICAJY2FwX21zZy5tYXhfcGFnZV9udW1iZXIgPSAtMTsN
-Cj4gDQo+ICAJcmV0ID0gdm1idXNfc2VuZHBhY2tldChkZXYtPmNoYW5uZWwsICZjYXBfbXNnLA0K
-PiAtCQkJCXNpemVvZihzdHJ1Y3QgZG1fY2FwYWJpbGl0aWVzKSwNCj4gLQkJCQkodW5zaWduZWQg
-bG9uZylOVUxMLA0KPiAtCQkJCVZNX1BLVF9EQVRBX0lOQkFORCwgMCk7DQo+ICsJCQkgICAgICAg
-c2l6ZW9mKHN0cnVjdCBkbV9jYXBhYmlsaXRpZXMpLA0KPiArCQkJICAgICAgICh1bnNpZ25lZCBs
-b25nKU5VTEwsIFZNX1BLVF9EQVRBX0lOQkFORCwgMCk7DQo+ICAJaWYgKHJldCkNCj4gLQkJZ290
-byBwcm9iZV9lcnJvcjI7DQo+ICsJCWdvdG8gb3V0Ow0KPiANCj4gIAl0ID0gd2FpdF9mb3JfY29t
-cGxldGlvbl90aW1lb3V0KCZkbV9kZXZpY2UuaG9zdF9ldmVudCwgNSpIWik7DQo+ICAJaWYgKHQg
-PT0gMCkgew0KPiAgCQlyZXQgPSAtRVRJTUVET1VUOw0KPiAtCQlnb3RvIHByb2JlX2Vycm9yMjsN
-Cj4gKwkJZ290byBvdXQ7DQo+ICAJfQ0KPiANCj4gIAkvKg0KPiBAQCAtMTcwMSwyMyArMTY2Nyw2
-NSBAQCBzdGF0aWMgaW50IGJhbGxvb25fcHJvYmUoc3RydWN0IGh2X2RldmljZSAqZGV2LA0KPiAg
-CSAqIGZhaWwgdGhlIHByb2JlIGZ1bmN0aW9uLg0KPiAgCSAqLw0KPiAgCWlmIChkbV9kZXZpY2Uu
-c3RhdGUgPT0gRE1fSU5JVF9FUlJPUikgew0KPiAtCQlyZXQgPSAtRVRJTUVET1VUOw0KPiAtCQln
-b3RvIHByb2JlX2Vycm9yMjsNCj4gKwkJcmV0ID0gLUVQUk9UTzsNCj4gKwkJZ290byBvdXQ7DQo+
-ICAJfQ0KPiANCj4gKwlyZXR1cm4gMDsNCj4gK291dDoNCj4gKwl2bWJ1c19jbG9zZShkZXYtPmNo
-YW5uZWwpOw0KPiArCXJldHVybiByZXQ7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBpbnQgYmFsbG9v
-bl9wcm9iZShzdHJ1Y3QgaHZfZGV2aWNlICpkZXYsDQo+ICsJCQkgY29uc3Qgc3RydWN0IGh2X3Zt
-YnVzX2RldmljZV9pZCAqZGV2X2lkKQ0KPiArew0KPiArCWludCByZXQ7DQo+ICsNCj4gKyNpZmRl
-ZiBDT05GSUdfTUVNT1JZX0hPVFBMVUcNCj4gKwlkb19ob3RfYWRkID0gaG90X2FkZDsNCj4gKyNl
-bHNlDQo+ICsJZG9faG90X2FkZCA9IGZhbHNlOw0KPiArI2VuZGlmDQo+ICsJZG1fZGV2aWNlLmRl
-diA9IGRldjsNCj4gKwlkbV9kZXZpY2Uuc3RhdGUgPSBETV9JTklUSUFMSVpJTkc7DQo+ICsJZG1f
-ZGV2aWNlLm5leHRfdmVyc2lvbiA9IERZTk1FTV9QUk9UT0NPTF9WRVJTSU9OX1dJTjg7DQo+ICsJ
-aW5pdF9jb21wbGV0aW9uKCZkbV9kZXZpY2UuaG9zdF9ldmVudCk7DQo+ICsJaW5pdF9jb21wbGV0
-aW9uKCZkbV9kZXZpY2UuY29uZmlnX2V2ZW50KTsNCj4gKwlJTklUX0xJU1RfSEVBRCgmZG1fZGV2
-aWNlLmhhX3JlZ2lvbl9saXN0KTsNCj4gKwlzcGluX2xvY2tfaW5pdCgmZG1fZGV2aWNlLmhhX2xv
-Y2spOw0KPiArCUlOSVRfV09SSygmZG1fZGV2aWNlLmJhbGxvb25fd3JrLndyaywgYmFsbG9vbl91
-cCk7DQo+ICsJSU5JVF9XT1JLKCZkbV9kZXZpY2UuaGFfd3JrLndyaywgaG90X2FkZF9yZXEpOw0K
-PiArCWRtX2RldmljZS5ob3N0X3NwZWNpZmllZF9oYV9yZWdpb24gPSBmYWxzZTsNCj4gKw0KPiAr
-I2lmZGVmIENPTkZJR19NRU1PUllfSE9UUExVRw0KPiArCXNldF9vbmxpbmVfcGFnZV9jYWxsYmFj
-aygmaHZfb25saW5lX3BhZ2UpOw0KPiArCXJlZ2lzdGVyX21lbW9yeV9ub3RpZmllcigmaHZfbWVt
-b3J5X25iKTsNCj4gKyNlbmRpZg0KPiArDQo+ICsJaHZfc2V0X2RydmRhdGEoZGV2LCAmZG1fZGV2
-aWNlKTsNCj4gKw0KPiArCXJldCA9IGJhbGxvb25fY29ubmVjdF92c3AoZGV2KTsNCj4gKwlpZiAo
-cmV0ICE9IDApDQo+ICsJCXJldHVybiByZXQ7DQo+ICsNCj4gIAlkbV9kZXZpY2Uuc3RhdGUgPSBE
-TV9JTklUSUFMSVpFRDsNCj4gLQlsYXN0X3Bvc3RfdGltZSA9IGppZmZpZXM7DQoNCkkgd2FzIGN1
-cmlvdXMgYWJvdXQgdGhlIGFib3ZlIGRlbGV0aW9uLiAgQnV0IEkgZ3Vlc3MgdGhlIGxpbmUNCmlz
-IG5vdCBuZWVkZWQgYXMgdGhlIHRpbWVfYWZ0ZXIoKSBjaGVjayBpbiBwb3N0X3N0YXR1cygpIHNo
-b3VsZA0KaGFuZGxlIGFuIGluaXRpYWwgdmFsdWUgb2YgMCBmb3IgbGFzdF9wb3N0X3RpbWUganVz
-dCBmaW5lLg0KDQo+ICsNCj4gKwlkbV9kZXZpY2UudGhyZWFkID0NCj4gKwkJIGt0aHJlYWRfcnVu
-KGRtX3RocmVhZF9mdW5jLCAmZG1fZGV2aWNlLCAiaHZfYmFsbG9vbiIpOw0KPiArCWlmIChJU19F
-UlIoZG1fZGV2aWNlLnRocmVhZCkpIHsNCj4gKwkJcmV0ID0gUFRSX0VSUihkbV9kZXZpY2UudGhy
-ZWFkKTsNCj4gKwkJZ290byBwcm9iZV9lcnJvcjsNCj4gKwl9DQoNCkp1c3QgYW4gb2JzZXJ2YXRp
-b246ICB0aGlzIHRocmVhZCBjcmVhdGlvbiBub3cgaGFwcGVucyBhdCB0aGUgZW5kIG9mIHRoZQ0K
-cHJvYmluZyBwcm9jZXNzLiAgQnV0IHRoYXQncyBnb29kLCBiZWNhdXNlIGluIHRoZSBvbGQgY29k
-ZSwgdGhlIHRocmVhZA0Kd2FzIHN0YXJ0ZWQgYW5kIGNvdWxkIHJ1biBiZWZvcmUgdGhlIHByb3Rv
-Y29sIHZlcnNpb24gaGFkIGJlZW4NCm5lZ290aWF0ZWQuICBTbyBJJ2xsIGFzc3VtZSB5b3VyIGNo
-YW5nZSBoZXJlIGlzIGludGVudGlvbmFsLg0KDQo+IA0KPiAgCXJldHVybiAwOw0KPiANCj4gLXBy
-b2JlX2Vycm9yMjoNCj4gK3Byb2JlX2Vycm9yOg0KPiArCXZtYnVzX2Nsb3NlKGRldi0+Y2hhbm5l
-bCk7DQo+ICAjaWZkZWYgQ09ORklHX01FTU9SWV9IT1RQTFVHDQo+ICsJdW5yZWdpc3Rlcl9tZW1v
-cnlfbm90aWZpZXIoJmh2X21lbW9yeV9uYik7DQoNCkhtbW0uIEV2aWRlbnRseSB0aGUgYWJvdmUg
-Y2xlYW51cCB3YXMgbWlzc2luZyBpbiB0aGUNCm9sZCBjb2RlLg0KDQo+ICAJcmVzdG9yZV9vbmxp
-bmVfcGFnZV9jYWxsYmFjaygmaHZfb25saW5lX3BhZ2UpOw0KPiAgI2VuZGlmDQo+IC0Ja3RocmVh
-ZF9zdG9wKGRtX2RldmljZS50aHJlYWQpOw0KPiAtDQo+IC1wcm9iZV9lcnJvcjE6DQo+IC0Jdm1i
-dXNfY2xvc2UoZGV2LT5jaGFubmVsKTsNCj4gIAlyZXR1cm4gcmV0Ow0KPiAgfQ0KPiANCj4gQEAg
-LTE3MzQsMTEgKzE3NDIsMTEgQEAgc3RhdGljIGludCBiYWxsb29uX3JlbW92ZShzdHJ1Y3QgaHZf
-ZGV2aWNlICpkZXYpDQo+ICAJY2FuY2VsX3dvcmtfc3luYygmZG0tPmJhbGxvb25fd3JrLndyayk7
-DQo+ICAJY2FuY2VsX3dvcmtfc3luYygmZG0tPmhhX3dyay53cmspOw0KPiANCj4gLQl2bWJ1c19j
-bG9zZShkZXYtPmNoYW5uZWwpOw0KPiAgCWt0aHJlYWRfc3RvcChkbS0+dGhyZWFkKTsNCj4gKwl2
-bWJ1c19jbG9zZShkZXYtPmNoYW5uZWwpOw0KDQpQcmVzdW1hYmx5IHRoaXMgaXMgYW4gaW50ZW50
-aW9uYWwgb3JkZXJpbmcgY2hhbmdlIGFzIHdlbGwuDQpUaGUga3RocmVhZCBzaG91bGQgYmUgc3Rv
-cHBlZCBiZWZvcmUgY2xvc2luZyB0aGUgY2hhbm5lbC4NCg0KPiAgI2lmZGVmIENPTkZJR19NRU1P
-UllfSE9UUExVRw0KPiAtCXJlc3RvcmVfb25saW5lX3BhZ2VfY2FsbGJhY2soJmh2X29ubGluZV9w
-YWdlKTsNCj4gIAl1bnJlZ2lzdGVyX21lbW9yeV9ub3RpZmllcigmaHZfbWVtb3J5X25iKTsNCj4g
-KwlyZXN0b3JlX29ubGluZV9wYWdlX2NhbGxiYWNrKCZodl9vbmxpbmVfcGFnZSk7DQoNCkFuZCB5
-b3UndmUgY2hhbmdlZCB0aGUgb3JkZXJpbmcgb2YgdGhlc2Ugc3RlcHMgc28gdGhleSBhcmUNCnRo
-ZSBpbnZlcnNlIG9mIHdoZW4gdGhleSBhcmUgc2V0IHVwLiAgQWxzbyBhIGdvb2QgY2xlYW51cCAu
-Li4uDQoNCj4gICNlbmRpZg0KPiAgCXNwaW5fbG9ja19pcnFzYXZlKCZkbV9kZXZpY2UuaGFfbG9j
-aywgZmxhZ3MpOw0KPiAgCWxpc3RfZm9yX2VhY2hfZW50cnlfc2FmZShoYXMsIHRtcCwgJmRtLT5o
-YV9yZWdpb25fbGlzdCwgbGlzdCkgew0KPiAtLQ0KPiAyLjE5LjENCg0KUmV2aWV3ZWQtYnk6IE1p
-Y2hhZWwgS2VsbGV5IDxtaWtlbGxleUBtaWNyb3NvZnQuY29tPg0K
+On Fri, Jun 14, 2019 at 06:04:33PM +0000, Peter Rosin wrote:
+> On 2019-06-14 18:31, Serge Semin wrote:
+> > Hello Peter,
+> > 
+> > On Sun, Jun 09, 2019 at 09:34:54PM +0000, Peter Rosin wrote:
+> >> On 2019-04-26 01:20, Serge Semin wrote:
+> >>> The GPIOs request loop can be safely moved to a separate function.
+> >>> First of all it shall improve the code readability. Secondly the
+> >>> initialization loop at this point is used for both of- and
+> >>> platform_data-based initialization paths, but it will be changed in
+> >>> the next patch, so by isolating the code we'll simplify the future
+> >>> work.
+> >>
+> >> This patch is just preparatory for patch 3/3, as I see it. And since
+> >> I'm not really fond of the end result after patch 3/3, I'm going to
+> >> sum up my issues here, instead of trying do it piecemeal in the two
+> >> patches.
+> >>
+> >> Linus and Jean, for your convenience, link to this patch series [1].
+> >>
+> >> While I agree with the goal (to use the more flexible gpiod functions
+> >> to get at the gpio descriptors), the cost is too high when the init
+> >> code for platform and OF is basically completely separated. I much
+> >> prefer the approach taken by Linus [2], which instead converts the
+> >> platform interface and its single user to use gpio descriptors instead
+> >> of the legacy gpio interface. The i2c-mux-gpio code then has the
+> >> potential to take a unified approach to the given gpio descriptors,
+> >> wherever they are originating from, which is much nicer than the
+> >> code-fork in this series.
+> >>
+> >> I also think it is pretty pointless to first split the code into
+> >> platform and OF paths, just so that the next patch (from Linus) can
+> >> unify the two paths again. I'd like to skip the intermediate step.
+> >>
+> >> So, I'm hoping for the following to happen.
+> >> 1. Sergey sends a revised patch for patch 1/3.
+> >> 2. I put the patch on the for-next branch.
+> >> 3. Linus rebases his patch on top of that (while thinking about
+> >>    the questions raised by Sergey).
+> >> 4. Sergey tests the result, I and Jean review it, then possibly
+> >>    go back to 3.
+> >> 5. I put the patch on the for-next branch.
+> >>
+> >> Is that ok? Or is someone insisting that we take a detour?
+> >>
+> > 
+> > The series was intended to add the gpiod support to the i2c-mux-gpio driver
+> > (see the cover letter of the series). So the last patch is the most valuable
+> > one. Without it the whole series is nothing but a small readability improvement.
+> > So it is pointless to merge the first patch only.
+> 
+> Agreed on all points, except perhaps for the "refuse" part below and
+> that the readability improvement of patch 1/3 is perhaps not all that
+> pointless.
+> 
+> > Anyway since you refuse to add the last patch and the first patch is actually
+> > pointless without the rest of the series, and I would have to spend my time to
+> > resubmit the v3 of the first patch anyway, it was much easier to test the
+> > current version of the Linus' patch and make it working for OF-based platforms.
+> > Additionally the Linus' patch also reaches the main goal of this patchset.
+> 
+> I'm very pleased that you do not feel totally put off, and are willing
+> to help even if we end up storing your series in /dev/null. Kudos!
+> 
+> > I don't know what would be the appropriate way to send the updated version of
+> > the Linus' patch. So I just attached the v4 of it to this email. Shall I better
+> > send it in reply to the Linus' patch series?
+> 
+> I get the impression that you have already done the work? In that case,
+> how I would proceed would depend on how big the difference is. If it's
+> just a few one-liners here and there, I think I would make a detailed
+> review comment so that it is easy for Linus to incorporate the needed
+> changes. If it's anything even remotely complex I would post an
+> incremental patch. Of course, the former does not exclude the latter,
+> but I do think an incremental patch is better than a repost.
+> 
+
+Yes, I tested the Linus' patch on my OF-based platform (though had to port to
+kernel 4.9) and found two problems. The incremental patch, which fixes them is
+send to you with mailing lists and everyone involved being Cc'ed.
+
+Regards,
+-Sergey
+
+> Thanks again!
+> 
+> Cheers,
+> Peter
