@@ -2,272 +2,185 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1701FC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC5CC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F572133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F6321744
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="d8QFLc0X"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ZxhHLReM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbfFNPWs (ORCPT
+        id S1726297AbfFNPXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:22:48 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40177 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfFNPWs (ORCPT
+        Fri, 14 Jun 2019 11:23:12 -0400
+Received: from mail.efficios.com ([167.114.142.138]:49952 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfFNPXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:22:48 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so4015166eds.7
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 08:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=dXndqQ1AQICqmvtwsrmWxtGA2LkxXy4opA3uGDC+gYY=;
-        b=d8QFLc0X7BeHMuw1YHf2wvaXSPx8ffwCsfn7Hjqz39LN3vc4CJeI2ACBnDIX2FkzWw
-         OTH8nK0RQ6od8ZYHbWp3zjNiXm+xm6eUDfn96nxnWMJzwyqBJgnxBpOAAO6uJZOr5Lp8
-         q1Xk6rvZTnEUtRsYFmKR23cVC6ZYlwk9T31S0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=dXndqQ1AQICqmvtwsrmWxtGA2LkxXy4opA3uGDC+gYY=;
-        b=sZ8Qr0wlq6pTDSWPHOyj148Wh4pXIq1ZhK7X/Hx/osdnWVUlsj7xUmXbTk7H0xAcTv
-         G2dcwsh1t5jbaDetXnT2QaU6sLwM6cHzGiir8N8b79+qKrNooKxuehufFOBHClA00pnF
-         g119E6H0xpuH1nKyHe5I7Id3gVaDcVLDZe21jKeVlbhB8SVpyvwd4Dgunx6AAd4kjW6K
-         ei62wUjJJaoCB6nQegSzXf68vvfYes1Uh7NaxLPJGTFhWKDJuD8qu5DidajOc4xXPdJx
-         HkfSSkSjtbdWuetwgQqvxho22BsnCVACOUwTe5X7g/H//erXkP/qW8H6exyNpYiiWsCb
-         hu4Q==
-X-Gm-Message-State: APjAAAXv/lLeB+efUd5ji1aWroEE/OU7e0fsIEMy9Gu+F2CzRdMZdFqX
-        faTwt91MdJeKMx3edoF+K/9XTg==
-X-Google-Smtp-Source: APXvYqxF89aMMU3nddTZFQ4L9VrL8aHf/ROCuBn3TO1QrfZw98b4GBGGD0sKAyq4iPcPF7wNLQzXUw==
-X-Received: by 2002:aa7:d781:: with SMTP id s1mr30705429edq.20.1560525766105;
-        Fri, 14 Jun 2019 08:22:46 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id x10sm972203edd.73.2019.06.14.08.22.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 08:22:45 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 17:22:42 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Christian =?iso-8859-1?Q?K=F6nig?= 
-        <ckoenig.leichtzumerken@gmail.com>, daniel@ffwll.ch,
-        l.stach@pengutronix.de, linux+etnaviv@armlinux.org.uk,
-        christian.gmeiner@gmail.com, yuq825@gmail.com, eric@anholt.net,
-        thellstrom@vmware.com, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, etnaviv@lists.freedesktop.org,
-        lima@lists.freedesktop.org
-Subject: Re: [PATCH 3/6] drm/gem: use new ww_mutex_(un)lock_for_each macros
-Message-ID: <20190614152242.GC23020@phenom.ffwll.local>
-Mail-Followup-To: Peter Zijlstra <peterz@infradead.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
-        l.stach@pengutronix.de, linux+etnaviv@armlinux.org.uk,
-        christian.gmeiner@gmail.com, yuq825@gmail.com, eric@anholt.net,
-        thellstrom@vmware.com, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, etnaviv@lists.freedesktop.org,
-        lima@lists.freedesktop.org
-References: <20190614124125.124181-1-christian.koenig@amd.com>
- <20190614124125.124181-4-christian.koenig@amd.com>
- <20190614131916.GQ3436@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190614131916.GQ3436@hirez.programming.kicks-ass.net>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 14 Jun 2019 11:23:12 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id EEC6825174D;
+        Fri, 14 Jun 2019 11:23:10 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id dHBNh9EPKqVL; Fri, 14 Jun 2019 11:23:10 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id AA480251731;
+        Fri, 14 Jun 2019 11:23:08 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com AA480251731
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1560525788;
+        bh=OBox3OMxjxvC7PvoLYGWSN3dsx6DMeQHxfzI7UPjj1Y=;
+        h=From:To:Date:Message-Id;
+        b=ZxhHLReM1LIW1i4jvG82L8qd3m5LTPJDyXwDqty0mpFQ+PLM8Cp+W8h7rbu734ot7
+         1Qg6PIsk3Q7eYwHmQEuH3mqUrMoYcqExVUsVlkB3ehCCcSSj7BDPSoHhGE61e2qXk3
+         1YWyu18xdbqY6QiRcvEfvoUpuZdvaZbNux0oI2PFtFfshhaSZpXcDfNkqsBbeK04Cq
+         zFNu2khFa6v4rXfjX3jNPBAsvjO1NCOPjV8OeL6X7WoPzKrpW4fPeJoYBiCx1OS0uq
+         L6HiXqZWIgOHjhdQXVDEhVs55OyLIH9rME6OctJDlrefUJQcZnehuOQ6ABHcrRk6fa
+         g3yhiwSdJrUyg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id Uimi5a9qPjeK; Fri, 14 Jun 2019 11:23:08 -0400 (EDT)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id 655E725171F;
+        Fri, 14 Jun 2019 11:23:08 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Carlos O'Donell <carlos@redhat.com>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH glibc 2/5] glibc: sched_getcpu(): use rseq cpu_id TLS on Linux (v5)
+Date:   Fri, 14 Jun 2019 11:23:01 -0400
+Message-Id: <20190614152304.12321-3-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190614152304.12321-1-mathieu.desnoyers@efficios.com>
+References: <20190614152304.12321-1-mathieu.desnoyers@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 03:19:16PM +0200, Peter Zijlstra wrote:
-> On Fri, Jun 14, 2019 at 02:41:22PM +0200, Christian König wrote:
-> > Use the provided macros instead of implementing deadlock handling on our own.
-> > 
-> > Signed-off-by: Christian König <christian.koenig@amd.com>
-> > ---
-> >  drivers/gpu/drm/drm_gem.c | 49 ++++++++++-----------------------------
-> >  1 file changed, 12 insertions(+), 37 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-> > index 50de138c89e0..6e4623d3bee2 100644
-> > --- a/drivers/gpu/drm/drm_gem.c
-> > +++ b/drivers/gpu/drm/drm_gem.c
-> > @@ -1307,51 +1307,26 @@ int
-> >  drm_gem_lock_reservations(struct drm_gem_object **objs, int count,
-> >  			  struct ww_acquire_ctx *acquire_ctx)
-> >  {
-> > -	int contended = -1;
-> > +	struct ww_mutex *contended;
-> >  	int i, ret;
-> >  
-> >  	ww_acquire_init(acquire_ctx, &reservation_ww_class);
-> >  
-> > -retry:
-> > -	if (contended != -1) {
-> > -		struct drm_gem_object *obj = objs[contended];
-> > -
-> > -		ret = ww_mutex_lock_slow_interruptible(&obj->resv->lock,
-> > -						       acquire_ctx);
-> > -		if (ret) {
-> > -			ww_acquire_done(acquire_ctx);
-> > -			return ret;
-> > -		}
-> > -	}
-> > -
-> > -	for (i = 0; i < count; i++) {
-> > -		if (i == contended)
-> > -			continue;
-> > -
-> > -		ret = ww_mutex_lock_interruptible(&objs[i]->resv->lock,
-> > -						  acquire_ctx);
-> > -		if (ret) {
-> > -			int j;
-> > -
-> > -			for (j = 0; j < i; j++)
-> > -				ww_mutex_unlock(&objs[j]->resv->lock);
-> > -
-> > -			if (contended != -1 && contended >= i)
-> > -				ww_mutex_unlock(&objs[contended]->resv->lock);
-> > -
-> > -			if (ret == -EDEADLK) {
-> > -				contended = i;
-> > -				goto retry;
-> > -			}
-> > -
-> > -			ww_acquire_done(acquire_ctx);
-> > -			return ret;
-> > -		}
-> > -	}
-> 
-> I note all the sites you use this on are simple idx iterators; so how
-> about something like so:
-> 
-> int ww_mutex_unlock_all(int count, void *data, struct ww_mutex *(*func)(int, void *))
-> {
-> 	int i;
-> 
-> 	for (i = 0; i < count; i++) {
-> 		lock = func(i, data);
-> 		ww_mutex_unlock(lock);
-> 	}
-> }
-> 
-> int ww_mutex_lock_all(int count, struct ww_acquire_context *acquire_ctx, bool intr,
-> 		      void *data, struct ww_mutex *(*func)(int, void *))
-> {
-> 	int i, ret, contended = -1;
-> 	struct ww_mutex *lock;
-> 
-> retry:
-> 	if (contended != -1) {
-> 		lock = func(contended, data);
-> 		if (intr)
-> 			ret = ww_mutex_lock_slow_interruptible(lock, acquire_ctx);
-> 		else
-> 			ret = ww_mutex_lock_slow(lock, acquire_ctx), 0;
-> 
-> 		if (ret) {
-> 			ww_acquire_done(acquire_ctx);
-> 			return ret;
-> 		}
-> 	}
-> 
-> 	for (i = 0; i < count; i++) {
-> 		if (i == contended)
-> 			continue;
-> 
-> 		lock = func(i, data);
-> 		if (intr)
-> 			ret = ww_mutex_lock_interruptible(lock, acquire_ctx);
-> 		else
-> 			ret = ww_mutex_lock(lock, acquire_ctx), 0;
-> 
-> 		if (ret) {
-> 			ww_mutex_unlock_all(i, data, func);
-> 			if (contended > i) {
-> 				lock = func(contended, data);
-> 				ww_mutex_unlock(lock);
-> 			}
-> 
-> 			if (ret == -EDEADLK) {
-> 				contended = i;
-> 				goto retry;
-> 			}
-> 
-> 			ww_acquire_done(acquire_ctx);
-> 			return ret;
-> 		}
-> 	}
-> 
-> 	ww_acquire_done(acquire_ctx);
-> 	return 0;
-> }
-> 
-> > +	ww_mutex_lock_for_each(for (i = 0; i < count; i++),
-> > +			       &objs[i]->resv->lock, contended, ret, true,
-> > +			       acquire_ctx)
-> > +		if (ret)
-> > +			goto error;
-> 
-> which then becomes:
-> 
-> struct ww_mutex *gem_ww_mutex_func(int i, void *data)
-> {
-> 	struct drm_gem_object **objs = data;
-> 	return &objs[i]->resv->lock;
-> }
-> 
-> 	ret = ww_mutex_lock_all(count, acquire_ctx, true, objs, gem_ww_mutex_func);
-> 
-> >  	ww_acquire_done(acquire_ctx);
-> >  
-> >  	return 0;
-> > +
-> > +error:
-> > +	ww_mutex_unlock_for_each(for (i = 0; i < count; i++),
-> > +				 &objs[i]->resv->lock, contended);
-> > +	ww_acquire_done(acquire_ctx);
-> > +	return ret;
-> >  }
-> >  EXPORT_SYMBOL(drm_gem_lock_reservations);
+When available, use the cpu_id field from __rseq_abi on Linux to
+implement sched_getcpu(). Fall-back on the vgetcpu vDSO if unavailable.
 
-Another idea, entirely untested (I guess making sure that we can use the
-same iterator for both locking and unlocking in the contended case will be
-fun), but maybe something like this:
+Benchmarks:
 
-	WW_MUTEX_LOCK_BEGIN();
-	driver_for_each_loop (iter, pos) {
-		WW_MUTEX_LOCK(&pos->ww_mutex);
-	}
-	WW_MUTEX_LOCK_END();
+x86-64: Intel E5-2630 v3@2.40GHz, 16-core, hyperthreading
 
-That way we can reuse any and all iterators that'll ever show up at least.
-It's still horrible because the macros need to jump around between all of
-them. Would also make this useful for more cases, where maybe you need to
-trylock some lru lock to get at your next ww_mutex, or do some
-kref_get_unless_zero. Buffer eviction loops tend to acquire these, and
-that would all get ugly real fast if we'd need to stuff it into some
-iterator argument.
+glibc sched_getcpu():                     13.7 ns (baseline)
+glibc sched_getcpu() using rseq:           2.5 ns (speedup:  5.5x)
+inline load cpuid from __rseq_abi TLS:     0.8 ns (speedup: 17.1x)
 
-This is kinda what we went with for modeset locks with
-DRM_MODESET_LOCK_ALL_BEGIN/END, you can grab more locks in between the
-pair at least. But it's a lot more limited use-cases, maybe too fragile an
-idea for ww_mutex in full generality.
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+CC: Carlos O'Donell <carlos@redhat.com>
+CC: Florian Weimer <fweimer@redhat.com>
+CC: Joseph Myers <joseph@codesourcery.com>
+CC: Szabolcs Nagy <szabolcs.nagy@arm.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ben Maurer <bmaurer@fb.com>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+CC: Boqun Feng <boqun.feng@gmail.com>
+CC: Will Deacon <will.deacon@arm.com>
+CC: Dave Watson <davejwatson@fb.com>
+CC: Paul Turner <pjt@google.com>
+CC: libc-alpha@sourceware.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-api@vger.kernel.org
+---
+Changes since v1:
+- rseq is only used if both __NR_rseq and RSEQ_SIG are defined.
 
-Not going to type this out because too much w/e mode here already, but I
-can give it a stab next week.
--Daniel
+Changes since v2:
+- remove duplicated __rseq_abi extern declaration.
+
+Changes since v3:
+- update ChangeLog.
+
+Changes since v4:
+- Use atomic_load_relaxed to load the __rseq_abi.cpu_id field, a
+  consequence of the fact that __rseq_abi is not volatile anymore.
+- Include atomic.h which provides atomic_load_relaxed.
+---
+ ChangeLog                              |  5 +++++
+ sysdeps/unix/sysv/linux/sched_getcpu.c | 25 +++++++++++++++++++++++--
+ 2 files changed, 28 insertions(+), 2 deletions(-)
+
+diff --git a/ChangeLog b/ChangeLog
+index 01a411acbf..58830cafc2 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -1,3 +1,8 @@
++2019-04-23  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
++
++	* sysdeps/unix/sysv/linux/sched_getcpu.c: use rseq cpu_id TLS on
++	Linux.
++
+ 2019-04-23  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+ 
+ 	* NEWS: Add Restartable Sequences feature description.
+diff --git a/sysdeps/unix/sysv/linux/sched_getcpu.c b/sysdeps/unix/sysv/linux/sched_getcpu.c
+index fb0d317f83..01a818f5b0 100644
+--- a/sysdeps/unix/sysv/linux/sched_getcpu.c
++++ b/sysdeps/unix/sysv/linux/sched_getcpu.c
+@@ -18,14 +18,15 @@
+ #include <errno.h>
+ #include <sched.h>
+ #include <sysdep.h>
++#include <atomic.h>
+ 
+ #ifdef HAVE_GETCPU_VSYSCALL
+ # define HAVE_VSYSCALL
+ #endif
+ #include <sysdep-vdso.h>
+ 
+-int
+-sched_getcpu (void)
++static int
++vsyscall_sched_getcpu (void)
+ {
+ #ifdef __NR_getcpu
+   unsigned int cpu;
+@@ -37,3 +38,23 @@ sched_getcpu (void)
+   return -1;
+ #endif
+ }
++
++#ifdef __NR_rseq
++#include <sys/rseq.h>
++#endif
++
++#if defined __NR_rseq && defined RSEQ_SIG
++int
++sched_getcpu (void)
++{
++  int cpu_id = atomic_load_relaxed (&__rseq_abi.cpu_id);
++
++  return cpu_id >= 0 ? cpu_id : vsyscall_sched_getcpu ();
++}
++#else
++int
++sched_getcpu (void)
++{
++  return vsyscall_sched_getcpu ();
++}
++#endif
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.17.1
+
