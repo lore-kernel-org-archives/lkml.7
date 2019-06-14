@@ -2,90 +2,92 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E29CC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72420C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F97F2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C782168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfFNUxY (ORCPT
+        id S1726797AbfFNUxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:53:24 -0400
-Received: from sauhun.de ([88.99.104.3]:56910 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfFNUxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:53:24 -0400
-Received: from localhost (p5486CF81.dip0.t-ipconnect.de [84.134.207.129])
-        by pokefinder.org (Postfix) with ESMTPSA id D46602CF690;
-        Fri, 14 Jun 2019 22:53:22 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 22:53:22 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     pierre-yves.mordret@st.com, marc.w.gonzalez@free.fr,
-        fabien.dessenne@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] i2c: i2c-stm32f7: fix the get_irq error cases
-Message-ID: <20190614205322.GA17899@ninjato>
-References: <1558020594-1498-1-git-send-email-fabrice.gasnier@st.com>
+        Fri, 14 Jun 2019 16:53:45 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:40718 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfFNUxo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:53:44 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hbtCf-00060Z-Fp; Fri, 14 Jun 2019 22:53:41 +0200
+Date:   Fri, 14 Jun 2019 22:53:40 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Borislav Petkov <bp@alien8.de>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Adric Blake <promarbler14@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
+Subject: Re: [PATCH] x86/microcode, cpuhotplug: Add a microcode loader CPU
+ hotplug callback
+In-Reply-To: <20190614182317.29292-1-bp@alien8.de>
+Message-ID: <alpine.DEB.2.21.1906142253230.1760@nanos.tec.linutronix.de>
+References: <20190614182317.29292-1-bp@alien8.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
-Content-Disposition: inline
-In-Reply-To: <1558020594-1498-1-git-send-email-fabrice.gasnier@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 14 Jun 2019, Borislav Petkov wrote:
 
---Dxnq1zWXvFF0Q93v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> From: Borislav Petkov <bp@suse.de>
+> 
+> Adric Blake reported the following warning during suspend-resume:
+> 
+>   Enabling non-boot CPUs ...
+>   x86: Booting SMP configuration:
+>   smpboot: Booting Node 0 Processor 1 APIC 0x2
+>   unchecked MSR access error: WRMSR to 0x10f (tried to write 0x0000000000000000) \
+>    at rIP: 0xffffffff8d267924 (native_write_msr+0x4/0x20)
+>   Call Trace:
+>    intel_set_tfa
+>    intel_pmu_cpu_starting
+>    ? x86_pmu_dead_cpu
+>    x86_pmu_starting_cpu
+>    cpuhp_invoke_callback
+>    ? _raw_spin_lock_irqsave
+>    notify_cpu_starting
+>    start_secondary
+>    secondary_startup_64
+>   microcode: sig=0x806ea, pf=0x80, revision=0x96
+>   microcode: updated to revision 0xb4, date = 2019-04-01
+>   CPU1 is up
+> 
+> The MSR in question is MSR_TFA_RTM_FORCE_ABORT and that MSR is emulated
+> by microcode. The log above shows that the microcode loader callback
+> happens after the PMU restoration, leading to the conjecture that
+> because the microcode hasn't been updated yet, that MSR is not present
+> yet, leading to the #GP.
+> 
+> Add a microcode loader-specific hotplug vector which comes before
+> the PERF vectors and thus executes earlier and makes sure the MSR is
+> present.
+> 
+> Fixes: 400816f60c54 ("perf/x86/intel: Implement support for TSX Force Abort")
+> Reported-by: Adric Blake <promarbler14@gmail.com>
+> Signed-off-by: Borislav Petkov <bp@suse.de>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: x86@kernel.org
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203637
 
-Hi Fabrice,
-
-> +		return irq_event ? irq_event : -ENODEV;
-
-Maybe -ENOENT instead of -ENODEV? I mean you have a dev_err there, so
-the driver core should probably also complain?
-
-You could also shorten the ternary operator to:
-
-	return irq_event ? : -E<whatyouprefer>;
-
-However, both are minor nits. If you prefer to keep the patch as is,
-fine with me.
-
-Regards,
-
-   Wolfram
-
-
---Dxnq1zWXvFF0Q93v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0ECT4ACgkQFA3kzBSg
-KbaP8xAAiUUQ1YDf9eeO9qQ5B7FKo7kXJ7iUA/RbGjfpC5zhjsoVgb7DdHvc7npe
-PSrQ21fAXNJtFz4N1CcQ6A38C2/IYZ+A2NnmwNyzMhqL5W5Ah2gPl6UP7S6USF4J
-4NnHw0/0eeH7/i+F13uiVGJudC+MVesWYPZgOBq9GGqgwxp7IztsjSOliBDRkC6c
-6RtdlqXD0UfUt60sxIJz/Oy+SYRKc0V78KUeybe7+fT5gisBfF3E1Zs3OZFieupk
-BIRuhXDNBQUTb7Cy387Zh4Im2uEzUb1qBIqC3azfJhNVyMm9fyiFGgysXNhkgEJ5
-1CKiXadTzhYJQJUpxNDmYQcmk8t/cM69R9NKBXou8XCeutIbe4BA6myz0U0hz1Np
-E7iBJ//LJpXAptZErq3n2VzDFHKKFWn4hyIJKI7LOZIdO2t/I/6wzJPMKxHJSOTv
-soWDgPcS/D1to1Glq4+CPqwNicEXLm5q1H18UE0SjBskFaGwCwyjNFAvwwjmhJ4f
-73uuuJBC3Oq2W/JqnYY+IFcue4GO/VS6ZughqW8iebSmwaoArzN00L844leXDkHN
-0dBGj3bT/lcLrR+d7jLsWeHt4t6J0dTJAkIxBivl+dK2nta7NMalnqp6cFp/nHfY
-R8KQhpWqlKhaoFGQzW1XiLNlKq+ZPC4MGq3h3thFOc9Z4lo96KA=
-=VE/8
------END PGP SIGNATURE-----
-
---Dxnq1zWXvFF0Q93v--
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
