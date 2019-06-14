@@ -2,101 +2,190 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DD9C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DC4C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEE221473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:10:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560514203;
-	bh=8IHr1gLtD4hNqNX6dX49R4OHXx8RZC0mKA9co1k7r0Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nLto09R/QJ/kOIRZ79RMZR7lq8Kir3w+R81I4RKNDmOThD6MhQkGHQV8hfQBgmsEG
-	 RBh8TFzNIc3wLCU0zYaLBHRCIMMl46hQg1Uc1Wb84ugWOvnOu5SNt+BT8+ENRMYWGb
-	 5RtWA+FNhX0KWKf0qvF8UAhRNm6/63ickWCOX+Js=
+	by mail.kernel.org (Postfix) with ESMTP id 1C0A4208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:10:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="igk9dt/v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfFNMKB (ORCPT
+        id S1727816AbfFNMKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:10:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46508 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727217AbfFNMKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:10:01 -0400
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22B7B21744;
-        Fri, 14 Jun 2019 12:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560514200;
-        bh=8IHr1gLtD4hNqNX6dX49R4OHXx8RZC0mKA9co1k7r0Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GRFjtJqWs4Od0DofHFi5X08sv06mdK/RmdUQr3mBnKJYdS1uNW9H4VEWsGocmZl0v
-         v1vpqtasZs0f8s3yZu9IfMLakCLgDLMo69noidjS1RrEHnUd7pc5tH2LiItKAtlX7t
-         cf46L8Z+/cakYobSvceGWddDvqsGgClDTdNe5i3s=
-Received: by mail-lj1-f182.google.com with SMTP id a21so2149304ljh.7;
-        Fri, 14 Jun 2019 05:10:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAXuRuf/qP/Ly5dy4rses5L3NEosCNqWhNi8vnn/9Bud/hmMuit+
-        xgY+CgcHnSeHQ8Z6atijndIqMUTVq76hkEM4xEI=
-X-Google-Smtp-Source: APXvYqwY1vJUmcClY7DiOhpKQac9810LonMaVqUAY+cbDTalTdSgVuGq1lXMJRDJ3zZvhaS6+/qwdx4Tw6yJNS0UFq0=
-X-Received: by 2002:a2e:94c9:: with SMTP id r9mr4914536ljh.210.1560514198446;
- Fri, 14 Jun 2019 05:09:58 -0700 (PDT)
+        Fri, 14 Jun 2019 08:10:24 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:35697 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727217AbfFNMKX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:10:23 -0400
+Received: by mail-vs1-f65.google.com with SMTP id u124so1618108vsu.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 05:10:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F5D+HakwAE2WgxfHyzl83ZwTB437sX3wIDlJ8qrfryI=;
+        b=igk9dt/vAQdzxT8QzdZI/Ievysa9xK3WPDJK4vcC3mDYTCNmuMk9blJgU6OL9Yc0dK
+         Tio9BFMzxl///10xMQOIVDRbhF/nM/Hlu2UzObSKzWbdltAQYn565CyrftqwwoLEd33B
+         Cr7ROv4Q0dHUiigBi2fHNGkoZUZUg1UIePaijaE5FoQNP4Rj7BRVnnrvi3b8R3WX/hJu
+         CM8fh8LGVg8luPx2wjcpony8vE0jjzt/t5njqGuSo/mVk/E4Zw+RG33ExdPs2KeVtCjq
+         cOiCldbH6KD71Pzci41unZHGuT1+Ngh7l43T59JmGfcQNXWayyQYrKADlRuNeU7nV5CB
+         2Apg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F5D+HakwAE2WgxfHyzl83ZwTB437sX3wIDlJ8qrfryI=;
+        b=hH3bqRhOP0hzZ0FiD/QDMgcnBzukCDn6CdT6HCVkTEbQi+CptGkOVe16+u1BKPZDe2
+         7yw3NJHY+dDokRqv+fsrdeh+dQAAskwDqqyrrcVbjvkxyjzQVSPx567M3z4kwbBEXJiv
+         0sPIvzbCgPQaycmlE67O17SLpSQK37WTy2w1NphiSwhisiGWWK2OERQdOo9dLBAbwCKk
+         tHgnd/LrWaPMO54YIHWNrit0GyfEedSk+Fps6qOhrHARFJDvn5fO4T3svGMX/9VAJGEl
+         /cf67BKY1V3dytpYxxNbLyeqOwJ6aR28A3DRvmO31/FOq1hmIRvIDq2r9PcoBPgDSlFt
+         ubZg==
+X-Gm-Message-State: APjAAAXd+cKsscFSkjRCGSJUkqkWmZyW+KXDnAG3hJjRl+CUY07iMt33
+        tEzztebTint4sKh5dk94q3rekGnSYoZ/W1McB5UC5A==
+X-Google-Smtp-Source: APXvYqydln8EpljbWUJIef2R+juyAWV3U5n+26y/5MI0AqXoz3GwtqMW3kyvstIYiC/7nRtirT+2WiUXP5SR66PbMWA=
+X-Received: by 2002:a67:ed8b:: with SMTP id d11mr52752594vsp.35.1560514222446;
+ Fri, 14 Jun 2019 05:10:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <CGME20190614095327eucas1p19b6e522efa15c8fd21c51f3900e376e9@eucas1p1.samsung.com>
- <20190614095309.24100-1-l.luba@partner.samsung.com> <20190614095309.24100-9-l.luba@partner.samsung.com>
-In-Reply-To: <20190614095309.24100-9-l.luba@partner.samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 14 Jun 2019 14:09:47 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPf=N28g850Q67z2sA5-KtkmqTuYLDcR0E_q1gSa17wWWw@mail.gmail.com>
-Message-ID: <CAJKOXPf=N28g850Q67z2sA5-KtkmqTuYLDcR0E_q1gSa17wWWw@mail.gmail.com>
-Subject: Re: [PATCH v10 08/13] drivers: memory: add DMC driver for Exynos5422
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
-        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
-        willy.mh.wolff.ml@gmail.com
+References: <20190613234153.59309-1-dianders@chromium.org> <20190613234153.59309-5-dianders@chromium.org>
+In-Reply-To: <20190613234153.59309-5-dianders@chromium.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 14 Jun 2019 14:09:45 +0200
+Message-ID: <CAPDyKFrJ4+zn7Ak0tYHkBfXUtH3N7erb5R7Q+hgugchZmCRGrw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] mmc: core: Add sdio_retune_hold_now() and sdio_retune_release()
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Double Lo <double.lo@cypress.com>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        netdev@vger.kernel.org, brcm80211-dev-list@cypress.com,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Avri Altman <avri.altman@wdc.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+On Fri, 14 Jun 2019 at 01:42, Douglas Anderson <dianders@chromium.org> wrote:
 >
-> This patch adds driver for Exynos5422 Dynamic Memory Controller.
-> The driver provides support for dynamic frequency and voltage scaling for
-> DMC and DRAM. It supports changing timings of DRAM running with different
-> frequency. There is also an algorithm to calculate timigns based on
-> memory description provided in DT.
-> The patch also contains needed MAINTAINERS file update.
+> We want SDIO drivers to be able to temporarily stop retuning when the
+> driver knows that the SDIO card is not in a state where retuning will
+> work (maybe because the card is asleep).  We'll move the relevant
+> functions to a place where drivers can call them.
 >
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+This looks good to me.
+
+BTW, seems like this series is best funneled via my mmc tree, no? In
+such case, I need acks for the brcmfmac driver patches.
+
+Kind regards
+Uffe
+
+
+
+
 > ---
->  MAINTAINERS                             |    8 +
->  drivers/memory/samsung/Kconfig          |   17 +
->  drivers/memory/samsung/Makefile         |    1 +
->  drivers/memory/samsung/exynos5422-dmc.c | 1262 +++++++++++++++++++++++
->  4 files changed, 1288 insertions(+)
->  create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
-
-Looks good to me. I think there is no dedicated maintainer for
-drivers/memory subsystem so I can take it through samsung-soc tree
-(just like in case of drivers/memory/samsung/exynos-srom.c). Are
-everyone OK with it?
-
-Best regards,
-Krzysztof
+>
+> Changes in v4:
+> - Moved retune hold/release to SDIO API (Adrian).
+>
+> Changes in v3:
+> - ("mmc: core: Export mmc_retune_hold_now() mmc_retune_release()") new for v3.
+>
+> Changes in v2: None
+>
+>  drivers/mmc/core/sdio_io.c    | 40 +++++++++++++++++++++++++++++++++++
+>  include/linux/mmc/sdio_func.h |  3 +++
+>  2 files changed, 43 insertions(+)
+>
+> diff --git a/drivers/mmc/core/sdio_io.c b/drivers/mmc/core/sdio_io.c
+> index f822a9630b0e..1b6fe737bd72 100644
+> --- a/drivers/mmc/core/sdio_io.c
+> +++ b/drivers/mmc/core/sdio_io.c
+> @@ -15,6 +15,7 @@
+>  #include "sdio_ops.h"
+>  #include "core.h"
+>  #include "card.h"
+> +#include "host.h"
+>
+>  /**
+>   *     sdio_claim_host - exclusively claim a bus for a certain SDIO function
+> @@ -770,3 +771,42 @@ void sdio_retune_crc_enable(struct sdio_func *func)
+>         func->card->host->retune_crc_disable = false;
+>  }
+>  EXPORT_SYMBOL_GPL(sdio_retune_crc_enable);
+> +
+> +/**
+> + *     sdio_retune_hold_now - start deferring retuning requests till release
+> + *     @func: SDIO function attached to host
+> + *
+> + *     This function can be called if it's currently a bad time to do
+> + *     a retune of the SDIO card.  Retune requests made during this time
+> + *     will be held and we'll actually do the retune sometime after the
+> + *     release.
+> + *
+> + *     This function could be useful if an SDIO card is in a power state
+> + *     where it can respond to a small subset of commands that doesn't
+> + *     include the retuning command.  Care should be taken when using
+> + *     this function since (presumably) the retuning request we might be
+> + *     deferring was made for a good reason.
+> + *
+> + *     This function should be called while the host is claimed.
+> + */
+> +void sdio_retune_hold_now(struct sdio_func *func)
+> +{
+> +       mmc_retune_hold_now(func->card->host);
+> +}
+> +EXPORT_SYMBOL_GPL(sdio_retune_hold_now);
+> +
+> +/**
+> + *     sdio_retune_release - signal that it's OK to retune now
+> + *     @func: SDIO function attached to host
+> + *
+> + *     This is the complement to sdio_retune_hold_now().  Calling this
+> + *     function won't make a retune happen right away but will allow
+> + *     them to be scheduled normally.
+> + *
+> + *     This function should be called while the host is claimed.
+> + */
+> +void sdio_retune_release(struct sdio_func *func)
+> +{
+> +       mmc_retune_release(func->card->host);
+> +}
+> +EXPORT_SYMBOL_GPL(sdio_retune_release);
+> diff --git a/include/linux/mmc/sdio_func.h b/include/linux/mmc/sdio_func.h
+> index 4820e6d09dac..5a177f7a83c3 100644
+> --- a/include/linux/mmc/sdio_func.h
+> +++ b/include/linux/mmc/sdio_func.h
+> @@ -170,4 +170,7 @@ extern int sdio_set_host_pm_flags(struct sdio_func *func, mmc_pm_flag_t flags);
+>  extern void sdio_retune_crc_disable(struct sdio_func *func);
+>  extern void sdio_retune_crc_enable(struct sdio_func *func);
+>
+> +extern void sdio_retune_hold_now(struct sdio_func *func);
+> +extern void sdio_retune_release(struct sdio_func *func);
+> +
+>  #endif /* LINUX_MMC_SDIO_FUNC_H */
+> --
+> 2.22.0.rc2.383.gf4fbbf30c2-goog
+>
