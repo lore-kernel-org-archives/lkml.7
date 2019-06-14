@@ -2,138 +2,104 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A27C46477
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1338C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA3BF2082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B03412082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qM6xA9qO"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ooZzfFJD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfFNKxM (ORCPT
+        id S1727245AbfFNK4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:53:12 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:43162 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727153AbfFNKxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:53:11 -0400
-Received: from zn.tnic (p200300EC2F097F00C4A032B92937AA15.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:7f00:c4a0:32b9:2937:aa15])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B61DD1EC08BF;
-        Fri, 14 Jun 2019 12:53:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560509589;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=yzCmUlCjP9a7GEpaOHqX1nvhmFrkNCsaBbmvlBxEF5c=;
-        b=qM6xA9qOPjwVNkU21hNWRUr7MvFeIQC3OWWvSiZOPF4FaHtYc942B7yj11LC+PcVYc1mlK
-        KGATlePwCuIJ1OvpeRi5W3y+3jqKtVxhCcaqPy6j9/DmtgTtsczGVa4S7ITHxyzOln6jRM
-        Wv9mL0WGTAgB50AcnVKXGbQIpRyTcD0=
-Date:   Fri, 14 Jun 2019 12:53:01 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     James Morse <james.morse@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Hanoch, Uri" <hanochu@amazon.com>
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-Message-ID: <20190614105301.GB2586@zn.tnic>
-References: <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
- <20190608090556.GA32464@zn.tnic>
- <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
- <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
- <20190611115651.GD31772@zn.tnic>
- <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
- <20190612034813.GA32652@zn.tnic>
- <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
- <20190612104238.GG32652@zn.tnic>
- <2a53690aa81a406b9a6290f70e47470d0f698f00.camel@kernel.crashing.org>
+        Fri, 14 Jun 2019 06:56:43 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34257 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfFNK4m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 06:56:42 -0400
+Received: by mail-io1-f66.google.com with SMTP id k8so4864158iot.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 03:56:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=06iI6z4cthU4ce66OeHWQkRCnmuFyEIHHZ9Es1yn3sc=;
+        b=ooZzfFJD2u9j2LussEGHFOPOfLBkJ+BU0GJHPBhgAJ/vkF6JbiQbi3Z9LCSduATYrm
+         pmqk7dvkdE04MoEJvLFEsmWLKI31BrB0lbpcgBa7PmY2Pqee615LcMhMjtdzFAWkeAol
+         te7vdgYxjdEddafQhiDTatljo0z/1a5LRul94=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=06iI6z4cthU4ce66OeHWQkRCnmuFyEIHHZ9Es1yn3sc=;
+        b=KFZBOf1xB6qy7k0lRpNqI8S6Fkx7L3IoUOhast9ERJ8A6/zbzxosTdJMjogZ2Q1cQv
+         sm31jW4zS7rW8SnCftYJXa94X8cfkSo1Nx+QSqiStfNkum4eRfNGDNzecEj2pu5WJ9+j
+         g8rjSGue0LIfrM1YZd3qN+tDsmGDvPQDUYii7MxcXzCFF55wn2YdAZ+pLtAJ0ShSLQHF
+         r7j8CR/vEI/ghcGk4+0mU8lPCFbfPcHhILTYvu1DIXnF3o2lD3L43UW40JEnNeoxeRtX
+         JJzjcCR4eqihO+4qSYSy7ShjNHTXtjwhIk4OGM1WHjKeDNUscvP2Ra1MUpCblFLIOSrG
+         Bc3A==
+X-Gm-Message-State: APjAAAV5zhiTPdaMkVBmP3n/F4HbNYdVY5ajOJRCv10pvRwJc6M3dYwU
+        UrfumPpjLqULQkJhVQ27NeQ69IAVqpbFKcY/36O1tw==
+X-Google-Smtp-Source: APXvYqwkcIwVPtfblhejh6xHVBtwFYzc9v3JjBjZavec/51f+nlxxqOghRWbuFOJBMDNowUmrcO58Fw+cwukMr5fTSU=
+X-Received: by 2002:a05:6602:2253:: with SMTP id o19mr14463706ioo.297.1560509801785;
+ Fri, 14 Jun 2019 03:56:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2a53690aa81a406b9a6290f70e47470d0f698f00.camel@kernel.crashing.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190613185241.22800-1-jagan@amarulasolutions.com>
+ <20190613185241.22800-3-jagan@amarulasolutions.com> <CAGb2v65xuXc4C1jOyM1GbEFVDam5P-6NN0ZhtzwzA7qU5F3nJQ@mail.gmail.com>
+ <CAGb2v67DY534hXrx2H4jnZXA7jJS7sq2UwYCqw1iAgyLKdNzgA@mail.gmail.com>
+In-Reply-To: <CAGb2v67DY534hXrx2H4jnZXA7jJS7sq2UwYCqw1iAgyLKdNzgA@mail.gmail.com>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Fri, 14 Jun 2019 16:26:30 +0530
+Message-ID: <CAMty3ZBc-AqbNGZCxRhOPw46iMvEZxoq1oATA46=K29gRYi4Sg@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH 2/9] drm/sun4i: tcon: Add TCON LCD support
+ for R40
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reply part 2.
+On Fri, Jun 14, 2019 at 9:05 AM Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> On Fri, Jun 14, 2019 at 11:19 AM Chen-Yu Tsai <wens@csie.org> wrote:
+> >
+> > On Fri, Jun 14, 2019 at 2:53 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > >
+> > > TCON LCD0, LCD1 in allwinner R40, are used for managing
+> > > LCD interfaces like RGB, LVDS and DSI.
+> > >
+> > > Like TCON TV0, TV1 these LCD0, LCD1 are also managed via
+> > > tcon top.
+> > >
+> > > Add support for it, in tcon driver.
+> > >
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> >
+> > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+>
+> I take that back.
+>
+> The TCON output muxing (which selects whether TCON LCD or TCON TV
+> outputs to the GPIO pins)
+> is not supported yet. Please at least add TODO notes, or ideally,
 
-On Thu, Jun 13, 2019 at 09:54:18AM +1000, Benjamin Herrenschmidt wrote:
-> Why ? Because one or two historical drivers mix MC and PCI then "it
-> makes sense" to do that for everybody ?
-
-Because it was like that. And now all of a sudden ARM wants something
-different. So we must at least talk about it before we do it, right?
-
-Also, I don't know if you've noticed but RAS "architecture" on Linux is
-still a big WIP, to put it mildly. So before we do anything, we should
-have at least some rough idea of where it is all going to.
-
-> And then you have 20 platforms and 20 drivers, with 50% or more code
-> duplication, bugs fixed in one and not the other, gratuituous behaviour
-> differences to confuse users etc... No. that doesn't make sense.
-
-No different on ARM if you have a memory controller IP which is roughly
-the same IP but different vendors integrate it and they each tweak it
-a bit in their own way (registers, ECC support, etc) and you get an
-EDAC MC driver from every vendor and they all don't share the basic
-functionality.
-
-> I have no idea what "the DT argument" is, and that's from the guy who
-> created the FDT....
-> 
-> I have difficulties understanding how you cannot see that having re-
-> usable single drivers for a single piece of HW makes sense. If anything
-> in term of avoiding duplication, bitrot, bugs being fixed in some and
-> not others, etc etc... It also means more eyes on a given piece of code
-> which is a good thing.
-> 
-> Also you "have heard more than enough" is again a sign that a whole lot
-> of people are trying to tell you something that you seem to refuse to
-> hear.
-
-Hmm, I think I'm hearing it. But not without good arguments for why
-we're going to do it. I believe that became clear so far..
-
-> Whatever that "DT argument" is, did you just ignore it or had
-> some good and solid arguments of your own to refute it ?
-
-I don't care about refuting it or not - all I care about is getting good
-arguments for why we should do this driver-per-IP-block thing. EDAC was
-was ok so far - I wasn't going to change it just because someone is
-sending me drivers per-IP block and not selling me the idea properly.
-
-And AFAIR I haven't heard a single good argument trying to convince me
-why it should be done this way. Only after this thread started and we
-started poking at it, I got some good arguments.
-
-So enough wasting time, I think we can try the per-IP things and see
-where it would get us.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Are you referring about port selection? it is support in
+sun8i_tcon_top_de_config.
