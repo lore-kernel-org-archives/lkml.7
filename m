@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54CFC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D6EC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC91E2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5218A2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544759;
-	bh=9LfXJqPbTe49NZw+18AdoXCwnz+9y6RsODIwSQkuX3M=;
+	s=default; t=1560544765;
+	bh=h6DRz8peL2BXbXkkK36S6N4w4/4bEu/ErJcl08BVaZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lWtVHZZLyMvLTBbOWpXBYOBxNi6y/zr/T+60EGjOl13cjqiDrcToX1O06tbR+wwG8
-	 qj7hrw2YSnYOWDkMlmXpU5ARFbugfBBrKP6PZLeXfflWhYd0W/LkDH6f2kgLJ3AIY+
-	 bxZmFdowEjNtFa31bVKgCWi1C3htjmyupaxE8ZMk=
+	b=BBHBVIXG3fmGEu5tn4SFXqkICClsQZ90Wu4DZOUVwaH7SOuYj3CdQRCQ57KtcJvKY
+	 Sfb0wNfB1Re8k2HtO8BMD0gj+v59xVnTlyGNFTThQEAXf8mZbyNriuLbTXzy0NWklI
+	 IHx4GyD+cAx+D5Zv/3wmpvzRJo8dIwoTdtyx70jU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfFNUjS (ORCPT
+        id S1728523AbfFNUjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:39:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50548 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:39:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726432AbfFNU2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:28:53 -0400
+        id S1726388AbfFNU2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:28:51 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E36421852;
-        Fri, 14 Jun 2019 20:28:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6504B2184E;
+        Fri, 14 Jun 2019 20:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544132;
-        bh=9LfXJqPbTe49NZw+18AdoXCwnz+9y6RsODIwSQkuX3M=;
+        s=default; t=1560544130;
+        bh=h6DRz8peL2BXbXkkK36S6N4w4/4bEu/ErJcl08BVaZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JqyUKjFt2WThI8Eh3Z+dRlApivY5YgP23kFC7YwCyLYEnk3dKiF4GKk0TqppfL4jo
-         7uZci1CtjW285YhCPUB1dge1spavFerkneieAPMy+rWba9l6ezPNfEWgaWrmkwN+Cx
-         yzEvrtLrLegUI0uUQHit/E62XToiQLZP6ZPwvJsY=
+        b=Ap1n6SCxQ2U3mZpEkAByx96CMXSWZ6yOf44mop0kVWk+gx7VdfaBwVXEebGSMhCkE
+         +wujxfMkATrIVztvWYPWOoG0NsrbIcgiBNks8arqEOXlza3LK0mYAv0eY7pcoAFV1X
+         xLjHt2cmySB9zeSeokq9Inv6aIs6+b06cv2Hvq5c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jose Abreu <joabreu@synopsys.com>,
-        Joao Pinto <jpinto@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.1 12/59] ARC: [plat-hsdk]: Add missing FIFO size entry in GMAC node
-Date:   Fri, 14 Jun 2019 16:27:56 -0400
-Message-Id: <20190614202843.26941-12-sashal@kernel.org>
+Cc:     Baolin Wang <baolin.wang@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 06/59] dmaengine: sprd: Fix the possible crash when getting descriptor status
+Date:   Fri, 14 Jun 2019 16:27:50 -0400
+Message-Id: <20190614202843.26941-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
 References: <20190614202843.26941-1-sashal@kernel.org>
@@ -65,39 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <joabreu@synopsys.com>
+From: Baolin Wang <baolin.wang@linaro.org>
 
-[ Upstream commit 4c70850aeb2e40016722cd1abd43c679666d3ca0 ]
+[ Upstream commit 16d0f85e45b99411ac10cb12cdd9279204a72381 ]
 
-Add the binding for RX/TX fifo size of GMAC node.
+We will get a NULL virtual descriptor by vchan_find_desc() when the descriptor
+has been submitted, that will crash the kernel when getting the descriptor
+status.
 
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Vineet Gupta <vgupta@synopsys.com>
-Tested-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+In this case, since the descriptor has been submitted to process, but it
+is not completed now, which means the descriptor is listed into the
+'vc->desc_submitted' list now. So we can not get current processing descriptor
+by vchan_find_desc(), but the pointer 'schan->cur_desc' will point to the
+current processing descriptor, then we can use 'schan->cur_desc' to get
+current processing descriptor's status to avoid this issue.
+
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/boot/dts/hsdk.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/dma/sprd-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-index 699f372b2a6f..6219b372e9c1 100644
---- a/arch/arc/boot/dts/hsdk.dts
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -196,6 +196,9 @@
- 			mac-address = [00 00 00 00 00 00]; /* Filled in by U-Boot */
- 			dma-coherent;
+diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+index 48431e2da987..e29342ab85f6 100644
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -625,7 +625,7 @@ static enum dma_status sprd_dma_tx_status(struct dma_chan *chan,
+ 		else
+ 			pos = 0;
+ 	} else if (schan->cur_desc && schan->cur_desc->vd.tx.cookie == cookie) {
+-		struct sprd_dma_desc *sdesc = to_sprd_dma_desc(vd);
++		struct sprd_dma_desc *sdesc = schan->cur_desc;
  
-+			tx-fifo-depth = <4096>;
-+			rx-fifo-depth = <4096>;
-+
- 			mdio {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
+ 		if (sdesc->dir == DMA_DEV_TO_MEM)
+ 			pos = sprd_dma_get_dst_addr(schan);
 -- 
 2.20.1
 
