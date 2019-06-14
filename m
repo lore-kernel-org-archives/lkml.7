@@ -2,262 +2,197 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B6DC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FA7C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF882133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:59:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=azazel.net header.i=@azazel.net header.b="MvtV+EL3"
+	by mail.kernel.org (Postfix) with ESMTP id 45EAF2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:00:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbfFNH7A (ORCPT
+        id S1726187AbfFNIAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:59:00 -0400
-Received: from kadath.azazel.net ([81.187.231.250]:37526 "EHLO
-        kadath.azazel.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbfFNH67 (ORCPT
+        Fri, 14 Jun 2019 04:00:47 -0400
+Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:14652 "EHLO
+        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbfFNIAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:58:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=azazel.net;
-         s=20190108; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=G0kG6tqXXsRGIiO+BHcEtfpdFD2+yHGBJ6x5btZuxkA=; b=MvtV+EL3y940ymGGuOgSbcqr9G
-        kWmqZgj+RVG52zJpxNLvpASYK91l/pZPjyaRJKZ8gmulUwbkc96+v/Y3f8pcACZtbmAcrEkyPfmzj
-        +AF3DdZwZZal7wuKknrxWgnuWgI9dr1S1DdHvkdTXC5ulV+8gZwKxTLKaKMGgpkmVPrnFNn2sNQR4
-        n6CgI7c6q5ylvS9WiiibsXaUCeBCE7SBBBvAQsz5MT79+syCQmzKZ0tTFhsIhiHXI6yC2kzS7naSP
-        t/EBFrBKI1XUa2pswCGBzSodZA/OFsVixCOxd62s53RqKr5Oldky3picc/JNFMdCSIUwQqByoqJ4m
-        boLAhlMg==;
-Received: from kadath.azazel.net ([2001:8b0:135f:bcd1:e2cb:4eff:fedf:e608] helo=azazel.net)
-        by kadath.azazel.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <jeremy@azazel.net>)
-        id 1hbh6A-0001e9-VN; Fri, 14 Jun 2019 08:58:11 +0100
-Date:   Fri, 14 Jun 2019 08:58:09 +0100
-From:   Jeremy Sowden <jeremy@azazel.net>
-To:     syzbot <syzbot+0789f0c7e45efd7bb643@syzkaller.appspotmail.com>
-Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, dvyukov@google.com, hawk@kernel.org,
-        hdanton@sina.com, jakub.kicinski@netronome.com,
-        jasowang@redhat.com, john.fastabend@gmail.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mst@redhat.com,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        virtualization@lists.linux-foundation.org,
-        xdp-newbies@vger.kernel.org
-Subject: Re: memory leak in vhost_net_ioctl
-Message-ID: <20190614075809.32gnqqpzgl25gxmz@azazel.net>
-References: <20190614024519.6224-1-hdanton@sina.com>
- <000000000000f9d056058b3fe507@google.com>
+        Fri, 14 Jun 2019 04:00:47 -0400
+Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  andrew.cooper3@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="andrew.cooper3@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa2.hc3370-68.iphmx.com: domain of
+  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="Andrew.Cooper3@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
+Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: lIK8uRyv3J9C8Tab6kOP2ulS71S5RTNGfnFsGUL07XbS+821uBhx7jt9xR3JgO8RLAn43MYqT0
+ yYjySklJiQ59Sb12ApaM+zOvobdyE3jlGrzLgoYMKeD/SLmJok9pxRz3Gteu5cTtZh9g+4XA0z
+ gPeDChkEBC8+64hV4VCOfeXK2HJNRnnceJG0rpKF9kq5K/FFDM6GqOPc6XJJ/9xlq4eaL0Njb8
+ U3c6dYGyeykWQtUx4H3CJAo5acH6k0Ujtsw/1KbBYrwq6JuPTnx8x+lyEWm40MkL3dkS6EWgKt
+ o50=
+X-SBRS: 2.7
+X-MesageID: 1730806
+X-Ironport-Server: esa2.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.63,372,1557201600"; 
+   d="scan'208";a="1730806"
+Subject: Re: [Xen-devel] [RFC PATCH 04/16] x86/xen: hypercall support for
+ xenhost_t
+To:     Juergen Gross <jgross@suse.com>,
+        Ankur Arora <ankur.a.arora@oracle.com>,
+        <linux-kernel@vger.kernel.org>, <xen-devel@lists.xenproject.org>
+CC:     <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
+        <pbonzini@redhat.com>, <boris.ostrovsky@oracle.com>,
+        <joao.m.martins@oracle.com>
+References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
+ <20190509172540.12398-5-ankur.a.arora@oracle.com>
+ <11f8b620-11ac-7075-019a-30d6bad7583c@citrix.com>
+ <fbfc0a0c-3707-7f17-9f2a-6c9d2c7b05b1@oracle.com>
+ <59f7cc19-cd9b-119a-1715-50a947cd995d@suse.com>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=andrew.cooper3@citrix.com; prefer-encrypt=mutual; keydata=
+ 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
+ 6+ahAA==
+Message-ID: <2d097a0d-a538-86ec-060b-492629a86bc3@citrix.com>
+Date:   Fri, 14 Jun 2019 09:00:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mv67wdquhvqcpoxi"
-Content-Disposition: inline
-In-Reply-To: <000000000000f9d056058b3fe507@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:8b0:135f:bcd1:e2cb:4eff:fedf:e608
-X-SA-Exim-Mail-From: jeremy@azazel.net
-X-SA-Exim-Scanned: No (on kadath.azazel.net); SAEximRunCond expanded to false
+In-Reply-To: <59f7cc19-cd9b-119a-1715-50a947cd995d@suse.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---mv67wdquhvqcpoxi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On 2019-06-13, at 20:04:01 -0700, syzbot wrote:
-> syzbot has tested the proposed patch but the reproducer still
-> triggered crash: memory leak in batadv_tvlv_handler_register
-
-There's already a fix for this batman leak:
-
-  https://lore.kernel.org/netdev/00000000000017d64c058965f966@google.com/
-  https://www.open-mesh.org/issues/378
-
->   484.626788][  T156] bond0 (unregistering): Releasing backup
->   interface bond_slave_1
-> Warning: Permanently added '10.128.0.87' (ECDSA) to the list of known
-> hosts.
-> BUG: memory leak
-> unreferenced object 0xffff88811d25c4c0 (size 64):
->   comm "softirq", pid 0, jiffies 4294943668 (age 434.830s)
->   hex dump (first 32 bytes):
->     00 00 00 00 00 00 00 00 e0 fc 5b 20 81 88 ff ff  ..........[ ....
->     00 00 00 00 00 00 00 00 20 91 15 83 ff ff ff ff  ........ .......
->   backtrace:
->     [<000000000045bc9d>] kmemleak_alloc_recursive
-> include/linux/kmemleak.h:43 [inline]
->     [<000000000045bc9d>] slab_post_alloc_hook mm/slab.h:439 [inline]
->     [<000000000045bc9d>] slab_alloc mm/slab.c:3326 [inline]
->     [<000000000045bc9d>] kmem_cache_alloc_trace+0x13d/0x280
-> mm/slab.c:3553
->     [<00000000197d773e>] kmalloc include/linux/slab.h:547 [inline]
->     [<00000000197d773e>] kzalloc include/linux/slab.h:742 [inline]
->     [<00000000197d773e>] batadv_tvlv_handler_register+0xae/0x140
-> net/batman-adv/tvlv.c:529
->     [<00000000fa9f11af>] batadv_tt_init+0x78/0x180
-> net/batman-adv/translation-table.c:4411
->     [<000000008c50839d>] batadv_mesh_init+0x196/0x230
-> net/batman-adv/main.c:208
->     [<000000001c5a74a3>] batadv_softif_init_late+0x1ca/0x220
-> net/batman-adv/soft-interface.c:861
->     [<000000004e676cd1>] register_netdevice+0xbf/0x600
-> net/core/dev.c:8635
->     [<000000005601497b>] __rtnl_newlink+0xaca/0xb30
-> net/core/rtnetlink.c:3199
->     [<00000000ad02cf5e>] rtnl_newlink+0x4e/0x80
-> net/core/rtnetlink.c:3245
->     [<00000000eceb53af>] rtnetlink_rcv_msg+0x178/0x4b0
-> net/core/rtnetlink.c:5214
->     [<00000000140451f6>] netlink_rcv_skb+0x61/0x170
-> net/netlink/af_netlink.c:2482
->     [<00000000237e38f7>] rtnetlink_rcv+0x1d/0x30
-> net/core/rtnetlink.c:5232
->     [<000000000d47c000>] netlink_unicast_kernel
-> net/netlink/af_netlink.c:1307 [inline]
->     [<000000000d47c000>] netlink_unicast+0x1ec/0x2d0
-> net/netlink/af_netlink.c:1333
->     [<0000000098503d79>] netlink_sendmsg+0x26a/0x480
-> net/netlink/af_netlink.c:1922
->     [<000000009263e868>] sock_sendmsg_nosec net/socket.c:646 [inline]
->     [<000000009263e868>] sock_sendmsg+0x54/0x70 net/socket.c:665
->     [<000000007791ad47>] __sys_sendto+0x148/0x1f0 net/socket.c:1958
->     [<00000000d6f3807d>] __do_sys_sendto net/socket.c:1970 [inline]
->     [<00000000d6f3807d>] __se_sys_sendto net/socket.c:1966 [inline]
->     [<00000000d6f3807d>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1966
+On 14/06/2019 08:35, Juergen Gross wrote:
+> On 14.06.19 09:20, Ankur Arora wrote:
+>> On 2019-06-12 2:15 p.m., Andrew Cooper wrote:
+>>> On 09/05/2019 18:25, Ankur Arora wrote:
+>>>> Allow for different hypercall implementations for different xenhost
+>>>> types.
+>>>> Nested xenhost, which has two underlying xenhosts, can use both
+>>>> simultaneously.
+>>>>
+>>>> The hypercall macros (HYPERVISOR_*) implicitly use the default
+>>>> xenhost.x
+>>>> A new macro (hypervisor_*) takes xenhost_t * as a parameter and
+>>>> does the
+>>>> right thing.
+>>>>
+>>>> TODO:
+>>>>    - Multicalls for now assume the default xenhost
+>>>>    - xen_hypercall_* symbols are only generated for the default
+>>>> xenhost.
+>>>>
+>>>> Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
+>>>
+>>> Again, what is the hypervisor nesting and/or guest layout here?
+>> Two hypervisors, L0 and L1, and the guest is a child of the L1
+>> hypervisor but could have PV devices attached to both L0 and L1
+>> hypervisors.
+>>
+>>>
+>>> I can't think of any case where a single piece of software can
+>>> legitimately have two hypercall pages, because if it has one working
+>>> one, it is by definition a guest, and therefore not privileged
+>>> enough to
+>>> use the outer one.
+>> Depending on which hypercall page is used, the hypercall would
+>> (eventually) land in the corresponding hypervisor.
+>>
+>> Juergen elsewhere pointed out proxying hypercalls is a better approach,
+>> so I'm not really considering this any more but, given this layout, and
+>> assuming that the hypercall pages could be encoded differently would it
+>> still not work?
 >
-> BUG: memory leak
-> unreferenced object 0xffff8881024a3340 (size 64):
->   comm "softirq", pid 0, jiffies 4294943678 (age 434.730s)
->   hex dump (first 32 bytes):
->     00 00 00 00 00 00 00 00 e0 2c 66 04 81 88 ff ff  .........,f.....
->     00 00 00 00 00 00 00 00 20 91 15 83 ff ff ff ff  ........ .......
->   backtrace:
->     [<000000000045bc9d>] kmemleak_alloc_recursive
-> include/linux/kmemleak.h:43 [inline]
->     [<000000000045bc9d>] slab_post_alloc_hook mm/slab.h:439 [inline]
->     [<000000000045bc9d>] slab_alloc mm/slab.c:3326 [inline]
->     [<000000000045bc9d>] kmem_cache_alloc_trace+0x13d/0x280
-> mm/slab.c:3553
->     [<00000000197d773e>] kmalloc include/linux/slab.h:547 [inline]
->     [<00000000197d773e>] kzalloc include/linux/slab.h:742 [inline]
->     [<00000000197d773e>] batadv_tvlv_handler_register+0xae/0x140
-> net/batman-adv/tvlv.c:529
->     [<00000000fa9f11af>] batadv_tt_init+0x78/0x180
-> net/batman-adv/translation-table.c:4411
->     [<000000008c50839d>] batadv_mesh_init+0x196/0x230
-> net/batman-adv/main.c:208
->     [<000000001c5a74a3>] batadv_softif_init_late+0x1ca/0x220
-> net/batman-adv/soft-interface.c:861
->     [<000000004e676cd1>] register_netdevice+0xbf/0x600
-> net/core/dev.c:8635
->     [<000000005601497b>] __rtnl_newlink+0xaca/0xb30
-> net/core/rtnetlink.c:3199
->     [<00000000ad02cf5e>] rtnl_newlink+0x4e/0x80
-> net/core/rtnetlink.c:3245
->     [<00000000eceb53af>] rtnetlink_rcv_msg+0x178/0x4b0
-> net/core/rtnetlink.c:5214
->     [<00000000140451f6>] netlink_rcv_skb+0x61/0x170
-> net/netlink/af_netlink.c:2482
->     [<00000000237e38f7>] rtnetlink_rcv+0x1d/0x30
-> net/core/rtnetlink.c:5232
->     [<000000000d47c000>] netlink_unicast_kernel
-> net/netlink/af_netlink.c:1307 [inline]
->     [<000000000d47c000>] netlink_unicast+0x1ec/0x2d0
-> net/netlink/af_netlink.c:1333
->     [<0000000098503d79>] netlink_sendmsg+0x26a/0x480
-> net/netlink/af_netlink.c:1922
->     [<000000009263e868>] sock_sendmsg_nosec net/socket.c:646 [inline]
->     [<000000009263e868>] sock_sendmsg+0x54/0x70 net/socket.c:665
->     [<000000007791ad47>] __sys_sendto+0x148/0x1f0 net/socket.c:1958
->     [<00000000d6f3807d>] __do_sys_sendto net/socket.c:1970 [inline]
->     [<00000000d6f3807d>] __se_sys_sendto net/socket.c:1966 [inline]
->     [<00000000d6f3807d>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1966
+> Hypercalls might work, but it is a bad idea and a violation of layering
+> to let a L1 guest issue hypercalls to L0 hypervisor, as those hypercalls
+> could influence other L1 guests and even the L1 hypervisor.
 >
-> BUG: memory leak
-> unreferenced object 0xffff888108a71b80 (size 128):
->   comm "syz-executor.3", pid 7367, jiffies 4294943696 (age 434.550s)
->   hex dump (first 32 bytes):
->     f0 f8 bf 02 81 88 ff ff f0 f8 bf 02 81 88 ff ff  ................
->     1a dc 77 da 54 a0 be 41 64 20 e9 56 ff ff ff ff  ..w.T..Ad .V....
->   backtrace:
->     [<000000000045bc9d>] kmemleak_alloc_recursive
-> include/linux/kmemleak.h:43 [inline]
->     [<000000000045bc9d>] slab_post_alloc_hook mm/slab.h:439 [inline]
->     [<000000000045bc9d>] slab_alloc mm/slab.c:3326 [inline]
->     [<000000000045bc9d>] kmem_cache_alloc_trace+0x13d/0x280
-> mm/slab.c:3553
->     [<00000000cc6863ae>] kmalloc include/linux/slab.h:547 [inline]
->     [<00000000cc6863ae>] hsr_create_self_node+0x42/0x150
-> net/hsr/hsr_framereg.c:84
->     [<000000000e2bb6b0>] hsr_dev_finalize+0xa4/0x233
-> net/hsr/hsr_device.c:441
->     [<000000003b100a4a>] hsr_newlink+0xf3/0x140
-> net/hsr/hsr_netlink.c:69
->     [<00000000b5efb0eb>] __rtnl_newlink+0x892/0xb30
-> net/core/rtnetlink.c:3187
->     [<00000000ad02cf5e>] rtnl_newlink+0x4e/0x80
-> net/core/rtnetlink.c:3245
->     [<00000000eceb53af>] rtnetlink_rcv_msg+0x178/0x4b0
-> net/core/rtnetlink.c:5214
->     [<00000000140451f6>] netlink_rcv_skb+0x61/0x170
-> net/netlink/af_netlink.c:2482
->     [<00000000237e38f7>] rtnetlink_rcv+0x1d/0x30
-> net/core/rtnetlink.c:5232
->     [<000000000d47c000>] netlink_unicast_kernel
-> net/netlink/af_netlink.c:1307 [inline]
->     [<000000000d47c000>] netlink_unicast+0x1ec/0x2d0
-> net/netlink/af_netlink.c:1333
->     [<0000000098503d79>] netlink_sendmsg+0x26a/0x480
-> net/netlink/af_netlink.c:1922
->     [<000000009263e868>] sock_sendmsg_nosec net/socket.c:646 [inline]
->     [<000000009263e868>] sock_sendmsg+0x54/0x70 net/socket.c:665
->     [<000000007791ad47>] __sys_sendto+0x148/0x1f0 net/socket.c:1958
->     [<00000000d6f3807d>] __do_sys_sendto net/socket.c:1970 [inline]
->     [<00000000d6f3807d>] __se_sys_sendto net/socket.c:1966 [inline]
->     [<00000000d6f3807d>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1966
->     [<000000003ba31db7>] do_syscall_64+0x76/0x1a0
-> arch/x86/entry/common.c:301
->     [<0000000075c8daad>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
-> Tested on:
->
-> commit:         c11fb13a Merge branch 'for-linus' of git://git.kernel.org/..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15c8f3b6a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=cb38d33cd06d8d48
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=12477101a00000
+> Hmm, thinking more about it, I even doubt those hypercalls could work in
+> all cases: when issued from a L1 PV guest the hypercalls would seem to
+> be issued from user mode for the L0 hypervisor, and this is not allowed.
 
-J.
+That is exactly the point I was trying to make.
 
---mv67wdquhvqcpoxi
-Content-Type: application/pgp-signature; name="signature.asc"
+If L2 is an HVM guest, then both its hypercall pages will be using
+VMCALL/VMMCALL which will end up making hypercalls to L1, rather than
+having one go to L0.
 
------BEGIN PGP SIGNATURE-----
+If L2 is a PV guest, then one hypercall page will be SYSCALL/INT 82
+which will go to L1, and one will be VMCALL/VMMCALL which goes to L0,
+but L0 will see it from ring1/ring3 and reject the hypercall.
 
-iQIzBAABCAAdFiEEZ8d+2N/NBLDbUxIF0Z7UzfnX9sMFAl0DU4oACgkQ0Z7UzfnX
-9sMn7g/8DSm3sIrrshWDSyy7szl4gf7yrszSZ+Dusy9+UNL7QnfrgTAgzFEESeBH
-D+mzA5Jnv/xZH6nBWwdo+hvOzVpOxJrK2vF1iLOC+6q0frEWN+626UUxjVN3q2dU
-lEpXnIsEY1j/G8fDXcWtvDuX40rCKbSYbCs0YHf/RxJRiCG4qHcISfwViOlvUryu
-9O+13yT82OwYjf8zg3Czgll3f67/tLMhcIXAztccMGJmzoIiqi9wu7VCLHO9WjaH
-OgqRYXow09VwBdm1SeX6RaiU0NKikPx0Cay59EHBUu4eVUs7dk2hHh2e8n5CRC8e
-fMx8zEDmc9/fU0t+iwekfjX5y4U3VvOks1i+EdzheClV8mLy3x4F9k0+3el3TgJF
-qmCV8SSjlmQJ11FCacd4HCJ+4miUF+Fz/G7ii5QiU+j/vsUEzBEIKDKAT5qsYUwL
-j7n1HsgRxX8GXA/7MqDo4+EwCZxWRXqTNqwG5FOfAoLq/eJk5y1DCRqWGFVPvTN8
-lskd/oo+fQ2sDf1YtI3Hm1ZppzbQYjwSUIQmEmA9PuWVR1QM85d2Jqwf+plFyKn6
-zJ+mFFv80h/k9o35VQaBOsHema+/lTVvOSaWwoys6njDMU2saYvtY9pRWkn0mNE4
-EbnPJb3JIj+0B/Lq/XgMoNIWutlwyeH5YOgnGGO4dcBuPMoiuBA=
-=QX3O
------END PGP SIGNATURE-----
+However you nest the system, every guest only has a single occurrence of
+"supervisor software", so only has a single context that will be
+tolerated to make hypercalls by the next hypervisor up.
 
---mv67wdquhvqcpoxi--
+~Andrew
