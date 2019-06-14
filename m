@@ -2,98 +2,65 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FC7C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE25FC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBD492133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DAD2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:12:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B9BPcDse"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s1QW40cd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbfFNHMC (ORCPT
+        id S1726293AbfFNHM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:12:02 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34344 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfFNHMC (ORCPT
+        Fri, 14 Jun 2019 03:12:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60754 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbfFNHM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:12:02 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p10so1032704pgn.1;
-        Fri, 14 Jun 2019 00:12:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Z24ehB4D4Ib9KAp40EZZmlh/Bvx/EOYlNXp8ka69OO8=;
-        b=B9BPcDseXlrG3ycjZwkqgwkcR4nbLzBIh5VosFrf0JeTSEKLiWEH6adqv8bIWjlg4W
-         BZ/ZOqF/A/WYbvWb9vmh7V/loVsJqBxoEIuQJweLvcYV0fIC4vlQ7lqYh3yxthPbgr2u
-         CNHzecQBxrBeIfgbc8ho7f7yZsrmweoLIveR4N3U2Yil8uZ4FE3XSSXjXYKBWBFuYn7o
-         PHQR8MyXRWvpnBsJhGbmXFj8ARsLEMGcjU2gmzLgPiBRvFrrWstDIaXjnW3gIG5E6kRG
-         grEUr886Mf21+FzGVkzxd2/v6C+saav0KjRjDR2PrUB29ZETxp+0Q3jgxtGQWB7IslDt
-         NP7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Z24ehB4D4Ib9KAp40EZZmlh/Bvx/EOYlNXp8ka69OO8=;
-        b=s8ahWKl+/lZpJFOUZpYoO2JWInshv2JYd7mA68ep6Hrf+calmT7qRiOFRwbUlAa6Q4
-         to8YVV+lv8dLZQ9Ca3hFZwo1fil9Ep66SLYsmBVWCzOIFyC3YSH6/Pv1SVbdAup87qOR
-         VYD/YPSGiFCxXsPXwP4wgeXtMdiPT56Eu2102vigyBG6hndaT128wHeJFnprDq75PHJ7
-         sQxnQvMdQJT9lGFqn1b82azAz8anXG7huqIHwzgw/QXK1e83FFwFJfC+NXIFo2/dhYiD
-         UJtbyzT5QFS3e1redzf3+JVfNNOxf5JV1PL1wpNVD5AxBPWGhD/lywOeAtfLBq8Ha3Xd
-         LBCw==
-X-Gm-Message-State: APjAAAUj2aPYrrfAAlSYPcZr9g8kW/mI6aiPsGfWBk3XbKGXOEv81j9D
-        buJT/F4jVGqnGgSJJ20j1Qo=
-X-Google-Smtp-Source: APXvYqzts64d3r5DidYI4YK6nxHWTCr4iviOKRGBsvDDVRUCcUr1GO2l5XgET6/yAn2cJC6dCRNUFw==
-X-Received: by 2002:a63:3148:: with SMTP id x69mr19476839pgx.226.1560496321289;
-        Fri, 14 Jun 2019 00:12:01 -0700 (PDT)
-Received: from xy-data.openstacklocal ([159.138.22.150])
-        by smtp.gmail.com with ESMTPSA id p68sm1634074pfb.80.2019.06.14.00.11.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 14 Jun 2019 00:12:00 -0700 (PDT)
-From:   Young Xiao <92siuyang@gmail.com>
-To:     sameo@linux.intel.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Young Xiao <92siuyang@gmail.com>
-Subject: [PATCH] nfc: Ensure presence of required attributes in the deactivate_target handler
-Date:   Fri, 14 Jun 2019 15:13:02 +0800
-Message-Id: <1560496382-32532-1-git-send-email-92siuyang@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 14 Jun 2019 03:12:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=iTqU4HCutRR3uOJUYQ45ZU7506Sl5CfUv5xpSiuoAIU=; b=s1QW40cdUPPbUO6WyXX5MasT2
+        zpUzI0yFs1dQWyfV9pw8s8UglBzqG+hjlADCXiVES4YrjrDEhXQvqU3LokO6gSsZwbjRHmb+6ZyE1
+        FuDxJYef6OyM+Hxt2LP7pNdGVoMXpMHIdsuXRR2OX42DSoYiurBP9/ocQAMN4Eta7uIzpXrzg9fmp
+        Y6r0Be3/EI5gOKvt4DARL3XPteJl0Va8ohPC+ryF0kMr7AlVaHJTI5rRsCiDRjvakeLyezkJsw8fG
+        3bMGg1n2z31C8vbZYnB2aHllCUjOCFyLrkeM3GqhFS7vfUhCcWJNuI/OTr0WLGQyWdFBmmlWt2b+L
+        5rQEFqwrg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbgOE-0000yO-1z; Fri, 14 Jun 2019 07:12:46 +0000
+Date:   Fri, 14 Jun 2019 00:12:46 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     joro@8bytes.org, m.szyprowski@samsung.com, kgene@kernel.org,
+        krzk@kernel.org, will.deacon@arm.com, robin.murphy@arm.com,
+        agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com,
+        heiko@sntech.de, thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 01/10] iommu/exynos: convert to SPDX license tags
+Message-ID: <20190614071245.GA2950@infradead.org>
+References: <20190613162703.986-1-tiny.windzz@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613162703.986-1-tiny.windzz@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check that the NFC_ATTR_TARGET_INDEX attributes (in addition to
-NFC_ATTR_DEVICE_INDEX) are provided by the netlink client prior to
-accessing them. This prevents potential unhandled NULL pointer dereference
-exceptions which can be triggered by malicious user-mode programs,
-if they omit one or both of these attributes.
-
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
----
- net/nfc/netlink.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/net/nfc/netlink.c b/net/nfc/netlink.c
-index 04a8e47..89d885d 100644
---- a/net/nfc/netlink.c
-+++ b/net/nfc/netlink.c
-@@ -923,7 +923,8 @@ static int nfc_genl_deactivate_target(struct sk_buff *skb,
- 	u32 device_idx, target_idx;
- 	int rc;
- 
--	if (!info->attrs[NFC_ATTR_DEVICE_INDEX])
-+	if (!info->attrs[NFC_ATTR_DEVICE_INDEX] ||
-+	    !info->attrs[NFC_ATTR_TARGET_INDEX])
- 		return -EINVAL;
- 
- 	device_idx = nla_get_u32(info->attrs[NFC_ATTR_DEVICE_INDEX]);
--- 
-2.7.4
-
+Thomas Gleixner is doing automated SPDX conversion that directly
+got to Linux at the moment.  I'd avoid doing more manual ones for
+now as it will just create conflicts.
