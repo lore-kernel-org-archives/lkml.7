@@ -2,87 +2,195 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A9BC31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED3CC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 184E721841
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03ED021841
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:01:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfFNSAf (ORCPT
+        id S1727589AbfFNSBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:00:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41486 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726915AbfFNSAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:00:35 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 652B481F13;
-        Fri, 14 Jun 2019 18:00:29 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DA8B95D982;
-        Fri, 14 Jun 2019 18:00:24 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v2 0/5] x86/bpf: unwinder fixes
-Date:   Fri, 14 Jun 2019 12:56:39 -0500
-Message-Id: <cover.1560534694.git.jpoimboe@redhat.com>
+        Fri, 14 Jun 2019 14:01:24 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33012 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726758AbfFNSBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 14:01:23 -0400
+Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 61CBBF107AFE943A80B4;
+        Fri, 14 Jun 2019 19:01:22 +0100 (IST)
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.154)
+ by smtpsuk.huawei.com (10.201.108.43) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 14 Jun 2019 19:01:14 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <zohar@linux.ibm.com>, <dmitry.kasatkin@huawei.com>,
+        <mjg59@google.com>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH v4 04/14] ima: generalize policy file operations
+Date:   Fri, 14 Jun 2019 19:55:03 +0200
+Message-ID: <20190614175513.27097-5-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190614175513.27097-1-roberto.sassu@huawei.com>
+References: <20190614175513.27097-1-roberto.sassu@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 14 Jun 2019 18:00:35 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v2:
+This patch renames ima_open_policy() and ima_release_policy() respectively
+to ima_open_data_upload() and ima_release_data_upload(). They will be used
+to implement file operations for interfaces allowing to load data from user
+space.
 
-- Simplified the frame pointer fixes - instead of using R12, just
-  continue to use RBP for BPF_REG_FP, but use nested frames so the
-  unwinder can understand (suggested by David Laight).
+A new flag (IMA_POLICY_BUSY) has been defined to prevent concurrent policy
+upload.
 
-- Dropped the AT&T syntax patches for now.  I'm about to disappear for a
-  week and I don't have time to argue about whether code readability is
-  a good thing.
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+---
+ security/integrity/ima/ima_fs.c | 58 ++++++++++++++++++++++++---------
+ 1 file changed, 43 insertions(+), 15 deletions(-)
 
-- I can do the 32-bit version of the fix when I get back.  It should be
-  easy enough.
-
-v1 is here:
-https://lkml.kernel.org/r/cover.1560431531.git.jpoimboe@redhat.com
-
-
-Josh Poimboeuf (4):
-  objtool: Fix ORC unwinding in non-JIT BPF generated code
-  x86/bpf: Move epilogue generation to a dedicated function
-  x86/bpf: Fix 64-bit JIT frame pointer usage
-  x86/unwind/orc: Fall back to using frame pointers for generated code
-
-Song Liu (1):
-  perf/x86: Always store regs->ip in perf_callchain_kernel()
-
- arch/x86/events/core.c       |  10 +--
- arch/x86/kernel/unwind_orc.c |  26 ++++++--
- arch/x86/net/bpf_jit_comp.c  | 115 +++++++++++++++++++----------------
- kernel/bpf/core.c            |   5 +-
- tools/objtool/check.c        |  16 ++++-
- 5 files changed, 107 insertions(+), 65 deletions(-)
-
+diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+index 9a10b62e380f..c8bbc56f735e 100644
+--- a/security/integrity/ima/ima_fs.c
++++ b/security/integrity/ima/ima_fs.c
+@@ -386,9 +386,20 @@ static ssize_t ima_write_data(struct file *file, const char __user *buf,
+ }
+ 
+ enum ima_fs_flags {
++	IMA_POLICY_BUSY,
+ 	IMA_FS_BUSY,
+ };
+ 
++static enum ima_fs_flags ima_get_dentry_flag(struct dentry *dentry)
++{
++	enum ima_fs_flags flag = IMA_FS_BUSY;
++
++	if (dentry == ima_policy)
++		flag = IMA_POLICY_BUSY;
++
++	return flag;
++}
++
+ static unsigned long ima_fs_flags;
+ 
+ #ifdef	CONFIG_IMA_READ_POLICY
+@@ -401,22 +412,32 @@ static const struct seq_operations ima_policy_seqops = {
+ #endif
+ 
+ /*
+- * ima_open_policy: sequentialize access to the policy file
++ * ima_open_data_upload: sequentialize access to the data upload interface
+  */
+-static int ima_open_policy(struct inode *inode, struct file *filp)
++static int ima_open_data_upload(struct inode *inode, struct file *filp)
+ {
++	struct dentry *dentry = file_dentry(filp);
++	const struct seq_operations *seq_ops = NULL;
++	enum ima_fs_flags flag = ima_get_dentry_flag(dentry);
++	bool read_allowed = false;
++
++	if (dentry == ima_policy) {
++#ifdef	CONFIG_IMA_READ_POLICY
++		read_allowed = true;
++		seq_ops = &ima_policy_seqops;
++#endif
++	}
++
+ 	if (!(filp->f_flags & O_WRONLY)) {
+-#ifndef	CONFIG_IMA_READ_POLICY
+-		return -EACCES;
+-#else
++		if (!read_allowed)
++			return -EACCES;
+ 		if ((filp->f_flags & O_ACCMODE) != O_RDONLY)
+ 			return -EACCES;
+ 		if (!capable(CAP_SYS_ADMIN))
+ 			return -EPERM;
+-		return seq_open(filp, &ima_policy_seqops);
+-#endif
++		return seq_open(filp, seq_ops);
+ 	}
+-	if (test_and_set_bit(IMA_FS_BUSY, &ima_fs_flags))
++	if (test_and_set_bit(flag, &ima_fs_flags))
+ 		return -EBUSY;
+ 	return 0;
+ }
+@@ -428,13 +449,20 @@ static int ima_open_policy(struct inode *inode, struct file *filp)
+  * point to the new policy rules, and remove the securityfs policy file,
+  * assuming a valid policy.
+  */
+-static int ima_release_policy(struct inode *inode, struct file *file)
++static int ima_release_data_upload(struct inode *inode, struct file *file)
+ {
++	struct dentry *dentry = file_dentry(file);
+ 	const char *cause = valid_policy ? "completed" : "failed";
++	enum ima_fs_flags flag = ima_get_dentry_flag(dentry);
+ 
+ 	if ((file->f_flags & O_ACCMODE) == O_RDONLY)
+ 		return seq_release(inode, file);
+ 
++	if (dentry != ima_policy) {
++		clear_bit(flag, &ima_fs_flags);
++		return 0;
++	}
++
+ 	if (valid_policy && ima_check_policy() < 0) {
+ 		cause = "failed";
+ 		valid_policy = 0;
+@@ -447,7 +475,7 @@ static int ima_release_policy(struct inode *inode, struct file *file)
+ 	if (!valid_policy) {
+ 		ima_delete_rules();
+ 		valid_policy = 1;
+-		clear_bit(IMA_FS_BUSY, &ima_fs_flags);
++		clear_bit(flag, &ima_fs_flags);
+ 		return 0;
+ 	}
+ 
+@@ -456,18 +484,18 @@ static int ima_release_policy(struct inode *inode, struct file *file)
+ 	securityfs_remove(ima_policy);
+ 	ima_policy = NULL;
+ #elif defined(CONFIG_IMA_WRITE_POLICY)
+-	clear_bit(IMA_FS_BUSY, &ima_fs_flags);
++	clear_bit(flag, &ima_fs_flags);
+ #elif defined(CONFIG_IMA_READ_POLICY)
+ 	inode->i_mode &= ~S_IWUSR;
+ #endif
+ 	return 0;
+ }
+ 
+-static const struct file_operations ima_measure_policy_ops = {
+-	.open = ima_open_policy,
++static const struct file_operations ima_data_upload_ops = {
++	.open = ima_open_data_upload,
+ 	.write = ima_write_data,
+ 	.read = seq_read,
+-	.release = ima_release_policy,
++	.release = ima_release_data_upload,
+ 	.llseek = generic_file_llseek,
+ };
+ 
+@@ -511,7 +539,7 @@ int __init ima_fs_init(void)
+ 
+ 	ima_policy = securityfs_create_file("policy", POLICY_FILE_FLAGS,
+ 					    ima_dir, NULL,
+-					    &ima_measure_policy_ops);
++					    &ima_data_upload_ops);
+ 	if (IS_ERR(ima_policy))
+ 		goto out;
+ 
 -- 
-2.20.1
+2.17.1
 
