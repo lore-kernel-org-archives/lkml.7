@@ -2,152 +2,93 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37703C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D20C46477
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 198CF217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 589F9217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560534416;
+	bh=/1MCtpy3za94LqQjIrUTTEhKO99VLaUdtj0seQkUbtM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XrwMN1imDaGEmAHF2HjYyodKyiaNKTy0TSiDFcA5htDxAS36a8YTq7+b/xBxzGN9c
+	 JVbTSPsHrxqyIM2ycx5H8GK92EhLUSYAImWjABdmN8XPnwqIotrNhyiJUOllbhDdUz
+	 k/TtZ6KjAQg9n05xczoknF2J018QJEcyh3U8S+s0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbfFNRp6 (ORCPT
+        id S1726770AbfFNRqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 13:45:58 -0400
-Received: from mga14.intel.com ([192.55.52.115]:53669 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbfFNRp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 13:45:57 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 10:45:56 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga008.jf.intel.com with ESMTP; 14 Jun 2019 10:45:56 -0700
-Date:   Fri, 14 Jun 2019 10:45:56 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "serge@hallyn.com" <serge@hallyn.com>,
-        "paul@paul-moore.com" <paul@paul-moore.com>,
-        "eparis@parisplace.org" <eparis@parisplace.org>,
-        "jethro@fortanix.com" <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "pmccallum@redhat.com" <pmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        "Tricca, Philip B" <philip.b.tricca@intel.com>
-Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
- SELinux
-Message-ID: <20190614174556.GJ12191@linux.intel.com>
-References: <cover.1560131039.git.cedric.xing@intel.com>
- <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
- <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
- <20190611220243.GB3416@linux.intel.com>
- <8d99d8fb-a921-286a-8cf0-cd522e09b37c@tycho.nsa.gov>
- <20190614004600.GF18385@linux.intel.com>
- <960B34DE67B9E140824F1DCDEC400C0F65504665@ORSMSX116.amr.corp.intel.com>
+        Fri, 14 Jun 2019 13:46:55 -0400
+Received: from mail-qk1-f177.google.com ([209.85.222.177]:36446 "EHLO
+        mail-qk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbfFNRqy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 13:46:54 -0400
+Received: by mail-qk1-f177.google.com with SMTP id g18so2223000qkl.3;
+        Fri, 14 Jun 2019 10:46:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mfFFn/3fVwiltpoTn5VtkiFL9dQwzzi7uuy6j4r0c2E=;
+        b=tScJNbpFESr1S5qpoA/84AXMVM2fWbLaa+BL6ZNYdX7iYc8t9aTc9v1Z3WzJWWEfsW
+         OQtK1gSJ30WuTDroiA7Esjhe4gvWfS+dx3RwR93rrC6fVHoaJVc2mmSQG27zEeMEXwsa
+         qcaklPQc7Kjb5y08Nmn2YaQbWaW7249tJm8PU8BpVeygOrZrxY40QQUlmZHRl4ov6lD+
+         MVjkh2iiwsGnjJJQNRWbTjrilhumeT4pDnA6hj5gi6O+q8WhE2rRaStMvDORhVPNJj4L
+         SMfF8cI6VZsPqFs2EXNjTtUFAInkzz90CiWwQDq1AAU8/WhF3yokWf3oEMuMsqNUzA+2
+         2XtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mfFFn/3fVwiltpoTn5VtkiFL9dQwzzi7uuy6j4r0c2E=;
+        b=pcx8NdBGD2bJT15Y/3ftsbcL6t/tfWp7zfZnMSTDLcDPUuX1rF0JWNmhgjO3naiRyO
+         MTFz6PNAb3PGMyZocbmkIIiG64z+/udB30mxcNpRyQ1Gs2SIonkSqXIA+3hU4LsxMVjR
+         flJ1LZQUv1PgzRch1uTP1zwuGd95MuQhLDN6KVXv9lVlTixN9T6Mrdk1G5OwRkbW9ZU9
+         8yHkylgjwPGOF7m5/OmEO5gBUa5lMIEs/vYuYOQDEOrVOW/gE3+OqTdgn5zgiBAaOUrZ
+         LokyMvXfnGxtjvL5O6kIAArbFPjFEvF0ZN4FKd94noAYlRkGWjmE/G3/peCwqoMyiE2X
+         ohLQ==
+X-Gm-Message-State: APjAAAXw3iEgOB0y/KDYNTM7BWmxdYUQxJBfqA6cXJwZ66brTPgMvOnj
+        OqLfoEXp2u490+ufMFZaeVTrYEK6
+X-Google-Smtp-Source: APXvYqyAfVnqkVNXbSHlgJIQRVrQOFKEqmlnGRlAPUUjUK4nAA9X6ax8LBgHs5kJCBg/hhv4iIvVYw==
+X-Received: by 2002:ae9:f107:: with SMTP id k7mr13980314qkg.215.1560534413489;
+        Fri, 14 Jun 2019 10:46:53 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::6bab])
+        by smtp.gmail.com with ESMTPSA id u2sm1971672qtj.97.2019.06.14.10.46.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 10:46:52 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 10:46:51 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
+        axboe@kernel.dk, jack@suse.cz
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCHSET btrfs/for-next] btrfs: fix cgroup writeback support
+Message-ID: <20190614174651.GI538958@devbig004.ftw2.facebook.com>
+References: <20190614003350.1178444-1-tj@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F65504665@ORSMSX116.amr.corp.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190614003350.1178444-1-tj@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 10:16:55AM -0700, Xing, Cedric wrote:
-> > From: Christopherson, Sean J
-> > Sent: Thursday, June 13, 2019 5:46 PM
-> > 
-> > On Thu, Jun 13, 2019 at 01:02:17PM -0400, Stephen Smalley wrote:
-> > > On 6/11/19 6:02 PM, Sean Christopherson wrote:
-> > > >My RFC series[1] implements #1.  My understanding is that Andy
-> > > >(Lutomirski) prefers #2.  Cedric's RFC series implements #3.
-> > > >
-> > > >Perhaps the easiest way to make forward progress is to rule out the
-> > > >options we absolutely *don't* want by focusing on the potentially
-> > > >blocking issue with each option:
-> > > >
-> > > >   #1 - SGX UAPI funkiness
-> > > >
-> > > >   #2 - Auditing complexity, potential enclave lock contention
-> > > >
-> > > >   #3 - Pushing SGX details into LSMs and complexity of kernel
-> > > > implementation
-> > > >
-> > > >
-> > > >[1]
-> > > >https://lkml.kernel.org/r/20190606021145.12604-1-sean.j.christopherso
-> > > >n@intel.com
-> > >
-> > > Given the complexity tradeoff, what is the clear motivating example
-> > > for why
-> > > #1 isn't the obvious choice? That the enclave loader has no way of
-> > > knowing a priori whether the enclave will require W->X or WX?  But
-> > > aren't we better off requiring enclaves to be explicitly marked as
-> > > needing such so that we can make a more informed decision about
-> > > whether to load them in the first place?
-> > 
-> > Andy and/or Cedric, can you please weigh in with a concrete (and
-> > practical) use case that will break if we go with #1?  The auditing
-> > issues for #2/#3 are complex to say the least...
-> 
-> How does enclave loader provide per-page ALLOW_* flags?
+Hello,
 
-Unchanged from my RFC, i.e. specified at SGX_IOC_ENCLAVE_ADD_PAGE(S).
+Added a separate patch to add dummy css_get() and EXPORT's for the
+build failures.  It's in the following branch.  I'll wait for a while
+and send out if nothing else is broken.
 
-> And a related question is why they are necessary for enclaves but
-> unnecessary for regular executables or shared objects.
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-btrfs-cgroup-updates-v2
 
-Because at mmap()/mprotect() time we don't have the source file of the
-enclave page to check SELinux's FILE__EXECUTE or AppArmor's AA_EXEC_MMAP.
+Thanks.
 
-> What's the story for SGX2 if mmap()'ing non-existing pages is not allowed?
-
-Userspace will need to invoke an ioctl() to tell SGX "this range can be
-EAUG'd".
-
-> 
-> What's the story for auditing?
-
-It happens naturally when security_enclave_load() is called.  Am I
-missing something?
-
-> After everything above has been taken care of properly, will #1 still be
-> simpler than #2/#3?
-
-The state tracking of #2/#3 doesn't scare me, it's purely the auditing.
-Holding an audit message for an indeterminate amount of time is a
-nightmare.
-
-Here's a thought.  What if we simply require FILE__EXECUTE or AA_EXEC_MAP
-to load any enclave page from a file?  Alternatively, we could add an SGX
-specific file policity, e.g. FILE__ENCLAVELOAD and AA_MAY_LOAD_ENCLAVE.
-As in my other email, SELinux's W^X restrictions can be tied to the process,
-i.e. they can be checked at mmap()/mprotect() without throwing a wrench in
-auditing.
+-- 
+tejun
