@@ -2,161 +2,174 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5D7C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECE2C31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A462084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B5F22084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:39:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CLau/Foc"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="d5hQVDNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725827AbfFNHjf (ORCPT
+        id S1725922AbfFNHjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:39:35 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48180 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfFNHjf (ORCPT
+        Fri, 14 Jun 2019 03:39:46 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:61904 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725775AbfFNHjp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:39:35 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5E7cn5Y055852;
-        Fri, 14 Jun 2019 02:38:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560497929;
-        bh=XUtGv9i9kBDE+ZCJi30XsOqMTXyvYkwzq8DviMjz+zI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=CLau/FocdtepnaKW7TOtwKJtse9EitcdCONvaaKRRuneRloxuF2e3/SFS+fdbb1yc
-         z0+xhXgitHRenRN6XhAFyJ5RyCO41grD2xZmIlnjWzp2hv12oO9AYbmq5jnha83gGd
-         ISkeVwj0GBS0vcCPzcClrx3bdMFu8x8cMpi3dcTw=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5E7cnMo086540
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 14 Jun 2019 02:38:49 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 14
- Jun 2019 02:38:49 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 14 Jun 2019 02:38:49 -0500
-Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5E7citB062587;
-        Fri, 14 Jun 2019 02:38:45 -0500
-Subject: Re: [PATCH] mtd: cfi_cmdset_0002: dynamically determine the max
- sectors
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "richard@nod.at" <richard@nod.at>
-CC:     "sr@denx.de" <sr@denx.de>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        Fri, 14 Jun 2019 03:39:45 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5E7asaD020061;
+        Fri, 14 Jun 2019 09:39:26 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=WnBJiL3yLXib/3hyU89WJ3ADaCZVb5cHV2S7IUcVmG8=;
+ b=d5hQVDNSjEe3/rSaKwOUDiXx1sfXNGQJMBOrTR7+nNma3iYoaulYBv02GV2z7dXa21++
+ 8YQ8vK9HbOhfIcSDBeLESRTlC/w4XSzsYSpwG34Q83l8jOYiXCQxoIQFpesSXIrAz24H
+ BnDFxqg/UEfaaK9avM3Nue63kiRa3XhqGiPToCvxwGdHGByk3tEJQFr+oBQoXiwHbijD
+ Vibc+Ycpx618ZEkwSWO0vRdfd8eQLeY+5sy1+sMA9SIk1I2t3pMvTTdvQmkip+CU+NBN
+ bJckRzlTtFQlpvoJCb7+FkHLds7hG4VhYLO8pDAtzM4/2OYcYgtCZ52M/Yaic4Usqjym Kg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2t2f8c8ear-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 14 Jun 2019 09:39:26 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6B07D3A;
+        Fri, 14 Jun 2019 07:39:25 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0AAFF1807;
+        Fri, 14 Jun 2019 07:39:25 +0000 (GMT)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 14 Jun
+ 2019 09:39:24 +0200
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1473.003; Fri, 14 Jun 2019 09:39:24 +0200
+From:   Patrice CHOTARD <patrice.chotard@st.com>
+To:     Lubomir Rintel <lkundrak@v3.sk>, Olof Johansson <olof@lixom.net>
+CC:     Wei Xu <xuwei5@hisilicon.com>, Daniel Mack <daniel@zonque.org>,
+        "Haojian Zhuang" <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190522000628.13073-1-chris.packham@alliedtelesis.co.nz>
- <8e80d911f0dd4759b3edc72fb76530d6@svr-chch-ex1.atlnz.lc>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <8039faae-0ea3-fe85-ae2d-3e7853410a7d@ti.com>
-Date:   Fri, 14 Jun 2019 13:09:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <8e80d911f0dd4759b3edc72fb76530d6@svr-chch-ex1.atlnz.lc>
-Content-Type: text/plain; charset="utf-8"
+Subject: Re: [PATCH 1/6] ARM: dts: STi: Switch to SPDX header
+Thread-Topic: [PATCH 1/6] ARM: dts: STi: Switch to SPDX header
+Thread-Index: AQHVICdybxhZw6uCRkCvwJXJ6Jt2RKaapruA
+Date:   Fri, 14 Jun 2019 07:39:24 +0000
+Message-ID: <95148f1a-c48b-95a3-77ab-4420f7cf7de2@st.com>
+References: <20190611072921.2979446-1-lkundrak@v3.sk>
+ <20190611072921.2979446-2-lkundrak@v3.sk>
+In-Reply-To: <20190611072921.2979446-2-lkundrak@v3.sk>
+Accept-Language: fr-FR, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.47]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F57771CFAF48BE4AB6A55DC764223446@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 14/06/19 8:53 AM, Chris Packham wrote:
-> Hi All,
-> 
-> I think this may have got lost in the change of maintainer for mtd.
-> 
-
-I do have this in my queue of patches for mtd/next and will forward to
-Miquel once he is back.
-
-
-> On 22/05/19 12:06 PM, Chris Packham wrote:
->> Because PPB unlocking unlocks the whole chip cfi_ppb_unlock() needs to
->> remember the locked status for each sector so it can re-lock the
->> unaddressed sectors. Dynamically calculate the maximum number of sectors
->> rather than using a hardcoded value that is too small for larger chips.
->>
->> Tested with Spansion S29GL01GS11TFI flash device.
->>
->> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-
-Acked-by: Vignesh Raghavendra <vigneshr@ti.com>
-
-Regards
-Vignesh
-
->> ---
->>   drivers/mtd/chips/cfi_cmdset_0002.c | 13 ++++++++-----
->>   1 file changed, 8 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_cmdset_0002.c
->> index c8fa5906bdf9..a1a7d334aa82 100644
->> --- a/drivers/mtd/chips/cfi_cmdset_0002.c
->> +++ b/drivers/mtd/chips/cfi_cmdset_0002.c
->> @@ -2533,8 +2533,6 @@ struct ppb_lock {
->>   	int locked;
->>   };
->>   
->> -#define MAX_SECTORS			512
->> -
->>   #define DO_XXLOCK_ONEBLOCK_LOCK		((void *)1)
->>   #define DO_XXLOCK_ONEBLOCK_UNLOCK	((void *)2)
->>   #define DO_XXLOCK_ONEBLOCK_GETLOCK	((void *)3)
->> @@ -2633,6 +2631,7 @@ static int __maybe_unused cfi_ppb_unlock(struct mtd_info *mtd, loff_t ofs,
->>   	int i;
->>   	int sectors;
->>   	int ret;
->> +	int max_sectors;
->>   
->>   	/*
->>   	 * PPB unlocking always unlocks all sectors of the flash chip.
->> @@ -2640,7 +2639,11 @@ static int __maybe_unused cfi_ppb_unlock(struct mtd_info *mtd, loff_t ofs,
->>   	 * first check the locking status of all sectors and save
->>   	 * it for future use.
->>   	 */
->> -	sect = kcalloc(MAX_SECTORS, sizeof(struct ppb_lock), GFP_KERNEL);
->> +	max_sectors = 0;
->> +	for (i = 0; i < mtd->numeraseregions; i++)
->> +		max_sectors += regions[i].numblocks;
->> +
->> +	sect = kcalloc(max_sectors, sizeof(struct ppb_lock), GFP_KERNEL);
->>   	if (!sect)
->>   		return -ENOMEM;
->>   
->> @@ -2689,9 +2692,9 @@ static int __maybe_unused cfi_ppb_unlock(struct mtd_info *mtd, loff_t ofs,
->>   		}
->>   
->>   		sectors++;
->> -		if (sectors >= MAX_SECTORS) {
->> +		if (sectors >= max_sectors) {
->>   			printk(KERN_ERR "Only %d sectors for PPB locking supported!\n",
->> -			       MAX_SECTORS);
->> +			       max_sectors);
->>   			kfree(sect);
->>   			return -EINVAL;
->>   		}
->>
-> 
-
--- 
-Regards
-Vignesh
+SGkgTHVib21pcg0KDQpPbiA2LzExLzE5IDk6MjkgQU0sIEx1Ym9taXIgUmludGVsIHdyb3RlOg0K
+PiBUaGUgb3JpZ2luYWwgbGljZW5zZSB0ZXh0IGhhZCBhIHR5cG8gKCJwdWJsaXNoaGVkIikgd2hp
+Y2ggd291bGQgYmUNCj4gbGlrZWx5IHRvIGNvbmZ1c2UgYXV0b21hdGVkIGxpY2Vuc2luZyBhdWRp
+dGluZyB0b29scy4gTGV0J3MganVzdCBzd2l0Y2gNCj4gdG8gU1BEWCBpbnN0ZWFkIG9mIGZpeGlu
+ZyB0aGUgd29yZGluZy4NCj4NCj4gU2lnbmVkLW9mZi1ieTogTHVib21pciBSaW50ZWwgPGxrdW5k
+cmFrQHYzLnNrPg0KPiAtLS0NCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctZmFtaWx5LmR0
+c2kgIHwgNSArLS0tLQ0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQwNy1waW5jdHJsLmR0c2kg
+fCA1ICstLS0tDQo+ICBhcmNoL2FybS9ib290L2R0cy9zdGloNDA3LmR0c2kgICAgICAgICB8IDUg
+Ky0tLS0NCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTAtcGluY3RybC5kdHNpIHwgNSArLS0t
+LQ0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQxMC5kdHNpICAgICAgICAgfCA1ICstLS0tDQo+
+ICBhcmNoL2FybS9ib290L2R0cy9zdGloNDE4LmR0c2kgICAgICAgICB8IDUgKy0tLS0NCj4gIDYg
+ZmlsZXMgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCAyNCBkZWxldGlvbnMoLSkNCj4NCj4gZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctZmFtaWx5LmR0c2kgYi9hcmNoL2Fy
+bS9ib290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNpDQo+IGluZGV4IDllMjlhNDQ5OTkzOC4uMmZm
+MjU0MmJmMzM1IDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZhbWls
+eS5kdHNpDQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctZmFtaWx5LmR0c2kNCj4g
+QEAgLTEsMTAgKzEsNyBAQA0KPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAN
+Cj4gIC8qDQo+ICAgKiBDb3B5cmlnaHQgKEMpIDIwMTQgU1RNaWNyb2VsZWN0cm9uaWNzIExpbWl0
+ZWQuDQo+ICAgKiBBdXRob3I6IEdpdXNlcHBlIENhdmFsbGFybyA8cGVwcGUuY2F2YWxsYXJvQHN0
+LmNvbT4NCj4gLSAqDQo+IC0gKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNh
+biByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQ0KPiAtICogaXQgdW5kZXIgdGhlIHRlcm1z
+IG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSB2ZXJzaW9uIDIgYXMNCj4gLSAqIHB1
+Ymxpc2hoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbi4NCj4gICAqLw0KPiAgI2lu
+Y2x1ZGUgInN0aWg0MDctcGluY3RybC5kdHNpIg0KPiAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL21m
+ZC9zdC1scGMuaD4NCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctcGlu
+Y3RybC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQwNy1waW5jdHJsLmR0c2kNCj4gaW5k
+ZXggZTM5MzUxOWZiODRjLi5kYjE3NDAxOTYyNmYgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL3N0aWg0MDctcGluY3RybC5kdHNpDQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0
+aWg0MDctcGluY3RybC5kdHNpDQo+IEBAIC0xLDEwICsxLDcgQEANCj4gKy8vIFNQRFgtTGljZW5z
+ZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+ICAvKg0KPiAgICogQ29weXJpZ2h0IChDKSAyMDE0IFNU
+TWljcm9lbGVjdHJvbmljcyBMaW1pdGVkLg0KPiAgICogQXV0aG9yOiBHaXVzZXBwZSBDYXZhbGxh
+cm8gPHBlcHBlLmNhdmFsbGFyb0BzdC5jb20+DQo+IC0gKg0KPiAtICogVGhpcyBwcm9ncmFtIGlz
+IGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkNCj4g
+LSAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2Ug
+dmVyc2lvbiAyIGFzDQo+IC0gKiBwdWJsaXNoaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5k
+YXRpb24uDQo+ICAgKi8NCj4gICNpbmNsdWRlICJzdC1waW5jZmcuaCINCj4gICNpbmNsdWRlIDxk
+dC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+DQo+IGRpZmYgLS1naXQg
+YS9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9zdGlo
+NDA3LmR0c2kNCj4gaW5kZXggNWI3OTUxZmZjMzUwLi4yNDJhYzcyZTRkNGEgMTAwNjQ0DQo+IC0t
+LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDcuZHRzaQ0KPiArKysgYi9hcmNoL2FybS9ib290
+L2R0cy9zdGloNDA3LmR0c2kNCj4gQEAgLTEsMTAgKzEsNyBAQA0KPiArLy8gU1BEWC1MaWNlbnNl
+LUlkZW50aWZpZXI6IEdQTC0yLjANCj4gIC8qDQo+ICAgKiBDb3B5cmlnaHQgKEMpIDIwMTUgU1RN
+aWNyb2VsZWN0cm9uaWNzIExpbWl0ZWQuDQo+ICAgKiBBdXRob3I6IEdhYnJpZWwgRmVybmFuZGV6
+IDxnYWJyaWVsLmZlcm5hbmRlekBsaW5hcm8ub3JnPg0KPiAtICoNCj4gLSAqIFRoaXMgcHJvZ3Jh
+bSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5
+DQo+IC0gKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNl
+bnNlIHZlcnNpb24gMiBhcw0KPiAtICogcHVibGlzaGhlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBG
+b3VuZGF0aW9uLg0KPiAgICovDQo+ICAjaW5jbHVkZSAic3RpaDQwNy1jbG9jay5kdHNpIg0KPiAg
+I2luY2x1ZGUgInN0aWg0MDctZmFtaWx5LmR0c2kiDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9i
+b290L2R0cy9zdGloNDEwLXBpbmN0cmwuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTAt
+cGluY3RybC5kdHNpDQo+IGluZGV4IDVhZTFmZDY2YzBiOC4uODUzMmFlM2Y2MWU4IDEwMDY0NA0K
+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDEwLXBpbmN0cmwuZHRzaQ0KPiArKysgYi9h
+cmNoL2FybS9ib290L2R0cy9zdGloNDEwLXBpbmN0cmwuZHRzaQ0KPiBAQCAtMSwxMCArMSw3IEBA
+DQo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiAgLyoNCj4gICAqIENv
+cHlyaWdodCAoQykgMjAxNCBTVE1pY3JvZWxlY3Ryb25pY3MgTGltaXRlZC4NCj4gICAqIEF1dGhv
+cjogUGV0ZXIgR3JpZmZpbiA8cGV0ZXIuZ3JpZmZpbkBsaW5hcm8ub3JnPg0KPiAtICoNCj4gLSAq
+IFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBh
+bmQvb3IgbW9kaWZ5DQo+IC0gKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFs
+IFB1YmxpYyBMaWNlbnNlIHZlcnNpb24gMiBhcw0KPiAtICogcHVibGlzaGhlZCBieSB0aGUgRnJl
+ZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLg0KPiAgICovDQo+ICAjaW5jbHVkZSAic3QtcGluY2ZnLmgi
+DQo+ICAvIHsNCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTAuZHRzaSBi
+L2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTAuZHRzaQ0KPiBpbmRleCA4ODg1NDhlYTliNWMuLjIz
+YjQ5NGExM2M0NyAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQxMC5kdHNp
+DQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTAuZHRzaQ0KPiBAQCAtMSwxMCArMSw3
+IEBADQo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiAgLyoNCj4gICAq
+IENvcHlyaWdodCAoQykgMjAxNCBTVE1pY3JvZWxlY3Ryb25pY3MgTGltaXRlZC4NCj4gICAqIEF1
+dGhvcjogUGV0ZXIgR3JpZmZpbiA8cGV0ZXIuZ3JpZmZpbkBsaW5hcm8ub3JnPg0KPiAtICoNCj4g
+LSAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBp
+dCBhbmQvb3IgbW9kaWZ5DQo+IC0gKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5l
+cmFsIFB1YmxpYyBMaWNlbnNlIHZlcnNpb24gMiBhcw0KPiAtICogcHVibGlzaGhlZCBieSB0aGUg
+RnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLg0KPiAgICovDQo+ICAjaW5jbHVkZSAic3RpaDQxMC1j
+bG9jay5kdHNpIg0KPiAgI2luY2x1ZGUgInN0aWg0MDctZmFtaWx5LmR0c2kiDQo+IGRpZmYgLS1n
+aXQgYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDE4LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9z
+dGloNDE4LmR0c2kNCj4gaW5kZXggMGVmYjNjZDZhODZlLi5mM2YwYTBlMGYyM2MgMTAwNjQ0DQo+
+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTguZHRzaQ0KPiArKysgYi9hcmNoL2FybS9i
+b290L2R0cy9zdGloNDE4LmR0c2kNCj4gQEAgLTEsMTAgKzEsNyBAQA0KPiArLy8gU1BEWC1MaWNl
+bnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gIC8qDQo+ICAgKiBDb3B5cmlnaHQgKEMpIDIwMTQg
+U1RNaWNyb2VsZWN0cm9uaWNzIExpbWl0ZWQuDQo+ICAgKiBBdXRob3I6IFBldGVyIEdyaWZmaW4g
+PHBldGVyLmdyaWZmaW5AbGluYXJvLm9yZz4NCj4gLSAqDQo+IC0gKiBUaGlzIHByb2dyYW0gaXMg
+ZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQ0KPiAt
+ICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSB2
+ZXJzaW9uIDIgYXMNCj4gLSAqIHB1Ymxpc2hoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRh
+dGlvbi4NCj4gICAqLw0KPiAgI2luY2x1ZGUgInN0aWg0MTgtY2xvY2suZHRzaSINCj4gICNpbmNs
+dWRlICJzdGloNDA3LWZhbWlseS5kdHNpIg0KDQpBY2tlZC1ieTogUGF0cmljZSBDaG90YXJkIDxw
+YXRyaWNlLmNob3RhcmRAc3QuY29tPg0KDQpUaGFua3MNCg==
