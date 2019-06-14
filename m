@@ -2,78 +2,135 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99041C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132A3C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7520421773
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCA1021773
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:06:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="aMGMnR3v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfFNKEY (ORCPT
+        id S1727274AbfFNKGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:04:24 -0400
-Received: from smtprelay0221.hostedemail.com ([216.40.44.221]:33379 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726370AbfFNKEX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:04:23 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 4A238100E86C6;
-        Fri, 14 Jun 2019 10:04:22 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: beast43_6032aa142690d
-X-Filterd-Recvd-Size: 2014
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 14 Jun 2019 10:04:20 +0000 (UTC)
-Message-ID: <8eacbd27239ec5ce956309278beae9b499499108.camel@perches.com>
-Subject: Re: [PATCH] bus: hisi_lpc: Don't use devm_kzalloc() to allocate
- logical PIO range
-From:   Joe Perches <joe@perches.com>
-To:     John Garry <john.garry@huawei.com>, xuwei5@huawei.com
-Cc:     bhelgaas@google.com, linuxarm@huawei.com, arm@kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 14 Jun 2019 03:04:19 -0700
-In-Reply-To: <1560505624-39955-1-git-send-email-john.garry@huawei.com>
-References: <1560505624-39955-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Fri, 14 Jun 2019 06:06:52 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:59532 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726370AbfFNKGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 06:06:52 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45QGVJ0nt7z9vDbm;
+        Fri, 14 Jun 2019 12:06:48 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=aMGMnR3v; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id X4TVEgvEUXXh; Fri, 14 Jun 2019 12:06:48 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45QGVH6rw3z9vDbk;
+        Fri, 14 Jun 2019 12:06:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1560506807; bh=H6U3dIX2SVKCwZUsFTw72sro38m1Gqkl8Z8i5rZXXBk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=aMGMnR3vGNtc96FQA7Tlx/Xb6c2k5dcWmki0WikZ3pCbwAQ5boG68yvaraxbba0gA
+         SmDmrwVTNjTIsBuCKtj2ADsZ/+uqrgL5K6rjuv6tuoLuYZylcEBbgrPXVO+yGDPymj
+         LRH1EF2eY01DWKSxkoYMNtpIqFxfEAG5lIhoLS7A=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 27A3F8B7AD;
+        Fri, 14 Jun 2019 12:06:49 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 8qQm5fcEnkLQ; Fri, 14 Jun 2019 12:06:49 +0200 (CEST)
+Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.230.107])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 02E4A8B7AC;
+        Fri, 14 Jun 2019 12:06:49 +0200 (CEST)
+Subject: Re: [PATCH] powerpc: Enable kernel XZ compression option on PPC_85xx
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Axtens <dja@axtens.net>,
+        Pawel Dembicki <paweldembicki@gmail.com>
+Cc:     Christian Lamparter <chunkeey@gmail.com>,
+        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+References: <20190603164115.27471-1-paweldembicki@gmail.com>
+ <877e9qp3ou.fsf@dja-thinkpad.axtens.net>
+ <87ftodempa.fsf@concordia.ellerman.id.au>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <f988951c-3077-ab19-81eb-560418468d14@c-s.fr>
+Date:   Fri, 14 Jun 2019 12:06:48 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <87ftodempa.fsf@concordia.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-14 at 17:47 +0800, John Garry wrote:
-> If, after registering a logical PIO range, the driver probe later fails,
-> the logical PIO range memory will be released automatically.
-> 
-> This causes an issue, in that the logical PIO range is not unregistered
-> (that is not supported) and the released range memory may be later
-> referenced
-> 
-> Allocate the logical PIO range with kzalloc() to avoid this potential
-> issue.
-> 
-> Fixes: adf38bb0b5956 ("HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings")
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> 
-> diff --git a/drivers/bus/hisi_lpc.c b/drivers/bus/hisi_lpc.c
-[]
-> @@ -599,7 +599,7 @@ static int hisi_lpc_probe(struct platform_device *pdev)
->  	if (IS_ERR(lpcdev->membase))
->  		return PTR_ERR(lpcdev->membase);
->  
-> -	range = devm_kzalloc(dev, sizeof(*range), GFP_KERNEL);
-> +	range = kzalloc(sizeof(*range), GFP_KERNEL);
-
-If this is really necessary, it'd be useful to say so in the
-code too with a comment so it doesn't get drive-by 'unfixed'
-by someone well meaning but ill-uninformed.
 
 
+Le 13/06/2019 à 13:42, Michael Ellerman a écrit :
+> Daniel Axtens <dja@axtens.net> writes:
+>> Pawel Dembicki <paweldembicki@gmail.com> writes:
+>>
+>>> Enable kernel XZ compression option on PPC_85xx. Tested with
+>>> simpleImage on TP-Link TL-WDR4900 (Freescale P1014 processor).
+>>>
+>>> Suggested-by: Christian Lamparter <chunkeey@gmail.com>
+>>> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+>>> ---
+>>>   arch/powerpc/Kconfig | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+>>> index 8c1c636308c8..daf4cb968922 100644
+>>> --- a/arch/powerpc/Kconfig
+>>> +++ b/arch/powerpc/Kconfig
+>>> @@ -196,7 +196,7 @@ config PPC
+>>>   	select HAVE_IOREMAP_PROT
+>>>   	select HAVE_IRQ_EXIT_ON_IRQ_STACK
+>>>   	select HAVE_KERNEL_GZIP
+>>> -	select HAVE_KERNEL_XZ			if PPC_BOOK3S || 44x
+>>> +	select HAVE_KERNEL_XZ			if PPC_BOOK3S || 44x || PPC_85xx
+>>
+>> (I'm not super well versed in the compression stuff, so apologies if
+>> this is a dumb question.) If it's this simple, is there any reason we
+>> can't turn it on generally, or convert it to a blacklist of platforms
+>> known not to work?
+> 
+> For some platforms enabling XZ requires that your u-boot has XZ support,
+> and I'm not very clear on when that support landed in u-boot and what
+> boards have it. And there are boards out there with old/custom u-boots
+> that effectively can't be updated.
+
+I don't think that it has anything to do with u-boot.
+AFAIK, today's mainline U-boot only supports GZIP (by default) and the 
+following optional ones: LZO, LZMA, LZ4.
+
+If we want to set additional compression types for u-boot, it is not 
+enough to select HAVE_KERNEL_XXXX, we also have to update uImage 
+generation scripts.
+
+See the series I sent some time ago: 
+https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=104153
+I'll resent it without bzip2 as today's uboot doesn't support bzip2 anymore.
+
+> 
+> But as a server guy I don't really know the details of all that very
+> well. So if someone tells me that we should enable XZ for everything, or
+> as you say just black list some platforms, then that's fine by me.
+> 
+
+I guess we first need to understand how this is used.
+
+Christophe
