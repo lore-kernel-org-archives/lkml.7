@@ -2,84 +2,99 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E853CC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87856C31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA9B2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:53:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560495223;
-	bh=wuUTXFN56UvawcDpp0upIqE8jR1yiNkVbrzRRp7qMFM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=unKXu7eO1UIdsmrbQkliGVSSY7mf5b4g4dMg84svE2ZmQQdl/RQHOvhDNZRNHklvu
-	 UiAlrC16xTNvks64LcF9X6llpPb81/7aF8syvqYlNUCL9qh4Lb9XPtHhO1YmbDOAVg
-	 TV9yRdFFq8v6GbqeWARlhOfHoSvwQ5FfINg1jhPQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6A6B120673
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbfFNGxm (ORCPT
+        id S1726209AbfFNGy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 02:53:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbfFNGxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 02:53:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BB3B20673;
-        Fri, 14 Jun 2019 06:53:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560495221;
-        bh=wuUTXFN56UvawcDpp0upIqE8jR1yiNkVbrzRRp7qMFM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1FSemE9FNDYxmgCQYzMONszZilvyP63OswdHEot/o2wMC3VwlKk942CueY5gw/5WE
-         VJwdcpZlJRWNZZfHgKE3MDbsQO9tHoASvSmr2J/CvWxHDgUTmBwbAcd8t0oi7itxZ4
-         ESCybRUSBQv9D7x4hETjGfhG3vtXx1qWxhor05vM=
-Date:   Fri, 14 Jun 2019 08:53:39 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "Lee, Chun-Yi" <jlee@suse.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/8] platform: x86: acer-wmi: no need to check return
- value of debugfs_create functions
-Message-ID: <20190614065339.GB21447@kroah.com>
-References: <20190612121258.19535-1-gregkh@linuxfoundation.org>
- <CAHp75VeQy9o6tHtqKEE3o9ijBE4c11cWcc00+RqCj+P1FOky1w@mail.gmail.com>
+        Fri, 14 Jun 2019 02:54:26 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:33860 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbfFNGyZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 02:54:25 -0400
+Received: from relay7-d.mail.gandi.net (unknown [217.70.183.200])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id D2E883A570C;
+        Fri, 14 Jun 2019 06:33:02 +0000 (UTC)
+X-Originating-IP: 88.190.179.123
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id EA8272000E;
+        Fri, 14 Jun 2019 06:32:52 +0000 (UTC)
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Ellie Reeves <ellierevves@gmail.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH v2] PCI: aardvark: Fix PCI_EXP_RTCTL conf register writing
+Date:   Fri, 14 Jun 2019 08:42:25 +0200
+Message-Id: <20190614064225.24434-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeQy9o6tHtqKEE3o9ijBE4c11cWcc00+RqCj+P1FOky1w@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 09:48:04AM +0300, Andy Shevchenko wrote:
-> On Wed, Jun 12, 2019 at 3:13 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > When calling debugfs functions, there is no need to ever check the
-> > return value.  The function can work or not, but the code logic should
-> > never do something different based on this.
-> >
-> > Also, because there is no need to save the file dentry, remove the
-> > variable that was saving it and just recursively delete the whole
-> > directory.
-> >
-> 
-> Through which tree you want to proceed this?
+PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
+should not modify other interrupts' mask. The ISR mask polarity was also
+inverted, when PCI_EXP_RTCTL_PMEIE is set PCIE_MSG_PM_PME_MASK mask bit
+should actually be cleared.
 
-What ever is easier for you, I can take it through mine, as I have a lot
-of other patches like this queued up already, or it can go through
-yours.
+Fixes: 6302bf3ef78d ("PCI: Init PCIe feature bits for managed host bridge alloc")
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+Changes since v1:
+ * Improve code readability
+ * Fix mask polarity
+ * PME_MASK shift was off by one
+---
+ drivers/pci/controller/pci-aardvark.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-thanks,
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 134e0306ff00..f6e55c4597b1 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -415,7 +415,7 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+ 
+ 	case PCI_EXP_RTCTL: {
+ 		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG);
+-		*value = (val & PCIE_MSG_PM_PME_MASK) ? PCI_EXP_RTCTL_PMEIE : 0;
++		*value = (val & PCIE_MSG_PM_PME_MASK) ? 0 : PCI_EXP_RTCTL_PMEIE;
+ 		return PCI_BRIDGE_EMUL_HANDLED;
+ 	}
+ 
+@@ -451,10 +451,15 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+ 		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+ 		break;
+ 
+-	case PCI_EXP_RTCTL:
+-		new = (new & PCI_EXP_RTCTL_PMEIE) << 3;
+-		advk_writel(pcie, new, PCIE_ISR0_MASK_REG);
++	case PCI_EXP_RTCTL: {
++		/* Only mask/unmask PME interrupt */
++		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
++			~PCIE_MSG_PM_PME_MASK;
++		if ((new & PCI_EXP_RTCTL_PMEIE) == 0)
++			val |= PCIE_MSG_PM_PME_MASK;
++		advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
+ 		break;
++	}
+ 
+ 	case PCI_EXP_RTSTA:
+ 		new = (new & PCI_EXP_RTSTA_PME) >> 9;
+-- 
+2.20.1
 
-greg k-h
