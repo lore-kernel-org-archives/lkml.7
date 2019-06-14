@@ -2,107 +2,116 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9662EC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B901C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E49C2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D00FC2084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:41:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="enxNyPGf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tx3zTdrZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbfFNHlw (ORCPT
+        id S1726294AbfFNHl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:41:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42040 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfFNHlv (ORCPT
+        Fri, 14 Jun 2019 03:41:58 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44392 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfFNHl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:41:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dMa51kg57fAa4NjsSOviOfP9gGy0J52rQSs24i78lqM=; b=enxNyPGfXRJ13CeS7m9p9KG21
-        CAI3rfauRIHJfVS9oNQsEcK5NuzFFZpbXcwFW0dlOpM8YfXXmZUApq3Gnz8Q/oUDAlGcVIvWiMDt5
-        y6DN9xseIb0N3NavBCFfjc/pqRVUw0PSKFS/nO32WgxFy6KJaJku201BKfsVRRGltg2BT65O66e+T
-        XCsaWVePnFoaP1V8qN1ERxmF4DYSW0CZwr3WliQqmLGelLnyXTswdG9chzija+kqid4SrEWBTfIJj
-        EbtEvn3HPHfEjQkn40caRbdi//HC0PTasJfOSHrg45Zy3WRZztaaqcwOM+qF1o0oz+8ra4g80NaBv
-        C83qEkdqQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbgqA-0005t2-S6; Fri, 14 Jun 2019 07:41:39 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0F21A209C9EB8; Fri, 14 Jun 2019 09:41:37 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 09:41:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>
-Subject: Re: [PATCH 7/9] x86/unwind/orc: Fall back to using frame pointers
- for generated code
-Message-ID: <20190614074136.GR3436@hirez.programming.kicks-ass.net>
-References: <cover.1560431531.git.jpoimboe@redhat.com>
- <4f536ec4facda97406273a22a4c2677f7cb22148.1560431531.git.jpoimboe@redhat.com>
- <20190613220054.tmonrgfdeie2kl74@ast-mbp.dhcp.thefacebook.com>
- <20190614013051.6gnwduy4dsygbamj@treble>
- <20190614014244.st7fbr6areazmyrb@ast-mbp.dhcp.thefacebook.com>
- <20190614015848.todgfogryjn573nd@treble>
- <20190614022848.ly4vlgsz6fa4bcbl@treble>
- <20190614045037.zinbi2sivthcfrtg@treble>
- <20190614060006.na6nfl6shawsyj3i@ast-mbp.dhcp.thefacebook.com>
+        Fri, 14 Jun 2019 03:41:56 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t7so648771plr.11;
+        Fri, 14 Jun 2019 00:41:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qTN8zccKrdobWI38/ip/wwPCXH3X8VyP8EgQGu6WwT4=;
+        b=Tx3zTdrZxlmZBygvwuVbgkil59kuAuDEE9UD/o9yXNf7z+83BF5msXsFToFYmZYp4E
+         XQNHmim9ZBjucKmzzcSeHbwSWyreHdMPlMOEanVzlkX78CwPSYCOsE8/m3p5jc56JiSD
+         bqk0LJyD4L28EhEOAJoXAJwXrYikXA1UQnWIFOFhd46PbySme9DU402xNwtgUMvOSqQ/
+         I827m25SPAHWqj1C/AdTSO4O39CqR9R0nk6mmFTDkAGS/Bp72RWn/UNarsZfSSd7Y/dd
+         Yx1xXLEIaOvVSUkS7evJYxbttwD/KV7HRyR5gFCW3oYFzUiGwkid6CiY38OPJCFA5EW3
+         yHoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qTN8zccKrdobWI38/ip/wwPCXH3X8VyP8EgQGu6WwT4=;
+        b=cE1cY9Dz/hxc+Upm5hjSyho6ivM8ZjsWaHC511ReRJCkmryp4Z2kDVsNID/R3wkGcf
+         kMiCwfxPSTAI46I59FwTKk1CBMWrMDLmw3S27XBe1ZUzA4yjFGgSfUEbYEEYxkL/OAhc
+         WEVCkOFd/rNTonqXoSJaRb3FxgP4FSEH8iFU7lJklxJwqxm2CSe6MmOh63mxptSJQzwy
+         ugARzlH7GaE+YZRy/iq2NLUFKwnjw4R8+8+TevKSQ2Kt0pIROOJh+3srk5gUKBfc2JEU
+         WMhevfl02WCBZFV+8UYuMLy1Dso1UZ7q6w5CUqRXkcN9Ncc7ZZ9yYgQz4tFNA/vNPjhQ
+         8EzA==
+X-Gm-Message-State: APjAAAVw6lm51mwYk9Fstlx4Nqga9RHiS61pk6f2o0JTkZ4wepFPDO8a
+        mWRJ+QnO3QoZfQBrv3Kd9R8=
+X-Google-Smtp-Source: APXvYqz1ezUgFwUfWTWpyFtqN1r3FJLRHBwqWF1tKFIH7v0Hytm+7RntCcWvpExkwSaYKI3rEoBEyA==
+X-Received: by 2002:a17:902:8696:: with SMTP id g22mr66319599plo.249.1560498115397;
+        Fri, 14 Jun 2019 00:41:55 -0700 (PDT)
+Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id c6sm1979398pfm.163.2019.06.14.00.41.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 00:41:54 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        NXP Linux Team <linux-imx@nxp.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] thermal: imx: skip registering legacy cooling on i.MX7
+Date:   Fri, 14 Jun 2019 00:41:40 -0700
+Message-Id: <20190614074140.15276-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614060006.na6nfl6shawsyj3i@ast-mbp.dhcp.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:00:09PM -0700, Alexei Starovoitov wrote:
+i.MX7 doesn't have a mainline cpufreq driver, so
+imx_thermal_register_legacy_cooling() will always return -EPROBE_DEFER
+preventing the driver probe from finishing. No-op
+imx_thermal_register_legacy_cooling() on i.MX7 to avoid that problem.
 
-> There is something wrong with
-> commit d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/thermal/imx_thermal.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-It assumes we can always unwind stack, which is, imo, not a weird thing.
+diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+index bb6754a5342c..bfc9c6d57916 100644
+--- a/drivers/thermal/imx_thermal.c
++++ b/drivers/thermal/imx_thermal.c
+@@ -658,6 +658,9 @@ static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
+ 	struct device_node *np;
+ 	int ret;
+ 
++	if (data->socdata->version == TEMPMON_IMX7D)
++		return 0;
++
+ 	data->policy = cpufreq_cpu_get(0);
+ 	if (!data->policy) {
+ 		pr_debug("%s: CPUFreq policy not found\n", __func__);
+-- 
+2.21.0
 
-> If I simply revert it and have CONFIG_UNWINDER_FRAME_POINTER=y
-> JITed stacks work just fine, because
-> bpf_get_stackid()->get_perf_callchain()
-> need to start unwinding before any bpf stuff.
-
-How does stack unwinding work if we try and unwind from an interrupt
-that hits inside a BPF program? That too needs to work properly.
-
-> After that commit it needs to go through which is a bug on its own.
-> imo patch 1 doesn't really fix that issue.
-
-This we agree on, patch 1 doesn't solve that at all. But we also should
-not loose the initial regs->ip value.
-
-> As far as mangled rbp can we partially undo old
-> commit 177366bf7ceb ("bpf: change x86 JITed program stack layout")
-> that introduced that rbp adjustment.
-
-> Going through bpf code is only interesting in case of panics somewhere
-> in bpf helpers. Back then we didn't even have ksym of jited code.
-
-I disagree here, interrupts/NMIs hitting inside BPF should be able to
-reliably unwind the entire stack. Back then is irrelevant, these days we
-expect a reliable unwind.
-
-> Anyhow I agree that we need to make the jited frame proper,
-> but unwinding need to start before any bpf stuff.
-> That's a bigger issue.
-
-I strongly disagree, we should be able to unwind through bpf.
