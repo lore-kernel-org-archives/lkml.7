@@ -2,126 +2,294 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0550C31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9A0C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94ECE20851
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:28:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="voy0OQVz"
+	by mail.kernel.org (Postfix) with ESMTP id 421E520851
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfFNN2j (ORCPT
+        id S1728153AbfFNN3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:28:39 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34709 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727729AbfFNN2i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:28:38 -0400
-Received: by mail-ed1-f65.google.com with SMTP id s49so3563649edb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:28:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/bEFMtHnd0Lq4R6BgJaHDb9jSNJdzL1pBjuE2g5cik8=;
-        b=voy0OQVzAPCvIAmwQgiYtlSleenOKuT/qpb01Z/+4pGuPKe1skxIJEkKDPpwS9HC3H
-         d2duEeopfKNnnkQCjYrCgqImAQqW5bLMgwugLa222v0jda83+go22NOjY5PWaEnTSvyV
-         KLhBwBJPS7SZJtXCtxB7OvQQqgSQ3kPKWmFUA1MJa9Wrfld0MCSAXdHUdWfClFnEwpgf
-         sOPE6zcJmB0iiUGNc4akPixQ19M5SCYisvcVkA0vU6UsVVet+GzmRtabFV//WJ5mNMyj
-         qJmJDuvP10aBanhB/RZD0uRXen4zbe9eWcwwuargF/sjpjd9dhGMdU11acHxnHjo9xUZ
-         o5vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/bEFMtHnd0Lq4R6BgJaHDb9jSNJdzL1pBjuE2g5cik8=;
-        b=coD8TeATohLfgZQhGaarZO74H5exr9aMPwmhM04iLuOdielfvnp9KkJqchf8iTxzf2
-         Szva4WXx0uFFaF4RBwneD30WNRsBF1d6f2O7gFnHFQTh3tQ64rfqjOZ0xkqremG2khBT
-         /wCkKGZdYEFNKeQZrRPtqlMVptlRic9UCfXqffsHSLNimzvZxpKSBUs5zpyiY6/hFzPb
-         bIxj9mmS3Hg45fR1ZZH5FV1WOGFv4ekfDr9panV6rfKb84CaA5VOhUEFqVLepB+zuEEt
-         KGaHate7qj+uzdH0O/tvVZoARD7vaQh/yVOtyHrCOa2w83Nn/ONq1Q30z5KmurGO40kF
-         mBEA==
-X-Gm-Message-State: APjAAAW1kQ8TjEbvpzl1dLCscruHT0RR+FLRpueFGOlOBPRCYyDJWcDn
-        qsz+woU7MSfiK9qOADjO1IBzGA==
-X-Google-Smtp-Source: APXvYqwTjBWiaWugHv92n/VOXJckmXdJ0ij79tTSCt3WN5QrjcsRYX/bfqnOjwWa25VDWFa14JeAyw==
-X-Received: by 2002:a50:b178:: with SMTP id l53mr75879420edd.244.1560518916776;
-        Fri, 14 Jun 2019 06:28:36 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id 34sm901697eds.5.2019.06.14.06.28.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 06:28:36 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 8857010086F; Fri, 14 Jun 2019 16:28:36 +0300 (+03)
-Date:   Fri, 14 Jun 2019 16:28:36 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 13/62] x86/mm: Add hooks to allocate and free
- encrypted pages
-Message-ID: <20190614132836.spl6bmk2kkx65nfr@box>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-14-kirill.shutemov@linux.intel.com>
- <20190614093409.GX3436@hirez.programming.kicks-ass.net>
- <20190614110458.GN3463@hirez.programming.kicks-ass.net>
+        Fri, 14 Jun 2019 09:29:01 -0400
+Received: from mga17.intel.com ([192.55.52.151]:23818 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727729AbfFNN3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:29:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 06:29:00 -0700
+X-ExtLoop1: 1
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
+  by fmsmga001.fm.intel.com with ESMTP; 14 Jun 2019 06:28:58 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: [PATCH 05/14] scripts: add an script to parse the ABI files
+In-Reply-To: <196fb3c497546f923bf5d156c3fddbe74a4913bc.1560477540.git.mchehab+samsung@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <cover.1560477540.git.mchehab+samsung@kernel.org> <196fb3c497546f923bf5d156c3fddbe74a4913bc.1560477540.git.mchehab+samsung@kernel.org>
+Date:   Fri, 14 Jun 2019 16:31:56 +0300
+Message-ID: <87r27wuwc3.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614110458.GN3463@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 01:04:58PM +0200, Peter Zijlstra wrote:
-> On Fri, Jun 14, 2019 at 11:34:09AM +0200, Peter Zijlstra wrote:
-> > On Wed, May 08, 2019 at 05:43:33PM +0300, Kirill A. Shutemov wrote:
-> > 
-> > > +		lookup_page_ext(page)->keyid = keyid;
-> 
-> > > +		lookup_page_ext(page)->keyid = 0;
-> 
-> Also, perhaps paranoid; but do we want something like:
-> 
-> static inline void page_set_keyid(struct page *page, int keyid)
-> {
-> 	/* ensure nothing creeps after changing the keyid */
-> 	barrier();
-> 	WRITE_ONCE(lookup_page_ext(page)->keyid, keyid);
-> 	barrier();
-> 	/* ensure nothing creeps before changing the keyid */
-> }
-> 
-> And this is very much assuming there is no concurrency through the
-> allocator locks.
+On Thu, 13 Jun 2019, Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+>
+> Add a script to parse the Documentation/ABI files and produce
+> an output with all entries inside an ABI (sub)directory.
+>
+> Right now, it outputs its contents on ReST format. It shouldn't
+> be hard to make it produce other kind of outputs, since the ABI
+> file parser is implemented in separate than the output generator.
 
-There's no concurrency for this page: it has been off the free list, but
-have not yet passed on to user. Nobody else sees the page before
-allocation is finished.
+Hum, or just convert the ABI files to rst directly.
 
-And barriers/WRITE_ONCE() looks excessive to me. It's just yet another bit
-of page's metadata and I don't see why it's has to be handled in a special
-way.
+BR,
+Jani.
 
-Does it relax your paranoia? :P
+
+
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  scripts/get_abi.pl | 212 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 212 insertions(+)
+>  create mode 100755 scripts/get_abi.pl
+>
+> diff --git a/scripts/get_abi.pl b/scripts/get_abi.pl
+> new file mode 100755
+> index 000000000000..f7c9944a833c
+> --- /dev/null
+> +++ b/scripts/get_abi.pl
+> @@ -0,0 +1,212 @@
+> +#!/usr/bin/perl
+> +
+> +use strict;
+> +use Pod::Usage;
+> +use Getopt::Long;
+> +use File::Find;
+> +use Fcntl ':mode';
+> +
+> +my $help;
+> +my $man;
+> +my $debug;
+> +
+> +GetOptions(
+> +	"debug|d+" => \$debug,
+> +	'help|?' => \$help,
+> +	man => \$man
+> +) or pod2usage(2);
+> +
+> +pod2usage(1) if $help;
+> +pod2usage(-exitstatus => 0, -verbose => 2) if $man;
+> +
+> +pod2usage(2) if (scalar @ARGV != 1);
+> +
+> +my ($prefix) = @ARGV;
+> +
+> +require Data::Dumper if ($debug);
+> +
+> +my %data;
+> +
+> +#
+> +# Displays an error message, printing file name and line
+> +#
+> +sub parse_error($$$$) {
+> +	my ($file, $ln, $msg, $data) = @_;
+> +
+> +	print STDERR "file $file#$ln: $msg at\n\t$data";
+> +}
+> +
+> +#
+> +# Parse an ABI file, storing its contents at %data
+> +#
+> +sub parse_abi {
+> +	my $file = $File::Find::name;
+> +
+> +	my $mode = (stat($file))[2];
+> +	return if ($mode & S_IFDIR);
+> +	return if ($file =~ m,/README,);
+> +
+> +	my $name = $file;
+> +	$name =~ s,.*/,,;
+> +
+> +	my $type = $file;
+> +	$type =~ s,.*/(.*)/.*,$1,;
+> +
+> +	my $what;
+> +	my $new_what;
+> +	my $tag;
+> +	my $ln;
+> +
+> +	print STDERR "Opening $file\n" if ($debug > 1);
+> +	open IN, $file;
+> +	while(<IN>) {
+> +		$ln++;
+> +		if (m/^(\S+):\s*(.*)/i) {
+> +			my $new_tag = lc($1);
+> +			my $content = $2;
+> +
+> +			if (!($new_tag =~ m/(what|date|kernelversion|contact|description|users)/)) {
+> +				if ($tag eq "description") {
+> +					$data{$what}->{$tag} .= "\n$content";;
+> +					$data{$what}->{$tag} =~ s/\n+$//;
+> +					next;
+> +				} else {
+> +					parse_error($file, $ln, "tag '$tag' is invalid", $_);
+> +				}
+> +			}
+> +
+> +			if ($new_tag =~ m/what/) {
+> +				if ($tag =~ m/what/) {
+> +					$what .= ", " . $content;
+> +				} else {
+> +					$what = $content;
+> +					$new_what = 1;
+> +				}
+> +				$tag = $new_tag;
+> +				next;
+> +			}
+> +
+> +			$tag = $new_tag;
+> +
+> +			if ($new_what) {
+> +				$new_what = 0;
+> +
+> +				$data{$what}->{type} = $type;
+> +				$data{$what}->{file} = $name;
+> +				print STDERR "\twhat: $what\n" if ($debug > 1);
+> +			}
+> +
+> +			if (!$what) {
+> +				parse_error($file, $ln, "'What:' should come first:", $_);
+> +				next;
+> +			}
+> +			$data{$what}->{$tag} = $content;
+> +			next;
+> +		}
+> +
+> +		# Silently ignore any headers before the database
+> +		next if (!$tag);
+> +
+> +		if (m/^\s*(.*)/) {
+> +			$data{$what}->{$tag} .= "\n$1";
+> +			$data{$what}->{$tag} =~ s/\n+$//;
+> +			next;
+> +		}
+> +
+> +		# Everything else is error
+> +		parse_error($file, $ln, "Unexpected line:", $_);
+> +	}
+> +	close IN;
+> +}
+> +
+> +# Outputs the output on ReST format
+> +sub output_rest {
+> +	foreach my $what (sort keys %data) {
+> +		my $type = $data{$what}->{type};
+> +		my $file = $data{$what}->{file};
+> +
+> +		my $w = $what;
+> +		$w =~ s/([\(\)\_\-\*\=\^\~\\])/\\$1/g;
+> +
+> +		print "$w\n\n";
+> +		print "- defined on file $file (type: $type)\n\n::\n\n";
+> +
+> +		my $desc = $data{$what}->{description};
+> +		$desc =~ s/^\s+//;
+> +
+> +		# Remove title markups from the description, as they won't work
+> +		$desc =~ s/\n[\-\*\=\^\~]+\n/\n/g;
+> +
+> +		# put everything inside a code block
+> +		$desc =~ s/\n/\n /g;
+> +
+> +
+> +		if (!($desc =~ /^\s*$/)) {
+> +			print " $desc\n\n";
+> +		} else {
+> +			print " DESCRIPTION MISSING\n\n";
+> +		}
+> +	}
+> +}
+> +
+> +#
+> +# Parses all ABI files located at $prefix dir
+> +#
+> +find({wanted =>\&parse_abi, no_chdir => 1}, $prefix);
+> +
+> +print STDERR Data::Dumper->Dump([\%data], [qw(*data)]) if ($debug);
+> +
+> +#
+> +# Outputs an ReST file with the ABI contents
+> +#
+> +output_rest
+> +
+> +
+> +__END__
+> +
+> +=head1 NAME
+> +
+> +abi_book.pl - parse the Linux ABI files and produce a ReST book.
+> +
+> +=head1 SYNOPSIS
+> +
+> +B<abi_book.pl> [--debug] <ABI_DIR>]
+> +
+> +=head1 OPTIONS
+> +
+> +=over 8
+> +
+> +=item B<--debug>
+> +
+> +Put the script in verbose mode, useful for debugging. Can be called multiple
+> +times, to increase verbosity.
+> +
+> +=item B<--help>
+> +
+> +Prints a brief help message and exits.
+> +
+> +=item B<--man>
+> +
+> +Prints the manual page and exits.
+> +
+> +=back
+> +
+> +=head1 DESCRIPTION
+> +
+> +Parse the Linux ABI files from ABI DIR (usually located at Documentation/ABI)
+> +and produce a ReST book containing the Linux ABI.
+> +
+> +=head1 BUGS
+> +
+> +Report bugs to Mauro Carvalho Chehab <mchehab@s-opensource.com>
+> +
+> +=head1 COPYRIGHT
+> +
+> +Copyright (c) 2016 by Mauro Carvalho Chehab <mchehab@s-opensource.com>.
+> +
+> +License GPLv2: GNU GPL version 2 <http://gnu.org/licenses/gpl.html>.
+> +
+> +This is free software: you are free to change and redistribute it.
+> +There is NO WARRANTY, to the extent permitted by law.
+> +
+> +=cut
 
 -- 
- Kirill A. Shutemov
+Jani Nikula, Intel Open Source Graphics Center
