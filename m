@@ -2,258 +2,274 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86316C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C0BC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 477982168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 451832168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:41:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Trfs0DuM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6G7BoDB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbfFNNk7 (ORCPT
+        id S1728460AbfFNNlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:40:59 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:52745 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728301AbfFNNk7 (ORCPT
+        Fri, 14 Jun 2019 09:41:16 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50722 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727918AbfFNNlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:40:59 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190614134057euoutp015d2097e35a2c76e7c742b270ae1d6405~oFFxTeczd3177231772euoutp01w
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 13:40:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190614134057euoutp015d2097e35a2c76e7c742b270ae1d6405~oFFxTeczd3177231772euoutp01w
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1560519657;
-        bh=+ZzNZVpTuLGrOOQoRV7Ief94EdVHmVGQucnOC6c/nP0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Trfs0DuMSl21QJlyU9ckjlqR8CFqBM3V6byuRgPvNfVj6laK49jhlP2qQXOb8FFBR
-         AIIVegDkZk981BicJaayTP4dkHG3bU9MVOlfpMOL40W6Svw94iOx9indofxoVKWBS0
-         6S+aeeLEYn1cEMqqb1F6MBM4SmAfCy+tE+MBEr00=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190614134056eucas1p1f027afb1e1ee5936d02bd3e470ef5b26~oFFwgE7yf2597425974eucas1p1h;
-        Fri, 14 Jun 2019 13:40:56 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 9D.22.04298.8E3A30D5; Fri, 14
-        Jun 2019 14:40:56 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190614134055eucas1p16bbd29a62be6825394efb3b635182019~oFFvlXRvG3190831908eucas1p1E;
-        Fri, 14 Jun 2019 13:40:55 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190614134055eusmtrp16d5f32edc3d1360d84dcda5e43addbdb~oFFvVgrBl1787017870eusmtrp1A;
-        Fri, 14 Jun 2019 13:40:55 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-7c-5d03a3e877dd
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 6E.6C.04146.7E3A30D5; Fri, 14
-        Jun 2019 14:40:55 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190614134054eusmtip2e7741234ae8ace93d169fd44129e8334~oFFugLp_T2169921699eusmtip2J;
-        Fri, 14 Jun 2019 13:40:54 +0000 (GMT)
-Subject: Re: [PATCH v10 08/13] drivers: memory: add DMC driver for
- Exynos5422
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
-        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
-        willy.mh.wolff.ml@gmail.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <6f86228d-8409-a835-20ba-ad20464379dd@partner.samsung.com>
-Date:   Fri, 14 Jun 2019 15:40:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.0
+        Fri, 14 Jun 2019 09:41:15 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c66so2437011wmf.0;
+        Fri, 14 Jun 2019 06:41:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=urqaKiKcLrJEblLE8+XdAboXEjaR6M1gRRSSmR7FScw=;
+        b=f6G7BoDBciBLYV9QMXXNv/zkT7BGMPhTiKhbXA8aWM+X1d/DcbZu/JOnFl4SvylxHo
+         38snO8SLUJD7O4Msz5GmhRYms2tsfXpFTO2+7IupBrcnmEa8m2V6LLTo+gXruLmaCR1I
+         o8fxToZFPi3rIMcKTHTcSTr4OQWI7sNfg3vRMhQxVKNGKDIYuM4I9a/1c1D2zGCcfNT9
+         1bZZAINW/opHIeM1boEaLBjPk7BiWZz6g8TSiT3DR0qQzXdEepsqW/+1CrXH4HoqPAQK
+         To6H7Xlbi5sXOkWCFMH+JEjalXmYb7w2436dLipJd8opKdjoi1OUEYhuGsz3nNfUoowJ
+         8e9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=urqaKiKcLrJEblLE8+XdAboXEjaR6M1gRRSSmR7FScw=;
+        b=MASd4FC2+lUM7NJPdGbC0+gIVFVtGYfmtobd0Lat9xFy9KTESCsEtkGKS9aBKHubKj
+         eAbhh0aXokI5Qv5WQl/TTivV5GvMNAhryR0RRz4EisXtaErwxlUE/dHFDm862BecQiXi
+         FDLSp3PlEwbgJ5l5yK9WwUjLBSUcB4VakjBLEuEJ+sKMe0jHeML3Qd1QNBAeR9lbbcUe
+         brJIzKe8s5X1UQwU7QmTB3m2U88uhDcm2FopnQ2TSRFiewKtwuAVFrIwSU+01xKBeKyk
+         475xzUlIYjZFJi35jwm3ljdWzLimA4fCOVY51dSWjnIt9gAywgQ/XtOU5dYgxnafFRE8
+         UAHQ==
+X-Gm-Message-State: APjAAAWXc03rgA9p5Z8KNd36d5gGl/oAMj0F1z6CiwRnhXNBORy65p0i
+        +rSnOBNPHts8CIG48fiBTL0=
+X-Google-Smtp-Source: APXvYqxswwUWs8sABZyoTXQPjxIQn7vtGYSsVLr0m8JTWoKM9NUet9+L51oP1hOk/CXu9hbpF7VlBw==
+X-Received: by 2002:a7b:c5d1:: with SMTP id n17mr8220842wmk.84.1560519672520;
+        Fri, 14 Jun 2019 06:41:12 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id k5sm1947558wmj.30.2019.06.14.06.41.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 06:41:11 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 15:41:10 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] rtc: tegra: Implement suspend clock source
+Message-ID: <20190614134110.GF15526@ulmo>
+References: <20190614104747.19712-1-thierry.reding@gmail.com>
+ <20190614104747.19712-2-thierry.reding@gmail.com>
+ <5a00bccf-6542-51bd-9030-99a59f14f2f9@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPehO2pKrTKMO4YRwDMaPPngmeWG9WF=kMuBG+=P1ix3NA@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0yNcRjH/c577XDq54SexbSdaWgTbTa/Yc197zLX2dxmHLyrplOcV5H6
-        I0zRFRWnQ3KWScfl5EjJDm1dnJw4CYtp0o2MQrot1PT2Zvrv83yf7/N7nu/24yltEuvLh0ce
-        Fo2R+ggdq6ZLngzWzfucT+1acN3sR+6abAx509vBkLwqN0NudrchcjLfxpJMV66KPEsxkIy2
-        rxSpqyviyPMTnRzpTm1iyKuHl1nSk1aFiKnusYrcrnrPkXrXatJ4/AZLKjuTGDLccJcm5a9D
-        SONvT9Jf04qWTRP6+87Twve3pzjhUkI9LZSZ33OC3XqGFcpzb3FC2slvrJBebEXCvdo4occ+
-        c6N6h3rpfjEiPEY0zg/eow7raDx0sEZ39EdrH52A3L7JyIMHvBDMP1rYZKTmtfgGgsftnbRS
-        9CL42GxjlKIHQXdOP/NvpNJl4mTW4gIEz5IFxdSFYLg6G8kNb7wBHAXVlMxT8Fx4MzQw+hKF
-        sxlwDLhHFvI8iwPhgfWQ7NHgNdCU90slM439YcDyZ3R2Kt4GvWV2pHgmw9OcdlpmD7wJ7KaG
-        UT+FfeBde94Y+0Fp12VK3gXYwUNWZxmrXL0KGlJaaYW94YuzmFN4BtRmpo7pEiSkWZDC8dCW
-        kTvmWQKVznpGvpkaCWN7OF+Rl0O6pUUly4A94W3XZOUETzhfcpFSZA2cTtQq7jlQnPpCpfA0
-        KLh1gTuLdOZxwczjwpjHhTH/33sV0VbkI0ZLhlBRCooUjwRKeoMUHRkauC/KYEcj37N22Pnz
-        Aep7ubcCYR7pJmlM6dQuLaOPkWINFQh4SjdFc2XJiKTZr489JhqjdhujI0SpAk3naZ2PJm5C
-        804tDtUfFg+I4kHR+K+r4j18E9C5wdzls03rbZZZMdvTretPV3tUxs8pnvXFObFQa11xM37Q
-        3yev41vpuy2FW1/G1i/c7DV1aVG+xVnkNbQYz+PXTUwNyFkbUvuqt+lSzrWWz8as4HstFr84
-        h9FdMmHx5sTgqItsRvanO1eaXfGabY8WhYVmxiTpd1gLs9j7DtfK8g9uHS2F6YMCKKOk/ws+
-        OqLwmgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJKsWRmVeSWpSXmKPExsVy+t/xe7rPFzPHGvRdkrPYOGM9q8X1L89Z
-        LeYfOcdqsfrjY0aL5sXr2Swmn5rLZHGmO9ei//FrZovz5zewW5xtesNu8bHnHqvF5V1z2Cw+
-        9x5htJhxfh+Txdojd9ktLp5ytbjduILN4vCbdlaLf9c2sljsv+Jlcfs3n8W3E48YHcQ8vn2d
-        xOLx/kYru8fshossHjtn3WX32LSqk81j/9w17B69ze/YPPq2rGL02Hy62uPzJrkArig9m6L8
-        0pJUhYz84hJbpWhDCyM9Q0sLPSMTSz1DY/NYKyNTJX07m5TUnMyy1CJ9uwS9jOe3CwtOKFV8
-        ePSVpYHxnFQXIyeHhICJxOFTM9hBbCGBpYwSGz6EQ8TFJCbt284OYQtL/LnWxdbFyAVU85pR
-        ou/WCyCHg0NYwFdi93FxkBoRAU2J63+/s4LUMAtMZZWY8Pw01NAJTBLHdsWB1LMJ6EnsWFUI
-        EuYVcJO4N/8XE4jNIqAq8X3hH2YQW1QgQmL2rgYWiBpBiZMzn4DZnAKBEptmXAOrZxYwk5i3
-        +SEzhC0ucevJfKi4vMT2t3OYJzAKzULSPgtJyywkLbOQtCxgZFnFKJJaWpybnltsqFecmFtc
-        mpeul5yfu4kRmCy2Hfu5eQfjpY3BhxgFOBiVeHhn9DHHCrEmlhVX5h5ilOBgVhLhnWcNFOJN
-        SaysSi3Kjy8qzUktPsRoCvTcRGYp0eR8YCLLK4k3NDU0t7A0NDc2NzazUBLn7RA4GCMkkJ5Y
-        kpqdmlqQWgTTx8TBKdXA2OicoMT9dhcTjwyvqe+aNh3LRp11fXejNiyMnL79vOPjy1zX+NVL
-        y0OzLsbIZGex1mi0eFx03hiX1rx9ZSnTq1Jj7nynRz0x+1/zPtf2r4tWb7V5d3Sj+yHbaptC
-        JS5F1kVTDqRfnLn+Zjj7nl3GS+JL7Y61nNn3WESmcMuqKebrYmZ5hd5TYinOSDTUYi4qTgQA
-        gD6NvywDAAA=
-X-CMS-MailID: 20190614134055eucas1p16bbd29a62be6825394efb3b635182019
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190614095327eucas1p19b6e522efa15c8fd21c51f3900e376e9
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190614095327eucas1p19b6e522efa15c8fd21c51f3900e376e9
-References: <CGME20190614095327eucas1p19b6e522efa15c8fd21c51f3900e376e9@eucas1p1.samsung.com>
-        <20190614095309.24100-1-l.luba@partner.samsung.com>
-        <20190614095309.24100-9-l.luba@partner.samsung.com>
-        <CAJKOXPehO2pKrTKMO4YRwDMaPPngmeWG9WF=kMuBG+=P1ix3NA@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="GV0iVqYguTV4Q9ER"
+Content-Disposition: inline
+In-Reply-To: <5a00bccf-6542-51bd-9030-99a59f14f2f9@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
 
-On 6/14/19 2:58 PM, Krzysztof Kozlowski wrote:
-> On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->> This patch adds driver for Exynos5422 Dynamic Memory Controller.
->> The driver provides support for dynamic frequency and voltage scaling for
->> DMC and DRAM. It supports changing timings of DRAM running with different
->> frequency. There is also an algorithm to calculate timigns based on
->> memory description provided in DT.
->> The patch also contains needed MAINTAINERS file update.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   MAINTAINERS                             |    8 +
->>   drivers/memory/samsung/Kconfig          |   17 +
->>   drivers/memory/samsung/Makefile         |    1 +
->>   drivers/memory/samsung/exynos5422-dmc.c | 1262 +++++++++++++++++++++++
->>   4 files changed, 1288 insertions(+)
->>   create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 57f496cff999..6ffccfd95351 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -3470,6 +3470,14 @@ S:       Maintained
->>   F:     drivers/devfreq/exynos-bus.c
->>   F:     Documentation/devicetree/bindings/devfreq/exynos-bus.txt
->>
->> +DMC FREQUENCY DRIVER FOR SAMSUNG EXYNOS5422
-> 
-> Eh, more comments from my side.
-> "For the hard of thinking, this list is meant to remain in alphabetical order."
-OK
-> 
->> +M:     Lukasz Luba <l.luba@partner.samsung.com>
->> +L:     linux-pm@vger.kernel.org
->> +L:     linux-samsung-soc@vger.kernel.org
->> +S:     Maintained
->> +F:     drivers/memory/samsung/exynos5422-dmc.c
->> +F:     Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
->> +
->>   BUSLOGIC SCSI DRIVER
->>   M:     Khalid Aziz <khalid@gonehiking.org>
->>   L:     linux-scsi@vger.kernel.org
->> diff --git a/drivers/memory/samsung/Kconfig b/drivers/memory/samsung/Kconfig
->> index 79ce7ea58903..c93baa029654 100644
->> --- a/drivers/memory/samsung/Kconfig
->> +++ b/drivers/memory/samsung/Kconfig
->> @@ -5,6 +5,23 @@ config SAMSUNG_MC
->>            Support for the Memory Controller (MC) devices found on
->>            Samsung Exynos SoCs.
->>
->> +config ARM_EXYNOS5422_DMC
-> 
-> Why you added prefix of ARM to CONFIG think none of other Exynos
-> Kconfig options follow such convention (except devfreq).
-In the previous versions the driver was in drivers/devfreq/,
-that's why they have this prefix.
-> 
->> +       tristate "ARM EXYNOS5422 Dynamic Memory Controller driver"
->> +       depends on ARCH_EXYNOS
->> +       select DDR
-> 
-> In general select should be used only for non-visible symbols and DDR
-> is visible. Use depends.
-OK
-> 
->> +       select PM_DEVFREQ
-> 
-> This definitely cannot be select. You do not select entire subsystem
-> because some similar driver was chosen.
-So I will use depends int this case
-> 
->> +       select DEVFREQ_GOV_SIMPLE_ONDEMAND
->> +       select DEVFREQ_GOV_USERSPACE
-> 
-> I think only simple_ondemand is needed. Is userspace governor
-> necessary for working? Or actually maybe both could be skipped?
-> 
-Actually we can skip both governors from here.
+--GV0iVqYguTV4Q9ER
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> +       select PM_DEVFREQ_EVENT
-> 
-> Again, depends.
-OK
+On Fri, Jun 14, 2019 at 03:01:13PM +0300, Dmitry Osipenko wrote:
+> 14.06.2019 13:47, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > From: Thierry Reding <treding@nvidia.com>
+> >=20
+> > The suspend clock source for Tegra210 and earlier is currently
+> > implemented in the Tegra timer driver. However, the suspend clock source
+> > code accesses registers that are part of the RTC hardware block, so both
+> > can step on each others' toes. In practice this isn't an issue, but
+> > there is no reason why the RTC driver can't implement the clock source,
+> > so move the code over to the tegra-rtc driver.
+> >=20
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> >  drivers/clocksource/timer-tegra.c | 44 -------------------------------
+> >  drivers/rtc/rtc-tegra.c           | 42 +++++++++++++++++++++++++++++
+> >  2 files changed, 42 insertions(+), 44 deletions(-)
+> >=20
+> > diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/ti=
+mer-tegra.c
+> > index e6608141cccb..87eac618924d 100644
+> > --- a/drivers/clocksource/timer-tegra.c
+> > +++ b/drivers/clocksource/timer-tegra.c
+> > @@ -21,10 +21,6 @@
+> > =20
+> >  #include "timer-of.h"
+> > =20
+> > -#define RTC_SECONDS		0x08
+> > -#define RTC_SHADOW_SECONDS	0x0c
+> > -#define RTC_MILLISECONDS	0x10
+> > -
+> >  #define TIMERUS_CNTR_1US	0x10
+> >  #define TIMERUS_USEC_CFG	0x14
+> >  #define TIMERUS_CNTR_FREEZE	0x4c
+> > @@ -164,34 +160,6 @@ static struct delay_timer tegra_delay_timer =3D {
+> >  };
+> >  #endif
+> > =20
+> > -static struct timer_of suspend_rtc_to =3D {
+> > -	.flags =3D TIMER_OF_BASE | TIMER_OF_CLOCK,
+> > -};
+> > -
+> > -/*
+> > - * tegra_rtc_read - Reads the Tegra RTC registers
+> > - * Care must be taken that this function is not called while the
+> > - * tegra_rtc driver could be executing to avoid race conditions
+> > - * on the RTC shadow register
+> > - */
+> > -static u64 tegra_rtc_read_ms(struct clocksource *cs)
+> > -{
+> > -	void __iomem *reg_base =3D timer_of_base(&suspend_rtc_to);
+> > -
+> > -	u32 ms =3D readl_relaxed(reg_base + RTC_MILLISECONDS);
+> > -	u32 s =3D readl_relaxed(reg_base + RTC_SHADOW_SECONDS);
+> > -
+> > -	return (u64)s * MSEC_PER_SEC + ms;
+> > -}
+> > -
+> > -static struct clocksource suspend_rtc_clocksource =3D {
+> > -	.name	=3D "tegra_suspend_timer",
+> > -	.rating	=3D 200,
+> > -	.read	=3D tegra_rtc_read_ms,
+> > -	.mask	=3D CLOCKSOURCE_MASK(32),
+> > -	.flags	=3D CLOCK_SOURCE_IS_CONTINUOUS | CLOCK_SOURCE_SUSPEND_NONSTOP,
+> > -};
+> > -
+> >  static inline unsigned int tegra_base_for_cpu(int cpu, bool tegra20)
+> >  {
+> >  	if (tegra20) {
+> > @@ -385,15 +353,3 @@ static int __init tegra20_init_timer(struct device=
+_node *np)
+> >  	return tegra_init_timer(np, true, rating);
+> >  }
+> >  TIMER_OF_DECLARE(tegra20_timer, "nvidia,tegra20-timer", tegra20_init_t=
+imer);
+> > -
+> > -static int __init tegra20_init_rtc(struct device_node *np)
+> > -{
+> > -	int ret;
+> > -
+> > -	ret =3D timer_of_init(np, &suspend_rtc_to);
+> > -	if (ret)
+> > -		return ret;
+> > -
+> > -	return clocksource_register_hz(&suspend_rtc_clocksource, 1000);
+> > -}
+> > -TIMER_OF_DECLARE(tegra20_rtc, "nvidia,tegra20-rtc", tegra20_init_rtc);
+> > diff --git a/drivers/rtc/rtc-tegra.c b/drivers/rtc/rtc-tegra.c
+> > index 8fa1b3febf69..6da54264a27a 100644
+> > --- a/drivers/rtc/rtc-tegra.c
+> > +++ b/drivers/rtc/rtc-tegra.c
+> > @@ -6,6 +6,7 @@
+> >   */
+> > =20
+> >  #include <linux/clk.h>
+> > +#include <linux/clocksource.h>
+> >  #include <linux/delay.h>
+> >  #include <linux/init.h>
+> >  #include <linux/io.h>
+> > @@ -52,8 +53,15 @@ struct tegra_rtc_info {
+> >  	struct clk *clk;
+> >  	int irq; /* alarm and periodic IRQ */
+> >  	spinlock_t lock;
+> > +
+> > +	struct clocksource clksrc;
+> >  };
+> > =20
+> > +static struct tegra_rtc_info *to_tegra_rtc(struct clocksource *clksrc)
+> > +{
+> > +	return container_of(clksrc, struct tegra_rtc_info, clksrc);
+> > +}
+> > +
+> >  /*
+> >   * RTC hardware is busy when it is updating its values over AHB once e=
+very
+> >   * eight 32 kHz clocks (~250 us). Outside of these updates the CPU is =
+free to
+> > @@ -268,6 +276,17 @@ static const struct rtc_class_ops tegra_rtc_ops =
+=3D {
+> >  	.alarm_irq_enable =3D tegra_rtc_alarm_irq_enable,
+> >  };
+> > =20
+> > +static u64 tegra_rtc_read_ms(struct clocksource *clksrc)
+> > +{
+> > +	struct tegra_rtc_info *info =3D to_tegra_rtc(clksrc);
+> > +	u32 ms, s;
+> > +
+> > +	ms =3D readl_relaxed(info->base + TEGRA_RTC_REG_MILLI_SECONDS);
+> > +	s =3D readl_relaxed(info->base + TEGRA_RTC_REG_SHADOW_SECONDS);
+> > +
+> > +	return (u64)s * MSEC_PER_SEC + ms;
+> > +}
+> > +
+> >  static const struct of_device_id tegra_rtc_dt_match[] =3D {
+> >  	{ .compatible =3D "nvidia,tegra20-rtc", },
+> >  	{}
+> > @@ -339,6 +358,28 @@ static int tegra_rtc_probe(struct platform_device =
+*pdev)
+> >  		goto disable_clk;
+> >  	}
+> > =20
+> > +	/*
+> > +	 * The Tegra RTC is the only reliable clock source that persists
+> > +	 * across an SC7 transition (VDD_CPU and VDD_CORE off) on Tegra210
+> > +	 * and earlier. Starting with Tegra186, the ARM v8 architected timer
+> > +	 * is in an always on power partition and its reference clock keeps
+> > +	 * running during SC7. Therefore, we technically don't need to have
+> > +	 * the RTC register as a clock source on Tegra186 and later, but it
+> > +	 * doesn't hurt either, so we just register it unconditionally here.
+> > +	 */
+> > +	info->clksrc.name =3D "tegra_rtc";
+> > +	info->clksrc.rating =3D 200;
+> > +	info->clksrc.read =3D tegra_rtc_read_ms;
+> > +	info->clksrc.mask =3D CLOCKSOURCE_MASK(32);
+>=20
+> Hm.. shouldn't this be CLOCKSOURCE_MASK(52)? Given that there are 32 bits=
+ for seconds and
+> 10bits for milliseconds.
 
-There are these 4 options which the driver depends on:
-         depends on ARCH_EXYNOS
-         depends on DDR
-         depends on PM_DEVFREQ
-         depends on PM_DEVFREQ_EVENT
+Did you mean to say CLOCKSOURCE_MASK(42)? Yeah, that's probably better
+here.
 
-Should I merged them into one, two lines? like below:
-a)
-depends on (ARCH_EXYNOS && DDR && PM_DEVFREQ && PM_DEVFREQ_EVENT)
-b) grouped into two sets
-depends on (ARCH_EXYNOS && DDR)
-depends on (PM_DEVFREQ && PM_DEVFREQ_EVENT)
-c) grouped by pm_devfreq only
-depends on ARCH_EXYNOS
-depends on DDR
-depends on (PM_DEVFREQ && PM_DEVFREQ_EVENT)
+Thierry
 
-> 
->> +       select PM_OPP
-This option can be used here IIUC
->> +       help
->> +         This adds driver for Exynos5422 DMC (Dynamic Memory Controller).
->> +         The driver provides support for Dynamic Voltage and Frequency Scaling in
->> +         DMC and DRAM. It also supports changing timings of DRAM running with
->> +         different frequency. The timings are calculated based on DT memory
->> +         information.
->> +
->> +
->>   if SAMSUNG_MC
-> 
-> Why this is outside of SAMSUNG_MC?
-Good question, I will move it below this 'if' statement.
+--GV0iVqYguTV4Q9ER
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Regards,
-Lukasz
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Do/QACgkQ3SOs138+
+s6HR9RAAsJyzd0Esu9QvsUoB6AafwWFSFPYw6wwtOpUYUKXqhjnGhCnrokJmny2I
+DNS8nD0AEcdS2J1xcz0g1Ani1ZfK6go7eKRR70cxvoqR+ykYybGodqoXYrDNFAy6
+aqazQXOZLHL76jWTgBbLpxCj0PXPqzDJVca01x6VgCqCaQlyY00gxm99FaOe+RFQ
+ldzN3zEXysNXcW4k0NvDdDEfBcnT5HcxtNd7+HMovWB9XlO6RefD1Fp+sXpiLtw1
+OGVvIqQVVu7pwrQvaQN8LD96GFE9IygI98h3QiIAkXeOKQaL83KENg5+O1setGqM
+Gc/1QqIEnHFNNPcUiJWQJ+czlxVN+4hfAUPq+s27f+f+7Brz2jjVB2xbAeV3QJT8
+OR+rC0rs56lI85wuqUNQDGeGO2VrVrXQXNMPlB5YYBAcegzTg7p+yXFNMxP+8jsO
+aSMi7hlVKT7aulOh0mGiyDOhw5iSo2oDfwa1LS8ssFyFqGokCpnsNDX4Hbp3ty9B
+rwB77aKiMCYlfi+tLufWqbPA7aKUKg76eRHIyAfAG3KA/OaYWELxDeghO0IXi5JF
+XIr0KGim7+xoxAj9BN7GbOplb38jSSmYMYFmdJvG2GJx9Qtvpz++e7sUch+t0Uat
+01UaISSIEOC49LsJ5OKlpWfKeJ+PaHm+LLe9Mn3q8pN7alBK4is=
+=/nfa
+-----END PGP SIGNATURE-----
+
+--GV0iVqYguTV4Q9ER--
