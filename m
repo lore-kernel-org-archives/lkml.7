@@ -2,88 +2,109 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E73C31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB87EC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF94A2173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988DC20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:22:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728557AbfFNOVw (ORCPT
+        id S1728738AbfFNOWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:21:52 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:38289 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727729AbfFNOVv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:21:51 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hbn5M-0007a1-1S; Fri, 14 Jun 2019 16:21:44 +0200
-Date:   Fri, 14 Jun 2019 16:21:43 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@amacapital.net>
-cc:     Dave Hansen <dave.hansen@intel.com>,
-        Marius Hillenbrand <mhillenb@amazon.de>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        linux-mm@kvack.org, Alexander Graf <graf@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM
- secrets
-In-Reply-To: <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net>
-Message-ID: <alpine.DEB.2.21.1906141618000.1722@nanos.tec.linutronix.de>
-References: <20190612170834.14855-1-mhillenb@amazon.de> <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com> <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 14 Jun 2019 10:22:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:35154 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728300AbfFNOWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:22:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0FA17344;
+        Fri, 14 Jun 2019 07:22:40 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BF923F246;
+        Fri, 14 Jun 2019 07:22:38 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 15:22:31 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Anisse Astier <aastier@freebox.fr>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Rich Felker <dalias@aerifal.cx>, linux-kernel@vger.kernel.org,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Ricardo Salveti <ricardo@foundries.io>
+Subject: Re: [PATCH] arm64/sve: <uapi/asm/ptrace.h> should not depend on
+ <uapi/linux/prctl.h>
+Message-ID: <20190614142231.GA29231@fuggles.cambridge.arm.com>
+References: <20190613163801.21949-1-aastier@freebox.fr>
+ <20190613171432.GA2790@e103592.cambridge.arm.com>
+ <20190614112222.GA47082@anisse-station>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1104140577-1560522104=:1722"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614112222.GA47082@anisse-station>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Anisse, Dave,
 
---8323329-1104140577-1560522104=:1722
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+On Fri, Jun 14, 2019 at 01:22:22PM +0200, Anisse Astier wrote:
+> On Thu, Jun 13, 2019 at 06:14:44PM +0100, Dave Martin wrote:
+> > On Thu, Jun 13, 2019 at 06:38:01PM +0200, Anisse Astier wrote:
+> > > -#define SVE_PT_VL_INHERIT		(PR_SVE_VL_INHERIT >> 16)
+> > > -#define SVE_PT_VL_ONEXEC		(PR_SVE_SET_VL_ONEXEC >> 16)
+> > > +#define SVE_PT_VL_INHERIT		(1 << 1) /* PR_SVE_VL_INHERIT */
+> > > +#define SVE_PT_VL_ONEXEC		(1 << 2) /* PR_SVE_SET_VL_ONEXEC */
+> > 
+> > Makes sense, but...
+> > 
+> > Since sve_context.h was already introduced to solve a closely related
+> > problem, I wonder whether we can provide shadow definitions there,
+> > similarly to way the arm64/include/uapi/asm/ptrace.h definitions are
+> > derived.  Although it's a slight abuse of that header, I think that
+> > would be my preferred approach.
+> 
+> Yes I saw this, and I considered doing something similar. But, those
+> defines are in uapi/linux/prctl.h, which does not include any asm/*.h
+> header. This would have then required adding a full infrastructure for
+> asm/prctl.h (that could then include sve_context.h for example), which
+> does not exist yet, instead of copying these two values.
 
-On Wed, 12 Jun 2019, Andy Lutomirski wrote:
-> > On Jun 12, 2019, at 12:55 PM, Dave Hansen <dave.hansen@intel.com> wrote:
-> > 
-> >> On 6/12/19 10:08 AM, Marius Hillenbrand wrote:
-> >> This patch series proposes to introduce a region for what we call
-> >> process-local memory into the kernel's virtual address space. 
-> > 
-> > It might be fun to cc some x86 folks on this series.  They might have
-> > some relevant opinions. ;)
-> > 
-> > A few high-level questions:
-> > 
-> > Why go to all this trouble to hide guest state like registers if all the
-> > guest data itself is still mapped?
-> > 
-> > Where's the context-switching code?  Did I just miss it?
-> > 
-> > We've discussed having per-cpu page tables where a given PGD is only in
-> > use from one CPU at a time.  I *think* this scheme still works in such a
-> > case, it just adds one more PGD entry that would have to context-switched.
->
-> Fair warning: Linus is on record as absolutely hating this idea. He might
-> change his mind, but it’s an uphill battle.
+x86 appears to have an asm/prctl.h implementation, but it's not included
+by anybody so I guess that doesn't really help us here.
 
-Yes I know, but as a benefit we could get rid of all the GSBASE horrors in
-the entry code as we could just put the percpu space into the local PGD.
+> Since this is part of the kernel-userspace ABI, I don't see this values
+> changing anytime soon, which is why I thought copying them shouldn't be
+> a big issue.
+
+Certainly not a big issue, just that the harder we make this to change
+the better.
+
+> A simple solution would be to to include sve_context.h or a third
+> header, maybe linux/prctl_arm64_sve.h (with only these two/five
+> defines), in linux/prctl.h, and reuse it in uapi/asm/ptrace.h; but this
+> would break the self-contained nature of linux/prctl.h.
+> > 
+> > Otherwise, at least make the required relationship between ptrace.h and
+> > prctl.h constants a bit more obvious, say,
+> > 
+> > 	#define SVE_PT_VL_INHERIT ((1 << 17) /* PR_SVE_SET_VL_INHERIT */ >> 16)
+> 
+> This one is much simpler and closer to what I had in mind with this
+> patch.
+> 
+> Will, what do you think of this second approach Dave proposed ?
+
+Duplication is grotty, but it does the job so I'm ok with it. I don't have
+any better ideas.
 
 Thanks,
 
-	tglx
---8323329-1104140577-1560522104=:1722--
+Will
