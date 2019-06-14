@@ -7,65 +7,67 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DB7C31E4E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811E2C31E4E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B0E21841
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 589F621841
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ApCzoYVF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZHrf0zet"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbfFNWr4 (ORCPT
+        id S1726582AbfFNWr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 18:47:56 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38588 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbfFNWrz (ORCPT
+        Fri, 14 Jun 2019 18:47:58 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35502 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbfFNWr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 18:47:55 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v11so2311958pgl.5
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 15:47:55 -0700 (PDT)
+        Fri, 14 Jun 2019 18:47:56 -0400
+Received: by mail-pf1-f194.google.com with SMTP id d126so2246922pfd.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 15:47:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B/paYYaNElnUhrLCMfr9aofzvSpDY7fIjtUGwDwrL/w=;
-        b=ApCzoYVFWJ+gmiLTLvrC4zRCv/sxTzAUuGigYReuCPkwv8+JbQtTQ1ujJvy8eXWLqB
-         +IQTzppqRJKhqe+8V7UEuUHo4bd+AM07L3HjWFZQQdGpjnep077mDCdlHdC1RIk2DgQq
-         5mJV4O++xveG92zkhvhU6kYaRMIla/IEBvu+I=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0MclKa4ww/GU4h0ModhXTnU03GxDuW7aam4X/xA5H20=;
+        b=ZHrf0zetXblEGMrSWzFuV+TI9faYuEa+jhfVW9V/m0B9O+jKxO4+WjenDITlg+aFYZ
+         rwkn7i/eEJwwpQKHMiEq0zlBvGsHMIF45Uf+FNPktBaKA1e7aETQITS6pxCwjG88fhY0
+         xNrhAWXlbmUSTAcnqo9tAd0ptVAPAcMc7dGLQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B/paYYaNElnUhrLCMfr9aofzvSpDY7fIjtUGwDwrL/w=;
-        b=GrZQT/05C9Nz3MgrvdN5SPSnS6ysJPGH6yBIDXs64Q7ud1JP/FFVQAg7vYTdNrFwU2
-         uHubat7eUo9PSMvyu30lp36bXj1xIoBCzxQAamnaxjAQtPERqy1ck1dtQz0io5W4Q399
-         9V8kXiwnYqoP2vT+rG7PFgdExDsGrRZw5NxQDfFy+l3hbUjWtmFcY6EGlxe4IaR32RWh
-         xbJwqYnw4HOZF4xQ+rQRZkpmOXbCiG2EfhbG+c3iwMvJ9e0Hj3Xes8B2T24bx8q5lR1V
-         SQhPFVeu9+YsT6fNk1Q7dZbdB2n3IQnK2uReAxf/sVwAMwzYlyMMR6j4KnWDAyxbW41D
-         a2Ug==
-X-Gm-Message-State: APjAAAWDUBPw+ZQqDFaxBUtmGTsg4FHAbN/wh5FOUrAlduu0k4rKq3T7
-        fba80CaURRA9oGleMKPqx3imoQ==
-X-Google-Smtp-Source: APXvYqwCFm4zexZwb/yHk0T7k2vyRVj2XJif4vKx4gUkaC3e6ysgiT29t7k5lmVupIUZSX9ZhqMjSw==
-X-Received: by 2002:a63:441c:: with SMTP id r28mr37978657pga.255.1560552475017;
-        Fri, 14 Jun 2019 15:47:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0MclKa4ww/GU4h0ModhXTnU03GxDuW7aam4X/xA5H20=;
+        b=W1Xw7Po/M0H2ojwhxcrdgpsb01F1GM79zGaQ3qdAEgizfPLJhqjp8uOfwYio2U/tyT
+         0KTiNV4dbQyrRJNAUb5jRsHSaNk+8+DZZF7l2knJ0186V6qsKyIZTyl5ndej6uOTj0aO
+         MJduwChE15jOzKAVBxURa9OUQrFgzy3vCGGNaoby9yp2LG4TyKxtVceCcl+wdGQVQUbt
+         pnBVhcN1hk2OZYdLt3eEtdeuseetZatA4ghX1jp3Jk9R0EDJbWDSCyl/pOITD2tOi6zR
+         nWbainuXOM9kD+0PyjmZgPFd9602KtusaxhCa8fBY8y9UxzS8O1VQaEZec4e6NEVqHq2
+         rmYA==
+X-Gm-Message-State: APjAAAXxX5+1OwzaklzomQXZ5lYxNFvg2U4oDE4VURSNhV1FlyozEqnm
+        WaG1f7HFK8ZnHgfyqd1by6JhNw==
+X-Google-Smtp-Source: APXvYqzZ+CMlOlPiOf2LQv6uMUwI93prqIodMDLjqSqBeZ5oaQMYW0ftolCisN3PIf4q8UD0Rzr7Vg==
+X-Received: by 2002:a17:90a:25af:: with SMTP id k44mr13019616pje.122.1560552476071;
+        Fri, 14 Jun 2019 15:47:56 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id x7sm3706087pfm.82.2019.06.14.15.47.54
+        by smtp.gmail.com with ESMTPSA id x7sm3706087pfm.82.2019.06.14.15.47.55
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 15:47:54 -0700 (PDT)
+        Fri, 14 Jun 2019 15:47:55 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Sandy Huang <hjc@rock-chips.com>, heiko@sntech.de,
         seanpaul@chromium.org
 Cc:     linux-rockchip@lists.infradead.org, urjaman@gmail.com,
         Douglas Anderson <dianders@chromium.org>,
-        Yakir Yang <ykk@rock-chips.com>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        David Airlie <airlied@linux.ie>,
         linux-arm-kernel@lists.infradead.org,
         Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH 1/2] drm/rockchip: Properly adjust to a true clock in adjusted_mode
-Date:   Fri, 14 Jun 2019 15:47:29 -0700
-Message-Id: <20190614224730.98622-1-dianders@chromium.org>
+Subject: [PATCH 2/2] drm/rockchip: Base adjustments of the mode based on prev adjustments
+Date:   Fri, 14 Jun 2019 15:47:30 -0700
+Message-Id: <20190614224730.98622-2-dianders@chromium.org>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+In-Reply-To: <20190614224730.98622-1-dianders@chromium.org>
+References: <20190614224730.98622-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,41 +75,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When fixing up the clock in vop_crtc_mode_fixup() we're not doing it
-quite correctly.  Specifically if we've got the true clock 266666667 Hz,
-we'll perform this calculation:
-   266666667 / 1000 => 266666
+In vop_crtc_mode_fixup() we fixup the mode to show what we actually
+will be able to achieve.  However we should base our adjustments on
+any previous adjustments that were made.
 
-Later when we try to set the clock we'll do clk_set_rate(266666 *
-1000).  The common clock framework won't actually pick the proper clock
-in this case since it always wants clocks <= the specified one.
+As an example, the dw_hdmi driver may wish to make some small
+adjustments to clock rates in its atomic_check() function.  If it
+does, it will update the adjusted_mode.  We shouldn't throw away those
+adjustments.
 
-Let's solve this by using DIV_ROUND_UP.
+NOTE: the version of the dw_hdmi driver upstream doesn't _actually_
+make such adjustments, but downstream in Chrome OS it does.  It is
+plausible that one day we'll figure out how to cleanly make that
+happen in an upstream-friendly way, so we should prepare by using the
+right mode.
 
-Fixes: b59b8de31497 ("drm/rockchip: return a true clock rate to adjusted_mode")
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Reviewed-by: Yakir Yang <ykk@rock-chips.com>
 ---
-Back in 2016 Mark Yao said he applied this to his drm fixes [1], but it's
-2019 and it's still missing so I'm posting again.
 
-[1] https://patchwork.freedesktop.org/patch/103872/
-
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-index e4580d8f21e1..d124f34ab9fc 100644
+index d124f34ab9fc..09a790c2f3a1 100644
 --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
 +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-@@ -1006,7 +1006,8 @@ static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
+@@ -1006,8 +1006,8 @@ static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
  	struct vop *vop = to_vop(crtc);
  
  	adjusted_mode->clock =
--		clk_round_rate(vop->dclk, mode->clock * 1000) / 1000;
-+		DIV_ROUND_UP(clk_round_rate(vop->dclk, mode->clock * 1000),
-+			     1000);
+-		DIV_ROUND_UP(clk_round_rate(vop->dclk, mode->clock * 1000),
+-			     1000);
++		DIV_ROUND_UP(clk_round_rate(vop->dclk,
++					    adjusted_mode->clock * 1000), 1000);
  
  	return true;
  }
