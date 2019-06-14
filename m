@@ -2,126 +2,168 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE82C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5A8C31E4E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A36DF21537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:20:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jEyWyusN"
+	by mail.kernel.org (Postfix) with ESMTP id E90DE20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:20:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbfFNOUT (ORCPT
+        id S1728757AbfFNOUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:20:19 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51826 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728633AbfFNOUS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Jun 2019 10:20:18 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 207so2574500wma.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 07:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ty57fS8FEMMkyXkp+DBY1O/OWs9quJnipD1xbuIqd/0=;
-        b=jEyWyusNNcy/zIbSz97DCVXFWo6liOcR3UroHiqapt1gsw21z6NUzdxOP/hmEgFDBX
-         t1czRS7WpYV+PhrzE3HFYeek6Du6wzUsF1/pN008841LWOFHasdvj6d+dFsDXf+hlrJU
-         owQrDqnNU5/CublkS+8W0dU/rjeHgad6VMBxd8pnSRMEdPRJTt1X2bt1uaQJXAL1e/5q
-         U/gmBDF5avTuXoNJUV7zOCQIGoZGpk0ulZIOp7Et4rU7grQ325ujdHK3kP5Y7lhQvg5X
-         KWcolpqX/LJTn4nS4d4FeoGz8lrZ3u9tUQ3Ld6Z6/atadBGm/XGdJH91UL7cE7YTfnk/
-         qBtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ty57fS8FEMMkyXkp+DBY1O/OWs9quJnipD1xbuIqd/0=;
-        b=VcchbGXmjzuhDXKu9IwG1Lhu2/0XRv4RhMKahde7X5olDPUfq/HtLOUwRuFrf0Y3km
-         /fT2ZotgeL7xHapPmjHmk4jwhwo15PWyEobNtKYKcmS41Pf4161vmlvTTgzKMW7PiT7P
-         jffNtatR3///NHlw0+HK3Qj2haVx8aJljnmMZuVNiCPtqO2zVgodj62lur7GAMpwZilq
-         /MkGbTPJTrBle7CcCq41JXLFPmKoh8212bTCpkwBgcqOKt8kjPVXphv4SewC9/4UTljR
-         NGdGNAT0JbRj9wF8ejMPhCQcdCw6REon6EAUCidH6oOWZLhUtyxEnlHWdHoVq1SaBEQa
-         YyAA==
-X-Gm-Message-State: APjAAAWmI6igyD1whPQWlv1/D5HFBVcD3RmliTpn7JbwwP7THcvvwJJo
-        umkbXhT1bqQuqyvSK5JJAxiZug==
-X-Google-Smtp-Source: APXvYqxpNPUsDaAEg7ZHJS2hvOSurHBke9twjY/3loroMi7xipncRW4bBwmksKoG12q4fxRVq1yzYQ==
-X-Received: by 2002:a1c:b1d5:: with SMTP id a204mr118305wmf.101.1560522016576;
-        Fri, 14 Jun 2019 07:20:16 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id j7sm3990080wru.54.2019.06.14.07.20.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 07:20:15 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, sricharan@codeaurora.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
-Date:   Fri, 14 Jun 2019 15:20:12 +0100
-Message-Id: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
+Received: from mx1.redhat.com ([209.132.183.28]:58792 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728642AbfFNOUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:20:18 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AEAEFC1EB1FE;
+        Fri, 14 Jun 2019 14:20:12 +0000 (UTC)
+Received: from [10.18.17.153] (dhcp-17-153.bos.redhat.com [10.18.17.153])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 037E219C58;
+        Fri, 14 Jun 2019 14:20:09 +0000 (UTC)
+Subject: Re: [PATCH v4 00/10] klp-convert livepatch build tooling
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        =?UTF-8?Q?Libor_Pech=c3=a1=c4=8dek?= <lpechacek@suse.com>
+References: <20190509143859.9050-1-joe.lawrence@redhat.com>
+ <alpine.LSU.2.21.1906131451560.22698@pobox.suse.cz>
+ <b1a627a4-3702-9689-6c03-0c2123c06a2d@redhat.com>
+ <c9021573-11c6-b576-0aa6-97754c98a06e@redhat.com>
+ <20190614083435.uq3mk6mprbatysol@pathway.suse.cz>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <a0db1cee-8bba-4093-c3ca-4c2fe61b15ba@redhat.com>
+Date:   Fri, 14 Jun 2019 10:20:09 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190614083435.uq3mk6mprbatysol@pathway.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 14 Jun 2019 14:20:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For some reason arguments to most of the circular buffers
-macros are used in reverse, tail is used for head and vice versa.
+On 6/14/19 4:34 AM, Petr Mladek wrote:
+> On Thu 2019-06-13 16:48:02, Joe Lawrence wrote:
+>> On 6/13/19 9:15 AM, Joe Lawrence wrote:
+>>> On 6/13/19 9:00 AM, Miroslav Benes wrote:
+>>>> Hi Joe,
+>>>>
+>>>> first, I'm sorry for the lack of response so far.
+>>>>
+>>>> Maybe you've already noticed but the selftests fail. Well, at least in
+>>>> my VM. When test_klp_convert1.ko is loaded, the process is killed with
+>>>>
+>>>> [  518.041826] BUG: kernel NULL pointer dereference, address: 0000000000000000
+>>>> [  518.042816] #PF: supervisor read access in kernel mode
+>>>> [  518.043393] #PF: error_code(0x0000) - not-present page
+>>>> [  518.043981] PGD 0 P4D 0
+>>>> [  518.044185] Oops: 0000 [#1] SMP PTI
+>>>> [  518.044518] CPU: 2 PID: 2255 Comm: insmod Tainted: G           O  K   5.1.0-klp_convert_v4-193435-g67748576637e #2
+>>>> [  518.045784] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
+>>>> [  518.046940] RIP: 0010:test_klp_convert_init+0x1c/0x40 [test_klp_convert1]
+>>>> [  518.047611] Code: 1b a0 48 89 c6 e9 a8 c0 f4 e0 0f 1f 40 00 0f 1f 44 00 00 53 48 c7 c7 00 30 1b a0 e8 5e 33 f6 e0 85 c0 89 c3 74 04 89 d8 5b c3 <48> 8b 35 5d ef e4 5f 48 c7 c7 28 20 1b a0 e8 75 c0 f4 e0 e8 6c ff
+>>>> [  518.049779] RSP: 0018:ffffc90000f37cc8 EFLAGS: 00010246
+>>>> [  518.050243] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000027de0
+>>>> [  518.050922] RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff88807ab54f40
+>>>> [  518.051619] RBP: ffffffffa01b1080 R08: 0000000096efde7a R09: 0000000000000001
+>>>> [  518.052332] R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffffffff
+>>>> [  518.053012] R13: 0000000000000000 R14: ffff888078b55000 R15: ffffc90000f37ea0
+>>>> [  518.053714] FS:  00007febece1fb80(0000) GS:ffff88807d400000(0000) knlGS:0000000000000000
+>>>> [  518.054514] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>> [  518.055078] CR2: 0000000000000000 CR3: 000000007a56a000 CR4: 00000000000006e0
+>>>> [  518.055818] Call Trace:
+>>>> [  518.056007]  do_one_initcall+0x6a/0x2da
+>>>> [  518.056340]  ? do_init_module+0x22/0x230
+>>>> [  518.056702]  ? rcu_read_lock_sched_held+0x96/0xa0
+>>>> [  518.057125]  ? kmem_cache_alloc_trace+0x284/0x2e0
+>>>> [  518.057493]  do_init_module+0x5a/0x230
+>>>> [  518.057900]  load_module+0x17bc/0x1f50
+>>>> [  518.058214]  ? __symbol_put+0x40/0x40
+>>>> [  518.058499]  ? vfs_read+0x12d/0x160
+>>>> [  518.058766]  __do_sys_finit_module+0x83/0xc0
+>>>> [  518.059122]  do_syscall_64+0x57/0x190
+>>>> [  518.059407]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>>>> ...
+>>>>
+>>>> It crashes right in test_klp_convert_init() when print_*() using
+>>>> supposed-to-be-converted symbols are called. I'll debug it next week. Can
+>>>> you reproduce it too?
+>>>
+>>> Hey, thanks for the report..
+>>>
+>>> I don't recall the tests crashing, but I had put this patchset on the
+>>> side for a few weeks now.  I'll try to fire up a VM and see what happens
+>>> today.
+>>>
+>>
+>> Hmm, I haven't been able to reproduce using my original base (Linux 5.1-rc6)
+>> or when rebased ontop of livepatching.git/master + 997a55f3fb6d("stacktrace: Unbreak stack_trace_save_tsk_reliable()")
+> 
+> I stared into the code a bit but I did not find any bug. Let's hope
+> that it was just some pre-vacation last minute mistake (system
+> inconsistency or so ;-)
+> 
+> Anyway, I am curious about one thing. I saw:
+> 
+> function __load_mod() {
+> 	local mod="$1"; shift
+> 
+> 	local msg="% modprobe $mod $*"
+> 	log "${msg%% }"
+> 	ret=$(modprobe "$mod" "$@" 2>&1)
+> 	if [[ "$ret" != "" ]]; then
+> 		die "$ret"
+> 	fi
+> 
+> 	# Wait for module in sysfs ...
+> 	loop_until '[[ -e "/sys/module/$mod" ]]' ||
+> 		die "failed to load module $mod"
+> }
+> 
+> Is the waiting for sysfs really necessary here?
+> 
+> Note that it is /sys/module and not /sys/kernel/livepatch/.
 
-This leads to bam thinking that there is an extra descriptor at the
-end and leading to retransmitting descriptor which was not scheduled
-by any driver. This happens after MAX_DESCRIPTORS (4096) are scheduled
-and done, so most of the drivers would not notice this, unless they are
-heavily using bam dma. Originally found this issue while testing
-SoundWire over SlimBus on DB845c which uses DMA very heavily for
-read/writes.
+I can't remember if that was just paranoid-protective-bash coding or 
+actually required.  Libor provided great feedback on the initial patch 
+series that introduced the self-tests, perhaps he remembers.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/dma/qcom/bam_dma.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+> My understanding is that modprobe waits until the module succesfully
+> loaded. mod_sysfs_setup() is called before the module init callback.
+> Therefore the sysfs interface should be read before modprobe returns.
+> Do I miss something?
+ >
+> If it works different way then there might be some races because
+> mod_sysfs_setup() is called before the module is alive.
 
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index cb860cb53c27..43d7b0a9713a 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -350,8 +350,8 @@ static const struct reg_offset_data bam_v1_7_reg_info[] = {
- #define BAM_DESC_FIFO_SIZE	SZ_32K
- #define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) - 1)
- #define BAM_FIFO_SIZE	(SZ_32K - 8)
--#define IS_BUSY(chan)	(CIRC_SPACE(bchan->tail, bchan->head,\
--			 MAX_DESCRIPTORS + 1) == 0)
-+#define IS_BUSY(chan)	(CIRC_SPACE(bchan->head, bchan->tail,\
-+			 MAX_DESCRIPTORS) == 0)
- 
- struct bam_chan {
- 	struct virt_dma_chan vc;
-@@ -806,7 +806,7 @@ static u32 process_channel_irqs(struct bam_device *bdev)
- 		offset /= sizeof(struct bam_desc_hw);
- 
- 		/* Number of bytes available to read */
--		avail = CIRC_CNT(offset, bchan->head, MAX_DESCRIPTORS + 1);
-+		avail = CIRC_CNT(bchan->head, offset, MAX_DESCRIPTORS);
- 
- 		list_for_each_entry_safe(async_desc, tmp,
- 					 &bchan->desc_list, desc_node) {
-@@ -997,8 +997,7 @@ static void bam_start_dma(struct bam_chan *bchan)
- 			bam_apply_new_config(bchan, async_desc->dir);
- 
- 		desc = async_desc->curr_desc;
--		avail = CIRC_SPACE(bchan->tail, bchan->head,
--				   MAX_DESCRIPTORS + 1);
-+		avail = CIRC_SPACE(bchan->head, bchan->tail, MAX_DESCRIPTORS);
- 
- 		if (async_desc->num_desc > avail)
- 			async_desc->xfer_len = avail;
--- 
-2.21.0
+All of this is called from a single bash script function, so in a call 
+stack fashion, something like this would occur when loading a livepatch 
+module:
 
+   [ mod_sysfs_setup() ]
+   modprobe waits for:         .init complete, MODULE_STATE_LIVE
+   __load_mod() waits for:     /sys/module/$mod
+   load_lp_nowait() waits for: /sys/kernel/livepatch/$mod
+   load_lp() waits for:        /sys/kernel/livepatch/$mod/transition = 0
+   test-script.sh
+
+So I would think that by calling modprobe, we ensure that the module 
+code is ready to go.  The /sys/module/$mod check might be redundant as 
+you say, but because modprobe completed, we should be safe, no?
+
+The only "nowait" function we have is load_lp_nowait(), which would let 
+us march onward before the livepatch transition may have completed.
+
+-- Joe
