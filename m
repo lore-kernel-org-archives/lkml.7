@@ -2,115 +2,102 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1805AC31E50
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B48C31E52
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3D1E217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6591921850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:34:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XsbynDbD"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fteRuuju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbfFNXa3 (ORCPT
+        id S1726202AbfFNXeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 19:30:29 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39398 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbfFNXa3 (ORCPT
+        Fri, 14 Jun 2019 19:34:01 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:44682 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfFNXeB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 19:30:29 -0400
-Received: by mail-lj1-f193.google.com with SMTP id v18so3970698ljh.6;
-        Fri, 14 Jun 2019 16:30:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hLRvRyseCoNTnINKGx1gbhdzgE1HlmQyXykkBiBseG4=;
-        b=XsbynDbDNwALY52CArTK5cnvk4mmYDaryXGQacSxkuCC0C8D65Z1opswYES2F8hqFg
-         CFQ84p+YGY1zGY2h+9tqYn6+0MoWuMrQarVQmuoy8vDOEVM+cQrGs8+zFuGOktT5ohLd
-         OUbDI+uM8jrivKmiy6Jo5kJlh9zuJrafznOYrKm5vbV6sjk3saWgdzXVZXEDifzNldEQ
-         znvklcvpQYIiycEhvllN7AdQgxTJBhe1lkDPFy7NtT1q0+iL2/QR9igFkKB25K3ip37h
-         0L6A/n4zRVSwEBIKu0Fh8JGoquUtbaktaShO4Ut63P1MnDFD3JKy6bbu4LGnhM8N8oho
-         P3jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hLRvRyseCoNTnINKGx1gbhdzgE1HlmQyXykkBiBseG4=;
-        b=Dt0WPn1g0Y/aPaj/RYz7+JVZ0g3u0iHugwhPpvZCZUomV7Fn2U2fgcJ6b/BPwLz/Je
-         wLb82i0yCecrIt9sNP5iC3dF3xwdDoervKjF9GckYW4w5GHkKnjSRUj0ovDDgxNEoTHK
-         tIqWE6syWqToCrOBxBz978gzwR0znsPbQhWdvBYQb8nb4pMzME9PJx0AugQpVnvUFkhF
-         XWE7stvcaQyV3EW9U3EqGtVm3SAgAjgMhViH2CEhLAJgvTz6PCwt1Bm2lOr+LZqhKlaU
-         zPDSvTepILPjCnsEMngaiRKMeUHfb56yNLGiHs/cz90fnHJg0od6EAYIfRyL5zpB6y7I
-         aaNg==
-X-Gm-Message-State: APjAAAUDtqomHqk32X8Vzwi9NN1u3JhLE1TGAzKh0zIxgwTdmPOU5rwP
-        XF9LqMGBDu64mRRfnXOdSfeMwmPV3JpPM4Y4iZc=
-X-Google-Smtp-Source: APXvYqwbIBfbtHpDcKSqlvtFREHBX4scDcT301yjzhza69EW1cROJWTQO5zNXq0ejKhNBgymyKw0elbWtSfI8kvJ+ys=
-X-Received: by 2002:a2e:968e:: with SMTP id q14mr10593386lji.195.1560555026608;
- Fri, 14 Jun 2019 16:30:26 -0700 (PDT)
+        Fri, 14 Jun 2019 19:34:01 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ENXaBH134612;
+        Fri, 14 Jun 2019 23:33:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=xC57jn87JyXy7UEJGYT3I0BpBDnQuaSrP5i3P1QlI6I=;
+ b=fteRuujufu3CmIQ0hpxr3+DyF3Am163I32ktIzUzd9sOepWWRmqepsAtq8Gxt4y4VAog
+ LM2vzoQo1R5A/xCc7g6UYg0Q4MATHrE8QxJ6wLY2uu5nhFEZ/G/LZOgDkYOMtF7OFpZ9
+ 1ixxkQkAA0WPyqDBLwCYi0TktWyxmkGyOhPBL2JbS142d+gNM+gVbRvH2zIMyW3c1S01
+ oQFRK0HZS3jkXyMKG4wQjuSD2eOZoUx5c+PvJXBvlxFZYpjdzHUq52EZYK6QaurDHB5h
+ 0vd5nkpD5p4NYWyj4QcAjFe30PQNSHNx/1oFZuDMchT0o+UNU6VZGKOZp8BWI/1PzvWw Iw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2t04eu9srg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 23:33:57 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ENWsED162221;
+        Fri, 14 Jun 2019 23:33:56 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2t0p9t7n0b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 23:33:56 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5ENXtO0029569;
+        Fri, 14 Jun 2019 23:33:55 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 14 Jun 2019 16:33:55 -0700
+Subject: Re: [PATCH 2/3] hugetlbfs: Use i_mmap_rwsem to fix page
+ fault/truncate race
+To:     Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     Michal Hocko <mhocko@kernel.org>, Hugh Dickins <hughd@google.com>,
+        stable@vger.kernel.org
+References: <20181203200850.6460-3-mike.kravetz@oracle.com>
+ <20190614215632.BF5F721473@mail.kernel.org>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <f8cea651-8052-4109-ea9b-dee3fbfc81d1@oracle.com>
+Date:   Fri, 14 Jun 2019 16:33:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <cover.1560534694.git.jpoimboe@redhat.com> <c0add777a2e0207c1474ce99baa492a7ce3502d6.1560534694.git.jpoimboe@redhat.com>
- <20190614205841.s4utbpurntpr6aiq@ast-mbp.dhcp.thefacebook.com>
- <20190614210745.kwiqm5pkgabruzuj@treble> <CAADnVQLK3ixK1JWF_mfScZoFzFF=6O8f1WcqkYqiejKeex1GSQ@mail.gmail.com>
- <20190614211929.drnnawbi7guqj2ck@treble> <CAADnVQ+BCxsKEK=ZzYOZkgTJAg_7jz1_f+FCX+Ms0vTOuW8Mxw@mail.gmail.com>
- <20190614231717.xukbfpc2cy47s4xh@treble>
-In-Reply-To: <20190614231717.xukbfpc2cy47s4xh@treble>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Fri, 14 Jun 2019 16:30:15 -0700
-Message-ID: <CAADnVQJn+TnSj82MJ0ry1UTNGXD0qzESqfp7E1oi_HAYC-xTXg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] objtool: Fix ORC unwinding in non-JIT BPF
- generated code
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     X86 ML <x86@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@aculab.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190614215632.BF5F721473@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9288 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906140187
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9288 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906140187
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 4:17 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Fri, Jun 14, 2019 at 02:22:59PM -0700, Alexei Starovoitov wrote:
-> > On Fri, Jun 14, 2019 at 2:19 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > > > > > >
-> > > > > > > +#define JUMP_TABLE_SYM_PREFIX "jump_table."
-> > > > > >
-> > > > > > since external tool will be looking at it should it be named
-> > > > > > "bpf_jump_table." to avoid potential name conflicts?
-> > > > > > Or even more unique name?
-> > > > > > Like "bpf_interpreter_jump_table." ?
-> > > > >
-> > > > > No, the point is that it's a generic feature which can also be used any
-> > > > > non-BPF code which might also have a jump table.
-> > > >
-> > > > and you're proposing to name all such jump tables in the kernel
-> > > > as static foo jump_table[] ?
-> > >
-> > > That's the idea.
-> >
-> > Then it needs much wider discussion.
->
-> Why would it need wider discussion?  It only has one user.  If you
-> honestly believe that it will be controversial to require future users
-> to call a static jump table "jump_table" then we can have that
-> discussion when it comes up.
+On 6/14/19 2:56 PM, Sasha Levin wrote:
+> Hi,
+> 
+> [This is an automated email]
+> 
+> This commit has been processed because it contains a "Fixes:" tag,
+> fixing commit: ebed4bfc8da8 [PATCH] hugetlb: fix absurd HugePages_Rsvd.
+<snip>
+> 
+> How should we proceed with this patch?
+> 
 
-It's clearly controversial.
-I nacked it already on pointless name change
-from "jumptable" to "jump_table" and now you're saying
-that no one will complain about "jump_table" name
-for all jump tables in the kernel that will ever appear?
+I hope you do nothing with this as the patch is not upstream.
+
+-- 
+Mike Kravetz
