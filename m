@@ -2,163 +2,195 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08768C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F86DC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CC621473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEE6021473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:03:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5CHbTqH"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="RwaLEtIe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbfFNMDa (ORCPT
+        id S1727752AbfFNMDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:03:30 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52918 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbfFNMDa (ORCPT
+        Fri, 14 Jun 2019 08:03:36 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34670 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727164AbfFNMDf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:03:30 -0400
-Received: by mail-wm1-f65.google.com with SMTP id s3so2089076wms.2;
-        Fri, 14 Jun 2019 05:03:28 -0700 (PDT)
+        Fri, 14 Jun 2019 08:03:35 -0400
+Received: by mail-io1-f66.google.com with SMTP id k8so5246346iot.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 05:03:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=amarulasolutions.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cShyFkkmWiHnsjmUQgXX28LcVYfBv8SOqWlH6SPYRUQ=;
-        b=B5CHbTqHgazRv85fYB6qcW/DGkY6lv6fwiiiSu0OBHcgweSNDpZyIW9F2RN6VrIcIW
-         38rllu0/vNktkMaesiFUHr2i8JuWl/hbG4SdQKM9WJA9Jt95TjwBoJHQRroRg2uwkVhx
-         qz6JFi/NFuYO5p6hi11fSIIy8tYGriGfrQSWGGOrmaWhrin+ZDWzQ1Obrm/KKwd+tI1B
-         bOa+M/FzAXsGpYQywfHA9bnPZn9KZHrcgIN1So9SI+RStILzW/2pmJCyvrtRLJ00Lhtj
-         4LDUtsHIhm4789TBidIsDrf3+F4XulU2mS2PWJsYnDSiv7JFVoGCTR1HXxxMWSPMUk6U
-         4suA==
+        bh=/wQ/+4oi2roFCaYScj1Q55OcKp1nSbLwhVoKOf09Asc=;
+        b=RwaLEtIeEZfhJJlQdAVLsRJ0/NGBnlzdV/0XXWeOAqJQc8QEGdwGUbHdRPrYTPyPU1
+         CbJEa0gp6RQrSeO0KR+jjk6LbyxEQq6BcpTuHiOfH9ivEHQO7wcWoHRw6hPLUDNro1rn
+         q1URzqnlkLQVGPVk8oNQqGh9U+Ztx3Co3aQec=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cShyFkkmWiHnsjmUQgXX28LcVYfBv8SOqWlH6SPYRUQ=;
-        b=LAD2veHMdCA/Sn3tQ2y6hEJoroGhU3iTs2+kbhfq+ZLhDvPxD4xbwxv5z071Gy66mV
-         erUkdlIXb4Xwj+A2Kp7iTQknX08+2PHbFjEjnactEHDliENaXDrJSbgoXJZr/sWWvvX3
-         1ml3PT2E8vBgwV7qzONTojqOBvN7N6cWZEU2hIREHSTCkyWeBxGSdC11M8Uy/8CZUQVA
-         gdtvZ3QfI9Uns13Sq8i1imOUvHY0ugNAsCLelE19jNVYMo0Ynd1XuOe9vV53o4HpqxfB
-         IvI80WzFkuBnn6LKVSxZl0DmutaNQS1jHy+JRc5nEn0yD7ihHN++zR4TyolDbb6XGFxN
-         sZYg==
-X-Gm-Message-State: APjAAAXDVjaqqgSlXa4GyxSAf1btrHmE4tgmCzBGdFwnf8FMNmOqDoad
-        yqGAoiof1f1eStzAlxeC+SYJDP2SJB1a0dT+FyI=
-X-Google-Smtp-Source: APXvYqxHOhGAxfhtTTPi6t7uAwRltrvjH/NqXqmw08VpXZpoMAYhTdcpPhC1ZS6CKEf9eePZKkmmvwD3J6yNEDTd0Yg=
-X-Received: by 2002:a7b:c247:: with SMTP id b7mr8209757wmj.13.1560513807708;
- Fri, 14 Jun 2019 05:03:27 -0700 (PDT)
+        bh=/wQ/+4oi2roFCaYScj1Q55OcKp1nSbLwhVoKOf09Asc=;
+        b=aauaiKADocXX8rgeRV18LLiXwM4Ycu44Mztbnk5/WF9U4j8AOPQ3+DBNy+cYVcEwuZ
+         HvUkHNTqLAX8y74Xtp8w1hiN0NologK6Qt9y0aYOVaxlZoyFV9hYze4exitvfNKvyhuT
+         +Ouw2kss0CrwPe6NtZKwM/e8DTusB5jQLIJi+usiyGS7/P3wQIMbQIKZRHzVp9BRYZfh
+         ofiJKwNBDhMDOKyCFOGy5zMi62FCRdnnqeo+6rT8X5mgglmcd+tTTAawMPkT8XvP+agt
+         Lpb/aJsR3P9ASj7EjKkjPAii8xYcvw39MjpEvOzUn2Ar4Kp4uJquHAMAlM/wNErNYrRQ
+         8XrQ==
+X-Gm-Message-State: APjAAAWJHpTd4Jy4CRgYjLyYvgLMhog++5GFnnlGCrxjlHPbNdfFPOyf
+        dGTjRVQR5pmJC79AZ0UOMQ9johKavJBh1lbHn2iUZfV5
+X-Google-Smtp-Source: APXvYqy8dqjJJrqb47B50NWJWZ/ietS+z5lG9TefXpi7Q0ubtlJipgQXopwyn5R2J8JE+kMLkcqv2x3My0lPlTANcZE=
+X-Received: by 2002:a5e:8618:: with SMTP id z24mr60025926ioj.174.1560513814542;
+ Fri, 14 Jun 2019 05:03:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com> <1560513063-24995-3-git-send-email-robert.chiras@nxp.com>
-In-Reply-To: <1560513063-24995-3-git-send-email-robert.chiras@nxp.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Fri, 14 Jun 2019 15:03:15 +0300
-Message-ID: <CAEnQRZA0yB8KKU8zcZU1CgPE5x9bYtp_4ESQ+miMkwuYKRkbJQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/panel: Add support for Raydium RM67191 panel driver
-To:     Robert Chiras <robert.chiras@nxp.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
+References: <20190520090318.27570-1-jagan@amarulasolutions.com>
+ <20190520090318.27570-5-jagan@amarulasolutions.com> <20190523204823.mx7l4ozklzdh7npn@flea>
+ <CAMty3ZA0S=+8NBrQZvP6sFdzSYWqhNZL_KjkJAQ0jTc2RVivrw@mail.gmail.com>
+ <20190604143016.fcx3ezmga244xakp@flea> <CAMty3ZAAK4RoE6g_LAZ-Q38On_1s_TTOz65YG7PVd88mwp-+4Q@mail.gmail.com>
+ <20190613131626.7zbwvrvd4e7eafrc@flea>
+In-Reply-To: <20190613131626.7zbwvrvd4e7eafrc@flea>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Fri, 14 Jun 2019 17:33:23 +0530
+Message-ID: <CAMty3ZBDkMJkZm8FudNB1wQ+L-q3XVKa3zR2M0wZ5Uncdy_Ayg@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v10 04/11] drm/sun4i: tcon: Compute DCLK
+ dividers based on format, lanes
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bhushan Shah <bshah@mykolab.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?UTF-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
-
-Minor comment. See inline:
-
-On Fri, Jun 14, 2019 at 2:52 PM Robert Chiras <robert.chiras@nxp.com> wrote:
+On Thu, Jun 13, 2019 at 7:28 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> This patch adds Raydium RM67191 TFT LCD panel driver (MIPI-DSI
-> protocol).
+> On Wed, Jun 05, 2019 at 01:11:44PM +0530, Jagan Teki wrote:
+> > On Tue, Jun 4, 2019 at 8:00 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > On Fri, May 24, 2019 at 03:37:36PM +0530, Jagan Teki wrote:
+> > > > On Fri, May 24, 2019 at 2:18 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > >
+> > > > > On Mon, May 20, 2019 at 02:33:11PM +0530, Jagan Teki wrote:
+> > > > > > pll-video => pll-mipi => tcon0 => tcon0-pixel-clock is the typical
+> > > > > > MIPI clock topology in Allwinner DSI controller.
+> > > > > >
+> > > > > > TCON dotclock driver is computing the desired DCLK divider based on
+> > > > > > panel pixel clock along with input DCLK min, max divider values from
+> > > > > > tcon driver and that would eventually set the pll-mipi clock rate.
+> > > > > >
+> > > > > > The current code is passing dsi min and max divider value as 4 via
+> > > > > > tcon driver which would ended-up triggering below vblank wait timed out
+> > > > > > warning on "bananapi,s070wv20-ct16" panel.
+> > > > > >
+> > > > > >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
+> > > > > >  [CRTC:46:crtc-0] vblank wait timed out
+> > > > > >  Modules linked in:
+> > > > > >  CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00025-g5186cdf10757-dirty #6
+> > > > > >  Hardware name: Allwinner sun8i Family
+> > > > > >  Workqueue: events deferred_probe_work_func
+> > > > > >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
+> > > > > >  [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
+> > > > > >  [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
+> > > > > >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
+> > > > > >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
+> > > > > >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
+> > > > > >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
+> > > > > >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
+> > > > > >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
+> > > > > >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
+> > > > > >  [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
+> > > > > >  [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
+> > > > > >  [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
+> > > > > >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
+> > > > > >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
+> > > > > >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
+> > > > > >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
+> > > > > >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
+> > > > > >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
+> > > > > >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
+> > > > > >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
+> > > > > >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
+> > > > > >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
+> > > > > >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
+> > > > > >  [<c043f060>] (sun4i_drv_bind) from [<c044b588>] (try_to_bring_up_master+0x164/0x1a0)
+> > > > > >  [<c044b588>] (try_to_bring_up_master) from [<c044b658>] (__component_add+0x94/0x140)
+> > > > > >  [<c044b658>] (__component_add) from [<c0445e0c>] (sun6i_dsi_probe+0x144/0x234)
+> > > > > >  [<c0445e0c>] (sun6i_dsi_probe) from [<c0452ee4>] (platform_drv_probe+0x48/0x9c)
+> > > > > >  [<c0452ee4>] (platform_drv_probe) from [<c04512bc>] (really_probe+0x1dc/0x2c8)
+> > > > > >  [<c04512bc>] (really_probe) from [<c0451508>] (driver_probe_device+0x60/0x160)
+> > > > > >  [<c0451508>] (driver_probe_device) from [<c044f794>] (bus_for_each_drv+0x74/0xb8)
+> > > > > >  [<c044f794>] (bus_for_each_drv) from [<c045106c>] (__device_attach+0xd0/0x13c)
+> > > > > >  [<c045106c>] (__device_attach) from [<c0450464>] (bus_probe_device+0x84/0x8c)
+> > > > > >  [<c0450464>] (bus_probe_device) from [<c04508f0>] (deferred_probe_work_func+0x64/0x90)
+> > > > > >  [<c04508f0>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
+> > > > > >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
+> > > > > >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
+> > > > > >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> > > > > >  Exception stack(0xde539fb0 to 0xde539ff8)
+> > > > > >  9fa0:                                     00000000 00000000 00000000 00000000
+> > > > > >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> > > > > >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > > > > >  ---[ end trace 4017fea4906ab391 ]---
+> > > > > >
+> > > > > > But accordingly to Allwinner A33, A64 BSP codes [1] [2] this divider
+> > > > > > is clearly using 'format/lanes' for dsi divider value, dsi_clk.clk_div
+> > > > > >
+> > > > > > Which would compute the pll_freq and set a clock rate for it in
+> > > > > > [3] and [4] respectively.
+> > > > > >
+> > > > > > The same issue has reproduced in A33, A64 with 4-lane and 2-lane devices
+> > > > > > and got fixed with this computation logic 'format/lanes', so this patch
+> > > > > > using dclk min and max dividers as per BSP.
+> > > > > >
+> > > > > > [1] https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L1106
+> > > > > > [2] https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L213
+> > > > > > [3] https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L1127
+> > > > > > [4] https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L1161
+> > > > >
+> > > > > In that mail, I've pointed out that clk_div isn't used for the TCON dclk divider:
+> > > > > http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629596.html
+> > > > >
+> > > > > The only reply you've sent is that you indeed see that the divider is
+> > > > > set to 4 in the BSP, but you're now saying that the BSP can change
+> > > > > it. If so, then please point exactly the flaw in the explanation in
+> > > > > that mail.
+> > > >
+> > > > Frankly, I have explained these details in commit message and previous
+> > > > version patch[1] with print messages on the code.
+> > > >
+> > > > BSP has tcon_div and dsi_div. dsi_div is dynamic which depends on
+> > > > bpp/lanes and it indeed depends on PLL computation (not tcon_div),
+> > > > anyway I have explained again on this initial link you mentioned.
+> > > > Please have a look and get back.
+> > >
+> > > I'll have a look, thanks.
+> > >
+> > > I've given your patches a try on my setup though, and this patch
+> > > breaks it with vblank timeouts and some horizontal lines that looks
+> > > like what should be displayed, but blinking and on the right of the
+> > > display. The previous ones are fine though.
+> >
+> > Would you please send me the link of panel driver.
 >
-> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-> ---
->  drivers/gpu/drm/panel/Kconfig                 |   9 +
->  drivers/gpu/drm/panel/Makefile                |   1 +
->  drivers/gpu/drm/panel/panel-raydium-rm67191.c | 730 ++++++++++++++++++++++++++
->  3 files changed, 740 insertions(+)
->  create mode 100644 drivers/gpu/drm/panel/panel-raydium-rm67191.c
->
-> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-> index d9d931a..8be1ac1 100644
-> --- a/drivers/gpu/drm/panel/Kconfig
-> +++ b/drivers/gpu/drm/panel/Kconfig
-> @@ -159,6 +159,15 @@ config DRM_PANEL_RASPBERRYPI_TOUCHSCREEN
->           Pi 7" Touchscreen.  To compile this driver as a module,
->           choose M here.
->
-> +config DRM_PANEL_RAYDIUM_RM67191
-> +       tristate "Raydium RM67191 FHD 1080x1920 DSI video mode panel"
-> +       depends on OF
-> +       depends on DRM_MIPI_DSI
-> +       depends on BACKLIGHT_CLASS_DEVICE
-> +       help
-> +         Say Y here if you want to enable support for Raydium RM67191 FHD
-> +         (1080x1920) DSI panel.
-> +
->  config DRM_PANEL_RAYDIUM_RM68200
->         tristate "Raydium RM68200 720x1280 DSI video mode panel"
->         depends on OF
-> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-> index fb0cb3a..1fc0f68 100644
-> --- a/drivers/gpu/drm/panel/Makefile
-> +++ b/drivers/gpu/drm/panel/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_DRM_PANEL_ORISETECH_OTM8009A) += panel-orisetech-otm8009a.o
->  obj-$(CONFIG_DRM_PANEL_OSD_OSD101T2587_53TS) += panel-osd-osd101t2587-53ts.o
->  obj-$(CONFIG_DRM_PANEL_PANASONIC_VVX10F034N00) += panel-panasonic-vvx10f034n00.o
->  obj-$(CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN) += panel-raspberrypi-touchscreen.o
-> +obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM67191) += panel-raydium-rm67191.o
->  obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM68200) += panel-raydium-rm68200.o
->  obj-$(CONFIG_DRM_PANEL_ROCKTECH_JH057N00900) += panel-rocktech-jh057n00900.o
->  obj-$(CONFIG_DRM_PANEL_RONBO_RB070D30) += panel-ronbo-rb070d30.o
-> diff --git a/drivers/gpu/drm/panel/panel-raydium-rm67191.c b/drivers/gpu/drm/panel/panel-raydium-rm67191.c
-> new file mode 100644
-> index 0000000..75bfb03
-> --- /dev/null
-> +++ b/drivers/gpu/drm/panel/panel-raydium-rm67191.c
-> @@ -0,0 +1,730 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * i.MX drm driver - Raydium MIPI-DSI panel driver
-> + *
-> + * Copyright (C) 2017 NXP
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+> It's drivers/gpu/drm/panel/panel-ronbo-rb070d30.c
 
-Please remove the license text once you already added the SPDX identifier.
-
-Also preferred copyright for NXP is:
-
-Copyright 2019 NXP
-
-So, the file should look like this:
-
-// SPDX-License-Identifier: GPL-2.0
-/*
- * i.MX drm driver - Raydium MIPI-DSI panel driver
- *
- * Copyright 2019 NXP
- */
+Look like this panel work even w/o any vendor sequence. it's similar
+to the 4-lane panel I have with RGB888, so the dclk div is 6, is it
+working with this divider?
