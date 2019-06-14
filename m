@@ -2,88 +2,170 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E9DC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D8EC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA7D2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D826C21473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfFNJ0X (ORCPT
+        id S1727053AbfFNJ0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:26:23 -0400
-Received: from mail.steuer-voss.de ([85.183.69.95]:50578 "EHLO
-        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbfFNJ0W (ORCPT
+        Fri, 14 Jun 2019 05:26:40 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:40387 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfFNJ0j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:26:22 -0400
-X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
-Received: by mail.steuer-voss.de (Postfix, from userid 1000)
-        id D56394CEDA; Fri, 14 Jun 2019 11:25:58 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.steuer-voss.de (Postfix) with ESMTP id D098E4CDFA;
-        Fri, 14 Jun 2019 11:25:58 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 11:25:58 +0200 (CEST)
-From:   Nikolaus Voss <nv@vosn.de>
-X-X-Sender: nv@fox.voss.local
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        linux-leds@vger.kernel.org,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
- loads
-In-Reply-To: <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.20.1906141114490.6579@fox.voss.local>
-References: <cover.1560327219.git.nikolaus.voss@loewensteinmedical.de> <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de> <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
-User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+        Fri, 14 Jun 2019 05:26:39 -0400
+X-Originating-IP: 37.177.88.254
+Received: from uno.localdomain (unknown [37.177.88.254])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 1B0CBC0019;
+        Fri, 14 Jun 2019 09:26:34 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 11:27:45 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
+        koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 19/20] drm: rcar-du: crtc: Register GAMMA_LUT properties
+Message-ID: <20190614092745.wznk3iv5dgehmjsb@uno.localdomain>
+References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
+ <20190606142220.1392-20-jacopo+renesas@jmondi.org>
+ <20190607120304.GH7593@pendragon.ideasonboard.com>
+ <20190614081507.3ky4pcyijjxnr7mp@uno.localdomain>
+ <20190614084251.GW23020@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="sj54nnncvdq22ppw"
+Content-Disposition: inline
+In-Reply-To: <20190614084251.GW23020@phenom.ffwll.local>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
 
-On Fri, 14 Jun 2019, Rafael J. Wysocki wrote:
-> On Wed, Jun 12, 2019 at 10:36 AM Nikolaus Voss
-> <nikolaus.voss@loewensteinmedical.de> wrote:
->>
->> If an ACPI SSDT overlay is loaded after built-in tables
->> have been loaded e.g. via configfs or efivar_ssdt_load()
->> it is necessary to rewalk the namespace to resolve
->> references. Without this, relative and absolute paths
->> like ^PCI0.SBUS or \_SB.PCI0.SBUS are not resolved
->> correctly.
->>
->> Make configfs load use the same method as efivar_ssdt_load().
->>
->> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+--sj54nnncvdq22ppw
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Daniel,
+
+On Fri, Jun 14, 2019 at 10:42:51AM +0200, Daniel Vetter wrote:
+> On Fri, Jun 14, 2019 at 10:15:52AM +0200, Jacopo Mondi wrote:
+> > Hi Laurent,
+> >    thanks for review
+> >
+> > On Fri, Jun 07, 2019 at 03:03:04PM +0300, Laurent Pinchart wrote:
+> > > Hi Jacopo,
+> > >
+> > > Thank you for the patch.
+> > >
+> > > On Thu, Jun 06, 2019 at 04:22:19PM +0200, Jacopo Mondi wrote:
+> > > > Enable the GAMMA_LUT KMS property using the framework helpers to
+> > > > register the proeprty and the associated gamma table size maximum size.
+> > > >
+> > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > > ---
+> > > >  drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> > > > index e6d3df37c827..c920fb5dba65 100644
+> > > > --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> > > > +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> > > > @@ -1207,6 +1207,9 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
+> > > >  	    rcdu->cmms[swindex]) {
+> > > >  		rcrtc->cmm = rcdu->cmms[swindex];
+> > > >  		rgrp->cmms_mask |= BIT(hwindex % 2);
+> > > > +
+> > > > +		drm_mode_crtc_set_gamma_size(crtc, CMM_GAMMA_LUT_SIZE);
+> > > > +		drm_crtc_enable_color_mgmt(crtc, 0, false, CMM_GAMMA_LUT_SIZE);
+> > >
+> > > This change looks good, but you also need to add support for legacy API.
+> > > According to the function's documentation,
+> > >
+> > >  * Drivers should use drm_atomic_helper_legacy_gamma_set() to implement the
+> > >  * legacy &drm_crtc_funcs.gamma_set callback.
+> > >
+> >
+> > Drivers 'shuld' or drivers 'shall' ?
+> > Isn't this required only to support the 'legacy APIs' ? Do we want that?
 >
-> This is fine by me, so
+> You're calling drm_mode_crtc_set_gamma_size, which is only useful for the
+> legacy ioctls. should here = assuming your hw supports something that
+> legacy gamma ioctl can use. Feel free to patch up the docs.
+
+Oh, I see. I should either leave the old API alone without calling
+drm_mode_crtc_set_gamma_size(), or set the .gamma_set callback to
+point to drm_atomic_helper_legacy_gamma_set(), which translates the
+old gamma table interface to a blob property and attach it to a crtc
+state which is then commited and applied through the atomic helpers.
+
+So I would change the doc to prescribe that if the driver intends to
+support the legacy SETGAMMA/GETGAMMA IOCTLs it should declare the
+gamma table size with drm_mode_crtc_set_gamma_size() first, and set
+the .gamma_set crtc callback to drm_atomic_helper_legacy_gamma_set(),
+which translates the legacy interface to a GAMMA_LUT property blob
+and commit it.
+
+If that works, I'll make a small patch to the documentation in v2.
+
+Thanks
+  j
+
+
+> -Daniel
 >
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Thanks
+> >    j
+> >
+> > > >  	}
+> > > >
+> > > >  	drm_crtc_helper_add(crtc, &crtc_helper_funcs);
+> > > >
+> > >
+> > > --
+> > > Regards,
+> > >
+> > > Laurent Pinchart
 >
-> Or if you want me to take this patch (without the other two in the
-> series), please let me know.
+>
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
 
-thanks. I think it would be the best if you take up this patch as it is an 
-independent topic. In retrospect it wasn't a good idea to put it into this 
-series.
+--sj54nnncvdq22ppw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Kind regards,
-Niko
+-----BEGIN PGP SIGNATURE-----
 
-[...]
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0DaJEACgkQcjQGjxah
+VjyZGw//cZKIgD3YBAnD/okoI7Ik01icCdrGdWWeIC9/Z0xJL8Dby8DaDoHJqfoS
+A8QEj+V8gJKXy5NBC2OUScmMxIHV1bR05HrMd11+sVHlcGdt/g9c/A5BRVG8R0P9
+V4SKMzy9foDWYr6weedp6+PKpV0rV3BoexzpEAU7Op6rd+foNuxSH9tKaabzWcfs
+C+zK4ptII8U4eNZUf7bAuLojs8PdZFTwfMyTwdeztmUg9KvQIZvUTkPNdIOA41kj
+R5joK3EOA5El7uKl/L9kJbRnpiNlJJoihNtc2bO8i7ApzX6hNods2nj0ackJTnlM
+0/VUceYdSFCwAypt8fBAUBVy9HfG1MhQnEGW3rvlgm46yzHytSVo8Mz8vTFOYN+p
+hQG8FE822naJpMITM4aAddW/LKkKUXKyYNkn9Fvf+8EjGgXMBgEauQ56WUlxXKrk
+YpslnrXSzWJrmtGnshFgsnbM95zJ3TB9YtuVzVl++M5yAv8fMo2JC8Q8PROy/+S1
+B5sltyBaoA9SZPJ7y88JoEZCsT20f+1UfXch4kkP32BIm54IlCF7vDe99/WTsfCQ
+nqNBg1M5QZt4g3OLy/mVXMoZ/mZAV3XrSmXBSKjPaHr7l5Yz8n8eAeh7QzIJWc/C
+cui0ZFX8PCPJOsI+wDPggV/Tc8/OuJ4qaMLAPvoIces8BA2M6I8=
+=jBlM
+-----END PGP SIGNATURE-----
+
+--sj54nnncvdq22ppw--
