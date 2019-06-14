@@ -2,142 +2,115 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B6EC31E50
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1805AC31E50
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F00217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:26:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560554809;
-	bh=OnhDQrubH4/9j8Vym32fyb+MvNHZxTLkb5f+IClKMRY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=hPvednsUEC8Uf9CHZDp8AMOqOV3yIM9oah68eKZUpTisZG5RPbNinHfqxZdd5eZ/+
-	 BsocA2DO8YCKuaA5L22LpRK7Umo0Q4dfqFj2clxGlyQgSUBEVlHXQQsTpikeEfnN8+
-	 n9poHMz3b2WHTqIHAy0wUSERhn7E+LKSY+OB+pqM=
+	by mail.kernel.org (Postfix) with ESMTP id E3D1E217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:30:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XsbynDbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725809AbfFNX0s (ORCPT
+        id S1726268AbfFNXa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 19:26:48 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:32856 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbfFNX0s (ORCPT
+        Fri, 14 Jun 2019 19:30:29 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39398 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfFNXa3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 19:26:48 -0400
-Received: by mail-io1-f68.google.com with SMTP id u13so9420105iop.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 16:26:47 -0700 (PDT)
+        Fri, 14 Jun 2019 19:30:29 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v18so3970698ljh.6;
+        Fri, 14 Jun 2019 16:30:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BgBzUprMwzxsPrUZNWFb4TI8c1DrqIQ3OMpOfxCgcVs=;
-        b=MYEZ7rV6UMaiVgCFYJK+xu/nqaoPXZxT6oh0Pv0vsmoNEWPLqK8YlLR3v8iSy8V42X
-         awYvACi/szyb7fIaoWUsI0FWo5Mzm3DoAf+clHBsjkN0aXAjD8KvE6GCxiX/TbgP+t4g
-         PFvfSpT3DKHUCpLTfTUtcF4c0qttULVKYylIk=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hLRvRyseCoNTnINKGx1gbhdzgE1HlmQyXykkBiBseG4=;
+        b=XsbynDbDNwALY52CArTK5cnvk4mmYDaryXGQacSxkuCC0C8D65Z1opswYES2F8hqFg
+         CFQ84p+YGY1zGY2h+9tqYn6+0MoWuMrQarVQmuoy8vDOEVM+cQrGs8+zFuGOktT5ohLd
+         OUbDI+uM8jrivKmiy6Jo5kJlh9zuJrafznOYrKm5vbV6sjk3saWgdzXVZXEDifzNldEQ
+         znvklcvpQYIiycEhvllN7AdQgxTJBhe1lkDPFy7NtT1q0+iL2/QR9igFkKB25K3ip37h
+         0L6A/n4zRVSwEBIKu0Fh8JGoquUtbaktaShO4Ut63P1MnDFD3JKy6bbu4LGnhM8N8oho
+         P3jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BgBzUprMwzxsPrUZNWFb4TI8c1DrqIQ3OMpOfxCgcVs=;
-        b=Z5Jm0QKdgQ3GWa+vTdKygc5xCO9Gd232CPwyv5ttZ84+67mATKgdRhujZ7VLKbF5Y1
-         jWA8sfnhnHD9GRrSQkJUnTATNlMb3XoSiMf0L1c9FVhNucEiYDjz6Gx7gV1g2yMjZ+ym
-         esgSKLHya1aHLYRJE/5J0GjkzvE1D4kP9GeydpPtkzBF3yiLDKwnu4bu3PVymfEAAtWa
-         +KF6kx1rjxL1q5Pr2e2N2qFCxQRvZgVF+lk/D7GrjcZA25rI6YhqPEudLkn01CdeSA5r
-         ZmxhyS/+wT81AYqpPQe5B70MOkVnlEdRHqWo0khp3slvc20VOKei1ylrUT2aRRtxNsR8
-         JD9A==
-X-Gm-Message-State: APjAAAVwgVcEIqJI8tCv7OsbJTGRq1wQ+S853no2w9QuecF6MO5k1lGV
-        W2l8666o6sRHkgJ9+1FT5dW91z6D3hg=
-X-Google-Smtp-Source: APXvYqxgmtCNsTmHG+dcHz1s0SZYMqut7P+FjNnZMFVIaHax7HqhzzuNcY6lDvMQIrBHy7YoUNYJOQ==
-X-Received: by 2002:a05:6602:218b:: with SMTP id b11mr6217236iob.264.1560554807498;
-        Fri, 14 Jun 2019 16:26:47 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id o7sm3931020ioo.81.2019.06.14.16.26.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 16:26:47 -0700 (PDT)
-Subject: Re: [PATCH 0/2] Use Media Dev Allocator to fix vimc dev lifetime bugs
-To:     Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <cover.1558667245.git.skhan@linuxfoundation.org>
- <c9160fe7-e880-4070-3959-b9e9177acf54@xs4all.nl>
- <2862ebca-c58f-c265-cc74-8d0f9b943275@collabora.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <1c794ca1-5490-26a4-dc39-f86e05fadc46@linuxfoundation.org>
-Date:   Fri, 14 Jun 2019 17:26:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hLRvRyseCoNTnINKGx1gbhdzgE1HlmQyXykkBiBseG4=;
+        b=Dt0WPn1g0Y/aPaj/RYz7+JVZ0g3u0iHugwhPpvZCZUomV7Fn2U2fgcJ6b/BPwLz/Je
+         wLb82i0yCecrIt9sNP5iC3dF3xwdDoervKjF9GckYW4w5GHkKnjSRUj0ovDDgxNEoTHK
+         tIqWE6syWqToCrOBxBz978gzwR0znsPbQhWdvBYQb8nb4pMzME9PJx0AugQpVnvUFkhF
+         XWE7stvcaQyV3EW9U3EqGtVm3SAgAjgMhViH2CEhLAJgvTz6PCwt1Bm2lOr+LZqhKlaU
+         zPDSvTepILPjCnsEMngaiRKMeUHfb56yNLGiHs/cz90fnHJg0od6EAYIfRyL5zpB6y7I
+         aaNg==
+X-Gm-Message-State: APjAAAUDtqomHqk32X8Vzwi9NN1u3JhLE1TGAzKh0zIxgwTdmPOU5rwP
+        XF9LqMGBDu64mRRfnXOdSfeMwmPV3JpPM4Y4iZc=
+X-Google-Smtp-Source: APXvYqwbIBfbtHpDcKSqlvtFREHBX4scDcT301yjzhza69EW1cROJWTQO5zNXq0ejKhNBgymyKw0elbWtSfI8kvJ+ys=
+X-Received: by 2002:a2e:968e:: with SMTP id q14mr10593386lji.195.1560555026608;
+ Fri, 14 Jun 2019 16:30:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2862ebca-c58f-c265-cc74-8d0f9b943275@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1560534694.git.jpoimboe@redhat.com> <c0add777a2e0207c1474ce99baa492a7ce3502d6.1560534694.git.jpoimboe@redhat.com>
+ <20190614205841.s4utbpurntpr6aiq@ast-mbp.dhcp.thefacebook.com>
+ <20190614210745.kwiqm5pkgabruzuj@treble> <CAADnVQLK3ixK1JWF_mfScZoFzFF=6O8f1WcqkYqiejKeex1GSQ@mail.gmail.com>
+ <20190614211929.drnnawbi7guqj2ck@treble> <CAADnVQ+BCxsKEK=ZzYOZkgTJAg_7jz1_f+FCX+Ms0vTOuW8Mxw@mail.gmail.com>
+ <20190614231717.xukbfpc2cy47s4xh@treble>
+In-Reply-To: <20190614231717.xukbfpc2cy47s4xh@treble>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Fri, 14 Jun 2019 16:30:15 -0700
+Message-ID: <CAADnVQJn+TnSj82MJ0ry1UTNGXD0qzESqfp7E1oi_HAYC-xTXg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] objtool: Fix ORC unwinding in non-JIT BPF
+ generated code
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     X86 ML <x86@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@aculab.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/19 7:24 AM, Helen Koike wrote:
-> 
-> 
-> On 6/13/19 2:44 AM, Hans Verkuil wrote:
->> On 5/24/19 5:31 AM, Shuah Khan wrote:
->>> media_device is embedded in struct vimc_device and when vimc is removed
->>> vimc_device and the embedded media_device goes with it, while the active
->>> stream and vimc_capture continue to access it.
->>>
->>> Fix the media_device lifetime problem by changing vimc to create shared
->>> media_device using Media Device Allocator API and vimc_capture getting
->>> a reference to vimc module. With this change, vimc module can be removed
->>> only when the references are gone. vimc can be removed after vimc_capture
->>> is removed.
->>>
->>> Media Device Allocator API supports just USB devices. Enhance it
->>> adding a genetic device allocate interface to support other media
->>> drivers.
->>>
->>> The new interface takes pointer to struct device instead and creates
->>> media device. This interface allows a group of drivers that have a
->>> common root device to share media device resource and ensure media
->>> device doesn't get deleted as long as one of the drivers holds its
->>> reference.
->>>
->>> The new interface has been tested with vimc component driver to fix
->>> panics when vimc module is removed while streaming is in progress.
->>
->> Helen, can you review this series? I'm not sure this is the right approach
->> for a driver like vimc, and even if it is, then it is odd that vimc-capture
->> is the only vimc module that's handled here.
-> 
-> Hi Hans,
-> 
-> Yes, I can take a look. Sorry, I've been a bit busy these days but I'll
-> try to take a look at this patch series (and the others) asap.
-> 
-> Helen
-> 
->>
->> My gut feeling is that this should be handled inside vimc directly and not
->> using the media-dev-allocator.
->>
+On Fri, Jun 14, 2019 at 4:17 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> On Fri, Jun 14, 2019 at 02:22:59PM -0700, Alexei Starovoitov wrote:
+> > On Fri, Jun 14, 2019 at 2:19 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > > > > > >
+> > > > > > > +#define JUMP_TABLE_SYM_PREFIX "jump_table."
+> > > > > >
+> > > > > > since external tool will be looking at it should it be named
+> > > > > > "bpf_jump_table." to avoid potential name conflicts?
+> > > > > > Or even more unique name?
+> > > > > > Like "bpf_interpreter_jump_table." ?
+> > > > >
+> > > > > No, the point is that it's a generic feature which can also be used any
+> > > > > non-BPF code which might also have a jump table.
+> > > >
+> > > > and you're proposing to name all such jump tables in the kernel
+> > > > as static foo jump_table[] ?
+> > >
+> > > That's the idea.
+> >
+> > Then it needs much wider discussion.
+>
+> Why would it need wider discussion?  It only has one user.  If you
+> honestly believe that it will be controversial to require future users
+> to call a static jump table "jump_table" then we can have that
+> discussion when it comes up.
 
-Hi Hans and Helen,
-
-I explored fixing the problem within vimc before I went down the path to
-use Media Device Allocator API. I do think that it is cleaner to go this
-way and easier to maintain.
-
-vimc is a group pf component drivers that rely on the media device vimc
-in vimc and falls into the use-case Media Device Allocator API is added
-to address. The release and life-time management happens without vimc
-component drivers being changed other than using the API to get and put
-media device reference.
-
-thanks,
--- Shuah
-
-
+It's clearly controversial.
+I nacked it already on pointless name change
+from "jumptable" to "jump_table" and now you're saying
+that no one will complain about "jump_table" name
+for all jump tables in the kernel that will ever appear?
