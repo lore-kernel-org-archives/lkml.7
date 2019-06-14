@@ -2,87 +2,187 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCAEC31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B126C31E4A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD87E2073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF3972073F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfFNDTT (ORCPT
+        id S1726701AbfFNDUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 23:19:19 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37692 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbfFNDTT (ORCPT
+        Thu, 13 Jun 2019 23:20:06 -0400
+Received: from lucky1.263xmail.com ([211.157.147.132]:34690 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfFNDUF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 23:19:19 -0400
-Received: by mail-ed1-f66.google.com with SMTP id w13so1324875eds.4;
-        Thu, 13 Jun 2019 20:19:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NPwG/+sK6rrlYN0ObMy3YjCUZytnPkU+C+L+wuAauYY=;
-        b=H0IWw6Cw1xDgvx1twE7WAHCT0moG8RFGnDdUYOn2dAMMyHyYz3Zjky76dF6pklZRqi
-         R0Z6qxf9om9OtLw5gN7NlQTQuksIKdu952W3KspO/88oEHRkVM+ghgdUDG4YvC9tGeVO
-         JT+KNFhFrCLC6Mv5RK4kac/EbWIgJSuG385p2qtmopTx5z10OeaU797gj/NGziOIHdFW
-         cGrhUfteIAvmUc0DrIiSMiGbBr2gmwBMvILhuwL8btsIeriotHAAweQqrcWknIQNI2L2
-         neOxaG1A8tn+uZPNj+ev/oFMNraMzrKeTV6cuEegK1P2nGyEHGDA6/R8lkO4LdWOfbW2
-         Tgag==
-X-Gm-Message-State: APjAAAUc1bsi40n0XPzotdxwXcrsh9m2kT2dgO3k5ftajsi4a91EK7Dz
-        GJpkCMzhZjTG+sKSRmbt5kLAMVZKuPA=
-X-Google-Smtp-Source: APXvYqwITARVTvOF/txRmfKZFDzXu1HmSUvVaVy/Q8Gc8d26YbmXl9cQT6dEYnSWLLpmpevrQWV0gQ==
-X-Received: by 2002:a17:906:f0cd:: with SMTP id dk13mr31604991ejb.84.1560482356479;
-        Thu, 13 Jun 2019 20:19:16 -0700 (PDT)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
-        by smtp.gmail.com with ESMTPSA id o93sm479766edd.46.2019.06.13.20.19.16
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 20:19:16 -0700 (PDT)
-Received: by mail-wr1-f54.google.com with SMTP id p11so871303wre.7;
-        Thu, 13 Jun 2019 20:19:16 -0700 (PDT)
-X-Received: by 2002:adf:fd01:: with SMTP id e1mr2697971wrr.167.1560482355808;
- Thu, 13 Jun 2019 20:19:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190613185241.22800-1-jagan@amarulasolutions.com> <20190613185241.22800-3-jagan@amarulasolutions.com>
-In-Reply-To: <20190613185241.22800-3-jagan@amarulasolutions.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Fri, 14 Jun 2019 11:19:04 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65xuXc4C1jOyM1GbEFVDam5P-6NN0ZhtzwzA7qU5F3nJQ@mail.gmail.com>
-Message-ID: <CAGb2v65xuXc4C1jOyM1GbEFVDam5P-6NN0ZhtzwzA7qU5F3nJQ@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH 2/9] drm/sun4i: tcon: Add TCON LCD support
- for R40
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-amarula@amarulasolutions.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 13 Jun 2019 23:20:05 -0400
+Received: from tony.xie?rock-chips.com (unknown [192.168.167.152])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 28D7C54DEB;
+        Fri, 14 Jun 2019 11:17:43 +0800 (CST)
+X-263anti-spam: KSV:0;BIG:0;
+X-MAIL-GRAY: 1
+X-MAIL-DELIVERY: 0
+X-KSVirus-check: 0
+X-ADDR-CHECKED4: 1
+X-ABS-CHECKED: 1
+X-SKE-CHECKED: 1
+X-ANTISPAM-LEVEL: 2
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P20303T139952891324160S1560482259794024_;
+        Fri, 14 Jun 2019 11:17:41 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <253e62f960b9431d8ca182157cc282f4>
+X-RL-SENDER: tony.xie@rock-chips.com
+X-SENDER: xxx@rock-chips.com
+X-LOGIN-NAME: tony.xie@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+From:   Tony Xie <tony.xie@rock-chips.com>
+To:     heiko@sntech.de
+Cc:     broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, chenjh@rock-chips.com,
+        xsf@rock-chips.com, zhangqing@rock-chips.com,
+        huangtao@rock-chips.com, tony.xie@rock-chips.com
+Subject: [PATCH v9 6/6] clk: RK808: add RK809 and RK817 support.
+Date:   Thu, 13 Jun 2019 23:17:38 -0400
+Message-Id: <20190614031738.15909-1-tony.xie@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190614031425.15741-1-tony.xie@rock-chips.com>
+References: <20190614031425.15741-1-tony.xie@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 2:53 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> TCON LCD0, LCD1 in allwinner R40, are used for managing
-> LCD interfaces like RGB, LVDS and DSI.
->
-> Like TCON TV0, TV1 these LCD0, LCD1 are also managed via
-> tcon top.
->
-> Add support for it, in tcon driver.
->
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+RK809 and RK817 are power management IC chips for multimedia products.
+most of their functions and registers are same, including the clkout
+funciton.
 
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/Kconfig     |  9 +++---
+ drivers/clk/clk-rk808.c | 64 ++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 67 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index e5b2fe80eab4..532ab112fa8a 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -52,13 +52,12 @@ config COMMON_CLK_MAX9485
+ 	  This driver supports Maxim 9485 Programmable Audio Clock Generator
+ 
+ config COMMON_CLK_RK808
+-	tristate "Clock driver for RK805/RK808/RK818"
++	tristate "Clock driver for RK805/RK808/RK809/RK817/RK818"
+ 	depends on MFD_RK808
+ 	---help---
+-	  This driver supports RK805, RK808 and RK818 crystal oscillator clock. These
+-	  multi-function devices have two fixed-rate oscillators,
+-	  clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
+-	  by control register.
++	  This driver supports RK805, RK809 and RK817, RK808 and RK818 crystal oscillator clock.
++	  These multi-function devices have two fixed-rate oscillators, clocked at 32KHz each.
++	  Clkout1 is always on, Clkout2 can off by control register.
+ 
+ config COMMON_CLK_HI655X
+ 	tristate "Clock driver for Hi655x" if EXPERT
+diff --git a/drivers/clk/clk-rk808.c b/drivers/clk/clk-rk808.c
+index 8d90bdf5b946..75f2cf0dfc9f 100644
+--- a/drivers/clk/clk-rk808.c
++++ b/drivers/clk/clk-rk808.c
+@@ -96,6 +96,68 @@ of_clk_rk808_get(struct of_phandle_args *clkspec, void *data)
+ 	return idx ? &rk808_clkout->clkout2_hw : &rk808_clkout->clkout1_hw;
+ }
+ 
++static int rk817_clkout2_enable(struct clk_hw *hw, bool enable)
++{
++	struct rk808_clkout *rk808_clkout = container_of(hw,
++							 struct rk808_clkout,
++							 clkout2_hw);
++	struct rk808 *rk808 = rk808_clkout->rk808;
++
++	return regmap_update_bits(rk808->regmap, RK817_SYS_CFG(1),
++				  RK817_CLK32KOUT2_EN,
++				  enable ? RK817_CLK32KOUT2_EN : 0);
++}
++
++static int rk817_clkout2_prepare(struct clk_hw *hw)
++{
++	return rk817_clkout2_enable(hw, true);
++}
++
++static void rk817_clkout2_unprepare(struct clk_hw *hw)
++{
++	rk817_clkout2_enable(hw, false);
++}
++
++static int rk817_clkout2_is_prepared(struct clk_hw *hw)
++{
++	struct rk808_clkout *rk808_clkout = container_of(hw,
++							 struct rk808_clkout,
++							 clkout2_hw);
++	struct rk808 *rk808 = rk808_clkout->rk808;
++	unsigned int val;
++
++	int ret = regmap_read(rk808->regmap, RK817_SYS_CFG(1), &val);
++
++	if (ret < 0)
++		return 0;
++
++	return (val & RK817_CLK32KOUT2_EN) ? 1 : 0;
++}
++
++static const struct clk_ops rk817_clkout2_ops = {
++	.prepare = rk817_clkout2_prepare,
++	.unprepare = rk817_clkout2_unprepare,
++	.is_prepared = rk817_clkout2_is_prepared,
++	.recalc_rate = rk808_clkout_recalc_rate,
++};
++
++static const struct clk_ops *rkpmic_get_ops(long variant)
++{
++	switch (variant) {
++	case RK809_ID:
++	case RK817_ID:
++		return &rk817_clkout2_ops;
++	/*
++	 * For the default case, it match the following PMIC type.
++	 * RK805_ID
++	 * RK808_ID
++	 * RK818_ID
++	 */
++	default:
++		return &rk808_clkout2_ops;
++	}
++}
++
+ static int rk808_clkout_probe(struct platform_device *pdev)
+ {
+ 	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
+@@ -127,7 +189,7 @@ static int rk808_clkout_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	init.name = "rk808-clkout2";
+-	init.ops = &rk808_clkout2_ops;
++	init.ops = rkpmic_get_ops(rk808->variant);
+ 	rk808_clkout->clkout2_hw.init = &init;
+ 
+ 	/* optional override of the clockname */
+-- 
+2.17.1
+
+
+
