@@ -2,99 +2,169 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F27E5C31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1BCC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE4972183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560535010;
-	bh=u7A2glWdDsI2x2SgfHUUq2LVtrXCaDuJkwVjBKKrUo8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HmOjzvyuDBp/SPePnNhAunfyo3549x9Welfc6QeS4pvX8F09C5XjVW76mTfyO/QKu
-	 ZcvoN3BdXE7n3cu4PnYXqv49Fv42WtRPN8hCjnhOVgfqOTg58dNeAOLXD5k1WbOPJ7
-	 gIYH1aXhmyzJQzilnNuusU60fQmbLa8i6Tmm6Ijo=
+	by mail.kernel.org (Postfix) with ESMTP id 032072183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:59:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfFNR4t (ORCPT
+        id S1726924AbfFNR7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 13:56:49 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]:34591 "EHLO
-        mail-qk1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbfFNR4r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 13:56:47 -0400
-Received: by mail-qk1-f172.google.com with SMTP id t8so2251674qkt.1;
-        Fri, 14 Jun 2019 10:56:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rr4DhL8mkbmYJTu+prptdDL5l4mcP175r2QLE+Qn8CA=;
-        b=cLJE6Rf50VcaPIRaV80FOsBwRwK4nUuYdTa5x8SSx7ww6xsZtzmNPaHRzNFTqODvt6
-         /hDunowkAFc2MbCFwhosFbE8+tPmvxmQRmpC52XUQF980dU32Z/0oL5rfh3XNrTNYbFv
-         KriO0fhfVsUT+A9lhgqJbmINYpztEe4MklT1Ldi/Vti1KUej1yYg4tDVt3hgO+0jTOpz
-         5Fj80H6LyQIWI99RhAp20XnOEHvpU96YrUa8/k5wkGWwVitKTO6pO/6rPbClA3iQm2IW
-         4fu7vDzS8uvA/oeFzyyU9Ar2Hi+EglXMSWAaTbVT0DVcRnsuLKZdJlnI/97tTg2cJhpu
-         KCAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rr4DhL8mkbmYJTu+prptdDL5l4mcP175r2QLE+Qn8CA=;
-        b=KebvoWhKRM0aSt+WSLpMLhu2XJ8iQgggI0djTeL6CGayR+zWhhhyArkODirBXA3XT+
-         0JxXHsU2YcUj9WGIQdWyY7nYQblTZWOGFcBTIpimCbdY6t0qE9rPybXrtpZ0rH5vtL9a
-         u1U/sxt2TaaEiEtqgT0s3KfHYo88uWGL3w02Vf0xiZqxa0WcN5rN9fQarnM1LTAcZ5Aa
-         aFn9H4ZYS5lMsQtr8BKdfZ0fojQypcZ2JffWDn9UAXwjajhMqqQ54udpBsBRx75NC7sv
-         IbfOf7/dMEWIicDBwf20AB9nlKYlu6S0fqqRfgKvqNyiI7CEgmrt2ly6yki1HOFOBLy0
-         BgMQ==
-X-Gm-Message-State: APjAAAV0RcvJv174bkSSjwvOcofaEdzzM79TnPw6+k4SeFv04xveZcTf
-        VeaycOzZ0rD6KAEvJT0CZYU=
-X-Google-Smtp-Source: APXvYqyur5VtexgQTx8OWTjFE9G5cpfspjCCJpY9hNeZ4lleSYHrVILXqbnzUXo5x1BF6SWDHMdQ/Q==
-X-Received: by 2002:a37:7646:: with SMTP id r67mr57567827qkc.249.1560535005491;
-        Fri, 14 Jun 2019 10:56:45 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::6bab])
-        by smtp.gmail.com with ESMTPSA id t187sm1843362qkh.10.2019.06.14.10.56.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 10:56:44 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 10:56:42 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     axboe@kernel.dk, newella@fb.com, clm@fb.com, josef@toxicpanda.com,
-        dennisz@fb.com, lizefan@huawei.com, hannes@cmpxchg.org
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        kernel-team@fb.com, cgroups@vger.kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, bpf@vger.kernel.org
-Subject: Re: [PATCHSET block/for-next] IO cost model based work-conserving
- porportional controller
-Message-ID: <20190614175642.GA657710@devbig004.ftw2.facebook.com>
-References: <20190614015620.1587672-1-tj@kernel.org>
+        Fri, 14 Jun 2019 13:59:13 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33008 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726389AbfFNR7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 13:59:13 -0400
+Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 8E24D53F4C2D688BC80F;
+        Fri, 14 Jun 2019 18:59:10 +0100 (IST)
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.154)
+ by smtpsuk.huawei.com (10.201.108.43) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 14 Jun 2019 18:59:00 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <zohar@linux.ibm.com>, <dmitry.kasatkin@huawei.com>,
+        <mjg59@google.com>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH v4 00/14] ima: introduce IMA Digest Lists extension
+Date:   Fri, 14 Jun 2019 19:54:59 +0200
+Message-ID: <20190614175513.27097-1-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614015620.1587672-1-tj@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 06:56:10PM -0700, Tejun Heo wrote:
-...
-> The patchset is also available in the following git branch.
-> 
->  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-iow
+This patch set introduces a new IMA extension called IMA Digest Lists.
 
-Updated patchset available in the following branch.  Just build fixes
-and cosmetic changes for now.
+At early boot, the extension preloads in kernel memory reference digest
+values, that can be compared with actual file digests when files are
+accessed in the system.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-iow-v2
+The extension will open for new possibilities: PCR with predictable value,
+that can be used for sealing policies associated to data or TPM keys;
+appraisal based on reference digests already provided by Linux distribution
+vendors in the software packages.
 
-Thanks.
+The first objective can be achieved because the PCR values does not depend
+on which and when files are measured: the extension measures digest lists
+sequentially and files whose digest is not in the digest list.
+
+The second objective can be reached because the extension is able to
+extract reference measurements from packages (with a user space tool) and
+use it as a source for appraisal verification as the reference came from
+the security.ima xattr. This approach will also reduce the overhead as only
+one signature is verified for many files (as opposed to one signature for
+each file with the current implementation).
+
+This version of the patch set provides a clear separation between current
+and new functionality. First, the new functionality must be explicitly
+enabled from the kernel command line. Second, results of operations
+performed by the extension can be distinguished from those obtained from
+the existing code: measurement entries created by the extension have a
+different PCR; mutable files appraised with the extension have a different
+security.ima type.
+
+The review of this patch set should start from patch 11 and 12, which
+modify the IMA-Measure and IMA-Appraise submodules to use digest lists.
+Patch 1 to 5 are prerequisites. Patch 6 to 10 adds support for digest
+lists. Finally, patch 13 introduces two new policies to measure/appraise
+rootfs and patch 14 adds the documentation (including a flow chart to
+show how IMA has been modified).
+
+The user space tools to configure digest lists are available at:
+
+https://github.com/euleros/digest-list-tools/releases/tag/v0.3
+
+The patch set applies on top of linux-integrity/next-queued-testing
+(73589972b987).
+
+It is necessary to apply also:
+https://patchwork.kernel.org/cover/10957495/
+
+To use appraisal, it is necessary to use a modified cpio and a modified
+dracut:
+
+https://github.com/euleros/cpio/tree/xattr-v1
+https://github.com/euleros/dracut/tree/digest-lists
+
+For now, please use it only in a testing environment.
+
+
+Changelog
+
+v3:
+- move ima_lookup_loaded_digest() and ima_add_digest_data_entry() from
+  ima_queue.c to ima_digest_list.c
+- remove patch that introduces security.ima_algo
+- add version number and type modifiers to the compact list header
+- remove digest list metadata, all digest lists in the directory are
+  accessed
+- move loading of signing keys to user space
+- add violation for both PCRs if they are selected
+- introduce two new appraisal modes
+
+v2:
+- add support for multiple hash algorithms
+- remove RPM parser from the kernel
+- add support for parsing digest lists in user space
+
+v1:
+- add support for immutable/mutable files
+- add support for appraisal with digest lists
+
+
+Roberto Sassu (14):
+  ima: read hash algorithm from security.ima even if appraisal is not
+    enabled
+  ima: generalize ima_read_policy()
+  ima: generalize ima_write_policy() and raise uploaded data size limit
+  ima: generalize policy file operations
+  ima: use ima_show_htable_value to show violations and hash table data
+  ima: add parser of compact digest list
+  ima: restrict upload of converted digest lists
+  ima: prevent usage of digest lists that are not measured/appraised
+  ima: introduce new securityfs files
+  ima: load parser digests and execute the parser at boot time
+  ima: add support for measurement with digest lists
+  ima: add support for appraisal with digest lists
+  ima: introduce new policies initrd and appraise_initrd
+  ima: add Documentation/security/IMA-digest-lists.txt
+
+ .../admin-guide/kernel-parameters.txt         |  16 +-
+ Documentation/security/IMA-digest-lists.txt   | 226 +++++++++++++
+ include/linux/evm.h                           |   6 +
+ include/linux/fs.h                            |   1 +
+ security/integrity/evm/evm_main.c             |   2 +-
+ security/integrity/iint.c                     |   1 +
+ security/integrity/ima/Kconfig                |  25 ++
+ security/integrity/ima/Makefile               |   1 +
+ security/integrity/ima/ima.h                  |  32 +-
+ security/integrity/ima/ima_api.c              |  43 ++-
+ security/integrity/ima/ima_appraise.c         |  92 +++---
+ security/integrity/ima/ima_digest_list.c      | 309 ++++++++++++++++++
+ security/integrity/ima/ima_digest_list.h      |  69 ++++
+ security/integrity/ima/ima_fs.c               | 224 ++++++++-----
+ security/integrity/ima/ima_init.c             |   2 +-
+ security/integrity/ima/ima_main.c             |  81 ++++-
+ security/integrity/ima/ima_policy.c           |  29 +-
+ security/integrity/integrity.h                |  22 ++
+ 18 files changed, 1018 insertions(+), 163 deletions(-)
+ create mode 100644 Documentation/security/IMA-digest-lists.txt
+ create mode 100644 security/integrity/ima/ima_digest_list.c
+ create mode 100644 security/integrity/ima/ima_digest_list.h
 
 -- 
-tejun
+2.17.1
+
