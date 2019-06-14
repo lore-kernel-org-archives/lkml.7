@@ -2,90 +2,77 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A1EC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AFBC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82D0C2184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623212184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:19:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfFNVRe (ORCPT
+        id S1726658AbfFNVT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 17:17:34 -0400
-Received: from sauhun.de ([88.99.104.3]:57240 "EHLO pokefinder.org"
+        Fri, 14 Jun 2019 17:19:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46642 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726030AbfFNVRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 17:17:34 -0400
-Received: from localhost (p5486CF81.dip0.t-ipconnect.de [84.134.207.129])
-        by pokefinder.org (Postfix) with ESMTPSA id C6D022CF690;
-        Fri, 14 Jun 2019 23:17:31 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 23:17:31 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, agross@kernel.org, david.brown@linaro.org,
-        wsa+renesas@sang-engineering.com, bjorn.andersson@linaro.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org,
-        ard.biesheuvel@linaro.org, jlhugo@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.or
-Subject: Re: [PATCH v4 2/6] i2c: i2c-qcom-geni: Signify successful driver
- probe
-Message-ID: <20190614211731.GI17899@ninjato>
-References: <20190612142654.9639-1-lee.jones@linaro.org>
- <20190612142654.9639-3-lee.jones@linaro.org>
+        id S1725908AbfFNVT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 17:19:26 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5BCBC30832CC;
+        Fri, 14 Jun 2019 21:19:21 +0000 (UTC)
+Received: from treble (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CBE6061B7F;
+        Fri, 14 Jun 2019 21:19:17 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 16:19:16 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v2 4/5] x86/bpf: Fix 64-bit JIT frame pointer usage
+Message-ID: <20190614211916.jnxakyfwilcv6r57@treble>
+References: <cover.1560534694.git.jpoimboe@redhat.com>
+ <178097de8c1bd6a877342304f3469eac4067daa4.1560534694.git.jpoimboe@redhat.com>
+ <20190614210555.q4ictql3tzzjio4r@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="PWfwoUCx3AFJRUBq"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190612142654.9639-3-lee.jones@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190614210555.q4ictql3tzzjio4r@ast-mbp.dhcp.thefacebook.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 14 Jun 2019 21:19:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 14, 2019 at 02:05:56PM -0700, Alexei Starovoitov wrote:
+> Have you tested it ?
+> I really doubt, since in my test both CONFIG_UNWINDER_ORC and
+> CONFIG_UNWINDER_FRAME_POINTER failed to unwind through such odd frame.
 
---PWfwoUCx3AFJRUBq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hm, are you seeing selftest failures?  They seem to work for me.
 
-On Wed, Jun 12, 2019 at 03:26:50PM +0100, Lee Jones wrote:
-> The Qualcomm Geni I2C driver currently probes silently which can be
-> confusing when debugging potential issues.  Add a low level (INFO)
-> print when each I2C controller is successfully initially set-up.
->=20
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Here is much simple patch that I mentioned in the email yesterday,
+> but you failed to listen instead of focusing on perceived 'code readability'.
+> 
+> It makes one proper frame and both frame and orc unwinders are happy.
 
-Applied to for-next, thanks!
+I'm on my way out the door and I just skimmed it, but it looks fine.
 
-Alok, are you still there? Your ack is missed here...
+Some of the code and patch description look familiar, please be sure to
+give me proper credit.
 
-
---PWfwoUCx3AFJRUBq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0EDusACgkQFA3kzBSg
-KbaF5A//eOUYXPdT2ti6Q1bKBj1UFPE+GDDgTGN5/r9/yp/CvXDI2rmQRzYZ4Hzw
-gu+c+ZlfvgufyiS3nOri6r8RgiSRqWPRUCKK+PZNGdiYg7bjmHGSzYj3QwprXu6Y
-vorDbXJ8AsnSr3/LAqO+vwzxwJIUdUNu51svi+IYKw0t+v7mbxfSKbl6vTCmrums
-DepavKTDuQKnoLD6RX7E89ffTw/wvnR5kR/kGlIeAmcOHYCWyNZhdmrNLSqhZdmf
-Ki1TTIq8D0dHoVKia0GdkcCBeegTHBpfwkiDzRl9ubpPaZen6T3ny5mrbyTWV2wF
-Xn3H7nYSiT2jbY35k09RINb1G2YSc6zHClcgIAdx0OO9Zs1OXV4s5sdHvjzHR1ep
-SbpBxZ+ndXOt+Eyo4aXSpK8In3noXs0RZiw+kf7DxUKQWOb465hHb7aX7cCwp2Fv
-kjHYMgizH6agnT5ApVTa4GLF/NQ2uTj+EmWjgwhFmPWsnfjS1rCOrvWkizGx1dpn
-55ROyQ1sS8fIRk4lhKJa0H54up9gg4ql07O0qMvkwRUkLvBnEedob5AapJp2jg2b
-FKH9EhHky3pgSWkrlChUiNcRsBtF9IKORupVYGjhDfKGo+dQMvrEhgFIpcPINk2E
-1zRvv6B2/eRrDN13n6Kztrfil3fRYOEYmbSn01W7loWGu51o2LE=
-=OtA8
------END PGP SIGNATURE-----
-
---PWfwoUCx3AFJRUBq--
+-- 
+Josh
