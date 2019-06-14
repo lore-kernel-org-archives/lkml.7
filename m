@@ -2,68 +2,92 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F56C31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271EAC31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0263B20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:30:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cM786c65"
+	by mail.kernel.org (Postfix) with ESMTP id F3B6F20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:32:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbfFNOaz (ORCPT
+        id S1728327AbfFNOcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:30:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55502 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbfFNOaz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:30:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=g+j545IMwIJikYLXl8ImiYVIWrJ6ceFqhokOAsJBX7s=; b=cM786c65V4kkuIngazZnMLV984
-        naip0mPWhZac9mKV9KODwN08xWW4C000ncgC8+c0HPnIlOHcIATtO/rCFwxw70GeCrODf9MynGlvh
-        6m38ZTtpfwldKgVCKRdbotYqvsYbdCsBJnRgnSqK+drvHDChY7ql/bSEhL4ZbIMeobeyLLPzerQfm
-        xHBc8WISsqWEavTN7ZZcOZlG+o1BpXrSOq2ChfgU6BBy2DXHlMEGTjTRAphi9hJ9a2jp9wt9SPoOi
-        XIeND7qTYR8tnCPWjaBkFDVBUprrR5Xu8E2nTkHEPpQJnI0FucO52NlI13y8iXV70oLxZQeK0sIn8
-        jmilIPbQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbnEC-0000KR-UG; Fri, 14 Jun 2019 14:30:52 +0000
-Date:   Fri, 14 Jun 2019 07:30:52 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        util-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Help with reviewing dosfstools patches
-Message-ID: <20190614143052.GA21822@infradead.org>
-References: <20190614102513.4uwsu2wkigg3pimq@pali>
- <ae5097ee-12af-2807-d48c-4274b4fc856d@metux.net>
- <20190614142534.4obcytnq4v3ejdni@pali>
+        Fri, 14 Jun 2019 10:32:06 -0400
+Received: from relay.sw.ru ([185.231.240.75]:37964 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728074AbfFNOcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:32:06 -0400
+Received: from [172.16.25.12] (helo=i7.sw.ru)
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1hbnEw-0006yb-Sg; Fri, 14 Jun 2019 17:31:39 +0300
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc:     Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] x86/kasan: Fix boot with 5-level paging and KASAN
+Date:   Fri, 14 Jun 2019 17:31:49 +0300
+Message-Id: <20190614143149.2227-1-aryabinin@virtuozzo.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190612014526.jtklrc3okejm3e4t@box>
+References: <20190612014526.jtklrc3okejm3e4t@box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190614142534.4obcytnq4v3ejdni@pali>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 04:25:34PM +0200, Pali Rohár wrote:
-> > Does the project already have a maillist ?
-> 
-> No, there is no mailing list. Basically whole development is on github
-> via github pull requests where are also put review comments and where is
-> also whole discussion, including bug reports.
+Since commit d52888aa2753 ("x86/mm: Move LDT remap out of KASLR region on
+5-level paging") kernel doesn't boot with KASAN on 5-level paging machines.
+The bug is actually in early_p4d_offset() and introduced by commit
+12a8cc7fcf54 ("x86/kasan: Use the same shadow offset for 4- and 5-level paging")
 
-That could explain why it is lacking qualified reviewers..
+early_p4d_offset() tries to convert pgd_val(*pgd) value to physical
+address. This doesn't make sense because pgd_val() already contains
+physical address.
+
+It did work prior to commit d52888aa2753 because the result of
+"__pa_nodebug(pgd_val(*pgd)) & PTE_PFN_MASK" was the same as
+"pgd_val(*pgd) & PTE_PFN_MASK". __pa_nodebug() just set some high bit
+which were masked out by applying PTE_PFN_MASK.
+
+After the change of the PAGE_OFFSET offset in commit d52888aa2753
+__pa_nodebug(pgd_val(*pgd)) started to return value with more high bits
+set and PTE_PFN_MASK wasn't enough to mask out all of them. So we've got
+wrong not even canonical address and crash on the attempt to dereference it.
+
+Fixes: 12a8cc7fcf54 ("x86/kasan: Use the same shadow offset for 4- and 5-level paging")
+Reported-by: Kirill A. Shutemov <kirill@shutemov.name>
+Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: <stable@vger.kernel.org>
+---
+ arch/x86/mm/kasan_init_64.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
+index 8dc0fc0b1382..296da58f3013 100644
+--- a/arch/x86/mm/kasan_init_64.c
++++ b/arch/x86/mm/kasan_init_64.c
+@@ -199,7 +199,7 @@ static inline p4d_t *early_p4d_offset(pgd_t *pgd, unsigned long addr)
+ 	if (!pgtable_l5_enabled())
+ 		return (p4d_t *)pgd;
+ 
+-	p4d = __pa_nodebug(pgd_val(*pgd)) & PTE_PFN_MASK;
++	p4d = pgd_val(*pgd) & PTE_PFN_MASK;
+ 	p4d += __START_KERNEL_map - phys_base;
+ 	return (p4d_t *)p4d + p4d_index(addr);
+ }
+-- 
+2.21.0
+
