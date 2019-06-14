@@ -2,84 +2,183 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D049C468B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC013C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE8821841
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:39:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fnFmAH1S"
+	by mail.kernel.org (Postfix) with ESMTP id 885D521841
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560534042;
+	bh=picnxEZ2Wx6Xt/xYCo+RIPwm3gjIvkVmQnAkykkOUfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VRvbvQSmpeI9zJoVAF1QvV3WcLPXTAMrNWwhIwopPJFypa3Q8w19Gpzth8izxGzM/
+	 kI28E9aQ/ggoWIVRAhcEHNvtXrgMZYUZ7xsVIFASWHnQ1rSwDVup2vKv9vp6gn54Qq
+	 MoQV+/JiZ6FnUy/PYAH2LQpYYxYdanCS0/HI7YTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfFNRjx (ORCPT
+        id S1726667AbfFNRkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 13:39:53 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39782 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbfFNRjx (ORCPT
+        Fri, 14 Jun 2019 13:40:41 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34414 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbfFNRkk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 13:39:53 -0400
-Received: by mail-io1-f68.google.com with SMTP id r185so1583185iod.6;
-        Fri, 14 Jun 2019 10:39:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pyNZh3/ZiJGCHGyK6bSxYhhEMHeQph+kYYlr649t5fI=;
-        b=fnFmAH1S+PAJamnF3NqeGjNJKLKabKSrwIeQ4EWJOLeaxDi+l9iEip4OJmJBE4s4L5
-         t9EWMjkoX75msS90FvzStnVp/1AD3CIo70/WhRleVWjKXaqS3APRMAJECm+XcYadU/ix
-         NoYetrWGQsDpipp5CJSmFksF4KKmbPS+G5fi+ZUtKbo2GXH7BN59YlDslJywgc2SS+gy
-         7nSTV2khtyZxk64W+L6RLIHRhrh19JY6SbxYGhrM4ZCTDfu5g2mtLUyNnQtuaUcGndFD
-         fG4rYx3xyR8Rc02ZTzSUJSrO3nLpuK/4ZfzmIZPbx6Ud+dlFALl7B/IX0ZD07hvzgrFQ
-         PnCA==
+        Fri, 14 Jun 2019 13:40:40 -0400
+Received: by mail-qt1-f193.google.com with SMTP id m29so3450033qtu.1;
+        Fri, 14 Jun 2019 10:40:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pyNZh3/ZiJGCHGyK6bSxYhhEMHeQph+kYYlr649t5fI=;
-        b=SttPqDvXao+Cd1GUZVy+vSg5gDTLY2Q9Otpe/yV70Fb+zOHaHaJx3Wh8xQF1TjMOIF
-         5QHdQmJ/Ha0Zn8uBhhA14w/FEYM26cvLKlK+9z9TlaiBhXlYV8qavsw5BwSAwqxLHuUX
-         uF8InqHc50SU1oitdoURr2ZdrPt3oev36tv/GQ1XldHxVoN43NTdUOnAFW+9xOL2OKMc
-         mA3dpY0EcS8yOPWysqrGMR07haTDus5lFQDx9BZZPpXPiQRtcodliTmvcXx/UvCZ5N4w
-         tpy/8punK88JAJUxt96r+vaXj+N53i6BimIiEAVv9zNqCwuwZSyb/qxM9FXbfOGuttfw
-         Z84g==
-X-Gm-Message-State: APjAAAVnnlWrQz+T6WTQ8JU3+RnJG+M/ZDFP2EC9ft37csziXFskjuLy
-        7pMt2JHyF4X+jBmA5mj3T4d8fdAb9lR/VLGfA80=
-X-Google-Smtp-Source: APXvYqwNZ0eXs3p92pVUhwtqOL0humBUMj2IEaTDc3AAW0U+hb04I4VnHxh86HS27ouhORHP6iTBY8v4nEVPMWiA21c=
-X-Received: by 2002:a02:9567:: with SMTP id y94mr69763782jah.28.1560533991898;
- Fri, 14 Jun 2019 10:39:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wPpnwqyMUwz4SjcLvux0hAtQhIO7tvhlsaBTqk5BtFQ=;
+        b=aeOLEXhAUBlKVEX6xUuNUcJiPqFBUt5wPo1E48xyyyjUYISE1QJIkjclf1ZplcQKXb
+         vNPYaWwouLzTrQ7LLxf2RH9dZTbHxQkHc8TcblDcwyHB8bqllXKhDZ29SEeNsAmCx+QB
+         se+XSIZwk4niInJsxsgKnA86AehhoONbwz5NhrvnqFpBcOnM7XTFvtNarcZuLnGu3HNE
+         tYrX45x1j5CR6annID1xEvRXrpe7FNAPnfUo35d9Jv4fbqZvvDCzBtptqW+78+VIgtV+
+         49B/FhEP0FpUZQBQai68BEwBbXu8vWq95JJCN4/Hfc/lbXhE1X79ajyhe+LGotePXWNu
+         yr4A==
+X-Gm-Message-State: APjAAAV/46fiPy+TqHknOpcS53CptU1fxPptDgjGvUG4S7DTytTl3LyV
+        88TWhS1wlfzFM0LEW3cyDQ==
+X-Google-Smtp-Source: APXvYqxo44A52mZTtb6SOTHwe53kddQe2wYjOh2ybh83i+aLF200ttNmY0LQpx9l952MRTesaOIZBw==
+X-Received: by 2002:ad4:43e3:: with SMTP id f3mr9527578qvu.108.1560534039177;
+        Fri, 14 Jun 2019 10:40:39 -0700 (PDT)
+Received: from localhost ([64.188.179.243])
+        by smtp.gmail.com with ESMTPSA id f25sm2592067qta.81.2019.06.14.10.40.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 10:40:38 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 11:40:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com
+Subject: Re: [PATCH v2 4/6] dt-bindings: display: bridge: Add ICN6211
+ MIPI-DSI to RGB converter bridge
+Message-ID: <20190614174036.GA31068@bogus>
+References: <20190524104317.20287-1-jagan@amarulasolutions.com>
+ <20190524104317.20287-2-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-References: <20190613162703.986-1-tiny.windzz@gmail.com> <20190614071245.GA2950@infradead.org>
-In-Reply-To: <20190614071245.GA2950@infradead.org>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Sat, 15 Jun 2019 01:39:40 +0800
-Message-ID: <CAEExFWupzjErW1E0z3tcR2xyGgpWXwgLZOTqvru4=hk98EfGhQ@mail.gmail.com>
-Subject: Re: [PATCH 01/10] iommu/exynos: convert to SPDX license tags
-To:     tglx@linutronix.de
-Cc:     joro@8bytes.org, m.szyprowski@samsung.com, kgene@kernel.org,
-        krzk@kernel.org, will.deacon@arm.com, robin.murphy@arm.com,
-        agross@kernel.org, David Brown <david.brown@linaro.org>,
-        Rob Clark <robdclark@gmail.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        jonathanh@nvidia.com, linux-samsung-soc@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190524104317.20287-2-jagan@amarulasolutions.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Need me to make them a patch?
+On Fri, May 24, 2019 at 04:13:15PM +0530, Jagan Teki wrote:
+> ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
+> It has a flexible configuration of MIPI DSI signal input
+> and produce RGB565, RGB666, RGB888 output format.
+> 
+> Add dt-bingings for it.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+>  .../display/bridge/chipone,icn6211.txt        | 78 +++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+> new file mode 100644
+> index 000000000000..53a9848ef8b6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/chipone,icn6211.txt
+> @@ -0,0 +1,78 @@
+> +Chipone ICN6211 MIPI-DSI to RGB Converter Bridge
+> +
+> +ICN6211 is MIPI-DSI/RGB converter bridge from chipone.
+> +It has a flexible configuration of MIPI DSI signal input
+> +and produce RGB565, RGB666, RGB888 output format.
+> +
+> +Required properties for RGB:
+> +- compatible: must be "chipone,icn6211"
+> +- reg: the virtual channel number of a DSI peripheral
+> +- reset-gpios: a GPIO phandle for the reset pin
+> +
+> +The device node can contain following 'port' child nodes,
+> +according to the OF graph bindings defined in [1]:
+> +  0: DSI Input, not required, if the bridge is DSI controlled
+> +  1: RGB Output, mandatory
+> +
+> +[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +Example:
+> +
+> +	panel {
+> +		compatible = "bananapi,s070wv20-ct16", "simple-panel";
 
-MBR,
-Yangtao
+'simple-panel' is not a valid compatible string.
+
+> +		enable-gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PB7 */
+> +		backlight = <&backlight>;
+> +
+> +		port {
+> +			panel_out_bridge: endpoint {
+> +				remote-endpoint = <&bridge_out_panel>;
+> +			};
+> +		};
+> +	};
+> +
+> +&dsi {
+> +	vcc-dsi-supply = <&reg_dcdc1>;		/* VCC-DSI */
+> +	status = "okay";
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		dsi_out: port@0 {
+> +			reg = <0>;
+> +
+> +			dsi_out_bridge: endpoint {
+> +				remote-endpoint = <&bridge_out_dsi>;
+> +			};
+> +		};
+> +	};
+> +
+> +	bridge@0 {
+> +		compatible = "chipone,icn6211";
+> +		reg = <0>;
+> +		reset-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* LCD-RST: PL5 */
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			bridge_in: port@0 {
+> +				reg = <0>;
+> +
+> +				bridge_out_dsi: endpoint {
+> +					remote-endpoint = <&dsi_out_bridge>;
+> +				};
+> +			};
+> +
+> +			bridge_out: port@1 {
+> +				reg = <1>;
+> +
+> +				bridge_out_panel: endpoint {
+> +					remote-endpoint = <&panel_out_bridge>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.18.0.321.gffc6fa0e3
+> 
