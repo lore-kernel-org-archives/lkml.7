@@ -2,294 +2,308 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AA9C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C83C46477
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 670522133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FCCC2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:57:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IDJpDQ6I"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="e1+cNEF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfFNH4s (ORCPT
+        id S1726321AbfFNH54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:56:48 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43100 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfFNH4r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:56:47 -0400
-Received: by mail-pl1-f195.google.com with SMTP id cl9so668888plb.10
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 00:56:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oUe0EsfPK7WobnMDoqwxZ5A8cbWc1pQqqXQ4s7xzzNE=;
-        b=IDJpDQ6ICIrk//XXoQHGmBnCzA7kLbwgTcW9n/66M3LSLVUb/jQBjAYmCXvMYUqZq+
-         FT4x57m3dI3QSqrUdHsWO2c5kvmnJVMGqI33D4O8VRr8fzCsno2eOUSubR5bgPYQ10eX
-         E/KaekFbmcwgJH/iGnvT68nvT68UtiVbFqmQ0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oUe0EsfPK7WobnMDoqwxZ5A8cbWc1pQqqXQ4s7xzzNE=;
-        b=SYo8e2IgcIXXCibw9KN7TJrTIb8nAWaAKn0f1y9AbtnqqWsTLp++svDw1gs1WKfQZr
-         jDvYBaCwR0lHdZrwgMgpR3mt1uLW/OQjIVQnBTzbNkdyCZIIeN+nr27RCSgiOxvpEaoW
-         mjEvGq5vHSWXzztwgHzlyzMTWaPFgeaQl77YHwvZlFXECmg+ycPfK3QDHODM0wjnz/v2
-         8QDUVf6i/Z16Kf2Km4J2IAmbrDaCygOvTJDHVfGiZYvMOagvGgKZlHUV51nwD5BvppNn
-         594YeDsbdc0wiQWJLWnbq9J3MZDZCu9g9stJSKw3cmGhXMd/xGmIMSNOw6kH3LAv6do3
-         /sxw==
-X-Gm-Message-State: APjAAAV7uzGPiaDdD8w+jIAyUywsPQzqV2GKiVLyHjw365UmNfybCALn
-        nnp/0CmCrNwQrnOHnM0iXtMtig==
-X-Google-Smtp-Source: APXvYqwqW/T4Lqap0ZHSnu0gIKcR91q9naNgHyS5/oXC+wwRf1BPu6mHNjAT/uhApLrTMh5HeGXZtg==
-X-Received: by 2002:a17:902:bc43:: with SMTP id t3mr26108872plz.250.1560499006748;
-        Fri, 14 Jun 2019 00:56:46 -0700 (PDT)
-Received: from acourbot.tok.corp.google.com ([2401:fa00:4:4:9712:8cf1:d0f:7d33])
-        by smtp.gmail.com with ESMTPSA id q7sm2156947pfb.32.2019.06.14.00.56.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 00:56:46 -0700 (PDT)
-From:   Alexandre Courbot <acourbot@chromium.org>
-To:     Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH v2] media: mtk-vcodec: remove unneeded proxy functions
-Date:   Fri, 14 Jun 2019 16:56:40 +0900
-Message-Id: <20190614075640.106709-1-acourbot@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+        Fri, 14 Jun 2019 03:57:56 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:38638 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725889AbfFNH5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 03:57:55 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45QCdX3sMnz9tyJw;
+        Fri, 14 Jun 2019 09:57:52 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=e1+cNEF/; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id ZrStMswTDZeP; Fri, 14 Jun 2019 09:57:52 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45QCdX2dsxz9tyJy;
+        Fri, 14 Jun 2019 09:57:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1560499072; bh=oT2fHNdybfAxWEmzrHGkKIoJJEAYmlpOVh6imQNqZcc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=e1+cNEF/q+/VrMW4aMFvDCQAj3vTpTuGFP4QAfVt1LPAeCSH6ZZWzf7Gnl0YCMMQn
+         aEDtPUdFScUZG59wg0BZr11yjvRw9S7LDOMcBVanP6isUkLBBjdxE+eLL6eOIWsfXp
+         fH8yVTldLClkbLNwJaQGlCQB0NAtyM3kTjhlKZM4=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 547758B74C;
+        Fri, 14 Jun 2019 09:57:53 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 3if0_gw2Yco7; Fri, 14 Jun 2019 09:57:53 +0200 (CEST)
+Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.230.107])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EDFBD8B77A;
+        Fri, 14 Jun 2019 09:57:52 +0200 (CEST)
+Subject: Re: [PATCH v3 2/4] crypto: talitos - fix hash on SEC1.
+To:     Horia Geanta <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <cover.1560429844.git.christophe.leroy@c-s.fr>
+ <732ca0ff440bf4cd589d844cfda71d96efd500f5.1560429844.git.christophe.leroy@c-s.fr>
+ <VI1PR0402MB348595847AD2B8975A60C1D398EF0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <548bea7c-fa35-3c17-ee21-61aeb3c59b9a@c-s.fr>
+Date:   Fri, 14 Jun 2019 09:57:53 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <VI1PR0402MB348595847AD2B8975A60C1D398EF0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We were getting the codec interface through a proxy function that does
-not bring anything compared to just accessing the interface definition
-directly, so just do that. Also make the decoder interfaces const.
 
-Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
----
-Changes since v1:
 
-* Fix checkpatch warnings.
+Le 13/06/2019 à 21:07, Horia Geanta a écrit :
+> On 6/13/2019 3:48 PM, Christophe Leroy wrote:
+>> On SEC1, hash provides wrong result when performing hashing in several
+>> steps with input data SG list has more than one element. This was
+>> detected with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:
+>>
+>> [   44.185947] alg: hash: md5-talitos test failed (wrong result) on test vector 6, cfg="random: may_sleep use_finup src_divs=[<reimport>25.88%@+8063, <flush>24.19%@+9588, 28.63%@+16333, <reimport>4.60%@+6756, 16.70%@+16281] dst_divs=[71.61%@alignmask+16361, 14.36%@+7756, 14.3%@+"
+>> [   44.325122] alg: hash: sha1-talitos test failed (wrong result) on test vector 3, cfg="random: inplace use_final src_divs=[<flush,nosimd>16.56%@+16378, <reimport>52.0%@+16329, 21.42%@alignmask+16380, 10.2%@alignmask+16380] iv_offset=39"
+>> [   44.493500] alg: hash: sha224-talitos test failed (wrong result) on test vector 4, cfg="random: use_final nosimd src_divs=[<reimport>52.27%@+7401, <reimport>17.34%@+16285, <flush>17.71%@+26, 12.68%@+10644] iv_offset=43"
+>> [   44.673262] alg: hash: sha256-talitos test failed (wrong result) on test vector 4, cfg="random: may_sleep use_finup src_divs=[<reimport>60.6%@+12790, 17.86%@+1329, <reimport>12.64%@alignmask+16300, 8.29%@+15, 0.40%@+13506, <reimport>0.51%@+16322, <reimport>0.24%@+16339] dst_divs"
+>>
+>> This is due to two issues:
+>> - We have an overlap between the buffer used for copying the input
+>> data (SEC1 doesn't do scatter/gather) and the chained descriptor.
+>> - Data copy is wrong when the previous hash left less than one
+>> blocksize of data to hash, implying a complement of the previous
+>> block with a few bytes from the new request.
+>>
+> I fail to spot these issues.
+> 
+> IIUC in case of SEC1, the variable part of talitos_edesc structure contains
+> a 2nd "chained" descriptor (talitos_desc struct) followed by an area
+> dedicated to linearizing the input (in case input is scattered).
+> 
+> Where is the overlap?
 
- drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c |  9 +--------
- drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c  |  9 +--------
- drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c  |  9 +--------
- drivers/media/platform/mtk-vcodec/vdec_drv_if.c       | 10 +++-------
- drivers/media/platform/mtk-vcodec/vdec_drv_if.h       |  4 ++++
- drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c |  9 +--------
- drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c  |  9 +--------
- drivers/media/platform/mtk-vcodec/venc_drv_if.c       |  7 ++-----
- drivers/media/platform/mtk-vcodec/venc_drv_if.h       |  3 +++
- 9 files changed, 17 insertions(+), 52 deletions(-)
+talitos_sg_map() maps the area starting at edesc->dma_link_tbl, which 
+corresponds to the start of the variable part of talitos_edesc 
+structure. When we use the second descriptor, the data is after that 
+descriptor, but talitos_sg_map() is not aware of it so it maps the 
+second descriptor followed by part of the data instead of mapping the data.
 
-diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
-index 67a7d4f813d5..c5f8f1fca44c 100644
---- a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
-+++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
-@@ -485,16 +485,9 @@ static int vdec_h264_get_param(void *h_vdec, enum vdec_get_param_type type,
- 	return 0;
- }
- 
--static struct vdec_common_if vdec_h264_if = {
-+const struct vdec_common_if vdec_h264_if = {
- 	.init		= vdec_h264_init,
- 	.decode		= vdec_h264_decode,
- 	.get_param	= vdec_h264_get_param,
- 	.deinit		= vdec_h264_deinit,
- };
--
--struct vdec_common_if *get_h264_dec_comm_if(void);
--
--struct vdec_common_if *get_h264_dec_comm_if(void)
--{
--	return &vdec_h264_if;
--}
-diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
-index 42e302650e69..63a8708ce682 100644
---- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
-+++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
-@@ -610,16 +610,9 @@ static void vdec_vp8_deinit(void *h_vdec)
- 	kfree(inst);
- }
- 
--static struct vdec_common_if vdec_vp8_if = {
-+const struct vdec_common_if vdec_vp8_if = {
- 	.init		= vdec_vp8_init,
- 	.decode		= vdec_vp8_decode,
- 	.get_param	= vdec_vp8_get_param,
- 	.deinit		= vdec_vp8_deinit,
- };
--
--struct vdec_common_if *get_vp8_dec_comm_if(void);
--
--struct vdec_common_if *get_vp8_dec_comm_if(void)
--{
--	return &vdec_vp8_if;
--}
-diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-index bed452ac9d13..c179204f97ec 100644
---- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-+++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-@@ -1000,16 +1000,9 @@ static int vdec_vp9_get_param(void *h_vdec, enum vdec_get_param_type type,
- 	return ret;
- }
- 
--static struct vdec_common_if vdec_vp9_if = {
-+const struct vdec_common_if vdec_vp9_if = {
- 	.init		= vdec_vp9_init,
- 	.decode		= vdec_vp9_decode,
- 	.get_param	= vdec_vp9_get_param,
- 	.deinit		= vdec_vp9_deinit,
- };
--
--struct vdec_common_if *get_vp9_dec_comm_if(void);
--
--struct vdec_common_if *get_vp9_dec_comm_if(void)
--{
--	return &vdec_vp9_if;
--}
-diff --git a/drivers/media/platform/mtk-vcodec/vdec_drv_if.c b/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
-index 8354404a7fc9..2e43dd4486e0 100644
---- a/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
-+++ b/drivers/media/platform/mtk-vcodec/vdec_drv_if.c
-@@ -15,23 +15,19 @@
- #include "mtk_vcodec_dec_pm.h"
- #include "mtk_vpu.h"
- 
--const struct vdec_common_if *get_h264_dec_comm_if(void);
--const struct vdec_common_if *get_vp8_dec_comm_if(void);
--const struct vdec_common_if *get_vp9_dec_comm_if(void);
--
- int vdec_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
- {
- 	int ret = 0;
- 
- 	switch (fourcc) {
- 	case V4L2_PIX_FMT_H264:
--		ctx->dec_if = get_h264_dec_comm_if();
-+		ctx->dec_if = &vdec_h264_if;
- 		break;
- 	case V4L2_PIX_FMT_VP8:
--		ctx->dec_if = get_vp8_dec_comm_if();
-+		ctx->dec_if = &vdec_vp8_if;
- 		break;
- 	case V4L2_PIX_FMT_VP9:
--		ctx->dec_if = get_vp9_dec_comm_if();
-+		ctx->dec_if = &vdec_vp9_if;
- 		break;
- 	default:
- 		return -EINVAL;
-diff --git a/drivers/media/platform/mtk-vcodec/vdec_drv_if.h b/drivers/media/platform/mtk-vcodec/vdec_drv_if.h
-index c5bd8b0dbe13..270d8dc9984b 100644
---- a/drivers/media/platform/mtk-vcodec/vdec_drv_if.h
-+++ b/drivers/media/platform/mtk-vcodec/vdec_drv_if.h
-@@ -54,6 +54,10 @@ struct vdec_fb_node {
- 	struct vdec_fb *fb;
- };
- 
-+extern const struct vdec_common_if vdec_h264_if;
-+extern const struct vdec_common_if vdec_vp8_if;
-+extern const struct vdec_common_if vdec_vp9_if;
-+
- /**
-  * vdec_if_init() - initialize decode driver
-  * @ctx	: [in] v4l2 context
-diff --git a/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c b/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
-index 0183dd395d44..b9624f8df0e9 100644
---- a/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
-+++ b/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
-@@ -655,16 +655,9 @@ static int h264_enc_deinit(void *handle)
- 	return ret;
- }
- 
--static const struct venc_common_if venc_h264_if = {
-+const struct venc_common_if venc_h264_if = {
- 	.init = h264_enc_init,
- 	.encode = h264_enc_encode,
- 	.set_param = h264_enc_set_param,
- 	.deinit = h264_enc_deinit,
- };
--
--const struct venc_common_if *get_h264_enc_comm_if(void);
--
--const struct venc_common_if *get_h264_enc_comm_if(void)
--{
--	return &venc_h264_if;
--}
-diff --git a/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c b/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c
-index 3787e75ca902..8d36f0362efe 100644
---- a/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c
-+++ b/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c
-@@ -460,16 +460,9 @@ static int vp8_enc_deinit(void *handle)
- 	return ret;
- }
- 
--static const struct venc_common_if venc_vp8_if = {
-+const struct venc_common_if venc_vp8_if = {
- 	.init = vp8_enc_init,
- 	.encode = vp8_enc_encode,
- 	.set_param = vp8_enc_set_param,
- 	.deinit = vp8_enc_deinit,
- };
--
--const struct venc_common_if *get_vp8_enc_comm_if(void);
--
--const struct venc_common_if *get_vp8_enc_comm_if(void)
--{
--	return &venc_vp8_if;
--}
-diff --git a/drivers/media/platform/mtk-vcodec/venc_drv_if.c b/drivers/media/platform/mtk-vcodec/venc_drv_if.c
-index b5cc645f7c68..c6bb82ac2dcd 100644
---- a/drivers/media/platform/mtk-vcodec/venc_drv_if.c
-+++ b/drivers/media/platform/mtk-vcodec/venc_drv_if.c
-@@ -17,19 +17,16 @@
- #include "mtk_vcodec_enc_pm.h"
- #include "mtk_vpu.h"
- 
--const struct venc_common_if *get_h264_enc_comm_if(void);
--const struct venc_common_if *get_vp8_enc_comm_if(void);
--
- int venc_if_init(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
- {
- 	int ret = 0;
- 
- 	switch (fourcc) {
- 	case V4L2_PIX_FMT_VP8:
--		ctx->enc_if = get_vp8_enc_comm_if();
-+		ctx->enc_if = &venc_vp8_if;
- 		break;
- 	case V4L2_PIX_FMT_H264:
--		ctx->enc_if = get_h264_enc_comm_if();
-+		ctx->enc_if = &venc_h264_if;
- 		break;
- 	default:
- 		return -EINVAL;
-diff --git a/drivers/media/platform/mtk-vcodec/venc_drv_if.h b/drivers/media/platform/mtk-vcodec/venc_drv_if.h
-index cc5bb36c2735..52fc9cc812fc 100644
---- a/drivers/media/platform/mtk-vcodec/venc_drv_if.h
-+++ b/drivers/media/platform/mtk-vcodec/venc_drv_if.h
-@@ -110,6 +110,9 @@ struct venc_done_result {
- 	bool is_key_frm;
- };
- 
-+extern const struct venc_common_if venc_h264_if;
-+extern const struct venc_common_if venc_vp8_if;
-+
- /*
-  * venc_if_init - Create the driver handle
-  * @ctx: device context
--- 
-2.22.0.410.gd8fdbe21b5-goog
+Christophe
 
+
+> 
+>> Fix it by:
+>> - Moving the second descriptor after the buffer, as moving the buffer
+>> after the descriptor would make it more complex for other cipher
+>> operations (AEAD, ABLKCIPHER)
+>> - Rebuiding a new data SG list without the bytes taken from the new
+>> request to complete the previous one.
+>>
+>> Preceding patch ("crypto: talitos - move struct talitos_edesc into
+>> talitos.h") as required for this change to build properly.
+>>
+>> Fixes: 37b5e8897eb5 ("crypto: talitos - chain in buffered data for ahash on SEC1")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> ---
+>>   drivers/crypto/talitos.c | 63 ++++++++++++++++++++++++++++++------------------
+>>   1 file changed, 40 insertions(+), 23 deletions(-)
+>>
+>> diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
+>> index 5b401aec6c84..4f03baef952b 100644
+>> --- a/drivers/crypto/talitos.c
+>> +++ b/drivers/crypto/talitos.c
+>> @@ -336,15 +336,18 @@ static void flush_channel(struct device *dev, int ch, int error, int reset_ch)
+>>   	tail = priv->chan[ch].tail;
+>>   	while (priv->chan[ch].fifo[tail].desc) {
+>>   		__be32 hdr;
+>> +		struct talitos_edesc *edesc;
+>>   
+>>   		request = &priv->chan[ch].fifo[tail];
+>> +		edesc = container_of(request->desc, struct talitos_edesc, desc);
+>>   
+>>   		/* descriptors with their done bits set don't get the error */
+>>   		rmb();
+>>   		if (!is_sec1)
+>>   			hdr = request->desc->hdr;
+>>   		else if (request->desc->next_desc)
+>> -			hdr = (request->desc + 1)->hdr1;
+>> +			hdr = ((struct talitos_desc *)
+>> +			       (edesc->buf + edesc->dma_len))->hdr1;
+>>   		else
+>>   			hdr = request->desc->hdr1;
+>>   
+>> @@ -476,8 +479,14 @@ static u32 current_desc_hdr(struct device *dev, int ch)
+>>   		}
+>>   	}
+>>   
+>> -	if (priv->chan[ch].fifo[iter].desc->next_desc == cur_desc)
+>> -		return (priv->chan[ch].fifo[iter].desc + 1)->hdr;
+>> +	if (priv->chan[ch].fifo[iter].desc->next_desc == cur_desc) {
+>> +		struct talitos_edesc *edesc;
+>> +
+>> +		edesc = container_of(priv->chan[ch].fifo[iter].desc,
+>> +				     struct talitos_edesc, desc);
+>> +		return ((struct talitos_desc *)
+>> +			(edesc->buf + edesc->dma_len))->hdr;
+>> +	}
+>>   
+>>   	return priv->chan[ch].fifo[iter].desc->hdr;
+>>   }
+>> @@ -1402,15 +1411,11 @@ static struct talitos_edesc *talitos_edesc_alloc(struct device *dev,
+>>   	edesc->dst_nents = dst_nents;
+>>   	edesc->iv_dma = iv_dma;
+>>   	edesc->dma_len = dma_len;
+>> -	if (dma_len) {
+>> -		void *addr = &edesc->link_tbl[0];
+>> -
+>> -		if (is_sec1 && !dst)
+>> -			addr += sizeof(struct talitos_desc);
+>> -		edesc->dma_link_tbl = dma_map_single(dev, addr,
+>> +	if (dma_len)
+>> +		edesc->dma_link_tbl = dma_map_single(dev, &edesc->link_tbl[0],
+>>   						     edesc->dma_len,
+>>   						     DMA_BIDIRECTIONAL);
+>> -	}
+>> +
+>>   	return edesc;
+>>   }
+>>   
+>> @@ -1722,14 +1727,16 @@ static void common_nonsnoop_hash_unmap(struct device *dev,
+>>   	struct talitos_private *priv = dev_get_drvdata(dev);
+>>   	bool is_sec1 = has_ftr_sec1(priv);
+>>   	struct talitos_desc *desc = &edesc->desc;
+>> -	struct talitos_desc *desc2 = desc + 1;
+>> +	struct talitos_desc *desc2 = (struct talitos_desc *)
+>> +				     (edesc->buf + edesc->dma_len);
+>>   
+>>   	unmap_single_talitos_ptr(dev, &edesc->desc.ptr[5], DMA_FROM_DEVICE);
+>>   	if (desc->next_desc &&
+>>   	    desc->ptr[5].ptr != desc2->ptr[5].ptr)
+>>   		unmap_single_talitos_ptr(dev, &desc2->ptr[5], DMA_FROM_DEVICE);
+>>   
+>> -	talitos_sg_unmap(dev, edesc, req_ctx->psrc, NULL, 0, 0);
+>> +	if (req_ctx->psrc)
+>> +		talitos_sg_unmap(dev, edesc, req_ctx->psrc, NULL, 0, 0);
+>>   
+>>   	/* When using hashctx-in, must unmap it. */
+>>   	if (from_talitos_ptr_len(&edesc->desc.ptr[1], is_sec1))
+>> @@ -1796,7 +1803,6 @@ static void talitos_handle_buggy_hash(struct talitos_ctx *ctx,
+>>   
+>>   static int common_nonsnoop_hash(struct talitos_edesc *edesc,
+>>   				struct ahash_request *areq, unsigned int length,
+>> -				unsigned int offset,
+>>   				void (*callback) (struct device *dev,
+>>   						  struct talitos_desc *desc,
+>>   						  void *context, int error))
+>> @@ -1835,9 +1841,7 @@ static int common_nonsnoop_hash(struct talitos_edesc *edesc,
+>>   
+>>   	sg_count = edesc->src_nents ?: 1;
+>>   	if (is_sec1 && sg_count > 1)
+>> -		sg_pcopy_to_buffer(req_ctx->psrc, sg_count,
+>> -				   edesc->buf + sizeof(struct talitos_desc),
+>> -				   length, req_ctx->nbuf);
+>> +		sg_copy_to_buffer(req_ctx->psrc, sg_count, edesc->buf, length);
+>>   	else if (length)
+>>   		sg_count = dma_map_sg(dev, req_ctx->psrc, sg_count,
+>>   				      DMA_TO_DEVICE);
+>> @@ -1850,7 +1854,7 @@ static int common_nonsnoop_hash(struct talitos_edesc *edesc,
+>>   				       DMA_TO_DEVICE);
+>>   	} else {
+>>   		sg_count = talitos_sg_map(dev, req_ctx->psrc, length, edesc,
+>> -					  &desc->ptr[3], sg_count, offset, 0);
+>> +					  &desc->ptr[3], sg_count, 0, 0);
+>>   		if (sg_count > 1)
+>>   			sync_needed = true;
+>>   	}
+>> @@ -1874,7 +1878,8 @@ static int common_nonsnoop_hash(struct talitos_edesc *edesc,
+>>   		talitos_handle_buggy_hash(ctx, edesc, &desc->ptr[3]);
+>>   
+>>   	if (is_sec1 && req_ctx->nbuf && length) {
+>> -		struct talitos_desc *desc2 = desc + 1;
+>> +		struct talitos_desc *desc2 = (struct talitos_desc *)
+>> +					     (edesc->buf + edesc->dma_len);
+>>   		dma_addr_t next_desc;
+>>   
+>>   		memset(desc2, 0, sizeof(*desc2));
+>> @@ -1895,7 +1900,7 @@ static int common_nonsnoop_hash(struct talitos_edesc *edesc,
+>>   						      DMA_TO_DEVICE);
+>>   		copy_talitos_ptr(&desc2->ptr[2], &desc->ptr[2], is_sec1);
+>>   		sg_count = talitos_sg_map(dev, req_ctx->psrc, length, edesc,
+>> -					  &desc2->ptr[3], sg_count, offset, 0);
+>> +					  &desc2->ptr[3], sg_count, 0, 0);
+>>   		if (sg_count > 1)
+>>   			sync_needed = true;
+>>   		copy_talitos_ptr(&desc2->ptr[5], &desc->ptr[5], is_sec1);
+>> @@ -2006,7 +2011,6 @@ static int ahash_process_req(struct ahash_request *areq, unsigned int nbytes)
+>>   	struct device *dev = ctx->dev;
+>>   	struct talitos_private *priv = dev_get_drvdata(dev);
+>>   	bool is_sec1 = has_ftr_sec1(priv);
+>> -	int offset = 0;
+>>   	u8 *ctx_buf = req_ctx->buf[req_ctx->buf_idx];
+>>   
+>>   	if (!req_ctx->last && (nbytes + req_ctx->nbuf <= blocksize)) {
+>> @@ -2046,6 +2050,9 @@ static int ahash_process_req(struct ahash_request *areq, unsigned int nbytes)
+>>   			sg_chain(req_ctx->bufsl, 2, areq->src);
+>>   		req_ctx->psrc = req_ctx->bufsl;
+>>   	} else if (is_sec1 && req_ctx->nbuf && req_ctx->nbuf < blocksize) {
+>> +		int offset;
+>> +		struct scatterlist *sg;
+>> +
+>>   		if (nbytes_to_hash > blocksize)
+>>   			offset = blocksize - req_ctx->nbuf;
+>>   		else
+>> @@ -2058,7 +2065,18 @@ static int ahash_process_req(struct ahash_request *areq, unsigned int nbytes)
+>>   		sg_copy_to_buffer(areq->src, nents,
+>>   				  ctx_buf + req_ctx->nbuf, offset);
+>>   		req_ctx->nbuf += offset;
+>> -		req_ctx->psrc = areq->src;
+>> +		for (sg = areq->src; sg && offset >= sg->length;
+>> +		     offset -= sg->length, sg = sg_next(sg))
+>> +			;
+>> +		if (offset) {
+>> +			sg_init_table(req_ctx->bufsl, 2);
+>> +			sg_set_buf(req_ctx->bufsl, sg_virt(sg) + offset,
+>> +				   sg->length - offset);
+>> +			sg_chain(req_ctx->bufsl, 2, sg_next(sg));
+>> +			req_ctx->psrc = req_ctx->bufsl;
+>> +		} else {
+>> +			req_ctx->psrc = sg;
+>> +		}
+>>   	} else
+>>   		req_ctx->psrc = areq->src;
+>>   
+>> @@ -2098,8 +2116,7 @@ static int ahash_process_req(struct ahash_request *areq, unsigned int nbytes)
+>>   	if (ctx->keylen && (req_ctx->first || req_ctx->last))
+>>   		edesc->desc.hdr |= DESC_HDR_MODE0_MDEU_HMAC;
+>>   
+>> -	return common_nonsnoop_hash(edesc, areq, nbytes_to_hash, offset,
+>> -				    ahash_done);
+>> +	return common_nonsnoop_hash(edesc, areq, nbytes_to_hash, ahash_done);
+>>   }
+>>   
+>>   static int ahash_update(struct ahash_request *areq)
+>>
