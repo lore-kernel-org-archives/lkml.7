@@ -2,308 +2,262 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C83C46477
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B6DC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FCCC2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF882133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:59:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="e1+cNEF/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=azazel.net header.i=@azazel.net header.b="MvtV+EL3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbfFNH54 (ORCPT
+        id S1726344AbfFNH7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:57:56 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:38638 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbfFNH5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:57:55 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45QCdX3sMnz9tyJw;
-        Fri, 14 Jun 2019 09:57:52 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=e1+cNEF/; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id ZrStMswTDZeP; Fri, 14 Jun 2019 09:57:52 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45QCdX2dsxz9tyJy;
-        Fri, 14 Jun 2019 09:57:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1560499072; bh=oT2fHNdybfAxWEmzrHGkKIoJJEAYmlpOVh6imQNqZcc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=e1+cNEF/q+/VrMW4aMFvDCQAj3vTpTuGFP4QAfVt1LPAeCSH6ZZWzf7Gnl0YCMMQn
-         aEDtPUdFScUZG59wg0BZr11yjvRw9S7LDOMcBVanP6isUkLBBjdxE+eLL6eOIWsfXp
-         fH8yVTldLClkbLNwJaQGlCQB0NAtyM3kTjhlKZM4=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 547758B74C;
-        Fri, 14 Jun 2019 09:57:53 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 3if0_gw2Yco7; Fri, 14 Jun 2019 09:57:53 +0200 (CEST)
-Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.230.107])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EDFBD8B77A;
-        Fri, 14 Jun 2019 09:57:52 +0200 (CEST)
-Subject: Re: [PATCH v3 2/4] crypto: talitos - fix hash on SEC1.
-To:     Horia Geanta <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <cover.1560429844.git.christophe.leroy@c-s.fr>
- <732ca0ff440bf4cd589d844cfda71d96efd500f5.1560429844.git.christophe.leroy@c-s.fr>
- <VI1PR0402MB348595847AD2B8975A60C1D398EF0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <548bea7c-fa35-3c17-ee21-61aeb3c59b9a@c-s.fr>
-Date:   Fri, 14 Jun 2019 09:57:53 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 03:59:00 -0400
+Received: from kadath.azazel.net ([81.187.231.250]:37526 "EHLO
+        kadath.azazel.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbfFNH67 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 03:58:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=azazel.net;
+         s=20190108; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=G0kG6tqXXsRGIiO+BHcEtfpdFD2+yHGBJ6x5btZuxkA=; b=MvtV+EL3y940ymGGuOgSbcqr9G
+        kWmqZgj+RVG52zJpxNLvpASYK91l/pZPjyaRJKZ8gmulUwbkc96+v/Y3f8pcACZtbmAcrEkyPfmzj
+        +AF3DdZwZZal7wuKknrxWgnuWgI9dr1S1DdHvkdTXC5ulV+8gZwKxTLKaKMGgpkmVPrnFNn2sNQR4
+        n6CgI7c6q5ylvS9WiiibsXaUCeBCE7SBBBvAQsz5MT79+syCQmzKZ0tTFhsIhiHXI6yC2kzS7naSP
+        t/EBFrBKI1XUa2pswCGBzSodZA/OFsVixCOxd62s53RqKr5Oldky3picc/JNFMdCSIUwQqByoqJ4m
+        boLAhlMg==;
+Received: from kadath.azazel.net ([2001:8b0:135f:bcd1:e2cb:4eff:fedf:e608] helo=azazel.net)
+        by kadath.azazel.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <jeremy@azazel.net>)
+        id 1hbh6A-0001e9-VN; Fri, 14 Jun 2019 08:58:11 +0100
+Date:   Fri, 14 Jun 2019 08:58:09 +0100
+From:   Jeremy Sowden <jeremy@azazel.net>
+To:     syzbot <syzbot+0789f0c7e45efd7bb643@syzkaller.appspotmail.com>
+Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, dvyukov@google.com, hawk@kernel.org,
+        hdanton@sina.com, jakub.kicinski@netronome.com,
+        jasowang@redhat.com, john.fastabend@gmail.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mst@redhat.com,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        virtualization@lists.linux-foundation.org,
+        xdp-newbies@vger.kernel.org
+Subject: Re: memory leak in vhost_net_ioctl
+Message-ID: <20190614075809.32gnqqpzgl25gxmz@azazel.net>
+References: <20190614024519.6224-1-hdanton@sina.com>
+ <000000000000f9d056058b3fe507@google.com>
 MIME-Version: 1.0
-In-Reply-To: <VI1PR0402MB348595847AD2B8975A60C1D398EF0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mv67wdquhvqcpoxi"
+Content-Disposition: inline
+In-Reply-To: <000000000000f9d056058b3fe507@google.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:8b0:135f:bcd1:e2cb:4eff:fedf:e608
+X-SA-Exim-Mail-From: jeremy@azazel.net
+X-SA-Exim-Scanned: No (on kadath.azazel.net); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--mv67wdquhvqcpoxi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Le 13/06/2019 à 21:07, Horia Geanta a écrit :
-> On 6/13/2019 3:48 PM, Christophe Leroy wrote:
->> On SEC1, hash provides wrong result when performing hashing in several
->> steps with input data SG list has more than one element. This was
->> detected with CONFIG_CRYPTO_MANAGER_EXTRA_TESTS:
->>
->> [   44.185947] alg: hash: md5-talitos test failed (wrong result) on test vector 6, cfg="random: may_sleep use_finup src_divs=[<reimport>25.88%@+8063, <flush>24.19%@+9588, 28.63%@+16333, <reimport>4.60%@+6756, 16.70%@+16281] dst_divs=[71.61%@alignmask+16361, 14.36%@+7756, 14.3%@+"
->> [   44.325122] alg: hash: sha1-talitos test failed (wrong result) on test vector 3, cfg="random: inplace use_final src_divs=[<flush,nosimd>16.56%@+16378, <reimport>52.0%@+16329, 21.42%@alignmask+16380, 10.2%@alignmask+16380] iv_offset=39"
->> [   44.493500] alg: hash: sha224-talitos test failed (wrong result) on test vector 4, cfg="random: use_final nosimd src_divs=[<reimport>52.27%@+7401, <reimport>17.34%@+16285, <flush>17.71%@+26, 12.68%@+10644] iv_offset=43"
->> [   44.673262] alg: hash: sha256-talitos test failed (wrong result) on test vector 4, cfg="random: may_sleep use_finup src_divs=[<reimport>60.6%@+12790, 17.86%@+1329, <reimport>12.64%@alignmask+16300, 8.29%@+15, 0.40%@+13506, <reimport>0.51%@+16322, <reimport>0.24%@+16339] dst_divs"
->>
->> This is due to two issues:
->> - We have an overlap between the buffer used for copying the input
->> data (SEC1 doesn't do scatter/gather) and the chained descriptor.
->> - Data copy is wrong when the previous hash left less than one
->> blocksize of data to hash, implying a complement of the previous
->> block with a few bytes from the new request.
->>
-> I fail to spot these issues.
-> 
-> IIUC in case of SEC1, the variable part of talitos_edesc structure contains
-> a 2nd "chained" descriptor (talitos_desc struct) followed by an area
-> dedicated to linearizing the input (in case input is scattered).
-> 
-> Where is the overlap?
+On 2019-06-13, at 20:04:01 -0700, syzbot wrote:
+> syzbot has tested the proposed patch but the reproducer still
+> triggered crash: memory leak in batadv_tvlv_handler_register
 
-talitos_sg_map() maps the area starting at edesc->dma_link_tbl, which 
-corresponds to the start of the variable part of talitos_edesc 
-structure. When we use the second descriptor, the data is after that 
-descriptor, but talitos_sg_map() is not aware of it so it maps the 
-second descriptor followed by part of the data instead of mapping the data.
+There's already a fix for this batman leak:
 
-Christophe
+  https://lore.kernel.org/netdev/00000000000017d64c058965f966@google.com/
+  https://www.open-mesh.org/issues/378
 
+>   484.626788][  T156] bond0 (unregistering): Releasing backup
+>   interface bond_slave_1
+> Warning: Permanently added '10.128.0.87' (ECDSA) to the list of known
+> hosts.
+> BUG: memory leak
+> unreferenced object 0xffff88811d25c4c0 (size 64):
+>   comm "softirq", pid 0, jiffies 4294943668 (age 434.830s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 e0 fc 5b 20 81 88 ff ff  ..........[ ....
+>     00 00 00 00 00 00 00 00 20 91 15 83 ff ff ff ff  ........ .......
+>   backtrace:
+>     [<000000000045bc9d>] kmemleak_alloc_recursive
+> include/linux/kmemleak.h:43 [inline]
+>     [<000000000045bc9d>] slab_post_alloc_hook mm/slab.h:439 [inline]
+>     [<000000000045bc9d>] slab_alloc mm/slab.c:3326 [inline]
+>     [<000000000045bc9d>] kmem_cache_alloc_trace+0x13d/0x280
+> mm/slab.c:3553
+>     [<00000000197d773e>] kmalloc include/linux/slab.h:547 [inline]
+>     [<00000000197d773e>] kzalloc include/linux/slab.h:742 [inline]
+>     [<00000000197d773e>] batadv_tvlv_handler_register+0xae/0x140
+> net/batman-adv/tvlv.c:529
+>     [<00000000fa9f11af>] batadv_tt_init+0x78/0x180
+> net/batman-adv/translation-table.c:4411
+>     [<000000008c50839d>] batadv_mesh_init+0x196/0x230
+> net/batman-adv/main.c:208
+>     [<000000001c5a74a3>] batadv_softif_init_late+0x1ca/0x220
+> net/batman-adv/soft-interface.c:861
+>     [<000000004e676cd1>] register_netdevice+0xbf/0x600
+> net/core/dev.c:8635
+>     [<000000005601497b>] __rtnl_newlink+0xaca/0xb30
+> net/core/rtnetlink.c:3199
+>     [<00000000ad02cf5e>] rtnl_newlink+0x4e/0x80
+> net/core/rtnetlink.c:3245
+>     [<00000000eceb53af>] rtnetlink_rcv_msg+0x178/0x4b0
+> net/core/rtnetlink.c:5214
+>     [<00000000140451f6>] netlink_rcv_skb+0x61/0x170
+> net/netlink/af_netlink.c:2482
+>     [<00000000237e38f7>] rtnetlink_rcv+0x1d/0x30
+> net/core/rtnetlink.c:5232
+>     [<000000000d47c000>] netlink_unicast_kernel
+> net/netlink/af_netlink.c:1307 [inline]
+>     [<000000000d47c000>] netlink_unicast+0x1ec/0x2d0
+> net/netlink/af_netlink.c:1333
+>     [<0000000098503d79>] netlink_sendmsg+0x26a/0x480
+> net/netlink/af_netlink.c:1922
+>     [<000000009263e868>] sock_sendmsg_nosec net/socket.c:646 [inline]
+>     [<000000009263e868>] sock_sendmsg+0x54/0x70 net/socket.c:665
+>     [<000000007791ad47>] __sys_sendto+0x148/0x1f0 net/socket.c:1958
+>     [<00000000d6f3807d>] __do_sys_sendto net/socket.c:1970 [inline]
+>     [<00000000d6f3807d>] __se_sys_sendto net/socket.c:1966 [inline]
+>     [<00000000d6f3807d>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1966
+>
+> BUG: memory leak
+> unreferenced object 0xffff8881024a3340 (size 64):
+>   comm "softirq", pid 0, jiffies 4294943678 (age 434.730s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 e0 2c 66 04 81 88 ff ff  .........,f.....
+>     00 00 00 00 00 00 00 00 20 91 15 83 ff ff ff ff  ........ .......
+>   backtrace:
+>     [<000000000045bc9d>] kmemleak_alloc_recursive
+> include/linux/kmemleak.h:43 [inline]
+>     [<000000000045bc9d>] slab_post_alloc_hook mm/slab.h:439 [inline]
+>     [<000000000045bc9d>] slab_alloc mm/slab.c:3326 [inline]
+>     [<000000000045bc9d>] kmem_cache_alloc_trace+0x13d/0x280
+> mm/slab.c:3553
+>     [<00000000197d773e>] kmalloc include/linux/slab.h:547 [inline]
+>     [<00000000197d773e>] kzalloc include/linux/slab.h:742 [inline]
+>     [<00000000197d773e>] batadv_tvlv_handler_register+0xae/0x140
+> net/batman-adv/tvlv.c:529
+>     [<00000000fa9f11af>] batadv_tt_init+0x78/0x180
+> net/batman-adv/translation-table.c:4411
+>     [<000000008c50839d>] batadv_mesh_init+0x196/0x230
+> net/batman-adv/main.c:208
+>     [<000000001c5a74a3>] batadv_softif_init_late+0x1ca/0x220
+> net/batman-adv/soft-interface.c:861
+>     [<000000004e676cd1>] register_netdevice+0xbf/0x600
+> net/core/dev.c:8635
+>     [<000000005601497b>] __rtnl_newlink+0xaca/0xb30
+> net/core/rtnetlink.c:3199
+>     [<00000000ad02cf5e>] rtnl_newlink+0x4e/0x80
+> net/core/rtnetlink.c:3245
+>     [<00000000eceb53af>] rtnetlink_rcv_msg+0x178/0x4b0
+> net/core/rtnetlink.c:5214
+>     [<00000000140451f6>] netlink_rcv_skb+0x61/0x170
+> net/netlink/af_netlink.c:2482
+>     [<00000000237e38f7>] rtnetlink_rcv+0x1d/0x30
+> net/core/rtnetlink.c:5232
+>     [<000000000d47c000>] netlink_unicast_kernel
+> net/netlink/af_netlink.c:1307 [inline]
+>     [<000000000d47c000>] netlink_unicast+0x1ec/0x2d0
+> net/netlink/af_netlink.c:1333
+>     [<0000000098503d79>] netlink_sendmsg+0x26a/0x480
+> net/netlink/af_netlink.c:1922
+>     [<000000009263e868>] sock_sendmsg_nosec net/socket.c:646 [inline]
+>     [<000000009263e868>] sock_sendmsg+0x54/0x70 net/socket.c:665
+>     [<000000007791ad47>] __sys_sendto+0x148/0x1f0 net/socket.c:1958
+>     [<00000000d6f3807d>] __do_sys_sendto net/socket.c:1970 [inline]
+>     [<00000000d6f3807d>] __se_sys_sendto net/socket.c:1966 [inline]
+>     [<00000000d6f3807d>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1966
+>
+> BUG: memory leak
+> unreferenced object 0xffff888108a71b80 (size 128):
+>   comm "syz-executor.3", pid 7367, jiffies 4294943696 (age 434.550s)
+>   hex dump (first 32 bytes):
+>     f0 f8 bf 02 81 88 ff ff f0 f8 bf 02 81 88 ff ff  ................
+>     1a dc 77 da 54 a0 be 41 64 20 e9 56 ff ff ff ff  ..w.T..Ad .V....
+>   backtrace:
+>     [<000000000045bc9d>] kmemleak_alloc_recursive
+> include/linux/kmemleak.h:43 [inline]
+>     [<000000000045bc9d>] slab_post_alloc_hook mm/slab.h:439 [inline]
+>     [<000000000045bc9d>] slab_alloc mm/slab.c:3326 [inline]
+>     [<000000000045bc9d>] kmem_cache_alloc_trace+0x13d/0x280
+> mm/slab.c:3553
+>     [<00000000cc6863ae>] kmalloc include/linux/slab.h:547 [inline]
+>     [<00000000cc6863ae>] hsr_create_self_node+0x42/0x150
+> net/hsr/hsr_framereg.c:84
+>     [<000000000e2bb6b0>] hsr_dev_finalize+0xa4/0x233
+> net/hsr/hsr_device.c:441
+>     [<000000003b100a4a>] hsr_newlink+0xf3/0x140
+> net/hsr/hsr_netlink.c:69
+>     [<00000000b5efb0eb>] __rtnl_newlink+0x892/0xb30
+> net/core/rtnetlink.c:3187
+>     [<00000000ad02cf5e>] rtnl_newlink+0x4e/0x80
+> net/core/rtnetlink.c:3245
+>     [<00000000eceb53af>] rtnetlink_rcv_msg+0x178/0x4b0
+> net/core/rtnetlink.c:5214
+>     [<00000000140451f6>] netlink_rcv_skb+0x61/0x170
+> net/netlink/af_netlink.c:2482
+>     [<00000000237e38f7>] rtnetlink_rcv+0x1d/0x30
+> net/core/rtnetlink.c:5232
+>     [<000000000d47c000>] netlink_unicast_kernel
+> net/netlink/af_netlink.c:1307 [inline]
+>     [<000000000d47c000>] netlink_unicast+0x1ec/0x2d0
+> net/netlink/af_netlink.c:1333
+>     [<0000000098503d79>] netlink_sendmsg+0x26a/0x480
+> net/netlink/af_netlink.c:1922
+>     [<000000009263e868>] sock_sendmsg_nosec net/socket.c:646 [inline]
+>     [<000000009263e868>] sock_sendmsg+0x54/0x70 net/socket.c:665
+>     [<000000007791ad47>] __sys_sendto+0x148/0x1f0 net/socket.c:1958
+>     [<00000000d6f3807d>] __do_sys_sendto net/socket.c:1970 [inline]
+>     [<00000000d6f3807d>] __se_sys_sendto net/socket.c:1966 [inline]
+>     [<00000000d6f3807d>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1966
+>     [<000000003ba31db7>] do_syscall_64+0x76/0x1a0
+> arch/x86/entry/common.c:301
+>     [<0000000075c8daad>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>
+> Tested on:
+>
+> commit:         c11fb13a Merge branch 'for-linus' of git://git.kernel.org/..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15c8f3b6a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=cb38d33cd06d8d48
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=12477101a00000
 
-> 
->> Fix it by:
->> - Moving the second descriptor after the buffer, as moving the buffer
->> after the descriptor would make it more complex for other cipher
->> operations (AEAD, ABLKCIPHER)
->> - Rebuiding a new data SG list without the bytes taken from the new
->> request to complete the previous one.
->>
->> Preceding patch ("crypto: talitos - move struct talitos_edesc into
->> talitos.h") as required for this change to build properly.
->>
->> Fixes: 37b5e8897eb5 ("crypto: talitos - chain in buffered data for ahash on SEC1")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   drivers/crypto/talitos.c | 63 ++++++++++++++++++++++++++++++------------------
->>   1 file changed, 40 insertions(+), 23 deletions(-)
->>
->> diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
->> index 5b401aec6c84..4f03baef952b 100644
->> --- a/drivers/crypto/talitos.c
->> +++ b/drivers/crypto/talitos.c
->> @@ -336,15 +336,18 @@ static void flush_channel(struct device *dev, int ch, int error, int reset_ch)
->>   	tail = priv->chan[ch].tail;
->>   	while (priv->chan[ch].fifo[tail].desc) {
->>   		__be32 hdr;
->> +		struct talitos_edesc *edesc;
->>   
->>   		request = &priv->chan[ch].fifo[tail];
->> +		edesc = container_of(request->desc, struct talitos_edesc, desc);
->>   
->>   		/* descriptors with their done bits set don't get the error */
->>   		rmb();
->>   		if (!is_sec1)
->>   			hdr = request->desc->hdr;
->>   		else if (request->desc->next_desc)
->> -			hdr = (request->desc + 1)->hdr1;
->> +			hdr = ((struct talitos_desc *)
->> +			       (edesc->buf + edesc->dma_len))->hdr1;
->>   		else
->>   			hdr = request->desc->hdr1;
->>   
->> @@ -476,8 +479,14 @@ static u32 current_desc_hdr(struct device *dev, int ch)
->>   		}
->>   	}
->>   
->> -	if (priv->chan[ch].fifo[iter].desc->next_desc == cur_desc)
->> -		return (priv->chan[ch].fifo[iter].desc + 1)->hdr;
->> +	if (priv->chan[ch].fifo[iter].desc->next_desc == cur_desc) {
->> +		struct talitos_edesc *edesc;
->> +
->> +		edesc = container_of(priv->chan[ch].fifo[iter].desc,
->> +				     struct talitos_edesc, desc);
->> +		return ((struct talitos_desc *)
->> +			(edesc->buf + edesc->dma_len))->hdr;
->> +	}
->>   
->>   	return priv->chan[ch].fifo[iter].desc->hdr;
->>   }
->> @@ -1402,15 +1411,11 @@ static struct talitos_edesc *talitos_edesc_alloc(struct device *dev,
->>   	edesc->dst_nents = dst_nents;
->>   	edesc->iv_dma = iv_dma;
->>   	edesc->dma_len = dma_len;
->> -	if (dma_len) {
->> -		void *addr = &edesc->link_tbl[0];
->> -
->> -		if (is_sec1 && !dst)
->> -			addr += sizeof(struct talitos_desc);
->> -		edesc->dma_link_tbl = dma_map_single(dev, addr,
->> +	if (dma_len)
->> +		edesc->dma_link_tbl = dma_map_single(dev, &edesc->link_tbl[0],
->>   						     edesc->dma_len,
->>   						     DMA_BIDIRECTIONAL);
->> -	}
->> +
->>   	return edesc;
->>   }
->>   
->> @@ -1722,14 +1727,16 @@ static void common_nonsnoop_hash_unmap(struct device *dev,
->>   	struct talitos_private *priv = dev_get_drvdata(dev);
->>   	bool is_sec1 = has_ftr_sec1(priv);
->>   	struct talitos_desc *desc = &edesc->desc;
->> -	struct talitos_desc *desc2 = desc + 1;
->> +	struct talitos_desc *desc2 = (struct talitos_desc *)
->> +				     (edesc->buf + edesc->dma_len);
->>   
->>   	unmap_single_talitos_ptr(dev, &edesc->desc.ptr[5], DMA_FROM_DEVICE);
->>   	if (desc->next_desc &&
->>   	    desc->ptr[5].ptr != desc2->ptr[5].ptr)
->>   		unmap_single_talitos_ptr(dev, &desc2->ptr[5], DMA_FROM_DEVICE);
->>   
->> -	talitos_sg_unmap(dev, edesc, req_ctx->psrc, NULL, 0, 0);
->> +	if (req_ctx->psrc)
->> +		talitos_sg_unmap(dev, edesc, req_ctx->psrc, NULL, 0, 0);
->>   
->>   	/* When using hashctx-in, must unmap it. */
->>   	if (from_talitos_ptr_len(&edesc->desc.ptr[1], is_sec1))
->> @@ -1796,7 +1803,6 @@ static void talitos_handle_buggy_hash(struct talitos_ctx *ctx,
->>   
->>   static int common_nonsnoop_hash(struct talitos_edesc *edesc,
->>   				struct ahash_request *areq, unsigned int length,
->> -				unsigned int offset,
->>   				void (*callback) (struct device *dev,
->>   						  struct talitos_desc *desc,
->>   						  void *context, int error))
->> @@ -1835,9 +1841,7 @@ static int common_nonsnoop_hash(struct talitos_edesc *edesc,
->>   
->>   	sg_count = edesc->src_nents ?: 1;
->>   	if (is_sec1 && sg_count > 1)
->> -		sg_pcopy_to_buffer(req_ctx->psrc, sg_count,
->> -				   edesc->buf + sizeof(struct talitos_desc),
->> -				   length, req_ctx->nbuf);
->> +		sg_copy_to_buffer(req_ctx->psrc, sg_count, edesc->buf, length);
->>   	else if (length)
->>   		sg_count = dma_map_sg(dev, req_ctx->psrc, sg_count,
->>   				      DMA_TO_DEVICE);
->> @@ -1850,7 +1854,7 @@ static int common_nonsnoop_hash(struct talitos_edesc *edesc,
->>   				       DMA_TO_DEVICE);
->>   	} else {
->>   		sg_count = talitos_sg_map(dev, req_ctx->psrc, length, edesc,
->> -					  &desc->ptr[3], sg_count, offset, 0);
->> +					  &desc->ptr[3], sg_count, 0, 0);
->>   		if (sg_count > 1)
->>   			sync_needed = true;
->>   	}
->> @@ -1874,7 +1878,8 @@ static int common_nonsnoop_hash(struct talitos_edesc *edesc,
->>   		talitos_handle_buggy_hash(ctx, edesc, &desc->ptr[3]);
->>   
->>   	if (is_sec1 && req_ctx->nbuf && length) {
->> -		struct talitos_desc *desc2 = desc + 1;
->> +		struct talitos_desc *desc2 = (struct talitos_desc *)
->> +					     (edesc->buf + edesc->dma_len);
->>   		dma_addr_t next_desc;
->>   
->>   		memset(desc2, 0, sizeof(*desc2));
->> @@ -1895,7 +1900,7 @@ static int common_nonsnoop_hash(struct talitos_edesc *edesc,
->>   						      DMA_TO_DEVICE);
->>   		copy_talitos_ptr(&desc2->ptr[2], &desc->ptr[2], is_sec1);
->>   		sg_count = talitos_sg_map(dev, req_ctx->psrc, length, edesc,
->> -					  &desc2->ptr[3], sg_count, offset, 0);
->> +					  &desc2->ptr[3], sg_count, 0, 0);
->>   		if (sg_count > 1)
->>   			sync_needed = true;
->>   		copy_talitos_ptr(&desc2->ptr[5], &desc->ptr[5], is_sec1);
->> @@ -2006,7 +2011,6 @@ static int ahash_process_req(struct ahash_request *areq, unsigned int nbytes)
->>   	struct device *dev = ctx->dev;
->>   	struct talitos_private *priv = dev_get_drvdata(dev);
->>   	bool is_sec1 = has_ftr_sec1(priv);
->> -	int offset = 0;
->>   	u8 *ctx_buf = req_ctx->buf[req_ctx->buf_idx];
->>   
->>   	if (!req_ctx->last && (nbytes + req_ctx->nbuf <= blocksize)) {
->> @@ -2046,6 +2050,9 @@ static int ahash_process_req(struct ahash_request *areq, unsigned int nbytes)
->>   			sg_chain(req_ctx->bufsl, 2, areq->src);
->>   		req_ctx->psrc = req_ctx->bufsl;
->>   	} else if (is_sec1 && req_ctx->nbuf && req_ctx->nbuf < blocksize) {
->> +		int offset;
->> +		struct scatterlist *sg;
->> +
->>   		if (nbytes_to_hash > blocksize)
->>   			offset = blocksize - req_ctx->nbuf;
->>   		else
->> @@ -2058,7 +2065,18 @@ static int ahash_process_req(struct ahash_request *areq, unsigned int nbytes)
->>   		sg_copy_to_buffer(areq->src, nents,
->>   				  ctx_buf + req_ctx->nbuf, offset);
->>   		req_ctx->nbuf += offset;
->> -		req_ctx->psrc = areq->src;
->> +		for (sg = areq->src; sg && offset >= sg->length;
->> +		     offset -= sg->length, sg = sg_next(sg))
->> +			;
->> +		if (offset) {
->> +			sg_init_table(req_ctx->bufsl, 2);
->> +			sg_set_buf(req_ctx->bufsl, sg_virt(sg) + offset,
->> +				   sg->length - offset);
->> +			sg_chain(req_ctx->bufsl, 2, sg_next(sg));
->> +			req_ctx->psrc = req_ctx->bufsl;
->> +		} else {
->> +			req_ctx->psrc = sg;
->> +		}
->>   	} else
->>   		req_ctx->psrc = areq->src;
->>   
->> @@ -2098,8 +2116,7 @@ static int ahash_process_req(struct ahash_request *areq, unsigned int nbytes)
->>   	if (ctx->keylen && (req_ctx->first || req_ctx->last))
->>   		edesc->desc.hdr |= DESC_HDR_MODE0_MDEU_HMAC;
->>   
->> -	return common_nonsnoop_hash(edesc, areq, nbytes_to_hash, offset,
->> -				    ahash_done);
->> +	return common_nonsnoop_hash(edesc, areq, nbytes_to_hash, ahash_done);
->>   }
->>   
->>   static int ahash_update(struct ahash_request *areq)
->>
+J.
+
+--mv67wdquhvqcpoxi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEZ8d+2N/NBLDbUxIF0Z7UzfnX9sMFAl0DU4oACgkQ0Z7UzfnX
+9sMn7g/8DSm3sIrrshWDSyy7szl4gf7yrszSZ+Dusy9+UNL7QnfrgTAgzFEESeBH
+D+mzA5Jnv/xZH6nBWwdo+hvOzVpOxJrK2vF1iLOC+6q0frEWN+626UUxjVN3q2dU
+lEpXnIsEY1j/G8fDXcWtvDuX40rCKbSYbCs0YHf/RxJRiCG4qHcISfwViOlvUryu
+9O+13yT82OwYjf8zg3Czgll3f67/tLMhcIXAztccMGJmzoIiqi9wu7VCLHO9WjaH
+OgqRYXow09VwBdm1SeX6RaiU0NKikPx0Cay59EHBUu4eVUs7dk2hHh2e8n5CRC8e
+fMx8zEDmc9/fU0t+iwekfjX5y4U3VvOks1i+EdzheClV8mLy3x4F9k0+3el3TgJF
+qmCV8SSjlmQJ11FCacd4HCJ+4miUF+Fz/G7ii5QiU+j/vsUEzBEIKDKAT5qsYUwL
+j7n1HsgRxX8GXA/7MqDo4+EwCZxWRXqTNqwG5FOfAoLq/eJk5y1DCRqWGFVPvTN8
+lskd/oo+fQ2sDf1YtI3Hm1ZppzbQYjwSUIQmEmA9PuWVR1QM85d2Jqwf+plFyKn6
+zJ+mFFv80h/k9o35VQaBOsHema+/lTVvOSaWwoys6njDMU2saYvtY9pRWkn0mNE4
+EbnPJb3JIj+0B/Lq/XgMoNIWutlwyeH5YOgnGGO4dcBuPMoiuBA=
+=QX3O
+-----END PGP SIGNATURE-----
+
+--mv67wdquhvqcpoxi--
