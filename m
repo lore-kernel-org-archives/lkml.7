@@ -2,286 +2,153 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE796C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C631C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC99B2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560494089;
-	bh=CkKywgMmABsPnJapZTOG9f6KDfJsQaG7fpEOo4UPeIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eNO9eaqo2bg501C9ecD7XIcSq4htdhuHZkK+eS4wlNiydb2wH9/iB7DrOub6AIwVr
-	 wckWId4+vq95yZuXx7mNaEHCxCXFZ20SH4HpE86nn6e2ilnZBlid7sG6orUe5otpCD
-	 OUVBHuw0DdsTmGIvNF5K7q/dQwYxVk5Uj79FCjlc=
+	by mail.kernel.org (Postfix) with ESMTP id 33E4120850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:36:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJ0JOvSs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726020AbfFNGes (ORCPT
+        id S1725851AbfFNGgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 02:34:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbfFNGer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 02:34:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 904C720850;
-        Fri, 14 Jun 2019 06:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560494086;
-        bh=CkKywgMmABsPnJapZTOG9f6KDfJsQaG7fpEOo4UPeIA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tB9P5Z71Kj27xZnFlZrLVXZ6rtTkeM9DShoon4023U995XqGmKRtFJ67LgqimO8Fu
-         qutSVdk2Okvv6zyrykkOTpOExuYPJiJFAqWWAPCLlz4v3eJ3RrdMRn5h6hz5TgWjvD
-         xC7RGC3cOOrFhQY9CDEjDihB7v+UuM9sxRMmPSCI=
-Date:   Fri, 14 Jun 2019 08:34:43 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Nayna Jain <nayna@linux.ibm.com>
-Cc:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>
-Subject: Re: [PATCH 2/2] powerpc: expose secure variables via sysfs
-Message-ID: <20190614063443.GB17056@kroah.com>
-References: <1560459027-5248-1-git-send-email-nayna@linux.ibm.com>
- <1560459027-5248-3-git-send-email-nayna@linux.ibm.com>
+        Fri, 14 Jun 2019 02:36:15 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43714 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfFNGgP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 02:36:15 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 16so1156017ljv.10;
+        Thu, 13 Jun 2019 23:36:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2MEVIt+PlMUB27yCjfj/2xmvsTwKURfuQtH2qPYNxsw=;
+        b=IJ0JOvSspzYxd6Ul4Sy7Np9tIWkHfUBiGstx0XJxV5LbgwgM+SUdsahe520SjIR9eP
+         S3K9OWDFjelMsjJC9b7pQNsvVj1FdC82XBfBSfEdOLHhCjS6U7dQCT0s8TNp5Lgwxk6f
+         KWK/E3iKiXjPzUWZ9UEfvjoRCgtgd3z930Ae5mBok/eA2d+dXbm87Oi3El6PG1sJ6Jvs
+         OQA/JCEeAJzyEiRFUUCG4TF1yKPKN/jnLSkWk4zCD6GDsGE/RYOrG5pPDMnHzd7yFm4m
+         JTgDWCTlNgOQCpfofp/znJNLCFSW2itYRui1wza3209BDimAhZeWCUdrzZcuhe1wbbmf
+         nrqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2MEVIt+PlMUB27yCjfj/2xmvsTwKURfuQtH2qPYNxsw=;
+        b=RngrHps+aewf+kodDkO6D62paV3a5hfKaUQR1rghJB1FesgylCiwzEgFBqK+LgCBRy
+         hB0sMwp3RvCi3OmBRJH4eArvYMyobPK6H2oQ9ctOm9xPlhSbTxSEXp7GACWhc2KK6EJv
+         zFv3BtCU2/HDuBkEnuB6VU6iKqe3BGEc39cW2wCcMiLBCwu/CRsPvGAI0weZcFEtFuxS
+         xB6mpUK2smS5OwlteCaFnd8EdYDAPjyAPHTl9sDxyLOEVOnwA01rYXEuIFTs2AQ7LYg7
+         5VaMDIHrIlLKXRFGqb8BAc4ObuqOK8ncj/rHj1WSuLN+D82oxu13I8c8gYNsnX7/xWpk
+         Z0Fw==
+X-Gm-Message-State: APjAAAWMBCdXpWuJudxsTjPC8xZrgokrC9Zo84X3pSCbpjJKNvMkflSE
+        7qKUbiROM2iYr0s4RaGske44DCCR
+X-Google-Smtp-Source: APXvYqzwsZzaCaFXxcWCo00HdeQ2ZkEM08b9HJZzaTN3xwQoyHs7ZXv3dvYO4laBtzf9YEmuWv40LQ==
+X-Received: by 2002:a2e:81c4:: with SMTP id s4mr38659037ljg.182.1560494173078;
+        Thu, 13 Jun 2019 23:36:13 -0700 (PDT)
+Received: from localhost.localdomain ([5.164.217.122])
+        by smtp.gmail.com with ESMTPSA id z12sm318548lfg.67.2019.06.13.23.36.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 23:36:12 -0700 (PDT)
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Vadim V . Vlasov" <vadim.vlasov@t-platforms.ru>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mips: Remove q-accessors from non-64bit platforms
+Date:   Fri, 14 Jun 2019 09:33:42 +0300
+Message-Id: <20190614063341.1672-1-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560459027-5248-3-git-send-email-nayna@linux.ibm.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 04:50:27PM -0400, Nayna Jain wrote:
-> As part of PowerNV secure boot support, OS verification keys are stored
-> and controlled by OPAL as secure variables. These need to be exposed to
-> the userspace so that sysadmins can perform key management tasks.
-> 
-> This patch adds the support to expose secure variables via a sysfs
-> interface It reuses the the existing efi defined hooks and backend in
-> order to maintain the compatibility with the userspace tools.
-> 
-> Though it reuses a great deal of efi, POWER platforms do not use EFI.
-> A new config, POWER_SECVAR_SYSFS, is defined to enable this new sysfs
-> interface.
-> 
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> ---
->  arch/powerpc/Kconfig                 |   2 +
->  drivers/firmware/Makefile            |   1 +
->  drivers/firmware/efi/efivars.c       |   2 +-
->  drivers/firmware/powerpc/Kconfig     |  12 +
->  drivers/firmware/powerpc/Makefile    |   3 +
->  drivers/firmware/powerpc/efi_error.c |  46 ++++
->  drivers/firmware/powerpc/secvar.c    | 326 +++++++++++++++++++++++++++
->  7 files changed, 391 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/firmware/powerpc/Kconfig
->  create mode 100644 drivers/firmware/powerpc/Makefile
->  create mode 100644 drivers/firmware/powerpc/efi_error.c
->  create mode 100644 drivers/firmware/powerpc/secvar.c
+There are some generic drivers in the kernel, which make use of the
+q-accessors or their derivatives. While at current asm/io.h the accessors
+are defined, their implementation is only applicable either for 64bit
+systems, or for systems with cpu_has_64bits flag set. Obviously there
+are MIPS systems which are neither of these, but still need to have
+those drivers supported. In this case the solution is to define some
+generic versions of the q-accessors, but with a limitation to be
+non-atomic. Such accessors are defined in the
+io-64-nonatomic-{hi-lo,lo-hi}.h file. The drivers which utilize the
+q-suffixed IO-methods are supposed to include the header file, so
+in case if these accessors aren't defined for the platform, the generic
+non-atomic versions are utilized. Currently the MIPS-specific asm/io.h
+file provides the q-accessors for any MIPS system even for ones, which
+in fact don't support them and raise BUG() in case if any of them is
+called. Due to this the generic versions of the accessors are never
+used while an attempt to call the IO-methods causes the kernel BUG().
+In order to fix this we need to define the q-accessors only for
+the MIPS systems, which actually support them, and don't define them
+otherwise, so to let the corresponding drivers to use the non-atomic
+q-suffixed accessors.
 
-If you add/remove/modify sysfs files, you also need to update the
-relevant Documentation/ABI/ entry as well.  Please add something there
-to describe your new files when you resend the next version of this
-patch series.
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Vadim V. Vlasov <vadim.vlasov@t-platforms.ru>
+---
+ arch/mips/include/asm/io.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-> diff --git a/drivers/firmware/powerpc/Kconfig b/drivers/firmware/powerpc/Kconfig
-> new file mode 100644
-> index 000000000000..e0303fc517d5
-> --- /dev/null
-> +++ b/drivers/firmware/powerpc/Kconfig
-> @@ -0,0 +1,12 @@
-> +config POWER_SECVAR_SYSFS
-> +	tristate "Enable sysfs interface for POWER secure variables"
-> +	default n
+diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+index 29997e42480e..4597017f147b 100644
+--- a/arch/mips/include/asm/io.h
++++ b/arch/mips/include/asm/io.h
+@@ -462,7 +462,12 @@ __BUILD_MEMORY_PFX(, bwlq, type, 0)
+ BUILDIO_MEM(b, u8)
+ BUILDIO_MEM(w, u16)
+ BUILDIO_MEM(l, u32)
++#ifdef CONFIG_64BIT
+ BUILDIO_MEM(q, u64)
++#else
++__BUILD_MEMORY_PFX(__raw_, q, u64, 0)
++__BUILD_MEMORY_PFX(__mem_, q, u64, 0)
++#endif
+ 
+ #define __BUILD_IOPORT_PFX(bus, bwlq, type)				\
+ 	__BUILD_IOPORT_SINGLE(bus, bwlq, type, 1, 0,)			\
+@@ -488,12 +493,16 @@ __BUILDIO(q, u64)
+ #define readb_relaxed			__relaxed_readb
+ #define readw_relaxed			__relaxed_readw
+ #define readl_relaxed			__relaxed_readl
++#ifdef CONFIG_64BIT
+ #define readq_relaxed			__relaxed_readq
++#endif
+ 
+ #define writeb_relaxed			__relaxed_writeb
+ #define writew_relaxed			__relaxed_writew
+ #define writel_relaxed			__relaxed_writel
++#ifdef CONFIG_64BIT
+ #define writeq_relaxed			__relaxed_writeq
++#endif
+ 
+ #define readb_be(addr)							\
+ 	__raw_readb((__force unsigned *)(addr))
+@@ -516,8 +525,10 @@ __BUILDIO(q, u64)
+ /*
+  * Some code tests for these symbols
+  */
++#ifdef CONFIG_64BIT
+ #define readq				readq
+ #define writeq				writeq
++#endif
+ 
+ #define __BUILD_MEMORY_STRING(bwlq, type)				\
+ 									\
+-- 
+2.21.0
 
-default is always n, no need to list it.
-
-> --- /dev/null
-> +++ b/drivers/firmware/powerpc/efi_error.c
-> @@ -0,0 +1,46 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 IBM Corporation
-> + * Author: Nayna Jain <nayna@linux.ibm.com>
-> + *
-> + * efi_error.c
-> + *      - Error codes as understood by efi based tools
-> + *      Taken from drivers/firmware/efi/efi.c
-
-Why not just export the symbol from the original file instead of
-duplicating it here?
-
-> +static int convert_buffer_to_efi_guid(u8 *buffer, efi_guid_t *guid)
-> +{
-> +	u32 *a1;
-> +	u16 *a2;
-> +	u16 *a3;
-> +
-> +	a1 = kzalloc(4, GFP_KERNEL);
-
-No error checking in this function for memory issues at all?
-
-> +	memcpy(a1, buffer, 4);
-> +	*a1 = be32_to_cpu(*a1);
-> +
-> +	a2 = kzalloc(2, GFP_KERNEL);
-> +	memcpy(a2, buffer+4, 2);
-> +	*a2 = be16_to_cpu(*a2);
-> +
-> +	a3 = kzalloc(2, GFP_KERNEL);
-> +	memcpy(a3, buffer+6, 2);
-> +	*a3 = be16_to_cpu(*a3);
-> +
-> +	*guid = EFI_GUID(*a1, *a2, *a3, *(buffer + 8),
-> +			*(buffer + 9),
-> +			*(buffer + 10),
-> +			*(buffer + 11),
-> +			*(buffer + 12),
-> +			*(buffer + 13),
-> +			*(buffer + 14),
-> +			*(buffer + 15));
-> +
-> +	kfree(a1);
-> +	kfree(a2);
-> +	kfree(a3);
-> +	return 0;
-> +}
-> +static efi_status_t powerpc_get_next_variable(unsigned long *name_size,
-> +					      efi_char16_t *name,
-> +					      efi_guid_t *vendor)
-> +{
-> +	int rc;
-> +	u8 *key;
-> +	int namesize;
-> +	unsigned long keylen;
-> +	unsigned long keysize = 1024;
-> +	unsigned long *mdsize;
-> +	u8 *mdata = NULL;
-> +	efi_guid_t guid;
-> +
-> +	if (ucs2_strnlen(name, 1024) > 0) {
-> +		createkey(name, &key, &keylen);
-> +	} else {
-> +		keylen = 0;
-> +		key = kzalloc(1024, GFP_KERNEL);
-> +	}
-> +
-> +	pr_info("%s: powerpc get next variable, key is %s\n", __func__, key);
-
-Don't put debugging info like this in the kernel log of everyone :(
-
-> +
-> +	rc = opal_get_next_variable(key, &keylen, keysize);
-> +	if (rc) {
-> +		kfree(key);
-> +		return opal_to_efi_status(rc);
-> +	}
-> +
-> +	mdsize = kzalloc(sizeof(unsigned long), GFP_KERNEL);
-
-No error checking?
-
-> +	rc = opal_get_variable_size(key, keylen, mdsize, NULL);
-> +	if (rc)
-> +		goto out;
-> +
-> +	if (*mdsize <= 0)
-> +		goto out;
-> +
-> +	mdata = kzalloc(*mdsize, GFP_KERNEL);
-> +
-> +	rc = opal_get_variable(key, keylen, mdata, mdsize, NULL, NULL);
-> +	if (rc)
-> +		goto out;
-> +
-> +	if (*mdsize > 0) {
-> +		namesize = *mdsize - sizeof(efi_guid_t) - sizeof(u32);
-> +		if (namesize > 0) {
-> +			memset(&guid, 0, sizeof(efi_guid_t));
-> +			convert_buffer_to_efi_guid(mdata + namesize, &guid);
-> +			memcpy(vendor, &guid, sizeof(efi_guid_t));
-> +			memset(name, 0, namesize + 2);
-> +			memcpy(name, mdata, namesize);
-> +			*name_size = namesize + 2;
-> +			name[namesize++] = 0;
-> +			name[namesize] = 0;
-> +		}
-> +	}
-> +
-> +out:
-> +	kfree(mdsize);
-> +	kfree(mdata);
-> +
-> +	return opal_to_efi_status(rc);
-> +}
-> +
-> +static efi_status_t powerpc_set_variable(efi_char16_t *name, efi_guid_t *vendor,
-> +					 u32 attr, unsigned long data_size,
-> +					 void *data)
-> +{
-> +	int rc;
-> +	u8 *key;
-> +	unsigned long keylen;
-> +	u8 *metadata;
-> +	unsigned long mdsize;
-> +
-> +	if (!name)
-> +		return EFI_INVALID_PARAMETER;
-> +
-> +	if (!vendor)
-> +		return EFI_INVALID_PARAMETER;
-> +
-> +	createkey(name, &key, &keylen);
-> +	pr_info("%s: nayna key is %s\n", __func__, key);
-
-Again, please remove all of your debugging code when resending.
-
-> +
-> +	createmetadata(name, vendor, &attr, &metadata, &mdsize);
-> +
-> +	rc = opal_set_variable(key, keylen, metadata, mdsize, data, data_size);
-> +
-> +	return opal_to_efi_status(rc);
-> +}
-> +
-> +
-> +static const struct efivar_operations efivar_ops = {
-> +	.get_variable = powerpc_get_variable,
-> +	.set_variable = powerpc_set_variable,
-> +	.get_next_variable = powerpc_get_next_variable,
-> +};
-> +
-> +
-> +static __init int power_secvar_init(void)
-> +{
-> +	int rc = 0;
-> +	unsigned long ver = 0;
-> +
-> +	rc = opal_variable_version(&ver);
-> +	if (ver != BACKEND_TC_COMPAT_V1) {
-> +		pr_info("Compatible backend unsupported\n");
-> +		return -1;
-
-Do not make up error numbers, use the defined values please.
-
-thanks,
-
-greg k-h
